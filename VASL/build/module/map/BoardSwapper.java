@@ -141,11 +141,12 @@ public class BoardSwapper extends AbstractBuildable {
       }
     }
 
+    /** @deprecated */
     public void setVisible(boolean b) {
       if (b) {
         setBoards(oldBoards.elements());
       }
-      super.setVisible(b);
+//      super.setVisible(b);
     }
 
     public void actionPerformed(ActionEvent e) {

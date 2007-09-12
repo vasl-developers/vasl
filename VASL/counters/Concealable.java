@@ -107,7 +107,7 @@ public class Concealable extends Obscurable implements EditablePiece {
   public Command myKeyEvent(KeyStroke stroke) {
     myGetKeyCommands();
     Command c = null;
-    if (commands[0].matches(stroke)
+    if (hide.matches(stroke)
         && getMap() != null
         && !obscuredToOthers()
         && !obscuredToMe()) {

@@ -18,13 +18,18 @@
  */
 package VASL.build.module.map;
 
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
+import java.util.BitSet;
 import VASL.counters.ASLProperties;
 import VASSAL.build.module.map.StackMetrics;
 import VASSAL.counters.GamePiece;
+import VASSAL.counters.Properties;
 import VASSAL.counters.Stack;
-
-import java.awt.*;
-import java.awt.geom.AffineTransform;
 
 public class ASLStackMetrics extends StackMetrics {
   protected void drawUnexpanded(GamePiece p, Graphics g,
@@ -40,17 +45,28 @@ public class ASLStackMetrics extends StackMetrics {
   public int getContents(Stack parent, Point[] positions, Shape[] shapes, Rectangle[] boundingBoxes, int x, int y) {
     int val = super.getContents(parent, positions, shapes, boundingBoxes, x, y);
     if (!parent.isExpanded()) {
-      for (int i = 0,n = parent.getPieceCount(); i < n; ++i) {
+      int count = parent.getPieceCount();
+      BitSet visibleLocations = new BitSet(count);
+      BitSet visibleOther = new BitSet(count);
+      for (int i = 0; i < count; ++i) {
         GamePiece p = parent.getPieceAt(i);
-        if (p.getProperty((ASLProperties.LOCATION)) != null) {
-          if (positions != null) {
-            positions[i].translate(-15,0);
-          }
-          if (boundingBoxes != null) {
-            boundingBoxes[i].translate(-15,0);
-          }
-          if (shapes != null) {
-            shapes[i] = AffineTransform.getTranslateInstance(-15,0).createTransformedShape(shapes[i]);
+        boolean visibleToMe = !Boolean.TRUE.equals(p.getProperty(Properties.INVISIBLE_TO_ME));
+        boolean isLocation = p.getProperty((ASLProperties.LOCATION)) != null;
+        visibleLocations.set(i, isLocation && visibleToMe);
+        visibleOther.set(i,!isLocation && visibleToMe);
+      }
+      if (visibleLocations.cardinality() > 0 && visibleOther.cardinality() > 0) {
+        for (int i=0;i<count;++i) {
+          if (visibleLocations.get(i)) {
+            if (positions != null) {
+              positions[i].translate(-15,0);
+            }
+            if (boundingBoxes != null) {
+              boundingBoxes[i].translate(-15,0);
+            }
+            if (shapes != null) {
+              shapes[i] = AffineTransform.getTranslateInstance(-15,0).createTransformedShape(shapes[i]);
+            }
           }
         }
       }

@@ -18,7 +18,73 @@
  */
 package VASL.build.module.map;
 
-import VASL.build.module.map.boardPicker.*;
+import java.awt.CardLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.GridLayout;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.Collator;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.StringTokenizer;
+import java.util.Vector;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
+import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionListener;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import VASL.build.module.map.boardPicker.ASLBoard;
+import VASL.build.module.map.boardPicker.ASLBoardSlot;
+import VASL.build.module.map.boardPicker.BoardException;
+import VASL.build.module.map.boardPicker.Overlay;
+import VASL.build.module.map.boardPicker.SSRFilter;
+import VASL.build.module.map.boardPicker.SSROverlay;
+import VASL.build.module.map.boardPicker.Underlay;
 import VASSAL.build.Buildable;
 import VASSAL.build.Builder;
 import VASSAL.build.Configurable;
@@ -31,26 +97,6 @@ import VASSAL.command.NullCommand;
 import VASSAL.configure.DirectoryConfigurer;
 import VASSAL.configure.ValidationReport;
 import VASSAL.tools.DataArchive;
-import VASSAL.tools.Sort;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import javax.swing.*;
-import javax.swing.event.ListSelectionListener;
-import java.awt.*;
-import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.StringTokenizer;
-import java.util.Vector;
 
 public class ASLBoardPicker extends BoardPicker
     implements ActionListener {
@@ -72,16 +118,14 @@ public class ASLBoardPicker extends BoardPicker
 
   protected void initComponents() {
     super.initComponents();
-    controls.setLayout(new GridLayout(4, 2));
     addButton("Add overlays");
     addButton("Crop boards");
     addButton("Terrain SSR");
-    pack();
   }
 
   public Command decode(String command) {
     if (command.startsWith("bd\t")) {
-      Vector v = new Vector();
+      List<Board> v = new ArrayList<Board>();
       Command comm = new NullCommand();
       if (command.length() > 3) {
         command = command.substring(3);
@@ -90,7 +134,7 @@ public class ASLBoardPicker extends BoardPicker
           ASLBoard b = new ASLBoard();
           try {
             buildBoard(b, command.substring(0, index));
-            v.addElement(b);
+            v.add(b);
           }
           catch (final BoardException e) {
             Runnable r = new Runnable() {
@@ -105,7 +149,7 @@ public class ASLBoardPicker extends BoardPicker
         ASLBoard b = new ASLBoard();
         try {
           buildBoard(b, command);
-          v.addElement(b);
+          v.add(b);
         }
         catch (final BoardException e) {
           Runnable r = new Runnable() {
@@ -128,11 +172,11 @@ public class ASLBoardPicker extends BoardPicker
     if (c instanceof SetBoards
         && map != null) {
       String s = "bd\t";
-      for (Enumeration e = getCurrentBoards();
-           e.hasMoreElements();) {
-        ASLBoard b = (ASLBoard) e.nextElement();
+      for (Iterator it = getSelectedBoards().iterator();
+           it.hasNext();) {
+        ASLBoard b = (ASLBoard) it.next();
         s += b.getState();
-        if (e.hasMoreElements()) {
+        if (it.hasNext()) {
           s += "bd\t";
         }
       }
@@ -216,7 +260,7 @@ public class ASLBoardPicker extends BoardPicker
   /**     * Reads the current board directory and constructs     * the list of available boards     */
   public void refreshPossibleBoards() {
     String files[] = boardDir.list();
-    Vector sorted = new Vector();
+    List<String> sorted = new ArrayList<String>();
     for (int i = 0; i < files.length; ++i) {
       if (files[i].startsWith("bd")
           && !(new File(boardDir, files[i])).isDirectory()) {
@@ -228,38 +272,28 @@ public class ASLBoardPicker extends BoardPicker
           name = null;
         }
         if (name != null && !sorted.contains(name)) {
-          sorted.addElement(name);
+          sorted.add(name);
         }
       }
     }
 
-    final Sort.Comparator alpha = new Sort.Alpha();
+    final Comparator alpha = Collator.getInstance();
 
-    Sort.Comparator comp = new Sort.Comparator() {
-
-      public int compare(Object o1, Object o2) {
-
+    Comparator<String> comp = new Comparator<String>() {
+      public int compare(String o1, String o2) {
         try {
-
-          return Integer.parseInt((String) o1) - Integer.parseInt((String) o2);
-
+          return Integer.parseInt(o1) - Integer.parseInt(o2);
         }
-
         catch (NumberFormatException ex) {
-
         }
-
         return alpha.compare(o1, o2);
-
       }
-
     };
+    Collections.sort(sorted, comp);
 
-    Sort.quicksort(sorted, comp);
-
-    possibleBoards.removeAllElements();
+    possibleBoards.clear();
     for (int i = 0; i < sorted.size(); ++i) {
-      addBoard((String) sorted.elementAt(i));
+      addBoard((String) sorted.get(i));
     }
   }
 
@@ -268,7 +302,9 @@ public class ASLBoardPicker extends BoardPicker
   }
 
   public void addBoard(String name) {
-    possibleBoards.addElement(name);
+    ASLBoard b = new ASLBoard();
+    b.setCommonName(name);
+    possibleBoards.add(b);
   }
 
   public void validate(Buildable target, ValidationReport report) {
@@ -277,7 +313,7 @@ public class ASLBoardPicker extends BoardPicker
   public String[] getAllowableBoardNames() {
     String s[] = new String[possibleBoards.size()];
     for (int i = 0; i < s.length; ++i) {
-      s[i] = (String) possibleBoards.elementAt(i);
+      s[i] = ((ASLBoard) possibleBoards.get(i)).getCommonName();
     }
     return s;
   }
@@ -303,7 +339,7 @@ public class ASLBoardPicker extends BoardPicker
         buildBoard(b, "0\t0\t" + name);
       }
       catch (BoardException e) {
-        JOptionPane.showMessageDialog(this, e.getMessage(), "Error loading board", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(GameModule.getGameModule().getFrame(), e.getMessage(), "Error loading board", JOptionPane.ERROR_MESSAGE);
       }
     }
     return b;
@@ -407,14 +443,15 @@ public class ASLBoardPicker extends BoardPicker
     for (int j = 0; j < ny; ++j) {
       slotPanel.add(new ASLBoardSlot(this), (j + 1) * nx - 1);
     }
-    pack();
+    slotPanel.revalidate();
   }
 
   protected void addRow() {
     slotPanel.setLayout(new GridLayout(++ny, nx));
-    for (int i = 0; i < nx; ++i)
+    for (int i = 0; i < nx; ++i) {
       slotPanel.add(new ASLBoardSlot(this), -1);
-    pack();
+    }
+    slotPanel.revalidate();
   }
 
   public void reset() {
@@ -425,7 +462,6 @@ public class ASLBoardPicker extends BoardPicker
     overlayer.clear();
     cropper.clear();
     terrain.reset();
-    pack();
   }
 
   public void actionPerformed(ActionEvent e) {
@@ -437,8 +473,8 @@ public class ASLBoardPicker extends BoardPicker
       cropper.setVisible(true);
     }
     else if ("Terrain SSR".equals(label)) {
-      currentBoards = pickBoards();
-      terrain.setup(currentBoards.elements());
+      currentBoards = getBoardsFromControls();
+      terrain.setup(currentBoards);
     }
     else {
       super.actionPerformed(e);
@@ -481,9 +517,6 @@ public class ASLBoardPicker extends BoardPicker
     bp.initComponents();
     bp.reset();
 
-    // Comment
-
-    bp.setVisible(true);
 
     JButton over = new JButton("Overlays");
     JButton ssr = new JButton("Terrain");
@@ -527,7 +560,7 @@ public class ASLBoardPicker extends BoardPicker
     bp.terrain.reset.addActionListener(al);
     ssr.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        bp.terrain.setup(bp.pickBoards().elements());
+        bp.terrain.setup(bp.getBoardsFromControls());
       }
     });
     Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
@@ -608,9 +641,9 @@ class Cropper extends JDialog implements ActionListener {
 
     pack();
     setLocation(Toolkit.getDefaultToolkit().getScreenSize().width / 2
-                - maker.getSize().width / 2,
+                - getWidth() / 2,
                 Toolkit.getDefaultToolkit().getScreenSize().height / 2
-                - maker.getSize().height / 2 - getSize().height);
+                - getHeight()/2);
   }
 
   public void clear() {
@@ -636,7 +669,6 @@ class Cropper extends JDialog implements ActionListener {
                                      fullrow.isSelected());
       b.getBoard().fixImage(this);
       b.invalidate();
-      maker.pack();
       b.repaint();
       bdName.setText("");
       row1.setText("");
@@ -708,20 +740,17 @@ class Overlayer extends JDialog implements ActionListener {
 
     pack();
     setLocation(Toolkit.getDefaultToolkit().getScreenSize().width / 2
-                + maker.getSize().width / 2 - getSize().width,
+                - getSize().width/2,
                 Toolkit.getDefaultToolkit().getScreenSize().height / 2
-                - maker.getSize().height / 2 - getSize().height);
+                - getSize().height/2);
   }
 
   public void clear() {
     status.setText("Enter blank hexes to delete.");
     hex1.setText("");
     hex2.setText("");
-    ;
     ovrName.setText("");
-    ;
     bdName.setText("");
-    ;
   }
 
   public void actionPerformed(ActionEvent e) {
@@ -836,7 +865,7 @@ class TerrainEditor extends JDialog implements ActionListener {
     return maker;
   }
 
-  public void setup(Enumeration boardList) {
+  public void setup(Collection<Board> boardList) {
     Box box = Box.createVerticalBox();
     for (int i = 0; i < 4; ++i) {
       TransformOption opt = new TransformOption();
@@ -848,8 +877,8 @@ class TerrainEditor extends JDialog implements ActionListener {
     boards.removeAllElements();
     String version = "";
     int nboards = 0;
-    while (boardList.hasMoreElements()) {
-      ASLBoard b = (ASLBoard) boardList.nextElement();
+    for (Board board : boardList) {
+      ASLBoard b = (ASLBoard) board;
       boards.addElement(b);
       if (b != null) {
         try {
