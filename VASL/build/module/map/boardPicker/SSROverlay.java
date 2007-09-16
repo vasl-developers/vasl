@@ -52,8 +52,7 @@ public class SSROverlay extends Overlay {
   public void setImage(ASLBoard b, Overlay o, Component map) {
     if (o != null) {
       try {
-        image = DataArchive.findImage
-            (o.getFile(), name);
+        image = DataArchive.getImage(DataArchive.getFileStream(o.getFile(), name));
       }
       catch (java.io.IOException e) {
         image = null;
@@ -61,8 +60,7 @@ public class SSROverlay extends Overlay {
     }
     else {
       try {
-        image = DataArchive.findImage
-            (b.getFile(), name);
+        image = DataArchive.getImage(DataArchive.getFileStream(b.getFile(), name));
       }
       catch (java.io.IOException e2) {
         image = null;

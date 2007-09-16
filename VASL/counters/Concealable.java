@@ -165,7 +165,7 @@ public class Concealable extends Obscurable implements EditablePiece {
    * counter is on top of it in a stack
    */
   public Command adjustConcealment() {
-    if (isMaskableBy(GameModule.getUserId())) {
+    if (isMaskable()) {
       GamePiece outer = Decorator.getOutermost(this);
       String state = outer.getState();
       setProperty(Properties.OBSCURED_BY, null);

@@ -18,19 +18,6 @@
  */
 package VASL.build.module.map;
 
-import VASL.build.module.map.boardPicker.ASLBoard;
-import VASL.build.module.map.boardPicker.Overlay;
-import VASSAL.build.AbstractBuildable;
-import VASSAL.build.Buildable;
-import VASSAL.build.GameModule;
-import VASSAL.build.module.GameComponent;
-import VASSAL.build.module.Map;
-import VASSAL.build.module.ServerConnection;
-import VASSAL.command.Command;
-import VASSAL.configure.StringConfigurer;
-import VASSAL.tools.PropertiesEncoder;
-
-import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
@@ -40,6 +27,22 @@ import java.net.URLConnection;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Vector;
+
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
+import VASL.build.module.map.boardPicker.ASLBoard;
+import VASL.build.module.map.boardPicker.Overlay;
+import VASSAL.build.AbstractBuildable;
+import VASSAL.build.Buildable;
+import VASSAL.build.GameModule;
+import VASSAL.build.module.GameComponent;
+import VASSAL.build.module.Map;
+import VASSAL.build.module.ServerConnection;
+import VASSAL.build.module.map.boardPicker.Board;
+import VASSAL.command.Command;
+import VASSAL.configure.StringConfigurer;
+import VASSAL.tools.PropertiesEncoder;
 
 /**
  * Copyright (c) 2003 by Rodney Kinney.  All rights reserved.
@@ -103,8 +106,8 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
     if (gameStarting) {
       if (boardVersions != null) {
         Vector obsolete = new Vector();
-        for (Enumeration e = map.getAllBoards(); e.hasMoreElements();) {
-          ASLBoard b = (ASLBoard) e.nextElement();
+        for (Board board : map.getBoards()) {
+          ASLBoard b = (ASLBoard) board;
           String availableVersion = boardVersions.getProperty(b.getName(), b.getVersion());
           if (!availableVersion.equals(b.getVersion())) {
             obsolete.addElement(b.getName());
@@ -140,8 +143,8 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
       }
       if (overlayVersions != null) {
         Vector obsolete = new Vector();
-        for (Enumeration e = map.getAllBoards(); e.hasMoreElements();) {
-          ASLBoard b = (ASLBoard) e.nextElement();
+        for (Board board : map.getBoards()) {
+          ASLBoard b = (ASLBoard) board;
           for (Enumeration e2 = b.getOverlays(); e2.hasMoreElements();) {
             Overlay o = (Overlay) e2.nextElement();
             String name = o.getFile().getName();

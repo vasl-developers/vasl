@@ -20,21 +20,13 @@ package VASL.build.module;
 
 import VASSAL.build.AbstractBuildable;
 import VASSAL.build.Buildable;
-import VASSAL.build.GameModule;
-import VASSAL.build.module.GameState;
-import VASSAL.command.Command;
-import VASSAL.command.CommandEncoder;
-import VASSAL.tools.Decoder;
-
-import java.io.ByteArrayOutputStream;
-import java.util.StringTokenizer;
 
 /**
  * Provides backward-compatibility for VASL 3.0 savefiles
  */
-public class BackTranslater extends AbstractBuildable implements CommandEncoder {
+@Deprecated
+public class BackTranslater extends AbstractBuildable {
   public void addTo(Buildable b) {
-    GameModule.getGameModule().addCommandEncoder(this);
   }
 
   public String[] getAttributeNames() {
@@ -48,54 +40,4 @@ public class BackTranslater extends AbstractBuildable implements CommandEncoder 
     return null;
   }
 
-  public String encode(Command c) {
-    return null;
-  }
-
-  public static String decodeString(String in) {
-    if (in == null)
-      return null;
-
-    if (in.indexOf("%") < 0) {
-      return in;
-    }
-
-    String s = Decoder.URLdecode(in);
-    ByteArrayOutputStream out = new ByteArrayOutputStream(s.length());
-
-    for (int i = 0; i < s.length(); i++) {
-      int c = (int) s.charAt(i) ^ 0x117e;
-      out.write(c);
-    }
-    return out.toString();
-  }
-
-
-  public Command decode(String s) {
-    boolean encoded = false;
-    if (s.startsWith("%1C%1Aw")) {
-      encoded = true;
-    }
-    else if (s.startsWith("bd\t")
-        && (s.indexOf("\n") > 0 || s.indexOf("\r") > 0)) {
-      encoded = false;
-    }
-    else {
-      return null;
-    }
-
-    Command c = new GameState.SetupCommand(false);
-    StringTokenizer st = new StringTokenizer(s, "\n\r");
-    while (st.hasMoreTokens()) {
-      String sub = decodeString(st.nextToken());
-      try {
-        c.append(GameModule.getGameModule().decode(sub));
-      }
-      catch (Exception ex) {
-        System.err.println("Error decoding " + sub);
-        ex.printStackTrace();
-      }
-    }
-    return c;
-  }
 }

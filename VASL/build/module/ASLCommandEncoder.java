@@ -376,7 +376,7 @@ public class ASLCommandEncoder extends VASSAL.build.module.BasicCommandEncoder i
 
   public Map getMap() {
     if (map == null) {
-      map = (Map) VASSAL.build.GameModule.getGameModule().getComponents(Map.class).nextElement();
+      map = VASSAL.build.GameModule.getGameModule().getComponentsOf(Map.class).iterator().next();
     }
     return map;
   }

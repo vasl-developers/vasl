@@ -139,7 +139,7 @@ public class Concealment extends Decorator implements EditablePiece {
     if (canConceal(p)) {
       String state = p.getState();
       p.setProperty(Properties.OBSCURED_BY,
-                    concealed ? GameModule.getGameModule().getUserId()
+                    concealed ? GameModule.getUserId()
                     : null);
       return new ChangePiece(p.getId(), state, p.getState());
     }
@@ -155,7 +155,7 @@ public class Concealment extends Decorator implements EditablePiece {
   public boolean canConceal(GamePiece p) {
     Concealable c = (Concealable) Decorator.getDecorator(p, Concealable.class);
     if (c == null
-        || !c.isMaskableBy(GameModule.getUserId())) {
+        || !c.isMaskable()) {
       return false;
     }
     else {

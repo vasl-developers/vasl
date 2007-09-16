@@ -18,23 +18,27 @@
  */
 package VASL.build.module.map;
 
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.Iterator;
+import java.util.Vector;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.SwingUtilities;
+
 import CASL.VASL.VASLThread;
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASSAL.build.AbstractBuildable;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.Map;
-import VASSAL.build.module.map.GlobalMap;
 import VASSAL.build.module.map.BoardPicker;
+import VASSAL.build.module.map.GlobalMap;
+import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.counters.GamePiece;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.util.Enumeration;
-import java.util.Vector;
 
 /**
  * Allows the user the change boards in a Map window while
@@ -98,9 +102,9 @@ public class BoardSwapper extends AbstractBuildable {
         if (boards.elementAt(n) != null) {
           String boardName = (String) boards.elementAt(n);
           GamePiece piece = (GamePiece) pieces.elementAt(n);
-          for (Enumeration e = map.getAllBoards();
-               e.hasMoreElements();) {
-            ASLBoard board = (ASLBoard) e.nextElement();
+          for (Iterator it = map.getBoards().iterator();
+               it.hasNext();) {
+            ASLBoard board = (ASLBoard) it.next();
             if (boardName.equals(board.getName())) {
               b = board;
               break;
@@ -136,8 +140,8 @@ public class BoardSwapper extends AbstractBuildable {
       initTerrainEditor();
       allowMultiple = true;
       oldBoards = new Vector();
-      for (Enumeration e = this.map.getAllBoards(); e.hasMoreElements();) {
-        oldBoards.addElement(e.nextElement());
+      for (Board b : this.map.getBoards()) {
+        oldBoards.addElement(b);
       }
     }
 
@@ -170,16 +174,15 @@ public class BoardSwapper extends AbstractBuildable {
 
     public void save() {
       new BoardPicker.SetBoards(map.getBoardPicker(),currentBoards).execute();
-      for (Enumeration e = GameModule.getGameModule().getGameState().getGameComponentsEnum();
-           e.hasMoreElements();) {
-        Object o = e.nextElement();
+      for (Iterator e = GameModule.getGameModule().getGameState().getGameComponents().iterator();
+           e.hasNext();) {
+        Object o = e.next();
         if (o instanceof GlobalMap) {
           ((GlobalMap) o).setup(true);
           break;
         }
       }
-      for (Enumeration e = this.map.getComponents(VASLThread.class); e.hasMoreElements();) {
-        VASLThread t = (VASLThread) e.nextElement();
+      for (VASLThread t : this.map.getComponentsOf(VASLThread.class)) {
         t.setup(false);
         t.setup(true);
       }

@@ -18,25 +18,28 @@
  */
 package VASL.build.module.map;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
+
+import javax.swing.AbstractAction;
+import javax.swing.JButton;
+import javax.swing.JPopupMenu;
+
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
 import VASSAL.build.Buildable;
 import VASSAL.build.Builder;
 import VASSAL.build.GameModule;
-import VASSAL.build.IllegalBuildException;
 import VASSAL.build.module.Map;
 import VASSAL.command.Command;
 import VASSAL.command.NullCommand;
 import VASSAL.command.RemovePiece;
 import VASSAL.counters.GamePiece;
 import VASSAL.counters.Stack;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
 
 /**
  * A class to remove all GamePieces with a given name
@@ -125,14 +128,10 @@ public class MassRemover implements Buildable {
 
   private class RemAction extends AbstractAction {
     private Vector pieces = new Vector();
-    private String name;
-    private String piece;
 
     public RemAction(String actionName, String pieceName) {
       super(actionName);
       addPiece(pieceName);
-      name = actionName;
-      piece = pieceName;
     }
 
     public void addPiece(String name) {

@@ -37,11 +37,9 @@ public class ASLThread extends LOS_Thread {
   }
 
   private void setGridSnapToVertex(boolean toVertex) {
-    for (java.util.Enumeration e = map.getAllBoards();
-         e.hasMoreElements();) {
+    for (Board b : map.getBoards()) {
       HexGrid grid =
-          (HexGrid)
-          ((Board) e.nextElement()).getGrid();
+          (HexGrid)b.getGrid();
       grid.setCornersLegal(toVertex);
       grid.setEdgesLegal(!toVertex);
     }

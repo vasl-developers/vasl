@@ -182,7 +182,7 @@ public class Overlay implements Cloneable {
 
   private Image getImage(String name) {
     try {
-      return DataArchive.findImage(overlayFile, fileName(name));
+      return DataArchive.getImage(DataArchive.getFileStream(overlayFile, fileName(name)));
     }
     catch (java.io.IOException e) {
       return null;

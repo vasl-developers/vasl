@@ -201,7 +201,6 @@ public class OBA extends AbstractBuildable
   }
 
   public static class UpdateModule extends Command {
-    private Module mod;
     private String oldState;
     private String newState;
     private OBA oba;
@@ -276,7 +275,6 @@ public class OBA extends AbstractBuildable
 
   public static class RemoveModule extends Command {
     private String state;
-    private Module mod;
     private OBA oba;
     private int index;
 
@@ -552,7 +550,6 @@ public class OBA extends AbstractBuildable
 
     public void mouseReleased(MouseEvent e) {
       int x = e.getX();
-      int y = e.getY();
 
       String oldState = mod.getState();
       int pos = x / (boxX + 4);

@@ -75,7 +75,7 @@ public class Underlay extends SSROverlay {
   public void setImage(ASLBoard b, Component map) {
     if (underlayImage == null) {
       try {
-        underlayImage = DataArchive.findImage(b.getFile(), imageName);
+        underlayImage = DataArchive.getImage(DataArchive.getFileStream(b.getFile(), imageName));
       }
       catch (IOException ex) {
         image = map.createImage(1, 1);

@@ -428,7 +428,7 @@ public class ASLBoardPicker extends BoardPicker
     if (bd.indexOf("SSR") >= 0) {
       b.setTerrain(bd.substring(bd.indexOf("SSR") + 4));
     }
-    b.fixImage(GameModule.getGameModule().getFrame());
+    b.fixImage();
   }
 
   protected Overlay parseOverlay(String s) {
@@ -546,7 +546,7 @@ public class ASLBoardPicker extends BoardPicker
     mapF.getContentPane().add(new JScrollPane(m.getView()));
     final ActionListener al = new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        m.setBoards(bp.pickBoards().elements());
+        m.setBoards(bp.getBoardsFromControls());
         m.getView().revalidate();
         m.repaint();
       }
@@ -667,7 +667,7 @@ class Cropper extends JDialog implements ActionListener {
                                      coord1.getText().toLowerCase().trim(),
                                      coord2.getText().toLowerCase().trim(),
                                      fullrow.isSelected());
-      b.getBoard().fixImage(this);
+      b.getBoard().fixImage();
       b.invalidate();
       b.repaint();
       bdName.setText("");
@@ -1012,7 +1012,7 @@ class TerrainEditor extends JDialog implements ActionListener {
                               + '\t' + optionRules());
               ((ASLBoard) slot.getBoard())
                   .setTerrain(basicRules() + slot.getTerrain());
-              slot.getBoard().fixImage(slot);
+              slot.getBoard().fixImage();
               slot.repaint();
             }
           }
@@ -1043,7 +1043,7 @@ class TerrainEditor extends JDialog implements ActionListener {
             slot.setTerrain("");
             try {
               ((ASLBoard) slot.getBoard()).setTerrain("");
-              slot.getBoard().fixImage(slot);
+              slot.getBoard().fixImage();
             }
             catch (Exception e2) {
             }

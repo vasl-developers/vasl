@@ -18,19 +18,33 @@
  */
 package VASL.build.module.map.boardPicker;
 
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
+import java.awt.Image;
+import java.awt.MediaTracker;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Transparency;
+import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Enumeration;
+import java.util.StringTokenizer;
+import java.util.Vector;
+
+import javax.swing.JLabel;
+
 import VASL.build.module.map.boardPicker.board.ASLHexGrid;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.build.module.map.boardPicker.board.HexGrid;
 import VASSAL.build.module.map.boardPicker.board.MapGrid;
 import VASSAL.tools.DataArchive;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.Enumeration;
-import java.util.StringTokenizer;
-import java.util.Vector;
 
 /** A Board is a geomorphic or HASL board.*/
 public class ASLBoard extends Board {
@@ -161,7 +175,8 @@ public class ASLBoard extends Board {
     }
   }
 
-  public void fixImage(Component map) {
+  public void fixImage() {
+    Component comp = new JLabel();
     Cleanup.init();
     Cleanup.getInstance().addBoard(this);
     try {
@@ -169,7 +184,7 @@ public class ASLBoard extends Board {
         baseImage = DataArchive.getImage(new FileInputStream(boardFile));
       }
       else {
-        baseImage = DataArchive.findImage(boardFile, imageFile);
+        baseImage = DataArchive.getImage(DataArchive.getFileStream(boardFile, imageFile));
       }
     }
     catch (java.io.IOException notFound) {
@@ -186,14 +201,14 @@ public class ASLBoard extends Board {
     for (int i = 0; i < overlays.size(); ++i)
       ((Overlay) overlays.elementAt(i)).readData();
 
-    MediaTracker track = new MediaTracker(map);
+    MediaTracker track = new MediaTracker(comp);
     try {
       track.addImage(baseImage, 0);
       track.waitForID(0);
     }
     catch (Exception eWaitMain2) {
     }
-    Image im = terrain == null ? baseImage : terrain.recolor(baseImage, map);
+    Image im = terrain == null ? baseImage : terrain.recolor(baseImage, comp);
     try {
       track.addImage(im, 0);
       track.waitForID(0);
@@ -201,11 +216,11 @@ public class ASLBoard extends Board {
     catch (Exception eWaitMain2) {
     }
 
-    boundaries.setSize(cropBounds.width > 0 ? cropBounds.width : baseImage.getWidth(map),
-                       cropBounds.height > 0 ? cropBounds.height : baseImage.getHeight(map));
+    boundaries.setSize(cropBounds.width > 0 ? cropBounds.width : baseImage.getWidth(comp),
+                       cropBounds.height > 0 ? cropBounds.height : baseImage.getHeight(comp));
 
-    uncroppedSize = new Dimension(baseImage.getWidth(map),
-                                  baseImage.getHeight(map));
+    uncroppedSize = new Dimension(baseImage.getWidth(comp),
+                                  baseImage.getHeight(comp));
 
     if (terrain == null
         && overlays.size() == 0
@@ -224,23 +239,23 @@ public class ASLBoard extends Board {
     else {
       g.translate(-cropBounds.x,-cropBounds.y);
     }
-    g.drawImage(im, 0, 0, map);
+    g.drawImage(im, 0, 0, comp);
 
     for (int i = 0; i < overlays.size(); ++i) {
       Overlay o = (Overlay) overlays.elementAt(i);
-      o.setImage(this, map);
+      o.setImage(this, comp);
       g.drawImage(o.getImage(), o.bounds().x,
-                  o.bounds().y, map);
+                  o.bounds().y, comp);
       if (o.getTerrain() != terrain && o.getTerrain() != null) {
         SSROverlay ssrOverlay;
         for (Enumeration e = o.getTerrain().getOverlays(); e.hasMoreElements();) {
           ssrOverlay = (SSROverlay) e.nextElement();
-          ssrOverlay.setImage(this, o, map);
+          ssrOverlay.setImage(this, o, comp);
           if (ssrOverlay.getImage() != null) {
             Rectangle r = ssrOverlay.bounds();
             if (o.getOrientation(this) == 'a') {
               g.drawImage(ssrOverlay.getImage(), r.x + o.bounds().x,
-                          r.y + o.bounds().y, map);
+                          r.y + o.bounds().y, comp);
             }
             else {
               try {
@@ -251,7 +266,7 @@ public class ASLBoard extends Board {
                 g.drawImage(ssrOverlay.getImage(),
                             p.x, p.y,
                             p.x - r.width, p.y - r.height,
-                            0, 0, r.width, r.height, map);
+                            0, 0, r.width, r.height, comp);
               }
               catch (BoardException e1) {
                 e1.printStackTrace();
