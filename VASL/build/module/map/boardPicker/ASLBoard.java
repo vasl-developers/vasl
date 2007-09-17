@@ -90,11 +90,15 @@ public class ASLBoard extends Board {
   }
 
   public String getCommonName() {
-    return boardName;
+    return getConfigureName();
   }
 
   public void setCommonName(String s) {
-    boardName = s;
+    setConfigureName(s);
+  }
+  
+  public String getLocalizedName() {
+    return getConfigureName();
   }
 
   public String getBaseImageFileName() {
@@ -176,6 +180,9 @@ public class ASLBoard extends Board {
   }
 
   public void fixImage() {
+    if (baseImage != null || boardFile == null) {
+      return;
+    }
     Component comp = new JLabel();
     Cleanup.init();
     Cleanup.getInstance().addBoard(this);
@@ -218,6 +225,7 @@ public class ASLBoard extends Board {
 
     boundaries.setSize(cropBounds.width > 0 ? cropBounds.width : baseImage.getWidth(comp),
                        cropBounds.height > 0 ? cropBounds.height : baseImage.getHeight(comp));
+    fixedBoundaries = true;
 
     uncroppedSize = new Dimension(baseImage.getWidth(comp),
                                   baseImage.getHeight(comp));
@@ -280,6 +288,10 @@ public class ASLBoard extends Board {
     g.dispose();
     System.gc();
   }
+  
+  public void fixBounds() {
+    fixImage();
+  }
 
   public synchronized Image getScaledImage(double zoom, Component obs) {
     boolean wasReversed = reversed;
@@ -316,7 +328,13 @@ public class ASLBoard extends Board {
 
   public void setCropBounds(Rectangle r) {
     cropBounds = new Rectangle(r);
+    baseImage = null;
   }
+  
+//  public void setReversed(boolean rev) {
+//    super.setReversed(rev);
+//    boardImage = null;
+//  }
 
   public void crop(String row1, String row2,
                    String coord1, String coord2)
@@ -354,6 +372,7 @@ public class ASLBoard extends Board {
         cropBounds.width += (int) (dx / 2);
       }
     }
+    baseImage = null;
   }
 
   public String locationName(Point p) {
