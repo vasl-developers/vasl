@@ -25,9 +25,11 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.Vector;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.SwingUtilities;
+import javax.swing.JDialog;
 
 import CASL.VASL.VASLThread;
 import VASL.build.module.map.boardPicker.ASLBoard;
@@ -35,9 +37,7 @@ import VASSAL.build.AbstractBuildable;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.Map;
-import VASSAL.build.module.map.BoardPicker;
 import VASSAL.build.module.map.GlobalMap;
-import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.counters.GamePiece;
 
 /**
@@ -59,8 +59,30 @@ public class BoardSwapper extends AbstractBuildable {
     launch.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent evt) {
         recordPiecePositions();
-        ASLBoardPicker picker = new Picker(map);
-        picker.setup(true);
+        final ASLBoardPicker picker = new Picker(map);
+        final JDialog d = new JDialog(GameModule.getGameModule().getFrame(),true);
+        d.getContentPane().setLayout(new BoxLayout(d.getContentPane(),BoxLayout.Y_AXIS));
+        d.getContentPane().add(picker.getControls());
+        JButton okButton = new JButton("Ok");
+        okButton.addActionListener(new ActionListener() {
+          public void actionPerformed(ActionEvent arg0) {
+            d.setVisible(false);
+            picker.finish();
+          }
+        });
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(new ActionListener() {
+          public void actionPerformed(ActionEvent arg0) {
+            d.setVisible(false);
+          }
+        });
+        Box buttonBox = Box.createHorizontalBox();
+        buttonBox.add(okButton);
+        buttonBox.add(cancelButton);
+        d.getContentPane().add(buttonBox);
+        d.pack();
+        d.setLocationRelativeTo(GameModule.getGameModule().getFrame());
+        d.setVisible(true);
         restorePiecePositions();
         map.repaint();
       }
@@ -132,54 +154,20 @@ public class BoardSwapper extends AbstractBuildable {
   }
 
   private static class Picker extends ASLBoardPicker {
-    private Vector oldBoards;
-
     public Picker(Map m) {
       this.map = m;
-      setBoardDir((File) GameModule.getGameModule().getPrefs().getValue(BOARD_DIR));
-      initTerrainEditor();
       allowMultiple = true;
-      oldBoards = new Vector();
-      for (Board b : this.map.getBoards()) {
-        oldBoards.addElement(b);
-      }
+      setBoardDir((File) GameModule.getGameModule().getPrefs().getValue(BOARD_DIR));
+//      initTerrainEditor();
     }
 
-    /** @deprecated */
-    public void setVisible(boolean b) {
-      if (b) {
-        setBoards(oldBoards.elements());
-      }
-//      super.setVisible(b);
-    }
-
-    public void actionPerformed(ActionEvent e) {
-      if ("Cancel".equals(e.getActionCommand())) {
-        currentBoards = oldBoards;
-        setVisible(false);
-      }
-      else if ("Ok".equals(e.getActionCommand())) {
-        super.actionPerformed(e);
-        Runnable runnable = new Runnable() {
-          public void run() {
-            save();
-          }
-        };
-        SwingUtilities.invokeLater(runnable);
-      }
-      else {
-        super.actionPerformed(e);
-      }
-    }
-
-    public void save() {
-      new BoardPicker.SetBoards(map.getBoardPicker(),currentBoards).execute();
+    public void finish() {
+      super.finish();
       for (Iterator e = GameModule.getGameModule().getGameState().getGameComponents().iterator();
            e.hasNext();) {
         Object o = e.next();
         if (o instanceof GlobalMap) {
           ((GlobalMap) o).setup(true);
-          break;
         }
       }
       for (VASLThread t : this.map.getComponentsOf(VASLThread.class)) {

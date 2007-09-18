@@ -36,6 +36,10 @@ public class ASLHexGrid extends HexGrid {
     super(height, alt);
   }
 
+  public String localizedLocationName(Point p) {
+    return locationName(p);
+  }
+  
   public String locationName(Point p) {
     p.translate(-origin.x, (int) (dy / 2. - origin.y));
 
