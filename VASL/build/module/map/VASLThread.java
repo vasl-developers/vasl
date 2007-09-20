@@ -324,10 +324,7 @@ public class VASLThread
   }
 
   public void mouseDragged(MouseEvent e) {
-    super.mouseDragged(e);
-    if (!isEnabled()) {
-      return;
-    }
+    if (isEnabled()) {
     // get the map point, ensure the point is on the CASL map
     Point p = mapMouseToCASLCoordinates(map.mapCoordinates(e.getPoint()));
     if (p == null || !CASLMap.onMap(p.x, p.y)) return;
@@ -346,6 +343,8 @@ public class VASLThread
       }
     }
     doLOS();
+    }
+    super.mouseDragged(e);
   }
 
   private boolean isEnabled() {
@@ -398,6 +397,7 @@ public class VASLThread
   */
 
   public void draw(Graphics g, VASSAL.build.module.Map m) {
+    long time = System.currentTimeMillis();
     if (!isPreferenceEnabled()) {
       super.draw(g, m);
     }
@@ -534,13 +534,13 @@ public class VASLThread
           }
           g.setFont(RANGE_FONT);
           if (isVerbose()) {
-            drawString(g,
+            lastRangeRect = drawString(g,
                        sourceLOSPoint.x - 20,
                        sourceLOSPoint.y + (shiftSourceText ? shift : 0) - g.getFontMetrics().getDescent(),
                        source.getName() + "  (Level " + (source.getBaseHeight() + source.getHex().getBaseHeight() + ")"));
           }
           else if (source.getBaseHeight() != 0) {
-            drawString(g,
+            lastRangeRect = drawString(g,
                        sourceLOSPoint.x - 20,
                        sourceLOSPoint.y + (shiftSourceText ? shift : 0) - g.getFontMetrics().getDescent(),
                        "Level " + (source.getBaseHeight() + source.getHex().getBaseHeight()));
@@ -564,24 +564,24 @@ public class VASLThread
               g.setColor(Color.white);
           }
           if (isVerbose()) {
-            drawString(g,
+            lastRangeRect.add(drawString(g,
                        targetLOSPoint.x - 20,
                        targetLOSPoint.y + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
-                       target.getName() + "  (Level " + (target.getBaseHeight() + target.getHex().getBaseHeight() + ")"));
+                       target.getName() + "  (Level " + (target.getBaseHeight() + target.getHex().getBaseHeight() + ")")));
           }
           else if (target.getBaseHeight() != 0) {
-            drawString(g,
+            lastRangeRect.add(drawString(g,
                        targetLOSPoint.x - 20,
                        targetLOSPoint.y + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
-                       "Level " + (target.getBaseHeight() + target.getHex().getBaseHeight()));
+                       "Level " + (target.getBaseHeight() + target.getHex().getBaseHeight())));
           }
           // draw the results string
           g.setColor(Color.black);
           if (shiftSourceText) {
-            drawString(g, targetLOSPoint.x - 20, targetLOSPoint.y - shift, resultsString);
+            lastRangeRect.add(drawString(g, targetLOSPoint.x - 20, targetLOSPoint.y - shift, resultsString));
           }
           else {
-            drawString(g, targetLOSPoint.x - 20, targetLOSPoint.y + shift * 2 - 2, resultsString);
+            lastRangeRect.add(drawString(g, targetLOSPoint.x - 20, targetLOSPoint.y + shift * 2 - 2, resultsString));
           }
         }
       }
@@ -589,6 +589,7 @@ public class VASLThread
     else {
       super.draw(g, m);
     }
+    markDirtyRegion();
   }
 
   private boolean isVerbose() {
@@ -673,19 +674,21 @@ public class VASLThread
     System.gc();
   }
 
-  private void drawString(Graphics g, int x, int y, String s) {
+  private Rectangle drawString(Graphics g, int x, int y, String s) {
     int border = 1;
     // paint the background
     g.setColor(Color.black);
-    g.fillRect(
+    Rectangle region = new Rectangle(
         x - border,
         y - border - g.getFontMetrics().getHeight() + g.getFontMetrics().getDescent(),
         g.getFontMetrics().stringWidth(s) + border * 2,
         g.getFontMetrics().getHeight() + border * 2);
+    g.fillRect(region.x, region.y, region.width, region.height);
 
     // draw the string
     g.setColor(Color.white);
     g.drawString(s, x, y);
+    return region;
   }
 
   private void doLOS() {
@@ -1271,14 +1274,12 @@ public class VASLThread
       else if (s.equals("RoadsToPaths") || s.equals("NoRoads") || s.equals("NoWoodsRoads")) {
 
         Hex h = null;
-        Terrain t;
-
         // convert forest-road hexes
         for (int col = 0; col < map.getWidth(); col++) {
           for (int row = 0; row < map.getHeight() + (col % 2); row++) {
 
             h = map.getHex(col, row);
-            t = h.getCenterLocation().getTerrain();
+            h.getCenterLocation().getTerrain();
 
             boolean roadHexside = false;
             boolean woodsHex = false;
