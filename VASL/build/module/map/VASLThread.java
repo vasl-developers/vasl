@@ -18,16 +18,38 @@
  */
 package VASL.build.module.map;
 
-import CASL.Map.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.StringTokenizer;
+
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+
+import CASL.Map.GameMap;
+import CASL.Map.Hex;
+import CASL.Map.LOSResult;
+import CASL.Map.Location;
+import CASL.Map.Smoke;
+import CASL.Map.Terrain;
 import CASL.Scenario.Scenario;
-import VASL.build.module.map.ASLThread;
-import VASL.build.module.map.HindranceKeeper;
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASL.counters.ASLProperties;
 import VASL.counters.TextInfo;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.GameComponent;
+import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.command.Command;
 import VASSAL.configure.BooleanConfigurer;
 import VASSAL.configure.ColorConfigurer;
@@ -35,15 +57,6 @@ import VASSAL.counters.Decorator;
 import VASSAL.counters.GamePiece;
 import VASSAL.counters.PieceIterator;
 import VASSAL.tools.BackgroundTask;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.StringTokenizer;
 
 /**
  * Extends the LOS thread to take advantage of CASL's LOS logic and report
@@ -143,19 +156,19 @@ public class VASLThread
     // if there are any unexpected exceptions, turn off LOS checking
     try {
       // get the board list
-      Enumeration boardList = map.getAllBoards();
+      Iterator boardList = map.getBoards().iterator();
 
       // determine the VASL map dimensions
       ASLBoard b = null;
-      while (boardList.hasMoreElements()) {
-        b = (ASLBoard) boardList.nextElement();
+      while (boardList.hasNext()) {
+        b = (ASLBoard) boardList.next();
         mapWidth = Math.max(b.relativePosition().x, mapWidth);
         mapHeight = Math.max(b.relativePosition().y, mapHeight);
       }
       mapWidth++;
       mapHeight++;
       // reset the enumerator
-      boardList = map.getAllBoards();
+      boardList = map.getBoards().iterator();
       // create the necessary LOS variables
       result = new LOSResult();
       scenario = new Scenario();
@@ -171,9 +184,9 @@ public class VASLThread
 
       // load the CASL maps
       boolean mapFound = false;
-      while (boardList.hasMoreElements()) {
+      while (boardList.hasNext()) {
 
-        b = (ASLBoard) boardList.nextElement();
+        b = (ASLBoard) boardList.next();
         String boardName = b.getName().startsWith("r") ? b.getName().substring(1) : b.getName();
 
         // set the upper left board
@@ -356,48 +369,8 @@ public class VASLThread
   private boolean isPreferenceEnabled() {
     return Boolean.TRUE.equals(GameModule.getGameModule().getPrefs().getValue(ENABLED));
   }
-  /*
-  private void drawUnit(Graphics g) {
-    if (map.getZoom() == 1.0 && unit != null && unitImage != null) {
-      g.setFont(RANGE_FONT);
-      Point unitPoint = mapCASLPointToScreen(unit.getLocation().getUnitLocationPoint());
-      g.setColor((Color) GameModule.getGameModule().getPrefs().getValue("ge"));
-      g.fillRect(unitPoint.x - unitSize / 2, unitPoint.y - unitSize / 2, unitSize, unitSize);
-      g.drawImage(unitImage, unitPoint.x - unitSize / 2, unitPoint.y - unitSize / 2, unitSize, unitSize, map.getView());
-      if (moveResult == null) {
-        drawString(g, unitPoint.x - unitSize / 2, unitPoint.y + unitSize / 2 + g.getFontMetrics().getHeight(), "Move me!");
-      }
-      else {
-        drawString(g, unitPoint.x - unitSize / 2, unitPoint.y + unitSize / 2 + g.getFontMetrics().getHeight(), moveResult.getMF() + " MF");
-        // draw the move/error message
-        if (moveResult.isLegal()) {
-          StringTokenizer t = new StringTokenizer(moveResult.getMovementMessage(), "\n");
-          int count = 1;
-          while (t.hasMoreTokens()) {
-            drawString(
-              g,
-              unitPoint.x - unitSize / 2,
-              unitPoint.y + unitSize / 2 + g.getFontMetrics().getHeight() * (count + 1),
-              t.nextToken()
-            );
-            count++;
-          }
-        }
-        else {
-          drawString(
-            g,
-            unitPoint.x - unitSize / 2,
-            unitPoint.y + unitSize / 2 + g.getFontMetrics().getHeight(),
-            moveResult.getErrorMessage()
-          );
-        }
-      }
-    }
-  }
-  */
 
   public void draw(Graphics g, VASSAL.build.module.Map m) {
-    long time = System.currentTimeMillis();
     if (!isPreferenceEnabled()) {
       super.draw(g, m);
     }
@@ -610,7 +583,7 @@ public class VASLThread
       return;
     }
     int code = e.getKeyCode();
-    String modifiers = e.getKeyModifiersText(e.getModifiers());
+    String modifiers = KeyEvent.getKeyModifiersText(e.getModifiers());
     // move up
     if (code == KeyEvent.VK_KP_UP || code == KeyEvent.VK_UP) {
       // move the source up
@@ -860,8 +833,8 @@ public class VASLThread
     p = b.uncroppedCoordinates(p);
     // Now we need to adjust for cropping of the boards to the left and
     // above the target board
-    for (Enumeration e = map.getAllBoards(); e.hasMoreElements();) {
-      ASLBoard b2 = (ASLBoard) e.nextElement();
+    for (Board board : map.getBoards()) {
+      ASLBoard b2 = (ASLBoard) board;
       if (b2.relativePosition().y == b.relativePosition().y
           && b2.relativePosition().x < b.relativePosition().x) {
         p.translate(b2.getUncroppedSize().width - b2.bounds().width, 0);
