@@ -31,7 +31,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 
-import CASL.VASL.VASLThread;
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASSAL.build.AbstractBuildable;
 import VASSAL.build.Buildable;
