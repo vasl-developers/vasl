@@ -61,7 +61,7 @@ import VASSAL.tools.BackgroundTask;
 /**
  * Extends the LOS thread to take advantage of CASL's LOS logic and report
  */
-public class VASLThread
+public class CASLThread
     extends ASLThread
     implements KeyListener, GameComponent {
 
@@ -99,7 +99,7 @@ public class VASLThread
   // Thread to initialize CASL map in background;
   private Thread initThread;
 
-  public VASLThread() {
+  public CASLThread() {
     // ensure correct Java version
     if (System.getProperty("java.version").startsWith("1.1")) {
       System.err.println("LOS checking turned off:  Java version " + System.getProperty("java.version"));

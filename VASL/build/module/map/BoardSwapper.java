@@ -169,7 +169,7 @@ public class BoardSwapper extends AbstractBuildable {
           ((GlobalMap) o).setup(true);
         }
       }
-      for (VASLThread t : this.map.getComponentsOf(VASLThread.class)) {
+      for (CASLThread t : this.map.getComponentsOf(CASLThread.class)) {
         t.setup(false);
         t.setup(true);
       }
