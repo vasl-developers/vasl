@@ -391,7 +391,8 @@ public class VASLThread
       g.drawImage(loadingStatus, map.getView().getVisibleRect().x, map.getView().getVisibleRect().y, map.getView());
     }
     else if (visible && status == LOADED) {
-      //drawUnit(g);
+      lastAnchor = map.componentCoordinates(anchor);
+      lastArrow = map.componentCoordinates(arrow);
       if (source != null) {
         // source LOS point
         Point sourceLOSPoint;
@@ -562,7 +563,6 @@ public class VASLThread
     else {
       super.draw(g, m);
     }
-    markDirtyRegion();
   }
 
   private boolean isVerbose() {
