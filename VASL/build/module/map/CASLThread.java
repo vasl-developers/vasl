@@ -670,6 +670,7 @@ public class CASLThread
     // set the result string
     resultsString =
         "Range: " + result.getRange();
+    lastRange = String.valueOf(result.getRange());
     if (isVerbose()) {
       if (result.isBlocked()) {
         resultsString += "  Blocked in " + CASLMap.gridToHex(result.getBlockedAtPoint().x, result.getBlockedAtPoint().y).getName() +
