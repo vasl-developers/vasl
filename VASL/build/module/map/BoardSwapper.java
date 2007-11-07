@@ -18,6 +18,7 @@
  */
 package VASL.build.module.map;
 
+import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,6 +37,7 @@ import VASSAL.build.AbstractBuildable;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.Map;
+import VASSAL.build.module.map.BoardPicker;
 import VASSAL.build.module.map.GlobalMap;
 import VASSAL.counters.GamePiece;
 
@@ -157,9 +159,8 @@ public class BoardSwapper extends AbstractBuildable {
       this.map = m;
       allowMultiple = true;
       setBoardDir((File) GameModule.getGameModule().getPrefs().getValue(BOARD_DIR));
-//      initTerrainEditor();
     }
-
+    
     public void finish() {
       super.finish();
       for (Iterator e = GameModule.getGameModule().getGameState().getGameComponents().iterator();
@@ -173,6 +174,16 @@ public class BoardSwapper extends AbstractBuildable {
         t.setup(false);
         t.setup(true);
       }
+      for (BoardPicker p : this.map.getComponentsOf(BoardPicker.class)) {
+        new SetBoards(p, currentBoards).execute();
+      }
+    }
+
+    @Override
+    public Component getControls() {
+      Component c = super.getControls();
+      setBoards(this.map.getBoards());
+      return c;
     }
   }
 }
