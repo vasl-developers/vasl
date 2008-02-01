@@ -18,16 +18,25 @@
  */
 package VASL.build.module.map.boardPicker;
 
-import VASSAL.build.GameModule;
-import VASSAL.tools.DataArchive;
-
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
+import java.awt.Image;
+import java.awt.MediaTracker;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.RGBImageFilter;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+
+import javax.swing.ImageIcon;
+
+import VASSAL.build.GameModule;
+import VASSAL.tools.DataArchive;
 
 /**
  * A special kind of SSROverlay constructed on the fly
@@ -147,6 +156,7 @@ public class Underlay extends SSROverlay {
     image = Toolkit.getDefaultToolkit().createImage(new FilteredImageSource
         (replacement.getSource(),
          new HolePunch(new int[]{0})));
+    new ImageIcon(image);
     replacement = null;
     g2.dispose();
     System.gc();
