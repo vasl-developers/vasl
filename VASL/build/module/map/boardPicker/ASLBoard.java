@@ -357,7 +357,16 @@ public class ASLBoard extends Board {
   /**
    * Transform from local board coordinates to local coordinates on the uncropped board
    */
-  public Point uncroppedCoordinates(Point p) {
+  public Point uncroppedCoordinates(Point input) {
+    fixBounds();
+    Point p = new Point(input);
+    if (reversed) {
+      p.translate(cropBounds.width > 0 ? uncroppedSize.width-cropBounds.x-cropBounds.width : 0,
+          cropBounds.height > 0 ? uncroppedSize.height-cropBounds.y-cropBounds.height : 0);
+    }
+    else {
+      p.translate(cropBounds.x,cropBounds.y);
+    }
     return p;
   }
 
