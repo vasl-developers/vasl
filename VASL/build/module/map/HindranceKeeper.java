@@ -34,19 +34,22 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 /**
- * This is a {@link Drawable} class that draws only counters that have the
- * {@link ASLProperties#HINDRANCE} property set.  It is enables when
- * the LOS Thread is being drawn.
+ * This is a {@link Drawable} class that draws only counters that have the {@link ASLProperties#HINDRANCE} property set.
+ * It is enables when the LOS Thread is being drawn.
  */
-public class HindranceKeeper extends AbstractBuildable implements Drawable, KeyListener, PieceFilter {
+public class HindranceKeeper extends AbstractBuildable implements Drawable, KeyListener {
   public static final String DRAW_HINDRANCES = "DrawHindrances";
   private Map map;
+  protected PieceFilter hindranceFilter = new PieceFilter() {
+    public boolean accept(GamePiece piece) {
+      return isVisibleHindrance(piece);
+    }
+  };
 
   public void addTo(Buildable b) {
     map = (Map) b;
     map.addDrawComponent(this);
-    GameModule.getGameModule().getPrefs().addOption
-        ("LOS", new BooleanConfigurer(DRAW_HINDRANCES, "Retain LOS-hindrance counters (toggle with shift-F10)"));
+    GameModule.getGameModule().getPrefs().addOption("LOS", new BooleanConfigurer(DRAW_HINDRANCES, "Retain LOS-hindrance counters (toggle with shift-F10)"));
     map.getView().addKeyListener(this);
   }
 
@@ -62,8 +65,7 @@ public class HindranceKeeper extends AbstractBuildable implements Drawable, KeyL
   }
 
   public void draw(Graphics g, Map m) {
-    if (!m.isPiecesVisible()
-        && Boolean.TRUE.equals(GameModule.getGameModule().getPrefs().getValue(DRAW_HINDRANCES))) {
+    if (!m.isPiecesVisible()) {
       GamePiece[] p = m.getPieces();
       java.awt.Point pt;
       for (int i = 0; i < p.length; ++i) {
@@ -71,7 +73,7 @@ public class HindranceKeeper extends AbstractBuildable implements Drawable, KeyL
           Stack temp = getVisibleHindrances((Stack) p[i]);
           if (temp != null) {
             pt = map.componentCoordinates(p[i].getPosition());
-            map.getStackMetrics().draw(temp,g,pt.x,pt.y,map.getView(),map.getZoom());
+            map.getStackMetrics().draw(temp, g, pt.x, pt.y, map.getView(), map.getZoom());
           }
         }
         else if (isVisibleHindrance(p[i])) {
@@ -86,14 +88,10 @@ public class HindranceKeeper extends AbstractBuildable implements Drawable, KeyL
     return true;
   }
 
-  public boolean accept(GamePiece piece) {
-    return isVisibleHindrance(piece);
-  }
-
   private boolean isVisibleHindrance(GamePiece p) {
-    return p.getProperty(ASLProperties.HINDRANCE) != null
-            && !Boolean.TRUE.equals(p.getProperty(Properties.INVISIBLE_TO_ME))
-            && !Boolean.TRUE.equals(p.getProperty(Properties.OBSCURED_TO_ME));
+    return (p.getProperty(ASLProperties.OVERLAY) != null || (Boolean.TRUE.equals(GameModule.getGameModule().getPrefs().getValue(DRAW_HINDRANCES)) && p
+        .getProperty(ASLProperties.HINDRANCE) != null))
+        && !Boolean.TRUE.equals(p.getProperty(Properties.INVISIBLE_TO_ME)) && !Boolean.TRUE.equals(p.getProperty(Properties.OBSCURED_TO_ME));
   }
 
   private Stack getVisibleHindrances(Stack s) {
@@ -108,12 +106,13 @@ public class HindranceKeeper extends AbstractBuildable implements Drawable, KeyL
         }
         contents[pieceCount++] = c;
       }
+
       public boolean isExpanded() {
         return true;
       }
     }
     Stack tempStack = null;
-    for (PieceIterator pi = new PieceIterator(s.getPieces(),this);pi.hasMoreElements();) {
+    for (PieceIterator pi = new PieceIterator(s.getPieces(), hindranceFilter); pi.hasMoreElements();) {
       if (tempStack == null) {
         tempStack = new TempStack();
       }
@@ -126,8 +125,7 @@ public class HindranceKeeper extends AbstractBuildable implements Drawable, KeyL
   }
 
   public void keyReleased(KeyEvent e) {
-    if (!map.isPiecesVisible()
-        && KeyStroke.getKeyStrokeForEvent(e).equals(KeyStroke.getKeyStroke(KeyEvent.VK_F10, KeyEvent.SHIFT_MASK, true))) {
+    if (!map.isPiecesVisible() && KeyStroke.getKeyStrokeForEvent(e).equals(KeyStroke.getKeyStroke(KeyEvent.VK_F10, KeyEvent.SHIFT_MASK, true))) {
       Configurer config = GameModule.getGameModule().getPrefs().getOption(DRAW_HINDRANCES);
       config.setValue(Boolean.TRUE.equals(config.getValue()) ? Boolean.FALSE : Boolean.TRUE);
       map.getView().repaint();

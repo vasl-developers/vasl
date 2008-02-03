@@ -29,4 +29,7 @@ public interface ASLProperties {
   public static final String HINDRANCE = "Hindrance";
 
   public static final String NATIONALITY = "Nation";
+  
+  /** This piece is a terrain overlay */
+  public static final String OVERLAY = "Overlay";
 }
