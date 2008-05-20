@@ -26,14 +26,15 @@
  */
 package VASL.counters;
 
+import java.util.Iterator;
+
+import javax.swing.KeyStroke;
+
 import VASSAL.command.Command;
 import VASSAL.counters.Decorator;
 import VASSAL.counters.GamePiece;
 import VASSAL.counters.KeyCommand;
 import VASSAL.counters.PlaceMarker;
-
-import javax.swing.*;
-import java.util.Enumeration;
 
 /**
  * Places a DM Marker only if the underlying counter is not broken
@@ -65,9 +66,9 @@ public class PlaceDM extends PlaceMarker {
       boolean dmExists = false;
       if (getParent() != null) {
         GamePiece outer = Decorator.getOutermost(this);
-        for (Enumeration e = getParent().getPiecesInReverseOrder();
-             e.hasMoreElements();) {
-          GamePiece p = (GamePiece) e.nextElement();
+        for (Iterator<GamePiece> it = getParent().getPiecesReverseIterator();
+          it.hasNext();) {
+          GamePiece p = it.next();
           if (p.getName().equals("DM")) {
             dmExists = true;
             break;

@@ -26,6 +26,7 @@ import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -45,6 +46,7 @@ import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.build.module.map.boardPicker.board.HexGrid;
 import VASSAL.build.module.map.boardPicker.board.MapGrid;
 import VASSAL.tools.DataArchive;
+import VASSAL.tools.imageop.Op;
 
 /** A Board is a geomorphic or HASL board. */
 public class ASLBoard extends Board {
@@ -136,8 +138,7 @@ public class ASLBoard extends Board {
       for (int i = 0; i < overlays.size(); ++i) {
         ((Overlay) overlays.elementAt(i)).setTerrain(terrain);
       }
-      for (Enumeration e = terrain.getOverlays(); e.hasMoreElements();) {
-        SSROverlay o = (SSROverlay) e.nextElement();
+      for (SSROverlay o : terrain.getOverlays()) {
         o.setFile(getFile()); /* Insert terrain overlays always before ordinary overlays */
         overlays.insertElementAt(o, 0);
       }
@@ -187,6 +188,9 @@ public class ASLBoard extends Board {
       if (boardFile.getName().equals(imageFile)) {
         baseImage = DataArchive.getImage(new FileInputStream(boardFile));
       }
+      else if (terrain != null) {
+        baseImage = Toolkit.getDefaultToolkit().createImage(DataArchive.getBytes(DataArchive.getFileStream(boardFile, imageFile)));
+      }
       else {
         baseImage = DataArchive.getImage(DataArchive.getFileStream(boardFile, imageFile));
       }
@@ -208,6 +212,7 @@ public class ASLBoard extends Board {
     catch (Exception eWaitMain2) {
     }
     Image im = terrain == null ? baseImage : terrain.recolor(baseImage, comp);
+//    Image im = terrain == null ? baseImage : terrain.apply((BufferedImage)baseImage);
     try {
       track.addImage(im, 0);
       track.waitForID(0);
@@ -219,12 +224,13 @@ public class ASLBoard extends Board {
     fixedBoundaries = true;
     uncroppedSize = new Dimension(baseImage.getWidth(comp), baseImage.getHeight(comp));
     if (terrain == null && overlays.size() == 0 && cropBounds.width < 0 && cropBounds.height < 0) {
-      boardImage = baseImage;
+//      boardImage = baseImage;
+      boardImageOp = Op.load(baseImage);
       return;
     }
-    boardImage = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(boundaries.width,
+    Image tempImage = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(boundaries.width,
         boundaries.height, Transparency.BITMASK);
-    Graphics2D g = ((BufferedImage) boardImage).createGraphics();
+    Graphics2D g = ((BufferedImage) tempImage).createGraphics();
     g.translate(-cropBounds.x, -cropBounds.y);
     g.drawImage(im, 0, 0, comp);
     for (int i = 0; i < overlays.size(); ++i) {
@@ -232,9 +238,7 @@ public class ASLBoard extends Board {
       o.setImage(this, comp);
       g.drawImage(o.getImage(), o.bounds().x, o.bounds().y, comp);
       if (o.getTerrain() != terrain && o.getTerrain() != null) {
-        SSROverlay ssrOverlay;
-        for (Enumeration e = o.getTerrain().getOverlays(); e.hasMoreElements();) {
-          ssrOverlay = (SSROverlay) e.nextElement();
+        for (SSROverlay ssrOverlay : o.getTerrain().getOverlays()) {
           ssrOverlay.setImage(this, o, comp);
           if (ssrOverlay.getImage() != null) {
             Rectangle r = ssrOverlay.bounds();
@@ -257,11 +261,28 @@ public class ASLBoard extends Board {
         }
       }
     }
+    boardImageOp = Op.load(tempImage);
+    anImage = im;
     im = null;
     g.dispose();
     System.gc();
   }
-
+  private Image anImage;
+/*  
+  public void drawRegion(final Graphics g,
+      final Point location,
+      Rectangle visibleRect,
+      final double zoom,
+      final Component obs) {
+    try {
+//      g.drawImage(boardImageOp.getImage(null),0,0,null);
+      g.drawImage(anImage,0,0,null);
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+*/
   public void fixBounds() {
     fixImage();
   }

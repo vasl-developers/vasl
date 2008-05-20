@@ -112,7 +112,7 @@ public class HindranceKeeper extends AbstractBuildable implements Drawable, KeyL
       }
     }
     Stack tempStack = null;
-    for (PieceIterator pi = new PieceIterator(s.getPieces(), hindranceFilter); pi.hasMoreElements();) {
+    for (PieceIterator pi = new PieceIterator(s.getPiecesIterator(), hindranceFilter); pi.hasMoreElements();) {
       if (tempStack == null) {
         tempStack = new TempStack();
       }

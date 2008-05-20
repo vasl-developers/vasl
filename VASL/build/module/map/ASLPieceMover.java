@@ -191,7 +191,7 @@ public class ASLPieceMover extends PieceMover {
       GamePiece p = it.nextPiece();
       if (p instanceof Stack) {
         Vector toMove = new Vector();
-        for (PieceIterator pi = new PieceIterator(((Stack) p).getPieces());
+        for (PieceIterator pi = new PieceIterator(((Stack) p).getPiecesIterator());
              pi.hasMoreElements();) {
           GamePiece p1 = pi.nextPiece();
           if (p1.getProperty(ASLProperties.LOCATION) == null) {

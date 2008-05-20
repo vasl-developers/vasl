@@ -692,7 +692,7 @@ public class CASLThread
       // add each of the pieces to the scenario
       for (int i = 0; i < p.length; ++i) {
         if (p[i] instanceof VASSAL.counters.Stack) {
-          for (PieceIterator pi = new PieceIterator(((VASSAL.counters.Stack) p[i]).getPieces()); pi.hasMoreElements();) {
+          for (PieceIterator pi = new PieceIterator(((VASSAL.counters.Stack) p[i]).getPiecesIterator()); pi.hasMoreElements();) {
             loadPiece(pi.nextPiece());
           }
         }

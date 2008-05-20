@@ -18,68 +18,62 @@
  */
 package VASL.build.module.map.boardPicker;
 
+import java.awt.Component;
+import java.awt.GraphicsEnvironment;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.Transparency;
+import java.awt.image.BufferedImage;
+import java.awt.image.FilteredImageSource;
+import java.awt.image.RGBImageFilter;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StreamTokenizer;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.StringTokenizer;
+import java.util.Vector;
+
 import VASSAL.build.GameModule;
 import VASSAL.tools.DataArchive;
 
-import java.awt.*;
-import java.awt.image.FilteredImageSource;
-import java.awt.image.RGBImageFilter;
-import java.io.*;
-import java.util.*;
-
 public class SSRFilter extends RGBImageFilter {
   /*
-   ** A class to swap colors according to specified rules
-   ** A set of color names is read from an input file with the format
-   ** White    255,255,255
-   ** Black    0,0,0
-   **
-   ** The swapping rules are read from an input file with the format:
-   ** <key>
-   **   <color>=<color>
-   **   <color>=<color>
-   **   <color>=<color>
-   ** There can be any number of color entries per key.
-   ** The color entries are names of colors as defined in the color file
-   ** Example:
-   **
-   ** WoodsToBrush
-   **  WoodsGreen=BrushL0
-   **  WoodsBlack=BrushL0
+   * * A class to swap colors according to specified rules * A set of color names is read from an input file with the
+   * format * White 255,255,255 * Black 0,0,0 * * The swapping rules are read from an input file with the format: *
+   * <key> * <color>=<color> * <color>=<color> * <color>=<color> * There can be any number of color entries per key. *
+   * The color entries are names of colors as defined in the color file * Example: * * WoodsToBrush * WoodsGreen=BrushL0 *
+   * WoodsBlack=BrushL0
    */
-
   private static File globalArchive;
-
-  private Vector mappings;
+  private Map<Integer,Integer> mappings;
   private String saveRules;
-  private Hashtable colorValues;
-  private Vector overlays;
+  private Map<String,Integer> colorValues;
+  private List<SSROverlay> overlays;
   private File archive;
 
-  //  public SSRFilter(String zip, String listOfRules)
-  public SSRFilter(String listOfRules, File archive)
-      throws BoardException {
+  // public SSRFilter(String zip, String listOfRules)
+  public SSRFilter(String listOfRules, File archive) throws BoardException {
     canFilterIndexColorModel = true;
-
     saveRules = listOfRules;
     this.archive = archive;
-
     try {
       DataArchive.getFileStream(archive, "data");
     }
     catch (IOException ex) {
       throw new BoardException("Board does not support terrain alterations");
     }
-
     readAllRules();
   }
 
   private static InputStream getStream(String name) {
     try {
-      return globalArchive == null ?
-          GameModule.getGameModule().getDataArchive()
-          .getFileStream(name) :
-          DataArchive.getFileStream(getGlobalArchive(), name);
+      return globalArchive == null ? GameModule.getGameModule().getDataArchive().getFileStream(name) : DataArchive.getFileStream(getGlobalArchive(), name);
     }
     catch (IOException ex) {
       return null;
@@ -94,8 +88,8 @@ public class SSRFilter extends RGBImageFilter {
     globalArchive = f;
   }
 
-  public Enumeration getOverlays() {
-    return overlays.elements();
+  public Iterable<SSROverlay> getOverlays() {
+    return overlays;
   }
 
   public int filterRGB(int x, int y, int rgb) {
@@ -104,15 +98,12 @@ public class SSRFilter extends RGBImageFilter {
 
   private int newValue(int rgb) {
     /*
-    ** Maps the color to it's transformed value by going through
-    ** the rules.  All rules are applied in sequence.
-    */
+     * * Maps the color to it's transformed value by going through * the rules. All rules are applied in sequence.
+     */
     int rval = rgb;
-
-    for (Enumeration e = mappings.elements(); e.hasMoreElements();) {
-      RGBMapping m = (RGBMapping) e.nextElement();
-      if (m.from == rval)
-        rval = m.to;
+    Integer mappedValue = mappings.get(rgb);
+    if (mappedValue != null) {
+      rval = mappedValue;
     }
     return rval;
   }
@@ -123,7 +114,7 @@ public class SSRFilter extends RGBImageFilter {
 
   private int parseRGB(String s) {
     /*
-     ** Calculate integer value from rr,gg,bb or 40a38f format
+     * * Calculate integer value from rr,gg,bb or 40a38f format
      */
     int rval = -1;
     try {
@@ -138,9 +129,7 @@ public class SSRFilter extends RGBImageFilter {
           red = Integer.parseInt(st.nextToken());
           green = Integer.parseInt(st.nextToken());
           blue = Integer.parseInt(st.nextToken());
-          if ((red >= 0 && red <= 255) &&
-              (green >= 0 && green <= 255) &&
-              (blue >= 0 && blue <= 255)) {
+          if ((red >= 0 && red <= 255) && (green >= 0 && green <= 255) && (blue >= 0 && blue <= 255)) {
             rval = (red << 16) + (green << 8) + blue;
           }
         }
@@ -156,7 +145,7 @@ public class SSRFilter extends RGBImageFilter {
   }
 
   public void readAllRules() {
-// Build the list of rules in use
+    // Build the list of rules in use
     Vector rules = new Vector();
     StringTokenizer st = new StringTokenizer(saveRules);
     while (st.hasMoreTokens()) {
@@ -165,29 +154,27 @@ public class SSRFilter extends RGBImageFilter {
         rules.addElement(s);
       }
     }
-
-    mappings = new Vector();
-    colorValues = new Hashtable();
+    mappings = new HashMap<Integer,Integer>();
+    colorValues = new HashMap<String,Integer>();
     overlays = new Vector();
-
-// Read board-specific colors last to override defaults
+    // Read board-specific colors last to override defaults
     readColorValues(getStream("boardData/colors"));
     try {
       readColorValues(DataArchive.getFileStream(archive, "colors"));
     }
     catch (IOException ex) {
     }
-// Read board-specific rules first to be applied before defaults
+    // Read board-specific rules first to be applied before defaults
     try {
       readColorRules(DataArchive.getFileStream(archive, "colorSSR"), rules);
     }
     catch (IOException ex) {
     }
     readColorRules(getStream("boardData/colorSSR"), rules);
-    overlays.removeAllElements();
-// SSR Overlays are applied in reverse order to the order they're listed
-// in the overlaySSR file.  Therefore, reading board-specific
-// overlay rules first will override defaults
+    overlays.clear();
+    // SSR Overlays are applied in reverse order to the order they're listed
+    // in the overlaySSR file. Therefore, reading board-specific
+    // overlay rules first will override defaults
     try {
       readOverlayRules(DataArchive.getFileStream(archive, "overlaySSR"));
     }
@@ -202,7 +189,7 @@ public class SSRFilter extends RGBImageFilter {
 
   protected void readColorValues(InputStream in) {
     /*
-     ** Add to the list of color definitions, as read from input file
+     * * Add to the list of color definitions, as read from input file
      */
     if (in == null)
       return;
@@ -217,10 +204,8 @@ public class SSRFilter extends RGBImageFilter {
     st.slashSlashComments(true);
     st.slashStarComments(true);
     st.eolIsSignificant(false);
-
     try {
-      for (String s = reader.readLine(); s != null;
-           s = reader.readLine()) {
+      for (String s = reader.readLine(); s != null; s = reader.readLine()) {
         if (s.startsWith("/"))
           continue;
         StringTokenizer st2 = new StringTokenizer(s);
@@ -243,13 +228,11 @@ public class SSRFilter extends RGBImageFilter {
 
   public void readColorRules(InputStream in, Vector rules) {
     /*
-     ** Define the color transformations defined by each rule
-     ** as read in from input file
+     * * Define the color transformations defined by each rule * as read in from input file
      */
     if (in == null)
       return;
-    StreamTokenizer st = new StreamTokenizer
-        (new BufferedReader(new InputStreamReader(in)));
+    StreamTokenizer st = new StreamTokenizer(new BufferedReader(new InputStreamReader(in)));
     st.resetSyntax();
     st.wordChars((int) ' ', 0xff);
     st.commentChar((int) '/');
@@ -259,9 +242,7 @@ public class SSRFilter extends RGBImageFilter {
     st.slashSlashComments(true);
     st.slashStarComments(true);
     st.eolIsSignificant(false);
-
-    boolean inCategory = false;  /* are we in a "selected" category */
-
+    boolean inCategory = false; /* are we in a "selected" category */
     try {
       while (st.nextToken() != StreamTokenizer.TT_EOF) {
         String s = st.sval;
@@ -289,12 +270,11 @@ public class SSRFilter extends RGBImageFilter {
             int ifrom = parseRGB(sfrom);
             int ito = parseRGB(sto);
             if (ifrom >= 0 && ito >= 0) {
-              mappings.addElement(new RGBMapping(ifrom, ito));
+              mappings.put(ifrom,ito);
             }
             else {
               valid = false;
-              System.err.println("Invalid color mapping: " + s
-                                 + " mapped to " + ifrom + "=" + ito);
+              System.err.println("Invalid color mapping: " + s + " mapped to " + ifrom + "=" + ito);
             }
           }
           if (!valid) {
@@ -308,10 +288,8 @@ public class SSRFilter extends RGBImageFilter {
   }
 
   public void readOverlayRules(InputStream in) {
-
     if (in == null)
       return;
-
     try {
       BufferedReader file;
       file = new BufferedReader(new InputStreamReader(in));
@@ -332,16 +310,15 @@ public class SSRFilter extends RGBImageFilter {
                 int trans[] = new int[st.countTokens()];
                 int n = 0;
                 while (st.hasMoreTokens()) {
-                  trans[n++] =
-                      ((Integer) colorValues.get(st.nextToken())).intValue();
+                  trans[n++] = ((Integer) colorValues.get(st.nextToken())).intValue();
                 }
-                overlays.addElement(new Underlay(underImage, trans));
+                overlays.add(new Underlay(underImage, trans));
               }
               catch (NoSuchElementException end) {
               }
             }
             else
-              overlays.addElement(new SSROverlay(s.trim()));
+              overlays.add(new SSROverlay(s.trim()));
           }
         }
       }
@@ -352,18 +329,36 @@ public class SSRFilter extends RGBImageFilter {
   }
 
   public Image recolor(Image oldImage, Component observer) {
-    return Toolkit.getDefaultToolkit().createImage
-        (new FilteredImageSource(oldImage.getSource(), this));
+    return Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(oldImage.getSource(), this));
+  }
+
+  public BufferedImage apply(BufferedImage src) {
+    BufferedImage dst = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(
+        src.getWidth(), src.getHeight(), Transparency.BITMASK);
+    final int h = src.getHeight();
+    final int[] row = new int[src.getWidth()];
+    for (int y = 0; y < h; ++y) {
+      src.getRGB(0, y, row.length, 1, row, 0, row.length);
+      for (int x = 0; x < row.length; ++x) {
+        row[x] = filterRGB(x, y, row[x]);
+      }
+      dst.setRGB(0, y, row.length, 1, row, 0, row.length);
+    }
+    return dst;
+  }
+  private static class RGBMapping {
+    private int from;
+    private int to;
+    private String text;
+
+    private RGBMapping(int fromVal, int toVal, String s) {
+      from = fromVal;
+      to = toVal;
+      this.text = s;
+    }
+
+    public String toString() {
+      return "RGBMapping "+text+":  "+from+"->"+to;
+    }
   }
 }
-
-class RGBMapping {
-  int from;
-  int to;
-
-  RGBMapping(int fromVal, int toVal) {
-    from = fromVal;
-    to = toVal;
-  }
-}
-
