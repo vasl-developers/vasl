@@ -18,6 +18,7 @@
  */
 package VASL.build.module.map.boardPicker;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
@@ -26,18 +27,22 @@ import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
 
+import javax.imageio.ImageIO;
+import javax.imageio.stream.MemoryCacheImageInputStream;
 import javax.swing.JLabel;
 
 import VASL.build.module.map.boardPicker.board.ASLHexGrid;
@@ -46,7 +51,13 @@ import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.build.module.map.boardPicker.board.HexGrid;
 import VASSAL.build.module.map.boardPicker.board.MapGrid;
 import VASSAL.tools.DataArchive;
+import VASSAL.tools.ErrorLog;
+import VASSAL.tools.ImageUtils;
+import VASSAL.tools.imageop.ImageOp;
+import VASSAL.tools.imageop.ImageOpObserver;
 import VASSAL.tools.imageop.Op;
+import VASSAL.tools.imageop.SourceOpBitmapImpl;
+import VASSAL.tools.imageop.SourceTileOpBitmapImpl;
 
 /** A Board is a geomorphic or HASL board. */
 public class ASLBoard extends Board {
@@ -178,6 +189,10 @@ public class ASLBoard extends Board {
   }
 
   public void fixImage() {
+    if (true) {
+      boardImageOp = new BoardOp();
+      return;
+    }
     if (baseImage != null || boardFile == null) {
       return;
     }
@@ -189,7 +204,7 @@ public class ASLBoard extends Board {
         baseImage = DataArchive.getImage(new FileInputStream(boardFile));
       }
       else if (terrain != null) {
-        baseImage = Toolkit.getDefaultToolkit().createImage(DataArchive.getBytes(DataArchive.getFileStream(boardFile, imageFile)));
+        baseImage = ImageIO.read(new MemoryCacheImageInputStream(DataArchive.getFileStream(boardFile, imageFile)));
       }
       else {
         baseImage = DataArchive.getImage(DataArchive.getFileStream(boardFile, imageFile));
@@ -211,8 +226,7 @@ public class ASLBoard extends Board {
     }
     catch (Exception eWaitMain2) {
     }
-    Image im = terrain == null ? baseImage : terrain.recolor(baseImage, comp);
-//    Image im = terrain == null ? baseImage : terrain.apply((BufferedImage)baseImage);
+    Image im = terrain == null ? baseImage : terrain.apply((BufferedImage) baseImage);
     try {
       track.addImage(im, 0);
       track.waitForID(0);
@@ -224,13 +238,14 @@ public class ASLBoard extends Board {
     fixedBoundaries = true;
     uncroppedSize = new Dimension(baseImage.getWidth(comp), baseImage.getHeight(comp));
     if (terrain == null && overlays.size() == 0 && cropBounds.width < 0 && cropBounds.height < 0) {
-//      boardImage = baseImage;
       boardImageOp = Op.load(baseImage);
       return;
     }
-    Image tempImage = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(boundaries.width,
-        boundaries.height, Transparency.BITMASK);
+    Image tempImage = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(
+        boundaries.width, boundaries.height, Transparency.BITMASK);
     Graphics2D g = ((BufferedImage) tempImage).createGraphics();
+    g.setColor(Color.GREEN);
+    g.fillRect(0, 0, boundaries.width, boundaries.height);
     g.translate(-cropBounds.x, -cropBounds.y);
     g.drawImage(im, 0, 0, comp);
     for (int i = 0; i < overlays.size(); ++i) {
@@ -262,27 +277,11 @@ public class ASLBoard extends Board {
       }
     }
     boardImageOp = Op.load(tempImage);
-    anImage = im;
     im = null;
     g.dispose();
     System.gc();
   }
-  private Image anImage;
-/*  
-  public void drawRegion(final Graphics g,
-      final Point location,
-      Rectangle visibleRect,
-      final double zoom,
-      final Component obs) {
-    try {
-//      g.drawImage(boardImageOp.getImage(null),0,0,null);
-      g.drawImage(anImage,0,0,null);
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-*/
+
   public void fixBounds() {
     fixImage();
   }
@@ -382,11 +381,11 @@ public class ASLBoard extends Board {
     fixBounds();
     Point p = new Point(input);
     if (reversed) {
-      p.translate(cropBounds.width > 0 ? uncroppedSize.width-cropBounds.x-cropBounds.width : 0,
-          cropBounds.height > 0 ? uncroppedSize.height-cropBounds.y-cropBounds.height : 0);
+      p.translate(cropBounds.width > 0 ? uncroppedSize.width - cropBounds.x - cropBounds.width : 0, cropBounds.height > 0 ? uncroppedSize.height - cropBounds.y
+          - cropBounds.height : 0);
     }
     else {
-      p.translate(cropBounds.x,cropBounds.y);
+      p.translate(cropBounds.x, cropBounds.y);
     }
     return p;
   }
@@ -405,5 +404,63 @@ public class ASLBoard extends Board {
     if (terrainChanges.length() > 0)
       val += "SSR\t" + terrainChanges;
     return val;
+  }
+  private class BoardOp extends SourceOpBitmapImpl {
+    public BoardOp() {
+      super(imageFile);
+    }
+
+    @Override
+    protected Dimension getImageSize() {
+      try {
+        return ImageUtils.getImageSize(getImageStream());
+      }
+      catch (IOException e) {
+        ErrorLog.log(e);
+        return new Dimension(-1, -1);
+      }
+    }
+
+    @Override
+    public Image apply() throws IOException {
+      if (size == null)
+        fixSize();
+      if (terrain == null) {
+        return ImageUtils.getLargeImage(getImageStream());
+      }
+      else {
+        return terrain.apply(ImageUtils.getLargeBufferedImage(getImageStream()));
+      }
+    }
+
+    @Override
+    protected InputStream getImageStream() throws IOException {
+      return DataArchive.getFileStream(boardFile, imageFile);
+    }
+
+    @Override
+    protected ImageOp createTileOp(int tileX, int tileY) {
+      return new BoardTileOp(this, tileX, tileY);
+    }
+
+    public boolean equals(Object o) {
+      return this == o;
+    }
+  }
+  private class BoardTileOp extends SourceTileOpBitmapImpl {
+    public BoardTileOp(ImageOp sop, int tileX, int tileY) {
+      super(sop, tileX, tileY);
+    }
+
+    @Override
+    public Image apply() throws Exception {
+//      BufferedImage im = (BufferedImage) super.apply();
+//      return terrain == null ? im : terrain.apply((BufferedImage) im);
+      return super.apply();
+    }
+
+    public boolean equals(Object o) {
+      return this == o;
+    }
   }
 }

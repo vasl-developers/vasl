@@ -18,14 +18,28 @@
  */
 package VASL.build.module.map.boardPicker;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
+import java.awt.Image;
+import java.awt.MediaTracker;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.Transparency;
+import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
 import VASSAL.build.module.map.boardPicker.board.MapGrid;
 import VASSAL.tools.DataArchive;
 import VASSAL.tools.SequenceEncoder;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.StringTokenizer;
 
 /**
  * Overlays of all types and sizes
@@ -182,7 +196,10 @@ public class Overlay implements Cloneable {
 
   private Image getImage(String name) {
     try {
-      return DataArchive.getImage(DataArchive.getFileStream(overlayFile, fileName(name)));
+//      return DataArchive.getImage(DataArchive.getFileStream(overlayFile, fileName(name)));
+      return Toolkit.getDefaultToolkit().createImage(DataArchive.getBytes(DataArchive.getFileStream(overlayFile, fileName(name))));
+//      return ImageIO.read(new MemoryCacheImageInputStream(DataArchive.getFileStream(overlayFile, fileName(name))));
+
     }
     catch (java.io.IOException e) {
       return null;

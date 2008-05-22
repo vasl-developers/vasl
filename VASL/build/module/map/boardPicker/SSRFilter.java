@@ -41,6 +41,7 @@ import java.util.Vector;
 
 import VASSAL.build.GameModule;
 import VASSAL.tools.DataArchive;
+import VASSAL.tools.ImageUtils;
 
 public class SSRFilter extends RGBImageFilter {
   /*
@@ -333,8 +334,14 @@ public class SSRFilter extends RGBImageFilter {
   }
 
   public BufferedImage apply(BufferedImage src) {
-    BufferedImage dst = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(
+    BufferedImage dst;
+    if (ImageUtils.isLargeImage(src.getWidth(), src.getHeight())) {
+      dst = ImageUtils.createEmptyLargeImage(src.getWidth(), src.getHeight());
+    }
+    else {
+      dst = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(
         src.getWidth(), src.getHeight(), Transparency.BITMASK);
+    }
     final int h = src.getHeight();
     final int[] row = new int[src.getWidth()];
     for (int y = 0; y < h; ++y) {
