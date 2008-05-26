@@ -1,5 +1,4 @@
 * text=auto !eol
-/.classpath -text
 /.project -text
 VASL/build/module/map/CASLThread.java -text
 VASL/build/module/map/boardPicker/ApplyOverlaysOp.java -text svneol=unset#text/plain
