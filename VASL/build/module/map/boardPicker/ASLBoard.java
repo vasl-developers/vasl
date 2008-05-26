@@ -18,7 +18,6 @@
  */
 package VASL.build.module.map.boardPicker;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
@@ -35,11 +34,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.StringTokenizer;
-import java.util.Vector;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.ExecutionException;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.MemoryCacheImageInputStream;
@@ -51,13 +50,8 @@ import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.build.module.map.boardPicker.board.HexGrid;
 import VASSAL.build.module.map.boardPicker.board.MapGrid;
 import VASSAL.tools.DataArchive;
-import VASSAL.tools.ErrorLog;
-import VASSAL.tools.ImageUtils;
-import VASSAL.tools.imageop.ImageOp;
-import VASSAL.tools.imageop.ImageOpObserver;
 import VASSAL.tools.imageop.Op;
 import VASSAL.tools.imageop.SourceOpBitmapImpl;
-import VASSAL.tools.imageop.SourceTileOpBitmapImpl;
 
 /** A Board is a geomorphic or HASL board. */
 public class ASLBoard extends Board {
@@ -66,7 +60,7 @@ public class ASLBoard extends Board {
   private Dimension uncroppedSize;
   /** The image before cropping, overlays, and terrain changes */
   private Image baseImage;
-  private Vector overlays = new Vector();
+  private List<Overlay> overlays = new ArrayList();
   private String terrainChanges = "";
   private SSRFilter terrain;
   private File boardFile;
@@ -96,7 +90,7 @@ public class ASLBoard extends Board {
   }
 
   public Enumeration getOverlays() {
-    return overlays.elements();
+    return Collections.enumeration(overlays);
   }
 
   public SSRFilter getTerrain() {
@@ -138,20 +132,20 @@ public class ASLBoard extends Board {
       return;
     }
     for (int i = 0; i < overlays.size(); ++i) {
-      if ((Overlay) overlays.elementAt(i) instanceof SSROverlay)
-        overlays.removeElementAt(i--);
+      if ((Overlay) overlays.get(i) instanceof SSROverlay)
+        overlays.remove(i--);
     }
     for (int i = 0; i < overlays.size(); ++i) {
-      ((Overlay) overlays.elementAt(i)).setTerrain(terrain);
+      ((Overlay) overlays.get(i)).setTerrain(terrain);
     }
     if (changes.length() > 0) {
       terrain = new SSRFilter(changes, boardFile);
       for (int i = 0; i < overlays.size(); ++i) {
-        ((Overlay) overlays.elementAt(i)).setTerrain(terrain);
+        ((Overlay) overlays.get(i)).setTerrain(terrain);
       }
       for (SSROverlay o : terrain.getOverlays()) {
         o.setFile(getFile()); /* Insert terrain overlays always before ordinary overlays */
-        overlays.insertElementAt(o, 0);
+        overlays.add(0, o);
       }
     }
     baseImage = null;
@@ -190,7 +184,14 @@ public class ASLBoard extends Board {
 
   public void fixImage() {
     if (true) {
-      boardImageOp = new BoardOp();
+      try {
+        boardImageOp = new SourceOpBitmapImpl(imageFile,new DataArchive(boardFile.getPath(),""));
+        boardImageOp = new TerrainOp(boardImageOp,terrain);
+        boardImageOp = new ApplyOverlaysOp(this, boardImageOp);
+      }
+      catch (IOException e) {
+        e.printStackTrace();
+      }
       return;
     }
     if (baseImage != null || boardFile == null) {
@@ -218,7 +219,7 @@ public class ASLBoard extends Board {
       return;
     }
     for (int i = 0; i < overlays.size(); ++i)
-      ((Overlay) overlays.elementAt(i)).readData();
+      ((Overlay) overlays.get(i)).readData();
     MediaTracker track = new MediaTracker(comp);
     try {
       track.addImage(baseImage, 0);
@@ -226,7 +227,7 @@ public class ASLBoard extends Board {
     }
     catch (Exception eWaitMain2) {
     }
-    Image im = terrain == null ? baseImage : terrain.apply((BufferedImage) baseImage);
+    Image im = terrain == null ? baseImage : terrain.apply((BufferedImage)baseImage);
     try {
       track.addImage(im, 0);
       track.waitForID(0);
@@ -235,7 +236,7 @@ public class ASLBoard extends Board {
     }
     boundaries.setSize(cropBounds.width > 0 ? cropBounds.width : baseImage.getWidth(comp), cropBounds.height > 0 ? cropBounds.height : baseImage
         .getHeight(comp));
-    fixedBoundaries = true;
+    fixedBoundaries = false;
     uncroppedSize = new Dimension(baseImage.getWidth(comp), baseImage.getHeight(comp));
     if (terrain == null && overlays.size() == 0 && cropBounds.width < 0 && cropBounds.height < 0) {
       boardImageOp = Op.load(baseImage);
@@ -244,12 +245,10 @@ public class ASLBoard extends Board {
     Image tempImage = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(
         boundaries.width, boundaries.height, Transparency.BITMASK);
     Graphics2D g = ((BufferedImage) tempImage).createGraphics();
-    g.setColor(Color.GREEN);
-    g.fillRect(0, 0, boundaries.width, boundaries.height);
     g.translate(-cropBounds.x, -cropBounds.y);
     g.drawImage(im, 0, 0, comp);
     for (int i = 0; i < overlays.size(); ++i) {
-      Overlay o = (Overlay) overlays.elementAt(i);
+      Overlay o = (Overlay) overlays.get(i);
       o.setImage(this, comp);
       g.drawImage(o.getImage(), o.bounds().x, o.bounds().y, comp);
       if (o.getTerrain() != terrain && o.getTerrain() != null) {
@@ -295,16 +294,16 @@ public class ASLBoard extends Board {
   }
 
   public void addOverlay(Overlay o) {
-    overlays.addElement(o);
+    overlays.add(o);
     baseImage = null;
   }
 
   public boolean removeOverlay(String s) {
     boolean changed = false;
     for (int i = 0; i < overlays.size(); ++i) {
-      Overlay o = (Overlay) overlays.elementAt(i);
+      Overlay o = (Overlay) overlays.get(i);
       if (o.name.equals(s)) {
-        overlays.removeElementAt(i--);
+        overlays.remove(i--);
         changed = true;
       }
     }
@@ -398,69 +397,11 @@ public class ASLBoard extends Board {
     String val = relativePosition().x + "\t" + relativePosition().y + "\t" + (reversed ? "r" : "") + imageFile.substring(2, imageFile.indexOf(".gif")) + "\t";
     if (cropBounds.width > 0 || cropBounds.height > 0)
       val += cropBounds.x + "\t" + cropBounds.y + "\t" + cropBounds.width + "\t" + cropBounds.height + "\t";
-    for (int i = 0; i < overlays.size(); ++i) {
-      val += ((Overlay) overlays.elementAt(i)) + "\t";
+    for (Overlay o : overlays) {
+      val += o+"\t";
     }
     if (terrainChanges.length() > 0)
       val += "SSR\t" + terrainChanges;
     return val;
-  }
-  private class BoardOp extends SourceOpBitmapImpl {
-    public BoardOp() {
-      super(imageFile);
-    }
-
-    @Override
-    protected Dimension getImageSize() {
-      try {
-        return ImageUtils.getImageSize(getImageStream());
-      }
-      catch (IOException e) {
-        ErrorLog.log(e);
-        return new Dimension(-1, -1);
-      }
-    }
-
-    @Override
-    public Image apply() throws IOException {
-      if (size == null)
-        fixSize();
-      if (terrain == null) {
-        return ImageUtils.getLargeImage(getImageStream());
-      }
-      else {
-        return terrain.apply(ImageUtils.getLargeBufferedImage(getImageStream()));
-      }
-    }
-
-    @Override
-    protected InputStream getImageStream() throws IOException {
-      return DataArchive.getFileStream(boardFile, imageFile);
-    }
-
-    @Override
-    protected ImageOp createTileOp(int tileX, int tileY) {
-      return new BoardTileOp(this, tileX, tileY);
-    }
-
-    public boolean equals(Object o) {
-      return this == o;
-    }
-  }
-  private class BoardTileOp extends SourceTileOpBitmapImpl {
-    public BoardTileOp(ImageOp sop, int tileX, int tileY) {
-      super(sop, tileX, tileY);
-    }
-
-    @Override
-    public Image apply() throws Exception {
-//      BufferedImage im = (BufferedImage) super.apply();
-//      return terrain == null ? im : terrain.apply((BufferedImage) im);
-      return super.apply();
-    }
-
-    public boolean equals(Object o) {
-      return this == o;
-    }
   }
 }

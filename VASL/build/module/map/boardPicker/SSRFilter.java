@@ -184,10 +184,6 @@ public class SSRFilter extends RGBImageFilter {
     readOverlayRules(getStream("boardData/overlaySSR"));
   }
 
-  protected void setRules(String s) {
-    saveRules = s;
-  }
-
   protected void readColorValues(InputStream in) {
     /*
      * * Add to the list of color definitions, as read from input file
@@ -341,6 +337,7 @@ public class SSRFilter extends RGBImageFilter {
     else {
       dst = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(
         src.getWidth(), src.getHeight(), Transparency.BITMASK);
+      dst = ImageUtils.toIntARGBSmall(dst);
     }
     final int h = src.getHeight();
     final int[] row = new int[src.getWidth()];
@@ -353,6 +350,19 @@ public class SSRFilter extends RGBImageFilter {
     }
     return dst;
   }
+  
+  
+  @Override
+  public boolean equals(Object obj) {
+    return obj instanceof SSRFilter && saveRules.equals(((SSRFilter)obj).saveRules);
+  }
+
+  @Override
+  public int hashCode() {
+    return saveRules.hashCode();
+  }
+
+
   private static class RGBMapping {
     private int from;
     private int to;

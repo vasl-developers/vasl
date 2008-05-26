@@ -2,3 +2,5 @@
 /.classpath -text
 /.project -text
 VASL/build/module/map/CASLThread.java -text
+VASL/build/module/map/boardPicker/ApplyOverlaysOp.java -text svneol=unset#text/plain
+VASL/build/module/map/boardPicker/TerrainOp.java -text svneol=unset#text/plain

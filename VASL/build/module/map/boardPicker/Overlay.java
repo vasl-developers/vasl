@@ -40,6 +40,8 @@ import java.util.StringTokenizer;
 import VASSAL.build.module.map.boardPicker.board.MapGrid;
 import VASSAL.tools.DataArchive;
 import VASSAL.tools.SequenceEncoder;
+import VASSAL.tools.imageop.ImageOp;
+import VASSAL.tools.imageop.SourceOpBitmapImpl;
 
 /**
  * Overlays of all types and sizes
@@ -47,7 +49,9 @@ import VASSAL.tools.SequenceEncoder;
 public class Overlay implements Cloneable {
   protected String name = "", version = "0";
 
+  @Deprecated
   protected Image image;
+  protected ImageOp imageOp;
   private File overlayFile;
 
   public String hex1 = "", hex2 = "";
@@ -56,7 +60,6 @@ public class Overlay implements Cloneable {
   protected Rectangle boundaries = new Rectangle();
   // boundaries are in local coordinates of the parent board
   // i.e., not accounting for cropping and reversal
-
   private SSRFilter terrain;
 
   public Overlay() {
@@ -81,7 +84,13 @@ public class Overlay implements Cloneable {
   }
 
   public Image getImage() {
-    return image;
+    try {
+      return imageOp.getImage(null);
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   public String getName() {
@@ -143,31 +152,32 @@ public class Overlay implements Cloneable {
       if (isSingleHex())
         c = 'a';
 
-      image = getImage(name + c);
-      if (image == null) {
-        if (overlayFile.exists()) {
-          throw new BoardException("Overlay " + name
-                                   + " not found in " + overlayFile.getPath());
-        }
-        else {
-          throw new BoardException("Overlay file " + overlayFile.getPath()
-                                   + " not found");
-        }
-      }
+      imageOp =  new TerrainOp(new SourceOpBitmapImpl(fileName(name+c), new DataArchive(overlayFile.getPath(),"")),b.getTerrain());
+//      image = getImage(name + c);
+//      if (image == null) {
+//        if (overlayFile.exists()) {
+//          throw new BoardException("Overlay " + name
+//                                   + " not found in " + overlayFile.getPath());
+//        }
+//        else {
+//          throw new BoardException("Overlay file " + overlayFile.getPath()
+//                                   + " not found");
+//        }
+//      }
 
       boundaries.setLocation(b.getGrid().getLocation(hex1));
       boundaries.translate(-offset(c, b).x, -offset(c, b).y);
 
-      waitFor(image, map);
+//      waitFor(image, map);
 
-      boundaries.setSize(image.getWidth(map), image.getHeight(map));
+//      boundaries.setSize(image.getWidth(map), image.getHeight(map));
 
       setTerrain(b.getTerrain());
 
-      if (terrain != null) {
-        image = terrain.recolor(image, map);
-      }
-      waitFor(image, map);
+//      if (terrain != null) {
+//        image = terrain.recolor(image, map);
+//      }
+//      waitFor(image, map);
     }
     catch (BoardException e) {
       FontMetrics fm = map.getGraphics().getFontMetrics();
@@ -190,6 +200,9 @@ public class Overlay implements Cloneable {
       g.setColor(Color.black);
       g.drawString(msg, 5, fm.getHeight());
       g.dispose();
+    }
+    catch (IOException e) {
+      e.printStackTrace();
     }
 
   }
@@ -605,9 +618,10 @@ public class Overlay implements Cloneable {
     MediaTracker track = new MediaTracker(c);
     try {
       track.addImage(im, 0);
-      track.waitForID(0);
+      track.waitForAll(0);
     }
     catch (Exception e) {
+      e.printStackTrace();
     }
     return im;
   }
