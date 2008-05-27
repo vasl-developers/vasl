@@ -21,13 +21,13 @@ package VASL.build.module.map.boardPicker;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FontMetrics;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -37,11 +37,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
+import javax.imageio.ImageIO;
+import javax.imageio.stream.MemoryCacheImageInputStream;
+
 import VASSAL.build.module.map.boardPicker.board.MapGrid;
 import VASSAL.tools.DataArchive;
 import VASSAL.tools.SequenceEncoder;
-import VASSAL.tools.imageop.ImageOp;
-import VASSAL.tools.imageop.SourceOpBitmapImpl;
 
 /**
  * Overlays of all types and sizes
@@ -49,9 +50,7 @@ import VASSAL.tools.imageop.SourceOpBitmapImpl;
 public class Overlay implements Cloneable {
   protected String name = "", version = "0";
 
-  @Deprecated
   protected Image image;
-  protected ImageOp imageOp;
   private File overlayFile;
 
   public String hex1 = "", hex2 = "";
@@ -84,13 +83,7 @@ public class Overlay implements Cloneable {
   }
 
   public Image getImage() {
-    try {
-      return imageOp.getImage(null);
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-      return null;
-    }
+    return image;
   }
 
   public String getName() {
@@ -152,7 +145,8 @@ public class Overlay implements Cloneable {
       if (isSingleHex())
         c = 'a';
 
-      imageOp =  new TerrainOp(new SourceOpBitmapImpl(fileName(name+c), new DataArchive(overlayFile.getPath(),"")),b.getTerrain());
+      image = getImage(name+c);
+
 //      image = getImage(name + c);
 //      if (image == null) {
 //        if (overlayFile.exists()) {
@@ -170,7 +164,7 @@ public class Overlay implements Cloneable {
 
 //      waitFor(image, map);
 
-//      boundaries.setSize(image.getWidth(map), image.getHeight(map));
+      boundaries.setSize(image.getWidth(map), image.getHeight(map));
 
       setTerrain(b.getTerrain());
 
@@ -201,17 +195,14 @@ public class Overlay implements Cloneable {
       g.drawString(msg, 5, fm.getHeight());
       g.dispose();
     }
-    catch (IOException e) {
-      e.printStackTrace();
-    }
-
   }
 
   private Image getImage(String name) {
     try {
 //      return DataArchive.getImage(DataArchive.getFileStream(overlayFile, fileName(name)));
-      return Toolkit.getDefaultToolkit().createImage(DataArchive.getBytes(DataArchive.getFileStream(overlayFile, fileName(name))));
+//      return Toolkit.getDefaultToolkit().createImage(DataArchive.getBytes(DataArchive.getFileStream(overlayFile, fileName(name))));
 //      return ImageIO.read(new MemoryCacheImageInputStream(DataArchive.getFileStream(overlayFile, fileName(name))));
+return ImageIO.read(new MemoryCacheImageInputStream(new DataArchive(overlayFile.getPath(),"").getImageInputStream(fileName(name))));
 
     }
     catch (java.io.IOException e) {

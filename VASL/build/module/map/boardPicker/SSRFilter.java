@@ -52,9 +52,9 @@ public class SSRFilter extends RGBImageFilter {
    * WoodsBlack=BrushL0
    */
   private static File globalArchive;
-  private Map<Integer,Integer> mappings;
+  private Map<Integer, Integer> mappings;
   private String saveRules;
-  private Map<String,Integer> colorValues;
+  private Map<String, Integer> colorValues;
   private List<SSROverlay> overlays;
   private File archive;
 
@@ -155,8 +155,8 @@ public class SSRFilter extends RGBImageFilter {
         rules.addElement(s);
       }
     }
-    mappings = new HashMap<Integer,Integer>();
-    colorValues = new HashMap<String,Integer>();
+    mappings = new HashMap<Integer, Integer>();
+    colorValues = new HashMap<String, Integer>();
     overlays = new Vector();
     // Read board-specific colors last to override defaults
     readColorValues(getStream("boardData/colors"));
@@ -267,7 +267,7 @@ public class SSRFilter extends RGBImageFilter {
             int ifrom = parseRGB(sfrom);
             int ito = parseRGB(sto);
             if (ifrom >= 0 && ito >= 0) {
-              mappings.put(ifrom,ito);
+              mappings.put(ifrom, ito);
             }
             else {
               valid = false;
@@ -335,8 +335,8 @@ public class SSRFilter extends RGBImageFilter {
       dst = ImageUtils.createEmptyLargeImage(src.getWidth(), src.getHeight());
     }
     else {
-      dst = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(
-        src.getWidth(), src.getHeight(), Transparency.BITMASK);
+      dst = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(src.getWidth(),
+          src.getHeight(), Transparency.BITMASK);
       dst = ImageUtils.toIntARGBSmall(dst);
     }
     final int h = src.getHeight();
@@ -350,19 +350,30 @@ public class SSRFilter extends RGBImageFilter {
     }
     return dst;
   }
-  
-  
+
+  public void transform(BufferedImage image) {
+    if (!mappings.isEmpty()) {
+      final int h = image.getHeight();
+      final int[] row = new int[image.getWidth()];
+      for (int y = 0; y < h; ++y) {
+        image.getRGB(0, y, row.length, 1, row, 0, row.length);
+        for (int x = 0; x < row.length; ++x) {
+          row[x] = filterRGB(x, y, row[x]);
+        }
+        image.setRGB(0, y, row.length, 1, row, 0, row.length);
+      }
+    }
+  }
+
   @Override
   public boolean equals(Object obj) {
-    return obj instanceof SSRFilter && saveRules.equals(((SSRFilter)obj).saveRules);
+    return obj instanceof SSRFilter && saveRules.equals(((SSRFilter) obj).saveRules);
   }
 
   @Override
   public int hashCode() {
     return saveRules.hashCode();
   }
-
-
   private static class RGBMapping {
     private int from;
     private int to;
@@ -375,7 +386,7 @@ public class SSRFilter extends RGBImageFilter {
     }
 
     public String toString() {
-      return "RGBMapping "+text+":  "+from+"->"+to;
+      return "RGBMapping " + text + ":  " + from + "->" + to;
     }
   }
 }

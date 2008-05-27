@@ -20,6 +20,7 @@ package VASL.build.module.map.boardPicker;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
@@ -50,8 +51,13 @@ import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.build.module.map.boardPicker.board.HexGrid;
 import VASSAL.build.module.map.boardPicker.board.MapGrid;
 import VASSAL.tools.DataArchive;
+import VASSAL.tools.ImageUtils;
+import VASSAL.tools.imageop.AbstractTiledOpImpl;
+import VASSAL.tools.imageop.ImageOp;
 import VASSAL.tools.imageop.Op;
+import VASSAL.tools.imageop.SourceOp;
 import VASSAL.tools.imageop.SourceOpBitmapImpl;
+import VASSAL.tools.imageop.SourceTileOpBitmapImpl;
 
 /** A Board is a geomorphic or HASL board. */
 public class ASLBoard extends Board {
@@ -59,11 +65,13 @@ public class ASLBoard extends Board {
   private Rectangle cropBounds = new Rectangle(0, 0, -1, -1);
   private Dimension uncroppedSize;
   /** The image before cropping, overlays, and terrain changes */
+  @Deprecated
   private Image baseImage;
   private List<Overlay> overlays = new ArrayList();
   private String terrainChanges = "";
   private SSRFilter terrain;
   private File boardFile;
+  private DataArchive boardArchive;
 
   public ASLBoard() {
     setGrid(new ASLHexGrid(64.5, false));
@@ -119,6 +127,12 @@ public class ASLBoard extends Board {
 
   public void setFile(File f) {
     boardFile = f;
+    try {
+      boardArchive = new DataArchive(boardFile.getPath(),"");
+    }
+    catch (IOException e) {
+      throw new IllegalArgumentException("Cannot open file "+boardFile.getPath());
+    }
   }
 
   public File getFile() {
@@ -183,102 +197,8 @@ public class ASLBoard extends Board {
   }
 
   public void fixImage() {
-    if (true) {
-      try {
-        boardImageOp = new SourceOpBitmapImpl(imageFile,new DataArchive(boardFile.getPath(),""));
-        boardImageOp = new TerrainOp(boardImageOp,terrain);
-        boardImageOp = new ApplyOverlaysOp(this, boardImageOp);
-      }
-      catch (IOException e) {
-        e.printStackTrace();
-      }
-      return;
-    }
-    if (baseImage != null || boardFile == null) {
-      return;
-    }
-    Component comp = new JLabel();
-    Cleanup.init();
-    Cleanup.getInstance().addBoard(this);
-    try {
-      if (boardFile.getName().equals(imageFile)) {
-        baseImage = DataArchive.getImage(new FileInputStream(boardFile));
-      }
-      else if (terrain != null) {
-        baseImage = ImageIO.read(new MemoryCacheImageInputStream(DataArchive.getFileStream(boardFile, imageFile)));
-      }
-      else {
-        baseImage = DataArchive.getImage(DataArchive.getFileStream(boardFile, imageFile));
-      }
-    }
-    catch (java.io.IOException notFound) {
-      notFound.printStackTrace();
-      baseImage = null;
-      javax.swing.JOptionPane.showMessageDialog(null, "Board image " + imageFile + " not found in " + boardFile, "Not Found",
-          javax.swing.JOptionPane.ERROR_MESSAGE);
-      return;
-    }
-    for (int i = 0; i < overlays.size(); ++i)
-      ((Overlay) overlays.get(i)).readData();
-    MediaTracker track = new MediaTracker(comp);
-    try {
-      track.addImage(baseImage, 0);
-      track.waitForID(0);
-    }
-    catch (Exception eWaitMain2) {
-    }
-    Image im = terrain == null ? baseImage : terrain.apply((BufferedImage)baseImage);
-    try {
-      track.addImage(im, 0);
-      track.waitForID(0);
-    }
-    catch (Exception eWaitMain2) {
-    }
-    boundaries.setSize(cropBounds.width > 0 ? cropBounds.width : baseImage.getWidth(comp), cropBounds.height > 0 ? cropBounds.height : baseImage
-        .getHeight(comp));
+    boardImageOp = new BoardOp();
     fixedBoundaries = false;
-    uncroppedSize = new Dimension(baseImage.getWidth(comp), baseImage.getHeight(comp));
-    if (terrain == null && overlays.size() == 0 && cropBounds.width < 0 && cropBounds.height < 0) {
-      boardImageOp = Op.load(baseImage);
-      return;
-    }
-    Image tempImage = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(
-        boundaries.width, boundaries.height, Transparency.BITMASK);
-    Graphics2D g = ((BufferedImage) tempImage).createGraphics();
-    g.translate(-cropBounds.x, -cropBounds.y);
-    g.drawImage(im, 0, 0, comp);
-    for (int i = 0; i < overlays.size(); ++i) {
-      Overlay o = (Overlay) overlays.get(i);
-      o.setImage(this, comp);
-      g.drawImage(o.getImage(), o.bounds().x, o.bounds().y, comp);
-      if (o.getTerrain() != terrain && o.getTerrain() != null) {
-        for (SSROverlay ssrOverlay : o.getTerrain().getOverlays()) {
-          ssrOverlay.setImage(this, o, comp);
-          if (ssrOverlay.getImage() != null) {
-            Rectangle r = ssrOverlay.bounds();
-            if (o.getOrientation(this) == 'a') {
-              g.drawImage(ssrOverlay.getImage(), r.x + o.bounds().x, r.y + o.bounds().y, comp);
-            }
-            else {
-              try {
-                Point p1 = o.offset(o.getOrientation(this), this);
-                Point p2 = o.offset('a', this);
-                Point p = new Point(p1.x + p2.x + o.bounds().x, p1.y + p2.y + o.bounds().y);
-                p.translate(-r.x, -r.y);
-                g.drawImage(ssrOverlay.getImage(), p.x, p.y, p.x - r.width, p.y - r.height, 0, 0, r.width, r.height, comp);
-              }
-              catch (BoardException e1) {
-                e1.printStackTrace();
-              }
-            }
-          }
-        }
-      }
-    }
-    boardImageOp = Op.load(tempImage);
-    im = null;
-    g.dispose();
-    System.gc();
   }
 
   public void fixBounds() {
@@ -403,5 +323,116 @@ public class ASLBoard extends Board {
     if (terrainChanges.length() > 0)
       val += "SSR\t" + terrainChanges;
     return val;
+  }
+  
+  private class BoardOp extends AbstractTiledOpImpl implements SourceOp {
+    private String boardState;
+    private BoardOp() {
+      boardState = ASLBoard.this.getState();
+    }
+    @Override
+    protected ImageOp createTileOp(int tileX, int tileY) {
+      return new SourceTileOpBitmapImpl(this, tileX, tileY);
+    }
+
+    @Override
+    public Image apply() throws Exception {
+      if (size == null) {
+        fixSize();
+      }
+      ImageOp base = new SourceOpBitmapImpl(imageFile,boardArchive);
+      if (terrain == null && overlays.isEmpty()) {
+        return base.getImage(null); 
+      }
+      BufferedImage im = ImageUtils.createEmptyLargeImage(size.width, size.height);
+      Graphics2D g = (Graphics2D) im.getGraphics();
+      g.translate(-cropBounds.x, -cropBounds.y);
+      g.drawImage(base.getImage(null), 0, 0, null);
+      Component comp = new Component() {};
+      for (Enumeration e = ASLBoard.this.getOverlays(); e.hasMoreElements();) {
+        Overlay o = (Overlay) e.nextElement();
+        o.readData();
+        o.setImage(ASLBoard.this, comp);
+        Rectangle r = new Rectangle(o.bounds());
+        g.drawImage(clipImage(o.getImage(),r), r.x, r.y, comp);
+        if (o.getTerrain() != getTerrain() && o.getTerrain() != null) {
+          for (SSROverlay ssrOverlay : o.getTerrain().getOverlays()) {
+            ssrOverlay.setImage(ASLBoard.this, o, comp);
+            if (ssrOverlay.getImage() != null) {
+              r = new Rectangle(ssrOverlay.bounds());
+              if (o.getOrientation(ASLBoard.this) == 'a') {
+                r.translate(o.bounds().x, o.bounds().y);
+                g.drawImage(clipImage(ssrOverlay.getImage(), r), r.x, r.y, comp);
+              }
+              else {
+                try {
+                  Point p1 = o.offset(o.getOrientation(ASLBoard.this), ASLBoard.this);
+                  Point p2 = o.offset('a', ASLBoard.this);
+                  Point p = new Point(p1.x + p2.x + o.bounds().x, p1.y + p2.y + o.bounds().y);
+                  p.translate(-r.x, -r.y);
+                  g.drawImage(ssrOverlay.getImage(), p.x, p.y, p.x - r.width, p.y - r.height, 0, 0, r.width, r.height, comp);
+                }
+                catch (BoardException e1) {
+                  e1.printStackTrace();
+                }
+              }
+            }
+          }
+        }
+      }
+      if (terrain != null) {
+        terrain.transform(im);
+      }
+      return im;
+    }
+    
+    private Image clipImage(Image image, Rectangle imageBounds) {
+      Rectangle boardBounds = new Rectangle(ASLBoard.this.bounds().getSize());
+      Rectangle intersection = boardBounds.intersection(imageBounds);
+      if (intersection.width * intersection.height != imageBounds.width * imageBounds.height) {
+        BufferedImage clipped = new BufferedImage(intersection.width, intersection.height, BufferedImage.TYPE_INT_ARGB);
+        Graphics g = clipped.getGraphics();
+        g.drawImage(image, Math.min(imageBounds.x,0), Math.min(imageBounds.y,0), null);
+        imageBounds.setBounds(Math.max(imageBounds.x,0), Math.max(imageBounds.y,0),intersection.width, intersection.height);
+        return clipped;
+      }
+      else {
+        return image;
+      }
+    }
+
+    @Override
+    protected void fixSize() {
+      ImageOp base = new SourceOpBitmapImpl(imageFile,boardArchive);
+      size = new Dimension(cropBounds.width > 0 ? cropBounds.width : base.getWidth(), cropBounds.height > 0 ? cropBounds.height : base
+          .getHeight());
+
+      tileSize = new Dimension(256,256);
+
+      numXTiles = (int) Math.ceil((double)size.width/tileSize.width);
+      numYTiles = (int) Math.ceil((double)size.height/tileSize.height);
+
+      tiles = new ImageOp[numXTiles*numYTiles];
+    }
+
+    public ImageOp getSource() {
+      return null;
+    }
+
+    public String getName() {
+      return ASLBoard.this.getName();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (!(obj instanceof ASLBoard.BoardOp)) return false;
+      BoardOp op = (BoardOp) obj;
+      return boardState.equals(op.boardState);
+    }
+
+    @Override
+    public int hashCode() {
+      return boardState.hashCode();
+    }
   }
 }
