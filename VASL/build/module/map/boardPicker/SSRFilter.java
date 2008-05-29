@@ -19,10 +19,8 @@
 package VASL.build.module.map.boardPicker;
 
 import java.awt.Component;
-import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.RGBImageFilter;
@@ -41,7 +39,6 @@ import java.util.Vector;
 
 import VASSAL.build.GameModule;
 import VASSAL.tools.DataArchive;
-import VASSAL.tools.ImageUtils;
 
 public class SSRFilter extends RGBImageFilter {
   /*
@@ -51,20 +48,20 @@ public class SSRFilter extends RGBImageFilter {
    * The color entries are names of colors as defined in the color file * Example: * * WoodsToBrush * WoodsGreen=BrushL0 *
    * WoodsBlack=BrushL0
    */
-  private static File globalArchive;
   private Map<Integer, Integer> mappings;
   private String saveRules;
   private Map<String, Integer> colorValues;
   private List<SSROverlay> overlays;
-  private File archive;
+  private File archiveFile;
+  private DataArchive archive;
 
-  // public SSRFilter(String zip, String listOfRules)
-  public SSRFilter(String listOfRules, File archive) throws BoardException {
+  SSRFilter(String listOfRules, File archiveFile) throws BoardException {
     canFilterIndexColorModel = true;
     saveRules = listOfRules;
-    this.archive = archive;
+    this.archiveFile = archiveFile;
     try {
-      DataArchive.getFileStream(archive, "data");
+      archive = new DataArchive(archiveFile.getPath());
+      archive.getFileStream("data");
     }
     catch (IOException ex) {
       throw new BoardException("Board does not support terrain alterations");
@@ -74,19 +71,11 @@ public class SSRFilter extends RGBImageFilter {
 
   private static InputStream getStream(String name) {
     try {
-      return globalArchive == null ? GameModule.getGameModule().getDataArchive().getFileStream(name) : DataArchive.getFileStream(getGlobalArchive(), name);
+      return GameModule.getGameModule().getDataArchive().getFileStream(name);
     }
     catch (IOException ex) {
       return null;
     }
-  }
-
-  public static File getGlobalArchive() {
-    return globalArchive;
-  }
-
-  public static void setGlobalArchive(File f) {
-    globalArchive = f;
   }
 
   public Iterable<SSROverlay> getOverlays() {
@@ -161,13 +150,13 @@ public class SSRFilter extends RGBImageFilter {
     // Read board-specific colors last to override defaults
     readColorValues(getStream("boardData/colors"));
     try {
-      readColorValues(DataArchive.getFileStream(archive, "colors"));
+      readColorValues(archive.getFileStream("colors"));
     }
     catch (IOException ex) {
     }
     // Read board-specific rules first to be applied before defaults
     try {
-      readColorRules(DataArchive.getFileStream(archive, "colorSSR"), rules);
+      readColorRules(archive.getFileStream("colorSSR"), rules);
     }
     catch (IOException ex) {
     }
@@ -177,7 +166,7 @@ public class SSRFilter extends RGBImageFilter {
     // in the overlaySSR file. Therefore, reading board-specific
     // overlay rules first will override defaults
     try {
-      readOverlayRules(DataArchive.getFileStream(archive, "overlaySSR"));
+      readOverlayRules(archive.getFileStream("overlaySSR"));
     }
     catch (IOException ex) {
     }
@@ -315,7 +304,7 @@ public class SSRFilter extends RGBImageFilter {
               }
             }
             else
-              overlays.add(new SSROverlay(s.trim()));
+              overlays.add(new SSROverlay(s.trim(),archiveFile));
           }
         }
       }
@@ -327,28 +316,6 @@ public class SSRFilter extends RGBImageFilter {
 
   public Image recolor(Image oldImage, Component observer) {
     return Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(oldImage.getSource(), this));
-  }
-
-  public BufferedImage apply(BufferedImage src) {
-    BufferedImage dst;
-    if (ImageUtils.isLargeImage(src.getWidth(), src.getHeight())) {
-      dst = ImageUtils.createEmptyLargeImage(src.getWidth(), src.getHeight());
-    }
-    else {
-      dst = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(src.getWidth(),
-          src.getHeight(), Transparency.BITMASK);
-      dst = ImageUtils.toIntARGBSmall(dst);
-    }
-    final int h = src.getHeight();
-    final int[] row = new int[src.getWidth()];
-    for (int y = 0; y < h; ++y) {
-      src.getRGB(0, y, row.length, 1, row, 0, row.length);
-      for (int x = 0; x < row.length; ++x) {
-        row[x] = filterRGB(x, y, row[x]);
-      }
-      dst.setRGB(0, y, row.length, 1, row, 0, row.length);
-    }
-    return dst;
   }
 
   public void transform(BufferedImage image) {
@@ -373,20 +340,5 @@ public class SSRFilter extends RGBImageFilter {
   @Override
   public int hashCode() {
     return saveRules.hashCode();
-  }
-  private static class RGBMapping {
-    private int from;
-    private int to;
-    private String text;
-
-    private RGBMapping(int fromVal, int toVal, String s) {
-      from = fromVal;
-      to = toVal;
-      this.text = s;
-    }
-
-    public String toString() {
-      return "RGBMapping " + text + ":  " + from + "->" + to;
-    }
   }
 }

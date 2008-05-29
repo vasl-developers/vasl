@@ -31,8 +31,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -60,7 +58,6 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -68,7 +65,6 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.JToolBar;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
@@ -83,9 +79,7 @@ import VASL.build.module.map.boardPicker.ASLBoard;
 import VASL.build.module.map.boardPicker.ASLBoardSlot;
 import VASL.build.module.map.boardPicker.BoardException;
 import VASL.build.module.map.boardPicker.Overlay;
-import VASL.build.module.map.boardPicker.SSRFilter;
 import VASL.build.module.map.boardPicker.SSROverlay;
-import VASL.build.module.map.boardPicker.Underlay;
 import VASSAL.build.Buildable;
 import VASSAL.build.Builder;
 import VASSAL.build.Configurable;
@@ -378,18 +372,17 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
     }
     while (bd.indexOf("OVR") >= 0) {
       bd = bd.substring(bd.indexOf("OVR") + 4);
-      b.addOverlay(parseOverlay(bd));
+      try {
+        b.addOverlay(new Overlay(bd, b,new File(getBoardDir(), "overlays")));
+      }
+      catch (IOException e) {
+        e.printStackTrace();
+      }
     }
     if (bd.indexOf("SSR") >= 0) {
       b.setTerrain(bd.substring(bd.indexOf("SSR") + 4));
     }
     b.fixImage();
-  }
-
-  protected Overlay parseOverlay(String s) {
-    Overlay o = new Overlay(s);
-    o.setFile(new File(new File(getBoardDir(), "overlays"), o.archiveName()));
-    return o;
   }
 
   protected void addColumn() {
@@ -470,64 +463,6 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
           return (b);
       }
     throw new BoardException("No Such Board");
-  }
-
-  public static void main(String args[]) throws Exception {
-    File dir = new File(System.getProperty("user.dir") + java.io.File.separator + "boards");
-    if (!dir.exists()) {
-      throw new RuntimeException(dir + " doesn't exist");
-    }
-    File archive = new File(dir, "SSRdata");
-    SSRFilter.setGlobalArchive(archive);
-    Underlay.setGlobalArchive(archive);
-    final ASLBoardPicker bp = new ASLBoardPicker();
-    bp.setBoardDir(dir);
-    bp.build(null);
-    bp.refreshPossibleBoards();
-    bp.initComponents();
-    bp.reset();
-    JButton over = new JButton("Overlays");
-    JButton ssr = new JButton("Terrain");
-    JToolBar b = new JToolBar();
-    b.add(ssr);
-    b.add(over);
-    over.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        bp.new Overlayer((Frame) null).setVisible(true);
-      }
-    });
-    JFrame f = new JFrame();
-    f.getContentPane().add("North", b);
-    f.getContentPane().add("Center", bp.slotPanel);
-    f.pack();
-    f.setLocation(300, 0);
-    f.setVisible(true);
-    f.addWindowListener(new WindowAdapter() {
-      public void windowClosing(WindowEvent evt) {
-        System.exit(0);
-      }
-    });
-    JFrame mapF = new JFrame();
-    final VASSAL.build.module.Map m = new VASSAL.build.module.Map();
-    mapF.getContentPane().add(new JScrollPane(m.getView()));
-    final ActionListener al = new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        m.setBoards(bp.getBoardsFromControls());
-        m.getView().revalidate();
-        m.repaint();
-      }
-    };
-    bp.terrain.apply.addActionListener(al);
-    bp.terrain.reset.addActionListener(al);
-    ssr.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        bp.terrain.setup(bp.getBoardsFromControls());
-      }
-    });
-    Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-    mapF.setSize(d.width, d.height - f.getSize().height);
-    mapF.setLocation(0, f.getSize().height);
-    mapF.setVisible(true);
   }
 
   public org.w3c.dom.Element getBuildElement(org.w3c.dom.Document doc) {
@@ -671,11 +606,13 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
 
     protected Overlayer(Frame f) {
       super(f, true);
+      setTitle("Overlays");
       init();
     }
 
     protected Overlayer(Dialog d) {
       super(d, true);
+      setTitle("Overlays");
       init();
     }
 

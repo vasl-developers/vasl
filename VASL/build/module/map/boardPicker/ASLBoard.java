@@ -22,16 +22,12 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GraphicsEnvironment;
 import java.awt.Image;
-import java.awt.MediaTracker;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -40,10 +36,6 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.StringTokenizer;
-
-import javax.imageio.ImageIO;
-import javax.imageio.stream.MemoryCacheImageInputStream;
-import javax.swing.JLabel;
 
 import VASL.build.module.map.boardPicker.board.ASLHexGrid;
 import VASSAL.build.GameModule;
@@ -54,7 +46,6 @@ import VASSAL.tools.DataArchive;
 import VASSAL.tools.ImageUtils;
 import VASSAL.tools.imageop.AbstractTiledOpImpl;
 import VASSAL.tools.imageop.ImageOp;
-import VASSAL.tools.imageop.Op;
 import VASSAL.tools.imageop.SourceOp;
 import VASSAL.tools.imageop.SourceOpBitmapImpl;
 import VASSAL.tools.imageop.SourceTileOpBitmapImpl;
@@ -149,20 +140,12 @@ public class ASLBoard extends Board {
       if ((Overlay) overlays.get(i) instanceof SSROverlay)
         overlays.remove(i--);
     }
-    for (int i = 0; i < overlays.size(); ++i) {
-      ((Overlay) overlays.get(i)).setTerrain(terrain);
-    }
     if (changes.length() > 0) {
       terrain = new SSRFilter(changes, boardFile);
-      for (int i = 0; i < overlays.size(); ++i) {
-        ((Overlay) overlays.get(i)).setTerrain(terrain);
-      }
       for (SSROverlay o : terrain.getOverlays()) {
-        o.setFile(getFile()); /* Insert terrain overlays always before ordinary overlays */
         overlays.add(0, o);
       }
     }
-    baseImage = null;
   }
 
   public String getVersion() {
@@ -171,7 +154,7 @@ public class ASLBoard extends Board {
 
   public void readData() {
     try {
-      InputStream in = DataArchive.getFileStream(boardFile, "data");
+      InputStream in = boardArchive.getFileStream("data");
       BufferedReader file = new BufferedReader(new InputStreamReader(in));
       String s;
       while ((s = file.readLine()) != null) {
@@ -199,6 +182,7 @@ public class ASLBoard extends Board {
   public void fixImage() {
     boardImageOp = new BoardOp();
     fixedBoundaries = false;
+    scaledImageOp = null;
   }
 
   public void fixBounds() {
@@ -351,22 +335,19 @@ public class ASLBoard extends Board {
       Component comp = new Component() {};
       for (Enumeration e = ASLBoard.this.getOverlays(); e.hasMoreElements();) {
         Overlay o = (Overlay) e.nextElement();
-        o.readData();
-        o.setImage(ASLBoard.this, comp);
         Rectangle r = new Rectangle(o.bounds());
         g.drawImage(clipImage(o.getImage(),r), r.x, r.y, comp);
         if (o.getTerrain() != getTerrain() && o.getTerrain() != null) {
           for (SSROverlay ssrOverlay : o.getTerrain().getOverlays()) {
-            ssrOverlay.setImage(ASLBoard.this, o, comp);
             if (ssrOverlay.getImage() != null) {
               r = new Rectangle(ssrOverlay.bounds());
-              if (o.getOrientation(ASLBoard.this) == 'a') {
+              if (o.getOrientation() == 'a') {
                 r.translate(o.bounds().x, o.bounds().y);
                 g.drawImage(clipImage(ssrOverlay.getImage(), r), r.x, r.y, comp);
               }
               else {
                 try {
-                  Point p1 = o.offset(o.getOrientation(ASLBoard.this), ASLBoard.this);
+                  Point p1 = o.offset(o.getOrientation(), ASLBoard.this);
                   Point p2 = o.offset('a', ASLBoard.this);
                   Point p = new Point(p1.x + p2.x + o.bounds().x, p1.y + p2.y + o.bounds().y);
                   p.translate(-r.x, -r.y);

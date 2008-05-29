@@ -18,18 +18,9 @@
  */
 package VASL.build.module.map.boardPicker;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GraphicsEnvironment;
 import java.awt.Image;
-import java.awt.MediaTracker;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Transparency;
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -41,6 +32,7 @@ import javax.imageio.ImageIO;
 import javax.imageio.stream.MemoryCacheImageInputStream;
 
 import VASSAL.build.module.map.boardPicker.board.MapGrid;
+import VASSAL.build.module.map.boardPicker.board.MapGrid.BadCoords;
 import VASSAL.tools.DataArchive;
 import VASSAL.tools.SequenceEncoder;
 
@@ -49,41 +41,98 @@ import VASSAL.tools.SequenceEncoder;
  */
 public class Overlay implements Cloneable {
   protected String name = "", version = "0";
-
   protected Image image;
-  private File overlayFile;
-
+  protected File overlayFile;
   public String hex1 = "", hex2 = "";
-
   private String origins;
   protected Rectangle boundaries = new Rectangle();
   // boundaries are in local coordinates of the parent board
   // i.e., not accounting for cropping and reversal
-  private SSRFilter terrain;
+  protected ASLBoard board;
+  protected DataArchive archive;
 
-  public Overlay() {
+  protected Overlay() {
   }
 
   public String getVersion() {
     return version;
   }
 
-  public Overlay(String ovr) {
+  public Overlay(String ovr, ASLBoard board, File overlayDir) throws IOException, BoardException {
     StringTokenizer st = new StringTokenizer(ovr, "\t");
-
     if (st.countTokens() >= 3) {
       name = st.nextToken();
       hex1 = st.nextToken();
       hex2 = st.nextToken();
     }
+    this.board = board;
+    overlayFile = new File(overlayDir, archiveName());
+    archive = new DataArchive(overlayFile.getPath(), "");
+    readData();
+    try {
+      setBounds();
+    }
+    catch (BadCoords e) {
+      throw new BoardException(e.getMessage());
+    }
+    check();
   }
 
   public SSRFilter getTerrain() {
+    SSRFilter terrain = board.getTerrain();
+    if (terrain == null) {
+      return null;
+    }
+    boolean hasOwnParameters = false;
+    try {
+      archive.getFileStream("colors");
+      hasOwnParameters = true;
+    }
+    catch (IOException ex) {
+    }
+    try {
+      archive.getFileStream("colorSSR");
+      hasOwnParameters = true;
+    }
+    catch (IOException ex) {
+    }
+    try {
+      archive.getFileStream("overlaySSR");
+      hasOwnParameters = true;
+    }
+    catch (IOException ex) {
+    }
+    if (hasOwnParameters) {
+      try {
+        terrain = new SSRFilter(terrain.toString(), overlayFile);
+      }
+      catch (BoardException e) {
+        e.printStackTrace();
+        terrain = null;
+      }
+    }
     return terrain;
   }
 
   public Image getImage() {
+    if (image == null) {
+      image = loadImage();
+    }
     return image;
+  }
+
+  protected Image loadImage() {
+    Image im = null;
+    char c = getOrientation();
+    if (isSingleHex())
+      c = 'a';
+    try {
+      im = ImageIO.read(new MemoryCacheImageInputStream(archive.getImageInputStream(fileName(name + c))));
+    }
+    catch (IOException e) {
+      e.printStackTrace();
+    }
+    return im;
   }
 
   public String getName() {
@@ -91,41 +140,32 @@ public class Overlay implements Cloneable {
   }
 
   /**
-   * The boundaries of this overlay's image,
-   * in local coordinates on the parent board
+   * The boundaries of this overlay's image, in local coordinates on the parent board
    */
   public Rectangle bounds() {
     return boundaries;
   }
 
-  public void readData() {
+  private void readData() throws IOException {
     origins = getDefaultOriginList(name);
-
-    try {
-      InputStream in = DataArchive.getFileStream(overlayFile, "data");
-      //    InputStream in = DataArchive.getFileStream
-      //	(overlayDir(),archiveName(),"data");
-      BufferedReader file = new BufferedReader(new InputStreamReader(in));
-      String s;
-      while ((s = file.readLine()) != null) {
-        StringTokenizer st = new StringTokenizer(s);
-        if (st.countTokens() < 2)
-          continue;
-        String s1 = st.nextToken();
-        if (s1.equalsIgnoreCase(name)) {
-          origins = s.substring(name.length()).trim();
-        }
-        else if (s1.equalsIgnoreCase("version")) {
-          version = st.nextToken();
-        }
-        else if (s1.equalsIgnoreCase("placeAt")) {
-          hex1 = st.nextToken();
-          hex2 = st.nextToken();
-        }
+    InputStream in = archive.getFileStream("data");
+    BufferedReader file = new BufferedReader(new InputStreamReader(in));
+    String s;
+    while ((s = file.readLine()) != null) {
+      StringTokenizer st = new StringTokenizer(s);
+      if (st.countTokens() < 2)
+        continue;
+      String s1 = st.nextToken();
+      if (s1.equalsIgnoreCase(name)) {
+        origins = s.substring(name.length()).trim();
       }
-    }
-    catch (IOException e) {
-      e.printStackTrace();
+      else if (s1.equalsIgnoreCase("version")) {
+        version = st.nextToken();
+      }
+      else if (s1.equalsIgnoreCase("placeAt")) {
+        hex1 = st.nextToken();
+        hex2 = st.nextToken();
+      }
     }
   }
 
@@ -133,83 +173,12 @@ public class Overlay implements Cloneable {
     return overlayFile;
   }
 
-  public void setFile(File f) {
-    overlayFile = f;
-    readData();
+  protected void setBounds() throws IOException, BoardException, MapGrid.BadCoords {
+    char c = getOrientation();
+    boundaries.setLocation(board.getGrid().getLocation(hex1));
+    boundaries.translate(-offset(c, board).x, -offset(c, board).y);
+    boundaries.setSize(archive.getImageSize(fileName(name + c)));
   }
-
-  public void setImage(ASLBoard b, Component map) {
-    try {
-      char c = getOrientation(b);
-
-      if (isSingleHex())
-        c = 'a';
-
-      image = getImage(name+c);
-
-//      image = getImage(name + c);
-//      if (image == null) {
-//        if (overlayFile.exists()) {
-//          throw new BoardException("Overlay " + name
-//                                   + " not found in " + overlayFile.getPath());
-//        }
-//        else {
-//          throw new BoardException("Overlay file " + overlayFile.getPath()
-//                                   + " not found");
-//        }
-//      }
-
-      boundaries.setLocation(b.getGrid().getLocation(hex1));
-      boundaries.translate(-offset(c, b).x, -offset(c, b).y);
-
-//      waitFor(image, map);
-
-      boundaries.setSize(image.getWidth(map), image.getHeight(map));
-
-      setTerrain(b.getTerrain());
-
-//      if (terrain != null) {
-//        image = terrain.recolor(image, map);
-//      }
-//      waitFor(image, map);
-    }
-    catch (BoardException e) {
-      FontMetrics fm = map.getGraphics().getFontMetrics();
-      String msg = e.getMessage();
-      int width = fm.stringWidth(msg) + 10;
-      int height = fm.getHeight() * 2;
-      image = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(width, height, Transparency.BITMASK );
-      Graphics2D g = ((BufferedImage)image).createGraphics();
-      g.setColor(Color.black);
-      g.drawString(msg, 5, fm.getHeight());
-      g.dispose();
-    }
-    catch (MapGrid.BadCoords e) {
-      FontMetrics fm = map.getGraphics().getFontMetrics();
-      String msg = e.getMessage();
-      int width = fm.stringWidth(msg) + 10;
-      int height = fm.getHeight() * 2;
-      image = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(width, height, Transparency.BITMASK );
-      Graphics2D g = ((BufferedImage)image).createGraphics();
-      g.setColor(Color.black);
-      g.drawString(msg, 5, fm.getHeight());
-      g.dispose();
-    }
-  }
-
-  private Image getImage(String name) {
-    try {
-//      return DataArchive.getImage(DataArchive.getFileStream(overlayFile, fileName(name)));
-//      return Toolkit.getDefaultToolkit().createImage(DataArchive.getBytes(DataArchive.getFileStream(overlayFile, fileName(name))));
-//      return ImageIO.read(new MemoryCacheImageInputStream(DataArchive.getFileStream(overlayFile, fileName(name))));
-return ImageIO.read(new MemoryCacheImageInputStream(new DataArchive(overlayFile.getPath(),"").getImageInputStream(fileName(name))));
-
-    }
-    catch (java.io.IOException e) {
-      return null;
-    }
-  }
-
 
   private String fileName(String name) {
     return "ovr" + equivalence(name) + ".gif";
@@ -237,61 +206,25 @@ return ImageIO.read(new MemoryCacheImageInputStream(new DataArchive(overlayFile.
   }
 
   private static String trimName(String sin) {
-    if (sin.charAt(0) <= '9' &&
-        sin.charAt(0) >= '0')
+    if (sin.charAt(0) <= '9' && sin.charAt(0) >= '0')
       return sin.substring(0, sin.length() - 1);
     String s = sin.substring(0, sin.length() - 1);
     int n = s.length() - 1;
-    while (s.charAt(n) <= '9' &&
-        s.charAt(n) >= '0' &&
-        n >= 0)
+    while (s.charAt(n) <= '9' && s.charAt(n) >= '0' && n >= 0)
       --n;
     if (n >= 0)
       s = s.substring(0, n + 1);
     return s;
   }
 
-  public void setTerrain(SSRFilter newTerrain) throws BoardException {
-    terrain = newTerrain;
-
-    if (terrain == null) {
-      return;
-    }
-
-    boolean hasOwnParameters = false;
-    try {
-      DataArchive.getFileStream(overlayFile, "colors");
-      hasOwnParameters = true;
-    }
-    catch (IOException ex) {
-    }
-    try {
-      DataArchive.getFileStream(overlayFile, "colorSSR");
-      hasOwnParameters = true;
-    }
-    catch (IOException ex) {
-    }
-    try {
-      DataArchive.getFileStream(overlayFile, "overlaySSR");
-      hasOwnParameters = true;
-    }
-    catch (IOException ex) {
-    }
-    if (hasOwnParameters) {
-      terrain = new SSRFilter(terrain.toString(), overlayFile);
-    }
-  }
-
-  protected char getOrientation(ASLBoard board) {
+  protected char getOrientation() {
     if (hex1.equals(hex2))
       return 'a';
-
     int hex1X, hex1Y, hex2X, hex2Y;
     try {
       Point p = board.getGrid().getLocation(hex1);
       hex1X = p.x;
       hex1Y = p.y;
-
       p = board.getGrid().getLocation(hex2);
       hex2X = p.x;
       hex2Y = p.y;
@@ -299,7 +232,6 @@ return ImageIO.read(new MemoryCacheImageInputStream(new DataArchive(overlayFile.
     catch (MapGrid.BadCoords bEx) {
       return 'a';
     }
-
     char c;
     if (hex1X == hex2X)
       c = hex1Y < hex2Y ? 'd' : 'a';
@@ -307,41 +239,31 @@ return ImageIO.read(new MemoryCacheImageInputStream(new DataArchive(overlayFile.
       c = hex1Y > hex2Y ? 'f' : 'e';
     else
       c = hex1Y > hex2Y ? 'b' : 'c';
-
     return c;
   }
 
-  public void check(ASLBoard board) throws BoardException {
+  private void check() throws BoardException {
     if (isSingleHex()) {
-      if (!hex2.equals(hex1) &&
-          hex1.length() > 0 && hex2.length() > 0)
+      if (!hex2.equals(hex1) && hex1.length() > 0 && hex2.length() > 0)
         throw new BoardException("Specify a single hex");
     }
-    else if (hex1.length() == 0 ||
-        hex2.length() == 0 ||
-        hex1.equals(hex2)) {
+    else if (hex1.length() == 0 || hex2.length() == 0 || hex1.equals(hex2)) {
       throw new BoardException("Specify two hexes");
     }
-
     try {
       Point p1 = board.getGrid().getLocation(hex1);
       Point p2 = board.getGrid().getLocation(hex2);
-      int dx = board.getGrid().getLocation("B1").x
-          - board.getGrid().getLocation("A1").x;
-      int dy = board.getGrid().getLocation("B1").y
-          - board.getGrid().getLocation("B0").y;
-      if (Math.abs(p2.x - p1.x) > 1.1 * dx ||
-          Math.abs(p2.y - p1.y) > 1.1 * dy)
+      int dx = board.getGrid().getLocation("B1").x - board.getGrid().getLocation("A1").x;
+      int dy = board.getGrid().getLocation("B1").y - board.getGrid().getLocation("B0").y;
+      if (Math.abs(p2.x - p1.x) > 1.1 * dx || Math.abs(p2.y - p1.y) > 1.1 * dy)
         throw new BoardException("Illegal coordinates");
-
-      char c = getOrientation(board);
+      char c = getOrientation();
       offset(c, board);
       try {
-        DataArchive.getFileStream(overlayFile, fileName(name + c));
+        archive.getFileStream(fileName(name + c));
       }
       catch (IOException ex) {
-        throw new BoardException("Overlay file " + overlayFile.getPath()
-                                 + " not found");
+        throw new BoardException("Overlay not found in " + overlayFile.getPath());
       }
     }
     catch (MapGrid.BadCoords err) {
@@ -352,7 +274,6 @@ return ImageIO.read(new MemoryCacheImageInputStream(new DataArchive(overlayFile.
   Point offset(char orient, ASLBoard board) throws BoardException {
     try {
       SequenceEncoder.Decoder st = new SequenceEncoder.Decoder(origins, ';');
-
       int n = orient - 'a' + 1;
       String origin = "";
       while (n-- > 0) {
@@ -363,34 +284,26 @@ return ImageIO.read(new MemoryCacheImageInputStream(new DataArchive(overlayFile.
     catch (Exception e) {
       throw new BoardException("Illegal orientation \'" + orient + "\' for overlay " + name);
     }
-
     /*
-      Orientations are:
-
-      2
-      1  : a
-
-       2
-      1  : b
-
-      1
-       2 : c
-
-      1
-      2  : d
-
-       1
-      2  : e
-
-      2
-       1 : f
-
-    */
+     * Orientations are:
+     * 
+     * 2 1 : a
+     * 
+     * 2 1 : b
+     * 
+     * 1 2 : c
+     * 
+     * 1 2 : d
+     * 
+     * 1 2 : e
+     * 
+     * 2 1 : f
+     * 
+     */
   }
 
   private String getDefaultOriginList(String ovr) {
     String o;
-
     if ("st1".equals(ovr))
       o = "b7;g4;g3;d5;h3;i4";
     else if ("st2".equals(ovr))
@@ -479,37 +392,23 @@ return ImageIO.read(new MemoryCacheImageInputStream(new DataArchive(overlayFile.
       o = "b3;e2;f2;d4;e4;d3";
     else if ("ef3".equals(ovr))
       o = "c5;d3;e2;e4;g3;f5";
-    else if ("be1".equals(ovr) ||
-        "be2".equals(ovr) ||
-        "be3".equals(ovr) ||
-        "be7".equals(ovr))
+    else if ("be1".equals(ovr) || "be2".equals(ovr) || "be3".equals(ovr) || "be7".equals(ovr))
       o = "g11;e10;b5;b1;k1;n5";
-    else if ("be4".equals(ovr) ||
-        "be5".equals(ovr) ||
-        "be6".equals(ovr))
+    else if ("be4".equals(ovr) || "be5".equals(ovr) || "be6".equals(ovr))
       o = "m7;i12;b9;b1;g1;n3";
-    else if ("oc1".equals(ovr) ||
-        "oc2".equals(ovr))
+    else if ("oc1".equals(ovr) || "oc2".equals(ovr))
       o = "m13;h15;d9;b1;o1;s7";
-    else if ("oc3".equals(ovr) ||
-        "oc4".equals(ovr))
+    else if ("oc3".equals(ovr) || "oc4".equals(ovr))
       o = "m14;h15;c9;b1;o1;t7";
-
-    else if ("x20".equals(ovr) ||
-        "x21".equals(ovr))
+    else if ("x20".equals(ovr) || "x21".equals(ovr))
       o = "c2;f2;f4;c5;c5;c2";
-    else if ("x23".equals(ovr) ||
-        "x24".equals(ovr))
+    else if ("x23".equals(ovr) || "x24".equals(ovr))
       o = "b2;d1;c2;e2;d3;d4";
-    else if ("rr1".equals(ovr) ||
-        "rr2".equals(ovr) ||
-        "rr8".equals(ovr))
+    else if ("rr1".equals(ovr) || "rr2".equals(ovr) || "rr8".equals(ovr))
       o = "b5;h4;h4;b7;f5;f3";
-    else if ("rr3".equals(ovr) ||
-        "rr11".equals(ovr))
+    else if ("rr3".equals(ovr) || "rr11".equals(ovr))
       o = "c5;d4;d2;c2;g3;g4";
-    else if ("rr4".equals(ovr) ||
-        "rr12".equals(ovr))
+    else if ("rr4".equals(ovr) || "rr12".equals(ovr))
       o = "c4;d4;d2;c3;e3;e4";
     else if ("rr7".equals(ovr))
       o = "b7;f4;f3;b5;h3;h4";
@@ -527,29 +426,18 @@ return ImageIO.read(new MemoryCacheImageInputStream(new DataArchive(overlayFile.
       o = "b4;b1;c1;e1;f3;d4";
     else if ("re5".equals(ovr))
       o = "b4;b1;c1;e1;f3;d4";
-    else if ("hd5".equals(ovr) ||
-        "hd6".equals(ovr) ||
-        "hd7".equals(ovr))
+    else if ("hd5".equals(ovr) || "hd6".equals(ovr) || "hd7".equals(ovr))
       o = "b4;b2;b1;c1;d1;d2";
     else if ("hd8".equals(ovr))
       o = "b3;c2;d1;d2;d2;d2;";
-    else if ("hd9".equals(ovr) ||
-        "hd10".equals(ovr))
+    else if ("hd9".equals(ovr) || "hd10".equals(ovr))
       o = "b4;b3;b1;c1;f1;f3";
     else if ("hd11".equals(ovr))
       o = "d6;b5;b1;c1;g2;h4";
     else if ("ow1".equals(ovr))
       o = "c3;c3;d2;e3;d3;d3";
-    else if (ovr.startsWith("wd") ||
-        ovr.startsWith("g") ||
-        ovr.startsWith("m") ||
-        ovr.startsWith("p") ||
-        ovr.startsWith("x") ||
-        ovr.startsWith("b") ||
-        ovr.startsWith("rp") ||
-        ovr.startsWith("rr") ||
-        ovr.startsWith("hd") ||
-        ovr.startsWith("o"))
+    else if (ovr.startsWith("wd") || ovr.startsWith("g") || ovr.startsWith("m") || ovr.startsWith("p") || ovr.startsWith("x") || ovr.startsWith("b")
+        || ovr.startsWith("rp") || ovr.startsWith("rr") || ovr.startsWith("hd") || ovr.startsWith("o"))
       o = "b2;b1;c1;d1;d2;c3";
     else
       o = null;
@@ -558,43 +446,19 @@ return ImageIO.read(new MemoryCacheImageInputStream(new DataArchive(overlayFile.
 
   private boolean isSingleHex() {
     try {
-      DataArchive.getFileStream(overlayFile, fileName(name + 'a'));
+      archive.getFileStream(fileName(name + 'a'));
     }
     catch (IOException ex) {
       ex.printStackTrace();
       return false;
     }
     try {
-      DataArchive.getFileStream(overlayFile, fileName(name + 'd'));
+      archive.getFileStream(fileName(name + 'd'));
       return false;
     }
     catch (IOException ex) {
       return true;
     }
-
-    /*
-      return
-      ovr.equals("b1") ||
-      ovr.equals("g1") ||
-      ovr.equals("hd1") ||
-      ovr.equals("m1") ||
-      ovr.equals("o1") ||
-      ovr.equals("og1") ||
-      ovr.equals("p1") ||
-      ovr.equals("rp1") ||
-      ovr.equals("x1") ||
-      ovr.equals("x2") ||
-      ovr.equals("x3") ||
-      ovr.equals("x4") ||
-      ovr.equals("x5") ||
-      ovr.equals("x6") ||
-      ovr.equals("x7") ||
-      ovr.equals("x8") ||
-      ovr.equals("x9") ||
-      ovr.equals("x10") ||
-      ovr.equals("x22") ||
-      ovr.equals("wd1");
-    */
   }
 
   public Object clone() throws CloneNotSupportedException {
@@ -605,15 +469,7 @@ return ImageIO.read(new MemoryCacheImageInputStream(new DataArchive(overlayFile.
     return "OVR\t" + name + "\t" + hex1 + "\t" + hex2;
   }
 
-  private static Image waitFor(Image im, Component c) {
-    MediaTracker track = new MediaTracker(c);
-    try {
-      track.addImage(im, 0);
-      track.waitForAll(0);
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
-    return im;
+  public ASLBoard getBoard() {
+    return board;
   }
 }

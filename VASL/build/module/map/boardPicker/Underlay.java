@@ -81,15 +81,15 @@ public class Underlay extends SSROverlay {
   public void readData() {
   }
 
-  public void setImage(ASLBoard b, Component map) {
+  public void setImage(Component map) {
     if (underlayImage == null) {
       try {
-        underlayImage = DataArchive.getImage(DataArchive.getFileStream(b.getFile(), imageName));
+        underlayImage = DataArchive.getImage(DataArchive.getFileStream(board.getFile(), imageName));
       }
       catch (IOException ex) {
         image = map.createImage(1, 1);
         System.err.println("Underlay image " + imageName + " not found in "
-                           + b.getFile().getName());
+                           + board.getFile().getName());
         return;
       }
     }
@@ -102,17 +102,17 @@ public class Underlay extends SSROverlay {
     }
     catch (Exception e) {
     }
-    if (b.getTerrain() != null) {
-      underlayImage = b.getTerrain().recolor(underlayImage, map);
+    if (board.getTerrain() != null) {
+      underlayImage = board.getTerrain().recolor(underlayImage, map);
     }
 
     Point pos = new Point(0, 0);
 
     Image base = null;
 
-    pos = b.getCropBounds().getLocation();
-    boundaries.setSize(b.bounds().getSize());
-    base = b.getBaseImage();
+    pos = board.getCropBounds().getLocation();
+    boundaries.setSize(board.bounds().getSize());
+    base = board.getBaseImage();
     try {
       mt.addImage(base, 0);
       mt.waitForAll();

@@ -19,6 +19,7 @@
 package VASL.build.module.map.boardPicker;
 
 import VASL.build.module.map.ASLBoardPicker;
+import VASSAL.build.GameModule;
 import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.build.module.map.boardPicker.BoardSlot;
 import VASSAL.build.module.map.boardPicker.board.MapGrid;
@@ -28,6 +29,7 @@ import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
+import java.io.IOException;
 
 public class ASLBoardSlot extends BoardSlot {
   private String terrain = "";
@@ -71,15 +73,21 @@ public class ASLBoardSlot extends BoardSlot {
           hex2 = hex1;
         if (hex1.length() == 0)
           hex1 = hex2;
-        Overlay o = new Overlay(ovr + "\t" + hex1 + "\t" + hex2);
-        o.setFile(new File(new File(((ASLBoardPicker) picker)
-                                    .getBoardDir(), "overlays"),
-                           o.archiveName()));
-        o.check(getASLBoard());
-        getASLBoard().addOverlay(o);
-        board.fixImage();
-        checkOverlap(o);
-        msg = "Added Overlay " + o.getName() + " (ver " + o.getVersion() + ")";
+        Overlay o;
+        try {
+          o = new Overlay(ovr + "\t" + hex1 + "\t" + hex2, getASLBoard(),new File(((ASLBoardPicker) picker)
+              .getBoardDir(), "overlays"));
+          getASLBoard().addOverlay(o);
+          board.fixImage();
+          checkOverlap(o);
+          msg = "Added Overlay " + o.getName() + " (ver " + o.getVersion() + ")";
+        }
+        catch (IOException e) {
+          if (e.getMessage() != null && e.getMessage().length() > 0) {
+            throw new BoardException(e.getMessage());
+          }
+          e.printStackTrace();
+        }
       }
     }
     catch (BoardException e) {
@@ -171,15 +179,22 @@ public class ASLBoardSlot extends BoardSlot {
       p.translate(offX, offY);
       p = otherBoard.localCoordinates(p);
       String hex2 = otherBoard.getGrid().locationName(p);
-      o = new Overlay(o.getName() + "\t" + hex1 + "\t" + hex2);
-      o.setFile(new File(new File(((ASLBoardPicker) picker)
-                                  .getBoardDir(), "overlays"),
-                         o.archiveName()));
+      o = new Overlay(o.getName() + "\t" + hex1 + "\t" + hex2, getASLBoard(),new File(((ASLBoardPicker) picker)
+          .getBoardDir(), "overlays"));
       otherBoard.addOverlay(o);
       otherBoard.fixImage();
     }
     catch (MapGrid.BadCoords ex) {
-      ex.printStackTrace();
+      GameModule.getGameModule().warn(ex.getMessage());
+    }
+    catch (IOException e) {
+      e.printStackTrace();
+      if (e.getMessage() != null && e.getMessage().length() > 0) {
+        GameModule.getGameModule().warn(e.getMessage());
+      }
+    }
+    catch (BoardException e) {
+      e.printStackTrace();
     }
   }
 }
