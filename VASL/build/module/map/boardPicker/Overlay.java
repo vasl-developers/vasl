@@ -104,7 +104,7 @@ public class Overlay implements Cloneable {
     }
     if (hasOwnParameters) {
       try {
-        terrain = new SSRFilter(terrain.toString(), overlayFile);
+        terrain = new SSRFilter(terrain.toString(), overlayFile, board);
       }
       catch (BoardException e) {
         e.printStackTrace();

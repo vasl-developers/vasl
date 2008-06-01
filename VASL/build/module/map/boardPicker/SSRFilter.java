@@ -54,8 +54,9 @@ public class SSRFilter extends RGBImageFilter {
   private List<SSROverlay> overlays;
   private File archiveFile;
   private DataArchive archive;
+  private ASLBoard board;
 
-  SSRFilter(String listOfRules, File archiveFile) throws BoardException {
+  public SSRFilter(String listOfRules, File archiveFile, ASLBoard board) throws BoardException {
     canFilterIndexColorModel = true;
     saveRules = listOfRules;
     this.archiveFile = archiveFile;
@@ -66,6 +67,7 @@ public class SSRFilter extends RGBImageFilter {
     catch (IOException ex) {
       throw new BoardException("Board does not support terrain alterations");
     }
+    this.board = board;
     readAllRules();
   }
 
@@ -298,7 +300,7 @@ public class SSRFilter extends RGBImageFilter {
                 while (st.hasMoreTokens()) {
                   trans[n++] = ((Integer) colorValues.get(st.nextToken())).intValue();
                 }
-                overlays.add(new Underlay(underImage, trans));
+                overlays.add(new Underlay(underImage, trans, archive, board));
               }
               catch (NoSuchElementException end) {
               }

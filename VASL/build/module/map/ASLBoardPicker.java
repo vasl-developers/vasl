@@ -291,6 +291,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
         buildBoard(b, "0\t0\t" + name);
       }
       catch (BoardException e) {
+        e.printStackTrace();
         JOptionPane.showMessageDialog(GameModule.getGameModule().getFrame(), e.getMessage(), "Error loading board", JOptionPane.ERROR_MESSAGE);
       }
     }
@@ -307,45 +308,45 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
         // case-insensitive name
         // conflict between RB and
         // reversed b
-        b.setFile(f);
         b.setCommonName(baseName);
         b.setBaseImageFileName("bd" + baseName + ".gif");
+        b.setFile(f);
       }
       else if (baseName.startsWith("0") && (f = new File(boardDir, "bd" + baseName.substring(1))).exists()) {
-        b.setFile(f);
         b.setCommonName(baseName.substring(1));
         b.setBaseImageFileName("bd" + baseName + ".gif");
+        b.setFile(f);
       }
       else if ((f = new File(boardDir, "bd" + baseName + ".gif")).exists()) {
-        b.setFile(f);
         b.setCommonName(baseName);
         b.setBaseImageFileName("bd" + baseName + ".gif");
+        b.setFile(f);
       }
       else if (baseName.startsWith("dx") || baseName.startsWith("rdx")) {
         int prefix = baseName.startsWith("dx") ? 2 : 3;
         if ((f = new File(boardDir, "bd" + baseName.substring(prefix))).exists()) {
-          b.setFile(f);
           b.setCommonName(baseName.substring(prefix));
           b.setBaseImageFileName("bd" + baseName.substring(prefix) + ".gif");
+          b.setFile(f);
         }
         else if ((f = new File(boardDir, "bd" + baseName + ".gif")).exists()) {
-          b.setFile(f);
           b.setCommonName(baseName.substring(prefix));
           b.setBaseImageFileName("bd" + baseName + ".gif");
+          b.setFile(f);
         }
         b.setReversed(prefix == 3);
       }
       else if (baseName.startsWith("r")) {
         baseName = baseName.substring(1);
         if ((f = new File(boardDir, "bd" + baseName)).exists()) {
-          b.setFile(f);
           b.setCommonName(baseName);
           b.setBaseImageFileName("bd" + baseName + ".gif");
+          b.setFile(f);
         }
         else if (baseName.startsWith("0") && (f = new File(boardDir, "bd" + baseName.substring(1))).exists()) {
-          b.setFile(f);
           b.setCommonName(baseName.substring(1));
           b.setBaseImageFileName("bd" + baseName + ".gif");
+          b.setFile(f);
         }
         else {
           throw new BoardException("Unable to find board " + baseName);
@@ -358,6 +359,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
       b.readData();
     }
     catch (Exception eParse) {
+      eParse.printStackTrace();
       throw new BoardException(eParse.getMessage());
     }
     try {
@@ -382,7 +384,6 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
     if (bd.indexOf("SSR") >= 0) {
       b.setTerrain(bd.substring(bd.indexOf("SSR") + 4));
     }
-    b.fixImage();
   }
 
   protected void addColumn() {
@@ -587,7 +588,6 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
         BoardSlot b = match(bdName.getText());
         ((ASLBoard) b.getBoard()).crop(row1.getText().toLowerCase().trim(), row2.getText().toLowerCase().trim(), coord1.getText().toLowerCase().trim(), coord2
             .getText().toLowerCase().trim(), fullrow.isSelected());
-        b.getBoard().fixImage();
         b.invalidate();
         b.repaint();
         bdName.setText("");
@@ -701,6 +701,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
 
     protected TerrainEditor() {
       super((Frame) null, true);
+      setTitle("Terrain Transformations");
       boards = new Vector();
       getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
       status = new JTextField("Leave board number blank to apply to all boards:  ");
@@ -725,6 +726,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
       pp.setLayout(new GridLayout(1, 2));
       pp.add(new JLabel("Board "));
       board = new JTextField(2);
+      board.setMaximumSize(new Dimension(board.getMaximumSize().width,board.getPreferredSize().height));
       pp.add(board);
       p.add(pp);
       apply = new JButton("Apply");
@@ -886,7 +888,6 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
               if (boardName.length() == 0 || match(boardName) == slot) {
                 slot.setTerrain(slot.getTerrain() + '\t' + optionRules());
                 ((ASLBoard) slot.getBoard()).setTerrain(basicRules() + slot.getTerrain());
-                slot.getBoard().fixImage();
                 slot.repaint();
               }
             }
@@ -916,7 +917,6 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
               slot.setTerrain("");
               try {
                 ((ASLBoard) slot.getBoard()).setTerrain("");
-                slot.getBoard().fixImage();
               }
               catch (Exception e2) {
               }
@@ -994,6 +994,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
               propChange.firePropertyChange("active", null, getActive());
             }
           });
+          comp.setMaximumSize(new Dimension(comp.getMaximumSize().width,comp.getPreferredSize().height));
         }
         else if (e.getTagName().equals("ScrollList")) {
           comp = new JList(new DefaultListModel());
@@ -1422,6 +1423,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
         model.addElement("Level 2");
         model.addElement("Level 3");
         model.addElement("Level 4");
+        from.setMaximumSize(new Dimension(from.getMaximumSize().width,from.getPreferredSize().height));
         to = new JComboBox();
         model = (DefaultComboBoxModel) to.getModel();
         model.addElement("-");
@@ -1432,6 +1434,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
         model.addElement("Level -1");
         model.addElement("Level 0");
         model.addElement("Level 1");
+        to.setMaximumSize(new Dimension(to.getMaximumSize().width,to.getPreferredSize().height));
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
         panel.add(new JLabel("All"));
         panel.add(from);

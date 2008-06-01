@@ -18,175 +18,110 @@
  */
 package VASL.build.module.map.boardPicker;
 
-import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
-import java.awt.MediaTracker;
 import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
-import java.awt.image.FilteredImageSource;
-import java.awt.image.RGBImageFilter;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 
-import javax.swing.ImageIcon;
+import javax.imageio.ImageIO;
+import javax.imageio.stream.MemoryCacheImageInputStream;
 
 import VASSAL.build.GameModule;
 import VASSAL.tools.DataArchive;
 
 /**
- * A special kind of SSROverlay constructed on the fly
- * by underlaying a patterned GIF under a board GIF
- * with certain colors turned transparent
+ * A special kind of SSROverlay constructed on the fly by underlaying a patterned GIF under a board GIF with certain
+ * colors turned transparent
  */
 public class Underlay extends SSROverlay {
-
   private int transparentList[];
-  private Image underlayImage;
   private String imageName;
+  private DataArchive archive;
 
-  private static File archive;
-
-  public Underlay(String im, int trans[]) {
+  public Underlay(String im, int trans[], DataArchive a, ASLBoard board) {
     imageName = im;
-    try {
-      underlayImage = DataArchive.getImage(getStream("boardData/" + imageName));
-    }
-    catch (IOException ex) {
-      ex.printStackTrace();
-    }
     transparentList = trans;
-  }
-
-  public static void setGlobalArchive(File f) {
-    archive = f;
-  }
-
-  public static InputStream getStream(String name) {
-    try {
-      return archive == null ?
-          GameModule.getGameModule().getDataArchive()
-          .getFileStream(name) :
-          DataArchive.getFileStream(archive, name);
-    }
-    catch (IOException ex) {
-      return null;
-    }
+    this.archive = a;
+    this.board = board;
   }
 
   public void readData() {
   }
 
-  public void setImage(Component map) {
+  public Image loadImage() {
+    Image underlayImage = null;
+    try {
+      underlayImage = ImageIO.read(new MemoryCacheImageInputStream(GameModule.getGameModule().getDataArchive().getFileStream("boardData/" + imageName)));
+    }
+    catch (IOException ex) {
+    }
     if (underlayImage == null) {
       try {
-        underlayImage = DataArchive.getImage(DataArchive.getFileStream(board.getFile(), imageName));
+        underlayImage = archive.getImage(imageName);
       }
       catch (IOException ex) {
-        image = map.createImage(1, 1);
-        System.err.println("Underlay image " + imageName + " not found in "
-                           + board.getFile().getName());
-        return;
+        System.err.println("Underlay image " + imageName + " not found in " + archive.getName());
+        return new BufferedImage(1, 1, BufferedImage.TYPE_4BYTE_ABGR);
       }
     }
-
-    MediaTracker mt = new MediaTracker(map);
-
-    try {
-      mt.addImage(underlayImage, 0);
-      mt.waitForAll();
-    }
-    catch (Exception e) {
-    }
-    if (board.getTerrain() != null) {
-      underlayImage = board.getTerrain().recolor(underlayImage, map);
-    }
-
     Point pos = new Point(0, 0);
-
-    Image base = null;
-
     pos = board.getCropBounds().getLocation();
     boundaries.setSize(board.bounds().getSize());
-    base = board.getBaseImage();
-    try {
-      mt.addImage(base, 0);
-      mt.waitForAll();
-    }
-    catch (Exception e) {
-    }
-
+    Image boardBase = board.getBaseImage();
     boundaries.setLocation(pos.x, pos.y);
-
-    base = Toolkit.getDefaultToolkit().createImage(new FilteredImageSource
-        (base.getSource(),
-         new HolePunch(transparentList, 0)));
-
-    BufferedImage replacement = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(boundaries.width, boundaries.height, Transparency.BITMASK);
+    BufferedImage base = new BufferedImage(boardBase.getWidth(null),boardBase.getHeight(null),BufferedImage.TYPE_INT_ARGB);
+    base.getGraphics().drawImage(boardBase, 0, 0, null);
+    new HolePunch(transparentList, 0).transform(base);
+    BufferedImage replacement = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(
+        boundaries.width, boundaries.height, Transparency.BITMASK);
     Graphics2D g2 = replacement.createGraphics();
-    try {
-      mt.addImage(underlayImage, 0);
-      mt.waitForAll();
-    }
-    catch (Exception e) {
-    }
-    int w = underlayImage.getWidth(map);
-    int h = underlayImage.getHeight(map);
+    int w = underlayImage.getWidth(null);
+    int h = underlayImage.getHeight(null);
     for (int x = 0; x < boundaries.width; x += w)
       for (int y = 0; y < boundaries.height; y += h)
-        g2.drawImage(underlayImage, x, y, map);
-    try {
-      mt.addImage(base, 0);
-      mt.waitForAll();
-    }
-    catch (Exception e) {
-    }
-    g2.drawImage(base, -pos.x, -pos.y, map);
-    try {
-      mt.addImage(replacement, 0);
-      mt.waitForAll();
-    }
-    catch (Exception e2) {
+        g2.drawImage(underlayImage, x, y, null);
+    g2.drawImage(base, -pos.x, -pos.y, null);
+    new HolePunch(new int[]{0}).transform(replacement);
+    return replacement;
+  }
+  /**
+   * Takes an image and turns a list of colors transparent
+   */
+  private static class HolePunch {
+    int transparent[]; /* List of colors to turn transparent (and red) */
+    int mask = -1; /* All other colors become this (unchanged if -1) */
+
+    public HolePunch(int trans[], int mask) {
+      transparent = trans;
+      this.mask = mask;
     }
 
-    image = Toolkit.getDefaultToolkit().createImage(new FilteredImageSource
-        (replacement.getSource(),
-         new HolePunch(new int[]{0})));
-    new ImageIcon(image);
-    replacement = null;
-    g2.dispose();
-    System.gc();
+    public HolePunch(int trans[]) {
+      this(trans, -1);
+    }
+
+    public int filterRGB(int x, int y, int rgb) {
+      rgb = 0xffffff & rgb;
+      for (int i = 0; i < transparent.length; ++i) {
+        if (rgb == transparent[i])
+          return 0xff;
+      }
+      return 0xff000000 | (mask >= 0 ? mask : rgb);
+    }
+
+    public void transform(BufferedImage image) {
+      final int h = image.getHeight();
+      final int[] row = new int[image.getWidth()];
+      for (int y = 0; y < h; ++y) {
+        image.getRGB(0, y, row.length, 1, row, 0, row.length);
+        for (int x = 0; x < row.length; ++x) {
+          row[x] = filterRGB(x, y, row[x]);
+        }
+        image.setRGB(0, y, row.length, 1, row, 0, row.length);
+      }
+    }
   }
 }
-
-/**
- * Takes an image and turns a list of colors transparent
- */
-class HolePunch extends RGBImageFilter {
-  int transparent[]; /* List of colors to turn transparent (and red) */
-  int mask = -1;     /* All other colors become this (unchanged if -1) */
-
-  public HolePunch(int trans[], int mask) {
-    transparent = trans;
-    this.mask = mask;
-    canFilterIndexColorModel = true;
-  }
-
-  public HolePunch(int trans[]) {
-    this(trans, -1);
-  }
-
-  public int filterRGB(int x, int y, int rgb) {
-    rgb = 0xffffff & rgb;
-    for (int i = 0; i < transparent.length; ++i) {
-      if (rgb == transparent[i])
-        return 0xff;
-    }
-    return 0xff000000 | (mask >= 0 ? mask : rgb);
-  }
-}
-

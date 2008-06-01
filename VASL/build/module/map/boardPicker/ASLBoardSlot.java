@@ -41,7 +41,6 @@ public class ASLBoardSlot extends BoardSlot {
         Runnable runnable = new Runnable() {
           public void run() {
             if (board != null) {
-              board.fixImage();
               picker.repaint();
             }
           }
@@ -63,9 +62,7 @@ public class ASLBoardSlot extends BoardSlot {
     String msg = "";
     try {
       if (hex1.equals("") && hex2.equals("")) {
-        if (getASLBoard().removeOverlay(ovr)) {
-          board.fixImage();
-        }
+        getASLBoard().removeOverlay(ovr);
         msg = "Removed Overlay " + ovr;
       }
       else {
@@ -78,7 +75,6 @@ public class ASLBoardSlot extends BoardSlot {
           o = new Overlay(ovr + "\t" + hex1 + "\t" + hex2, getASLBoard(),new File(((ASLBoardPicker) picker)
               .getBoardDir(), "overlays"));
           getASLBoard().addOverlay(o);
-          board.fixImage();
           checkOverlap(o);
           msg = "Added Overlay " + o.getName() + " (ver " + o.getVersion() + ")";
         }
@@ -182,7 +178,6 @@ public class ASLBoardSlot extends BoardSlot {
       o = new Overlay(o.getName() + "\t" + hex1 + "\t" + hex2, getASLBoard(),new File(((ASLBoardPicker) picker)
           .getBoardDir(), "overlays"));
       otherBoard.addOverlay(o);
-      otherBoard.fixImage();
     }
     catch (MapGrid.BadCoords ex) {
       GameModule.getGameModule().warn(ex.getMessage());
