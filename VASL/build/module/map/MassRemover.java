@@ -22,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.AbstractAction;
@@ -111,9 +112,8 @@ public class MassRemover implements Buildable {
 
     for (int i = 0; i < piece.length; ++i) {
       if (piece[i] instanceof Stack) {
-        for (Enumeration e = ((Stack) piece[i]).getPieces();
-             e.hasMoreElements();) {
-          GamePiece child = (GamePiece) e.nextElement();
+        for (Iterator<GamePiece> it = ((Stack) piece[i]).getPiecesIterator();it.hasNext();) {
+          GamePiece child = it.next();
           if (isMatch(child, name)) {
             comm = comm.append(new RemovePiece(child));
           }

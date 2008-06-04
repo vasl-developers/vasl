@@ -472,4 +472,8 @@ public class Overlay implements Cloneable {
   public ASLBoard getBoard() {
     return board;
   }
+
+  public DataArchive getDataArchive() {
+    return archive;
+  }
 }

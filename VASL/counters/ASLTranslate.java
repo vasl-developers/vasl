@@ -18,15 +18,14 @@
  */
 package VASL.counters;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import VASSAL.command.Command;
 import VASSAL.command.NullCommand;
 import VASSAL.counters.GamePiece;
 import VASSAL.counters.Stack;
 import VASSAL.counters.Translate;
-
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Iterator;
 
 /**
  * Modifies the {@link Translate} base class by not moving counters with the {@link ASLProperties#LOCATION} trait
@@ -44,8 +43,8 @@ public class ASLTranslate extends Translate {
     if (target instanceof Stack) {
       Stack s = (Stack) target;
       ArrayList movable = new ArrayList();
-      for (Enumeration e = s.getPieces(); e.hasMoreElements();) {
-        GamePiece piece = (GamePiece) e.nextElement();
+      for (Iterator<GamePiece> it = s.getPiecesIterator(); it.hasNext();) {
+        GamePiece piece = it.next();
         if (piece.getProperty(ASLProperties.LOCATION) == null) {
           movable.add(piece);
         }

@@ -18,23 +18,49 @@
  */
 package VASL.counters;
 
-import VASSAL.build.GameModule;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+
+import javax.swing.Box;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+
 import VASSAL.build.Configurable;
+import VASSAL.build.GameModule;
 import VASSAL.build.widget.PieceSlot;
 import VASSAL.command.ChangePiece;
 import VASSAL.command.Command;
 import VASSAL.command.NullCommand;
-import VASSAL.configure.StringConfigurer;
 import VASSAL.configure.ChooseComponentPathDialog;
-import VASSAL.counters.*;
-import VASSAL.tools.SequenceEncoder;
+import VASSAL.configure.StringConfigurer;
+import VASSAL.counters.BasicPiece;
+import VASSAL.counters.Decorator;
+import VASSAL.counters.EditablePiece;
+import VASSAL.counters.Embellishment;
+import VASSAL.counters.GamePiece;
+import VASSAL.counters.Hideable;
+import VASSAL.counters.ImagePicker;
+import VASSAL.counters.Obscurable;
+import VASSAL.counters.PieceCloner;
+import VASSAL.counters.PieceEditor;
+import VASSAL.counters.Properties;
+import VASSAL.counters.Stack;
 import VASSAL.tools.ComponentPathBuilder;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.image.BufferedImage;
+import VASSAL.tools.SequenceEncoder;
+import VASSAL.tools.imageop.Op;
 
 public class Concealable extends Obscurable implements EditablePiece {
   public static final String ID = "conceal;";
@@ -258,8 +284,7 @@ public class Concealable extends Obscurable implements EditablePiece {
   private void loadImages(Component obs) {
     if (concealedToMe == null) {
       try {
-        concealedToMe = GameModule.getGameModule().getDataArchive()
-            .getCachedImage(imageName + ".gif");
+        concealedToMe = Op.load(imageName + ".gif").getImage(null);
         if (concealedToMe != null) {
           JLabel l = new JLabel(new ImageIcon(concealedToMe));
           imageSize = l.getPreferredSize();
@@ -268,7 +293,7 @@ public class Concealable extends Obscurable implements EditablePiece {
           imageSize.setSize(0, 0);
         }
       }
-      catch (java.io.IOException ex) {
+      catch (Exception ex) {
         concealedToMe = obs.createImage(20, 20);
         java.awt.Graphics g = concealedToMe.getGraphics();
         g.drawString("?", 0, 0);
@@ -276,10 +301,9 @@ public class Concealable extends Obscurable implements EditablePiece {
     }
     if (concealedToOthers == null) {
       try {
-        concealedToOthers =
-            GameModule.getGameModule().getDataArchive().getCachedImage(nation + "/" + nation + "qmarkme.gif");
+        concealedToOthers = Op.load(nation + "/" + nation + "qmarkme.gif").getImage(null);
       }
-      catch (java.io.IOException ex) {
+      catch (Exception ex) {
         // Using generic qmarkme.gif image and prefs-specified colors
         int size = imageSize.width;
         BufferedImage rev = new BufferedImage(size, size, BufferedImage.TYPE_4BYTE_ABGR);

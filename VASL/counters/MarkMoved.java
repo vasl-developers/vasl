@@ -18,14 +18,25 @@
  */
 package VASL.counters;
 
-import VASSAL.build.GameModule;
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.Shape;
+
+import javax.swing.KeyStroke;
+
 import VASSAL.command.ChangeTracker;
 import VASSAL.command.Command;
-import VASSAL.counters.*;
+import VASSAL.counters.Decorator;
+import VASSAL.counters.EditablePiece;
+import VASSAL.counters.GamePiece;
+import VASSAL.counters.KeyCommand;
+import VASSAL.counters.PieceEditor;
+import VASSAL.counters.Properties;
+import VASSAL.counters.SimplePieceEditor;
 import VASSAL.tools.SequenceEncoder;
-
-import javax.swing.*;
-import java.awt.*;
+import VASSAL.tools.imageop.ImageOp;
+import VASSAL.tools.imageop.Op;
 
 /**
  * Allows a piece to be marked as having moved
@@ -125,16 +136,15 @@ public class MarkMoved extends Decorator implements EditablePiece {
     if (hasMoved) {
       Rectangle r = piece.getShape().getBounds();
       try {
-        Image im =
-            GameModule.getGameModule().getDataArchive().getCachedImage(markImage + ".gif");
+        ImageOp im = Op.load(markImage + ".gif");
         if (zoom != 1.0) {
-          im = GameModule.getGameModule().getDataArchive().getScaledImage(im,zoom);
+          im = Op.scale(im,zoom);
         }
-        g.drawImage(im,
+        g.drawImage(im.getImage(null),
                     x + (int) (zoom * (r.x + r.width)),
                     y + (int) (zoom * r.y),obs);
       }
-      catch (java.io.IOException ex) {
+      catch (Exception ex) {
         ex.printStackTrace();
       }
     }

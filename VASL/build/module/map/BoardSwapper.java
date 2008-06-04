@@ -40,6 +40,7 @@ import VASSAL.build.module.Map;
 import VASSAL.build.module.map.BoardPicker;
 import VASSAL.build.module.map.GlobalMap;
 import VASSAL.counters.GamePiece;
+import VASSAL.tools.imageop.Op;
 
 /**
  * Allows the user the change boards in a Map window while
@@ -89,12 +90,12 @@ public class BoardSwapper extends AbstractBuildable {
       }
     });
     try {
-      launch.setIcon(new ImageIcon(GameModule.getGameModule()
-                                   .getDataArchive().getCachedImage("newBoards.gif")));
+      launch.setIcon(new ImageIcon(Op.load("newBoards.gif").getImage(null)));
       launch.setText("");
       launch.setToolTipText("Pick new boards for this scenario");
     }
-    catch (java.io.IOException ex) {
+    catch (Exception e) {
+      e.printStackTrace();
     }
     map.getToolBar().add(launch);
   }

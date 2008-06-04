@@ -43,7 +43,6 @@ import VASSAL.build.module.map.boardPicker.board.MapGrid;
 import VASSAL.tools.DataArchive;
 import VASSAL.tools.ImageUtils;
 import VASSAL.tools.imageop.AbstractTiledOpImpl;
-import VASSAL.tools.imageop.CropOpBitmapImpl;
 import VASSAL.tools.imageop.ImageOp;
 import VASSAL.tools.imageop.SourceOp;
 import VASSAL.tools.imageop.SourceOpBitmapImpl;
@@ -186,18 +185,13 @@ public class ASLBoard extends Board {
 
   protected void resetImage() {
     boardImageOp = new BoardOp();
-    if (false && (cropBounds.width > 0 || cropBounds.height > 0)) {
-      int x = cropBounds.width < 0 ? boardImageOp.getWidth()-cropBounds.x : cropBounds.x + cropBounds.width;
-      int y = cropBounds.height < 0 ? boardImageOp.getHeight()-cropBounds.y : cropBounds.y + cropBounds.height;
-      boardImageOp = new SourceCrop(boardImageOp,cropBounds.x,cropBounds.y, x, y);
+    if (boardArchive != null) {
+      uncroppedSize = new SourceOpBitmapImpl(imageFile, boardArchive).getSize();
     }
     fixedBoundaries = false;
     scaledImageOp = null;
   }
-
-  public void fixBounds() {
-  }
-
+  
   public static String archiveName(String s) {
     return "bd" + s.toUpperCase();
   }
@@ -243,9 +237,8 @@ public class ASLBoard extends Board {
     cropBounds.width = row2.length() == 0 ? -1 : (getGrid().getLocation(row2 + "0").x - cropBounds.x);
     cropBounds.y = coord1.length() == 0 ? 0 : (getGrid().getLocation("a" + coord1).y - (int) (dy / 2));
     cropBounds.height = coord2.length() == 0 ? -1 : (getGrid().getLocation("a" + coord2).y + (int) (dy / 2) - cropBounds.y);
-    int baseWidth = new SourceOpBitmapImpl(imageFile,boardArchive).getSize().width;
     if (nearestFullRow) {
-      if (cropBounds.width > 0 && Math.abs(cropBounds.x + cropBounds.width - baseWidth) > dx / 4) {
+      if (cropBounds.width > 0 && Math.abs(cropBounds.x + cropBounds.width - uncroppedSize.width) > dx / 4) {
         cropBounds.width += (int) (dx / 2);
       }
       if (cropBounds.x != 0) {
@@ -289,7 +282,6 @@ public class ASLBoard extends Board {
    * Transform from local board coordinates to local coordinates on the uncropped board
    */
   public Point uncroppedCoordinates(Point input) {
-    fixBounds();
     Point p = new Point(input);
     if (reversed) {
       p.translate(cropBounds.width > 0 ? uncroppedSize.width - cropBounds.x - cropBounds.width : 0, cropBounds.height > 0 ? uncroppedSize.height - cropBounds.y
@@ -388,9 +380,7 @@ public class ASLBoard extends Board {
     
     @Override
     protected void fixSize() {
-      ImageOp base = new SourceOpBitmapImpl(imageFile,boardArchive);
-      size = new Dimension(cropBounds.width > 0 ? cropBounds.width : base.getWidth(), cropBounds.height > 0 ? cropBounds.height : base
-          .getHeight());
+      size = new Dimension(cropBounds.width > 0 ? cropBounds.width : uncroppedSize.width, cropBounds.height > 0 ? cropBounds.height : uncroppedSize.height);
 
       tileSize = new Dimension(256,256);
 
@@ -425,14 +415,4 @@ public class ASLBoard extends Board {
     return boardArchive;
   }
   
-  public static class SourceCrop extends CropOpBitmapImpl implements SourceOp {
-
-    public SourceCrop(ImageOp sop, int x0, int y0, int x1, int y1) {
-      super(sop, x0, y0, x1, y1);
-    }
-
-    public String getName() {
-      return null;
-    }
-  }
 }

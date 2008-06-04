@@ -18,14 +18,23 @@
  */
 package VASL.counters;
 
-import VASSAL.build.GameModule;
+import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.Shape;
+
+import javax.swing.KeyStroke;
+
 import VASSAL.command.ChangeTracker;
 import VASSAL.command.Command;
-import VASSAL.counters.*;
+import VASSAL.counters.Decorator;
+import VASSAL.counters.EditablePiece;
+import VASSAL.counters.Embellishment;
+import VASSAL.counters.GamePiece;
+import VASSAL.counters.KeyCommand;
+import VASSAL.counters.PieceEditor;
+import VASSAL.counters.SimplePieceEditor;
 import VASSAL.tools.SequenceEncoder;
-
-import javax.swing.*;
-import java.awt.*;
+import VASSAL.tools.imageop.Op;
 
 /**
  * This class draws a turret counter at different offsets depending on the CA
@@ -81,8 +90,13 @@ public class Turreted extends Embellishment implements EditablePiece {
 
   protected Image getCurrentImage() throws java.io.IOException {
     if (flipped || value != getVehicleCA()) {
-      return GameModule.getGameModule().getDataArchive()
-          .getCachedImage((flipped ? back : front) + value + ".gif");
+      try {
+        return Op.load((flipped ? back : front) + value + ".gif").getImage(null);
+      }
+      catch (Exception e) {
+        e.printStackTrace();
+        return null;
+      }
     }
     else {
       return null;

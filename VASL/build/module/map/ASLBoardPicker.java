@@ -91,7 +91,6 @@ import VASSAL.command.Command;
 import VASSAL.command.NullCommand;
 import VASSAL.configure.DirectoryConfigurer;
 import VASSAL.configure.ValidationReport;
-import VASSAL.tools.DataArchive;
 
 public class ASLBoardPicker extends BoardPicker implements ActionListener {
   /** The key for the preferences setting giving the board directory */
@@ -769,7 +768,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
         boards.addElement(b);
         if (b != null) {
           try {
-            readOptions(DataArchive.getFileStream(b.getFile(), "SSRControls"));
+            readOptions(b.getBoardArchive().getFileStream("SSRControls"));
           }
           catch (IOException ex) {
           }
@@ -777,7 +776,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
             Overlay o = (Overlay) oEnum.nextElement();
             if (!(o instanceof SSROverlay)) {
               try {
-                readOptions(DataArchive.getFileStream(o.getFile(), "SSRControls"));
+                readOptions(o.getDataArchive().getFileStream("SSRControls"));
               }
               catch (IOException ex) {
               }

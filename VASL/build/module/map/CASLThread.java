@@ -30,11 +30,16 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.StringTokenizer;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+
+import org.jdesktop.swingworker.SwingWorker;
 
 import CASL.Map.GameMap;
 import CASL.Map.Hex;
@@ -56,7 +61,6 @@ import VASSAL.configure.ColorConfigurer;
 import VASSAL.counters.Decorator;
 import VASSAL.counters.GamePiece;
 import VASSAL.counters.PieceIterator;
-import VASSAL.tools.BackgroundTask;
 
 /**
  * Extends the LOS thread to take advantage of CASL's LOS logic and report
@@ -97,7 +101,8 @@ public class CASLThread
   private Image loadingStatus = null;
 
   // Thread to initialize CASL map in background;
-  private Thread initThread;
+//  private Thread initThread;
+  private SwingWorker<String, Void> initThread;
 
   public CASLThread() {
     // ensure correct Java version
@@ -118,9 +123,12 @@ public class CASLThread
         case LOADING:
           if (initThread != null && !visible) {
             try {
-              initThread.join();
+              initThread.get();
             }
             catch (InterruptedException e) {
+            }
+            catch (ExecutionException e) {
+              e.printStackTrace();
             }
             launchTruLOS();
           }
@@ -156,19 +164,15 @@ public class CASLThread
     // if there are any unexpected exceptions, turn off LOS checking
     try {
       // get the board list
-      Iterator boardList = map.getBoards().iterator();
+      List<ASLBoard> boardList = new ArrayList<ASLBoard>((Collection<? extends ASLBoard>) map.getBoards());
 
       // determine the VASL map dimensions
-      ASLBoard b = null;
-      while (boardList.hasNext()) {
-        b = (ASLBoard) boardList.next();
+      for (ASLBoard b : boardList) {
         mapWidth = Math.max(b.relativePosition().x, mapWidth);
         mapHeight = Math.max(b.relativePosition().y, mapHeight);
       }
       mapWidth++;
       mapHeight++;
-      // reset the enumerator
-      boardList = map.getBoards().iterator();
       // create the necessary LOS variables
       result = new LOSResult();
       scenario = new Scenario();
@@ -177,16 +181,15 @@ public class CASLThread
       // create the map
       //CASLMap = new GameMap(mapWidth * 32 + 1, mapHeight * 10);
       //CASLMap = createCASLMap(mapWidth * 32 + 1, mapHeight * 10);
-      CASLMap = createCASLMap(mapWidth * (int) Math.round(b.getUncroppedSize().getWidth() / 56.25) + 1,
-                              mapHeight * (int) Math.round(b.getUncroppedSize().getHeight() / 64.5));
+      CASLMap = createCASLMap(mapWidth * (int) Math.round(boardList.get(0).getUncroppedSize().getWidth() / 56.25) + 1,
+                              mapHeight * (int) Math.round(boardList.get(0).getUncroppedSize().getHeight() / 64.5));
 
 
 
       // load the CASL maps
       boolean mapFound = false;
-      while (boardList.hasNext()) {
+      for (ASLBoard b : boardList) {
 
-        b = (ASLBoard) boardList.next();
         String boardName = b.getName().startsWith("r") ? b.getName().substring(1) : b.getName();
 
         // set the upper left board
@@ -198,7 +201,7 @@ public class CASLThread
         // load the map files
         GameMap newCASLMap;
         try {
-          newCASLMap = CASL.Map.Map.readMap(VASSAL.tools.DataArchive.getFileStream(b.getFile(), "bd" + boardName + ".map"));
+          newCASLMap = CASL.Map.Map.readMap(b.getBoardArchive().getFileStream("bd" + boardName + ".map"));
         }
         catch (IOException e) {
           freeResources();
@@ -774,14 +777,22 @@ public class CASLThread
       if (initThread == null
           && status != DISABLED) {
         status = LOADING;
-        initThread = new BackgroundTask() {
-          String error = null;
-
-          public void doFirst() {
-            error = initCaslMap();
+        initThread = new SwingWorker<String,Void>() {
+          @Override
+          protected String doInBackground() throws Exception {
+            return initCaslMap();
           }
-
-          public void doLater() {
+          protected void done() {
+            String error = null;
+            try {
+              error = get();
+            }
+            catch (InterruptedException e) {
+              e.printStackTrace();
+            }
+            catch (ExecutionException e) {
+              e.printStackTrace();
+            }
             if (error != null) {
               GameModule.getGameModule().warn(error);
               status = ERROR;
@@ -791,7 +802,8 @@ public class CASLThread
             }
             map.repaint();
           }
-        }.start();
+        };
+        initThread.execute();
       }
     }
     else {
