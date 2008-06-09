@@ -60,8 +60,8 @@ public class ASLBoard extends Board {
   private DataArchive boardArchive;
 
   public ASLBoard() {
-    setGrid(new ASLHexGrid(64.5, false));
-    ((HexGrid) getGrid()).setHexWidth(56.25);
+    setGrid(new ASLHexGrid(64.51, false));
+    ((HexGrid) getGrid()).setHexWidth(56.24);
     ((HexGrid) getGrid()).setEdgesLegal(true);
     reversible = true;
   }
