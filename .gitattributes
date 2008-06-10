@@ -9,6 +9,7 @@ dist/macosx/JavaApplicationStub -text
 dist/macosx/PkgInfo -text
 dist/windows/VASL.bat -text
 dist/windows/VASL.l4j.xml -text svneol=unset#text/plain
+dist/windows/nsis/installer.nsi -text
 doc/UsersGuide/02.htm -text svneol=unset#text/plain
 doc/UsersGuide/03.htm -text svneol=unset#text/plain
 doc/UsersGuide/04.htm -text svneol=unset#text/plain
