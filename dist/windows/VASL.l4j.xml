@@ -1,0 +1,35 @@
+<launch4jConfig>
+  <dontWrapJar>true</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>lib\Vengine.jar</jar>
+  <outfile>VASL.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine>--load VASL.mod</cmdLine>
+  <chdir>.</chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl>http://forums.vassalengine.org</supportUrl>
+  <customProcName>true</customProcName>
+  <stayAlive>false</stayAlive>
+  <icon></icon>
+  <classPath>
+    <mainClass>VASSAL.launch.Player</mainClass>
+    <cp>Vengine.jar</cp>
+  </classPath>
+  <jre>
+    <path></path>
+    <minVersion>1.5.0</minVersion>
+    <dontUsePrivateJres>false</dontUsePrivateJres>
+  </jre>
+  <versionInfo>
+    <fileVersion>%NUMVERSION%.0</fileVersion>
+    <txtFileVersion>%FULLVERSION%</txtFileVersion>
+    <fileDescription>VASL</fileDescription>
+    <copyright>The VASL Team</copyright>
+    <productVersion>%NUMVERSION%.0</productVersion>
+    <txtProductVersion>%FULLVERSION%</txtProductVersion>
+    <productName>VASL</productName>
+    <internalName>VASL</internalName>
+    <originalFilename>VASL.exe</originalFilename>
+  </versionInfo>
+</launch4jConfig>
