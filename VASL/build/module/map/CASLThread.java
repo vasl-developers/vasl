@@ -164,7 +164,10 @@ public class CASLThread
     // if there are any unexpected exceptions, turn off LOS checking
     try {
       // get the board list
-      List<ASLBoard> boardList = new ArrayList<ASLBoard>((Collection<? extends ASLBoard>) map.getBoards());
+      List<ASLBoard> boardList = new ArrayList<ASLBoard>();
+      for (Board b : map.getBoards()) {
+          boardList.add((ASLBoard)b);
+      }
 
       // determine the VASL map dimensions
       for (ASLBoard b : boardList) {
