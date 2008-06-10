@@ -4,6 +4,9 @@ dist/VASL.mod -text
 dist/VASL.sh -text
 dist/Vengine.mf -text
 dist/launch.xml -text
+dist/macosx/Info.plist -text
+dist/macosx/JavaApplicationStub -text
+dist/macosx/PkgInfo -text
 doc/UsersGuide/02.htm -text svneol=unset#text/plain
 doc/UsersGuide/03.htm -text svneol=unset#text/plain
 doc/UsersGuide/04.htm -text svneol=unset#text/plain
