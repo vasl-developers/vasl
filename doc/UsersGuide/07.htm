@@ -1,0 +1,289 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
+
+<html>
+<head>
+<title>VASL 4.0 User's Guide - Playing Tools</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="vasl_ug_styles.css" type="text/css">
+<script language="JavaScript">
+<!--
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+
+function MM_findObj(n, d) { //v4.0
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && document.getElementById) x=document.getElementById(n); return x;
+}
+
+function MM_swapImage() { //v3.0
+  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+}
+//-->
+</script>
+</head>
+<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" link="#666600" vlink="#666600" alink="#FF0000" onLoad="MM_preloadImages('ug_images/nav_users_guide_on.gif','ug_images/nav_about_on.gif','ug_images/nav_download_on.gif','ug_images/nav_faq_on.gif','ug_images/ug_nav_vasl_on.gif')">
+<!-- BEGIN HEADER TABLE  This table contains the logo and page header -->
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr> 
+    <td width="1%" align="left" valign="top"> <a href="http://www.vasl.org" ><img src="ug_images/vASL4_logo.gif" width="169" height="170" border="0"></a> 
+    </td>
+    <td valign="top" width="99%" height="92"> 
+      <!-- BEGIN NAVIGATION STRUCTURE  Contains link to vASL.org -->
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr> 
+          <td bgcolor="#999933" align="right" valign="top" background="ug_images/header_bg.jpg" height="71"><img src="ug_images/shim.gif" width="10" height="71"></td>
+        </tr>
+        <tr> 
+          <td> 
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#666666">
+              <tr align="right" valign="top"> 
+                <td width="99%" background="ug_images/nav_bg.gif"><img src="ug_images/shim.gif" width="10" height="21"></td>
+                <td width="1%"><a href="http://www.vasl.org" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('vasl','','ug_images/ug_nav_vasl_on.gif',1)" ><img src="ug_images/ug_nav_vasl.gif" width="151" height="21" name="vasl" border="0" alt="vASL.org"></a></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+      <!-- END NAVIGATION STRUCTURE -->
+      <!-- Page Header -->
+      <table width="100%" border="0" cellspacing="20">
+        <tr> 
+          <td> 
+            <h1 align="right">VASL 4.0 User's Guide<br>
+              - Playing Tools</h1>
+          </td>
+        </tr>
+      </table>
+      <!-- End Page Header -->
+    </td>
+  </tr>
+</table>
+<!-- END HEADER TABLE -->
+<table width="90%" border="0" align="center" cellspacing="20">
+  <tr align="center"> 
+    <td colspan="2" class="sidebar"><a href="index.htm">Introduction</a> | <a href="02.htm">Installation</a> 
+      | <a href="03.htm">Preferences</a> | <a href="04.htm">Environment</a> | 
+      <a href="05.htm">Getting Started</a> | <a href="06.htm">Setting Up a Scenario</a> 
+      | <b>Playing Tools</b> | <a href="08.htm">Appendices</a></td>
+  </tr>
+  <tr> 
+    <td colspan="2"><a name="info"> 
+      <hr width="100%" align="center" noshade>
+      </a> 
+      <p><a name="info"> </a>All Playing Tools for VASL are accessible either 
+        from the top of the VASL Controls window, or from the top of the VASL 
+        Map window.</p>
+    </td>
+  </tr>
+  <!-- BEGIN MAIN CONTENT -->
+  <tr> 
+    <td valign="top"> 
+      <h2>Scenario Info Window</h2>
+      <p>The Scenario Info window allows you to keep track of the what turn it 
+        is, who moves first, SAN numbers, and ELR ratings. There is also a notes 
+        area that allows you to keep track of information such as Victory Conditions, 
+        Play Balance used, etc. The Private Note area is a a way to keep private 
+        notes for yourself during the course of the game.</p>
+    </td>
+    <td valign="top"><img src="ug_images/scenario_info.gif" width="338" height="329" border="1"></td>
+  </tr>
+  <tr> 
+    <td colspan="2"> 
+      <h2>OBA Draw Piles</h2>
+      <div align="center"><img src="ug_images/oba.gif" width="482" height="200" border="1"> 
+      </div><br>
+      <p>Click the <b>OBA</b> button at the top of the VASL Controls window. The 
+        OBA Modules window will appear. Push the <b>Add Module</b> button to create 
+        a new (empty) deck for making OBA draws. When your opponent creates a 
+        module, you will simply see a deck of cards which you can not modify. 
+        Otherwise, you may type in the number of red and black cards in the areas 
+        provided (and hit enter). Click the mouse on the deck to turn up a random 
+        card from the pile. Click on an exposed card to shuffle it back into the 
+        deck. The OBA draw pile information is shared between users just like 
+        counter positions, and is retained when the scenario is saved. To delete 
+        a module, set the number of red and black cards both to zero.</p>
+      <h2>Die Rollers</h2>
+      <p>Click <b>dr</b> at the top of the VASL Controls window (or press <b>F1</b>) 
+        to roll one die; click <b>DR</b> (or press <b>F2</b>) to roll two. The 
+        results of the roll will appear in the VASL Controls window with the name 
+        of the rolling player. The first number of a DR is considered to be the 
+        colored die (e.g., on a result of ***DR=1,3***, the 1 is the colored die).</p>
+      <h2>QRDC</h2>
+      <p>VASL also contains a computerized version of the QRDC to aid your play. 
+        Select the <b>QRDC</b> button at the top of the VASL Controls window to 
+        launch the QRDC. Both IFT and IIFT are present on the table. Simply click 
+        on the corresponding tab to switch from one to the other, or to the Close 
+        Combat, Ordnance To Hit and Vehicle To Kill charts.</p>
+      <h2>Checking LOS</h2>
+      <p>VASL 4.0 features automatic LOS checking, courtesy of David Sullivan. 
+        LOS checking works on single boards, cropped boards, or across multiple 
+        boards. However, LOS does not account for overlays or terrain transformations 
+        (e.g. Grain out of season) at this time. You may enable or disable LOS 
+        checking in the &quot;<strong>LOS</strong>&quot; tab of the preferences.</p>
+      <p> After pressing the <strong>LOS</strong> button, left click the mouse 
+        in any hex (the &quot;source&quot; hex) and drag the mouse to any other 
+        hex (the &quot;target&quot; hex) to check the LOS. You may select the 
+        highest location in a hex by holding the control key (Ctrl) down when 
+        clicking or dragging the mouse. If the mouse pointer is not in the center 
+        of a hex, the LOS<br>
+        will be checked to/from the nearest hex spine (The '<strong>Snap thread 
+        to grid</strong>' preference is ignored when LOS checking is enabled). 
+        The last LOS checked remains displayed on the screen as long as VASL is 
+        in LOS mode. Note that if the '<strong>Retain LOS-hindrance counters</strong>' 
+        preference is &quot;yes&quot; (checked), the hindrance counters that remain 
+        on the screen during the LOS check WILL affect the results.</p>
+      <p>The LOS thread uses three different colors: a basic thread color, a hindrance 
+        color, and a blocked color, all of which are customizable in the <strong>Edit 
+        Properties</strong> dialog. The LOS thread starts with the basic color, 
+        indicating a clear LOS, changes to the hindrance color at the point of 
+        the first hindrance, and then changes to the blocked color at the point 
+        where the LOS is blocked.</p>
+      <p>If the &quot;<strong>Verbose LOS Mode</strong>&quot; preference box is 
+        checked, text messages closest to the source and target locations will 
+        display the name and elevation of the locations. A second text message, 
+        near the target location, will display the range and the result of the 
+        LOS check. If the LOS is clear, but hindrances were detected, the number 
+        of hindrances will be given. If the LOS is blocked, the hex where it is 
+        blocked and the reason will be shown.</p>
+      <p>While the LOS is visible, you may move the source and target locations 
+        up and down within the hex using these keystrokes:</p>
+      <table border="1" cellspacing="0" cellpadding="5" align="center" bordercolor="#000000">
+        <tr bgcolor="#CCCC99"> 
+          <td class="parNonJust" nowrap><b>Keystroke</b></td>
+          <td class="parNonJust" nowrap align="center"><b>Moves</b></td>
+        </tr>
+        <tr bgcolor="#CCCCCC"> 
+          <td class="parNonJust" nowrap>Up Arrow</td>
+          <td class="parNonJust" nowrap align="center">Move the target location 
+            up</td>
+        </tr>
+        <tr> 
+          <td class="parNonJust" nowrap>Down Arrow</td>
+          <td class="parNonJust" nowrap align="center">Move the target location 
+            down</td>
+        </tr>
+        <tr bgcolor="#CCCCCC"> 
+          <td class="parNonJust" nowrap>Ctrl + Up Arrow</td>
+          <td class="parNonJust" nowrap align="center">Move the source location 
+            up</td>
+        </tr>
+        <tr> 
+          <td class="parNonJust" nowrap>Ctrl + Down arrow</td>
+          <td class="parNonJust" nowrap align="center">Move the source location 
+            down</td>
+        </tr>
+      </table>
+      <p>If no locations exist above or below the current one, the keystroke is 
+        ignored.</p>
+      <h2>Mark All Unmoved&nbsp;&nbsp;<img src="ug_images/mark_unmoved.gif" width="91" height="21" align="absmiddle" border="1"></h2>
+      <p>If you have checked <b>Mark Moved Units</b> in the Preferences, click 
+        <b>Mark unmoved</b> at the top of the VASL map window to delete the &quot;Moved&quot; 
+        notation of all stacks.</p>
+      <h2>Save Map as GIF File&nbsp;&nbsp;<img src="ug_images/save_gif.gif" width="25" height="23" align="absmiddle" border="1"></h2>
+      <p>This will save the image of the map and counters into a GIF file. It 
+        is the same as a screen capture except that the entire map need not be 
+        showing on your screen. <font color="#CCCCCC">The file is written in PPM 
+        format (sorry). The files will be large (~ 3 MB for a single board), but 
+        you should be able to load them into any graphics program and convert 
+        them to GIF format, which will reduce the size by a factor of 10. If you 
+        don't have such a program, there's a web site that can do it for you.</font></p>
+      <h2>Save Map as Text&nbsp;&nbsp;<img src="ug_images/save_text.gif" width="59" height="21" align="absmiddle" border="1"></h2>
+      <p>This will write an ASCII file giving a hex-by-hex summary of the contents 
+        of the map. You will be prompted to choose whether or not to output the 
+        locations and content of your hidden and concealed units.</p>
+      <h2>Keyboard Shortcuts</h2>
+      <table border="1" cellspacing="0" cellpadding="5" align="center" bordercolor="#000000">
+        <tr bgcolor="#CCCC99"> 
+          <td class="parNonJust" nowrap><b>Action</b></td>
+          <td class="parNonJust" nowrap align="center"><b>PC Keyboards</b></td>
+        </tr>
+        <tr bgcolor="#CCCCCC"> 
+          <td class="parNonJust" nowrap>dr</td>
+          <td class="parNonJust" nowrap align="center">F1</td>
+        </tr>
+        <tr> 
+          <td class="parNonJust" nowrap>DR</td>
+          <td class="parNonJust" nowrap align="center">F2</td>
+        </tr>
+        <tr bgcolor="#CCCCCC"> 
+          <td class="parNonJust" nowrap>Zoom out</td>
+          <td class="parNonJust" nowrap align="center">F3</td>
+        </tr>
+        <tr> 
+          <td class="parNonJust" nowrap>Zoom in</td>
+          <td class="parNonJust" nowrap align="center">F4</td>
+        </tr>
+        <tr bgcolor="#CCCCCC"> 
+          <td class="parNonJust" nowrap>QRDC Tables</td>
+          <td class="parNonJust" nowrap align="center">F5</td>
+        </tr>
+        <tr> 
+          <td class="parNonJust" nowrap>OBA Draw Pile</td>
+          <td class="parNonJust" nowrap align="center">F6</td>
+        </tr>
+        <tr bgcolor="#CCCCCC"> 
+          <td class="parNonJust" nowrap>Scenario Info Window</td>
+          <td class="parNonJust" nowrap align="center">F7</td>
+        </tr>
+        <tr> 
+          <td class="parNonJust" nowrap>Mark All Unmoved</td>
+          <td class="parNonJust" nowrap align="center">F8</td>
+        </tr>
+        <tr bgcolor="#CCCCCC"> 
+          <td class="parNonJust" nowrap>Check LOS</td>
+          <td class="parNonJust" nowrap align="center">F10 </td>
+        </tr>
+        <tr> 
+          <td class="parNonJust" nowrap>Scroll Map (only if no unit selected and 
+            set in Preferences)</td>
+          <td class="parNonJust" nowrap align="center">arrow keys</td>
+        </tr>
+        <tr bgcolor="#CCCCCC"> 
+          <td class="parNonJust" nowrap>Step (forward through logfile) </td>
+          <td class="parNonJust" nowrap align="center">Page Down </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr align="left" valign="top"> 
+    <td colspan="2"> 
+      <hr width="100%" align="center" noshade>
+    </td>
+  </tr>
+  <!-- END MAIN CONTENT -->
+  <!-- USER'S GUIDE NAVIGATION - BOTTOM -->
+  <tr> 
+    <td align="left" class="next" nowrap> &lt;&lt; <a href="06.htm">Setting Up 
+      a Scenario</a> </td>
+    <td align="right" class="next"> <a href="08.htm">Appendices</a> &gt;&gt; </td>
+  </tr>
+  <tr align="center"> 
+    <td colspan="2" class="sidebar"><a href="index.htm">Introduction</a> | <a href="02.htm">Installation</a> 
+      | <a href="03.htm">Preferences</a> | <a href="04.htm">Environment</a> | 
+      <a href="05.htm">Getting Started</a> | <a href="06.htm">Setting Up a Scenario</a> 
+      | <b>Playing Tools</b> | <a href="08.htm">Appendices</a></td>
+  </tr>
+  <!-- END USER'S GUIDE NAVIGATION - BOTTOM -->
+  <!-- BEGIN COPYRIGHT -->
+  <tr> 
+    <td colspan="2"> 
+      <div align="center" class="copyright">&copy; Copyright 2002 <a href="mailto:rodneykinney@attbi.com">Rodney 
+        Kinney</a></div>
+    </td>
+  </tr>
+  <!-- END COPYRIGHT -->
+</table>
+</body>
+</html>

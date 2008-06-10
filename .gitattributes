@@ -1,2 +1,113 @@
 * text=auto !eol
-VASL/build/module/map/CASLThread.java -text
+/Makefile -text
+doc/UsersGuide/02.htm -text svneol=unset#text/plain
+doc/UsersGuide/03.htm -text svneol=unset#text/plain
+doc/UsersGuide/04.htm -text svneol=unset#text/plain
+doc/UsersGuide/05.htm -text svneol=unset#text/plain
+doc/UsersGuide/06.htm -text svneol=unset#text/plain
+doc/UsersGuide/07.htm -text svneol=unset#text/plain
+doc/UsersGuide/08.htm -text svneol=unset#text/plain
+doc/UsersGuide/index.htm -text svneol=unset#text/plain
+doc/UsersGuide/ug_images/VASLdir.gif -text
+doc/UsersGuide/ug_images/add_overlay.gif -text
+doc/UsersGuide/ug_images/add_overlay_bd2.gif -text
+doc/UsersGuide/ug_images/choose_boards_bd2.gif -text
+doc/UsersGuide/ug_images/crop.gif -text
+doc/UsersGuide/ug_images/crop_board_2.gif -text
+doc/UsersGuide/ug_images/header_bg.jpg -text
+doc/UsersGuide/ug_images/heirarchy.gif -text
+doc/UsersGuide/ug_images/los.gif -text
+doc/UsersGuide/ug_images/map.gif -text
+doc/UsersGuide/ug_images/map_features.gif -text
+doc/UsersGuide/ug_images/mark_unmoved.gif -text
+doc/UsersGuide/ug_images/messages.gif -text
+doc/UsersGuide/ug_images/nav_bg.gif -text
+doc/UsersGuide/ug_images/oba.gif -text
+doc/UsersGuide/ug_images/opening_screen.gif -text
+doc/UsersGuide/ug_images/options_temp.gif -text
+doc/UsersGuide/ug_images/overview.gif -text
+doc/UsersGuide/ug_images/pick_new_boards.gif -text
+doc/UsersGuide/ug_images/pref_colors.gif -text
+doc/UsersGuide/ug_images/pref_general.gif -text
+doc/UsersGuide/ug_images/pref_los.gif -text
+doc/UsersGuide/ug_images/pref_personal.gif -text
+doc/UsersGuide/ug_images/properties.gif -text
+doc/UsersGuide/ug_images/save_gif.gif -text
+doc/UsersGuide/ug_images/save_text.gif -text
+doc/UsersGuide/ug_images/scenario_info.gif -text
+doc/UsersGuide/ug_images/server_new_room.gif -text
+doc/UsersGuide/ug_images/server_room.gif -text
+doc/UsersGuide/ug_images/shim.gif -text
+doc/UsersGuide/ug_images/status_looking.gif -text
+doc/UsersGuide/ug_images/terrain_ssr.gif -text
+doc/UsersGuide/ug_images/terrain_ssr_bd17.gif -text
+doc/UsersGuide/ug_images/terrain_ssr_bd24.gif -text
+doc/UsersGuide/ug_images/typical_setup.gif -text
+doc/UsersGuide/ug_images/ug_nav_vasl.gif -text
+doc/UsersGuide/ug_images/ug_nav_vasl_on.gif -text
+doc/UsersGuide/ug_images/ug_pref_general.gif -text
+doc/UsersGuide/ug_images/units_ger_veh.gif -text
+doc/UsersGuide/ug_images/vASL4_logo.gif -text
+doc/UsersGuide/ug_images/vassal.gif -text
+doc/UsersGuide/vasl_ug_styles.css -text
+lib/AppleJavaExtensions.jar -text
+lib/BrowserLauncher2-10.jar -text
+lib/CASL.jar -text
+lib/Vengine.jar -text
+lib/batik-anim.jar -text
+lib/batik-awt-util.jar -text
+lib/batik-bridge.jar -text
+lib/batik-codec.jar -text
+lib/batik-css.jar -text
+lib/batik-dom.jar -text
+lib/batik-ext.jar -text
+lib/batik-extension.jar -text
+lib/batik-gui-util.jar -text
+lib/batik-gvt.jar -text
+lib/batik-parser.jar -text
+lib/batik-script.jar -text
+lib/batik-svg-dom.jar -text
+lib/batik-svggen.jar -text
+lib/batik-swing.jar -text
+lib/batik-transcoder.jar -text
+lib/batik-util.jar -text
+lib/batik-xml.jar -text
+lib/java-getopt-1.0.13.jar -text
+lib/js.jar -text
+lib/licenses/LICENSE.batik.txt -text svneol=unset#text/plain
+lib/licenses/LICENSE.cryptix.txt -text svneol=unset#text/plain
+lib/licenses/LICENSE.dom-documentation.txt -text svneol=unset#text/plain
+lib/licenses/LICENSE.dom-software.txt -text svneol=unset#text/plain
+lib/licenses/LICENSE.java-getopt.txt -text svneol=unset#text/plain
+lib/licenses/LICENSE.js.txt -text svneol=unset#text/plain
+lib/licenses/LICENSE.pdf-transcoder.txt -text svneol=unset#text/plain
+lib/licenses/LICENSE.sax.txt -text svneol=unset#text/plain
+lib/licenses/LICENSE.sun-icons.txt -text svneol=unset#text/plain
+lib/licenses/LICENSE.swingx.txt -text svneol=unset#text/plain
+lib/licenses/LICENSE.tango.txt -text svneol=unset#text/plain
+lib/licenses/LICENSE.wizard.txt -text svneol=unset#text/plain
+lib/licenses/LICENSE.xalan-2.6.0.txt -text svneol=unset#text/plain
+lib/licenses/LICENSE.xerces_2_5_0.txt -text svneol=unset#text/plain
+lib/licenses/LICENSE.xml-apis.txt -text svneol=unset#text/plain
+lib/licenses/NOTICE.batik.txt -text svneol=unset#text/plain
+lib/licenses/README.batik.txt -text svneol=unset#text/plain
+lib/licenses/README.js.txt -text svneol=unset#text/plain
+lib/licenses/README.pdf-transcoder.txt -text svneol=unset#text/plain
+lib/licenses/README.tango.txt -text svneol=unset#text/plain
+lib/licenses/README.xalan-2.6.0.txt -text svneol=unset#text/plain
+lib/licenses/README.xerces_2_5_0.txt -text svneol=unset#text/plain
+lib/licenses/README.xml-apis-ext.txt -text svneol=unset#text/plain
+lib/licenses/README.xml-apis.txt -text svneol=unset#text/plain
+lib/pdf-transcoder.jar -text
+lib/smack.jar -text
+lib/smackx-debug.jar -text
+lib/smackx.jar -text
+lib/swing-layout-1.0.3.jar -text
+lib/swing-worker-1.1.jar -text
+lib/swingx-0.9.2.jar -text
+lib/wizard.jar -text
+lib/xalan-2.6.0.jar -text
+lib/xerces_2_5_0.jar -text
+lib/xml-apis-ext.jar -text
+lib/xml-apis.jar -text
+src/VASL/build/module/map/CASLThread.java -text

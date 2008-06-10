@@ -1,0 +1,520 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
+
+<html>
+<head>
+<title>VASL 4.0 User's Guide - Setting Up a Scenario</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="vasl_ug_styles.css" type="text/css">
+<script language="JavaScript">
+<!--
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+
+function MM_findObj(n, d) { //v4.0
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && document.getElementById) x=document.getElementById(n); return x;
+}
+
+function MM_swapImage() { //v3.0
+  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+}
+//-->
+</script>
+</head>
+<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" link="#666600" vlink="#666600" alink="#FF0000" onLoad="MM_preloadImages('ug_images/nav_users_guide_on.gif','ug_images/nav_about_on.gif','ug_images/nav_download_on.gif','ug_images/nav_faq_on.gif','ug_images/ug_nav_vasl_on.gif')">
+<!-- BEGIN HEADER TABLE  This table contains the logo and page header -->
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr> 
+    <td width="1%" align="left" valign="top"> <a href="http://www.vasl.org" ><img src="ug_images/vASL4_logo.gif" width="169" height="170" border="0"></a> 
+    </td>
+    <td valign="top" width="99%" height="92"> 
+      <!-- BEGIN NAVIGATION STRUCTURE  Contains link to vASL.org -->
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr> 
+          <td bgcolor="#999933" align="right" valign="top" background="ug_images/header_bg.jpg" height="71"><img src="ug_images/shim.gif" width="10" height="71"></td>
+        </tr>
+        <tr> 
+          <td> 
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#666666">
+              <tr align="right" valign="top"> 
+                <td width="99%" background="ug_images/nav_bg.gif"><img src="ug_images/shim.gif" width="10" height="21"></td>
+                <td width="1%"><a href="http://www.vasl.org" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('vasl','','ug_images/ug_nav_vasl_on.gif',1)" ><img src="ug_images/ug_nav_vasl.gif" width="151" height="21" name="vasl" border="0" alt="vASL.org"></a></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+      <!-- END NAVIGATION STRUCTURE -->
+      <!-- Page Header -->
+      <table width="100%" border="0" cellspacing="20">
+        <tr> 
+          <td> 
+            <h1 align="right">VASL 4.0 User's Guide<br>
+              - Setting Up a Scenario</h1>
+          </td>
+        </tr>
+      </table>
+      <!-- End Page Header -->
+    </td>
+  </tr>
+</table>
+<!-- END HEADER TABLE -->
+<table width="90%" border="0" align="center" cellspacing="20">
+  <tr align="center"> 
+    <td colspan="2" class="sidebar"><a href="index.htm">Introduction</a> | <a href="02.htm">Installation</a> 
+      | <a href="03.htm">Preferences</a> | <a href="04.htm">Environment</a> | 
+      <a href="05.htm">Getting Started</a> | <b>Setting Up a Scenario</b> | <a href="07.htm">Playing 
+      Tools</a> | <a href="08.htm">Appendices</a></td>
+  </tr>
+  <!-- USER'S GUIDE NAVIGATION - TOP -->
+  <!-- END USER'S GUIDE NAVIGATION - TOP -->
+  <!-- BEGIN MAIN CONTENT -->
+  <tr> 
+    <td colspan="2"> <a name="creating"> 
+      <hr width="100%" align="center" noshade>
+      </a> 
+      <div align="center" class="sidebar"><b>Creating a Room</b> | <a href="#loading">Loading 
+        the Scenario</a> | <a href="#maps">Maps</a> | <a href="#placement">Placement 
+        of Counters</a> | <a href="#handling">Handling the Counters</a> | <a href="#tips">Tips 
+        and Tricks</a></div>
+    </td>
+  </tr>
+  <tr align="left" valign="top"> 
+    <td> 
+      <h2>Step 1 - Creating a Room</h2>
+      <p>In order to start a new game it will be necessary for you to create a 
+        Scenario Room for you and your opponent to play. In the Server window. 
+        type the name you wish your room to have into the &quot;New Game&quot; 
+        field and press <b>Enter</b> on your keyboard. You should now be the sole 
+        occupant of that room. If you enter the same name as a currently-ongoing 
+        scenario, you will join that room instead.</p>
+      <blockquote> 
+        <p class="sidebar"><b>NOTE:</b> It is considered bad etiquette to start 
+          up a scenario in the middle of the Main Room. This is the meeting area 
+          for players entering VASL, not a place to play your game! </p>
+      </blockquote>
+      <p>While connected to a scenario chat room, all moves are broadcast to all 
+        players and maps are updated automatically. You can save and restore the 
+        game to files on your local machine. If your map and your opponent's map 
+        appear to differ (e.g. due to lost moves during a broken connection), 
+        synchronizing by right clicking on your opponent's name and selecting 
+        <b>&quot;Synchronize&quot;</b> will update your map to coincide with your 
+        opponent's.</p>
+    </td>
+    <td><img src="ug_images/server_new_room.gif" width="333" height="243" border="1"></td>
+  </tr>
+  <tr align="left" valign="top"> 
+    <td colspan="2"> <a name="loading"> 
+      <hr width="100%" align="center" noshade>
+      </a> 
+      <div align="center" class="sidebar"><a href="#creating">Creating a Room</a> 
+        | <b>Loading the Scenario</b> | <a href="#maps">Maps</a> | <a href="#placement">Placement 
+        of Counters</a> | <a href="#handling">Handling the Counters</a> | <a href="#tips">Tips 
+        and Tricks</a></div>
+      <h2>Step 2 - Loading the Scenario</h2>
+      <p>First, check the <a href="http://www.vasl.org/scenarios.htm">VASL scenario 
+        setup archive</a> for the scenario you want to play. Many official scenarios 
+        have been compiled by volunteers. Download the file, then from the VASL 
+        controls window choose <b>File - Load Game</b> and select the scenario 
+        file, and you'll have both sides' OB in front of you, ready for the Defender's 
+        setup. (If you're not setting up a scenario from scratch, proceed to the 
+        instructions on <a href="#placement">placing your counters</a>.)</p>
+      <p>If the scenario you are playing doesn't exist in the archive, you can 
+        create the setup yourself. Choose <b>File - New Game</b>. The Choose Boards 
+        window will appear asking you to select the maps you will use in the game.</p>
+      <a name="maps"> 
+      <hr width="100%" align="center" noshade>
+      </a> 
+      <div align="center" class="sidebar"><a href="#creating">Creating a Room</a> 
+        | <a href="#loading">Loading the Scenario</a> | <b>Maps</b> | <a href="#placement">Placement 
+        of Counters</a> | <a href="#handling">Handling the Counters</a> | <a href="#tips">Tips 
+        and Tricks</a></div>
+      <h2>Step 3 - Mapboards</h2>
+      <div align="center"><img src="ug_images/choose_boards_bd2.gif" width="539" height="175" border="1"></div><br>
+      <p>Select the mapboard you are going to use for the scenario from the drop 
+        down list. Only mapboards which you have downloaded beforehand from the 
+        <a href="http://www.vasl.org/boards.htm" >Board Archive</a> will appear 
+        in the list. Occasionally, new versions of board files will be issues 
+        to correct artwork errors or add features. The version number of the board 
+        appears with the name of the board after it has been loaded (e.g. &quot;Loaded 
+        board 2 (version 1.3)&quot;).<br>
+      </p>
+      <p>To add another board, select whether it will be placed horizontally (<b>Add 
+        Row</b>) or vertically (<b>Add Column</b>). If the map needs to be reversed 
+        (rotated), check the <b>Reverse</b> checkbox. If you made a mistake setting 
+        up the maps. you can click the <b>Clear</b> button, to reset the window 
+        so you can start again.</p>
+      <table width="100%" border="0" cellspacing="0">
+        <tr align="center" valign="middle"> 
+          <td><img src="ug_images/crop.gif" width="132" height="109" border="1"></td>
+          <td><img src="ug_images/crop_board_2.gif" width="354" height="174" border="1"></td>
+        </tr>
+      </table>
+      <p>Once the maps are correctly placed you also have the ability to crop 
+        the maps. To crop a map, click on the <b>Crop Boards</b> button. A new 
+        window will appear. Enter the board number to be cropped (if there is 
+        more than one) and then enter the coordinates to be removed (leaving the 
+        fields blank will leave the height or width untouched). Press the <b>Crop</b> 
+        button to complete the operation and finish by pressing the <b>Done</b> 
+        button. To un-crop a board, type in the board number, and press <b>Crop</b>. 
+        Without any coordinates, it will restore the board to its original condition. 
+        If you desire, you can create extra space around a board by cropping to 
+        offboard coordinates. Negative numbers and negative letters are valid 
+        (for example, cropping coordinates -3 to 10 will add 3 hexes of blank 
+        space above the board, while cropping hexrows -d to gg will add 3 hexes 
+        to the left of the board).</p>
+      <div align="center"><img src="ug_images/add_overlay.gif" width="362" height="136" border="1"> 
+      </div><br>
+      <p><b>Overlays</b> are available by typing in the overlay name and hexes 
+        as they appear on a scenario card. You don't need to specify a board number 
+        if there is only one board. Some overlays, such as E1 and 4, require no 
+        coordinates. You should see the overlays on your Choose Boards window 
+        as they are added. Overlay files have version numbers in case they need 
+        to be updated. The version number is displayed when the overlay is added.</p>
+      <div align="center"><img src="ug_images/add_overlay_bd2.gif" width="539" height="175"> 
+      </div>
+      <br>
+      <p>Add ocean and beach overlays as though they were ordinary overlays, using 
+        hexes xx01 and xx02 as the &quot;1&quot; and &quot;2&quot; hexes. As with 
+        cropping, negative numbers and negative letters are legal for offboard 
+        placement hexes. Since Beach and Ocean overlays often extend off the edge 
+        of a board, you will need to either add space by cropping (see above) 
+        or place a blank board under the overlays.</p>
+      <p>With respect to <b>Cropping</b> and <b>Overlays</b>, follow the scenario 
+        card. For example, in scenario A59 &quot;Death at Carentan&quot;, it says 
+        only hexrows I through GG are playable. These are the letters that should 
+        be entered in the crop fields for hexrows. The overlays for this scenario 
+        as per SSR are: O1 17o7, O2 17o2 - p1, O4 17L4 - M4, O5 17w3 - w4. When 
+        you enter these overlays on to the map, enter them as follows:</p>
+      <table width="400" border="1" cellspacing="0" cellpadding="5" align="center" bordercolor="#000000">
+        <tr bgcolor="#CCCC99" align="center"> 
+          <td class="parNonJust"><b>Overlay</b></td>
+          <td class="parNonJust"><b>Board</b></td>
+          <td class="parNonJust"><b>Hex 1</b></td>
+          <td class="parNonJust"><b>Hex 2</b></td>
+        </tr>
+        <tr align="center"> 
+          <td class="parNonJust">o1</td>
+          <td class="parNonJust">17</td>
+          <td class="parNonJust">o7</td>
+          <td class="parNonJust">&nbsp;</td>
+        </tr>
+        <tr bgcolor="#CCCCCC" align="center"> 
+          <td class="parNonJust">o2</td>
+          <td class="parNonJust">17</td>
+          <td class="parNonJust">o2</td>
+          <td class="parNonJust">p1</td>
+        </tr>
+        <tr align="center"> 
+          <td class="parNonJust">o4</td>
+          <td class="parNonJust">17</td>
+          <td class="parNonJust">l4</td>
+          <td class="parNonJust">m4</td>
+        </tr>
+        <tr bgcolor="#CCCCCC" align="center"> 
+          <td class="parNonJust">o5</td>
+          <td class="parNonJust">17</td>
+          <td class="parNonJust">w3</td>
+          <td class="parNonJust">w4</td>
+        </tr>
+      </table>
+      <p>If you make a mistake, entering an overlay with both Hex 1 and Hex 2 
+        blank will delete that overlay. </p>
+      <p><b>Terrain changes</b> are alterations to the mapboards according to 
+        special rules that comonly appear in scenarios. They allow you to completely 
+        alter the look of the geomorphic boards by putting down ground snow, removing 
+        grain or roads, applying PTO terrain, etc. </p>
+      <div align="center"><img src="ug_images/terrain_ssr_bd17.gif" width="539" height="175" border="1"><br>
+        <span class="sidebar">Board 17 in winter</span> <br>
+        <br>
+        <img src="ug_images/terrain_ssr_bd24.gif" width="539" height="175" border="1"><br>
+        <span class="sidebar">Board 24 with no valley, all paved roads, and all 
+        stone buildings </span><br>
+        <br>
+        <img src="ug_images/terrain_ssr.gif" width="451" height="185" border="1"> 
+      </div><br>
+      <p>Press the <b>Terrain SSR</b> button, use the controls to make your selection 
+        and hit the <b>Apply</b> button. Hit the <b>Done</b> button when finished.</p>
+      <p> </p>
+      <p>Like overlays, boards are given version numbers for possible future updates. 
+        The version number is displayed when you open the Terrain SSR window. 
+        When you connect to the VASL server, VASL will automatically check the 
+        version numbers of the boards in play against the latest version. If your 
+        copies are found to be out of date, you will be prompted to let VASL download 
+        and install the latest versions.</p>
+      <blockquote> <span class="sidebar">NOTE: Depending on the amount of memory 
+        in your computer, loading the maps may take a bit of time. The more memory 
+        you have the faster it will load. Also be aware that some of the larger 
+        HASL maps require quite a lot of memory. For Windows 95 <font color="#00CCFF">[98? 
+        XP?]</font> machines, 64 MB is recommended to load the Red Barricades 
+        map. </span> </blockquote>
+      <p>Once you are done setting up the boards, press the <b>Done</b> button 
+        to begin setting up the counters.</p>
+      <p>(If you wish to change mapboards after having begun setup, you may do 
+        so by clicking the <img src="ug_images/pick_new_boards.gif" width="27" height="27" border="1" align="absmiddle"> 
+        button at the top of the VASL Map window.)</p>
+      <a name="placement"> 
+      <hr width="100%" align="center" noshade>
+      </a> 
+      <div align="center" class="sidebar"><a href="#creating">Creating a Room</a> 
+        | <a href="#loading">Loading the Scenario</a> | <a href="#maps">Maps</a> 
+        | <b>Placement of Counters</b> | <a href="#handling">Handling the Counters</a> 
+        | <a href="#tips">Tips and Tricks</a></div>
+    </td>
+  </tr>
+  <tr align="left" valign="top"> 
+    <td> 
+      <h2>Step 4 - Placement of Counters </h2>
+      <p>After the maps have been set up, or after you've loaded a scenarios setup, 
+        the Overview window and VASL map window will appear on the screen. The 
+        Counters window, which allows you to select new counters you wish to place 
+        on the map, should already be open. To select from the various information 
+        counters, click on the <b>Info</b> tab. To select from the unit counters 
+        of the various nationalities, click on the <b>Units</b> tab.</p>
+      <p>All the information and unit counters used in ASL are available in VASL. 
+        Click on the drop down list to select the category of information counters 
+        that you wish to choose from. All the counters in that category will be 
+        shown in the list window to the right. To view the counter simply click 
+        on its name in the list window and the counter's image will appear on 
+        the left hand side. (You may flip the counter by right-clicking on the 
+        counter and selecting &quot;<b>Flip</b>&quot; from the pop-up menu, or 
+        clicking on the counter and hitting <b>Ctrl+F</b>) To place that counter 
+        on the map, simply click and drag the image from the Counter window onto 
+        the map.</p>
+    </td>
+    <td><img src="ug_images/units_ger_veh.gif" width="304" height="268" border="1"></td>
+  </tr>
+  <tr align="left" valign="top"> 
+    <td colspan="2"> 
+      <p> </p>
+      <p><b>TIP:</b> Once you draw out all your counters you may <b>HIP</b> them 
+        (<b>Ctrl+H</b>) to prevent your opponent from seeing them. Then set up 
+        your counters. There is no need for your opponent to leave the scenario 
+        room while you set up. Once you and your opponent are ready, conceal the 
+        HIPed stacks and then reveal them! </p>
+      <a name="handling"> 
+      <hr width="100%" align="center" noshade>
+      </a> 
+      <div align="center" class="sidebar"><a href="#creating">Creating a Room</a> 
+        | <a href="#loading">Loading the Scenario</a> | <a href="#maps">Maps</a> 
+        | <a href="#placement">Placement of Counters</a> | <b>Handling the Counters</b> 
+        | <a href="#tips">Tips and Tricks</a></div>
+      <h2>Handling the Counters</h2>
+      <p>The key to handling counters in VASL is <i>selecting</i> them. In order 
+        to perform any action on any counter placed on the board it is necessary 
+        to select the counter to be acted upon. </p>
+      <p><b>Selecting an Individual Counter:</b> Left-click on the counter, a 
+        black outline will appear around the edge of the counter.</p>
+      <p><b>Selecting a Stack of Counters</b>: To select a stack of counters, 
+        left-click on the top counter of the stack.</p>
+      <p><b>Expanding a Stack of Counters:</b> Stacks are normally drawn compacted, 
+        i.e. with only the top counter showing. An expanded view of a stack can 
+        be seen by double-clicking on it. <font color="#CCCCCC">(Mac users hold 
+        down the apple key)</font> To select individual counters of a stack, hold 
+        down the shift key as you click on each counter of the expanded stack. 
+        Each counter you select will have a black outline.</p>
+      <p><b>Collapsing a Stack of Counters:</b> When you wish to collapse a stack 
+        in order to return it to its compacted view, simply double-click on the 
+        expanded stack.</p>
+      <p><b>Counter Actions:</b> Once you have selected the counter(s) or stacks 
+        you wish to act upon, you may take the following actions by using the 
+        corresponding key commands. You may also right-click (Mac users hold down 
+        the command [apple] key while clicking) on a counter for a pop-up menu 
+        with all available commands for that counter.</p>
+      <div align="center"> 
+        <table border="1" cellspacing="0" cellpadding="5" bordercolor="#000000" align="center">
+          <tr bgcolor="#CCCC99"> 
+            <td class="parNonJust" align="center"><b>Keystroke</b></td>
+            <td class="parNonJust"><b>Action</b></td>
+          </tr>
+          <tr> 
+            <td class="parNonJust" align="center" nowrap><b>Click &amp; Drag</b></td>
+            <td class="parNonJust" nowrap>Move selected counter(s) </td>
+          </tr>
+          <tr bgcolor="#CCCCCC"> 
+            <td class="parNonJust" align="center" nowrap><b>right-arrow</b></td>
+            <td class="parNonJust" nowrap>Move a counter up within a stack </td>
+          </tr>
+          <tr> 
+            <td class="parNonJust" align="center" nowrap><b>left-arrow</b></td>
+            <td class="parNonJust" nowrap>Move a counter down within a stack</td>
+          </tr>
+          <tr bgcolor="#CCCCCC"> 
+            <td class="parNonJust" align="center" nowrap><b>up-arrow</b></td>
+            <td class="parNonJust" nowrap>Move a counter to the top of a stack 
+            </td>
+          </tr>
+          <tr> 
+            <td class="parNonJust" align="center" nowrap><b>down-arrow</b></td>
+            <td class="parNonJust" nowrap>Move a counter to the bottom of a stack 
+            </td>
+          </tr>
+          <tr bgcolor="#CCCCCC"> 
+            <td class="parNonJust" align="center" nowrap><b>CTRL + F</b></td>
+            <td class="parNonJust" nowrap>Flip a counter</td>
+          </tr>
+          <tr> 
+            <td class="parNonJust" align="center" nowrap><b>CTRL + D</b></td>
+            <td class="parNonJust" nowrap>Delete a counter </td>
+          </tr>
+          <tr bgcolor="#CCCCCC"> 
+            <td class="parNonJust" align="center" nowrap><b>CTRL + X</b></td>
+            <td class="parNonJust" nowrap> Rotate clockwise </td>
+          </tr>
+          <tr> 
+            <td class="parNonJust" align="center" nowrap><b>CTRL + Z</b></td>
+            <td class="parNonJust" nowrap>Rotate counter-clockwise </td>
+          </tr>
+          <tr bgcolor="#CCCCCC"> 
+            <td class="parNonJust" align="center" nowrap><b>CTRL + S</b></td>
+            <td class="parNonJust" nowrap>Rotate TCA clockwise </td>
+          </tr>
+          <tr> 
+            <td class="parNonJust" align="center" nowrap><b>CTRL + A</b></td>
+            <td class="parNonJust" nowrap>Rotate TCA counter-clockwise</td>
+          </tr>
+          <tr bgcolor="#CCCCCC"> 
+            <td class="parNonJust" align="center" nowrap><b>CTRL + C</b></td>
+            <td class="parNonJust" nowrap>Toggle between Conceal/Unconceal (see 
+              <a href="#concealment">Concealment</a>)</td>
+          </tr>
+          <tr> 
+            <td class="parNonJust" align="center" nowrap><b>CTRL + H</b></td>
+            <td class="parNonJust" nowrap>Toggle between HIP/Un-HIP (see <a href="#concealment">Concealment</a>) 
+            </td>
+          </tr>
+          <tr bgcolor="#CCCCCC"> 
+            <td class="parNonJust" align="center" nowrap><b>CTRL + B</b></td>
+            <td class="parNonJust" nowrap>Toggle between CE / BU </td>
+          </tr>
+          <tr> 
+            <td class="parNonJust" align="center" nowrap><b>CTRL + L</b></td>
+            <td class="parNonJust" nowrap>Change label. To end, hit Enter. (see 
+              <a href="#labels">Labels</a>) </td>
+          </tr>
+          <tr bgcolor="#CCCCCC"> 
+            <td class="parNonJust" align="center" nowrap><b>CTRL + I</b></td>
+            <td class="parNonJust" nowrap>Display Vehicle/Gun info (see <a href="#info">Special 
+              Information</a>) </td>
+          </tr>
+          <tr> 
+            <td class="parNonJust" align="center" nowrap><b>CTRL + O</b></td>
+            <td class="parNonJust" nowrap>Assume possession of counter as ones 
+              own.</td>
+          </tr>
+          <tr> 
+            <td class="parNonJust" align="center" nowrap bgcolor="#CCCCCC"><b>CTRL 
+              + K</b></td>
+            <td class="parNonJust" nowrap bgcolor="#CCCCCC">Clone counter (add 
+              duplicate to stack) </td>
+          </tr>
+        </table>
+        <blockquote class="sidebar"> Macintosh users may use the Apple (command) 
+          key instead of the CTRL key. </blockquote>
+      </div>
+      <p><a name="labels"><b>LABELS:</b></a> Whereas on a physical board, many 
+        things need to be indicated with a counter, in VASL that information can 
+        be more convenient if made into a label. For example, labeling a unit 
+        &quot;Fanatic,&quot; &quot;Berserk,&quot; or &quot;Wounded&quot; saves 
+        you from having to drag around an extra counter. For vehicles, use the 
+        labels for vehicle ID numbers (matched with labels on acquisition counters), 
+        HD status on crest lines, optional MG, Gyrostabilizers/Schuerzen, or armor 
+        leaders. To label a counter, simply select the counter and press <b>CTRL 
+        + L</b>. Type in the information you wish that counter to display and 
+        press <b>Enter</b>. To edit the contents of a counter label simply select 
+        the counter and press <b>CTRL + L</b>.</p>
+      <p><a name="info"><b>SPECIAL INFORMATION:</b></a> Special ammo information 
+        for guns and vehicles is not written on the backs of the counters, but 
+        can be seen by selecting the counter and typing <b>CTRL +I</b>. Type <b>CTRL 
+        +I</b> again to hide the info. While the info is displayed, BU/CE counters 
+        are drawn underneath the vehicle counter so that you can read the front.</p>
+      <p><a name="concealment"><b>CONCEALMENT:</b></a> When concealed, your units 
+        will appear with a &quot;?&quot; in the upper left corner. To your opponent, 
+        all concealed counters look like dummy (&quot;?&quot;) counters. It is 
+        up to the honor system to keep you from unconcealing your opponent's concealed 
+        counters. A HIP counter is invisible to your opponent. Your own HIP counters 
+        are drawn on your map in a semi-transparent manner with HIP stacks appearing 
+        against a white background.</p>
+      <p>Placing a &quot;?&quot; counter on top of a stack will conceal all of 
+        your units beneath it. Removing or repositioning a &quot;?&quot; counter 
+        will unconceal units accordingly. Because of special cases that may arise 
+        (usually involving multiple Locations in a hex), units may also be concealed 
+        and unconcealed individually, so concealed status is not strictly linked 
+        to a unit's position in a stack.</p>
+      <p><b>CLEANING UP:</b> VASL allows you to quickly delete all the phase based 
+        information counters. Choose Remove All from the top of the VASL map window. 
+        A sub-menu will appear listing all the information counters that can be 
+        quickly deleted at once.</p>
+      <div align="center"><img src="ug_images/map_features.gif" width="561" height="440" border="1"> 
+      </div>
+      <p>&nbsp;</p>
+      <a name="tips"> 
+      <hr width="100%" align="center" noshade>
+      </a> 
+      <div align="center" class="sidebar"><a href="#creating">Creating a Room</a> 
+        | <a href="#loading">Loading the Scenario</a> | <a href="#maps">Maps</a> 
+        | <a href="#placement">Placement of Counters</a> | <a href="#handling">Handling 
+        the Counters</a> | <b>Tips and Tricks</b></div>
+      <h2>Tips and Tricks</h2>
+      <p>At setup, place your entire OB off board (on the grey area outside the 
+        map) before putting units on the boards, to more easily keep track of 
+        what you have available.</p>
+      <p>To merge concealed stacks, move counters into their destination stack 
+        one at a time. Otherwise, your counters will be momentarily revealed when 
+        you delete the top concealment counter. When entering units from off board, 
+        first place everything into one or two stacks, conceal them, and then 
+        split off individual units into stacks for entry.</p>
+      <p>Night scenarios are particularly convenient when using VASL, since the 
+        Defender can keep his HIP units on his screen during play. The Attacker 
+        can place stacks of HIP units under his cloaking counters to avoid having 
+        to using the cloaking display.</p>
+      <p>Be sure to check the <a href="http://www.vasl.org/scenarios.htm" >VASL 
+        scenario setup archive</a> for your scenario first. One of the most time 
+        consuming parts of playing ASL face-to-face is setting up, but loading 
+        a savefile into VASL takes no time at all, and of course, putting the 
+        scenario away is even faster! </p>
+    </td>
+  </tr>
+  <tr align="left" valign="top"> 
+    <td colspan="2"> 
+      <hr width="100%" align="center" noshade>
+    </td>
+  </tr>
+  <!-- END MAIN CONTENT -->
+  <!-- USER'S GUIDE NAVIGATION - BOTTOM -->
+  <tr> 
+    <td align="left" class="next"> &lt;&lt; <a href="05.htm">Getting Started</a> 
+    </td>
+    <td align="right" class="next"> <a href="07.htm">Playing Tools</a> &gt;&gt; 
+    </td>
+  </tr>
+  <tr align="center"> 
+    <td colspan="2" class="sidebar"><a href="index.htm">Introduction</a> | <a href="02.htm">Installation</a> 
+      | <a href="03.htm">Preferences</a> | <a href="04.htm">Environment</a> | 
+      <a href="05.htm">Getting Started</a> | <b>Setting Up a Scenario</b> | <a href="07.htm">Playing 
+      Tools</a> | <a href="08.htm">Appendices</a></td>
+  </tr>
+  <!-- END USER'S GUIDE NAVIGATION - BOTTOM -->
+  <!-- BEGIN COPYRIGHT -->
+  <tr> 
+    <td colspan="2"> 
+      <div align="center" class="copyright">&copy; Copyright 2002 <a href="mailto:rodneykinney@attbi.com">Rodney 
+        Kinney</a></div>
+    </td>
+  </tr>
+  <!-- END COPYRIGHT -->
+</table>
+</body>
+</html>

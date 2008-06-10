@@ -1,0 +1,262 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
+<html>
+<head>
+  <title>VASL 4.0 User's Guide - Installation</title>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=iso-8859-1">
+  <link rel="stylesheet" href="vasl_ug_styles.css" type="text/css">
+  <script language="JavaScript">
+<!--
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+
+function MM_findObj(n, d) { //v4.0
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && document.getElementById) x=document.getElementById(n); return x;
+}
+
+function MM_swapImage() { //v3.0
+  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+}
+//-->
+  </script>
+</head>
+<body bgcolor="#ffffff" text="#000000" leftmargin="0" topmargin="0"
+ marginwidth="0" marginheight="0" link="#666600" vlink="#666600"
+ alink="#ff0000"
+ onload="MM_preloadImages('ug_images/nav_users_guide_on.gif','ug_images/nav_about_on.gif','ug_images/nav_download_on.gif','ug_images/nav_faq_on.gif','ug_images/ug_nav_vasl_on.gif')">
+<!-- BEGIN HEADER TABLE  This table contains the logo and page header -->
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tbody>
+    <tr>
+      <td width="1%" align="left" valign="top"> <a
+ href="http://www.vasl.org"><img src="ug_images/vASL4_logo.gif"
+ width="169" height="170" border="0"> </a> </td>
+      <td valign="top" width="99%" height="92"><!-- BEGIN NAVIGATION STRUCTURE  Contains link to vASL.org -->
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tbody>
+          <tr>
+            <td bgcolor="#999933" align="right" valign="top"
+ background="ug_images/header_bg.jpg" height="71"><img
+ src="ug_images/shim.gif" width="10" height="71"> </td>
+          </tr>
+          <tr>
+            <td>
+            <table width="100%" border="0" cellspacing="0"
+ cellpadding="0" bgcolor="#666666">
+              <tbody>
+                <tr align="right" valign="top">
+                  <td width="99%" background="ug_images/nav_bg.gif"><img
+ src="ug_images/shim.gif" width="10" height="21"> </td>
+                  <td width="1%"><a href="http://www.vasl.org"
+ onmouseout="MM_swapImgRestore()"
+ onmouseover="MM_swapImage('vasl','','ug_images/ug_nav_vasl_on.gif',1)"><img
+ src="ug_images/ug_nav_vasl.gif" width="151" height="21" name="vasl"
+ border="0" alt="vASL.org"> </a></td>
+                </tr>
+              </tbody>
+            </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+<!-- END NAVIGATION STRUCTURE --><!-- Page Header -->
+      <table width="100%" border="0" cellspacing="20">
+        <tbody>
+          <tr>
+            <td>
+            <h1 align="right">VASL 4.0 User's Guide<br>
+- Installation</h1>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+<!-- End Page Header --> </td>
+    </tr>
+  </tbody>
+</table>
+<!-- END HEADER TABLE -->
+<table width="90%" border="0" align="center" cellspacing="20">
+  <tbody>
+    <tr align="center">
+      <td colspan="2" class="sidebar"><a href="index.htm">Introduction</a>
+| <b>Installation</b> | <a href="03.htm">Preferences</a> | <a
+ href="04.htm">Environment</a> | <a href="05.htm">Getting Started</a>
+| <a href="06.htm">Setting Up a Scenario</a> | <a href="07.htm">Playing
+Tools</a> | <a href="08.htm">Appendices</a></td>
+    </tr>
+<!-- USER'S GUIDE NAVIGATION - TOP --><!-- END USER'S GUIDE NAVIGATION - TOP --><!-- BEGIN MAIN CONTENT --> <tr>
+      <td colspan="2">
+      <h2><a name="installation"></a></h2>
+      <hr width="100%" size="2">
+      <div align="center" class="sidebar"><b>Installation</b> | <a
+ href="file:///home/rkinney/VASSAL/VASL/distrib/docs/UsersGuide/02.htm#preparation">Preparation</a>
+| <a
+ href="file:///home/rkinney/VASSAL/VASL/distrib/docs/UsersGuide/02.htm#vassal">VASSAL</a><br>
+      </div>
+      <h2>Installation</h2>
+      <p>Installation of VASL is simpler than ever thanks to Java Web
+Start.&nbsp; Clicking on <a href="http://www.vasl.org/ws/vasl.jnlp">this
+link</a> from any browser will launch the latest version.&nbsp; If the
+link doesn't work, first make sure you've installed <a
+ href="http://www.java.com">Java 1.4.x</a> and then read the notes <a
+ href="http://www.vassalengine.org/ws">here</a> before requesting  help
+via <a href="mailto:vasl@vasl.org">email</a>.&nbsp; On Windows
+systems, Web Start will prompt you to create a shortcut on your desktop
+for you to run the program without going through a web browser.&nbsp;On
+Mac-OS-X/Linux, you can launch VASL directly with the command line <code>$JAVA_HOME/javaws/javaws
+http://www.vasl.org/ws/vasl.jnlp. </code>VASL does not run on pre-OS-X
+Macintosh systems. <br>
+      <br>
+      </p>
+      <hr width="100%" size="2">
+      <div align="center" class="sidebar"><a href="#installation">Installation</a>
+| <b>Preparation</b> | <a
+ href="file:///home/rkinney/VASSAL/VASL/web/users_guide/02.htm#vassal">VASSAL</a></div>
+      <h2>Preparation</h2>
+      <h3>Mapboards</h3>
+      <p>In order to actually play a game, you will need one or more of
+the VASL maps. &nbsp;The complete set of maps can be downloaded from
+the vasl.org <a href="http://www.vasl.org/boards.htm">Board    
+and Overlay Archive</a>.<!--Lately an effort has been made by the VASL community 
+        to create more artistic renditions of the ASL map set than those originally 
+        provided by Rodney and Tom. These additional map sets are still works 
+        in progress and are not yet complete. <a href="mailto:dykevader@golden.net">Cait 
+        Glasson&#146;s</a> maps can be found at her <font color="#FF0000">Alternate 
+        VASL Board site</font> and <a href="mailto:bcm@u.washington.edu">Bruce 
+        Mansfield&#146;s</a> maps can be found at Michael Loos&#146; <a href="http://fge.if.usp.br/%7Eloos/ASLIND.htm" >VASL 
+        Board Website</a>. Also some Windows 95 users sporting slower machines 
+        or less memory have experienced problems loading the entire &quot;Red 
+        Barricades&quot; map.--> </p>
+      <blockquote>
+        <p class="sidebar"><b>Note:</b> The VASL maps are <i>not</i> a
+replacement            for the real ASL maps. LOS on these maps may be
+different than those            on the real maps. </p>
+      </blockquote>
+      <p>Your VASL folder will contain a folder named <b>boards</b>,
+and inside          the boards folder, a folder named <b>overlays</b>.</p>
+      <p> Unzip the various board archives and extract them to the <b>boards</b>
+folder. If you have downloaded the overlays, extract them to the <b>overlays</b>
+folder inside <b>boards</b>.</p>
+      <h3>Additional Folders (optional)</h3>
+      <p>You may also wish to create folders to store games you wish to
+save and          downloaded scenario setup files (e.g., you could
+create two folders in          your VASL directory named <b>scenarios</b>
+and <b>games saved</b>).</p>
+      <p>Below is a typical setup with the <b>VASL</b> folder created
+inside of <b>C:\Program Files\VASSAL</b>:</p>
+      <div align="center"> <img src="ug_images/typical_setup.gif"
+ width="545" height="253"> </div>
+      <a name="vassal"></a>
+      <hr width="100%" size="2">
+      <div align="center" class="sidebar"><a
+ href="file:///home/rkinney/VASSAL/VASL/web/users_guide/02.htm#installation">Installation</a>
+| <a href="#preparation">Preparation</a> | <b>VASSAL</b></div>
+      <h2><small><b>The VASSAL Engine</b></small></h2>
+      <small>VASL is based on the <a href="http://www.vassalengine.org">VASSAL
+Engine</a>, which can be used to make VASL-like playing aids for any
+kind of board game. &nbsp;Hey, if it can handle ASL, then any other
+game should be cake, right?&nbsp; You can launch VASSAL by clicking <a
+ href="http://www.vassalengine.org/ws/vassal.jnlp">here</a>.</small>
+      <h2> 	<!--
+      <span class="sidebar"><a href="#win">Windows</a> | <a href="#mac">Macintosh</a> 
+      | <a href="#os2">OS/2</a> | <a href="#linux">Linux</a></span> <a name="win">&nbsp;</a> 
+      <p><b>Windows 95/NT machines Installation</b></p>
+      <p>1. The VASL icon is a shortcut that opens <b>VASL</b> and the <b>JRE</b> 
+        simultaneously. Right-click on the VASL icon and select <b>Properties</b>.</p>
+      <p>2. Click on the <b>Shortcut</b> tab. Change the &quot;Start in&quot; 
+        field to your VASL directory, i.e. the one containing the classes.jar 
+        and VASLdata files, such as &quot;C:\VASL\&quot;. See Figure B.</p>
+      <p>3. You should not have to alter the &quot;Target&quot; field. If you 
+        lose the initial setting, reset the Target field to: &quot;C:\Program 
+        Files\Javasoft\JRE\1.1\bin\jrew.exe&quot; -nojit -cp classes.jar VASL. 
+        If you are using version 1.1.4 of the JRE or earlier, delete the -nojit 
+        part of the field. If your JRE is installed into a directory other than 
+        the default, you will have to edit the &quot;Target&quot; field, replacing 
+        C:\Program Files\Javasoft\JRE\1.1\bin with the directory containing the 
+        jrew.exe file. </p>
+      <p>4. Press <b>OK</b> to accept the changes. Double-click on the VASL icon 
+        to launch VASL. If nothing happens, check the shortcut fields for proper 
+        spacing, spelling, and upper/lowercase. Any errors will prevent the program 
+        from launching. </p>
+      <a name="mac">&nbsp;</a> 
+      <p><b>MAC Installation</b></p>
+      <p>1. Install the MRJ. This will place files into your System Extensions 
+        folder, but not all of the files are necessary to run VASL. If you want 
+        to preserve space, you may delete (or put in the Extensions (Disabled) 
+        folder) the <i>MRJ SDK</i> folder as well as the following files in the 
+        MRJ Libraries folder: <i>MRJ PPC JITC, MRJ PPC JITC.zip, MRJLib.zip, MRJSDKClasses.zip, 
+        MRJToolkitStubs.zip</i>. You need to keep the <i>MRJ Libraries</i> folder 
+        with the <i>MRJLib</i> file and the <i>MRJClasses</i> folder which contains 
+        a single file called <i>MRJClasses.zip</i>. </p>
+      <p>2. Download and extract the the MacVASL application. Double-click on 
+        the VASL icon to launch VASL.</p>
+      <a name="os2">&nbsp;</a> 
+      <p><b>OS / 2 Installation</b></p>
+      <p>To run VASL from an OS/2 desktop icon involves the following three steps 
+        after downloading VASL. Here, <i>[path]</i> refers to the VASL directory.</p>
+      <p>1. Add <i>[path]classes.jar</i> to the SET CLASSPATH command in CONFIG.SYS 
+        to eliminate having to include it on a session-by-session basis. </p>
+      <p>2. Create a two-line OS/2 command file with filename vasl.cmd to point 
+        to the drive and directory containing <i>classes.jar</i> and <i>VASLdata</i> 
+        (to eliminate unnecessary references for saved files, etc.) and then to 
+        invoke Java as follows: </p>
+      <p>cd<i> [path]</i><br>
+        java VASL </p>
+      <p>3. Create a program object with the following properties: </p>
+      <blockquote> 
+        <p>Program Path and file name = vasl.cmd <br>
+          Session = OS/2 <br>
+          Window Start minimized = ON <br>
+          Close window on exit = ON<br>
+          Choose an Icon from whatever strikes your fancy<br>
+          Title=VASL</p>
+      </blockquote>
+      <a name="linux">&nbsp;</a> 
+      <p><b>LINUX Installation</b></p>
+      <p>Make a shell script in ~/bin with the following command line (one line)</p>
+      <span class="parNonJust">cd ~/vasl /usr/local/jdk1.1.5/bin/jre -classpath 
+      ~/vasl/classes.jar:/usr/local/jdk1.1.5/lib/classes.zip VASL &amp; cd</span> 
+      --> </h2>
+      </td>
+    </tr>
+    <tr align="left" valign="top">
+      <td colspan="2">
+      <hr width="100%" align="center" noshade="noshade"> </td>
+    </tr>
+<!-- END MAIN CONTENT --><!-- USER'S GUIDE NAVIGATION - BOTTOM --> <tr>
+      <td align="left" class="next">&lt;&lt; <a href="index.htm">Introduction</a></td>
+      <td align="right" class="next"> <a href="03.htm">Preferences</a>
+&gt;&gt; </td>
+    </tr>
+    <tr align="center">
+      <td colspan="2" class="sidebar"><a href="index.htm">Introduction</a>
+| <b>Installation</b> | <a href="03.htm">Preferences</a> | <a
+ href="04.htm">Environment</a> | <a href="05.htm">Getting Started</a>
+| <a href="06.htm">Setting Up a Scenario</a> | <a href="07.htm">Playing
+Tools</a> | <a href="08.htm">Appendices</a></td>
+    </tr>
+<!-- END USER'S GUIDE NAVIGATION - BOTTOM --><!-- BEGIN COPYRIGHT --> <tr>
+      <td colspan="2">
+      <div align="center" class="copyright">&copy; Copyright 2002 <a
+ href="mailto:rodneykinney@attbi.com">Rodney          Kinney</a></div>
+      </td>
+    </tr>
+<!-- END COPYRIGHT -->
+  </tbody>
+</table>
+<br>
+<br>
+</body>
+</html>

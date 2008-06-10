@@ -1,0 +1,492 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
+<html>
+<head>
+  <title>VASL 4.0 User's Guide - Appendices</title>
+  
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=iso-8859-1">
+ 
+  <link rel="stylesheet" href="vasl_ug_styles.css" type="text/css">
+ 
+  <script language="JavaScript">
+<!--
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+
+function MM_findObj(n, d) { //v4.0
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && document.getElementById) x=document.getElementById(n); return x;
+}
+
+function MM_swapImage() { //v3.0
+  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+}
+//-->
+  </script>
+</head>
+   <body bgcolor="#ffffff" text="#000000" leftmargin="0" topmargin="0"
+ marginwidth="0" marginheight="0" link="#666600" vlink="#666600"
+ alink="#ff0000"
+ onload="MM_preloadImages('ug_images/nav_users_guide_on.gif','ug_images/nav_about_on.gif','ug_images/nav_download_on.gif','ug_images/nav_faq_on.gif','ug_images/ug_nav_vasl_on.gif')">
+ <!-- BEGIN HEADER TABLE  This table contains the logo and page header --> 
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+   <tbody>
+    <tr>
+      <td width="1%" align="left" valign="top"> <a
+ href="http://www.vasl.org"><img src="ug_images/vASL4_logo.gif"
+ width="169" height="170" border="0">
+      </a></td>
+     <td valign="top" width="99%" height="92">        <!-- BEGIN NAVIGATION STRUCTURE  Contains link to vASL.org --> 
+      
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+         <tbody>
+          <tr>
+            <td bgcolor="#999933" align="right" valign="top"
+ background="ug_images/header_bg.jpg" height="71"><img
+ src="ug_images/shim.gif" width="10" height="71">
+            </td>
+         </tr>
+         <tr>
+            <td>              
+            <table width="100%" border="0" cellspacing="0"
+ cellpadding="0" bgcolor="#666666">
+               <tbody>
+                <tr align="right" valign="top">
+                  <td width="99%" background="ug_images/nav_bg.gif"><img
+ src="ug_images/shim.gif" width="10" height="21">
+                  </td>
+                 <td width="1%"><a href="http://www.vasl.org"
+ onmouseout="MM_swapImgRestore()"
+ onmouseover="MM_swapImage('vasl','','ug_images/ug_nav_vasl_on.gif',1)"><img
+ src="ug_images/ug_nav_vasl.gif" width="151" height="21" name="vasl"
+ border="0" alt="vASL.org">
+                  </a></td>
+               </tr>
+             
+              </tbody>
+            </table>
+           </td>
+         </tr>
+       
+        </tbody>
+      </table>
+       <!-- END NAVIGATION STRUCTURE -->       <!-- Page Header -->     
+ 
+      <table width="100%" border="0" cellspacing="20">
+         <tbody>
+          <tr>
+            <td>              
+            <h1 align="right">VASL 4.0 User's Guide<br>
+               - Appendices</h1>
+           </td>
+         </tr>
+       
+        </tbody>
+      </table>
+       <!-- End Page Header -->     </td>
+   </tr>
+ 
+  </tbody>
+</table>
+ <!-- END HEADER TABLE --> 
+<table width="90%" border="0" align="center" cellspacing="20">
+   <tbody>
+    <tr align="center">
+      <td colspan="2" class="sidebar"><a href="index.htm">Introduction</a>
+| <a href="02.htm">Installation</a>        | <a href="03.htm">Preferences</a>
+| <a href="04.htm">Environment</a> |        <a href="05.htm">Getting Started</a>
+| <a href="06.htm">Setting Up a Scenario</a>        | <a href="07.htm">Playing
+Tools</a> | <b>Appendices</b></td>
+   </tr>
+   <tr>
+     <td colspan="2"> <a name="internet">        
+      <hr width="100%" align="center" noshade="">       </a>        
+      <div align="center" class="sidebar"><b>Internet Resources</b> | <a
+ href="#offline">Working          Offline</a> | <a href="#postal">Postal
+VASL</a> | <a href="#etiquette">Etiquette</a>          | <a
+ href="#acknowledgements">Acknowledgements</a> | <a href="#license">License</a>
+         | <a href="#troubleshooting">Troubleshooting</a> | <a
+ href="#maps">Contribute to VASL</a></div>
+       
+      <h2>A. Internet ASL Resources</h2>
+       
+      <p><a href="http://www.vasl.org">VASL.org</a> - The official VASL site
+         - Downloads, Boards and Overlay Archive, Scenario Setup Archives,
+FAQ's<br>
+         Jacques Cuneo's <a
+ href="http://www.tigertank.com/aslcrossroads/">ASL          Crossroads</a>
+- All things ASL on the Net<br>
+         <a href="http://www.jrvdev.com/ROAR/">ROAR ASL</a> - Automated Scenario
+         Record <br>
+         <a href="http://hem.passagen.se/klamal/asl.html"
+ target="_blank">ASL Errata</a>          - Errata for AH and non-AH scenarios<br>
+         Tom Repetti's "<a href="http://www.mindspring.com/%7Etqr/">Tuomoland</a>"
+         - Fun for the whole family <br>
+       </p>
+       <a name="offline">        
+      <hr width="100%" align="center" noshade="">       </a>        
+      <div align="center" class="sidebar"><a href="#internet">Internet Resources</a>
+         | <b>Working Offline</b> | <a href="#postal">Postal VASL</a> | <a
+ href="#etiquette">Etiquette</a>          | <a href="#acknowledgements">Acknowledgements</a>
+| <a href="#license">License</a>          | <a href="#troubleshooting">Troubleshooting</a>
+| <a href="#maps">Contribute to VASL</a></div>
+       
+      <h2>B. Working Offline</h2>
+       
+      <p>VASL can be a great analytical tool for planning out your next ASL
+game.          Start VASL the way you normally do and do not connect to the
+server. Set          up your scenarios and tweak your placements! No counters
+to pick up, no          messes to clean. When you are ready for your face-to-face
+game, simply          expand every stack and take a screen shot of the VASL
+window. Then print          your screen capture! A very neat way to set up
+your games ahead of time.          Windows users can easily print their VASL
+screens by pressing the Print          Screen button above the Insert key
+on their keyboard. Then open any program          that allows cutting and
+pasting (Paintbrush, even your word processor)          and paste the image.
+Once pasted in, you can easily print the graphic.          VASL users that
+use the program on other operating systems can use shareware          screen
+capture programs to accomplish the same thing. </p>
+       <a name="postal">        
+      <hr width="100%" align="center" noshade="">       </a>        
+      <div align="center" class="sidebar"><a href="#internet">Internet Resources</a>
+         | <a href="#offline">Working Offline</a> | <b>Postal VASL</b> |
+      <a href="#etiquette">Etiquette</a>          | <a
+ href="#acknowledgements">Acknowledgements</a> | <a href="#license">License</a>
+         | <a href="#troubleshooting">Troubleshooting</a> | <a
+ href="#maps">Contribute to VASL</a></div>
+       
+      <h2>C. Postal VASL</h2>
+       
+      <p><i>Many thanks to Lars Thuring and Gary Milks!</i></p>
+       
+      <p>On of the nicest features of VASL is how it enables users to quickly
+         and efficiently play ASL via the mail (e-mail that is). VASL allows
+you          to not only save the scenario as an attachable file, but it
+also keeps          a Log File of each of the actions taken by the players,
+so you can step          through the action move by move. </p>
+       
+      <h3>Preparing your E-Mail program</h3>
+       
+      <p>When you play VASL by email logfile exchange, a problem can crop
+up when          your email program wraps long text lines onto the next line
+(i.e., the          "word wrap" feature). VASL logfiles are solid blocks
+of text, and if an email application word wraps a logfile, VASL will report
+"Invalid savefile" when trying to load it. </p>
+       
+      <p>Most email utilities allow you to turn off the word-wrap feature
+for          individual mailings - in Eudora Pro, simply uncheck the "word
+wrap"          icon that appears at the top of new message and any logfile
+attachments          will not be word-wrapped.</p>
+       
+      <p>In desperate situations, word-wrapped logfiles can be edited with
+a text          editor - usually simply deleting the line breaks inserted
+by the mail program will repair it. &nbsp;Be sure there are also no linebreaks
+at the end of the file either!</p>
+       
+      <h3>File naming conventions</h3>
+       
+      <p>Some file naming convention between yourself and your opponent will
+be          necessary... here is a suggestion: "[scenario#]-[turn #]-[side]-[phase]
+         .vasl"</p>
+       
+      <table border="0" cellspacing="0" cellpadding="5" align="center">
+         <tbody>
+          <tr>
+            <td class="parNonJust"><b>Side</b></td>
+           <td class="parNonJust">A</td>
+           <td class="parNonJust" nowrap="">Allies</td>
+         </tr>
+         <tr>
+            <td class="parNonJust">&nbsp;</td>
+           <td class="parNonJust">X</td>
+           <td class="parNonJust" nowrap="">Axis</td>
+         </tr>
+         <tr>
+            <td class="parNonJust">&nbsp;</td>
+           <td class="parNonJust">&nbsp;</td>
+           <td class="parNonJust" nowrap="">&nbsp;</td>
+         </tr>
+         <tr>
+            <td class="parNonJust"><b>Phase</b></td>
+           <td class="parNonJust">RPh</td>
+           <td class="parNonJust" nowrap="">Rally Phase</td>
+         </tr>
+         <tr>
+            <td class="parNonJust">&nbsp;</td>
+           <td class="parNonJust">PFPh</td>
+           <td class="parNonJust" nowrap="">Prep Fire</td>
+         </tr>
+         <tr>
+            <td class="parNonJust">&nbsp;</td>
+           <td class="parNonJust">MPh</td>
+           <td class="parNonJust" nowrap="">Movement</td>
+         </tr>
+         <tr>
+            <td class="parNonJust">&nbsp;</td>
+           <td class="parNonJust">DFPh</td>
+           <td class="parNonJust" nowrap="">Defensive Fire Phase</td>
+         </tr>
+         <tr>
+            <td class="parNonJust">&nbsp;</td>
+           <td class="parNonJust">AFPh</td>
+           <td class="parNonJust" nowrap="">Advancing Fire Phase</td>
+         </tr>
+         <tr>
+            <td class="parNonJust">&nbsp;</td>
+           <td class="parNonJust">RtPh</td>
+           <td class="parNonJust" nowrap="">Route Phase</td>
+         </tr>
+         <tr>
+            <td class="parNonJust">&nbsp;</td>
+           <td class="parNonJust">APh</td>
+           <td class="parNonJust" nowrap="">Advance Phase</td>
+         </tr>
+         <tr>
+            <td class="parNonJust">&nbsp;</td>
+           <td class="parNonJust">CCPh</td>
+           <td class="parNonJust" nowrap="">Close Combat Phase</td>
+         </tr>
+       
+        </tbody>
+      </table>
+       
+      <p><b>Example:</b> "AH17-3-A-PFph.vasl" or "CH45-2-X-Aph.vasl"    
+   </p>
+       
+      <h3>The Log File</h3>
+       
+      <p>Postal VASL is achieved through the mailing back and forth of a
+Log File.          <font color="#cccccc">The Logging feature must be turned
+on to capture          the moves.</font> Create a logfile by selecting <b>Begin
+Logfile</b> from          the <b>File</b> menu at the top of the VASL Control
+window. The current          map position will be saved, and VASL will record
+all your moves, actions,          and comments. They will be seen by your
+opponent as (s)he <b>Steps</b>          through the log file. Hitting the
+      <b>Undo</b> button will back you up          to the last move, but
+your text comments will not be erased. When finished          with your moves,
+select <b>End Log</b> from the <b>File</b> menu to save the moves into  
+       a file using the above naming system. Be sure you give the logfile
+a different          name from the scenario savefile or you will overwrite
+the savefile.</p>
+       
+      <h3>Sending the Log File</h3>
+       
+      <p>After closing the log file, exit VASL and start your mail program.
+Create          a message to your opponent and, if possible, attach the log
+file (as an          attachment, there is less chance that the log file will
+be mangled by          line wraps). If attachments are not possible, the
+log file can opened          in a text editor (Notepad or SimpleText) and
+the contents pasted into          the message body </p>
+       
+      <h3>Stepping through a Log File</h3>
+       
+      <p>Upon receiving a VASL log in email, save the attachment (or copy
+and          paste the VASL log into your text editor and save it) into the
+subfolder          for the scenario. Your opponent activates the logfile
+by choosing it after          selecting <b>File &gt; Load Game</b>. A logfile
+is technically just a          savefile with moves tacked onto the end, so
+if the file contains moves          the <b>Step</b> button will appear automatically.
+If the button does not          appear, there are no moves recorded in that
+file. </p>
+       
+      <p>Each time you hit the <b>Step</b> button, a single move or comment
+will          be executed until the end of the file is reached. The <b>Undo</b>
+button          takes you back to the last move. Step through your opponent's
+log file          until you see something to which you wish to respond (a
+comment, an error,          or a defensive first fire opportunity). Back
+up to the location where          you wish to start logging (possibly several
+lines back where the target          unit starts moving) and write a new
+logfile. As you now step through your          opponent's logfile, his moves
+will be echoed into the logfile you are          creating. Step down to show
+your opponent's comment/error/move, then enter          your response. [Note:
+the reason for not writing your log immediately          after loading your
+opponent's is to avoid copying your opponent's valid          actions to
+your log file unnecessarily and thus to keep each log file          to the
+minimum size possible.] If your response significantly changes          the
+situation in the game, end the log and send the logfile to your opponent
+         for any adjustments. Otherwise, enter the actions for your phase(s),
+end          the log and exit VASL. </p>
+       
+      <p>If playing or observing a live game on the server, a logfile may
+be opened          to record the game as it progresses.</p>
+       
+      <h3>Honor System</h3>
+       
+      <p>Like all mail/email games, a version of the "On My Honor" rules
+         will be used<font color="#cccccc"> (see the FAQ)</font>. For instance,
+         the players must agree not to step through the log file to determine
+the          best defensive first fire opportunities before applying the
+shots. They          must also agree to stop stepping through their opponent's
+MPh if a significant          defensive action takes place. In other words,
+both players must agree          to play the log file as it comes. So no
+peeking!</p>
+       <a name="etiquette">        
+      <hr width="100%" align="center" noshade="">       </a>        
+      <div align="center" class="sidebar"><a href="#internet">Internet Resources</a>
+         | <a href="#offline">Working Offline</a> | <a href="#postal">Postal
+VASL</a>          | <b>Etiquette</b> | <a href="#acknowledgements">Acknowledgements</a>
+         | <a href="#license">License</a> | <a href="#troubleshooting">Troubleshooting</a>
+         | <a href="#maps">Contribute to VASL</a></div>
+       
+      <h2>D. Etiquette</h2>
+       
+      <p>VASL is not just an interface for playing ASL over the Internet,
+its          a social environment as well. Please remember to act accordingly.
+      </p>
+       
+      <h3>Simple Rules</h3>
+       
+      <ul>
+         <li>Be Polite</li>
+         <li>Do not start games you are not in a position to finish.</li>
+         <li>Don't kibitz or interfere in games that you are spectating in.</li>
+         <li>Provide rules help only if asked in games you are a spectator
+to.            And avoid starting a rules fight in a game you are not a part
+of.</li>
+         <li>When in the Main Room, don't interrupt conversation by rolling
+dice.            Also, don't move counters around on your map unless you
+have Auto-Report            Moves turned off.</li>
+         <li>When watching other people play, you can expand and contract
+stacks            without affecting the other's view. Needless to say, you
+should not            otherwise manipulate the counters.</li>
+       
+      </ul>
+       <a name="acknowledgements">        
+      <hr width="100%" align="center" noshade="">       </a>        
+      <div align="center" class="sidebar"><a href="#internet">Internet Resources</a>
+         | <a href="#offline">Working Offline</a> | <a href="#postal">Postal
+VASL</a>          | <a href="#etiquette">Etiquette</a> | <b>Acknowledgements</b>
+| <a href="#license">License</a>          | <a href="#troubleshooting">Troubleshooting</a>
+| <a href="#maps">Contribute to VASL</a></div>
+       
+      <h2>E. Acknowledgements</h2>
+       
+      <h3>From Rodney Kinney: </h3>
+       
+      <p>Extreme thanks to Carl Fung for the counter artwork. Big thanks
+to Gordon,          Molek, Tom Repetti, Bruce Mansfield and Carl Pfeiffer
+for the beautiful          maps. Thanks to testers for their suggestions
+and enthusiasm. Thanks to          Hasbro for not dragging me into court.</p>
+       <a name="license">        
+      <hr width="100%" align="center" noshade="">       </a>        
+      <div align="center" class="sidebar"><a href="#internet">Internet Resources</a>
+         | <a href="#offline">Working Offline</a> | <a href="#postal">Postal
+VASL</a>          | <a href="#etiquette">Etiquette</a> | <a
+ href="#acknowledgements">Acknowledgements</a>          | <b>License</b>
+| <a href="#troubleshooting">Troubleshooting</a> | <a href="#maps">Contribute
+to VASL</a></div>
+       
+      <h2>F. License</h2>
+       
+      <h3>From Rodney Kinney:</h3>
+       
+      <p>You may not distribute VASL in exchange for any sort of fee without
+my          explicit written consent. There is no charge for personal use
+of VASL.          On the other hand, if this software isn't worth $10, then
+I don't know          what is. Donations accepted by Rodney Kinney at 4053
+149th Ave SE, Bellevue          WA, 98006. <font color="#cccccc">Include
+your email address and I'll tell          you how to disable the "friendly
+reminder." </font>Also, read          the license that comes with the Java
+Runtime Environment.</p>
+       <a name="troubleshooting">        
+      <hr width="100%" align="center" noshade="">       </a>        
+      <div align="center" class="sidebar"><a href="#internet">Internet Resources</a>
+         | <a href="#offline">Working Offline</a> | <a href="#postal">Postal
+VASL</a>          | <a href="#etiquette">Etiquette</a> | <a
+ href="#acknowledgements">Acknowledgements</a>          | <a
+ href="#license">License</a> | <b>Troubleshooting</b> | <a href="#maps">Contribute
+to VASL</a></div>
+       
+      <h2>G. Troubleshooting</h2>
+       
+      <p><b>PROBLEM:</b> VASL can't find my boards or overlays!</p>
+       
+      <p><b>SOLUTION:</b> Double-check the directory structure as described
+in          the Installation section. Make sure your Boards directory is
+set correctly          in the Preferences. Pay attention to upper vs. lower
+case. Your boards          directory should only have the bdXX files. It
+should not contain any GIFs.        </p>
+       
+      <p><b>PROBLEM:</b> Out of memory errors pop up when loading large scenarios.
+       </p>
+       
+      <p><b>SOLUTION:</b> Set display to 256 colors. </p>
+       
+      <p><b>PROBLEM:</b> Still get out-of-memory errors with HASL maps. </p>
+       
+      <p><b>SOLUTION:</b> Use a paint program to split the board image into
+parts.          Rename them and you can put them together as if they were
+geomorphic boards.          If that still doesn't work, maybe you need more
+memory! </p>
+       
+      <p><b>PROBLEM:</b> I have a different problem! </p>
+       
+      <p><b>SOLUTION</b>: Send email to <a
+ href="mailto:rodneykinney@attbi.com">Rodney          Kinney</a>. </p>
+       <a name="maps">        
+      <hr width="100%" align="center" noshade="">       </a>        
+      <div align="center" class="sidebar"><a href="#internet">Internet Resources</a>
+         | <a href="#offline">Working Offline</a> | <a href="#postal">Postal
+VASL</a>          | <a href="#etiquette">Etiquette</a> | <a
+ href="#acknowledgements">Acknowledgements</a>          | <a
+ href="#license">License</a> | <a href="#troubleshooting">Troubleshooting</a>
+         | <b>Contribute to VASL</b></div>
+       
+      <h2>H. Contribute to VASL</h2>
+       
+      <p>VASL is not the result of a single person's effort, but has grown
+out          of the cooperation of a large number of people over time. There
+are many          niches, large and small, for anybody interested in contributing.
+The VASL          Cooperative is a collection of people who contribute map
+artwork, counter          artwork, scenario setups, web support, and/or Java
+programming. Or people          just interested in an inside or advance view
+of what's happening with          VASL. </p>
+       
+      <p>Join the discussion list at<br>
+         <a href="http://groups.yahoo.com/group/vaslmapcabal"
+ target="_blank">http://groups.yahoo.com/group/vaslmapcabal</a>.        </p>
+       
+      <p>You may find talents or obsessions you never knew you had!</p>
+             </td>
+   </tr>
+   <tr align="left" valign="top">
+      <td colspan="2">        
+      <hr width="100%" align="center" noshade="">     </td>
+   </tr>
+   <!-- END MAIN CONTENT -->   <!-- USER'S GUIDE NAVIGATION - BOTTOM --> 
+ <tr>
+      <td align="left" class="next" nowrap=""> &lt;&lt; <a href="07.htm">Playing
+Tools</a>      </td>
+     <td align="right" class="next">&nbsp; </td>
+   </tr>
+   <tr align="center">
+      <td colspan="2" class="sidebar"><a href="index.htm">Introduction</a>
+| <a href="02.htm">Installation</a>        | <a href="03.htm">Preferences</a>
+| <a href="04.htm">Environment</a> |        <a href="05.htm">Getting Started</a>
+| <a href="06.htm">Setting Up a Scenario</a>        | <a href="07.htm">Playing
+Tools</a> | <b>Appendices</b></td>
+   </tr>
+   <!-- END USER'S GUIDE NAVIGATION - BOTTOM -->   <!-- BEGIN COPYRIGHT --> 
+  <tr>
+      <td colspan="2">        
+      <div align="center" class="copyright">&copy; Copyright 2002 <a
+ href="mailto:rodneykinney@attbi.com">Rodney          Kinney</a></div>
+     </td>
+   </tr>
+   <!-- END COPYRIGHT --> 
+  </tbody>
+</table>
+ <br>
+</body>
+</html>
