@@ -77,19 +77,18 @@ $(TMPDIR)/VASL-$(VERSION).app: all $(JARS) $(TMPDIR)
          -e 's/%NUMVERSION%/$(VNUM)/g' \
 				 -e 's/%FULLVERSION%/$(VERSION)/g' $@/Contents/Info.plist
 	cp dist/macosx/JavaApplicationStub $@/Contents/MacOS
-	cp -r $(LIBDIR) $@/Contents/Resources/Java
+	svn export $(LIBDIR) $@/Contents/Resources/Java
+	cp dist/VASL.mod $@/Contents/Resources/Java
 	rm $@/Contents/Resources/Java/AppleJavaExtensions.jar
-	cp -r $(DOCDIR) $@/Contents/Resources/doc
+	svn export $(DOCDIR) $@/Contents/Resources/doc
 
 $(TMPDIR)/VASL-$(VERSION)-macosx.dmg: $(TMPDIR)/VASL-$(VERSION).app
 	genisoimage -V VASL-$(VERSION) -r -apple -root VASL-$(VERSION).app -o $@ $<
 
 $(TMPDIR)/VASL-$(VERSION)-generic.zip: all $(JARS)
 	mkdir -p $(BUILDDIR)
-	test -d $(BUILDDIR)/doc || mkdir $(BUILDDIR)/doc
-	test -d $(BUILDDIR)/lib || mkdir $(BUILDDIR)/lib
-	cp -r $(DOCDIR)/* $(BUILDDIR)/doc
-	cp -r $(LIBDIR)/* $(BUILDDIR)/lib
+	svn export $(DOCDIR) $(BUILDDIR)/doc
+	svn export $(LIBDIR) $(BUILDDIR)/lib
 	rm $(BUILDDIR)/lib/AppleJavaExtensions.jar
 	cp dist/VASL.sh dist/windows/VASL.bat $(BUILDDIR)
 	cd $(TMPDIR) ; zip -9rv $(notdir $@) VASL-$(VERSION) ; cd ..

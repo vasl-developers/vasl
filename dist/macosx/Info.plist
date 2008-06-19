@@ -42,7 +42,7 @@
 	<key>Java</key>
 	<dict>
 		<key>Arguments</key>
-		<string>--load --VASL.mod</string>
+		<string>--load $JAVAROOT/VASL.mod</string>
 		<key>ClassPath</key>
 		<array>
 			<string>$JAVAROOT/Vengine.jar</string>
