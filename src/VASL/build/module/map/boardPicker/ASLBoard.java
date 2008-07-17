@@ -69,6 +69,11 @@ public class ASLBoard extends Board {
   public Rectangle getCropBounds() {
     return cropBounds;
   }
+  
+  public void setMagnification(double mag) {
+    super.setMagnification(mag);
+    ((ASLHexGrid)grid).setSnapScale(mag > 1.0 ? 2 : 1);
+  }
 
   /**
    * *
@@ -275,13 +280,13 @@ public class ASLBoard extends Board {
   public Point globalCoordinates(Point input) {
     Point p = new Point(input);
     p.translate(-cropBounds.x, -cropBounds.y);
-    if (reversed) {
-      p.x = bounds().width - p.x;
-      p.y = bounds().height - p.y;
-    }
     if (magnification != 1.0) {
       p.x = (int)Math.round(p.x*magnification);
       p.y = (int)Math.round(p.y*magnification);
+    }
+    if (reversed) {
+      p.x = bounds().width - p.x;
+      p.y = bounds().height - p.y;
     }
     return p;
   }

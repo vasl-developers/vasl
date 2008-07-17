@@ -496,6 +496,16 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
       deluxe.addItemListener(new ItemListener() {
         public void itemStateChanged(ItemEvent e) {
           enableDeluxe = e.getStateChange() == ItemEvent.SELECTED;
+          int n=0;
+          ASLBoardSlot slot;
+          while ((slot = (ASLBoardSlot)getSlot(n++)) != null) {
+            if (slot.getBoard() != null) {
+              slot.getBoard().setMagnification(enableDeluxe ? 3.0 : 1.0);
+              slot.setSize(slot.getPreferredSize());
+              slot.revalidate();
+              slot.repaint();
+            }
+          }
         }
       });
       add(deluxe);
