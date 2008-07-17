@@ -224,7 +224,6 @@ public class CASLThread
           }
 
           // add to map
-//          if (!CASLMap.insertGEOMap(newCASLMap, CASLMap.getHex(b.relativePosition().x * 32, b.relativePosition().y * 10))) {
           if (!CASLMap.insertGEOMap(newCASLMap, CASLMap.getHex(b.relativePosition().x * ((int) (Math.round(b.getUncroppedSize().getWidth() / 56.25))), b.relativePosition().y * ((int) (Math.round(b.getUncroppedSize().getHeight() / 64.5)))))) {
             System.err.println("LOS engine disabled... Error building map");
             newCASLMap = null;
@@ -819,6 +818,10 @@ public class CASLThread
 
   private Point mapCASLPointToScreen(Point p) {
     Point temp = map.componentCoordinates(new Point(p));
+    if (upperLeftBoard != null) {
+      temp.x = (int)Math.round(temp.x*upperLeftBoard.getMagnification());
+      temp.y = (int)Math.round(temp.y*upperLeftBoard.getMagnification());
+    }
     temp.translate((int) (map.getEdgeBuffer().width * map.getZoom()), (int) (map.getEdgeBuffer().height * map.getZoom()));
     // adjust for board cropping
     if (upperLeftBoard != null) {
@@ -836,7 +839,8 @@ public class CASLThread
         deltaX = crop.x;
         deltaY = crop.y;
       }
-      temp.translate((int) (-deltaX * map.getZoom()), (int) (-deltaY * map.getZoom()));
+      temp.translate((int) Math.round(-deltaX * map.getZoom()*upperLeftBoard.getMagnification()), 
+          (int) Math.round(-deltaY * map.getZoom()*upperLeftBoard.getMagnification()));
     }
     return temp;
   }
@@ -845,28 +849,30 @@ public class CASLThread
     ASLBoard b = (ASLBoard) map.findBoard(p);
     // ensure we are on a board
     if (b == null) return null;
-    p = b.uncroppedCoordinates(p);
     // Now we need to adjust for cropping of the boards to the left and
     // above the target board
     for (Board board : map.getBoards()) {
       ASLBoard b2 = (ASLBoard) board;
       if (b2.relativePosition().y == b.relativePosition().y
           && b2.relativePosition().x < b.relativePosition().x) {
-        p.translate(b2.getUncroppedSize().width - b2.bounds().width, 0);
+        p.translate((int)Math.round(b2.getMagnification()*b2.getUncroppedSize().width) - b2.bounds().width, 0);
       }
       else if (b2.relativePosition().x == b.relativePosition().x
           && b2.relativePosition().y < b.relativePosition().y) {
-        p.translate(0, b2.getUncroppedSize().height - b2.bounds().height);
+        p.translate(0, (int)Math.round(b2.getMagnification()*b2.getUncroppedSize().height) - b2.bounds().height);
       }
     }
     // remove edge buffer
     p.translate(-map.getEdgeBuffer().width, -map.getEdgeBuffer().height);
+    p = b.localCoordinates(p);
+    if (b.isReversed()) {
+      p.x = b.getUncroppedSize().width-p.x;
+      p.y = b.getUncroppedSize().height-p.y;
+    }
     return p;
   }
 
   private void applyTerrainChanges(ASLBoard b, GameMap map) {
-
-//	StringTokenizer st = new StringTokenizer(b.getTerrainChanges(), "\t");
     StringTokenizer st = new StringTokenizer(b.getState(), "\t");
     String s = null;
     while (st.hasMoreTokens()) {

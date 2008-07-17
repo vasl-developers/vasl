@@ -87,6 +87,7 @@ import VASSAL.build.GameModule;
 import VASSAL.build.module.map.BoardPicker;
 import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.build.module.map.boardPicker.BoardSlot;
+import VASSAL.build.module.map.boardPicker.board.HexGrid;
 import VASSAL.command.Command;
 import VASSAL.command.NullCommand;
 import VASSAL.configure.DirectoryConfigurer;
@@ -98,6 +99,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
   private File boardDir;
   protected TerrainEditor terrain;
   private SetupControls setupControls;
+  private boolean enableDeluxe;
 
   public ASLBoardPicker() {
   }
@@ -215,8 +217,9 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
     }
   }
 
-  /** 
-   * Reads the current board directory and constructs the list of available boards */
+  /**
+   * Reads the current board directory and constructs the list of available boards
+   */
   public void refreshPossibleBoards() {
     String files[] = boardDir == null ? new String[0] : boardDir.list();
     List<String> sorted = new ArrayList<String>();
@@ -294,6 +297,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
         JOptionPane.showMessageDialog(GameModule.getGameModule().getFrame(), e.getMessage(), "Error loading board", JOptionPane.ERROR_MESSAGE);
       }
     }
+    b.setMagnification(enableDeluxe ? 3.0 : 1.0);
+    ((HexGrid) b.getGrid()).setSnapScale(enableDeluxe ? 2 : 0);
     return b;
   }
 
@@ -374,7 +379,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
     while (bd.indexOf("OVR") >= 0) {
       bd = bd.substring(bd.indexOf("OVR") + 4);
       try {
-        b.addOverlay(new Overlay(bd, b,new File(getBoardDir(), "overlays")));
+        b.addOverlay(new Overlay(bd, b, new File(getBoardDir(), "overlays")));
       }
       catch (IOException e) {
         e.printStackTrace();
@@ -382,6 +387,9 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
     }
     if (bd.indexOf("SSR") >= 0) {
       b.setTerrain(bd.substring(bd.indexOf("SSR") + 4));
+    }
+    if (bd.indexOf("ZOOM") >= 0) {
+      b.setMagnification(Double.parseDouble(bd.substring(bd.indexOf("ZOOM")+5)));
     }
   }
 
@@ -483,6 +491,14 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
       dirConfig = new DirectoryConfigurer(null, pref.getName());
       dirConfig.setValue(pref.getFileValue());
       add(dirConfig.getControls());
+      JCheckBox deluxe = new JCheckBox("Deluxe-size hexes");
+      deluxe.setAlignmentX(0.0F);
+      deluxe.addItemListener(new ItemListener() {
+        public void itemStateChanged(ItemEvent e) {
+          enableDeluxe = e.getStateChange() == ItemEvent.SELECTED;
+        }
+      });
+      add(deluxe);
       add(controls);
       dirConfig.addPropertyChangeListener(new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent evt) {
@@ -725,7 +741,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
       pp.setLayout(new GridLayout(1, 2));
       pp.add(new JLabel("Board "));
       board = new JTextField(2);
-      board.setMaximumSize(new Dimension(board.getMaximumSize().width,board.getPreferredSize().height));
+      board.setMaximumSize(new Dimension(board.getMaximumSize().width, board.getPreferredSize().height));
       pp.add(board);
       p.add(pp);
       apply = new JButton("Apply");
@@ -993,7 +1009,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
               propChange.firePropertyChange("active", null, getActive());
             }
           });
-          comp.setMaximumSize(new Dimension(comp.getMaximumSize().width,comp.getPreferredSize().height));
+          comp.setMaximumSize(new Dimension(comp.getMaximumSize().width, comp.getPreferredSize().height));
         }
         else if (e.getTagName().equals("ScrollList")) {
           comp = new JList(new DefaultListModel());
@@ -1422,7 +1438,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
         model.addElement("Level 2");
         model.addElement("Level 3");
         model.addElement("Level 4");
-        from.setMaximumSize(new Dimension(from.getMaximumSize().width,from.getPreferredSize().height));
+        from.setMaximumSize(new Dimension(from.getMaximumSize().width, from.getPreferredSize().height));
         to = new JComboBox();
         model = (DefaultComboBoxModel) to.getModel();
         model.addElement("-");
@@ -1433,7 +1449,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
         model.addElement("Level -1");
         model.addElement("Level 0");
         model.addElement("Level 1");
-        to.setMaximumSize(new Dimension(to.getMaximumSize().width,to.getPreferredSize().height));
+        to.setMaximumSize(new Dimension(to.getMaximumSize().width, to.getPreferredSize().height));
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
         panel.add(new JLabel("All"));
         panel.add(from);

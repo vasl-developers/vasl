@@ -60,7 +60,7 @@ public class ASLBoard extends Board {
   private DataArchive boardArchive;
 
   public ASLBoard() {
-    setGrid(new ASLHexGrid(64.51, false));
+    new ASLHexGrid(64.51, false).addTo(this);
     ((HexGrid) getGrid()).setHexWidth(56.24);
     ((HexGrid) getGrid()).setEdgesLegal(true);
     reversible = true;
@@ -232,21 +232,21 @@ public class ASLBoard extends Board {
   public void crop(String row1, String row2, String coord1, String coord2, boolean nearestFullRow) throws MapGrid.BadCoords {
     double dx = ((HexGrid) getGrid()).getHexWidth();
     double dy = ((HexGrid) getGrid()).getHexSize();
-    cropBounds = new Rectangle(0, 0, -1, -1);
-    cropBounds.x = (row1.length() == 0 ? 0 : getGrid().getLocation(row1 + "0").x);
-    cropBounds.width = row2.length() == 0 ? -1 : (getGrid().getLocation(row2 + "0").x - cropBounds.x);
-    cropBounds.y = coord1.length() == 0 ? 0 : (getGrid().getLocation("a" + coord1).y - (int) (dy / 2));
-    cropBounds.height = coord2.length() == 0 ? -1 : (getGrid().getLocation("a" + coord2).y + (int) (dy / 2) - cropBounds.y);
+    Rectangle newCropBounds = new Rectangle(0, 0, -1, -1);
+    newCropBounds.x = (row1.length() == 0 ? 0 : getGrid().getLocation(row1 + "0").x);
+    newCropBounds.width = row2.length() == 0 ? -1 : (getGrid().getLocation(row2 + "0").x - newCropBounds.x);
+    newCropBounds.y = coord1.length() == 0 ? 0 : (getGrid().getLocation("a" + coord1).y - (int) (dy / 2));
+    newCropBounds.height = coord2.length() == 0 ? -1 : (getGrid().getLocation("a" + coord2).y + (int) (dy / 2) - newCropBounds.y);
     if (nearestFullRow) {
-      if (cropBounds.width > 0 && Math.abs(cropBounds.x + cropBounds.width - uncroppedSize.width) > dx / 4) {
-        cropBounds.width += (int) (dx / 2);
+      if (newCropBounds.width > 0 && Math.abs(newCropBounds.x + newCropBounds.width - uncroppedSize.width) > dx / 4) {
+        newCropBounds.width += (int) (dx / 2);
       }
-      if (cropBounds.x != 0) {
-        cropBounds.x -= (int) (dx / 2);
-        cropBounds.width += (int) (dx / 2);
+      if (newCropBounds.x != 0) {
+        newCropBounds.x -= (int) (dx / 2);
+        newCropBounds.width += (int) (dx / 2);
       }
     }
-    resetImage();
+    setCropBounds(newCropBounds);
   }
 
   public String locationName(Point p) {
@@ -264,6 +264,10 @@ public class ASLBoard extends Board {
       p.x = bounds().width - p.x;
       p.y = bounds().height - p.y;
     }
+    if (magnification != 1.0) {
+      p.x = (int)Math.round(p.x/magnification);
+      p.y = (int)Math.round(p.y/magnification);
+    }
     p.translate(cropBounds.x, cropBounds.y);
     return p;
   }
@@ -275,20 +279,9 @@ public class ASLBoard extends Board {
       p.x = bounds().width - p.x;
       p.y = bounds().height - p.y;
     }
-    return p;
-  }
-
-  /**
-   * Transform from local board coordinates to local coordinates on the uncropped board
-   */
-  public Point uncroppedCoordinates(Point input) {
-    Point p = new Point(input);
-    if (reversed) {
-      p.translate(cropBounds.width > 0 ? uncroppedSize.width - cropBounds.x - cropBounds.width : 0, cropBounds.height > 0 ? uncroppedSize.height - cropBounds.y
-          - cropBounds.height : 0);
-    }
-    else {
-      p.translate(cropBounds.x, cropBounds.y);
+    if (magnification != 1.0) {
+      p.x = (int)Math.round(p.x*magnification);
+      p.y = (int)Math.round(p.y*magnification);
     }
     return p;
   }
@@ -306,6 +299,9 @@ public class ASLBoard extends Board {
     }
     if (terrainChanges.length() > 0)
       val += "SSR\t" + terrainChanges;
+    if (magnification != 1.0) {
+      val += "\tZOOOM\t"+magnification;
+    }
     return val;
   }
   
@@ -331,6 +327,8 @@ public class ASLBoard extends Board {
       BufferedImage im = ImageUtils.createEmptyLargeImage(size.width, size.height);
       Graphics2D g = (Graphics2D) im.getGraphics();
       Rectangle visible = new Rectangle(cropBounds.getLocation(), ASLBoard.this.bounds().getSize());
+      visible.width = (int)Math.round(visible.width/magnification);
+      visible.height = (int)Math.round(visible.height/magnification);
       g.drawImage(base.getImage(null), 0, 0, visible.width, visible.height, 
             cropBounds.x, cropBounds.y, cropBounds.x + visible.width, cropBounds.y + visible.height, null);
       Component comp = new Component() {};

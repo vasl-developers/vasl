@@ -106,7 +106,8 @@ public class ASLHexGrid extends HexGrid {
             (int) (dy * (p.y - 1.5) + .5)
             : (int) (dy * (p.y - .5) + .5);
 
-      return new Point(sign * hexX + origin.x, hexY + origin.y);
+      Point pt = new Point(sign * hexX + origin.x, hexY + origin.y);
+      return pt;
     }
     catch (Exception e) {
       throw new MapGrid.BadCoords("Bad Hex Coordinates");
