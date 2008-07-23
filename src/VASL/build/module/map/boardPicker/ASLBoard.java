@@ -36,7 +36,11 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import javax.imageio.ImageIO;
+import javax.imageio.stream.MemoryCacheImageInputStream;
+
 import VASL.build.module.map.boardPicker.board.ASLHexGrid;
+import VASSAL.build.GameModule;
 import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.build.module.map.boardPicker.board.HexGrid;
 import VASSAL.build.module.map.boardPicker.board.MapGrid;
@@ -325,9 +329,21 @@ public class ASLBoard extends Board {
       if (size == null) {
         fixSize();
       }
-      ImageOp base = new SourceOpBitmapImpl(imageFile,boardArchive);
+      ImageOp base = new SourceOpBitmapImpl(imageFile, boardArchive) {
+        @Override
+        public Image apply() throws IOException {
+          if (size == null)
+            fixSize();
+          if (Boolean.TRUE.equals(GameModule.getGameModule().getPrefs().getValue(ImageUtils.PREFER_MEMORY_MAPPED))) {
+            return super.apply();
+          }
+          else {
+            return ImageIO.read(new MemoryCacheImageInputStream(archive.getImageInputStream(name)));
+          }
+        }
+      };
       if (terrain == null && overlays.isEmpty() && cropBounds.width < 0 && cropBounds.height < 0) {
-        return base.getImage(null); 
+        return ImageUtils.toIntARGBLarge((BufferedImage)base.getImage(null));
       }
       BufferedImage im = ImageUtils.createEmptyLargeImage(size.width, size.height);
       Graphics2D g = (Graphics2D) im.getGraphics();
