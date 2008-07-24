@@ -309,7 +309,7 @@ public class ASLBoard extends Board {
     if (terrainChanges.length() > 0)
       val += "SSR\t" + terrainChanges;
     if (magnification != 1.0) {
-      val += "\tZOOOM\t"+magnification;
+      val += "\tZOOM\t"+magnification;
     }
     return val;
   }

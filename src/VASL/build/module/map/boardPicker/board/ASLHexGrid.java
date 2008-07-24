@@ -52,28 +52,27 @@ public class ASLHexGrid extends HexGrid {
         (int) Math.floor(p.y / dy) + 1 :
         (int) Math.floor(p.y / dy + 0.5));
 
-    if ((int) Math.floor(2 * p.x / dx + .5) % 2 != 0) {       /* Bypass at 1/2-hex in X */
-      hexX = (int) Math.floor(p.x / dx);
-      hexY = (hexX % 2 == 0 ?
-          (int) Math.floor(p.y / dy) + 1 :
-          (int) Math.floor(p.y / dy + 0.5));
-
-      hexX2 = hexX + 1;
-      if (hexX % 2 == 0)
-        hexY2 = p.y > (hexY - 0.5) * dy ? hexY : hexY - 1;
-      else
-        hexY2 = p.y > hexY * dy ? hexY + 1 : hexY;
-    }
-    else if (hexX % 2 == 0) {
-      if ((int) Math.floor(2 * p.y / dy + 0.5) % 2 == 0) {    /* Bypass at 1/2-hex in Y */
-        hexX2 = hexX;
-        hexY2 = p.y > (hexY - 0.5) * dy ? hexY + 1 : hexY - 1;
+    if (p.x == sideX(p.x,p.y) && p.y == sideY(p.x,p.y)) {
+      if ((int) Math.floor(2 * p.x / dx + .5) % 2 != 0) { /* Bypass at 1/2-hex in X */
+        hexX = (int) Math.floor(p.x / dx);
+        hexY = (hexX % 2 == 0 ? (int) Math.floor(p.y / dy) + 1 : (int) Math.floor(p.y / dy + 0.5));
+        hexX2 = hexX + 1;
+        if (hexX % 2 == 0)
+          hexY2 = p.y > (hexY - 0.5) * dy ? hexY : hexY - 1;
+        else
+          hexY2 = p.y > hexY * dy ? hexY + 1 : hexY;
       }
-    }
-    else {
-      if ((int) Math.floor(2 * p.y / dy + 0.5) % 2 != 0) {    /* Bypass at 1/2-hex in Y */
-        hexX2 = hexX;
-        hexY2 = p.y > hexY * dy ? hexY + 1 : hexY - 1;
+      else if (hexX % 2 == 0) {
+        if ((int) Math.floor(2 * p.y / dy + 0.5) % 2 == 0) { /* Bypass at 1/2-hex in Y */
+          hexX2 = hexX;
+          hexY2 = p.y > (hexY - 0.5) * dy ? hexY + 1 : hexY - 1;
+        }
+      }
+      else {
+        if ((int) Math.floor(2 * p.y / dy + 0.5) % 2 != 0) { /* Bypass at 1/2-hex in Y */
+          hexX2 = hexX;
+          hexY2 = p.y > hexY * dy ? hexY + 1 : hexY - 1;
+        }
       }
     }
 
