@@ -266,6 +266,11 @@ public class ASLBoard extends Board {
       return super.locationName(p);
     }
   }
+  
+  @Override
+  public String localizedLocationName(Point p) {
+    return locationName(p);
+  }
 
   public Point localCoordinates(Point p1) {
     Point p = new Point(p1.x, p1.y);
