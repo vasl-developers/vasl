@@ -33,7 +33,6 @@ import java.awt.*;
  */
 public class Concealment extends Decorator implements EditablePiece {
   public static final String ID = "concealment;";
-
   private KeyCommand[] commands;
   private String nation;
   private String owner;
@@ -48,7 +47,7 @@ public class Concealment extends Decorator implements EditablePiece {
   }
 
   public void mySetType(String type) {
-    SequenceEncoder.Decoder st = new SequenceEncoder.Decoder(type.substring(ID.length()),';');
+    SequenceEncoder.Decoder st = new SequenceEncoder.Decoder(type.substring(ID.length()), ';');
     owner = st.nextToken(null);
     nation = st.nextToken(null);
   }
@@ -80,14 +79,9 @@ public class Concealment extends Decorator implements EditablePiece {
   protected KeyCommand[] myGetKeyCommands() {
     if (commands == null) {
       commands = new KeyCommand[1];
-      commands[0] = new KeyCommand("Conceal",
-                                   KeyStroke.getKeyStroke('C', java.awt.event.InputEvent.CTRL_MASK),
-                                   Decorator.getOutermost(this));
+      commands[0] = new KeyCommand("Conceal", KeyStroke.getKeyStroke('C', java.awt.event.InputEvent.CTRL_MASK), Decorator.getOutermost(this));
     }
-    commands[0].setEnabled(owner == null
-                           || owner.equals(GameModule.getUserId())
-                           || ObscurableOptions.getInstance().isUnmaskable(owner));
-    return commands;
+    return owner == null || owner.equals(GameModule.getUserId()) || ObscurableOptions.getInstance().isUnmaskable(owner) ? commands : new KeyCommand[0];
   }
 
   public Command myKeyEvent(javax.swing.KeyStroke stroke) {
@@ -95,52 +89,54 @@ public class Concealment extends Decorator implements EditablePiece {
   }
 
   public Command keyEvent(javax.swing.KeyStroke stroke) {
-    Stack parent = getParent();
-    if (parent != null) {
-      BoundsTracker tracker = new BoundsTracker();
-      tracker.addPiece(parent);
-      int lastIndex = getParent().indexOf(Decorator.getOutermost(this));
-      Command c = super.keyEvent(stroke);
-      if (c == null || c.isNull()) {
+    if (owner == null || owner.equals(GameModule.getUserId()) || ObscurableOptions.getInstance().isUnmaskable(owner)) {
+      Stack parent = getParent();
+      if (parent != null) {
+        BoundsTracker tracker = new BoundsTracker();
+        tracker.addPiece(parent);
+        int lastIndex = getParent().indexOf(Decorator.getOutermost(this));
+        Command c = super.keyEvent(stroke);
+        if (c == null || c.isNull()) {
+          return c;
+        }
+        // Concealment counter was deleted or moved in the stack
+        int newIndex = getParent() == null ? -1 : getParent().indexOf(Decorator.getOutermost(this));
+        if (newIndex > lastIndex) {
+          for (int i = lastIndex; i < newIndex; ++i) {
+            c.append(setConcealed(parent.getPieceAt(i), true));
+          }
+        }
+        else if (newIndex < lastIndex) {
+          if (getParent() == null) {
+            lastIndex--;
+          }
+          for (int i = lastIndex; i > newIndex; --i) {
+            GamePiece child = parent.getPieceAt(i);
+            if (Decorator.getDecorator(child, Concealment.class) != null) {
+              break;
+            }
+            c.append(setConcealed(child, false));
+          }
+        }
+        tracker.repaint();
         return c;
       }
-      // Concealment counter was deleted or moved in the stack
-      int newIndex = getParent() == null ? -1 : getParent().indexOf(Decorator.getOutermost(this));
-      if (newIndex > lastIndex) {
-        for (int i = lastIndex; i < newIndex; ++i) {
-          c.append(setConcealed(parent.getPieceAt(i), true));
-        }
+      else {
+        return super.keyEvent(stroke);
       }
-      else if (newIndex < lastIndex) {
-        if (getParent() == null) {
-          lastIndex--;
-        }
-        for (int i = lastIndex; i > newIndex; --i) {
-          GamePiece child = parent.getPieceAt(i);
-          if (Decorator.getDecorator(child, Concealment.class) != null) {
-            break;
-          }
-          c.append(setConcealed(child, false));
-        }
-      }
-      tracker.repaint();
-      return c;
     }
     else {
-      return super.keyEvent(stroke);
+      return null;
     }
   }
 
   /**
-   * Conceal or unconceal the given unit.  Do nothing if the
-   * the unit is not concealable by this concealment counter
+   * Conceal or unconceal the given unit. Do nothing if the the unit is not concealable by this concealment counter
    */
   public Command setConcealed(GamePiece p, boolean concealed) {
     if (canConceal(p)) {
       String state = p.getState();
-      p.setProperty(Properties.OBSCURED_BY,
-                    concealed ? GameModule.getUserId()
-                    : null);
+      p.setProperty(Properties.OBSCURED_BY, concealed ? GameModule.getUserId() : null);
       return new ChangePiece(p.getId(), state, p.getState());
     }
     else {
@@ -148,14 +144,13 @@ public class Concealment extends Decorator implements EditablePiece {
     }
   }
 
-  /** @return true if this concealment counter is
-   * applicable to the given piece (i.e. if the piece
-   * is a concealable counter of the same nationality)
+  /**
+   * @return true if this concealment counter is applicable to the given piece (i.e. if the piece is a concealable
+   *         counter of the same nationality)
    */
   public boolean canConceal(GamePiece p) {
     Concealable c = (Concealable) Decorator.getDecorator(p, Concealable.class);
-    if (c == null
-        || !c.isMaskable()) {
+    if (c == null || !c.isMaskable()) {
       return false;
     }
     else {
@@ -166,7 +161,7 @@ public class Concealment extends Decorator implements EditablePiece {
   private String getNationality() {
     String value = nation;
     if (value == null) {
-      ColoredBox b = (ColoredBox) Decorator.getDecorator(this,ColoredBox.class);
+      ColoredBox b = (ColoredBox) Decorator.getDecorator(this, ColoredBox.class);
       if (b != null) {
         value = b.getColorId();
       }
