@@ -9,7 +9,8 @@ DOCDIR:=doc
 DISTDIR:=dist
 
 VNUM:=5.9.0
-VERSION:=$(shell unzip -p dist/VASL.mod buildFile | grep \<VASSAL.launch.BasicModule  | sed -e 's/.*version="\([^"]*\)".*/\1/g')
+#VERSION:=$(shell unzip -p dist/VASL.mod buildFile | grep \<VASSAL.launch.BasicModule  | sed -e 's/.*version="\([^"]*\)".*/\1/g')
+VERSION:=5.9-beta3
 BUILDDIR:=$(TMPDIR)/VASL-$(VERSION)
 
 #CLASSPATH:=$(CLASSDIR):$(LIBDIR)/*
@@ -49,6 +50,7 @@ module: $(CLASSES) $(BUILDDIR)/VASL.mod
 $(BUILDDIR)/VASL.mod: dist/VASL.mod
 	cp dist/VASL.mod $(BUILDDIR)
 	cd classes && zip -0 ../$(BUILDDIR)/VASL.mod -r VASL
+	cd $(BUILDDIR) && unzip -p VASL.mod buildFile | sed -e 's/\(<VASSAL.launch.BasicModule.*version="\)[^"]*\(".*\)/\1$(VERSION)\2/g' > buildFile && zip -m -0 VASL.mod buildFile
 
 fast: clean $(CLASSDIR) fast-compile 
 
@@ -79,6 +81,8 @@ $(TMPDIR)/VASL-$(VERSION).app: all $(JARS) $(TMPDIR)
 	cp dist/macosx/JavaApplicationStub $@/Contents/MacOS
 	svn export $(LIBDIR) $@/Contents/Resources/Java
 	cp dist/VASL.mod $@/Contents/Resources/Java
+	cd classes && zip -0 ../$@/Contents/Resources/Java/VASL.mod -r VASL
+	cd $@/Contents/Resources/Java && unzip -p VASL.mod buildFile | sed -e 's/\(<VASSAL.launch.BasicModule.*version="\)[^"]*\(".*\)/\1$(VERSION)\2/g' > buildFile && zip -m -0 VASL.mod buildFile
 	rm $@/Contents/Resources/Java/AppleJavaExtensions.jar
 	svn export $(DOCDIR) $@/Contents/Resources/doc
 
