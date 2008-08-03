@@ -7,6 +7,7 @@ dist/launch.xml -text
 dist/macosx/Info.plist -text
 dist/macosx/JavaApplicationStub -text
 dist/macosx/PkgInfo -text
+dist/moduleData/buildFile -text
 dist/windows/VASL.bat -text
 dist/windows/VASL.l4j.xml -text svneol=unset#text/plain
 dist/windows/nsis/installer.nsi -text
