@@ -121,3 +121,4 @@ lib/xerces_2_5_0.jar -text
 lib/xml-apis-ext.jar -text
 lib/xml-apis.jar -text
 src/VASL/build/module/map/CASLThread.java -text
+src/VASL/build/module/map/CounterDetailViewer.java -text

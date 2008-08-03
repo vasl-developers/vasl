@@ -18,6 +18,8 @@
  */
 package VASL.counters;
 
+import java.awt.Component;
+import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -35,6 +37,7 @@ import VASSAL.counters.PieceEditor;
 import VASSAL.counters.SimplePieceEditor;
 import VASSAL.tools.SequenceEncoder;
 import VASSAL.tools.imageop.Op;
+import VASSAL.tools.imageop.ScaledImagePainter;
 
 /**
  * This class draws a turret counter at different offsets depending on the CA
@@ -48,6 +51,8 @@ public class Turreted extends Embellishment implements EditablePiece {
   protected boolean flipped;
   protected boolean rotateWithCounter; // As of VASL 4.2+, vehicles counters rotate in their entirety,
   // rather than just the silhouette
+  protected ScaledImagePainter[] frontImages;
+  protected ScaledImagePainter[] backImages;
 
   public Turreted() {
 //    this(ID + "tcaCE;tca;S;A;r", null);   // Enable this in VASL 5.0
@@ -81,12 +86,29 @@ public class Turreted extends Embellishment implements EditablePiece {
       }
     }
     super.mySetType(embType);
+    frontImages = new ScaledImagePainter[6];
+    backImages = new ScaledImagePainter[6];
+    for (int i=0;i<6;++i) {
+      frontImages[i] = new ScaledImagePainter();
+      frontImages[i].setImageName(front+(i+1));
+      backImages[i] = new ScaledImagePainter();
+      backImages[i].setImageName(back+(i+1));
+    }
   }
 
   public Shape getShape() {
     return piece.getShape();
   }
-
+  
+  public boolean isActive() {
+    return super.isActive() && (flipped || value != getVehicleCA());
+  }
+  
+  @Override
+  public void draw(Graphics g, int x, int y, Component obs, double zoom) {
+    imagePainter = flipped ? backImages : frontImages;
+    super.draw(g, x, y, obs, zoom);
+  }
 
   protected Image getCurrentImage() throws java.io.IOException {
     if (flipped || value != getVehicleCA()) {
@@ -110,7 +132,6 @@ public class Turreted extends Embellishment implements EditablePiece {
       switch (value) {
         case 1:
           r.translate(20, -10);
-          ;
           break;
         case 2:
           r.translate(20, 5);

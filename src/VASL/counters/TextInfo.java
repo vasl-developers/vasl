@@ -82,6 +82,10 @@ public class TextInfo extends Decorator implements EditablePiece {
     }
     return null;
   }
+  
+  public boolean isInfoShowing() {
+    return showInfo;
+  }
 
   public Shape getShape() {
     return piece.getShape();
