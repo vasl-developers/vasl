@@ -297,8 +297,10 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
         JOptionPane.showMessageDialog(GameModule.getGameModule().getFrame(), e.getMessage(), "Error loading board", JOptionPane.ERROR_MESSAGE);
       }
     }
-    b.setMagnification(enableDeluxe ? 3.0 : 1.0);
-    ((HexGrid) b.getGrid()).setSnapScale(enableDeluxe ? 2 : 0);
+    if (enableDeluxe) {
+      b.setMagnification(3.0);
+      ((HexGrid) b.getGrid()).setSnapScale(2);
+    }
     return b;
   }
 

@@ -54,6 +54,8 @@ import VASSAL.tools.imageop.SourceTileOpBitmapImpl;
 
 /** A Board is a geomorphic or HASL board. */
 public class ASLBoard extends Board {
+  public static final double DEFAULT_HEX_WIDTH = 56.24;
+  public static final double DEFAULT_HEX_HEIGHT = 64.51;
   public String version = "0.0";
   private Rectangle cropBounds = new Rectangle(0, 0, -1, -1);
   private Dimension uncroppedSize;
@@ -64,8 +66,8 @@ public class ASLBoard extends Board {
   private DataArchive boardArchive;
 
   public ASLBoard() {
-    new ASLHexGrid(64.51, false).addTo(this);
-    ((HexGrid) getGrid()).setHexWidth(56.24);
+    new ASLHexGrid(DEFAULT_HEX_HEIGHT, false).addTo(this);
+    ((HexGrid) getGrid()).setHexWidth(DEFAULT_HEX_WIDTH);
     ((HexGrid) getGrid()).setEdgesLegal(true);
     reversible = true;
   }

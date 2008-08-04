@@ -54,6 +54,7 @@ import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.GameComponent;
 import VASSAL.build.module.map.boardPicker.Board;
+import VASSAL.build.module.map.boardPicker.board.HexGrid;
 import VASSAL.command.Command;
 import VASSAL.configure.BooleanConfigurer;
 import VASSAL.configure.ColorConfigurer;
@@ -818,9 +819,10 @@ public class CASLThread
 
   private Point mapCASLPointToScreen(Point p) {
     Point temp = map.componentCoordinates(new Point(p));
+    double scale = upperLeftBoard == null ? 1.0 : upperLeftBoard.getMagnification() * ((HexGrid)upperLeftBoard.getGrid()).getHexSize()/ASLBoard.DEFAULT_HEX_HEIGHT;
     if (upperLeftBoard != null) {
-      temp.x = (int)Math.round(temp.x*upperLeftBoard.getMagnification());
-      temp.y = (int)Math.round(temp.y*upperLeftBoard.getMagnification());
+      temp.x = (int)Math.round(temp.x*scale);
+      temp.y = (int)Math.round(temp.y*scale);
     }
     temp.translate((int) (map.getEdgeBuffer().width * map.getZoom()), (int) (map.getEdgeBuffer().height * map.getZoom()));
     // adjust for board cropping
@@ -839,8 +841,8 @@ public class CASLThread
         deltaX = crop.x;
         deltaY = crop.y;
       }
-      temp.translate((int) Math.round(-deltaX * map.getZoom()*upperLeftBoard.getMagnification()), 
-          (int) Math.round(-deltaY * map.getZoom()*upperLeftBoard.getMagnification()));
+      temp.translate((int) Math.round(-deltaX * map.getZoom()*scale), 
+          (int) Math.round(-deltaY * map.getZoom()*scale));
     }
     return temp;
   }
@@ -853,13 +855,14 @@ public class CASLThread
     // above the target board
     for (Board board : map.getBoards()) {
       ASLBoard b2 = (ASLBoard) board;
+      double scale = b2.getMagnification() * ((HexGrid)b2.getGrid()).getHexSize()/ASLBoard.DEFAULT_HEX_HEIGHT;
       if (b2.relativePosition().y == b.relativePosition().y
           && b2.relativePosition().x < b.relativePosition().x) {
-        p.translate((int)Math.round(b2.getMagnification()*b2.getUncroppedSize().width) - b2.bounds().width, 0);
+        p.translate((int)Math.round(scale*b2.getUncroppedSize().width) - b2.bounds().width, 0);
       }
       else if (b2.relativePosition().x == b.relativePosition().x
           && b2.relativePosition().y < b.relativePosition().y) {
-        p.translate(0, (int)Math.round(b2.getMagnification()*b2.getUncroppedSize().height) - b2.bounds().height);
+        p.translate(0, (int)Math.round(scale*b2.getUncroppedSize().height) - b2.bounds().height);
       }
     }
     // remove edge buffer

@@ -18,9 +18,13 @@
  */
 package VASL.counters;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import VASL.build.module.map.boardPicker.ASLBoard;
+import VASSAL.build.module.map.boardPicker.Board;
+import VASSAL.build.module.map.boardPicker.board.HexGrid;
 import VASSAL.command.Command;
 import VASSAL.command.NullCommand;
 import VASSAL.counters.GamePiece;
@@ -61,8 +65,24 @@ public class ASLTranslate extends Translate {
       }
     }
     else {
-    c = super.moveTarget(target);
+      c = super.moveTarget(target);
     }
     return c;
+  }
+
+  @Override
+  protected void translate(Point p) {
+    Board b = getMap().findBoard(p);
+    if (b != null && ((HexGrid) b.getGrid()).getHexSize() != ASLBoard.DEFAULT_HEX_HEIGHT) {
+      int x = p.x;
+      int y = p.y;
+      super.translate(p);
+      double scale = ((HexGrid) b.getGrid()).getHexSize() / ASLBoard.DEFAULT_HEX_HEIGHT;
+      p.x = x + (int) Math.round(scale * (p.x - x));
+      p.y = y + (int) Math.round(scale * (p.y - y));
+    }
+    else {
+      super.translate(p);
+    }
   }
 }
