@@ -50,7 +50,7 @@ module: $(CLASSES) $(BUILDDIR)/VASL.mod
 $(BUILDDIR)/VASL.mod: dist/VASL.mod $(BUILDDIR)
 	cp dist/VASL.mod $(BUILDDIR)
 	cd classes && zip -0 ../$(BUILDDIR)/VASL.mod -r VASL
-	cd dist/moduleData && zip -0 ../../$(BUILDDIR)/VASL.mod -r *
+	cd dist/moduleData && zip -0 ../../$(BUILDDIR)/VASL.mod -r * -x \*.svn/\* 
 	cd $(BUILDDIR) && unzip -p VASL.mod buildFile | sed -e 's/\(<VASSAL.launch.BasicModule.*version="\)[^"]*\(".*\)/\1$(VERSION)\2/g' > buildFile && zip -m -0 VASL.mod buildFile
 
 fast: clean $(CLASSDIR) fast-compile 

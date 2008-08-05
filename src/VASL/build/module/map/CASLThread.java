@@ -830,10 +830,13 @@ public class CASLThread
       int deltaX = 0, deltaY = 0;
       Rectangle crop = upperLeftBoard.getCropBounds();
       if (upperLeftBoard.isReversed()) {
+        double hexScale = ((HexGrid)upperLeftBoard.getGrid()).getHexSize()/ASLBoard.DEFAULT_HEX_HEIGHT;
         if (crop.width >= 0) {
+//          deltaX = (int)Math.round((upperLeftBoard.getUncroppedSize().width - crop.x - crop.width)*hexScale);
           deltaX = upperLeftBoard.getUncroppedSize().width - crop.x - crop.width;
         }
         if (crop.height >= 0) {
+//          deltaY = (int)Math.round((upperLeftBoard.getUncroppedSize().height - crop.y - crop.height)*hexScale);
           deltaY = upperLeftBoard.getUncroppedSize().height - crop.y - crop.height;
         }
       }
@@ -841,8 +844,8 @@ public class CASLThread
         deltaX = crop.x;
         deltaY = crop.y;
       }
-      temp.translate((int) Math.round(-deltaX * map.getZoom()*scale), 
-          (int) Math.round(-deltaY * map.getZoom()*scale));
+      temp.translate((int) Math.round(-deltaX * map.getZoom()*upperLeftBoard.getMagnification()), 
+          (int) Math.round(-deltaY * map.getZoom()*upperLeftBoard.getMagnification()));
     }
     return temp;
   }
@@ -868,9 +871,12 @@ public class CASLThread
     // remove edge buffer
     p.translate(-map.getEdgeBuffer().width, -map.getEdgeBuffer().height);
     p = b.localCoordinates(p);
+    double gridScale = ((HexGrid)b.getGrid()).getHexSize() / ASLBoard.DEFAULT_HEX_HEIGHT; 
+    p.x = (int)Math.round(p.x / gridScale);
+    p.y = (int)Math.round(p.y / gridScale);
     if (b.isReversed()) {
-      p.x = b.getUncroppedSize().width-p.x;
-      p.y = b.getUncroppedSize().height-p.y;
+      p.x = (int)Math.round(b.getUncroppedSize().width/gridScale)-p.x;
+      p.y = (int)Math.round(b.getUncroppedSize().height/gridScale)-p.y;
     }
     return p;
   }
