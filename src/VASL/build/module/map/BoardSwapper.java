@@ -176,6 +176,7 @@ public class BoardSwapper extends AbstractBuildable {
         t.setup(true);
       }
       for (BoardPicker p : this.map.getComponentsOf(BoardPicker.class)) {
+        ((ASLBoardPicker)p).setGlobalMapScale();
         new SetBoards(p, currentBoards).execute();
       }
     }

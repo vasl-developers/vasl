@@ -67,7 +67,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionListener;
 
 import org.w3c.dom.Document;
@@ -80,11 +79,13 @@ import VASL.build.module.map.boardPicker.ASLBoardSlot;
 import VASL.build.module.map.boardPicker.BoardException;
 import VASL.build.module.map.boardPicker.Overlay;
 import VASL.build.module.map.boardPicker.SSROverlay;
+import VASSAL.build.BadDataReport;
 import VASSAL.build.Buildable;
 import VASSAL.build.Builder;
 import VASSAL.build.Configurable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.map.BoardPicker;
+import VASSAL.build.module.map.GlobalMap;
 import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.build.module.map.boardPicker.BoardSlot;
 import VASSAL.build.module.map.boardPicker.board.HexGrid;
@@ -92,6 +93,7 @@ import VASSAL.command.Command;
 import VASSAL.command.NullCommand;
 import VASSAL.configure.DirectoryConfigurer;
 import VASSAL.configure.ValidationReport;
+import VASSAL.tools.ErrorDialog;
 
 public class ASLBoardPicker extends BoardPicker implements ActionListener {
   /** The key for the preferences setting giving the board directory */
@@ -125,12 +127,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
             v.add(b);
           }
           catch (final BoardException e) {
-            Runnable r = new Runnable() {
-              public void run() {
-                JOptionPane.showMessageDialog(GameModule.getGameModule().getFrame(), e.getMessage());
-              }
-            };
-            SwingUtilities.invokeLater(r);
+            ErrorDialog.dataError(new BadDataReport("Unrecognized board in saved game",e));
           }
           command = command.substring(index + 3);
         }
@@ -140,12 +137,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
           v.add(b);
         }
         catch (final BoardException e) {
-          Runnable r = new Runnable() {
-            public void run() {
-              JOptionPane.showMessageDialog(GameModule.getGameModule().getFrame(), e.getMessage());
-            }
-          };
-          SwingUtilities.invokeLater(r);
+          ErrorDialog.dataError(new BadDataReport("Bad board:  "+b,e));
         }
       }
       comm = comm.append(new SetBoards(this, v));
@@ -199,6 +191,26 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
     boardDir = dir;
     refreshPossibleBoards();
     reset();
+  }
+  
+  @Override
+  public void setup(boolean show) {
+    super.setup(show);
+    if (show) {
+      setGlobalMapScale();
+    }
+  }
+
+  public void setGlobalMapScale() {
+    Collection<Board> bds = getSelectedBoards();
+    if (bds.iterator().hasNext()) {
+      double mag = bds.iterator().next().getMagnification();
+      double globalScale = 0.19444444;
+      if (mag > 1.0) {
+        globalScale /= mag;
+      }
+      map.getComponentsOf(GlobalMap.class).get(0).setAttribute("scale", globalScale);
+    }
   }
 
   public File getBoardDir() {
