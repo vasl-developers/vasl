@@ -184,8 +184,10 @@ public class CASLThread
       // create the map
       //CASLMap = new GameMap(mapWidth * 32 + 1, mapHeight * 10);
       //CASLMap = createCASLMap(mapWidth * 32 + 1, mapHeight * 10);
-      CASLMap = createCASLMap(mapWidth * (int) Math.round(boardList.get(0).getUncroppedSize().getWidth() / 56.25) + 1,
-                              mapHeight * (int) Math.round(boardList.get(0).getUncroppedSize().getHeight() / 64.5));
+      if (boardList.size() > 0) {
+        CASLMap = createCASLMap(mapWidth * (int) Math.round(boardList.get(0).getUncroppedSize().getWidth() / 56.25) + 1,
+            mapHeight * (int) Math.round(boardList.get(0).getUncroppedSize().getHeight() / 64.5));
+      }
 
 
 
