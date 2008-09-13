@@ -147,10 +147,12 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
           ASLBoard b = (ASLBoard) board;
           for (Enumeration e2 = b.getOverlays(); e2.hasMoreElements();) {
             Overlay o = (Overlay) e2.nextElement();
-            String name = o.getFile().getName();
-            String availableVersion = overlayVersions.getProperty(name, o.getVersion());
-            if (!availableVersion.equals(o.getVersion())) {
-              obsolete.addElement(name);
+            if (o.getClass().equals(Overlay.class)) { // Don't check for SSROverlays
+              String name = o.getFile().getName();
+              String availableVersion = overlayVersions.getProperty(name, o.getVersion());
+              if (!availableVersion.equals(o.getVersion())) {
+                obsolete.addElement(name);
+              }
             }
           }
         }

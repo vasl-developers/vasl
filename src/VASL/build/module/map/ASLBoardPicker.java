@@ -122,12 +122,13 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
         command = command.substring(3);
         for (int index = command.indexOf("bd\t"); index > 0; index = command.indexOf("bd\t")) {
           ASLBoard b = new ASLBoard();
+          String boardDesc = command.substring(0, index);
           try {
-            buildBoard(b, command.substring(0, index));
+            buildBoard(b, boardDesc);
             v.add(b);
           }
           catch (final BoardException e) {
-            ErrorDialog.dataError(new BadDataReport("Unrecognized board in saved game",e));
+            ErrorDialog.dataError(new BadDataReport("Board not found",boardDesc,e));
           }
           command = command.substring(index + 3);
         }
@@ -137,7 +138,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
           v.add(b);
         }
         catch (final BoardException e) {
-          ErrorDialog.dataError(new BadDataReport("Bad board:  "+b,e));
+          ErrorDialog.dataError(new BadDataReport("Unable to build board",command,e));
         }
       }
       comm = comm.append(new SetBoards(this, v));
