@@ -85,19 +85,19 @@ public class Overlay implements Cloneable {
     }
     boolean hasOwnParameters = false;
     try {
-      archive.getFileStream("colors");
+      archive.getInputStream("colors");
       hasOwnParameters = true;
     }
     catch (IOException ex) {
     }
     try {
-      archive.getFileStream("colorSSR");
+      archive.getInputStream("colorSSR");
       hasOwnParameters = true;
     }
     catch (IOException ex) {
     }
     try {
-      archive.getFileStream("overlaySSR");
+      archive.getInputStream("overlaySSR");
       hasOwnParameters = true;
     }
     catch (IOException ex) {
@@ -148,7 +148,7 @@ public class Overlay implements Cloneable {
 
   private void readData() throws IOException {
     origins = getDefaultOriginList(name);
-    InputStream in = archive.getFileStream("data");
+    InputStream in = archive.getInputStream("data");
     BufferedReader file = new BufferedReader(new InputStreamReader(in));
     String s;
     while ((s = file.readLine()) != null) {
@@ -260,7 +260,7 @@ public class Overlay implements Cloneable {
       char c = getOrientation();
       offset(c, board);
       try {
-        archive.getFileStream(fileName(name + c));
+        archive.getInputStream(fileName(name + c));
       }
       catch (IOException ex) {
         throw new BoardException("Overlay not found in " + overlayFile.getPath());
@@ -446,14 +446,14 @@ public class Overlay implements Cloneable {
 
   private boolean isSingleHex() {
     try {
-      archive.getFileStream(fileName(name + 'a'));
+      archive.getInputStream(fileName(name + 'a'));
     }
     catch (IOException ex) {
       ex.printStackTrace();
       return false;
     }
     try {
-      archive.getFileStream(fileName(name + 'd'));
+      archive.getInputStream(fileName(name + 'd'));
       return false;
     }
     catch (IOException ex) {

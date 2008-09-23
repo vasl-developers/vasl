@@ -54,7 +54,7 @@ public class Underlay extends SSROverlay {
   public Image loadImage() {
     Image underlayImage = null;
     try {
-      underlayImage = ImageIO.read(new MemoryCacheImageInputStream(GameModule.getGameModule().getDataArchive().getFileStream("boardData/" + imageName)));
+      underlayImage = ImageIO.read(new MemoryCacheImageInputStream(GameModule.getGameModule().getDataArchive().getInputStream("boardData/" + imageName)));
     }
     catch (IOException ex) {
     }

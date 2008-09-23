@@ -62,7 +62,7 @@ public class SSRFilter extends RGBImageFilter {
     this.archiveFile = archiveFile;
     try {
       archive = new DataArchive(archiveFile.getPath());
-      archive.getFileStream("data");
+      archive.getInputStream("data");
     }
     catch (IOException ex) {
       throw new BoardException("Board does not support terrain alterations");
@@ -73,7 +73,7 @@ public class SSRFilter extends RGBImageFilter {
 
   private static InputStream getStream(String name) {
     try {
-      return GameModule.getGameModule().getDataArchive().getFileStream(name);
+      return GameModule.getGameModule().getDataArchive().getInputStream(name);
     }
     catch (IOException ex) {
       return null;
@@ -152,13 +152,13 @@ public class SSRFilter extends RGBImageFilter {
     // Read board-specific colors last to override defaults
     readColorValues(getStream("boardData/colors"));
     try {
-      readColorValues(archive.getFileStream("colors"));
+      readColorValues(archive.getInputStream("colors"));
     }
     catch (IOException ex) {
     }
     // Read board-specific rules first to be applied before defaults
     try {
-      readColorRules(archive.getFileStream("colorSSR"), rules);
+      readColorRules(archive.getInputStream("colorSSR"), rules);
     }
     catch (IOException ex) {
     }
@@ -168,7 +168,7 @@ public class SSRFilter extends RGBImageFilter {
     // in the overlaySSR file. Therefore, reading board-specific
     // overlay rules first will override defaults
     try {
-      readOverlayRules(archive.getFileStream("overlaySSR"));
+      readOverlayRules(archive.getInputStream("overlaySSR"));
     }
     catch (IOException ex) {
     }

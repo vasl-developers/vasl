@@ -67,6 +67,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionListener;
 
 import org.w3c.dom.Document;
@@ -79,13 +80,11 @@ import VASL.build.module.map.boardPicker.ASLBoardSlot;
 import VASL.build.module.map.boardPicker.BoardException;
 import VASL.build.module.map.boardPicker.Overlay;
 import VASL.build.module.map.boardPicker.SSROverlay;
-import VASSAL.build.BadDataReport;
 import VASSAL.build.Buildable;
 import VASSAL.build.Builder;
 import VASSAL.build.Configurable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.map.BoardPicker;
-import VASSAL.build.module.map.GlobalMap;
 import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.build.module.map.boardPicker.BoardSlot;
 import VASSAL.build.module.map.boardPicker.board.HexGrid;
@@ -93,7 +92,6 @@ import VASSAL.command.Command;
 import VASSAL.command.NullCommand;
 import VASSAL.configure.DirectoryConfigurer;
 import VASSAL.configure.ValidationReport;
-import VASSAL.tools.ErrorDialog;
 
 public class ASLBoardPicker extends BoardPicker implements ActionListener {
   /** The key for the preferences setting giving the board directory */
@@ -222,7 +220,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
     if (terrain == null) {
       terrain = new TerrainEditor();
       try {
-        InputStream in = GameModule.getGameModule().getDataArchive().getFileStream("boardData/SSRControls");
+        InputStream in = GameModule.getGameModule().getDataArchive().getInputStream("boardData/SSRControls");
         terrain.readOptions(in);
       }
       catch (java.io.IOException ex) {
@@ -328,30 +326,25 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
         // conflict between RB and
         // reversed b
         b.setCommonName(baseName);
-        b.setBaseImageFileName("bd" + baseName + ".gif");
-        b.setFile(f);
+        b.setBaseImageFileName("bd" + baseName + ".gif",f);
       }
       else if (baseName.startsWith("0") && (f = new File(boardDir, "bd" + baseName.substring(1))).exists()) {
         b.setCommonName(baseName.substring(1));
-        b.setBaseImageFileName("bd" + baseName + ".gif");
-        b.setFile(f);
+        b.setBaseImageFileName("bd" + baseName + ".gif",f);
       }
       else if ((f = new File(boardDir, "bd" + baseName + ".gif")).exists()) {
         b.setCommonName(baseName);
-        b.setBaseImageFileName("bd" + baseName + ".gif");
-        b.setFile(f);
+        b.setBaseImageFileName("bd" + baseName + ".gif",f);
       }
       else if (baseName.startsWith("dx") || baseName.startsWith("rdx")) {
         int prefix = baseName.startsWith("dx") ? 2 : 3;
         if ((f = new File(boardDir, "bd" + baseName.substring(prefix))).exists()) {
           b.setCommonName(baseName.substring(prefix));
-          b.setBaseImageFileName("bd" + baseName.substring(prefix) + ".gif");
-          b.setFile(f);
+          b.setBaseImageFileName("bd" + baseName.substring(prefix) + ".gif",f);
         }
         else if ((f = new File(boardDir, "bd" + baseName + ".gif")).exists()) {
           b.setCommonName(baseName.substring(prefix));
-          b.setBaseImageFileName("bd" + baseName + ".gif");
-          b.setFile(f);
+          b.setBaseImageFileName("bd" + baseName + ".gif",f);
         }
         b.setReversed(prefix == 3);
       }
@@ -359,13 +352,15 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
         baseName = baseName.substring(1);
         if ((f = new File(boardDir, "bd" + baseName)).exists()) {
           b.setCommonName(baseName);
-          b.setBaseImageFileName("bd" + baseName + ".gif");
-          b.setFile(f);
+          b.setBaseImageFileName("bd" + baseName + ".gif",f);
         }
         else if (baseName.startsWith("0") && (f = new File(boardDir, "bd" + baseName.substring(1))).exists()) {
           b.setCommonName(baseName.substring(1));
-          b.setBaseImageFileName("bd" + baseName + ".gif");
-          b.setFile(f);
+          b.setBaseImageFileName("bd" + baseName + ".gif",f);
+        }
+        else if ((f = new File(boardDir, "bd" + baseName + ".gif")).exists()) {
+          b.setCommonName(baseName);
+          b.setBaseImageFileName("bd" + baseName + ".gif",f);
         }
         else {
           throw new BoardException("Unable to find board " + baseName);
@@ -808,16 +803,18 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
         ASLBoard b = (ASLBoard) board;
         boards.addElement(b);
         if (b != null) {
-          try {
-            readOptions(b.getBoardArchive().getFileStream("SSRControls"));
-          }
-          catch (IOException ex) {
+          if (b.getBoardArchive() != null) {
+            try {
+              readOptions(b.getBoardArchive().getInputStream("SSRControls"));
+            }
+            catch (IOException ex) {
+            }
           }
           for (Enumeration oEnum = b.getOverlays(); oEnum.hasMoreElements();) {
             Overlay o = (Overlay) oEnum.nextElement();
             if (!(o instanceof SSROverlay)) {
               try {
-                readOptions(o.getDataArchive().getFileStream("SSRControls"));
+                readOptions(o.getDataArchive().getInputStream("SSRControls"));
               }
               catch (IOException ex) {
               }

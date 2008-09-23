@@ -206,16 +206,16 @@ public class CASLThread
         // load the map files
         GameMap newCASLMap;
         try {
-          newCASLMap = CASL.Map.Map.readMap(b.getBoardArchive().getFileStream("bd" + boardName + ".map"));
+          newCASLMap = b.getBoardArchive() == null ? null : CASL.Map.Map.readMap(b.getBoardArchive().getInputStream("bd" + boardName + ".map"));
         }
         catch (IOException e) {
           freeResources();
-          return "LOS engine disabled... Board " + boardName + " does not support LOS checking";
+          return "LOS engine disabled... Could not read bd" + boardName + ".map";
         }
 
         if (newCASLMap == null) {
           freeResources();
-          return "LOS engine disabled... Could not read bd" + boardName + ".map";
+          return "LOS engine disabled... Board " + boardName + " does not support LOS checking";
         }
 
         else {

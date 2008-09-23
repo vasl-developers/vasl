@@ -27,6 +27,7 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -40,14 +41,17 @@ import javax.imageio.ImageIO;
 import javax.imageio.stream.MemoryCacheImageInputStream;
 
 import VASL.build.module.map.boardPicker.board.ASLHexGrid;
+import VASSAL.build.BadDataReport;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.build.module.map.boardPicker.board.HexGrid;
 import VASSAL.build.module.map.boardPicker.board.MapGrid;
 import VASSAL.tools.DataArchive;
+import VASSAL.tools.ErrorDialog;
 import VASSAL.tools.ImageUtils;
 import VASSAL.tools.imageop.AbstractTiledOpImpl;
 import VASSAL.tools.imageop.ImageOp;
+import VASSAL.tools.imageop.Op;
 import VASSAL.tools.imageop.SourceOp;
 import VASSAL.tools.imageop.SourceOpBitmapImpl;
 import VASSAL.tools.imageop.SourceTileOpBitmapImpl;
@@ -63,6 +67,7 @@ public class ASLBoard extends Board {
   private String terrainChanges = "";
   private SSRFilter terrain;
   private File boardFile;
+  private ImageOp baseImageOp;
   private DataArchive boardArchive;
 
   public ASLBoard() {
@@ -75,10 +80,10 @@ public class ASLBoard extends Board {
   public Rectangle getCropBounds() {
     return cropBounds;
   }
-  
+
   public void setMagnification(double mag) {
     super.setMagnification(mag);
-    ((ASLHexGrid)grid).setSnapScale(mag > 1.0 ? 2 : 1);
+    ((ASLHexGrid) grid).setSnapScale(mag > 1.0 ? 2 : 1);
   }
 
   /**
@@ -92,7 +97,7 @@ public class ASLBoard extends Board {
 
   public Image getBaseImage() {
     try {
-      return new SourceOpBitmapImpl(imageFile,boardArchive).getImage(null);
+      return baseImageOp.getImage(null);
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -124,18 +129,14 @@ public class ASLBoard extends Board {
     return imageFile;
   }
 
-  public void setBaseImageFileName(String s) {
+  public void setBaseImageFileName(String s, File f) {
     imageFile = s;
-    resetImage();
-  }
-
-  public void setFile(File f) {
     boardFile = f;
     try {
-      boardArchive = new DataArchive(boardFile.getPath(),"");
+      boardArchive = boardFile.getName().equals(imageFile) ? null : new DataArchive(boardFile.getPath(), "");
     }
     catch (IOException e) {
-      throw new IllegalArgumentException("Cannot open file "+boardFile.getPath());
+      ErrorDialog.dataError(new BadDataReport("Unable to open board file", boardFile.getName(), e));
     }
     resetImage();
   }
@@ -168,16 +169,18 @@ public class ASLBoard extends Board {
   }
 
   public void readData() {
-    try {
-      InputStream in = boardArchive.getFileStream("data");
-      BufferedReader file = new BufferedReader(new InputStreamReader(in));
-      String s;
-      while ((s = file.readLine()) != null) {
-        parseDataLine(s);
+    if (boardArchive != null) {
+      try {
+        InputStream in = boardArchive.getInputStream("data");
+        BufferedReader file = new BufferedReader(new InputStreamReader(in));
+        String s;
+        while ((s = file.readLine()) != null) {
+          parseDataLine(s);
+        }
       }
-    }
-    catch (Exception e) {
-      e.printStackTrace();
+      catch (IOException e) {
+        ErrorDialog.dataError(new BadDataReport("Unable to read data from board", boardArchive.getName(), e));
+      }
     }
   }
 
@@ -195,14 +198,22 @@ public class ASLBoard extends Board {
   }
 
   protected void resetImage() {
-    boardImageOp = new BoardOp();
-    if (boardArchive != null) {
-      uncroppedSize = new SourceOpBitmapImpl(imageFile, boardArchive).getSize();
+    try {
+      baseImageOp = boardArchive == null ? 
+          Op.load(ImageIO.read(new MemoryCacheImageInputStream(new FileInputStream(boardFile))))
+//          Op.load(Toolkit.getDefaultToolkit().createImage(boardFile.getAbsolutePath())) 
+              : new SourceOpBitmapImpl(imageFile, boardArchive);
     }
+    catch (IOException e) {
+      ErrorDialog.dataError(new BadDataReport("Unable to load board",boardFile.getName(),e));
+      baseImageOp = Op.load(new BufferedImage(1,1,BufferedImage.TYPE_INT_ARGB));
+    }
+    boardImageOp = new BoardOp();
+    uncroppedSize = baseImageOp.getSize();
     fixedBoundaries = false;
     scaledImageOp = null;
   }
-  
+
   public static String archiveName(String s) {
     return "bd" + s.toUpperCase();
   }
@@ -268,7 +279,7 @@ public class ASLBoard extends Board {
       return super.locationName(p);
     }
   }
-  
+
   @Override
   public String localizedLocationName(Point p) {
     return locationName(p);
@@ -281,8 +292,8 @@ public class ASLBoard extends Board {
       p.y = bounds().height - p.y;
     }
     if (magnification != 1.0) {
-      p.x = (int)Math.round(p.x/magnification);
-      p.y = (int)Math.round(p.y/magnification);
+      p.x = (int) Math.round(p.x / magnification);
+      p.y = (int) Math.round(p.y / magnification);
     }
     p.translate(cropBounds.x, cropBounds.y);
     return p;
@@ -292,8 +303,8 @@ public class ASLBoard extends Board {
     Point p = new Point(input);
     p.translate(-cropBounds.x, -cropBounds.y);
     if (magnification != 1.0) {
-      p.x = (int)Math.round(p.x*magnification);
-      p.y = (int)Math.round(p.y*magnification);
+      p.x = (int) Math.round(p.x * magnification);
+      p.y = (int) Math.round(p.y * magnification);
     }
     if (reversed) {
       p.x = bounds().width - p.x;
@@ -311,21 +322,22 @@ public class ASLBoard extends Board {
     if (cropBounds.width > 0 || cropBounds.height > 0)
       val += cropBounds.x + "\t" + cropBounds.y + "\t" + cropBounds.width + "\t" + cropBounds.height + "\t";
     for (Overlay o : overlays) {
-      val += o+"\t";
+      val += o + "\t";
     }
     if (terrainChanges.length() > 0)
       val += "SSR\t" + terrainChanges;
     if (magnification != 1.0) {
-      val += "\tZOOM\t"+magnification;
+      val += "\tZOOM\t" + magnification;
     }
     return val;
   }
-  
   private class BoardOp extends AbstractTiledOpImpl implements SourceOp {
     private String boardState;
+
     private BoardOp() {
       boardState = ASLBoard.this.getState();
     }
+
     @Override
     protected ImageOp createTileOp(int tileX, int tileY) {
       return new SourceTileOpBitmapImpl(this, tileX, tileY);
@@ -336,7 +348,7 @@ public class ASLBoard extends Board {
       if (size == null) {
         fixSize();
       }
-      ImageOp base = new SourceOpBitmapImpl(imageFile, boardArchive) {
+      ImageOp base = boardArchive == null ? baseImageOp : new SourceOpBitmapImpl(imageFile, boardArchive) {
         @Override
         public Image apply() throws IOException {
           if (size == null)
@@ -350,24 +362,25 @@ public class ASLBoard extends Board {
         }
       };
       if (terrain == null && overlays.isEmpty() && cropBounds.width < 0 && cropBounds.height < 0) {
-        return ImageUtils.toIntARGBLarge((BufferedImage)base.getImage(null));
+        return ImageUtils.toIntARGBLarge((BufferedImage) base.getImage(null));
       }
       BufferedImage im = ImageUtils.createEmptyLargeImage(size.width, size.height);
       Graphics2D g = (Graphics2D) im.getGraphics();
       Rectangle visible = new Rectangle(cropBounds.getLocation(), ASLBoard.this.bounds().getSize());
-      visible.width = (int)Math.round(visible.width/magnification);
-      visible.height = (int)Math.round(visible.height/magnification);
-      g.drawImage(base.getImage(null), 0, 0, visible.width, visible.height, 
-            cropBounds.x, cropBounds.y, cropBounds.x + visible.width, cropBounds.y + visible.height, null);
-      Component comp = new Component() {};
+      visible.width = (int) Math.round(visible.width / magnification);
+      visible.height = (int) Math.round(visible.height / magnification);
+      g.drawImage(base.getImage(null), 0, 0, visible.width, visible.height, cropBounds.x, cropBounds.y, cropBounds.x + visible.width, cropBounds.y
+          + visible.height, null);
+      Component comp = new Component() {
+      };
       for (Enumeration e = ASLBoard.this.getOverlays(); e.hasMoreElements();) {
         Overlay o = (Overlay) e.nextElement();
         Rectangle r = visible.intersection(o.bounds());
         if (!r.isEmpty()) {
-          int x = Math.max(visible.x-o.bounds().x, 0);
-          int y = Math.max(visible.y-o.bounds().y, 0);
-          g.drawImage(o.getImage(), r.x-visible.x, r.y-visible.y, r.x-visible.x +r.width, r.y-visible.y+r.height, 
-                x,y,x+r.width, y+r.height, comp);
+          int x = Math.max(visible.x - o.bounds().x, 0);
+          int y = Math.max(visible.y - o.bounds().y, 0);
+          g.drawImage(o.getImage(), r.x - visible.x, r.y - visible.y, r.x - visible.x + r.width, r.y - visible.y + r.height, x, y, x + r.width, y + r.height,
+              comp);
         }
         if (o.getTerrain() != getTerrain() && o.getTerrain() != null) {
           for (SSROverlay ssrOverlay : o.getTerrain().getOverlays()) {
@@ -377,10 +390,10 @@ public class ASLBoard extends Board {
                 oBounds.translate(o.bounds().x, o.bounds().y);
                 r = visible.intersection(oBounds);
                 if (!r.isEmpty()) {
-                  int x = Math.max(visible.x-o.bounds().x, 0);
-                  int y = Math.max(visible.y-o.bounds().y, 0);
-                  g.drawImage(ssrOverlay.getImage(), r.x-visible.x, r.y-visible.y, r.x-visible.x +r.width, r.y-visible.y+r.height, 
-                        x,y,x+r.width, y+r.height, comp);
+                  int x = Math.max(visible.x - o.bounds().x, 0);
+                  int y = Math.max(visible.y - o.bounds().y, 0);
+                  g.drawImage(ssrOverlay.getImage(), r.x - visible.x, r.y - visible.y, r.x - visible.x + r.width, r.y - visible.y + r.height, x, y,
+                      x + r.width, y + r.height, comp);
                 }
               }
               else {
@@ -403,17 +416,14 @@ public class ASLBoard extends Board {
       }
       return im;
     }
-    
+
     @Override
     protected void fixSize() {
       size = new Dimension(cropBounds.width > 0 ? cropBounds.width : uncroppedSize.width, cropBounds.height > 0 ? cropBounds.height : uncroppedSize.height);
-
-      tileSize = new Dimension(256,256);
-
-      numXTiles = (int) Math.ceil((double)size.width/tileSize.width);
-      numYTiles = (int) Math.ceil((double)size.height/tileSize.height);
-
-      tiles = new ImageOp[numXTiles*numYTiles];
+      tileSize = new Dimension(256, 256);
+      numXTiles = (int) Math.ceil((double) size.width / tileSize.width);
+      numYTiles = (int) Math.ceil((double) size.height / tileSize.height);
+      tiles = new ImageOp[numXTiles * numYTiles];
     }
 
     public ImageOp getSource() {
@@ -426,7 +436,8 @@ public class ASLBoard extends Board {
 
     @Override
     public boolean equals(Object obj) {
-      if (!(obj instanceof ASLBoard.BoardOp)) return false;
+      if (!(obj instanceof ASLBoard.BoardOp))
+        return false;
       BoardOp op = (BoardOp) obj;
       return boardState.equals(op.boardState);
     }
@@ -440,5 +451,4 @@ public class ASLBoard extends Board {
   public DataArchive getBoardArchive() {
     return boardArchive;
   }
-  
 }
