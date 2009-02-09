@@ -86,6 +86,15 @@ public class ASLHexGrid extends HexGrid {
       hex += "/" + hexrow(hexX2) + hexY2;
     return (hex);
   }
+  
+  public void setAttribute(String key, Object value) {
+	  if ("alternate".equals(key)) {
+		  this.alternate = "true".equals(value);
+	  }
+	  else {
+		  super.setAttribute(key, value);
+	  }
+  }
 
   public Point getLocation(String hex) throws MapGrid.BadCoords {
     hex = hex.toLowerCase();

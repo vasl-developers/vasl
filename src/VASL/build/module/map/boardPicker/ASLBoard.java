@@ -49,6 +49,7 @@ import VASSAL.build.module.map.boardPicker.board.MapGrid;
 import VASSAL.tools.DataArchive;
 import VASSAL.tools.ErrorDialog;
 import VASSAL.tools.ImageUtils;
+import VASSAL.tools.image.ImageIOException;
 import VASSAL.tools.imageop.AbstractTiledOpImpl;
 import VASSAL.tools.imageop.ImageOp;
 import VASSAL.tools.imageop.Op;
@@ -342,22 +343,30 @@ public class ASLBoard extends Board {
     protected ImageOp createTileOp(int tileX, int tileY) {
       return new SourceTileOpBitmapImpl(this, tileX, tileY);
     }
+    
+    public List<VASSAL.tools.opcache.Op<?>> getSources() {
+        return Collections.emptyList();
+      }
 
     @Override
-    public Image apply() throws Exception {
+    public BufferedImage eval() throws Exception {
       if (size == null) {
         fixSize();
       }
       ImageOp base = boardArchive == null ? baseImageOp : new SourceOpBitmapImpl(imageFile, boardArchive) {
         @Override
-        public Image apply() throws IOException {
+        public BufferedImage eval() throws ImageIOException {
           if (size == null)
             fixSize();
           if (Boolean.TRUE.equals(GameModule.getGameModule().getPrefs().getValue(ImageUtils.PREFER_MEMORY_MAPPED))) {
-            return super.apply();
+            return super.eval();
           }
           else {
-            return ImageIO.read(new MemoryCacheImageInputStream(archive.getImageInputStream(name)));
+            try {
+				return ImageIO.read(new MemoryCacheImageInputStream(archive.getImageInputStream(name)));
+			} catch (IOException e) {
+				throw new ImageIOException(name,e);
+			}
           }
         }
       };
