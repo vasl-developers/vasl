@@ -195,7 +195,7 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
         p = new PropertiesEncoder(s).getProperties();
       }
       catch (IOException e) {
-        e.printStackTrace();
+        // Fail silently if we can't contact the server
       }
     }
     return p;
@@ -215,7 +215,7 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
         input.close();
       }
       catch (IOException e) {
-        e.printStackTrace();
+        // Fail silently if we can't contact the server
       }
       try {
         URL base = new URL(overlayVersionURL);
@@ -229,7 +229,7 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
         input.close();
       }
       catch (IOException e) {
-        e.printStackTrace();
+        // Fail silently if we can't contact the server
       }
     }
   }

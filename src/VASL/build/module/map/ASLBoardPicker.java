@@ -306,8 +306,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
         buildBoard(b, "0\t0\t" + name);
       }
       catch (BoardException e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(GameModule.getGameModule().getFrame(), e.getMessage(), "Error loading board", JOptionPane.ERROR_MESSAGE);
+        ErrorDialog.dataError(new BadDataReport("Unable to build board",name,e));
       }
     }
     if (enableDeluxe) {
