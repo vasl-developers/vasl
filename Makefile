@@ -17,8 +17,8 @@ BUILDDIR:=$(TMPDIR)/VASL-$(VERSION)
 #JAVAPATH:=/usr/lib/jvm/java-1.6.0-sun
 
 CLASSPATH:=$(CLASSDIR):$(shell echo $(LIBDIR)/*.jar | tr ' ' ':')
-#JAVAPATH:=/usr/lib/jvm/java-1.5.0-sun
-JAVAPATH:=/usr/lib/jdk
+JAVAPATH:=/usr/lib/jdk1.5.0_16
+#JAVAPATH:=/usr/lib/jdk
 
 JC:=$(JAVAPATH)/bin/javac
 JCFLAGS:=-d $(CLASSDIR) -source 5 -target 5 -Xlint -classpath $(CLASSPATH) -sourcepath $(SRCDIR)
