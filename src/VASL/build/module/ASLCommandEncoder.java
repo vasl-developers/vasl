@@ -73,7 +73,7 @@ public class ASLCommandEncoder extends VASSAL.build.module.BasicCommandEncoder i
 
   public Element getBuildElement(Document doc) {
     Element el = super.getBuildElement(doc);
-    el.setAttribute("noColorPreferences", promptForColors ? "" : "true");
+    el.setAttribute("noColorPreferences", promptForColors ? "true" : "");
     return el;
   }
 
