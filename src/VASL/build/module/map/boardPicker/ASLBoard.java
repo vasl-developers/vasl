@@ -48,8 +48,9 @@ import VASSAL.build.module.map.boardPicker.board.HexGrid;
 import VASSAL.build.module.map.boardPicker.board.MapGrid;
 import VASSAL.tools.DataArchive;
 import VASSAL.tools.ErrorDialog;
-import VASSAL.tools.ImageUtils;
 import VASSAL.tools.image.ImageIOException;
+import VASSAL.tools.image.ImageUtils;
+import VASSAL.tools.image.memmap.MappedBufferedImage;
 import VASSAL.tools.imageop.AbstractTiledOpImpl;
 import VASSAL.tools.imageop.ImageOp;
 import VASSAL.tools.imageop.Op;
@@ -200,16 +201,15 @@ public class ASLBoard extends Board {
 
   protected void resetImage() {
     try {
-      baseImageOp = boardArchive == null ? 
-          Op.load(ImageIO.read(new MemoryCacheImageInputStream(new FileInputStream(boardFile))))
-//          Op.load(Toolkit.getDefaultToolkit().createImage(boardFile.getAbsolutePath())) 
-              : new SourceOpBitmapImpl(imageFile, boardArchive);
+      baseImageOp = boardArchive == null ? Op.load(ImageIO.read(new MemoryCacheImageInputStream(new FileInputStream(boardFile))))
+          : new SourceOpBitmapImpl(imageFile, boardArchive);
     }
     catch (IOException e) {
-      ErrorDialog.dataError(new BadDataReport("Unable to load board",boardFile.getName(),e));
-      baseImageOp = Op.load(new BufferedImage(1,1,BufferedImage.TYPE_INT_ARGB));
+      ErrorDialog.dataError(new BadDataReport("Unable to load board", boardFile.getName(), e));
+      baseImageOp = Op.load(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB));
     }
     boardImageOp = new BoardOp();
+    boardImageOp.update();
     uncroppedSize = baseImageOp.getSize();
     fixedBoundaries = false;
     scaledImageOp = null;
@@ -343,10 +343,10 @@ public class ASLBoard extends Board {
     protected ImageOp createTileOp(int tileX, int tileY) {
       return new SourceTileOpBitmapImpl(this, tileX, tileY);
     }
-    
+
     public List<VASSAL.tools.opcache.Op<?>> getSources() {
-        return Collections.emptyList();
-      }
+      return Collections.emptyList();
+    }
 
     @Override
     public BufferedImage eval() throws Exception {
@@ -363,17 +363,19 @@ public class ASLBoard extends Board {
           }
           else {
             try {
-				return ImageIO.read(new MemoryCacheImageInputStream(archive.getImageInputStream(name)));
-			} catch (IOException e) {
-				throw new ImageIOException(name,e);
-			}
+              return ImageIO.read(new MemoryCacheImageInputStream(archive.getImageInputStream(name)));
+            }
+            catch (IOException e) {
+              throw new ImageIOException(name, e);
+            }
           }
         }
       };
       if (terrain == null && overlays.isEmpty() && cropBounds.width < 0 && cropBounds.height < 0) {
-        return ImageUtils.toIntARGBLarge((BufferedImage) base.getImage(null));
+        return (BufferedImage) base.getImage(null);
       }
-      BufferedImage im = ImageUtils.createEmptyLargeImage(size.width, size.height);
+      BufferedImage im = ImageUtils.useMappedImages() ? new MappedBufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB) : new BufferedImage(
+          size.width, size.height, BufferedImage.TYPE_INT_ARGB);
       Graphics2D g = (Graphics2D) im.getGraphics();
       Rectangle visible = new Rectangle(cropBounds.getLocation(), ASLBoard.this.bounds().getSize());
       visible.width = (int) Math.round(visible.width / magnification);
