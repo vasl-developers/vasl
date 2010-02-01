@@ -111,7 +111,7 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
 				ASLBoard b = (ASLBoard) board;
 				info += b.getName() + "(v" + b.getVersion() + ") ";
 			}
-			GameModule.getGameModule().getChatter().send(info);
+			GameModule.getGameModule().warn(info);
 		}
 	}
 	
