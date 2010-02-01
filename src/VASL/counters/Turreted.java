@@ -128,7 +128,9 @@ public class Turreted extends Embellishment implements EditablePiece {
   public Rectangle getCurrentImageBounds() {
     Rectangle r;
     if (flipped || value != getVehicleCA()) {
+      imagePainter = flipped ? backImages : frontImages;
       r = new Rectangle(super.getCurrentImageBounds());
+      /*
       switch (value) {
         case 1:
           r.translate(20, -10);
@@ -149,6 +151,7 @@ public class Turreted extends Embellishment implements EditablePiece {
           r.translate(-10, -10);
           break;
       }
+      */
     }
     else {
       r = new Rectangle();
