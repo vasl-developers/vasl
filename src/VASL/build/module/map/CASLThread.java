@@ -722,49 +722,53 @@ public class CASLThread
 
     // add the piece to the scenario/map
     if ((piece.getProperty(ASLProperties.HINDRANCE) != null && !Boolean.TRUE.equals(piece.getProperty(VASSAL.counters.Properties.INVISIBLE_TO_ME)))) {
+      String name = piece.getName().trim();
       // smoke
-      if (piece.getName().equals("+3 Smoke")) {
+      if (name.equals("White +3 Smoke")) {
         CASLMap.addSmoke(new Smoke(Smoke.SMOKE, h.getCenterLocation()));
       }
-      else if (piece.getName().equals("+3 Smoke2 Smoke")) {
+      else if (name.equals("White +2 Smoke")) {
         CASLMap.addSmoke(new Smoke(Smoke.SMOKE, h.getCenterLocation(), true));
       }
-      else if (piece.getName().equals("+2 Smoke (Grey)")) {
+      else if (name.equals("Gray +2 Smoke")) {
         CASLMap.addSmoke(new Smoke(Smoke.SMOKE, h.getCenterLocation(), true));
       }
-      else if (piece.getName().equals("+2 WP")) {
+      else if (name.equals("White +2 WP")) {
         CASLMap.addSmoke(new Smoke(Smoke.WHITE_PHOSPHORUS, h.getCenterLocation()));
       }
-      else if (piece.getName().equals("+1 WP (Grey)")) {
+      else if (name.equals("White +1 WP")) {
         CASLMap.addSmoke(new Smoke(Smoke.WHITE_PHOSPHORUS, h.getCenterLocation(), true));
       }
-      else if (piece.getName().equals("Smoke grenades")) {
+      else if (name.equals("Smoke grenade +2")) {
         CASLMap.addSmoke(new Smoke(Smoke.SMOKE_GRENADES, h.getCenterLocation()));
       }
-      else if (piece.getName().equals("WP grenades")) {
+      else if (name.equals("Gray +1 WP") || name.equals("WP grenade +1")) {
         CASLMap.addSmoke(new Smoke(Smoke.WHITE_PHOSPHORUS_SMOKE_GRENADES, h.getCenterLocation()));
       }
-      else if (piece.getName().equals("Blaze")) {
+      else if (name.equals("Blaze")) {
         CASLMap.addSmoke(new Smoke(Smoke.SMOKE, h.getCenterLocation()));
       }
-      else if (piece.getName().equals("Blazing Building")) {
+      else if (name.equals("Blazing Building") || name.equals("1-level Blaze") || name.equals("2-level Blaze") || name.equals("3-level Blaze") || name.equals("4-level Blaze")) {
         CASLMap.addSmoke(new Smoke(Smoke.SMOKE, h.getCenterLocation()));
       }
-      else if (piece.getName().equals("Wreck")) {
+      else if (name.equals("Wreck")) {
         scenario.addUnit(new CASL.Unit.Vehicle(h.getCenterLocation()), Scenario.ALLIES);
       }
       // vehicle hindrances
       else if (Decorator.getDecorator(piece, TextInfo.class) != null) {
         scenario.addUnit(new CASL.Unit.Vehicle(h.getCenterLocation()), Scenario.ALLIES);
       }
-      else if (piece.getName().equals("Stone Rubble")) {
+      else if (name.equals("Stone Rubble")) {
         CASLMap.setGridTerrain(h.getHexBorder(), CASLMap.getTerrain(Terrain.STONE_RUBBLE));
         CASLMap.setHexTerrain(h.getHexBorder(), CASLMap.getTerrain(Terrain.STONE_RUBBLE));
       }
-      else if (piece.getName().equals("Wooden Rubble")) {
+      else if (name.equals("Wood Rubble")) {
         CASLMap.setGridTerrain(h.getHexBorder(), CASLMap.getTerrain(Terrain.WOODEN_RUBBLE));
         CASLMap.setHexTerrain(h.getHexBorder(), CASLMap.getTerrain(Terrain.WOODEN_RUBBLE));
       }
+      // TODO: Palm Debris
+      else
+    	  System.out.println("LOS WARNING: hindrance not handled for counter ["+name+"] at hex " + h.getName());
     }
   }
 
