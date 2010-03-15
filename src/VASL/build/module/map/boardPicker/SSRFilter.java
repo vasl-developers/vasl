@@ -31,11 +31,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StreamTokenizer;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.Map.Entry;
 
 import VASSAL.build.GameModule;
 import VASSAL.tools.DataArchive;
@@ -259,6 +262,17 @@ public class SSRFilter extends RGBImageFilter {
             int ito = parseRGB(sto);
             if (ifrom >= 0 && ito >= 0) {
               mappings.put(ifrom, ito);
+
+              /*
+               * Also apply this mapping to previous mappings
+               */
+              if (mappings.containsValue(ifrom)) {            	  
+	              for(Iterator<Entry<Integer,Integer>> it = mappings.entrySet().iterator(); it.hasNext(); ) {
+	            	  Entry<Integer,Integer> e = it.next();
+	            	  if (e.getValue() == ifrom)
+	            		  e.setValue(ito);
+	              }
+              }
             }
             else {
               valid = false;
