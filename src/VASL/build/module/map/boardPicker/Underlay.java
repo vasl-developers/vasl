@@ -46,6 +46,10 @@ public class Underlay extends SSROverlay {
     transparentList = trans;
     this.archive = a;
     this.board = board;
+    
+    boundaries.setSize(board.bounds().getSize());
+    Point pos = board.getCropBounds().getLocation();
+    boundaries.setLocation(pos.x, pos.y);
   }
 
   public void readData() {
