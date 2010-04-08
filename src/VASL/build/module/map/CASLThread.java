@@ -672,6 +672,11 @@ public class CASLThread
   }
 
   private void doLOS() {
+	if(source == null)
+	{
+		System.err.println("LOS failed: no source hex");
+		return;
+	}
     // do the LOS
     CASLMap.LOS(source, useAuxSourceLOSPoint, target, useAuxTargetLOSPoint, result, scenario);
     // set the result string
