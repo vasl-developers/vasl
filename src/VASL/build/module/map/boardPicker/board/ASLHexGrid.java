@@ -41,6 +41,7 @@ public class ASLHexGrid extends HexGrid {
   }
   
   public String locationName(Point p) {
+	Point po = new Point(p);
     p.translate(-origin.x, (int) (dy / 2. - origin.y));
 
     int hexX, hexY;
@@ -52,7 +53,7 @@ public class ASLHexGrid extends HexGrid {
         (int) Math.floor(p.y / dy) + 1 :
         (int) Math.floor(p.y / dy + 0.5));
 
-    if (p.x == sideX(p.x,p.y) && p.y == sideY(p.x,p.y)) {
+    if (po.x == sideX(po.x,po.y) && po.y == sideY(po.x,po.y)) {
       if ((int) Math.floor(2 * p.x / dx + .5) % 2 != 0) { /* Bypass at 1/2-hex in X */
         hexX = (int) Math.floor(p.x / dx);
         hexY = (hexX % 2 == 0 ? (int) Math.floor(p.y / dy) + 1 : (int) Math.floor(p.y / dy + 0.5));
