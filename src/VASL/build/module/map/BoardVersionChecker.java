@@ -51,16 +51,18 @@ import VASSAL.tools.PropertiesEncoder;
 public class BoardVersionChecker extends AbstractBuildable implements GameComponent, PropertyChangeListener {
   private String boardVersionURL;
   private String overlayVersionURL;
+  private String boardPageURL;
   private Map map;
   private Properties boardVersions;
   private Properties overlayVersions;
   private static final String BOARD_VERSION_URL = "boardVersionURL";
   private static final String OVERLAY_VERSION_URL = "overlayVersionURL";
+  private static final String BOARD_PAGE_URL = "boardPageURL";
   private static final String BOARD_VERSIONS = "boardVersions";
   private static final String OVERLAY_VERSIONS = "overlayVersions";
 
   public String[] getAttributeNames() {
-    return new String[]{BOARD_VERSION_URL, OVERLAY_VERSION_URL};
+    return new String[]{BOARD_VERSION_URL, OVERLAY_VERSION_URL, BOARD_PAGE_URL};
   }
 
   public String getAttributeValueString(String key) {
@@ -70,6 +72,9 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
     else if (OVERLAY_VERSION_URL.equals(key)) {
       return overlayVersionURL;
     }
+    else if (BOARD_PAGE_URL.equals(key)) {
+        return boardPageURL;
+    }    
     return null;
   }
 
@@ -80,6 +85,9 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
     else if (OVERLAY_VERSION_URL.equals(key)) {
       overlayVersionURL = (String) value;
     }
+    else if (BOARD_PAGE_URL.equals(key)) {
+    	boardPageURL = (String) value;
+    }    
   }
 
   public void addTo(Buildable parent) {
@@ -113,9 +121,7 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
 			}
 			GameModule.getGameModule().warn(info);
 		}
-	}
-	
-    if (false /*gameStarting*/) {
+
       if (boardVersions != null) {
         Vector obsolete = new Vector();
         for (Board board : map.getBoards()) {
@@ -128,7 +134,7 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
         String msg = null;
         if (obsolete.size() == 1) {
           String name = (String) obsolete.firstElement();
-          msg = "Version " + boardVersions.getProperty(name) + " of board " + name + " is now available.\nhttp://www.vasl.org/boards.htm";
+          msg = "Version " + boardVersions.getProperty(name) + " of board " + name + " is now available.\n"+boardPageURL;
         }
         else if (obsolete.size() > 1) {
           StringBuffer buff = new StringBuffer();
@@ -141,7 +147,7 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
               buff.append(" and ");
             }
           }
-          msg = "New versions of boards " + buff + " are available.\nhttp://www.vasl.org/boards.htm";
+          msg = "New versions of boards " + buff + " are available.\n"+boardPageURL;
         }
         if (msg != null) {
           final String message = msg;
@@ -171,7 +177,7 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
         String msg = null;
         if (obsolete.size() == 1) {
           String name = (String) obsolete.firstElement();
-          msg = "Version " + overlayVersions.getProperty(name) + " of overlay " + name + " is now available.\nhttp://www.vasl.org/boards.htm";
+          msg = "Version " + overlayVersions.getProperty(name) + " of overlay " + name + " is now available.\n"+boardPageURL;
         }
         else if (obsolete.size() > 1) {
           StringBuffer buff = new StringBuffer();
@@ -184,7 +190,7 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
               buff.append(" and ");
             }
           }
-          msg = "New versions of overlays " + buff + " are available.\nhttp://www.vasl.org/boards.htm";
+          msg = "New versions of overlays " + buff + " are available.\n"+boardPageURL;
         }
         if (msg != null) {
           final String message = msg;
