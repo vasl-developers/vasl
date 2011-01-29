@@ -322,6 +322,7 @@ public class ASLBoard extends Board {
     String val = relativePosition().x + "\t" + relativePosition().y + "\t" + (reversed ? "r" : "") + imageFile.substring(2, imageFile.indexOf(".gif")) + "\t";
     if (cropBounds.width > 0 || cropBounds.height > 0)
       val += cropBounds.x + "\t" + cropBounds.y + "\t" + cropBounds.width + "\t" + cropBounds.height + "\t";
+    val += "VER\t" + getVersion();
     for (Overlay o : overlays) {
       val += o + "\t";
     }
