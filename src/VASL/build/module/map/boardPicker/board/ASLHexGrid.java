@@ -128,16 +128,14 @@ public class ASLHexGrid extends HexGrid {
    * in number of hexes, e.g. hex A1 returns (0,1), B3 returns (1,3)
    */
   public static Point hexPosition(String hex) throws MapGrid.BadCoords {
-    int nx = 0, ny = 0, n = 0;
+    int nx = 0, ny = 0, n = 0;    
     nx = hex.charAt(0) - 'a';
-    if (hex.charAt(1) <= 'z'
-        && hex.charAt(1) >= 'a') {
-      if (hex.charAt(1) == hex.charAt(0))
+    while (hex.charAt(n+1) < '0' || hex.charAt(n+1) > '9')
+    {
+    	if (hex.charAt(n+1) > 'z' || hex.charAt(n+1) < 'a' || hex.charAt(n+1) != hex.charAt(0))
+    		throw new MapGrid.BadCoords("Bad Hex Coordinates");   	
         nx += 26;
-      else {
-        throw new MapGrid.BadCoords("Bad Hex Coordinates");
-      }
-      n = 1;
+        n++;
     }
     try {
       ny = Integer.parseInt(hex.substring(n + 1));
@@ -145,7 +143,7 @@ public class ASLHexGrid extends HexGrid {
     catch (NumberFormatException ex) {
       throw new MapGrid.BadCoords("Bad Coordinates");
     }
-
+    
     return new Point(nx, ny);
   }
 
