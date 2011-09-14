@@ -210,7 +210,7 @@ public class CASLThread
         }
         catch (IOException e) {
           freeResources();
-          return "LOS engine disabled... Could not read bd" + boardName + ".map";
+          return "@LOS engine disabled... Could not read bd" + boardName + ".map";
         }
 
         if (newCASLMap == null) {
@@ -807,7 +807,8 @@ public class CASLThread
               e.printStackTrace();
             }
             if (error != null) {
-              GameModule.getGameModule().warn(error);
+              if(error.charAt(0) != '@')
+            	  GameModule.getGameModule().warn(error);
               status = ERROR;
             }
             else {
