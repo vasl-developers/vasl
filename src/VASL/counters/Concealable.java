@@ -32,7 +32,6 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
 import javax.swing.Box;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.KeyStroke;
@@ -61,6 +60,7 @@ import VASSAL.counters.Stack;
 import VASSAL.tools.ComponentPathBuilder;
 import VASSAL.tools.SequenceEncoder;
 import VASSAL.tools.imageop.Op;
+import VASSAL.tools.imageop.ScaledImagePainter;
 
 public class Concealable extends Obscurable implements EditablePiece {
   public static final String ID = "conceal;";
@@ -115,7 +115,11 @@ public class Concealable extends Obscurable implements EditablePiece {
       g.setColor(getColor(nation2));
       g.fillRect(x - size / 2 + size / 8, y - size / 2 + size / 8, size - size / 4, size - size / 4);
     }
-    g.drawImage(concealedToMe, x - size / 2, y - size / 2, size, size, obs);
+    if (conceal != null) {
+        conceal.draw(g, x - size / 2, y - size / 2, zoom, obs);
+    } else {
+        g.drawImage(concealedToMe, x - size / 2, y - size / 2, size, size, obs);
+    }
   }
 
   protected void drawObscuredToOthers(Graphics g, int x, int y, Component obs, double zoom) {
@@ -281,13 +285,17 @@ public class Concealable extends Obscurable implements EditablePiece {
     return piece.getShape();
   }
 
+  private ScaledImagePainter conceal = null;
+
   private void loadImages(Component obs) {
     if (concealedToMe == null) {
       try {
         concealedToMe = Op.load(imageName + ".gif").getImage(null);
         if (concealedToMe != null) {
-          JLabel l = new JLabel(new ImageIcon(concealedToMe));
-          imageSize = l.getPreferredSize();
+          concealedToMe = null;
+          conceal = new ScaledImagePainter();
+          conceal.setImageName(imageName + ".gif");
+          imageSize = conceal.getImageSize();
         }
         else {
           imageSize.setSize(0, 0);

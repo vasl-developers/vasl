@@ -343,8 +343,14 @@ public class CASLThread
     resetScenario();
   }
 
+  public void mouseReleased(MouseEvent e) {
+      source = null;
+      target = null;
+      super.mouseReleased(e);
+  }
+
   public void mouseDragged(MouseEvent e) {
-    if (isEnabled()) {
+    if (source != null && isEnabled()) {
     // get the map point, ensure the point is on the CASL map
     Point p = mapMouseToCASLCoordinates(map.mapCoordinates(e.getPoint()));
     if (p == null || !CASLMap.onMap(p.x, p.y)) return;
