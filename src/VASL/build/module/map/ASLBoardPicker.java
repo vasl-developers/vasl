@@ -193,7 +193,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
     refreshPossibleBoards();
     reset();
   }
-  
+
   @Override
   public void setup(boolean show) {
     super.setup(show);
@@ -387,9 +387,9 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
     catch (Exception e) {
       b.setCropBounds(new Rectangle(0, 0, -1, -1));
     }
-    
+
     if( bd.indexOf("VER") >= 0 )
-    {   
+    {
     	StringTokenizer st = new StringTokenizer(bd.substring(bd.indexOf("VER")+4), "\t");
         if (st.countTokens() >= 1)
         {
@@ -398,7 +398,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
         	  GameModule.getGameModule().warn("This game was saved with board " + b.getName() + " v" + reqver + ". You are using v" + b.getVersion());
         }
     }
-    
+
     while (bd.indexOf("OVR") >= 0) {
       bd = bd.substring(bd.indexOf("OVR") + 4);
       try {
@@ -937,6 +937,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
             while ((slot = (ASLBoardSlot) getSlot(n++)) != null) {
               if (boardName.length() == 0 || match(boardName) == slot) {
                 slot.setTerrain(slot.getTerrain() + '\t' + optionRules());
+                if (slot.getBoard() == null) continue;
                 ((ASLBoard) slot.getBoard()).setTerrain(basicRules() + slot.getTerrain());
                 slot.repaint();
               }
