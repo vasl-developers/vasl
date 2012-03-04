@@ -18,15 +18,14 @@
  */
 package VASL.counters;
 
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CounterNames {
 
-  private Hashtable h;
+  private Map<String,String> h = new HashMap<String,String>();
 
   public CounterNames() {
-    h = new Hashtable();
-
     h.put("blank", "");
     h.put("Blank", "");
 
@@ -1513,6 +1512,6 @@ public class CounterNames {
   }
 
   public String nameOf(String s) {
-    return (String) h.get(s);
+    return h.get(s);
   }
 }
