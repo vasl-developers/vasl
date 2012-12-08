@@ -1,0 +1,288 @@
+<SSRControls>
+<!-- 
+Aug 2008 Tom R
+* added Rice Paddies to the Transformation rules
+* removed the L2,3,4 To Vineyard transformation rules
+
+Jan 2008  Tom R
+* v5 board changes (added "Board X Special Overlays" menu)
+* revamped the Walls/Hedges menu
+
+Aug 20, 2002 Tom R
+* Removed the auto DTOtoETO rule under the ETO Terrain option
+* Moved the DTO Terrain menu option down to a checkbox under "Other Transformations" as "DTO Colors", along with an "ETO Colors" checkbox
+* Added "orchards out of season" text when that rule is invoked
+* Fixed text on wall/hedge to cactus hedge
+
+Aug 19, 2002 Tom R
+* Added DTOtoETO and ETOtoDTO rules, with DTO entry under the Terrain menu
+
+Aug 16, 2002 Tom R
+* Added Rice Paddy menu item to Water Level menu
+* Removed Orch2Vineyard from OSC Swapping menu
+
+July 7, 2002 Tom R
+* Added Crag2Palm choice
+* Added "Other Xformations" menu for X2(Vineyard)
+* Moved Wall/Hedge to CactusHedge to the Wall/Hedge menu
+* Added Orch2(CactusPatch/OliveGrove/Vineyard) options under OSC menu
+* Added Crag2Vineyard option under OSC menu
+
+July 3, 2002 Tom R
+Changes:
+* Added NoCliffs checkbox which is auto-activated under NoHills
+* Added NoGrain rule to Snow and Deep Snow
+* Snow and Deep Snow auto-check OrchardOutOfSeason (added <source/>
+  line to Snow menu to allow this)
+* Added <Source/> line after Roads menu name entry to allow NoBridges to
+  activate under NoRoads
+* Added OSC Swapping menu 
+-->
+   <Basic>
+      <Menu name="Month">
+         <entry name="January"/>
+         <entry name="February"/>
+         <entry name="March"/>
+         <entry name="April"/>
+         <entry name="May"/>
+         <entry name="June" default="true"/>
+         <entry name="July"/>
+         <entry name="August"/>
+         <entry name="September"/>
+         <entry name="October"/>
+         <entry name="November"/>
+         <entry name="December"/>
+         <Source/>
+      </Menu>
+      <Checkbox name="Orchards">
+         <entry name="Out of Season" rule="OrchardOutOfSeason" text="orchards out of season">
+            <Target sourceName="Month">
+               <activate sourceProperty="November"/>
+               <activate sourceProperty="December"/>
+               <activate sourceProperty="January"/>
+               <activate sourceProperty="February"/>
+               <activate sourceProperty="March"/>
+            </Target>
+            <Target sourceName="Snow">
+               <activate sourceProperty="Ground Snow"/>
+               <activate sourceProperty="Deep Snow"/>
+            </Target>
+         </entry>
+      </Checkbox>
+      <Menu name="Grain">
+         <entry name="In Season">
+            <Target sourceName="Month">
+               <activate sourceProperty="June"/>
+               <activate sourceProperty="July"/>
+               <activate sourceProperty="August"/>
+               <activate sourceProperty="September"/>
+            </Target>
+         </entry>
+         <entry name="Out of Season" rule="NoGrain" text="grain out of season">
+            <Target sourceName="Month">
+               <activate sourceProperty="October"/>
+               <activate sourceProperty="November"/>
+               <activate sourceProperty="December"/>
+               <activate sourceProperty="January"/>
+               <activate sourceProperty="February"/>
+               <activate sourceProperty="March"/>
+            </Target>
+         </entry>
+         <entry name="Plowed Fields" rule="PlowedFields" text="plowed fields">
+            <Target sourceName="Month">
+               <activate sourceProperty="April"/>
+               <activate sourceProperty="May"/>
+            </Target>
+         </entry>
+      </Menu>
+      <Menu name="Terrain">
+         <Source/>
+         <entry name="ETO terrain" rule="SwampToMarsh"/>
+         <entry name="PTO light jungle" rule="RoadsToPaths,Bamboo,PalmTrees" text="PTO terrain (light jungle, roads are paths, bridges are fords)"/>
+         <entry name="PTO dense jungle" rule="RoadsToPaths,Bamboo,DenseJungle,PalmTrees" text="PTO terrain (dense jungle, roads are paths, bridges are fords)"/>
+      </Menu>
+   </Basic>
+   <Option name="Buildings">
+      <Menu name="Construction">
+         <entry name="Normal"/>
+         <entry name="All Wood" rule="AllWood" text="all buildings are wood"/>
+         <entry name="All Stone" rule="AllStone" text="all buildings are stone"/>
+      </Menu>
+      <Checkbox name="No Stairwells" >
+         <entry name="No Stairwells" rule="NoStairwells" text="no stairwells"/>
+      </Checkbox>
+      <Menu name="Rowhouse Bars">
+         <entry name="Normal"/>
+         <entry name="Become Wood/Stone brown/grey" rule="RowhouseBarsToBuildings" text="no buildings are rowhouses"/>
+         <entry name="Become Open Ground" rule="RowhouseBarsToOpenGround" text="rowhouse bars are open ground"/>
+      </Menu>
+   </Option>
+   <Option name="Weather">
+      <Menu name="Snow">
+         <Source/>
+         <entry name="No Snow"/>
+         <entry name="Ground Snow" rule="NoGrain,MarshToOpenGround,Winter" text="ground snow"/>
+         <entry name="Deep Snow" rule="NoGrain,MarshToOpenGround,BrushToOpenGround,Winter" text="deep snow (brush is open ground)"/>
+      </Menu>
+      <Checkbox name="Mud">
+         <Source/>
+         <entry name="Mud" rule="Mud" text="mud">
+	   <!--Mud does not invoke NoWoodsRoads, so no difference between PTO and ETO-->
+	 </entry>
+      </Checkbox>
+   </Option>
+   <Option name="Roads">
+      <Menu name="Roads">
+         <Source/>
+         <entry name="Normal"/>
+         <entry name="All Paved" rule="AllPaved" text="all roads are paved"/>
+         <entry name="All Dirt" rule="AllDirt" text="all roads are dirt"/>
+         <entry name="No Roads" rule="NoRoads" text="no roads exist">
+            <Target sourceName="Terrain">
+               <activate sourceProperty="PTO light jungle"/>
+               <activate sourceProperty="PTO dense jungle"/>
+	    </Target>
+	 </entry>
+      </Menu>
+      <Menu name="Woods-Roads">
+        <entry name="Normal"/>
+        <entry name="Paths" rule="RoadsToPaths" text="woods-roads are paths">
+            <Target sourceName="Terrain">
+               <activate sourceProperty="PTO light jungle"/>
+               <activate sourceProperty="PTO dense jungle"/>
+	    </Target>
+        </entry>
+        <entry name="Filled in with Woods" rule="NoWoodsRoads" text="woods-roads are woods"/>
+      </Menu>
+      <Checkbox name="No Bridges">
+        <Source/>
+         <entry name="No Bridges" rule="NoBridge" text="no bridges">
+            <Target sourceName="Roads">
+               <activate sourceProperty="No Roads"/>
+	    </Target>
+         </entry>
+      </Checkbox>
+      <Checkbox name="Bridges are Fords">
+         <entry name="Bridges are Fords" rule="BridgeToFord" text="bridges are fords">
+            <Target sourceName="Terrain">
+               <activate sourceProperty="PTO light jungle"/>
+               <activate sourceProperty="PTO dense jungle"/>
+	    </Target>
+	 </entry>
+      </Checkbox>
+      <Checkbox name="No Sunken/Elevated Roads">
+         <entry name="No Sunken/Elevated Roads" rule="NoSunkElevRoads" text="no sunken/elevated roads"/>
+      </Checkbox>
+   </Option>
+   <Option name="Water Level">
+      <Menu name="Streams">
+         <entry name="Normal"/>
+         <entry name="Dry Streams" rule="DryStreams" text="all streams are dry"/>
+         <entry name="Flooded" rule="Flooded" text="all streams are flooded"/>
+      </Menu>
+      <Menu name="Rice Paddies">
+         <entry name="Normal"/>
+         <entry name="Irrigated" rule="IrrigatedPaddies" text="Irrigated Rice Paddies"/>
+         <entry name="In Season" rule="InSeasonPaddies" text="In Season Rice Paddies"/>
+      </Menu>
+      <Checkbox name="Rivers are dry">
+      <entry name="Rivers are dry" rule="RiverToValley" text="rivers are valleys"/>
+      </Checkbox >
+      <Checkbox name="Ponds are dry">
+      <entry name="Ponds are dry" rule="PondToValley" text="ponds are valleys"/>
+      </Checkbox >
+      <Checkbox name="Gullies are Streams">
+      <entry name="Gullies are Streams" rule="GulliesToStreams" text="gullies are streams"/>
+      </Checkbox >
+   </Option>
+   <Option name="Walls/Hedges">
+      <Menu name="Walls Are:">
+         <entry name="Normal"/>
+         <entry name="Hedges" rule="HedgesOnly" text="all walls are hedges"/>
+         <entry name="Bocage" rule="WallsToBocage" text="all walls are bocage"/>
+         <entry name="Cactus Hedge" rule="WallToCactus" text="all walls are cactus hedges"/>
+         <entry name="Open Ground" rule="WallsToOG" text="all walls are open ground"/>
+      </Menu>
+      <Menu name="Hedges Are:">
+         <entry name="Normal"/>
+         <entry name="Walls" rule="WallsOnly" text="all hedges are walls"/>
+         <entry name="Bocage" rule="HedgesToBocage" text="all hedges are bocage"/>
+         <entry name="Cactus Hedge" rule="HedgeToCactus" text="all hedges are cactus hedges"/>
+        <entry name="Open Ground" rule="HedgesToOG" text="all hedges are open ground"/>
+      </Menu>
+   </Option>
+   <Option name="Hills">
+      <Menu name="Hill Levels">
+         <Source/>
+         <entry name="Normal"/>
+         <entry name="Level 5 max" rule="Level6ToLevel5" text="no level 6"/>
+         <entry name="Level 4 max" rule="Level5ToLevel4" text="no level 5"/>
+         <entry name="Level 3 max" rule="Level4ToLevel3" text="no level 4"/>
+         <entry name="Level 2 max" rule="Level4ToLevel2,Level3ToLevel2" text="no level 3-4"/>
+         <entry name="Level 1 max" rule="Level4ToLevel1,Level3ToLevel1,Level2ToLevel1" text="no level 2-4"/>
+         <entry name="No hills" rule="NoCliffs,NoHillNums,Level4ToLevel0,Level3ToLevel0,Level2ToLevel0,Level1ToLevel0" text="no level 1-4"/>
+      </Menu>
+      <Checkbox name="No Valley">
+         <entry name="No Valley" rule="Level_1ToLevel0" text="no valley"/>
+      </Checkbox>
+      <Checkbox name="No Cliffs">
+         <entry name="No Cliffs" rule="NoCliffs" text="no cliffs">
+            <Target sourceName="Hill Levels">
+               <activate sourceProperty="No hills"/>
+	    </Target>
+	 </entry>
+      </Checkbox>
+   </Option>
+  <Option name="OSC Swapping">
+      <Menu name="Orchards Are">
+         <entry name="Normal"/>
+         <entry name="Shellholes" rule="OrchardsToShellholes" text="Orch2Shell"/>
+         <entry name="Crags" rule="OrchardsToCrags" text="Orch2Crag"/>
+      </Menu>
+
+      <Menu name="Shellholes Are">
+         <entry name="Normal"/>
+         <entry name="Orchards" rule="ShellholesToOrchards" text="shellholes to orchards"/>
+         <entry name="PalmTrees" rule="ShellholesToPalmTrees" text="shellholes to palm trees"/>
+      </Menu>
+      <Menu name="Crags Are">
+         <entry name="Normal"/>
+         <entry name="Shellholes" rule="CragsToShellholes" text="Crags to shellholes"/>
+         <entry name="Orchards" rule="CragsToOrchards" text="Crags to orchards"/>
+         <entry name="Palm Trees" rule="CragsToPalmTrees" text="Crags to palm trees"/>
+      </Menu>
+   </Option>
+  <Option name="Other Transformations">
+      <Menu name="X to Vineyard">
+         <entry name="None"/>
+         <entry name="Woods" rule="WoodsToVineyard" text="Woods to Vineyard"/>
+         <entry name="Brush" rule="BrushToVineyard" text="Brush to Vineyard"/>
+         <entry name="Marsh" rule="MarshToVineyard" text="Marsh to Vineyard"/>
+         <entry name="Grain" rule="GrainToVineyard" text="Grain to Vineyard"/>
+         <entry name="Level -1" rule="Level_1ToVineyard" text="Level -1 to Vineyard"/>
+         <entry name="Level 1" rule="Level1ToVineyard" text="Level 1 to Vineyard"/>
+      </Menu>
+      <Menu name="X to Rice Paddy">
+         <entry name="None"/>
+         <entry name="Woods" rule="WoodsToPaddy" text="Woods to Paddy"/>
+         <entry name="Brush" rule="BrushToPaddy" text="Brush to Paddy"/>
+         <entry name="Marsh" rule="MarshToPaddy" text="Marsh to Paddy"/>
+         <entry name="Grain" rule="GrainToPaddy" text="Grain to Paddy"/>
+         <entry name="Level -1" rule="Level_1ToPaddy" text="Level -1 to Paddy"/>
+         <entry name="Level 1" rule="Level1ToPaddy" text="Level 1 to Paddy"/>
+      </Menu>
+      <Checkbox name="Use Desert Colors">
+         <entry name="Use Desert Colors" rule="ETOtoDTO" text="Desert colors"/>
+      </Checkbox>
+      <Checkbox name="Use ETO Colors">
+         <entry name="Use ETO Colors" rule="DTOtoETO" text="ETO colors"/>
+      </Checkbox>
+      <Checkbox name="No white Hex IDs" >
+         <entry name="No white Hex IDs" rule="NoWhiteHexIDs" text="no white hex IDs"/>
+      </Checkbox>
+      <Checkbox name="Use v5 colors for v4 boards" >
+         <entry name="Use v5 colors for v4 boards" rule="v42v5" text="update v4 board colors"/>
+      </Checkbox>
+   </Option>
+</SSRControls>
+

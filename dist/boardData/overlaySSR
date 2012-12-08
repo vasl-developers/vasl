@@ -1,0 +1,176 @@
+WoodsToVineyard
+underlay VineyardPattern.gif WoodsGreen,WoodsBlack
+
+BrushToVineyard
+underlay VineyardPattern.gif BrushL0,BrushL1,BrushL2,BrushL3,BrushL4,BrushL5,BrushL6,BrushL_1,BrushL_2,BrushBlackL_2,BrushBlackL_1,BrushBlackL0,BrushBlackL1,BrushBlackL2,BrushBlackL3,BrushBlackL4,BrushBlackL5,BrushBlackL6
+
+GrainToVineyard
+underlay VineyardPattern.gif GrainL0,GrainL1,GrainL2,GrainL3,GrainL4,GrainL5,GrainL6,GrainL_1,GrainL_2,PlowedFields,Furrows,FurrowsL0,FurrowsL1,FurrowsL2,FurrowsL3,FurrowsL4,FurrowsL5,FurrowsL6,FurrowsL_1,FurrowsL_2
+
+MarshToVineyard
+underlay VineyardPattern.gif MarshGreenL1,MarshBrownL1,MarshGreenL0,MarshBrownL0,MarshGreenL_1,MarshBrownL_1,MarshGreenL_2,MarshBrownL_2,SeparatedMarshGreenL0,SeparatedMarshBrownL0,SeparatedMarshGreenL_1,SeparatedMarshBrownL_1,SeparatedMarshGreenL_2,SeparatedMarshBrownL_2,SeparatedMarshGreenL1,SeparatedMarshBrownL1,SwampGreenL1,SwampBrownL1,SwampGreenL0,SwampBrownL0,SwampGreenL_1,SwampBrownL_1,SwampGreenL_2,SwampBrownL_2
+
+Level_1ToVineyard
+underlay VineyardPattern.gif Level_1
+
+Level1ToVineyard
+underlay VineyardPattern.gif Level1
+
+WoodsToPaddy
+underlay PaddyPattern.gif WoodsGreen,WoodsBlack
+
+BrushToPaddy
+underlay PaddyPattern.gif BrushL0,BrushL1,BrushL2,BrushL3,BrushL4,BrushL5,BrushL6,BrushL_1,BrushL_2,BrushBlackL_2,BrushBlackL_1,BrushBlackL0,BrushBlackL1,BrushBlackL2,BrushBlackL3,BrushBlackL4,BrushBlackL5,BrushBlackL6
+
+GrainToPaddy
+underlay PaddyPattern.gif GrainL0,GrainL1,GrainL2,GrainL3,GrainL4,GrainL5,GrainL6,GrainL_1,GrainL_2,PlowedFields,Furrows,FurrowsL0,FurrowsL1,FurrowsL2,FurrowsL3,FurrowsL4,FurrowsL5,FurrowsL6,FurrowsL_1,FurrowsL_2
+
+MarshToPaddy
+underlay PaddyPattern.gif MarshGreenL1,MarshBrownL1,MarshGreenL0,MarshBrownL0,MarshGreenL_1,MarshBrownL_1,MarshGreenL_2,MarshBrownL_2,SeparatedMarshGreenL0,SeparatedMarshBrownL0,SeparatedMarshGreenL_1,SeparatedMarshBrownL_1,SeparatedMarshGreenL_2,SeparatedMarshBrownL_2,SeparatedMarshGreenL1,SeparatedMarshBrownL1,SwampGreenL1,SwampBrownL1,SwampGreenL0,SwampBrownL0,SwampGreenL_1,SwampBrownL_1,SwampGreenL_2,SwampBrownL_2
+
+Level_1ToPaddy
+underlay PaddyPattern.gif Level_1
+
+Level1ToPaddy
+underlay PaddyPattern.gif Level1
+
+WallsOnly
+underlay WallPattern.gif HedgeGreen
+
+WallToCactus
+underlay CactusPattern.gif WallBrown,WallGrey1,WallGrey2
+
+HedgeToCactus
+underlay CactusPattern.gif HedgeGreen
+
+WoodsToBrush
+underlay BrushPattern.gif WoodsGreen,WoodsBlack
+
+GrainToBrush
+underlay BrushPattern.gif GrainL0,GrainL1,GrainL2,GrainL3,GrainL4,GrainL5,GrainL6,GrainL_1,GrainL_2,PlowedFields,Furrows,FurrowsL0,FurrowsL1,FurrowsL2,FurrowsL3,FurrowsL4,FurrowsL5,FurrowsL6,FurrowsL_1,FurrowsL_2
+
+MarshToBrush
+underlay BrushPattern.gif MarshGreenL1,MarshBrownL1,MarshGreenL0,MarshBrownL0,MarshGreenL_1,MarshBrownL_1,MarshGreenL_2,MarshBrownL_2,SeparatedMarshGreenL0,SeparatedMarshBrownL0,SeparatedMarshGreenL_1,SeparatedMarshBrownL_1,SeparatedMarshGreenL_2,SeparatedMarshBrownL_2,SeparatedMarshGreenL1,SeparatedMarshBrownL1,SwampGreenL1,SwampBrownL1,SwampGreenL0,SwampBrownL0,SwampGreenL_1,SwampBrownL_1,SwampGreenL_2,SwampBrownL_2
+
+Level_2ToBrush
+underlay BrushPattern.gif Level_2
+
+Level_1ToBrush
+underlay BrushPattern.gif Level_1
+
+Level1ToBrush
+underlay BrushPattern.gif Level1
+
+Level2ToBrush
+underlay BrushPattern.gif Level2
+
+Level3ToBrush
+underlay BrushPattern.gif Level3
+
+Level4ToBrush
+underlay BrushPattern.gif Level4
+
+Level5ToBrush
+underlay BrushPattern.gif Level5
+
+Level6ToBrush
+underlay BrushPattern.gif Level6
+
+BrushToWoods
+underlay WoodsPattern.gif BrushL0,BrushL1,BrushL2,BrushL3,BrushL4,BrushL5,BrushL6,BrushL_1,BrushL_2,BrushBlackL_2,BrushBlackL_1,BrushBlackL0,BrushBlackL1,BrushBlackL2,BrushBlackL3,BrushBlackL4,BrushBlackL5,BrushBlackL6
+
+GrainToWoods
+underlay WoodsPattern.gif GrainL0,GrainL1,GrainL2,GrainL3,GrainL4,GrainL5,GrainL6,GrainL_1,GrainL_2,PlowedFields,Furrows,FurrowsL0,FurrowsL1,FurrowsL2,FurrowsL3,FurrowsL4,FurrowsL5,FurrowsL6,FurrowsL_1,FurrowsL_2
+
+MarshToWoods
+underlay WoodsPattern.gif MarshGreenL1,MarshBrownL1,MarshGreenL0,MarshBrownL0,MarshGreenL_1,MarshBrownL_1,MarshGreenL_2,MarshBrownL_2,SeparatedMarshGreenL0,SeparatedMarshBrownL0,SeparatedMarshGreenL_1,SeparatedMarshBrownL_1,SeparatedMarshGreenL_2,SeparatedMarshBrownL_2,SeparatedMarshGreenL1,SeparatedMarshBrownL1,SwampGreenL1,SwampBrownL1,SwampGreenL0,SwampBrownL0,SwampGreenL_1,SwampBrownL_1,SwampGreenL_2,SwampBrownL_2
+
+Level_2ToWoods
+underlay WoodsPattern.gif Level_2
+
+Level_1ToWoods
+underlay WoodsPattern.gif Level_1
+
+Level1ToWoods
+underlay WoodsPattern.gif Level1
+
+Level2ToWoods
+underlay WoodsPattern.gif Level2
+
+Level3ToWoods
+underlay WoodsPattern.gif Level3
+
+Level4ToWoods
+underlay WoodsPattern.gif Level4
+
+Level5ToWoods
+underlay WoodsPattern.gif Level5
+
+Level6ToWoods
+underlay WoodsPattern.gif Level6
+
+WoodsToMarsh
+underlay MarshPattern.gif WoodsGreen,WoodsBlack
+
+BrushToMarsh
+underlay MarshPattern.gif BrushL0,BrushL1,BrushL2,BrushL3,BrushL4,BrushL5,BrushL6,BrushL_1,BrushL_2,BrushBlackL_2,BrushBlackL_1,BrushBlackL0,BrushBlackL1,BrushBlackL2,BrushBlackL3,BrushBlackL4,BrushBlackL5,BrushBlackL6
+
+GrainToMarsh
+underlay MarshPattern.gif GrainL0,GrainL1,GrainL2,GrainL3,GrainL4,GrainL5,GrainL6,GrainL_1,GrainL_2,PlowedFields,Furrows,FurrowsL0,FurrowsL1,FurrowsL2,FurrowsL3,FurrowsL4,FurrowsL5,FurrowsL6,FurrowsL_1,FurrowsL_2
+
+Level_2ToMarsh
+underlay MarshPattern.gif Level_2
+
+Level_1ToMarsh
+underlay MarshPattern.gif Level_1
+
+Level1ToMarsh
+underlay MarshPattern.gif Level1
+
+Level2ToMarsh
+underlay MarshPattern.gif Level2
+
+Level3ToMarsh
+underlay MarshPattern.gif Level3
+
+Level4ToMarsh
+underlay MarshPattern.gif Level4
+
+Level5ToMarsh
+underlay MarshPattern.gif Level5
+
+Level6ToMarsh
+underlay MarshPattern.gif Level6
+
+WoodsToGrain
+underlay GrainPattern.gif WoodsGreen,WoodsBlack
+
+BrushToGrain
+underlay GrainPattern.gif BrushL0,BrushL1,BrushL2,BrushL3,BrushL4,BrushL5,BrushL6,BrushL_1,BrushL_2,BrushBlackL_2,BrushBlackL_1,BrushBlackL0,BrushBlackL1,BrushBlackL2,BrushBlackL3,BrushBlackL4,BrushBlackL5,BrushBlackL6
+
+MarshToGrain
+underlay GrainPattern.gif MarshGreenL1,MarshBrownL1,MarshGreenL0,MarshBrownL0,MarshGreenL_1,MarshBrownL_1,MarshGreenL_2,MarshBrownL_2,SeparatedMarshGreenL0,SeparatedMarshBrownL0,SeparatedMarshGreenL_1,SeparatedMarshBrownL_1,SeparatedMarshGreenL_2,SeparatedMarshBrownL_2,SeparatedMarshGreenL1,SeparatedMarshBrownL1,SwampGreenL1,SwampBrownL1,SwampGreenL0,SwampBrownL0,SwampGreenL_1,SwampBrownL_1,SwampGreenL_2,SwampBrownL_2
+
+Level_2ToGrain
+underlay GrainPattern.gif Level_2
+
+Level_1ToGrain
+underlay GrainPattern.gif Level_1
+
+Level1ToGrain
+underlay GrainPattern.gif Level1
+
+Level2ToGrain
+underlay GrainPattern.gif Level2
+
+Level3ToGrain
+underlay GrainPattern.gif Level3
+
+Level4ToGrain
+underlay GrainPattern.gif Level4
+
+Level5ToGrain
+underlay GrainPattern.gif Level5
+
+Level6ToGrain
+underlay GrainPattern.gif Level6

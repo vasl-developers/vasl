@@ -1,0 +1,60 @@
+Two buttons (& fkeys) control shading of the map:
+	Night (F9)
+	LV Hindrance (F11)
+
+Their effects are purely visual, and don't alter the operation of the existing
+LOS mechanism. Night effects can obscure the images of the LOS-string & its msg-
+flags, but it doesn't change or alter the content of the LOS-string/msgs. One
+can toggle Night off while checking LOS, then turn it back on.
+
+Night causes a grey-screen to be drawn over the entire map, including any ctrs.
+Certain ctrs/overlays (as defined in Ch. E) will automatically 'erase' the Night
+effects from areas of the map, but won't affect the LV Hindrance shading. For
+example, a Prep/Def/Gunflash/Flame marker will 'unshade' its hex. An FFE overlay
+will 'unshade' all 7 hexes of its blast area. A Blaze ctr will unshade all 19
+hexes (2-hex radius) of its 'illumination area'. Starshell and IR ctrs/overlays
+behave in a similar fashion. 
+
+The Flame ctr will automatically increase the size of its illumination
+when it is ctrl-F Flipped to a Blaze. The Trip Flare ctr will activate its
+illumination when it is unHIPped, but won't illuminate while HIP.
+
+The shaded map, LOS engine, and any applied 'unshade' ctrs/overlays, are 'dumb'
+to the existing map-terrain. So, an applied illumination-area ctr/overlay will
+unshade areas that, by rule, should still be shaded. In this case, players must
+manually apply 'shade' overlays to the obscured areas. These overlays will not
+respond to the 'unshade' effects of the ctrs, and must be manually replaced
+as needed.
+
+List of counters that illuminate during Night:
+> Unit Info tab
+    Prep Fire (incl. Bounding/Opportunity/Advance Fire)
+    First Fire (incl. IFP/SW/Final Fire)
+    Veh First Fire
+    Intensive Fire
+> Map Info > Night tab
+    IR
+    Starshell
+    Trip Flare - illuminates only when not HIP
+    Gunflash
+    Flame/Blaze - adjusts illumination area on ctrl-F Flip
+    1-level Blaze - 2-hex radius
+    2-level Blaze - 4-hex radius
+    3-level Blaze - 6-hex radius
+    4-level Blaze - 8-hex radius
+    1-hex shade - for manual shading
+    7-hex shade - for manual shading
+    19-hex shade - for manual shading
+> 5/8 Info > Fortification
+    Trip Flare - illuminates only when not HIP
+> 5/8 Info > Destruction
+    Blazing Building - 2-hex radius
+    Flame/Blaze - adjusts illumination area on ctrl-F Flip
+
+List of overlays that illuminate during Night:
+> OBA
+    FFE
+    Harassing FFE
+    IR
+    Starshell
+    Naval FFE - doesn't include the 2 extra 1/2-FP hexes

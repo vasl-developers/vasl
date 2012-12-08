@@ -1,0 +1,16 @@
+--Credits
+
+VASL and the VASSAL engine were written by Rodney Kinney (vasl@vasl.org), but
+they are far from the work of one man. New counter artwork in version 5 was
+contributed by Kenn Monte, Ken Knudsen, Jeff Leslie, Eric Givler, and Zoltan
+Grose. Counter redesign was done by Jeffrey Malter. Tom Repetti contributed
+map work, terrain design, and overall moral support. David Sullivan has allowed
+use of his Java libraries for computing LOS. David Lake (www.lakewebworks.com)
+designed the VASL web site. Thanks to counter trolls Klaus Fischer, Scott Brady,
+Sam Tyson, Brad Hampson, and Carl Fung. Thanks to map gnomes Tim Fachko, Gordon
+Molek, Carl Pfeiffer, and Bruce Mansfield. Thanks to Gary Krockover for the
+TurnPhase indicator, and to Ole Bøe for permission to use his IIFT(M)QRDC.
+GameSquad users 'General Mayhem' and 'wlk' contributed code for VASL 5.9.
+
+Finally, thanks to Multi-Man Publishing for their selfless support
+of the ASL hobby, and their continued indulgence of VASL.

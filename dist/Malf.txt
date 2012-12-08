@@ -1,0 +1,62 @@
+This function provides a list of ctrs & markers that require attention during
+the Rally-Phase. Only ctrs dragged to the map from the base v5.5 (or later) tray
+will be included - ctrs created in previous versions of VASL, or from Extensions,
+will not show in the list.
+
+Procedure:
+After you load a game, a new icon (representing a Malf Gun) will appear in the
+'VASL controls' dlog. Tag the button to open a resizable subdialog, where folders
+representing the current map(s) will appear. Double-click a folder to open it, &
+a list of those hexes containing broken/malf ctrs will drop down. Double-click
+the hex-folders to open them & a list of ctrs will drop down. Click on one of the
+listed ctrs, and the main map will attempt to re-center on that hex. All off-map
+ctrs will appear in a single folder named 'offboard'. The ctrs in the list are
+'live' - right-click on one, or tag it to give it the highlight - give it a ctrl-
+command & that change will be immediately duplicated by its on-map twin.
+
+During your Rally-Phase, examine this list while making your rally / repair
+rolls. Make changes to the ctrs in the list, flipping or deleting them as
+appropriate. If you make your changes on the list, the ctrs will immediately
+disappear from the list if they no longer meet its criteria for display. If you
+make your changes on the map, tag the list's 'Refresh' button to update it.
+
+Only these counters will appear in the list:
+	All Broken MMC & SMC ctrs
+	All malfed SW ctrs
+	All Malfed Dismantleable Guns (in both their 1/2" & 5/8" states)
+	All Malfed Guns (v5.9 and later, only)
+	DM & Disrupt markers
+	MG & Gun Malf markers (but not their Disabled flips)
+	Vehicle MA / SA / MG Malf markers (but not their Disabled flips)
+	Shock / UK markers (both sides)
+	stun & STUN markers (but not their +1 / Recall flips)
+
+Use blue SW/Gun Malf ctrs to mark your Malfed ctrs if the ctrs themselves
+don't appear in the 'Broken Units' dlog.
+
+Your oppo will not see any of your HIPped ctrs in his 5BRK dlog, but will see a
+'?-ctr' (say, a malfed SW that was moved out of LOS in the APh and was able to
+gain Concealment in the CCPh). Players should adopt the technique of HIPping
+any Concealed malfed SW, and adding a generic ?-ctr to the stack.
+
+	Only ctrs created from base VASL v5.5 (or later) will be displayed.
+	Only Guns from base VASL v5.9 (or later) will be displayed.
+	Ctrs from earlier versions of VASL will not be included.
+	Ctrs from Extensions (especially those created prior to v5.5) will probably
+	not show.
+
+Caveats:
+The maps and their hexes aren't listed in alphanumerical order, but in the order
+that VASSAL 'reads' the state of the game. Similarly, the ctrs listed in each hex
+probably won't appear in their correct 'stacking' order, but in 'as-read' game-
+state order. Consult the actual map-window to determine which brokies are/aren't
+under a DM/Disrupt marker.
+This extension may not be appropriate for Tournament play - player-pairs &
+tournament directors must decide whether to allow its use.
+
+
+Acknowlegements:
+	Stefan Fiedler made the original request for this function.
+	rk added an 'Inventory' widget to VASSAL v2.8 that was easily adapted
+to this purpose.
+	Thanks Stefan and rk!

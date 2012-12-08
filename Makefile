@@ -35,10 +35,9 @@ $(CLASSDIR):
 
 module: $(CLASSES) $(TMPDIR)/VASL-$(VERSION).vmod
 
-$(TMPDIR)/VASL-$(VERSION).vmod: dist/VASL-5.9.2.vmod $(TMPDIR)
+$(TMPDIR)/VASL-$(VERSION).vmod: $(TMPDIR)
 	mkdir -p $(TMPDIR)/vmod
-	unzip -d $(TMPDIR)/vmod dist/VASL-5.9.2.vmod
-	$(RM) -r $(TMPDIR)/vmod/VASL
+	cp -a dist/* $(TMPDIR)/vmod
 	cp -a classes/VASL $(TMPDIR)/vmod
 	perl -pi -e 's/(<VASSAL.launch.BasicModule.*version=")[^"]*(".*)/$${1}$(VERSION)\2/g' $(TMPDIR)/vmod/buildFile
 	cd $(TMPDIR)/vmod && zip -9rv ../VASL-$(VERSION).vmod *

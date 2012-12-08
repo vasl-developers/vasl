@@ -1,0 +1,32 @@
+VASL v5.1 adds keyboard commands to Move selected units.
+NumLock must be ON for both notebook and full-size keyboards.
+Hold down the ctrl-key in combination w/ the selected numpad direction key.
+
+	ctrl-num8 - dir 1
+	ctrl-num9 - dir 2
+	ctrl-num3 - dir 3
+	ctrl-num2 - dir 4
+	ctrl-num1 - dir 5
+	ctrl-num7 - dir 6
+
+This layout corresponds (roughly) to the standard ASL direction-description
+as diagrammed on a Sniper or OBA ctr, w/ 'dir 1' corresponding to 'up'.
+This orientation stays constant regardless of a ctr's CA / VCA.
+
+All National O/B units [EXC: Acq, Ctrl, Sniper, OBA] and many 1/2" & 5/8" Info
+markers have Move capability. Location, Fortification, Destruction & certain
+other markers (SMOKE, Residual FP, Abandoned) do not have ctrl-cmd Movement.
+All Moved units will Report in the chat dialog. Overlays will not Move.
+
+Multiple ctrs/stacks can be selected using shift-click or click&drag.
+Individual ctrs can be selected from an expanded stack using shift-click.
+Only the selected ctrs that 'own' the Move-cmds will respond.
+
+- Stack Movement:
+    Click on the top-most unit of a collapsed stack to highlight it, a ctrl-cmd
+    Move will affect the entire stack. Location markers (such as Fortifications
+    or Terrain) will not Move with the stack. If the top-most ctr does not
+    have Move capability (such as TI or Immobilized markers), the stack will
+    NOT Move, but if such ctrs are included elsewhere in the stack, they will
+    Move along w/ the stack.
+
