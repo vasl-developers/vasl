@@ -1,6 +1,5 @@
 * text=auto !eol
 /Makefile -text
-dist/VASL.mod -text
 dist/moduleData/buildFile -text
 dist/moduleData/images/DD/BRTPalmDebris.gif -text
 dist/moduleData/images/DD/BRTbreach.gif -text
