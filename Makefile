@@ -8,8 +8,9 @@ JDOCDIR:=javadoc
 DOCDIR:=doc
 DISTDIR:=dist
 
-VNUM:=5.9.0
-VERSION:=5.9-beta3
+VNUM:=5.9.3
+SVNVERSION:=$(shell git svn log -1 --oneline | grep -oP '^r\K\d+')
+VERSION:=$(VNUM)-svn$(SVNVERSION)
 
 CLASSPATH:=$(CLASSDIR):$(shell echo $(LIBDIR)/*.jar | tr ' ' ':'):$(shell echo $(LIBDIRND)/*.jar | tr ' ' ':')
 JAVAPATH:=/usr/bin
@@ -32,13 +33,15 @@ $(CLASSDIR):
 %.class: %.java
 	$(JC) $(JCFLAGS) $<
 
-module: $(CLASSES) $(TMPDIR)/VASL.mod
+module: $(CLASSES) $(TMPDIR)/VASL-$(VERSION).vmod
 
-$(TMPDIR)/VASL.mod: dist/VASL.mod $(TMPDIR)
-	cp dist/VASL.mod $(TMPDIR)
-	cd classes && zip -0 ../$(TMPDIR)/VASL.mod -r VASL
-	cd dist/moduleData && zip -0 ../../$(TMPDIR)/VASL.mod -r * -x \*.svn/\* 
-	cd $(TMPDIR) && unzip -p VASL.mod buildFile | sed -e 's/\(<VASSAL.launch.BasicModule.*version="\)[^"]*\(".*\)/\1$(VERSION)\2/g' > buildFile && zip -m -0 VASL.mod buildFile
+$(TMPDIR)/VASL-$(VERSION).vmod: dist/VASL-5.9.2.vmod $(TMPDIR)
+	mkdir -p $(TMPDIR)/vmod
+	unzip -d $(TMPDIR)/vmod dist/VASL-5.9.2.vmod
+	$(RM) -r $(TMPDIR)/vmod/VASL
+	cp -a classes/VASL $(TMPDIR)/vmod
+	perl -pi -e 's/(<VASSAL.launch.BasicModule.*version=")[^"]*(".*)/$${1}$(VERSION)\2/g' $(TMPDIR)/vmod/buildFile
+	cd $(TMPDIR)/vmod && zip -9rv ../VASL-$(VERSION).vmod *
 
 fast-compile:
 	$(JC) $(JCFLAGS) $(shell find $(SRCDIR) -name '*.java')

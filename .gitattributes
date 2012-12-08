@@ -1,5 +1,6 @@
 * text=auto !eol
 /Makefile -text
+dist/VASL-5.9.2.vmod -text svneol=unset#unset
 doc/UsersGuide/02.htm -text svneol=unset#text/plain
 doc/UsersGuide/03.htm -text svneol=unset#text/plain
 doc/UsersGuide/04.htm -text svneol=unset#text/plain
