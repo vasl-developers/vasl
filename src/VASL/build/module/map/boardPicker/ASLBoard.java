@@ -50,7 +50,7 @@ import VASSAL.tools.DataArchive;
 import VASSAL.tools.ErrorDialog;
 import VASSAL.tools.image.ImageIOException;
 import VASSAL.tools.image.ImageUtils;
-//import VASSAL.tools.image.memmap.MappedBufferedImage;
+import VASSAL.tools.image.memmap.MappedBufferedImage;
 import VASSAL.tools.imageop.AbstractTiledOpImpl;
 import VASSAL.tools.imageop.ImageOp;
 import VASSAL.tools.imageop.Op;
@@ -354,7 +354,6 @@ public class ASLBoard extends Board {
       if (size == null) {
         fixSize();
       }
-      /*
       ImageOp base = boardArchive == null ? baseImageOp : new SourceOpBitmapImpl(imageFile, boardArchive) {
         @Override
         public BufferedImage eval() throws ImageIOException {
@@ -377,18 +376,7 @@ public class ASLBoard extends Board {
         return (BufferedImage) base.getImage(null);
       }
       BufferedImage im = ImageUtils.useMappedImages() ? new MappedBufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB) : new BufferedImage(
-          size.width, size.height, BufferedImage.TYPE_INT_ARGB);*/
-      
-      final ImageOp base = boardArchive ==
-    	          null ? baseImageOp : new SourceOpBitmapImpl(imageFile, boardArchive); 
-    	  
-    	        if (terrain == null && overlays.isEmpty() &&
-    	            cropBounds.width < 0 && cropBounds.height < 0) {
-    	          return base.getImage();
-    	        }
-    	        
-    	        final BufferedImage im =
-    	          ImageUtils.createCompatibleTranslucentImage(size.width, size.height);
+          size.width, size.height, BufferedImage.TYPE_INT_ARGB);
       Graphics2D g = (Graphics2D) im.getGraphics();
       Rectangle visible = new Rectangle(cropBounds.getLocation(), ASLBoard.this.bounds().getSize());
       visible.width = (int) Math.round(visible.width / magnification);
@@ -435,9 +423,6 @@ public class ASLBoard extends Board {
           }
         }
       }
-      
-      g.dispose();
-      
       if (terrain != null) {
         terrain.transform(im);
       }
