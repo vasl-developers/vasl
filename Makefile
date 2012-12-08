@@ -4,7 +4,6 @@ SRCDIR:=src
 LIBDIR:=lib
 CLASSDIR:=classes
 TMPDIR:=tmp
-JDOCDIR:=javadoc
 DOCDIR:=doc
 DISTDIR:=dist
 
@@ -19,7 +18,6 @@ JC:=$(JAVAPATH)/javac
 JCFLAGS:=-d $(CLASSDIR) -source 5 -target 5 -Xlint -classpath $(CLASSPATH) -sourcepath $(SRCDIR)
 
 JAR:=$(JAVAPATH)/jar
-JDOC:=$(JAVAPATH)/javadoc
 
 vpath %.class $(shell find $(CLASSDIR) -type d)
 vpath %.java  $(shell find $(SRCDIR) -type d -name .svn -prune -o -print)
@@ -54,4 +52,4 @@ clean-release:
 clean: clean-release
 	$(RM) -r $(CLASSDIR)
 
-.PHONY: all fast-compile clean release release-macosx release-windows release-generic clean-release i18n images help javadoc clean-javadoc version
+.PHONY: all fast-compile clean release clean-release
