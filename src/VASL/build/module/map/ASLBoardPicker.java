@@ -37,6 +37,7 @@ import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,6 +49,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -250,17 +253,82 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
         }
       }
     }
-    final Comparator alpha = Collator.getInstance();
+
+    //
+    // * Strings with leading zeros sort ahead of those without.
+    // * Strings with leading integer parts sort ahead of those without.
+    // * Strings with lesser leading integer parts sort ahead of those with
+    //   greater leading integer parts.
+    // * Strings which are otherwise equal are sorted lexicographically by
+    //   their trailing noninteger parts.
+    //
+
+    final Comparator<Object> alpha = Collator.getInstance();
+    final Pattern pat = Pattern.compile("((0*)\\d*)(.*)");
+
     Comparator<String> comp = new Comparator<String>() {
       public int compare(String o1, String o2) {
-        try {
-          return Integer.parseInt(o1) - Integer.parseInt(o2);
+        final Matcher m1 = pat.matcher(o1);
+        final Matcher m2 = pat.matcher(o2);
+
+        if (!m1.matches()) {
+          // impossible
+          throw new IllegalStateException();
         }
-        catch (NumberFormatException ex) {
+        
+        if (!m2.matches()) {
+          // impossible
+          throw new IllegalStateException();
         }
-        return alpha.compare(o1, o2);
-      }
+
+        // count leading zeros
+        final int z1 = m1.group(2).length();
+        final int z2 = m2.group(2).length();
+
+        // more leading zeros comes first
+        if (z1 < z2) {
+          return 1;
+        }
+        else if (z1 > z2) {
+          return -1;
+        }
+
+        // same number of leading zeros
+        final String o1IntStr = m1.group(1);
+        final String o2IntStr = m2.group(1);
+        if (o1IntStr.length() > 0) {
+          if (o2IntStr.length() > 0) {
+            try {
+              // both strings have integer parts
+              final BigInteger o1Int = new BigInteger(o1IntStr);
+              final BigInteger o2Int = new BigInteger(o2IntStr);
+
+              if (!o1Int.equals(o2Int)) {
+                // one integer part is smaller than the other
+                return o1Int.compareTo(o2Int);
+
+              }
+            }
+            catch (NumberFormatException e) {
+              // impossible
+              throw new IllegalStateException(e);
+            }
+          }
+          else {
+            // only o1 has an integer part
+            return -1;
+          }
+        }
+        else if (o2IntStr.length() > 0) {
+          // only o2 has an integer part
+          return 1;
+        }
+
+        // the traling string part is decisive
+        return alpha.compare(m1.group(3), m2.group(3));
+      } 
     };
+
     Collections.sort(sorted, comp);
     possibleBoards.clear();
     for (int i = 0; i < sorted.size(); ++i) {
