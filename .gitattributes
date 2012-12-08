@@ -1,6 +1,5 @@
 * text=auto !eol
 /Makefile -text
-/Vengine.jar -text
 dist/VASL.mod -text
 dist/VASL.sh -text
 dist/Vengine.mf -text
