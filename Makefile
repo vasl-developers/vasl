@@ -37,7 +37,8 @@ $(TMPDIR)/VASL-$(VERSION).vmod: $(TMPDIR)
 	mkdir -p $(TMPDIR)/vmod
 	cp -a dist/* $(TMPDIR)/vmod
 	cp -a classes/VASL $(TMPDIR)/vmod
-	perl -pi -e 's/(<VASSAL.launch.BasicModule.*version=")[^"]*(".*)/$${1}$(VERSION)\2/g' $(TMPDIR)/vmod/buildFile
+	perl -pi -e 's/(<VASSAL.launch.BasicModule.*version=")[^"]*(".*)/$${1}$(VERSION)$${2}/' $(TMPDIR)/vmod/buildFile
+	perl -pi -e 's/(<version>).*?(<\/version>)/$${1}$(VERSION)$${2}/' $(TMPDIR)/vmod/moduledata
 	cd $(TMPDIR)/vmod && zip -9rv ../VASL-$(VERSION).vmod *
 
 fast-compile:
