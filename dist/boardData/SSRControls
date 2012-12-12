@@ -1,5 +1,20 @@
 <SSRControls>
 <!-- 
+Nov 2011 Tom R
+* Reinstituted the ShellholesToPalm and CragsToPalm rules, replacing ShellholesToPalmTrees and CragsToPalmTrees, which unfortunately invoked the (Orch2)PalmTrees rule
+
+Apr 2011 Tom R
+* Added Dense Jungle, Bamboo, SwampPattern, Light Woods, DTO Broken Terrain, and DTO Steppe Terrain checkboxes to Other Transformations
+* Added Orchards To Cactus Patches, ShellholesToCactusPatches, CragsToCactusPatches, and Orch2Palm rules in OSC Swapping
+* Added DTO terrain to Terrain dropdown, made "use desert colors" and "use ETO colors"
+    activate on DTO and ETO terrain, respectively 
+* Added FloodedStreams, FloodedRivers and FordableRivers rules
+* Added StreamsToGullies rule
+* Enabled everything in the PTO to be turned off except SwampToSwampPattern (ie, all of the PTO rules are activated by the sourceproperty of PTO light or dense jungle (and can thus be deactivated), not dictated automatically by PTO light or dense jungle
+* Removed the <source/> for Mud and NoBridge; also removed the NoBridge activating under NoRoads
+* Cleaned up the </entry> fields - must have one for every entry that is activated by a sourceproperty (ie, that is a Target)
+* Put DTO and PTO stuff into their own panels
+
 Aug 2008 Tom R
 * added Rice Paddies to the Transformation rules
 * removed the L2,3,4 To Vineyard transformation rules
@@ -40,6 +55,7 @@ Changes:
 -->
    <Basic>
       <Menu name="Month">
+         <Source/>
          <entry name="January"/>
          <entry name="February"/>
          <entry name="March"/>
@@ -52,7 +68,6 @@ Changes:
          <entry name="October"/>
          <entry name="November"/>
          <entry name="December"/>
-         <Source/>
       </Menu>
       <Checkbox name="Orchards">
          <entry name="Out of Season" rule="OrchardOutOfSeason" text="orchards out of season">
@@ -98,8 +113,9 @@ Changes:
       <Menu name="Terrain">
          <Source/>
          <entry name="ETO terrain" rule="SwampToMarsh"/>
-         <entry name="PTO light jungle" rule="RoadsToPaths,Bamboo,PalmTrees" text="PTO terrain (light jungle, roads are paths, bridges are fords)"/>
-         <entry name="PTO dense jungle" rule="RoadsToPaths,Bamboo,DenseJungle,PalmTrees" text="PTO terrain (dense jungle, roads are paths, bridges are fords)"/>
+         <entry name="PTO light jungle" text="PTO terrain (light jungle, roads are paths, bridges are fords,add Swamp Pattern)"/>
+         <entry name="PTO dense jungle" text="PTO terrain (dense jungle, roads are paths, bridges are fords,add Swamp Pattern)"/>         
+         <entry name="DTO terrain" rule="ETOtoDTO" text="DTO terrain"/>
       </Menu>
    </Basic>
    <Option name="Buildings">
@@ -125,10 +141,8 @@ Changes:
          <entry name="Deep Snow" rule="NoGrain,MarshToOpenGround,BrushToOpenGround,Winter" text="deep snow (brush is open ground)"/>
       </Menu>
       <Checkbox name="Mud">
-         <Source/>
-         <entry name="Mud" rule="Mud" text="mud">
+         <entry name="Mud" rule="Mud" text="mud"/>
 	   <!--Mud does not invoke NoWoodsRoads, so no difference between PTO and ETO-->
-	 </entry>
       </Checkbox>
    </Option>
    <Option name="Roads">
@@ -155,7 +169,6 @@ Changes:
         <entry name="Filled in with Woods" rule="NoWoodsRoads" text="woods-roads are woods"/>
       </Menu>
       <Checkbox name="No Bridges">
-        <Source/>
          <entry name="No Bridges" rule="NoBridge" text="no bridges">
             <Target sourceName="Roads">
                <activate sourceProperty="No Roads"/>
@@ -177,17 +190,21 @@ Changes:
    <Option name="Water Level">
       <Menu name="Streams">
          <entry name="Normal"/>
-         <entry name="Dry Streams" rule="DryStreams" text="all streams are dry"/>
-         <entry name="Flooded" rule="Flooded" text="all streams are flooded"/>
+         <entry name="Dry" rule="DryStreams" text="all streams are dry"/>
+         <entry name="Flooded" rule="FloodedStreams" text="all streams are flooded"/>
+         <entry name="Changed to Gullies" rule="StreamsToGullies" text="streams are gullies"/>
+      </Menu>
+      <Menu name="Rivers">
+         <entry name="Normal"/>
+         <entry name="Fordable" rule="FordableRivers" text="Fordable Rivers"/>
+         <entry name="Flooded" rule="FloodedRivers" text="Flooded Rivers"/>
+         <entry name="Changed to Valleys" rule="RiverToValley" text="rivers are valleys"/>
       </Menu>
       <Menu name="Rice Paddies">
          <entry name="Normal"/>
-         <entry name="Irrigated" rule="IrrigatedPaddies" text="Irrigated Rice Paddies"/>
          <entry name="In Season" rule="InSeasonPaddies" text="In Season Rice Paddies"/>
+         <entry name="Irrigated" rule="IrrigatedPaddies" text="Irrigated Rice Paddies"/>
       </Menu>
-      <Checkbox name="Rivers are dry">
-      <entry name="Rivers are dry" rule="RiverToValley" text="rivers are valleys"/>
-      </Checkbox >
       <Checkbox name="Ponds are dry">
       <entry name="Ponds are dry" rule="PondToValley" text="ponds are valleys"/>
       </Checkbox >
@@ -215,12 +232,12 @@ Changes:
       <Menu name="Hill Levels">
          <Source/>
          <entry name="Normal"/>
-         <entry name="Level 5 max" rule="Level6ToLevel5" text="no level 6"/>
-         <entry name="Level 4 max" rule="Level5ToLevel4" text="no level 5"/>
-         <entry name="Level 3 max" rule="Level4ToLevel3" text="no level 4"/>
-         <entry name="Level 2 max" rule="Level4ToLevel2,Level3ToLevel2" text="no level 3-4"/>
-         <entry name="Level 1 max" rule="Level4ToLevel1,Level3ToLevel1,Level2ToLevel1" text="no level 2-4"/>
-         <entry name="No hills" rule="NoCliffs,NoHillNums,Level4ToLevel0,Level3ToLevel0,Level2ToLevel0,Level1ToLevel0" text="no level 1-4"/>
+         <entry name="Level 5 max" rule="Level6ToLevel5" text="Hill Level 5 max"/>
+         <entry name="Level 4 max" rule="Level6ToLevel5,Level5ToLevel4" text="Hill Level 4 max"/>
+         <entry name="Level 3 max" rule="Level6ToLevel5,Level5ToLevel4,Level4ToLevel3" text="Hill Level 3 max"/>
+         <entry name="Level 2 max" rule="Level6ToLevel5,Level5ToLevel4,Level4ToLevel3,Level3ToLevel2" text="Hill Level 2 max"/>
+         <entry name="Level 1 max" rule="Level6ToLevel5,Level5ToLevel4,Level4ToLevel3,Level3ToLevel2,Level2ToLevel1" text="Hill Level 1 max"/>
+         <entry name="No Hills" rule="NoCliffs,NoHillNums,Level6ToLevel5,Level5ToLevel4,Level4ToLevel3,Level3ToLevel2,Level2ToLevel1,Level1ToLevel0" text="No Hills"/>
       </Menu>
       <Checkbox name="No Valley">
          <entry name="No Valley" rule="Level_1ToLevel0" text="no valley"/>
@@ -228,7 +245,7 @@ Changes:
       <Checkbox name="No Cliffs">
          <entry name="No Cliffs" rule="NoCliffs" text="no cliffs">
             <Target sourceName="Hill Levels">
-               <activate sourceProperty="No hills"/>
+               <activate sourceProperty="No Hills"/>
 	    </Target>
 	 </entry>
       </Checkbox>
@@ -238,20 +255,84 @@ Changes:
          <entry name="Normal"/>
          <entry name="Shellholes" rule="OrchardsToShellholes" text="Orch2Shell"/>
          <entry name="Crags" rule="OrchardsToCrags" text="Orch2Crag"/>
+         <entry name="Cactus Patches" rule="OrchardsToCactusPatches" text="Orch2CactusPatch"/>
+         <entry name="Palm Trees" rule="PalmTrees" text="Orchards to Palm Trees">
+            <Target sourceName="Terrain">
+               <activate sourceProperty="PTO light jungle"/>
+               <activate sourceProperty="PTO dense jungle"/>
+			 </Target>
+		</entry>
       </Menu>
-
       <Menu name="Shellholes Are">
          <entry name="Normal"/>
          <entry name="Orchards" rule="ShellholesToOrchards" text="shellholes to orchards"/>
-         <entry name="PalmTrees" rule="ShellholesToPalmTrees" text="shellholes to palm trees"/>
+         <entry name="PalmTrees" rule="ShellholesToPalm" text="shellholes to palm trees"/>
+		 <entry name="Cactus Patches" rule="ShellholesToCactusPatches" text="shellholes to cactus patches"/>
       </Menu>
       <Menu name="Crags Are">
          <entry name="Normal"/>
          <entry name="Shellholes" rule="CragsToShellholes" text="Crags to shellholes"/>
          <entry name="Orchards" rule="CragsToOrchards" text="Crags to orchards"/>
-         <entry name="Palm Trees" rule="CragsToPalmTrees" text="Crags to palm trees"/>
+         <entry name="Palm Trees" rule="CragsToPalm" text="Crags to palm trees"/>
+		 <entry name="Cactus Patches" rule="CragsToCactusPatches" text="crags to cactus patches"/>
       </Menu>
    </Option>
+	<Option name="PTO Transformations">
+       <Checkbox name="Dense Jungle">
+         <entry name="Dense Jungle" rule="DenseJungle" text="Dense Jungle">
+            <Target sourceName="Terrain">
+               <activate sourceProperty="PTO dense jungle"/>
+	    </Target>   
+       </entry>
+     </Checkbox>
+	     <Checkbox name="Bamboo">
+         <entry name="Bamboo" rule="Bamboo" text="Bamboo">
+            <Target sourceName="Terrain">
+               <activate sourceProperty="PTO light jungle"/>
+               <activate sourceProperty="PTO dense jungle"/>
+	    </Target>   
+       </entry>
+     </Checkbox>
+	 <Checkbox name="Palm Trees">
+	      <entry name="Palm Trees" rule="PalmTrees" text="Orchards to Palm Trees">
+            <Target sourceName="Terrain">
+               <activate sourceProperty="PTO light jungle"/>
+               <activate sourceProperty="PTO dense jungle"/>
+	         </Target>   
+		</entry>
+	</Checkbox>
+      <Checkbox name="Use Swamp Pattern for Marsh adj to Jungle">
+         <entry name="Use Swamp Pattern for Marsh adj to Jungle" rule="SwampToSwampPattern" text="overlay Swamp Pattern">
+            <Target sourceName="Terrain">
+               <activate sourceProperty="PTO light jungle"/>
+               <activate sourceProperty="PTO dense jungle"/>
+	    </Target>   
+       </entry>
+     </Checkbox>
+   </Option>
+  <Option name="DTO Transformations">  
+      <Checkbox name="DTO Broken Terrain">
+		<entry name="DTO Broken Terrain" rule="BrokenTerrain" text="DTO Broken Terrain">
+		   <Target sourceName="Terrain">
+               <activate sourceProperty="DTO terrain"/>
+	       </Target>   
+        </entry>
+      </Checkbox>
+      <Checkbox name="DTO Steppe Terrain">
+			<entry name="DTO Steppe Terrain" rule="SteppeTerrain" text="DTO Steppe Terrain">
+		   <Target sourceName="Terrain">
+               <activate sourceProperty="DTO terrain"/>
+	       </Target>   
+        </entry>
+		</Checkbox>
+	<Checkbox name="Use Desert Colors for ETO boards">
+         <entry name="Use Desert Colors for ETO boards" rule="ETOtoDTO" text="Desert colors">
+            <Target sourceName="Terrain">
+               <activate sourceProperty="DTO terrain"/>
+            </Target>
+			</entry>
+      </Checkbox>
+      </Option>
   <Option name="Other Transformations">
       <Menu name="X to Vineyard">
          <entry name="None"/>
@@ -271,17 +352,18 @@ Changes:
          <entry name="Level -1" rule="Level_1ToPaddy" text="Level -1 to Paddy"/>
          <entry name="Level 1" rule="Level1ToPaddy" text="Level 1 to Paddy"/>
       </Menu>
-      <Checkbox name="Use Desert Colors">
-         <entry name="Use Desert Colors" rule="ETOtoDTO" text="Desert colors"/>
-      </Checkbox>
       <Checkbox name="Use ETO Colors">
-         <entry name="Use ETO Colors" rule="DTOtoETO" text="ETO colors"/>
+         <entry name="Use ETO Colors" rule="DTOtoETO" text="ETO colors">
+            <Target sourceName="Terrain">
+               <activate sourceProperty="ETO terrain"/>
+            </Target>
+			</entry>
       </Checkbox>
       <Checkbox name="No white Hex IDs" >
          <entry name="No white Hex IDs" rule="NoWhiteHexIDs" text="no white hex IDs"/>
       </Checkbox>
-      <Checkbox name="Use v5 colors for v4 boards" >
-         <entry name="Use v5 colors for v4 boards" rule="v42v5" text="update v4 board colors"/>
+      <Checkbox name="Light Woods" >
+         <entry name="Light Woods" rule="LightWoods" text="Light Woods"/>
       </Checkbox>
    </Option>
 </SSRControls>

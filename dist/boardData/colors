@@ -1,16 +1,22 @@
-// Jul 2009 TR 
+// 11 Dec 2012 TR for vasl 5.9.3
+// Changed WinterDepression to 216 216 208
 //
-// 25Jul09 - Added BrushCrest[Hill/Dale][Mud/Winter]
-//         - Added GrainCrestMud
-//         - 
+// 11 Nov 2011 TR for vasl 5.9.3
+// Added WinterBlackHexNumbers
 //
-// - May 2008 version plus:
-// + added BldgShadowL2,3
-// + changed WallBrownWinter
+// 15 Apr 2011 TR   for vasl 5.9.3
+// Fixed {River,Stream,Separated}{Marsh,Swamp} colors
+// Added BocageBrownL0-L3
+// Fixed BrushCrestL1-6 colors
+// Added BldgShadowL4(winter/mud) colors
+// Added GullyHill (normal and winter/mud) colors
 
 // Bocage
-BocageGreen 62,90,47
-BocageBrown 176,145,70 //   for hill bocage: 149,113,33
+BocageGreen     62,90,47
+BocageBrownL0  176,145,70
+BocageBrownL1  149,113,33
+BocageBrownL2  123,92,27
+BocageBrownL3   92,64,4
 
 
 // Bridges
@@ -43,18 +49,19 @@ BrushBlackL6 68,70,27
 BrushWinter 196,207,187
 
 BrushCrestL_1 142,173,91
-BrushCrestL0 142,173,92
-BrushCrestL1 129,151,71
-BrushCrestL2 129,151,72
-BrushCrestL3 129,151,73
-BrushCrestL4 129,151,74
-BrushCrestL5 129,151,75
-BrushCrestL6 129,151,76
+BrushCrestL0  142,173,92
+BrushCrestL1  129,151,71
+BrushCrestL2  132,144,65
+BrushCrestL3  121,139,61
+BrushCrestL4  114,131,61
+BrushCrestL5  106,125,60
+BrushCrestL6  129,151,76
 
 BrushCrestHillWinter 179,191,168
 BrushCrestDaleWinter 218,230,210
 BrushCrestHillMud 130,119,60
 BrushCrestDaleMud 158,145,74
+
 
 //Building Shadows
 BldgShadowL_1 101,123,63
@@ -69,12 +76,14 @@ BldgShadowL0Winter 206,206,206
 BldgShadowL1Winter 186,179,158
 BldgShadowL2Winter 168,152,120
 BldgShadowL3Winter 141,126,93
+BldgShadowL4Winter 127,108,79
 
 BldgShadowL_1Mud 98,91,48
 BldgShadowL0Mud 148,141,92
 BldgShadowL1Mud 138,119,66
 BldgShadowL2Mud 114,90,38
 BldgShadowL3Mud 100,76,24
+BldgShadowL4Mud 77,56,15
 
 
 // Cliffs
@@ -154,6 +163,27 @@ GullyBrown2  136,95,33
 GullyBrown3  93,56,22
 GullyBlack   40,19,10
 
+GullyHill_1 99,120,62
+GullyHill1 155,126,49
+GullyHill2 130,94,16
+GullyHill3 100,68,0
+GullyHill4 80,49,0
+GullyHill5 62,38,0
+
+GullyHill_1Winter 213,224,194
+GullyHill1Winter 197,186,155
+GullyHill2Winter 172,154,120
+GullyHill3Winter 151,131,89
+GullyHill4Winter 136,112,74
+GullyHill5Winter 119,96,63
+
+GullyHill_1Mud 110,104,60
+GullyHill1Mud 128,105,44
+GullyHill2Mud 114,85,24
+GullyHill3Mud 103,73,7
+GullyHill4Mud 78,51,0
+GullyHill5Mud 56,34,0
+
 
 // Hedge
 HedgeGreen 62,91,47
@@ -169,35 +199,35 @@ Lumberyard5  45,31,16
 
 
 // Marsh
-MarshGreenL_2   68,98,39
-MarshGreenL_1   68,98,40
-MarshGreenL0    68,98,41
-MarshGreenL1    68,98,42
+StreamMarshGreenL_1  83,110,51
+StreamMarshGreenL0  83,110,52
+StreamMarshBrownL_1  50,2,21
+StreamMarshBrownL0  50,2,22
 
-MarshBrownL_2   49,0,22
-MarshBrownL_1   50,0,22
-MarshBrownL0    51,0,22
-MarshBrownL1    52,0,22
+StreamSwampGreenL_1  84,110,51
+StreamSwampGreenL0  84,110,52
+StreamSwampBrownL_1  51,2,21
+StreamSwampBrownL0  51,2,22
 
-SeparatedMarshGreenL_2   67,98,39
-SeparatedMarshGreenL_1   67,98,40
-SeparatedMarshGreenL0    67,98,41
-SeparatedMarshGreenL1    67,98,42
+RiverMarshGreenL_1  82,110,51
+RiverMarshGreenL0  82,110,52
+RiverMarshBrownL_1  49,2,21
+RiverMarshBrownL0  49,2,22
 
-SeparatedMarshBrownL_2   49,0,21
-SeparatedMarshBrownL_1   50,0,21
-SeparatedMarshBrownL0    51,0,21
-SeparatedMarshBrownL1    52,0,21
+RiverSwampGreenL_1  81,110,51
+RiverSwampGreenL0  81,110,52
+RiverSwampBrownL_1  48,2,21
+RiverSwampBrownL0  48,2,22
 
-SwampGreenL_2   69,98,39
-SwampGreenL_1   69,98,40
-SwampGreenL0    69,98,41
-SwampGreenL1    69,98,42
+SeparatedMarshGreenL_1  85,110,51
+SeparatedMarshGreenL0  85,110,52
+SeparatedMarshBrownL_1  52,2,21
+SeparatedMarshBrownL0  52,2,22
 
-SwampBrownL_2   49,1,22
-SwampBrownL_1   50,1,22
-SwampBrownL0    51,1,22
-SwampBrownL1    52,1,22
+SeparatedSwampGreenL_1  86,110,51
+SeparatedSwampGreenL0  86,110,52
+SeparatedSwampBrownL_1  53,2,21
+SeparatedSwampBrownL0  53,2,22
 
 MudflatL0    127,91,41
 MudflatL_1   127,90,41
@@ -206,6 +236,7 @@ MudflatL_1   127,90,41
 // Miscellaneous
 Black    0,0,0
 WhiteHexNumbers 251,252,253
+WinterBlackHexNumbers 253,252,251
 ManHoles 0,1,0
 BoardNum 255,255,11
 HillNum  255,255,10
@@ -340,8 +371,7 @@ StreamWhite   213,230,230
 StreamWater   131,190,240
 DryStream1 182,159,88
 DryStream2 147,105,25
-WinterDepression 233,233,225
-
+WinterDepression 216,216,208
 
 // Sunken Road
 SunkRoad1 146,110,30

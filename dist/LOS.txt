@@ -1,44 +1,12 @@
 --Checking LOS
 
-    VASL 5.0 features automatic LOS checking, courtesy of David Sullivan. LOS
-checking works on single boards, cropped boards, or across multiple boards. LOS
-does account for terrain transformations (e.g. Grain out of season), but doesn't
-know about overlays. You may enable or disable LOS checking in the "LOS" tab of
-the preferences.
+    The LOS-checking feature has been deprecated in VASL 5.9.3, pending a
+cleanup and rejiggering of the LOS code. You can still hit the F10 key and
+draw a LOS line, but VASL will not tell you whether the LOS is blocked or
+hindered, nor will it check for LOS info (the .map file) upon loading a board.
 
    After pressing the LOS button, left click the mouse in any hex (the "source"
-hex) and drag the mouse to any other hex (the "target" hex) to check the LOS.
-You may select the highest location in a hex by holding the control key (Ctrl)
-down when clicking or dragging the mouse. If the mouse pointer is not in the
-center of a hex, the LOS will be checked to/from the nearest hex spine (The
-'Snap thread to grid' preference is ignored when LOS checking is enabled). The
-last LOS checked remains displayed on the screen as long as VASL is in LOS mode.
-Note that if the 'Retain LOS-hindrance counters' preference is yes (checked),
-the hindrance counters that remain on the screen during the LOS check WILL
-affect the results.
-
-   The LOS thread uses three different colors: a basic thread color, a hindrance
-color, and a blocked color, all of which are customizable in the Edit Properties
-dialog. The LOS thread starts with the basic color, indicating a clear LOS,
-changes to the hindrance color at the point of the first hindrance, and then
-changes to the blocked color at the point where the LOS is blocked.
-
-   If the "Verbose LOS Mode" preference box is checked, text messages closest to
-the source and target locations will display the name and elevation of the
-locations. A second text message, near the target location, will display the
-range and the result of the LOS check. If the LOS is clear, but hindrances where
-detected, the number of hindrances will be given. If the LOS is blocked, the hex
-where it is blocked and the reason will be shown.
-
-While the LOS is visible, you may move the source and target
-locations up and down within the hex using these keystrokes:
-
-Keystroke		Moves
----------		-----
-Up arrow		Move the target location up
-Down arrow		Move the target location down
-Ctrl+Up arrow		Move the source location up
-Ctrl+Down arrow	Move the source location down
-
-If no locations exist above or below the current one,
-the keystroke is ignored.
+hex) and drag the mouse to any other hex (the "target" hex) to draw a LOS line.
+If the mouse pointer is not in the center of a hex, the line will be drawn 
+to/from the nearest hex spine. The last LOS line drawn remains displayed 
+on the screen as long as VASL is in LOS mode. 
