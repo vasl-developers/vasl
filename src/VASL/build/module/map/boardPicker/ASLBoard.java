@@ -203,19 +203,6 @@ public class ASLBoard extends Board {
   }
 
   protected void resetImage() {
-/*
-    try {
-      baseImageOp = boardArchive == null ? Op.load(ImageIO.read(new MemoryCacheImageInputStream(new FileInputStream(boardFile))))
-          : new SourceOpBitmapImpl(imageFile, boardArchive);
-    }
-    catch (IOException e) {
-      ErrorDialog.dataError(new BadDataReport("Unable to load board", boardFile.getName(), e));
-      baseImageOp = Op.load(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB));
-    }
-    boardImageOp = new BoardOp();
-    boardImageOp.update();
-*/
-
     final ImageTileSource ts =
       GameModule.getGameModule().getImageTileSource();
 
@@ -228,7 +215,6 @@ public class ASLBoard extends Board {
     }
 
     if (tiled) {
-System.err.println("looking for " + imageFile + " in " + boardFile);
       FileArchive fa = null;
       try {
         fa = new ZipArchive(boardFile);
@@ -244,8 +230,6 @@ System.err.println("looking for " + imageFile + " in " + boardFile);
     }
 
     baseImageOp = boardImageOp;
-
-
 
     uncroppedSize = baseImageOp.getSize();
     fixedBoundaries = false;
@@ -391,49 +375,26 @@ System.err.println("looking for " + imageFile + " in " + boardFile);
       if (size == null) {
         fixSize();
       }
-      /*
-      ImageOp base = boardArchive == null ? baseImageOp : new SourceOpBitmapImpl(imageFile, boardArchive) {
-        @Override
-        public BufferedImage eval() throws ImageIOException {
-          if (size == null)
-            fixSize();
-          if (Boolean.TRUE.equals(GameModule.getGameModule().getPrefs().getValue(ImageUtils.PREFER_MEMORY_MAPPED))) {
-            return super.eval();
-          }
-          else {
-            try {
-              return ImageIO.read(new MemoryCacheImageInputStream(archive.getImageInputStream(name)));
-            }
-            catch (IOException e) {
-              throw new ImageIOException(name, e);
-            }
-          }
-        }
-      };
-      if (terrain == null && overlays.isEmpty() && cropBounds.width < 0 && cropBounds.height < 0) {
-        return (BufferedImage) base.getImage(null);
-      }
-      BufferedImage im = ImageUtils.useMappedImages() ? new MappedBufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB) : new BufferedImage(
-          size.width, size.height, BufferedImage.TYPE_INT_ARGB);*/
       
-      final ImageOp base = boardArchive ==
-    	          null ? baseImageOp : new SourceOpBitmapImpl(imageFile, boardArchive); 
+      final ImageOp base = boardArchive == null ?
+    	  baseImageOp : new SourceOpBitmapImpl(imageFile, boardArchive); 
     	  
-    	        if (terrain == null && overlays.isEmpty() &&
-    	            cropBounds.width < 0 && cropBounds.height < 0) {
-    	          return base.getImage();
-    	        }
+    	if (terrain == null && overlays.isEmpty() &&
+          cropBounds.width < 0 && cropBounds.height < 0)
+      {
+    	  return base.getImage();
+    	}
     	        
-    	        final BufferedImage im =
-    	          ImageUtils.createCompatibleTranslucentImage(size.width, size.height);
-      Graphics2D g = (Graphics2D) im.getGraphics();
+    	final BufferedImage im =
+    	  ImageUtils.createCompatibleTranslucentImage(size.width, size.height);
+
+      final Graphics2D g = (Graphics2D) im.getGraphics();
       Rectangle visible = new Rectangle(cropBounds.getLocation(), ASLBoard.this.bounds().getSize());
       visible.width = (int) Math.round(visible.width / magnification);
       visible.height = (int) Math.round(visible.height / magnification);
       g.drawImage(base.getImage(null), 0, 0, visible.width, visible.height, cropBounds.x, cropBounds.y, cropBounds.x + visible.width, cropBounds.y
           + visible.height, null);
-      Component comp = new Component() {
-      };
+      Component comp = new Component() {};
       for (Enumeration e = ASLBoard.this.getOverlays(); e.hasMoreElements();) {
         Overlay o = (Overlay) e.nextElement();
         Rectangle r = visible.intersection(o.bounds());
