@@ -40,6 +40,9 @@ import javax.swing.JLabel;
 
 import org.jdesktop.swingworker.SwingWorker;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import CASL.Map.GameMap;
 import CASL.Map.Hex;
 import CASL.Map.LOSResult;
@@ -68,6 +71,9 @@ import VASSAL.counters.PieceIterator;
 public class CASLThread
     extends ASLThread
     implements KeyListener, GameComponent {
+
+  private static final Logger logger =
+    LoggerFactory.getLogger(CASLThread.class);
 
   public static final String ENABLED = "LosCheckEnabled";
   // status flag
@@ -128,7 +134,8 @@ public class CASLThread
             catch (InterruptedException e) {
             }
             catch (ExecutionException e) {
-              e.printStackTrace();
+// FIXME: this is likely an actual problem, should not just log it!
+              logger.error("", e);
             }
             launchTruLOS();
           }
