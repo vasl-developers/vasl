@@ -171,10 +171,13 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
 
   public void addTo(Buildable b) {
     DirectoryConfigurer config = new VASSAL.configure.DirectoryConfigurer(BOARD_DIR, "Board Directory");
-    GameModule.getGameModule().getPrefs().addOption(config);
-    String storedValue = GameModule.getGameModule().getPrefs().getStoredValue(BOARD_DIR);
+  
+    final GameModule g = GameModule.getGameModule();
+
+    g.getPrefs().addOption(config);
+    String storedValue = g.getPrefs().getStoredValue(BOARD_DIR);
     if (storedValue == null || !new File(storedValue).exists()) {
-      File archive = new File(GameModule.getGameModule().getDataArchive().getName());
+      File archive = new File(g.getDataArchive().getName());
       File dir = archive.getParentFile();
       File defaultDir = new File(dir, "boards");
       if (!defaultDir.exists()) {
@@ -182,8 +185,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
       }
       config.setValue(defaultDir);
     }
-    setBoardDir((File) GameModule.getGameModule().getPrefs().getValue(BOARD_DIR));
-    GameModule.getGameModule().getPrefs().getOption(BOARD_DIR).addPropertyChangeListener(new PropertyChangeListener() {
+    setBoardDir((File) g.getPrefs().getValue(BOARD_DIR));
+    g.getPrefs().getOption(BOARD_DIR).addPropertyChangeListener(new PropertyChangeListener() {
       public void propertyChange(PropertyChangeEvent evt) {
         setBoardDir((File) evt.getNewValue());
       }
