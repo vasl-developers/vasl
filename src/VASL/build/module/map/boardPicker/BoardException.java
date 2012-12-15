@@ -26,4 +26,12 @@ public class BoardException extends Exception {
   public BoardException(String s) {
     super(s);
   }
+
+  public BoardException(Throwable cause) {
+    super(cause);
+  }
+
+  public BoardException(String message, Throwable cause) {
+    super(message, cause);
+  }
 }
