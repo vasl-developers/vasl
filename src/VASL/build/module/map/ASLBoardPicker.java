@@ -72,6 +72,11 @@ import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionListener;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -82,6 +87,8 @@ import VASL.build.module.map.boardPicker.ASLBoardSlot;
 import VASL.build.module.map.boardPicker.BoardException;
 import VASL.build.module.map.boardPicker.Overlay;
 import VASL.build.module.map.boardPicker.SSROverlay;
+
+import VASSAL.Info;
 import VASSAL.build.BadDataReport;
 import VASSAL.build.Buildable;
 import VASSAL.build.Builder;
@@ -97,8 +104,12 @@ import VASSAL.command.NullCommand;
 import VASSAL.configure.DirectoryConfigurer;
 import VASSAL.configure.ValidationReport;
 import VASSAL.tools.ErrorDialog;
+import VASSAL.tools.ReadErrorDialog;
 
 public class ASLBoardPicker extends BoardPicker implements ActionListener {
+  private static final Logger logger =
+    LoggerFactory.getLogger(ASLBoardPicker.class);
+
   /** The key for the preferences setting giving the board directory */
   public static final String BOARD_DIR = "boardURL";
   private File boardDir;
@@ -344,7 +355,30 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
   }
 
   public void addBoard(String name) {
-    ASLBoard b = new ASLBoard();
+///
+    final GameModule g = GameModule.getGameModule();
+    final String hstr =
+      DigestUtils.shaHex(g.getGameName() + "_" + g.getGameVersion());
+
+    final File fpath = new File(boardDir, "bd" + name);
+
+    final ASLTilingHandler th = new ASLTilingHandler(
+      fpath.getAbsolutePath(),
+      new File(Info.getConfDir(), "tiles/" + hstr),
+      new Dimension(256, 256),
+      1024,
+      42
+    );
+
+    try {
+      th.sliceTiles();
+    }
+    catch (IOException e) {
+      ReadErrorDialog.error(e, fpath); 
+    }
+///
+
+    final ASLBoard b = new ASLBoard();
     b.setCommonName(name);
     possibleBoards.add(b);
   }
@@ -445,8 +479,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
       b.readData();
     }
     catch (Exception eParse) {
-      eParse.printStackTrace();
-      throw new BoardException(eParse.getMessage());
+//      eParse.printStackTrace();
+      throw new BoardException(eParse.getMessage(), eParse);
     }
     try {
       int x1 = Integer.parseInt(st2.nextToken());

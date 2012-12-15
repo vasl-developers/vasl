@@ -93,7 +93,12 @@ public class ASLHexGrid extends HexGrid {
 		  this.alternate = "true".equals(value);
 	  }
 	  else {
-		  super.setAttribute(key, value);
+      try {
+  		  super.setAttribute(key, value);
+      }
+      catch (IllegalArgumentException e) {
+        e.printStackTrace();
+      }
 	  }
   }
 

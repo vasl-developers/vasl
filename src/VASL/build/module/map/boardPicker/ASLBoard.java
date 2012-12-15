@@ -49,14 +49,17 @@ import VASSAL.build.module.map.boardPicker.board.MapGrid;
 import VASSAL.tools.DataArchive;
 import VASSAL.tools.ErrorDialog;
 import VASSAL.tools.image.ImageIOException;
+import VASSAL.tools.image.ImageTileSource;
 import VASSAL.tools.image.ImageUtils;
-//import VASSAL.tools.image.memmap.MappedBufferedImage;
 import VASSAL.tools.imageop.AbstractTiledOpImpl;
 import VASSAL.tools.imageop.ImageOp;
 import VASSAL.tools.imageop.Op;
 import VASSAL.tools.imageop.SourceOp;
 import VASSAL.tools.imageop.SourceOpBitmapImpl;
+import VASSAL.tools.imageop.SourceOpTiledBitmapImpl;
 import VASSAL.tools.imageop.SourceTileOpBitmapImpl;
+import VASSAL.tools.io.FileArchive;
+import VASSAL.tools.io.ZipArchive;
 
 /** A Board is a geomorphic or HASL board. */
 public class ASLBoard extends Board {
@@ -200,6 +203,7 @@ public class ASLBoard extends Board {
   }
 
   protected void resetImage() {
+/*
     try {
       baseImageOp = boardArchive == null ? Op.load(ImageIO.read(new MemoryCacheImageInputStream(new FileInputStream(boardFile))))
           : new SourceOpBitmapImpl(imageFile, boardArchive);
@@ -210,6 +214,39 @@ public class ASLBoard extends Board {
     }
     boardImageOp = new BoardOp();
     boardImageOp.update();
+*/
+
+    final ImageTileSource ts =
+      GameModule.getGameModule().getImageTileSource();
+
+    boolean tiled = false;
+    try {
+      tiled = ts.tileExists(imageFile, 0, 0, 1.0);
+    }
+    catch (ImageIOException e) {
+      // ignore, not tiled
+    }
+
+    if (tiled) {
+System.err.println("looking for " + imageFile + " in " + boardFile);
+      FileArchive fa = null;
+      try {
+        fa = new ZipArchive(boardFile);
+      }
+      catch (IOException e) {
+        e.printStackTrace();
+      }
+
+      boardImageOp = new SourceOpTiledBitmapImpl(imageFile, fa);
+    }
+    else {
+      boardImageOp = Op.load(imageFile);
+    }
+
+    baseImageOp = boardImageOp;
+
+
+
     uncroppedSize = baseImageOp.getSize();
     fixedBoundaries = false;
     scaledImageOp = null;
