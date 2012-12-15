@@ -6618,7 +6618,9 @@ doc/UsersGuide/vasl_ug_styles.css -text
 lib/AppleJavaExtensions.jar -text
 lib/BrowserLauncher2-10.jar -text
 lib/CASL.jar -text
+lib/TimingFramework-1.0.jar -text svneol=unset#unset
 lib/Vengine.jar -text
+lib/base64-2.3.8.jar -text svneol=unset#unset
 lib/batik-anim.jar -text
 lib/batik-awt-util.jar -text
 lib/batik-bridge.jar -text
@@ -6637,7 +6639,16 @@ lib/batik-swing.jar -text
 lib/batik-transcoder.jar -text
 lib/batik-util.jar -text
 lib/batik-xml.jar -text
+lib/bsh-2.0b4.jar -text svneol=unset#unset
+lib/commons-codec-1.4.jar -text svneol=unset#unset
+lib/commons-compiler.jar -text svneol=unset#unset
+lib/commons-io-1.4.jar -text svneol=unset#unset
+lib/commons-lang-2.5.jar -text svneol=unset#unset
+lib/guava-r06.jar -text svneol=unset#unset
+lib/janino.jar -text svneol=unset#unset
 lib/java-getopt-1.0.13.jar -text
+lib/jl1.0.1.jar -text svneol=unset#unset
+lib/jna.jar -text svneol=unset#unset
 lib/js.jar -text
 lib/licenses/LICENSE.batik.txt -text svneol=unset#text/plain
 lib/licenses/LICENSE.cryptix.txt -text svneol=unset#text/plain
@@ -6663,15 +6674,20 @@ lib/licenses/README.xalan-2.6.0.txt -text svneol=unset#text/plain
 lib/licenses/README.xerces_2_5_0.txt -text svneol=unset#text/plain
 lib/licenses/README.xml-apis-ext.txt -text svneol=unset#text/plain
 lib/licenses/README.xml-apis.txt -text svneol=unset#text/plain
+lib/logback-classic-0.9.27.jar -text svneol=unset#unset
+lib/logback-core-0.9.27.jar -text svneol=unset#unset
+lib/miglayout-4.0-swing.jar -text svneol=unset#unset
 lib/pdf-transcoder.jar -text
+lib/slf4j-api-1.6.4.jar -text svneol=unset#unset
 lib/smack.jar -text
 lib/smackx-debug.jar -text
 lib/smackx.jar -text
 lib/swing-layout-1.0.3.jar -text
-lib/swing-worker-1.1.jar -text
-lib/swingx-0.9.2.jar -text
+lib/swing-worker-1.2.jar -text
+lib/swingx-0.9.4.jar -text svneol=unset#unset
 lib/wizard.jar -text
 lib/xalan-2.6.0.jar -text
+lib/xercesImpl.jar -text svneol=unset#unset
 lib/xerces_2_5_0.jar -text
 lib/xml-apis-ext.jar -text
 lib/xml-apis.jar -text
