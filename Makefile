@@ -7,7 +7,7 @@ TMPDIR:=tmp
 DOCDIR:=doc
 DISTDIR:=dist
 
-VNUM:=5.9.3
+VNUM:=5.10.0
 SVNVERSION:=$(shell git svn log -1 --oneline | grep -oP '^r\K\d+')
 VERSION:=$(VNUM)-svn$(SVNVERSION)
 
