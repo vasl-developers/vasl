@@ -11,6 +11,7 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -167,6 +168,18 @@ System.out.println(apath + ", " + imtime + ", " + tcache.getMTime(tpath));
       errP,
       args.toArray(new String[args.size()])
     );
+
+    // write the image paths to child's stdin, one per line
+    PrintWriter stdin = null;
+    try {
+      stdin = new PrintWriter(proc.stdin);
+      for (String m : multi) {
+        stdin.println(m);
+      }
+    }
+    finally {
+      IOUtils.closeQuietly(stdin);
+    }
 
     Socket csock = null;
     DataInputStream in = null;
