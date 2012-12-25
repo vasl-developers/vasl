@@ -351,6 +351,7 @@ public class ASLBoard extends Board {
     }
     return val;
   }
+
   private class BoardOp extends AbstractTiledOpImpl implements SourceOp {
     private String boardState;
 
@@ -389,9 +390,20 @@ public class ASLBoard extends Board {
       Rectangle visible = new Rectangle(cropBounds.getLocation(), ASLBoard.this.bounds().getSize());
       visible.width = (int) Math.round(visible.width / magnification);
       visible.height = (int) Math.round(visible.height / magnification);
-      g.drawImage(base.getImage(null), 0, 0, visible.width, visible.height, cropBounds.x, cropBounds.y, cropBounds.x + visible.width, cropBounds.y
-          + visible.height, null);
-      for (Enumeration e = ASLBoard.this.getOverlays(); e.hasMoreElements();) {
+      g.drawImage(
+        base.getImage(null),
+        0,
+        0,
+        visible.width,
+        visible.height,
+        cropBounds.x,
+        cropBounds.y,
+        cropBounds.x + visible.width,
+        cropBounds.y + visible.height,
+        null
+      );
+
+      for (Enumeration e = ASLBoard.this.getOverlays(); e.hasMoreElements(); ) {
         Overlay o = (Overlay) e.nextElement();
         Rectangle r = visible.intersection(o.bounds());
         if (!r.isEmpty()) {
