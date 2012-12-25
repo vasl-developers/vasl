@@ -391,16 +391,25 @@ public class ASLBoard extends Board {
       visible.height = (int) Math.round(visible.height / magnification);
       g.drawImage(base.getImage(null), 0, 0, visible.width, visible.height, cropBounds.x, cropBounds.y, cropBounds.x + visible.width, cropBounds.y
           + visible.height, null);
-      Component comp = new Component() {};
       for (Enumeration e = ASLBoard.this.getOverlays(); e.hasMoreElements();) {
         Overlay o = (Overlay) e.nextElement();
         Rectangle r = visible.intersection(o.bounds());
         if (!r.isEmpty()) {
           int x = Math.max(visible.x - o.bounds().x, 0);
           int y = Math.max(visible.y - o.bounds().y, 0);
-          g.drawImage(o.getImage(), r.x - visible.x, r.y - visible.y, r.x - visible.x + r.width, r.y - visible.y + r.height, x, y, x + r.width, y + r.height,
-              comp);
+          g.drawImage(
+            o.getImage(),
+            r.x - visible.x,
+            r.y - visible.y,
+            r.x - visible.x + r.width,
+            r.y - visible.y + r.height,
+            x,
+            y,
+            x + r.width, y + r.height,
+            null
+          );
         }
+
         if (o.getTerrain() != getTerrain() && o.getTerrain() != null) {
           for (SSROverlay ssrOverlay : o.getTerrain().getOverlays()) {
             if (ssrOverlay.getImage() != null) {
@@ -411,16 +420,40 @@ public class ASLBoard extends Board {
                 if (!r.isEmpty()) {
                   int x = Math.max(visible.x - o.bounds().x, 0);
                   int y = Math.max(visible.y - o.bounds().y, 0);
-                  g.drawImage(ssrOverlay.getImage(), r.x - visible.x, r.y - visible.y, r.x - visible.x + r.width, r.y - visible.y + r.height, x, y,
-                      x + r.width, y + r.height, comp);
+                  g.drawImage(
+                    ssrOverlay.getImage(),
+                    r.x - visible.x,
+                    r.y - visible.y,
+                    r.x - visible.x + r.width,
+                    r.y - visible.y + r.height,
+                    x,
+                    y,
+                    x + r.width,
+                    y + r.height,
+                    null
+                  );
                 }
               }
               else {
                 try {
                   Point p1 = o.offset(o.getOrientation(), ASLBoard.this);
                   Point p2 = o.offset('a', ASLBoard.this);
-                  Point p = new Point(p1.x + p2.x - oBounds.x + o.bounds().x - visible.x, p1.y + p2.y - oBounds.y + o.bounds().y - visible.y);
-                  g.drawImage(ssrOverlay.getImage(), p.x, p.y, p.x - oBounds.width, p.y - oBounds.height, 0, 0, oBounds.width, oBounds.height, comp);
+                  Point p = new Point(
+                    p1.x + p2.x - oBounds.x + o.bounds().x - visible.x,
+                    p1.y + p2.y - oBounds.y + o.bounds().y - visible.y
+                  );
+                  g.drawImage(
+                    ssrOverlay.getImage(),
+                    p.x,
+                    p.y,
+                    p.x - oBounds.width,
+                    p.y - oBounds.height,
+                    0,
+                    0,
+                    oBounds.width,
+                    oBounds.height,
+                    null
+                  );
                 }
                 catch (BoardException e1) {
                   e1.printStackTrace();
@@ -432,7 +465,7 @@ public class ASLBoard extends Board {
       }
       
       g.dispose();
-      
+
       if (terrain != null) {
         terrain.transform(im);
       }
