@@ -658,6 +658,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
     public void reset() {
     }
   }
+
   protected class Cropper extends JDialog implements ActionListener {
     private JTextField row1, row2, coord1, coord2, bdName;
     private JRadioButton halfrow, fullrow;
@@ -753,6 +754,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
       }
     }
   }
+
   protected class Overlayer extends JDialog implements ActionListener {
     private JTextField hex1, hex2, ovrName, bdName;
     private JLabel status;
