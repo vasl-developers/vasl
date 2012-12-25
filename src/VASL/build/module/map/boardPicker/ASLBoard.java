@@ -354,9 +354,11 @@ public class ASLBoard extends Board {
 
   private class BoardOp extends AbstractTiledOpImpl implements SourceOp {
     private String boardState;
+    private int hash;
 
     private BoardOp() {
       boardState = ASLBoard.this.getState();
+      hash = boardState.hashCode();
     }
 
     @Override
@@ -512,7 +514,7 @@ public class ASLBoard extends Board {
 
     @Override
     public int hashCode() {
-      return boardState.hashCode();
+      return hash;
     }
   }
 
