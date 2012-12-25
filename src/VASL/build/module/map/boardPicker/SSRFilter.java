@@ -297,8 +297,10 @@ public class SSRFilter extends RGBImageFilter {
   }
 
   public void readOverlayRules(InputStream in) {
-    if (in == null)
+    if (in == null) {
       return;
+    }
+
     try {
       BufferedReader file;
       file = new BufferedReader(new InputStreamReader(in));
