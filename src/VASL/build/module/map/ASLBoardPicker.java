@@ -182,7 +182,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
 
   public void addTo(Buildable b) {
     DirectoryConfigurer config = new VASSAL.configure.DirectoryConfigurer(BOARD_DIR, "Board Directory");
-  
+
     final GameModule g = GameModule.getGameModule();
 
     g.getPrefs().addOption(config);
@@ -289,7 +289,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
           // impossible
           throw new IllegalStateException();
         }
-        
+
         if (!m2.matches()) {
           // impossible
           throw new IllegalStateException();
@@ -340,7 +340,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
 
         // the traling string part is decisive
         return alpha.compare(m1.group(3), m2.group(3));
-      } 
+      }
     };
 
     Collections.sort(sorted, comp);
@@ -374,7 +374,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
       th.sliceTiles();
     }
     catch (IOException e) {
-      ReadErrorDialog.error(e, fpath); 
+      ReadErrorDialog.error(e, fpath);
     }
 ///
 

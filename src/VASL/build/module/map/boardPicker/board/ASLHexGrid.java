@@ -39,7 +39,7 @@ public class ASLHexGrid extends HexGrid {
   public String localizedLocationName(Point p) {
     return locationName(p);
   }
-  
+
   public String locationName(Point p) {
 	Point po = new Point(p);
     p.translate(-origin.x, (int) (dy / 2. - origin.y));
@@ -87,7 +87,7 @@ public class ASLHexGrid extends HexGrid {
       hex += "/" + hexrow(hexX2) + hexY2;
     return (hex);
   }
-  
+
   public void setAttribute(String key, Object value) {
 	  if ("alternate".equals(key)) {
 		  this.alternate = "true".equals(value);
@@ -133,12 +133,12 @@ public class ASLHexGrid extends HexGrid {
    * in number of hexes, e.g. hex A1 returns (0,1), B3 returns (1,3)
    */
   public static Point hexPosition(String hex) throws MapGrid.BadCoords {
-    int nx = 0, ny = 0, n = 0;    
+    int nx = 0, ny = 0, n = 0;
     nx = hex.charAt(0) - 'a';
     while (hex.charAt(n+1) < '0' || hex.charAt(n+1) > '9')
     {
     	if (hex.charAt(n+1) > 'z' || hex.charAt(n+1) < 'a' || hex.charAt(n+1) != hex.charAt(0))
-    		throw new MapGrid.BadCoords("Bad Hex Coordinates");   	
+    		throw new MapGrid.BadCoords("Bad Hex Coordinates");
         nx += 26;
         n++;
     }
@@ -148,7 +148,7 @@ public class ASLHexGrid extends HexGrid {
     catch (NumberFormatException ex) {
       throw new MapGrid.BadCoords("Bad Coordinates");
     }
-    
+
     return new Point(nx, ny);
   }
 

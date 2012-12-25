@@ -161,7 +161,7 @@ public class BoardSwapper extends AbstractBuildable {
       allowMultiple = true;
       setBoardDir((File) GameModule.getGameModule().getPrefs().getValue(BOARD_DIR));
     }
-    
+
     public void finish() {
       super.finish();
       for (Iterator e = GameModule.getGameModule().getGameState().getGameComponents().iterator();

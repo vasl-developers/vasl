@@ -90,7 +90,7 @@ public class ASLBoard extends Board {
 
   /**
    * *
-   * 
+   *
    * @return the size of the board if it were not cropped
    */
   public Dimension getUncroppedSize() {
@@ -373,16 +373,16 @@ public class ASLBoard extends Board {
       if (size == null) {
         fixSize();
       }
-      
+
       final ImageOp base = boardArchive == null ?
-    	  baseImageOp : new SourceOpBitmapImpl(imageFile, boardArchive); 
-    	  
+    	  baseImageOp : new SourceOpBitmapImpl(imageFile, boardArchive);
+
     	if (terrain == null && overlays.isEmpty() &&
           cropBounds.width < 0 && cropBounds.height < 0)
       {
     	  return base.getImage();
     	}
-    	        
+
     	final BufferedImage im =
     	  ImageUtils.createCompatibleTranslucentImage(size.width, size.height);
 
@@ -475,7 +475,7 @@ public class ASLBoard extends Board {
           }
         }
       }
-      
+
       g.dispose();
 
       if (terrain != null) {

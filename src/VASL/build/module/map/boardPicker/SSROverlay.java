@@ -59,7 +59,7 @@ public class SSROverlay extends Overlay {
       throw new IllegalArgumentException(e);
     }
   }
-  
+
   @Override
   public SSRFilter getTerrain() {
     return null;

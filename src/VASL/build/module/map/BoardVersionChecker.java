@@ -74,7 +74,7 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
     }
     else if (BOARD_PAGE_URL.equals(key)) {
         return boardPageURL;
-    }    
+    }
     return null;
   }
 
@@ -87,7 +87,7 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
     }
     else if (BOARD_PAGE_URL.equals(key)) {
     	boardPageURL = (String) value;
-    }    
+    }
   }
 
   public void addTo(Buildable parent) {

@@ -261,14 +261,14 @@ public class SSRFilter extends RGBImageFilter {
             int ifrom = parseRGB(sfrom);
             int ito = parseRGB(sto);
             if (ifrom >= 0 && ito >= 0) {
-            	
+
               if (!mappings.containsKey(ifrom))
             	  mappings.put(ifrom, ito);
-              
+
               /*
                * Also apply this mapping to previous mappings
                */
-              if (mappings.containsValue(ifrom)) {            	  
+              if (mappings.containsValue(ifrom)) {
 	              for(Iterator<Entry<Integer,Integer>> it = mappings.entrySet().iterator(); it.hasNext(); ) {
 	            	  Entry<Integer,Integer> e = it.next();
 	            	  if (e.getValue() == ifrom)

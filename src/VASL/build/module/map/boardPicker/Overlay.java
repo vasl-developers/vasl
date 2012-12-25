@@ -286,19 +286,19 @@ public class Overlay implements Cloneable {
     }
     /*
      * Orientations are:
-     * 
+     *
      * 2 1 : a
-     * 
+     *
      * 2 1 : b
-     * 
+     *
      * 1 2 : c
-     * 
+     *
      * 1 2 : d
-     * 
+     *
      * 1 2 : e
-     * 
+     *
      * 2 1 : f
-     * 
+     *
      */
   }
 

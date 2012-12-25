@@ -99,11 +99,11 @@ public class Turreted extends Embellishment implements EditablePiece {
   public Shape getShape() {
     return piece.getShape();
   }
-  
+
   public boolean isActive() {
     return super.isActive() && (flipped || value != getVehicleCA());
   }
-  
+
   @Override
   public void draw(Graphics g, int x, int y, Component obs, double zoom) {
     imagePainter = flipped ? backImages : frontImages;

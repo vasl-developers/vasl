@@ -869,7 +869,7 @@ public class CASLThread
         deltaX = crop.x;
         deltaY = crop.y;
       }
-      temp.translate((int) Math.round(-deltaX * map.getZoom()*upperLeftBoard.getMagnification()), 
+      temp.translate((int) Math.round(-deltaX * map.getZoom()*upperLeftBoard.getMagnification()),
           (int) Math.round(-deltaY * map.getZoom()*upperLeftBoard.getMagnification()));
     }
     return temp;
@@ -896,7 +896,7 @@ public class CASLThread
     // remove edge buffer
     p.translate(-map.getEdgeBuffer().width, -map.getEdgeBuffer().height);
     p = b.localCoordinates(p);
-    double gridScale = ((HexGrid)b.getGrid()).getHexSize() / ASLBoard.DEFAULT_HEX_HEIGHT; 
+    double gridScale = ((HexGrid)b.getGrid()).getHexSize() / ASLBoard.DEFAULT_HEX_HEIGHT;
     p.x = (int)Math.round(p.x / gridScale);
     p.y = (int)Math.round(p.y / gridScale);
     if (b.isReversed()) {
