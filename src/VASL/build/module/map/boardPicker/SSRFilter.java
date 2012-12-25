@@ -304,12 +304,14 @@ public class SSRFilter extends RGBImageFilter {
       file = new BufferedReader(new InputStreamReader(in));
       String s;
       while ((s = file.readLine()) != null) {
-        if (s.trim().length() == 0)
+        if (s.trim().length() == 0) {
           continue;
+        }
         if (saveRules.indexOf(s.trim()) >= 0) {
           while ((s = file.readLine()) != null) {
-            if (s.length() == 0)
+            if (s.length() == 0) {
               break;
+            }
             else if (s.toLowerCase().startsWith("underlay")) {
               try {
                 StringTokenizer st = new StringTokenizer(s);
@@ -326,8 +328,9 @@ public class SSRFilter extends RGBImageFilter {
               catch (NoSuchElementException end) {
               }
             }
-            else
+            else {
               overlays.add(new SSROverlay(s.trim(),archiveFile));
+            }
           }
         }
       }
