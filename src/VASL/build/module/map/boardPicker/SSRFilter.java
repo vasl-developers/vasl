@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.FileNotFoundException;
 import java.io.StreamTokenizer;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -63,13 +64,17 @@ public class SSRFilter extends RGBImageFilter {
     canFilterIndexColorModel = true;
     saveRules = listOfRules;
     this.archiveFile = archiveFile;
+
     try {
       archive = new DataArchive(archiveFile.getPath());
-      archive.getInputStream("data");
+      if (!archive.contains("data")) {
+        throw new FileNotFoundException("data");
+      }
     }
     catch (IOException ex) {
       throw new BoardException("Board does not support terrain alterations");
     }
+
     this.board = board;
     readAllRules();
   }
