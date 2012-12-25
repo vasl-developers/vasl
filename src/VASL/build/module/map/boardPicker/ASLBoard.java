@@ -37,9 +37,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import javax.imageio.ImageIO;
-import javax.imageio.stream.MemoryCacheImageInputStream;
-
 import VASL.build.module.map.boardPicker.board.ASLHexGrid;
 import VASSAL.build.BadDataReport;
 import VASSAL.build.GameModule;
