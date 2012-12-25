@@ -503,8 +503,9 @@ public class ASLBoard extends Board {
 
     @Override
     public boolean equals(Object obj) {
-      if (!(obj instanceof ASLBoard.BoardOp))
+      if (!(obj instanceof BoardOp)) {
         return false;
+      }
       BoardOp op = (BoardOp) obj;
       return boardState.equals(op.boardState);
     }
