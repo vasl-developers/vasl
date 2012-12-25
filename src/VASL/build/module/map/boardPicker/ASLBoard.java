@@ -154,8 +154,9 @@ public class ASLBoard extends Board {
       return;
     }
     for (int i = 0; i < overlays.size(); ++i) {
-      if ((Overlay) overlays.get(i) instanceof SSROverlay)
+      if ((Overlay) overlays.get(i) instanceof SSROverlay) {
         overlays.remove(i--);
+      }
     }
     if (changes.length() > 0) {
       terrain = new SSRFilter(changes, boardFile, this);
@@ -344,8 +345,9 @@ public class ASLBoard extends Board {
     for (Overlay o : overlays) {
       val += o + "\t";
     }
-    if (terrainChanges.length() > 0)
+    if (terrainChanges.length() > 0) {
       val += "SSR\t" + terrainChanges;
+    }
     if (magnification != 1.0) {
       val += "\tZOOM\t" + magnification;
     }
