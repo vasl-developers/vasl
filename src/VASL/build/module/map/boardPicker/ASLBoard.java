@@ -220,13 +220,13 @@ public class ASLBoard extends Board {
         e.printStackTrace();
       }
 
-      boardImageOp = new SourceOpTiledBitmapImpl(imageFile, fa);
+      baseImageOp = new SourceOpTiledBitmapImpl(imageFile, fa);
     }
     else {
-      boardImageOp = Op.load(imageFile);
+      baseImageOp = Op.load(imageFile);
     }
 
-    baseImageOp = boardImageOp;
+    boardImageOp = new BoardOp();
 
     uncroppedSize = baseImageOp.getSize();
     fixedBoundaries = false;
@@ -376,8 +376,8 @@ public class ASLBoard extends Board {
         fixSize();
       }
 
-      final ImageOp base = boardArchive == null ?
-    	  baseImageOp : new SourceOpBitmapImpl(imageFile, boardArchive);
+      final ImageOp base = boardArchive == null
+        ? baseImageOp : new SourceOpBitmapImpl(imageFile, boardArchive);
 
     	if (terrain == null && overlays.isEmpty() &&
           cropBounds.width < 0 && cropBounds.height < 0)
@@ -500,7 +500,7 @@ public class ASLBoard extends Board {
     }
 
     public String getName() {
-      return ASLBoard.this.getName();
+      return ASLBoard.this.fileName(ASLBoard.this.getName());
     }
 
     @Override
@@ -508,7 +508,7 @@ public class ASLBoard extends Board {
       if (!(obj instanceof BoardOp)) {
         return false;
       }
-      BoardOp op = (BoardOp) obj;
+      final BoardOp op = (BoardOp) obj;
       return boardState.equals(op.boardState);
     }
 
