@@ -35,6 +35,7 @@ import VASSAL.build.module.map.boardPicker.board.MapGrid;
 import VASSAL.build.module.map.boardPicker.board.MapGrid.BadCoords;
 import VASSAL.tools.DataArchive;
 import VASSAL.tools.SequenceEncoder;
+import VASSAL.tools.io.IOUtils;
 
 /**
  * Overlays of all types and sizes
@@ -83,25 +84,26 @@ public class Overlay implements Cloneable {
     if (terrain == null) {
       return null;
     }
+
     boolean hasOwnParameters = false;
     try {
-      archive.getInputStream("colors");
-      hasOwnParameters = true;
+      hasOwnParameters = archive.contains("colors");
     }
-    catch (IOException ex) {
+    catch (IOException ignore) {
     }
+
     try {
-      archive.getInputStream("colorSSR");
-      hasOwnParameters = true;
+      hasOwnParameters = archive.contains("colorSSR");
     }
-    catch (IOException ex) {
+    catch (IOException ignore) {
     }
+
     try {
-      archive.getInputStream("overlaySSR");
-      hasOwnParameters = true;
+      hasOwnParameters = archive.contains("overlaySSR");
     }
-    catch (IOException ex) {
+    catch (IOException ignore) {
     }
+
     if (hasOwnParameters) {
       try {
         terrain = new SSRFilter(terrain.toString(), overlayFile, board);
@@ -124,14 +126,22 @@ public class Overlay implements Cloneable {
   protected Image loadImage() {
     Image im = null;
     char c = getOrientation();
-    if (isSingleHex())
+    if (isSingleHex()) {
       c = 'a';
+    }
+
+    InputStream in = null;
     try {
-      im = ImageIO.read(new MemoryCacheImageInputStream(archive.getImageInputStream(fileName(name + c))));
+      in = archive.getImageInputStream(fileName(name + c));
+      im = ImageIO.read(new MemoryCacheImageInputStream(in));
     }
     catch (IOException e) {
       e.printStackTrace();
     }
+    finally {
+      IOUtils.closeQuietly(in);
+    }    
+
     return im;
   }
 
@@ -148,24 +158,32 @@ public class Overlay implements Cloneable {
 
   private void readData() throws IOException {
     origins = getDefaultOriginList(name);
-    InputStream in = archive.getInputStream("data");
-    BufferedReader file = new BufferedReader(new InputStreamReader(in));
-    String s;
-    while ((s = file.readLine()) != null) {
-      StringTokenizer st = new StringTokenizer(s);
-      if (st.countTokens() < 2)
-        continue;
-      String s1 = st.nextToken();
-      if (s1.equalsIgnoreCase(name)) {
-        origins = s.substring(name.length()).trim();
+ 
+    InputStream in = null;
+    try {
+      in = archive.getInputStream("data");
+      BufferedReader file = new BufferedReader(new InputStreamReader(in));
+      String s;
+      while ((s = file.readLine()) != null) {
+        StringTokenizer st = new StringTokenizer(s);
+        if (st.countTokens() < 2) {
+          continue;
+        }
+        String s1 = st.nextToken();
+        if (s1.equalsIgnoreCase(name)) {
+          origins = s.substring(name.length()).trim();
+        }
+        else if (s1.equalsIgnoreCase("version")) {
+          version = st.nextToken();
+        }
+        else if (s1.equalsIgnoreCase("placeAt")) {
+          hex1 = st.nextToken();
+          hex2 = st.nextToken();
+        }
       }
-      else if (s1.equalsIgnoreCase("version")) {
-        version = st.nextToken();
-      }
-      else if (s1.equalsIgnoreCase("placeAt")) {
-        hex1 = st.nextToken();
-        hex2 = st.nextToken();
-      }
+    }
+    finally {
+      IOUtils.closeQuietly(in);
     }
   }
 
@@ -260,7 +278,9 @@ public class Overlay implements Cloneable {
       char c = getOrientation();
       offset(c, board);
       try {
-        archive.getInputStream(fileName(name + c));
+        if (!archive.contains(fileName(name + c))) {
+          throw new IOException();
+        }
       }
       catch (IOException ex) {
         throw new BoardException("Overlay not found in " + overlayFile.getPath());
@@ -446,18 +466,11 @@ public class Overlay implements Cloneable {
 
   private boolean isSingleHex() {
     try {
-      archive.getInputStream(fileName(name + 'a'));
+      return archive.contains(fileName(name + 'a')) &&
+             !archive.contains(fileName(name + 'd'));
     }
-    catch (IOException ex) {
-      ex.printStackTrace();
+    catch (IOException e) {
       return false;
-    }
-    try {
-      archive.getInputStream(fileName(name + 'd'));
-      return false;
-    }
-    catch (IOException ex) {
-      return true;
     }
   }
 

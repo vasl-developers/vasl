@@ -43,6 +43,7 @@ import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.command.Command;
 import VASSAL.configure.StringConfigurer;
 import VASSAL.tools.PropertiesEncoder;
+import VASSAL.tools.io.IOUtils;
 
 /**
  * Copyright (c) 2003 by Rodney Kinney.  All rights reserved.
@@ -225,26 +226,41 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
         URL base = new URL(boardVersionURL);
         URLConnection conn = base.openConnection();
         conn.setUseCaches(false);
-        InputStream input = conn.getInputStream();
+
         Properties p = new Properties();
-        p.load(input);
+        InputStream input = null;
+        try {
+          input = conn.getInputStream();
+          p.load(input);
+        }
+        finally {
+          IOUtils.closeQuietly(input);
+        }
+
         boardVersions = p;
         GameModule.getGameModule().getPrefs().getOption(BOARD_VERSIONS).setValue(new PropertiesEncoder(p).getStringValue());
-        input.close();
       }
       catch (IOException e) {
         // Fail silently if we can't contact the server
       }
+
       try {
         URL base = new URL(overlayVersionURL);
         URLConnection conn = base.openConnection();
         conn.setUseCaches(false);
-        InputStream input = conn.getInputStream();
+
         Properties p = new Properties();
-        p.load(input);
+        InputStream input = null;
+        try {
+          input = conn.getInputStream();
+          p.load(input);
+        }
+        finally {
+          IOUtils.closeQuietly(input);
+        }
+
         overlayVersions = p;
         GameModule.getGameModule().getPrefs().getOption(OVERLAY_VERSIONS).setValue(new PropertiesEncoder(p).getStringValue());
-        input.close();
       }
       catch (IOException e) {
         // Fail silently if we can't contact the server

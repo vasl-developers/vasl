@@ -29,6 +29,7 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+import java.io.InputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +65,7 @@ import VASSAL.configure.ColorConfigurer;
 import VASSAL.counters.Decorator;
 import VASSAL.counters.GamePiece;
 import VASSAL.counters.PieceIterator;
+import VASSAL.tools.io.IOUtils;
 
 /**
  * Extends the LOS thread to take advantage of CASL's LOS logic and report
@@ -212,12 +214,22 @@ public class CASLThread
 
         // load the map files
         GameMap newCASLMap;
-        try {
-          newCASLMap = b.getBoardArchive() == null ? null : CASL.Map.Map.readMap(b.getBoardArchive().getInputStream("bd" + boardName + ".map"));
+        if (b.getBoardArchive() == null) {
+          newCASLMap = null;
         }
-        catch (IOException e) {
-          freeResources();
-          return "@LOS engine disabled... Could not read bd" + boardName + ".map";
+        else {
+          InputStream in = null;
+          try {
+            in = b.getBoardArchive().getInputStream("bd" + boardName + ".map");
+            newCASLMap = CASL.Map.Map.readMap(in);
+          }
+          catch (IOException e) {
+            freeResources();
+            return "@LOS engine disabled... Could not read bd" + boardName + ".map";
+          }
+          finally {
+            IOUtils.closeQuietly(in);
+          }
         }
 
         if (newCASLMap == null) {

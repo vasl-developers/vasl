@@ -24,6 +24,7 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
+import java.io.InputStream;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -31,6 +32,7 @@ import javax.imageio.stream.MemoryCacheImageInputStream;
 
 import VASSAL.build.GameModule;
 import VASSAL.tools.DataArchive;
+import VASSAL.tools.io.IOUtils;
 
 /**
  * A special kind of SSROverlay constructed on the fly by underlaying a patterned GIF under a board GIF with certain
@@ -57,11 +59,17 @@ public class Underlay extends SSROverlay {
 
   public Image loadImage() {
     Image underlayImage = null;
+    InputStream in = null;
     try {
-      underlayImage = ImageIO.read(new MemoryCacheImageInputStream(GameModule.getGameModule().getDataArchive().getInputStream("boardData/" + imageName)));
+      in = GameModule.getGameModule().getDataArchive().getInputStream("boardData/" + imageName);
+      underlayImage = ImageIO.read(new MemoryCacheImageInputStream(in));
     }
     catch (IOException ex) {
     }
+    finally {
+      IOUtils.closeQuietly(in);
+    }
+
     if (underlayImage == null) {
       try {
         underlayImage = archive.getImage(imageName);
@@ -91,6 +99,7 @@ public class Underlay extends SSROverlay {
     new HolePunch(new int[]{0}).transform(replacement);
     return replacement;
   }
+
   /**
    * Takes an image and turns a list of colors transparent
    */

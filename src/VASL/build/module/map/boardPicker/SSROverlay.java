@@ -19,9 +19,11 @@
 package VASL.build.module.map.boardPicker;
 
 import VASSAL.tools.DataArchive;
+import VASSAL.tools.io.IOUtils;
 
 import java.awt.*;
 import java.io.File;
+import java.io.InputStream;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
@@ -67,12 +69,18 @@ public class SSROverlay extends Overlay {
 
   protected Image loadImage() {
     Image im = null;
+    InputStream in = null;
     try {
-      im = ImageIO.read(new MemoryCacheImageInputStream(archive.getImageInputStream(name)));
+      in = archive.getImageInputStream(name);
+      im = ImageIO.read(new MemoryCacheImageInputStream(in));
     }
     catch (IOException e) {
       e.printStackTrace();
     }
+    finally {
+      IOUtils.closeQuietly(in);
+    }
+
     return im;
   }
 
