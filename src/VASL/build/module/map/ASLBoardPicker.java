@@ -105,6 +105,7 @@ import VASSAL.configure.DirectoryConfigurer;
 import VASSAL.configure.ValidationReport;
 import VASSAL.tools.ErrorDialog;
 import VASSAL.tools.ReadErrorDialog;
+import VASSAL.tools.io.IOUtils;
 
 public class ASLBoardPicker extends BoardPicker implements ActionListener {
   private static final Logger logger =
@@ -238,11 +239,16 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
   public void initTerrainEditor() {
     if (terrain == null) {
       terrain = new TerrainEditor();
+
+      InputStream in = null;
       try {
-        InputStream in = GameModule.getGameModule().getDataArchive().getInputStream("boardData/SSRControls");
+        in = GameModule.getGameModule().getDataArchive().getInputStream("boardData/SSRControls");
         terrain.readOptions(in);
       }
-      catch (java.io.IOException ex) {
+      catch (IOException ignore) {
+      }
+      finally {
+        IOUtils.closeQuietly(in);
       }
     }
   }
@@ -924,19 +930,30 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
         boards.addElement(b);
         if (b != null) {
           if (b.getBoardArchive() != null) {
+            InputStream in = null;
             try {
-              readOptions(b.getBoardArchive().getInputStream("SSRControls"));
+              in = b.getBoardArchive().getInputStream("SSRControls");
+              readOptions(in);
             }
-            catch (IOException ex) {
+            catch (IOException ignore) {
+            }
+            finally {
+              IOUtils.closeQuietly(in);
             }
           }
+
           for (Enumeration oEnum = b.getOverlays(); oEnum.hasMoreElements();) {
             Overlay o = (Overlay) oEnum.nextElement();
             if (!(o instanceof SSROverlay)) {
+              InputStream in = null;
               try {
-                readOptions(o.getDataArchive().getInputStream("SSRControls"));
+                in = o.getDataArchive().getInputStream("SSRControls");
+                readOptions(in);
               }
-              catch (IOException ex) {
+              catch (IOException ignore) {
+              }
+              finally {
+                IOUtils.closeQuietly(in);
               }
             }
           }

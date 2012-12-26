@@ -195,11 +195,11 @@ public class SSRFilter extends RGBImageFilter {
     }
     finally {
       IOUtils.closeQuietly(in);
-    }    
+    }
 
     in = null;
     try {
-      in = da.getInputStream("boardData/colorSSR");      
+      in = da.getInputStream("boardData/colorSSR");
       readColorRules(in, rules);
     }
     catch (IOException ignore) {
