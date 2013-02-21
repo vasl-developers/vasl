@@ -30,7 +30,7 @@ import VASSAL.command.ChangeTracker;
 import VASSAL.command.Command;
 import VASSAL.counters.Decorator;
 import VASSAL.counters.EditablePiece;
-import VASSAL.counters.Embellishment;
+import VASSAL.counters.Embellishment0;
 import VASSAL.counters.GamePiece;
 import VASSAL.counters.KeyCommand;
 import VASSAL.counters.PieceEditor;
@@ -44,7 +44,7 @@ import VASSAL.tools.imageop.ScaledImagePainter;
  * and doesn't draw the counter at all if the TCA=CA
  * (unless CE status differs from the default)
  */
-public class Turreted extends Embellishment implements EditablePiece {
+public class Turreted extends Embellishment0 implements EditablePiece {
   public static final String ID = "turr;";
 
   protected String front,back;
@@ -66,8 +66,8 @@ public class Turreted extends Embellishment implements EditablePiece {
 
   public void mySetType(String type) {
     String embType;
-    if (type.startsWith(Embellishment.ID)
-      || type.startsWith(Embellishment.OLD_ID)) {
+    if (type.startsWith(Embellishment0.ID)
+      || type.startsWith(Embellishment0.OLD_ID)) {
       embType = type;
     }
     else {
@@ -75,7 +75,7 @@ public class Turreted extends Embellishment implements EditablePiece {
       st.nextToken();
       front = st.nextToken();
       back = st.nextToken();
-      embType = Embellishment.OLD_ID + ";_;" + st.nextToken() + ";TCA cw;"
+      embType = Embellishment0.OLD_ID + ";_;" + st.nextToken() + ";TCA cw;"
           + st.nextToken() + ";TCA ccw;0;0";
       if (st.hasMoreTokens()) {
         rotateWithCounter = true;
@@ -163,9 +163,9 @@ public class Turreted extends Embellishment implements EditablePiece {
     }
     else {
       for (GamePiece p = piece; p instanceof Decorator; p = ((Decorator) p).getInner()) {
-        if (p instanceof Embellishment
+        if (p instanceof Embellishment0
             && p.getType().indexOf("Rotate") >= 0) {
-          return ((Embellishment) p).getValue() + 1;
+          return ((Embellishment0) p).getValue() + 1;
         }
       }
     }
