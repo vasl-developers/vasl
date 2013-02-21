@@ -163,9 +163,9 @@ public class Turreted extends Embellishment0 implements EditablePiece {
     }
     else {
       for (GamePiece p = piece; p instanceof Decorator; p = ((Decorator) p).getInner()) {
-        if (p instanceof Embellishment0
+        if (p instanceof Embellishment
             && p.getType().indexOf("Rotate") >= 0) {
-          return ((Embellishment0) p).getValue() + 1;
+          return ((Embellishment) p).getValue() + 1;
         }
       }
     }
