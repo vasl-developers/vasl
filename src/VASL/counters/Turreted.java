@@ -30,6 +30,7 @@ import VASSAL.command.ChangeTracker;
 import VASSAL.command.Command;
 import VASSAL.counters.Decorator;
 import VASSAL.counters.EditablePiece;
+import VASSAL.counters.Embellishment;
 import VASSAL.counters.Embellishment0;
 import VASSAL.counters.GamePiece;
 import VASSAL.counters.KeyCommand;
