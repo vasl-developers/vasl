@@ -6619,7 +6619,7 @@ lib/AppleJavaExtensions.jar -text
 lib/BrowserLauncher2-1_3.jar -text svneol=unset#unset
 lib/CASL.jar -text
 lib/TimingFramework-1.0.jar -text svneol=unset#unset
-lib/Vengine.jar -text
+lib/Vengine-3.2.7.jar -text
 lib/batik-anim.jar -text
 lib/batik-awt-util.jar -text
 lib/batik-bridge.jar -text
