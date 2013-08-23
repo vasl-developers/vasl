@@ -18,4 +18,3 @@ installation of VASSAL, and the VASL module.
               rk
 
     
-
