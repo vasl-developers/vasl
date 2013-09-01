@@ -6702,6 +6702,7 @@ lib/xalan-2.6.0.jar -text
 lib/xercesImpl.jar -text svneol=unset#unset
 lib/xml-apis-ext.jar -text
 lib/xml-apis.jar -text
+/pom.xml -text
 src/VASL/build/module/map/ASLTilingHandler.java -text
 src/VASL/build/module/map/CASLThread.java -text
 src/VASL/build/module/map/CounterDetailViewer.java -text

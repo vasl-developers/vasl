@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <data version="1">
-  <version>5.9.3b6</version>
-  <VassalVersion>3.2.2</VassalVersion>
+  <version>${project.version}</version>
+  <VassalVersion>3.2.8</VassalVersion>
   <dateSaved>1322805026979</dateSaved>
-  <description>12-Dec-2012</description>
+  <description>VASL build from SVN revision number ${buildNumber}</description>
   <name>VASL</name>
 </data>
