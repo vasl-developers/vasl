@@ -6619,7 +6619,7 @@ lib/AppleJavaExtensions.jar -text
 lib/BrowserLauncher2-1_3.jar -text svneol=unset#unset
 lib/CASL.jar -text
 lib/TimingFramework-1.0.jar -text svneol=unset#unset
-lib/Vengine-3.2.7.jar -text
+lib/Vengine-3.2.8.jar -text
 lib/batik-anim.jar -text
 lib/batik-awt-util.jar -text
 lib/batik-bridge.jar -text
@@ -6638,7 +6638,6 @@ lib/batik-swing.jar -text
 lib/batik-transcoder.jar -text
 lib/batik-util.jar -text
 lib/batik-xml.jar -text
-lib/bsh-2.0b4.jar -text svneol=unset#unset
 lib/bsh-core-2.0b4.jar -text svneol=unset#unset
 lib/cglib-2.1_3-src.jar -text svneol=unset#unset
 lib/cglib-nodep-2.1_3.jar -text svneol=unset#unset
@@ -6658,39 +6657,56 @@ lib/jmock-junit3-2.5.1.jar -text svneol=unset#unset
 lib/jmock-junit4-2.5.1.jar -text svneol=unset#unset
 lib/jmock-legacy-2.5.1.jar -text svneol=unset#unset
 lib/jmock-script-2.5.1.jar -text svneol=unset#unset
-lib/jna.jar -text svneol=unset#unset
+lib/jna-3.5.2.jar -text svneol=unset#unset
 lib/junit-4.7.jar -text svneol=unset#unset
-lib/licenses/LICENSE.batik.txt -text svneol=unset#text/plain
-lib/licenses/LICENSE.cryptix.txt -text svneol=unset#text/plain
-lib/licenses/LICENSE.dom-documentation.txt -text svneol=unset#text/plain
-lib/licenses/LICENSE.dom-software.txt -text svneol=unset#text/plain
-lib/licenses/LICENSE.java-getopt.txt -text svneol=unset#text/plain
-lib/licenses/LICENSE.js.txt -text svneol=unset#text/plain
-lib/licenses/LICENSE.pdf-transcoder.txt -text svneol=unset#text/plain
-lib/licenses/LICENSE.sax.txt -text svneol=unset#text/plain
-lib/licenses/LICENSE.sun-icons.txt -text svneol=unset#text/plain
-lib/licenses/LICENSE.swingx.txt -text svneol=unset#text/plain
-lib/licenses/LICENSE.tango.txt -text svneol=unset#text/plain
-lib/licenses/LICENSE.wizard.txt -text svneol=unset#text/plain
-lib/licenses/LICENSE.xalan-2.6.0.txt -text svneol=unset#text/plain
-lib/licenses/LICENSE.xerces_2_5_0.txt -text svneol=unset#text/plain
-lib/licenses/LICENSE.xml-apis.txt -text svneol=unset#text/plain
-lib/licenses/NOTICE.batik.txt -text svneol=unset#text/plain
-lib/licenses/README.batik.txt -text svneol=unset#text/plain
-lib/licenses/README.js.txt -text svneol=unset#text/plain
-lib/licenses/README.pdf-transcoder.txt -text svneol=unset#text/plain
-lib/licenses/README.tango.txt -text svneol=unset#text/plain
-lib/licenses/README.xalan-2.6.0.txt -text svneol=unset#text/plain
-lib/licenses/README.xerces_2_5_0.txt -text svneol=unset#text/plain
-lib/licenses/README.xml-apis-ext.txt -text svneol=unset#text/plain
-lib/licenses/README.xml-apis.txt -text svneol=unset#text/plain
-lib/logback-classic-1.0.7.jar -text svneol=unset#unset
-lib/logback-core-1.0.7.jar -text svneol=unset#unset
+lib/licenses/BeanShell-2.0b4/License.txt -text
+lib/licenses/BeanShell-2.0b4/README.txt -text
+lib/licenses/BrowserLauncher2-1.3/COPYING.txt -text svneol=unset#text/plain
+lib/licenses/BrowserLauncher2-1.3/README.txt -text
+lib/licenses/batik-1.7/LICENSE -text svneol=unset#text/plain
+lib/licenses/batik-1.7/LICENSE.dom-documentation.txt -text svneol=unset#text/plain
+lib/licenses/batik-1.7/LICENSE.dom-software.txt -text svneol=unset#text/plain
+lib/licenses/batik-1.7/LICENSE.js.txt -text svneol=unset#text/plain
+lib/licenses/batik-1.7/LICENSE.pdf-transcoder.txt -text svneol=unset#text/plain
+lib/licenses/batik-1.7/LICENSE.sax.txt -text svneol=unset#text/plain
+lib/licenses/batik-1.7/LICENSE.xalan-2.6.0.txt -text svneol=unset#text/plain
+lib/licenses/batik-1.7/LICENSE.xerces_2_5_0.txt -text svneol=unset#text/plain
+lib/licenses/batik-1.7/NOTICE -text
+lib/licenses/batik-1.7/README -text svneol=unset#text/plain
+lib/licenses/batik-1.7/README.js.txt -text svneol=unset#text/plain
+lib/licenses/batik-1.7/README.pdf-transcoder.txt -text svneol=unset#text/plain
+lib/licenses/batik-1.7/README.xalan-2.6.0.txt -text svneol=unset#text/plain
+lib/licenses/batik-1.7/README.xerces_2_5_0.txt -text svneol=unset#text/plain
+lib/licenses/batik-1.7/README.xml-apis-ext.txt -text svneol=unset#text/plain
+lib/licenses/batik-1.7/README.xml-apis.txt -text svneol=unset#text/plain
+lib/licenses/commons-codec-1.4/LICENSE.txt -text svneol=unset#text/plain
+lib/licenses/commons-io-1.4/LICENSE.txt -text svneol=unset#text/plain
+lib/licenses/commons-lang-2.5/LICENSE.txt -text svneol=unset#text/plain
+lib/licenses/guava-r06/COPYING -text svneol=unset#text/plain
+lib/licenses/jLayer-1.0.1/LICENSE.txt -text svneol=unset#text/plain
+lib/licenses/jLayer-1.0.1/README.txt -text
+lib/licenses/janino-2.6.1/new_bsd_license.txt -text
+lib/licenses/java-getopt-1.0.13/COPYING.LIB -text svneol=unset#text/plain
+lib/licenses/java-getopt-1.0.13/README -text
+lib/licenses/jna-3.5.2/LICENSE.txt -text svneol=unset#text/plain
+lib/licenses/logback-1.0.13/LICENSE.txt -text
+lib/licenses/slf4j-1.7.5/LICENSE.txt -text
+lib/licenses/smack-3.0.4/README.html -text
+lib/licenses/sun-icons/LICENSE -text svneol=unset#text/plain
+lib/licenses/swing-layout-1.0.3/COPYING -text svneol=unset#text/plain
+lib/licenses/swing-worker-1.2/COPYING -text svneol=unset#text/plain
+lib/licenses/swingx-0.9.4/COPYING -text svneol=unset#text/plain
+lib/licenses/tango/COPYING -text svneol=unset#text/plain
+lib/licenses/tango/README -text svneol=unset#text/plain
+lib/licenses/wizard-0.998.1/LICENSE -text svneol=unset#text/plain
+lib/logback-classic-1.0.13.jar -text svneol=unset#unset
+lib/logback-core-1.0.13.jar -text svneol=unset#unset
 lib/miglayout-core-4.2.jar -text svneol=unset#unset
 lib/miglayout-swing-4.2ju.jar -text svneol=unset#unset
 lib/mockito-all-1.8.1.jar -text svneol=unset#unset
 lib/objenesis-1.0.jar -text svneol=unset#unset
-lib/slf4j-api-1.7.2.jar -text svneol=unset#unset
+lib/platform-3.5.2.jar -text svneol=unset#unset
+lib/slf4j-api-1.7.5.jar -text svneol=unset#unset
 lib/smack.jar -text
 lib/smackx-debug.jar -text
 lib/smackx.jar -text
