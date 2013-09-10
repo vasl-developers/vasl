@@ -12,9 +12,12 @@ Squad Leader.
   To begin development on your own, you'll need this source code, an
 installation of VASSAL, and the VASL module.
 
-  Enjoy!
+  To build VASL use Maven 3.1. Copy the "settings.xml.TEMPLATE" to the .m2
+directory in your home folder and rename to "settings.xml". Adapt the 
+path to your local JDK installation that you would like to use for 
+compiling VASL in the settings file.
 
-  Rodney Kinney
-              rk
+  In order to create the VASL module, run "mvn install" from the command
+line. This will create the module in the target folder.
 
-    
+  In order to run VASL, run "mvn exec:exec" from the command line.
