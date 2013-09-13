@@ -191,6 +191,12 @@ dist/boardData/colorSSR -text
 dist/boardData/colors -text
 dist/boardData/overlaySSR -text
 dist/buildFile -text
+dist/images/AirSptArrives.png -text
+dist/images/AirSptLeaves.png -text
+dist/images/Allies.png -text
+dist/images/Axis.png -text
+dist/images/BritRondel.png -text
+dist/images/ConcealTall1.gif -text
 dist/images/ControlSV.gif -text svneol=unset#unset
 dist/images/DD/BRTPalmDebris.gif -text svneol=unset#unset
 dist/images/DD/BRTbreach.gif -text svneol=unset#unset
@@ -1364,6 +1370,14 @@ dist/images/DO/pOGsL_1.gif -text svneol=unset#unset
 dist/images/DO/pOGsL_2.gif -text svneol=unset#unset
 dist/images/DO/pWater.gif -text svneol=unset#unset
 dist/images/DRs.gif -text svneol=unset#unset
+dist/images/Damaged.png -text
+dist/images/Destroyed.gif -text
+dist/images/FT17C.gif -text
+dist/images/FinnishLion.png -text
+dist/images/FrenchRondel.png -text
+dist/images/GermanCross.png -text
+dist/images/IJASun.png -text
+dist/images/ItalianBars.png -text
 dist/images/ML/ATditch.gif -text svneol=unset#unset
 dist/images/ML/Aacq1tr.gif -text svneol=unset#unset
 dist/images/ML/Aacq1wh.gif -text svneol=unset#unset
@@ -1888,8 +1902,55 @@ dist/images/MS/pin.gif -text svneol=unset#unset
 dist/images/MS/pinb.gif -text svneol=unset#unset
 dist/images/MS/stun.gif -text svneol=unset#unset
 dist/images/MS/ti.gif -text svneol=unset#unset
+dist/images/Manhole[!!-~]centered.gif -text
+dist/images/Manhole[!!-~]offset[!!-~]position[!!-~]1.gif -text
+dist/images/Manhole[!!-~]offset[!!-~]position[!!-~]2.gif -text
+dist/images/Manhole[!!-~]offset[!!-~]position[!!-~]3.gif -text
+dist/images/Manhole[!!-~]offset[!!-~]position[!!-~]4.gif -text
+dist/images/Manhole[!!-~]offset[!!-~]position[!!-~]5.gif -text
+dist/images/Manhole[!!-~]offset[!!-~]position[!!-~]6.gif -text
+dist/images/NoQuarterDeclared.png -text
+dist/images/PrepMini.png -text
 dist/images/QRDC.gif -text svneol=unset#unset
+dist/images/RussianStar.png -text
+dist/images/SawTunnelUsed.gif -text
 dist/images/ShortRedArrow.gif -text svneol=unset#unset
+dist/images/Tunnel-length1black.gif -text
+dist/images/Tunnel-length1blue.gif -text
+dist/images/Tunnel-length1green.gif -text
+dist/images/Tunnel-length1red.gif -text
+dist/images/Tunnel-length1white.gif -text
+dist/images/Tunnel-length1yellow.gif -text
+dist/images/Tunnel-length2black.gif -text
+dist/images/Tunnel-length2blue.gif -text
+dist/images/Tunnel-length2green.gif -text
+dist/images/Tunnel-length2red.gif -text
+dist/images/Tunnel-length2white.gif -text
+dist/images/Tunnel-length2yellow.gif -text
+dist/images/Tunnel-length3black.gif -text
+dist/images/Tunnel-length3blue.gif -text
+dist/images/Tunnel-length3green.gif -text
+dist/images/Tunnel-length3red.gif -text
+dist/images/Tunnel-length3white.gif -text
+dist/images/Tunnel-length3yellow.gif -text
+dist/images/Tunnel-length4black.gif -text
+dist/images/Tunnel-length4blue.gif -text
+dist/images/Tunnel-length4green.gif -text
+dist/images/Tunnel-length4red.gif -text
+dist/images/Tunnel-length4white.gif -text
+dist/images/Tunnel-length4yellow.gif -text
+dist/images/Tunnel-length5black.gif -text
+dist/images/Tunnel-length5blue.gif -text
+dist/images/Tunnel-length5green.gif -text
+dist/images/Tunnel-length5red.gif -text
+dist/images/Tunnel-length5white.gif -text
+dist/images/Tunnel-length5yellow.gif -text
+dist/images/Tunnel1.png -text
+dist/images/Tunnel2.png -text
+dist/images/Tunnel3.png -text
+dist/images/USStar.png -text
+dist/images/UnderlineBar.gif -text
+dist/images/UpperEncircled.gif -text
 dist/images/VASL-Splash.png -text svneol=unset#unset
 dist/images/al/al-Hero.gif -text svneol=unset#unset
 dist/images/al/al-Herob.gif -text svneol=unset#unset
@@ -5613,6 +5674,7 @@ dist/images/malf.gif -text svneol=unset#unset
 dist/images/mober.gif -text svneol=unset#unset
 dist/images/mofan.gif -text svneol=unset#unset
 dist/images/mohro.gif -text svneol=unset#unset
+dist/images/morris.gif -text
 dist/images/mov.gif -text svneol=unset#unset
 dist/images/moved.gif -text svneol=unset#unset
 dist/images/moved58.gif -text svneol=unset#unset
@@ -6568,6 +6630,11 @@ dist/images/tables/turn_track10Vert.gif -text svneol=unset#unset
 dist/images/tables/turn_track15.gif -text svneol=unset#unset
 dist/images/tables/turn_track15Vert.gif -text svneol=unset#unset
 dist/images/tables/turn_usa.gif -text svneol=unset#unset
+dist/images/turn_track06.gif -text
+dist/images/turn_track06Vert.gif -text
+dist/images/turn_track08Vert.gif -text
+dist/images/turn_track10Vert.gif -text
+dist/images/turn_track15Vert.gif -text
 dist/images/underscore.gif -text svneol=unset#unset
 dist/moduledata -text
 doc/UsersGuide/02.htm -text svneol=unset#text/plain
@@ -6725,6 +6792,7 @@ lib/xml-apis-ext.jar -text
 lib/xml-apis.jar -text
 /pom.xml -text
 /settings.xml.TEMPLATE -text
+src/VASL/build/module/map/ASLPieceFinder.java -text
 src/VASL/build/module/map/ASLTilingHandler.java -text
 src/VASL/build/module/map/CASLThread.java -text
 src/VASL/build/module/map/CounterDetailViewer.java -text

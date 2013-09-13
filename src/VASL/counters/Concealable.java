@@ -18,25 +18,6 @@
  */
 package VASL.counters;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Rectangle;
-import java.awt.Shape;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
-
 import VASSAL.build.Configurable;
 import VASSAL.build.GameModule;
 import VASSAL.build.widget.PieceSlot;
@@ -45,22 +26,17 @@ import VASSAL.command.Command;
 import VASSAL.command.NullCommand;
 import VASSAL.configure.ChooseComponentPathDialog;
 import VASSAL.configure.StringConfigurer;
-import VASSAL.counters.BasicPiece;
-import VASSAL.counters.Decorator;
-import VASSAL.counters.EditablePiece;
-import VASSAL.counters.Embellishment;
-import VASSAL.counters.GamePiece;
-import VASSAL.counters.Hideable;
-import VASSAL.counters.ImagePicker;
-import VASSAL.counters.Obscurable;
-import VASSAL.counters.PieceCloner;
-import VASSAL.counters.PieceEditor;
-import VASSAL.counters.Properties;
-import VASSAL.counters.Stack;
+import VASSAL.counters.*;
 import VASSAL.tools.ComponentPathBuilder;
 import VASSAL.tools.SequenceEncoder;
 import VASSAL.tools.imageop.Op;
 import VASSAL.tools.imageop.ScaledImagePainter;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 
 public class Concealable extends Obscurable implements EditablePiece {
   public static final String ID = "conceal;";
@@ -273,6 +249,7 @@ public class Concealable extends Obscurable implements EditablePiece {
       p = new Concealment(Concealment.ID + GameModule.getUserId() + ";" + nation, p);
       p = new MarkMoved(MarkMoved.ID + (large ? "moved58" : "moved"), p);
       p = new Hideable("hide;H;HIP;255,255,255", p);
+      p = new FreeRotator("rotate;6;88,130;90,130;CA cw;CA ccw;;;", p);
     }
     return p;
   }
