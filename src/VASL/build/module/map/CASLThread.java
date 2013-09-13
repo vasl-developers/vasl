@@ -18,38 +18,7 @@
  */
 package VASL.build.module.map;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.io.InputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
-import java.util.concurrent.ExecutionException;
-
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-
-import org.jdesktop.swingworker.SwingWorker;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import CASL.Map.GameMap;
-import CASL.Map.Hex;
-import CASL.Map.LOSResult;
-import CASL.Map.Location;
-import CASL.Map.Smoke;
-import CASL.Map.Terrain;
+import CASL.Map.*;
 import CASL.Scenario.Scenario;
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASL.counters.ASLProperties;
@@ -66,6 +35,21 @@ import VASSAL.counters.Decorator;
 import VASSAL.counters.GamePiece;
 import VASSAL.counters.PieceIterator;
 import VASSAL.tools.io.IOUtils;
+import org.jdesktop.swingworker.SwingWorker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Extends the LOS thread to take advantage of CASL's LOS logic and report
@@ -119,12 +103,16 @@ public class CASLThread
       status = DISABLED;
       freeResources();
     }
+
+      // disable CASL LOS
+      status = DISABLED;
   }
 
   /** Invoked when the user hits the "LOS" button */
   protected void launch() {
     if (!isPreferenceEnabled()) {
       super.launch();
+        super.threadColor = (Color) GameModule.getGameModule().getPrefs().getValue("threadColor");
     }
     else {
       switch (status) {
@@ -280,34 +268,42 @@ public class CASLThread
   }
 
   public void addTo(Buildable buildable) {
-    super.addTo(buildable);
-    if (status != DISABLED) {
-      // add the key listener
-      map.getView().addKeyListener(this);
-      // add additional thread colors
-      final BooleanConfigurer enable = new BooleanConfigurer(ENABLED, "Enable LOS checking", Boolean.TRUE);
-      final JCheckBox enableBox = findBox(enable.getControls());
-      final ColorConfigurer hindrance = new ColorConfigurer("hindranceThreadColor", "Hindrance Thread Color", Color.red);
-      final ColorConfigurer blocked = new ColorConfigurer("blockedThreadColor", "Blocked Thread Color", Color.blue);
-      final BooleanConfigurer verbose = new BooleanConfigurer("verboseLOS", "Verbose LOS mode");
-      GameModule.getGameModule().getPrefs().addOption(getAttributeValueString("label"), enable);
-      GameModule.getGameModule().getPrefs().addOption(getAttributeValueString("label"), hindrance);
-      GameModule.getGameModule().getPrefs().addOption(getAttributeValueString("label"), blocked);
-      GameModule.getGameModule().getPrefs().addOption(getAttributeValueString("label"), verbose);
-      java.awt.event.ItemListener l = new java.awt.event.ItemListener() {
-        public void itemStateChanged(java.awt.event.ItemEvent evt) {
-          enableAll(hindrance.getControls(), enableBox.isSelected());
-          enableAll(blocked.getControls(), enableBox.isSelected());
-          enableAll(verbose.getControls(), enableBox.isSelected());
-        }
-      };
-      enableBox.addItemListener(l);
-      enableAll(hindrance.getControls(), Boolean.TRUE.equals(enable.getValue()));
-      enableAll(blocked.getControls(), Boolean.TRUE.equals(enable.getValue()));
-      enableAll(verbose.getControls(), Boolean.TRUE.equals(enable.getValue()));
-      // hook for game opening/closing
-      GameModule.getGameModule().getGameState().addGameComponent(this);
-    }
+      super.addTo(buildable);
+      if (status != DISABLED) {
+          // add the key listener
+          map.getView().addKeyListener(this);
+          // add additional thread colors
+          final BooleanConfigurer enable = new BooleanConfigurer(ENABLED, "Enable LOS checking", Boolean.TRUE);
+          final JCheckBox enableBox = findBox(enable.getControls());
+          final ColorConfigurer hindrance = new ColorConfigurer("hindranceThreadColor", "Hindrance Thread Color", Color.red);
+          final ColorConfigurer blocked = new ColorConfigurer("blockedThreadColor", "Blocked Thread Color", Color.blue);
+          final BooleanConfigurer verbose = new BooleanConfigurer("verboseLOS", "Verbose LOS mode");
+          GameModule.getGameModule().getPrefs().addOption(getAttributeValueString("label"), enable);
+          GameModule.getGameModule().getPrefs().addOption(getAttributeValueString("label"), hindrance);
+          GameModule.getGameModule().getPrefs().addOption(getAttributeValueString("label"), blocked);
+          GameModule.getGameModule().getPrefs().addOption(getAttributeValueString("label"), verbose);
+          java.awt.event.ItemListener l = new java.awt.event.ItemListener() {
+              public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                  enableAll(hindrance.getControls(), enableBox.isSelected());
+                  enableAll(blocked.getControls(), enableBox.isSelected());
+                  enableAll(verbose.getControls(), enableBox.isSelected());
+              }
+          };
+          enableBox.addItemListener(l);
+          enableAll(hindrance.getControls(), Boolean.TRUE.equals(enable.getValue()));
+          enableAll(blocked.getControls(), Boolean.TRUE.equals(enable.getValue()));
+          enableAll(verbose.getControls(), Boolean.TRUE.equals(enable.getValue()));
+          // hook for game opening/closing
+          GameModule.getGameModule().getGameState().addGameComponent(this);
+      }
+
+      // customize VASL thread
+      else {
+
+          final ColorConfigurer threadColor = new ColorConfigurer("threadColor", "Thread Color", Color.red);
+          GameModule.getGameModule().getPrefs().addOption(getAttributeValueString("label"), threadColor);
+
+      }
   }
 
   protected JCheckBox findBox(Component c) {
