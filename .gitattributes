@@ -1,5 +1,10 @@
 * text=auto !eol
 /Makefile -text
+boards/bd00/bd00.gif -text
+boards/bd00/bd0b.psd -text
+boards/bd00/colorSSR -text
+boards/bd00/colors -text
+boards/bd00/data -text
 dist/CASL/GameBuilder/CounterInfoFrame.class -text svneol=unset#unset
 dist/CASL/GameBuilder/CounterInfoPanel.class -text svneol=unset#unset
 dist/CASL/GameBuilder/GameBuilder.class -text svneol=unset#unset

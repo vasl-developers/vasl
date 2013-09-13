@@ -1,0 +1,17 @@
+// May 2008 TR 
+// added for compatibility of v5 board with v4 VASL
+
+DirtRdL0  220,205,123
+DirtRdWinter 235,231,205
+DuttyWhiteHexDots 255,254,253
+SnowHexDots 168,182,203
+Level0   175,188,106
+WoodsGreen  85,95,45
+WoodsBlack  44,42,22
+WoodsGreenWinter  166,171,145
+WoodsBlackWinter  94,90,75
+MudLevel0      170,160,95
+MudDirtRoad   164,147,82
+MudBoardNum 90,77,42
+DesertL0      251,223,147
+DirtRdDesertL0      248,210,108
