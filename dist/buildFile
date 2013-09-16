@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<VASSAL.launch.BasicModule VassalVersion="3.2.2" description="12-Dec-2012" name="VASL" nextPieceSlotId="6367" version="5.9.3b6">
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<VASSAL.launch.BasicModule VassalVersion="3.2.8" description="9-Sep-2013" name="VASL" nextPieceSlotId="6367" version="6.0.0b1">
     <VASL.build.module.BackTranslater/>
     <VASL.build.module.OBA hotkey="117,0"/>
     <VASL.build.module.ScenInfo/>
