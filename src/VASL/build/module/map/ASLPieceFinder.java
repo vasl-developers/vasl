@@ -59,18 +59,18 @@ public class ASLPieceFinder extends AbstractConfigurable implements CommandEncod
 
     @Override
     public String[] getAttributeNames() {
-        return new String[] {""};
+        return new String[] {"Name"};
     }
 
     @Override
     public String[] getAttributeDescriptions() {
-        return new String[] {""};
+        return new String[] {"Name"};
     }
 
     @Override
     public String getAttributeValueString(String key) {
 
-        return "";
+        return "ASL Piece Finder";
     }
 
     @Override
