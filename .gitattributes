@@ -1,22 +1,22 @@
 * text=auto !eol
 /Makefile -text
-boards/bd01/1_DenseJungle.gif -text
-boards/bd01/1_NoRoads.gif -text
-boards/bd01/1_SSO_32.gif -text
-boards/bd01/1_SSO_O.png -text
-boards/bd01/SSRControls -text
-boards/bd01/bd01.gif -text
-boards/bd01/bd1DenseJungle.gif -text
-boards/bd01/bd1p.psd -text
-boards/bd01/colorSSR -text
-boards/bd01/colors -text
-boards/bd01/data -text
-boards/bd01/overlaySSR -text
 boards/src/bd00/bd00.gif -text
 boards/src/bd00/bd0b.psd -text
 boards/src/bd00/colorSSR -text
 boards/src/bd00/colors -text
 boards/src/bd00/data -text
+boards/src/bd01/1_DenseJungle.gif -text
+boards/src/bd01/1_NoRoads.gif -text
+boards/src/bd01/1_SSO_32.gif -text
+boards/src/bd01/1_SSO_O.png -text
+boards/src/bd01/SSRControls -text
+boards/src/bd01/bd01.gif -text
+boards/src/bd01/bd1DenseJungle.gif -text
+boards/src/bd01/bd1p.psd -text
+boards/src/bd01/colorSSR -text
+boards/src/bd01/colors -text
+boards/src/bd01/data -text
+boards/src/bd01/overlaySSR -text
 dist/CASL/GameBuilder/CounterInfoFrame.class -text svneol=unset#unset
 dist/CASL/GameBuilder/CounterInfoPanel.class -text svneol=unset#unset
 dist/CASL/GameBuilder/GameBuilder.class -text svneol=unset#unset
