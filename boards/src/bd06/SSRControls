@@ -1,0 +1,19 @@
+<SSRControls>
+ <Option name="Board 6 Special overlays">
+ <Checkbox name="">
+         <entry name="Only bldg 6M5 is Stone" rule="BSO_6_OnlyChateauIsStone" text="Only 6M5 is Stone"/>
+ </Checkbox>
+  <Checkbox name="">
+         <entry name="A27 - King's Castle" rule="SSO_6_A27" text="Scenario A27 SSO"/>
+ </Checkbox>
+   <Checkbox name="">
+         <entry name="A64 - Chateau de Quesnoy" rule="SSO_6_A64" text="Scenario A64 SSO"/>
+ </Checkbox>
+    <Checkbox name="">
+         <entry name="U - Chance d'une Affaire" rule="SSO_6_U" text="Scenario U SSO"/>
+ </Checkbox>
+     <Checkbox name="">
+         <entry name="ASLUG 2.1 - Chateau Cherry" rule="SSO_6_ASLUG2pt1" text="Scenario ASLUG2.1 SSO"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

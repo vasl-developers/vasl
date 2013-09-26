@@ -1,0 +1,10 @@
+<SSRControls>
+ <Option name="Board 4a Special overlays">
+ <Checkbox name="">
+         <entry name="No Vehicle Entrance in G11" rule="BSO_4a_NoRoadEntryInG11" text="No Vehicle Entrance in G11"/>
+ </Checkbox>
+   <Checkbox name="">
+         <entry name="AP80: A Bloody Waste" rule="SSO_AP80" text="scenario AP80 overlay"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

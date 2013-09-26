@@ -1,0 +1,10 @@
+<SSRControls>
+ <Option name="Board 3b Special overlays">
+ <Checkbox name="">
+         <entry name="Hexrow 1 side is water" rule="BSO_bd3b_Hexrow1IsWater" text="bd 3b row 1 side to water"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Hexrow 20 side is water" rule="BSO_bd3b_Hexrow20IsWater" text="bd 3b row 20 side to water"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

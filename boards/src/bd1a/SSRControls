@@ -1,0 +1,7 @@
+<SSRControls>
+ <Option name="Board 1a Special overlays">
+ <Checkbox name="">
+         <entry name="AP74 - Batty-P" rule="SSO_AP74" text="Scenario AP74 overlay"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

@@ -1,0 +1,37 @@
+<SSRControls>
+   <Option name="Board 7 Special Overlays">
+       <Checkbox name="" >
+         <entry name="Remove Islands" rule="07_BSO_RemoveIslands" text="Remove Islands"/>
+      </Checkbox>
+      <Checkbox name="" >
+         <entry name="Islands are Level 0 Open Ground" rule="07_BSO_L0Islands" text="Islands are Level 0 Open Ground"/>
+      </Checkbox>
+	  <Checkbox name="" >
+         <entry name="Hexrow 1 side is water" rule="07_BSO_Hexrow1SideisWater" text="Bd 7 hexrow 1 side is water"/>
+      </Checkbox>
+	  <Checkbox name="" >
+         <entry name="Hexrow 10 side is water" rule="07_BSO_Hexrow10SideisWater" text="Bd 7 hexrow 10 side is water"/>
+      </Checkbox>
+	   <Checkbox name="">
+         <entry name="Scenario 19 - Backs To The Sea" rule="SSO_07_19" text="Bd7 Scen 19 SSO"/>
+       </Checkbox>
+	   <Checkbox name="">
+         <entry name="Scenario 25 - Gavin's Gamble" rule="SSO_07_25" text="Bd7 Scen 25 SSO"/>
+       </Checkbox>
+	   <Checkbox name="">
+         <entry name="Scenario 53 - A High Price To Pay" rule="SSO_07_53" text="Bd7 Scen 53 SSO"/>
+       </Checkbox>
+	   <Checkbox name="">
+         <entry name="Scenario 54 - Bridge To Nowhere" rule="SSO_07_54" text="Bd7 Scen 54 SSO"/>
+       </Checkbox>
+	   <Checkbox name="">
+         <entry name="Scenario A28 - The Professionals" rule="SSO_07_A28" text="Bd7 Scen A28 SSO"/>
+       </Checkbox>
+	   <Checkbox name="">
+         <entry name="Scenario A96 - In Rommel's Wake" rule="SSO_07_A96" text="Bd7 Scen A96 SSO"/>
+       </Checkbox>
+	   <Checkbox name="">
+         <entry name="Scenario A120 - Uncommon Valor" rule="SSO_07_A120" text="Bd7 Scen 120 SSO"/>
+       </Checkbox>
+  </Option>
+  </SSRControls>

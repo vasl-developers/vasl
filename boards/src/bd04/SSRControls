@@ -1,0 +1,16 @@
+<SSRControls>
+ <Option name="Board 4 Special overlays">
+ <Checkbox name="">
+         <entry name="32: Subterranean Quarry" rule="SSO_32" text="scenario 32 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="O: The St. Goar Assault" rule="SSO_O" text="scenario O overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="A23: Contest in the Clouds" rule="SSO_A23" text="scenario A23 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="A74: Valhalla Bound" rule="SSO_A74" text="scenario A74 overlay"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

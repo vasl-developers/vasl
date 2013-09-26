@@ -1,0 +1,22 @@
+<SSRControls>
+ <Option name="Board 10 Special overlays">
+ <Checkbox name="">
+         <entry name="Remove the Pond" rule="BSO_10_PondToOG" text="Bd10 Remove Pond"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Woods Path is Dirt Road" rule="BSO_10_WoodsPathToRoad" text="Bd10 Woods Path To Dirt Rd"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="J78: Fast Heinz" rule="SSO_10_J78" text="J78 SSO"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="DB044 - Asking For Trouble" rule="SSO_10_DB044" text="DB044 SSO"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Go Rogue!" rule="BSO_10_Rogue" text="Rogue board 10"/>
+ </Checkbox>
+ 	   <Checkbox name="">
+         <entry name="BSO Challenge Winner - Steve Pleva" rule="SSO_10_BSOCW" text="Steve Pleva's BSO Challenge Winning Entry"/>
+       </Checkbox>
+    </Option>
+</SSRControls>

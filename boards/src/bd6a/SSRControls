@@ -1,0 +1,31 @@
+<SSRControls>
+ <Option name="Board 6a Special overlays">
+  <Checkbox name="">
+         <entry name="AP73: Happy Valley" rule="SSO_AP73" text="scenario AP73 overlay"/>
+ </Checkbox>
+   <Checkbox name="">
+         <entry name="AP76: Smoke 'Em" rule="SSO_AP76" text="scenario AP76 overlay"/>
+ </Checkbox>
+   <Checkbox name="">
+         <entry name="AP77: Texas Flood" rule="SSO_AP77" text="scenario AP77 overlay"/>
+ </Checkbox>
+   <Checkbox name="">
+         <entry name="Paved Stone Bridge from I11-L12" rule="BSO_6a_I11-L12Bridge" text="Paved Stone Bridge from I11-L12"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Remove Island J13" rule="BSO_6a_NoJ13Island" text="Remove Island J13"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Remove Island E12" rule="BSO_6a_NoE12Island" text="Remove Island E12"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Remove Island M4" rule="BSO_6a_NoM4Island" text="Remove Island M4"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="A1 side is water" rule="BSO_6a_A1SideIsWater" text="A1 side is water"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Q20 side is water" rule="BSO_6a_Q20SideIsWater" text="Q20 side is water"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

@@ -1,0 +1,22 @@
+<SSRControls>
+ <Option name="Board 6b Special overlays">
+  <Checkbox name="">
+         <entry name="Paved Stone Bridge from Y11-BB12" rule="BSO_6b_Y11-BB12Bridge" text="Paved Stone Bridge from Y11-BB12"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Remove Island Z13" rule="BSO_6b_NoZ13Island" text="Remove Island Z13"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Remove Island U12" rule="BSO_6b_NoU12Island" text="Remove Island U12"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Remove Island CC4" rule="BSO_6b_NoCC4Island" text="Remove Island CC4"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Q1 side is water" rule="BSO_6b_Q1SideIsWater" text="Q1 side is water"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="GG20 side is water" rule="BSO_6b_GG20SideIsWater" text="GG20 side is water"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

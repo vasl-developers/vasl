@@ -1,0 +1,47 @@
+WallsOnly
+underlay WallPattern.gif HedgeGreen
+
+WallToCactus
+underlay CactusPattern.gif WallBrown,WallGrey1,WallGrey2
+
+HedgeToCactus
+underlay CactusPattern.gif HedgeGreen
+
+BSO_6_OnlyChateauIsStone
+BSO_6_OnlyChateauIsStone.gif 493,208
+
+SSO_6_A27
+SSO_6_A27.gif 562,63
+
+SSO_6_A64
+SSO_6_A64.gif 545,208
+
+SSO_6_U
+SSO_6_U.gif 545,208
+
+SSO_6_ASLUG2pt1
+SSO_6_ASLUG2pt1.gif 1,1
+
+DenseJungle
+6_DenseJungle.gif 1,1
+
+LightWoods
+6_LightWoods.gif 1,1
+
+OrchardsToCrags
+6_Orch2Crag.gif 146,208
+
+OrchardsToShellholes
+6_Orch2Shell.gif 140,203
+
+PalmTrees
+6_PalmTrees.gif 146,205
+
+WallsToBocage
+6_Walls2Bocage.gif 125,1
+
+HedgesToBocage
+6_Hedges2Bocage.gif 203,26
+
+NoRoads 
+6_NoRoads.gif 1,1

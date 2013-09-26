@@ -1,0 +1,16 @@
+<SSRControls>
+ <Option name="Board 5 Special overlays">
+ <Checkbox name="">
+         <entry name="A21: Counterattack on the Vistula" rule="SSO_A21" text="scenario A21 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="A40: Ad Hoc at Beaurains" rule="SSO_A40" text="scenario A40 overlay"/>
+ </Checkbox>
+  <Checkbox name="">
+         <entry name="Alan Findlay's Bd5 BSO Contest Winner" rule="BSO_05_BSOCW" text="Bd 5 BSO Contest Winner"/>
+ </Checkbox>
+   <Checkbox name="">
+         <entry name="Aaron Cleavin's Bd5 BSO Contest 2nd Place Finisher" rule="BSO_05_BSOCW2" text="Bd 5 BSO Contest 2nd place"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

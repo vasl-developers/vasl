@@ -1,0 +1,80 @@
+WallsOnly
+underlay WallPattern.gif HedgeGreen
+
+WallToCactus
+underlay CactusPattern.gif WallBrown,WallGrey1,WallGrey2
+
+HedgeToCactus
+underlay CactusPattern.gif HedgeGreen
+
+BSO_6b_NoZ13Island
+BSO_6b_NoZ13Island.gif 462,797
+
+BSO_6b_NoU12Island
+BSO_6b_NoU12Island.gif 67,702
+
+BSO_6b_NoCC4Island
+BSO_6b_NoCC4Island.gif 517,184
+
+BSO_6b_GG20SideIsWater
+BSO_6b_GG20SideIsWater.gif 1,379
+
+BSO_6b_Q1SideIsWater
+BSO_6b_Q1SideIsWater.gif 1,1
+
+BSO_6b_Y11-BB12Bridge
+BSO_6b_Y11-BB12Bridge.gif 415,650
+
+PalmTrees
+6b_PalmTrees.gif 32,400
+
+OrchardsToShellholes
+6b_Orch2Shell.gif 27,396
+
+OrchardsToCrags
+6b_Orch2Crag.gif 34,400
+
+Bamboo
+6b_Bamboo.gif 22,96
+
+LightWoods
+6b_LightWoods.gif 1,1
+
+DenseJungle
+6b_DenseJungle.gif 1,1
+
+NoCliffs
+6b_NoCliffs.gif 239,481
+
+NoHillNums
+6b_NoHillNum.gif 148,374
+
+HedgesToBocage
+6b_HedgesToBocage.gif 706,447
+
+CragsToOrchards
+6b_CragsToOrchards.gif 256,494
+
+CragsToShellholes
+6b_CragsToShellholes.gif 259,494 
+
+CragsToPalm
+6b_CragsToPalm.gif 258,494
+
+BridgeToFord
+6b_BridgeToFord.gif 357,101
+
+NoBridge
+6b_NoBridge.gif 357,101
+
+RoadsToPaths
+6b_RoadsToPaths.gif 45,1
+
+NoWoodsRoad
+6b_NoWoodsRoad.gif 45,1
+
+BrushToOpenGround
+6b_BrushToOG.gif 713,1087
+
+NoRoads
+6b_NoRoads.gif 1,1

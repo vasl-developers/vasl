@@ -1,0 +1,56 @@
+WallsOnly
+underlay WallPattern.gif HedgeGreen
+
+WallToCactus
+underlay CactusPattern.gif WallBrown,WallGrey1,WallGrey2
+
+HedgeToCactus
+underlay CactusPattern.gif HedgeGreen
+
+SSO_07_19
+SSO_07_19.gif 1,12
+
+SSO_07_25
+SSO_07_25.gif 1,35
+
+SSO_07_53
+SSO_07_53.gif 31,71
+
+SSO_07_54
+SSO_07_54.gif 31,71
+
+SSO_07_A28
+SSO_07_A28.gif 730,210
+
+SSO_07_A96
+SSO_07_A96.gif 31,71
+
+SSO_07_A120
+SSO_07_A120.gif 145,48
+
+07_BSO_RemoveIslands
+07_BSO_NoIslands.gif 339,115
+
+07_BSO_L0Islands
+07_BSO_L0Islands.gif 346,122
+
+07_BSO_Hexrow1SideisWater
+07_BSO_Hexrow1SideisWater.gif 1,1
+
+07_BSO_Hexrow10SideisWater
+07_BSO_Hexrow10SideisWater.gif 1,401
+
+DenseJungle
+07_DenseJungle.gif 22,1
+
+LightWoods
+07_LightWoods.gif 28,1
+
+NoWoodsRoads 
+07_NoWoodsRoads.gif 1084,18
+
+RoadsToPaths 
+07_RoadsToPaths.gif 1084,18
+
+NoRoads
+07_NoRoads.gif 153,1

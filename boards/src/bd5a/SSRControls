@@ -1,0 +1,7 @@
+<SSRControls>
+ <Option name="Board 5a Special overlays">
+  <Checkbox name="">
+         <entry name="AP75: Gabriel's Horn" rule="SSO_AP75" text="scenario AP75 overlay"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

@@ -1,0 +1,25 @@
+<SSRControls>
+ <Option name="Board 2 Special overlays">
+ <Checkbox name="">
+         <entry name="14: Silence That Gun" rule="SSO_14" text="scenario 14 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="15: Trapped!" rule="SSO_15" text="scenario 15 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="48: Toujours l'audace" rule="SSO_48" text="scenario 48 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="T11: The Attempt to Relieve Peiper" rule="SSO_T11" text="scenario T11 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="O: The St. Goar Assault" rule="SSO_O" text="scenario O overlay"/>
+ </Checkbox>
+  <Checkbox name="">
+         <entry name="AP73: Happy Valley" rule="SSO_AP73" text="scenario AP73 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Overlay TR2-1" rule="2_BSO_TR2-1" text="overlay TR2-1"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

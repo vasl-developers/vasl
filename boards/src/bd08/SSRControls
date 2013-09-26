@@ -1,0 +1,28 @@
+<SSRControls>
+ <Option name="Board 8 Special overlays">
+ <Checkbox name="">
+         <entry name="No Island" rule="8_BSO_NoIsland" text="no bd8 Island"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Hexrow 1 side is water" rule="8_BSO_1SideWater" text="bd 8 row 1 side to water"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Hexrow 10 side is water" rule="8_BSO_10SideWater" text="bd 8 row 10 side to water"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="J36: The Bridge of Verdalsora" rule="SSO_J36" text="scenario J36 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="J39: Indeed!" rule="SSO_J39" text="scenario J39 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="SP132: Timmerman's Bridge" rule="SSO_SP132" text="scenario SP132 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="FE149: Arpad Bridge" rule="SSO_FE149" text="scenario FE149 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Bd 8 BSO Contest Winner" rule="BSO_08_BSOCW" text="BSO Contest Winner"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

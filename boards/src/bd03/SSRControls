@@ -1,0 +1,34 @@
+<SSRControls>
+ <Option name="Board 3 Special overlays">
+ <Checkbox name="">
+         <entry name="A8: The Agony of Doom" rule="SSO_A8" text="scenario A8 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="A26: Beachhead at Ozereyka Bay" rule="SSO_A26" text="scenario A26 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="J29: Capture of Balta" rule="SSO_J29" text="scenario J29 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="J94: Kempf at Melikhovo" rule="SSO_J94" text="scenario J94 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="O: The St. Goar Assault" rule="SSO_O" text="scenario O overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="G34: The Liberators" rule="SSO_G34" text="scenario G34 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="T5: The Pouppeville Exit" rule="SSO_T5" text="scenario T5 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="All Hills To L0 Woods" rule="BSO_3_HillsToL0Woods" text="Bd 3 Hills to L0Woods"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Overlay TR3-1" rule="3_BSO_TR3-1" text="overlay TR3-1"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Overlay TR3-2" rule="3_BSO_TR3-2" text="overlay TR3-2"/>
+ </Checkbox>
+   </Option>
+</SSRControls>

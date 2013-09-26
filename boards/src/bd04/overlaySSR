@@ -1,0 +1,41 @@
+WallsOnly
+underlay WallPattern.gif HedgeGreen
+
+WallToCactus
+underlay CactusPattern.gif WallBrown,WallGrey1,WallGrey2
+
+HedgeToCactus
+underlay CactusPattern.gif HedgeGreen
+
+DenseJungle
+4_DenseJungle.gif 1,1
+
+WallsToBocage
+4_Walls2Bocage.gif 465,1
+
+HedgesToBocage
+4_Hedges2Bocage.gif 855,1
+
+ShellholesToOrchards
+4_Shellhole2Orch.gif 980,139
+
+ShellholesToPalmTrees
+4_Shellhole2PalmTrees.gif 969,125
+
+SSO_A74
+4_SSO_A74.gif  892,1
+
+SSO_O
+4_SSO_O.png 0,484
+
+SSO_32
+4_SSO_32.gif 115,20
+
+SSO_A23
+4_SSO_A23.gif 1,1
+
+NoRoads 
+4_NoRoads.gif 1,1
+
+
+

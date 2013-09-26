@@ -1,0 +1,7 @@
+<SSRControls>
+ <Option name="Board 4b Special overlays">
+ <Checkbox name="">
+         <entry name="No Vehicle Entrance in W11" rule="BSO_4b_NoRoadEntryInW11" text="No Vehicle Entrance in W11"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

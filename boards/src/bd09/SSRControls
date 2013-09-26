@@ -1,0 +1,13 @@
+<SSRControls>
+   <Option name="Board 9 Special Overlays">
+ <Checkbox name="">
+         <entry name="Remove building 9DD3" rule="bd9_BSO_NoDD3Bldg" text="Remove 9DD3 building"/>
+ </Checkbox>
+  <Checkbox name="">
+         <entry name="Use FT5 Pillbox overlay on 9DD3" rule="BSO_09_FT05" text="FT5 Pillbox overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Go Rogue!" rule="BSO_09_Rogue" text="Rogue board 09"/>
+ </Checkbox>
+   </Option>
+</SSRControls>

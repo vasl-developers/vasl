@@ -1,0 +1,69 @@
+WallsOnly
+underlay WallPattern.gif HedgeGreen
+
+WallToCactus
+underlay CactusPattern.gif WallBrown,WallGrey1,WallGrey2
+
+HedgeToCactus
+underlay CactusPattern.gif HedgeGreen
+
+SSO_J36
+8_SSO_J36.gif 431,172
+
+SSO_J39
+8_SSO_J39.gif 36,28
+
+SSO_SP132
+8_SSO_SP132.gif 410,200
+
+SSO_FE149
+8_SSO_FE149.gif 88,325
+
+BSO_08_BSOCW
+BSO_08_BSOCW.gif 76,1
+
+8_BSO_NoIsland
+8_NoIsland.gif  1570,262
+
+8_BSO_1SideWater
+8_Hexrow1SideToWater.gif 1,1
+
+8_BSO_10SideWater
+8_Hexrow10SideToWater.gif 1,214
+
+DenseJungle
+8_DenseJungle.gif 191,1
+
+NoWoodsRoad
+8_NoWoodsRoads.gif 535,26
+
+RoadsToPaths
+8_WoodsRoadToPath.gif 531,26
+
+NoWalls
+8_NoWalls.gif 14,1
+
+WallsToOG
+8_NoWalls.gif 14,1
+
+WallsToBocage
+8_Walls2Bocage.gif 14,1
+
+HedgesToBocage
+8_Hedges2Bocage.gif 373,92
+
+NoCliffs
+8_NoCliffs.gif  14,214
+
+OrchardsToShellholes
+8_Orch2Shell.gif 142,1
+
+OrchardsToCrags
+8_Orch2Crag.gif 148,6
+
+PalmTrees
+8_Orch2Palm.gif 146,1
+
+NoRoads 
+8_NoRoads.gif 87,1
+
