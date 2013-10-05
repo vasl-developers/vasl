@@ -10,7 +10,7 @@
         <option name="serverControlsIcon">/images/connect.gif</option>
         <option name="serverControlsHotKey">83,520</option>
     </VASSAL.build.module.GlobalOptions>
-    <VASSAL.build.module.Map allowMultiple="true" backgroundcolor="255,255,255" buttonName="Map" changeFormat="$message$" color="0,0,0" createFormat="$pieceName$ created in $location$ *" edgeHeight="200" edgeWidth="200" hotkey="" icon="/images/map.gif" launch="false" mapName="" markMoved="Use Preferences Setting" markUnmovedIcon="mov.gif" markUnmovedText="" markUnmovedTooltip="mark all units unmoved" moveKey="" moveToFormat="$pieceName$ moves $previousLocation$ -&gt; $location$ *" moveWithinFormat="$pieceName$ moves $previousLocation$ -&gt; $location$ *" thickness="3">
+    <VASL.build.module.ASLMap allowMultiple="true" backgroundcolor="255,255,255" buttonName="Map" changeFormat="$message$" color="0,0,0" createFormat="$pieceName$ created in $location$ *" edgeHeight="200" edgeWidth="200" hotkey="" icon="/images/map.gif" launch="false" mapName="" markMoved="Use Preferences Setting" markUnmovedIcon="mov.gif" markUnmovedText="" markUnmovedTooltip="mark all units unmoved" moveKey="" moveToFormat="$pieceName$ moves $previousLocation$ -&gt; $location$ *" moveWithinFormat="$pieceName$ moves $previousLocation$ -&gt; $location$ *" thickness="3">
         <VASL.build.module.map.ASLBoardPicker/>
         <VASSAL.build.module.map.GlobalMap buttonText="" color="0,0,0" hotkey="79,195" icon="overview.gif" scale="0.19444444" tooltip="Show/Hide overview window"/>
         <VASL.build.module.map.HindranceKeeper/>
@@ -114,7 +114,7 @@
         <VASSAL.build.module.map.SelectionHighlighters/>
         <VASL.build.module.map.MapCenterer/>
         <VASL.build.module.map.ASLPieceMover hotkey="119,0"/>
-    </VASSAL.build.module.Map>
+    </VASL.build.module.ASLMap>
     <VASSAL.build.module.NotesWindow buttonText="" hotkey="" icon="notesV.gif" tooltip="Notes"/>
     <VASSAL.build.module.Documentation>
         <VASSAL.build.module.documentation.AboutScreen fileName="VASL-Splash.png" title="About VASL"/>
