@@ -1,0 +1,17 @@
+<SSRControls>
+   <Option name="Board 19 Special Overlays">
+	   <Checkbox name="">
+         <entry name="Scenario 19 - Backs to the Sea" rule="SSO_19_19" text="Bd19 Scen 19 SSO"/>
+       </Checkbox>
+	   <Checkbox name="">
+         <entry name="Scenario A52 - Swan Song" rule="SSO_19_A52" text="Bd19 Scen A52 SSO"/>
+       </Checkbox>
+	   	<Checkbox name="">
+         <entry name="Scenario G17 - Hakkaa Paalle" rule="SSO_19_G17" text="Bd19 Scen G17 SSO"/>
+       </Checkbox>
+	   <Checkbox name="">
+         <entry name="Scenario ESG29 - Blood in the Mud" rule="SSO_19_ESG29" text="Bd19 Scen ESG29 SSO"/>
+       </Checkbox>
+	   </Option>
+  </SSRControls>
+ 

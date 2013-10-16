@@ -1,0 +1,26 @@
+<SSRControls>
+   <Option name="Board 17 Special Overlays">
+	   <Checkbox name="">
+         <entry name="Scenario 59 - Smertniki" rule="SSO_17_59" text="Bd17 Scen 59 SSO"/>
+       </Checkbox>
+	   <Checkbox name="">
+         <entry name="Scenario ASLUG17 - Escape at Dawn" rule="SSO_17_ASLUG17" text="Bd17 Scen ASLUG17 SSO"/>
+       </Checkbox>
+	   <Checkbox name="">
+         <entry name="Scenario BB2 - Throwing Down The Gauntlet" rule="SSO_17_BB2" text="Bd17 Scen BB2 SSO"/>
+       </Checkbox>
+	   <Checkbox name="">
+         <entry name="Scenario CH8 - The Predators" rule="SSO_17_CH8" text="Bd17 Scen CH8 SSO"/>
+       </Checkbox>
+	   <Checkbox name="">
+         <entry name="Scenario G2 - Last Act in Lorraine" rule="SSO_17_G2" text="Bd17 Scen G2 SSO"/>
+       </Checkbox>
+	   <Checkbox name="">
+         <entry name="Scenario G5 - Six Came Back" rule="SSO_17_G5" text="Bd17 Scen G5 SSO"/>
+       </Checkbox>
+	   <Checkbox name="">
+         <entry name="BSO Challenge Winner - Alan Findlay" rule="SSO_17_BSOCW" text="Alan Findlay's BSO Challenge Winning Entry"/>
+       </Checkbox>
+  </Option>
+  </SSRControls>
+  

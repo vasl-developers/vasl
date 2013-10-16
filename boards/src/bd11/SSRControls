@@ -1,0 +1,10 @@
+<SSRControls>
+ <Option name="Board 11 Special overlays">
+ <Checkbox name="">
+         <entry name="Z5 Grainfield is Level 2 hill" rule="BSO_11_Z5IsL2" text="Z5 Grain is L2 Hill"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Go Rogue!" rule="BSO_11_Rogue" text="Rogue board 11"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

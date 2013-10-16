@@ -1,0 +1,7 @@
+<SSRControls>
+   <Option name="Board 14 Special Overlays">
+      <Checkbox name="Remove Runway" >
+         <entry name="Remove Runway" rule="Nobd14Runway" text="Remove Runway"/>
+      </Checkbox>
+   </Option>
+</SSRControls>

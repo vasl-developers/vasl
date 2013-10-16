@@ -1,0 +1,22 @@
+<SSRControls>
+   <Option name="Board 15 Special Overlays">
+     <Checkbox name="">
+         <entry name="Scenario A43 - Probing Layforce" rule="SSO_15_A43" text="A43 SSO"/>
+ </Checkbox>
+      <Checkbox name="">
+         <entry name="Scenario A57 - First Banzai" rule="SSO_15_A57" text="A57 SSO"/>
+ </Checkbox>
+       <Checkbox name="">
+         <entry name="Scenario G12 - Avalanche!" rule="SSO_15_G12" text="G12 SSO"/>
+ </Checkbox>
+        <Checkbox name="">
+         <entry name="Scenario J18 - The Pinnacle" rule="SSO_15_J18" text="J18 SSO"/>
+ </Checkbox>
+       <Checkbox name="">
+         <entry name="Scenario ESG35 - Destroy All Monsters" rule="SSO_15_ESG35" text="ESG35 SSO"/>
+ </Checkbox>
+  <Checkbox name="">
+         <entry name="Scenario FT62 - New Model Army" rule="SSO_15_FT62" text="FT62 SSO"/>
+ </Checkbox>
+   </Option>
+</SSRControls>

@@ -1,0 +1,32 @@
+<SSRControls>
+ <Option name="Board 16 Special overlays">
+ <Checkbox name="">
+         <entry name="19: Backs To The Sea" rule="16_SSO_19" text="scenario 19 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="25: Gavin's Gamble" rule="16_SSO_25" text="scenario 25 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="59: Smertniki" rule="16_SSO_59" text="scenario 59 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="79: Bridge of the Seven Planets" rule="16_SSO_79" text="scenario 79 overlay"/>
+ </Checkbox>
+  <Checkbox name="">
+         <entry name="A52: Swan Song" rule="16_SSO_A52" text="scenario A52 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="CH17: Funnies at Zyfflich" rule="16_SSO_CH17" text="scenario CH17 overlay"/>
+ </Checkbox>
+  <Checkbox name="">
+         <entry name="G17: Hakkaa Paalle" rule="16_SSO_G17" text="scenario G17 overlay"/>
+ </Checkbox>
+   <Checkbox name="">
+         <entry name="G5: Six Came Back" rule="16_SSO_G5" text="scenario G5 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="TOT9: Beat Feet to Foy" rule="16_SSO_TOT9" text="scenario TOT9 overlay"/>
+ </Checkbox>
+ </Option>
+</SSRControls>
+

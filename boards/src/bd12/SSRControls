@@ -1,0 +1,29 @@
+<SSRControls>
+ <Option name="Board 12 Special overlays">
+   <Checkbox name="">
+         <entry name="Remove the Marketplace" rule="BSO_12_NoMarketPlace" text="Bd12 No Marketplace"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Scenario A52 - Swan Song" rule="SSO_12_A52" text="Bd12 Scen A52 SSO"/>
+ </Checkbox>
+  <Checkbox name="">
+         <entry name="Scenario AP24 - Tridentina Avanti!" rule="SSO_12_AP24" text="Bd12 Scen AP24 SSO"/>
+ </Checkbox>
+   <Checkbox name="">
+         <entry name="Scenario G2 - Last Act in Lorraine" rule="SSO_12_G2" text="Bd12 Scen G2 SSO"/>
+ </Checkbox>
+  <Checkbox name="">
+         <entry name="Scenario G5 - Six Came Back" rule="SSO_12_G5" text="Bd12 Scen G5 SSO"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Scenario G40 - Will to Fight...Eradicated" rule="SSO_12_G40" text="Bd12 Scen G40 SSO"/>
+ </Checkbox>
+<Checkbox name="">
+         <entry name="Scenario J67 - The Lawless Roads" rule="SSO_12_J67" text="Bd12 Scen J67 SSO"/>
+ </Checkbox>
+<Checkbox name="">
+         <entry name="Scenario J118	- The Marketplace at Wormhoudt" rule="SSO_12_J118" text="Bd12 Scen J118 SSO"/>
+ </Checkbox>
+    </Option>
+</SSRControls>
+

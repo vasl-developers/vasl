@@ -1,0 +1,16 @@
+<SSRControls>
+ <Option name="Board 18 Special overlays">
+  <Checkbox name="">
+         <entry name="59: Smertniki" rule="SSO_18_59" text="scenario 59 overlay"/>
+ </Checkbox>
+   <Checkbox name="">
+         <entry name="A57: First Banzai" rule="SSO_18_A57" text="scenario A57 overlay"/>
+ </Checkbox>
+    <Checkbox name="">
+         <entry name="AP17: The Valley of Death" rule="SSO_18_AP17" text="scenario AP17 overlay"/>
+ </Checkbox>
+     <Checkbox name="">
+         <entry name="ESG35: Destroy All Monsters" rule="SSO_18_ESG35" text="scenario ESG35 overlay"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

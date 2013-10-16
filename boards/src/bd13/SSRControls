@@ -1,0 +1,7 @@
+<SSRControls>
+ <Option name="Board 13 Special overlays">
+ <Checkbox name="">
+         <entry name="Scenario A36 - Oy Veghel" rule="SSO_A36" text="Bd13 Scen A36 SSO"/>
+ </Checkbox>
+    </Option>
+</SSRControls>
