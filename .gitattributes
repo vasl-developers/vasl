@@ -732,6 +732,7 @@ boards/src/bd6b/colorSSR -text
 boards/src/bd6b/colors -text
 boards/src/bd6b/data -text
 boards/src/bd6b/overlaySSR -text
+dev/vassal-3.2.8-sources.jar -text
 dist/CASL/GameBuilder/CounterInfoFrame.class -text svneol=unset#unset
 dist/CASL/GameBuilder/CounterInfoPanel.class -text svneol=unset#unset
 dist/CASL/GameBuilder/GameBuilder.class -text svneol=unset#unset
