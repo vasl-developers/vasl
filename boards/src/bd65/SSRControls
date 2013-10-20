@@ -1,0 +1,14 @@
+<SSRControls>
+   <Option name="Board 65 Special Overlays">
+   	   <Checkbox name="">
+         <entry name="No Gully Cliffs" rule="BSO_65_NoGullyCliffs" text="No Gully Cliffs"/>
+       </Checkbox>
+	    <Checkbox name="">
+         <entry name="Brush Fields (B2, H6, I2, J0) to Grain" rule="BSO_65_BrushFields2Grain" text="Brush Fields to Grain"/>
+       </Checkbox>
+	   <Checkbox name="">
+         <entry name="Scenario WO6 - The Heat Is On" rule="SSO_65_WO6" text="Bd65 Scen WO6 SSO"/>
+       </Checkbox>
+  </Option>
+  </SSRControls>
+  

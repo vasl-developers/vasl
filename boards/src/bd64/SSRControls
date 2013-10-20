@@ -1,0 +1,11 @@
+<SSRControls>
+   <Option name="Board 64 Special Overlays">
+	    <Checkbox name="">
+         <entry name="Brush Fields (C3, I5, J9) to Grain" rule="BSO_64_BrushFields2Grain" text="Brush Fields to Grain"/>
+       </Checkbox>
+	   	 <Checkbox name="">
+         <entry name="No Factory Entrances in Bldg L4" rule="BSO_64_NoL4Factory" text="64L4 is not a Factory"/>
+       </Checkbox>
+  </Option>
+  </SSRControls>
+  
