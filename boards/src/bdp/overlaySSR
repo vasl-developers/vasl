@@ -1,0 +1,26 @@
+WallsOnly
+underlay WallPattern.gif HedgeGreen
+
+WallToCactus
+underlay CactusPattern.gif WallBrown,WallGrey1,WallGrey2
+
+HedgeToCactus
+underlay CactusPattern.gif HedgeGreen
+
+OrchardsToCrags
+p_Orch2Crag.gif 89,39
+
+OrchardsToShellholes
+p_Orch2Shell.gif 86,37
+
+PalmTrees
+p_PalmTrees.gif 89,38
+
+DenseJungle
+p_DenseJungle.gif 1,1
+
+HedgesToBocage
+p_HedgeToBocage.gif 69,24
+
+NoRoads
+p_NoRoads.gif 1,1
