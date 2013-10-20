@@ -1,0 +1,10 @@
+<SSRControls>
+ <Option name="Board 22 Special overlays">
+ <Checkbox name="">
+         <entry name="A47: White Tigers" rule="SSO_A47" text="scenario A47 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Stream to Open Ground" rule="22_BSO_Stream2OG" text="bd 22 stream to OG"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

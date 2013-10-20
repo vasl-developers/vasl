@@ -1,0 +1,16 @@
+<SSRControls>
+ <Option name="Board 23 Special overlays">
+ <Checkbox name="">
+         <entry name="Canal to Open Ground" rule="23_BSO_Canal2OG" text="canal to OG"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Hexrow 1 side is water" rule="23_BSO_1SideWater" text="bd 23 row 1 side to water"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Hexrow 10 side is water" rule="23_BSO_10SideWater" text="bd 23 row 10 side to water"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="22: Kurhaus Clash" rule="SSO_22" text="scenario 22 overlay"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

@@ -1,0 +1,10 @@
+<SSRControls>
+ <Option name="Board 24 Special overlays">
+ <Checkbox name="">
+         <entry name="J3: A Sunday Stroll" rule="SSO_J3" text="scenario J3 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="I2 and E9 are Gully Cliffs" rule="24_BSO_I2E9ToGullyCliffs" text="24I2 and E9 cliffs are Gully Cliffs"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

@@ -1,0 +1,34 @@
+<SSRControls>
+   <Option name="Board 26 Special Overlays">
+       <Checkbox name="">
+       <entry name="Use ETO colors" rule="DTOtoETO"/>
+     </Checkbox>
+	 	  <Checkbox name="">
+        <entry name="Hammada is Open Ground" rule="HammadaToOG"/>
+      </Checkbox>
+	  <Checkbox name="">
+        <entry name="Scrub is Open Ground" rule="ScrubToOG"/>
+      </Checkbox>
+ <Checkbox name="">
+         <entry name="Scenario 58 - Ci Arrendiamo" rule="SSO_26_58" text="Bd26 Scen 58 SSO"/>
+</Checkbox>
+<Checkbox name="">
+         <entry name="Scenario 65 - Red Star Red Sun" rule="SSO_26_65" text="Bd26 Scen 65 SSO"/>
+ </Checkbox>
+<Checkbox name="">
+         <entry name="Scenario ASLUG16 - Bunshin Gogeki" rule="SSO_26_ASLUG16" text="Bd26 Scen ASLUG16 SSO"/>
+</Checkbox>
+<Checkbox name="">
+         <entry name="Scenario G24 - Mountain Comes To Mohammed" rule="SSO_26_G24" text="Bd26 Scen G24 SSO"/>
+</Checkbox>
+<Checkbox name="">
+         <entry name="Scenario G45 - Halha River Bridge" rule="SSO_26_G45" text="Bd26 Scen G45 SSO"/>
+</Checkbox>
+<Checkbox name="">
+         <entry name="Scenario J47 - They're Here! Reverse!" rule="SSO_26_J47" text="Bd26 Scen J47 SSO"/>
+</Checkbox>
+    </Option>
+</SSRControls>
+
+    
+    

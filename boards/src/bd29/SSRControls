@@ -1,0 +1,25 @@
+<SSRControls>
+   <Option name="Board 29 Special Overlays">
+          <Checkbox name="">
+       <entry name="Use ETO colors" rule="DTOtoETO"/>
+     </Checkbox>
+	 	  <Checkbox name="">
+        <entry name="Hammada is Open Ground" rule="HammadaToOG"/>
+      </Checkbox>
+	  <Checkbox name="">
+        <entry name="Scrub is Open Ground" rule="ScrubToOG"/>
+      </Checkbox>
+	 <Checkbox name="">
+         <entry name="Scenario 38 - Escape From Derna" rule="SSO_29_38" text="Bd29 Scen 38 SSO"/>
+       </Checkbox>
+	         <Checkbox name="">
+         <entry name="Scenario 81 - Fratricidal Fighting" rule="SSO_29_81" text="Bd29 Scen 81 SSO"/>
+       </Checkbox>
+	   	         <Checkbox name="">
+         <entry name="Scenario ASLUG16 - Bunshin Gogeki" rule="SSO_29_ASLUG16" text="Bd29 Scen ASLUG16 SSO"/>
+       </Checkbox>
+	   	   <Checkbox name="">
+         <entry name="Scenario J47 - They're Here! Reverse!" rule="SSO_29_J47" text="Bd29 Scen J47 SSO"/>
+       </Checkbox>
+    </Option>
+</SSRControls>

@@ -1,0 +1,7 @@
+<SSRControls>
+ <Option name="Board 21 Special overlays">
+  <Checkbox name="">
+         <entry name="ASLUG5: Shootout at Singling" rule="SSO_ASLUG5" text="scenario ASLUG5 overlay"/>
+ </Checkbox>
+    </Option>
+</SSRControls>
