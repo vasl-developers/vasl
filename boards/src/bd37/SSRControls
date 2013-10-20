@@ -1,0 +1,22 @@
+<SSRControls>
+   <Option name="Board 37 Special Overlays">
+             <Checkbox name="">
+         <entry name="Scenario 60 - On the Kokoda Trail" rule="SSO_37_60" text="Bd37 Scen 60 SSO"/>
+       </Checkbox>
+          <Checkbox name="">
+         <entry name="Scenario 62 - Bungle In The Jungle" rule="SSO_37_62" text="Bd37 Scen 62 SSO"/>
+       </Checkbox>
+	          <Checkbox name="">
+         <entry name="Scenario J7 - Slow and Steady" rule="SSO_37_J7" text="Bd37 Scen J7 SSO"/>
+       </Checkbox>
+       <Checkbox name="">
+         <entry name="Scenario J70 - Just an Illusion" rule="SSO_37_J70" text="Bd37 Scen J70 SSO"/>
+       </Checkbox>
+	   	          <Checkbox name="">
+         <entry name="Scenario J117 - The Triangle" rule="SSO_37_J117" text="Bd37 Scen J117 SSO"/>
+       </Checkbox>
+	   	   	          <Checkbox name="">
+         <entry name="Scenario ESG 8 - Soumussalmi Sandwich" rule="SSO_37_ESG8" text="Bd37 Scen ESG8 SSO"/>
+       </Checkbox>
+  </Option>
+  </SSRControls>

@@ -1,0 +1,34 @@
+<SSRControls>
+ <Option name="Board 40 Special overlays">
+ <Checkbox name="">
+         <entry name="Add Q1-Q4 Bridge" rule="BSO_40_Q1-Q4Bridge" text="Bd40 Q1-Q4 bridge"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Add I1-I4 Bridge" rule="BSO_40_I1-I4Bridge" text="Bd40 I1-I4 bridge"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Hexrow 1 side is water" rule="BSO_40_Hexrow1SideToWater" text="Bd40 Hexrow 1 side is water"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Hexrow 10 side is water" rule="BSO_40_Hexrow10SideToWater" text="Bd40 Hexrow 10 side is water"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Scenario 79 - Bridge of the Seven Planets" rule="SSO_40_79" text="Bd40 Scen 79 SSO"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Scenario A78 - Prelude to Breakout" rule="SSO_40_A78" text="Bd40 Scen A78 SSO"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Scenario ASLUG 9 - Sword Play" rule="SSO_40_ASLUG9" text="Bd40 Scen ASLUG9 SSO"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Scenario ASLUG G28 - Ramsey's Charge" rule="SSO_40_G28" text="Bd40 Scen G28 SSO"/>
+ </Checkbox>
+  <Checkbox name="">
+         <entry name="AP73 - Happy Valley" rule="SSO_AP73" text="Bd40 Scen AP73 SSO"/>
+ </Checkbox>
+   <Checkbox name="">
+         <entry name="AP77 - Texas Flood" rule="SSO_AP77" text="Bd40 Scen AP77 SSO"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

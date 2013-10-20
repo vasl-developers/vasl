@@ -1,0 +1,19 @@
+<SSRControls>
+   <Option name="Board 35 Special Overlays">
+       <Checkbox name="">
+         <entry name="Scenario 62 - Bungle in the Jungle" rule="SSO_35_62" text="Bd35 Scen 62 SSO"/>
+       </Checkbox>
+       <Checkbox name="">
+         <entry name="Scenario 68 - The Rock" rule="SSO_35_68" text="Bd35 Scen 68 SSO"/>
+       </Checkbox>
+	   <Checkbox name="">
+         <entry name="Scenario 74 - Bloody Red Beach" rule="SSO_35_74" text="Bd35 Scen 74 SSO"/>
+       </Checkbox>
+	   	<Checkbox name="">
+         <entry name="Scenario BB1 - Taming Tulagi" rule="SSO_35_BB1" text="Bd35 Scen BB1 SSO"/>
+       </Checkbox>
+	   	<Checkbox name="">
+         <entry name="Scenario CH28 - Children of the Kunai" rule="SSO_35_CH28" text="Bd35 Scen CH28 SSO"/>
+       </Checkbox>
+  </Option>
+  </SSRControls>
