@@ -1,0 +1,7 @@
+<SSRControls>
+ <Option name="Board 43 Special overlays">
+ <Checkbox name="">
+         <entry name="AP3: A Breezeless Day" rule="SSO_AP3" text="scenario AP3 overlay"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

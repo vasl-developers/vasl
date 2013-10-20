@@ -1,0 +1,10 @@
+<SSRControls>
+ <Option name="Board 46 Special overlays">
+ <Checkbox name="">
+         <entry name="118: Downsizing the Uprising" rule="SSO_46_118" text="118 SSO"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="ESG29 - Blood in the Mud" rule="SSO_46_ESG29" text="ESG29 SSO"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

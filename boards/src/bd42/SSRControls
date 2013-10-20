@@ -1,0 +1,16 @@
+<SSRControls>
+ <Option name="Board 42 Special overlays">
+ <Checkbox name="">
+         <entry name="42AA3 Pond to Open Ground" rule="42_BSO_AA3PondToOG" text="42AA3 pond to OG"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="ASLOKXX1: Riposte at Dusk" rule="SSO_ASLOKXX1" text="scenario ASLOKXX1 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="G29: Shoot-n-Scoot" rule="SSO_G29" text="scenario G29 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="SP42: Hot in Kot" rule="SSO_SP42" text="scenario SP42 overlay"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

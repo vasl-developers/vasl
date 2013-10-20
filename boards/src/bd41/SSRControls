@@ -1,0 +1,11 @@
+<SSRControls>
+   <Option name="Board 41 Special Overlays">
+	   <Checkbox name="">
+         <entry name="Scenario 118 - Downsizing the Uprising" rule="SSO_41_118" text="Bd41 Scen 118 SSO"/>
+       </Checkbox>
+	   <Checkbox name="">
+         <entry name="Scenario A87 - The Grand Canal" rule="SSO_41_A87" text="Bd41 Scen A87 SSO"/>
+       </Checkbox>
+  </Option>
+  </SSRControls>
+  
