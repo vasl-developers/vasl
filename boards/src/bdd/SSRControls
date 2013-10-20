@@ -1,0 +1,7 @@
+<SSRControls>
+ <Option name="Board d Special overlays">
+ <Checkbox name="">
+         <entry name="Gully Cliff does not exist" rule="BSO_d_NoGullyCliff" text="No bd d Gully Cliff"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

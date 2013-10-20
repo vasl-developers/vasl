@@ -1,0 +1,7 @@
+<SSRControls>
+ <Option name="Board a Special overlays">
+ <Checkbox name="">
+         <entry name="J89: Himmler's House" rule="SSO_J89" text="scenario J89 overlay"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

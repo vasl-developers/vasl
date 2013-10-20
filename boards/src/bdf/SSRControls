@@ -1,0 +1,7 @@
+<SSRControls>
+ <Option name="Board f Special overlays">
+ <Checkbox name="">
+         <entry name="DB029: Brasching the British" rule="SSO_DB029" text="scenario DB029 overlay"/>
+ </Checkbox>
+   </Option>
+</SSRControls>
