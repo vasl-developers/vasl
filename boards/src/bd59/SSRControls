@@ -1,0 +1,7 @@
+<SSRControls>
+ <Option name="Board 59 Special overlays">
+ <Checkbox name="">
+         <entry name="Remove the Stream" rule="bd59_BSO_NoStream" text="remove bd59 Stream"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

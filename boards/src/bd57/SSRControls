@@ -1,0 +1,8 @@
+<SSRControls>
+   <Option name="Board 57 Special Overlays">
+ 	   <Checkbox name="">
+         <entry name="Scenario WO6 - The Heat Is On" rule="SSO_57_WO6" text="Bd57 Scen WO6 SSO"/>
+       </Checkbox>
+  </Option>
+  </SSRControls>
+  
