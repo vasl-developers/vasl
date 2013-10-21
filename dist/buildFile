@@ -113,6 +113,45 @@
         <VASSAL.build.module.map.SelectionHighlighters/>
         <VASL.build.module.map.MapCenterer/>
         <VASL.build.module.map.ASLPieceMover hotkey="119,0"/>
+        <VASL.build.module.map.QC>
+            <entry name="7_PREP" image="QC/FirePrep" menu="false">0</entry>
+            <entry name="7_OPP" image="QC/FireOpp" menu="false">11</entry>
+            <entry name="7_ADVF" image="QC/FireAdv" menu="false">12</entry>
+            <entry name="7_PREPINT" image="QC/PrepInt" menu="false">13</entry>
+            <entry name="7_FIRST" image="QC/FirstFire" menu="false">15</entry>
+            <entry name="7_FINAL" image="QC/FinalFire" menu="false">18</entry>
+            <entry name="7_INTFIRE" image="QC/IntensiveFire" menu="false">19</entry>
+            <entry name="7_VEHFIRE" image="QC/VehFire" menu="false">21</entry>
+            <entry name="7_PIN" image="QC/PIN" menu="false">1</entry>
+            <entry name="7_DM" image="QC/DM" menu="false">2</entry>
+            <entry name="7_DISR" image="QC/Disrupted" menu="false">63</entry>
+            <entry name="7_RFP" image="QC/RFP" menu="true">Res. 1 FP:47,Res. 2 FP:48,Res. 4 FP:49,Res. 6 FP:50,Res. 8 FP:51,Res. 12 FP:52</entry>
+            <entry name="7_FL" image="QC/FL" menu="true">F. Lane 1 FP:53,F. Lane 2 FP:54,F. Lane 4 FP:55,F. Lane 6 FP:56</entry>
+            <entry name="7_SMOKE" image="QC/Smoke" menu="true">Smoke grenade:6,Smoke white +3:57,Smoke white +2:59,Smoke gray +2:61,WP grenade:72,WP white +2:58,WP white +1:60,WP gray +1:62,Blaze/Flame:114</entry>
+            <entry name="4_WA" image="QC/WA69" menu="false">69</entry>
+            <entry name="4_CREST" image="QC/Crest" menu="false">146</entry>
+            <entry name="4_ENCIR" image="QC/Encircled" menu="false">64</entry>
+            <entry name="3_OTHSWA" image="QC/WA" menu="true">WA:69,Crest:146,Encircled:64</entry>
+            <entry name="7_CC" image="QC/CC" menu="true">CC:73,Melee:74,Human Wave:83,HW DIrection:85,HW Range:88</entry>
+            <entry name="6_POW" image="QC/POW" menu="true">POW:6390,POW SMC:6391</entry>
+            <entry name="6_OTHSMALL" image="QC/OTHER" menu="true">TI:68,Labor:66,CA:5903,Low Ammo:5902</entry>
+            <entry name="1_OTHER" image="QC/OTHER" menu="true">TI:68,Labor:66,POW:6390,POW SMC:6391,CA:5903,Low Ammo:5902</entry>
+            <entry name="7_ACQ" image="QC/ACQ" menu="true">Russian Acq:423,American Acq:773,British Acq:1066,French Acq:1589,Chinese Acq:1939,Allied Minor Acq:2122,German Acq:2353,Waffen SS Acq:2831,Japanese Acq:3192,Italian Acq:3380,Finnish Acq:3573,Axis Minor Acq:3634,Hungarian Acq:3916</entry>
+            <entry name="4_MA" image="QC/MA" menu="true">Malf. MA:41,Malf. BMG:5918,Malf. CMG:5919,Malf. AAMG:5920</entry>
+            <entry name="4_ABAND" image="QC/Abandoned" menu="false">109</entry>
+            <entry name="4_IMMOB" image="QC/Immobile" menu="false">111</entry>
+            <entry name="4_SCROUN" image="QC/Scrounged" menu="false">113</entry>
+            <entry name="4_SHOCK" image="QC/Shock" menu="false">126</entry>
+            <entry name="4_STUNL" image="QC/StunL" menu="false">128</entry>
+            <entry name="4_STUNB" image="QC/StunB" menu="false">129</entry>
+            <entry name="4_BOG" image="QC/Bog" menu="false">116</entry>
+            <entry name="4_HD" image="QC/HD" menu="false">123</entry>
+            <entry name="4_TRAIL" image="QC/TrailBreak" menu="false">104</entry>
+            <entry name="3_TANK" image="QC/TANK" menu="true">Malf. MA:41,Malf. BMG:5918,Malf. CMG:5919,Malf. AAMG:5920,Abandoned:109,Immobile:111,Scrounged:113,Shock:126,stun:128,STUN:129,Bog:116,Hulldown:123,Trailbreak:104</entry>
+            <entry name="7_OBA" image="QC/OBA" menu="false">344</entry>
+            <entry name="7_BUILD" image="QC/BUILD" menu="true">Cellar:171,Level 1:167,Level 2:169,Level 3:163,Roof:165,Stone rubble:202,Wood rubble:203,Shellhole:204</entry>
+            <entry name="7_SASL" image="QC/SASL" menu="true">Letter Chit:359,Axis VPO:360,Allied VPO:361,Suspect:362,Suspect:363,Suspect:364,In Command:365,Move:366,Panic:367</entry>
+	</VASL.build.module.map.QC>
     </VASL.build.module.ASLMap>
     <VASSAL.build.module.NotesWindow buttonText="" hotkey="" icon="notesV.gif" tooltip="Notes"/>
     <VASSAL.build.module.Documentation>
