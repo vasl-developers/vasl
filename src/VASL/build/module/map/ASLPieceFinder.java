@@ -100,6 +100,7 @@ public class ASLPieceFinder extends AbstractConfigurable implements CommandEncod
 
         active = true;
         timer.restart();
+        map.getView().repaint();
     }
 
     @Override
@@ -137,7 +138,10 @@ public class ASLPieceFinder extends AbstractConfigurable implements CommandEncod
      */
     public String encode(Command c) {
         if (c instanceof FindPieceCommand) {
-            return COMMAND_PREFIX + clickPoint.x + "," + clickPoint.y;
+            return COMMAND_PREFIX + (
+                    (FindPieceCommand) c).getClickPoint().x +
+                    "," +
+                    ((FindPieceCommand) c).getClickPoint().y;
         }
         else {
             return null;
@@ -219,19 +223,30 @@ public class ASLPieceFinder extends AbstractConfigurable implements CommandEncod
     public Command getRestoreCommand() {
         return null;
     }
+
+    public void setClickPoint(Point p) {
+
+        clickPoint = p;
+    }
+
+    public Point getClickPoint(){
+        return clickPoint;
+    }
 }
 
 class FindPieceCommand extends Command {
 
     private ASLPieceFinder finder;
 
-    public FindPieceCommand(ASLPieceFinder finder) {
+    private Point clickPoint;
 
+    public FindPieceCommand(ASLPieceFinder finder) {
+        clickPoint = new Point(finder.getClickPoint());
         this.finder = finder;
     }
 
     protected void executeCommand() {
-
+        finder.setClickPoint(clickPoint);
         finder.startAnimation(false);
     }
 
@@ -241,5 +256,9 @@ class FindPieceCommand extends Command {
 
     public int getValue() {
         return 0;
+    }
+
+    public Point getClickPoint(){
+        return clickPoint;
     }
 }
