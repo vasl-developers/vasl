@@ -41,6 +41,9 @@ import VASSAL.command.NullCommand;
 import VASSAL.command.RemovePiece;
 import VASSAL.counters.GamePiece;
 import VASSAL.counters.Stack;
+import VASSAL.tools.imageop.Op;
+import java.awt.Insets;
+import javax.swing.ImageIcon;
 
 /**
  * A class to remove all GamePieces with a given name
@@ -52,9 +55,21 @@ public class MassRemover implements Buildable {
   private Vector entries = new Vector();
 
   public void build(Element e) {
-    launch = new JButton("Remove All");
+    // change the caption of the button to gain space
+    launch = new JButton("ALL");
     launch.setToolTipText("Remove all counters of a given type");
     launch.setAlignmentY(0.0F);
+    // loads the icon of the jbutton (the original button has no icon)
+    try
+    {
+        launch.setIcon(new ImageIcon(Op.load("QC/Remove.png").getImage(null)));
+    }
+    catch (Exception ex) 
+    {
+        ex.printStackTrace();
+    }
+    launch.setMargin(new Insets(0,0,0,0));
+    
     popup = new JPopupMenu();
     Hashtable actions = new Hashtable();
 

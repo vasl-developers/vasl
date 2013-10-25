@@ -22,12 +22,61 @@ package VASL.build.module;
 import java.awt.Point;
 
 import VASSAL.build.module.Map;
+import VASSAL.tools.imageop.Op;
+import java.awt.Color;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 
 public class ASLMap extends Map {
-  
-  public ASLMap() {
+
+    // FredKors popup menu
+    private JPopupMenu m_mnuMainPopup = null;
+    
+  public ASLMap() {      
     super();
-  }
+    
+    m_mnuMainPopup = new JPopupMenu();
+    
+    // FredKors: creation of the toolbar button
+    // that opens the popup menu
+    JButton l_Menu = new JButton();
+    
+    try
+    {
+        l_Menu.setIcon(new ImageIcon(Op.load("QC/menu.png").getImage(null)));
+    }
+    catch (Exception ex) 
+    {
+        ex.printStackTrace();
+    }
+    
+    l_Menu.setMargin(new Insets(0, 0, 0, 0));
+    l_Menu.setAlignmentY(0.0F);
+    
+    l_Menu.addActionListener(new ActionListener() 
+    {
+        public void actionPerformed(ActionEvent evt) 
+        {
+            if (evt.getSource() instanceof JButton)
+                m_mnuMainPopup.show((JButton)evt.getSource(), 0, 0);
+        }
+    });
+
+    // add the first element to the popupp menu
+    JMenuItem l_SelectItem = new JMenuItem("Select");
+    l_SelectItem.setBackground(new Color(255,255,255));
+    m_mnuMainPopup.add(l_SelectItem);
+    m_mnuMainPopup.addSeparator();    
+
+    // add the menu button to the toolbar
+    getToolBar().add(l_Menu); 
+    getToolBar().addSeparator();
+}
   
   /*
    *  Work-around for VASL board being 1 pixel too large causing double stacks to form along board edges.
@@ -56,5 +105,9 @@ public class ASLMap extends Map {
     }
     return p2;
   }
-  
+  // return the popup menu
+  public JPopupMenu getPopupMenu()
+  {
+      return m_mnuMainPopup;
+  }  
 }

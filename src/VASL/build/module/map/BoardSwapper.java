@@ -18,6 +18,7 @@
  */
 package VASL.build.module.map;
 
+import VASL.build.module.ASLMap;
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -41,6 +42,7 @@ import VASSAL.build.module.map.BoardPicker;
 import VASSAL.build.module.map.GlobalMap;
 import VASSAL.counters.GamePiece;
 import VASSAL.tools.imageop.Op;
+import javax.swing.JMenuItem;
 
 /**
  * Allows the user the change boards in a Map window while
@@ -49,6 +51,8 @@ import VASSAL.tools.imageop.Op;
 public class BoardSwapper extends AbstractBuildable {
   private Map map;
   private JButton launch;
+    // menuitem in the ASLMap popup menu
+  JMenuItem m_MenuItem = null;
 
   private Vector pieces = new Vector();
   private Vector positions = new Vector();
@@ -97,7 +101,19 @@ public class BoardSwapper extends AbstractBuildable {
     catch (Exception e) {
       e.printStackTrace();
     }
-    map.getToolBar().add(launch);
+    
+    // creates the menuitem 
+    m_MenuItem = new JMenuItem(launch.getToolTipText());
+
+    // copy the properties from the jbutton
+    m_MenuItem.addActionListener(((JButton)launch).getListeners(ActionListener.class)[0]);
+    m_MenuItem.setIcon(((JButton)launch).getIcon());
+    
+    // doesn't add the button to the toolbar
+    //map.getToolBar().add(launch);
+    // adds the menuitem to the ASLMap popup menu
+    ((ASLMap)map).getPopupMenu().add(m_MenuItem);
+    
   }
 
   protected void recordPiecePositions() {

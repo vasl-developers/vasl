@@ -1,7 +1,7 @@
 package VASL.build.module.map;
 
+import VASL.build.module.ASLMap;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -56,11 +56,8 @@ public class QC implements Buildable
 
     private Map m_Map;
     private Vector<JButton> m_ButtonsV = new Vector<JButton>();
-    private Vector<JButton> m_RemovedButtonsV = new Vector<JButton>();
     private Vector<JPopupMenu> m_PopupMenusV = new Vector<JPopupMenu>();
     private Vector<Entry> m_EntriesV = new Vector<Entry>();
-    private JPopupMenu m_mnuMainPopup = null;
-    private List<PieceSlot> m_PieceSlotL = null;
     private int m_iMode = c_iModeNormal;
 
     private void toggleVisibility(JButton button) 
@@ -92,26 +89,34 @@ public class QC implements Buildable
         }
     }
 
-    protected PieceSlot getPieceSlot(String l_strPieceDefinition) 
+    protected void getPieceSlot() 
     {
-        if (m_PieceSlotL == null)
-            m_PieceSlotL = GameModule.getGameModule().getAllDescendantComponentsOf(PieceSlot.class);
-
-        for (PieceSlot l_pieceSlot : m_PieceSlotL) 
+        List<PieceSlot> l_PieceSlotL = GameModule.getGameModule().getAllDescendantComponentsOf(PieceSlot.class);
+        
+        for (Enumeration<Entry> l_Enum = m_EntriesV.elements(); l_Enum.hasMoreElements();) 
         {
-            String l_id = l_pieceSlot.getGpId();
+            Entry l_Entry = l_Enum.nextElement();
 
-            if (l_id != null) 
+            if (l_Entry.m_popupMenu == null)
             {
-                if (l_id.length() != 0) 
+                for (PieceSlot l_pieceSlot : l_PieceSlotL) 
                 {
-                    if (l_id.compareTo(l_strPieceDefinition) == 0) 
-                        return l_pieceSlot;
+                    String l_id = l_pieceSlot.getGpId();
+
+                    if (l_id != null) 
+                    {
+                        if (l_id.length() != 0) 
+                        {
+                            if (l_id.compareTo(l_Entry.m_strPieceDefinition) == 0) 
+                            {
+                                l_Entry.m_pieceModelSlot = l_pieceSlot;
+                                break;
+                            }
+                        }
+                    }
                 }
             }
         }
-
-        return null;
     }
 
     // read the last working mode from file
@@ -292,214 +297,76 @@ public class QC implements Buildable
         return l_Elem;
     }
   
-    private JMenuItem ConvertComponent(Component objComp, String strText)
-    {
-        JMenuItem l_MenuItem = null;
-	  
-        if ((objComp instanceof JButton) && (((JButton)objComp).getListeners(ActionListener.class).length > 0))
-        {
-            l_MenuItem = new JMenuItem(strText);
-            l_MenuItem.addActionListener(((JButton)objComp).getListeners(ActionListener.class)[0]);
-            l_MenuItem.setIcon(((JButton)objComp).getIcon());
-            l_MenuItem.setMargin(new Insets(0,0,0,0));
-        }
-		
-        return l_MenuItem;
-    }
-
     public void addTo(Buildable b) 
     {
         m_Map = (Map) b;
-	Vector<Component> l_ComponentV = new Vector<Component>();
         
-        if (m_Map.getToolBar().getComponentCount() >= 11)
+        ((ASLMap)m_Map).getPopupMenu().addSeparator();
+        JMenuItem l_SelectQCItem = new JMenuItem("Select QC working mode");
+        l_SelectQCItem.setBackground(new Color(255,255,255));
+        ((ASLMap)m_Map).getPopupMenu().add(l_SelectQCItem);
+        ((ASLMap)m_Map).getPopupMenu().addSeparator();
+
+        // normal mode
+        ButtonGroup l_Group = new ButtonGroup();
+        JRadioButtonMenuItem l_NormalMode = new JRadioButtonMenuItem("Normal working mode");
+
+        l_NormalMode.addActionListener(new ActionListener() 
         {
-	    for (int l_i = 0; l_i < m_Map.getToolBar().getComponentCount(); l_i++)
-                if (m_Map.getToolBar().getComponent(l_i) instanceof JButton)
-                    l_ComponentV.add(m_Map.getToolBar().getComponent(l_i));
-	    
-            m_Map.getToolBar().removeAll();
-	    
-	    JButton l_Menu = new JButton("Menu");
-	    l_Menu.setAlignmentY(0.0F);
-	    
-	    m_mnuMainPopup = new JPopupMenu();
-	    
-	    l_Menu.addActionListener(new ActionListener() 
-	    {
-	        public void actionPerformed(ActionEvent evt) 
-	        {
-                    if (evt.getSource() instanceof JButton)
-                        m_mnuMainPopup.show((JButton)evt.getSource(), 0, 0);
-	        }
-	    });
-    
-            JMenuItem l_SelectItem = new JMenuItem("Select");
-            l_SelectItem.setBackground(new Color(255,255,255));
-            m_mnuMainPopup.add(l_SelectItem);
-            m_mnuMainPopup.addSeparator();
-		
-            Component l_ShowHide = l_ComponentV.get(0);
-            JMenuItem l_ShowHideItem = ConvertComponent(l_ShowHide, "Show/Hide overview window");
-		
-            if (l_ShowHideItem != null)
-	    	m_mnuMainPopup.add(l_ShowHideItem);
-		
-            m_RemovedButtonsV.add((JButton)l_ShowHide);
-		
-
-            Component l_SavePNG = l_ComponentV.get(7);
-            JMenuItem l_SavePNGItem = ConvertComponent(l_SavePNG, "Save Map as PNG file");
-		
-            if (l_SavePNGItem != null)
-	    	m_mnuMainPopup.add(l_SavePNGItem);
-		
-            m_RemovedButtonsV.add((JButton)l_SavePNG);
-		
-
-            Component l_SaveText = l_ComponentV.get(8);
-            JMenuItem l_SaveTextItem = ConvertComponent(l_SaveText, "Save Map contents as plain text file");
-		
-            if (l_SaveTextItem != null)
+            public void actionPerformed(ActionEvent evt) 
             {
-                try
-                {
-                    l_SaveTextItem.setIcon(new ImageIcon(Op.load("QC/text.png").getImage(null)));
-                }
-                catch (Exception ex) 
-                {
-                    ex.printStackTrace();
-                }
-    		
-                m_mnuMainPopup.add(l_SaveTextItem);
+                m_iMode = c_iModeNormal;
+
+                saveLastWorkingMode();
+                toggleVisibility();
             }
-		
-            m_RemovedButtonsV.add((JButton)l_SaveText);
-		
-		
-            Component l_PickNewBoards = l_ComponentV.get(9);
-            JMenuItem l_PickNewBoardsItem = ConvertComponent(l_PickNewBoards, "Pick new boards for this scenario");
-		
-            if (l_PickNewBoardsItem != null)
-	    	m_mnuMainPopup.add(l_PickNewBoardsItem);
-		
-            m_RemovedButtonsV.add((JButton)l_PickNewBoards);
+        });
 
-            m_mnuMainPopup.addSeparator();
-            JMenuItem l_SelectQCItem = new JMenuItem("Select QC working mode");
-            l_SelectQCItem.setBackground(new Color(255,255,255));
-            m_mnuMainPopup.add(l_SelectQCItem);
-            m_mnuMainPopup.addSeparator();
-    	
-            // normal mode
-            ButtonGroup l_Group = new ButtonGroup();
-            JRadioButtonMenuItem l_NormalMode = new JRadioButtonMenuItem("Normal working mode");
-    	
-            l_NormalMode.addActionListener(new ActionListener() 
+        l_Group.add(l_NormalMode);
+        ((ASLMap)m_Map).getPopupMenu().add(l_NormalMode);
+
+
+        JRadioButtonMenuItem l_CompactMode = new JRadioButtonMenuItem("Compact working mode");
+
+        l_CompactMode.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent evt) 
             {
-	        public void actionPerformed(ActionEvent evt) 
-	        {
-                    m_iMode = c_iModeNormal;
+                m_iMode = c_iModeCompact;
 
-                    saveLastWorkingMode();
-                    toggleVisibility();
-                }
-            });
-    	
-            l_Group.add(l_NormalMode);
-            m_mnuMainPopup.add(l_NormalMode);
-		
-		
-            JRadioButtonMenuItem l_CompactMode = new JRadioButtonMenuItem("Compact working mode");
-    	
-            l_CompactMode.addActionListener(new ActionListener() 
-            {
-	        public void actionPerformed(ActionEvent evt) 
-	        {
-                    m_iMode = c_iModeCompact;
-	        	
-                    saveLastWorkingMode();
-                    toggleVisibility();
-                }
-            });
-    	
-            l_Group.add(l_CompactMode);
-            m_mnuMainPopup.add(l_CompactMode);
-		
-    	
-            JRadioButtonMenuItem l_VeryCompactMode = new JRadioButtonMenuItem("Very compact working mode");
-    	
-            l_VeryCompactMode.addActionListener(new ActionListener() 
-            {
-	        public void actionPerformed(ActionEvent evt) 
-	        {
-                    m_iMode = c_iModeUltra;
-
-                    saveLastWorkingMode();
-                    toggleVisibility();
-                }
-            });
-    	
-            l_Group.add(l_VeryCompactMode);
-            m_mnuMainPopup.add(l_VeryCompactMode);
-
-            l_NormalMode.setSelected(m_iMode == c_iModeNormal);
-            l_CompactMode.setSelected(m_iMode == c_iModeCompact);
-	    l_VeryCompactMode.setSelected(m_iMode == c_iModeUltra);
-    	
-            m_Map.getToolBar().add(l_Menu); 
-            m_Map.getToolBar().addSeparator();
-    	
-            if (l_ComponentV.get(1) instanceof JButton)
-                ((JButton) l_ComponentV.get(1)).setText("L");
-            if (l_ComponentV.get(2) instanceof JButton)
-                ((JButton) l_ComponentV.get(2)).setText("l");
-
-            m_Map.getToolBar().add(l_ComponentV.get(1)); // LOS
-            m_Map.getToolBar().add(l_ComponentV.get(2)); // los
-            m_Map.getToolBar().addSeparator();
-
-            m_Map.getToolBar().add(l_ComponentV.get(3)); // zoom +
-            m_Map.getToolBar().add(l_ComponentV.get(4)); // menu zoom
-            m_Map.getToolBar().add(l_ComponentV.get(5)); // zoom -
-            m_Map.getToolBar().addSeparator();
-
-            m_Map.getToolBar().add(l_ComponentV.get(10)); // toggli le unità
-            m_Map.getToolBar().addSeparator();
-
-            Component l_RemoveAll = l_ComponentV.get(6);
-    	
-            if (l_RemoveAll instanceof JButton)
-            {
-                ((JButton) l_RemoveAll).setText("ALL ");    			
-
-                try
-                {
-                    ((JButton) l_RemoveAll).setIcon(new ImageIcon(Op.load("QC/Remove.png").getImage(null)));
-                    ((JButton) l_RemoveAll).setMargin(new Insets(0,0,0,0));
-                }
-                catch (Exception ex) 
-                {
-                    ex.printStackTrace();
-                }
+                saveLastWorkingMode();
+                toggleVisibility();
             }
-    	
-            m_Map.getToolBar().add(l_RemoveAll); // remove all
-            m_Map.getToolBar().addSeparator();
-    	
-            if (l_ComponentV.size() > 11)
+        });
+
+        l_Group.add(l_CompactMode);
+        ((ASLMap)m_Map).getPopupMenu().add(l_CompactMode);
+
+
+        JRadioButtonMenuItem l_VeryCompactMode = new JRadioButtonMenuItem("Very compact working mode");
+
+        l_VeryCompactMode.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent evt) 
             {
-	    	for (int l_i = 11; l_i < l_ComponentV.size(); l_i++)
-	    	{
-                    m_Map.getToolBar().add(l_ComponentV.get(l_i)); 
-	    	}
-	    	
-	    	m_Map.getToolBar().addSeparator();
+                m_iMode = c_iModeUltra;
+
+                saveLastWorkingMode();
+                toggleVisibility();
             }
-        }
+        });
+
+        l_Group.add(l_VeryCompactMode);
+        ((ASLMap)m_Map).getPopupMenu().add(l_VeryCompactMode);
+
+        l_NormalMode.setSelected(m_iMode == c_iModeNormal);
+        l_CompactMode.setSelected(m_iMode == c_iModeCompact);
+        l_VeryCompactMode.setSelected(m_iMode == c_iModeUltra);
     
         toggleVisibility();
     
+        m_Map.getToolBar().addSeparator();
+        
         for (Enumeration<JButton> l_Enum = m_ButtonsV.elements(); l_Enum.hasMoreElements();) 
         {
             m_Map.getToolBar().add(l_Enum.nextElement());
@@ -597,7 +464,7 @@ public class QC implements Buildable
             if (m_Entry.m_popupMenu == null)
             {
                 if (m_Entry.m_pieceModelSlot == null)
-                    m_Entry.m_pieceModelSlot = getPieceSlot(m_Entry.m_strPieceDefinition);
+                    getPieceSlot();
                 
                 if (m_Entry.m_pieceModelSlot != null)
                 {

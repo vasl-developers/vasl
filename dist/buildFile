@@ -11,7 +11,7 @@
     </VASSAL.build.module.GlobalOptions>
     <VASL.build.module.ASLMap allowMultiple="true" backgroundcolor="255,255,255" buttonName="Map" changeFormat="$message$" color="0,0,0" createFormat="$pieceName$ created in $location$ *" edgeHeight="200" edgeWidth="200" hotkey="" icon="/images/map.gif" launch="false" mapName="" markMoved="Use Preferences Setting" markUnmovedIcon="mov.gif" markUnmovedText="" markUnmovedTooltip="mark all units unmoved" moveKey="" moveToFormat="$pieceName$ moves $previousLocation$ -&gt; $location$ *" moveWithinFormat="$pieceName$ moves $previousLocation$ -&gt; $location$ *" thickness="3">
         <VASL.build.module.map.ASLBoardPicker/>
-        <VASSAL.build.module.map.GlobalMap buttonText="" color="0,0,0" hotkey="79,195" icon="overview.gif" scale="0.19444444" tooltip="Show/Hide overview window"/>
+        <VASL.build.module.map.ASLGlobalMap buttonText="" color="0,0,0" hotkey="79,195" icon="overview.gif" scale="0.19444444" tooltip="Show/Hide overview window"/>
         <VASL.build.module.map.HindranceKeeper/>
         <VASSAL.build.module.map.ForwardToKeyBuffer/>
         <VASSAL.build.module.map.Scroller/>
@@ -21,8 +21,8 @@
         <VASSAL.build.module.map.ForwardToChatter/>
         <VASSAL.build.module.map.StackExpander/>
         <VASL.build.module.map.BoardVersionChecker boardPageURL="http://goo.gl/N52DL" boardVersionURL="http://home.comcast.net/~tomrepetti/boards/v5boardVersions" overlayVersionURL="http://home.comcast.net/~tomrepetti/boards/v5overlayVersions"/>
-        <VASL.build.module.map.CASLThread drawRange="true" global="Always" hideCounters="true" hideOpacity="0" hotkey="121,0" iconName="/images/thread.gif" label="LOS" persistence="Never" persistentIconName="" rangeBg="0,0,0" rangeFg="255,255,255" report="$playerId$ Checked LOS from $FromLocation$ to $ToLocation$, Range=$Range$" round="Nearest whole number" scale="0" snapEnd="false" snapStart="false" threadColor="0,0,0" threadName="LOS" tooltip="Draw LOS Thread"/>
-        <VASL.build.module.map.CASLThread drawRange="true" global="Never" hideCounters="true" hideOpacity="0" hotkey="121,130" iconName="/images/thread.gif" label="los" persistence="Never" persistentIconName="" rangeBg="255,255,255" rangeFg="0,0,0" report="$playerId$ Checked LOS" round="Nearest whole number" scale="0" snapEnd="false" snapStart="false" threadColor="255,40,39" tooltip="Draw silent LOS"/>
+        <VASL.build.module.map.CASLThread drawRange="true" global="Always" hideCounters="true" hideOpacity="0" hotkey="121,0" iconName="/images/thread.gif" label="L" persistence="Never" persistentIconName="" rangeBg="0,0,0" rangeFg="255,255,255" report="$playerId$ Checked LOS from $FromLocation$ to $ToLocation$, Range=$Range$" round="Nearest whole number" scale="0" snapEnd="false" snapStart="false" threadColor="0,0,0" threadName="LOS" tooltip="Draw LOS Thread"/>
+        <VASL.build.module.map.CASLThread drawRange="true" global="Never" hideCounters="true" hideOpacity="0" hotkey="121,129" iconName="/images/thread.gif" label="l" persistence="Never" persistentIconName="" rangeBg="255,255,255" rangeFg="0,0,0" report="$playerId$ Checked LOS" round="Nearest whole number" scale="0" snapEnd="false" snapStart="false" threadColor="255,40,39" tooltip="Draw silent LOS"/>
         <VASSAL.build.module.map.Zoomer inButtonText="" inIconName="/images/zoomIn.gif" inTooltip="Zoom in" outButtonText="" outIconName="/images/zoomOut.gif" outTooltip="Zoom out" pickButtonText="" pickIconName="/images/zoom.png" pickTooltip="Select Zoom" zoomInKey="114,0" zoomLevels="0.19753086419753085,0.2962962962962963,0.4444444444444444,0.6666666666666666,1.0,1.5" zoomOutKey="115,0" zoomPickKey="" zoomStart="3"/>
         <VASL.build.module.map.MassRemover>
             <entry name=" - ">-</entry>
@@ -100,8 +100,8 @@
             <entry name="Perimeter">Pink Perimeter</entry>
         </VASL.build.module.map.MassRemover>
         <VASSAL.build.module.map.KeyBufferer/>
-        <VASSAL.build.module.map.ImageSaver buttonText="" hotkey="" icon="/images/camera.gif" tooltip="Save Map as PNG file"/>
-        <VASSAL.build.module.map.TextSaver buttonText="Save Text" hotkey="" tooltip="Save map contents as plain text file"/>
+        <VASL.build.module.map.ASLImageSaver buttonText="" hotkey="" icon="/images/camera.gif" tooltip="Save Map as PNG file"/>
+        <VASL.build.module.map.ASLTextSaver buttonText="Save Text" hotkey="" tooltip="Save map contents as plain text file"/>
         <VASL.build.module.map.BoardSwapper/>
         <VASL.build.module.map.ASLStackMetrics bottom="40,0" color="255,255,255" disabled="false" down="37,0" exSepX="16" exSepY="32" top="38,0" unexSepX="2" unexSepY="4" up="39,0"/>
         <VASSAL.build.module.map.HidePiecesButton buttonText="" hiddenIcon="/images/globe_selected.gif" hotkey="121,130" showingIcon="/images/globe_unselected.gif" tooltip="Hide all pieces on this map"/>

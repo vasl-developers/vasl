@@ -3911,6 +3911,7 @@ dist/images/QC/WA.png -text
 dist/images/QC/WA146.png -text
 dist/images/QC/WA64.png -text
 dist/images/QC/WA69.png -text
+dist/images/QC/menu.png -text
 dist/images/QC/text.png -text
 dist/images/QRDC.gif -text svneol=unset#unset
 dist/images/RussianStar.png -text
@@ -8794,7 +8795,10 @@ lib/xml-apis.jar -text
 /pom.xml -text
 /settings.xml.TEMPLATE -text
 src/VASL/build/module/ASLMap.java -text svneol=unset#text/plain
+src/VASL/build/module/map/ASLGlobalMap.java -text
+src/VASL/build/module/map/ASLImageSaver.java -text
 src/VASL/build/module/map/ASLPieceFinder.java -text
+src/VASL/build/module/map/ASLTextSaver.java -text
 src/VASL/build/module/map/ASLTilingHandler.java -text
 src/VASL/build/module/map/CASLThread.java -text
 src/VASL/build/module/map/CounterDetailViewer.java -text
