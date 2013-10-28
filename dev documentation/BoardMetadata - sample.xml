@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<!--
+    This file contains the board metadata specific to a VASL board archive.
+    Create one file per VASL board and place it in the archive.
+-->
+
+<!-- 
+    Board-level metadata
+	name - the name of the board (as it will appear in board selector drop-down - not yet supported)
+	version - the board version
+	versionDate - the date the last version was created
+	author - the caring soul who created the board
+    boardImage - the name of the VASL image file in the board archive; the name is case sensitive
+    hasElevations - TRUE if the board contains non-zero ground levels; E.g. hills, gullies, streams, etc. 
+                if not we can assume the ground level under the terrain is zero, which
+                makes the VASL LOS image translation faster and more accurate
+    height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
+    width - width of the board in hexes.
+	others - TBD e.g. alternate hex grain, etc. 
+-->
+<boardMetadata name="07" version="5.3" versionDate="Aug 2008" author="TR" boardImageFileName="bd07.gif" hasElevations="TRUE" width="33" height="10">
+
+    <!--
+        The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
+        determine the proper building type when creating the LOS information and assumes buildings are single-hex stone or 
+        wooden buildings. Use these elements to override the building type. 
+        
+        See the terrainType elements for a complete list of building names
+    -->
+    <buildingTypes>
+	    <buildingType hexName="U8" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="CC3" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="DD3" buildingTypeName="Stone Building, 1 Level" />
+
+        <buildingType hexName="F1" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="G1" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="K7" buildingTypeName="Wooden Building, 1 Level" />
+
+    </buildingTypes>
+	
+	<overlaySSRules>
+	    <!--
+			Scenario-specific overlay rules. 
+			name - the VASL SSR name
+			image - the image name
+			x - x coordinate of overly upper left (?)
+			y - y coordinate of overlay upper left (?)
+		-->
+
+		<overlaySSR name="DenseJungle" image="1_DenseJungle.gif" x="0" y="0" />
+		<overlaySSR name="SSO_O" image="1_SSO_O.png" x="1" y="484" />
+		<overlaySSR name="SSO_32" image="1_SSO_32.gif" x="61" y="1" />
+		<overlaySSR name="NoRoads" image="1_NoRoads.gif" x="1" y="1" />
+	</overlaySSRules>
+	
+	<colors>
+		<!--
+			The VASL board colors. Used for color-specific SSR transformations. Use this element to override the shared color pallet. 
+			name - the VASL color namge
+			red, green, blue - the RBG value of the color in the image
+			terrain - the LOS terrain type
+			elevation - the base elevation of the terrain
+			
+		-->
+		<color name="BocageGreen" red="62" green="90" blue="47" terrain="Bocage" elevation="UNKNOWN" />
+		<color name="BocageBrownL0" red="176" green="145" blue="70" terrain="Bocage" elevation="0" />
+		<color name="BocageBrownL1" red="149" green="113" blue="33" terrain="Bocage" elevation="1" />
+		<color name="BocageBrownL2" red="123" green="92" blue="27" terrain="Bocage" elevation="2" />
+		<color name="BocageBrownL3" red="92" green="64" blue="4" terrain="Bocage" elevation="3" />
+	</colors>
+	
+	<colorSSRules>
+		<!--
+			The board color scenario-specific rules. Use this element to override the shared SSRs.		
+		-->
+		<colorSSR name="NoWhiteHexIDs">
+			<colorMap fromColor="WhiteHexNumbers" toColor="Black"/>
+			<colorMap fromColor="WinterBlackHexNumbers" toColor="Black"/>
+		</colorSSR>
+		<colorSSR name="AllPaved">
+			<colorMap fromColor="DirtRdL0" toColor="PavedRdL0"/>
+			<colorMap fromColor="DirtRdL1" toColor="PavedRdL1"/>
+			<colorMap fromColor="DirtRdL2" toColor="PavedRdL2"/>
+			<colorMap fromColor="DirtRdL3" toColor="PavedRdL3"/>
+			<colorMap fromColor="DirtRdL4" toColor="PavedRdL4"/>
+			<colorMap fromColor="DirtRdL5" toColor="PavedRdL5"/>
+			<colorMap fromColor="DirtRdL6" toColor="PavedRdL6"/>
+			<colorMap fromColor="DirtRdL_1" toColor="PavedRdL_1"/>
+			<colorMap fromColor="DirtRdL_2" toColor="PavedRdL_2"/>
+			<colorMap fromColor="DirtRdBridge" toColor="PavedRdBridge"/>
+		</colorSSR>
+	</colorSSRules>
+	
+	<SSRControls>
+		<!--
+			Board-specific special SSR changes.  VASL will add these options to the board picker dialog. 
+		-->
+		 <Option name="Board 1 Special overlays">
+			 <Checkbox name="">
+					 <entry name="32: Subterranean Quarry" rule="SSO_32" text="scenario 32 overlay"/>
+			 </Checkbox>
+			 <Checkbox name="">
+					 <entry name="O: The St. Goar Assault" rule="SSO_O" text="scenario O overlay"/>
+			 </Checkbox>
+		 </Option>
+	</SSRControls>
+</boardMetadata>

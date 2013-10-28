@@ -1884,6 +1884,10 @@ boards/src/bdz/z_Orch2Crag.gif -text
 boards/src/bdz/z_Orch2PalmTrees.gif -text
 boards/src/bdz/z_Orch2Shellhole.gif -text
 boards/src/bdz/z_WoodsRoadToPath.gif -text
+dev[!!-~]documentation/Board[!!-~]Archive[!!-~]Interface[!!-~]Design.doc -text
+dev[!!-~]documentation/BoardMetadata[!!-~]-[!!-~]sample.xml -text
+dev[!!-~]documentation/Setting[!!-~]up[!!-~]IntelliJ[!!-~]for[!!-~]VASL[!!-~]development.doc -text
+dev[!!-~]documentation/SharedBoardMetadata[!!-~]-[!!-~]sample.xml -text
 dev/vassal-3.2.8-sources.jar -text
 dist/CASL/GameBuilder/CounterInfoFrame.class -text svneol=unset#unset
 dist/CASL/GameBuilder/CounterInfoPanel.class -text svneol=unset#unset
