@@ -1,6 +1,5 @@
 * text=auto !eol
 /Makefile -text
-/Setting[!!-~]up[!!-~]IntelliJ[!!-~]for[!!-~]VASL[!!-~]development.doc -text
 boards/src/bd00/bd00.gif -text
 boards/src/bd00/bd0b.psd -text
 boards/src/bd00/colorSSR -text
