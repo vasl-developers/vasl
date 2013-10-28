@@ -20,6 +20,7 @@ package VASL.counters;
 
 import VASSAL.build.Configurable;
 import VASSAL.build.GameModule;
+import VASSAL.build.module.ObscurableOptions;
 import VASSAL.build.widget.PieceSlot;
 import VASSAL.command.ChangePiece;
 import VASSAL.command.Command;
@@ -210,6 +211,12 @@ public class Concealable extends Obscurable implements EditablePiece {
     }
     s.getMap().repaint(s.getMap().boundingBoxOf(s));
     return c;
+  }
+
+  @Override
+  public boolean isMaskable() {
+    return access.currentPlayerCanModify(obscuredBy)
+      || ObscurableOptions.getInstance().isUnmaskable(obscuredBy);
   }
 
   /**
