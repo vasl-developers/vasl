@@ -301,7 +301,7 @@ public class CASLThread
       else {
 
           final ColorConfigurer threadColor = new ColorConfigurer("threadColor", "Thread Color", Color.red);
-          GameModule.getGameModule().getPrefs().addOption(getAttributeValueString("label"), threadColor);
+          GameModule.getGameModule().getPrefs().addOption("LOS", threadColor);
 
       }
   }
