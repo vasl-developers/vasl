@@ -10,9 +10,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -31,20 +29,130 @@ import VASSAL.Info;
 import VASSAL.build.Buildable;
 import VASSAL.build.Builder;
 import VASSAL.build.GameModule;
-import VASSAL.build.module.Chatter;
-import VASSAL.build.module.GlobalOptions;
 import VASSAL.build.module.Map;
+import VASSAL.build.module.map.PieceMover;
 import VASSAL.build.widget.PieceSlot;
-import VASSAL.command.AddPiece;
-import VASSAL.command.Command;
-import VASSAL.command.NullCommand;
+import VASSAL.counters.DragBuffer;
 import VASSAL.counters.GamePiece;
 import VASSAL.counters.KeyBuffer;
 import VASSAL.counters.PieceCloner;
 import VASSAL.counters.Properties;
-import VASSAL.tools.FormattedString;
 import VASSAL.tools.imageop.Op;
+import java.awt.Point;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DragGestureEvent;
+import java.awt.dnd.DragGestureListener;
+import java.awt.dnd.DragSource;
 
+class ASLButton extends JButton
+{
+    ButtonEntry m_objEntry;
+    
+    public ASLButton(ButtonEntry objEntry) 
+    {
+        m_objEntry = objEntry;
+
+        setDropTarget(PieceMover.AbstractDragHandler.makeDropTarget(this, DnDConstants.ACTION_MOVE, null));
+
+        DragGestureListener dragGestureListener = new DragGestureListener() {
+            public void dragGestureRecognized(DragGestureEvent dge) {
+                startDrag();
+                PieceMover.AbstractDragHandler.getTheDragHandler().dragGestureRecognized(dge);
+            }
+        };
+        DragSource.getDefaultDragSource().createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_MOVE, dragGestureListener);
+    }
+    
+    // Puts counter in DragBuffer. Call when mouse gesture recognized
+    protected void startDrag() 
+    {
+        if (m_objEntry.m_objPieceSlot == null)
+            m_objEntry.m_objParent.getPiecesSlot();
+            
+        if (m_objEntry.m_objPieceSlot != null)
+        {
+            m_objEntry.m_objPieceSlot.getPiece().setPosition(new Point(0, 0));
+
+            // Erase selection border to avoid leaving selected after mouse dragged out
+            m_objEntry.m_objPieceSlot.getPiece().setProperty(Properties.SELECTED, null);
+
+            if (m_objEntry.m_objPieceSlot.getPiece() != null) {
+                KeyBuffer.getBuffer().clear();
+                DragBuffer.getBuffer().clear();
+                GamePiece l_objNewPiece = PieceCloner.getInstance().clonePiece(m_objEntry.m_objPieceSlot.getPiece());
+                l_objNewPiece.setProperty(Properties.PIECE_ID, m_objEntry.m_objPieceSlot.getGpId());
+                DragBuffer.getBuffer().add(l_objNewPiece);
+            }
+        }
+    }
+}
+
+class ASLMenuItem extends JMenuItem
+{
+    ButtonEntry m_objEntry;
+    
+    public ASLMenuItem(ButtonEntry objEntry) 
+    {
+        m_objEntry = objEntry;
+
+        setDropTarget(PieceMover.AbstractDragHandler.makeDropTarget(this, DnDConstants.ACTION_MOVE, null));
+
+        DragGestureListener dragGestureListener = new DragGestureListener() {
+            public void dragGestureRecognized(DragGestureEvent dge) {
+                startDrag();
+                PieceMover.AbstractDragHandler.getTheDragHandler().dragGestureRecognized(dge);
+            }
+        };
+        DragSource.getDefaultDragSource().createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_MOVE, dragGestureListener);
+    }
+    
+    // Puts counter in DragBuffer. Call when mouse gesture recognized
+    protected void startDrag() 
+    {
+        if (m_objEntry.m_objPieceSlot == null)
+            m_objEntry.m_objParent.getPiecesSlot();
+            
+        if (m_objEntry.m_objPieceSlot != null)
+        {
+            m_objEntry.m_objPieceSlot.getPiece().setPosition(new Point(0, 0));
+
+            // Erase selection border to avoid leaving selected after mouse dragged out
+            m_objEntry.m_objPieceSlot.getPiece().setProperty(Properties.SELECTED, null);
+
+            if (m_objEntry.m_objPieceSlot.getPiece() != null) {
+                KeyBuffer.getBuffer().clear();
+                DragBuffer.getBuffer().clear();
+                GamePiece l_objNewPiece = PieceCloner.getInstance().clonePiece(m_objEntry.m_objPieceSlot.getPiece());
+                l_objNewPiece.setProperty(Properties.PIECE_ID, m_objEntry.m_objPieceSlot.getGpId());
+                DragBuffer.getBuffer().add(l_objNewPiece);
+            }
+        }
+    }
+}
+
+class ButtonEntry {
+    
+    public QC m_objParent;
+    public String m_strName;
+    public String m_strPieceDefinition;
+    public String m_strImageName;
+    public String m_strMenu;
+    public PieceSlot m_objPieceSlot;
+    public JPopupMenu m_popupMenu;
+    public boolean m_bTopLevel;
+
+    public ButtonEntry(QC objParent, String strName, String strDef, String strImg, String strMenu, PieceSlot pieceModelSlot, JPopupMenu popupMenu, boolean bTopLevel) 
+    {
+        m_objParent = objParent;
+        m_strName = strName;
+        m_strPieceDefinition = strDef;
+        m_strImageName = strImg;
+        m_strMenu = strMenu;
+        m_objPieceSlot = pieceModelSlot;
+        m_popupMenu = popupMenu;
+        m_bTopLevel = bTopLevel;
+    }
+}
 /**
  * A class to remove all GamePieces with a given name
  */
@@ -57,12 +165,12 @@ public class QC implements Buildable
     private Map m_Map;
     private Vector<JButton> m_ButtonsV = new Vector<JButton>();
     private Vector<JPopupMenu> m_PopupMenusV = new Vector<JPopupMenu>();
-    private Vector<Entry> m_EntriesV = new Vector<Entry>();
+    private Vector<ButtonEntry> m_EntriesV = new Vector<ButtonEntry>();
     private int m_iMode = c_iModeNormal;
 
-    private void toggleVisibility(JButton button) 
+    private void toggleVisibility(JButton objButton) 
     {
-        String l_strButtonName = button.getName();
+        String l_strButtonName = objButton.getName();
 
         if (l_strButtonName != null) 
         {
@@ -72,7 +180,7 @@ public class QC implements Buildable
                 {
                     int l_iVisibility = Integer.valueOf(l_strButtonName.substring(0, 1));
 
-                    button.setVisible((m_iMode & l_iVisibility) != 0);
+                    objButton.setVisible((m_iMode & l_iVisibility) != 0);
                 } 
                 catch (Exception ex) 
                 {
@@ -89,19 +197,19 @@ public class QC implements Buildable
         }
     }
 
-    protected void getPieceSlot() 
+    protected void getPiecesSlot() 
     {
-        List<PieceSlot> l_PieceSlotL = GameModule.getGameModule().getAllDescendantComponentsOf(PieceSlot.class);
+        List<PieceSlot> lar_PieceSlotL = GameModule.getGameModule().getAllDescendantComponentsOf(PieceSlot.class);
         
-        for (Enumeration<Entry> l_Enum = m_EntriesV.elements(); l_Enum.hasMoreElements();) 
+        for (Enumeration<ButtonEntry> l_Enum = m_EntriesV.elements(); l_Enum.hasMoreElements();) 
         {
-            Entry l_Entry = l_Enum.nextElement();
+            ButtonEntry l_Entry = l_Enum.nextElement();
 
             if (l_Entry.m_popupMenu == null)
             {
-                for (PieceSlot l_pieceSlot : l_PieceSlotL) 
+                for (PieceSlot l_objPieceSlot : lar_PieceSlotL) 
                 {
-                    String l_id = l_pieceSlot.getGpId();
+                    String l_id = l_objPieceSlot.getGpId();
 
                     if (l_id != null) 
                     {
@@ -109,7 +217,7 @@ public class QC implements Buildable
                         {
                             if (l_id.compareTo(l_Entry.m_strPieceDefinition) == 0) 
                             {
-                                l_Entry.m_pieceModelSlot = l_pieceSlot;
+                                l_Entry.m_objPieceSlot = l_objPieceSlot;
                                 break;
                             }
                         }
@@ -182,43 +290,43 @@ public class QC implements Buildable
         {
             Element l_Element = (Element) l_NodeL.item(i);
 
-            String l_strActionName = l_Element.getAttribute("name");
+            String l_strName = l_Element.getAttribute("name");
             String l_strImageName = l_Element.getAttribute("image");
             String l_strMenu = l_Element.getAttribute("menu");
             String l_strPieceDefinition = Builder.getText(l_Element);
 
-            JButton l_Button = new JButton("");
-
+            // is a standard button
             if (l_strMenu.compareToIgnoreCase("false") == 0) 
             {
-                Entry l_Entry = new Entry(l_strActionName, l_strPieceDefinition, l_strImageName, l_strMenu, null, null, true);
+                ButtonEntry l_Entry = new ButtonEntry(this, l_strName, l_strPieceDefinition, l_strImageName, l_strMenu, null, null, true);
+                ASLButton l_ASLButton = new ASLButton(l_Entry);
 
                 try 
                 {
-                    l_Button.setName(l_strActionName);                    
-                    l_Button.setIcon(new ImageIcon(Op.load(l_strImageName + ".png").getImage(null)));
-                    l_Button.setMargin(new Insets(0, 0, 0, 0));
+                    l_ASLButton.setName(l_strName);                    
+                    l_ASLButton.setIcon(new ImageIcon(Op.load(l_strImageName + ".png").getImage(null)));
+                    l_ASLButton.setMargin(new Insets(0, 0, 0, 0));
                 } 
                 catch (Exception ex) 
                 {
                     ex.printStackTrace();
                 }
 
-                l_Button.setAlignmentY(0.0F);
-                l_Button.addActionListener(new PlaceMarkAction(l_Entry));
+                l_ASLButton.setAlignmentY(0.0F);
 
                 m_EntriesV.addElement(l_Entry);
-                m_ButtonsV.addElement(l_Button);
+                m_ButtonsV.addElement(l_ASLButton);
             } 
-            else 
+            else // is a submenu
             {
+                JButton l_Button = new JButton("");
                 JPopupMenu l_PopupMenu = new JPopupMenu();
 
-                Entry l_Entry = new Entry(l_strActionName, l_strPieceDefinition, l_strImageName, l_strMenu, null, l_PopupMenu, true);
+                ButtonEntry l_Entry = new ButtonEntry(this, l_strName, l_strPieceDefinition, l_strImageName, l_strMenu, null, l_PopupMenu, true);
 
                 try 
                 {
-                    l_Button.setName(l_strActionName);
+                    l_Button.setName(l_strName);
                     l_Button.setIcon(new ImageIcon(Op.load(l_strImageName + ".png").getImage(null)));
                     l_Button.setMargin(new Insets(0, 0, 0, 0));
                 } 
@@ -250,9 +358,10 @@ public class QC implements Buildable
                     {
                         String l_strText = l_strTextElemA[0];
                         String l_strID = l_strTextElemA[1];
-                        JMenuItem l_MenuItem = new JMenuItem(l_strText);
 
-                        Entry l_PopupEntry = new Entry(l_strActionName + l_strID, l_strID, l_strImageName + l_strID, "false", null, null, false);
+                        ButtonEntry l_PopupEntry = new ButtonEntry(this, l_strName + l_strID, l_strID, l_strImageName + l_strID, "false", null, null, false);
+                        ASLMenuItem l_MenuItem = new ASLMenuItem(l_PopupEntry);
+                        l_MenuItem.setText(l_strText);
 
                         try 
                         {
@@ -277,15 +386,15 @@ public class QC implements Buildable
     {
         Element l_Elem = doc.createElement(getClass().getName());
 
-        for (Enumeration<Entry> l_Enum = m_EntriesV.elements(); l_Enum.hasMoreElements();) 
+        for (Enumeration<ButtonEntry> l_Enum = m_EntriesV.elements(); l_Enum.hasMoreElements();) 
         {
-            Entry l_Entry = l_Enum.nextElement();
+            ButtonEntry l_Entry = l_Enum.nextElement();
 
             if (l_Entry.m_bTopLevel)
             {
                 Element l_Sub = doc.createElement("entry");
                 
-                l_Sub.setAttribute("name", l_Entry.m_strActionName);
+                l_Sub.setAttribute("name", l_Entry.m_strName);
                 l_Sub.setAttribute("image", l_Entry.m_strImageName);
                 l_Sub.setAttribute("menu", l_Entry.m_strMenu);
                 l_Sub.appendChild(doc.createTextNode(l_Entry.m_strPieceDefinition));
@@ -385,123 +494,22 @@ public class QC implements Buildable
         || Boolean.TRUE.equals(piece.getProperty(Properties.INVISIBLE_TO_OTHERS));
     }
   
-    public Command PlaceMarker(Entry entry) 
-    {
-        Command l_Comm = new NullCommand();
-		
-        final ArrayList<String> l_PiecesIdA = new ArrayList<String>();
-		
-        for (Iterator<GamePiece> l_it = KeyBuffer.getBuffer().getPiecesIterator(); l_it.hasNext(); ) 
-        {
-            l_PiecesIdA.add(l_it.next().getId());	        
-        }	
-	      
-        for (String l_strId : l_PiecesIdA) 
-        {
-            GamePiece l_createdPiece = null, l_Piece = null;
-
-            l_Piece = GameModule.getGameModule().getGameState().getPieceForId(l_strId);
-
-            if (l_Piece != null)
-            {
-                if (l_Piece.getMap() != null) 
-                {
-                    if (!isInvisible(l_Piece))
-                    {
-                        if (l_Piece.getParent() != null)
-                        {
-                            if (l_Piece.getParent().topPiece().getProperty(Properties.PIECE_ID).toString().compareTo(entry.m_pieceModelSlot.getGpId()) != 0)
-                            {
-                                l_createdPiece = PieceCloner.getInstance().clonePiece(entry.m_pieceModelSlot.getPiece());
-                                l_createdPiece.setId(null);
-
-                                l_Comm.append(new AddPiece(l_createdPiece));
-
-                                GameModule.getGameModule().getGameState().addPiece(l_createdPiece);
-
-                                l_Comm.append(l_Piece.getMap().placeAt(l_createdPiece, l_Piece.getPosition()));
-                                l_Comm.append(l_Piece.getMap().placeOrMerge(l_createdPiece,l_Piece.getPosition()));
-
-                                KeyBuffer.getBuffer().add(l_createdPiece);
-
-                                if (GlobalOptions.getInstance().autoReportEnabled()) 
-                                {
-                                    FormattedString l_Fmt = new FormattedString();
-
-                                    l_Fmt.setFormat(l_Piece.getMap().getCreateFormat());
-
-                                    l_Fmt.setProperty(Map.PIECE_NAME, l_createdPiece.getLocalizedName());
-                                    l_Fmt.setProperty(Map.LOCATION, l_Piece.getMap().localizedLocationName(l_Piece.getPosition()));
-
-                                    String l_strText = l_Fmt.getLocalizedText();
-
-                                    if (l_strText.length() > 0) 
-                                    {
-                                        l_Comm = l_Comm.append(new Chatter.DisplayText(GameModule.getGameModule().getChatter(), "* " + l_strText));
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return l_Comm;
-    }
-
     private class PlaceMarkAction implements ActionListener 
     {
-        private Entry m_Entry = null;
+        private ButtonEntry m_Entry = null;
 	  
-        public PlaceMarkAction(Entry entry) 
+        public PlaceMarkAction(ButtonEntry entry) 
         {
             m_Entry = entry;
         }
 
         public void actionPerformed(ActionEvent evt) 
         {
-            if (m_Entry.m_popupMenu == null)
-            {
-                if (m_Entry.m_pieceModelSlot == null)
-                    getPieceSlot();
-                
-                if (m_Entry.m_pieceModelSlot != null)
-                {
-                    Command l_Command = PlaceMarker(m_Entry);
-
-                    l_Command.execute();
-
-                    GameModule.getGameModule().sendAndLog(l_Command);
-                }
-            }
-            else
+            if (m_Entry.m_popupMenu != null)
             {
                 if (evt.getSource() instanceof JButton)
                     m_Entry.m_popupMenu.show((JButton)evt.getSource(), 0, 0);
             }
-        }
-    }
-
-    private static class Entry 
-    {
-        public String m_strActionName;
-        public String m_strPieceDefinition;
-        public String m_strImageName;
-        public String m_strMenu;
-        public PieceSlot m_pieceModelSlot;
-        public JPopupMenu m_popupMenu;
-        public boolean m_bTopLevel;
-
-        public Entry(String strName, String strDef, String strImg, String strMenu, PieceSlot pieceModelSlot, JPopupMenu popupMenu, boolean bTopLevel) 
-        {
-            m_strActionName = strName;
-            m_strPieceDefinition = strDef;
-            m_strImageName = strImg;
-            m_strMenu = strMenu;
-            m_pieceModelSlot = pieceModelSlot;
-            m_popupMenu = popupMenu;
-            m_bTopLevel = bTopLevel;
         }
     }
 }
