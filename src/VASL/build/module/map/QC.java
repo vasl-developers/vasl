@@ -488,12 +488,6 @@ public class QC implements Buildable
     {
     }
 
-    protected boolean isInvisible(GamePiece piece) 
-    {
-        return Boolean.TRUE.equals(piece.getProperty(Properties.INVISIBLE_TO_ME))
-        || Boolean.TRUE.equals(piece.getProperty(Properties.INVISIBLE_TO_OTHERS));
-    }
-  
     private class PlaceMarkAction implements ActionListener 
     {
         private ButtonEntry m_Entry = null;
