@@ -44,14 +44,18 @@ import java.awt.dnd.DragGestureEvent;
 import java.awt.dnd.DragGestureListener;
 import java.awt.dnd.DragSource;
 
-class ASLButton extends JButton
+class QCButton extends JButton
 {
-    ButtonEntry m_objEntry;
+    QCPieceEntry m_objEntry;
     
-    public ASLButton(ButtonEntry objEntry) 
+    public QCButton(QCPieceEntry objEntry) 
     {
+        super();
         m_objEntry = objEntry;
-
+    }
+    
+    public void InitDragDrop()
+    {
         setDropTarget(PieceMover.AbstractDragHandler.makeDropTarget(this, DnDConstants.ACTION_MOVE, null));
 
         DragGestureListener dragGestureListener = new DragGestureListener() {
@@ -87,14 +91,18 @@ class ASLButton extends JButton
     }
 }
 
-class ASLMenuItem extends JMenuItem
+class QCMenuItem extends JMenuItem
 {
-    ButtonEntry m_objEntry;
+    QCPieceEntry m_objEntry;
     
-    public ASLMenuItem(ButtonEntry objEntry) 
+    public QCMenuItem(QCPieceEntry objEntry) 
     {
+        super();
         m_objEntry = objEntry;
-
+    }
+    
+    public void InitDragDrop()
+    {
         setDropTarget(PieceMover.AbstractDragHandler.makeDropTarget(this, DnDConstants.ACTION_MOVE, null));
 
         DragGestureListener dragGestureListener = new DragGestureListener() {
@@ -127,10 +135,14 @@ class ASLMenuItem extends JMenuItem
                 DragBuffer.getBuffer().add(l_objNewPiece);
             }
         }
+        
+        if (getParent() != null)
+            if (getParent() instanceof JPopupMenu)
+                ((JPopupMenu)this.getParent()).setVisible(false);
     }
 }
 
-class ButtonEntry {
+class QCPieceEntry {
     
     public QC m_objParent;
     public String m_strName;
@@ -141,7 +153,7 @@ class ButtonEntry {
     public JPopupMenu m_popupMenu;
     public boolean m_bTopLevel;
 
-    public ButtonEntry(QC objParent, String strName, String strDef, String strImg, String strMenu, PieceSlot pieceModelSlot, JPopupMenu popupMenu, boolean bTopLevel) 
+    public QCPieceEntry(QC objParent, String strName, String strDef, String strImg, String strMenu, PieceSlot pieceModelSlot, JPopupMenu popupMenu, boolean bTopLevel) 
     {
         m_objParent = objParent;
         m_strName = strName;
@@ -165,7 +177,7 @@ public class QC implements Buildable
     private Map m_Map;
     private Vector<JButton> m_ButtonsV = new Vector<JButton>();
     private Vector<JPopupMenu> m_PopupMenusV = new Vector<JPopupMenu>();
-    private Vector<ButtonEntry> m_EntriesV = new Vector<ButtonEntry>();
+    private Vector<QCPieceEntry> m_EntriesV = new Vector<QCPieceEntry>();
     private int m_iMode = c_iModeNormal;
 
     private void toggleVisibility(JButton objButton) 
@@ -201,9 +213,9 @@ public class QC implements Buildable
     {
         List<PieceSlot> lar_PieceSlotL = GameModule.getGameModule().getAllDescendantComponentsOf(PieceSlot.class);
         
-        for (Enumeration<ButtonEntry> l_Enum = m_EntriesV.elements(); l_Enum.hasMoreElements();) 
+        for (Enumeration<QCPieceEntry> l_Enum = m_EntriesV.elements(); l_Enum.hasMoreElements();) 
         {
-            ButtonEntry l_Entry = l_Enum.nextElement();
+            QCPieceEntry l_Entry = l_Enum.nextElement();
 
             if (l_Entry.m_popupMenu == null)
             {
@@ -298,11 +310,12 @@ public class QC implements Buildable
             // is a standard button
             if (l_strMenu.compareToIgnoreCase("false") == 0) 
             {
-                ButtonEntry l_Entry = new ButtonEntry(this, l_strName, l_strPieceDefinition, l_strImageName, l_strMenu, null, null, true);
-                ASLButton l_ASLButton = new ASLButton(l_Entry);
+                QCPieceEntry l_Entry = new QCPieceEntry(this, l_strName, l_strPieceDefinition, l_strImageName, l_strMenu, null, null, true);
+                QCButton l_ASLButton = new QCButton(l_Entry);
 
                 try 
                 {
+                    l_ASLButton.InitDragDrop();
                     l_ASLButton.setName(l_strName);                    
                     l_ASLButton.setIcon(new ImageIcon(Op.load(l_strImageName + ".png").getImage(null)));
                     l_ASLButton.setMargin(new Insets(0, 0, 0, 0));
@@ -322,7 +335,7 @@ public class QC implements Buildable
                 JButton l_Button = new JButton("");
                 JPopupMenu l_PopupMenu = new JPopupMenu();
 
-                ButtonEntry l_Entry = new ButtonEntry(this, l_strName, l_strPieceDefinition, l_strImageName, l_strMenu, null, l_PopupMenu, true);
+                QCPieceEntry l_Entry = new QCPieceEntry(this, l_strName, l_strPieceDefinition, l_strImageName, l_strMenu, null, l_PopupMenu, true);
 
                 try 
                 {
@@ -359,12 +372,13 @@ public class QC implements Buildable
                         String l_strText = l_strTextElemA[0];
                         String l_strID = l_strTextElemA[1];
 
-                        ButtonEntry l_PopupEntry = new ButtonEntry(this, l_strName + l_strID, l_strID, l_strImageName + l_strID, "false", null, null, false);
-                        ASLMenuItem l_MenuItem = new ASLMenuItem(l_PopupEntry);
-                        l_MenuItem.setText(l_strText);
+                        QCPieceEntry l_PopupEntry = new QCPieceEntry(this, l_strName + l_strID, l_strID, l_strImageName + l_strID, "false", null, null, false);
+                        QCMenuItem l_MenuItem = new QCMenuItem(l_PopupEntry);
 
                         try 
                         {
+                            l_MenuItem.InitDragDrop();
+                            l_MenuItem.setText(l_strText);
                             l_MenuItem.setIcon(new ImageIcon(Op.load(l_strImageName + l_strID + ".png").getImage(null)));
                         } 
                         catch (Exception ex) 
@@ -386,9 +400,9 @@ public class QC implements Buildable
     {
         Element l_Elem = doc.createElement(getClass().getName());
 
-        for (Enumeration<ButtonEntry> l_Enum = m_EntriesV.elements(); l_Enum.hasMoreElements();) 
+        for (Enumeration<QCPieceEntry> l_Enum = m_EntriesV.elements(); l_Enum.hasMoreElements();) 
         {
-            ButtonEntry l_Entry = l_Enum.nextElement();
+            QCPieceEntry l_Entry = l_Enum.nextElement();
 
             if (l_Entry.m_bTopLevel)
             {
@@ -490,9 +504,9 @@ public class QC implements Buildable
 
     private class PlaceMarkAction implements ActionListener 
     {
-        private ButtonEntry m_Entry = null;
+        private QCPieceEntry m_Entry = null;
 	  
-        public PlaceMarkAction(ButtonEntry entry) 
+        public PlaceMarkAction(QCPieceEntry entry) 
         {
             m_Entry = entry;
         }
