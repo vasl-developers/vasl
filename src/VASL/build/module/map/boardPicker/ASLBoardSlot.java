@@ -114,10 +114,21 @@ public class ASLBoardSlot extends BoardSlot {
     if (board.isReversed()) {
       obox.translate(-obox.width, -obox.height);
     }
-    boolean overlapLeft = obox.x < bbox.x;
-    boolean overlapRight = obox.x + obox.width > bbox.x + bbox.width;
-    boolean overlapTop = obox.y < bbox.y;
-    boolean overlapBottom = obox.y + obox.height > bbox.y + bbox.height;
+    
+    // fredkors 14.nov.2013
+    // bbox rect is in 'screen' coordinates (only width and height count)
+    // while obox rect is in 'map' coordinates
+    
+    //boolean overlapLeft = obox.x < bbox.x;
+    //boolean overlapRight = obox.x + obox.width > bbox.x + bbox.width;
+    //boolean overlapTop = obox.y < bbox.y;
+    //boolean overlapBottom = obox.y + obox.height > bbox.y + bbox.height;
+    
+    boolean overlapLeft = obox.x < 0;
+    boolean overlapRight = obox.x + obox.width > bbox.width;
+    boolean overlapTop = obox.y < 0;
+    boolean overlapBottom = obox.y + obox.height > bbox.height;
+    
     if (overlapLeft) {
       if (overlapTop) {
         overlap(o, -1, -1);

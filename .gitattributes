@@ -3825,6 +3825,7 @@ dist/images/QC/CC74.png -text
 dist/images/QC/CC83.png -text
 dist/images/QC/CC85.png -text
 dist/images/QC/CC88.png -text
+dist/images/QC/CX.png -text
 dist/images/QC/Crest.png -text
 dist/images/QC/DM.png -text
 dist/images/QC/Disrupted.png -text
@@ -3847,6 +3848,7 @@ dist/images/QC/MA41.png -text
 dist/images/QC/MA5918.png -text
 dist/images/QC/MA5919.png -text
 dist/images/QC/MA5920.png -text
+dist/images/QC/MOTION.png -text
 dist/images/QC/OBA.png -text
 dist/images/QC/OTHER.png -text
 dist/images/QC/OTHER5902.png -text
@@ -3895,6 +3897,7 @@ dist/images/QC/Smoke72.png -text
 dist/images/QC/StunB.png -text
 dist/images/QC/StunL.png -text
 dist/images/QC/TANK.png -text
+dist/images/QC/TANK101.png -text
 dist/images/QC/TANK104.png -text
 dist/images/QC/TANK109.png -text
 dist/images/QC/TANK111.png -text
