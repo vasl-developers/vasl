@@ -22,6 +22,7 @@ import VASSAL.build.module.map.boardPicker.board.HexGrid;
 import VASSAL.build.module.map.boardPicker.board.MapGrid;
 
 import java.awt.*;
+import javax.swing.JOptionPane;
 
 public class ASLHexGrid extends HexGrid {
   protected static final String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -67,18 +68,37 @@ public class ASLHexGrid extends HexGrid {
         if ((int) Math.floor(2 * p.y / dy + 0.5) % 2 == 0) { /* Bypass at 1/2-hex in Y */
           hexX2 = hexX;
           hexY2 = p.y > (hexY - 0.5) * dy ? hexY + 1 : hexY - 1;
+          if (hexY2 < hexY) // FredKors 16-nov-2013 fix bypass coord
+          {
+              int l_iSwitch = hexY2;
+              hexY2 = hexY;
+              hexY = l_iSwitch;
+          }
         }
       }
       else {
         if ((int) Math.floor(2 * p.y / dy + 0.5) % 2 != 0) { /* Bypass at 1/2-hex in Y */
           hexX2 = hexX;
           hexY2 = p.y > hexY * dy ? hexY + 1 : hexY - 1;
+          if (hexY2 < hexY) // FredKors 16-nov-2013 fix bypass coord
+          {
+              int l_iSwitch = hexY2;
+              hexY2 = hexY;
+              hexY = l_iSwitch;
+          }
         }
       }
     }
 
+    // FredKors 16-nov-2013 fix bypass coord in 'alternate' maps
     if (alternate && hexX % 2 != 0) {
       hexY++;
+      //hexY2++;
+    }
+    
+    // FredKors 16-nov-2013 fix bypass coord in 'alternate' maps
+    
+    if ((hexX2 != UNSPECIFIED) && (alternate) && (hexX2 % 2 != 0)) {
       hexY2++;
     }
 
