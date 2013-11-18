@@ -20,7 +20,6 @@ import javax.swing.JButton;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
-import javax.swing.JSeparator;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -38,11 +37,13 @@ import VASSAL.counters.KeyBuffer;
 import VASSAL.counters.PieceCloner;
 import VASSAL.counters.Properties;
 import VASSAL.tools.imageop.Op;
+import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragGestureEvent;
 import java.awt.dnd.DragGestureListener;
 import java.awt.dnd.DragSource;
+import javax.swing.SwingConstants;
 
 class QCButton extends JButton
 {
@@ -88,57 +89,10 @@ class QCButton extends JButton
                 DragBuffer.getBuffer().add(l_objNewPiece);
             }
         }
-    }
-}
-
-class QCMenuItem extends JMenuItem
-{
-    QCPieceEntry m_objEntry;
-    
-    public QCMenuItem(QCPieceEntry objEntry) 
-    {
-        super();
-        m_objEntry = objEntry;
-    }
-    
-    public void InitDragDrop()
-    {
-        setDropTarget(PieceMover.AbstractDragHandler.makeDropTarget(this, DnDConstants.ACTION_MOVE, null));
-
-        DragGestureListener dragGestureListener = new DragGestureListener() {
-            public void dragGestureRecognized(DragGestureEvent dge) {
-                startDrag();
-                PieceMover.AbstractDragHandler.getTheDragHandler().dragGestureRecognized(dge);
-            }
-        };
-        DragSource.getDefaultDragSource().createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_MOVE, dragGestureListener);
-    }
-    
-    // Puts counter in DragBuffer. Call when mouse gesture recognized
-    protected void startDrag() 
-    {
-        if (m_objEntry.m_objPieceSlot == null)
-            m_objEntry.m_objParent.getPiecesSlot();
-            
-        if (m_objEntry.m_objPieceSlot != null)
-        {
-            m_objEntry.m_objPieceSlot.getPiece().setPosition(new Point(0, 0));
-
-            // Erase selection border to avoid leaving selected after mouse dragged out
-            m_objEntry.m_objPieceSlot.getPiece().setProperty(Properties.SELECTED, null);
-
-            if (m_objEntry.m_objPieceSlot.getPiece() != null) {
-                KeyBuffer.getBuffer().clear();
-                DragBuffer.getBuffer().clear();
-                GamePiece l_objNewPiece = PieceCloner.getInstance().clonePiece(m_objEntry.m_objPieceSlot.getPiece());
-                l_objNewPiece.setProperty(Properties.PIECE_ID, m_objEntry.m_objPieceSlot.getGpId());
-                DragBuffer.getBuffer().add(l_objNewPiece);
-            }
-        }
         
         if (getParent() != null)
             if (getParent() instanceof JPopupMenu)
-                ((JPopupMenu)this.getParent()).setVisible(false);
+                ((JPopupMenu)this.getParent()).setVisible(false);        
     }
 }
 
@@ -355,13 +309,12 @@ public class QC implements Buildable
                 m_ButtonsV.addElement(l_Button);
                 m_PopupMenusV.addElement(l_PopupMenu);
 
-                l_PopupMenu.add(new JMenuItem("Select"));
-                l_PopupMenu.add(new JSeparator());
-
                 // create the submenu
                 String l_strDelims = "[,]";
                 String[] l_strTokensA = l_strPieceDefinition.split(l_strDelims);
 
+                l_PopupMenu.setLayout(new GridLayout(l_strTokensA.length, 1));
+                
                 for (int l_i = 0; l_i < l_strTokensA.length; l_i++)
                 {
                     String l_strSingleDelims = "[:]";
@@ -373,13 +326,18 @@ public class QC implements Buildable
                         String l_strID = l_strTextElemA[1];
 
                         QCPieceEntry l_PopupEntry = new QCPieceEntry(this, l_strName + l_strID, l_strID, l_strImageName + l_strID, "false", null, null, false);
-                        QCMenuItem l_MenuItem = new QCMenuItem(l_PopupEntry);
+                        QCButton l_MenuItem = new QCButton(l_PopupEntry);
 
                         try 
                         {
-                            l_MenuItem.InitDragDrop();
                             l_MenuItem.setText(l_strText);
                             l_MenuItem.setIcon(new ImageIcon(Op.load(l_strImageName + l_strID + ".png").getImage(null)));
+                            l_MenuItem.setMargin(new Insets(2, 2, 2, 2));
+                            l_MenuItem.setAlignmentY(0.0F);
+                            l_MenuItem.setFocusPainted(false);
+                            l_MenuItem.setBackground(new Color(235, 235, 235));
+                            l_MenuItem.setHorizontalAlignment(SwingConstants.LEFT);
+                            l_MenuItem.InitDragDrop();
                         } 
                         catch (Exception ex) 
                         {
@@ -516,7 +474,7 @@ public class QC implements Buildable
             if (m_Entry.m_popupMenu != null)
             {
                 if (evt.getSource() instanceof JButton)
-                    m_Entry.m_popupMenu.show((JButton)evt.getSource(), 0, 0);
+                    m_Entry.m_popupMenu.show((JButton)evt.getSource(), ((JButton)evt.getSource()).getWidth() - 5, ((JButton)evt.getSource()).getHeight() - 5);
             }
         }
     }
