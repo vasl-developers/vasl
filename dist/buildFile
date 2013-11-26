@@ -4598,9 +4598,8 @@
             </VASSAL.build.widget.BoxWidget>
         </VASSAL.build.widget.TabWidget>
     </VASSAL.build.module.PieceWindow>
-    <VASL.build.module.ASLDiceButton addToTotal="0" hotkey="113,0" icon="DRs" nDice="2" nSides="6" name="DR" plus="0" prompt="false" reportFormat="** $name$ = $result$ *** &lt;$playerName$&gt;" reportTotal="false" sortDice="false" text="" tooltip="DR"/>
-    <VASSAL.build.module.DiceButton addToTotal="0" hotkey="112,0" icon="dr" nDice="1" nSides="6" name="dr" plus="0" prompt="false" reportFormat="** $name$ = $result$ *** &lt;$playerName$&gt;" reportTotal="false" sortDice="false" text="" tooltip="dr"/>
-    <VASSAL.build.module.Chatter/>
+    <VASL.build.module.ASLDiceBot/>
+    <VASL.build.module.ASLChatter/>
     <VASSAL.build.module.ConnectionWindow/>
     <VASSAL.build.module.ChartWindow hotkey="116,0" icon="QRDC" name="QRDC" text="" tooltip="QRDC">
         <VASSAL.build.widget.TabWidget>
