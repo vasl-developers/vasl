@@ -298,17 +298,17 @@ public class ASLDiceBot extends AbstractBuildable
     public static final String ICON = "icon"; //$NON-NLS-1$
     public static final String HOTKEY = "hotkey"; //$NON-NLS-1$
 
-    private static LaunchButton m_objButtonStats; //, m_objButtonDR, m_objButtondr;
+    private LaunchButton m_objButtonStats; //, m_objButtonDR, m_objButtondr;
 
-    private static final int m_MaxInstancesPerSeries = 99;
-    private static int m_iCurrentSeries = 0, m_iInstancesInCurrentSeries = m_MaxInstancesPerSeries;
+    private final int m_MaxInstancesPerSeries = 99;
+    private int m_iCurrentSeries = 0, m_iInstancesInCurrentSeries = m_MaxInstancesPerSeries;
     
     private static final int m_iMAXNUM = 1000;
-    private static final int[] mar_iRandomNumbers = new int[m_iMAXNUM];
-    private static final InstanceNumber[] mar_objInstanceNumber = new InstanceNumber[m_MaxInstancesPerSeries];
-    private static final ArrayList<Integer> mar_iDereferencingIndex = new ArrayList<Integer>();
-    private static boolean m_bUseRandomOrg = false;
-    private static final DiceStats map_objStats = new DiceStats();
+    private final int[] mar_iRandomNumbers = new int[m_iMAXNUM];
+    private final InstanceNumber[] mar_objInstanceNumber = new InstanceNumber[m_MaxInstancesPerSeries];
+    private final ArrayList<Integer> mar_iDereferencingIndex = new ArrayList<Integer>();
+    private boolean m_bUseRandomOrg = false;
+    private final DiceStats map_objStats = new DiceStats();
     
     public ASLDiceBot() {
         for (int i = 0; i < m_MaxInstancesPerSeries; i++) {
@@ -320,13 +320,20 @@ public class ASLDiceBot extends AbstractBuildable
     }
 
     public String[] getAttributeNames() {
-        return null;
+        return new String[0];
     }
 
+    public String[] getAttributeDescriptions() {
+        return new String[0];
+    }
     public String getAttributeValueString(String key) {
-        return null;
+        return "";
     }
-
+    
+    public Class<?>[] getAttributeTypes() {
+        return new Class<?>[0];
+    }
+    
     public void addTo(Buildable parent) {
         GameModule l_objGameModule = (GameModule) parent;
 
@@ -677,5 +684,4 @@ public class ASLDiceBot extends AbstractBuildable
         
         OutputString(" ");
     }
-
 }

@@ -87,14 +87,14 @@ public class ASLChatter extends VASSAL.build.module.Chatter
   private static final String USE_DICE_IMAGES = "useDiceImages"; //$NON-NLS-1$
   private static final String COLORED_DICE_COLOR = "coloredDiceColor"; //$NON-NLS-1$
   private static final String SINGLE_DIE_COLOR = "singleDieColor"; //$NON-NLS-1$
-  private final String m_strFileNameFormat = "chatter/DC%s_%s.png";
+  private final static String m_strFileNameFormat = "chatter/DC%s_%s.png";
 
-  private static Color m_clrGameMsg;
-  private static Color m_clrSystemMsg;
-  private static Color m_crlMyChatMsg;
-  private static Color m_clrOtherChatMsg;
-  private static Color m_clrColoredDiceColor;
-  private static Color m_clrSingleDieColor;
+  private Color m_clrGameMsg;
+  private Color m_clrSystemMsg;
+  private Color m_crlMyChatMsg;
+  private Color m_clrOtherChatMsg;
+  private Color m_clrColoredDiceColor;
+  private Color m_clrSingleDieColor;
   
   private JButton m_btnDR;
   private JButton m_btnIFT;
@@ -108,22 +108,22 @@ public class ASLChatter extends VASSAL.build.module.Chatter
   private JButton m_btnSA;
   private JButton m_btnRS;
   
-  private static JTextPane m_objChatPanel;
-  private static StyledDocument m_objDocument;
-  private static StyleContext m_objStyleContext;
+  private JTextPane m_objChatPanel;
+  private StyledDocument m_objDocument;
+  private StyleContext m_objStyleContext;
   
-  private static Font m_objChatterFont;
+  private Font m_objChatterFont;
   
-  private static Style m_objMainStyle;
-  private static Style m_objIconStyle;
-  private static boolean m_bUseDiceImages;
+  private Style m_objMainStyle;
+  private Style m_objIconStyle;
+  private boolean m_bUseDiceImages;
   
-  private final static Icon [] mar_objWhiteDCIcon = new Icon[6];
-  private final static Icon [] mar_objColoredDCIcon = new Icon[6];
-  private final static Icon [] mar_objSingleDieIcon = new Icon[6];
+  private final Icon [] mar_objWhiteDCIcon = new Icon[6];
+  private final Icon [] mar_objColoredDCIcon = new Icon[6];
+  private final Icon [] mar_objSingleDieIcon = new Icon[6];
   
-  private static JTextField m_edtInputText;
-  private final static JScrollPane m_objScrollPane = new ScrollPane(
+  private JTextField m_edtInputText;
+  private final JScrollPane m_objScrollPane = new ScrollPane(
        JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
        JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
@@ -156,20 +156,36 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         super();
 
         // remove chatter components
-        remove(input);
-        scroll.setViewportView(null);
-        remove(scroll);
+        if (input != null)
+            remove(input);
+        
+        if (scroll != null)
+        {
+            scroll.setViewportView(null);
+            remove(scroll);
+        }
 
         // free chatter components
-        conversation = null;
-        input = null;
-        scroll = null;
+        if (conversation != null)
+            conversation = null;
+        if (input != null)
+            input = null;
+        if (scroll != null)
+            scroll = null;
 
+        m_clrGameMsg = Color.magenta;
+        m_clrSystemMsg = new Color(160, 160, 160);
+        m_crlMyChatMsg = Color.gray;
+        m_clrOtherChatMsg =  Color.black;
+        m_clrColoredDiceColor = Color.YELLOW;
+        m_clrSingleDieColor = Color.RED;
+        
         // create new components
         m_objStyleContext = new StyleContext();
         m_objDocument = new DefaultStyledDocument(m_objStyleContext);
 
         Style l_objDefaultStyle = m_objStyleContext.getStyle(StyleContext.DEFAULT_STYLE);
+
         m_objMainStyle = m_objStyleContext.addStyle("MainStyle", l_objDefaultStyle);
         m_objIconStyle = m_objStyleContext.addStyle("IconStyle", l_objDefaultStyle);
         
@@ -181,6 +197,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                 mar_objColoredDCIcon[l_i] = null;
                 mar_objSingleDieIcon[l_i] = null;
             }
+            
+            RebuildColoredDiceFaces();
+            RebuildSingleDieFaces();
         }
         catch (Exception ex) 
         {
@@ -370,14 +389,20 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         {
             public void actionPerformed(ActionEvent e)
             {
-                ASLDiceBot l_objDice = (ASLDiceBot) GameModule.getGameModule().getComponentsOf(ASLDiceBot.class).iterator().next();
-
-                if (l_objDice != null)
+                try
                 {
-                    if (bDice)
-                        l_objDice.DR(strCat);
-                    else
-                        l_objDice.dr(strCat);
+                    ASLDiceBot l_objDice = (ASLDiceBot) GameModule.getGameModule().getComponentsOf(ASLDiceBot.class).iterator().next();
+
+                    if (l_objDice != null)
+                    {
+                        if (bDice)
+                            l_objDice.DR(strCat);
+                        else
+                            l_objDice.dr(strCat);
+                    }
+                }
+                catch (Exception ex)
+                {
                 }
             }
         };
@@ -878,7 +903,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         {
             JLabel l_objLabel = new JLabel((bSingle ? mar_objSingleDieIcon[l_iDice - 1] : (bColored ? mar_objColoredDCIcon[l_iDice - 1] : mar_objWhiteDCIcon[l_iDice - 1])));
             l_objLabel.setAlignmentY(0.7f);
-
+            
             StyleConstants.setComponent(m_objIconStyle, l_objLabel);        
             m_objDocument.insertString(m_objDocument.getLength(), "Ignored", m_objIconStyle);
         }
@@ -972,7 +997,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     private void RebuildSingleDieFaces() 
     {
         BufferedImage l_objImage = null;
-
+        
         try
         {
             for (int l_i = 0; l_i < 6; l_i++)
@@ -987,7 +1012,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
     }
 
-    /**
+   /**
    * Expects to be added to a GameModule.  Adds itself to the
    * controls window and registers itself as a
    * {@link CommandEncoder} */
@@ -995,6 +1020,17 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     public void addTo(Buildable b) 
     {
         GameModule l_objGameModule = (GameModule) b;
+
+        if (l_objGameModule.getChatter() != null)
+        {
+            try
+            {
+                l_objGameModule.getControlPanel().remove(l_objGameModule.getChatter());
+                l_objGameModule.remove(l_objGameModule.getChatter());
+            }
+            catch(Exception ex)
+            { }               
+        }
         
         l_objGameModule.setChatter(this);
         l_objGameModule.addCommandEncoder(this);
