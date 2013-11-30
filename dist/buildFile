@@ -99,7 +99,7 @@
             <entry name="Perimeter">Black Perimeter</entry>
             <entry name="Perimeter">Pink Perimeter</entry>
         </VASL.build.module.map.MassRemover>
-        <VASSAL.build.module.map.KeyBufferer/>
+        <VASL.build.module.map.ASLKeyBufferer/>
         <VASL.build.module.map.ASLImageSaver buttonText="" hotkey="" icon="/images/camera.gif" tooltip="Save Map as PNG file"/>
         <VASL.build.module.map.ASLTextSaver buttonText="Save Text" hotkey="" icon="" tooltip="Save map contents as plain text file"/>
         <VASL.build.module.map.BoardSwapper/>
