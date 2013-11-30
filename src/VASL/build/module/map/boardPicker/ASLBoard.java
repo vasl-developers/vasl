@@ -18,25 +18,6 @@
  */
 package VASL.build.module.map.boardPicker;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.StringTokenizer;
-
 import VASL.build.module.map.boardPicker.board.ASLHexGrid;
 import VASSAL.build.BadDataReport;
 import VASSAL.build.GameModule;
@@ -48,16 +29,16 @@ import VASSAL.tools.ErrorDialog;
 import VASSAL.tools.image.ImageIOException;
 import VASSAL.tools.image.ImageTileSource;
 import VASSAL.tools.image.ImageUtils;
-import VASSAL.tools.imageop.AbstractTiledOpImpl;
-import VASSAL.tools.imageop.ImageOp;
-import VASSAL.tools.imageop.Op;
-import VASSAL.tools.imageop.SourceOp;
-import VASSAL.tools.imageop.SourceOpBitmapImpl;
-import VASSAL.tools.imageop.SourceOpTiledBitmapImpl;
-import VASSAL.tools.imageop.SourceTileOpBitmapImpl;
+import VASSAL.tools.imageop.*;
 import VASSAL.tools.io.FileArchive;
 import VASSAL.tools.io.IOUtils;
 import VASSAL.tools.io.ZipArchive;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.util.*;
+import java.util.List;
 
 /** A Board is a geomorphic or HASL board. */
 public class ASLBoard extends Board {
