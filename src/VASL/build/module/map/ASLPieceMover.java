@@ -34,6 +34,7 @@ import VASSAL.tools.LaunchButton;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Vector;
 
 public class ASLPieceMover extends PieceMover {
@@ -193,7 +194,7 @@ public class ASLPieceMover extends PieceMover {
         Vector toMove = new Vector();
         for (PieceIterator pi = new PieceIterator(((Stack) p).getPiecesIterator());
              pi.hasMoreElements();) {
-          GamePiece p1 = pi.nextPiece();
+          GamePiece p1 = pi.nextPiece(); 
           if (p1.getProperty(ASLProperties.LOCATION) == null) {
             toMove.addElement(p1);
           }
@@ -208,14 +209,146 @@ public class ASLPieceMover extends PieceMover {
           }
         }
       }
-      else {
+      else { 
         movable.addElement(p);
       }
     }
+    
+    // FredKors 30/11/2013 : PRB if a stack contains INVISIBLE_TO_ME counters, they are added as single counters as movable
     DragBuffer.getBuffer().clear();
+    
     for (Enumeration e = movable.elements();
          e.hasMoreElements();) {
-      DragBuffer.getBuffer().add((GamePiece) e.nextElement());
+        GamePiece p = (GamePiece) e.nextElement();
+        
+        if (p.getProperty(ASLProperties.LOCATION) == null) 
+            DragBuffer.getBuffer().add(p);
+        else
+        {
+            Stack s = p.getParent();
+            int iNumSameParent = 0;
+            
+            if (s != null)
+            {
+                for (Enumeration en = movable.elements();
+                     en.hasMoreElements();) 
+                {
+                    GamePiece pp = (GamePiece) en.nextElement();
+                    
+                    if (pp.getParent() == s)
+                        iNumSameParent++;
+                }
+                
+                if (iNumSameParent == 1) // if there are more than a single counter of the same stack, I don't move the fixed counter
+                    DragBuffer.getBuffer().add(p);
+            }
+            else
+                DragBuffer.getBuffer().add(p); // if it is a single counter, I move it
+        }
     }
   }
+  
+  /**
+   * When the user clicks on the map, a piece from the map is selected by
+   * the dragTargetSelector. What happens to that piece is determined by
+   * the {@link PieceVisitorDispatcher} instance returned by this method.
+   * The default implementation does the following: If a Deck, add the top
+   * piece to the drag buffer If a stack, add it to the drag buffer.
+   * Otherwise, add the piece and any other multi-selected pieces to the
+   * drag buffer.
+   *
+   * @see #createDragTargetSelector
+   * @return
+   */
+  protected PieceVisitorDispatcher createSelectionProcessor() {
+    return new DeckVisitorDispatcher(new DeckVisitor() {
+      public Object visitDeck(Deck d) {
+        DragBuffer.getBuffer().clear();
+        for (PieceIterator it = d.drawCards(); it.hasMoreElements();) {
+          DragBuffer.getBuffer().add(it.nextPiece());
+        }
+        return null;
+      }
+
+      // Modified by FredKors 30/11/2013 : Filter INVISIBLE_TO_ME counters
+      public Object visitStack(Stack s) {
+        DragBuffer.getBuffer().clear();
+        // RFE 1629255 - Only add selected pieces within the stack to the DragBuffer
+        // Add whole stack if all pieces are selected - better drag cursor
+        int selectedCount = 0;
+        int invisibleCount = 0;
+        for (int i = 0; i < s.getPieceCount(); i++) {
+          if (Boolean.TRUE.equals(s.getPieceAt(i).getProperty(Properties.SELECTED))) 
+          {
+            if (!Boolean.TRUE.equals(s.getPieceAt(i).getProperty(Properties.INVISIBLE_TO_ME)))
+                selectedCount++;
+            else
+                invisibleCount++;
+          }
+          else
+              if (Boolean.TRUE.equals(s.getPieceAt(i).getProperty(Properties.INVISIBLE_TO_ME)))
+                  invisibleCount++;
+        }
+
+        if (((Boolean) GameModule.getGameModule().getPrefs().getValue(Map.MOVING_STACKS_PICKUP_UNITS)).booleanValue() || s.getPieceCount() == 1 || s.getPieceCount() == selectedCount) 
+        {
+            if (invisibleCount == 0)
+                DragBuffer.getBuffer().add(s);
+            else
+            {
+                for (int i = 0; i < s.getPieceCount(); i++) 
+                {
+                    final GamePiece p = s.getPieceAt(i);
+                    
+                    if (!Boolean.TRUE.equals(s.getPieceAt(i).getProperty(Properties.INVISIBLE_TO_ME)))
+                    {
+                        DragBuffer.getBuffer().add(p);
+                    }
+                }
+            }
+        }
+        else {
+          for (int i = 0; i < s.getPieceCount(); i++) {
+            final GamePiece p = s.getPieceAt(i);
+            if (Boolean.TRUE.equals(p.getProperty(Properties.SELECTED))) {
+              DragBuffer.getBuffer().add(p);
+            }
+          }
+        }
+        // End RFE 1629255
+        if (KeyBuffer.getBuffer().containsChild(s)) {
+          // If clicking on a stack with a selected piece, put all selected
+          // pieces in other stacks into the drag buffer
+          KeyBuffer.getBuffer().sort(ASLPieceMover.this);
+          for (Iterator<GamePiece> i =
+                KeyBuffer.getBuffer().getPiecesIterator(); i.hasNext();) {
+            final GamePiece piece = i.next();
+            if (piece.getParent() != s) {
+              DragBuffer.getBuffer().add(piece);
+            }
+          }
+        }
+        return null;
+      }
+
+      public Object visitDefault(GamePiece selected) {
+        DragBuffer.getBuffer().clear();
+        if (KeyBuffer.getBuffer().contains(selected)) {
+          // If clicking on a selected piece, put all selected pieces into the
+          // drag buffer
+          KeyBuffer.getBuffer().sort(ASLPieceMover.this);
+          for (Iterator<GamePiece> i =
+                KeyBuffer.getBuffer().getPiecesIterator(); i.hasNext();) {
+            DragBuffer.getBuffer().add(i.next());
+          }
+        }
+        else {
+          DragBuffer.getBuffer().clear();
+          DragBuffer.getBuffer().add(selected);
+        }
+        return null;
+      }
+    });
+  }
+  
 }
