@@ -110,6 +110,12 @@ public class ASLCommandEncoder extends VASSAL.build.module.BasicCommandEncoder i
     else if (type.startsWith(Translate.ID)) {
       return new ASLTranslate(type,inner);
     }
+    else if (type.startsWith(ASLAreaOfEffect.ID)) {  // FredKors 16-nov-2013 fix for the starshell - IR off map
+      return new ASLAreaOfEffect(type,inner);
+    }
+    else if (type.startsWith(ASLAreaOfEffectDL.ID)) {    // FredKors 17-nov-2013 support for the deluxe hex AreaEffect
+      return new ASLAreaOfEffectDL(type,inner);
+    }
     else {
       return super.createDecorator(type, inner);
     }
