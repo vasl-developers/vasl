@@ -86,35 +86,23 @@ public class VASLBoard extends ASLBoard {
     @Override
     public void readData(){
 
-        if (isLegacyBoard()) {
-            super.readData();
+        version = VASLBoardArchive.getVersion();
+        if(VASLBoardArchive.getA1CenterX() != VASLBoardArchive.missingValue()){
+            ((HexGrid) getGrid()).setAttribute(HexGrid.X0, VASLBoardArchive.getA1CenterX());
         }
-        else {
-
-            version = VASLBoardArchive.getVersion();
-            if(VASLBoardArchive.getA1CenterX() != VASLBoardArchive.missingValue()){
-                ((HexGrid) getGrid()).setAttribute(HexGrid.X0, VASLBoardArchive.getA1CenterX());
-            }
-            if(VASLBoardArchive.getA1CenterY() != VASLBoardArchive.missingValue()){
-                ((HexGrid) getGrid()).setAttribute(HexGrid.Y0, VASLBoardArchive.getA1CenterY());
-            }
-            if(VASLBoardArchive.getHexWidth() != VASLBoardArchive.missingValue()){
-                ((HexGrid) getGrid()).setAttribute(HexGrid.DX, VASLBoardArchive.getHexWidth());
-            }
-            if(VASLBoardArchive.getHexHeight() != VASLBoardArchive.missingValue()){
-                ((HexGrid) getGrid()).setAttribute(HexGrid.DY, VASLBoardArchive.getHexHeight());
-            }
+        if(VASLBoardArchive.getA1CenterY() != VASLBoardArchive.missingValue()){
+            ((HexGrid) getGrid()).setAttribute(HexGrid.Y0, VASLBoardArchive.getA1CenterY());
         }
-
+        if(VASLBoardArchive.getHexWidth() != VASLBoardArchive.missingValue()){
+            ((HexGrid) getGrid()).setAttribute(HexGrid.DX, VASLBoardArchive.getHexWidth());
+        }
+        if(VASLBoardArchive.getHexHeight() != VASLBoardArchive.missingValue()){
+            ((HexGrid) getGrid()).setAttribute(HexGrid.DY, VASLBoardArchive.getHexHeight());
+        }
     }
 
     public String getName() {
-        if(isLegacyBoard()) {
-            return super.getName();
-        }
-        else {
-            return VASLBoardArchive.getBoardImageFileName();
-        }
+        return VASLBoardArchive.getBoardImageFileName();
     }
 
 }
