@@ -6,7 +6,7 @@
 
     <groupId>org.vasl</groupId>
     <artifactId>vasl</artifactId>
-    <version>6.1-SNAPSHOT</version>
+    <version>6.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -112,8 +112,8 @@
         </plugins>
     </build>
 
-    <name>VASL</name>
-    <url>https://github.com/vasl-developers</url>
+    <name>VASSAL</name>
+    <url>http://www.vassalengine.org</url>
     <licenses>
         <license>
             <name>GNU Lesser General Public License, version 2.1</name>
@@ -126,14 +126,14 @@
     </licenses>
 
     <issueManagement>
-        <system>GitHub Issues</system>
-        <url>https://github.com/vasl-developers/vasl/issues</url>
+        <system>Bugzilla</system>
+        <url>http://www.vassalengine.org/tracker/</url>
     </issueManagement>
 
     <scm>
-        <url>https://github.com/vasl-developers/vasl</url>
-        <connection>scm:git:git://github.com/vasl-developers/vasl.git</connection>
-        <developerConnection>scm:git:git@github.com:vasl-developers/vasl.git</developerConnection>
+        <connection>scm:svn:https://svn.code.sf.net/p/vassalengine/svn/VASSAL-src</connection>
+        <tag>HEAD</tag>
+        <url>https://svn.code.sf.net/p/vassalengine/svn/VASSAL-src</url>
     </scm>
 
 </project>

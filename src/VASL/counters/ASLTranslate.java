@@ -28,7 +28,6 @@ import VASSAL.build.module.map.boardPicker.board.HexGrid;
 import VASSAL.command.Command;
 import VASSAL.command.NullCommand;
 import VASSAL.counters.GamePiece;
-import VASSAL.counters.Properties;
 import VASSAL.counters.Stack;
 import VASSAL.counters.Translate;
 
@@ -43,43 +42,31 @@ public class ASLTranslate extends Translate {
     super(type, inner);
   }
 
-  // FredKors 30/11/2013 : Filter INVISIBLE_TO_ME counters
   protected Command moveTarget(GamePiece target) {
-      Command c;
-      if (target instanceof Stack) {
-          Stack s = (Stack) target;
-          ArrayList movable = new ArrayList();
-          ArrayList visibleToMe = new ArrayList();
-
-          for (Iterator<GamePiece> it = s.getPiecesIterator(); it.hasNext();) {
-              GamePiece piece = it.next();
-
-              if (!Boolean.TRUE.equals(piece.getProperty(Properties.INVISIBLE_TO_ME))) {
-                  visibleToMe.add(piece);
-              }
-          }
-
-          for (Iterator it = visibleToMe.iterator(); it.hasNext();) {
-              GamePiece piece = (GamePiece) it.next();
-
-              if (piece.getProperty(ASLProperties.LOCATION) == null) {
-                  movable.add(piece);
-              }
-          }
-
-          if (movable.size() == s.getPieceCount()) {
-              return super.moveTarget(s);
-          } else {
-              c = new NullCommand();
-              for (Iterator it = movable.iterator(); it.hasNext();) {
-                  GamePiece gamePiece = (GamePiece) it.next();
-                  c.append(super.moveTarget(gamePiece));
-              }
-          }
-      } else {
-          c = super.moveTarget(target);
+    Command c;
+    if (target instanceof Stack) {
+      Stack s = (Stack) target;
+      ArrayList movable = new ArrayList();
+      for (Iterator<GamePiece> it = s.getPiecesIterator(); it.hasNext();) {
+        GamePiece piece = it.next();
+        if (piece.getProperty(ASLProperties.LOCATION) == null) {
+          movable.add(piece);
+        }
       }
-    
+      if (movable.size() == s.getPieceCount()) {
+        return super.moveTarget(s);
+      }
+      else {
+        c = new NullCommand();
+        for (Iterator it = movable.iterator(); it.hasNext();) {
+          GamePiece gamePiece = (GamePiece) it.next();
+          c.append(super.moveTarget(gamePiece));
+        }
+      }
+    }
+    else {
+      c = super.moveTarget(target);
+    }
     return c;
   }
 
@@ -97,5 +84,5 @@ public class ASLTranslate extends Translate {
     else {
       super.translate(p);
     }
-  } 
+  }
 }
