@@ -19,6 +19,20 @@
 package VASL.build.module.map;
 
 import VASL.build.module.ASLMap;
+import java.awt.Component;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.Iterator;
+import java.util.Vector;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASSAL.build.AbstractBuildable;
 import VASSAL.build.Buildable;
@@ -28,14 +42,7 @@ import VASSAL.build.module.map.BoardPicker;
 import VASSAL.build.module.map.GlobalMap;
 import VASSAL.counters.GamePiece;
 import VASSAL.tools.imageop.Op;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.util.Iterator;
-import java.util.Vector;
+import javax.swing.JMenuItem;
 
 /**
  * Allows the user the change boards in a Map window while
@@ -180,7 +187,7 @@ public class BoardSwapper extends AbstractBuildable {
           ((GlobalMap) o).setup(true);
         }
       }
-      for (VASLThread t : this.map.getComponentsOf(VASLThread.class)) {
+      for (CASLThread t : this.map.getComponentsOf(CASLThread.class)) {
         t.setup(false);
         t.setup(true);
       }
