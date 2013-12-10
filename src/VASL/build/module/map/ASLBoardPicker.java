@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ASLBoardPicker.java 8948 2013-11-24 04:29:28Z davidsullivan1 $
  *
  * Copyright (c) 2000-2003 by Rodney Kinney
  *
@@ -18,82 +18,9 @@
  */
 package VASL.build.module.map;
 
-import java.awt.CardLayout;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dialog;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.GridLayout;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigInteger;
-import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.StringTokenizer;
-import java.util.Vector;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.ListModel;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionListener;
-
-import org.apache.commons.codec.digest.DigestUtils;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import VASL.build.module.map.boardPicker.ASLBoard;
-import VASL.build.module.map.boardPicker.ASLBoardSlot;
-import VASL.build.module.map.boardPicker.BoardException;
-import VASL.build.module.map.boardPicker.Overlay;
-import VASL.build.module.map.boardPicker.SSROverlay;
-
+import VASL.build.module.map.boardPicker.*;
 import VASSAL.Info;
-import VASSAL.build.BadDataReport;
-import VASSAL.build.Buildable;
-import VASSAL.build.Builder;
-import VASSAL.build.Configurable;
-import VASSAL.build.GameModule;
+import VASSAL.build.*;
 import VASSAL.build.module.map.BoardPicker;
 import VASSAL.build.module.map.GlobalMap;
 import VASSAL.build.module.map.boardPicker.Board;
@@ -106,6 +33,33 @@ import VASSAL.configure.ValidationReport;
 import VASSAL.tools.ErrorDialog;
 import VASSAL.tools.ReadErrorDialog;
 import VASSAL.tools.io.IOUtils;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigInteger;
+import java.text.Collator;
+import java.util.*;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ASLBoardPicker extends BoardPicker implements ActionListener {
   private static final Logger logger =
@@ -136,7 +90,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
       if (command.length() > 3) {
         command = command.substring(3);
         for (int index = command.indexOf("bd\t"); index > 0; index = command.indexOf("bd\t")) {
-          ASLBoard b = new ASLBoard();
+          ASLBoard b = new VASLBoard();
           String boardDesc = command.substring(0, index);
           try {
             buildBoard(b, boardDesc);
@@ -147,7 +101,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
           }
           command = command.substring(index + 3);
         }
-        ASLBoard b = new ASLBoard();
+        ASLBoard b = new VASLBoard();
         try {
           buildBoard(b, command);
           v.add(b);
@@ -384,7 +338,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
     }
 ///
 
-    final ASLBoard b = new ASLBoard();
+    final ASLBoard b = new VASLBoard();
     b.setCommonName(name);
     possibleBoards.add(b);
   }
@@ -405,7 +359,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
   }
 
   public Board getBoard(String name, boolean localized) {
-    ASLBoard b = new ASLBoard();
+    ASLBoard b = new VASLBoard();
     if (name != null) {
       if (name.length() == 1 && name.charAt(0) <= '9' && name.charAt(0) >= '0') {
         name = '0' + name;
