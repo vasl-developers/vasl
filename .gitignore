@@ -4,3 +4,6 @@
 /classes*
 /target
 /tmp*
+.idea/
+boardsZIP/
+out/
