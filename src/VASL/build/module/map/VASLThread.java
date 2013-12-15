@@ -22,7 +22,6 @@ package VASL.build.module.map;
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASSAL.build.Buildable;
 import VASSAL.build.module.GameComponent;
-import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.build.module.map.boardPicker.board.HexGrid;
 import VASSAL.command.Command;
 import VASSAL.configure.BooleanConfigurer;
@@ -542,18 +541,18 @@ public class VASLThread extends  ASLThread implements KeyListener, GameComponent
         if (b == null) return null;
         // Now we need to adjust for cropping of the boards to the left and
         // above the target board
-        for (Board board : map.getBoards()) {
+/*        for (Board board : map.getBoards()) {
             ASLBoard b2 = (ASLBoard) board;
             double scale = b2.getMagnification() * ((HexGrid)b2.getGrid()).getHexSize()/ASLBoard.DEFAULT_HEX_HEIGHT;
             if (b2.relativePosition().y == b.relativePosition().y
                     && b2.relativePosition().x < b.relativePosition().x) {
-                p.translate((int)Math.round(scale*b2.getUncroppedSize().width) - b2.bounds().width, 0);
+               p.translate((int)Math.round(scale*b2.getUncroppedSize().width) - b2.bounds().width, 0);
             }
             else if (b2.relativePosition().x == b.relativePosition().x
                     && b2.relativePosition().y < b.relativePosition().y) {
-                p.translate(0, (int)Math.round(scale*b2.getUncroppedSize().height) - b2.bounds().height);
+               p.translate(0, (int)Math.round(scale*b2.getUncroppedSize().height) - b2.bounds().height);
             }
-        }
+        }*/
         // remove edge buffer
         p.translate(-map.getEdgeBuffer().width, -map.getEdgeBuffer().height);
         p = b.localCoordinates(p);

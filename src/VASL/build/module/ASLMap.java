@@ -163,7 +163,6 @@ public class ASLMap extends Map {
     // board stuff
     private int mapWidth = 0;		// VASL map dimensions (i.e. number of rows and columns of boards)
     private int mapHeight = 0;
-    private ASLBoard upperLeftBoard;
 
     /**
      * Builds the VASL map
@@ -179,6 +178,7 @@ public class ASLMap extends Map {
             legacyMode = false;
         }
 
+        //TODO: need to account for board cropping
         LinkedList<VASLBoard> VASLBoards = new LinkedList<VASLBoard>(); // keep the boards so they are instantiated once
         try {
 
@@ -196,6 +196,22 @@ public class ASLMap extends Map {
                     unsupportedFeature = true;
                 }
             }
+
+            int width = 0;
+            int height = 0;
+            for (int x = 0; x < this.boardHeights[0].length; x++) {
+                int rowWidth = 0;
+                int maxHeight = 0;
+                for(int y = 0; y < this.boardWidths[x].length; y++) {
+                    rowWidth += boardWidths[x][y];
+                    maxHeight = Math.max(maxHeight, boardHeights[x][y]);
+                }
+                width = Math.max(width, rowWidth);
+                height += maxHeight;
+            }
+
+            System.out.println("Map width: " + width);
+            System.out.println("Map height: " + height);
 
             // determine the VASL map dimensions
             for (VASLBoard b : VASLBoards) {
@@ -227,12 +243,11 @@ public class ASLMap extends Map {
 
                 for (VASLBoard board : VASLBoards) {
 
-                    // set the upper left board
-                    if (board.relativePosition().x == 0 && board.relativePosition().y == 0) {
-
-                        upperLeftBoard = board;
+                    // read the LOS data and flip/crop the board if needed
+                    VASL.LOS.Map.Map LOSData = board.getLOSData(sharedBoardMetadata.getTerrainTypes());
+                    if(board.isReversed()){
+                        LOSData.flip();
                     }
-
                     // add to map
                     if (!VASLMap.insertGEOMap(
                             board.getLOSData(sharedBoardMetadata.getTerrainTypes()),

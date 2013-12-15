@@ -1858,6 +1858,9 @@ public class Map
      *	a larger map "grid" for VASL. As such, 1) it is assumed the half hex along board
      *	edges are compatible, and 2) the hex/location names from the map that is being
      *	inserted should be used. Other uses will produce unexpected results.
+     * @param insertMap the map to insert
+     * @param upperLeft the upper left corner of the inserted map should align with this hex
+     * @return true if the map was successfully inserted
      */
     //TODO: move to editor?
     public boolean insertGEOMap(Map insertMap, Hex upperLeft) {
@@ -1899,6 +1902,49 @@ public class Map
         }
 
         return true;
+    }
+
+    /**
+     * Crops the board to the points in the map grid. Note that the "corners" of the cropped map must create
+     * a map where the left and right board edges are half hexes and both corner hexes are fully on the map
+     * @param upperLeft upper left corner of the map grid
+     * @param lowerRight the lower-right corner of the map grid
+     * @return the cropped map or null if invalid
+     */
+    //TODO: extend to handle non-symmetrical geometries and alternate hex sizes
+    public Map crop(Point upperLeft, Point lowerRight){
+
+        int hexGridWidth = lowerRight.x - upperLeft.x + 1;
+        int hexGridHeight = lowerRight.y - upperLeft.y + 1;
+        int hexWidth = (int) (hexGridWidth/Hex.WIDTH) + 1;
+        int hexHeight = (int) (hexGridHeight/Hex.HEIGHT);
+
+        // the hex width must be odd - if not extend to include the next half hex
+        if (hexWidth%2 != 1) {
+            hexWidth++;
+        }
+
+        Map newMap = new Map(hexWidth, hexHeight, terrainNameMap);
+
+        // copy the map grid
+        for(int x = upperLeft.x; x <= lowerRight.x; x++) {
+            for(int y = upperLeft.y; y <= lowerRight.y; y++){
+
+                newMap.setGridTerrainCode(getGridTerrainCode(x, y) , x - upperLeft.x, y - lowerRight.y);
+                newMap.setGridElevation(getGridElevation(x, y), x - upperLeft.x, y - lowerRight.y);
+            }
+        }
+
+        //copy the hex grid
+        Hex upperLeftHex = getHex(upperLeft.x, upperLeft.y);
+        for (int x = 0; x < newMap.hexGrid.length; x++) {
+            for (int y = 0; y < newMap.hexGrid[x].length; y++) {
+
+                newMap.hexGrid[x][y] = (hexGrid[x + upperLeftHex.getColumnNumber()][y + upperLeftHex.getRowNumber()]);
+            }
+        }
+
+        return newMap;
     }
 
 }

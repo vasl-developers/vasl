@@ -18,19 +18,6 @@
  */
 package VASL.build.module.map;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Enumeration;
-import java.util.Properties;
-import java.util.Vector;
-
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASL.build.module.map.boardPicker.Overlay;
 import VASSAL.build.AbstractBuildable;
@@ -44,6 +31,17 @@ import VASSAL.command.Command;
 import VASSAL.configure.StringConfigurer;
 import VASSAL.tools.PropertiesEncoder;
 import VASSAL.tools.io.IOUtils;
+
+import javax.swing.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Enumeration;
+import java.util.Properties;
+import java.util.Vector;
 
 /**
  * Copyright (c) 2003 by Rodney Kinney.  All rights reserved.
