@@ -198,6 +198,10 @@ public class ASLPieceMover extends PieceMover {
           if (p1.getProperty(ASLProperties.LOCATION) == null) {
             toMove.addElement(p1);
           }
+          else // FRedKors 20/12/2013 If a stack contains an immobile counter, I don't move it AND I deselect it
+          {
+              KeyBuffer.getBuffer().remove(p1);
+          }
         }
         if (toMove.size() == ((Stack) p).getPieceCount()
             || toMove.size() == 0) {
@@ -241,6 +245,8 @@ public class ASLPieceMover extends PieceMover {
                 
                 if (iNumSameParent == 1) // if there are more than a single counter of the same stack, I don't move the fixed counter
                     DragBuffer.getBuffer().add(p);
+                else
+                    KeyBuffer.getBuffer().remove(p);// FRedKors 20/12/2013 If a stack contains an immobile counter, I don't move it AND I deselect it
             }
             else
                 DragBuffer.getBuffer().add(p); // if it is a single counter, I move it
