@@ -28,6 +28,7 @@ import VASSAL.build.module.map.boardPicker.board.HexGrid;
 import VASSAL.command.Command;
 import VASSAL.command.NullCommand;
 import VASSAL.counters.GamePiece;
+import VASSAL.counters.KeyBuffer;
 import VASSAL.counters.Properties;
 import VASSAL.counters.Stack;
 import VASSAL.counters.Translate;
@@ -65,6 +66,10 @@ public class ASLTranslate extends Translate {
               if (piece.getProperty(ASLProperties.LOCATION) == null) {
                   movable.add(piece);
               }
+              else
+              {
+                  KeyBuffer.getBuffer().remove(piece);
+              }              
           }
 
           if (movable.size() == s.getPieceCount()) {
