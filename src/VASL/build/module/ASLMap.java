@@ -83,27 +83,54 @@ public class ASLMap extends Map {
    *  Any snap to a board top or left edge half hex, bump it 1 pixel up or left on to the next board.
    *  
    *  */
-  public Point snapTo(Point p) {
-    final Point p1 = super.snapTo(p);
-    final Point p2 = new Point (p1);
-    final String loc = locationName(p1);
+  public Point snapTo(Point p) 
+  { // FredKors 22/12/2013
+    final Point l_pSnapTo = super.snapTo(p);
+    Point l_pShiftedXY, l_pShiftedY, l_pShiftedX;
     
-    // Ignore Edge and Corner locations
-    if (! loc.contains("/")) {
-      // Zero row hexes are all top edge half hexes, bump the snap up 1 pixel to the board above.
-      if (loc.endsWith("0") && ! loc.endsWith("10")) {
-        p2.y -= 1;
-      }
-      // Column A hexes are all left edge half gexes, bump the snap left 1 pixel to the board to the left 
-      else if (loc.contains("A") && ! loc.contains("AA")) {
-        p2.x -=1;
-      }
-    }
-    // If the snap has been bumped offmap (must be top or right edge of map), use the original snap.
-    if (findBoard(p2) == null) {
-      return p1;
-    }
-    return p2;
+    l_pShiftedXY = new Point (l_pSnapTo);
+
+    l_pShiftedXY.x -= 3;
+    l_pShiftedXY.y -= 3; // I move the snap point 3 pixel up and left: if the map changes, the snapTo could return a different point, otherwise nothing changes
+    l_pShiftedXY = super.snapTo(l_pShiftedXY);
+    
+    if (findBoard(l_pShiftedXY) != null) //  Return to the snapTo point if I moved off the top border or the left border
+        return l_pShiftedXY;
+    
+    l_pShiftedY = new Point (l_pSnapTo);
+    
+    l_pShiftedY.y -= 3; // I move the snap point 3 pixel up: if the map changes, the snapTo could return a different point, otherwise nothing changes
+    l_pShiftedY = super.snapTo(l_pShiftedY);
+    
+    if (findBoard(l_pShiftedY) == null) // I moved off the top border, return to the snapTo point
+        l_pShiftedY.y = l_pSnapTo.y;
+    
+    l_pShiftedX = new Point (l_pShiftedY);
+    
+    l_pShiftedX.x -= 3;// I move the snap point 3 pixel left: if the map changes, the snapTo could return a different point, otherwise nothing changes
+    l_pShiftedX = super.snapTo(l_pShiftedX);
+    
+    if (findBoard(l_pShiftedX) == null) // I moved off the left border
+        return l_pShiftedY;
+    
+    return l_pShiftedX;        
+    
+//    // Ignore Edge and Corner locations
+//    if (! loc.contains("/")) {
+//      // Zero row hexes are all top edge half hexes, bump the snap up 1 pixel to the board above.
+//      if (loc.endsWith("0") && ! loc.endsWith("10")) {
+//        p2.y -= 1;
+//      }
+//      // Column A hexes are all left edge half gexes, bump the snap left 1 pixel to the board to the left 
+//      else if (loc.contains("A") && ! loc.contains("AA")) {
+//        p2.x -=1;
+//      }
+//    }
+//    // If the snap has been bumped offmap (must be top or right edge of map), use the original snap.
+//    if (findBoard(p2) == null) {
+//      return p1;
+//    }
+//    return p2;
   }
   // return the popup menu
   public JPopupMenu getPopupMenu()
