@@ -243,7 +243,7 @@ public class BoardArchive {
     private void addLOSDataToArchive(File losData) throws IOException {
 
         // get a temp losData and delete as we just want the name
-        File tempFile = File.createTempFile(this.getBoardName(), null);
+        File tempFile = File.createTempFile("board" + this.getBoardName(), null);
         if (!tempFile.delete()) {
             throw new IOException("Cannot delete the temporary file: " + tempFile.getAbsolutePath());
         }
@@ -364,6 +364,12 @@ public class BoardArchive {
             return BoardMetadata.NO_TERRAIN;
         }
         return getTerrainForVASLColor(metadata.getVASLColorName(color));
+    }
+
+    public boolean isStairwayColor(Color color) {
+
+        String colorName = metadata.getVASLColorName(color);
+        return colorName.equals("WoodStairwell") || colorName.equals("StoneStairwell");
     }
 
     /**

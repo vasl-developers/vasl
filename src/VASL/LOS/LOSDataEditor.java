@@ -285,6 +285,25 @@ public class LOSDataEditor {
         fixElevatedSunkenRoads();
 
         map.resetHexTerrain();
+
+        addStairways();
+    }
+
+    /**
+     * Spins through the map and adds stairways
+     */
+    private void addStairways() {
+
+        BufferedImage boardImage = boardArchive.getBoardImage();
+
+        for(int x = 0; x < map.getGridWidth(); x++) {
+            for(int y = 0; y < map.getGridHeight(); y++){
+
+                if(boardArchive.isStairwayColor(getRGBColor(boardImage, x, y))) {
+                    map.gridToHex(x, y).setStairway(true);
+                }
+            }
+        }
     }
 
     /**
