@@ -368,6 +368,9 @@ public class BoardArchive {
 
     public boolean isStairwayColor(Color color) {
 
+        if(color == null || metadata.getVASLColorName(color) == null) {
+            return false;
+        }
         String colorName = metadata.getVASLColorName(color);
         return colorName.equals("WoodStairwell") || colorName.equals("StoneStairwell");
     }

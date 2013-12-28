@@ -2064,9 +2064,9 @@ public class LOSEditorJComponent
         l.setBaseHeight(baseHeight);
     }
 
-    public void insertGEOMap(Map insertMap, String upperLeftHex) {
+    public void insertMap(Map insertMap, String upperLeftHex) {
 
-        if (losDataEditor.insertGEOMap(insertMap, losDataEditor.getMap().getHex(upperLeftHex.toUpperCase()))) {
+        if (losDataEditor.insertMap(insertMap, losDataEditor.getMap().getHex(upperLeftHex.toUpperCase()))) {
 
             frame.setStatusBarText("Rebuilding the map image...");
             frame.paintImmediately();

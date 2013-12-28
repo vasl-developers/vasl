@@ -512,58 +512,15 @@ public class VASLThread extends  ASLThread implements KeyListener, GameComponent
         }
         temp.translate((int) (map.getEdgeBuffer().width * map.getZoom()), (int) (map.getEdgeBuffer().height * map.getZoom()));
 
-        // adjust for board cropping
-        if (upperLeftBoard != null) {
-            int deltaX = 0, deltaY = 0;
-            Rectangle crop = upperLeftBoard.getCropBounds();
-            if (upperLeftBoard.isReversed()) {
-                double hexScale = ((HexGrid)upperLeftBoard.getGrid()).getHexSize()/ASLBoard.DEFAULT_HEX_HEIGHT;
-                if (crop.width >= 0) {
-                    deltaX = upperLeftBoard.getUncroppedSize().width - crop.x - crop.width;
-                }
-                if (crop.height >= 0) {
-                    deltaY = upperLeftBoard.getUncroppedSize().height - crop.y - crop.height;
-                }
-            }
-            else {
-                deltaX = crop.x;
-                deltaY = crop.y;
-            }
-            temp.translate((int) Math.round(-deltaX * map.getZoom()*upperLeftBoard.getMagnification()),
-                    (int) Math.round(-deltaY * map.getZoom()*upperLeftBoard.getMagnification()));
-        }
         return temp;
     }
 
     private Point mapMouseToMapCoordinates(Point p) {
-        ASLBoard b = (ASLBoard) map.findBoard(p);
-        // ensure we are on a board
-        if (b == null) return null;
-        // Now we need to adjust for cropping of the boards to the left and
-        // above the target board
-/*        for (Board board : map.getBoards()) {
-            ASLBoard b2 = (ASLBoard) board;
-            double scale = b2.getMagnification() * ((HexGrid)b2.getGrid()).getHexSize()/ASLBoard.DEFAULT_HEX_HEIGHT;
-            if (b2.relativePosition().y == b.relativePosition().y
-                    && b2.relativePosition().x < b.relativePosition().x) {
-               p.translate((int)Math.round(scale*b2.getUncroppedSize().width) - b2.bounds().width, 0);
-            }
-            else if (b2.relativePosition().x == b.relativePosition().x
-                    && b2.relativePosition().y < b.relativePosition().y) {
-               p.translate(0, (int)Math.round(scale*b2.getUncroppedSize().height) - b2.bounds().height);
-            }
-        }*/
-        // remove edge buffer
-        p.translate(-map.getEdgeBuffer().width, -map.getEdgeBuffer().height);
-        p = b.localCoordinates(p);
-        double gridScale = ((HexGrid)b.getGrid()).getHexSize() / ASLBoard.DEFAULT_HEX_HEIGHT;
-        p.x = (int)Math.round(p.x / gridScale);
-        p.y = (int)Math.round(p.y / gridScale);
-        if (b.isReversed()) {
-            p.x = (int)Math.round(b.getUncroppedSize().width/gridScale)-p.x;
-            p.y = (int)Math.round(b.getUncroppedSize().height/gridScale)-p.y;
-        }
-        return p;
+
+        // just remove edge buffer
+        Point temp = new Point(p);
+        temp.translate(-map.getEdgeBuffer().width, -map.getEdgeBuffer().height);
+        return temp;
     }
 
     /**

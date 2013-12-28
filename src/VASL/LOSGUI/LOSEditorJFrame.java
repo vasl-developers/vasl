@@ -746,7 +746,7 @@ public class LOSEditorJFrame extends JFrame {
 
     public void insertMap(Map insertMap, String upperLeft) {
 
-        losEditorJComponent.insertGEOMap(insertMap, upperLeft);
+        losEditorJComponent.insertMap(insertMap, upperLeft);
     }
 
     private void closeMapVariables() {

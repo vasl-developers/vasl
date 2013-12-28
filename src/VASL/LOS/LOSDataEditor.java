@@ -253,7 +253,12 @@ public class LOSDataEditor {
                     Hex hex = map.gridToHex(x, y);
                     Hex oppositeHex = map.getAdjacentHex(hex, hex.getLocationHexside(hex.nearestLocation(x,y)));
 
-                    map.setGridElevation(Math.min(hex.getBaseHeight(), oppositeHex.getBaseHeight()), x, y);
+                    if(oppositeHex == null){
+                        map.setGridElevation(hex.getBaseHeight(), x, y);
+                    }
+                    else {
+                        map.setGridElevation(Math.min(hex.getBaseHeight(), oppositeHex.getBaseHeight()), x, y);
+                    }
                 }
             }
         }
@@ -307,7 +312,7 @@ public class LOSDataEditor {
     }
 
     /**
-     * This is a kludge to fix elevated and sunken roads as the use the same colors
+     * This is a kludge to fix elevated and sunken roads as they use the same colors
      */
     private void fixElevatedSunkenRoads(){
 
@@ -1355,9 +1360,9 @@ public class LOSDataEditor {
      *	edges are compatible, and 2) the hex/location names from the map that is being
      *	inserted should be used. Other uses will produce unexpected results.
      */
-    public boolean insertGEOMap(Map insertMap, Hex upperLeft) {
+    public boolean insertMap(Map insertMap, Hex upperLeft) {
 
-        return map.insertGEOMap(insertMap, upperLeft);
+        return map.insertMap(insertMap, upperLeft);
     }
 
     /**

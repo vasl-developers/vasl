@@ -1858,12 +1858,12 @@ public class Map
      *	a larger map "grid" for VASL. As such, 1) it is assumed the half hex along board
      *	edges are compatible, and 2) the hex/location names from the map that is being
      *	inserted should be used. Other uses will produce unexpected results.
-     * @param insertMap the map to insert
+     * @param map the map to insert
      * @param upperLeft the upper left corner of the inserted map should align with this hex
      * @return true if the map was successfully inserted
      */
     //TODO: move to editor?
-    public boolean insertGEOMap(Map insertMap, Hex upperLeft) {
+    public boolean insertMap(Map map, Hex upperLeft) {
 
         // determine where the upper-left pixel of the inserted map will be
         int left = upperLeft.getCenterLocation().getLOSPoint().x;
@@ -1876,27 +1876,27 @@ public class Map
         }
 
         // ensure the map will fit
-        if (left + insertMap.getGridWidth() > this.gridWidth || upper + insertMap.getGridHeight() > this.gridHeight) {
+        if (left + map.getGridWidth() > this.gridWidth || upper + map.getGridHeight() > this.gridHeight) {
 
             return false;
         }
 
         // copy the terrain and elevation grids
-        for (int x = 0; x < insertMap.gridWidth; x++) {
-            for (int y = 0; y < insertMap.gridHeight; y++) {
+        for (int x = 0; x < map.gridWidth; x++) {
+            for (int y = 0; y < map.gridHeight; y++) {
 
-                terrainGrid[left + x][upper + y] = (char) insertMap.getGridTerrain(x, y).getType();
-                elevationGrid[left + x][upper + y] = (byte) insertMap.getGridElevation(x, y);
+                terrainGrid[left + x][upper + y] = (char) map.getGridTerrain(x, y).getType();
+                elevationGrid[left + x][upper + y] = (byte) map.getGridElevation(x, y);
             }
         }
 
         // copy the hex grid
         int hexRow = upperLeft.getRowNumber();
         int hexCol = upperLeft.getColumnNumber();
-        for (int x = 0; x < insertMap.hexGrid.length; x++) {
-            for (int y = 0; y < insertMap.hexGrid[x].length; y++) {
+        for (int x = 0; x < map.hexGrid.length; x++) {
+            for (int y = 0; y < map.hexGrid[x].length; y++) {
 
-                hexGrid[x + hexCol][y + hexRow].copy(insertMap.getHex(x, y));
+                hexGrid[x + hexCol][y + hexRow].copy(map.getHex(x, y));
 
             }
         }
@@ -1914,10 +1914,10 @@ public class Map
     //TODO: extend to handle non-symmetrical geometries and alternate hex sizes
     public Map crop(Point upperLeft, Point lowerRight){
 
-        int hexGridWidth = lowerRight.x - upperLeft.x + 1;
-        int hexGridHeight = lowerRight.y - upperLeft.y + 1;
-        int hexWidth = (int) (hexGridWidth/Hex.WIDTH) + 1;
-        int hexHeight = (int) (hexGridHeight/Hex.HEIGHT);
+        int gridWidth = lowerRight.x - upperLeft.x;
+        int gridHeight = lowerRight.y - upperLeft.y;
+        int hexWidth = (int) Math.round(gridWidth/Hex.WIDTH) + 1;
+        int hexHeight = (int) Math.round(gridHeight/Hex.HEIGHT);
 
         // the hex width must be odd - if not extend to include the next half hex
         if (hexWidth%2 != 1) {
@@ -1927,16 +1927,16 @@ public class Map
         Map newMap = new Map(hexWidth, hexHeight, terrainNameMap);
 
         // copy the map grid
-        for(int x = upperLeft.x; x <= lowerRight.x; x++) {
-            for(int y = upperLeft.y; y <= lowerRight.y; y++){
+        for(int x = 0; x < newMap.gridWidth; x++) {
+            for(int y = 0; y < newMap.gridHeight; y++){
 
-                newMap.setGridTerrainCode(getGridTerrainCode(x, y) , x - upperLeft.x, y - lowerRight.y);
-                newMap.setGridElevation(getGridElevation(x, y), x - upperLeft.x, y - lowerRight.y);
+                newMap.terrainGrid[x][y] = terrainGrid[x + upperLeft.x][y + upperLeft.y];
+                newMap.elevationGrid[x][y] = elevationGrid[x + upperLeft.x][y + upperLeft.y];
             }
         }
 
         //copy the hex grid
-        Hex upperLeftHex = getHex(upperLeft.x, upperLeft.y);
+        Hex upperLeftHex = gridToHex(upperLeft.x, upperLeft.y);
         for (int x = 0; x < newMap.hexGrid.length; x++) {
             for (int y = 0; y < newMap.hexGrid[x].length; y++) {
 

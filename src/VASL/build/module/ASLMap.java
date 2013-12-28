@@ -19,9 +19,9 @@
 
 package VASL.build.module;
 
+import VASL.LOS.Map.Hex;
 import VASL.build.module.map.boardArchive.BoardArchive;
 import VASL.build.module.map.boardArchive.SharedBoardMetadata;
-import VASL.build.module.map.boardPicker.ASLBoard;
 import VASL.build.module.map.boardPicker.VASLBoard;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.Map;
@@ -187,10 +187,6 @@ public class ASLMap extends Map {
         }
     }
 
-    // board stuff
-    private int mapWidth = 0;		// VASL map dimensions (i.e. number of rows and columns of boards)
-    private int mapHeight = 0;
-
     /**
      * Builds the VASL map
      */
@@ -210,10 +206,13 @@ public class ASLMap extends Map {
         try {
 
             // see there are any legacy boards in the board set
+            // and determine the size of the map
             unsupportedFeature = false;
+            Rectangle mapBoundary = new Rectangle(0,0);
             for(Board b: boards) {
                 try {
                     VASLBoard board = (VASLBoard) b;
+                    mapBoundary.add(b.bounds());
                     VASLBoards.add(board);
                     if(board.isLegacyBoard() || board.getOverlays().hasMoreElements()) {
                         unsupportedFeature = true;
@@ -224,38 +223,15 @@ public class ASLMap extends Map {
                 }
             }
 
-            int width = 0;
-            int height = 0;
-            for (int x = 0; x < this.boardHeights[0].length; x++) {
-                int rowWidth = 0;
-                int maxHeight = 0;
-                for(int y = 0; y < this.boardWidths[x].length; y++) {
-                    rowWidth += boardWidths[x][y];
-                    maxHeight = Math.max(maxHeight, boardHeights[x][y]);
-                }
-                width = Math.max(width, rowWidth);
-                height += maxHeight;
-            }
-
-            System.out.println("Map width: " + width);
-            System.out.println("Map height: " + height);
-
-            // determine the VASL map dimensions
-            for (VASLBoard b : VASLBoards) {
-                mapWidth = Math.max(b.relativePosition().x, mapWidth);
-                mapHeight = Math.max(b.relativePosition().y, mapHeight);
-            }
-            mapWidth++;
-            mapHeight++;
+            // remove the edge buffer from the map boundary
+            mapBoundary.width -= edgeBuffer.width;
+            mapBoundary.height -= edgeBuffer.height;
 
             // create the VASL map
-            //TODO: remove hard-coded hex sizes
-            if (mapWidth > 0) {
-                VASLMap = new VASL.LOS.Map.Map(
-                        mapWidth * (int) Math.round(((ASLBoard) boards.get(0)).getUncroppedSize().getWidth() / 56.25) + 1,
-                        mapHeight * (int) Math.round(((ASLBoard) boards.get(0)).getUncroppedSize().getHeight() / 64.5),
-                        sharedBoardMetadata.getTerrainTypes());
-            }
+            VASLMap = new VASL.LOS.Map.Map(
+                    (int) Math.round(mapBoundary.width/ Hex.WIDTH) + 1,
+                    (int) Math.round(mapBoundary.height / Hex.HEIGHT),
+                    sharedBoardMetadata.getTerrainTypes());
         }
         // fall back to legacy mode if an unexpected exception is thrown
         catch (Exception e) {
@@ -272,17 +248,23 @@ public class ASLMap extends Map {
 
                     // read the LOS data and flip/crop the board if needed
                     VASL.LOS.Map.Map LOSData = board.getLOSData(sharedBoardMetadata.getTerrainTypes());
-                    if(board.isReversed()){
-                        LOSData.flip();
+
+                    if(board.isCropped()) {
+                        LOSData = board.cropLOSData(LOSData);
                     }
-                    // add to map
-                    if (!VASLMap.insertGEOMap(
-                            board.getLOSData(sharedBoardMetadata.getTerrainTypes()),
-                            //TODO: remove hard-coded hex sizes
-                            VASLMap.getHex(
-                                    board.relativePosition().x * ((int) (Math.round(board.getUncroppedSize().getWidth() / 56.25))),
-                                    board.relativePosition().y * ((int) (Math.round(board.getUncroppedSize().getHeight() / 64.5)))))
-                            ) {
+
+                    if(board.isReversed() && !board.isFlipped()){
+                        LOSData.flip();
+                        board.setFlipped(true);
+                    }
+
+                    // add the board LOS data to the map
+                    if (!VASLMap.insertMap(
+                            LOSData,
+                            VASLMap.gridToHex(board.getBoardLocation().x, board.getBoardLocation().y))) {
+
+                        // didn't work, so assume an unsupported feature
+                        unsupportedFeature = true;
                     }
                 }
             }

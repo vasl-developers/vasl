@@ -255,7 +255,7 @@
 		<color name="PavedRdL5" red="192" green="192" blue="212" terrain="Paved Road" elevation="5" />
 		<color name="PavedRdL6" red="192" green="192" blue="213" terrain="Paved Road" elevation="6" />
 		<color name="PavedRdWinter" red="222" green="222" blue="222" terrain="Paved Road" elevation="UNKNOWN" />
-		<color name="PavedRdBridge" red="192" green="193" blue="207" terrain="Single Hex Stone Bridge" elevation="UNKNOWN" />
+		<color name="PavedRdBridge" red="192" green="193" blue="207" terrain="Paved Road" elevation="UNKNOWN" />
 		<!-- Railroads  -->
 		<color name="Rails1" red="120" green="122" blue="126" terrain="Railroad, Ground Level" elevation="UNKNOWN" />
 		<color name="Rails2" red="60" green="60" blue="60" terrain="Railroad, Ground Level" elevation="UNKNOWN" />
@@ -430,7 +430,7 @@
 		<color name="BrushDesertL4" red="183" green="179" blue="47" terrain="Brush" elevation="4" />
 		<color name="BrushDesertL5" red="184" green="179" blue="47" terrain="Brush" elevation="5" />
 		<color name="BrushDesertL6" red="185" green="179" blue="47" terrain="Brush" elevation="6" />
-		<color name="DirtRdBridgeDesert" red="246" green="210" blue="108" terrain="Single Hex Stone Bridge" elevation="UNKNOWN" />
+		<color name="DirtRdBridgeDesert" red="246" green="210" blue="108" terrain="Dirt Road" elevation="UNKNOWN" />
 		<color name="OrchTreesDesert" red="106" green="120" blue="0" terrain="Orchard" elevation="UNKNOWN" />
 		<color name="DierBase" red="250" green="213" blue="134" terrain="Dier" elevation="UNKNOWN" />
 		<color name="Sand1" red="238" green="194" blue="98" terrain="Open Ground" elevation="UNKNOWN" />
@@ -557,7 +557,7 @@
         <terrainType name="Dune, Crest Low" typeCode="109" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="HEXSIDE"  />
         <terrainType name="Dune, Crest High" typeCode="110" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="HEXSIDE"  />
         <terrainType name="Sangar" typeCode="111" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="250" mapColorGreen="235" mapColorBlue="130" LOSCategory="OPEN"  />
-        <terrainType name="Tracks" typeCode="112" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="200" mapColorGreen="175" mapColorBlue="83" LOSCategory="OPEN"  />
+        <terrainType name="Track" typeCode="112" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="200" mapColorGreen="175" mapColorBlue="83" LOSCategory="OPEN"  />
         <terrainType name="Mausoleum" typeCode="113" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="155" mapColorGreen="155" mapColorBlue="155" LOSCategory="BUILDING"  />
         <terrainType name="Bedouin Camp" typeCode="114" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="0" mapColorRed="155" mapColorGreen="155" mapColorBlue="155" LOSCategory="BUILDING"  />
         <terrainType name="Building Cluster" typeCode="115" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="155" mapColorGreen="155" mapColorBlue="155" LOSCategory="BUILDING"  />

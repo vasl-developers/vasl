@@ -24,6 +24,7 @@ import VASL.build.module.ASLMap;
 import VASL.build.module.map.boardArchive.BoardArchive;
 import VASSAL.build.module.map.boardPicker.board.HexGrid;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -36,6 +37,23 @@ public class VASLBoard extends ASLBoard {
 
     private boolean legacyBoard = true; // is the board legacy (i.e. V5) format?
     private BoardArchive VASLBoardArchive;
+
+    /**
+     * @return true if the board is already set
+     */
+    public boolean isFlipped() {
+        return flipped;
+    }
+
+    /**
+     * Mark board as having been flipped. This is a hack to prevent boards from being flipped multiple time
+     * @param flipped
+     */
+    public void setFlipped(boolean flipped) {
+        this.flipped = flipped;
+    }
+
+    private boolean flipped = false; // prevents the same board from being flipped multiple times
 
     public VASLBoard(){
 
@@ -71,6 +89,48 @@ public class VASLBoard extends ASLBoard {
     public boolean isLegacyBoard() {
         return legacyBoard;
     }
+
+    /**
+     * Is the board cropped?
+     */
+    public boolean isCropped() {
+        Rectangle croppedBounds = getCropBounds();
+        return !(croppedBounds.x == 0 && croppedBounds.y == 0 && croppedBounds.width == -1 && croppedBounds.height == -1);
+    }
+
+
+    /**
+     * Crops the LOS data
+     * @param losData
+     */
+    public VASL.LOS.Map.Map cropLOSData(VASL.LOS.Map.Map losData) {
+        if(!isCropped()) {
+            return null;
+        }
+        else {
+
+            Rectangle bounds = new Rectangle(getCropBounds());
+            if(bounds.width == -1) {
+                bounds.width = getUncroppedSize().width;
+            }
+            if(bounds.height == -1) {
+                bounds.height = getUncroppedSize().height;
+            }
+            return losData.crop(new Point(bounds.x, bounds.y), new Point(bounds.x + bounds.width, bounds.y + bounds.height));
+        }
+    }
+
+    /**
+     * @return a rectangle defining the board's location within the map
+     */
+    public Rectangle getBoardLocation() {
+
+        // the easiest way to do this is to use the boundary rectangle and remove the edge buffer
+        Rectangle rectangle = new Rectangle(this.boundaries);
+        rectangle.translate(-1 * map.getEdgeBuffer().width, -1 * map.getEdgeBuffer().height);
+        return rectangle;
+    }
+
     /**
      * @return the LOS data
      * @param terrainTypes the terrain types
