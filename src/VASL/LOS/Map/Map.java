@@ -22,14 +22,18 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Vector;
-
 /**
- * Title:        Map.java
- * Copyright:    Copyright (c) 2001-2013 David Sullivan. All rights reserved.
- * The <code>Map</code>  contains the map data information.
- *
- * @author       David Sullivan
- * @version      2.0
+ * The <code>Map</code> class is the map API.
+ * The map uses two data structures to represent the logical map: a terrain grid and a hex
+ * grid.
+ * <p>
+ * The terrain grid contains a physical representation of the image terrain where one point
+ * in the grid corresponds to one pixel in the map image. The upper-left pixel is (0,0).
+ * <p>
+ * The hex grid contains the information that is specific to each hex and uses the
+ * following coordinate system: the upper-left most hex (A1) is (0,0), A2 would be (0,1),
+ * B0 would be (1,0), and so on. Note that the number of hexes in each column will
+ * depend upon whether the column is odd or even.
  */
 public class Map
 	implements Serializable {

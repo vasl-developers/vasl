@@ -143,7 +143,7 @@ public class BoardMetadata extends AbstractMetadata {
 
                 // parse the board metadata elements
                 parseBuildingTypes(root.getChild(buildingTypesElement));
-                parseColors(root.getChild(colorsElement));
+                parseColors(root.getChild(colorsElement), true); // replace existing colors with those in board metadata
                 parseColorSSRules(root.getChild(colorSSRulesElement));
                 parseOverlaySSRules(root.getChild(overlaySSRulesElement));
             }

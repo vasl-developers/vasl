@@ -58,6 +58,17 @@ public abstract class AbstractMetadata {
      */
     protected void parseColors(Element element) throws JDOMException {
 
+        parseColors(element, false);
+    }
+
+    /**
+     * Parses the colors element, replacing any existing colors
+     * @param element the colors element
+     * @param replace replace existing colors?
+     * @throws org.jdom2.JDOMException
+    */
+    protected void parseColors(Element element, boolean replace) throws JDOMException {
+
         // make sure we have the right element
         assertElementName(element, colorsElement);
 
@@ -83,8 +94,13 @@ public abstract class AbstractMetadata {
                 // add the color to the list of VASL colors
                 boardColors.put(name, boardColor);
 
+                // replace existing?
+                if(replace) {
+                    colorToVASLColorName.put(color, name);
+                }
+
                 // if there are redundant colors (and there are) keep the first one in the list
-                if (!colorToVASLColorName.containsKey(color)) {
+                else if (!colorToVASLColorName.containsKey(color)) {
 
                     colorToVASLColorName.put(color, name);
                 }

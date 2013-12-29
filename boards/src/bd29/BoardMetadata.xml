@@ -1,0 +1,207 @@
+<?xml version="1.0"?>
+<!--
+    This file contains the board metadata specific to a VASL board archive.
+    Create one file per VASL board and place it in the archive.
+-->
+
+<!-- 
+    Board-level metadata
+	name - the name of the board (as it will appear in board selector drop-down - not yet supported)
+	version - the board version
+	versionDate - the date the last version was created
+	author - the caring soul who created the board
+    boardImage - the name of the VASL image file in the board archive; the name is case sensitive
+    hasHills - TRUE/FALSE if the board contains base elevations above ground level
+                if not we can assume the ground level under the terrain is zero, which
+                makes the VASL LOS image translation faster and more accurate
+    height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
+    width - width of the board in hexes.
+	others - TBD e.g. alternate hex grain, etc. 
+-->
+<boardMetadata name="29" version="6.0" versionDate="Apr 2013" author="TR" boardImageFileName="bd29.gif" hasHills="FALSE" width="33" height="10">
+
+    <!--
+        The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
+        determine the proper building type when creating the LOS information and assumes buildings are single-hex stone or 
+        wooden buildings. Use these elements to override the building type. 
+        
+        See the terrainType elements for a complete list of building names
+        <buildingType hexName="O4" buildingTypeName="Stone Building, 2 Level" />
+
+	-->
+    <buildingTypes>
+
+	</buildingTypes>
+	
+	<overlaySSRules>
+	    <!--
+			Scenario-specific underlay rules. 
+			name - the VASL SSR name
+			image - the image name
+			color - the VASL color name
+			
+			Example:
+			<underlaySSRule name="WallToCactus" image="CactusPattern.gif">
+				<color name="WallBrown" />
+				<color name="WallGrey1" />
+				<color name="WallGrey2" />
+			</underlaySSRule>			
+		-->
+		<underlaySSRule name="WallsOnly" image="WallPattern.gif">
+			<color name="DesertHedgeGreen" />
+		</underlaySSRule>
+		<underlaySSRule name="WallToCactus" image="CactusPattern.gif">
+			<color name="WallBrown" />
+			<color name="WallGrey1" />
+			<color name="WallGrey2" />
+		</underlaySSRule>
+		<underlaySSRule name="HedgeToCactus" image="CactusPattern.gif">
+			<color name="DesertHedgeGreen" />
+		</underlaySSRule>
+		<underlaySSRule name="OrchardsToCactusPatches" image="CactusPattern.gif">
+			<color name="OrchDesertL0" />
+			<color name="OrchDesertL1" />
+			<color name="OrchTreesDesert" />
+		</underlaySSRule>
+			
+	    <!--
+			Scenario-specific overlay rules. 
+			name - the VASL SSR name
+			image - the image name
+			x - x coordinate of overly upper left (?)
+			y - y coordinate of overlay upper left (?)
+		-->		
+		<overlaySSRule name="BrokenTerrain" image="29_BrokenTerrain.gif" x="1" y="1" />
+		<overlaySSRule name="SteppeTerrain" image="29_SteppeTerrain.gif" x="21" y="30" />
+		<overlaySSRule name="HammadaToOG" image="29_HammadaToOG.gif" x="27" y="37" />
+		<overlaySSRule name="ScrubToOG" image="29_ScrubToOG.gif" x="137" y="35" />
+		<overlaySSRule name="SSO_29_81" image="SSO_29_81.gif" x="1" y="150" />
+		<overlaySSRule name="SSO_29_ASLUG16" image="SSO_29_ASLUG16.gif" x="20" y="28" />
+		<overlaySSRule name="SSO_29_J47" image="SSO_29_J47.gif" x="1" y="1" />
+		<overlaySSRule name="SSO_29_38" image="SSO_29_38.gif" x="1623" y="1" />
+	</overlaySSRules>
+	
+	<colors>
+		<!--
+			The VASL board colors. Used for color-specific SSR transformations. Use this element to override the shared color pallet. 
+			name - the VASL color name
+			red, green, blue - the RBG value of the color in the image
+			terrain - the LOS terrain type
+			elevation - the base elevation of the terrain
+			
+			Example:
+			<colorSSR name="NoWhiteHexIDs">
+				<colorMap fromColor="WhiteHexNumbers" toColor="Black"/>
+				<colorMap fromColor="WinterBlackHexNumbers" toColor="Black"/>
+			</colorSSR>
+		-->
+		<color name="BrokenGround" red="60" green="44" blue="22" terrain="Broken Ground" elevation="UNKNOWN" />
+
+		<color name="Hammada1" red="190" green="149" blue="52" terrain="Hammada" elevation="UNKNOWN" />
+		<color name="Hammada2" red="169" green="127" blue="35" terrain="Hammada" elevation="UNKNOWN" />
+		<color name="Hammada3" red="148" green="113" blue="38" terrain="Hammada" elevation="UNKNOWN" />
+		<color name="Hammada4" red="123" green="92" blue="27" terrain="Hammada" elevation="UNKNOWN" />
+		<color name="Hammada5" red="108" green="75" blue="16" terrain="Hammada" elevation="UNKNOWN" />
+
+		<color name="Scrub_1" red="189" green="165" blue="51" terrain="Scrub" elevation="UNKNOWN" />
+		<color name="Scrub_2" red="168" green="141" blue="34" terrain="Scrub" elevation="UNKNOWN" />
+		<color name="Scrub_3" red="148" green="126" blue="37" terrain="Scrub" elevation="UNKNOWN" />
+		<color name="Scrub_4" red="142" green="134" blue="22" terrain="Scrub" elevation="UNKNOWN" />
+		<color name="Scrub_5" red="122" green="96" blue="26" terrain="Scrub" elevation="UNKNOWN" />
+		<color name="Scrub_6" red="112" green="115" blue="5" terrain="Scrub" elevation="UNKNOWN" />
+		<color name="Scrub_7" red="108" green="75" blue="15" terrain="Scrub" elevation="UNKNOWN" />
+		<color name="Scrub_8" red="99" green="104" blue="22" terrain="Scrub" elevation="UNKNOWN" />
+
+		<color name="Track" red="102" green="78" blue="37" terrain="Track" elevation="UNKNOWN" />
+
+		<color name="WadiBrown1" red="204" green="159" blue="52" terrain="Wadi" elevation="UNKNOWN" />
+		<color name="WadiBrown2" red="164" green="123" blue="0" terrain="Wadi" elevation="UNKNOWN" />
+		<color name="WadiBrown3" red="127" green="91" blue="33" terrain="Wadi" elevation="UNKNOWN" />
+		<color name="WadiBlack" red="83" green="51" blue="37" terrain="Wadi" elevation="UNKNOWN" />
+		<color name="WadiCliff" red="65" green="54" blue="28" terrain="Cliff" elevation="UNKNOWN" />
+
+		<color name="Sand1" red="230" green="19" blue="16" terrain="Sand" elevation="UNKNOWN" />
+
+		<color name="DTO_BrushL0" red="161" green="161" blue="56" terrain="Brush" elevation="0" />
+		<color name="DTO_BrushL1" red="161" green="162" blue="56" terrain="Brush" elevation="1" />
+		<color name="DTO_BrushL2" red="161" green="163" blue="56" terrain="Brush" elevation="2" />
+		<color name="DTO_BrushL3" red="161" green="164" blue="56" terrain="Brush" elevation="3" />
+		<color name="DTO_BrushL4" red="161" green="165" blue="56" terrain="Brush" elevation="4" />
+		<color name="DTO_BrushL5" red="161" green="166" blue="56" terrain="Brush" elevation="5" />
+		<color name="DTO_BrushL6" red="161" green="167" blue="56" terrain="Brush" elevation="6" />
+
+		<color name="DTO_BrushBlackL_2" red="68" green="62" blue="28" terrain="Brush" elevation="-2" />
+		<color name="DTO_BrushBlackL_1" red="68" green="63" blue="28" terrain="Brush" elevation="-1" />
+		<color name="DTO_BrushBlackL0" red="68" green="64" blue="28" terrain="Brush" elevation="0" />
+		<color name="DTO_BrushBlackL1" red="68" green="65" blue="28" terrain="Brush" elevation="1" />
+		<color name="DTO_BrushBlackL2" red="68" green="66" blue="28" terrain="Brush" elevation="2" />
+		<color name="DTO_BrushBlackL3" red="68" green="67" blue="28" terrain="Brush" elevation="3" />
+		<color name="DTO_BrushBlackL4" red="68" green="68" blue="28" terrain="Brush" elevation="4" />
+		<color name="DTO_BrushBlackL5" red="68" green="69" blue="28" terrain="Brush" elevation="5" />
+		<color name="DTO_BrushBlackL6" red="68" green="70" blue="28" terrain="Brush" elevation="6" />
+
+		<color name="DTO_BldgShadowL0" red="193" green="166" blue="88" terrain="Open Ground" elevation="0" />
+		<color name="DTO_BoardNum" red="255" green="229" blue="57" terrain="UNKNOWN" elevation="UNKNOWN" />
+
+		<color name="DTO_DirtRdL0" red="229" green="201" blue="126" terrain="Dirt Road" elevation="0" />
+		<color name="DTO_DirtRdL1" red="229" green="201" blue="127" terrain="Dirt Road" elevation="1" />
+		<color name="DTO_DirtRdL2" red="229" green="201" blue="128" terrain="Dirt Road" elevation="2" />
+		<color name="DTO_DirtRdL3" red="229" green="201" blue="129" terrain="Dirt Road" elevation="3" />
+		<color name="DTO_DirtRdL4" red="229" green="201" blue="130" terrain="Dirt Road" elevation="4" />
+		<color name="DTO_DirtRdL5" red="229" green="201" blue="131" terrain="Dirt Road" elevation="5" />
+		<color name="DTO_DirtRdL6" red="229" green="201" blue="132" terrain="Dirt Road" elevation="6" />
+		<color name="DTO_DirtRdBridge" red="229" green="200" blue="126" terrain="Dirt Road" elevation="0" />
+
+		<color name="DTO_GraveyardGreen" red="130" green="128" blue="58" terrain="Graveyard" elevation="UNKNOWN" />
+		<color name="DTO_GraveyardShadow" red="102" green="98" blue="40" terrain="Graveyard" elevation="UNKNOWN" />
+
+		<color name="DTO_HedgeGreen" red="114" green="117" blue="21" terrain="Hedge" elevation="UNKNOWN" />
+
+		<color name="DTO_PavedRdL0" red="193" green="193" blue="193" terrain="Paved Road" elevation="0" />
+		<color name="DTO_PavedRdL1" red="193" green="194" blue="193" terrain="Paved Road" elevation="1" />
+		<color name="DTO_PavedRdL2" red="193" green="195" blue="193" terrain="Paved Road" elevation="2" />
+		<color name="DTO_PavedRdL3" red="193" green="196" blue="193" terrain="Paved Road" elevation="3" />
+		<color name="DTO_PavedRdL4" red="193" green="197" blue="193" terrain="Paved Road" elevation="4" />
+		<color name="DTO_PavedRdL5" red="193" green="198" blue="193" terrain="Paved Road" elevation="5" />
+		<color name="DTO_PavedRdL6" red="193" green="199" blue="193" terrain="Paved Road" elevation="6" />
+		<color name="DTO_PavedRdBridge" red="193" green="193" blue="192" terrain="Paved Road" elevation="UNKNOWN" />
+
+		<color name="DTO_Level0_1" red="233" green="197" blue="40" terrain="Open Ground" elevation="0" />
+		<color name="DTO_Level0_2" red="232" green="188" blue="0" terrain="Open Ground" elevation="0" />
+		<color name="DTO_Level0_3" red="222" green="181" blue="19" terrain="Open Ground" elevation="0" />
+		<color name="DTO_Level0_4" red="218" green="178" blue="42" terrain="Open Ground" elevation="0" />
+		<color name="DTO_Level0_5" red="217" green="188" blue="92" terrain="Open Ground" elevation="0" />
+		<color name="DTO_Level0_6" red="201" green="158" blue="14" terrain="Open Ground" elevation="0" />
+
+		<color name="DTO_Level1" red="197" green="158" blue="53" terrain="Open Ground" elevation="1" />
+		<color name="DTO_Level2" red="169" green="131" blue="49" terrain="Open Ground" elevation="2" />
+		<color name="DTO_Level3" red="145" green="107" blue="27" terrain="Open Ground" elevation="3" />
+		<color name="DTO_Level4" red="114" green="83" blue="42" terrain="Open Ground" elevation="4" />
+
+		<color name="DTO_OrchL0" red="118" green="114" blue="36" terrain="Orchard" elevation="0" />
+		<color name="DTO_OrchL1" red="118" green="115" blue="36" terrain="Orchard" elevation="1" />
+		<color name="DTO_OrchL2" red="118" green="116" blue="36" terrain="Orchard" elevation="2" />
+		<color name="DTO_OrchL3" red="118" green="117" blue="36" terrain="Orchard" elevation="3" />
+		<color name="DTO_OrchL4" red="118" green="118" blue="36" terrain="Orchard" elevation="4" />
+		<color name="DTO_OrchL5" red="118" green="119" blue="36" terrain="Orchard" elevation="5" />
+		<color name="DTO_OrchL6" red="118" green="120" blue="36" terrain="Orchard" elevation="6" />
+		<color name="DTO_OrchTrees" red="118" green="114" blue="37" terrain="Orchard" elevation="UNKNOWN" />
+
+		<color name="DTO_WoodsGreen" red="119" green="119" blue="57" terrain="Woods" elevation="UNKNOWN" />
+		<color name="DTO_WoodsBlack" red="44" green="42" blue="23" terrain="Woods" elevation="UNKNOWN" />
+
+	</colors>
+	
+	<colorSSRules>
+		<!--
+			The board color scenario-specific rules. Use this element to override the shared SSRs.	
+			
+			Example:
+			<colorSSR name="NoWhiteHexIDs">
+				<colorMap fromColor="WhiteHexNumbers" toColor="Black"/>
+				<colorMap fromColor="WinterBlackHexNumbers" toColor="Black"/>
+			</colorSSR>			
+		-->
+
+	</colorSSRules>
+</boardMetadata>
