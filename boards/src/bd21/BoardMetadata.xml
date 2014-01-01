@@ -174,8 +174,8 @@
 			Scenario-specific overlay rules. 
 			name - the VASL SSR name
 			image - the image name
-			x - x coordinate of overly upper left (?)
-			y - y coordinate of overlay upper left (?)
+			x - x coordinate of overly upper left
+			y - y coordinate of overlay upper left
 		-->		
 		<overlaySSRule name="DenseJungle" image="21_DenseJungle.gif" x="1" y="1" />
 		<overlaySSRule name="WallsToBocage" image="21_Walls2Bocage.gif" x="127" y="1" />

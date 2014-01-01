@@ -68,8 +68,8 @@
 			Scenario-specific overlay rules. 
 			name - the VASL SSR name
 			image - the image name
-			x - x coordinate of overly upper left (?)
-			y - y coordinate of overlay upper left (?)
+			x - x coordinate of overly upper left
+			y - y coordinate of overlay upper left
 		-->		
 		<overlaySSRule name="BrokenTerrain" image="25_BrokenTerrain.gif" x="2" y="39" />
 		<overlaySSRule name="SteppeTerrain" image="25_SteppeTerrain.gif" x="18" y="94" />

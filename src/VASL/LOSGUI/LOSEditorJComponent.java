@@ -1345,6 +1345,11 @@ public class LOSEditorJComponent
         }
     }
 
+    public void mapToggleButton(){
+        VASLImage = !VASLImage;
+        repaint();
+    }
+
     public void updateMap() {
 
         // is the map open?
@@ -1740,6 +1745,13 @@ public class LOSEditorJComponent
 
         // is the map open?
         if (!mapOpen) return;
+
+
+            // toggle map
+        if (code == KeyEvent.VK_V) {
+
+            mapToggleButton();
+        }
 
         // Not doing LOS?
         if (!currentFunctionName.equals("LOS")) {

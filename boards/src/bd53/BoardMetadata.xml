@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<!--
+    This file contains the board metadata specific to a VASL board archive.
+    Create one file per VASL board and place it in the archive.
+-->
+
+<!-- 
+    Board-level metadata
+	name - the name of the board (as it will appear in board selector drop-down - not yet supported)
+	version - the board version
+	versionDate - the date the last version was created
+	author - the caring soul who created the board
+    boardImage - the name of the VASL image file in the board archive; the name is case sensitive
+    hasHills - TRUE/FALSE if the board contains base elevations above ground level
+                if not we can assume the ground level under the terrain is zero, which
+                makes the VASL LOS image translation faster and more accurate
+    height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
+    width - width of the board in hexes.
+	others - TBD e.g. alternate hex grain, etc. 
+-->
+<boardMetadata name="53" version="6.0" versionDate="Aug 2008" author="TR" boardImageFileName="bd53.gif" hasHills="FALSE" width="33" height="10">
+
+    <!--
+        The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
+        determine the proper building type when creating the LOS information and assumes buildings are single-hex stone or 
+        wooden buildings. Use these elements to override the building type. 
+        
+        See the terrainType elements for a complete list of building names
+        <buildingType hexName="O4" buildingTypeName="Stone Building, 2 Level" />
+
+	-->
+    <buildingTypes>
+        <buildingType hexName="L7" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="M7" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="N7" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="N6" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="O7" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="P7" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="P8" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="P9" buildingTypeName="Stone Building, 1 Level" />
+		
+        <buildingType hexName="O5" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="P2" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="P3" buildingTypeName="Stone Building, 2 Level" />
+        <buildingType hexName="P5" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="Q5" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="Q4" buildingTypeName="Stone Building, 1 Level" />
+		
+        <buildingType hexName="R2" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="R3" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="R4" buildingTypeName="Stone Building, 1 Level" />
+		
+        <buildingType hexName="R6" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="S6" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="S7" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="R8" buildingTypeName="Stone Building, 1 Level" />
+		
+        <buildingType hexName="T3" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="T5" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="T7" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="T7" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="W7" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="W8" buildingTypeName="Stone Building, 1 Level" />
+	</buildingTypes>
+	
+	<overlaySSRules>
+	    <!--
+			Scenario-specific underlay rules. 
+			name - the VASL SSR name
+			image - the image name
+			color - the VASL color name
+			
+			Example:
+			<underlaySSRule name="WallToCactus" image="CactusPattern.gif">
+				<color name="WallBrown" />
+				<color name="WallGrey1" />
+				<color name="WallGrey2" />
+			</underlaySSRule>			
+		-->
+				
+	    <!--
+			Scenario-specific overlay rules. 
+			name - the VASL SSR name
+			image - the image name
+			x - x coordinate of overly upper left
+			y - y coordinate of overlay upper left
+		-->		
+		<overlaySSRule name="DenseJungle" image="53_DenseJungle.gif" x="1" y="1" />
+		<overlaySSRule name="OrchardsToShellholes" image="53_Orch2Shell.gif" x="84" y="6" />
+		<overlaySSRule name="OrchardsToCrags" image="53_Orch2Crag.gif" x="84" y="9" />
+		<overlaySSRule name="PalmTrees" image="53_Orch2Palm.gif" x="82" y="9" />
+		<overlaySSRule name="BridgeToFord" image="53_Bridge2Ford.gif" x="1657" y="264" />
+		<overlaySSRule name="NoBridge" image="53_NoBridge.gif" x="1657" y="264" />
+		<overlaySSRule name="HedgesToBocage" image="53_HedgesToBocage.gif" x="37" y="26" />
+		<overlaySSRule name="WallsToBocage" image="53_WallsToBocage.gif" x="577" y="94" />
+		<overlaySSRule name="NoRoads" image="53_NoRoads.gif" x="1" y="1" />
+	</overlaySSRules>
+	
+	<colors>
+		<!--
+			The VASL board colors. Used for color-specific SSR transformations. Use this element to override the shared color pallet. 
+			name - the VASL color name
+			red, green, blue - the RBG value of the color in the image
+			terrain - the LOS terrain type
+			elevation - the base elevation of the terrain
+			
+			Example:
+			<colorSSR name="NoWhiteHexIDs">
+				<colorMap fromColor="WhiteHexNumbers" toColor="Black"/>
+				<colorMap fromColor="WinterBlackHexNumbers" toColor="Black"/>
+			</colorSSR>
+		-->
+
+	</colors>
+	
+	<colorSSRules>
+		<!--
+			The board color scenario-specific rules. Use this element to override the shared SSRs.	
+			
+			Example:
+			<colorSSR name="NoWhiteHexIDs">
+				<colorMap fromColor="WhiteHexNumbers" toColor="Black"/>
+				<colorMap fromColor="WinterBlackHexNumbers" toColor="Black"/>
+			</colorSSR>			
+		-->
+
+	</colorSSRules>
+</boardMetadata>

@@ -72,8 +72,8 @@
 			Scenario-specific overlay rules. 
 			name - the VASL SSR name
 			image - the image name
-			x - x coordinate of overly upper left (?)
-			y - y coordinate of overlay upper left (?)
+			x - x coordinate of overly upper left
+			y - y coordinate of overlay upper left
 		-->		
 
 		<overlaySSRule name="SSO_15_FT62" image="SSO_15_FT62.gif" x="344" y="0" />

@@ -65,8 +65,8 @@
 			Scenario-specific overlay rules. 
 			name - the VASL SSR name
 			image - the image name
-			x - x coordinate of overly upper left (?)
-			y - y coordinate of overlay upper left (?)
+			x - x coordinate of overly upper left
+			y - y coordinate of overlay upper left
 		-->		
 		<overlaySSRule name="OrchardsToCrags" image="34_Orch2Crag.gif" x="2" y="4" />
 		<overlaySSRule name="OrchardsToShellholes" image="34_Orch2Shell.gif" x="1" y="1" />
