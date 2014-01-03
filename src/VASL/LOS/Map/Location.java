@@ -36,7 +36,7 @@ public class Location
 	private int			baseHeight;
 	private Point		LOSPoint;
 	private Point		auxLOSPoint;	//auxiliary LOS point for bypass locations
-	private Point		edgeCenterPoint; //TODO: should not be needed - bypass only?
+	private Point		edgeCenterPoint;
 	private Hex hex;
 	private boolean 	fire			= false;
 	private boolean 	blaze			= false;

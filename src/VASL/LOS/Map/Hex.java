@@ -66,7 +66,7 @@ public class Hex
 	private	boolean edgeHasCliff[]  = new boolean[6];
 
 	// other stuff
-	private	Bridge	bridge; //TODO: bridge is not being saved
+	private	Bridge	bridge;
     private	boolean stairway;
 
 	// constructors
@@ -413,9 +413,6 @@ public class Hex
 	public int	  getBaseHeight()			{return baseHeight;}
 
 	public Location getCenterLocation() { return centerLocation;}
-	public void 	setCenterLocation(Location newCenterLocation) {
-		centerLocation = newCenterLocation;
-	}
 
 	public void setHexBorder(Polygon newHexBorder) {
 		hexBorder = newHexBorder;
@@ -438,32 +435,6 @@ public class Hex
 			case 3: return 0;
 			case 4: return 1;
 			case 5: return 2;
-		}
-		return -1;
-	}
-
-	public int getClockwiseHexside(int hexside){
-
-		switch (hexside){
-			case 0: return 1;
-			case 1: return 2;
-			case 2: return 3;
-			case 3: return 4;
-			case 4: return 5;
-			case 5: return 0;
-		}
-		return -1;
-	}
-
-	public int getCounterClockwiseHexside(int hexside){
-
-		switch (hexside){
-			case 0: return 5;
-			case 1: return 0;
-			case 2: return 1;
-			case 3: return 2;
-			case 4: return 3;
-			case 5: return 4;
 		}
 		return -1;
 	}
@@ -505,32 +476,9 @@ public class Hex
 		return -1;
 	}
 
-	public int getHexspine(Point LOSPoint){
-
-		for(int x = 0; x < 6; x++) {
-			if (hexsideLocations[x].getLOSPoint().getX() == LOSPoint.getX() &&
-				hexsideLocations[x].getLOSPoint().getY() == LOSPoint.getY()) {
-
-				return x;
-			}
-		}
-		return -1;
-	}
-
 	public boolean isHexsideLocation(Location l) {
 
 		return !isCenterLocation(l);
-	}
-
-	public boolean isGroundlevelLocation(Location l){
-
-		if (l == centerLocation) return true;
-
-		for(int x = 0; x < 6; x++) {
-			if (l == hexsideLocations[x])	return true;
-		}
-
-		return false;
 	}
 
 	public void setDepressionTerrain(Terrain terr) {
@@ -650,6 +598,38 @@ public class Hex
         // reset the hexside terrain
         //TODO: inherent terrain is bleeding into adjacent hexside locations
          resetHexsideTerrain();
+
+        // correct for single hex bridges
+        fixBridges();
+    }
+
+    /**
+     * Corrects hexes with single-hex bridges by setting the center location to the depression and add a road location above that
+     */
+    private void fixBridges() {
+
+        // hex has bridge?
+        Rectangle rectangle = getHexBorder().getBounds();
+        Terrain bridgeTerrain = null;
+        for(int x = rectangle.x; x < rectangle.x + rectangle.width && bridgeTerrain == null; x++) {
+            for(int y = rectangle.y; y < rectangle.y + rectangle.height  && bridgeTerrain == null; y++) {
+
+                if(getHexBorder().contains(x,y) &&
+                        map.onMap(x,y) &&
+                        map.getGridTerrain(x,y).isBridge()) {
+
+                    bridgeTerrain = map.getGridTerrain(x, y);
+                }
+            }
+        }
+
+        if(bridgeTerrain != null) {
+
+            // make the center location the road location by removing the depression terrain
+            int height = centerLocation.getBaseHeight();
+            centerLocation.setDepressionTerrain(null);
+            centerLocation.setBaseHeight(height);
+        }
     }
 
     /**
