@@ -139,6 +139,10 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
           ASLBoard b = new ASLBoard();
           String boardDesc = command.substring(0, index);
           try {
+            StringTokenizer st2 = new StringTokenizer(boardDesc, "\t\n");
+            b.relativePosition().move(Integer.parseInt(st2.nextToken()), Integer.parseInt(st2.nextToken()));
+            String baseName = st2.nextToken();
+            this.tileBoard(baseName);
             buildBoard(b, boardDesc);
             v.add(b);
           }
@@ -149,6 +153,10 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
         }
         ASLBoard b = new ASLBoard();
         try {
+          StringTokenizer st2 = new StringTokenizer(command, "\t\n");
+          b.relativePosition().move(Integer.parseInt(st2.nextToken()), Integer.parseInt(st2.nextToken()));
+          String baseName = st2.nextToken();
+          this.tileBoard(baseName);
           buildBoard(b, command);
           v.add(b);
         }
@@ -360,20 +368,22 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
     allowMultiple = true;
   }
 
-  public void addBoard(String name) {
-///
+  /*
+   * Tiles a board by common name (e.g. 21, not bd21)
+   */
+  private void tileBoard(String commonName) {
     final GameModule g = GameModule.getGameModule();
     final String hstr =
-      DigestUtils.shaHex(g.getGameName() + "_" + g.getGameVersion());
+        DigestUtils.shaHex(g.getGameName() + "_" + g.getGameVersion());
 
-    final File fpath = new File(boardDir, "bd" + name);
+    final File fpath = new File(boardDir, "bd" + commonName);
 
     final ASLTilingHandler th = new ASLTilingHandler(
-      fpath.getAbsolutePath(),
-      new File(Info.getConfDir(), "tiles/" + hstr),
-      new Dimension(256, 256),
-      1024,
-      42
+        fpath.getAbsolutePath(),
+        new File(Info.getConfDir(), "tiles/" + hstr),
+        new Dimension(256, 256),
+        1024,
+        42
     );
 
     try {
@@ -382,8 +392,9 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
     catch (IOException e) {
       ReadErrorDialog.error(e, fpath);
     }
-///
+  }
 
+  public void addBoard(String name) {
     final ASLBoard b = new ASLBoard();
     b.setCommonName(name);
     possibleBoards.add(b);
@@ -405,6 +416,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
   }
 
   public Board getBoard(String name, boolean localized) {
+    this.tileBoard(name);
     ASLBoard b = new ASLBoard();
     if (name != null) {
       if (name.length() == 1 && name.charAt(0) <= '9' && name.charAt(0) >= '0') {
