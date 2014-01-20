@@ -1,5 +1,5 @@
 /*
- * $Id: ASLBoardPicker.java 8948 2013-11-24 04:29:28Z davidsullivan1 $
+ * $Id$
  *
  * Copyright (c) 2000-2003 by Rodney Kinney
  *
@@ -93,6 +93,10 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
           ASLBoard b = new VASLBoard();
           String boardDesc = command.substring(0, index);
           try {
+            StringTokenizer st2 = new StringTokenizer(boardDesc, "\t\n");
+            b.relativePosition().move(Integer.parseInt(st2.nextToken()), Integer.parseInt(st2.nextToken()));
+            String baseName = st2.nextToken();
+            this.tileBoard(baseName);
             buildBoard(b, boardDesc);
             v.add(b);
           }
@@ -103,6 +107,10 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
         }
         ASLBoard b = new VASLBoard();
         try {
+          StringTokenizer st2 = new StringTokenizer(command, "\t\n");
+          b.relativePosition().move(Integer.parseInt(st2.nextToken()), Integer.parseInt(st2.nextToken()));
+          String baseName = st2.nextToken();
+          this.tileBoard(baseName);
           buildBoard(b, command);
           v.add(b);
         }
@@ -314,20 +322,22 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
     allowMultiple = true;
   }
 
-  public void addBoard(String name) {
-///
+  /*
+   * Tiles a board by common name (e.g. 21, not bd21)
+   */
+  private void tileBoard(String commonName) {
     final GameModule g = GameModule.getGameModule();
     final String hstr =
-      DigestUtils.shaHex(g.getGameName() + "_" + g.getGameVersion());
+        DigestUtils.shaHex(g.getGameName() + "_" + g.getGameVersion());
 
-    final File fpath = new File(boardDir, "bd" + name);
+    final File fpath = new File(boardDir, "bd" + commonName);
 
     final ASLTilingHandler th = new ASLTilingHandler(
-      fpath.getAbsolutePath(),
-      new File(Info.getConfDir(), "tiles/" + hstr),
-      new Dimension(256, 256),
-      1024,
-      42
+        fpath.getAbsolutePath(),
+        new File(Info.getConfDir(), "tiles/" + hstr),
+        new Dimension(256, 256),
+        1024,
+        42
     );
 
     try {
@@ -336,8 +346,9 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
     catch (IOException e) {
       ReadErrorDialog.error(e, fpath);
     }
-///
+  }
 
+  public void addBoard(String name) {
     final ASLBoard b = new VASLBoard();
     b.setCommonName(name);
     possibleBoards.add(b);
@@ -359,6 +370,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
   }
 
   public Board getBoard(String name, boolean localized) {
+    this.tileBoard(name);
     ASLBoard b = new VASLBoard();
     if (name != null) {
       if (name.length() == 1 && name.charAt(0) <= '9' && name.charAt(0) >= '0') {
@@ -1081,10 +1093,9 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
     }
 
     public String optionRules() {
-
-        String s = "";
-        for (int i = 0; i < optionGroup.size(); ++i) {
-
+      String s = "";
+      for (int i = 0; i < optionGroup.size(); ++i) {
+       // s = s.concat(((TerrainOption) optionGroup.elementAt(i)).getRule());
           if(s.length() > 0 && ((TerrainOption) optionGroup.elementAt(i)).getRule().length() > 0) {
               s = s.concat("\t").concat(((TerrainOption) optionGroup.elementAt(i)).getRule());
           }

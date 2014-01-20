@@ -1400,7 +1400,7 @@
 	-->
     <LOSSSRules>
 
-        <!-- rule that ignored. These are valid SSRs that do not impact the LOS data -->
+        <!-- rule that are ignored. These are valid SSRs that do not impact the LOS data -->
         <LOSSSRule name="NoWhiteHexIDs" type="ignore" fromValue="" toValue="" />
         <LOSSSRule name="AllPaved" type="ignore" fromValue="" toValue="" />
         <LOSSSRule name="AllDirt" type="ignore" fromValue="" toValue="" />
