@@ -1391,4 +1391,143 @@
 			<colorMap fromColor="GullyGreen3" toColor="WadiBrown1"/>
 		</colorSSR>
 	</colorSSRules>
+
+    <!-- the rules applied to the LOS data for the SSR transformations. 
+		"type" must be one of the following: ignore, customCode, terrainMap, elevationMap, terrainToElevationMap, or elevationToTerrainmap
+		Use type="ignore" for SSRS that do not impact the LOS data
+		Use type="customCode" to mark SSRs that need code support
+		All attributes are required
+	-->
+    <LOSSSRules>
+
+        <!-- rule that ignored. These are valid SSRs that do not impact the LOS data -->
+        <LOSSSRule name="NoWhiteHexIDs" type="ignore" fromValue="" toValue="" />
+        <LOSSSRule name="AllPaved" type="ignore" fromValue="" toValue="" />
+        <LOSSSRule name="AllDirt" type="ignore" fromValue="" toValue="" />
+        <LOSSSRule name="AllStone" type="ignore" fromValue="" toValue="" />
+        <LOSSSRule name="AllWood" type="ignore" fromValue="" toValue="" />
+        <LOSSSRule name="StreamsToGullies" type="ignore" fromValue="" toValue="" />
+        <LOSSSRule name="GulliesToStreams" type="ignore" fromValue="" toValue="" />
+        <LOSSSRule name="NoHillNums" type="ignore" fromValue="" toValue="" />
+        <LOSSSRule name="WallsOnly" type="ignore" fromValue="" toValue="" />
+
+        <!-- rules that must be handled in the code -->
+        <LOSSSRule name="RowhouseBarsToBuildings" type="customCode" fromValue="" toValue="" />
+        <LOSSSRule name="RowhouseBarsToOpenGround" type="customCode" fromValue="" toValue="" />
+        <LOSSSRule name="FloodedRivers" type="customCode" fromValue="" toValue="" />
+        <LOSSSRule name="FordableRivers" type="customCode" fromValue="" toValue="" />
+        <LOSSSRule name="Winter" type="customCode" fromValue="" toValue="" />
+        <LOSSSRule name="Mud" type="customCode" fromValue="" toValue="" />
+        <LOSSSRule name="NoStairwells" type="customCode" fromValue="" toValue="" />
+
+        <!-- simple terrain mappings -->
+        <LOSSSRule name="BrushToOpenGround" type="terrainMap" fromValue="Brush" toValue="Open Ground" />
+        <LOSSSRule name="SwampToMarsh" type="terrainMap" fromValue="Swamp" toValue="Marsh" />
+        <LOSSSRule name="MarshToOpenGround" type="terrainMap" fromValue="Marsh" toValue="Open Ground" />
+        <LOSSSRule name="FloodedStreams" type="terrainMap" fromValue="Shallow Stream" toValue="Flooded Stream" />
+        <LOSSSRule name="DryStreams" type="terrainMap" fromValue="Shallow Stream" toValue="Dry Stream" />
+        <LOSSSRule name="OrchardOutOfSeason" type="terrainMap" fromValue="Orchard" toValue="Orchard, Out of Season" />
+        <LOSSSRule name="NoGrain" type="terrainMap" fromValue="Grain" toValue="Open Ground" />
+        <LOSSSRule name="HedgesToOG" type="terrainMap" fromValue="Hedge" toValue="Open Ground" />
+        <LOSSSRule name="NoHedges" type="terrainMap" fromValue="Hedge" toValue="Open Ground" />
+        <LOSSSRule name="WallsToOG" type="terrainMap" fromValue="Wall" toValue="Open Ground" />
+        <LOSSSRule name="NoWalls" type="terrainMap" fromValue="Wall" toValue="Open Ground" />
+        <LOSSSRule name="PlowedFields" type="terrainMap" fromValue="Grain" toValue="Plowed Field" />
+        <LOSSSRule name="RiverToValley" type="terrainMap" fromValue="River" toValue="Open Ground" />
+        <LOSSSRule name="PondToValley" type="terrainMap" fromValue="Water" toValue="Open Ground" />
+        <LOSSSRule name="NoCliffs" type="terrainMap" fromValue="Cliff" toValue="Open Ground" />
+
+
+        <!-- simple elevation maps. Note that elevations can only be decreased -->
+        <LOSSSRule name="Level6ToLevel5" type="elevationMap" fromValue="6" toValue="5" />
+        <LOSSSRule name="Level5ToLevel4" type="elevationMap" fromValue="5" toValue="4" />
+        <LOSSSRule name="Level4ToLevel3" type="elevationMap" fromValue="4" toValue="3" />
+        <LOSSSRule name="Level4ToLevel2" type="elevationMap" fromValue="4" toValue="2" />
+        <LOSSSRule name="Level4ToLevel1" type="elevationMap" fromValue="4" toValue="1" />
+        <LOSSSRule name="Level4ToLevel0" type="elevationMap" fromValue="4" toValue="0" />
+        <LOSSSRule name="Level4ToLevel_1" type="elevationMap" fromValue="4" toValue="-1" />
+        <LOSSSRule name="Level3ToLevel2" type="elevationMap" fromValue="3" toValue="2" />
+        <LOSSSRule name="Level3ToLevel1" type="elevationMap" fromValue="3" toValue="1" />
+        <LOSSSRule name="Level3ToLevel0" type="elevationMap" fromValue="3" toValue="0" />
+        <LOSSSRule name="Level3ToLevel_1" type="elevationMap" fromValue="3" toValue="-1" />
+        <LOSSSRule name="Level2ToLevel1" type="elevationMap" fromValue="2" toValue="1" />
+        <LOSSSRule name="Level2ToLevel0" type="elevationMap" fromValue="2" toValue="0" />
+        <LOSSSRule name="Level2ToLevel_1" type="elevationMap" fromValue="2" toValue="-1" />
+        <LOSSSRule name="Level1ToLevel0" type="elevationMap" fromValue="1" toValue="0" />
+        <LOSSSRule name="Level1ToLevel_1" type="elevationMap" fromValue="1" toValue="_1" />
+        <LOSSSRule name="Level_1ToLevel0" type="elevationMap" fromValue="-1" toValue="0" />
+        <LOSSSRule name="Level_2ToLevel_1" type="elevationMap" fromValue="-2" toValue="-1" />
+        <LOSSSRule name="Level_2ToLevel0" type="elevationMap" fromValue="-2" toValue="0" />
+
+        <!-- custom mapping to include any combination of marsh, grain, brush, woods and levels -1 through 4 -->
+        <LOSSSRule name="WoodsToLevel_1" type="terrainToElevationMap" fromValue="Woods" toValue="-1" />
+        <LOSSSRule name="WoodsToLevel0" type="terrainToElevationMap" fromValue="Woods" toValue="0" />
+        <LOSSSRule name="WoodsToLevel1" type="terrainToElevationMap" fromValue="Woods" toValue="1" />
+        <LOSSSRule name="WoodsToLevel2" type="terrainToElevationMap" fromValue="Woods" toValue="2" />
+        <LOSSSRule name="WoodsToLevel3" type="terrainToElevationMap" fromValue="Woods" toValue="3" />
+        <LOSSSRule name="WoodsToLevel4" type="terrainToElevationMap" fromValue="Woods" toValue="4" />
+        <LOSSSRule name="WoodsToGrain" type="terrainMap" fromValue="Woods" toValue="Grain" />
+        <LOSSSRule name="WoodsToBrush" type="terrainMap" fromValue="Woods" toValue="Brush" />
+        <LOSSSRule name="WoodsToMarsh" type="terrainMap" fromValue="Woods" toValue="Marsh" />
+
+        <LOSSSRule name="BrushToLevel_1" type="terrainToElevationMap" fromValue="Brush" toValue="-1" />
+        <LOSSSRule name="BrushToLevel0" type="terrainToElevationMap" fromValue="Brush" toValue="0" />
+        <LOSSSRule name="BrushToLevel1" type="terrainToElevationMap" fromValue="Brush" toValue="1" />
+        <LOSSSRule name="BrushToLevel2" type="terrainToElevationMap" fromValue="Brush" toValue="2" />
+        <LOSSSRule name="BrushToLevel3" type="terrainToElevationMap" fromValue="Brush" toValue="3" />
+        <LOSSSRule name="BrushToLevel4" type="terrainToElevationMap" fromValue="Brush" toValue="4" />
+        <LOSSSRule name="BrushToGrain" type="terrainMap" fromValue="Brush" toValue="Grain" />
+        <LOSSSRule name="BrushToWoods" type="terrainMap" fromValue="Brush" toValue="Woods" />
+        <LOSSSRule name="BrushToMarsh" type="terrainMap" fromValue="Brush" toValue="Marsh" />
+
+        <LOSSSRule name="GrainToLevel_1" type="terrainToElevationMap" fromValue="Grain" toValue="-1" />
+        <LOSSSRule name="GrainToLevel0" type="terrainToElevationMap" fromValue="Grain" toValue="0" />
+        <LOSSSRule name="GrainToLevel1" type="terrainToElevationMap" fromValue="Grain" toValue="1" />
+        <LOSSSRule name="GrainToLevel2" type="terrainToElevationMap" fromValue="Grain" toValue="2" />
+        <LOSSSRule name="GrainToLevel3" type="terrainToElevationMap" fromValue="Grain" toValue="3" />
+        <LOSSSRule name="GrainToLevel4" type="terrainToElevationMap" fromValue="Grain" toValue="4" />
+        <LOSSSRule name="GrainToBrush" type="terrainMap" fromValue="Grain" toValue="Brush" />
+        <LOSSSRule name="GrainToWoods" type="terrainMap" fromValue="Grain" toValue="Woods" />
+        <LOSSSRule name="GrainToMarsh" type="terrainMap" fromValue="Grain" toValue="Marsh" />
+
+        <LOSSSRule name="MarshToLevel_1" type="terrainToElevationMap" fromValue="Marsh" toValue="-1" />
+        <LOSSSRule name="MarshToLevel0" type="terrainToElevationMap" fromValue="Marsh" toValue="0" />
+        <LOSSSRule name="MarshToLevel1" type="terrainToElevationMap" fromValue="Marsh" toValue="1" />
+        <LOSSSRule name="MarshToLevel2" type="terrainToElevationMap" fromValue="Marsh" toValue="2" />
+        <LOSSSRule name="MarshToLevel3" type="terrainToElevationMap" fromValue="Marsh" toValue="3" />
+        <LOSSSRule name="MarshToLevel4" type="terrainToElevationMap" fromValue="Marsh" toValue="4" />
+        <LOSSSRule name="MarshToBrush" type="terrainMap" fromValue="Marsh" toValue="Brush" />
+        <LOSSSRule name="MarshToWoods" type="terrainMap" fromValue="Marsh" toValue="Woods" />
+        <LOSSSRule name="MarshToGrain" type="terrainMap" fromValue="Marsh" toValue="Grain" />
+
+        <LOSSSRule name="Level_1ToWoods" type="elevationToTerrainMap" fromValue="-1" toValue="Woods" />
+        <LOSSSRule name="Level0ToWoods" type="elevationToTerrainMap" fromValue="0" toValue="Woods" />
+        <LOSSSRule name="Level1ToWoods" type="elevationToTerrainMap" fromValue="1" toValue="Woods" />
+        <LOSSSRule name="Level2ToWoods" type="elevationToTerrainMap" fromValue="2" toValue="Woods" />
+        <LOSSSRule name="Level3ToWoods" type="elevationToTerrainMap" fromValue="3" toValue="Woods" />
+        <LOSSSRule name="Level4ToWoods" type="elevationToTerrainMap" fromValue="4" toValue="Woods" />
+
+        <LOSSSRule name="Level_1ToGrain" type="elevationToTerrainMap" fromValue="-1" toValue="Grain" />
+        <LOSSSRule name="Level0ToGrain" type="elevationToTerrainMap" fromValue="0" toValue="Grain" />
+        <LOSSSRule name="Level1ToGrain" type="elevationToTerrainMap" fromValue="1" toValue="Grain" />
+        <LOSSSRule name="Level2ToGrain" type="elevationToTerrainMap" fromValue="2" toValue="Grain" />
+        <LOSSSRule name="Level3ToGrain" type="elevationToTerrainMap" fromValue="3" toValue="Grain" />
+        <LOSSSRule name="Level4ToGrain" type="elevationToTerrainMap" fromValue="4" toValue="Grain" />
+
+        <LOSSSRule name="Level_1ToMarsh" type="elevationToTerrainMap" fromValue="-1" toValue="Marsh" />
+        <LOSSSRule name="Level0ToMarsh" type="elevationToTerrainMap" fromValue="0" toValue="Marsh" />
+        <LOSSSRule name="Level1ToMarsh" type="elevationToTerrainMap" fromValue="1" toValue="Marsh" />
+        <LOSSSRule name="Level2ToMarsh" type="elevationToTerrainMap" fromValue="2" toValue="Marsh" />
+        <LOSSSRule name="Level3ToMarsh" type="elevationToTerrainMap" fromValue="3" toValue="Marsh" />
+        <LOSSSRule name="Level4ToMarsh" type="elevationToTerrainMap" fromValue="4" toValue="Marsh" />
+
+        <LOSSSRule name="Level_1ToBrush" type="elevationToTerrainMap" fromValue="-1" toValue="Brush" />
+        <LOSSSRule name="Level0ToBrush" type="elevationToTerrainMap" fromValue="0" toValue="Brush" />
+        <LOSSSRule name="Level1ToBrush" type="elevationToTerrainMap" fromValue="1" toValue="Brush" />
+        <LOSSSRule name="Level2ToBrush" type="elevationToTerrainMap" fromValue="2" toValue="Brush" />
+        <LOSSSRule name="Level3ToBrush" type="elevationToTerrainMap" fromValue="3" toValue="Brush" />
+        <LOSSSRule name="Level4ToBrush" type="elevationToTerrainMap" fromValue="4" toValue="Brush" />
+
+    </LOSSSRules>
+
 </sharedBoardMetadata>

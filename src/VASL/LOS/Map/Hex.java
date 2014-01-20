@@ -604,7 +604,7 @@ public class Hex
     }
 
     /**
-     * Corrects hexes with single-hex bridges by setting the center location to the depression and add a road location above that
+     * Corrects hexes with single-hex bridges by making the center location the road location
      */
     private void fixBridges() {
 
@@ -626,9 +626,18 @@ public class Hex
         if(bridgeTerrain != null) {
 
             // make the center location the road location by removing the depression terrain
+            Terrain depressionTerrain = centerLocation.getDepressionTerrain();
+
             int height = centerLocation.getBaseHeight();
             centerLocation.setDepressionTerrain(null);
             centerLocation.setBaseHeight(height);
+
+            Location newLocation = new Location(centerLocation);
+            newLocation.setDepressionTerrain(depressionTerrain);
+            newLocation.setBaseHeight(baseHeight - 1);
+
+            newLocation.setUpLocation(centerLocation);
+            centerLocation.setDownLocation(newLocation);
         }
     }
 
@@ -1164,6 +1173,9 @@ public class Hex
 				(Point) h.getBridge().getCenter().clone()
 			));
 		}
+
+        //stairways
+        stairway = h.hasStairway();
 	}
 
     public boolean hasStairway() {

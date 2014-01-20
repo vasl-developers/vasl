@@ -1081,9 +1081,16 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
     }
 
     public String optionRules() {
-      String s = "";
-      for (int i = 0; i < optionGroup.size(); ++i) {
-        s = s.concat(((TerrainOption) optionGroup.elementAt(i)).getRule());
+
+        String s = "";
+        for (int i = 0; i < optionGroup.size(); ++i) {
+
+          if(s.length() > 0 && ((TerrainOption) optionGroup.elementAt(i)).getRule().length() > 0) {
+              s = s.concat("\t").concat(((TerrainOption) optionGroup.elementAt(i)).getRule());
+          }
+          else {
+              s = s.concat(((TerrainOption) optionGroup.elementAt(i)).getRule());
+          }
       }
       return s;
     }

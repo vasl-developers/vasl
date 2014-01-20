@@ -13,20 +13,30 @@ import java.util.LinkedHashMap;
 public abstract class AbstractMetadata {
 
     protected static final String colorsElement = "colors";
-    private static final String colorElement = "color";
-    private static final String colorNameAttribute = "name";
-    private static final String colorRedAttribute = "red";
-    private static final String colorGreenAttribute = "green";
-    private static final String colorBlueAttribute = "blue";
-    private static final String colorTerrainAttribute = "terrain";
-    private static final String colorElevationAttribute = "elevation";
+    protected static final String colorElement = "color";
+    protected static final String colorNameAttribute = "name";
+    protected static final String colorRedAttribute = "red";
+    protected static final String colorGreenAttribute = "green";
+    protected static final String colorBlueAttribute = "blue";
+    protected static final String colorTerrainAttribute = "terrain";
+    protected static final String colorElevationAttribute = "elevation";
 
     protected static final String colorSSRulesElement = "colorSSRules";
-    private static final String colorSSRElement = "colorSSR";
-    private static final String colorSSRuleName = "name";
-    private static final String colorMapElement = "colorMap";
-    private static final String colorMapFromColorAttribute = "fromColor";
-    private static final String colorMapToColorAttribute = "toColor";
+    protected static final String colorSSRElement = "colorSSR";
+    protected static final String colorSSRuleName = "name";
+    protected static final String colorMapElement = "colorMap";
+    protected static final String colorMapFromColorAttribute = "fromColor";
+    protected static final String colorMapToColorAttribute = "toColor";
+
+    protected static final String LOSSSRulesElement = "LOSSSRules";
+    protected static final String LOSSSRuleElement = "LOSSSRule";
+    protected static final String LOSSSRuleNameAttribute = "name";
+    protected static final String LOSSSRuleTypeAttribute = "type";
+    protected static final String LOSSSRuleFromValueAttribute = "fromValue";
+    protected static final String LOSSSRuleToValueAttribute = "toValue";
+    protected static final String LOSSSRuleTypeValues[] = { // valid LOS rule types
+            "ignore", "customCode", "terrainMap", "elevationMap", "terrainToElevationMap", "elevationToTerrainMap"
+    };
 
     // Maps color names to board color object
     protected LinkedHashMap<String, BoardColor> boardColors = new LinkedHashMap<String, BoardColor>(100);
@@ -36,6 +46,9 @@ public abstract class AbstractMetadata {
 
     // Maps rule name to the rule object
     protected LinkedHashMap<String, ColorSSRule> colorSSRules = new LinkedHashMap<String, ColorSSRule>(100);
+
+    // List of LOS scenario-specific rules
+    protected LinkedHashMap<String, LOSSSRule> LOSSSRules = new LinkedHashMap<String, LOSSSRule>(100);
 
     /**
      * Assert the element has the given name otherwise throw an exception
@@ -109,6 +122,46 @@ public abstract class AbstractMetadata {
     }
 
     /**
+     * Parses the LOS scenario-specific rules element
+     * @param element the LOSSSRules element
+     * @throws org.jdom2.JDOMException
+     */
+    protected void parseLOSSSRules(Element element) throws JDOMException {
+
+        // make sure we have the right element
+        assertElementName(element, LOSSSRulesElement);
+
+        for(Element e: element.getChildren()) {
+
+            // ignore any child elements that are not color elements
+            if(e.getName().equals(LOSSSRuleElement)){
+
+                // read the attributes
+                String name = e.getAttributeValue(LOSSSRuleNameAttribute);
+                String type = e.getAttributeValue(LOSSSRuleTypeAttribute);
+                String fromValue = e.getAttributeValue(LOSSSRuleFromValueAttribute);
+                String toValue = e.getAttributeValue(LOSSSRuleToValueAttribute);
+
+                // make sure the type code is valid
+                boolean validTypeCode = false;
+                for(int x = 0; x < LOSSSRuleTypeValues.length && !validTypeCode; x++) {
+                    if(LOSSSRuleTypeValues[x].equals(type)) {
+                        validTypeCode = true;
+                    }
+                }
+
+                if(!validTypeCode) {
+                    throw new JDOMException("Invalid LOS scenario-specific rule type: " + name);
+                }
+
+                // create and store the rule
+                LOSSSRule losssRule = new LOSSSRule(name, type, fromValue, toValue);
+                LOSSSRules.put(name, losssRule);
+            }
+        }
+    }
+
+    /**
      * Parses the scenario-specific color rules element
      * @param element the colorSSRules element
      * @throws org.jdom2.JDOMException
@@ -169,5 +222,12 @@ public abstract class AbstractMetadata {
      */
     public LinkedHashMap<Color, String> getColorToVASLColorName() {
         return colorToVASLColorName;
+    }
+
+    /**
+     * @return the list of LOS scenario-specific rules
+     */
+    public LinkedHashMap<String, LOSSSRule> getLOSSSRules(){
+        return LOSSSRules;
     }
 }

@@ -338,4 +338,19 @@ public class BoardMetadata extends AbstractMetadata {
     public boolean isAltHexGrain() {
         return altHexGrain;
     }
+
+    /**
+     * @return the scenario-specific overlay rules
+     */
+    public LinkedHashMap<String, OverlaySSRule> getOverlaySSRules() {
+        return overlaySSRules;
+    }
+
+    /**
+     * @return the scenario-specific underlay rules
+     */
+    public LinkedHashMap<String, UnderlaySSRule> getUnderlaySSRules() {
+        return underlaySSRules;
+    }
+
 }

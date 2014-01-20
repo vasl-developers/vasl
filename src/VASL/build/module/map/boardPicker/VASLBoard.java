@@ -19,24 +19,27 @@
 
 package VASL.build.module.map.boardPicker;
 
+import VASL.LOS.Map.Hex;
 import VASL.LOS.Map.Terrain;
 import VASL.build.module.ASLMap;
 import VASL.build.module.map.boardArchive.BoardArchive;
+import VASL.build.module.map.boardArchive.LOSSSRule;
 import VASSAL.build.module.map.boardPicker.board.HexGrid;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.StringTokenizer;
 
 /**
  * Extends ASLBoard to add support for version 6+ boards
  */
 public class VASLBoard extends ASLBoard {
 
-
     private boolean legacyBoard = true; // is the board legacy (i.e. V5) format?
     private BoardArchive VASLBoardArchive;
+    private boolean flipped = false; // prevents the same board from being flipped multiple times
 
     /**
      * @return true if the board is already set
@@ -52,8 +55,6 @@ public class VASLBoard extends ASLBoard {
     public void setFlipped(boolean flipped) {
         this.flipped = flipped;
     }
-
-    private boolean flipped = false; // prevents the same board from being flipped multiple times
 
     public VASLBoard(){
 
@@ -97,7 +98,6 @@ public class VASLBoard extends ASLBoard {
         Rectangle croppedBounds = getCropBounds();
         return !(croppedBounds.x == 0 && croppedBounds.y == 0 && croppedBounds.width == -1 && croppedBounds.height == -1);
     }
-
 
     /**
      * Crops the LOS data
@@ -177,4 +177,256 @@ public class VASLBoard extends ASLBoard {
         }
     }
 
+    /**
+     * Applies the color scenario-specific rules to the LOS data
+     * @param LOSData the LOS data to modify
+     */
+    public void applyColorSSRules(VASL.LOS.Map.Map LOSData, HashMap<String, LOSSSRule> losssRules) throws BoardException {
+
+        if(!this.legacyBoard && terrainChanges.length() > 0) {
+
+            System.out.println(terrainChanges);
+
+            boolean changed = false; // changes made?
+
+            // step through each SSR token
+            StringTokenizer st = new StringTokenizer(terrainChanges, "\t");
+            while (st.hasMoreTokens()) {
+
+                String s = st.nextToken();
+
+                LOSSSRule rule = losssRules.get(s);
+                if(rule == null) {
+                    throw new BoardException("Unsupported scenario-specific rule: " + s);
+                }
+
+                // these are rules that have to be handled in the code
+                if(rule.getType().equals("customCode")) {
+
+                    if(s.equals("NoStairwells")) {
+
+                        Hex[][] hexGrid = LOSData.getHexGrid();
+                        for (int x = 0; x < hexGrid.length; x++) {
+                            for (int y = 0; y < hexGrid[x].length; y++) {
+                                LOSData.getHex(x, y).setStairway(false);
+                            }
+                        }
+                        changed = true;
+
+                    }
+                    else if(s.equals("RowhouseBarsToBuildings")) {
+
+                        // for simplicity assume stone building as type will not impact LOD
+                        changeGridTerrain(LOSData.getTerrain("Rowhouse Wall"), LOSData.getTerrain("Stone Building"), LOSData);
+                        changeGridTerrain(LOSData.getTerrain("Rowhouse Wall, 1 Level"), LOSData.getTerrain("Stone Building, 1 Level"), LOSData);
+                        changeGridTerrain(LOSData.getTerrain("Rowhouse Wall, 2 Level"), LOSData.getTerrain("Stone Building, 2 Level"), LOSData);
+                        changeGridTerrain(LOSData.getTerrain("Rowhouse Wall, 3 Level"), LOSData.getTerrain("Stone Building, 3 Level"), LOSData);
+                        changeGridTerrain(LOSData.getTerrain("Rowhouse Wall, 4 Level"), LOSData.getTerrain("Stone Building, 4 Level"), LOSData);
+                        changed = true;
+                    }
+                    else if(s.equals("RowhouseBarsToOpenGround")) {
+
+                        changeGridTerrain(LOSData.getTerrain("Rowhouse Wall"), LOSData.getTerrain("Open Ground"), LOSData);
+                        changeGridTerrain(LOSData.getTerrain("Rowhouse Wall, 1 Level"), LOSData.getTerrain("Open Ground"), LOSData);
+                        changeGridTerrain(LOSData.getTerrain("Rowhouse Wall, 2 Level"), LOSData.getTerrain("Open Ground"), LOSData);
+                        changeGridTerrain(LOSData.getTerrain("Rowhouse Wall, 3 Level"), LOSData.getTerrain("Open Ground"), LOSData);
+                        changeGridTerrain(LOSData.getTerrain("Rowhouse Wall, 4 Level"), LOSData.getTerrain("Open Ground"), LOSData);
+                        changed = true;
+                    }
+                    else if(s.equals("FloodedRivers")) {
+
+                    }
+                    else if(s.equals("FordableRivers")) {
+
+                    }
+                    else if(s.equals("Winter")) {
+
+                    }
+                    else if(s.equals("Mud")) {
+
+                    }
+                    else if(s.equals("NoHills")) {
+
+                    }
+                    else {
+                        throw new BoardException("Unsupported custom code SSR: " + s);
+                    }
+                }
+                else if(rule.getType().equals("terrainMap")) {
+
+                    applyTerrainMapRule(rule, LOSData);
+                    changed = true;
+
+                }
+                else if(rule.getType().equals("elevationMap")) {
+
+                    applyElevationMapRule(rule, LOSData);
+                    changed = true;
+
+                }
+                else if(rule.getType().equals("terrainToElevationMap")) {
+
+                    applyTerrainToElevationMapRule(rule, LOSData);
+                    changed = true;
+                }
+                else if(rule.getType().equals("elevationToTerrainMap")) {
+
+                    applyElevationToTerrainMapRule(rule, LOSData);
+                    changed = true;
+                }
+            }
+
+            // update the hex grid
+            if(changed){
+                LOSData.resetHexTerrain();
+            }
+        }
+    }
+
+    /**
+     * Apply elevation rule to the LOS data
+     * @param rule the elevation map rule
+     * @param LOSData the LOS data
+     * @throws BoardException
+     */
+    private void applyElevationMapRule(LOSSSRule rule, VASL.LOS.Map.Map LOSData) throws BoardException {
+
+        int fromElevation;
+        int toElevation;
+        try {
+            fromElevation = Integer.parseInt(rule.getFromValue());
+            toElevation = Integer.parseInt(rule.getToValue());
+        }
+        catch (Exception e) {
+            throw new BoardException("Invalid from or to value in SSR elevation map " + rule.getName());
+        }
+        changeGridElevation(fromElevation, toElevation, LOSData);
+    }
+
+    /**
+     * Apply terrain rule to the LOS data
+     * @param rule the terrain map rule
+     * @param LOSData the LOS data
+     * @throws BoardException
+     */
+    private void applyTerrainMapRule(LOSSSRule rule, VASL.LOS.Map.Map LOSData) throws BoardException {
+
+        Terrain fromTerrain;
+        Terrain toTerrain;
+        try {
+            fromTerrain = LOSData.getTerrain(rule.getFromValue());
+            toTerrain = LOSData.getTerrain(rule.getToValue());
+        }
+        catch (Exception e) {
+            throw new BoardException("Invalid from or to terrain in SSR terrain map " + rule.getName());
+        }
+        changeGridTerrain(fromTerrain, toTerrain, LOSData);
+    }
+
+    /**
+     * Apply elevation to terrain rule to the LOS data
+     * @param rule the elevation to terrain map rule
+     * @param LOSData the LOS data
+     * @throws BoardException
+     */
+    private void applyElevationToTerrainMapRule(LOSSSRule rule, VASL.LOS.Map.Map LOSData) throws BoardException {
+
+        int fromElevation;
+        Terrain toTerrain;
+
+        try {
+            fromElevation = Integer.parseInt(rule.getFromValue());
+            toTerrain = LOSData.getTerrain(rule.getToValue());
+        }
+        catch (Exception e) {
+            throw new BoardException("Invalid from or to value in SSR elevation to terrain map " + rule.getName());
+        }
+
+        // adjust the terrain and elevation
+        for(int x = 0; x < LOSData.getGridWidth(); x++) {
+            for(int y = 0; y < LOSData.getGridHeight(); y++ ) {
+
+                if(LOSData.getGridElevation(x, y) == fromElevation){
+                    LOSData.setGridElevation(0, x, y);
+                    LOSData.setGridTerrainCode(toTerrain.getType(), x, y);
+                }
+            }
+        }
+    }
+
+    /**
+     * Apply terrain to elevation rule to the LOS data
+     * @param rule the terrain to elevation map rule
+     * @param LOSData the LOS data
+     * @throws BoardException
+     */
+    private void applyTerrainToElevationMapRule(LOSSSRule rule, VASL.LOS.Map.Map LOSData) throws BoardException {
+
+        Terrain fromTerrain;
+        int toElevation;
+        try {
+            fromTerrain = LOSData.getTerrain(rule.getFromValue());
+            toElevation = Integer.parseInt(rule.getToValue());
+        }
+        catch (Exception e) {
+            throw new BoardException("Invalid from or to value in SSR terrain to elevation map " + rule.getName());
+        }
+
+        // adjust the terrain and elevation
+        for(int x = 0; x < LOSData.getGridWidth(); x++) {
+            for(int y = 0; y < LOSData.getGridHeight(); y++ ) {
+
+                if(LOSData.getGridTerrain(x, y) == fromTerrain){
+                    LOSData.setGridElevation(toElevation, x, y);
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Open Ground").getType(), x, y);
+                }
+            }
+        }
+    }
+
+    /**
+     * Changes all terrain in the terrain grid of the LOS data from one type to another
+     * IMPORTANT - the hex grid is not updated
+     * @param fromTerrain the from terrain
+     * @param toTerrain the to terrain
+     * @param LOSData the LOS data
+     */
+    private void changeGridTerrain(
+            VASL.LOS.Map.Terrain fromTerrain,
+            VASL.LOS.Map.Terrain toTerrain,
+            VASL.LOS.Map.Map LOSData
+    ){
+
+        for(int x = 0; x < LOSData.getGridWidth(); x++) {
+            for(int y = 0; y < LOSData.getGridHeight(); y++ ) {
+
+                if(LOSData.getGridTerrain(x, y) == fromTerrain){
+                    LOSData.setGridTerrainCode(toTerrain.getType(), x, y);
+                }
+            }
+        }
+    }
+
+    /**
+     * Maps all elevations in the elevation grid of the LOS data to a new elevation
+     * IMPORTANT - the hex grid is not updated
+     * @param fromElevation the from elevation
+     * @param toElevation the to elevation
+     * @param LOSData the LOS data
+     */
+    private void changeGridElevation(
+            int fromElevation,
+            int toElevation,
+            VASL.LOS.Map.Map LOSData
+    ){
+
+        for(int x = 0; x < LOSData.getGridWidth(); x++) {
+            for(int y = 0; y < LOSData.getGridHeight(); y++ ) {
+
+                if(LOSData.getGridElevation(x,y) == fromElevation){
+                    LOSData.setGridElevation(toElevation, x, y);
+                }
+            }
+        }
+    }
 }

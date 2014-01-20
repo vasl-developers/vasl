@@ -517,6 +517,9 @@ public class BoardArchive {
         return sharedBoardMetadataFile;
     }
 
+    /**
+     * @return the board image file name
+     */
     public String getBoardImageFileName() {
         return metadata.getBoardImageFileName();
     }
@@ -526,6 +529,14 @@ public class BoardArchive {
      */
     public int missingValue() {
         return metadata.MISSING;
+    }
+
+    /**
+     * @return the set of color SSR rules
+     */
+    public HashMap<String, ColorSSRule> getColorSSRules() {
+
+        return metadata.getColorSSRules();
     }
 }
 

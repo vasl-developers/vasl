@@ -1346,6 +1346,7 @@ public class LOSDataEditor {
         }
         return changed;
     }
+
     /**
      * Rotates the map 180 degrees. Should only be used for geomorphic map boards
      */

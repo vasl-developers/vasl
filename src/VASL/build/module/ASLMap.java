@@ -22,6 +22,7 @@ package VASL.build.module;
 import VASL.LOS.Map.Hex;
 import VASL.build.module.map.boardArchive.BoardArchive;
 import VASL.build.module.map.boardArchive.SharedBoardMetadata;
+import VASL.build.module.map.boardPicker.BoardException;
 import VASL.build.module.map.boardPicker.VASLBoard;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.Map;
@@ -30,6 +31,8 @@ import VASSAL.tools.DataArchive;
 import VASSAL.tools.imageop.Op;
 import VASSAL.tools.io.IOUtils;
 import org.jdom2.JDOMException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,6 +54,9 @@ public class ASLMap extends Map {
     private static SharedBoardMetadata sharedBoardMetadata = null;
     private boolean legacyMode;                  // true if unable to create a VASL map
     private boolean unsupportedFeature = false;   // true if one or more boards in legacy format, overlays not supported, etc
+
+    // used to log errors in the VASSAL error log
+    private static final Logger logger = LoggerFactory.getLogger(ASLMap.class);
 
   public ASLMap() {
 
@@ -215,7 +221,8 @@ public class ASLMap extends Map {
                     mapBoundary.add(b.bounds());
                     VASLBoards.add(board);
                     if(board.isLegacyBoard() || board.getOverlays().hasMoreElements()) {
-                        unsupportedFeature = true;
+                        //TODO: need to way to ID "real" overlays from SSR overlays
+                        // unsupportedFeature = true;
                     }
                 }
                 catch (Exception e) {
@@ -248,6 +255,17 @@ public class ASLMap extends Map {
 
                     // read the LOS data and flip/crop the board if needed
                     VASL.LOS.Map.Map LOSData = board.getLOSData(sharedBoardMetadata.getTerrainTypes());
+
+                    // apply overlays
+
+                    // apply the SSR changes
+                    try {
+                        board.applyColorSSRules(LOSData, sharedBoardMetadata.getLOSSSRules());
+                    }
+                    catch (BoardException e) {
+                        logError(e.getMessage());
+                        throw e;
+                    }
 
                     if(board.isCropped()) {
                         LOSData = board.cropLOSData(LOSData);
@@ -295,5 +313,13 @@ public class ASLMap extends Map {
      */
     public boolean isLegacyMode(){
         return legacyMode || unsupportedFeature;
+    }
+
+    /**
+     * Log a string to the VASSAL error log
+     * @param error the error string
+     */
+    private void logError(String error) {
+        logger.info(error);
     }
 }
