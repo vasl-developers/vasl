@@ -376,7 +376,21 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
     final String hstr =
         DigestUtils.shaHex(g.getGameName() + "_" + g.getGameVersion());
 
-    final File fpath = new File(boardDir, "bd" + commonName);
+    String unReversedBoardName;
+    if (commonName.startsWith("r")) {
+        if (commonName.equalsIgnoreCase("r")) {
+            // board r or R, this is ok
+            unReversedBoardName = commonName;
+        } else {
+            // board rX, this is really X
+            // Red Barricades (RB) and Ruweisat Ridge (RR) should not have gotten here
+            unReversedBoardName = commonName.substring(1);
+        }
+    } else {
+        unReversedBoardName = commonName;
+    }
+
+    final File fpath = new File(boardDir, "bd"+unReversedBoardName);
 
     final ASLTilingHandler th = new ASLTilingHandler(
         fpath.getAbsolutePath(),
