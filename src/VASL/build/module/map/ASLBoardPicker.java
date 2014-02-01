@@ -330,7 +330,21 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
     final String hstr =
         DigestUtils.shaHex(g.getGameName() + "_" + g.getGameVersion());
 
-    final File fpath = new File(boardDir, "bd" + commonName);
+    String unReversedBoardName;
+    if (commonName.startsWith("r")) {
+        if (commonName.equalsIgnoreCase("r")) {
+            // board r or R, this is ok
+            unReversedBoardName = commonName;
+        } else {
+            // board rX, this is really X
+            // Red Barricades (RB) and Ruweisat Ridge (RR) should not have gotten here
+            unReversedBoardName = commonName.substring(1);
+        }
+    } else {
+        unReversedBoardName = commonName;
+    }
+
+    final File fpath = new File(boardDir, "bd"+unReversedBoardName);
 
     final ASLTilingHandler th = new ASLTilingHandler(
         fpath.getAbsolutePath(),
@@ -398,54 +412,28 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
     try {
       b.relativePosition().move(Integer.parseInt(st2.nextToken()), Integer.parseInt(st2.nextToken()));
       String baseName = st2.nextToken();
+      String unReversedBoardName;
+      if (baseName.startsWith("r")) {
+        if (baseName.equalsIgnoreCase("r")) {
+          // board r or R, this is ok
+          unReversedBoardName = baseName;
+          b.setReversed(false);
+        } else {
+          // board rX, this is really X
+          // Red Barricades (RB) and Ruweisat Ridge (RR) should not have gotten here
+          unReversedBoardName = baseName.substring(1);
+          b.setReversed(true);
+        }
+      } else {
+        unReversedBoardName = baseName;
+        b.setReversed(false);
+      }
       File f;
-      if ((f = new File(boardDir, "bd" + baseName)).exists() && !"rb".equals(baseName)) { // Kludge to get around
-        // case-insensitive name
-        // conflict between RB and
-        // reversed b
-        b.setCommonName(baseName);
-        b.setBaseImageFileName("bd" + baseName + ".gif",f);
-      }
-      else if (baseName.startsWith("0") && (f = new File(boardDir, "bd" + baseName.substring(1))).exists()) {
-        b.setCommonName(baseName.substring(1));
-        b.setBaseImageFileName("bd" + baseName + ".gif",f);
-      }
-      else if ((f = new File(boardDir, "bd" + baseName + ".gif")).exists()) {
-        b.setCommonName(baseName);
-        b.setBaseImageFileName("bd" + baseName + ".gif",f);
-      }
-      else if (baseName.startsWith("dx") || baseName.startsWith("rdx")) {
-        int prefix = baseName.startsWith("dx") ? 2 : 3;
-        if ((f = new File(boardDir, "bd" + baseName.substring(prefix))).exists()) {
-          b.setCommonName(baseName.substring(prefix));
-          b.setBaseImageFileName("bd" + baseName.substring(prefix) + ".gif",f);
-        }
-        else if ((f = new File(boardDir, "bd" + baseName + ".gif")).exists()) {
-          b.setCommonName(baseName.substring(prefix));
-          b.setBaseImageFileName("bd" + baseName + ".gif",f);
-        }
-        b.setReversed(prefix == 3);
-      }
-      else if (baseName.startsWith("r")) {
-        baseName = baseName.substring(1);
-        if ((f = new File(boardDir, "bd" + baseName)).exists()) {
-          b.setCommonName(baseName);
-          b.setBaseImageFileName("bd" + baseName + ".gif",f);
-        }
-        else if (baseName.startsWith("0") && (f = new File(boardDir, "bd" + baseName.substring(1))).exists()) {
-          b.setCommonName(baseName.substring(1));
-          b.setBaseImageFileName("bd" + baseName + ".gif",f);
-        }
-        else if ((f = new File(boardDir, "bd" + baseName + ".gif")).exists()) {
-          b.setCommonName(baseName);
-          b.setBaseImageFileName("bd" + baseName + ".gif",f);
-        }
-        else {
-          throw new BoardException("Unable to find board " + baseName);
-        }
-        b.setReversed(true);
-      }
-      else {
+      f = new File(boardDir, "bd"+unReversedBoardName);
+      if (f.exists()) {
+        b.setCommonName(unReversedBoardName);
+        b.setBaseImageFileName("bd"+unReversedBoardName+".gif", f);
+      } else {
         throw new BoardException("Unable to find board " + baseName);
       }
       b.readData();
