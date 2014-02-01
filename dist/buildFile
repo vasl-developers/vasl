@@ -92,12 +92,6 @@
             <entry name="Gray Smoke">\+1 grey WP</entry>
             <entry name="Perimeter">Allied Perimeter</entry>
             <entry name="Perimeter">Axis Perimeter</entry>
-            <entry name="Perimeter">Red Perimeter</entry>
-            <entry name="Perimeter">Yellow Perimeter</entry>
-            <entry name="Perimeter">Green Perimeter</entry>
-            <entry name="Perimeter">Blue Perimeter</entry>
-            <entry name="Perimeter">Black Perimeter</entry>
-            <entry name="Perimeter">Pink Perimeter</entry>
         </VASL.build.module.map.MassRemover>
         <VASL.build.module.map.ASLKeyBufferer/>
         <VASL.build.module.map.ASLImageSaver buttonText="" hotkey="" icon="/images/camera.gif" tooltip="Save Map as PNG file"/>
