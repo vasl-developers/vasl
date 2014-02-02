@@ -41,6 +41,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.LinkedList;
 
 public class ASLMap extends Map {
@@ -52,8 +53,8 @@ public class ASLMap extends Map {
     //TODO: the shared metadata is static so it doesn't have to be passed around. Is there a better way?
     private VASL.LOS.Map.Map VASLMap;
     private static SharedBoardMetadata sharedBoardMetadata = null;
-    private boolean legacyMode;                  // true if unable to create a VASL map
-    private boolean unsupportedFeature = false;   // true if one or more boards in legacy format, overlays not supported, etc
+    private boolean legacyMode;                     // true if unable to create a VASL map or LOS data is missing
+    private boolean unsupportedFeature = false;     // true if one or more boards in legacy format, overlays not supported, etc
 
     // used to log errors in the VASSAL error log
     private static final Logger logger = LoggerFactory.getLogger(ASLMap.class);
@@ -137,22 +138,6 @@ public class ASLMap extends Map {
     
     return l_pShiftedX;        
     
-//    // Ignore Edge and Corner locations
-//    if (! loc.contains("/")) {
-//      // Zero row hexes are all top edge half hexes, bump the snap up 1 pixel to the board above.
-//      if (loc.endsWith("0") && ! loc.endsWith("10")) {
-//        p2.y -= 1;
-//      }
-//      // Column A hexes are all left edge half gexes, bump the snap left 1 pixel to the board to the left 
-//      else if (loc.contains("A") && ! loc.contains("AA")) {
-//        p2.x -=1;
-//      }
-//    }
-//    // If the snap has been bumped offmap (must be top or right edge of map), use the original snap.
-//    if (findBoard(p2) == null) {
-//      return p1;
-//    }
-//    return p2;
   }
   // return the popup menu
   public JPopupMenu getPopupMenu()
@@ -198,39 +183,22 @@ public class ASLMap extends Map {
      */
     protected void buildVASLMap() {
 
-        // can't build the map without the metadata so quit
-        if(sharedBoardMetadata == null) {
-            legacyMode = true;
-            return;
-        }
-        else {
-            legacyMode = false;
-        }
-
-        //TODO: need to account for board cropping
+        // create an empty VASL map of the correct size
         LinkedList<VASLBoard> VASLBoards = new LinkedList<VASLBoard>(); // keep the boards so they are instantiated once
         try {
 
-            // see there are any legacy boards in the board set
+            // see if there are any legacy boards in the board set
             // and determine the size of the map
             unsupportedFeature = false;
+            legacyMode = false;
             Rectangle mapBoundary = new Rectangle(0,0);
             for(Board b: boards) {
-                try {
-                    VASLBoard board = (VASLBoard) b;
-                    mapBoundary.add(b.bounds());
-                    VASLBoards.add(board);
-                    if(board.isLegacyBoard() || board.getOverlays().hasMoreElements()) {
-                        //TODO: need to way to ID "real" overlays from SSR overlays
-                        // unsupportedFeature = true;
-                    }
-                }
-                catch (Exception e) {
-                    unsupportedFeature = true;
-                }
+                VASLBoard board = (VASLBoard) b;
+                mapBoundary.add(b.bounds());
+                VASLBoards.add(board);
             }
 
-            // remove the edge buffer from the map boundary
+            // remove the edge buffer from the map boundary size
             mapBoundary.width -= edgeBuffer.width;
             mapBoundary.height -= edgeBuffer.height;
 
@@ -240,25 +208,36 @@ public class ASLMap extends Map {
                     (int) Math.round(mapBoundary.height / Hex.HEIGHT),
                     sharedBoardMetadata.getTerrainTypes());
         }
-        // fall back to legacy mode if an unexpected exception is thrown
+        // clean up and fall back to legacy mode if an unexpected exception is thrown
         catch (Exception e) {
 
             legacyMode = true;
+            VASLMap = null;
+            VASLBoards = null;
+            logError("LOS disabled - unexpected error");
+            logException(e);
         }
 
+        // add the boards to the VASL map
         try {
 
             // load the LOS data
-            if(!(legacyMode || unsupportedFeature)) {
+            if(!(legacyMode)) {
 
                 for (VASLBoard board : VASLBoards) {
 
                     // read the LOS data and flip/crop the board if needed
                     VASL.LOS.Map.Map LOSData = board.getLOSData(sharedBoardMetadata.getTerrainTypes());
 
-                    // apply overlays
+                    // check for overlays
+                    Enumeration overlays = board.getOverlays();
+                    while (overlays.hasMoreElements()) {
+                        if(overlays.nextElement().toString().length() > 0) {
+                            throw new BoardException("Overlays are not supported - disabling LOS");
+                        }
+                    }
 
-                    // apply the SSR changes
+                    // apply the SSR changes, crop and flip if needed
                     try {
                         board.applyColorSSRules(LOSData, sharedBoardMetadata.getLOSSSRules());
                     }
@@ -271,9 +250,8 @@ public class ASLMap extends Map {
                         LOSData = board.cropLOSData(LOSData);
                     }
 
-                    if(board.isReversed() && !board.isFlipped()){
+                    if(board.isReversed()){
                         LOSData.flip();
-                        board.setFlipped(true);
                     }
 
                     // add the board LOS data to the map
@@ -282,15 +260,26 @@ public class ASLMap extends Map {
                             VASLMap.gridToHex(board.getBoardLocation().x, board.getBoardLocation().y))) {
 
                         // didn't work, so assume an unsupported feature
-                        unsupportedFeature = true;
+                        throw  new BoardException("Unable to insert board " + board.getName() + " into the VASL map - LOS disabled");
                     }
                 }
             }
         }
-        // assume we're using an unsupported feature if an unexpected exception is thrown
+        // assume we're using an unsupported feature if an exception is thrown
+        catch (BoardException e) {
+
+            logError(e.toString());
+            unsupportedFeature = true;
+        }
         catch (Exception e) {
 
+            logError("LOS disabled - unexpected error");
+            logException(e);
             unsupportedFeature = true;
+        }
+        finally {
+            // free up memory
+            VASLBoards = null;
         }
     }
 
@@ -321,5 +310,13 @@ public class ASLMap extends Map {
      */
     private void logError(String error) {
         logger.info(error);
+    }
+
+    /**
+     * Log an exception to the VASSAL error log
+     * @param error the exception
+     */
+    private void logException(Throwable error) {
+        logger.info("", error);
     }
 }

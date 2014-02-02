@@ -1639,6 +1639,11 @@ public class Map
 
         int temp;
 
+        // blind hex NA for same-level LOS
+        if(sourceElevation == targetElevation){
+            return false;
+        }
+
         // if LOS raising, swap source/target and use the same logic as LOS falling
         if (sourceElevation < targetElevation) {
 
@@ -1944,7 +1949,12 @@ public class Map
         for (int x = 0; x < newMap.hexGrid.length; x++) {
             for (int y = 0; y < newMap.hexGrid[x].length; y++) {
 
-                newMap.hexGrid[x][y] = (hexGrid[x + upperLeftHex.getColumnNumber()][y + upperLeftHex.getRowNumber()]);
+                try {
+                    newMap.hexGrid[x][y] = (hexGrid[x + upperLeftHex.getColumnNumber()][y + upperLeftHex.getRowNumber()]);
+                }
+                catch (Exception e) {
+                    System.out.println();
+                }
             }
         }
 

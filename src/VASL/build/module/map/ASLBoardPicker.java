@@ -182,6 +182,16 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
     }
   }
 
+    @Override
+    /**
+     * This is a hack to prevent setup from being called multiple times when creating a new game.
+     * When this happens the VASL map gets created twice, which is bad
+     */
+    public void finish() {
+        currentBoards = new ArrayList<Board>(getBoardsFromControls());
+        // map.setBoards(getSelectedBoards());
+    }
+
   public void setGlobalMapScale() {
     Collection<Board> bds = getSelectedBoards();
     if (bds.iterator().hasNext()) {

@@ -66,6 +66,7 @@ public class Hex
 	private	boolean edgeHasCliff[]  = new boolean[6];
 
 	// other stuff
+    //TODO: bridge object no longer used
 	private	Bridge	bridge;
     private	boolean stairway;
 
@@ -322,12 +323,7 @@ public class Hex
 	}
 
 	public boolean hasBridge(){
-		if (bridge != null){
-			return true;
-		}
-		else {
-			return false;
-		}
+		return (bridge != null) || this.hasBridgeTerrain();
 	}
 
 	// Property methods
@@ -596,7 +592,6 @@ public class Hex
         setDepressionTerrain();
 
         // reset the hexside terrain
-        //TODO: inherent terrain is bleeding into adjacent hexside locations
          resetHexsideTerrain();
 
         // correct for single hex bridges
@@ -604,11 +599,10 @@ public class Hex
     }
 
     /**
-     * Corrects hexes with single-hex bridges by making the center location the road location
+     * @return true if this hex contains bridge terrain
      */
-    private void fixBridges() {
+    private boolean hasBridgeTerrain(){
 
-        // hex has bridge?
         Rectangle rectangle = getHexBorder().getBounds();
         Terrain bridgeTerrain = null;
         for(int x = rectangle.x; x < rectangle.x + rectangle.width && bridgeTerrain == null; x++) {
@@ -618,12 +612,20 @@ public class Hex
                         map.onMap(x,y) &&
                         map.getGridTerrain(x,y).isBridge()) {
 
-                    bridgeTerrain = map.getGridTerrain(x, y);
+                    return true;
                 }
             }
         }
 
-        if(bridgeTerrain != null) {
+        return false;
+    }
+
+    /**
+     * Corrects hexes with single-hex bridges by making the center location the road location
+     */
+    private void fixBridges() {
+
+        if(this.hasBridgeTerrain()) {
 
             // make the center location the road location by removing the depression terrain
             Terrain depressionTerrain = centerLocation.getDepressionTerrain();

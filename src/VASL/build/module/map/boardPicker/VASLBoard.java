@@ -37,24 +37,8 @@ import java.util.StringTokenizer;
  */
 public class VASLBoard extends ASLBoard {
 
-    private boolean legacyBoard = true; // is the board legacy (i.e. V5) format?
+    private boolean legacyBoard = true;        // is the board legacy (i.e. V5) format?
     private BoardArchive VASLBoardArchive;
-    private boolean flipped = false; // prevents the same board from being flipped multiple times
-
-    /**
-     * @return true if the board is already set
-     */
-    public boolean isFlipped() {
-        return flipped;
-    }
-
-    /**
-     * Mark board as having been flipped. This is a hack to prevent boards from being flipped multiple time
-     * @param flipped
-     */
-    public void setFlipped(boolean flipped) {
-        this.flipped = flipped;
-    }
 
     public VASLBoard(){
 
@@ -197,7 +181,7 @@ public class VASLBoard extends ASLBoard {
 
                 LOSSSRule rule = losssRules.get(s);
                 if(rule == null) {
-                    throw new BoardException("Unsupported scenario-specific rule: " + s);
+                    throw new BoardException("Unsupported scenario-specific rule: " + s + ". LOS disabled");
                 }
 
                 // these are rules that have to be handled in the code
@@ -233,20 +217,17 @@ public class VASLBoard extends ASLBoard {
                         changeGridTerrain(LOSData.getTerrain("Rowhouse Wall, 4 Level"), LOSData.getTerrain("Open Ground"), LOSData);
                         changed = true;
                     }
-                    else if(s.equals("FloodedRivers")) {
+                    else if(s.equals("NoBridge")) {
 
-                    }
-                    else if(s.equals("FordableRivers")) {
-
-                    }
-                    else if(s.equals("Winter")) {
-
-                    }
-                    else if(s.equals("Mud")) {
-
-                    }
-                    else if(s.equals("NoHills")) {
-
+                        // OK if board has no bridges otherwise unsupported
+                        Hex[][] hexGrid = LOSData.getHexGrid();
+                        for (int x = 0; x < hexGrid.length; x++) {
+                            for (int y = 0; y < hexGrid[x].length; y++) {
+                                if(LOSData.getHex(x, y).hasBridge()){
+                                 throw new BoardException("Board " + name + " has a bridge so it does not support NoBridge SSR.");
+                                }
+                            }
+                        }
                     }
                     else {
                         throw new BoardException("Unsupported custom code SSR: " + s);

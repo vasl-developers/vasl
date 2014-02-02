@@ -1397,10 +1397,13 @@
 		Use type="ignore" for SSRS that do not impact the LOS data
 		Use type="customCode" to mark SSRs that need code support
 		All attributes are required
+		Any VASL SSR tokens not explicitly listed below imply an unsupported transformation and will disable LOS
 	-->
     <LOSSSRules>
 
-        <!-- rule that are ignored. These are valid SSRs that do not impact the LOS data -->
+        <!-- Rules that are ignored. These are valid SSRs that do not impact the LOS data
+        Note that some rules are ignored because VASL applies additional rules that actually apply the logic (e.g. no hills)
+        -->
         <LOSSSRule name="NoWhiteHexIDs" type="ignore" fromValue="" toValue="" />
         <LOSSSRule name="AllPaved" type="ignore" fromValue="" toValue="" />
         <LOSSSRule name="AllDirt" type="ignore" fromValue="" toValue="" />
@@ -1410,15 +1413,18 @@
         <LOSSSRule name="GulliesToStreams" type="ignore" fromValue="" toValue="" />
         <LOSSSRule name="NoHillNums" type="ignore" fromValue="" toValue="" />
         <LOSSSRule name="WallsOnly" type="ignore" fromValue="" toValue="" />
+        <LOSSSRule name="DTOtoETO" type="ignore" fromValue="" toValue="" />
+        <LOSSSRule name="NoWhiteHexIDs" type="ignore" fromValue="" toValue="" />
+        <LOSSSRule name="LightWoods" type="ignore" fromValue="" toValue="" />
+        <LOSSSRule name="Mud" type="ignore" fromValue="" toValue="" />
+        <LOSSSRule name="Winter" type="ignore" fromValue="" toValue="" />
+        <LOSSSRule name="NoRoads" type="ignore" fromValue="" toValue="" />
 
         <!-- rules that must be handled in the code -->
         <LOSSSRule name="RowhouseBarsToBuildings" type="customCode" fromValue="" toValue="" />
         <LOSSSRule name="RowhouseBarsToOpenGround" type="customCode" fromValue="" toValue="" />
-        <LOSSSRule name="FloodedRivers" type="customCode" fromValue="" toValue="" />
-        <LOSSSRule name="FordableRivers" type="customCode" fromValue="" toValue="" />
-        <LOSSSRule name="Winter" type="customCode" fromValue="" toValue="" />
-        <LOSSSRule name="Mud" type="customCode" fromValue="" toValue="" />
         <LOSSSRule name="NoStairwells" type="customCode" fromValue="" toValue="" />
+        <LOSSSRule name="NoBridge" type="customCode" fromValue="" toValue="" />
 
         <!-- simple terrain mappings -->
         <LOSSSRule name="BrushToOpenGround" type="terrainMap" fromValue="Brush" toValue="Open Ground" />
@@ -1436,7 +1442,16 @@
         <LOSSSRule name="RiverToValley" type="terrainMap" fromValue="River" toValue="Open Ground" />
         <LOSSSRule name="PondToValley" type="terrainMap" fromValue="Water" toValue="Open Ground" />
         <LOSSSRule name="NoCliffs" type="terrainMap" fromValue="Cliff" toValue="Open Ground" />
-
+        <LOSSSRule name="WallsToBocage" type="terrainMap" fromValue="Wall" toValue="Bocage" />
+        <LOSSSRule name="HedgesToBocage" type="terrainMap" fromValue="Hedge" toValue="Bocage" />
+        <!-- too many problems around roads to reliably change terrain
+        <LOSSSRule name="OrchardsToShellholes" type="terrainMap" fromValue="Orchard" toValue="Shellholes" />
+        <LOSSSRule name="OrchardsToCrags" type="terrainMap" fromValue="Orchard" toValue="Crags" />
+        <LOSSSRule name="ShellholesToCrags" type="terrainMap" fromValue="Shellholes" toValue="Crags" />
+        <LOSSSRule name="ShellholesToOrchards" type="terrainMap" fromValue="Shellholes" toValue="Orchard" />
+        -->
+        <LOSSSRule name="CragsToOrchard" type="terrainMap" fromValue="Crags" toValue="Orchard" />
+        <LOSSSRule name="CragsToShellholes" type="terrainMap" fromValue="Crags" toValue="Shellholes" />
 
         <!-- simple elevation maps. Note that elevations can only be decreased -->
         <LOSSSRule name="Level6ToLevel5" type="elevationMap" fromValue="6" toValue="5" />

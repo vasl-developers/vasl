@@ -535,11 +535,7 @@ public class LOSDataEditor {
                 }
             }
 
-//        }
-//        catch (Exception e) {
-//
-//            System.out.println("Exception...");
-//        }
+
         // paint the bridges...
         // create a temp image for translated bridge image
         Bridge bridge = null;
