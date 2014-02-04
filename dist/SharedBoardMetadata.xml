@@ -1545,4 +1545,41 @@
 
     </LOSSSRules>
 
+    <LOSCounterRules>
+    <!-- the LOS metadata for each of the game counters that impact LOS
+    All attributes are required
+    -->
+        <smokeCounter name="White +3 Smoke" hindrance="3" height="2"/>
+        <smokeCounter name="White +2 Smoke" hindrance="2" height="2"/>
+        <smokeCounter name="Gray +2 Smoke" hindrance="2" height="2"/>
+        <smokeCounter name="White +2 WP" hindrance="2" height="4"/>
+        <smokeCounter name="White +1 WP" hindrance="1" height="4"/>
+        <smokeCounter name="Gray +1 WP" hindrance="1" height="4"/>
+        <smokeCounter name="Smoke grenade +2" hindrance="2" height="2"/>
+        <smokeCounter name="WP grenade +1" hindrance="1" height="4"/>
+        <smokeCounter name="Blaze" hindrance="3" height="2"/>
+        <smokeCounter name="Blazing Building" hindrance="3" height="4"/>
+        <smokeCounter name="1-level Blaze" hindrance="3" height="4"/>
+        <smokeCounter name="2-level Blaze" hindrance="3" height="5"/>
+        <smokeCounter name="3-level Blaze" hindrance="3" height="6"/>
+        <smokeCounter name="4-level Blaze" hindrance="3" height="7"/>
+        
+        <terrainCounter name="Stone Rubble" terrain="Stone Rubble"/>
+        <terrainCounter name="Wood Rubble" terrain="Wood Rubble"/>
+
+        <wreckCounter name="Wreck"/>
+        <wreckCounter name="Burnt Out Wreck"/>
+
+        <OBACounter name="Red OBA FFE:1"/>
+        <OBACounter name="Red OBA FFE:2"/>
+        <OBACounter name="Red OBA FFE:C"/>
+        <OBACounter name="Blue OBA FFE:1"/>
+        <OBACounter name="Blue OBA FFE:2"/>
+        <OBACounter name="Blue OBA FFE:C"/>
+        <OBACounter name="Green OBA FFE:1"/>
+        <OBACounter name="Green OBA FFE:2"/>
+        <OBACounter name="Green OBA FFE:C"/>
+
+    </LOSCounterRules>
+
 </sharedBoardMetadata>
