@@ -1026,6 +1026,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             try
             {
                 l_objGameModule.getControlPanel().remove(l_objGameModule.getChatter());
+                l_objGameModule.removeCommandEncoder(l_objGameModule.getChatter());
                 l_objGameModule.remove(l_objGameModule.getChatter());
             }
             catch(Exception ex)
