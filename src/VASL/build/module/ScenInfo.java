@@ -222,12 +222,7 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
     if (command.startsWith(COMMAND_PREFIX)) {
       return new SetInfo(command.substring(COMMAND_PREFIX.length()), this);
     }
-    else if (command.startsWith("NOTES")) { // VASL 3.0 format
-      return new AppendNotes(command.substring("NOTES".length()));
-    }
-    else {
-      return null;
-    }
+    return null;
   }
 
   public String encode(Command c) {
