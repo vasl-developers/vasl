@@ -19,20 +19,14 @@
 package VASL.LOS.Map;
 
 /**
- * A simple class for a vehicle counter
+ * A simple class for an OBA counter
  */
-public class Vehicle extends Counter {
+public class OBA extends Counter {
 
-    Location location;
+    Hex hex;
 
-	public Vehicle(String name, Location location){
-
+    public OBA(String name, Hex hex){
         super(name);
-        this.location = location;
-	}
-
-    public Location getLocation() {
-        return location;
+        this.hex = hex;
     }
 }
-

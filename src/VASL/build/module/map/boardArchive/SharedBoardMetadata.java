@@ -64,8 +64,8 @@ public class SharedBoardMetadata extends AbstractMetadata {
             }
 
         } catch (IOException e) {
-            System.err.println("Error reading the shared board metadata");
             e.printStackTrace(System.err);
+            throw new JDOMException("Error reading the shared board metadata", e);
         }
     }
 

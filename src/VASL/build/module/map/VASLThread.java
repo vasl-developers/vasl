@@ -19,6 +19,7 @@
 
 package VASL.build.module.map;
 
+import VASL.LOS.Map.VASLGameInterface;
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASSAL.build.Buildable;
 import VASSAL.build.module.GameComponent;
@@ -53,7 +54,7 @@ public class VASLThread extends  ASLThread implements KeyListener, GameComponent
     protected VASL.LOS.Map.LOSResult result;
     private VASL.LOS.Map.Location source;
     private VASL.LOS.Map.Location target;
-    private VASL.LOS.Map.Scenario scenario;
+    private VASLGameInterface VASLGameInterface;
     private ASLBoard upperLeftBoard;
     private boolean useAuxSourceLOSPoint;
     private boolean useAuxTargetLOSPoint;
@@ -80,9 +81,10 @@ public class VASLThread extends  ASLThread implements KeyListener, GameComponent
             legacyMode = false;
             LOSMap = theMap.getVASLMap();
 
-            // initialize LOS variables
+            // initialize LOS
             result = new VASL.LOS.Map.LOSResult();
-            scenario = new VASL.LOS.Map.Scenario();
+            VASLGameInterface = new VASLGameInterface(theMap, LOSMap);
+            VASLGameInterface.updatePieces();
 
             // setting these to null prevents the last LOS from being shown when launched
             source = null;
@@ -143,14 +145,10 @@ public class VASLThread extends  ASLThread implements KeyListener, GameComponent
         if (c instanceof JCheckBox) {
             val = (JCheckBox) c;
         }
-        if (c instanceof Container) {
-            if (c instanceof Container) {
-                for (int i = 0; i < ((Container) c).getComponentCount(); ++i) {
-                    val = findBox(((Container) c).getComponent(i));
-                    if (val != null) {
-                        break;
-                    }
-                }
+        for (int i = 0; i < ((Container) c).getComponentCount(); ++i) {
+            val = findBox(((Container) c).getComponent(i));
+            if (val != null) {
+                break;
             }
         }
         return val;
@@ -171,7 +169,7 @@ public class VASLThread extends  ASLThread implements KeyListener, GameComponent
         if (!isEnabled() || legacyMode) {
             return;
         }
-        result.setClear();
+        result.reset();
 
         // get the map point
         Point p = mapMouseToMapCoordinates(e.getPoint());
@@ -235,6 +233,7 @@ public class VASLThread extends  ASLThread implements KeyListener, GameComponent
     }
 
     public void draw(Graphics g, VASSAL.build.module.Map m) {
+
         if (!LOSPrefActive() || legacyMode) {
             super.draw(g, m);
         }
@@ -555,13 +554,13 @@ public class VASLThread extends  ASLThread implements KeyListener, GameComponent
     private void doLOS() {
 
         // silently ignore invalid LOS checks
-        if(source == null || target == null || result == null || scenario == null)
+        if(source == null || target == null || result == null || VASLGameInterface == null)
         {
             return;
         }
 
         // do the LOS
-        LOSMap.LOS(source, useAuxSourceLOSPoint, target, useAuxTargetLOSPoint, result, scenario);
+        LOSMap.LOS(source, useAuxSourceLOSPoint, target, useAuxTargetLOSPoint, result, VASLGameInterface);
 
         // set the result string
         resultsString =

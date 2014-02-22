@@ -1,5 +1,7 @@
 /*
- * Copyright (c) 2000-2003 by David Sullivan
+ * $Id: Wreck 2/15/14 davidsullivan1 $
+ *
+ * Copyright (c) 2013 by David Sullivan
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -14,34 +16,17 @@
  * License along with this library; if not, copies are available
  * at http://www.opensource.org.
  */
-package VASL.LOS.Unit;
+package VASL.LOS.Map;
 
-import java.awt.event.*;
-import javax.swing.*;
+/**
+ * A simple class for a wreck counter
+ */
+public class Wreck  extends Counter {
 
+    Hex hex;
 
-public class UnitPopupMenuAction
-	extends AbstractAction {
-
-	private Unit		unit;
-	private String	action;
-
-	UnitPopupMenuAction (String action) {
-		super(action);
-		putValue(Action.SHORT_DESCRIPTION, action);
-		this.action = action;
-	}
-
-	UnitPopupMenuAction (String action, Unit u) {
-		super(action);
-		putValue(Action.SHORT_DESCRIPTION, action);
-		this.action = action;
-		unit = u;
-	}
-
-	public void setUnit(Unit u) {unit = u;}
-
-	public void actionPerformed(ActionEvent actionEvent) {
-		unit.popupMenuEvent(action);
-	}
+    public Wreck(String name, Hex hex){
+        super(name);
+        this.hex = hex;
+    }
 }

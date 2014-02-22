@@ -18,7 +18,6 @@ package VASL.LOSGUI;
 
 import VASL.LOS.LOSDataEditor;
 import VASL.LOS.Map.*;
-import VASL.LOS.Unit.Unit;
 import VASL.LOSGUI.Selection.*;
 import VASL.build.module.map.boardArchive.BoardArchive;
 import VASL.build.module.map.boardArchive.SharedBoardMetadata;
@@ -69,7 +68,7 @@ public class LOSEditorJComponent
     private Image singleHexStoneBridgeImage;
 
     // scenario/unit stuff
-    private Scenario scenario = new Scenario();
+    private VASLGameInterface VASLGameInterface = new VASLGameInterface(null, null);
     private Image vehImage;
 
     // function variables
@@ -322,7 +321,7 @@ public class LOSEditorJComponent
 
         // paint the scenario units
         screen2D.setColor(Color.white);
-        for (Object o : scenario.getVehicles()) {
+/*        for (Object o : VASLGameInterface.getVehicles()) {
 
             Unit u = (Unit) o;
             screen2D.drawImage(
@@ -330,7 +329,7 @@ public class LOSEditorJComponent
                     (int) u.getLocation().getLOSPoint().getX() - 24,
                     (int) u.getLocation().getLOSPoint().getY() - 24,
                     this);
-        }
+        }*/
 
         if (currentFunctionName.equals("LOS")) {
 
@@ -880,7 +879,7 @@ public class LOSEditorJComponent
                 targetX = (int) LOSPoint.getX();
                 targetY = (int) LOSPoint.getY();
 
-                map.LOS(sourceLocation, false, targetLocation, useAuxTargetLOSPoint, result, scenario);
+                map.LOS(sourceLocation, false, targetLocation, useAuxTargetLOSPoint, result, VASLGameInterface);
 
                 if (result.isBlocked()) {
                     frame.setStatusBarText(
@@ -1549,7 +1548,7 @@ public class LOSEditorJComponent
 
                     } else if (currentTerrainName.equals("Smoke")) {
 
-                        losDataEditor.addSmoke(new Smoke(Smoke.SMOKE, h.getCenterLocation()));
+                        // losDataEditor.addSmoke(new Smoke(Smoke.SMOKE, h.getCenterLocation()));
 
                     } else if (currentTerrainName.equals("Vehicle")) {
 
@@ -1569,8 +1568,8 @@ public class LOSEditorJComponent
                         losDataEditor.removeSmoke(h.getCenterLocation());
                     } else if (currentTerrainName.equals("Remove Vehicle")) {
 
-                        Hex vh;
-                        Iterator iterator = scenario.getVehicles().iterator();
+/*                        Hex vh;
+                        Iterator iterator = VASLGameInterface.getVehicles().iterator();
                         while (iterator.hasNext()) {
 
                             vh = (Hex) iterator.next();
@@ -1578,7 +1577,7 @@ public class LOSEditorJComponent
 
                                 iterator.remove();
                             }
-                        }
+                        }*/
                     }
 
                     // adjust "dirty" area of map
@@ -2020,8 +2019,8 @@ public class LOSEditorJComponent
         for (int col = 0; col < width; col++) {
             for (int row = 0; row < height + (col % 2); row++) {
 
-                result.setClear();
-                map.LOS(l, false, map.getHex(col, row).getCenterLocation(), false, result, scenario);
+                result.reset();
+                map.LOS(l, false, map.getHex(col, row).getCenterLocation(), false, result, VASLGameInterface);
 
                 // increment counters
                 count++;
@@ -2037,8 +2036,8 @@ public class LOSEditorJComponent
         for (int col = 0; col < width; col++) {
             for (int row = 0; row < height + (col % 2); row++) {
 
-                result.setClear();
-                map.LOS(l, false, map.getHex(col, row).getCenterLocation(), false, result, scenario);
+                result.reset();
+                map.LOS(l, false, map.getHex(col, row).getCenterLocation(), false, result, VASLGameInterface);
 
                 // increment counters
                 count++;
@@ -2054,8 +2053,8 @@ public class LOSEditorJComponent
         for (int col = 0; col < width; col++) {
             for (int row = 0; row < height + (col % 2); row++) {
 
-                result.setClear();
-                map.LOS(l, false, map.getHex(col, row).getCenterLocation(), false, result, scenario);
+                result.reset();
+                map.LOS(l, false, map.getHex(col, row).getCenterLocation(), false, result, VASLGameInterface);
 
                 // increment counters
                 count++;

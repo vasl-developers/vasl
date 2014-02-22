@@ -1,11 +1,6 @@
 package VASL.LOS;
 
-import VASL.LOS.Map.Bridge;
-import VASL.LOS.Map.Hex;
-import VASL.LOS.Map.Location;
-import VASL.LOS.Map.Map;
-import VASL.LOS.Map.Smoke;
-import VASL.LOS.Map.Terrain;
+import VASL.LOS.Map.*;
 import VASL.build.module.map.boardArchive.BoardArchive;
 import VASL.build.module.map.boardArchive.SharedBoardMetadata;
 
@@ -13,7 +8,10 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Vector;
 
 
 /**
@@ -925,7 +923,7 @@ public class LOSDataEditor {
                         h.getHexCenter().y + 4);
             }
 
-            // show smoke
+/*            // show smoke
             HashSet smoke = h.getSmoke();
             Smoke sm;
             int offset = 0;
@@ -943,7 +941,7 @@ public class LOSDataEditor {
 
                     offset += 15;
                 }
-            }
+            }*/
         }
     }
 

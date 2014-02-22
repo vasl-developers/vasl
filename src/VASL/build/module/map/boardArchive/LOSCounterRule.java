@@ -26,7 +26,7 @@ public class LOSCounterRule {
     private int hindrance;
     private CounterType type;
 
-    public static enum CounterType {SMOKE, WRECK, OBA, TERRAIN}
+    public static enum CounterType {SMOKE, WRECK, OBA, TERRAIN, IGNORE}
 
     public LOSCounterRule(String name, CounterType type) {
         this.name = name;

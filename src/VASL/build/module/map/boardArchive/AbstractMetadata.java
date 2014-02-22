@@ -43,6 +43,7 @@ public abstract class AbstractMetadata {
     protected static final String OBACounterElement = "OBACounter";
     protected static final String terrainCounterElement = "terrainCounter";
     protected static final String wreckCounterElement = "wreckCounter";
+    protected static final String ignoreCounterElement = "ignoreCounter";
     protected static final String LOSCounterRuleNameAttribute = "name";
     protected static final String LOSCounterRuleHindranceAttribute = "hindrance";
     protected static final String LOSCounterRuleHeightAttribute = "height";
@@ -253,6 +254,9 @@ public abstract class AbstractMetadata {
                 losCounterRule = new LOSCounterRule(name, LOSCounterRule.CounterType.WRECK);
 
             }
+            else if(e.getName().equals(ignoreCounterElement)) {
+                losCounterRule = new LOSCounterRule(name, LOSCounterRule.CounterType.IGNORE);
+            }
 
             LOSCounterRules.put(name, losCounterRule);
         }
@@ -286,6 +290,9 @@ public abstract class AbstractMetadata {
         return LOSSSRules;
     }
 
+    /**
+     * @return the list of LOS counter rules
+     */
     public LinkedHashMap<String, LOSCounterRule> getLOSCounterRules(){
         return LOSCounterRules;
     }

@@ -19,7 +19,6 @@ package VASL.LOS.Map;
 import java.awt.*;
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.Iterator;
 
 /**
  * Title:        Hex.java
@@ -932,23 +931,6 @@ public class Hex
 	public HashSet getSmoke(){
 
 		return map.getAllSmoke(this);
-	}
-
-	// get smoke in hex
-	public int getSmokeHindrance(){
-
-		HashSet 	hind 	= map.getAllSmoke(this);
-		Iterator 	iter 	= hind.iterator();
-		Smoke 		s	 	= null;
-		int			total	= 0;
-
-		while(iter.hasNext()){
-
-			s = (Smoke) iter.next();
-			total += s.getHindrance();
-		}
-
-		return total;
 	}
 
 	// change all terrain within hex

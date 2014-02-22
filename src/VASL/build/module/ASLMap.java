@@ -28,6 +28,7 @@ import VASSAL.build.GameModule;
 import VASSAL.build.module.Map;
 import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.tools.DataArchive;
+import VASSAL.tools.ErrorDialog;
 import VASSAL.tools.imageop.Op;
 import VASSAL.tools.io.IOUtils;
 import org.jdom2.JDOMException;
@@ -62,7 +63,13 @@ public class ASLMap extends Map {
   public ASLMap() {
 
       super();
-      readSharedBoardMetadata();
+      try {
+          readSharedBoardMetadata();
+      } catch (JDOMException e) {
+
+          // give up if there's any problem reading the shared metadata file
+          ErrorDialog.bug(e);
+      }
       m_mnuMainPopup = new JPopupMenu();
 
       // FredKors: creation of the toolbar button
@@ -155,7 +162,7 @@ public class ASLMap extends Map {
     /**
      * read the shared board metadata
      */
-    private void readSharedBoardMetadata(){
+    private void readSharedBoardMetadata() throws JDOMException {
 
         DataArchive archive = GameModule.getGameModule().getDataArchive();
 
@@ -170,8 +177,10 @@ public class ASLMap extends Map {
         // give up on any errors
         } catch (IOException e) {
             sharedBoardMetadata = null;
+            throw new JDOMException("Cannot read the shared metadata file", e);
         } catch (JDOMException e) {
             sharedBoardMetadata = null;
+            throw new JDOMException("Cannot read the shared metadata file", e);
         }
         finally {
             IOUtils.closeQuietly(metadata);

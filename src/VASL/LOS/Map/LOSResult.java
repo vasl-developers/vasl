@@ -79,7 +79,7 @@ public class LOSResult {
 
 		// compute smoke
 		Iterator iter 	= smokeHindrances.iterator();
-		Smoke 	 s      = null;
+		Smoke 	 s;
 		while (iter.hasNext()){
 
 			s = (Smoke) iter.next();
@@ -198,7 +198,7 @@ public class LOSResult {
 				//add smoke
 				smokeHindrances.add(s);
 
-				// set first hindrance point, if necesary
+				// set first hindrance point, if necessary
 				if (firstHindranceAt == null){
 
 					firstHindranceAt = new Point(x, y);
@@ -214,7 +214,7 @@ public class LOSResult {
 	}
 
 	// add a vehicle hindrance
-	public void addVehicleHindrance(Vehicle v, int x, int y, Scenario scenario){
+	public void addVehicleHindrance(Vehicle v, int x, int y, VASLGameInterface VASLGameInterface){
 
 		// vehicle already added?
 		Iterator 	iter = vehicleHindrances.iterator();
@@ -269,12 +269,6 @@ public class LOSResult {
 		}
 	}
 
-	// get hindrances
-	public HashSet getMapHindranceHexes(){ return mapHindranceHexes;}
-	public HashSet getSmokeHindrances()	 { return smokeHindrances;}
-
-	public HashSet getVehicleHindrances() { return vehicleHindrances;}
-
 	// hexes
 	public void 	addHex(Hex h)	{hexes.add(h);}
 	public HashSet	getHexes()		{return hexes;}
@@ -294,8 +288,6 @@ public class LOSResult {
 	public int		getSourceExitHexspine()		{return sourceExitHexspine;}
 	public int		getTargetEnterHexside()		{return targetEnterHexside;}
 	public int		getTargetEnterHexspine()	{return targetEnterHexspine;}
-	public boolean	getUseAuxSourceLOSPoint()	{return useAuxSourceLOSPoint;}
-	public boolean	getUseAuxTargetLOSPoint()	{return useAuxTargetLOSPoint;}
 
 	// continuous slope
 	public boolean	isContinuousSlope()			{return continuousSlope;}
@@ -304,13 +296,8 @@ public class LOSResult {
 	}
 
 	// LOS slope
-	public boolean	isLOSis60Degree()	{return LOSis60Degree;}
 	public void		setLOSis60Degree(boolean newLOSis60Degree){
 		LOSis60Degree = newLOSis60Degree;
-	}
-	public boolean	isLOSisHorizontal()	{return LOSisHorizontal;}
-	public void		setLOSisHorizontal(boolean newLOSisHorizontal){
-		LOSisHorizontal = newLOSisHorizontal;
 	}
 
 	// range methods
@@ -326,7 +313,7 @@ public class LOSResult {
 	}
 
 	// clear LOS
-	public void setClear() {
+	public void reset() {
 
 		blocked				= false;
 		blockedAtPoint		= null;
@@ -364,7 +351,7 @@ public class LOSResult {
 	// any smoke from this hex already added?
 	private boolean smokePresent(Hex h){
 
-		HashSet smoke = h.getSmoke();
+		HashSet<Smoke> smoke = h.getMap().getAllSmoke(h);
 
 		if (smoke != null){
 

@@ -472,12 +472,12 @@ public class Map
      * @param target "target" hex
      * @param useAuxTargetLOSPoint use auxiliary bypass aiming point for target location
      * @param result <code>LOSResult</code> that will contain all of the LOS information
-     * @param scenario <code>Scenario</code> that contains all scenario-dependent LOS information
+     * @param VASLGameInterface <code>Scenario</code> that contains all scenario-dependent LOS information
      */
-    public void LOS(Location source, boolean useAuxSourceLOSPoint, Location target, boolean useAuxTargetLOSPoint, LOSResult result, Scenario scenario) {
+    public void LOS(Location source, boolean useAuxSourceLOSPoint, Location target, boolean useAuxTargetLOSPoint, LOSResult result, VASLGameInterface VASLGameInterface) {
 
         // reset the results
-        result.setClear();
+        result.reset();
         result.setSourceLocation(source);
         result.setTargetLocation(target);
         result.setUseAuxSourceLOSPoint(useAuxSourceLOSPoint);
@@ -494,17 +494,10 @@ public class Map
         }
 
         // check for smoke in source hex here
-        //TODO: move smoke to hex
-        HashSet hexSmoke = getAllSmoke(source.getHex());
+        HashSet<Smoke> hexSmoke = VASLGameInterface.getSmoke(source.getHex());
         if (hexSmoke != null && hexSmoke.size() > 0) {
 
-            Smoke s = null;
-
-            // step through all smoke counters in the source hex
-            Iterator iter = hexSmoke.iterator();
-            while (iter.hasNext()) {
-
-                s = (Smoke) iter.next();
+            for (Smoke s: hexSmoke) {
 
                 if ((source.getAbsoluteHeight() >= s.getLocation().getAbsoluteHeight() &&
                         source.getAbsoluteHeight() < s.getLocation().getAbsoluteHeight() + s.getHeight()) ||
@@ -569,11 +562,11 @@ public class Map
         }
 
         // Otherwise, standard LOS check
-        Pt2PtLOS(source, useAuxSourceLOSPoint, target, useAuxTargetLOSPoint, result, scenario);
+        Pt2PtLOS(source, useAuxSourceLOSPoint, target, useAuxTargetLOSPoint, result, VASLGameInterface);
     }
 
     // point to point LOS
-    protected void Pt2PtLOS(Location source, boolean useAuxSourceLOSPoint, Location target, boolean useAuxTargetLOSPoint, LOSResult result, Scenario scenario) {
+    protected void Pt2PtLOS(Location source, boolean useAuxSourceLOSPoint, Location target, boolean useAuxTargetLOSPoint, LOSResult result, VASLGameInterface VASLGameInterface) {
 
         // location variables
         int sourceX = useAuxSourceLOSPoint ? (int) source.getAuxLOSPoint().getX() : (int) source.getLOSPoint().getX();
@@ -766,21 +759,21 @@ public class Map
                                 gridToHex(currentCol, currentRow - 1).getCenterLocation().getTerrain().isInherentTerrain()) {
 
                             hindranceHex = gridToHex(currentCol, currentRow - 1);
-                            currentTerrain = terrainList[hindranceHex.getCenterLocation().getTerrain().getType()];
+                            currentTerrain = hindranceHex.getCenterLocation().getTerrain();
                         }
                         else if (currentRow != gridHeight &&
                                 gridToHex(currentCol, currentRow + 1).getCenterLocation().getTerrain().isInherentTerrain()) {
 
                             hindranceHex = gridToHex(currentCol, currentRow + 1);
-                            currentTerrain = terrainList[hindranceHex.getCenterLocation().getTerrain().getType()];
+                            currentTerrain = hindranceHex.getCenterLocation().getTerrain();
                         }
                         else if (currentTerrain.isInherentTerrain() && !tempHex.getCenterLocation().getTerrain().isInherentTerrain()) {
                             if (tempHex.getCenterLocation().getTerrain().isInherentTerrain()) {
 
-                                currentTerrain = terrainList[tempHex.getCenterLocation().getTerrain().getType()];
+                                currentTerrain = tempHex.getCenterLocation().getTerrain();
                             }
                             else {
-                                currentTerrain = terrainList[terrainNameMap.get("Open Ground").getType()];
+                                currentTerrain = getTerrain("Open Ground");
                             }
                         }
                     }
@@ -793,30 +786,30 @@ public class Map
                                 gridToHex(currentCol - 1, currentRow - 1).getCenterLocation().getTerrain().isInherentTerrain()) {
 
                             hindranceHex = gridToHex(currentCol - 1, currentRow - 1);
-                            currentTerrain = terrainList[hindranceHex.getCenterLocation().getTerrain().getType()];
+                            currentTerrain = hindranceHex.getCenterLocation().getTerrain();
                         }
                         else if (currentCol != gridWidth && currentRow != gridHeight &&
                                 gridToHex(currentCol + 1, currentRow + 1).getCenterLocation().getTerrain().isInherentTerrain()) {
 
                             hindranceHex = gridToHex(currentCol + 1, currentRow + 1);
-                            currentTerrain = terrainList[hindranceHex.getCenterLocation().getTerrain().getType()];
+                            currentTerrain = hindranceHex.getCenterLocation().getTerrain();
                         }
                         else if (currentCol != 0 && currentRow != gridHeight &&
                                 gridToHex(currentCol - 1, currentRow + 1).getCenterLocation().getTerrain().isInherentTerrain()) {
 
                             hindranceHex = gridToHex(currentCol - 1, currentRow + 1);
-                            currentTerrain = terrainList[hindranceHex.getCenterLocation().getTerrain().getType()];
+                            currentTerrain = hindranceHex.getCenterLocation().getTerrain();
                         }
                         else if (currentCol != gridWidth && currentRow != 0 &&
                                 gridToHex(currentCol + 1, currentRow - 1).getCenterLocation().getTerrain().isInherentTerrain()) {
 
                             hindranceHex = gridToHex(currentCol + 1, currentRow - 1);
-                            currentTerrain = terrainList[hindranceHex.getCenterLocation().getTerrain().getType()];
+                            currentTerrain = hindranceHex.getCenterLocation().getTerrain();
                         }
                         else if (currentTerrain.isInherentTerrain() && !tempHex.getCenterLocation().getTerrain().isInherentTerrain()) {
                             if (tempHex.getCenterLocation().getTerrain().isInherentTerrain()) {
 
-                                currentTerrain = terrainList[tempHex.getCenterLocation().getTerrain().getType()];
+                                currentTerrain = tempHex.getCenterLocation().getTerrain();
                             }
                             else {
                                 currentTerrain = getTerrain("Open Ground");
@@ -828,7 +821,7 @@ public class Map
                         !tempHex.getCenterLocation().getTerrain().isInherentTerrain()) {
                     if (tempHex.getCenterLocation().getTerrain().isInherentTerrain()) {
 
-                        currentTerrain = terrainList[tempHex.getCenterLocation().getTerrain().getType()];
+                        currentTerrain = tempHex.getCenterLocation().getTerrain();
                     }
                     else {
 
@@ -836,6 +829,10 @@ public class Map
                     }
                 }
 
+                // if there's a terrain counter in the hex use that terrain instead
+                if(VASLGameInterface.getTerrain(tempHex) != null) {
+                    currentTerrain = VASLGameInterface.getTerrain(tempHex);
+                }
 
                 currentTerrainHgt = currentTerrain.getHeight();
                 groundLevel = (int) elevationGrid[currentCol][currentRow];
@@ -857,25 +854,26 @@ public class Map
 
                     // get the vehicle hindrances
                     //if LOS on hex side, use the hex that has the most vehicles
-                    //TODO: move vehicles to map
+                    //TODO: need to check LOS to vehicles before deriving numVeh - may not be LOS to hex with most vehicles
                     if ((LOSisHorizontal || LOSis60Degree) && sourceElevation == targetElevation) {
-                        int numVeh = scenario.getVehicles(vehicleHex, sourceElevation).size();
-                        if (currentRow != 0 && scenario.getVehicles(gridToHex(currentCol, currentRow - 1), sourceElevation).size() > numVeh) {
+
+                        int numVeh = VASLGameInterface.getVehicles(vehicleHex, sourceElevation).size();
+                        if (currentRow != 0 && VASLGameInterface.getVehicles(gridToHex(currentCol, currentRow - 1), sourceElevation).size() > numVeh) {
 
                             vehicleHex = gridToHex(currentCol, currentRow - 1);
-                            numVeh = scenario.getVehicles(vehicleHex).size();
+                            numVeh = VASLGameInterface.getVehicles(vehicleHex).size();
                         }
-                        if (currentRow != gridHeight && scenario.getVehicles(gridToHex(currentCol, currentRow + 1), sourceElevation).size() > numVeh) {
+                        if (currentRow != gridHeight && VASLGameInterface.getVehicles(gridToHex(currentCol, currentRow + 1), sourceElevation).size() > numVeh) {
 
                             vehicleHex = gridToHex(currentCol, currentRow + 1);
-                            numVeh = scenario.getVehicles(vehicleHex).size();
+                            numVeh = VASLGameInterface.getVehicles(vehicleHex).size();
                         }
-                        if (LOSis60Degree && currentCol != 0 && currentRow != gridHeight && scenario.getVehicles(gridToHex(currentCol - 1, currentRow + 1), sourceElevation).size() > numVeh) {
+                        if (LOSis60Degree && currentCol != 0 && currentRow != gridHeight && VASLGameInterface.getVehicles(gridToHex(currentCol - 1, currentRow + 1), sourceElevation).size() > numVeh) {
 
                             vehicleHex = gridToHex(currentCol - 1, currentRow + 1);
-                            numVeh = scenario.getVehicles(vehicleHex).size();
+                            numVeh = VASLGameInterface.getVehicles(vehicleHex).size();
                         }
-                        if (LOSis60Degree && currentCol != gridWidth && currentRow != 0 && scenario.getVehicles(gridToHex(currentCol + 1, currentRow - 1), sourceElevation).size() > numVeh) {
+                        if (LOSis60Degree && currentCol != gridWidth && currentRow != 0 && VASLGameInterface.getVehicles(gridToHex(currentCol + 1, currentRow - 1), sourceElevation).size() > numVeh) {
 
                             vehicleHex = gridToHex(currentCol + 1, currentRow - 1);
                         }
@@ -885,7 +883,7 @@ public class Map
                     if (vehicleHex != sourceHex && vehicleHex != targetHex &&
                             source.getAbsoluteHeight() == target.getAbsoluteHeight()) {
 
-                        Iterator vehicles = scenario.getVehicles(vehicleHex).iterator();
+                        Iterator vehicles = VASLGameInterface.getVehicles(vehicleHex).iterator();
                         Vehicle v;
                         while (vehicles.hasNext()) {
 
@@ -894,13 +892,13 @@ public class Map
                             // see if a LOS exists to the vehicle
                             LOSResult res1 = new LOSResult();
                             LOSResult res2 = new LOSResult();
-                            LOS(source, useAuxSourceLOSPoint, v.getLocation(), false, res1, scenario);
-                            LOS(target, useAuxTargetLOSPoint, v.getLocation(), false, res2, scenario);
+                            LOS(source, useAuxSourceLOSPoint, v.getLocation(), false, res1, VASLGameInterface);
+                            LOS(target, useAuxTargetLOSPoint, v.getLocation(), false, res2, VASLGameInterface);
 
                             if (!res1.isBlocked() && !res2.isBlocked()) {
 
                                 // add vehicle hindrance
-                                result.addVehicleHindrance(v, currentCol, currentRow, scenario);
+                                result.addVehicleHindrance(v, currentCol, currentRow, VASLGameInterface);
                                 if (result.isBlocked()) return;
                             }
                         }
@@ -934,18 +932,18 @@ public class Map
                     }
 
                     // hex has smoke, or LOS on hexside and adjacent hex has smoke?
-                    HashSet hexSmoke = getAllSmoke(currentHex);
+                    HashSet<Smoke> hexSmoke = VASLGameInterface.getSmoke(currentHex);
                     if (hexSmoke.size() == 0) {
 
                         if (LOSisHorizontal) {
 
                             if (currentRow != 0) {
 
-                                hexSmoke = getAllSmoke(gridToHex(currentCol, currentRow - 1));
+                                hexSmoke = VASLGameInterface.getSmoke(gridToHex(currentCol, currentRow - 1));
                             }
                             if (hexSmoke.size() == 0 && currentRow != gridHeight) {
 
-                                hexSmoke = getAllSmoke(gridToHex(currentCol, currentRow + 1));
+                                hexSmoke = VASLGameInterface.getSmoke(gridToHex(currentCol, currentRow + 1));
                             }
                         }
 
@@ -953,32 +951,26 @@ public class Map
 
                             if (currentCol != 0 && currentRow != 0) {
 
-                                hexSmoke = getAllSmoke(gridToHex(currentCol - 1, currentRow - 1));
+                                hexSmoke =VASLGameInterface.getSmoke(gridToHex(currentCol - 1, currentRow - 1));
                             }
                             if (hexSmoke.size() == 0 && currentCol != gridWidth && currentRow != gridHeight) {
 
-                                hexSmoke = getAllSmoke(gridToHex(currentCol + 1, currentRow + 1));
+                                hexSmoke = VASLGameInterface.getSmoke(gridToHex(currentCol + 1, currentRow + 1));
                             }
                             if (hexSmoke.size() == 0 && currentCol != 0 && currentRow != gridHeight && gridToHex(currentCol - 1, currentRow + 1).getCenterLocation().getTerrain().isInherentTerrain()) {
 
-                                hexSmoke = getAllSmoke(gridToHex(currentCol - 1, currentRow + 1));
+                                hexSmoke = VASLGameInterface.getSmoke(gridToHex(currentCol - 1, currentRow + 1));
                             }
                             if (hexSmoke.size() == 0 && currentCol != gridWidth && currentRow != 0 && gridToHex(currentCol + 1, currentRow - 1).getCenterLocation().getTerrain().isInherentTerrain()) {
 
-                                hexSmoke = getAllSmoke(gridToHex(currentCol + 1, currentRow - 1));
+                                hexSmoke = VASLGameInterface.getSmoke(gridToHex(currentCol + 1, currentRow - 1));
                             }
                         }
                     }
 
                     if (hexSmoke != null && hexSmoke.size() > 0) {
 
-                        Smoke s = null;
-
-                        // step through all smoke counters in the hex
-                        Iterator iter = hexSmoke.iterator();
-                        while (iter.hasNext()) {
-
-                            s = (Smoke) iter.next();
+                        for(Smoke s: hexSmoke) {
 
                             // in target hex
                             if ((currentHex == targetHex &&
@@ -1076,7 +1068,7 @@ public class Map
                 }
 
                 /******************************
-                 Edge terrain
+                 Hexside terrain
                  ******************************/
                 if (currentTerrain.isHexside() && !currentTerrain.getName().equals("Cliff")) {
 
@@ -1554,6 +1546,8 @@ public class Map
      * @return HashSet containing all smoke objects
      */
     public HashSet getAllSmoke(Hex h) {
+
+
 
         // step through all smoke locations
         HashSet<Smoke> allSmoke = new HashSet(smokeList.size());

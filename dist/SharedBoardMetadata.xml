@@ -1565,7 +1565,7 @@
         <smokeCounter name="4-level Blaze" hindrance="3" height="7"/>
         
         <terrainCounter name="Stone Rubble" terrain="Stone Rubble"/>
-        <terrainCounter name="Wood Rubble" terrain="Wood Rubble"/>
+        <terrainCounter name="Wood Rubble" terrain="Wooden Rubble"/>
 
         <wreckCounter name="Wreck"/>
         <wreckCounter name="Burnt Out Wreck"/>
@@ -1579,6 +1579,12 @@
         <OBACounter name="Green OBA FFE:1"/>
         <OBACounter name="Green OBA FFE:2"/>
         <OBACounter name="Green OBA FFE:C"/>
+
+        <!-- These counters should be ignored as they will create false LOS conditions (e.g. treated as hindrances) -->
+        <ignoreCounter name="Barricade" />
+        <ignoreCounter name="Breached Barricade" />
+        <ignoreCounter name="Roadblock" />
+        <ignoreCounter name="Palm Debris" />
 
     </LOSCounterRules>
 
