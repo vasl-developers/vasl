@@ -51,6 +51,7 @@ import java.awt.Insets;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
@@ -83,6 +84,8 @@ import javax.swing.text.TabStop;
  */
 public class ASLChatter extends VASSAL.build.module.Chatter
 {
+  private ArrayList<ChatterListener> chatter_listeners = new ArrayList<ChatterListener>();
+  
   public static final String BEFORE_CATEGORY = "   ";
   private static final String USE_DICE_IMAGES = "useDiceImages"; //$NON-NLS-1$
   private static final String COLORED_DICE_COLOR = "coloredDiceColor"; //$NON-NLS-1$
@@ -562,9 +565,10 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
     private void ParseOlddr(String strMsg) {
         try
-        {
+        { // *** dr = 2 *** <FredKors>
             String l_strRestOfMsg = strMsg.substring("*** dr = ".length());
             int l_iPos = l_strRestOfMsg.indexOf(" ***");
+            String l_strUser = "";
 
             StyleConstants.setForeground(m_objMainStyle, m_clrGameMsg);
 
@@ -584,6 +588,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
                         if ((lar_strParts[1] != "") && (lar_strParts[2] != ""))
                         {
+                            l_strUser = lar_strParts[1];
+                            
                             m_objDocument.insertString(m_objDocument.getLength(), "\n*** dr = ", m_objMainStyle);
                             if (m_bUseDiceImages)
                             {
@@ -597,15 +603,19 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                             }
                             m_objDocument.insertString(m_objDocument.getLength(), lar_strParts[0], m_objMainStyle);
                             StyleConstants.setBold(m_objMainStyle, true);
-                            m_objDocument.insertString(m_objDocument.getLength(), lar_strParts[1], m_objMainStyle);
+                            m_objDocument.insertString(m_objDocument.getLength(), l_strUser, m_objMainStyle); // user
                             StyleConstants.setBold(m_objMainStyle, false);
                             m_objDocument.insertString(m_objDocument.getLength(), lar_strParts[2], m_objMainStyle);
+                            
+                            FireDiceRoll("", l_strUser, "", l_iDice, -1);
                         }
                         else
                         {
-                            m_objDocument.insertString(m_objDocument.getLength(), "\n*** DR = ", m_objMainStyle);
+                            m_objDocument.insertString(m_objDocument.getLength(), "\n*** dr = ", m_objMainStyle);
                             PaintIcon(l_iDice, true, true);                            
                             m_objDocument.insertString(m_objDocument.getLength(), l_strLast, m_objMainStyle);
+
+                            FireDiceRoll("", "?", "", l_iDice, -1);
                         }
                     }
                     else
@@ -626,7 +636,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     private void ParseNewDiceRoll(String strMsg)  
     {
         // *** (Other DR) 4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)        
-        String l_strCategory, l_strDice, l_strUser;
+        String l_strCategory = "", l_strDice = "", l_strUser = "", l_strSAN = "";
         int l_iFirstDice, l_iSecondDice;
         
         try
@@ -665,8 +675,6 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
                                 if ((lar_strParts[1] != "") && (lar_strParts[2] != ""))
                                 {
-                                    String l_strSAN = "";
-                                    
                                     l_strUser = lar_strParts[1];
                                     l_strRestOfMsg = lar_strParts[2]; // >      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)        
                                     
@@ -723,6 +731,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     StyleConstants.setBold(m_objMainStyle, false);
                                     StyleConstants.setUnderline(m_objMainStyle, false);
                                     m_objDocument.insertString(m_objDocument.getLength(), l_strRestOfMsg, m_objMainStyle);                                    
+                                    
+                                    FireDiceRoll(l_strCategory, l_strUser, l_strSAN, l_iFirstDice, l_iSecondDice);
                                 }
                                 else
                                     m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
@@ -796,6 +806,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     
                                     StyleConstants.setBold(m_objMainStyle, false);
                                     m_objDocument.insertString(m_objDocument.getLength(), "   " + l_strRestOfMsg, m_objMainStyle);                                    
+
+                                    FireDiceRoll(l_strCategory, l_strUser, "", l_iDice, -1);
                                 }
                                 else
                                     m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);                            
@@ -822,9 +834,12 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     private void ParseOldDR(String strMsg)  
     {
         try
-        {
+        {   //*** DR = 1,6 *** <FredKors> Axis/Allied SAN
+            // *** DR = 1,3 *** <FredKors> Allied SAN
+            // *** DR = 5,2 *** <FredKors> Axis SAN
             String l_strRestOfMsg = strMsg.substring("*** DR = ".length());
             int l_iPos = l_strRestOfMsg.indexOf(" ***");
+            String l_strUser = "", l_strSAN = "";
 
             StyleConstants.setForeground(m_objMainStyle, m_clrGameMsg);
 
@@ -851,6 +866,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
                             if ((lar_strParts[1] != "") && (lar_strParts[2] != ""))
                             {
+                                l_strUser = lar_strParts[1];
+                                
                                 m_objDocument.insertString(m_objDocument.getLength(), "\n*** DR = ", m_objMainStyle);
                                 if (m_bUseDiceImages)
                                 {
@@ -869,6 +886,21 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                 m_objDocument.insertString(m_objDocument.getLength(), lar_strParts[1], m_objMainStyle);
                                 StyleConstants.setBold(m_objMainStyle, false);
                                 m_objDocument.insertString(m_objDocument.getLength(), lar_strParts[2], m_objMainStyle);
+                                
+                                if (lar_strParts[2].contains("Axis SAN"))
+                                {
+                                    l_strSAN = "Axis SAN";
+                                }
+                                else if (lar_strParts[2].contains("Allied SAN"))
+                                {
+                                    l_strSAN = "Allied SAN";
+                                }
+                                else if (lar_strParts[2].contains("Axis/Allied SAN"))
+                                {
+                                    l_strSAN = "Axis/Allied SAN";
+                                }
+                                
+                                FireDiceRoll("", l_strUser, l_strSAN, l_iFirstDice, l_iSecondDice);
                             }
                             else
                             {
@@ -877,6 +909,21 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                 m_objDocument.insertString(m_objDocument.getLength(), " ", m_objMainStyle);
                                 PaintIcon(l_iSecondDice, false, false);
                                 m_objDocument.insertString(m_objDocument.getLength(), l_strLast, m_objMainStyle);
+
+                                if (l_strLast.contains("Axis SAN"))
+                                {
+                                    l_strSAN = "Axis SAN";
+                                }
+                                else if (l_strLast.contains("Allied SAN"))
+                                {
+                                    l_strSAN = "Allied SAN";
+                                }
+                                else if (l_strLast.contains("Axis/Allied SAN"))
+                                {
+                                    l_strSAN = "Axis/Allied SAN";
+                                }
+                                
+                                FireDiceRoll("", "?", l_strSAN, l_iFirstDice, l_iSecondDice);
                             }
                         }
                         else
@@ -1228,7 +1275,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         else
             l_objColoredDieColor = l_objColoredDieColor_Exist;
         
-        l_objGlobalPrefs.getOption(SINGLE_DIE_COLOR).addPropertyChangeListener(new PropertyChangeListener() 
+        l_objColoredDieColor.addPropertyChangeListener(new PropertyChangeListener() 
         {
             public void propertyChange(PropertyChangeEvent e) 
             {
@@ -1296,6 +1343,23 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     f.add(chat);
     f.pack();
     f.setVisible(true);
+  }
+  
+  private void FireDiceRoll(String strCategory, String strUser, String strSAN, int iFirstDice, int iSecondDice) {
+        for (ChatterListener objListener : chatter_listeners)
+            objListener.DiceRoll(strCategory, strUser, strSAN, iFirstDice, iSecondDice);
+  }  
+  
+  public void addListener(ChatterListener toAdd) {
+        chatter_listeners.add(toAdd);
+  }
+  
+  public void removeListener(ChatterListener toRemove) {
+        chatter_listeners.remove(toRemove);
+  }
+  
+  public interface ChatterListener {
+        public void DiceRoll(String strCategory, String strUser, String strSAN, int iFirstDice, int iSecondDice);
   }
 }
 
