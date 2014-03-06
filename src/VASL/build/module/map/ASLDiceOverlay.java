@@ -256,6 +256,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
     private long m_lMaxAge = 10;
     private long m_lClock = 0;
     private long m_lCount = 0;
+    private boolean m_bKeepAlive = false;
 
     /**
      * @return the mc_DefaultAge
@@ -776,7 +777,8 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
                 break;
         }
     
-        m_lClock++;
+        if (!m_bKeepAlive)
+            m_lClock++;
         
         if (l_bRepaint)
             FireNeedRepaint();
@@ -936,6 +938,20 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
     public int getMaxNumEntries() {
         return mc_iMaxNumEntries;
     }
+
+    /**
+     * @return the m_bKeepAlive
+     */
+    public boolean isKeepAlive() {
+        return m_bKeepAlive;
+    }
+
+    /**
+     * @param m_bKeepAlive the m_bKeepAlive to set
+     */
+    public void setKeepAlive(boolean m_bKeepAlive) {
+        this.m_bKeepAlive = m_bKeepAlive;
+    }
 }
 
 /**
@@ -1054,7 +1070,7 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
             Component l_objVertGlue = Box.createVerticalGlue();
             AddButton(l_objPanel, l_objVertGlue, l_iRow++, 2);
             
-            JToggleButton l_objTBtn = CreateKeepAliveButton("chatter/REWIND.png", "chatter/CLEAR.png", "", "Keep DRs on the screen");
+            JToggleButton l_objTBtn = CreateKeepAliveButton("chatter/PINUP.png", "chatter/PINDOWN.png", "", "Keep DRs on the screen");
             AddButton(l_objPanel, l_objTBtn, l_iRow++, 20);
             
             l_objBtn = CreateActionButton("chatter/CLEAR.png", "", "Clear the screen from DRs", new ActionListener() {public void actionPerformed(ActionEvent e) {m_objDRQH.KillAll();} });
@@ -1147,11 +1163,11 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
             {
                 if(e.getStateChange() == ItemEvent.SELECTED)
                 {
-//                    totalGUI.setBackground(Color.green);
+                    m_objDRQH.setKeepAlive(true);
                 }
                 else
                 {
-//                    totalGUI.setBackground(Color.red);
+                    m_objDRQH.setKeepAlive(false);
                 } 
             }
         };
