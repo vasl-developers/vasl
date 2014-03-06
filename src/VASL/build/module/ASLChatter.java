@@ -377,15 +377,13 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         
         l_btn.setMargin(new Insets(0, 0, 0, 0));       
         
-        if (strImage != "")
+        try
         {
-            try
-            {
+            if (!strImage.isEmpty())
                 l_btn.setIcon(new ImageIcon(Op.load(strImage).getImage(null)));
-            }
-            catch (Exception ex)
-            {
-            }
+        }
+        catch (Exception ex)
+        {
         }
         
         ActionListener l_objAL = new ActionListener()
@@ -546,7 +544,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                 StyleConstants.setForeground(m_objMainStyle, m_clrOtherChatMsg);
             }
 
-            if ((lar_strParts[1] != "") && (lar_strParts[2] != ""))
+            if ((!lar_strParts[1].isEmpty()) && (!lar_strParts[2].isEmpty()))
             {
                 m_objDocument.insertString(m_objDocument.getLength(), "\n" + lar_strParts[0], m_objMainStyle);
                 StyleConstants.setBold(m_objMainStyle, true);
@@ -586,7 +584,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                     {
                         String[] lar_strParts = FindUser(l_strLast);
 
-                        if ((lar_strParts[1] != "") && (lar_strParts[2] != ""))
+                        if ((!lar_strParts[1].isEmpty()) && (!lar_strParts[2].isEmpty()))
                         {
                             l_strUser = lar_strParts[1];
                             
@@ -673,7 +671,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                             {
                                 String[] lar_strParts = FindUser(l_strRestOfMsg);
 
-                                if ((lar_strParts[1] != "") && (lar_strParts[2] != ""))
+                                if ((!lar_strParts[1].isEmpty()) && (!lar_strParts[2].isEmpty()))
                                 {
                                     l_strUser = lar_strParts[1];
                                     l_strRestOfMsg = lar_strParts[2]; // >      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)        
@@ -774,7 +772,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                             {
                                 String[] lar_strParts = FindUser(l_strRestOfMsg);
 
-                                if ((lar_strParts[1] != "") && (lar_strParts[2] != ""))
+                                if ((!lar_strParts[1].isEmpty()) && (!lar_strParts[2].isEmpty()))
                                 {
                                     l_strUser = lar_strParts[1];
                                     l_strRestOfMsg = lar_strParts[2]; // >      [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)        
@@ -864,7 +862,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                         {
                             String[] lar_strParts = FindUser(l_strLast);
 
-                            if ((lar_strParts[1] != "") && (lar_strParts[2] != ""))
+                            if ((!lar_strParts[1].isEmpty()) && (!lar_strParts[2].isEmpty()))
                             {
                                 l_strUser = lar_strParts[1];
                                 

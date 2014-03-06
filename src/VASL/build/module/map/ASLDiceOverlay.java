@@ -44,6 +44,8 @@ import VASSAL.build.module.GlobalOptions;
 import VASSAL.configure.ColorConfigurer;
 import VASSAL.configure.FontConfigurer;
 import VASSAL.preferences.Prefs;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -119,14 +121,14 @@ class DiceRollHandler
     /**
      * @return the m_lClock
      */
-    public long getlClock() {
+    public long getClock() {
         return m_lClock;
     }
 
     /**
      * @param m_lClock the m_lClock to set
      */
-    public void setlClock(long lClock) {
+    public void setClock(long lClock) {
         m_lClock = lClock;
     }
     
@@ -250,7 +252,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
     private int m_iCaptionWidth = 0;
     private int m_iCaptionHeight = 0;
     
-    private final int mc_iMaxNumEntries = 9;
+    private final int mc_iMaxNumEntries = 8;
     private long m_lMaxAge = 10;
     private long m_lClock = 0;
     private long m_lCount = 0;
@@ -723,6 +725,37 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
         return false;
     }
     
+    public void KillAll()
+    {
+        m_lClock += m_lMaxAge;
+        
+        ClockTick();
+    }
+    
+    synchronized public void ShowLastDR()
+    {
+        boolean l_bRepaint = false;
+        
+        for (Iterator<DiceRollHandler> it = mar_DRH.iterator(); it.hasNext(); )
+        {
+            DiceRollHandler l_objDRH = it.next();
+            
+            if (l_objDRH.IsAlive())
+            {
+                l_objDRH.setClock(m_lClock);
+            }
+            else
+            {
+                l_objDRH.setClock(m_lClock);
+                l_objDRH.Alive();                
+                l_bRepaint = true;
+            }
+        }
+    
+        if (l_bRepaint)
+            FireNeedRepaint();
+    }
+    
     synchronized public void ClockTick()
     {
         boolean l_bRepaint = false;
@@ -733,7 +766,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
             
             if (l_objDRH.IsAlive())
             {
-                if ((m_lClock - l_objDRH.getlClock()) >= m_lMaxAge)
+                if ((m_lClock - l_objDRH.getClock()) >= m_lMaxAge)
                 {
                     l_objDRH.Dead();
                     l_bRepaint = true;
@@ -753,8 +786,8 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
     {
         mar_DRH.add(0, new DiceRollHandler(++m_lCount, m_lClock, strCategory, strUser, strSAN, iFirstDice, iSecondDice));
         
-        if (mar_DRH.size() > mc_iMaxNumEntries)
-            mar_DRH.subList(mc_iMaxNumEntries, mar_DRH.size()).clear();
+        if (mar_DRH.size() > getMaxNumEntries())
+            mar_DRH.subList(getMaxNumEntries(), mar_DRH.size()).clear();
         
         FireNeedRepaint();
     }
@@ -896,6 +929,13 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
         for (NeedRepaintEvent objListener : needrepaint_listeners)
             objListener.NeedRepaint();
     }      
+
+    /**
+     * @return the mc_iMaxNumEntries
+     */
+    public int getMaxNumEntries() {
+        return mc_iMaxNumEntries;
+    }
 }
 
 /**
@@ -1013,7 +1053,16 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
 		
             Component l_objVertGlue = Box.createVerticalGlue();
             AddButton(l_objPanel, l_objVertGlue, l_iRow++, 2);
-                
+            
+            JToggleButton l_objTBtn = CreateKeepAliveButton("chatter/REWIND.png", "chatter/CLEAR.png", "", "Keep DRs on the screen");
+            AddButton(l_objPanel, l_objTBtn, l_iRow++, 20);
+            
+            l_objBtn = CreateActionButton("chatter/CLEAR.png", "", "Clear the screen from DRs", new ActionListener() {public void actionPerformed(ActionEvent e) {m_objDRQH.KillAll();} });
+            AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
+
+            l_objBtn = CreateActionButton("chatter/REWIND.png", "", String.format("Show last %s DRs", m_objDRQH.getMaxNumEntries()), new ActionListener() {public void actionPerformed(ActionEvent e) {m_objDRQH.ShowLastDR();} });
+            AddButton(l_objPanel, l_objBtn, l_iRow++, 20);
+
             l_objBtn = CreateDiceButton("DRs.gif", "", "DR", KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), true, ASLDiceBot.OTHER_CATEGORY);
             AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
                 
@@ -1036,7 +1085,7 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
             AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
 
             l_objBtn = CreateDiceButton("", "TC", "Task Check DR", KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_MASK + InputEvent.SHIFT_MASK), true, "TC");
-            AddButton(l_objPanel, l_objBtn, l_iRow++, 8);
+            AddButton(l_objPanel, l_objBtn, l_iRow++, 10);
 
             l_objBtn = CreateDiceButton("dr.gif", "", "dr", KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), false, ASLDiceBot.OTHER_CATEGORY);
             AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
@@ -1069,6 +1118,79 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
         objPanel.add(objComp, l_objGBL_Btn);
     }
     
+    private JToggleButton CreateKeepAliveButton(String strImageOff, String strImageOn, String strCaption, String strTooltip) 
+    {
+        JToggleButton l_btn = new JToggleButton(strCaption);
+        
+        l_btn.setMargin(new Insets(0, 0, 0, 0));       
+        l_btn.setMaximumSize(new Dimension(32, 32));
+        l_btn.setMinimumSize(new Dimension(10, 10));
+        l_btn.setPreferredSize(new Dimension(32, 32));
+        l_btn.setFocusable(false);
+        l_btn.setRolloverEnabled(false);
+        
+        try
+        {
+            if (!strImageOff.isEmpty())
+                l_btn.setIcon(new ImageIcon(Op.load(strImageOff).getImage(null)));
+
+            if (!strImageOn.isEmpty())
+                l_btn.setSelectedIcon(new ImageIcon(Op.load(strImageOn).getImage(null)));
+        }
+        catch (Exception ex)
+        {
+        }
+        
+        ItemListener l_objIL = new ItemListener()
+        {
+            public void itemStateChanged(ItemEvent e) 
+            {
+                if(e.getStateChange() == ItemEvent.SELECTED)
+                {
+//                    totalGUI.setBackground(Color.green);
+                }
+                else
+                {
+//                    totalGUI.setBackground(Color.red);
+                } 
+            }
+        };
+            
+        l_btn.addItemListener(l_objIL);
+        AddHotKeyToTooltip(l_btn, null, strTooltip);
+        l_btn.setFocusable(false);
+       
+        return l_btn;
+
+    }
+    
+    private JButton CreateActionButton(String strImage, String strCaption, String strTooltip, ActionListener objList) 
+    {
+        JButton l_btn = new JButton(strCaption);
+        
+        l_btn.setMargin(new Insets(0, 0, 0, 0));       
+        l_btn.setMaximumSize(new Dimension(32, 32));
+        l_btn.setMinimumSize(new Dimension(10, 10));
+        l_btn.setPreferredSize(new Dimension(32, 32));
+        l_btn.setFocusable(false);
+        l_btn.setRolloverEnabled(false);
+        
+        try
+        {
+            if (!strImage.isEmpty())
+                l_btn.setIcon(new ImageIcon(Op.load(strImage).getImage(null)));
+        }
+        catch (Exception ex)
+        {
+        }
+        
+        l_btn.addActionListener(objList);
+        AddHotKeyToTooltip(l_btn, null, strTooltip);
+        l_btn.setFocusable(false);
+       
+        return l_btn;
+    }
+    
     private JButton CreateDiceButton(String strImage, String strCaption, String strTooltip, KeyStroke keyStroke, final boolean bDice, final String strCat) 
     {
         JButton l_btn = new JButton(strCaption);
@@ -1080,15 +1202,13 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
         l_btn.setFocusable(false);
         l_btn.setRolloverEnabled(false);
         
-        if (strImage != "")
+        try
         {
-            try
-            {
+            if (!strImage.isEmpty())
                 l_btn.setIcon(new ImageIcon(Op.load(strImage).getImage(null)));
-            }
-            catch (Exception ex)
-            {
-            }
+        }
+        catch (Exception ex)
+        {
         }
         
         ActionListener l_objAL = new ActionListener()
@@ -1120,7 +1240,7 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
         return l_btn;
     }
     
-    private void AddHotKeyToTooltip(JButton objButton, KeyStroke keyStroke, String strTooltipText) 
+    private void AddHotKeyToTooltip(JComponent objButton, KeyStroke keyStroke, String strTooltipText) 
     {
         if (keyStroke != null)
             objButton.setToolTipText(strTooltipText + " [" + HotKeyConfigurer.getString(keyStroke) + "]");
