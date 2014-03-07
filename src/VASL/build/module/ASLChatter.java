@@ -88,10 +88,12 @@ public class ASLChatter extends VASSAL.build.module.Chatter
   
   public static final String BEFORE_CATEGORY = "   ";
   private static final String USE_DICE_IMAGES = "useDiceImages"; //$NON-NLS-1$
+  private static final String CHAT_BACKGROUND_COLOR = "chatBackgroundColor"; //$NON-NLS-1$
   private static final String COLORED_DICE_COLOR = "coloredDiceColor"; //$NON-NLS-1$
   private static final String SINGLE_DIE_COLOR = "singleDieColor"; //$NON-NLS-1$
   private final static String m_strFileNameFormat = "chatter/DC%s_%s.png";
 
+  private Color m_clrBackground;
   private Color m_clrGameMsg;
   private Color m_clrSystemMsg;
   private Color m_crlMyChatMsg;
@@ -176,6 +178,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         if (scroll != null)
             scroll = null;
 
+        m_clrBackground = Color.white;
         m_clrGameMsg = Color.magenta;
         m_clrSystemMsg = new Color(160, 160, 160);
         m_crlMyChatMsg = Color.gray;
@@ -1131,6 +1134,31 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         l_objButtonsFontConfigurer.fireUpdate();
         
 
+        ColorConfigurer l_objBackgroundColor = null;
+        ColorConfigurer l_objBackgroundColor_Exist = (ColorConfigurer)l_objGlobalPrefs.getOption(CHAT_BACKGROUND_COLOR);
+        
+        if (l_objBackgroundColor_Exist == null)
+        {
+            l_objBackgroundColor = new ColorConfigurer(CHAT_BACKGROUND_COLOR, "Backgound color: ", Color.white); //$NON-NLS-1$
+            l_objGlobalPrefs.addOption(Resources.getString("Chatter.chat_window"), l_objBackgroundColor); //$NON-NLS-1$
+        }
+        else
+            l_objBackgroundColor = l_objBackgroundColor_Exist;
+        
+        m_clrBackground = (Color) l_objGlobalPrefs.getValue(CHAT_BACKGROUND_COLOR);
+        
+        l_objBackgroundColor.addPropertyChangeListener(new PropertyChangeListener() 
+        {
+            public void propertyChange(PropertyChangeEvent e) 
+            {
+                m_clrBackground = (Color) e.getNewValue();
+                m_objChatPanel.setBackground(m_clrBackground);
+            }
+        });
+        
+        l_objBackgroundColor.fireUpdate();
+        
+        
         ColorConfigurer l_objGameMsgColor = null;
         ColorConfigurer l_objGameMsgColor_Exist = (ColorConfigurer)l_objGlobalPrefs.getOption(GAME_MSG_COLOR);
         

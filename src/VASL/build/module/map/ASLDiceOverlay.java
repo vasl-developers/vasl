@@ -43,6 +43,7 @@ import static VASSAL.build.module.Chatter.getAnonymousUserName;
 import VASSAL.build.module.GlobalOptions;
 import VASSAL.configure.ColorConfigurer;
 import VASSAL.configure.FontConfigurer;
+import VASSAL.configure.LongConfigurer;
 import VASSAL.preferences.Prefs;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -223,6 +224,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
     private static final String ENEMY_DR_CAPTION_COLOR = "enemyDRCaptionColor"; //$NON-NLS-1$
     private static final String COLORED_DICE_COLOR_OVER_MAP = "coloredDiceColorOverMap"; //$NON-NLS-1$
     private static final String SINGLE_DIE_COLOR_OVER_MAP = "singleDieColorOverMap"; //$NON-NLS-1$
+    private static final String DR_SECONDS_LIFE = "DRPersistenceOnScreen";
     private static final String DICE_FILE_NAME_FORMAT = "chatter/BIGDC%s.png";
     private static final String PANEL_FILE_NAME = "chatter/PNL.png";
     private static final String CAPTION_FILE_NAME = "chatter/CAPT.png";
@@ -536,6 +538,28 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
         });
 
         l_objColoredDieColor.fireUpdate();
+        
+        // **************************************************************************************
+        LongConfigurer l_objDRSecondsLifeNum = null;
+        LongConfigurer l_objDRSecondsLifeNum_Exist = (LongConfigurer)l_objModulePrefs.getOption(DR_SECONDS_LIFE);
+
+        if (l_objDRSecondsLifeNum_Exist == null)
+        {
+            l_objDRSecondsLifeNum = new LongConfigurer(DR_SECONDS_LIFE, "DR persistence on the screen (seconds):  ", 10L); //$NON-NLS-1$
+            l_objModulePrefs.addOption(PREFERENCE_TAB, l_objDRSecondsLifeNum); //$NON-NLS-1$
+        }
+        else
+            l_objDRSecondsLifeNum = l_objDRSecondsLifeNum_Exist;
+        
+        l_objDRSecondsLifeNum.addPropertyChangeListener(new PropertyChangeListener() 
+        {
+            public void propertyChange(PropertyChangeEvent e) 
+            {
+                setMaxAge((Long) e.getNewValue());
+            }
+        });
+
+        l_objDRSecondsLifeNum.fireUpdate();
     }
     
     public static String GetFriendlyPlayerNick()

@@ -113,6 +113,7 @@
         <VASSAL.build.module.map.SelectionHighlighters/>
         <VASL.build.module.map.MapCenterer/>
         <VASL.build.module.map.ASLPieceMover hotkey="119,0"/>
+        <VASL.build.module.map.ASLDiceOverlay/>
         <VASL.build.module.map.QC>
             <entry image="QC/FirePrep" menu="false" name="7_PREP">0</entry>
             <entry image="QC/FireOpp" menu="false" name="7_OPP">11</entry>
