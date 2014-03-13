@@ -1,7 +1,7 @@
 /*
- * $Id: Chatter.java 8851 2013-10-01 19:34:04Z uckelman $
+ * $Id$
  *
- * Copyright (c) 2000-2003 by Rodney Kinney
+ * Copyright (c) 2013-2113 by Federico Corso (FredKors)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public

@@ -1,7 +1,7 @@
 /*
- * $Id: ASLPieceFinder.java 0000 2009-03-09 03:22:10Z davidsullivan1 $
- *
- * Copyright (c) 2013 by David Sullivan
+  * $Id$
+*
+ * Copyright (c) 2013-2113 by Federico Corso (FredKors)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -259,7 +259,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
     private long m_lClock = 0;
     private long m_lCount = 0;
     private boolean m_bKeepAlive = false;
-
+    
     /**
      * @return the mc_DefaultAge
      */
@@ -818,7 +818,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
         FireNeedRepaint();
     }
 
-    synchronized public void draw(Graphics g, Map map) 
+    synchronized public void draw(Graphics g, Map map, ToolBarPosition enToolbarPosition) 
     {
         final Rectangle r = map.getView().getVisibleRect();
         Graphics2D gg = (Graphics2D) g;
@@ -829,7 +829,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
             
             if (l_objDRH.IsAlive())
             {
-                Point l_objPoint = new Point(r.x + r.width - 190, r.y + r.height - 100 - 100 * l_i);
+                Point l_objPoint = new Point(r.x + (enToolbarPosition == ToolBarPosition.TP_EAST ? r.width - 190 : 10), r.y + r.height - 100 - 100 * l_i);
                 
                 gg.drawImage(GetDRImage(l_objDRH), l_objPoint.x, l_objPoint.y, null);
                 
@@ -978,6 +978,8 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
     }
 }
 
+enum ToolBarPosition {TP_EAST, TP_WEST};
+
 /**
  * This component highlights a spot on the board.
  * It's handy when you need to draw your opponent's attention to a piece you are rallying, moving, etc.
@@ -987,7 +989,9 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
     private ASLMap m_objASLMap;
     private JToolBar m_Toolbar = null;
     private DiceRollQueueHandler m_objDRQH = null;
-  
+    private ToolBarPosition m_enToolbarPosition = ToolBarPosition.TP_EAST;
+    
+      
     // this component is not configurable
     @Override
     public Class<?>[] getAttributeTypes() {return new Class<?>[] {};}
@@ -1014,7 +1018,7 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
             m_objASLMap.addDrawComponent(this);
             
             m_objASLMap.getPopupMenu().addSeparator();
-            JMenuItem l_Toggletoolbar = new JMenuItem("Dice-over-map toolbar");
+            JMenuItem l_Toggletoolbar = new JMenuItem("Dice-over-the-map toolbar");
             l_Toggletoolbar.setBackground(new Color(255,255,255));
             m_objASLMap.getPopupMenu().add(l_Toggletoolbar);
             m_objASLMap.getPopupMenu().addSeparator();
@@ -1048,7 +1052,7 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
     public void draw(Graphics g, Map map) 
     {
         if ((m_Toolbar != null) && (m_Toolbar.isVisible()))
-            m_objDRQH.draw(g, map);
+            m_objDRQH.draw(g, map, m_enToolbarPosition);
     }
 
     @Override
@@ -1134,6 +1138,9 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
             AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
 
             l_objBtn = CreateDiceButton("", "RS", "Random Selection dr", KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK + InputEvent.SHIFT_MASK), false, "RS");
+            AddButton(l_objPanel, l_objBtn, l_iRow++, 20);
+            
+            l_objBtn = CreateActionButton("chatter/ARROW.png", "", "Move the toolbar to the other side", new ActionListener() {public void actionPerformed(ActionEvent e) {ToolbarMove();}});
             AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
             
             SwingUtilities.getWindowAncestor(m_objASLMap.getLayeredPane()).add(m_Toolbar, BorderLayout.EAST);                
@@ -1143,6 +1150,29 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
         
         m_objASLMap.getView().revalidate();
         m_Toolbar.revalidate();
+    }
+    
+    private void ToolbarMove()
+    {
+        if (m_enToolbarPosition == ToolBarPosition.TP_EAST)
+        {
+            m_enToolbarPosition = ToolBarPosition.TP_WEST;
+            
+            SwingUtilities.getWindowAncestor(m_objASLMap.getLayeredPane()).getLayout().removeLayoutComponent(m_Toolbar);
+            SwingUtilities.getWindowAncestor(m_objASLMap.getLayeredPane()).add(m_Toolbar, BorderLayout.WEST);
+        }
+        else
+        {
+            m_enToolbarPosition = ToolBarPosition.TP_EAST;
+            
+            SwingUtilities.getWindowAncestor(m_objASLMap.getLayeredPane()).getLayout().removeLayoutComponent(m_Toolbar);
+            SwingUtilities.getWindowAncestor(m_objASLMap.getLayeredPane()).add(m_Toolbar, BorderLayout.EAST);
+        }
+        
+        m_objASLMap.getView().revalidate();
+        m_Toolbar.revalidate();
+        
+        NeedRepaint();
     }
     
     private void AddButton(JPanel objPanel, Component objComp, int iRow, int iGap)
