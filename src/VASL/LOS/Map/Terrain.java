@@ -303,7 +303,7 @@ public class Terrain implements Serializable {
     /**
      * @return true if the terrain is hexside terrain
      */
-    public boolean isHexside() {
+    public boolean isHexsideTerrain() {
 
         return LOSCategory == LOSCategories.HEXSIDE ||
                 isRowhouseWall();

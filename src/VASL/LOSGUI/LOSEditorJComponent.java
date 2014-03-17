@@ -67,10 +67,6 @@ public class LOSEditorJComponent
     private Image singleHexWoodenBridgeImage;
     private Image singleHexStoneBridgeImage;
 
-    // scenario/unit stuff
-    private VASLGameInterface VASLGameInterface = new VASLGameInterface(null, null);
-    private Image vehImage;
-
     // function variables
     private String currentFunctionName = "LOS";
     private String currentTerrainName;
@@ -115,9 +111,14 @@ public class LOSEditorJComponent
     private boolean doingLOS = false;
     private int targetX;
     private int targetY;
+    private int sourceX;
+    private int sourceY;
+
     private LOSResult result = new LOSResult();
     private Location sourceLocation;
     private Location targetLocation;
+
+    private boolean useAuxSourceLOSPoint;
 
     private LOSEditorJFrame frame;
 
@@ -321,15 +322,6 @@ public class LOSEditorJComponent
 
         // paint the scenario units
         screen2D.setColor(Color.white);
-/*        for (Object o : VASLGameInterface.getVehicles()) {
-
-            Unit u = (Unit) o;
-            screen2D.drawImage(
-                    vehImage,
-                    (int) u.getLocation().getLOSPoint().getX() - 24,
-                    (int) u.getLocation().getLOSPoint().getY() - 24,
-                    this);
-        }*/
 
         if (currentFunctionName.equals("LOS")) {
 
@@ -370,8 +362,8 @@ public class LOSEditorJComponent
 
                         screen2D.setColor(Color.white);
                         screen2D.drawLine(
-                                (int) sourceLocation.getLOSPoint().getX(),
-                                (int) sourceLocation.getLOSPoint().getY(),
+                                sourceX,
+                                sourceY,
                                 (int) result.firstHindranceAt().getX(),
                                 (int) result.firstHindranceAt().getY());
 
@@ -391,8 +383,8 @@ public class LOSEditorJComponent
                     } else {
                         screen2D.setColor(Color.white);
                         screen2D.drawLine(
-                                (int) sourceLocation.getLOSPoint().getX(),
-                                (int) sourceLocation.getLOSPoint().getY(),
+                                sourceX,
+                                sourceY,
                                 (int) result.getBlockedAtPoint().getX(),
                                 (int) result.getBlockedAtPoint().getY());
 
@@ -407,8 +399,8 @@ public class LOSEditorJComponent
 
                     screen2D.setColor(Color.white);
                     screen2D.drawLine(
-                            (int) sourceLocation.getLOSPoint().getX(),
-                            (int) sourceLocation.getLOSPoint().getY(),
+                            sourceX,
+                            sourceY,
                             (int) result.firstHindranceAt().getX(),
                             (int) result.firstHindranceAt().getY());
 
@@ -422,8 +414,8 @@ public class LOSEditorJComponent
 
                     screen2D.setColor(Color.white);
                     screen2D.drawLine(
-                            (int) sourceLocation.getLOSPoint().getX(),
-                            (int) sourceLocation.getLOSPoint().getY(),
+                            sourceX,
+                            sourceY,
                             targetX,
                             targetY);
                 }
@@ -688,6 +680,10 @@ public class LOSEditorJComponent
         if (currentFunctionName.equals("LOS")) {
 
             sourceLocation = losDataEditor.getMap().gridToHex(e.getX(), e.getY()).nearestLocation(e.getX(), e.getY());
+            useAuxSourceLOSPoint = sourceLocation.auxLOSPointIsCloser(e.getX(), e.getY());
+
+            sourceX = useAuxSourceLOSPoint ? sourceLocation.getAuxLOSPoint().x : sourceLocation.getLOSPoint().x;
+            sourceY = useAuxSourceLOSPoint ? sourceLocation.getAuxLOSPoint().y : sourceLocation.getLOSPoint().y;
 
             // if Ctrl click, use upper-most location
             if (e.isControlDown()) {
@@ -844,23 +840,8 @@ public class LOSEditorJComponent
 
             if (doingLOS) {
 
-                boolean useAuxTargetLOSPoint = false;
-                Point LOSPoint = newLocation.getLOSPoint();
-
-                // ensure the LOS point is on the map
-                if (!map.onMap((int) newLocation.getLOSPoint().getX(), (int) newLocation.getLOSPoint().getY())) {
-
-                    LOSPoint = newLocation.getAuxLOSPoint();
-                    useAuxTargetLOSPoint = true;
-                }
-                // use the closest LOS point
-                else if (Point.distance(mouseX, mouseY, (int) newLocation.getLOSPoint().getX(), (int) newLocation.getLOSPoint().getY()) >
-                        Point.distance(mouseX, mouseY, (int) newLocation.getAuxLOSPoint().getX(), (int) newLocation.getAuxLOSPoint().getY())) {
-
-                    LOSPoint = newLocation.getAuxLOSPoint();
-                    useAuxTargetLOSPoint = true;
-
-                }
+                boolean useAuxTargetLOSPoint = newLocation.auxLOSPointIsCloser(mouseX, mouseY);
+                Point LOSPoint = useAuxTargetLOSPoint ? newLocation.getAuxLOSPoint() : newLocation.getLOSPoint();
 
                 // are we really in a new location?
                 if (targetLocation == newLocation && targetX == (int) LOSPoint.getX() && targetY == (int) LOSPoint.getY()) {
@@ -879,19 +860,24 @@ public class LOSEditorJComponent
                 targetX = (int) LOSPoint.getX();
                 targetY = (int) LOSPoint.getY();
 
-                map.LOS(sourceLocation, false, targetLocation, useAuxTargetLOSPoint, result, VASLGameInterface);
+                map.LOS2(sourceLocation, useAuxSourceLOSPoint, targetLocation, useAuxTargetLOSPoint, result, null);
 
                 if (result.isBlocked()) {
                     frame.setStatusBarText(
                             "Blocked at " + (int) result.getBlockedAtPoint().getX() + ", "
                                     + (int) result.getBlockedAtPoint().getY() +
-                                    " Reason: " + result.getReason()
+                                    " Reason: " + result.getReason() +
+                                    " Horizontal? " + result.isLOSisHorizontal() +
+                                    " 60 deg? " + result.isLOSis60Degree()
                     );
                 } else {
                     frame.setStatusBarText(
                             " Hindrances: " + result.getHindrance() +
                                     " Continuous slope: " + result.isContinuousSlope() +
-                                    " Range: " + result.getRange());
+                                    " Range: " + result.getRange() +
+                                    " | Horizontal? " + result.isLOSisHorizontal() +
+                                    " | 60 deg? " + result.isLOSis60Degree()
+                    );
                 }
 
                 repaint();
@@ -928,6 +914,10 @@ public class LOSEditorJComponent
     }
 
     public void setCurrentFunction(String newCurrentFunction) {
+
+        if(losDataEditor == null) {
+            return;
+        }
 
         clearSelections();
         frame.setStatusBarText("  ");
@@ -995,6 +985,10 @@ public class LOSEditorJComponent
     }
 
     public void setCurrentTerrain(String newCurrentTerrain) {
+
+        if (losDataEditor == null) {
+            return;
+        }
 
         currentTerrainName = newCurrentTerrain;
 
@@ -1425,7 +1419,8 @@ public class LOSEditorJComponent
                 setDirtyArea(s.getBounds());
 
             }
-        } else if (currentFunctionName.equals("Add bridge")) {
+        }
+        else if (currentFunctionName.equals("Add bridge")) {
             if (allSelections.size() > 0) {
 
                 // selected bridge
@@ -1459,7 +1454,8 @@ public class LOSEditorJComponent
                     }
                 }
             }
-        } else if (currentFunctionName.equals("Add road")) {
+        }
+        else if (currentFunctionName.equals("Add road")) {
             Iterator iter;
             HexsideSelection selectedHexside;
             Terrain tempTerrain = currentTerrain;
@@ -1524,7 +1520,8 @@ public class LOSEditorJComponent
                 setDirtyArea(selectedHexside.getUpdateShape().getBounds());
                 mapChanged = true;
             }
-        } else if (currentFunctionName.equals("Add objects")) {
+        }
+        else if (currentFunctionName.equals("Add objects")) {
             if (allSelections.size() > 0) {
 
                 Hex h;
@@ -1587,7 +1584,8 @@ public class LOSEditorJComponent
             }
         }
 
-        // rebuild the map image
+        // rebuild the map
+        losDataEditor.getMap().resetHexTerrain();
         paintMapImage(true);
         clearSelections();
         repaint();
@@ -1617,8 +1615,9 @@ public class LOSEditorJComponent
     public void createNewMap(int width, int height) {
 
         // create the map
-        losDataEditor.createNewLOSData(width, height);
-
+        // losDataEditor.createNewLOSData(width, height);
+        frame.setStatusBarText("This option is not currently supported. Open an existing board. ");
+        frame.paintImmediately();
     }
 
     public void saveLOSData() {
@@ -2008,19 +2007,66 @@ public class LOSEditorJComponent
         Hex hex = map.getHex(map.getWidth() / 2, map.getHeight() / 2);
         Location l = hex.getCenterLocation();
 
-        frame.setStatusBarText("Starting the LOS test...");
+        frame.setStatusBarText("Running the LOS test...");
         frame.paintImmediately();
 
         // set the start time and save the base height
         int baseHeight = l.getBaseHeight();
         long startTime = System.currentTimeMillis();
 
+        // check all LOS on the board
+        for (int col = 0; col < width; col++) {
+            for (int row = 0; row < height + (col % 2); row++) {
+                for(int loc = 0; loc <= 6; loc++) {
+
+                    Location l2 = null;
+                    if(loc == 6) {
+                        l2 = map.getHex(col, row).getCenterLocation();
+                    }
+                    else {
+                        l2 = map.getHex(col, row).getHexsideLocation(loc);
+                    }
+
+                    // all upper level locations
+                    for(Location l3 = l2; l3 != null; l3 = l3.getUpLocation()) {
+                        if(l3.getHex().getName().equals("E4")) {
+                            System.out.println();
+                        }
+                        for (int col2 = 0; col2 < width && map.onMap(l3.getLOSPoint().x, l3.getLOSPoint().y); col2++) {
+                            for (int row2 = 0; row2 < height + (col2 % 2); row2++) {
+
+                                result.reset();
+                                map.LOS(l3, false, map.getHex(col2, row2).getCenterLocation(), false, result, null);
+
+                                // increment counters
+                                count++;
+                                if (result.isBlocked()) {
+
+                                    blocked++;
+                                }
+
+                                // regression test
+                                LOSResult result2 = new LOSResult();
+                                result2.reset();
+                                map.LOS2(l3, false, map.getHex(col2, row2).getCenterLocation(), false, result2, null);
+                                if(result.isBlocked() != result2.isBlocked() && result.getHindrance() != result2.getHindrance()){
+                                    System.out.println();
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         // check LOS at level zero
+/*
         for (int col = 0; col < width; col++) {
             for (int row = 0; row < height + (col % 2); row++) {
 
                 result.reset();
-                map.LOS(l, false, map.getHex(col, row).getCenterLocation(), false, result, VASLGameInterface);
+                map.LOS(l, false, map.getHex(col, row).getCenterLocation(), false, result, null);
 
                 // increment counters
                 count++;
@@ -2030,14 +2076,16 @@ public class LOSEditorJComponent
                 }
             }
         }
+*/
 
         // check LOS at level two
+/*
         l.setBaseHeight(2);
         for (int col = 0; col < width; col++) {
             for (int row = 0; row < height + (col % 2); row++) {
 
                 result.reset();
-                map.LOS(l, false, map.getHex(col, row).getCenterLocation(), false, result, VASLGameInterface);
+                map.LOS(l, false, map.getHex(col, row).getCenterLocation(), false, result, null);
 
                 // increment counters
                 count++;
@@ -2047,14 +2095,16 @@ public class LOSEditorJComponent
                 }
             }
         }
+*/
 
         // check LOS at level four
+/*
         l.setBaseHeight(4);
         for (int col = 0; col < width; col++) {
             for (int row = 0; row < height + (col % 2); row++) {
 
                 result.reset();
-                map.LOS(l, false, map.getHex(col, row).getCenterLocation(), false, result, VASLGameInterface);
+                map.LOS(l, false, map.getHex(col, row).getCenterLocation(), false, result, null);
 
                 // increment counters
                 count++;
@@ -2064,6 +2114,7 @@ public class LOSEditorJComponent
                 }
             }
         }
+*/
 
         frame.setStatusBarText(
                 "LOS test complete. Total checks: " + count +

@@ -164,11 +164,11 @@ public class ASLMap extends Map {
      */
     private void readSharedBoardMetadata() throws JDOMException {
 
-        DataArchive archive = GameModule.getGameModule().getDataArchive();
-
         // read the shared board metadata
         InputStream metadata = null;
         try {
+            DataArchive archive = GameModule.getGameModule().getDataArchive();
+
             metadata =  archive.getInputStream(BoardArchive.getSharedBoardMetadataFileName());
 
             sharedBoardMetadata = new SharedBoardMetadata();
@@ -179,6 +179,9 @@ public class ASLMap extends Map {
             sharedBoardMetadata = null;
             throw new JDOMException("Cannot read the shared metadata file", e);
         } catch (JDOMException e) {
+            sharedBoardMetadata = null;
+            throw new JDOMException("Cannot read the shared metadata file", e);
+        } catch (NullPointerException e) {
             sharedBoardMetadata = null;
             throw new JDOMException("Cannot read the shared metadata file", e);
         }

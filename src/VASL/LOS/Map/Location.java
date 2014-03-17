@@ -160,5 +160,13 @@ public class Location
 		terrain 			= l.getTerrain();
 		depressionTerrain 	= l.getDepressionTerrain();
 	}
+
+
+    public boolean auxLOSPointIsCloser(int x, int y) {
+
+        return Point.distance(x, y, LOSPoint.x, LOSPoint.y) >
+               Point.distance(x, y, auxLOSPoint.x, auxLOSPoint.y);
+
+        }
 }
 

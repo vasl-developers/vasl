@@ -322,7 +322,8 @@ public class Hex
 	}
 
 	public boolean hasBridge(){
-		return (bridge != null) || this.hasBridgeTerrain();
+		// return (bridge != null) || this.hasBridgeTerrain();
+        return (bridge != null);
 	}
 
 	// Property methods
@@ -571,7 +572,20 @@ public class Hex
                         (int) getHexsideLocation(x).getEdgeCenterPoint().getX(),
                         (int) getHexsideLocation(x).getEdgeCenterPoint().getY());
 
-                if(terrain.isHexside()) {
+                // if no hexside terrain use opposite location hexside terrain
+                Terrain oppositeHexsideTerrain;
+                Hex oppositeHex = map.getAdjacentHex(this, x);
+                if(oppositeHex != null){
+                    int oppositeHexside = (x + 3) % 6;
+                    oppositeHexsideTerrain =  map.getGridTerrain(
+                            (int) oppositeHex.getHexsideLocation(oppositeHexside).getEdgeCenterPoint().getX(),
+                            (int) oppositeHex.getHexsideLocation(oppositeHexside).getEdgeCenterPoint().getY());
+                    if(!terrain.isHexsideTerrain() && oppositeHexsideTerrain.isHexsideTerrain()) {
+                        terrain = oppositeHexsideTerrain;
+                    }
+                }
+
+                if(terrain.isHexsideTerrain()) {
                     edgeTerrain[x] = terrain;
                     if(terrain.getName().equals("Cliff")) {
                         edgeHasCliff[x] = true;
@@ -707,7 +721,7 @@ public class Hex
                 l = getHexsideLocation(x);
                 t = map.getGridTerrain((int) l.getEdgeCenterPoint().getX(), (int) l.getEdgeCenterPoint().getY());
 
-                if (t.isHexside()) {
+                if (t.isHexsideTerrain()) {
 
                     setEdgeTerrain(x, t);
                 }
@@ -818,7 +832,8 @@ public class Hex
 	}
 
 	// geometric methods
-	public boolean  contains(int x, int y)			{return hexBorder.contains(x, y);}
+	public boolean  contains(int x, int y)			{
+        return hexBorder.getBounds().contains(x,y) && hexBorder.contains(x, y);}
 	public boolean  containsExtended(int x, int y)	{return extendedHexBorder.contains(x, y);}
 	public boolean  contains(Point p)				{return hexBorder.contains(p);}
 	public boolean  containsExtended(Point p)		{return extendedHexBorder.contains(p);}
@@ -862,10 +877,10 @@ public class Hex
 
 		// get distance to center
 		double  distance	 = Point.distance(
-				x,
-				y,
-				(int) centerLocation.getLOSPoint().getX(),
-				(int) centerLocation.getLOSPoint().getY());
+                x,
+                y,
+                (int) centerLocation.getLOSPoint().getX(),
+                (int) centerLocation.getLOSPoint().getY());
 		Location currentLocation = centerLocation;
 		double   nextDistance;
 
@@ -1169,5 +1184,6 @@ public class Hex
     public void setStairway(Boolean stairway) {
         this.stairway = stairway;
     }
+
 }
 

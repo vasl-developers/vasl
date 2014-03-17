@@ -23,6 +23,7 @@ import VASL.LOS.Map.VASLGameInterface;
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASSAL.build.Buildable;
 import VASSAL.build.module.GameComponent;
+import VASSAL.build.module.map.LOS_Thread;
 import VASSAL.build.module.map.boardPicker.board.HexGrid;
 import VASSAL.command.Command;
 import VASSAL.configure.BooleanConfigurer;
@@ -36,7 +37,7 @@ import java.awt.event.MouseEvent;
 
 import static VASSAL.build.GameModule.getGameModule;
 
-public class VASLThread extends  ASLThread implements KeyListener, GameComponent {
+public class VASLThread extends LOS_Thread implements KeyListener, GameComponent {
 
     public static final String ENABLED = "LosCheckEnabled";
     public static final String HINDRANCE_THREAD_COLOR = "hindranceThreadColor";
@@ -58,7 +59,7 @@ public class VASLThread extends  ASLThread implements KeyListener, GameComponent
     private ASLBoard upperLeftBoard;
     private boolean useAuxSourceLOSPoint;
     private boolean useAuxTargetLOSPoint;
-    private String resultsString;
+    private String resultsString = "";
 
     // LOS colors
     private Color LOSColor;
@@ -222,6 +223,7 @@ public class VASLThread extends  ASLThread implements KeyListener, GameComponent
             doLOS();
         }
         super.mouseDragged(e);
+        map.repaint();
     }
 
     private boolean isEnabled() {
@@ -276,7 +278,6 @@ public class VASLThread extends  ASLThread implements KeyListener, GameComponent
                     h = mapPointToScreen(h);
                 }
                 // draw the LOS thread
-                map.repaint();
                 if (result.isBlocked()) {
                     if (result.hasHindrance()) {
                         g.setColor(LOSColor);

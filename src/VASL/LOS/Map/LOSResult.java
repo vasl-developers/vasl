@@ -33,8 +33,7 @@ public class LOSResult {
 
 	// private variables
 	protected Location sourceLocation;
-	@SuppressWarnings("unused")
-  private Location targetLocation;
+    private Location targetLocation;
 	private boolean useAuxSourceLOSPoint;
 	private boolean useAuxTargetLOSPoint;
 
@@ -62,6 +61,8 @@ public class LOSResult {
 	public Point	firstHindranceAt()		{return firstHindranceAt;}
 	public String	getReason()				{return reason;}
 
+    public boolean isLOSisHorizontal() { return LOSisHorizontal;}
+    public boolean isLOSis60Degree()   {return LOSis60Degree;}
 	public boolean  hasHindrance(){
 
 		if (mapHindranceHexes.size() + smokeHindrances.size() + vehicleHindrances.size() > 0){
@@ -111,24 +112,6 @@ public class LOSResult {
 			if(temp.getExtendedHexBorder().contains(x, y)){
 				found = true;
 			}
-			// don't add if LOSis60Degree and the appropriate adjacent hex already has been added
-			if (LOSis60Degree) {
-
-				if (sourceExitHexspine == 0 || sourceExitHexspine == 3){
-
-					if (h.getMap().getAdjacentHex(temp, 1) == h || h.getMap().getAdjacentHex(temp, 4) == h){
-
-						found = true;
-					}
-				}
-				else if (sourceExitHexspine == 1 || sourceExitHexspine == 4){
-
-					if (h.getMap().getAdjacentHex(temp, 2) == h || h.getMap().getAdjacentHex(temp, 5) == h){
-
-						found = true;
-					}
-				}
-			}
 
 			// don't add another hex having the same range to the target is already present
 			if(sourceLocation.getHex().getMap().range(sourceLocation.getHex(), h) ==
@@ -142,7 +125,7 @@ public class LOSResult {
 		if(!found){
 			mapHindranceHexes.add(h);
 
-			// set first hindrance point, if necesary
+			// set first hindrance point, if necessary
 			if (firstHindranceAt == null){
 
 				firstHindranceAt = new Point(x, y);
@@ -300,19 +283,26 @@ public class LOSResult {
 		LOSis60Degree = newLOSis60Degree;
 	}
 
+    public void setLOSisHorizontal(boolean loSisHorizontal) {
+        LOSisHorizontal = loSisHorizontal;
+    }
+
 	// range methods
 	public void setRange(int r){range = r;}
 	public int  getRange()	 {return range;}
 
 	// LOS blocked
-	public void setBlocked(int x, int y, String	reas) {
+	public void setBlocked(int x, int y, String	r) {
 
+        if(sourceLocation.getHex().getName().equals("A5") && targetLocation.getHex().getName().equals("F5")) {
+            System.out.println();
+        }
 		blocked				= true;
 		blockedAtPoint		= new Point(x,y);
-		reason				= reas;
+		reason				= r;
 	}
 
-	// clear LOS
+	// reset LOS
 	public void reset() {
 
 		blocked				= false;
