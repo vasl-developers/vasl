@@ -98,6 +98,9 @@ public class QCMod implements Buildable, ActionListener {
                             }
                         }
                         
+                        // button not found, restart the timer
+                        m_objClock.restart();
+                        
                         return;
                     }                        
                 }
