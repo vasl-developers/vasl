@@ -133,22 +133,23 @@ public class VASLGameInterface {
                         break;
 
                     case SMOKE:
-                        Smoke smoke = new Smoke(rule.getName(), h.nearestLocation(p.x, p.y), rule.getHeight(), rule.getHindrance());
+                        Smoke smoke = new Smoke(rule.getName(), h.getNearestLocation(p.x, p.y), rule.getHeight(), rule.getHindrance());
                         addCounter(smokeList, smoke, h);
                         break;
 
                     case WRECK:
-                        Wreck wreck = new Wreck(name, h);
-                        addCounter(wreckList, wreck, h);
+                        // treat wrecks as vehicles for now
+                        Vehicle vehicle = new Vehicle(name, h.getCenterLocation());
+                        addCounter(vehicleList, vehicle, h);
                         break;
                 }
             }
 
             // add vehicles
-            //TODO: assuming all hindrance counters that have no rule and are not ignored are vehicles - not good
+            //TODO: assuming all hindrance counters that have no rule are vehicles - not good
             else if(piece.getProperty(ASLProperties.HINDRANCE) != null && !Boolean.TRUE.equals(piece.getProperty(Properties.MOVED))){
 
-                Vehicle v = new Vehicle(name, h.getCenterLocation());
+                Vehicle v = new Vehicle(name, h.getNearestLocation(p.x, p.y));
                 addCounter(vehicleList, v, h);
             }
         }
@@ -192,11 +193,6 @@ public class VASLGameInterface {
         }
 	}
 
-	public HashSet<Vehicle> getVehicles(Hex h, int level){
-
-        return getVehicles(h);
-    }
-
     /**
      * Gets smoke counters in the given hex
      * @param hex the hex
@@ -224,7 +220,7 @@ public class VASLGameInterface {
     /**
      * Get the OBA in the given hex
      * @param hex the hex
-     * @return the set of OBA counters - if none an empty list is returned
+     * @return the set of OBA counters in the hex - if none an empty list is returned
      */
     public HashSet<OBA> getOBA(Hex hex){
 
@@ -234,6 +230,17 @@ public class VASLGameInterface {
         else {
             return emptyOBAList;
         }
+    }
+
+    /**
+     * @return all OBA counters - if none an empty list is returned
+     */
+    public HashSet<OBA> getOBA(){
+        HashSet<OBA> OBACounters = new HashSet<OBA>();
+        for(Hex hex : OBAList.keySet()) {
+            OBACounters.addAll(getOBA(hex));
+        }
+        return OBACounters;
     }
 
     /**

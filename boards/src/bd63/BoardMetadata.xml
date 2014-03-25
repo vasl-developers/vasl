@@ -34,7 +34,9 @@
         <buildingType hexName="T6" buildingTypeName="Stone Building, 2 Level" />
         <buildingType hexName="W5" buildingTypeName="Stone Building, 1 Level" />
         <buildingType hexName="X4" buildingTypeName="Stone Building, 1 Level" />
-		
+
+        <buildingType hexName="R9" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="S9" buildingTypeName="Wooden Building, 1 Level" />
 	</buildingTypes>
 	
 	<overlaySSRules>

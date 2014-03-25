@@ -1276,7 +1276,8 @@ public class LOSEditorJFrame extends JFrame {
 
     void testButton() {
 
-        losEditorJComponent.runLosTest();
+        // losEditorJComponent.runLosTest();
+        losEditorJComponent.runSingleLOS();
     }
 }
 

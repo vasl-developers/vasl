@@ -17,8 +17,8 @@
 package VASL.LOS.Map;
 
 import java.awt.*;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 
 /**
  * Title:        LOSResult.java
@@ -34,8 +34,6 @@ public class LOSResult {
 	// private variables
 	protected Location sourceLocation;
     private Location targetLocation;
-	private boolean useAuxSourceLOSPoint;
-	private boolean useAuxTargetLOSPoint;
 
 	private boolean blocked;
 	private Point   blockedAtPoint;
@@ -50,10 +48,13 @@ public class LOSResult {
 	protected boolean LOSis60Degree;
 	private boolean LOSisHorizontal;
 
-	private	HashSet	hexes				= new HashSet();
-	protected HashSet mapHindranceHexes	= new HashSet();
-	private	HashSet	smokeHindrances		= new HashSet();
-	private	HashSet	vehicleHindrances	= new HashSet();
+    // the <Integer> is the range to the hindrance hex
+	protected HashSet<Integer> mapHindrances = new HashSet<Integer>();
+
+    // <Integer, Integer> = <range, hindrance>
+	private	HashMap<Integer, Integer>	smokeHindrances	= new HashMap<Integer, Integer>();
+    private	HashMap<Integer, Integer>	vehicleHindrances	= new HashMap<Integer, Integer>();
+    private HashSet<OBA> obaHindrances = new HashSet<OBA>();
 
 	// hindrance/blocked methods
 	public boolean  isBlocked()				{return blocked;}
@@ -63,200 +64,129 @@ public class LOSResult {
 
     public boolean isLOSisHorizontal() { return LOSisHorizontal;}
     public boolean isLOSis60Degree()   {return LOSis60Degree;}
-	public boolean  hasHindrance(){
+	public boolean hasHindrance(){
 
-		if (mapHindranceHexes.size() + smokeHindrances.size() + vehicleHindrances.size() > 0){
-
-			return true;
-		}
-		else {
-			return false;
-		}
+        return mapHindrances.size() + smokeHindrances.size() + vehicleHindrances.size() + obaHindrances.size() > 0;
 	}
 
-	public int getHindrance() {
+    /**
+     * @return total hindrances in results
+     */
+    public int getHindrance() {
 
-		int hindrance = Math.min(mapHindranceHexes.size(), range) + vehicleHindrances.size();
+		int hindrance = mapHindrances.size();
 
-		// compute smoke
-		Iterator iter 	= smokeHindrances.iterator();
-		Smoke 	 s;
-		while (iter.hasNext()){
+		// add the smoke hindrances
+        for(Integer range : smokeHindrances.keySet()) {
 
-			s = (Smoke) iter.next();
-			hindrance += s.getHindrance();
-
-			// add one for being in the smoke
-			if (sourceLocation.getHex() == s.getLocation().getHex() &&
-				sourceLocation.getAbsoluteHeight() >= s.getLocation().getAbsoluteHeight() &&
-				sourceLocation.getAbsoluteHeight() <  s.getLocation().getAbsoluteHeight() + s.getHeight()
-			){
-
-				hindrance += 1;
-			}
-		}
+            hindrance += smokeHindrances.get(range);
+        }
+        // add the vehicle hindrances
+        for(Integer range: vehicleHindrances.keySet()) {
+            hindrance += vehicleHindrances.get(range);
+        }
+        // add the OBA hindrances
+        hindrance += obaHindrances.size();
 
 		return hindrance;
 	}
 
-	// add a map hindrance hex
-	public void addMapHindrance(Hex h, int x, int y){
+    /**
+     * add a map hindrance hex
+     * @param h the hindrance hex
+     * @param x current x of LOS
+     * @param y current y of LOS
+     */
+    public void addMapHindrance(Hex h, int x, int y){
 
-		// point already in the extended border of a hindrance hex?
-		Iterator 	iter = mapHindranceHexes.iterator();
-		boolean	found = false;
-		Hex temp = null;
-		while(iter.hasNext() && !found){
+        setFirstHindrance(x, y);
 
-			temp = (Hex) iter.next();
-			if(temp.getExtendedHexBorder().contains(x, y)){
-				found = true;
-			}
+        // add the range to the hindrance hex, so two hexes at the same range are only one hindrance
+        mapHindrances.add(sourceLocation.getHex().getMap().range(sourceLocation.getHex(), h));
 
-			// don't add another hex having the same range to the target is already present
-			if(sourceLocation.getHex().getMap().range(sourceLocation.getHex(), h) ==
-			   sourceLocation.getHex().getMap().range(sourceLocation.getHex(), temp)){
-
-			    found = true;
-			}
-		}
-
-		// add hex if necessary
-		if(!found){
-			mapHindranceHexes.add(h);
-
-			// set first hindrance point, if necessary
-			if (firstHindranceAt == null){
-
-				firstHindranceAt = new Point(x, y);
-			}
-
-			// blocked if hindrances >= 6
-			if (getHindrance() >= 6) {
-
-				setBlocked(x, y, "Hindrance total of six or more (B.10)");
-			}
-		}
+        setBlockedByHindrance(x, y);
 	}
 
-	// add a smoke hindrance
-	public void addSmokeHindrance(Smoke s, int x, int y){
+    /**
+     * Sets the first hindrance point if needed
+     * @param x current x of LOS
+     * @param y current y of LOS
+     */
+    private void setFirstHindrance(int x, int y) {
+        if(firstHindranceAt == null) {
+            firstHindranceAt = new Point(x, y);
+        }
+    }
 
-		if (!smokePresent(s)){
+    /**
+     * Sets the result as blocked when max hindrance reached
+     * @param x current x of LOS
+     * @param y current y of LOS
+     */
+    private void setBlockedByHindrance(int x, int y) {
 
-			boolean found = false;
-			Hex smokeHex = s.getLocation().getHex();
+        // blocked if hindrances >= 6
+        if (getHindrance() >= 6) {
+            setBlocked(x, y, "Hindrance total of six or more (B.10)");
+        }
+    }
 
-			// don't add if LOS along hexside and smoke from adjacent hex already has been added
-			if (LOSisHorizontal){
+    /**
+     * Add a smoke hindrance hex
+     * @param h the smoke hindrance hex
+     * @param hindrance the amount of hindrance (e.g. +2 or +3)
+     * @param x current x of LOS
+     * @param y current y of LOS
+     */
+    public void addSmokeHindrance(Hex h, int hindrance, int x, int y){
 
-				if (smokePresent(smokeHex.getMap().getAdjacentHex(smokeHex, 0)) ||
-					smokePresent(smokeHex.getMap().getAdjacentHex(smokeHex, 3))
-				){
-					found = true;
-				}
-			}
-			else if (LOSis60Degree) {
+        setFirstHindrance(x, y);
 
-				if (sourceExitHexspine == 0 || sourceExitHexspine == 3){
+        // if there's already smoke at this range replace if hindrance is greater
+        Integer range = sourceLocation.getHex().getMap().range(sourceLocation.getHex(), h);
+        if(!smokeHindrances.containsKey(range) ||
+           (smokeHindrances.containsKey(range) && hindrance > smokeHindrances.get(range))) {
+            smokeHindrances.put(range, hindrance);
+        }
 
-					if (smokePresent(smokeHex.getMap().getAdjacentHex(smokeHex, 1)) ||
-						smokePresent(smokeHex.getMap().getAdjacentHex(smokeHex, 4))){
-
-						found = true;
-					}
-				}
-				else if (sourceExitHexspine == 1 || sourceExitHexspine == 4){
-
-					if (smokePresent(smokeHex.getMap().getAdjacentHex(smokeHex, 2)) ||
-						smokePresent(smokeHex.getMap().getAdjacentHex(smokeHex, 5))){
-
-						found = true;
-					}
-				}
-			}
-
-			if (!found){
-
-				//add smoke
-				smokeHindrances.add(s);
-
-				// set first hindrance point, if necessary
-				if (firstHindranceAt == null){
-
-					firstHindranceAt = new Point(x, y);
-				}
-
-				// blocked if hindrances >= 6
-				if (getHindrance() >= 6) {
-
-					setBlocked(x, y, "Hindrance total of six or more (B.10)");
-				}
-			}
-		}
+        setBlockedByHindrance(x, y);
 	}
 
-	// add a vehicle hindrance
-	public void addVehicleHindrance(Vehicle v, int x, int y, VASLGameInterface VASLGameInterface){
+    /**
+     * Add a vehicle hindrance hex
+     * @param h the vehicle hindrance hex
+     * @param hindrance the amount of hindrance (e.g. the number of vehicles)
+     * @param x current x of LOS
+     * @param y current y of LOS
+     */
+    public void addVehicleHindrance(Hex h, int hindrance, int x, int y){
 
-		// vehicle already added?
-		Iterator 	iter = vehicleHindrances.iterator();
-		boolean	found = false;
-		while(iter.hasNext() && !found){
+        setFirstHindrance(x, y);
 
-			Vehicle veh	= (Vehicle) iter.next();
-			Hex vehHex 	= veh.getLocation().getHex();
+        // if there's already a vehicle hindrance at this range replace if hindrance is greater
+        Integer range = sourceLocation.getHex().getMap().range(sourceLocation.getHex(), h);
+        if(!vehicleHindrances.containsKey(range) ||
+                (vehicleHindrances.containsKey(range) && hindrance > vehicleHindrances.get(range))) {
+            vehicleHindrances.put(range, hindrance);
+        }
 
-			if(vehHex == v.getLocation().getHex()){
-				found = true;
+        setBlockedByHindrance(x, y);
+    }
 
-			}
-			// don't add if LOSis60Degree and the appropriate adjacent hex already has been added
-			else if (LOSis60Degree) {
+    /**
+     * Add an OBA hindrance hex
+     * @param oba the OBA counter
+     * @param x current x of LOS
+     * @param y current y of LOS
+     */
+    public void addOBAHindrance(OBA oba, int x, int y){
 
-				if (sourceExitHexspine == 0 || sourceExitHexspine == 3){
+        setFirstHindrance(x, y);
+        obaHindrances.add(oba);
+        setBlockedByHindrance(x, y);
+    }
 
-					if (vehHex.getMap().getAdjacentHex(vehHex, 1) == v.getLocation().getHex() ||
-						vehHex.getMap().getAdjacentHex(vehHex, 4) == v.getLocation().getHex()){
-
-						found = true;
-					}
-				}
-				else if (sourceExitHexspine == 1 || sourceExitHexspine == 4){
-
-					if (vehHex.getMap().getAdjacentHex(vehHex, 2) == v.getLocation().getHex() ||
-						vehHex.getMap().getAdjacentHex(vehHex, 5) == v.getLocation().getHex()){
-
-						found = true;
-					}
-				}
-			}
-		}
-
-		// add hex if necessary
-		if(!found){
-
-			vehicleHindrances.add(v);
-
-			// set first hindrance point, if necesary
-			if (firstHindranceAt == null){
-
-				firstHindranceAt = new Point(x, y);
-			}
-
-			// blocked if hindrances >= 6
-			if (getHindrance() >= 6) {
-
-				setBlocked(x, y, "Hindrance total of six or more (B.10)");
-			}
-		}
-	}
-
-	// hexes
-	public void 	addHex(Hex h)	{hexes.add(h);}
-	public HashSet	getHexes()		{return hexes;}
-
-	// location methods
+    // location methods
 	public void setSourceLocation(Location l){sourceLocation = l;}
 	public void	setTargetLocation(Location l){targetLocation = l;}
 
@@ -265,11 +195,7 @@ public class LOSResult {
 	public void		setSourceExitHexspine(int h){sourceExitHexspine = h;}
 	public void		setTargetEnterHexside(int h){targetEnterHexside = h;}
 	public void		setTargetEnterHexspine(int h){targetEnterHexspine = h;}
-	public void		setUseAuxSourceLOSPoint(boolean b){useAuxSourceLOSPoint = b;}
-	public void		setUseAuxTargetLOSPoint(boolean b){useAuxTargetLOSPoint = b;}
-	public int		getSourceExitHexside()		{return sourceExitHexside;}
 	public int		getSourceExitHexspine()		{return sourceExitHexspine;}
-	public int		getTargetEnterHexside()		{return targetEnterHexside;}
 	public int		getTargetEnterHexspine()	{return targetEnterHexspine;}
 
 	// continuous slope
@@ -279,10 +205,9 @@ public class LOSResult {
 	}
 
 	// LOS slope
-	public void		setLOSis60Degree(boolean newLOSis60Degree){
+	public void	setLOSis60Degree(boolean newLOSis60Degree){
 		LOSis60Degree = newLOSis60Degree;
 	}
-
     public void setLOSisHorizontal(boolean loSisHorizontal) {
         LOSisHorizontal = loSisHorizontal;
     }
@@ -291,18 +216,12 @@ public class LOSResult {
 	public void setRange(int r){range = r;}
 	public int  getRange()	 {return range;}
 
-	// LOS blocked
 	public void setBlocked(int x, int y, String	r) {
-
-        if(sourceLocation.getHex().getName().equals("A5") && targetLocation.getHex().getName().equals("F5")) {
-            System.out.println();
-        }
 		blocked				= true;
 		blockedAtPoint		= new Point(x,y);
 		reason				= r;
 	}
 
-	// reset LOS
 	public void reset() {
 
 		blocked				= false;
@@ -311,49 +230,16 @@ public class LOSResult {
 		range				= 0;
 		sourceExitHexside	= UNKNOWN;
 		targetEnterHexside	= UNKNOWN;
-		useAuxSourceLOSPoint	= false;
-		useAuxTargetLOSPoint	= false;
 		reason				= "";
 		continuousSlope 	= false;
 		LOSis60Degree		= false;
-		mapHindranceHexes.clear();
+		mapHindrances.clear();
 		smokeHindrances.clear();
- 		vehicleHindrances.clear();
-		hexes.clear();
+        vehicleHindrances.clear();
+        obaHindrances.clear();
 		sourceLocation		= null;
 		targetLocation		= null;
 		sourceExitHexspine	= UNKNOWN;
 		targetEnterHexspine	= UNKNOWN;
-	}
-
-	// this smoke already added?
-	private boolean smokePresent(Smoke s){
-
-		Iterator 	iter = smokeHindrances.iterator();
-		while(iter.hasNext()){
-			if((Smoke) iter.next() == s){
-				return true;
-			}
-		}
-		return false;
-	}
-
-	// any smoke from this hex already added?
-	private boolean smokePresent(Hex h){
-
-		HashSet<Smoke> smoke = h.getMap().getAllSmoke(h);
-
-		if (smoke != null){
-
-			Iterator smokeIter = smoke.iterator();
-			while (smokeIter.hasNext()){
-
-				if (smokePresent((Smoke) smokeIter.next())){
-
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 }

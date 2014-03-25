@@ -1,12 +1,11 @@
 package VASL.LOS.Map;
 
 import java.awt.*;
-import java.io.Serializable;
 
 /**
  * A terrain type
  */
-public class Terrain implements Serializable {
+public class Terrain {
 
     // private variables
     private String  name;
@@ -17,10 +16,9 @@ public class Terrain implements Serializable {
     private boolean lowerLOSHindrance	= false;
     private boolean inherentTerrain     = false;
     private boolean halfLevelHeight		= false;
-    private int	 height					= 0;
+    private int	    height				= 0;
     private float   split				= (float) 0.0;
 
-    //TODO: move to editor?
     private Color mapColor			    = new Color(0, 0, 0);
 
     private LOSCategories LOSCategory = LOSCategories.OPEN;
@@ -43,40 +41,11 @@ public class Terrain implements Serializable {
         STREAM,
         WATER,
         OTHER
-    };
-
-    /**
-     * Returns a string representation of the terrain category
-      * @return the LOS category or empty string if none
-     */
-    public String getLOSCategoryName() {
-
-        switch (LOSCategory) {
-
-            case HEXSIDE:return "Hexside";
-            case BUILDING:return "Building";
-            case MARKETPLACE:return "Marketplace";
-            case FACTORY:return "Factory";
-            case OPEN:return "Open";
-            case ENTRENCHMENT:return "Entrenchment";
-            case BRIDGE:return "Bridge";
-            case TUNNEL:return "Tunnel";
-            case DEPRESSION:return "Depression";
-            case ROAD:return "Road";
-            case WOODS:return "Woods";
-            case STREAM:return "Stream";
-            case WATER:return "Water";
-            case OTHER:return "Other";
-        }
-        return "";
     }
 
-    //TODO: finish or remove
     public boolean isEntrenchmentTerrain() {
         return false;
     }
-
-    //TODO: should be able to remove - only used by LOS algorithm
 
     /**
      * @return return true if the terrain is a building
@@ -85,7 +54,6 @@ public class Terrain implements Serializable {
         return LOSCategory == LOSCategories.MARKETPLACE || LOSCategory == LOSCategories.BUILDING;
     }
 
-    //TODO: should be able to remove - only used by LOS algorithm
     /**
      * @return return true if the terrain is water
      */
@@ -161,14 +129,6 @@ public class Terrain implements Serializable {
     }
 
     /**
-     * @return return true if the terrain is an LOS hindrance
-     */
-    public boolean isLOSHindrance() {
-        return LOSHindrance;
-    }
-
-
-    /**
      * Set the LOS hindrance flag
      * @param LOSHindrance the new LOS hindrance flag
      */public void setLOSHindrance(boolean LOSHindrance) {
@@ -199,7 +159,7 @@ public class Terrain implements Serializable {
 
     /**
      * Set the lower LOS hindrance flag. Only used for "split" terrain types
-     * @param lowerLOSHindrance
+     * @param lowerLOSHindrance the lower LOS hindrance flag
      */
     public void setLowerLOSHindrance(boolean lowerLOSHindrance) {
         this.lowerLOSHindrance = lowerLOSHindrance;

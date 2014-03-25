@@ -38,11 +38,15 @@
         <buildingType hexName="O5" buildingTypeName="Stone Building, 1 Level" />
         <buildingType hexName="P3" buildingTypeName="Stone Building, 1 Level" />
         <buildingType hexName="P4" buildingTypeName="Stone Building, 1 Level" />
-		
+
+        <buildingType hexName="R3" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="S4" buildingTypeName="Wooden Building, 1 Level" />
+
         <buildingType hexName="V6" buildingTypeName="Stone Building, 1 Level" />
         <buildingType hexName="V7" buildingTypeName="Stone Building, 1 Level" />
         <buildingType hexName="X6" buildingTypeName="Stone Building, 1 Level" />
         <buildingType hexName="V7" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="W7" buildingTypeName="Stone Building, 1 Level" />
         <buildingType hexName="W8" buildingTypeName="Stone Building, 1 Level" />
 	</buildingTypes>
 	

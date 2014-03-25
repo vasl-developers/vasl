@@ -28,8 +28,10 @@ import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.HashMap;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.zip.ZipEntry;
@@ -48,9 +50,6 @@ public class LOSEditorJComponent
         MouseMotionListener,
         Scrollable,
         KeyListener {
-
-    // synthetic field used to access text files in jar
-    static Class thisClass;
 
     // status variables
     private boolean mapChanged = false;
@@ -124,9 +123,6 @@ public class LOSEditorJComponent
 
     private Dimension dim;
 
-    // selection output file - records XML snippets of edits applied to the map
-    private final static String XMLSnippetFileName = "LOSXMLSnippets.txt";
-
     public LOSEditorJComponent() {
 
         enableEvents(AWTEvent.WINDOW_EVENT_MASK);
@@ -183,14 +179,6 @@ public class LOSEditorJComponent
 
             throw new IOException("Unable to read the shared board metadata from the LOS archive", e);
         }
-    }
-
-    /**
-     * @return the terrain types
-     */
-    public HashMap<String, Terrain> getTerrainTypes(){
-
-        return sharedBoardMetadata.getTerrainTypes();
     }
 
     // load the terrain graphics
@@ -466,7 +454,7 @@ public class LOSEditorJComponent
         if (map.onMap(e.getX(), e.getY())) {
             if (currentFunctionName.equals("LOS")) {
 
-                // once an LOS is made always show the LOS
+                return;
 
             } else if (currentFunctionName.equals("Set ground level") ||
                     currentFunctionName.equals("Add terrain")) {
@@ -530,9 +518,10 @@ public class LOSEditorJComponent
                         allSelections.add(new RectangularSelection(rect, roundBrush));
                     }
                 }
-            } else if (currentFunctionName.equals("Add hexside terrain")) {
+            }
+            else if (currentFunctionName.equals("Add hexside terrain")) {
 
-                Location sourceLocation = losDataEditor.getMap().gridToHex(e.getX(), e.getY()).nearestLocation(e.getX(), e.getY());
+                Location sourceLocation = losDataEditor.getMap().gridToHex(e.getX(), e.getY()).getNearestLocation(e.getX(), e.getY());
                 Hex hex = sourceLocation.getHex();
 
                 //ignore the center location
@@ -578,7 +567,8 @@ public class LOSEditorJComponent
                             sourceLocation
                     ));
                 }
-            } else if (currentFunctionName.equals("Add bridge")) {
+            }
+            else if (currentFunctionName.equals("Add bridge")) {
 
                 Hex h = map.gridToHex(e.getX(), e.getY());
                 // remove?
@@ -598,9 +588,10 @@ public class LOSEditorJComponent
                             currentBridge.getCenter()
                     )));
                 }
-            } else if (currentFunctionName.equals("Add road")) {
+            }
+            else if (currentFunctionName.equals("Add road")) {
 
-                Location sourceLocation = map.gridToHex(e.getX(), e.getY()).nearestLocation(e.getX(), e.getY());
+                Location sourceLocation = map.gridToHex(e.getX(), e.getY()).getNearestLocation(e.getX(), e.getY());
                 Hex hex = sourceLocation.getHex();
 
                 // only place elevated roads on level 0
@@ -661,14 +652,6 @@ public class LOSEditorJComponent
                             sourceLocation
                     ));
                 }
-            } else if (currentFunctionName.equals("Add objects")) {
-
-                // mark the hex
-                Hex h = map.gridToHex(e.getX(), e.getY());
-                allSelections.add(new HexSelection(
-                        new Rectangle((int) h.getCenterLocation().getLOSPoint().getX() - 8, (int) h.getCenterLocation().getLOSPoint().getY() - 8, 16, 16),
-                        h
-                ));
             }
 
             repaint();
@@ -679,7 +662,7 @@ public class LOSEditorJComponent
 
         if (currentFunctionName.equals("LOS")) {
 
-            sourceLocation = losDataEditor.getMap().gridToHex(e.getX(), e.getY()).nearestLocation(e.getX(), e.getY());
+            sourceLocation = losDataEditor.getMap().gridToHex(e.getX(), e.getY()).getNearestLocation(e.getX(), e.getY());
             useAuxSourceLOSPoint = sourceLocation.auxLOSPointIsCloser(e.getX(), e.getY());
 
             sourceX = useAuxSourceLOSPoint ? sourceLocation.getAuxLOSPoint().x : sourceLocation.getLOSPoint().x;
@@ -720,7 +703,7 @@ public class LOSEditorJComponent
         if (!mapOpen) return;
         if (!map.onMap(mouseX, mouseY)) return;
 
-        Location newLocation = map.gridToHex(mouseX, mouseY).nearestLocation(mouseX, mouseY);
+        Location newLocation = map.gridToHex(mouseX, mouseY).getNearestLocation(mouseX, mouseY);
 
         // set the pseudo mouse cursor
         if (currentFunctionName.equals("Set ground level") ||
@@ -807,8 +790,8 @@ public class LOSEditorJComponent
 
         // edge/cliff terrain?
         if (!targetLocation.getHex().isCenterLocation(targetLocation)) {
-            if (targetLocation.getHex().getEdgeTerrain(targetLocation.getHex().getLocationHexside(targetLocation)) != null) {
-                terrainString += "/" + targetLocation.getHex().getEdgeTerrain(targetLocation.getHex().getLocationHexside(targetLocation)).getName();
+            if (targetLocation.getHex().getHexsideTerrain(targetLocation.getHex().getLocationHexside(targetLocation)) != null) {
+                terrainString += "/" + targetLocation.getHex().getHexsideTerrain(targetLocation.getHex().getLocationHexside(targetLocation)).getName();
             }
             if (targetLocation.getHex().hasCliff(targetLocation.getHex().getLocationHexside(targetLocation))) {
                 terrainString += "/Cliff";
@@ -834,7 +817,7 @@ public class LOSEditorJComponent
 
         if (!map.onMap(mouseX, mouseY)) return;
 
-        Location newLocation = map.gridToHex(mouseX, mouseY).nearestLocation(mouseX, mouseY);
+        Location newLocation = map.gridToHex(mouseX, mouseY).getNearestLocation(mouseX, mouseY);
 
         if (currentFunctionName.equals("LOS")) {
 
@@ -860,7 +843,7 @@ public class LOSEditorJComponent
                 targetX = (int) LOSPoint.getX();
                 targetY = (int) LOSPoint.getY();
 
-                map.LOS2(sourceLocation, useAuxSourceLOSPoint, targetLocation, useAuxTargetLOSPoint, result, null);
+                map.LOS(sourceLocation, useAuxSourceLOSPoint, targetLocation, useAuxTargetLOSPoint, result, null);
 
                 if (result.isBlocked()) {
                     frame.setStatusBarText(
@@ -972,12 +955,6 @@ public class LOSEditorJComponent
                 currentTerrainName = "Dirt Road";
                 currentToTerrain = map.getTerrain("Dirt Road");
                 currentToTerrainName = "Dirt Road";
-            }
-        } else if (newCurrentFunction.equals("Add objects")) {
-            if (!currentFunctionName.equals("Add objects")) {
-                currentFunctionName = newCurrentFunction;
-                currentTerrain = map.getTerrain("Fox Holes");
-                currentTerrainName = "Fox Holes";
             }
         }
 
@@ -1112,33 +1089,6 @@ public class LOSEditorJComponent
                 currentTerrain = map.getTerrain("Sunken Road");
             } else if (currentTerrainName.equals("Runway")) {
                 currentTerrain = map.getTerrain("Runway");
-            }
-        } else if (currentFunctionName.equals("Add objects")) {
-
-            if (currentTerrainName.equals("Foxholes")) {
-                currentTerrain = map.getTerrain("Fox Holes");
-            } else if (currentTerrainName.equals("Trench")) {
-                currentTerrain = map.getTerrain("Trench");
-            } else if (currentTerrainName.equals("Tunnel")) {
-                currentTerrain = map.getTerrain("Tunnel");
-            } else if (currentTerrainName.equals("Sewer")) {
-                currentTerrain = map.getTerrain("Sewer");
-            } else if (currentTerrainName.equals("Stairway")) {
-                currentTerrain = null;
-            } else if (currentTerrainName.equals("Smoke")) {
-                currentTerrain = null;
-            } else if (currentTerrainName.equals("Vehicle")) {
-                currentTerrain = null;
-            } else if (currentTerrainName.equals("Remove Stairway")) {
-                currentTerrain = null;
-            } else if (currentTerrainName.equals("Remove Tunnel/Sewer")) {
-                currentTerrain = null;
-            } else if (currentTerrainName.equals("Remove Entrenchment")) {
-                currentTerrain = null;
-            } else if (currentTerrainName.equals("Remove Smoke")) {
-                currentTerrain = null;
-            } else if (currentTerrainName.equals("Remove Vehicle")) {
-                currentTerrain = null;
             }
         }
 
@@ -1285,59 +1235,6 @@ public class LOSEditorJComponent
         repaint();
     }
 
-    public void writeTerrainEditsToFile(Terrain terrain) {
-
-
-        try {
-
-            // open the file for append
-            PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(XMLSnippetFileName, true)));
-
-            // write existing edits to temp file
-            Iterator<Selection> iterator = allSelections.iterator();
-            while (iterator.hasNext()){
-
-                Selection s = iterator.next();
-
-                out.println(s.getTerrainXMLSnippet(currentTerrain));
-            }
-
-            // close the file
-            out.close();
-
-        } catch (IOException e) {
-            System.err.println("Cannot open the LOS XML snippet file" + XMLSnippetFileName);
-            e.printStackTrace(System.err);
-        }
-
-    }
-
-    public void writeElevationEditsToFile() {
-
-
-        try {
-
-            // open the file for append
-            PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(XMLSnippetFileName, true)));
-
-            // write existing edits to temp file
-            Iterator<Selection> iterator = allSelections.iterator();
-            while (iterator.hasNext()){
-
-                Selection s = iterator.next();
-
-                out.println(s.getElevationXMLSnippet(currentGroundLevel));
-            }
-
-            // close the file
-            out.close();
-
-        } catch (IOException e) {
-            System.err.println("Cannot open the LOS XML snippet file" + XMLSnippetFileName);
-            e.printStackTrace(System.err);
-        }
-    }
-
     public void mapToggleButton(){
         VASLImage = !VASLImage;
         repaint();
@@ -1349,8 +1246,6 @@ public class LOSEditorJComponent
         if (!mapOpen) return;
 
         if (currentFunctionName.equals("Set ground level")) {
-
-            writeElevationEditsToFile();
 
             // set the map grid first...
             Iterator iterator = allSelections.iterator();
@@ -1383,12 +1278,12 @@ public class LOSEditorJComponent
 
                 // set the edge terrain in the location hex
                 hexside = hex.getLocationHexside(selectedHexside.getLocation());
-                hex.setEdgeTerrain(hexside, currentTerrain);
+                hex.setHexsideTerrain(hexside, currentTerrain);
 
                 // set the edge terrain in the adjacent hex
                 hex = losDataEditor.getMap().getAdjacentHex(hex, hexside);
                 if (hex != null) {
-                    hex.setEdgeTerrain(hex.getOppositeHexside(hexside), currentTerrain);
+                    hex.setHexsideTerrain(hex.getOppositeHexside(hexside), currentTerrain);
                 }
 
                 // set the grid map
@@ -1405,8 +1300,6 @@ public class LOSEditorJComponent
         else if (currentFunctionName.equals("Add terrain")) {
 
             Selection sel;
-
-            writeTerrainEditsToFile(currentTerrain);
 
             for (Selection allSelection : allSelections) {
 
@@ -1519,68 +1412,6 @@ public class LOSEditorJComponent
 
                 setDirtyArea(selectedHexside.getUpdateShape().getBounds());
                 mapChanged = true;
-            }
-        }
-        else if (currentFunctionName.equals("Add objects")) {
-            if (allSelections.size() > 0) {
-
-                Hex h;
-                for (Selection allSelection : allSelections) {
-
-                    h = ((HexSelection) allSelection).getHex();
-
-                    if (currentTerrain != null &&
-                            (currentTerrain.getName().equals("Trench") || currentTerrain.getName().equals("Fox Holes"))) {
-
-                        h.addEntrenchment(currentTerrain);
-                    } else if (currentTerrain != null &&
-                            (currentTerrain.getName().equals("Sewer") || currentTerrain.getName().equals("Tunnel"))) {
-
-                        //TODO: remove tunnels
-//                        h.addTunnel(currentTerrain);
-
-                    } else if (currentTerrainName.equals("Stairway")) {
-
-                        h.setStairway(true);
-
-                    } else if (currentTerrainName.equals("Smoke")) {
-
-                        // losDataEditor.addSmoke(new Smoke(Smoke.SMOKE, h.getCenterLocation()));
-
-                    } else if (currentTerrainName.equals("Vehicle")) {
-
-                        //TODO: remove scenario dependency
-//                        scenario.addUnit(new Vehicle(h.getCenterLocation()), Scenario.ALLIES);
-                    } else if (currentTerrainName.equals("Remove Stairway")) {
-
-                        h.setStairway(false);
-                    } else if (currentTerrainName.equals("Remove Tunnel/Sewer")) {
-
-//                        h.removeTunnel();
-                    } else if (currentTerrainName.equals("Remove Entrenchment")) {
-
-                        h.removeEntrenchment();
-                    } else if (currentTerrainName.equals("Remove Smoke")) {
-
-                        losDataEditor.removeSmoke(h.getCenterLocation());
-                    } else if (currentTerrainName.equals("Remove Vehicle")) {
-
-/*                        Hex vh;
-                        Iterator iterator = VASLGameInterface.getVehicles().iterator();
-                        while (iterator.hasNext()) {
-
-                            vh = (Hex) iterator.next();
-                            if (vh == h) {
-
-                                iterator.remove();
-                            }
-                        }*/
-                    }
-
-                    // adjust "dirty" area of map
-                    setDirtyArea(h.getExtendedHexBorder().getBounds());
-                    mapChanged = true;
-                }
             }
         }
 
@@ -1942,14 +1773,18 @@ public class LOSEditorJComponent
             } else {
 
                 byte bytes[] = new byte[ip.available()];
-                ip.read(bytes);
-                Image temp = Toolkit.getDefaultToolkit().createImage(bytes);
+                int count = ip.read(bytes);
+                if(count > 0) {
+                    Image temp = Toolkit.getDefaultToolkit().createImage(bytes);
 
-                MediaTracker m = new MediaTracker(this);
-                m.addImage(temp, 0);
-                m.waitForID(0);
+                    MediaTracker m = new MediaTracker(this);
+                    m.addImage(temp, 0);
+                    m.waitForID(0);
 
-                return temp;
+                    return temp;
+                }
+
+                return null;
             }
 
         } catch (IOException e) {
@@ -1992,6 +1827,19 @@ public class LOSEditorJComponent
         frame.setStatusBarText("");
     }
 
+    /**
+     * Used for debugging individual LOS
+     */
+    public void runSingleLOS() {
+
+        Map map = losDataEditor.getMap();
+
+        LOSResult result = new LOSResult();
+        result.reset();
+        map.LOS(map.getHex("K4").getCenterLocation(), false, map.getHex("G2").getCenterLocation(), false, result, null);
+
+    }
+
     public void runLosTest() {
 
         Map map = losDataEditor.getMap();
@@ -2003,15 +1851,10 @@ public class LOSEditorJComponent
 
         LOSResult result = new LOSResult();
 
-        // create a new location in the middle of the board
-        Hex hex = map.getHex(map.getWidth() / 2, map.getHeight() / 2);
-        Location l = hex.getCenterLocation();
-
         frame.setStatusBarText("Running the LOS test...");
         frame.paintImmediately();
 
         // set the start time and save the base height
-        int baseHeight = l.getBaseHeight();
         long startTime = System.currentTimeMillis();
 
         // check all LOS on the board
@@ -2019,7 +1862,7 @@ public class LOSEditorJComponent
             for (int row = 0; row < height + (col % 2); row++) {
                 for(int loc = 0; loc <= 6; loc++) {
 
-                    Location l2 = null;
+                    Location l2;
                     if(loc == 6) {
                         l2 = map.getHex(col, row).getCenterLocation();
                     }
@@ -2029,9 +1872,6 @@ public class LOSEditorJComponent
 
                     // all upper level locations
                     for(Location l3 = l2; l3 != null; l3 = l3.getUpLocation()) {
-                        if(l3.getHex().getName().equals("E4")) {
-                            System.out.println();
-                        }
                         for (int col2 = 0; col2 < width && map.onMap(l3.getLOSPoint().x, l3.getLOSPoint().y); col2++) {
                             for (int row2 = 0; row2 < height + (col2 % 2); row2++) {
 
@@ -2044,15 +1884,6 @@ public class LOSEditorJComponent
 
                                     blocked++;
                                 }
-
-                                // regression test
-                                LOSResult result2 = new LOSResult();
-                                result2.reset();
-                                map.LOS2(l3, false, map.getHex(col2, row2).getCenterLocation(), false, result2, null);
-                                if(result.isBlocked() != result2.isBlocked() && result.getHindrance() != result2.getHindrance()){
-                                    System.out.println();
-                                }
-
                             }
                         }
                     }
@@ -2060,70 +1891,11 @@ public class LOSEditorJComponent
             }
         }
 
-        // check LOS at level zero
-/*
-        for (int col = 0; col < width; col++) {
-            for (int row = 0; row < height + (col % 2); row++) {
-
-                result.reset();
-                map.LOS(l, false, map.getHex(col, row).getCenterLocation(), false, result, null);
-
-                // increment counters
-                count++;
-                if (result.isBlocked()) {
-
-                    blocked++;
-                }
-            }
-        }
-*/
-
-        // check LOS at level two
-/*
-        l.setBaseHeight(2);
-        for (int col = 0; col < width; col++) {
-            for (int row = 0; row < height + (col % 2); row++) {
-
-                result.reset();
-                map.LOS(l, false, map.getHex(col, row).getCenterLocation(), false, result, null);
-
-                // increment counters
-                count++;
-                if (result.isBlocked()) {
-
-                    blocked++;
-                }
-            }
-        }
-*/
-
-        // check LOS at level four
-/*
-        l.setBaseHeight(4);
-        for (int col = 0; col < width; col++) {
-            for (int row = 0; row < height + (col % 2); row++) {
-
-                result.reset();
-                map.LOS(l, false, map.getHex(col, row).getCenterLocation(), false, result, null);
-
-                // increment counters
-                count++;
-                if (result.isBlocked()) {
-
-                    blocked++;
-                }
-            }
-        }
-*/
-
         frame.setStatusBarText(
                 "LOS test complete. Total checks: " + count +
                         "  Blocked: " + (int) ((float) blocked / (float) count * 100) + "%" +
                         "  Time elapsed: " + (((double) System.currentTimeMillis() - (double) startTime) / 1000));
         frame.paintImmediately();
-
-        // restore base height
-        l.setBaseHeight(baseHeight);
     }
 
     public void insertMap(Map insertMap, String upperLeftHex) {

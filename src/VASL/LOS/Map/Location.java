@@ -17,7 +17,6 @@
 package VASL.LOS.Map;
 
 import java.awt.*;
-import java.io.Serializable;
 
 /**
  * Title:        Location.java
@@ -25,11 +24,7 @@ import java.io.Serializable;
  * @author       David Sullivan
  * @version      1.0
  */
-public class Location
-	implements Serializable {
-
-	// serial ID: version 1.0.0
-	static final long serialVersionUID = 000100L;
+public class Location {
 
 	// property variables
 	private String  	name;
@@ -38,8 +33,7 @@ public class Location
 	private Point		auxLOSPoint;	//auxiliary LOS point for bypass locations
 	private Point		edgeCenterPoint;
 	private Hex hex;
-	private boolean 	fire			= false;
-	private boolean 	blaze			= false;
+
 	private Terrain terrain;
 	private Terrain depressionTerrain;
 	private Location upLocation;
@@ -76,22 +70,16 @@ public class Location
 
         hex				= l.getHex();
 
-        copyLocationValues(l);
+        copyLocation(l);
     }
 
     public Location(){}
-
-    // resets the location name when the location is moved (i.e. map flipped, etc)
-	public void resetName(){
-
-		name = hex.getName() + name.substring(name.indexOf(':'));
-	}
 
 	public	int	 	getBaseHeight() {return baseHeight;}
 	public	void	setBaseHeight(int newBaseHeight) {baseHeight = newBaseHeight;}
 	public	int	 	getAbsoluteHeight() {return baseHeight + hex.getBaseHeight();}
 
-	public Terrain getTerrain() {return terrain;}
+	public Terrain  getTerrain() {return terrain;}
 	public	void 	setTerrain(Terrain newTerrain) {terrain = newTerrain;}
 
 	public Hex getHex() {return hex;}
@@ -99,13 +87,8 @@ public class Location
 	public	Point	getLOSPoint() {return LOSPoint;}
 	public	Point	getAuxLOSPoint() {return auxLOSPoint;}
 	public	Point	getEdgeCenterPoint() {return edgeCenterPoint;}
-	public	boolean	hasFire() {return fire;}
-	public	void 	setFire(boolean newFire) {fire = newFire;}
 
-	public	boolean	hasBlaze() {return blaze;}
-	public	void 	setBlaze(boolean newBlaze) {blaze = newBlaze;}
-
-	public Terrain getDepressionTerrain(){ return depressionTerrain;}
+	public Terrain  getDepressionTerrain(){ return depressionTerrain;}
 	public	void	setDepressionTerrain(Terrain newDepressionTerrain){
 
 		// removing depression terrain?
@@ -142,17 +125,15 @@ public class Location
 	}
 
 	public Location getUpLocation() {return upLocation;}
-	public	void		setUpLocation(Location newUpLocation) {upLocation = newUpLocation;}
+	public	void	setUpLocation(Location newUpLocation) {upLocation = newUpLocation;}
 
 	public Location getDownLocation() {return downLocation;}
-	public	void		setDownLocation(Location newDownLocation) {downLocation = newDownLocation;}
+	public	void	setDownLocation(Location newDownLocation) {downLocation = newDownLocation;}
 
-	public void copyLocationValues(Location l) {
+	public void copyLocation(Location l) {
 
 		// copy the flags
 		baseHeight 		= l.getBaseHeight();
-		fire			= l.hasFire();
-		blaze			= l.hasBlaze();
 
 		// copy name, terrain values
 		name				= l.getName();
@@ -160,7 +141,6 @@ public class Location
 		terrain 			= l.getTerrain();
 		depressionTerrain 	= l.getDepressionTerrain();
 	}
-
 
     public boolean auxLOSPointIsCloser(int x, int y) {
 

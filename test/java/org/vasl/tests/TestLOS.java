@@ -95,9 +95,8 @@ public class TestLOS {
                         // check the LOS on the board
                         try {
 
-                            checkAllLOS(losDataEditor.getMap(), fileName);
-                            if(fileName.equals("bd09")) {
-                            }
+                            checkAllLOS(losDataEditor.getMap());
+
                         } catch (Exception e) {
                             logger.error("LOS error on board " + fileName, e);
                             return;
@@ -149,7 +148,7 @@ public class TestLOS {
         }
     }
 
-    public void checkAllLOS(Map map, String boardName) {
+    public void checkAllLOS(Map map) {
 
         int width = map.getWidth();
         int height = map.getHeight();
@@ -176,19 +175,6 @@ public class TestLOS {
 
                                 result.reset();
                                 map.LOS(l3, false, map.getHex(col2, row2).getCenterLocation(), false, result, null);
-
-                                // regression test
-                                LOSResult result2 = new LOSResult();
-                                result2.reset();
-                                map.LOS2(l3, false, map.getHex(col2, row2).getCenterLocation(), false, result2, null);
-                                if(result.isBlocked() != result2.isBlocked()){
-                                    logger.error("LOS regression from " + l3.getName() + " to " + map.getHex(col2, row2).getCenterLocation().getName() + " failed on board " + boardName);
-                                    logger.error("Old: Blocked - " + result.isBlocked() + " New: Blocked - " + result2.isBlocked());
-                                }
-                                else if(!result.isBlocked() && result.getHindrance() != result2.getHindrance()){
-//                                    logger.error("LOS regression from " + l3.getName() + " to " + map.getHex(col2, row2).getCenterLocation().getName() + " failed on board " + boardName);
-//                                    logger.error("Old: Hindrances - " + result.getHindrance() + " New: Hindrances - " + result2.getHindrance());
-                                }
                             }
                         }
                     }

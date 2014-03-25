@@ -23,7 +23,6 @@ import VASL.LOS.Map.VASLGameInterface;
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASSAL.build.Buildable;
 import VASSAL.build.module.GameComponent;
-import VASSAL.build.module.map.LOS_Thread;
 import VASSAL.build.module.map.boardPicker.board.HexGrid;
 import VASSAL.command.Command;
 import VASSAL.configure.BooleanConfigurer;
@@ -37,18 +36,13 @@ import java.awt.event.MouseEvent;
 
 import static VASSAL.build.GameModule.getGameModule;
 
-public class VASLThread extends LOS_Thread implements KeyListener, GameComponent {
+public class VASLThread extends ASLThread implements KeyListener, GameComponent {
 
     public static final String ENABLED = "LosCheckEnabled";
     public static final String HINDRANCE_THREAD_COLOR = "hindranceThreadColor";
     public static final String BLOCKED_THREAD_COLOR = "blockedThreadColor";
-
-    // status flags
     private boolean legacyMode = false;
-
     private final static String preferenceTabName = "LOS";
-
-    // board stuff
     private VASL.LOS.Map.Map LOSMap;
 
     // LOS stuff
@@ -177,7 +171,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         if (p == null || !LOSMap.onMap(p.x, p.y)) return;
 
         // get the nearest location
-        source = LOSMap.gridToHex(p.x, p.y).nearestLocation(p.x, p.y);
+        source = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
         useAuxSourceLOSPoint = useAuxLOSPoint(source, p.x, p.y);
 
         // if Ctrl click, use upper location
@@ -204,7 +198,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             // get the map point, ensure the point is on the CASL map
             Point p = mapMouseToMapCoordinates(map.mapCoordinates(e.getPoint()));
             if (p == null || !LOSMap.onMap(p.x, p.y)) return;
-            VASL.LOS.Map.Location newLocation = LOSMap.gridToHex(p.x, p.y).nearestLocation(p.x, p.y);
+            VASL.LOS.Map.Location newLocation = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
             boolean useAuxNewLOSPoint = useAuxLOSPoint(newLocation, p.x, p.y);
 
             // are we really in a new location?

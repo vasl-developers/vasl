@@ -9,7 +9,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -249,7 +248,7 @@ public class LOSDataEditor {
                 if (map.getGridTerrain(x, y) == map.getTerrain("Cliff")) {
 
                     Hex hex = map.gridToHex(x, y);
-                    Hex oppositeHex = map.getAdjacentHex(hex, hex.getLocationHexside(hex.nearestLocation(x,y)));
+                    Hex oppositeHex = map.getAdjacentHex(hex, hex.getLocationHexside(hex.getNearestLocation(x, y)));
 
                     if(oppositeHex == null){
                         map.setGridElevation(hex.getBaseHeight(), x, y);
@@ -897,51 +896,20 @@ public class LOSDataEditor {
                             workSpace.getFontMetrics().stringWidth(h.getName()) / 2 +
                             (h.getColumnNumber() == 0 ? 6 : 0) +
                             (h.getColumnNumber() == map.getHexGrid().length - 1 ? -7 : 0),
-                    h.getYOrigin() + 10
+                    h.getHexsideLocation(0).getLOSPoint().y + 10
             );
 
             // draw hex center
             workSpace.setColor(Color.white);
             if (h.hasStairway() &&
-                    !(h.getTerrain().getName().equals("Stone Building, 1 Level")||
-                            h.getTerrain().getName().equals("Wooden Building, 1 Level"))) {
+                    !(h.getCenterLocation().getTerrain().getName().equals("Stone Building, 1 Level")||
+                            h.getCenterLocation().getTerrain().getName().equals("Wooden Building, 1 Level"))) {
 
                 workSpace.fillRect(h.getHexCenter().x - 3, h.getHexCenter().y - 3, 6, 6);
             }
             else {
                 workSpace.fillRect(h.getHexCenter().x - 1, h.getHexCenter().y - 1, 2, 2);
             }
-
-            // show entrenchments
-            if (h.hasEntrenchment()) {
-
-                workSpace.setFont(new Font("Courier", Font.PLAIN, 12));
-                workSpace.setColor(Color.white);
-                workSpace.drawString(
-                        h.getCenterLocation().getDownLocation().getTerrain().getName(),
-                        h.getHexCenter().x - 25,
-                        h.getHexCenter().y + 4);
-            }
-
-/*            // show smoke
-            HashSet smoke = h.getSmoke();
-            Smoke sm;
-            int offset = 0;
-            if (smoke.size() > 0) {
-
-                for (Object aSmoke : smoke) {
-
-                    sm = (Smoke) aSmoke;
-                    workSpace.setFont(new Font("Courier", Font.PLAIN, 12));
-                    workSpace.setColor(Color.white);
-                    workSpace.drawString(
-                            sm.getName(),
-                            h.getHexCenter().x - 25,
-                            h.getHexCenter().y + 4 + offset);
-
-                    offset += 15;
-                }
-            }*/
         }
     }
 
@@ -1010,7 +978,7 @@ public class LOSDataEditor {
     public void setHexTerrain(Shape s, Terrain terr) {
 
         // get the affected hexes
-        Vector<Hex> v = map.intersectedHexes(s.getBounds());
+        Vector<Hex> v = intersectedHexes(map, s.getBounds());
         Hex currentHex = null;
         for (Hex aHex : v) {
 
@@ -1025,7 +993,7 @@ public class LOSDataEditor {
             for (int x = 0; x < 6; x++) {
                 if (s.contains(aHex.getHexsideLocation(x).getEdgeCenterPoint())) {
 
-                    aHex.setHexsideTerrain(x, terr);
+                    aHex.setHexsideLocationTerrain(x, terr);
                 }
             }
         }
@@ -1043,14 +1011,50 @@ public class LOSDataEditor {
     }
 
     /**
-     * Sets the ground level of all pixels within the given rectangle to the new terrain height.
-     * @param area map area to update
-     * @param terr applicable depression terrain
-     * @param newLevel new ground level
+     * Returns a set of hexes that intersect ("touch") the given rectangle.
+     * @param rect map area
+     * @return a Vector containing the intersecting hexes
      */
-    public void setGridGroundLevel(Rectangle area, Terrain terr, int newLevel) {
+    public Vector intersectedHexes(Map map, Rectangle rect) {
 
-        setGridGroundLevel(null, area, terr, newLevel);
+        Vector<Hex> hexes = new Vector<Hex>(5, 5);
+        Hex currentHex;
+
+        // find the hexes in the corner of the rectangle, clip to map boundry
+        Hex upperLeft = map.gridToHex(
+                Math.max((int) rect.getX(), 0),
+                Math.max((int) rect.getY(), 0));
+        Hex lowerRight = map.gridToHex(
+                Math.min((int) (rect.getX() + rect.getWidth()), map.getGridWidth() - 1),
+                Math.min((int) (rect.getY() + rect.getHeight()), map.getGridHeight() - 1));
+
+        // Rectangle completely in a single hex? Add the hex and quit
+        if (upperLeft == lowerRight) {
+
+            hexes.addElement(upperLeft);
+            return hexes;
+        }
+
+        // our desired bounds
+        int minX = Math.max(upperLeft.getColumnNumber() - 1, 0);
+        int minY = Math.max(upperLeft.getRowNumber() - 1, 0);
+        int maxX = Math.min(lowerRight.getColumnNumber() + 1, map.getWidth() - 1);
+        int maxY = Math.min(lowerRight.getRowNumber() + 1, map.getHeight());
+
+        // check all hexes bound by the corners to the vector
+        for (int x = minX; x <= maxX; x++) {
+            for (int y = minY;
+                 y <= Math.min(maxY, map.getHexGrid()[x].length - 1);
+                 y++) {
+                currentHex = map.getHex(x, y);
+
+                // add hexes that touch
+                if (currentHex.isTouchedBy(rect)) {
+                    hexes.addElement(map.getHex(x, y));
+                }
+            }
+        }
+        return hexes;
     }
 
     //TODO: does area need to be a parameter?
@@ -1110,7 +1114,7 @@ public class LOSDataEditor {
     public void setHexGroundLevel(Shape s, Terrain terr, int newLevel) {
 
         // set the hex base elevation and depression terrain
-        Vector v = map.intersectedHexes(s.getBounds());
+        Vector v = intersectedHexes(map, s.getBounds());
         Iterator iter = v.iterator();
         Hex currentHex = null;
         Location center = null;
@@ -1188,59 +1192,6 @@ public class LOSDataEditor {
                 }
             }
         }
-    }
-
-    /**
-     * Adds a smoke object to the map.
-     * @param s new smoke object
-     */
-    public void addSmoke(Smoke s) {
-
-        map.getSmokeList().add(s);
-    }
-
-    /**
-     * Removes all smoke from the given location.
-     * @param l location
-     */
-    public void removeSmoke(Location l) {
-
-        Smoke s = null;
-
-        // step through all locations
-        Iterator iter = map.getSmokeList().iterator();
-        while (iter.hasNext()) {
-
-            s = (Smoke) iter.next();
-
-            if (s.getLocation() == l) {
-
-                iter.remove();
-            }
-        }
-    }
-
-    /**
-     * Returns the set of all smoke objects in a hex.
-     * @return HashSet containing all smoke objects
-     */
-    public HashSet getAllSmoke(Hex h) {
-
-        // step through all smoke locations
-        HashSet<Smoke> smokeList = map.getSmokeList();
-        HashSet<Smoke> allSmoke = new HashSet<Smoke>(smokeList.size());
-        Iterator iter = smokeList.iterator();
-        Smoke sl;
-        while (iter.hasNext()) {
-
-            sl = (Smoke) iter.next();
-
-            if (sl.getLocation().getHex() == h) {
-                allSmoke.add(sl);
-            }
-        }
-
-        return allSmoke;
     }
 
     /**

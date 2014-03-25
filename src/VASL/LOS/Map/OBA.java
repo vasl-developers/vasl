@@ -23,10 +23,38 @@ package VASL.LOS.Map;
  */
 public class OBA extends Counter {
 
-    Hex hex;
+    private Hex hex;
+    private int blastHeight = 2;
+    private int blastAreaRadius = 1;
 
+    /**
+     * Create an OBA counter
+     * @param name the counter name
+     * @param hex the hex location of the counter
+     */
     public OBA(String name, Hex hex){
         super(name);
         this.hex = hex;
+    }
+
+    /**
+     * @return the hex location of the OBA counter
+     */
+    public Hex getHex(){
+        return hex;
+    }
+
+    /**
+     * @return the blast height of the OBA
+     */
+    public int getBlastHeight(){
+        return blastHeight;
+    }
+
+    /**
+     * @return the max range of the blast area from the counter
+     */
+    public int getBlastAreaRadius(){
+        return blastAreaRadius;
     }
 }

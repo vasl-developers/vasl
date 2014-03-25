@@ -36,8 +36,9 @@
         <buildingType hexName="P6" buildingTypeName="Wooden Building, 1 Level" />
         <buildingType hexName="Q6" buildingTypeName="Wooden Building, 1 Level" />
 
-        <buildingType hexName="N8" buildingTypeName="Stone Building, 2 Level" />
+        <buildingType hexName="N8" buildingTypeName="Stone Building, 1 Level" />
         <buildingType hexName="O8" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="N9" buildingTypeName="Wooden Building, 2 Level" />
         <buildingType hexName="O9" buildingTypeName="Stone Building, 1 Level" />
         <buildingType hexName="Q9" buildingTypeName="Stone Building, 1 Level" />
         <buildingType hexName="Q10" buildingTypeName="Stone Building, 1 Level" />

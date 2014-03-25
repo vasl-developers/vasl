@@ -136,7 +136,9 @@
 	    <buildingType hexName="CC7" buildingTypeName="Stone Building, 1 Level" />
 	    <buildingType hexName="DD6" buildingTypeName="Stone Building, 1 Level" />
 	    <buildingType hexName="CC8" buildingTypeName="Stone Building, 1 Level" />
-	    
+
+        <buildingType hexName="AA8" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="AA9" buildingTypeName="Stone Building, 1 Level" />
 	</buildingTypes>
 	
 	<overlaySSRules>

@@ -18,7 +18,6 @@ package VASL.LOS.Map;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.io.Serializable;
 
 /**
  * Title:        Bridge.java
@@ -26,11 +25,7 @@ import java.io.Serializable;
  * @author       David Sullivan
  * @version      1.0
  */
-public class Bridge
-	implements Serializable {
-
-	// serial ID: version 1.0.0
-	static final long serialVersionUID = 000100L;
+public class Bridge {
 
 	// public constants
 	public static final int	CUSTOM_BRIDGE_WIDTH	= (int) Hex.HEIGHT/4;
@@ -103,12 +98,7 @@ public class Bridge
 		setShape();
 		setRoadShape();
 	}
-	public void	setCenter(int x, int y){
 
-		center = new Point(x,y);
-		setShape();
-		setRoadShape();
-	}
 	public void	setRotation(int newRotation){
 
 		rotation = newRotation;
