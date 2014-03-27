@@ -922,7 +922,7 @@ public class Map  {
             if(status.currentTerrain.isInherentTerrain() && status.currentHex.getCenterLocation().getTerrain() != status.currentTerrain) {
 
                 // ignore this check when terrain counter is present
-                if(status.VASLGameInterface != null && status.VASLGameInterface.getTerrain(status.currentHex) == null){
+                if(status.VASLGameInterface == null  || (status.VASLGameInterface != null && status.VASLGameInterface.getTerrain(status.currentHex) == null)){
                     return false;
                 }
             }
