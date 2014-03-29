@@ -231,6 +231,7 @@ public class ASLPieceMover extends PieceMover {
         {
             Stack s = p.getParent();
             int iNumSameParent = 0;
+            boolean bOnlyFixedCounters = true;
             
             if (s != null)
             {
@@ -240,10 +241,17 @@ public class ASLPieceMover extends PieceMover {
                     GamePiece pp = (GamePiece) en.nextElement();
                     
                     if (pp.getParent() == s)
+                    {
                         iNumSameParent++;
+                    
+                        if (pp.getProperty(ASLProperties.LOCATION) == null) 
+                            bOnlyFixedCounters = false;
+                    }
                 }
                 
-                if (iNumSameParent == 1) // if there are more than a single counter of the same stack, I don't move the fixed counter
+                // if there are more than a single counter of the same stack, I don't move the fixed counter
+                // unless they are all fixed counter
+                if ((iNumSameParent == 1) || (bOnlyFixedCounters))
                     DragBuffer.getBuffer().add(p);
                 else
                     KeyBuffer.getBuffer().remove(p);// FRedKors 20/12/2013 If a stack contains an immobile counter, I don't move it AND I deselect it
