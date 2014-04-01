@@ -24,8 +24,10 @@ import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.BasicLogger;
 import VASSAL.build.module.Map;
+import VASSAL.tools.imageop.Op;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
 import javax.swing.Timer;
@@ -87,17 +89,57 @@ public class QCMod implements Buildable, ActionListener {
                     if (l_objB.getToolTipText().contains("VASL Counters window"))
                     {
                         JButton l_objCopy = CopyActionButton(l_objB, false);
+                        boolean l_bDone = false;
+                        int l_iPos = 0;
                         
                         for (int l_j = 0; l_j < m_objMap.getToolBar().getComponentCount(); l_j++)
                         {
                             if (m_objMap.getToolBar().getComponent(l_j) instanceof QCButton)
                             {
                                 m_objMap.getToolBar().add(l_objCopy, l_j);
-                                m_objMap.getToolBar().add(new JToolBar.Separator(), l_j + 1);
-                                return;
+                                l_bDone = true;
+                                l_iPos = l_j;
+                                break;
                             }
                         }
                         
+                        if (l_bDone) // add the break finder
+                        {
+                            JButton l_btn = new JButton("");
+
+                            try
+                            {
+                                l_btn.setIcon(new ImageIcon(Op.load("malf").getImage(null)));
+                            }
+                            catch (Exception ex)
+                            {
+                            }
+
+                            ActionListener l_objAL = new ActionListener()
+                            {
+                                public void actionPerformed(ActionEvent e)
+                                {
+                                    try
+                                    {
+                                        ASLBrokenFinder l_objBrokenFinder = (ASLBrokenFinder) m_objMap.getComponentsOf(ASLBrokenFinder.class).iterator().next();
+
+                                        if (l_objBrokenFinder != null)
+                                            l_objBrokenFinder.findBrokenPiece();
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                    }
+                                }
+                            };
+
+                            l_btn.addActionListener(l_objAL);
+                            l_btn.setToolTipText("Turn on/off the highlighting of broken units/weapons");
+                            
+                            m_objMap.getToolBar().add(l_btn, l_iPos + 1);
+                            m_objMap.getToolBar().add(new JToolBar.Separator(), l_iPos + 2);
+                            return;
+                        }
+                         
                         // button not found, restart the timer
                         m_objClock.restart();
                         
