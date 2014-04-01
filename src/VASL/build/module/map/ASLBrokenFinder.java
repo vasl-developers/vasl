@@ -99,7 +99,9 @@ public class ASLBrokenFinder extends AbstractConfigurable implements GameCompone
                 g.setColor(Color.RED);
 
                 Graphics2D l_objGraph2D = (Graphics2D) g;
-                l_objGraph2D.setStroke(new BasicStroke(2));
+                
+                Stroke l_objOldStroke = l_objGraph2D.getStroke();
+                l_objGraph2D.setStroke(new BasicStroke(4));
 
                 for (int l_i = 0; l_i < mar_objPointList.size(); l_i++)
                 {
@@ -107,6 +109,8 @@ public class ASLBrokenFinder extends AbstractConfigurable implements GameCompone
 
                     l_objGraph2D.drawOval(l_objPoint.x - l_iCircleSize/2, l_objPoint.y - l_iCircleSize/2, l_iCircleSize, l_iCircleSize);
                 }
+                
+                l_objGraph2D.setStroke(l_objOldStroke);
             }
         }
     }
