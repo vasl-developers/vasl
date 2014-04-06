@@ -920,7 +920,11 @@ public class Map  {
 
             // ignore inherent terrain that "spills" into adjacent hex
             if(status.currentTerrain.isInherentTerrain() && status.currentHex.getCenterLocation().getTerrain() != status.currentTerrain) {
-                return false;
+
+                // ignore this check when terrain counter is present
+                if(status.VASLGameInterface == null  || (status.VASLGameInterface != null && status.VASLGameInterface.getTerrain(status.currentHex) == null)){
+                    return false;
+                }
             }
 
             // Check LOS rules and return if blocked
@@ -1626,12 +1630,8 @@ public class Map  {
      */
     protected boolean checkHalfLevelTerrainRule(LOSStatus status, LOSResult result) {
 
-        // ignore inherent terrain that "spills" into adjacent hex
-        if(status.currentTerrain.isInherentTerrain() && status.currentHex.getCenterLocation().getTerrain() != status.currentTerrain) {
-            return false;
-        }
-
         if (status.currentTerrain.isHalfLevelHeight() &&
+                !status.currentTerrain.isHexsideTerrain() &&
                 status.groundLevel + status.currentTerrainHgt == status.sourceElevation &&
                 status.groundLevel + status.currentTerrainHgt == status.targetElevation) {
 

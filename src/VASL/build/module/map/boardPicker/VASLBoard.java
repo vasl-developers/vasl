@@ -169,8 +169,6 @@ public class VASLBoard extends ASLBoard {
 
         if(!this.legacyBoard && terrainChanges.length() > 0) {
 
-            System.out.println(terrainChanges);
-
             boolean changed = false; // changes made?
 
             // step through each SSR token
