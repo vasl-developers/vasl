@@ -35,8 +35,7 @@ import VASSAL.tools.io.IOUtils;
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Enumeration;
@@ -48,221 +47,226 @@ import java.util.Vector;
  * Date: Jun 11, 2003
  */
 public class BoardVersionChecker extends AbstractBuildable implements GameComponent, PropertyChangeListener {
-  private String boardVersionURL;
-  private String overlayVersionURL;
-  private String boardPageURL;
-  private Map map;
-  private Properties boardVersions;
-  private Properties overlayVersions;
-  private static final String BOARD_VERSION_URL = "boardVersionURL";
-  private static final String OVERLAY_VERSION_URL = "overlayVersionURL";
-  private static final String BOARD_PAGE_URL = "boardPageURL";
-  private static final String BOARD_VERSIONS = "boardVersions";
-  private static final String OVERLAY_VERSIONS = "overlayVersions";
+    private String boardVersionURL;
+    private String overlayVersionURL;
+    private String boardPageURL;
+    private Map map;
+    private Properties boardVersions;
+    private Properties overlayVersions;
+    private static final String BOARD_VERSION_URL = "boardVersionURL";
+    private static final String OVERLAY_VERSION_URL = "overlayVersionURL";
+    private static final String BOARD_PAGE_URL = "boardPageURL";
+    private static final String BOARD_VERSIONS = "boardVersions";
+    private static final String OVERLAY_VERSIONS = "overlayVersions";
 
-  public String[] getAttributeNames() {
-    return new String[]{BOARD_VERSION_URL, OVERLAY_VERSION_URL, BOARD_PAGE_URL};
-  }
+    public String[] getAttributeNames() {
+        return new String[]{BOARD_VERSION_URL, OVERLAY_VERSION_URL, BOARD_PAGE_URL};
+    }
 
-  public String getAttributeValueString(String key) {
-    if (BOARD_VERSION_URL.equals(key)) {
-      return boardVersionURL;
-    }
-    else if (OVERLAY_VERSION_URL.equals(key)) {
-      return overlayVersionURL;
-    }
-    else if (BOARD_PAGE_URL.equals(key)) {
-        return boardPageURL;
-    }
-    return null;
-  }
-
-  public void setAttribute(String key, Object value) {
-    if (BOARD_VERSION_URL.equals(key)) {
-      boardVersionURL = (String) value;
-    }
-    else if (OVERLAY_VERSION_URL.equals(key)) {
-      overlayVersionURL = (String) value;
-    }
-    else if (BOARD_PAGE_URL.equals(key)) {
-    	boardPageURL = (String) value;
-    }
-  }
-
-  public void addTo(Buildable parent) {
-    map = (Map) parent;
-    GameModule.getGameModule().getGameState().addGameComponent(this);
-    GameModule.getGameModule().getServer().addPropertyChangeListener(ServerConnection.CONNECTED, this);
-    GameModule.getGameModule().getPrefs().addOption(null, new StringConfigurer(BOARD_VERSIONS, null));
-    Properties p = readVersionList((String) GameModule.getGameModule().getPrefs().getValue(BOARD_VERSIONS));
-    if (p != null) {
-      boardVersions = p;
-    }
-    GameModule.getGameModule().getPrefs().addOption(null, new StringConfigurer(OVERLAY_VERSIONS, null));
-    p = readVersionList((String) GameModule.getGameModule().getPrefs().getValue(OVERLAY_VERSIONS));
-    if (p != null) {
-      overlayVersions = p;
-    }
-  }
-
-  public Command getRestoreCommand() {
-    return null;
-  }
-
-  public void setup(boolean gameStarting) {
-
-	if (gameStarting) {
-		if (boardVersions != null) {
-			String info = "Using board(s): ";
-			for (Board board : map.getBoards()) {
-				ASLBoard b = (ASLBoard) board;
-				info += b.getName() + "(v" + b.getVersion() + ") ";
-			}
-			GameModule.getGameModule().warn(info);
-		}
-
-      if (boardVersions != null) {
-        Vector obsolete = new Vector();
-        for (Board board : map.getBoards()) {
-          ASLBoard b = (ASLBoard) board;
-          String availableVersion = boardVersions.getProperty(b.getName(), b.getVersion());
-          if (!availableVersion.equals(b.getVersion())) {
-            obsolete.addElement(b.getName());
-          }
+    public String getAttributeValueString(String key) {
+        if (BOARD_VERSION_URL.equals(key)) {
+            return boardVersionURL;
+        } else if (OVERLAY_VERSION_URL.equals(key)) {
+            return overlayVersionURL;
+        } else if (BOARD_PAGE_URL.equals(key)) {
+            return boardPageURL;
         }
-        String msg = null;
-        if (obsolete.size() == 1) {
-          String name = (String) obsolete.firstElement();
-          msg = "Version " + boardVersions.getProperty(name) + " of board " + name + " is now available.\n"+boardPageURL;
+        return null;
+    }
+
+    public void setAttribute(String key, Object value) {
+        if (BOARD_VERSION_URL.equals(key)) {
+            boardVersionURL = (String) value;
+        } else if (OVERLAY_VERSION_URL.equals(key)) {
+            overlayVersionURL = (String) value;
+        } else if (BOARD_PAGE_URL.equals(key)) {
+            boardPageURL = (String) value;
         }
-        else if (obsolete.size() > 1) {
-          StringBuffer buff = new StringBuffer();
-          for (int i = 0,j = obsolete.size(); i < j; ++i) {
-            buff.append((String) obsolete.elementAt(i));
-            if (i < j - 2) {
-              buff.append(", ");
+    }
+
+    public void addTo(Buildable parent) {
+        map = (Map) parent;
+        GameModule.getGameModule().getGameState().addGameComponent(this);
+        GameModule.getGameModule().getServer().addPropertyChangeListener(ServerConnection.CONNECTED, this);
+        GameModule.getGameModule().getPrefs().addOption(null, new StringConfigurer(BOARD_VERSIONS, null));
+        GameModule.getGameModule().getPrefs().addOption(null, new StringConfigurer(OVERLAY_VERSIONS, null));
+
+        //TODO property change listener not firing - force update
+        readVersionFiles();
+
+        Properties p = readVersionList((String) GameModule.getGameModule().getPrefs().getValue(BOARD_VERSIONS));
+        if (p != null) {
+            boardVersions = p;
+        }
+        p = readVersionList((String) GameModule.getGameModule().getPrefs().getValue(OVERLAY_VERSIONS));
+        if (p != null) {
+            overlayVersions = p;
+        }
+    }
+
+    public Command getRestoreCommand() {
+        return null;
+    }
+
+    public void setup(boolean gameStarting) {
+
+        if (gameStarting) {
+            if (boardVersions != null) {
+                String info = "Using board(s): ";
+                for (Board board : map.getBoards()) {
+                    ASLBoard b = (ASLBoard) board;
+                    info += b.getName() + "(v" + b.getVersion() + ") ";
+                }
+                GameModule.getGameModule().warn(info);
             }
-            else if (i < j - 1) {
-              buff.append(" and ");
+
+            if (boardVersions != null) {
+                Vector obsolete = new Vector();
+                for (Board board : map.getBoards()) {
+                    ASLBoard b = (ASLBoard) board;
+                    String availableVersion = boardVersions.getProperty(b.getName(), b.getVersion());
+                    if (!availableVersion.equals(b.getVersion())) {
+                        obsolete.addElement(b.getName());
+                    }
+                }
+                String msg = null;
+                if (obsolete.size() == 1) {
+                    String name = (String) obsolete.firstElement();
+                    msg = "Version " + boardVersions.getProperty(name) + " of board " + name + " is now available. Please go to \n" + boardPageURL;
+                } else if (obsolete.size() > 1) {
+                    StringBuffer buff = new StringBuffer();
+                    for (int i = 0, j = obsolete.size(); i < j; ++i) {
+                        buff.append((String) obsolete.elementAt(i));
+                        if (i < j - 2) {
+                            buff.append(", ");
+                        } else if (i < j - 1) {
+                            buff.append(" and ");
+                        }
+                    }
+                    msg = "New versions of boards " + buff + " are available. Please go to \n" + boardPageURL;
+                }
+                if (msg != null) {
+                    final String message = msg;
+                    Runnable runnable = new Runnable() {
+                        public void run() {
+                            JOptionPane.showMessageDialog(map.getView().getTopLevelAncestor(), message);
+                        }
+                    };
+                    SwingUtilities.invokeLater(runnable);
+                }
             }
-          }
-          msg = "New versions of boards " + buff + " are available.\n"+boardPageURL;
-        }
-        if (msg != null) {
-          final String message = msg;
-          Runnable runnable = new Runnable() {
-            public void run() {
-              JOptionPane.showMessageDialog(map.getView().getTopLevelAncestor(), message);
+            if (overlayVersions != null) {
+                Vector obsolete = new Vector();
+                for (Board board : map.getBoards()) {
+                    ASLBoard b = (ASLBoard) board;
+                    for (Enumeration e2 = b.getOverlays(); e2.hasMoreElements(); ) {
+                        Overlay o = (Overlay) e2.nextElement();
+                        if (o.getClass().equals(Overlay.class)) { // Don't check for SSROverlays
+                            String name = o.getFile().getName();
+                            String availableVersion = overlayVersions.getProperty(name, o.getVersion());
+                            if (!availableVersion.equals(o.getVersion())) {
+                                obsolete.addElement(name);
+                            }
+                        }
+                    }
+                }
+                String msg = null;
+                if (obsolete.size() == 1) {
+                    String name = (String) obsolete.firstElement();
+                    msg = "Version " + overlayVersions.getProperty(name) + " of overlay " + name + " is now available.\n" + boardPageURL;
+                } else if (obsolete.size() > 1) {
+                    StringBuffer buff = new StringBuffer();
+                    for (int i = 0, j = obsolete.size(); i < j; ++i) {
+                        buff.append((String) obsolete.elementAt(i));
+                        if (i < j - 2) {
+                            buff.append(", ");
+                        } else if (i < j - 1) {
+                            buff.append(" and ");
+                        }
+                    }
+                    msg = "New versions of overlays " + buff + " are available.\n" + boardPageURL;
+                }
+                if (msg != null) {
+                    final String message = msg;
+                    Runnable runnable = new Runnable() {
+                        public void run() {
+                            JOptionPane.showMessageDialog(map.getView().getTopLevelAncestor(), message);
+                        }
+                    };
+                    SwingUtilities.invokeLater(runnable);
+                }
             }
-          };
-          SwingUtilities.invokeLater(runnable);
         }
-      }
-      if (overlayVersions != null) {
-        Vector obsolete = new Vector();
-        for (Board board : map.getBoards()) {
-          ASLBoard b = (ASLBoard) board;
-          for (Enumeration e2 = b.getOverlays(); e2.hasMoreElements();) {
-            Overlay o = (Overlay) e2.nextElement();
-            if (o.getClass().equals(Overlay.class)) { // Don't check for SSROverlays
-              String name = o.getFile().getName();
-              String availableVersion = overlayVersions.getProperty(name, o.getVersion());
-              if (!availableVersion.equals(o.getVersion())) {
-                obsolete.addElement(name);
-              }
-            }
-          }
-        }
-        String msg = null;
-        if (obsolete.size() == 1) {
-          String name = (String) obsolete.firstElement();
-          msg = "Version " + overlayVersions.getProperty(name) + " of overlay " + name + " is now available.\n"+boardPageURL;
-        }
-        else if (obsolete.size() > 1) {
-          StringBuffer buff = new StringBuffer();
-          for (int i = 0,j = obsolete.size(); i < j; ++i) {
-            buff.append((String) obsolete.elementAt(i));
-            if (i < j - 2) {
-              buff.append(", ");
-            }
-            else if (i < j - 1) {
-              buff.append(" and ");
-            }
-          }
-          msg = "New versions of overlays " + buff + " are available.\n"+boardPageURL;
-        }
-        if (msg != null) {
-          final String message = msg;
-          Runnable runnable = new Runnable() {
-            public void run() {
-              JOptionPane.showMessageDialog(map.getView().getTopLevelAncestor(), message);
-            }
-          };
-          SwingUtilities.invokeLater(runnable);
-        }
-      }
     }
-  }
 
-  private Properties readVersionList(String s) {
-    Properties p = null;
-    if (s != null
-        && s.length() > 0) {
-      try {
-        p = new PropertiesEncoder(s).getProperties();
-      }
-      catch (IOException e) {
-        // Fail silently if we can't contact the server
-      }
+    private Properties readVersionList(String s) {
+        Properties p = null;
+        if (s != null
+                && s.length() > 0) {
+            try {
+                p = new PropertiesEncoder(s).getProperties();
+            } catch (IOException e) {
+                // Fail silently if we can't contact the server
+            }
+        }
+        return p;
     }
-    return p;
-  }
 
-  public void propertyChange(PropertyChangeEvent evt) {
-    if (Boolean.TRUE.equals(evt.getNewValue())) {
-      try {
-        URL base = new URL(boardVersionURL);
-        URLConnection conn = base.openConnection();
-        conn.setUseCaches(false);
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (Boolean.TRUE.equals(evt.getNewValue())) {
 
-        Properties p = new Properties();
-        InputStream input = null;
+            readVersionFiles();
+        }
+    }
+
+    /**
+     * Reads the board and overlay versions using the URLs in the build file
+     */
+    private void readVersionFiles() {
+
+        // Need to disable SNI to read from Github
+        System.setProperty("jsse.enableSNIExtension", "false");
+
         try {
-          input = conn.getInputStream();
-          p.load(input);
+            URL base = new URL(boardVersionURL);
+            URLConnection conn = base.openConnection();
+            conn.setUseCaches(false);
+
+            Properties p = new Properties();
+            InputStream input = null;
+            try {
+                input = conn.getInputStream();
+                p.load(input);
+
+            }
+            finally {
+                IOUtils.closeQuietly(input);
+            }
+
+            boardVersions = p;
+            GameModule.getGameModule().getPrefs().getOption(BOARD_VERSIONS).setValue(new PropertiesEncoder(p).getStringValue());
+        } catch (IOException e) {
+            // Fail silently if we can't contact the server
         }
-        finally {
-          IOUtils.closeQuietly(input);
-        }
 
-        boardVersions = p;
-        GameModule.getGameModule().getPrefs().getOption(BOARD_VERSIONS).setValue(new PropertiesEncoder(p).getStringValue());
-      }
-      catch (IOException e) {
-        // Fail silently if we can't contact the server
-      }
-
-      try {
-        URL base = new URL(overlayVersionURL);
-        URLConnection conn = base.openConnection();
-        conn.setUseCaches(false);
-
-        Properties p = new Properties();
-        InputStream input = null;
         try {
-          input = conn.getInputStream();
-          p.load(input);
-        }
-        finally {
-          IOUtils.closeQuietly(input);
-        }
+            URL base = new URL(overlayVersionURL);
+            URLConnection conn = base.openConnection();
+            conn.setUseCaches(false);
 
-        overlayVersions = p;
-        GameModule.getGameModule().getPrefs().getOption(OVERLAY_VERSIONS).setValue(new PropertiesEncoder(p).getStringValue());
-      }
-      catch (IOException e) {
-        // Fail silently if we can't contact the server
-      }
+            Properties p = new Properties();
+            InputStream input = null;
+            try {
+                input = conn.getInputStream();
+                p.load(input);
+            } finally {
+                IOUtils.closeQuietly(input);
+            }
+
+            overlayVersions = p;
+            GameModule.getGameModule().getPrefs().getOption(OVERLAY_VERSIONS).setValue(new PropertiesEncoder(p).getStringValue());
+        } catch (IOException e) {
+            // Fail silently if we can't contact the server
+        }
     }
-  }
 }
