@@ -1,0 +1,1004 @@
+// 17 Apr 2013 TR  
+//  Golden Master for v5.9.4
+//
+// 17 Apr 2013 - updated DTO colors and rules   
+//             - removed NoWalls and NoHedges rules, which were there for v4 compatibility anyway     
+//
+// 8 Apr 2012 - commented out NoRoads color change rule, as it's now done by overlay
+//
+//  11-11-11 - added WinterBlackHexNumbers
+//
+// 8-20-11 - Added StreamsToGullies
+//
+// 4-6-11 - commented out the color rules that affect MarshBrown under Flooded
+//        - add FloodRiver and FordableRiver rules
+//        - basically enabled the changes necessary for the {River,Stream,Sep}{Marsh,Swamp} colors
+//        - Made sure Ponds do the right things when Streams/Rivers flood
+//
+// 3-3-11 - added some more Level5,6 entries
+//        - killed some rarely-used rules (BrushtoL_1,1, etc)
+//        - commented out NoSunkElevRoads rule, now done by overlay
+//
+// 1-13-10 - rounded out all the Level -2, 5, and 6 entries
+//
+// 7-25-09; Added BrushCrestHillWinter/BrushCrestDaleWinter rules to Winter 
+//         - Added BrushCrestHillMud/BrushCrestDaleMud rules to Mud 
+//         - Added BrushCrest rules to BrushToOpenGround
+//         - Added GrainCrest rules to NoGrain, PlowedFields, and Mud
+// 5-10-09: Added BldgShadowL_1 winter/mud rules
+// 4-22-09: Added BldgShadowL2,3 winter/mud rules
+//
+// Recoloring rules
+// [NAME]  [SOURCE=DEST]...
+// They are applied in the order listed
+
+NoWhiteHexIDs
+  WhiteHexNumbers=Black
+  WinterBlackHexNumbers=Black
+
+AllPaved
+  DirtRdL0=PavedRdL0
+  DirtRdL1=PavedRdL1
+  DirtRdL2=PavedRdL2
+  DirtRdL3=PavedRdL3
+  DirtRdL4=PavedRdL4
+  DirtRdL5=PavedRdL5
+  DirtRdL6=PavedRdL6
+  DirtRdL_1=PavedRdL_1
+  DirtRdL_2=PavedRdL_2
+  DirtRdBridge=PavedRdBridge
+  
+  DTO_DirtRdL0=DTO_PavedRdL0
+  DTO_DirtRdL1=DTO_PavedRdL1
+  DTO_DirtRdL2=DTO_PavedRdL2
+  DTO_DirtRdL3=DTO_PavedRdL3
+  DTO_DirtRdL4=DTO_PavedRdL4
+  DTO_DirtRdL5=DTO_PavedRdL5
+  DTO_DirtRdL6=DTO_PavedRdL6
+  DTO_DirtRdL_1=DTO_PavedRdL_1
+  DTO_DirtRdL_2=DTO_PavedRdL_2
+  DTO_DirtRdBridge=DTO_PavedRdBridge
+
+AllDirt
+  PavedRdL0=DirtRdL0
+  PavedRdL1=DirtRdL1
+  PavedRdL2=DirtRdL2
+  PavedRdL3=DirtRdL3
+  PavedRdL4=DirtRdL4
+  PavedRdL5=DirtRdL5
+  PavedRdL6=DirtRdL6
+  PavedRdL_1=DirtRdL_1
+  PavedRdL_2=DirtRdL_2
+  PavedRdBridge=DirtRdBridge
+  
+  DTO_PavedRdL0=DTO_DirtRdL0
+  DTO_PavedRdL1=DTO_DirtRdL1
+  DTO_PavedRdL2=DTO_DirtRdL2
+  DTO_PavedRdL3=DTO_DirtRdL3
+  DTO_PavedRdL4=DTO_DirtRdL4
+  DTO_PavedRdL5=DTO_DirtRdL5
+  DTO_PavedRdL6=DTO_DirtRdL6
+  DTO_PavedRdL_1=DTO_DirtRdL_1
+  DTO_PavedRdL_2=DTO_DirtRdL_2
+  DTO_PavedRdBridge=DTO_DirtRdBridge
+
+WoodsToLevel0
+  WoodsGreen=Level0
+  WoodsBlack=Level0
+
+WoodsToLevel1
+  WoodsGreen=Level1
+  WoodsBlack=Level1
+
+WoodsToLevel_1
+  WoodsGreen=Level_1
+  WoodsBlack=Level_1
+
+NoStairwells
+  WoodStairwell=WoodBldg6
+  StoneStairwell=StoneBldg6
+
+RowhouseBarsToBuildings
+   StoneRowhouseBar=StoneBldg8
+   WoodRowhouseBar=WoodBldg8
+
+RowhouseBarsToOpenGround
+  WoodRowhouseBar=Level0
+  StoneRowhouseBar=Level0
+
+AllStone
+  WoodBldg1=StoneBldg1
+  WoodBldg2=StoneBldg2
+  WoodBldg3=StoneBldg3
+  WoodBldg4=StoneBldg4
+  WoodBldg5=StoneBldg5
+  WoodBldg6=StoneBldg6
+  WoodBldg7=StoneBldg7
+  WoodBldg8=StoneBldg8
+  WoodBldg9=StoneBldg9
+  WoodBldg10=StoneBldg10
+  WoodBldg11=StoneBldg11
+  WoodBldg12=StoneBldg12
+  WoodBldg13=StoneBldg13
+  WoodBldg14=StoneBldg14
+  WoodBldg15=StoneBldg15
+  WoodStairwell=StoneStairwell
+
+
+AllWood
+  StoneBldg1=WoodBldg1
+  StoneBldg2=WoodBldg2
+  StoneBldg3=WoodBldg3
+  StoneBldg4=WoodBldg4
+  StoneBldg5=WoodBldg5
+  StoneBldg6=WoodBldg6
+  StoneBldg7=WoodBldg7
+  StoneBldg8=WoodBldg8
+  StoneBldg9=WoodBldg9
+  StoneBldg10=WoodBldg10
+  StoneBldg11=WoodBldg11
+  StoneBldg12=WoodBldg12
+  StoneBldg13=WoodBldg13
+  StoneBldg14=WoodBldg14
+  StoneBldg15=WoodBldg15
+  StoneStairwell=WoodStairwell
+
+
+BrushToOpenGround
+  BrushL0=Level0
+  BrushL1=Level1
+  BrushL2=Level2
+  BrushL3=Level3
+  BrushL4=Level4
+  BrushL5=Level5
+  BrushL6=Level6
+  BrushL_1=Level_1
+  BrushL_2=Level_2
+  BrushBlackL0=Level0
+  BrushBlackL1=Level1
+  BrushBlackL2=Level2
+  BrushBlackL3=Level3
+  BrushBlackL4=Level4
+  BrushBlackL5=Level5
+  BrushBlackL6=Level6
+  BrushBlackL_1=Level_1
+  BrushBlackL_2=Level_2
+  BrushCrestL0=Level0 
+  BrushCrestL1=Level1
+  BrushCrestL2=Level2 
+  BrushCrestL3=Level3 
+  BrushCrestL4=Level4 
+  BrushCrestL5=Level5 
+  BrushCrestL6=Level6 
+  BrushCrestL_1=Level_1
+  
+  DTO_BrushL0=DTO_Level0
+  DTO_BrushL1=DTO_Level1
+  DTO_BrushL2=DTO_Level2
+  DTO_BrushL3=DTO_Level3
+  DTO_BrushL4=DTO_Level4
+  DTO_BrushL5=DTO_Level5
+  DTO_BrushL6=DTO_Level6
+  DTO_BrushL_1=DTO_Level_1
+  DTO_BrushL_2=DTO_Level_2
+  DTO_BrushBlackL0=DTO_Level0
+  DTO_BrushBlackL1=DTO_Level1
+  DTO_BrushBlackL2=DTO_Level2
+  DTO_BrushBlackL3=DTO_Level3
+  DTO_BrushBlackL4=DTO_Level4
+  DTO_BrushBlackL5=DTO_Level5
+  DTO_BrushBlackL6=DTO_Level6
+  DTO_BrushBlackL_1=DTO_Level_1
+  DTO_BrushBlackL_2=DTO_Level_2
+
+SwampToMarsh  // must be ahead of any other swamp/marsh rule!
+  StreamSwampGreenL0=StreamMarshGreenL0
+  StreamSwampBrownL0=StreamMarshBrownL0
+  StreamSwampGreenL_1=StreamMarshGreenL_1
+  StreamSwampBrownL_1=StreamMarshBrownL_1
+
+  RiverSwampGreenL0=RiverMarshGreenL0
+  RiverSwampBrownL0=RiverMarshBrownL0
+  RiverSwampGreenL_1=RiverMarshGreenL_1
+  RiverSwampBrownL_1=RiverMarshBrownL_1
+
+  SeparatedSwampGreenL0=SeparatedMarshGreenL0
+  SeparatedSwampBrownL0=SeparatedMarshBrownL0
+  SeparatedSwampGreenL_1=SeparatedMarshGreenL_1
+  SeparatedSwampBrownL_1=SeparatedMarshBrownL_1
+
+MarshToOpenGround
+  StreamMarshGreenL0=Level0
+  StreamMarshBrownL0=Level0
+  StreamMarshGreenL_1=Level_1
+  StreamMarshBrownL_1=Level_1
+  StreamSwampGreenL0=Level0
+  StreamSwampBrownL0=Level0
+  StreamSwampGreenL_1=Level_1
+  StreamSwampBrownL_1=Level_1
+
+  RiverMarshGreenL0=Level0
+  RiverMarshBrownL0=Level0
+  RiverMarshGreenL_1=Level_1
+  RiverMarshBrownL_1=Level_1
+  RiverSwampGreenL0=Level0
+  RiverSwampBrownL0=Level0
+  RiverSwampGreenL_1=Level_1
+  RiverSwampBrownL_1=Level_1
+
+  SeparatedMarshGreenL0=Level0
+  SeparatedMarshBrownL0=Level0
+  SeparatedMarshGreenL_1=Level_1
+  SeparatedMarshBrownL_1=Level_1
+  SeparatedSwampGreenL0=Level0
+  SeparatedSwampBrownL0=Level0
+  SeparatedSwampGreenL_1=Level_1
+  SeparatedSwampBrownL_1=Level_1
+
+FloodedStreams
+  StreamWhite=Water
+  StreamBrown=Water
+  StreamGreen3=Water
+  StreamGreen2=Water
+  StreamMarshGreenL0=Water
+  StreamMarshGreenL_1=Water
+  PondWhite=PondWater
+
+DryStreams
+  StreamGreen1=Level0
+  StreamGreen2=Level0
+  StreamGreen3=Level0
+  StreamBrown=DryStream1
+  StreamWhite=DryStream1
+  StreamWater=DryStream2
+  StreamMarshGreenL0=MudflatL0
+  StreamMarshGreenL_1=MudflatL_1
+
+StreamsToGullies
+  StreamWater=GullyBlack
+  StreamWhite=GullyBrown3
+   
+FloodedRivers
+  RiverMarshGreenL0=Water
+  RiverMarshGreenL_1=Water
+  WaterWhite=Water
+  PondWhite=PondWater
+
+FordableRivers
+  RiverMarshGreenL0=MudflatL0
+  RiverMarshGreenL_1=MudflatL_1
+  WaterWhite=MudflatL0
+
+GulliesToStreams
+  GullyGreen2=StreamGreen2
+  GullyGreen3=StreamGreen3
+  GullyGreen1=StreamGreen1
+  GullyBrown2=StreamBrown
+  GullyBrown3=StreamWater
+  GullyBlack=StreamWater
+
+OrchardOutOfSeason
+  OrchL0=Level0
+  OrchL1=Level1
+  OrchL2=Level2
+  OrchL3=Level3
+  OrchL4=Level4
+  OrchL5=Level5
+  OrchL6=Level6
+  OrchL_1=Level_1
+  OrchL_2=Level_2
+  OrchTrees=Black
+//  DTO_OrchL0=DesertL0   handled by an over- or under-lay in the overlaySSR file
+  DTO_OrchL1=DTO_Level1
+  DTO_OrchL2=DTO_Level2
+  DTO_OrchL3=DTO_Level3
+  DTO_OrchL4=DTO_Level4
+  DTO_OrchL5=DTO_Level5
+  DTO_OrchL6=DTO_Level6
+  DTO_OrchL_1=DTO_Level_1
+  DTO_OrchL_2=DTO_Level_2
+  DTO_OrchTrees=Black
+
+NoGrain
+  GrainL0=Level0
+  GrainL1=Level1
+  GrainL2=Level2
+  GrainL3=Level3
+  GrainL4=Level4
+  GrainL5=Level5
+  GrainL6=Level6
+  GrainL_1=Level_1
+  GrainL_2=Level_2
+  FurrowsL0=Level0
+  FurrowsL1=Level1
+  FurrowsL2=Level2
+  FurrowsL3=Level3
+  FurrowsL4=Level4
+  FurrowsL5=Level5
+  FurrowsL6=Level6
+  FurrowsL_1=Level_1
+  FurrowsL_2=Level_2
+  GrainCrestL0=Level0
+  GrainCrestL1=Level1
+  GrainCrestL2=Level2
+  GrainCrestL3=Level3
+  GrainCrestL4=Level4
+  GrainCrestL5=Level5
+  GrainCrestL6=Level6
+  GrainCrestL_1=Level_1
+
+//NoSunkElevRoads        - now done via overlay as of v5.9.3
+//  SunkRoad1=Level0
+//  SunkRoad2=Level0
+
+// NoRoads               - now done via overlay as of (before!) v5.9.3
+//  PavedRdL0=Level0
+//  PavedRdL1=Level1
+//  PavedRdL2=Level2
+//  PavedRdL3=Level3
+//  PavedRdL4=Level4
+//  PavedRdL5=Level5
+//  PavedRdL6=Level6
+//  PavedRdL_1=Level_1
+//  PavedRdL_2=Level_2
+//  DirtRdL0=Level0
+//  DirtRdL1=Level1
+//  DirtRdL2=Level2
+//  DirtRdL3=Level3
+//  DirtRdL4=Level4
+//  DirtRdL5=Level5
+//  DirtRdL6=Level6
+//  DirtRdL_1=Level_1
+//  DirtRdL_2=Level_2
+
+Level6ToLevel5
+  Level6=Level5
+  DTO_Level6=DTO_Level5
+
+Level5ToLevel4
+  Level5=Level4
+  DTO_Level5=DTO_Level4
+
+Level4ToLevel3
+  Level4=Level3
+  DTO_Level4=DTO_Level3
+
+Level4ToLevel2
+  Level4=Level2
+  DTO_Level4=DTO_Level2
+  
+Level4ToLevel1
+  Level4=Level1
+  DTO_Level4=DTO_Level1
+
+Level4ToLevel0
+  Level4=Level0
+  
+Level4ToLevel_1
+  Level4=Level_1
+  DTO_Level4=DTO_Level_1
+
+Level3ToLevel2
+  Level3=Level2
+  DTO_Level3=DTO_Level2
+
+Level3ToLevel1
+  Level3=Level1
+  DTO_Level3=DTO_Level1
+
+Level3ToLevel0
+  Level3=Level0
+
+Level3ToLevel_1
+  Level3=Level_1
+  DTO_Level3=DTO_Level_1
+
+Level2ToLevel1
+  Level2=Level1
+  DTO_Level2=DTO_Level1
+
+Level2ToLevel0
+  Level2=Level0
+
+Level2ToLevel_1
+  Level2=Level_1
+  DTO_Level2=DTO_Level_1
+
+Level1ToLevel0
+  Level1=Level0
+
+Level1ToLevel_1
+  Level1=Level_1
+  DTO_Level1=DTO_Level_1
+
+Level_1ToLevel0
+  Level_1=Level0
+
+Level_2ToLevel_1
+  Level_2=Level_1
+
+Level_2ToLevel0
+  Level_2=Level0
+
+NoHillNums
+  HillNum=Level0
+
+HedgesOnly
+  WallGrey1=HedgeGreen
+  WallGrey2=HedgeGreen
+  WallBrown=HedgeGreen
+
+HedgesToOG
+  HedgeGreen=Level0
+
+//WallsOnly - handled via a wall underlay in global overlaySSR file
+
+WallsToOG
+  WallBrown=Level0
+  WallGrey1=Level0
+  WallGrey2=Level0
+
+//WallsToBocage - for v5, handled via overlays in each board's overlaySSR file
+
+//HedgesToBocage - for v5, handled via overlays in each board's overlaySSR file
+
+
+PlowedFields
+  GrainL0=PlowedFields
+  GrainL1=PlowedFields
+  GrainL2=PlowedFields
+  GrainL3=PlowedFields
+  GrainL4=PlowedFields
+  GrainL5=PlowedFields
+  GrainL6=PlowedFields
+  GrainL_1=PlowedFields
+  GrainL_2=PlowedFields
+  FurrowsL0=Furrows
+  FurrowsL1=Furrows
+  FurrowsL2=Furrows
+  FurrowsL3=Furrows
+  FurrowsL4=Furrows
+  FurrowsL5=Furrows
+  FurrowsL6=Furrows
+  FurrowsL_1=Furrows
+  FurrowsL_2=Furrows
+  GrainCrestL0=Furrows
+  GrainCrestL1=Furrows
+  GrainCrestL2=Furrows
+  GrainCrestL3=Furrows
+  GrainCrestL4=Furrows
+  GrainCrestL5=Furrows
+  GrainCrestL6=Furrows
+  GrainCrestL_1=Furrows
+
+RiverToValley
+  Water=Level_1
+  WaterWhite=Level_1
+
+PondToValley
+  PondWater=Level_1
+  PondWhite=Level_1
+
+IrrigatedPaddies
+  PaddyInterior=Water
+
+InSeasonPaddies
+  PaddyInterior=GrainL0
+
+//HedgeToCactus - handled via an underlay in overlaySSR file 
+
+//WallToCactus- handled via an underlay in overlaySSR file 
+
+//OrchardsToOliveGroves  - de-implemented as not being real useful
+
+ETOtoDTO
+//  BrushL_2=DTO_BrushL_2
+//  BrushL_1=DTO_BrushL_1
+  BrushL0=DTO_BrushL0
+  BrushL1=DTO_BrushL1
+  BrushL2=DTO_BrushL2
+  BrushL3=DTO_BrushL3
+  BrushL4=DTO_BrushL4
+  BrushL5=DTO_BrushL5
+  BrushL6=DTO_BrushL6
+//  BrushBlackL_2=DTO_BrushBlackL_2
+//  BrushBlackL_1=DTO_BrushBlackL_1
+  BrushBlackL0=DTO_BrushBlackL0
+  BrushBlackL1=DTO_BrushBlackL1
+  BrushBlackL2=DTO_BrushBlackL2
+  BrushBlackL3=DTO_BrushBlackL3
+  BrushBlackL4=DTO_BrushBlackL4
+  BrushBlackL5=DTO_BrushBlackL5
+  BrushBlackL6=DTO_BrushBlackL6
+
+  BldgShadowL0=DTO_BldgShadowL0
+
+//DirtRdL_2=DTO_DirtRdL_2
+//  DirtRdL_1=DTO_DirtRdL_1
+  DirtRdL0=DTO_DirtRdL0
+  DirtRdL1=DTO_DirtRdL1
+  DirtRdL2=DTO_DirtRdL2
+  DirtRdL3=DTO_DirtRdL3
+  DirtRdL4=DTO_DirtRdL4
+  DirtRdL5=DTO_DirtRdL5
+  DirtRdL6=DTO_DirtRdL6
+  DirtRdBridge=DTO_DirtRdBridge
+
+  GraveyardGreen=DTO_GraveyardGreen
+  GraveyardShadow=DTO_GraveyardShadow
+
+  GullyGreen1=WadiBrown1
+  GullyGreen2=WadiBrown2
+  GullyBrown3=WadiBrown3
+  GullyBlack=WadiBlack
+  GullyCliff=WadiCliff
+
+  GullyHill1=WadiBrown1
+  GullyHill2=WadiBrown1
+  GullyHill3=WadiBrown1
+  GullyHill4=WadiBrown1
+  GullyHill5=WadiBrown1
+
+  HedgeGreen=DTO_HedgeGreen
+  BoardNum=DTO_BoardNum
+
+//  Level_2=DTO_Level_2
+//  Level_1=DTO_Level_1
+// DTO Level 0 uses a pattern to replace Level0 color, in the overlaySSR file
+  Level1=DTO_Level1
+  Level2=DTO_Level2
+  Level3=DTO_Level3
+  Level4=DTO_Level4
+// Level5=DTO_Level5
+// Level6=DTO_Level6
+
+// OrchL_2=DTO_OrchL_2
+// OrchL_1=DTO_OrchL_1
+  OrchL0=DTO_OrchL0
+  OrchL1=DTO_OrchL1
+  OrchL2=DTO_OrchL2
+  OrchL3=DTO_OrchL3
+  OrchL4=DTO_OrchL4
+  OrchL5=DTO_OrchL5
+  OrchL6=DTO_OrchL6
+  OrchTrees=DTO_OrchTrees
+
+  PavedRdL0=DTO_PavedRdL0
+  PavedRdL1=DTO_PavedRdL1
+  PavedRdL2=DTO_PavedRdL2
+  PavedRdL3=DTO_PavedRdL3
+  PavedRdL4=DTO_PavedRdL4
+  PavedRdL5=DTO_PavedRdL5
+  PavedRdL6=DTO_PavedRdL6
+  PavedRdBridge=DTO_PavedRdBridge
+
+  StreamBrown=WadiBrown3
+  StreamGreen1=WadiBrown1
+  StreamGreen2=WadiBrown2
+  StreamGreen3=WadiBrown2
+
+  WoodsGreen=DTO_WoodsGreen
+  WoodsBlack=DTO_WoodsBlack
+
+DTOtoETO
+//  DTO_BrushL_2=BrushL_2
+//  DTO_BrushL_1=BrushL_1
+ DTO_BrushL0=BrushL0
+ DTO_BrushL1=BrushL1
+ DTO_BrushL2=BrushL2
+ DTO_BrushL3=BrushL3
+ DTO_BrushL4=BrushL4
+ DTO_BrushL5=BrushL5
+ DTO_BrushL6=BrushL6
+
+ DTO_BldgShadowL0=BldgShadowL0
+
+//DTO_DirtRdL_2=DirtRdL_2
+//DTO_DirtRdL_1DirtRdL_1
+  DTO_DirtRdL0=DirtRdL0
+  DTO_DirtRdL1=DirtRdL1
+  DTO_DirtRdL2=DirtRdL2
+  DTO_DirtRdL3=DirtRdL3
+  DTO_DirtRdL4=DirtRdL4
+  DTO_DirtRdL5=DirtRdL5
+  DTO_DirtRdL6=DirtRdL6
+  DTO_DirtRdBridge=DirtRdBridge
+
+  DTO_GraveyardGreen=GraveyardGreen
+  DTO_GraveyardShadow=GraveyardShadow
+
+  WadiBrown1=GullyGreen1
+  WadiBrown2=GullyGreen2
+  WadiBrown3=GullyBrown3
+  WadiBlack=GullyBlack
+  WadiCliff=GullyCliff
+
+  DTO_HedgeGreen=HedgeGreen
+  DTO_BoardNum=BoardNum
+
+//  DTO_Level_2=Level_2
+//  DTO_Level_1=Level_1
+  DTO_Level0_1=Level0
+  DTO_Level0_2=Level0
+  DTO_Level0_3=Level0
+  DTO_Level0_4=Level0
+  DTO_Level0_5=Level0
+  DTO_Level0_6=Level0
+  DTO_Level1=Level1
+  DTO_Level2=Level2
+  DTO_Level3=Level3
+  DTO_Level4=Level4
+  DTO_Level5=Level5  
+  DTO_Level6=Level6
+
+// DTO_OrchL_2=OrchL_2
+// DTO_OrchL_1=OrchL_1
+  DTO_OrchL0=OrchL0
+  DTO_OrchL1=OrchL1
+  DTO_OrchL2=OrchL2
+  DTO_OrchL3=OrchL3
+  DTO_OrchL4=OrchL4
+  DTO_OrchL5=OrchL5
+  DTO_OrchL6=OrchL6
+  DTO_OrchTrees=OrchTrees
+
+//  DTO_PavedRdL_2=PavedRdL_2
+//  DTO_PavedRdL_1=PavedRdL_1
+  DTO_PavedRdL0=PavedRdL0
+  DTO_PavedRdL1=PavedRdL1
+  DTO_PavedRdL2=PavedRdL2
+  DTO_PavedRdL3=PavedRdL3
+  DTO_PavedRdL4=PavedRdL4
+  DTO_PavedRdL5=PavedRdL5
+  DTO_PavedRdL6=PavedRdL6
+  DTO_PavedRdBridge=PavedRdBridge
+
+  DTO_WoodsGreen=WoodsGreen
+
+// Winter must always be last
+Winter
+  HillNum=Black
+  BoardNum=Black
+
+  DuttyWhiteHexDots=SnowHexDots
+  WinterBlackHexNumbers=Black
+
+  Level0=L0Winter
+  Level1=L1Winter
+  Level2=L2Winter
+  Level3=L3Winter
+  Level4=L4Winter
+  Level5=L5Winter
+  Level6=L6Winter
+  Level_1=L_1Winter
+  Level_2=L_2Winter
+  Cliff=WinterCliff
+
+  WoodBldg1=WoodBldg1Winter
+  WoodBldg2=WoodBldg2Winter
+  WoodBldg3=WoodBldg3Winter
+  WoodBldg4=WoodBldg4Winter
+  WoodBldg5=WoodBldg5Winter
+  WoodBldg6=WoodBldg6Winter
+  WoodBldg7=WoodBldg7Winter
+  WoodBldg8=WoodBldg8Winter
+  WoodBldg9=WoodBldg9Winter
+  WoodBldg10=WoodBldg10Winter
+  WoodBldg11=WoodBldg11Winter
+  WoodBldg12=WoodBldg12Winter
+  WoodBldg13=WoodBldg13Winter
+  WoodBldg14=WoodBldg14Winter
+  WoodBldg15=WoodBldg15Winter
+  WoodRowhouseBar=WoodRowhouseBarWinter
+
+  StoneBldg1=StoneBldg1Winter
+  StoneBldg2=StoneBldg2Winter
+  StoneBldg3=StoneBldg3Winter
+  StoneBldg4=StoneBldg4Winter
+  StoneBldg5=StoneBldg5Winter
+  StoneBldg6=StoneBldg6Winter
+  StoneBldg7=StoneBldg7Winter
+  StoneBldg8=StoneBldg8Winter
+  StoneBldg9=StoneBldg9Winter
+  StoneBldg10=StoneBldg10Winter
+  StoneBldg11=StoneBldg11Winter
+  StoneBldg12=StoneBldg12Winter
+  StoneBldg13=StoneBldg13Winter
+  StoneBldg14=StoneBldg14Winter
+  StoneBldg15=StoneBldg15Winter
+  StoneRowhouseBar=StoneRowhouseBarWinter
+
+  BldgShadowL_2=BldgShadowL_2Winter
+  BldgShadowL_1=BldgShadowL_1Winter
+  BldgShadowL0=BldgShadowL0Winter
+  BldgShadowL1=BldgShadowL1Winter
+  BldgShadowL2=BldgShadowL2Winter
+  BldgShadowL3=BldgShadowL3Winter
+  BldgShadowL4=BldgShadowL4Winter
+  BldgShadowL5=BldgShadowL5Winter
+  BldgShadowL6=BldgShadowL6Winter
+
+  ManHoles=StoneRowhouseBarWinter
+
+  PavedRdL0=PavedRdWinter
+  PavedRdL1=PavedRdWinter
+  PavedRdL2=PavedRdWinter
+  PavedRdL3=PavedRdWinter
+  PavedRdL4=PavedRdWinter
+  PavedRdL5=PavedRdWinter
+  PavedRdL6=PavedRdWinter
+  PavedRdL_1=PavedRdWinter
+  PavedRdL_2=PavedRdWinter
+
+  DirtRdL0=DirtRdWinter
+  DirtRdL1=DirtRdWinter
+  DirtRdL2=DirtRdWinter
+  DirtRdL3=DirtRdWinter
+  DirtRdL4=DirtRdWinter
+  DirtRdL5=DirtRdWinter
+  DirtRdL6=DirtRdWinter
+  DirtRdL_1=DirtRdWinter
+  DirtRdL_2=DirtRdWinter
+
+  PavedRdBridge=PavedRdWinter
+  DirtRdBridge=DirtRdWinter
+
+  WoodsBlack=WoodsBlackWinter
+  WoodsGreen=WoodsGreenWinter
+  HedgeGreen=HedgeGreenWinter
+  BocageGreen=HedgeGreenWinter
+  BocageBrownL0=L2Winter
+  BocageBrownL1=L3Winter
+  BocageBrownL2=L4Winter
+  BocageBrownL3=L5Winter
+
+  WallBrown=WallBrownWinter
+  WallGrey1=StoneBldg10Winter
+  WallGrey2=StoneBldg6Winter
+
+  CragGrey=StoneBldg12Winter
+  CragBlack=StoneBldg4Winter
+
+  BrushL0=BrushWinter
+  BrushL1=BrushWinter
+  BrushL2=BrushWinter
+  BrushL3=BrushWinter
+  BrushL4=BrushWinter
+  BrushL5=BrushWinter
+  BrushL6=BrushWinter
+  BrushL_1=BrushWinter
+  BrushL_2=BrushWinter
+  BrushBlackL_2=WoodsBlackWinter
+  BrushBlackL_1=WoodsBlackWinter
+  BrushBlackL0=WoodsBlackWinter
+  BrushBlackL1=WoodsBlackWinter
+  BrushBlackL2=WoodsBlackWinter
+  BrushBlackL3=WoodsBlackWinter
+  BrushBlackL4=WoodsBlackWinter
+  BrushBlackL5=WoodsBlackWinter
+  BrushBlackL6=WoodsBlackWinter
+  BrushCrestL_1=BrushCrestDaleWinter 
+  BrushCrestL0=BrushCrestDaleWinter 
+  BrushCrestL1=BrushCrestHillWinter 
+  BrushCrestL2=BrushCrestHillWinter 
+  BrushCrestL3=BrushCrestHillWinter 
+  BrushCrestL4=BrushCrestHillWinter 
+  BrushCrestL5=BrushCrestHillWinter 
+  BrushCrestL6=BrushCrestHillWinter 
+
+  GullyGreen1=White
+  GullyGreen2=WinterDepression
+  GullyGreen3=WinterDepression
+  GullyBrown1=L1Winter
+  GullyBrown2=WoodBldg11Winter
+  GullyBrown3=WoodBldg6Winter
+  GullyBlack=WoodsBlackWinter
+  GullyCliff=WinterCliff
+
+  GullyHill_1=GullyHill_1Winter
+  GullyHill1=GullyHill1Winter
+  GullyHill2=GullyHill2Winter
+  GullyHill3=GullyHill3Winter
+  GullyHill4=GullyHill4Winter
+  GullyHill5=GullyHill5Winter
+
+  DryStream1=WoodBldg12Winter
+  DryStream2=WoodBldg10Winter
+
+  StreamGreen1=White
+  StreamGreen2=WinterDepression
+  StreamGreen3=WinterDepression
+  StreamBrown=WoodBldg10Winter
+  Water=Ice
+  PondWater=Ice
+  StreamWater=Ice
+
+  GraveyardWhite1=StoneBldg15Winter
+  GraveyardWhite2=StoneBldg11Winter
+  GraveyardGreen=GraveyardGreenWinter
+  GraveyardShadow=StoneBldg3Winter
+
+  PathBrown1=WoodBldg15Winter
+  PathBrown2=WoodBldg12Winter
+  PathBrown3=WoodBldg7Winter
+
+  Lumberyard1=WoodBldg11Winter
+  Lumberyard2=WoodBldg9Winter
+  Lumberyard3=WoodBldg7Winter
+  Lumberyard4=WoodBldg5Winter
+  Lumberyard5=WoodBldg3Winter
+
+  Shellhole1=WoodBldg13Winter
+  Shellhole2=WoodBldg8Winter
+  Shellhole3=WinterCliff
+
+  SunkRoad1=L2Winter
+  SunkRoad2=L4Winter
+
+  PlowedFields=L0Winter
+  VineyardGreen=L0Winter
+  PaddyInterior=L0Winter
+
+  BridgeBrown=WallBrownWinter
+  BridgeGrey1=StoneBldg10Winter
+  BridgeGrey2=StoneBldg6Winter
+
+Mud
+  OrchTrees=MudOrchard
+  OrchL_2=MudOrchard
+  OrchL_1=MudOrchard
+  OrchL0=MudOrchard
+  OrchL1=MudOrchard
+  OrchL2=MudOrchard
+  OrchL3=MudOrchard
+  OrchL4=MudOrchard
+  OrchL5=MudOrchard
+  OrchL6=MudOrchard
+
+  BrushL_2=MudBrushCrest
+  BrushL_1=MudBrushCrest
+  BrushL0=MudBrushCrest
+  BrushL1=MudBrushCrest
+  BrushL2=MudBrushCrest
+  BrushL3=MudBrushCrest
+  BrushL4=MudBrushCrest
+  BrushL5=MudBrushCrest
+  BrushL6=MudBrushCrest
+  BrushCrestL_1=BrushCrestDaleMud
+  BrushCrestL0=BrushCrestDaleMud 
+  BrushCrestL1=BrushCrestHillMud 
+  BrushCrestL2=BrushCrestHillMud 
+  BrushCrestL3=BrushCrestHillMud 
+  BrushCrestL4=BrushCrestHillMud 
+  BrushCrestL5=BrushCrestHillMud 
+  BrushCrestL6=BrushCrestHillMud 
+
+  GullyGreen1=MudStreamGreen1
+  GullyGreen2=MudStreamGreen2
+  GullyGreen3=MudStreamGreen3
+  GullyBrown1=MudGullyBrown1
+  GullyBrown2=MudGullyBrown2
+  GullyBrown3=MudStreamBrown
+
+  GullyHill_1=GullyHill_1Mud
+  GullyHill1=GullyHill1Mud
+  GullyHill2=GullyHill2Mud
+  GullyHill3=GullyHill3Mud
+  GullyHill4=GullyHill4Mud
+  GullyHill5=GullyHill5Mud  
+
+  Level_2=MudLevel_2
+  Level_1=MudLevel_1
+  Level0=MudLevel0
+  Level1=MudLevel1
+  Level2=MudLevel2
+  Level3=MudLevel3
+  Level4=MudLevel4
+  Level5=MudLevel5
+  Level6=MudLevel6
+
+  BldgShadowL_2=BldgShadowL_2Mud
+  BldgShadowL_1=BldgShadowL_1Mud
+  BldgShadowL0=BldgShadowL0Mud
+  BldgShadowL1=BldgShadowL1Mud
+  BldgShadowL2=BldgShadowL2Mud
+  BldgShadowL3=BldgShadowL3Mud
+  BldgShadowL4=BldgShadowL4Mud
+  BldgShadowL5=BldgShadowL5Mud
+  BldgShadowL6=BldgShadowL6Mud
+
+  PavedRdL_2=MudPavedRoad
+  PavedRdL_1=MudPavedRoad
+  PavedRdL0=MudPavedRoad
+  PavedRdL1=MudPavedRoad
+  PavedRdL2=MudPavedRoad
+  PavedRdL3=MudPavedRoad
+  PavedRdL4=MudPavedRoad
+  PavedRdL5=MudPavedRoad
+  PavedRdL6=MudPavedRoad
+  PavedRdBridge=MudPavedRoad
+
+  DirtRdL_2=MudDirtRoad
+  DirtRdL_1=MudDirtRoad
+  DirtRdL0=MudDirtRoad
+  DirtRdL1=MudDirtRoad
+  DirtRdL2=MudDirtRoad
+  DirtRdL3=MudDirtRoad
+  DirtRdL4=MudDirtRoad
+  DirtRdL5=MudDirtRoad
+  DirtRdL6=MudDirtRoad
+  DirtRdBridge=MudDirtRoad
+
+  GrainL_2=MudGrain
+  GrainL_1=MudGrain
+  GrainL0=MudGrain
+  GrainL1=MudGrain
+  GrainL2=MudGrain
+  GrainL3=MudGrain
+  GrainL4=MudGrain
+  GrainL5=MudGrain
+  GrainL6=MudGrain
+
+  FurrowsL_2=MudGrain
+  FurrowsL_1=MudGrain
+  FurrowsL0=MudGrain
+  FurrowsL1=MudGrain
+  FurrowsL2=MudGrain
+  FurrowsL3=MudGrain
+  FurrowsL4=MudGrain
+  FurrowsL5=MudGrain
+  FurrowsL6=MudGrain
+
+  GrainCrestL0=GrainCrestMud
+  GrainCrestL1=GrainCrestMud
+  GrainCrestL2=GrainCrestMud
+  GrainCrestL3=GrainCrestMud
+  GrainCrestL4=GrainCrestMud
+  GrainCrestL5=GrainCrestMud
+  GrainCrestL6=GrainCrestMud
+  GrainCrestL_1=GrainCrestMud
+
+  PlowedFields=MudPlowedFields
+  Furrows=MudFurrows
+  RicePaddy=MudPaddyWall
+
+  StreamGreen1=MudStreamGreen1
+  StreamGreen2=MudStreamGreen2
+  StreamGreen3=MudStreamGreen3
+  StreamBrown=MudStreamBrown
+  StreamWhite=MudWaterWhite
+  StreamWater=MudWater
+
+  Water=MudWater
+  WaterWhite=MudWaterWhite
+  PondWater=MudWater
+  PondWhite=MudWaterWhite
+
+  StreamMarshGreenL_1=MudMarshGreen
+  StreamMarshGreenL0=MudMarshGreen
+  StreamMarshGreenL1=MudMarshGreen
+  RiverMarshGreenL_1=MudMarshGreen
+  RiverMarshGreenL0=MudMarshGreen
+  RiverMarshGreenL1=MudMarshGreen
+  SeparatedMarshGreenL_1=MudMarshGreen
+  SeparatedMarshGreenL0=MudMarshGreen
+  SeparatedMarshGreenL1=MudMarshGreen
+
+  StreamSwampGreenL_1=MudMarshGreen
+  StreamSwampGreenL0=MudMarshGreen
+  StreamSwampGreenL1=MudMarshGreen
+  RiverSwampGreenL_1=MudMarshGreen
+  RiverSwampGreenL0=MudMarshGreen
+  RiverSwampGreenL1=MudMarshGreen
+  SeparatedSwampGreenL_1=MudMarshGreen
+  SeparatedSwampGreenL0=MudMarshGreen
+  SeparatedSwampGreenL1=MudMarshGreen
+
+  BoardNum=MudBoardNum
+  HillNum=MudHillNum
+
+  Shellhole1=MudShellhole1
+  BocageBrown=MudLevel1
+
+  SunkRoad1=MudLevel2
+  SunkRoad2=MudLevel4

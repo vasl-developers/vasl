@@ -1,0 +1,7 @@
+<SSRControls>
+ <Option name="Board 9a Special overlays">
+  <Checkbox name="">
+         <entry name="SSRs will go here" rule=" " text="SSR Placeholder"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

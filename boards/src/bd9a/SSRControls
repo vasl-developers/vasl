@@ -1,0 +1,7 @@
+<SSRControls>
+ <Option name="Board 9a Special overlays">
+ <Checkbox name="">
+         <entry name="AP88: Full Moon Madness" rule="SSO_AP88" text="scenario AP88 overlay"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

@@ -1,0 +1,10 @@
+<SSRControls>
+ <Option name="Board 7a Special overlays">
+ <Checkbox name="">
+         <entry name="AP86: Milling About" rule="SSO_AP86_AP90" text="scenario AP86 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="AP90: Smashing the Hook" rule="SSO_AP86_AP90" text="scenario AP90 overlay"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

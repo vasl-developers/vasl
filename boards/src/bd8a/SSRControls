@@ -1,0 +1,7 @@
+<SSRControls>
+ <Option name="Board 8a Special overlays">
+ <Checkbox name="">
+         <entry name="No Sewers" rule="BSO_8a_NoSewers" text="bd 8a no sewers"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

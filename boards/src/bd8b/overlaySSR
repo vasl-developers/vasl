@@ -1,0 +1,59 @@
+WallsOnly
+underlay WallPattern.gif HedgeGreen
+
+WallToCactus
+underlay CactusPattern.gif WallBrown,WallGrey1,WallGrey2
+
+HedgeToCactus
+underlay CactusPattern.gif HedgeGreen
+
+BSO_8b_NoSewers
+BSO_8b_NoSewers.gif 217,1056
+
+BridgeToFord
+8b_BridgeToFord.gif 15,950
+
+NoBridge
+8b_NoBridge.gif 15,950
+
+DenseJungle
+8b_DenseJungle.gif 1,1
+
+Bamboo
+8b_Bamboo.gif 135,1
+
+BrushToOpenGround
+8b_BrushToOpenGround.gif 187,50
+
+WallsToBocage
+8b_WallsToBocage.gif 72,127
+
+WallsToOG
+8b_WallsToOpenGround.gif 72,127
+
+HedgesToBocage
+8b_HedgesToBocage.gif 182,771
+
+OrchardsToShellholes
+8b_Orch2Shell.gif 28,235
+
+OrchardsToCrags
+8b_Orch2Crag.gif 28,241
+
+NoCliffs
+8b_NoCliffs.gif 260,219
+
+PalmTrees
+8b_PalmTrees.gif 24,240
+
+LightWoods
+8b_LightWoods.gif 1,1
+
+RoadsToPaths
+8b_RoadsToPaths.gif 555,38
+
+NoWoodsRoad
+8b_NoWoodsRoad.gif 555,38
+
+NoRoads 
+8b_NoRoads.gif 1,1
