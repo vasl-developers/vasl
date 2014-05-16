@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<!--
+	This file contains additional information about game counters.
+-->
+<counterMetadata>
+
+    <!-- metadata for each of the game counters 
+    Attributes:
+        name = game piece name (i.e. piece.getName())
+        hindrance = # of hindrances/hex
+        height = height of LOS hindrance
+        terrain = map terrain type
+        level - denotes location level
+        position - for location denotes if pieces above/below the counter are in the location.
+        ca - covered arch of location 
+    -->
+    <smoke name="White +3 Smoke" hindrance="3" height="2"/>
+    <smoke name="White +2 Smoke" hindrance="2" height="2"/>
+    <smoke name="Gray +2 Smoke" hindrance="2" height="2"/>
+    <smoke name="White +2 WP" hindrance="2" height="4"/>
+    <smoke name="White +1 WP" hindrance="1" height="4"/>
+    <smoke name="Gray +1 WP" hindrance="1" height="4"/>
+    <smoke name="Smoke grenade +2" hindrance="2" height="2"/>
+    <smoke name="WP grenade +1" hindrance="1" height="4"/>
+    <smoke name="Blaze" hindrance="3" height="2"/>
+    <smoke name="Blazing Building" hindrance="3" height="4"/>
+    <smoke name="1-level Blaze" hindrance="3" height="4"/>
+    <smoke name="2-level Blaze" hindrance="3" height="5"/>
+    <smoke name="3-level Blaze" hindrance="3" height="6"/>
+    <smoke name="4-level Blaze" hindrance="3" height="7"/>
+
+    <terrain name="Stone Rubble" terrain="Stone Rubble"/>
+    <terrain name="Wood Rubble" terrain="Wooden Rubble"/>
+
+    <wreck name="Wreck"/>
+    <wreck name="Burnt Out Wreck"/>
+
+    <OBA name="Red OBA FFE:1"/>
+    <OBA name="Red OBA FFE:2"/>
+    <OBA name="Red OBA FFE:C"/>
+    <OBA name="Blue OBA FFE:1"/>
+    <OBA name="Blue OBA FFE:2"/>
+    <OBA name="Blue OBA FFE:C"/>
+    <OBA name="Green OBA FFE:1"/>
+    <OBA name="Green OBA FFE:2"/>
+    <OBA name="Green OBA FFE:C"/>
+
+    <!-- These counters should be ignored as they will create false LOS conditions (e.g. treated as hindrances) -->
+    <ignore name="Barricade" />
+    <ignore name="Breached Barricade" />
+    <ignore name="Roadblock" />
+    <ignore name="Palm Debris" />
+
+    <!-- location counters -->
+    <buildingLevel name="Building Ground Level" level="0" position="above" />
+    <buildingLevel name="Building Level 1" level="1" position="above" />
+    <buildingLevel name="Building Level 2" level="2" position="above" />
+    <buildingLevel name="Building Level 3" level="3" position="above" />
+
+    <buildingLevel name="Fort Bldg Ground Level" level="0" position="above" />
+    <buildingLevel name="Fort Bldg Level 1" level="1" position="above" />
+    <buildingLevel name="Fort Bldg Level 2" level="2" position="above" />
+    <buildingLevel name="Fort Bldg Level 3" level="3" position="above" />
+
+    <roof name="Building Roof Level" position="above" />
+
+    <buildingLevel name="Strongpoint Ground Level" level="0" position="above" />
+    <buildingLevel name="Strongpoint Level 1" level="1" position="above" />
+    <buildingLevel name="Strongpoint Level 2" level="2" position="above" />
+    <buildingLevel name="Strongpoint Level 3" level="3"  position="above" />
+
+    <entrenchment name="1S Foxhole" position="below" />
+    <entrenchment name="2S Foxhole"  position="below" />
+    <entrenchment name="3S Foxhole" position="below" />
+    <entrenchment name="Trench" position="below" />
+    <entrenchment name="A-T Ditch" position="below" />
+    <entrenchment name="Trench BRT" level="0" ca="1" position="above" />
+
+    <crest name="Crest ca1" ca="1" position="above" />
+    <crest name="Crest ca2" ca="2" position="above" />
+    <crest name="Crest ca3" ca="3" position="above" />
+    <crest name="Crest ca4" ca="4" position="above" />
+    <crest name="Crest ca5" ca="5" position="above" />
+    <crest name="Crest ca6" ca="6" position="above" />
+
+
+    <climb name="Climb 0: 1 ca1" level="0" ca="1" position="above" />
+    <climb name="Climb 1: 1 ca1" level="1" ca="1" position="above" />
+    <climb name="Climb -1: 1 ca1" level="-1" ca="1" position="above" />
+    <climb name="Climb 2: 1 ca1" level="2" ca="1" position="above" />
+    <climb name="Climb 3: 1 ca1" level="3" ca="1" position="above" />
+    <climb name="Climb 4: 1 ca1" level="4" ca="1" position="above" />
+
+    <climb name="Climb 0: 1 ca2" level="0" ca="2" position="above" />
+    <climb name="Climb 1: 1 ca2" level="1" ca="2" position="above" />
+    <climb name="Climb -1: 1 ca2" level="-1" ca="2" position="above" />
+    <climb name="Climb 2: 1 ca2" level="2" ca="2" position="above" />
+    <climb name="Climb 3: 1 ca2" level="3" ca="2" position="above" />
+    <climb name="Climb 4: 1 ca2" level="4" ca="2" position="above" />
+
+    <climb name="Climb 0: 1 ca3" level="0" ca="3" position="above" />
+    <climb name="Climb 1: 1 ca3" level="1" ca="3" position="above" />
+    <climb name="Climb -1: 1 ca3" level="-1" ca="3" position="above" />
+    <climb name="Climb 2: 1 ca3" level="2" ca="3" position="above" />
+    <climb name="Climb 3: 1 ca3" level="3" ca="3" position="above" />
+    <climb name="Climb 4: 1 ca3" level="4" ca="3" position="above" />
+
+    <climb name="Climb 0: 1 ca4" level="0" ca="4" position="above" />
+    <climb name="Climb 1: 1 ca4" level="1" ca="4" position="above" />
+    <climb name="Climb -1: 1 ca4" level="-1" ca="4" position="above" />
+    <climb name="Climb 2: 1 ca4" level="2" ca="4" position="above" />
+    <climb name="Climb 3: 1 ca4" level="3" ca="4" position="above" />
+    <climb name="Climb 4: 1 ca4" level="4" ca="4" position="above" />
+
+    <climb name="Climb 0: 1 ca5" level="0" ca="5" position="above" />
+    <climb name="Climb 1: 1 ca5" level="1" ca="5" position="above" />
+    <climb name="Climb -1: 1 ca5" level="-1" ca="5" position="above" />
+    <climb name="Climb 2: 1 ca5" level="2" ca="5" position="above" />
+    <climb name="Climb 3: 1 ca5" level="3" ca="5" position="above" />
+    <climb name="Climb 4: 1 ca5" level="4" ca="5" position="above" />
+
+    <climb name="Climb 0: 1 ca6" level="0" ca="6" position="above" />
+    <climb name="Climb 1: 1 ca6" level="1" ca="6" position="above" />
+    <climb name="Climb -1: 1 ca6" level="-1" ca="6" position="above" />
+    <climb name="Climb 2: 1 ca6" level="2" ca="6" position="above" />
+    <climb name="Climb 3: 1 ca6" level="3" ca="6" position="above" />
+    <climb name="Climb 4: 1 ca6" level="4" ca="6" position="above" />
+
+    <!-- location counters NOT currently supported in the code
+    <cellar name="Building Cellar" level="-1" position="below" />
+    <cellar name="Fort Bldg Cellar" level="0" position="below" />
+    <cellar name="Strongpoint Cellar" level="0" ca="1" position="above" />
+
+    <sewer name="Sewer Can Emerge" level="0" ca="1" position="above" />
+    <sewer name="Sewer Can't Emerge" level="0" ca="1" position="above" />
+    <sewer name="Sewer Can't Emerge" level="0" ca="1" position="above" />
+    <sewer name="Sewer" level="0" ca="1" position="above" />
+
+    <pillbox name="1+2+2 Pillbox" level="0" ca="1" position="above" />
+    <pillbox name="1+3+5 Pillbox ca1" level="0" ca="1" position="above" />
+    <pillbox name="1+3+5 PTObox ca1" level="0" ca="1" position="above" />
+
+    <pillbox name="1+4+6 Pillbox ca2" level="0" ca="1" position="above" />
+    <pillbox name="1+4+6 PTObox ca2" level="0" ca="1" position="above" />
+
+    <pillbox name="1+5+7 Pillbox ca2" level="0" ca="1" position="above" />
+    <pillbox name="1+5+7 Pillbox" level="0" ca="1" position="above" />
+
+    <pillbox name="1+5+7 PTObox ca2" level="0" ca="1" position="above" />
+    <pillbox name="1+5+7 PTObox ca3" level="0" ca="1" position="above" />
+    <pillbox name="2+5+7 Pillbox" level="0" ca="1" position="above" />
+    <pillbox name="3+3+5 Pillbox ca2" level="0" ca="1" position="above" />
+
+    <locationCounter name="Bombproof" level="0" ca="1" position="above" />
+
+    <tower name="Tower BRT" level="0" ca="1" position="above" />
+
+    <tunnel name="Tunnel Entrance x1" level="0" ca="1" position="above" />
+    <tunnel name="Tunnel Entrance x2" level="0" ca="1" position="above" />
+    <tunnel name="Tunnel Entrance x3" level="0" ca="1" position="above" />
+
+    <locationCounter name="Cmd Bunker" level="0" ca="1" position="above" />
+    <locationCounter name="Culvert" level="0" ca="1" position="above" />
+    <locationCounter name="1S Soft Sand Foxhole BRT" position="below" />
+    <locationCounter name="Island Cmd" level="0" ca="1" position="above" />
+    <locationCounter name="Lv 0 Cave (kk) ca4" level="0" ca="1" position="above" />
+    <locationCounter name="Lv 0 MTR Cave ca4" level="0" ca="1" position="above" />
+    -->
+</counterMetadata>

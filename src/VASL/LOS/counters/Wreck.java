@@ -1,5 +1,5 @@
 /*
- * $Id: OBA 2/15/14 davidsullivan1 $
+ * $Id: Wreck 2/15/14 davidsullivan1 $
  *
  * Copyright (c) 2013 by David Sullivan
  *
@@ -16,23 +16,20 @@
  * License along with this library; if not, copies are available
  * at http://www.opensource.org.
  */
-package VASL.LOS.Map;
+package VASL.LOS.counters;
+
+import VASL.LOS.Map.Hex;
+import VASL.LOS.counters.Counter;
 
 /**
- * A simple class for a vehicle counter
+ * A simple class for a wreck counter
  */
-public class Vehicle extends Counter {
+public class Wreck  extends Counter {
 
-    Location location;
+    Hex hex;
 
-	public Vehicle(String name, Location location){
-
+    public Wreck(String name, Hex hex){
         super(name);
-        this.location = location;
-	}
-
-    public Location getLocation() {
-        return location;
+        this.hex = hex;
     }
 }
-

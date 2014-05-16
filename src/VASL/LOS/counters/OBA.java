@@ -16,7 +16,10 @@
  * License along with this library; if not, copies are available
  * at http://www.opensource.org.
  */
-package VASL.LOS.Map;
+package VASL.LOS.counters;
+
+import VASL.LOS.Map.Hex;
+import VASL.LOS.counters.Counter;
 
 /**
  * A simple class for an OBA counter
