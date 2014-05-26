@@ -19,6 +19,7 @@ import VASSAL.preferences.Prefs;
 import VASSAL.tools.LaunchButton;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.net.HttpURLConnection;
 import java.text.NumberFormat;
 import java.util.HashMap;
 
@@ -404,12 +405,14 @@ public class ASLDiceBot extends AbstractBuildable
 
     private BufferedReader GetRemoteDataReader() throws Exception 
     {
-        URL l_Url = new URL("http://www.Random.Org/integers/?num=" + String.valueOf(m_iMAXNUM) + "&min=1&max=6&col=1&base=10&format=plain&rnd=new");
-        URLConnection l_Conn = l_Url.openConnection();
+        URL l_Url = new URL("http://www.random.org/integers/?num=" + String.valueOf(m_iMAXNUM) + "&min=1&max=6&col=1&base=10&format=plain&rnd=new");
+        HttpURLConnection l_Conn = (HttpURLConnection)l_Url.openConnection();
 
         l_Conn.setConnectTimeout(60000);
         l_Conn.setReadTimeout(60000);
-
+        l_Conn.setRequestMethod("GET");
+        l_Conn.setRequestProperty("User-Agent", "Mozilla/5.0");
+                
         return new BufferedReader(new InputStreamReader(l_Conn.getInputStream()));
     }
 
@@ -451,7 +454,7 @@ public class ASLDiceBot extends AbstractBuildable
             } 
             catch (Exception e) 
             {
-                OutputString(" Random.org not reachable or read failed");
+                OutputString(" Random.org not reachable or read failed: error= " + e.getMessage());
             }
             
             OutputString(" ");
