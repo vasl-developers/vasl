@@ -47,23 +47,16 @@ import java.awt.dnd.DragSourceDropEvent;
 import java.awt.dnd.DragSourceEvent;
 import java.awt.dnd.DragSourceListener;
 import java.io.FilenameFilter;
-import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -75,7 +68,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 class QCButton extends JButton
-// <editor-fold>
+// <editor-fold defaultstate="collapsed">
 {
     QCPieceEntry m_objEntry;
     
@@ -122,7 +115,7 @@ class QCButton extends JButton
 // </editor-fold>
 
 class QCMenuItem extends JMenuItem implements DragSourceListener
-// <editor-fold>
+// <editor-fold defaultstate="collapsed">
 {
     QCPieceEntry m_objEntry;
     
@@ -194,7 +187,7 @@ class QCMenuItem extends JMenuItem implements DragSourceListener
 // </editor-fold>
 
 class QCConfiguration extends DefaultHandler 
-// <editor-fold>
+// <editor-fold defaultstate="collapsed">
 {
     private QC m_objQC;
     private File m_objFile;
@@ -221,12 +214,22 @@ class QCConfiguration extends DefaultHandler
     }
 
     /**
-     * @return the m_objFilePath
+     * @return the m_objFile
      */
     public File getFile() {
         return m_objFile;
     }
 
+    /**
+     * @return the namne of the file
+     */
+    public String getName() {
+        if (m_objFile != null)
+            return m_objFile.getName();
+        else
+            return "";
+    }
+    
     /**
      * @return the m_strDescription
      */
@@ -341,7 +344,7 @@ class QCConfiguration extends DefaultHandler
 // </editor-fold>
 
 class QCConfigurationEntry
-// <editor-fold>
+// <editor-fold defaultstate="collapsed">
 {
     private QC m_objQC;
     private boolean m_bMenu;
@@ -449,7 +452,7 @@ class QCConfigurationEntry
 // </editor-fold>
 
 class QCPieceEntry 
-// <editor-fold>
+// <editor-fold defaultstate="collapsed">
 {
     
     public QC m_objParent;
@@ -476,10 +479,11 @@ class QCPieceEntry
 // </editor-fold>
 
 /**
- * A class to remove all GamePieces with a given name
+ * A class to represent the counters toolbar
  */
 public class QC implements Buildable 
 {
+// <editor-fold defaultstate="collapsed">
     private final String mc_strDefaultConfig = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 "<qcconfig descr=\"Default configuration\">\n" +
 "	<qcentry slot=\"0\"/>\n" +
@@ -594,6 +598,7 @@ public class QC implements Buildable
 "		<qcentry slot=\"367\"/>\n" +
 "	</qcsubmenu>\n" +
 "</qcconfig>";
+// </editor-fold>
     
     private final int c_iModeNormal = 4;
     private final int c_iModeCompact = 2;
@@ -604,36 +609,9 @@ public class QC implements Buildable
     private Vector<JPopupMenu> m_PopupMenusV = new Vector<JPopupMenu>();
     private Vector<QCPieceEntry> m_EntriesV = new Vector<QCPieceEntry>();
     private int m_iMode = c_iModeNormal;
-    private ArrayList<QCConfiguration> mar_objListQCConfiguration = new ArrayList<QCConfiguration>();
 
-    private void toggleVisibility(JButton objButton) 
-    {
-        String l_strButtonName = objButton.getName();
-
-        if (l_strButtonName != null) 
-        {
-            if (l_strButtonName.length() > 1) 
-            {
-                try 
-                {
-                    int l_iVisibility = Integer.valueOf(l_strButtonName.substring(0, 1));
-
-                    objButton.setVisible((m_iMode & l_iVisibility) != 0);
-                } 
-                catch (Exception ex) 
-                {
-                }
-            }
-        }
-    }
-
-    private void toggleVisibility()
-    {
-        for (Enumeration<JButton> l_enum = m_ButtonsV.elements(); l_enum.hasMoreElements();) 
-        {
-            toggleVisibility(l_enum.nextElement());
-        }
-    }
+    private ArrayList<QCConfiguration> mar_objListQCConfigurations = new ArrayList<QCConfiguration>();
+    private QCConfiguration m_objQCWorkingConfiguration = null;
 
     protected void getPiecesSlot() 
     {
@@ -667,55 +645,57 @@ public class QC implements Buildable
 
     public void loadConfigurations() 
     {
+        SAXParser l_objXMLParser = null;
         Path l_pathConfigs = Paths.get(Info.getHomeDir() + System.getProperty("file.separator","\\") + "qcconfigs");
         
-        // TODO Set the default config
-        mar_objListQCConfiguration.clear();
-        
-        // check for configs dir
-        if (Files.notExists(l_pathConfigs)) 
+        try 
         {
-            try
-            {
-                Files.createDirectory(l_pathConfigs);
-            } 
-            catch(Exception e)
-            {
-            }        
+            SAXParserFactory l_objXMLParserFactory = SAXParserFactory.newInstance();
+
+            l_objXMLParser = l_objXMLParserFactory.newSAXParser();
+        } 
+        catch (Exception ex) 
+        {
+            ex.printStackTrace();
+            l_objXMLParser = null;                    
         }
-        else // browsing configs files
+
+        if (l_objXMLParser != null)
         {
-            SAXParser l_objXMLParser = null;
+            // clear the old configurations (if any)
+            mar_objListQCConfigurations.clear();
+            
+            // read default configuration
+            QCConfiguration l_objQCDefaultConfiguration = new QCConfiguration(this, null); // null file for the default configuration
 
             try 
             {
-                SAXParserFactory l_objXMLParserFactory = SAXParserFactory.newInstance();
-
-                l_objXMLParser = l_objXMLParserFactory.newSAXParser();
-            } 
+                // parse the default configuration
+                l_objXMLParser.parse(new InputSource(new StringReader(mc_strDefaultConfig)), l_objQCDefaultConfiguration);
+            }
             catch (Exception ex) 
             {
-                l_objXMLParser = null;                    
+                ex.printStackTrace();
+                l_objQCDefaultConfiguration = null;
             }
 
-            if (l_objXMLParser != null)
+            if (l_objQCDefaultConfiguration != null)
+                mar_objListQCConfigurations.add(l_objQCDefaultConfiguration);            
+        
+            // now read the custom configuration files
+            // check for configs dir
+            if (Files.notExists(l_pathConfigs)) 
             {
-                // read default configuration
-                QCConfiguration l_objQCDefaultConfiguration = new QCConfiguration(this, null);
-                
-                try 
+                try
                 {
-                    // parse the default configuration
-                    l_objXMLParser.parse(new InputSource(new StringReader(mc_strDefaultConfig)), l_objQCDefaultConfiguration);
-                }
-                catch (Exception ex) 
+                    Files.createDirectory(l_pathConfigs);
+                } 
+                catch(Exception e)
                 {
-                    l_objQCDefaultConfiguration = null;
-                }
-
-                if (l_objQCDefaultConfiguration != null)
-                    mar_objListQCConfiguration.add(l_objQCDefaultConfiguration);            
-                            
+                }        
+            }
+            else // browsing configs files
+            {
                 File[] lar_objConfigFiles = l_pathConfigs.toFile().listFiles(new FilenameFilter() { public boolean accept(File objFile, String strName) 
                                                                                     {
                                                                                         return strName.toLowerCase().endsWith(".xml");
@@ -736,7 +716,7 @@ public class QC implements Buildable
                     }
 
                     if (l_objQCConfiguration != null)
-                        mar_objListQCConfiguration.add(l_objQCConfiguration);
+                        mar_objListQCConfigurations.add(l_objQCConfiguration);
                     else
                     {
                         try
@@ -748,15 +728,14 @@ public class QC implements Buildable
                         }
                     }
                 }
-            }
-        }      
+            }      
+        }
     }
-    // read the last working mode from file
-    public int loadLastWorkingMode() 
+    public void readWorkingConfiguration() 
     {
-        Integer l_iMode = c_iModeNormal;
         java.util.Properties l_objProperties = new java.util.Properties();
         InputStream l_objInputStream = null;
+        String l_strWorkingConfigurationName = "";
 
         // try loading QC.properties from from the home directory
         try 
@@ -774,41 +753,50 @@ public class QC implements Buildable
 
             l_objInputStream.close();
 
-            l_iMode = Integer.valueOf(l_objProperties.getProperty("QC_working_mode", "4"));
+            l_strWorkingConfigurationName = l_objProperties.getProperty("QC_working_configuration", "");
         }
         catch (Exception ex) 
         { 
+            ex.printStackTrace();
         }
-
-        return l_iMode;
+        
+        for (QCConfiguration l_objQCConfiguration : mar_objListQCConfigurations)
+        {
+            if (l_strWorkingConfigurationName.equalsIgnoreCase(l_objQCConfiguration.getName()))
+            {
+                m_objQCWorkingConfiguration = l_objQCConfiguration;
+                break;                
+            }
+        }
     }	
 
-    // save the current working mode to file
-    public void saveLastWorkingMode() 
+    public void saveWorkingConfiguration() 
     {
-        try 
+        if (m_objQCWorkingConfiguration != null)
         {
-            java.util.Properties l_Props = new java.util.Properties();
-            l_Props.setProperty("QC_working_mode", Integer.toString(m_iMode));
+            try 
+            {
+                java.util.Properties l_Props = new java.util.Properties();
+                l_Props.setProperty("QC_working_configuration", m_objQCWorkingConfiguration.getName());
 
-            OutputStream l_objOutputStream = new FileOutputStream(new File(Info.getHomeDir() + System.getProperty("file.separator","\\") + "QC.properties"));
+                OutputStream l_objOutputStream = new FileOutputStream(new File(Info.getHomeDir() + System.getProperty("file.separator","\\") + "QC.properties"));
 
-            l_Props.store(l_objOutputStream, "QC last working mode");
+                l_Props.store(l_objOutputStream, "QC working configuration");
 
-            l_objOutputStream.flush();
-            l_objOutputStream.close();
-        }
-        catch (Exception ex) 
-        {
-            ex.printStackTrace();
+                l_objOutputStream.flush();
+                l_objOutputStream.close();
+            }
+            catch (Exception ex) 
+            {
+                ex.printStackTrace();
+            }
         }
     }
 
     public void build(Element e) 
     {	
         loadConfigurations();
-        
-        m_iMode = loadLastWorkingMode();
+        readWorkingConfiguration();
 
         NodeList l_NodeL = e.getElementsByTagName("*");
 
@@ -909,26 +897,7 @@ public class QC implements Buildable
 
     public org.w3c.dom.Element getBuildElement(org.w3c.dom.Document doc) 
     {
-        Element l_Elem = doc.createElement(getClass().getName());
-
-        for (Enumeration<QCPieceEntry> l_Enum = m_EntriesV.elements(); l_Enum.hasMoreElements();) 
-        {
-            QCPieceEntry l_Entry = l_Enum.nextElement();
-
-            if (l_Entry.m_bTopLevel)
-            {
-                Element l_Sub = doc.createElement("entry");
-                
-                l_Sub.setAttribute("name", l_Entry.m_strName);
-                l_Sub.setAttribute("image", l_Entry.m_strImageName);
-                l_Sub.setAttribute("menu", l_Entry.m_strMenu);
-                l_Sub.appendChild(doc.createTextNode(l_Entry.m_strPieceDefinition));
-
-                l_Elem.appendChild(l_Sub);
-            }
-        }
-
-        return l_Elem;
+        return doc.createElement(getClass().getName());
     }
   
     public void addTo(Buildable b) 
@@ -951,8 +920,7 @@ public class QC implements Buildable
             {
                 m_iMode = c_iModeNormal;
 
-                saveLastWorkingMode();
-                toggleVisibility();
+                saveWorkingConfiguration();
             }
         });
 
@@ -968,8 +936,7 @@ public class QC implements Buildable
             {
                 m_iMode = c_iModeCompact;
 
-                saveLastWorkingMode();
-                toggleVisibility();
+                saveWorkingConfiguration();
             }
         });
 
@@ -985,8 +952,8 @@ public class QC implements Buildable
             {
                 m_iMode = c_iModeUltra;
 
-                saveLastWorkingMode();
-                toggleVisibility();
+                saveWorkingConfiguration();
+                //toggleVisibility();
             }
         });
 
@@ -996,8 +963,6 @@ public class QC implements Buildable
         l_NormalMode.setSelected(m_iMode == c_iModeNormal);
         l_CompactMode.setSelected(m_iMode == c_iModeCompact);
         l_VeryCompactMode.setSelected(m_iMode == c_iModeUltra);
-    
-        toggleVisibility();
     
         m_Map.getToolBar().addSeparator();
         
@@ -1009,9 +974,7 @@ public class QC implements Buildable
         m_Map.getToolBar().addSeparator();
     }
 
-    public void add(Buildable b) 
-    {
-    }
+    public void add(Buildable b) {}
 
     private class PlaceMarkAction implements ActionListener 
     {
