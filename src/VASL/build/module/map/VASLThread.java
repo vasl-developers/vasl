@@ -19,7 +19,25 @@
 
 package VASL.build.module.map;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
+
+import javax.swing.JCheckBox;
+
+import VASL.LOS.Map.LOSResult;
+import VASL.LOS.Map.Location;
 import VASL.LOS.Map.VASLGameInterface;
+import VASL.build.module.ASLMap;
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASSAL.build.Buildable;
 import VASSAL.build.module.GameComponent;
@@ -28,12 +46,6 @@ import VASSAL.command.Command;
 import VASSAL.configure.BooleanConfigurer;
 import VASSAL.configure.ColorConfigurer;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-
 import static VASSAL.build.GameModule.getGameModule;
 
 public class VASLThread extends ASLThread implements KeyListener, GameComponent {
@@ -41,14 +53,14 @@ public class VASLThread extends ASLThread implements KeyListener, GameComponent 
     public static final String ENABLED = "LosCheckEnabled";
     public static final String HINDRANCE_THREAD_COLOR = "hindranceThreadColor";
     public static final String BLOCKED_THREAD_COLOR = "blockedThreadColor";
-    private boolean legacyMode = false;
-    private final static String preferenceTabName = "LOS";
+    private boolean legacyMode;
+    private static final String preferenceTabName = "LOS";
     private VASL.LOS.Map.Map LOSMap;
 
     // LOS stuff
-    protected VASL.LOS.Map.LOSResult result;
-    private VASL.LOS.Map.Location source;
-    private VASL.LOS.Map.Location target;
+    private LOSResult result;
+    private Location source;
+    private Location target;
     private VASLGameInterface VASLGameInterface;
     private ASLBoard upperLeftBoard;
     private boolean useAuxSourceLOSPoint;
@@ -63,12 +75,13 @@ public class VASLThread extends ASLThread implements KeyListener, GameComponent 
     /**
      * Called when the LOS check is started
      */
-    protected void launch() {
+    @Override
+	protected void launch() {
 
         super.launch();
 
         // make sure we have a map otherwise disable LOS
-        VASL.build.module.ASLMap theMap = (VASL.build.module.ASLMap) map;
+        final ASLMap theMap = (ASLMap) map;
         if(theMap == null || theMap.isLegacyMode()) {
             legacyMode = true;
         }
@@ -77,7 +90,7 @@ public class VASLThread extends ASLThread implements KeyListener, GameComponent 
             LOSMap = theMap.getVASLMap();
 
             // initialize LOS
-            result = new VASL.LOS.Map.LOSResult();
+            result = new LOSResult();
             VASLGameInterface = new VASLGameInterface(theMap, LOSMap);
             VASLGameInterface.updatePieces();
 
@@ -99,7 +112,8 @@ public class VASLThread extends ASLThread implements KeyListener, GameComponent 
         }
     }
 
-    public void addTo(Buildable buildable) {
+    @Override
+	public void addTo(Buildable buildable) {
 
         super.addTo(buildable);
 
@@ -110,17 +124,18 @@ public class VASLThread extends ASLThread implements KeyListener, GameComponent 
         final BooleanConfigurer enable = new BooleanConfigurer(ENABLED, "Enable LOS checking", Boolean.TRUE);
         final JCheckBox enableBox = findBox(enable.getControls());
 
-        final ColorConfigurer threadColor = new ColorConfigurer(LOS_COLOR, "Thread Color", Color.red);
+        final ColorConfigurer thread = new ColorConfigurer(LOS_COLOR, "Thread Color", Color.red);
         final ColorConfigurer hindrance = new ColorConfigurer(HINDRANCE_THREAD_COLOR, "Hindrance Thread Color", Color.red);
         final ColorConfigurer blocked = new ColorConfigurer(BLOCKED_THREAD_COLOR, "Blocked Thread Color", Color.blue);
         final BooleanConfigurer verbose = new BooleanConfigurer("verboseLOS", "Verbose LOS mode");
-        getGameModule().getPrefs().addOption(preferenceTabName, threadColor);
+        getGameModule().getPrefs().addOption(preferenceTabName, thread);
         getGameModule().getPrefs().addOption(preferenceTabName, enable);
         getGameModule().getPrefs().addOption(preferenceTabName, hindrance);
         getGameModule().getPrefs().addOption(preferenceTabName, blocked);
         getGameModule().getPrefs().addOption(preferenceTabName, verbose);
-        java.awt.event.ItemListener l = new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+        final ItemListener l = new ItemListener() {
+            @Override
+			public void itemStateChanged(ItemEvent evt) {
                 enableAll(hindrance.getControls(), enableBox.isSelected());
                 enableAll(blocked.getControls(), enableBox.isSelected());
                 enableAll(verbose.getControls(), enableBox.isSelected());
@@ -135,7 +150,7 @@ public class VASLThread extends ASLThread implements KeyListener, GameComponent 
         getGameModule().getGameState().addGameComponent(this);
     }
 
-    protected JCheckBox findBox(Component c) {
+    protected static JCheckBox findBox(Component c) {
         JCheckBox val = null;
         if (c instanceof JCheckBox) {
             val = (JCheckBox) c;
@@ -149,7 +164,7 @@ public class VASLThread extends ASLThread implements KeyListener, GameComponent 
         return val;
     }
 
-    private void enableAll(Component c, boolean enable) {
+    private static void enableAll(Component c, boolean enable) {
         c.setEnabled(enable);
         if (c instanceof Container) {
             for (int i = 0; i < ((Container) c).getComponentCount(); ++i) {
@@ -158,7 +173,8 @@ public class VASLThread extends ASLThread implements KeyListener, GameComponent 
         }
     }
 
-    public void mousePressed(MouseEvent e) {
+    @Override
+	public void mousePressed(MouseEvent e) {
 
         super.mousePressed(e);
         if (!isEnabled() || legacyMode) {
@@ -167,7 +183,7 @@ public class VASLThread extends ASLThread implements KeyListener, GameComponent 
         result.reset();
 
         // get the map point
-        Point p = mapMouseToMapCoordinates(e.getPoint());
+        final Point p = mapMouseToMapCoordinates(e.getPoint());
         if (p == null || !LOSMap.onMap(p.x, p.y)) return;
 
         // get the nearest location
@@ -186,23 +202,25 @@ public class VASLThread extends ASLThread implements KeyListener, GameComponent 
         useAuxTargetLOSPoint = useAuxSourceLOSPoint;
     }
 
-    public void mouseReleased(MouseEvent e) {
+    @Override
+	public void mouseReleased(MouseEvent e) {
 
         super.mouseReleased(e);
     }
 
-    public void mouseDragged(MouseEvent e) {
+    @Override
+	public void mouseDragged(MouseEvent e) {
 
         if (!legacyMode && source != null && isEnabled()) {
 
             // get the map point, ensure the point is on the CASL map
-            Point p = mapMouseToMapCoordinates(map.mapCoordinates(e.getPoint()));
+            final Point p = mapMouseToMapCoordinates(map.mapCoordinates(e.getPoint()));
             if (p == null || !LOSMap.onMap(p.x, p.y)) return;
-            VASL.LOS.Map.Location newLocation = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
-            boolean useAuxNewLOSPoint = useAuxLOSPoint(newLocation, p.x, p.y);
+            final Location newLocation = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
+            final boolean useAuxNewLOSPoint = useAuxLOSPoint(newLocation, p.x, p.y);
 
             // are we really in a new location?
-            if (target == newLocation && useAuxTargetLOSPoint == useAuxNewLOSPoint) {
+            if (target.equals(newLocation) && useAuxTargetLOSPoint == useAuxNewLOSPoint) {
                 return;
             }
             target = newLocation;
@@ -224,11 +242,12 @@ public class VASLThread extends ASLThread implements KeyListener, GameComponent 
         return visible && LOSPrefActive();
     }
 
-    private boolean LOSPrefActive() {
+    private static boolean LOSPrefActive() {
         return Boolean.TRUE.equals(getGameModule().getPrefs().getValue(ENABLED));
     }
 
-    public void draw(Graphics g, VASSAL.build.module.Map m) {
+    @Override
+	public void draw(Graphics g, VASSAL.build.module.Map m) {
 
         if (!LOSPrefActive() || legacyMode) {
             super.draw(g, m);
@@ -334,8 +353,8 @@ public class VASLThread extends ASLThread implements KeyListener, GameComponent 
                 // use the draw range property to turn all text on/off
                 if (drawRange) {
                     // determine if the text should be above or below the location
-                    boolean shiftSourceText = sourceLOSPoint.y > targetLOSPoint.y;
-                    int shift = g.getFontMetrics().getHeight();
+                    final boolean shiftSourceText = sourceLOSPoint.y > targetLOSPoint.y;
+                    final int shift = g.getFontMetrics().getHeight();
 
                     // draw the source elevation
                     switch (source.getBaseHeight() + source.getHex().getBaseHeight()) {
@@ -416,22 +435,25 @@ public class VASLThread extends ASLThread implements KeyListener, GameComponent 
         }
     }
 
-    private boolean isVerbose() {
+    private static boolean isVerbose() {
         return Boolean.TRUE.equals(getGameModule().getPrefs().getValue("verboseLOS"));
     }
 
-    public void keyTyped(KeyEvent e) {
+    @Override
+	public void keyTyped(KeyEvent e) {
     }
 
-    public void keyReleased(KeyEvent e) {
+    @Override
+	public void keyReleased(KeyEvent e) {
     }
 
-    public void keyPressed(KeyEvent e) {
+    @Override
+	public void keyPressed(KeyEvent e) {
 
         if (!isEnabled() && legacyMode) {
             return;
         }
-        int code = e.getKeyCode();
+        final int code = e.getKeyCode();
         // move up
         if (code == KeyEvent.VK_KP_UP || code == KeyEvent.VK_UP) {
 
@@ -480,31 +502,29 @@ public class VASLThread extends ASLThread implements KeyListener, GameComponent 
         }
     }
 
-    private boolean useAuxLOSPoint(VASL.LOS.Map.Location l, int x, int y) {
+    private static boolean useAuxLOSPoint(Location l, int x, int y) {
 
-        Point LOSPoint = l.getLOSPoint();
-        Point AuxLOSPoint = l.getAuxLOSPoint();
+        final Point LOSPoint = l.getLOSPoint();
+        final Point AuxLOSPoint = l.getAuxLOSPoint();
 
         // use the closest LOS point
-        if (Point.distance(x, y, LOSPoint.x, LOSPoint.y) > Point.distance(x, y, AuxLOSPoint.x, AuxLOSPoint.y)) {
-            return true;
-        }
-        return false;
-    }
+		return Point2D.distance((double)x, (double)y, (double)LOSPoint.x, (double)LOSPoint.y) > Point2D.distance((double)x, (double)y, (double)AuxLOSPoint.x, (double)AuxLOSPoint.y);
+	}
 
-    public Command getRestoreCommand() {
+    @Override
+	public Command getRestoreCommand() {
         return null;
     }
 
     private Point mapPointToScreen(Point p) {
 
-        Point temp = map.componentCoordinates(new Point(p));
-        double scale = upperLeftBoard == null ? 1.0 : upperLeftBoard.getMagnification() * ((HexGrid)upperLeftBoard.getGrid()).getHexSize()/ASLBoard.DEFAULT_HEX_HEIGHT;
+        final Point temp = map.componentCoordinates(new Point(p));
+        final double scale = upperLeftBoard == null ? 1.0 : upperLeftBoard.getMagnification() * ((HexGrid)upperLeftBoard.getGrid()).getHexSize()/ASLBoard.DEFAULT_HEX_HEIGHT;
         if (upperLeftBoard != null) {
-            temp.x = (int)Math.round(temp.x*scale);
-            temp.y = (int)Math.round(temp.y*scale);
+            temp.x = (int)Math.round((double)temp.x *scale);
+            temp.y = (int)Math.round((double)temp.y *scale);
         }
-        temp.translate((int) (map.getEdgeBuffer().width * map.getZoom()), (int) (map.getEdgeBuffer().height * map.getZoom()));
+        temp.translate((int) ((double)map.getEdgeBuffer().width * map.getZoom()), (int) ((double)map.getEdgeBuffer().height * map.getZoom()));
 
         return temp;
     }
@@ -512,7 +532,7 @@ public class VASLThread extends ASLThread implements KeyListener, GameComponent 
     private Point mapMouseToMapCoordinates(Point p) {
 
         // just remove edge buffer
-        Point temp = new Point(p);
+        final Point temp = new Point(p);
         temp.translate(-map.getEdgeBuffer().width, -map.getEdgeBuffer().height);
         return temp;
     }
@@ -525,16 +545,16 @@ public class VASLThread extends ASLThread implements KeyListener, GameComponent 
      * @param s the text
      * @return a bounding region of the text drawn
      */
-    private Rectangle drawText(Graphics g, int x, int y, String s) {
+    private static Rectangle drawText(Graphics g, int x, int y, String s) {
 
         // paint the background
-        int border = 1;
+        final int border = 1;
         g.setColor(Color.black);
-        Rectangle region = new Rectangle(
+        final Rectangle region = new Rectangle(
                 x - border,
                 y - border - g.getFontMetrics().getHeight() + g.getFontMetrics().getDescent(),
-                g.getFontMetrics().stringWidth(s) + border * 2,
-                g.getFontMetrics().getHeight() + border * 2);
+                g.getFontMetrics().stringWidth(s) + 2,
+                g.getFontMetrics().getHeight() + 2);
         g.fillRect(region.x, region.y, region.width, region.height);
 
         // draw the text
@@ -571,5 +591,12 @@ public class VASLThread extends ASLThread implements KeyListener, GameComponent 
             }
         }
     }
+
+	// force a paint when remote LOS command received
+	@Override
+	public Command decode(String command) {
+		map.repaint();
+		return super.decode(command);
+	}
 
 }
