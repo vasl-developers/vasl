@@ -2,7 +2,6 @@ package VASL.build.module.map;
 
 import VASL.build.module.ASLMap;
 import java.awt.Color;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -10,24 +9,17 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Vector;
 
 import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 import VASSAL.Info;
 import VASSAL.build.Buildable;
-import VASSAL.build.Builder;
-import VASSAL.build.GameModule;
 import VASSAL.build.module.Map;
 import VASSAL.build.module.map.PieceMover;
 import VASSAL.build.widget.PieceSlot;
@@ -36,7 +28,7 @@ import VASSAL.counters.GamePiece;
 import VASSAL.counters.KeyBuffer;
 import VASSAL.counters.PieceCloner;
 import VASSAL.counters.Properties;
-import VASSAL.tools.imageop.Op;
+import java.awt.Component;
 import java.awt.Point;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragGestureEvent;
@@ -52,6 +44,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.JToolBar.Separator;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.SAXParser;
@@ -67,6 +61,32 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+class QCStartMenuItem extends JPopupMenu.Separator
+{}
+
+class QCEndMenuItem extends JPopupMenu.Separator
+{}
+
+class QCRadioButtonMenuItem extends JRadioButtonMenuItem
+{
+    private final QCConfiguration m_objQCConfiguration;
+    
+    QCRadioButtonMenuItem(QCConfiguration objConfiguration)
+    {
+        super(objConfiguration.getDescription());
+        
+        m_objQCConfiguration = objConfiguration;
+    }
+
+    /**
+     * @return the m_objQCConfiguration
+     */
+    public QCConfiguration getQCConfiguration() {
+        return m_objQCConfiguration;
+    }
+}
+
+/*
 class QCButton extends JButton
 // <editor-fold defaultstate="collapsed">
 {
@@ -185,6 +205,7 @@ class QCMenuItem extends JMenuItem implements DragSourceListener
     }
 }
 // </editor-fold>
+*/
 
 class QCConfiguration extends DefaultHandler 
 // <editor-fold defaultstate="collapsed">
@@ -599,20 +620,105 @@ public class QC implements Buildable
 "	</qcsubmenu>\n" +
 "</qcconfig>";
 // </editor-fold>
+ 
+// <editor-fold defaultstate="collapsed">
+/*
+            NodeList l_NodeL = e.getElementsByTagName("*");
+
+        for (int i = 0; i < l_NodeL.getLength(); ++i) 
+        {
+            Element l_Element = (Element) l_NodeL.item(i);
+
+            String l_strName = l_Element.getAttribute("name");
+            String l_strImageName = l_Element.getAttribute("image");
+            String l_strMenu = l_Element.getAttribute("menu");
+            String l_strPieceDefinition = Builder.getText(l_Element);
+
+            // is a standard button
+            if (l_strMenu.compareToIgnoreCase("false") == 0) 
+            {
+                QCPieceEntry l_Entry = new QCPieceEntry(this, l_strName, l_strPieceDefinition, l_strImageName, l_strMenu, null, null, true);
+                QCButton l_ASLButton = new QCButton(l_Entry);
+
+                try 
+                {
+                    l_ASLButton.InitDragDrop();
+                    l_ASLButton.setName(l_strName);                    
+                    l_ASLButton.setIcon(new ImageIcon(Op.load(l_strImageName + ".png").getImage(null)));
+                    l_ASLButton.setMargin(new Insets(0, 0, 0, 0));
+                } 
+                catch (Exception ex) 
+                {
+                    ex.printStackTrace();
+                }
+
+                l_ASLButton.setAlignmentY(0.0F);
+
+                m_EntriesV.addElement(l_Entry);
+                m_ButtonsV.addElement(l_ASLButton);
+            } 
+            else // is a submenu
+            {
+                JButton l_Button = new JButton("");
+                JPopupMenu l_PopupMenu = new JPopupMenu();
+
+                QCPieceEntry l_Entry = new QCPieceEntry(this, l_strName, l_strPieceDefinition, l_strImageName, l_strMenu, null, l_PopupMenu, true);
+
+                try 
+                {
+                    l_Button.setName(l_strName);
+                    l_Button.setIcon(new ImageIcon(Op.load(l_strImageName + ".png").getImage(null)));
+                    l_Button.setMargin(new Insets(0, 0, 0, 0));
+                } 
+                catch (Exception ex) 
+                {
+                    ex.printStackTrace();
+                }
+
+                l_Button.setAlignmentY(0.0F);
+                l_Button.addActionListener(new PlaceMarkAction(l_Entry));
+
+                m_EntriesV.addElement(l_Entry);
+                m_ButtonsV.addElement(l_Button);
+                m_PopupMenusV.addElement(l_PopupMenu);
+
+                // create the submenu
+                String l_strDelims = "[,]";
+                String[] l_strTokensA = l_strPieceDefinition.split(l_strDelims);
+
+                for (int l_i = 0; l_i < l_strTokensA.length; l_i++)
+                {
+                    String l_strSingleDelims = "[:]";
+                    String[] l_strTextElemA = l_strTokensA[l_i].split(l_strSingleDelims);
+
+                    if (l_strTextElemA.length == 2) 
+                    {
+                        String l_strText = l_strTextElemA[0];
+                        String l_strID = l_strTextElemA[1];
+
+                        QCPieceEntry l_PopupEntry = new QCPieceEntry(this, l_strName + l_strID, l_strID, l_strImageName + l_strID, "false", null, null, false);
+                        QCMenuItem l_MenuItem = new QCMenuItem(l_PopupEntry);
+
+                        try 
+                        {
+                            l_MenuItem.setText(l_strText);
+                            l_MenuItem.setIcon(new ImageIcon(Op.load(l_strImageName + l_strID + ".png").getImage(null)));
+                            l_MenuItem.InitDragDrop();
+                        } 
+                        catch (Exception ex) 
+                        {
+                            ex.printStackTrace();
+                        }
+
+                        l_MenuItem.addActionListener(new PlaceMarkAction(l_PopupEntry));
+                        l_PopupMenu.add(l_MenuItem);
+
+                        m_EntriesV.addElement(l_PopupEntry);
+                    }
+                }
+            }
+        }
     
-    private final int c_iModeNormal = 4;
-    private final int c_iModeCompact = 2;
-    private final int c_iModeUltra = 1;
-
-    private Map m_Map;
-    private Vector<JButton> m_ButtonsV = new Vector<JButton>();
-    private Vector<JPopupMenu> m_PopupMenusV = new Vector<JPopupMenu>();
-    private Vector<QCPieceEntry> m_EntriesV = new Vector<QCPieceEntry>();
-    private int m_iMode = c_iModeNormal;
-
-    private ArrayList<QCConfiguration> mar_objListQCConfigurations = new ArrayList<QCConfiguration>();
-    private QCConfiguration m_objQCWorkingConfiguration = null;
-
     protected void getPiecesSlot() 
     {
         List<PieceSlot> lar_PieceSlotL = GameModule.getGameModule().getAllDescendantComponentsOf(PieceSlot.class);
@@ -642,6 +748,13 @@ public class QC implements Buildable
             }
         }
     }
+    
+*/
+// </editor-fold>
+
+    private Map m_Map;
+    private ArrayList<QCConfiguration> mar_objListQCConfigurations = new ArrayList<QCConfiguration>();
+    private QCConfiguration m_objQCWorkingConfiguration = null;
 
     public void loadConfigurations() 
     {
@@ -793,106 +906,8 @@ public class QC implements Buildable
         }
     }
 
-    public void build(Element e) 
-    {	
-        loadConfigurations();
-        readWorkingConfiguration();
-
-        NodeList l_NodeL = e.getElementsByTagName("*");
-
-        for (int i = 0; i < l_NodeL.getLength(); ++i) 
-        {
-            Element l_Element = (Element) l_NodeL.item(i);
-
-            String l_strName = l_Element.getAttribute("name");
-            String l_strImageName = l_Element.getAttribute("image");
-            String l_strMenu = l_Element.getAttribute("menu");
-            String l_strPieceDefinition = Builder.getText(l_Element);
-
-            // is a standard button
-            if (l_strMenu.compareToIgnoreCase("false") == 0) 
-            {
-                QCPieceEntry l_Entry = new QCPieceEntry(this, l_strName, l_strPieceDefinition, l_strImageName, l_strMenu, null, null, true);
-                QCButton l_ASLButton = new QCButton(l_Entry);
-
-                try 
-                {
-                    l_ASLButton.InitDragDrop();
-                    l_ASLButton.setName(l_strName);                    
-                    l_ASLButton.setIcon(new ImageIcon(Op.load(l_strImageName + ".png").getImage(null)));
-                    l_ASLButton.setMargin(new Insets(0, 0, 0, 0));
-                } 
-                catch (Exception ex) 
-                {
-                    ex.printStackTrace();
-                }
-
-                l_ASLButton.setAlignmentY(0.0F);
-
-                m_EntriesV.addElement(l_Entry);
-                m_ButtonsV.addElement(l_ASLButton);
-            } 
-            else // is a submenu
-            {
-                JButton l_Button = new JButton("");
-                JPopupMenu l_PopupMenu = new JPopupMenu();
-
-                QCPieceEntry l_Entry = new QCPieceEntry(this, l_strName, l_strPieceDefinition, l_strImageName, l_strMenu, null, l_PopupMenu, true);
-
-                try 
-                {
-                    l_Button.setName(l_strName);
-                    l_Button.setIcon(new ImageIcon(Op.load(l_strImageName + ".png").getImage(null)));
-                    l_Button.setMargin(new Insets(0, 0, 0, 0));
-                } 
-                catch (Exception ex) 
-                {
-                    ex.printStackTrace();
-                }
-
-                l_Button.setAlignmentY(0.0F);
-                l_Button.addActionListener(new PlaceMarkAction(l_Entry));
-
-                m_EntriesV.addElement(l_Entry);
-                m_ButtonsV.addElement(l_Button);
-                m_PopupMenusV.addElement(l_PopupMenu);
-
-                // create the submenu
-                String l_strDelims = "[,]";
-                String[] l_strTokensA = l_strPieceDefinition.split(l_strDelims);
-
-                for (int l_i = 0; l_i < l_strTokensA.length; l_i++)
-                {
-                    String l_strSingleDelims = "[:]";
-                    String[] l_strTextElemA = l_strTokensA[l_i].split(l_strSingleDelims);
-
-                    if (l_strTextElemA.length == 2) 
-                    {
-                        String l_strText = l_strTextElemA[0];
-                        String l_strID = l_strTextElemA[1];
-
-                        QCPieceEntry l_PopupEntry = new QCPieceEntry(this, l_strName + l_strID, l_strID, l_strImageName + l_strID, "false", null, null, false);
-                        QCMenuItem l_MenuItem = new QCMenuItem(l_PopupEntry);
-
-                        try 
-                        {
-                            l_MenuItem.setText(l_strText);
-                            l_MenuItem.setIcon(new ImageIcon(Op.load(l_strImageName + l_strID + ".png").getImage(null)));
-                            l_MenuItem.InitDragDrop();
-                        } 
-                        catch (Exception ex) 
-                        {
-                            ex.printStackTrace();
-                        }
-
-                        l_MenuItem.addActionListener(new PlaceMarkAction(l_PopupEntry));
-                        l_PopupMenu.add(l_MenuItem);
-
-                        m_EntriesV.addElement(l_PopupEntry);
-                    }
-                }
-            }
-        }
+    public void build(Element e)
+    {
     }
 
     public org.w3c.dom.Element getBuildElement(org.w3c.dom.Document doc) 
@@ -904,77 +919,103 @@ public class QC implements Buildable
     {
         m_Map = (Map) b;
         
-        ((ASLMap)m_Map).getPopupMenu().addSeparator();
-        JMenuItem l_SelectQCItem = new JMenuItem("Select QC working mode");
-        l_SelectQCItem.setBackground(new Color(255,255,255));
-        ((ASLMap)m_Map).getPopupMenu().add(l_SelectQCItem);
-        ((ASLMap)m_Map).getPopupMenu().addSeparator();
+        loadConfigurations();
+        readWorkingConfiguration();
+        
+        QCStartMenuItem l_objQCStartMenuItem = new QCStartMenuItem();
+        l_objQCStartMenuItem.setVisible(false);
+        
+        ((ASLMap)m_Map).getPopupMenu().add(l_objQCStartMenuItem);
 
-        // normal mode
-        ButtonGroup l_Group = new ButtonGroup();
-        JRadioButtonMenuItem l_NormalMode = new JRadioButtonMenuItem("Normal working mode");
+        QCEndMenuItem l_objQCEndMenuItem = new QCEndMenuItem();
+        l_objQCEndMenuItem.setVisible(false);
+        
+        ((ASLMap)m_Map).getPopupMenu().add(l_objQCEndMenuItem);
+        
+        RebuildPopupMenu();
 
-        l_NormalMode.addActionListener(new ActionListener() 
-        {
-            public void actionPerformed(ActionEvent evt) 
-            {
-                m_iMode = c_iModeNormal;
-
-                saveWorkingConfiguration();
-            }
-        });
-
-        l_Group.add(l_NormalMode);
-        ((ASLMap)m_Map).getPopupMenu().add(l_NormalMode);
-
-
-        JRadioButtonMenuItem l_CompactMode = new JRadioButtonMenuItem("Compact working mode");
-
-        l_CompactMode.addActionListener(new ActionListener() 
-        {
-            public void actionPerformed(ActionEvent evt) 
-            {
-                m_iMode = c_iModeCompact;
-
-                saveWorkingConfiguration();
-            }
-        });
-
-        l_Group.add(l_CompactMode);
-        ((ASLMap)m_Map).getPopupMenu().add(l_CompactMode);
-
-
-        JRadioButtonMenuItem l_VeryCompactMode = new JRadioButtonMenuItem("Very compact working mode");
-
-        l_VeryCompactMode.addActionListener(new ActionListener() 
-        {
-            public void actionPerformed(ActionEvent evt) 
-            {
-                m_iMode = c_iModeUltra;
-
-                saveWorkingConfiguration();
-                //toggleVisibility();
-            }
-        });
-
-        l_Group.add(l_VeryCompactMode);
-        ((ASLMap)m_Map).getPopupMenu().add(l_VeryCompactMode);
-
-        l_NormalMode.setSelected(m_iMode == c_iModeNormal);
-        l_CompactMode.setSelected(m_iMode == c_iModeCompact);
-        l_VeryCompactMode.setSelected(m_iMode == c_iModeUltra);
-    
-        m_Map.getToolBar().addSeparator();
+/*        m_Map.getToolBar().addSeparator();
         
         for (Enumeration<JButton> l_Enum = m_ButtonsV.elements(); l_Enum.hasMoreElements();) 
         {
             m_Map.getToolBar().add(l_Enum.nextElement());
         }
 
-        m_Map.getToolBar().addSeparator();
+        m_Map.getToolBar().addSeparator(); */
     }
 
     public void add(Buildable b) {}
+
+    private void RebuildToolbar() 
+    {
+        
+    }
+    
+    private void RebuildPopupMenu() 
+    {
+        JPopupMenu l_objPopupMenu = ((ASLMap)m_Map).getPopupMenu();
+        int l_iStartPos = 0;
+        boolean l_bEndElementNotFound = true;
+        
+        // remove the old element
+        for (int l_i = l_objPopupMenu.getComponents().length - 1; l_i >= 0; l_i--)
+        {
+            Component l_objComponent = l_objPopupMenu.getComponent(l_i);
+            
+            if (l_bEndElementNotFound)
+            {
+                if (l_objComponent instanceof QCEndMenuItem) 
+                    l_bEndElementNotFound = false;                
+            }
+            else
+            {
+                if (l_objComponent instanceof QCStartMenuItem) 
+                {
+                    l_iStartPos = l_i + 1;
+                    break;
+                }
+                else
+                {
+                    l_objPopupMenu.remove(l_i);               
+                }
+            }
+        }
+        
+        l_objPopupMenu.add(new JPopupMenu.Separator(), l_iStartPos++);
+        
+        // title
+        JMenuItem l_SelectQCItem = new JMenuItem("Select QC configuration");
+        l_SelectQCItem.setBackground(new Color(255,255,255));
+        l_objPopupMenu.add(l_SelectQCItem, l_iStartPos++);
+        
+        l_objPopupMenu.add(new JPopupMenu.Separator(), l_iStartPos++);
+
+        // button group
+        ButtonGroup l_Group = new ButtonGroup();
+        
+        for (QCConfiguration l_objQCConfiguration : mar_objListQCConfigurations)
+        {
+            QCRadioButtonMenuItem l_objQCRadioButtonMenuItem = new QCRadioButtonMenuItem(l_objQCConfiguration);
+
+            l_objQCRadioButtonMenuItem.addActionListener(new ActionListener() 
+            {
+                public void actionPerformed(ActionEvent evt) 
+                {
+                    if (evt.getSource() instanceof QCRadioButtonMenuItem)
+                    {
+                        m_objQCWorkingConfiguration = ((QCRadioButtonMenuItem)evt.getSource()).getQCConfiguration();
+                        saveWorkingConfiguration();
+                        RebuildToolbar();
+                    }
+                }
+            });
+
+            l_Group.add(l_objQCRadioButtonMenuItem);
+            l_objPopupMenu.add(l_objQCRadioButtonMenuItem, l_iStartPos++);
+            
+            l_objQCRadioButtonMenuItem.setSelected(l_objQCConfiguration == m_objQCWorkingConfiguration);
+        }
+    }
 
     private class PlaceMarkAction implements ActionListener 
     {
