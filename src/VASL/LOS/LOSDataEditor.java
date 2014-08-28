@@ -1,16 +1,27 @@
 package VASL.LOS;
 
-import VASL.LOS.Map.*;
-import VASL.build.module.map.boardArchive.BoardArchive;
-import VASL.build.module.map.boardArchive.SharedBoardMetadata;
-
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
+
+import VASL.LOS.Map.Bridge;
+import VASL.LOS.Map.Hex;
+import VASL.LOS.Map.Location;
+import VASL.LOS.Map.Map;
+import VASL.LOS.Map.Terrain;
+import VASL.build.module.map.boardArchive.BoardArchive;
+import VASL.build.module.map.boardArchive.BoardMetadata;
+import VASL.build.module.map.boardArchive.SharedBoardMetadata;
 
 
 /**
@@ -60,9 +71,16 @@ public class LOSDataEditor {
         boardArchive = new BoardArchive(boardName, boardDirectory, sharedBoardMetadata);
         this.sharedBoardMetadata = sharedBoardMetadata;
 
-        // create an empty geomorphic map
-        map = new Map(33, 10, sharedBoardMetadata.getTerrainTypes());
+		final double hexHeight = boardArchive.getHexHeight();
 
+        // create an empty geomorphic map
+		if(hexHeight != BoardMetadata.MISSING) {
+
+			map = new Map(boardArchive.getBoardWidth(), boardArchive.getBoardHeight(), 0, 0, hexHeight, sharedBoardMetadata.getTerrainTypes());
+		}
+		else {
+			map = new Map(boardArchive.getBoardWidth(), boardArchive.getBoardHeight(), sharedBoardMetadata.getTerrainTypes());
+		}
     }
 
     public void createNewLOSData(int width, int height){

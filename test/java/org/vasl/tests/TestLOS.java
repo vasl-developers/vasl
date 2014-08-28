@@ -18,6 +18,10 @@
  */
 package org.vasl.tests;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+
 import VASL.LOS.LOSDataEditor;
 import VASL.LOS.Map.LOSResult;
 import VASL.LOS.Map.Location;
@@ -31,10 +35,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-
 /**
  * Tests for the LOS engine
  */
@@ -42,8 +42,8 @@ public class TestLOS {
     private static final Logger logger = LoggerFactory.getLogger(TestLOS.class);
 
     // board directory constants
-    final private static String boardDirectory = "C:\\Users\\usulld2\\Documents\\ASL\\VASL\\boardsLOS";
-    final private static String VASLModule = "C:\\Users\\usulld2\\IdeaProjects\\VASL\\target\\vasl-6.1-LOS.jar";
+    final private static String boardDirectory = "C:\\Users\\usulld2\\Documents\\ASL\\VASL\\boards";
+    final private static String VASLModule = "C:\\Users\\usulld2\\IdeaProjects\\VASL\\target\\vasl-6.2.0.jar";
 
     SharedBoardMetadata sharedBoardMetadata;
 

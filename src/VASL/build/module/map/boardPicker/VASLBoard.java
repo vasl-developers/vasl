@@ -19,18 +19,21 @@
 
 package VASL.build.module.map.boardPicker;
 
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.StringTokenizer;
+
 import VASL.LOS.Map.Hex;
+import VASL.LOS.Map.Map;
 import VASL.LOS.Map.Terrain;
 import VASL.build.module.ASLMap;
 import VASL.build.module.map.boardArchive.BoardArchive;
 import VASL.build.module.map.boardArchive.LOSSSRule;
 import VASSAL.build.module.map.boardPicker.board.HexGrid;
-
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.StringTokenizer;
+import VASSAL.i18n.Translatable;
 
 /**
  * Extends ASLBoard to add support for version 6+ boards
@@ -51,7 +54,8 @@ public class VASLBoard extends ASLBoard {
      * @param f the archive file
      */
     //TODO: refactor the board picker so there's a better way to initialize the board and instantiate the archive interface
-    public void setBaseImageFileName(String s, File f) {
+    @Override
+	public void setBaseImageFileName(String s, File f) {
 
         //TODO: eliminate the need to call the super class method
         super.setBaseImageFileName(s,f);
@@ -68,6 +72,13 @@ public class VASLBoard extends ASLBoard {
         }
     }
 
+
+	/**
+	 * @return the hex of the map hexes in pixels
+	 */
+	public float getHexHeight() {
+		return VASLBoardArchive.getHexHeight();
+	}
     /**
      * @return true if this board is legacy format (pre 6.0)
      */
@@ -79,21 +90,21 @@ public class VASLBoard extends ASLBoard {
      * Is the board cropped?
      */
     public boolean isCropped() {
-        Rectangle croppedBounds = getCropBounds();
+        final Rectangle croppedBounds = getCropBounds();
         return !(croppedBounds.x == 0 && croppedBounds.y == 0 && croppedBounds.width == -1 && croppedBounds.height == -1);
     }
 
     /**
      * Crops the LOS data
-     * @param losData
+     * @param losData the map LOS data
      */
-    public VASL.LOS.Map.Map cropLOSData(VASL.LOS.Map.Map losData) {
+    public Map cropLOSData(Map losData) {
         if(!isCropped()) {
             return null;
         }
         else {
 
-            Rectangle bounds = new Rectangle(getCropBounds());
+			final Rectangle bounds = new Rectangle(getCropBounds());
             if(bounds.width == -1) {
                 bounds.width = getUncroppedSize().width;
             }
@@ -110,7 +121,7 @@ public class VASLBoard extends ASLBoard {
     public Rectangle getBoardLocation() {
 
         // the easiest way to do this is to use the boundary rectangle and remove the edge buffer
-        Rectangle rectangle = new Rectangle(this.boundaries);
+		final Rectangle rectangle = new Rectangle(boundaries);
         rectangle.translate(-1 * map.getEdgeBuffer().width, -1 * map.getEdgeBuffer().height);
         return rectangle;
     }
@@ -119,7 +130,7 @@ public class VASLBoard extends ASLBoard {
      * @return the LOS data
      * @param terrainTypes the terrain types
      */
-    public VASL.LOS.Map.Map getLOSData(HashMap<String, Terrain> terrainTypes){
+    public Map getLOSData(HashMap<String, Terrain> terrainTypes){
         return VASLBoardArchive.getLOSData(terrainTypes);
     }
 
@@ -136,23 +147,24 @@ public class VASLBoard extends ASLBoard {
         else {
 
             version = VASLBoardArchive.getVersion();
-            if(VASLBoardArchive.getA1CenterX() != VASLBoardArchive.missingValue()){
-                ((HexGrid) getGrid()).setAttribute(HexGrid.X0, VASLBoardArchive.getA1CenterX());
+            if(VASLBoardArchive.getA1CenterX() != BoardArchive.missingValue()){
+                ((Translatable)getGrid()).setAttribute(HexGrid.X0, VASLBoardArchive.getA1CenterX());
             }
-            if(VASLBoardArchive.getA1CenterY() != VASLBoardArchive.missingValue()){
-                ((HexGrid) getGrid()).setAttribute(HexGrid.Y0, VASLBoardArchive.getA1CenterY());
+            if(VASLBoardArchive.getA1CenterY() != BoardArchive.missingValue()){
+                ((Translatable)getGrid()).setAttribute(HexGrid.Y0, VASLBoardArchive.getA1CenterY());
             }
-            if(VASLBoardArchive.getHexWidth() != VASLBoardArchive.missingValue()){
-                ((HexGrid) getGrid()).setAttribute(HexGrid.DX, VASLBoardArchive.getHexWidth());
+            if((int) VASLBoardArchive.getHexWidth() != BoardArchive.missingValue()){
+                ((Translatable)getGrid()).setAttribute(HexGrid.DX, VASLBoardArchive.getHexWidth());
             }
-            if(VASLBoardArchive.getHexHeight() != VASLBoardArchive.missingValue()){
-                ((HexGrid) getGrid()).setAttribute(HexGrid.DY, VASLBoardArchive.getHexHeight());
+            if((int) VASLBoardArchive.getHexHeight() != BoardArchive.missingValue()){
+                ((Translatable)getGrid()).setAttribute(HexGrid.DY, VASLBoardArchive.getHexHeight());
             }
         }
 
     }
 
-    public String getName() {
+    @Override
+	public String getName() {
         if(isLegacyBoard()) {
             return super.getName();
         }
@@ -165,29 +177,29 @@ public class VASLBoard extends ASLBoard {
      * Applies the color scenario-specific rules to the LOS data
      * @param LOSData the LOS data to modify
      */
-    public void applyColorSSRules(VASL.LOS.Map.Map LOSData, HashMap<String, LOSSSRule> losssRules) throws BoardException {
+    public void applyColorSSRules(Map LOSData, HashMap<String, LOSSSRule> losssRules) throws BoardException {
 
-        if(!this.legacyBoard && terrainChanges.length() > 0) {
+        if(!legacyBoard && !terrainChanges.isEmpty()) {
 
             boolean changed = false; // changes made?
 
             // step through each SSR token
-            StringTokenizer st = new StringTokenizer(terrainChanges, "\t");
+            final StringTokenizer st = new StringTokenizer(terrainChanges, "\t");
             while (st.hasMoreTokens()) {
 
-                String s = st.nextToken();
+				final String s = st.nextToken();
 
-                LOSSSRule rule = losssRules.get(s);
+				final LOSSSRule rule = losssRules.get(s);
                 if(rule == null) {
                     throw new BoardException("Unsupported scenario-specific rule: " + s + ". LOS disabled");
                 }
 
                 // these are rules that have to be handled in the code
-                if(rule.getType().equals("customCode")) {
+                if("customCode".equals(rule.getType())) {
 
-                    if(s.equals("NoStairwells")) {
+                    if("NoStairwells".equals(s)) {
 
-                        Hex[][] hexGrid = LOSData.getHexGrid();
+						final Hex[][] hexGrid = LOSData.getHexGrid();
                         for (int x = 0; x < hexGrid.length; x++) {
                             for (int y = 0; y < hexGrid[x].length; y++) {
                                 LOSData.getHex(x, y).setStairway(false);
@@ -196,7 +208,7 @@ public class VASLBoard extends ASLBoard {
                         changed = true;
 
                     }
-                    else if(s.equals("RowhouseBarsToBuildings")) {
+                    else if("RowhouseBarsToBuildings".equals(s)) {
 
                         // for simplicity assume stone building as type will not impact LOD
                         changeGridTerrain(LOSData.getTerrain("Rowhouse Wall"), LOSData.getTerrain("Stone Building"), LOSData);
@@ -206,7 +218,7 @@ public class VASLBoard extends ASLBoard {
                         changeGridTerrain(LOSData.getTerrain("Rowhouse Wall, 4 Level"), LOSData.getTerrain("Stone Building, 4 Level"), LOSData);
                         changed = true;
                     }
-                    else if(s.equals("RowhouseBarsToOpenGround")) {
+                    else if("RowhouseBarsToOpenGround".equals(s)) {
 
                         changeGridTerrain(LOSData.getTerrain("Rowhouse Wall"), LOSData.getTerrain("Open Ground"), LOSData);
                         changeGridTerrain(LOSData.getTerrain("Rowhouse Wall, 1 Level"), LOSData.getTerrain("Open Ground"), LOSData);
@@ -215,10 +227,10 @@ public class VASLBoard extends ASLBoard {
                         changeGridTerrain(LOSData.getTerrain("Rowhouse Wall, 4 Level"), LOSData.getTerrain("Open Ground"), LOSData);
                         changed = true;
                     }
-                    else if(s.equals("NoBridge")) {
+                    else if("NoBridge".equals(s)) {
 
                         // OK if board has no bridges otherwise unsupported
-                        Hex[][] hexGrid = LOSData.getHexGrid();
+						final Hex[][] hexGrid = LOSData.getHexGrid();
                         for (int x = 0; x < hexGrid.length; x++) {
                             for (int y = 0; y < hexGrid[x].length; y++) {
                                 if(LOSData.getHex(x, y).hasBridge()){
@@ -231,24 +243,24 @@ public class VASLBoard extends ASLBoard {
                         throw new BoardException("Unsupported custom code SSR: " + s);
                     }
                 }
-                else if(rule.getType().equals("terrainMap")) {
+                else if("terrainMap".equals(rule.getType())) {
 
                     applyTerrainMapRule(rule, LOSData);
                     changed = true;
 
                 }
-                else if(rule.getType().equals("elevationMap")) {
+                else if("elevationMap".equals(rule.getType())) {
 
                     applyElevationMapRule(rule, LOSData);
                     changed = true;
 
                 }
-                else if(rule.getType().equals("terrainToElevationMap")) {
+                else if("terrainToElevationMap".equals(rule.getType())) {
 
                     applyTerrainToElevationMapRule(rule, LOSData);
                     changed = true;
                 }
-                else if(rule.getType().equals("elevationToTerrainMap")) {
+                else if("elevationToTerrainMap".equals(rule.getType())) {
 
                     applyElevationToTerrainMapRule(rule, LOSData);
                     changed = true;
@@ -268,16 +280,16 @@ public class VASLBoard extends ASLBoard {
      * @param LOSData the LOS data
      * @throws BoardException
      */
-    private void applyElevationMapRule(LOSSSRule rule, VASL.LOS.Map.Map LOSData) throws BoardException {
+    private static void applyElevationMapRule(LOSSSRule rule, Map LOSData) throws BoardException {
 
-        int fromElevation;
-        int toElevation;
+		final int fromElevation;
+		final int toElevation;
         try {
             fromElevation = Integer.parseInt(rule.getFromValue());
             toElevation = Integer.parseInt(rule.getToValue());
         }
         catch (Exception e) {
-            throw new BoardException("Invalid from or to value in SSR elevation map " + rule.getName());
+            throw new BoardException("Invalid from or to value in SSR elevation map " + rule.getName(), e);
         }
         changeGridElevation(fromElevation, toElevation, LOSData);
     }
@@ -288,16 +300,16 @@ public class VASLBoard extends ASLBoard {
      * @param LOSData the LOS data
      * @throws BoardException
      */
-    private void applyTerrainMapRule(LOSSSRule rule, VASL.LOS.Map.Map LOSData) throws BoardException {
+    private static void applyTerrainMapRule(LOSSSRule rule, Map LOSData) throws BoardException {
 
-        Terrain fromTerrain;
-        Terrain toTerrain;
+        final Terrain fromTerrain;
+        final Terrain toTerrain;
         try {
             fromTerrain = LOSData.getTerrain(rule.getFromValue());
             toTerrain = LOSData.getTerrain(rule.getToValue());
         }
         catch (Exception e) {
-            throw new BoardException("Invalid from or to terrain in SSR terrain map " + rule.getName());
+            throw new BoardException("Invalid from or to terrain in SSR terrain map " + rule.getName(), e);
         }
         changeGridTerrain(fromTerrain, toTerrain, LOSData);
     }
@@ -308,17 +320,17 @@ public class VASLBoard extends ASLBoard {
      * @param LOSData the LOS data
      * @throws BoardException
      */
-    private void applyElevationToTerrainMapRule(LOSSSRule rule, VASL.LOS.Map.Map LOSData) throws BoardException {
+    private static void applyElevationToTerrainMapRule(LOSSSRule rule, Map LOSData) throws BoardException {
 
-        int fromElevation;
-        Terrain toTerrain;
+        final int fromElevation;
+        final Terrain toTerrain;
 
         try {
             fromElevation = Integer.parseInt(rule.getFromValue());
             toTerrain = LOSData.getTerrain(rule.getToValue());
         }
         catch (Exception e) {
-            throw new BoardException("Invalid from or to value in SSR elevation to terrain map " + rule.getName());
+            throw new BoardException("Invalid from or to value in SSR elevation to terrain map " + rule.getName(), e);
         }
 
         // adjust the terrain and elevation
@@ -339,23 +351,23 @@ public class VASLBoard extends ASLBoard {
      * @param LOSData the LOS data
      * @throws BoardException
      */
-    private void applyTerrainToElevationMapRule(LOSSSRule rule, VASL.LOS.Map.Map LOSData) throws BoardException {
+    private static void applyTerrainToElevationMapRule(LOSSSRule rule, Map LOSData) throws BoardException {
 
-        Terrain fromTerrain;
-        int toElevation;
+        final Terrain fromTerrain;
+        final int toElevation;
         try {
             fromTerrain = LOSData.getTerrain(rule.getFromValue());
             toElevation = Integer.parseInt(rule.getToValue());
         }
         catch (Exception e) {
-            throw new BoardException("Invalid from or to value in SSR terrain to elevation map " + rule.getName());
+            throw new BoardException("Invalid from or to value in SSR terrain to elevation map " + rule.getName(), e);
         }
 
         // adjust the terrain and elevation
         for(int x = 0; x < LOSData.getGridWidth(); x++) {
             for(int y = 0; y < LOSData.getGridHeight(); y++ ) {
 
-                if(LOSData.getGridTerrain(x, y) == fromTerrain){
+                if(LOSData.getGridTerrain(x, y).equals(fromTerrain)){
                     LOSData.setGridElevation(toElevation, x, y);
                     LOSData.setGridTerrainCode(LOSData.getTerrain("Open Ground").getType(), x, y);
                 }
@@ -370,16 +382,16 @@ public class VASLBoard extends ASLBoard {
      * @param toTerrain the to terrain
      * @param LOSData the LOS data
      */
-    private void changeGridTerrain(
-            VASL.LOS.Map.Terrain fromTerrain,
-            VASL.LOS.Map.Terrain toTerrain,
-            VASL.LOS.Map.Map LOSData
-    ){
+    private static void changeGridTerrain(
+		Terrain fromTerrain,
+		Terrain toTerrain,
+		Map LOSData
+	){
 
         for(int x = 0; x < LOSData.getGridWidth(); x++) {
             for(int y = 0; y < LOSData.getGridHeight(); y++ ) {
 
-                if(LOSData.getGridTerrain(x, y) == fromTerrain){
+                if(LOSData.getGridTerrain(x, y).equals(fromTerrain)){
                     LOSData.setGridTerrainCode(toTerrain.getType(), x, y);
                 }
             }
@@ -393,11 +405,11 @@ public class VASLBoard extends ASLBoard {
      * @param toElevation the to elevation
      * @param LOSData the LOS data
      */
-    private void changeGridElevation(
-            int fromElevation,
-            int toElevation,
-            VASL.LOS.Map.Map LOSData
-    ){
+    private static void changeGridElevation(
+		int fromElevation,
+		int toElevation,
+		Map LOSData
+	){
 
         for(int x = 0; x < LOSData.getGridWidth(); x++) {
             for(int y = 0; y < LOSData.getGridHeight(); y++ ) {

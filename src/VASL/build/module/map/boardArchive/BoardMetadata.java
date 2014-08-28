@@ -1,16 +1,16 @@
 package VASL.build.module.map.boardArchive;
 
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.JDOMException;
-import org.jdom2.input.SAXBuilder;
-
-import java.awt.*;
+import java.awt.Color;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
 
 /**
  * Read the XML metadata in the board archive
@@ -48,8 +48,8 @@ public class BoardMetadata extends AbstractMetadata {
 
     private int A1CenterX = (int) MISSING;  // location of the hex A1 center dot
     private int A1CenterY = (int) MISSING;
-    private float hexWidth = MISSING;
-    private float hexHeight = MISSING;
+    private float hexWidth = (float) MISSING;
+    private float hexHeight = (float )MISSING;
     private boolean altHexGrain = false; // upper left is A0, B1 is higher
 
     // Board metadata file element and attribute constants

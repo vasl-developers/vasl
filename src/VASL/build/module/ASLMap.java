@@ -19,7 +19,23 @@
 
 package VASL.build.module;
 
-import VASL.LOS.Map.Hex;
+import java.awt.Color;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.LinkedList;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+
 import VASL.build.module.map.boardArchive.BoardArchive;
 import VASL.build.module.map.boardArchive.SharedBoardMetadata;
 import VASL.build.module.map.boardPicker.BoardException;
@@ -34,16 +50,6 @@ import VASSAL.tools.io.IOUtils;
 import org.jdom2.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.LinkedList;
 
 public class ASLMap extends Map {
 
@@ -74,7 +80,7 @@ public class ASLMap extends Map {
 
       // FredKors: creation of the toolbar button
       // that opens the popup menu
-      JButton l_Menu = new JButton();
+      final JButton l_Menu = new JButton();
 
     try
     {
@@ -98,7 +104,7 @@ public class ASLMap extends Map {
     });
 
     // add the first element to the popupp menu
-    JMenuItem l_SelectItem = new JMenuItem("Select");
+    final JMenuItem l_SelectItem = new JMenuItem("Select");
     l_SelectItem.setBackground(new Color(255,255,255));
     m_mnuMainPopup.add(l_SelectItem);
     m_mnuMainPopup.addSeparator();    
@@ -160,14 +166,14 @@ public class ASLMap extends Map {
     }
 
     /**
-     * read the shared board metadata
+     * read the shared board metadata from the game archive
      */
     private void readSharedBoardMetadata() throws JDOMException {
 
         // read the shared board metadata
         InputStream metadata = null;
         try {
-            DataArchive archive = GameModule.getGameModule().getDataArchive();
+            final DataArchive archive = GameModule.getGameModule().getDataArchive();
 
             metadata =  archive.getInputStream(BoardArchive.getSharedBoardMetadataFileName());
 
@@ -203,11 +209,18 @@ public class ASLMap extends Map {
             // and determine the size of the map
             unsupportedFeature = false;
             legacyMode = false;
-            Rectangle mapBoundary = new Rectangle(0,0);
+            final Rectangle mapBoundary = new Rectangle(0,0);
+			double hexHeight = 0.0;
             for(Board b: boards) {
-                VASLBoard board = (VASLBoard) b;
+                final VASLBoard board = (VASLBoard) b;
                 mapBoundary.add(b.bounds());
                 VASLBoards.add(board);
+
+				// make sure the hex height of all boards is the same
+				if (hexHeight != 0.0 && (double) board.getHexHeight() != hexHeight ) {
+					throw new BoardException("Map configuration contains multiple hex sizes - disabling LOS");
+				}
+				hexHeight = (double) board.getHexHeight();
             }
 
             // remove the edge buffer from the map boundary size
@@ -216,8 +229,8 @@ public class ASLMap extends Map {
 
             // create the VASL map
             VASLMap = new VASL.LOS.Map.Map(
-                    (int) Math.round(mapBoundary.width/ Hex.WIDTH) + 1,
-                    (int) Math.round(mapBoundary.height / Hex.HEIGHT),
+                    (int) Math.round(mapBoundary.width/ VASL.LOS.Map.Map.DEFAULT_HEX_WIDTH) + 1,
+                    (int) Math.round(mapBoundary.height / VASL.LOS.Map.Map.DEFAULT_HEX_HEIGHT),
                     sharedBoardMetadata.getTerrainTypes());
         }
         // clean up and fall back to legacy mode if an unexpected exception is thrown
@@ -242,21 +255,15 @@ public class ASLMap extends Map {
                     VASL.LOS.Map.Map LOSData = board.getLOSData(sharedBoardMetadata.getTerrainTypes());
 
                     // check for overlays
-                    Enumeration overlays = board.getOverlays();
+                    final Enumeration overlays = board.getOverlays();
                     while (overlays.hasMoreElements()) {
-                        if(overlays.nextElement().toString().length() > 0) {
+                        if(!overlays.nextElement().toString().isEmpty()) {
                             throw new BoardException("Overlays are not supported - disabling LOS");
                         }
                     }
 
                     // apply the SSR changes, crop and flip if needed
-                    try {
-                        board.applyColorSSRules(LOSData, sharedBoardMetadata.getLOSSSRules());
-                    }
-                    catch (BoardException e) {
-                        logError(e.getMessage());
-                        throw e;
-                    }
+					board.applyColorSSRules(LOSData, sharedBoardMetadata.getLOSSSRules());
 
                     if(board.isCropped()) {
                         LOSData = board.cropLOSData(LOSData);

@@ -28,8 +28,8 @@ import java.awt.geom.AffineTransform;
 public class Bridge {
 
 	// public constants
-	public static final int	CUSTOM_BRIDGE_WIDTH	= (int) Hex.HEIGHT/4;
-	public static final int	CUSTOM_BRIDGE_HEIGHT	= (int) Hex.HEIGHT;
+	public static final int	CUSTOM_BRIDGE_WIDTH	= (int) Map.DEFAULT_HEX_HEIGHT /4;
+	public static final int	CUSTOM_BRIDGE_HEIGHT	= (int) Map.DEFAULT_HEX_HEIGHT;
 	public static final int	ROAD_AREA_INSET		= 2;
 
 	public static final int	SINGLE_HEX_CUSTOM_BRIDGE_WIDTH	= 32;
