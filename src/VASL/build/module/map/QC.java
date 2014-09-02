@@ -9,43 +9,28 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
-
 import org.w3c.dom.Element;
-
 import VASSAL.Info;
 import VASSAL.build.Buildable;
+import VASSAL.build.GameModule;
 import VASSAL.build.module.Map;
-import VASSAL.build.module.map.PieceMover;
 import VASSAL.build.widget.PieceSlot;
-import VASSAL.counters.DragBuffer;
-import VASSAL.counters.GamePiece;
-import VASSAL.counters.KeyBuffer;
-import VASSAL.counters.PieceCloner;
-import VASSAL.counters.Properties;
 import java.awt.Component;
-import java.awt.Point;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DragGestureEvent;
-import java.awt.dnd.DragGestureListener;
-import java.awt.dnd.DragSource;
-import java.awt.dnd.DragSourceDragEvent;
-import java.awt.dnd.DragSourceDropEvent;
-import java.awt.dnd.DragSourceEvent;
-import java.awt.dnd.DragSourceListener;
 import java.io.FilenameFilter;
 import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
-import javax.swing.JToolBar.Separator;
+import java.util.Hashtable;
+import java.util.List;
+import javax.swing.JToolBar;
+import javax.swing.Timer;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.SAXParser;
@@ -65,6 +50,12 @@ class QCStartMenuItem extends JPopupMenu.Separator
 {}
 
 class QCEndMenuItem extends JPopupMenu.Separator
+{}
+
+class QCStartToolbarItem extends JToolBar.Separator
+{}
+
+class QCEndToolbarItem extends JToolBar.Separator
 {}
 
 class QCRadioButtonMenuItem extends JRadioButtonMenuItem
@@ -261,8 +252,8 @@ class QCConfiguration extends DefaultHandler
     /**
      * @param m_strDescription the m_strDescription to set
      */
-    public void setDescription(String m_strDescription) {
-        this.m_strDescription = m_strDescription;
+    public void setDescription(String strDescription) {
+        this.m_strDescription = strDescription;
     }
 
     /**
@@ -286,7 +277,7 @@ class QCConfiguration extends DefaultHandler
             QCConfigurationEntry l_newEntry = new QCConfigurationEntry(getQC());
             
             l_newEntry.setMenu(true);
-            l_newEntry.setPieceSlot(attributes.getValue("slot"));
+            l_newEntry.setGpID(attributes.getValue("slot"));
             
             if (m_objCurrentSubMenu != null)
             {
@@ -302,7 +293,7 @@ class QCConfiguration extends DefaultHandler
         {
             QCConfigurationEntry l_newEntry = new QCConfigurationEntry(getQC());
 
-            l_newEntry.setPieceSlot(attributes.getValue("slot"));
+            l_newEntry.setGpID(attributes.getValue("slot"));
             
             if (m_objCurrentSubMenu != null)
                 m_objCurrentSubMenu.getListConfigurationEntry().add(l_newEntry);
@@ -367,19 +358,21 @@ class QCConfiguration extends DefaultHandler
 class QCConfigurationEntry
 // <editor-fold defaultstate="collapsed">
 {
-    private QC m_objQC;
+    private final QC m_objQC;
     private boolean m_bMenu;
     private ArrayList<QCConfigurationEntry> mar_objListConfigurationEntry;
-    private String m_strPieceSlot;    
+    private String m_strGpID;    
     private QCConfigurationEntry m_objParentEntry;
+    private PieceSlot m_objPieceSlot;
     
     public QCConfigurationEntry(QC objQC)
     {
         m_objQC = objQC;
         m_bMenu = false;
         mar_objListConfigurationEntry = null;
-        m_strPieceSlot = "";
+        m_strGpID = "";
         m_objParentEntry = null;
+        m_objPieceSlot = null;
     }   
 
     /**
@@ -390,10 +383,10 @@ class QCConfigurationEntry
     }
 
     /**
-     * @param m_bMenu the m_bMenu to set
+     * @param bMenu the bMenu to set
      */
-    public void setMenu(boolean m_bMenu) {
-        this.m_bMenu = m_bMenu;
+    public void setMenu(boolean bMenu) {
+        this.m_bMenu = bMenu;
         
         if (m_bMenu)
             mar_objListConfigurationEntry = new ArrayList<QCConfigurationEntry>();
@@ -409,15 +402,15 @@ class QCConfigurationEntry
     /**
      * @return the m_strPieceSlot
      */
-    public String getPieceSlot() {
-        return m_strPieceSlot;
+    public String getGpID() {
+        return m_strGpID;
     }
 
     /**
-     * @param m_strPieceSlot the m_strPieceSlot to set
+     * @param strGpID the strGpID to set
      */
-    public void setPieceSlot(String m_strPieceSlot) {
-        this.m_strPieceSlot = m_strPieceSlot;
+    public void setGpID(String strGpID) {
+        this.m_strGpID = strGpID;
     }
 
     /**
@@ -435,10 +428,10 @@ class QCConfigurationEntry
     }
 
     /**
-     * @param m_objParentEntry the m_objParentEntry to set
+     * @param objParentEntry the objParentEntry to set
      */
-    public void setParent(QCConfigurationEntry m_objParentEntry) {
-        this.m_objParentEntry = m_objParentEntry;
+    public void setParent(QCConfigurationEntry objParentEntry) {
+        this.m_objParentEntry = objParentEntry;
     }
 
     void WriteXML(Document objDocument, Element objElement) 
@@ -449,7 +442,7 @@ class QCConfigurationEntry
 
             // set attribute to staff element
             Attr l_objAttributes = objDocument.createAttribute("slot");
-            l_objAttributes.setValue(getPieceSlot());
+            l_objAttributes.setValue(getGpID());
             l_objEntry.setAttributeNode(l_objAttributes);
             
             objElement.appendChild(l_objEntry);
@@ -463,11 +456,25 @@ class QCConfigurationEntry
 
             // set attribute to staff element
             Attr l_objAttributes = objDocument.createAttribute("slot");
-            l_objAttributes.setValue(getPieceSlot());
+            l_objAttributes.setValue(getGpID());
             l_objEntry.setAttributeNode(l_objAttributes);
             
             objElement.appendChild(l_objEntry);
         }
+    }
+
+    /**
+     * @return the m_objPieceSlot
+     */
+    public PieceSlot getPieceSlot() {
+        return m_objPieceSlot;
+    }
+
+    /**
+     * @param objPieceSlot the objPieceSlot to set
+     */
+    public void setPieceSlot(PieceSlot objPieceSlot) {
+        this.m_objPieceSlot = objPieceSlot;
     }
 }
 // </editor-fold>
@@ -719,46 +726,17 @@ public class QC implements Buildable
             }
         }
     
-    protected void getPiecesSlot() 
-    {
-        List<PieceSlot> lar_PieceSlotL = GameModule.getGameModule().getAllDescendantComponentsOf(PieceSlot.class);
-        
-        for (Enumeration<QCPieceEntry> l_Enum = m_EntriesV.elements(); l_Enum.hasMoreElements();) 
-        {
-            QCPieceEntry l_Entry = l_Enum.nextElement();
-
-            if (l_Entry.m_popupMenu == null)
-            {
-                for (PieceSlot l_objPieceSlot : lar_PieceSlotL) 
-                {
-                    String l_id = l_objPieceSlot.getGpId();
-
-                    if (l_id != null) 
-                    {
-                        if (l_id.length() != 0) 
-                        {
-                            if (l_id.compareTo(l_Entry.m_strPieceDefinition) == 0) 
-                            {
-                                l_Entry.m_objPieceSlot = l_objPieceSlot;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
 */
 // </editor-fold>
 
     private Map m_Map;
-    private ArrayList<QCConfiguration> mar_objListQCConfigurations = new ArrayList<QCConfiguration>();
+    private final ArrayList<QCConfiguration> mar_objListQCConfigurations = new ArrayList<QCConfiguration>();
     private QCConfiguration m_objQCWorkingConfiguration = null;
+    private Timer m_objLinkTimer;
 
     public void loadConfigurations() 
     {
-        SAXParser l_objXMLParser = null;
+        SAXParser l_objXMLParser;
         Path l_pathConfigs = Paths.get(Info.getHomeDir() + System.getProperty("file.separator","\\") + "qcconfigs");
         
         try 
@@ -769,7 +747,6 @@ public class QC implements Buildable
         } 
         catch (Exception ex) 
         {
-            ex.printStackTrace();
             l_objXMLParser = null;                    
         }
 
@@ -779,21 +756,20 @@ public class QC implements Buildable
             mar_objListQCConfigurations.clear();
             
             // read default configuration
-            QCConfiguration l_objQCDefaultConfiguration = new QCConfiguration(this, null); // null file for the default configuration
+            m_objQCWorkingConfiguration = new QCConfiguration(this, null); // null file for the default configuration
 
             try 
             {
                 // parse the default configuration
-                l_objXMLParser.parse(new InputSource(new StringReader(mc_strDefaultConfig)), l_objQCDefaultConfiguration);
+                l_objXMLParser.parse(new InputSource(new StringReader(mc_strDefaultConfig)), m_objQCWorkingConfiguration);
             }
             catch (Exception ex) 
             {
-                ex.printStackTrace();
-                l_objQCDefaultConfiguration = null;
+                m_objQCWorkingConfiguration = null;
             }
 
-            if (l_objQCDefaultConfiguration != null)
-                mar_objListQCConfigurations.add(l_objQCDefaultConfiguration);            
+            if (m_objQCWorkingConfiguration != null)
+                mar_objListQCConfigurations.add(m_objQCWorkingConfiguration);            
         
             // now read the custom configuration files
             // check for configs dir
@@ -847,7 +823,7 @@ public class QC implements Buildable
     public void readWorkingConfiguration() 
     {
         java.util.Properties l_objProperties = new java.util.Properties();
-        InputStream l_objInputStream = null;
+        InputStream l_objInputStream;
         String l_strWorkingConfigurationName = "";
 
         // try loading QC.properties from from the home directory
@@ -859,18 +835,20 @@ public class QC implements Buildable
         { 
             l_objInputStream = null; 
         }
-
-        try 
+        
+        if (l_objInputStream != null)
         {
-            l_objProperties.load(l_objInputStream);
+            try 
+            {
+                l_objProperties.load(l_objInputStream);
 
-            l_objInputStream.close();
+                l_objInputStream.close();
 
-            l_strWorkingConfigurationName = l_objProperties.getProperty("QC_working_configuration", "");
-        }
-        catch (Exception ex) 
-        { 
-            ex.printStackTrace();
+                l_strWorkingConfigurationName = l_objProperties.getProperty("QC_working_configuration", "");
+            }
+            catch (Exception ex) 
+            { 
+            }
         }
         
         for (QCConfiguration l_objQCConfiguration : mar_objListQCConfigurations)
@@ -901,13 +879,14 @@ public class QC implements Buildable
             }
             catch (Exception ex) 
             {
-                ex.printStackTrace();
             }
         }
     }
 
     public void build(Element e)
     {
+        loadConfigurations();
+        readWorkingConfiguration();
     }
 
     public org.w3c.dom.Element getBuildElement(org.w3c.dom.Document doc) 
@@ -919,36 +898,70 @@ public class QC implements Buildable
     {
         m_Map = (Map) b;
         
-        loadConfigurations();
-        readWorkingConfiguration();
-        
-        QCStartMenuItem l_objQCStartMenuItem = new QCStartMenuItem();
-        l_objQCStartMenuItem.setVisible(false);
-        
-        ((ASLMap)m_Map).getPopupMenu().add(l_objQCStartMenuItem);
-
-        QCEndMenuItem l_objQCEndMenuItem = new QCEndMenuItem();
-        l_objQCEndMenuItem.setVisible(false);
-        
-        ((ASLMap)m_Map).getPopupMenu().add(l_objQCEndMenuItem);
+        ((ASLMap)m_Map).getPopupMenu().add(new QCStartMenuItem());
+        ((ASLMap)m_Map).getPopupMenu().add(new QCEndMenuItem());
         
         RebuildPopupMenu();
 
-/*        m_Map.getToolBar().addSeparator();
+        m_Map.getToolBar().add(new QCStartToolbarItem());
+        m_Map.getToolBar().add(new QCEndToolbarItem());
         
-        for (Enumeration<JButton> l_Enum = m_ButtonsV.elements(); l_Enum.hasMoreElements();) 
+        m_objLinkTimer = new Timer(5000, new ActionListener() 
         {
-            m_Map.getToolBar().add(l_Enum.nextElement());
-        }
+            public void actionPerformed(ActionEvent e) 
+            {
+                m_objLinkTimer.stop();
+                
+                ReadPiecesSlot();
+                RebuildToolbar();
+            }
+        });
+            
+        m_objLinkTimer.setRepeats(false);
+        m_objLinkTimer.start();
+    }
+    
+    private void ReadPiecesSlot()
+    {
+        List<PieceSlot> lar_PieceSlotL = GameModule.getGameModule().getAllDescendantComponentsOf(PieceSlot.class);
+        Hashtable lar_HashPieceSlot = new Hashtable();
 
-        m_Map.getToolBar().addSeparator(); */
+        for (PieceSlot l_objPieceSlot : lar_PieceSlotL) 
+            lar_HashPieceSlot.put(l_objPieceSlot.getGpId(), l_objPieceSlot);
+        
+        lar_PieceSlotL = null;
+        
+        for (QCConfiguration l_objQCConfiguration : mar_objListQCConfigurations)
+        {
+            for (QCConfigurationEntry l_objConfigurationEntry : l_objQCConfiguration.getListConfigurationEntry())
+                setPieceSlot(l_objConfigurationEntry, lar_HashPieceSlot);
+        }
+    }
+    
+    private void setPieceSlot(QCConfigurationEntry objConfigurationEntry, Hashtable ar_HashPieceSlot) 
+    {
+        PieceSlot l_objPieceSlot = (PieceSlot) ar_HashPieceSlot.get(objConfigurationEntry.getGpID());
+        
+        if (l_objPieceSlot != null)
+        {
+            objConfigurationEntry.setPieceSlot(l_objPieceSlot);
+            
+            if (objConfigurationEntry.isMenu())
+            {
+                for (QCConfigurationEntry l_objConfigurationEntry : objConfigurationEntry.getListConfigurationEntry())
+                    setPieceSlot(l_objConfigurationEntry, ar_HashPieceSlot);
+            }
+        }
     }
 
     public void add(Buildable b) {}
 
     private void RebuildToolbar() 
     {
-        
+        if (m_objQCWorkingConfiguration != null)
+        {
+// TODO
+        }
     }
     
     private void RebuildPopupMenu() 
@@ -980,8 +993,6 @@ public class QC implements Buildable
                 }
             }
         }
-        
-        l_objPopupMenu.add(new JPopupMenu.Separator(), l_iStartPos++);
         
         // title
         JMenuItem l_SelectQCItem = new JMenuItem("Select QC configuration");
