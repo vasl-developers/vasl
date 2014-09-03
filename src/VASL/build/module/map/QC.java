@@ -19,8 +19,20 @@ import VASSAL.Info;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.Map;
+import VASSAL.build.module.map.PieceMover;
 import VASSAL.build.widget.PieceSlot;
+import VASSAL.counters.DragBuffer;
+import VASSAL.counters.GamePiece;
+import VASSAL.counters.KeyBuffer;
+import VASSAL.counters.PieceCloner;
+import VASSAL.counters.Properties;
 import java.awt.Component;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DragGestureEvent;
+import java.awt.dnd.DragGestureListener;
+import java.awt.dnd.DragSource;
 import java.io.FilenameFilter;
 import java.io.StringReader;
 import java.nio.file.Files;
@@ -29,6 +41,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import javax.swing.ImageIcon;
+import javax.swing.JMenu;
 import javax.swing.JToolBar;
 import javax.swing.Timer;
 import javax.xml.parsers.DocumentBuilder;
@@ -52,13 +66,14 @@ class QCStartMenuItem extends JPopupMenu.Separator
 class QCEndMenuItem extends JPopupMenu.Separator
 {}
 
-class QCStartToolbarItem extends JToolBar.Separator
+class QCStartToolBarItem extends JToolBar.Separator
 {}
 
-class QCEndToolbarItem extends JToolBar.Separator
+class QCEndToolBarItem extends JToolBar.Separator
 {}
 
 class QCRadioButtonMenuItem extends JRadioButtonMenuItem
+// <editor-fold defaultstate="collapsed">
 {
     private final QCConfiguration m_objQCConfiguration;
     
@@ -76,23 +91,25 @@ class QCRadioButtonMenuItem extends JRadioButtonMenuItem
         return m_objQCConfiguration;
     }
 }
+// </editor-fold>
 
-/*
 class QCButton extends JButton
 // <editor-fold defaultstate="collapsed">
 {
-    QCPieceEntry m_objEntry;
-    
-    public QCButton(QCPieceEntry objEntry) 
+    PieceSlot m_objPieceSlot;
+        
+    public QCButton(PieceSlot objPieceSlot) 
     {
         super();
-        m_objEntry = objEntry;
+        m_objPieceSlot = objPieceSlot;
     }
     
     public void InitDragDrop()
     {
-        DragGestureListener dragGestureListener = new DragGestureListener() {
-            public void dragGestureRecognized(DragGestureEvent dge) {
+        DragGestureListener dragGestureListener = new DragGestureListener() 
+        {
+            public void dragGestureRecognized(DragGestureEvent dge) 
+            {
                 startDrag();
                 PieceMover.AbstractDragHandler.getTheDragHandler().dragGestureRecognized(dge);
             }
@@ -103,21 +120,18 @@ class QCButton extends JButton
     // Puts counter in DragBuffer. Call when mouse gesture recognized
     protected void startDrag() 
     {
-        if (m_objEntry.m_objPieceSlot == null)
-            m_objEntry.m_objParent.getPiecesSlot();
-            
-        if (m_objEntry.m_objPieceSlot != null)
+        if (m_objPieceSlot != null)
         {
-            m_objEntry.m_objPieceSlot.getPiece().setPosition(new Point(0, 0));
+            m_objPieceSlot.getPiece().setPosition(new Point(0, 0));
 
             // Erase selection border to avoid leaving selected after mouse dragged out
-            m_objEntry.m_objPieceSlot.getPiece().setProperty(Properties.SELECTED, null);
+            m_objPieceSlot.getPiece().setProperty(Properties.SELECTED, null);
 
-            if (m_objEntry.m_objPieceSlot.getPiece() != null) {
+            if (m_objPieceSlot.getPiece() != null) {
                 KeyBuffer.getBuffer().clear();
                 DragBuffer.getBuffer().clear();
-                GamePiece l_objNewPiece = PieceCloner.getInstance().clonePiece(m_objEntry.m_objPieceSlot.getPiece());
-                l_objNewPiece.setProperty(Properties.PIECE_ID, m_objEntry.m_objPieceSlot.getGpId());
+                GamePiece l_objNewPiece = PieceCloner.getInstance().clonePiece(m_objPieceSlot.getPiece());
+                l_objNewPiece.setProperty(Properties.PIECE_ID, m_objPieceSlot.getGpId());
                 DragBuffer.getBuffer().add(l_objNewPiece);
             }
         }
@@ -125,6 +139,7 @@ class QCButton extends JButton
 }
 // </editor-fold>
 
+/*
 class QCMenuItem extends JMenuItem implements DragSourceListener
 // <editor-fold defaultstate="collapsed">
 {
@@ -641,29 +656,6 @@ public class QC implements Buildable
             String l_strMenu = l_Element.getAttribute("menu");
             String l_strPieceDefinition = Builder.getText(l_Element);
 
-            // is a standard button
-            if (l_strMenu.compareToIgnoreCase("false") == 0) 
-            {
-                QCPieceEntry l_Entry = new QCPieceEntry(this, l_strName, l_strPieceDefinition, l_strImageName, l_strMenu, null, null, true);
-                QCButton l_ASLButton = new QCButton(l_Entry);
-
-                try 
-                {
-                    l_ASLButton.InitDragDrop();
-                    l_ASLButton.setName(l_strName);                    
-                    l_ASLButton.setIcon(new ImageIcon(Op.load(l_strImageName + ".png").getImage(null)));
-                    l_ASLButton.setMargin(new Insets(0, 0, 0, 0));
-                } 
-                catch (Exception ex) 
-                {
-                    ex.printStackTrace();
-                }
-
-                l_ASLButton.setAlignmentY(0.0F);
-
-                m_EntriesV.addElement(l_Entry);
-                m_ButtonsV.addElement(l_ASLButton);
-            } 
             else // is a submenu
             {
                 JButton l_Button = new JButton("");
@@ -903,8 +895,8 @@ public class QC implements Buildable
         
         RebuildPopupMenu();
 
-        m_Map.getToolBar().add(new QCStartToolbarItem());
-        m_Map.getToolBar().add(new QCEndToolbarItem());
+        m_Map.getToolBar().add(new QCStartToolBarItem());
+        m_Map.getToolBar().add(new QCEndToolBarItem());
         
         m_objLinkTimer = new Timer(5000, new ActionListener() 
         {
@@ -913,7 +905,7 @@ public class QC implements Buildable
                 m_objLinkTimer.stop();
                 
                 ReadPiecesSlot();
-                RebuildToolbar();
+                RebuildToolBar();
             }
         });
             
@@ -956,14 +948,80 @@ public class QC implements Buildable
 
     public void add(Buildable b) {}
 
-    private void RebuildToolbar() 
+    private void RebuildToolBar() 
     {
+        JToolBar l_objToolBar = m_Map.getToolBar();
+        boolean l_bEndElementNotFound = true;
+        int l_iStartPos = 0;
+        
         if (m_objQCWorkingConfiguration != null)
         {
-// TODO
+            // remove the old element
+            for (int l_i = l_objToolBar.getComponents().length - 1; l_i >= 0; l_i--)
+            {
+                Component l_objComponent = l_objToolBar.getComponent(l_i);
+
+                if (l_bEndElementNotFound)
+                {
+                    if (l_objComponent instanceof QCEndToolBarItem) 
+                        l_bEndElementNotFound = false;                
+                }
+                else
+                {
+                    if (l_objComponent instanceof QCStartToolBarItem) 
+                    {
+                        l_iStartPos = l_i + 1;
+                        break;
+                    }
+                    else
+                    {
+                        l_objToolBar.remove(l_i);               
+                    }
+                }
+            }
+            
+            for (QCConfigurationEntry l_objConfigurationEntry : m_objQCWorkingConfiguration.getListConfigurationEntry())
+            {
+                if (l_objConfigurationEntry.getPieceSlot() != null)
+                {
+                    Component l_objComponent = CreateToolBarItem(l_objConfigurationEntry);
+                    
+                    if (l_objComponent != null)
+                        l_objToolBar.add(l_objComponent, l_iStartPos++);                
+                }
+                
+                l_objToolBar.validate();
+            }
         }
     }
-    
+
+    private Component CreateToolBarItem(QCConfigurationEntry objConfigurationEntry) 
+    {
+        if (objConfigurationEntry.isMenu())
+        { // submenu
+            return null;
+        }
+        else // button standard
+        {
+            QCButton l_objQCButton = new QCButton(objConfigurationEntry.getPieceSlot());
+
+            try 
+            {
+                l_objQCButton.InitDragDrop();
+                //l_objQCButton.setIcon(new ImageIcon(Op.load(l_strImageName + ".png").getImage(null)));
+                l_objQCButton.setMargin(new Insets(0, 0, 0, 0));
+            } 
+            catch (Exception ex) 
+            {
+                ex.printStackTrace();
+            }
+
+            l_objQCButton.setAlignmentY(0.0F);
+            
+            return l_objQCButton;
+        } 
+    }
+
     private void RebuildPopupMenu() 
     {
         JPopupMenu l_objPopupMenu = ((ASLMap)m_Map).getPopupMenu();
@@ -1016,7 +1074,7 @@ public class QC implements Buildable
                     {
                         m_objQCWorkingConfiguration = ((QCRadioButtonMenuItem)evt.getSource()).getQCConfiguration();
                         saveWorkingConfiguration();
-                        RebuildToolbar();
+                        RebuildToolBar();
                     }
                 }
             });
