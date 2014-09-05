@@ -27,6 +27,7 @@ import VASSAL.counters.KeyBuffer;
 import VASSAL.counters.PieceCloner;
 import VASSAL.counters.Properties;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.PopupMenu;
@@ -168,7 +169,7 @@ class QCButtonMenu extends JButton
     }    
 
     /**
-     * @return the m_objPopupMenu
+     * @return the m_objParentPopupMenu
      */
     public JPopupMenu getPopupMenu() {
         return m_objPopupMenu;
@@ -180,11 +181,13 @@ class QCMenuItem extends JMenuItem implements DragSourceListener
 // <editor-fold defaultstate="collapsed">
 {
     PieceSlot m_objPieceSlot;
+    JPopupMenu m_objParentPopupMenu;
     
-    public QCMenuItem(PieceSlot objPieceSlot) 
+    public QCMenuItem(PieceSlot objPieceSlot, JPopupMenu objPopupMenu) 
     {
         super();
         m_objPieceSlot = objPieceSlot;
+        m_objParentPopupMenu = objPopupMenu;
     }
     
     public void InitDragDrop()
@@ -238,9 +241,9 @@ class QCMenuItem extends JMenuItem implements DragSourceListener
     }
 
     public void dragDropEnd(DragSourceDropEvent dsde) {
-        if (getParent() != null)
-            if (getParent() instanceof JPopupMenu)
-                ((JPopupMenu) getParent()).setVisible(false);
+        
+        if (m_objParentPopupMenu != null)
+            m_objParentPopupMenu.setVisible(false);
         
         DragSource.getDefaultDragSource().removeDragSourceListener(this);
     }
@@ -327,6 +330,7 @@ class QCConfiguration extends DefaultHandler
             
             l_newEntry.setMenu(true);
             l_newEntry.setGpID(attributes.getValue("slot"));
+            l_newEntry.setText(attributes.getValue("text"));
             
             if (m_objCurrentSubMenu != null)
             {
@@ -410,7 +414,7 @@ class QCConfigurationEntry
     private final QC m_objQC;
     private boolean m_bMenu;
     private ArrayList<QCConfigurationEntry> mar_objListConfigurationEntry;
-    private String m_strGpID;    
+    private String m_strGpID, m_strText;    
     private QCConfigurationEntry m_objParentEntry;
     private PieceSlot m_objPieceSlot;
     
@@ -419,7 +423,8 @@ class QCConfigurationEntry
         m_objQC = objQC;
         m_bMenu = false;
         mar_objListConfigurationEntry = null;
-        m_strGpID = "";
+        m_strGpID = null;
+        m_strText = null;
         m_objParentEntry = null;
         m_objPieceSlot = null;
     }   
@@ -489,10 +494,19 @@ class QCConfigurationEntry
         {
             Element l_objEntry = objDocument.createElement("qcsubmenu");
 
-            // set attribute to staff element
-            Attr l_objAttributes = objDocument.createAttribute("slot");
-            l_objAttributes.setValue(getGpID());
-            l_objEntry.setAttributeNode(l_objAttributes);
+            if (getGpID() != null)
+            {
+                Attr l_objAttribute = objDocument.createAttribute("slot");
+                l_objAttribute.setValue(getGpID());
+                l_objEntry.setAttributeNode(l_objAttribute);
+            }
+            
+            if (getText() != null)
+            {
+                Attr l_objAttribute = objDocument.createAttribute("text");
+                l_objAttribute.setValue(getText());
+                l_objEntry.setAttributeNode(l_objAttribute);
+            }
             
             objElement.appendChild(l_objEntry);
             
@@ -503,10 +517,12 @@ class QCConfigurationEntry
         {
             Element l_objEntry = objDocument.createElement("qcentry");
 
-            // set attribute to staff element
-            Attr l_objAttributes = objDocument.createAttribute("slot");
-            l_objAttributes.setValue(getGpID());
-            l_objEntry.setAttributeNode(l_objAttributes);
+            if (getGpID() != null)
+            {
+                Attr l_objAttribute = objDocument.createAttribute("slot");
+                l_objAttribute.setValue(getGpID());
+                l_objEntry.setAttributeNode(l_objAttribute);
+            }
             
             objElement.appendChild(l_objEntry);
         }
@@ -524,6 +540,20 @@ class QCConfigurationEntry
      */
     public void setPieceSlot(PieceSlot objPieceSlot) {
         this.m_objPieceSlot = objPieceSlot;
+    }
+
+    /**
+     * @return the m_strText
+     */
+    public String getText() {
+        return m_strText;
+    }
+
+    /**
+     * @param m_strText the m_strText to set
+     */
+    public void setText(String m_strText) {
+        this.m_strText = m_strText;
     }
 }
 // </editor-fold>
@@ -860,17 +890,20 @@ public class QC implements Buildable
     
     private void setPieceSlot(QCConfigurationEntry objConfigurationEntry, Hashtable ar_HashPieceSlot) 
     {
-        PieceSlot l_objPieceSlot = (PieceSlot) ar_HashPieceSlot.get(objConfigurationEntry.getGpID());
+        PieceSlot l_objPieceSlot = null;
         
-        if (l_objPieceSlot != null)
+        if (objConfigurationEntry.getGpID() != null)
         {
-            objConfigurationEntry.setPieceSlot(l_objPieceSlot);
-            
-            if (objConfigurationEntry.isMenu())
-            {
-                for (QCConfigurationEntry l_objConfigurationEntry : objConfigurationEntry.getListConfigurationEntry())
-                    setPieceSlot(l_objConfigurationEntry, ar_HashPieceSlot);
-            }
+            l_objPieceSlot = (PieceSlot) ar_HashPieceSlot.get(objConfigurationEntry.getGpID());
+
+            if (l_objPieceSlot != null)
+                objConfigurationEntry.setPieceSlot(l_objPieceSlot);
+        }
+
+        if (objConfigurationEntry.isMenu())
+        {
+            for (QCConfigurationEntry l_objConfigurationEntry : objConfigurationEntry.getListConfigurationEntry())
+                setPieceSlot(l_objConfigurationEntry, ar_HashPieceSlot);
         }
     }
 
@@ -917,9 +950,9 @@ public class QC implements Buildable
                     if (l_objComponent != null)
                         l_objToolBar.add(l_objComponent, l_iStartPos++);                
                 }
-                
-                l_objToolBar.validate();
             }
+            
+            l_objToolBar.validate();
         }
     }
 
@@ -972,44 +1005,46 @@ public class QC implements Buildable
         
         for (QCConfigurationEntry l_objConfigurationEntry : objConfigurationEntry.getListConfigurationEntry())
         {
-            JMenuItem l_objMenuItem = CreateMenuItem(l_objConfigurationEntry);
+            JMenuItem l_objMenuItem = CreateMenuItem(l_objConfigurationEntry, l_objPopupMenu);
             
             if (l_objMenuItem != null)
                 l_objPopupMenu.add(l_objMenuItem);
         }
     }
     
-    private JMenuItem CreateMenuItem(QCConfigurationEntry objConfigurationEntry) 
+    private JMenuItem CreateMenuItem(QCConfigurationEntry objConfigurationEntry, JPopupMenu objPopupMenu) 
     {
-        if (objConfigurationEntry.getPieceSlot() != null)
+        if (objConfigurationEntry.isMenu()) //submenu
         {
-            if (objConfigurationEntry.isMenu()) //submenu
-            {
-                JMenu l_objMenu = new JMenu();
-                
-                try 
-                {
-                    l_objMenu.setText(objConfigurationEntry.getPieceSlot().getPiece().getName()); // TODO
-                    // GetIcon l_MenuItem.setIcon(new ImageIcon(Op.load(l_strImageName + l_strID + ".png").getImage(null)));
-                } 
-                catch (Exception ex) 
-                {
-                    ex.printStackTrace();
-                }
-                
-                for (QCConfigurationEntry l_objConfigurationEntry : objConfigurationEntry.getListConfigurationEntry())
-                {
-                    JMenuItem l_objMenuItem = CreateMenuItem(l_objConfigurationEntry);
+            JMenu l_objMenu = new JMenu();
 
-                    if (l_objMenuItem != null)
-                        l_objMenu.add(l_objMenuItem);
-                }
-                
-                return l_objMenu;
-            }
-            else
+            try 
             {
-                QCMenuItem l_MenuItem = new QCMenuItem(objConfigurationEntry.getPieceSlot());
+                if (objConfigurationEntry.getText() != null)
+                    l_objMenu.setText(objConfigurationEntry.getText()); // TODO
+                else
+                    l_objMenu.setText("submenu");
+            } 
+            catch (Exception ex) 
+            {
+                ex.printStackTrace();
+            }
+            
+            for (QCConfigurationEntry l_objConfigurationEntry : objConfigurationEntry.getListConfigurationEntry())
+            {
+                JMenuItem l_objMenuItem = CreateMenuItem(l_objConfigurationEntry, objPopupMenu);
+
+                if (l_objMenuItem != null)
+                    l_objMenu.add(l_objMenuItem);
+            }
+
+            return l_objMenu;
+        }
+        else
+        {
+            if (objConfigurationEntry.getPieceSlot() != null)
+            {
+                QCMenuItem l_MenuItem = new QCMenuItem(objConfigurationEntry.getPieceSlot(), objPopupMenu);
 
                 try 
                 {
@@ -1023,8 +1058,8 @@ public class QC implements Buildable
                 }
 
                 return l_MenuItem;
-            }            
-        }
+            }
+        }            
         
         return null;
     }
