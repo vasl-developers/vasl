@@ -18,6 +18,7 @@ import org.w3c.dom.Element;
 import VASSAL.Info;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
+import VASSAL.build.module.Inventory;
 import VASSAL.build.module.Map;
 import VASSAL.build.module.map.PieceMover;
 import VASSAL.build.widget.PieceSlot;
@@ -26,11 +27,19 @@ import VASSAL.counters.GamePiece;
 import VASSAL.counters.KeyBuffer;
 import VASSAL.counters.PieceCloner;
 import VASSAL.counters.Properties;
+import VASSAL.tools.image.ImageUtils;
+import VASSAL.tools.imageop.Op;
+import java.awt.AlphaComposite;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.PopupMenu;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragGestureEvent;
 import java.awt.dnd.DragGestureListener;
@@ -39,6 +48,7 @@ import java.awt.dnd.DragSourceDragEvent;
 import java.awt.dnd.DragSourceDropEvent;
 import java.awt.dnd.DragSourceEvent;
 import java.awt.dnd.DragSourceListener;
+import java.awt.image.BufferedImage;
 import java.io.FilenameFilter;
 import java.io.StringReader;
 import java.nio.file.Files;
@@ -47,6 +57,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JOptionPane;
@@ -154,7 +165,6 @@ class QCButtonMenu extends JButton
         
     public QCButtonMenu(PieceSlot objPieceSlot) 
     {
-        super("M");
         m_objPieceSlot = objPieceSlot;
         
         addActionListener(new ActionListener() 
@@ -683,6 +693,7 @@ public class QC implements Buildable
     private final ArrayList<QCConfiguration> mar_objListQCConfigurations = new ArrayList<QCConfiguration>();
     private QCConfiguration m_objQCWorkingConfiguration = null;
     private Timer m_objLinkTimer;
+    private BufferedImage m_objMnuBtn = null;
 
     public void loadConfigurations() 
     {
@@ -943,13 +954,10 @@ public class QC implements Buildable
             
             for (QCConfigurationEntry l_objConfigurationEntry : m_objQCWorkingConfiguration.getListConfigurationEntry())
             {
-                if (l_objConfigurationEntry.getPieceSlot() != null)
-                {
-                    Component l_objComponent = CreateToolBarItem(l_objConfigurationEntry);
-                    
-                    if (l_objComponent != null)
-                        l_objToolBar.add(l_objComponent, l_iStartPos++);                
-                }
+                Component l_objComponent = CreateToolBarItem(l_objConfigurationEntry);
+
+                if (l_objComponent != null)
+                    l_objToolBar.add(l_objComponent, l_iStartPos++);                
             }
             
             l_objToolBar.validate();
@@ -964,7 +972,7 @@ public class QC implements Buildable
 
             try 
             {
-                //GetIconMenu l_objQCButton.setIcon(new ImageIcon(Op.load(l_strImageName + ".png").getImage(null)));
+                l_objQCButtonMenu.setIcon(new ImageIcon(CreateButtonMenuIcon(objConfigurationEntry)));
                 l_objQCButtonMenu.setMargin(new Insets(0, 0, 0, 0));
                 
                 CreatePopupMenu(objConfigurationEntry, l_objQCButtonMenu);                
@@ -980,25 +988,117 @@ public class QC implements Buildable
         }
         else // button standard
         {
-            QCButton l_objQCButton = new QCButton(objConfigurationEntry.getPieceSlot());
-
-            try 
+            if (objConfigurationEntry.getPieceSlot() != null)
             {
-                l_objQCButton.InitDragDrop();
-                //GetIcon l_objQCButton.setIcon(new ImageIcon(Op.load(l_strImageName + ".png").getImage(null)));
-                l_objQCButton.setMargin(new Insets(0, 0, 0, 0));
-            } 
+                QCButton l_objQCButton = new QCButton(objConfigurationEntry.getPieceSlot());
+
+                try 
+                {
+                    l_objQCButton.InitDragDrop();
+                    l_objQCButton.setIcon(new ImageIcon(CreateButtonIcon(objConfigurationEntry.getPieceSlot())));
+                    l_objQCButton.setMargin(new Insets(0, 0, 0, 0));
+                } 
+                catch (Exception ex) 
+                {
+                    ex.printStackTrace();
+                }
+
+                l_objQCButton.setAlignmentY(0.0F);
+
+                return l_objQCButton;
+            }
+        } 
+        
+        return null;
+    }
+
+    private BufferedImage CreateButtonIcon(PieceSlot pieceSlot) 
+    {
+        final int l_iSize = 30, l_iSizeRendering = 35;
+        final BufferedImage l_objBI = ImageUtils.createCompatibleTranslucentImage(l_iSize, l_iSize);
+        final Graphics2D l_objGraphics = l_objBI.createGraphics();
+        
+        l_objGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        
+        final GamePiece l_objPiece = pieceSlot.getPiece();
+        final Rectangle r = l_objPiece.getShape().getBounds();
+        final double l_dZoom = l_iSizeRendering / (double)r.width;
+
+        r.x = (int) Math.round(r.x * l_dZoom);
+        r.y = (int) Math.round(r.y * l_dZoom);
+        r.width = l_iSize;
+        r.height = l_iSize;
+
+        l_objPiece.draw(l_objGraphics, -r.x-3, -r.y-3, null, l_dZoom);
+        l_objGraphics.dispose();
+        
+        return l_objBI;
+    }
+
+    private BufferedImage  CreateButtonMenuIcon(QCConfigurationEntry objConfigurationEntry) 
+    {
+        PieceSlot l_objPieceSlot = objConfigurationEntry.getPieceSlot();
+        
+        if (l_objPieceSlot == null)
+        {
+            for (QCConfigurationEntry l_objConfigurationEntry : objConfigurationEntry.getListConfigurationEntry())
+            {
+                l_objPieceSlot = l_objConfigurationEntry.getPieceSlot();
+                
+                if (l_objPieceSlot != null)
+                    break;
+            }          
+        }
+        
+        if (l_objPieceSlot != null)
+        {
+            final BufferedImage l_objBI = CreateButtonIcon(l_objPieceSlot);
+            final Graphics2D l_objGraphics = l_objBI.createGraphics();
+    
+            l_objGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            
+            l_objGraphics.drawImage(GetMenuOverlay(), 0, 0, null);
+            
+            l_objGraphics.dispose();
+
+            return l_objBI;
+        }       
+        else
+        {
+            final int l_iSize = 30;
+            final BufferedImage l_objBI = ImageUtils.createCompatibleTranslucentImage(l_iSize, l_iSize);
+            final Graphics2D l_objGraphics = l_objBI.createGraphics();
+
+            l_objGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            
+            l_objGraphics.setColor(Color.WHITE);
+            l_objGraphics.fillRect(0, 0, l_iSize, l_iSize);            
+            
+            l_objGraphics.drawImage(GetMenuOverlay(), 0, 0, null);
+            
+            l_objGraphics.dispose();
+            
+            return l_objBI;
+        }
+    }
+    
+    private BufferedImage GetMenuOverlay() 
+    {
+        if (m_objMnuBtn == null)
+        {
+            try
+            {
+                m_objMnuBtn = Op.load("QC/mnubtn.png").getImage();
+            }
             catch (Exception ex) 
             {
                 ex.printStackTrace();
             }
-
-            l_objQCButton.setAlignmentY(0.0F);
-            
-            return l_objQCButton;
-        } 
+        }
+        
+        return m_objMnuBtn;
     }
-
+    
     private void CreatePopupMenu(QCConfigurationEntry objConfigurationEntry, QCButtonMenu objQCButtonMenu) 
     {
         JPopupMenu l_objPopupMenu = objQCButtonMenu.getPopupMenu();
@@ -1021,9 +1121,11 @@ public class QC implements Buildable
             try 
             {
                 if (objConfigurationEntry.getText() != null)
-                    l_objMenu.setText(objConfigurationEntry.getText()); // TODO
+                    l_objMenu.setText(objConfigurationEntry.getText()); 
                 else
                     l_objMenu.setText("submenu");
+
+                l_objMenu.setIcon(new ImageIcon(CreateButtonMenuIcon(objConfigurationEntry)));
             } 
             catch (Exception ex) 
             {
@@ -1048,8 +1150,8 @@ public class QC implements Buildable
 
                 try 
                 {
-                    l_MenuItem.setText(objConfigurationEntry.getPieceSlot().getPiece().getName()); // TODO
-                    // GetIcon l_MenuItem.setIcon(new ImageIcon(Op.load(l_strImageName + l_strID + ".png").getImage(null)));
+                    l_MenuItem.setText(objConfigurationEntry.getPieceSlot().getPiece().getName());
+                    l_MenuItem.setIcon(new ImageIcon(CreateButtonIcon(objConfigurationEntry.getPieceSlot())));
                     l_MenuItem.InitDragDrop();
                 } 
                 catch (Exception ex) 
