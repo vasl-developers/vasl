@@ -55,8 +55,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.UUID;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JMenu;
@@ -260,9 +263,19 @@ class QCMenuItem extends JMenuItem implements DragSourceListener
 }
 // </editor-fold>
 
+class QCConfigurationComparator implements Comparator<QCConfiguration> 
+{
+    @Override
+    public int compare(QCConfiguration o1, QCConfiguration o2) 
+    {
+        return o1.getDescription().compareTo(o2.getDescription());
+    }
+}
+
 class QCConfiguration extends DefaultHandler 
 // <editor-fold defaultstate="collapsed">
 {
+    private boolean m_bDefaultConfiguration;
     private QC m_objQC;
     private File m_objFile;
     private String m_strDescription;
@@ -271,6 +284,7 @@ class QCConfiguration extends DefaultHandler
     
     public QCConfiguration(QC objQC, File objFile)
     {
+        m_bDefaultConfiguration = false;
         m_objCurrentSubMenu = null;
         
         m_objQC = objQC;
@@ -280,6 +294,38 @@ class QCConfiguration extends DefaultHandler
         mar_objListConfigurationEntry = new ArrayList<QCConfigurationEntry>();
     }    
 
+    // copy object
+    public QCConfiguration(QCConfiguration objMaster)
+    {
+        m_bDefaultConfiguration = false;
+        m_objCurrentSubMenu = null;
+        
+        m_objQC = objMaster.getQC();
+        
+        m_strDescription = objMaster.getDescription() + " (copy)";
+        mar_objListConfigurationEntry = new ArrayList<QCConfigurationEntry>();
+        
+        for (QCConfigurationEntry l_objConfigurationEntry : objMaster.getListConfigurationEntry())
+            mar_objListConfigurationEntry.add(new QCConfigurationEntry(l_objConfigurationEntry));        
+        
+        Path l_pathConfigs = Paths.get(Info.getHomeDir() + System.getProperty("file.separator","\\") + "qcconfigs");
+        
+        if (Files.notExists(l_pathConfigs)) 
+        {
+            try
+            {
+                Files.createDirectory(l_pathConfigs);
+            } 
+            catch(Exception e)
+            {
+            }        
+        }
+
+        Path l_pathFile = Paths.get(l_pathConfigs + System.getProperty("file.separator","\\") + UUID.randomUUID().toString() + ".xml");
+
+        m_objFile = l_pathFile.toFile();
+    }
+    
     /**
      * @return the m_objQC
      */
@@ -315,7 +361,8 @@ class QCConfiguration extends DefaultHandler
      * @param m_strDescription the m_strDescription to set
      */
     public void setDescription(String strDescription) {
-        this.m_strDescription = strDescription;
+        if (strDescription != null)
+            this.m_strDescription = strDescription;
     }
 
     /**
@@ -415,6 +462,20 @@ class QCConfiguration extends DefaultHandler
 
         return false;
     }
+
+    /**
+     * @return the m_bDefaultConfiguration
+     */
+    public Boolean isDefaultConfiguration() {
+        return m_bDefaultConfiguration;
+    }
+
+    /**
+     * @param m_bDefaultConfiguration the m_bDefaultConfiguration to set
+     */
+    public void setDefaultConfiguration(Boolean m_bDefaultConfiguration) {
+        this.m_bDefaultConfiguration = m_bDefaultConfiguration;
+    }
 }
 // </editor-fold>
 
@@ -439,6 +500,27 @@ class QCConfigurationEntry
         m_objPieceSlot = null;
     }   
 
+    public QCConfigurationEntry(QCConfigurationEntry objMaster)
+    {
+        m_objParentEntry = null;
+        m_objQC = objMaster.getQC();
+        m_bMenu = objMaster.isMenu();
+        
+        if (m_bMenu)
+        {
+            mar_objListConfigurationEntry = new ArrayList<QCConfigurationEntry>();
+            
+            for (QCConfigurationEntry l_objConfigurationEntry : objMaster.getListConfigurationEntry())
+                mar_objListConfigurationEntry.add(new QCConfigurationEntry(l_objConfigurationEntry));        
+        }
+        else
+            mar_objListConfigurationEntry = null;
+        
+        m_strGpID = objMaster.getGpID();
+        m_strText = objMaster.getText();
+        m_objPieceSlot = objMaster.getPieceSlot();
+    }   
+    
     /**
      * @return the m_bMenu
      */
@@ -730,8 +812,8 @@ public class QC implements Buildable
             }
 
             if (m_objQCWorkingConfiguration != null)
-                mar_objListQCConfigurations.add(m_objQCWorkingConfiguration);            
-        
+                m_objQCWorkingConfiguration.setDefaultConfiguration(true);
+            
             // now read the custom configuration files
             // check for configs dir
             if (Files.notExists(l_pathConfigs)) 
@@ -778,6 +860,11 @@ public class QC implements Buildable
                         }
                     }
                 }
+                
+                Collections.sort(mar_objListQCConfigurations, new QCConfigurationComparator());
+                
+                if (m_objQCWorkingConfiguration != null)
+                    mar_objListQCConfigurations.add(0, m_objQCWorkingConfiguration);
             }      
         }
     }
@@ -1228,5 +1315,91 @@ public class QC implements Buildable
             
             l_objQCRadioButtonMenuItem.setSelected(l_objQCConfiguration == m_objQCWorkingConfiguration);
         }
+        
+        l_objPopupMenu.add(new JPopupMenu.Separator(), l_iStartPos++);
+        
+        // copy configuration copy configuration copy configuration copy configuration copy configuration
+        JMenuItem l_objCopyConfigurationMenuItem = new JMenuItem();
+        
+        l_objCopyConfigurationMenuItem.setText("Copy current QC configuration");
+        
+        try
+        {
+            l_objCopyConfigurationMenuItem.setIcon(new ImageIcon(Op.load("QC/copy.png").getImage(null)));
+        }
+        catch (Exception ex) 
+        {
+            ex.printStackTrace();
+        }
+
+        l_objCopyConfigurationMenuItem.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent evt) 
+            {
+                if (m_objQCWorkingConfiguration != null)
+                {
+                    QCConfiguration l_objNewConfiguration = new QCConfiguration(m_objQCWorkingConfiguration);
+                    
+                    if (l_objNewConfiguration.SaveXML())
+                    {
+                        mar_objListQCConfigurations.add(l_objNewConfiguration);
+                        m_objQCWorkingConfiguration = l_objNewConfiguration;
+                        saveWorkingConfiguration();
+                        
+                        RebuildPopupMenu();
+                        RebuildToolBar();
+                    }
+                }
+            }
+        });
+        
+        l_objPopupMenu.add(l_objCopyConfigurationMenuItem, l_iStartPos++);
+        
+        // remove configuration remove configuration remove configuration remove configuration remove configuration remove configuration
+        JMenuItem l_objRemoveConfigurationMenuItem = new JMenuItem();
+        
+        l_objRemoveConfigurationMenuItem.setText("Remove current QC configuration");
+        
+        try
+        {
+            l_objRemoveConfigurationMenuItem.setIcon(new ImageIcon(Op.load("QC/copy.png").getImage(null))); // TODO
+        }
+        catch (Exception ex) 
+        {
+            ex.printStackTrace();
+        }
+
+        l_objRemoveConfigurationMenuItem.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent evt) 
+            {
+                if (m_objQCWorkingConfiguration != null)
+                {
+                    if (true) // remove from disk
+                    {
+                        //remove from list
+            
+                        // set the default configuration to previous one
+                        
+                        saveWorkingConfiguration();
+
+                        RebuildPopupMenu();
+                        RebuildToolBar();
+                    }
+                }
+            }
+        });
+        
+        // TODO Inserimento in ordine alfabetico
+        // TODO Abilitazioni delle voci di menu
+        
+        l_objPopupMenu.add(l_objRemoveConfigurationMenuItem, l_iStartPos++);
+        
+        
+        // separator
+        l_objPopupMenu.add(new JPopupMenu.Separator(), l_iStartPos++);
+        
+        // edit configuration edit configuration edit configuration edit configuration edit configuration edit configuration edit configuration
+
     }
 }
