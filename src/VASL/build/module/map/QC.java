@@ -275,7 +275,7 @@ class QCConfigurationComparator implements Comparator<QCConfiguration>
 class QCConfiguration extends DefaultHandler 
 // <editor-fold defaultstate="collapsed">
 {
-    private boolean m_bDefaultConfiguration;
+    private boolean m_bBuiltinConfiguration;
     private QC m_objQC;
     private File m_objFile;
     private String m_strDescription;
@@ -284,7 +284,7 @@ class QCConfiguration extends DefaultHandler
     
     public QCConfiguration(QC objQC, File objFile)
     {
-        m_bDefaultConfiguration = false;
+        m_bBuiltinConfiguration = false;
         m_objCurrentSubMenu = null;
         
         m_objQC = objQC;
@@ -297,7 +297,7 @@ class QCConfiguration extends DefaultHandler
     // copy object
     public QCConfiguration(QCConfiguration objMaster)
     {
-        m_bDefaultConfiguration = false;
+        m_bBuiltinConfiguration = false;
         m_objCurrentSubMenu = null;
         
         m_objQC = objMaster.getQC();
@@ -464,17 +464,17 @@ class QCConfiguration extends DefaultHandler
     }
 
     /**
-     * @return the m_bDefaultConfiguration
+     * @return the m_bBuiltinConfiguration
      */
-    public Boolean isDefaultConfiguration() {
-        return m_bDefaultConfiguration;
+    public Boolean isBuiltinConfiguration() {
+        return m_bBuiltinConfiguration;
     }
 
     /**
-     * @param m_bDefaultConfiguration the m_bDefaultConfiguration to set
+     * @param m_bBuiltinConfiguration the m_bBuiltinConfiguration to set
      */
-    public void setDefaultConfiguration(Boolean m_bDefaultConfiguration) {
-        this.m_bDefaultConfiguration = m_bDefaultConfiguration;
+    public void setBuiltintConfiguration(Boolean m_bBuiltinConfiguration) {
+        this.m_bBuiltinConfiguration = m_bBuiltinConfiguration;
     }
 }
 // </editor-fold>
@@ -656,8 +656,8 @@ class QCConfigurationEntry
 public class QC implements Buildable 
 {
 // <editor-fold defaultstate="collapsed">
-    private final String mc_strDefaultConfig = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-"<qcconfig descr=\"Default configuration\">\n" +
+    private final String mc_strBuiltinConfig = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+"<qcconfig descr=\"Built-in configuration\">\n" +
 "	<qcentry slot=\"0\"/>\n" +
 "	<qcentry slot=\"11\"/>\n" +
 "	<qcentry slot=\"12\"/>\n" +
@@ -798,13 +798,13 @@ public class QC implements Buildable
             // clear the old configurations (if any)
             mar_objListQCConfigurations.clear();
             
-            // read default configuration
-            m_objQCWorkingConfiguration = new QCConfiguration(this, null); // null file for the default configuration
+            // read built-in configuration
+            m_objQCWorkingConfiguration = new QCConfiguration(this, null); // null file for the built-in configuration
 
             try 
             {
-                // parse the default configuration
-                l_objXMLParser.parse(new InputSource(new StringReader(mc_strDefaultConfig)), m_objQCWorkingConfiguration);
+                // parse the built-in configuration
+                l_objXMLParser.parse(new InputSource(new StringReader(mc_strBuiltinConfig)), m_objQCWorkingConfiguration);
             }
             catch (Exception ex) 
             {
@@ -812,7 +812,7 @@ public class QC implements Buildable
             }
 
             if (m_objQCWorkingConfiguration != null)
-                m_objQCWorkingConfiguration.setDefaultConfiguration(true);
+                m_objQCWorkingConfiguration.setBuiltintConfiguration(true);
             
             // now read the custom configuration files
             // check for configs dir
@@ -1256,6 +1256,7 @@ public class QC implements Buildable
     private void RebuildPopupMenu() 
     {
         JPopupMenu l_objPopupMenu = ((ASLMap)m_Map).getPopupMenu();
+        final JMenuItem l_objCopyConfigurationMenuItem  = new JMenuItem(), l_objRemoveConfigurationMenuItem  = new JMenuItem(), l_objEditConfigurationMenuItem = new JMenuItem();;
         int l_iStartPos = 0;
         boolean l_bEndElementNotFound = true;
         
@@ -1296,7 +1297,7 @@ public class QC implements Buildable
         for (QCConfiguration l_objQCConfiguration : mar_objListQCConfigurations)
         {
             QCRadioButtonMenuItem l_objQCRadioButtonMenuItem = new QCRadioButtonMenuItem(l_objQCConfiguration);
-
+            
             l_objQCRadioButtonMenuItem.addActionListener(new ActionListener() 
             {
                 public void actionPerformed(ActionEvent evt) 
@@ -1306,6 +1307,29 @@ public class QC implements Buildable
                         m_objQCWorkingConfiguration = ((QCRadioButtonMenuItem)evt.getSource()).getQCConfiguration();
                         saveWorkingConfiguration();
                         RebuildToolBar();
+                        
+                        if (m_objQCWorkingConfiguration != null)
+                        {
+                            l_objCopyConfigurationMenuItem.setEnabled(true);
+                            
+                            if (m_objQCWorkingConfiguration.isBuiltinConfiguration())
+                            {
+                                l_objRemoveConfigurationMenuItem.setEnabled(false);
+                                l_objEditConfigurationMenuItem.setEnabled(false);
+                            }
+                            else
+                            {
+                                l_objRemoveConfigurationMenuItem.setEnabled(true);
+                                l_objEditConfigurationMenuItem.setEnabled(true);
+                            }
+                        }
+                        else
+                        {
+                            l_objCopyConfigurationMenuItem.setEnabled(false);
+                            l_objRemoveConfigurationMenuItem.setEnabled(false);
+                            l_objEditConfigurationMenuItem.setEnabled(false);
+                        }
+                        
                     }
                 }
             });
@@ -1318,10 +1342,14 @@ public class QC implements Buildable
         
         l_objPopupMenu.add(new JPopupMenu.Separator(), l_iStartPos++);
         
-        // copy configuration copy configuration copy configuration copy configuration copy configuration
-        JMenuItem l_objCopyConfigurationMenuItem = new JMenuItem();
-        
+        // copy configuration copy configuration copy configuration copy configuration copy configuration copy configuration copy configuration copy configuration
+        // copy configuration copy configuration copy configuration copy configuration copy configuration copy configuration copy configuration copy configuration
         l_objCopyConfigurationMenuItem.setText("Copy current QC configuration");
+        
+        if (m_objQCWorkingConfiguration != null)
+            l_objCopyConfigurationMenuItem.setEnabled(true);
+        else
+            l_objCopyConfigurationMenuItem.setEnabled(false);
         
         try
         {
@@ -1346,6 +1374,12 @@ public class QC implements Buildable
                         m_objQCWorkingConfiguration = l_objNewConfiguration;
                         saveWorkingConfiguration();
                         
+                        QCConfiguration l_objBuiltinConfiguration = mar_objListQCConfigurations.get(0);
+                        mar_objListQCConfigurations.remove(l_objBuiltinConfiguration);
+
+                        Collections.sort(mar_objListQCConfigurations, new QCConfigurationComparator());
+                        mar_objListQCConfigurations.add(0, l_objBuiltinConfiguration);
+                        
                         RebuildPopupMenu();
                         RebuildToolBar();
                     }
@@ -1356,13 +1390,22 @@ public class QC implements Buildable
         l_objPopupMenu.add(l_objCopyConfigurationMenuItem, l_iStartPos++);
         
         // remove configuration remove configuration remove configuration remove configuration remove configuration remove configuration
-        JMenuItem l_objRemoveConfigurationMenuItem = new JMenuItem();
+        // remove configuration remove configuration remove configuration remove configuration remove configuration remove configuration
+        l_objRemoveConfigurationMenuItem.setText("Delete current QC configuration");
         
-        l_objRemoveConfigurationMenuItem.setText("Remove current QC configuration");
+        if (m_objQCWorkingConfiguration != null)
+        {
+            if (m_objQCWorkingConfiguration.isBuiltinConfiguration())
+                l_objRemoveConfigurationMenuItem.setEnabled(false);
+            else
+                l_objRemoveConfigurationMenuItem.setEnabled(true);
+        }
+        else
+            l_objRemoveConfigurationMenuItem.setEnabled(false);
         
         try
         {
-            l_objRemoveConfigurationMenuItem.setIcon(new ImageIcon(Op.load("QC/copy.png").getImage(null))); // TODO
+            l_objRemoveConfigurationMenuItem.setIcon(new ImageIcon(Op.load("QC/delete.png").getImage(null))); 
         }
         catch (Exception ex) 
         {
@@ -1379,7 +1422,7 @@ public class QC implements Buildable
                     {
                         //remove from list
             
-                        // set the default configuration to previous one
+                        // set the working configuration to previous one
                         
                         saveWorkingConfiguration();
 
@@ -1390,16 +1433,45 @@ public class QC implements Buildable
             }
         });
         
-        // TODO Inserimento in ordine alfabetico
-        // TODO Abilitazioni delle voci di menu
-        
         l_objPopupMenu.add(l_objRemoveConfigurationMenuItem, l_iStartPos++);
-        
         
         // separator
         l_objPopupMenu.add(new JPopupMenu.Separator(), l_iStartPos++);
         
         // edit configuration edit configuration edit configuration edit configuration edit configuration edit configuration edit configuration
+        // edit configuration edit configuration edit configuration edit configuration edit configuration edit configuration edit configuration
+        l_objEditConfigurationMenuItem.setText("Modify current QC configuration");
 
+        if (m_objQCWorkingConfiguration != null)
+        {
+            if (m_objQCWorkingConfiguration.isBuiltinConfiguration())
+                l_objEditConfigurationMenuItem.setEnabled(false);
+            else
+                l_objEditConfigurationMenuItem.setEnabled(true);
+        }
+        else
+            l_objEditConfigurationMenuItem.setEnabled(false);
+        
+        try
+        {
+            l_objEditConfigurationMenuItem.setIcon(new ImageIcon(Op.load("QC/edit.png").getImage(null)));
+        }
+        catch (Exception ex) 
+        {
+            ex.printStackTrace();
+        }
+
+        l_objEditConfigurationMenuItem.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent evt) 
+            {
+                if (m_objQCWorkingConfiguration != null)
+                {
+                    //open the configuration window
+                }
+            }
+        });
+        
+        l_objPopupMenu.add(l_objEditConfigurationMenuItem, l_iStartPos++);
     }
 }
