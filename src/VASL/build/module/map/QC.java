@@ -476,6 +476,26 @@ class QCConfiguration extends DefaultHandler
     public void setBuiltintConfiguration(Boolean m_bBuiltinConfiguration) {
         this.m_bBuiltinConfiguration = m_bBuiltinConfiguration;
     }
+
+    public boolean DeleteXML() 
+    {
+        try 
+        {
+            if (m_objFile != null)
+            {
+                if (m_objFile.exists())
+                    m_objFile.delete();
+            }
+            
+            return true;
+ 
+        } 
+        catch (Exception e) 
+        {
+        }
+
+        return false;
+    }
 }
 // </editor-fold>
 
@@ -1418,11 +1438,26 @@ public class QC implements Buildable
             {
                 if (m_objQCWorkingConfiguration != null)
                 {
-                    if (true) // remove from disk
+                    int l_iSelectedOption = JOptionPane.showConfirmDialog(m_Map.getView(), 
+                                                      "Do you really want to delete the '" + m_objQCWorkingConfiguration.getDescription() + "' QC configuration? This is NOT undoable or reversible!", 
+                                                      "Delete the current QC configuration", 
+                                                      JOptionPane.YES_NO_OPTION,
+                                                      JOptionPane.QUESTION_MESSAGE); 
+                    
+                    if (l_iSelectedOption == JOptionPane.YES_OPTION) 
                     {
-                        //remove from list
-            
-                        // set the working configuration to previous one
+                        m_objQCWorkingConfiguration.DeleteXML();
+                        
+                        int l_iIndex = mar_objListQCConfigurations.indexOf(m_objQCWorkingConfiguration);
+                        
+                        if (l_iIndex != -1)
+                        {
+                            if (l_iIndex > 0)
+                            {
+                                mar_objListQCConfigurations.remove(m_objQCWorkingConfiguration);
+                                m_objQCWorkingConfiguration = mar_objListQCConfigurations.get(l_iIndex - 1);
+                            }
+                        }
                         
                         saveWorkingConfiguration();
 
