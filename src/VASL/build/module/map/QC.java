@@ -420,6 +420,27 @@ class QCConfiguration extends DefaultHandler
             m_objCurrentSubMenu = m_objCurrentSubMenu.getParent();
     }  
     
+    @Override
+    public void endDocument ()
+        throws SAXException
+    {
+        m_objCurrentSubMenu = null;
+
+        for (QCConfigurationEntry l_objConfigurationEntry : mar_objListConfigurationEntry)
+            ParentNull(l_objConfigurationEntry);
+    }
+    
+    private void ParentNull(QCConfigurationEntry objConfigurationEntry)
+    {
+        objConfigurationEntry.setParent(null);
+
+        if (objConfigurationEntry.isMenu())
+        {
+            for (QCConfigurationEntry l_objConfigurationEntry : objConfigurationEntry.getListConfigurationEntry())
+                ParentNull(l_objConfigurationEntry);
+        }
+    }
+    
     public boolean SaveXML() 
     {
         try 
@@ -796,6 +817,8 @@ public class QC implements Buildable
     private QCConfiguration m_objQCWorkingConfiguration = null;
     private Timer m_objLinkTimer;
     private BufferedImage m_objMnuBtn = null;
+    private QCConfig m_objQCConfig = null;
+    private boolean m_bEditing = false;
 
     public void loadConfigurations() 
     {
@@ -1067,7 +1090,8 @@ public class QC implements Buildable
                     l_objToolBar.add(l_objComponent, l_iStartPos++);                
             }
             
-            l_objToolBar.validate();
+            l_objToolBar.revalidate();
+            l_objToolBar.repaint();
         }
     }
 
@@ -1328,7 +1352,7 @@ public class QC implements Buildable
                         saveWorkingConfiguration();
                         RebuildToolBar();
                         
-                        if (m_objQCWorkingConfiguration != null)
+                        if ((m_objQCWorkingConfiguration != null) && (!m_bEditing))
                         {
                             l_objCopyConfigurationMenuItem.setEnabled(true);
                             
@@ -1366,7 +1390,7 @@ public class QC implements Buildable
         // copy configuration copy configuration copy configuration copy configuration copy configuration copy configuration copy configuration copy configuration
         l_objCopyConfigurationMenuItem.setText("Copy current QC configuration");
         
-        if (m_objQCWorkingConfiguration != null)
+        if ((m_objQCWorkingConfiguration != null) && (!m_bEditing))
             l_objCopyConfigurationMenuItem.setEnabled(true);
         else
             l_objCopyConfigurationMenuItem.setEnabled(false);
@@ -1413,7 +1437,7 @@ public class QC implements Buildable
         // remove configuration remove configuration remove configuration remove configuration remove configuration remove configuration
         l_objRemoveConfigurationMenuItem.setText("Delete current QC configuration");
         
-        if (m_objQCWorkingConfiguration != null)
+        if ((m_objQCWorkingConfiguration != null) && (!m_bEditing))
         {
             if (m_objQCWorkingConfiguration.isBuiltinConfiguration())
                 l_objRemoveConfigurationMenuItem.setEnabled(false);
@@ -1477,7 +1501,7 @@ public class QC implements Buildable
         // edit configuration edit configuration edit configuration edit configuration edit configuration edit configuration edit configuration
         l_objEditConfigurationMenuItem.setText("Modify current QC configuration");
 
-        if (m_objQCWorkingConfiguration != null)
+        if ((m_objQCWorkingConfiguration != null) && (!m_bEditing))
         {
             if (m_objQCWorkingConfiguration.isBuiltinConfiguration())
                 l_objEditConfigurationMenuItem.setEnabled(false);
@@ -1503,10 +1527,28 @@ public class QC implements Buildable
                 if (m_objQCWorkingConfiguration != null)
                 {
                     //open the configuration window
+                    if (m_objQCConfig == null)
+                        m_objQCConfig = new QCConfig();
+                    
+                    m_objQCConfig.setConfiguration(m_objQCWorkingConfiguration);
+                    
+                    m_bEditing = true;
+                    RebuildPopupMenu();
                 }
             }
         });
         
         l_objPopupMenu.add(l_objEditConfigurationMenuItem, l_iStartPos++);
+    }
+    
+    public void UpdateQC(boolean bClosing)
+    {
+        if (bClosing)
+        {
+            m_bEditing = false;
+            RebuildPopupMenu();
+        }
+        
+        RebuildToolBar();
     }
 }
