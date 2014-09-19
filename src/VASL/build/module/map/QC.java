@@ -577,6 +577,8 @@ class QCConfigurationEntry
         
         if (m_bMenu)
             mar_objListConfigurationEntry = new ArrayList<QCConfigurationEntry>();
+        else
+            mar_objListConfigurationEntry = null;
     }
 
     /**

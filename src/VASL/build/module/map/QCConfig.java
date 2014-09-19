@@ -6,14 +6,22 @@
 
 package VASL.build.module.map;
 
+import VASSAL.build.module.map.PieceMover;
 import VASSAL.tools.imageop.Op;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.dnd.DnDConstants;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.Enumeration;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 /**
  *
@@ -24,11 +32,13 @@ public class QCConfig
     private QCConfiguration m_objConfiguration;
     private JFrame m_objFrame;
     final private QCConfig m_objSelf = this;
+    private DefaultMutableTreeNode m_objRootNode;
     
     public QCConfig() 
     {
         m_objConfiguration  = null;
         m_objFrame = null;       
+        m_objRootNode = null;
     }
     
     
@@ -41,94 +51,104 @@ public class QCConfig
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
 
-        jToolBar1 = new javax.swing.JToolBar();
-        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
-        jToolBar2 = new javax.swing.JToolBar();
-        filler5 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
-        jButton4 = new javax.swing.JButton();
+        QCConfigTB = new javax.swing.JToolBar();
         jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jSplitPane1 = new javax.swing.JSplitPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTree1 = new javax.swing.JTree();
-
-        jToolBar1.setOrientation(javax.swing.SwingConstants.VERTICAL);
-        jToolBar1.setRollover(true);
-        jToolBar1.add(filler1);
-
-        jToolBar2.setFloatable(false);
-        jToolBar2.setOrientation(javax.swing.SwingConstants.VERTICAL);
-        jToolBar2.setRollover(true);
-        jToolBar2.add(filler5);
-
-        jButton4.setText("A");
-        jButton4.setFocusable(false);
-        jButton4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton4.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar2.add(jButton4);
+        QCSP = new javax.swing.JScrollPane();
+        QCTree = new javax.swing.JTree(LoadConfiguration());
+        
+        expandAll(QCTree);
+        
+        QCConfigTB.setFloatable(false);
+        QCConfigTB.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        QCConfigTB.setRollover(true);
+        QCConfigTB.setMaximumSize(new java.awt.Dimension(64, 23));
+        QCConfigTB.setMinimumSize(new java.awt.Dimension(64, 23));
+        QCConfigTB.setPreferredSize(new java.awt.Dimension(64, 23));
 
         jButton5.setText("jButton5");
         jButton5.setFocusable(false);
         jButton5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton5.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar2.add(jButton5);
+        QCConfigTB.add(jButton5);
 
-        jButton6.setText("AA");
-        jButton6.setFocusable(false);
-        jButton6.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton6.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar2.add(jButton6);
+        QCSP.setName(""); // NOI18N
+        QCSP.setPreferredSize(new java.awt.Dimension(300, 500));
+        QCSP.setRequestFocusEnabled(false);
 
-        jSplitPane1.setDividerSize(10);
-        jSplitPane1.setAutoscrolls(true);
-
-        jTree1.setRootVisible(false);
-        jTree1.setShowsRootHandles(true);
-        jTree1.setToggleClickCount(1);
-        jScrollPane1.setViewportView(jTree1);
-
-        jSplitPane1.setLeftComponent(jScrollPane1);
+        QCTree.setShowsRootHandles(true);
+        QCTree.setToggleClickCount(1);
+        QCSP.setViewportView(QCTree);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(m_objFrame.getContentPane());
         m_objFrame.getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 367, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(72, 72, 72)
-                .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(QCSP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(QCConfigTB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jToolBar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(25, Short.MAX_VALUE))
+            .addComponent(QCConfigTB, javax.swing.GroupLayout.DEFAULT_SIZE, 750, Short.MAX_VALUE)
+            .addComponent(QCSP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
+
+        QCSP.getAccessibleContext().setAccessibleName("");
 
         m_objFrame.pack();
     }// </editor-fold>                        
     
+    public void expandAll(JTree tree) {
+        TreeNode root = (TreeNode) tree.getModel().getRoot();
+        expandAll(tree, new TreePath(root));
+    }
+
+    private void expandAll(JTree tree, TreePath parent) 
+    {
+        TreeNode node = (TreeNode) parent.getLastPathComponent();
+
+        if (node.getChildCount() >= 0) 
+        {
+            for (Enumeration e = node.children(); e.hasMoreElements();) 
+            {
+              TreeNode n = (TreeNode) e.nextElement();
+              TreePath path = parent.pathByAddingChild(n);
+              expandAll(tree, path);
+            }
+        }
+        tree.expandPath(parent);
+      // tree.collapsePath(parent);
+    }
+    
+    private TreeNode LoadConfiguration()     
+    {
+        m_objRootNode = new DefaultMutableTreeNode(m_objConfiguration);
+
+        for (QCConfigurationEntry l_objConfigurationEntry : m_objConfiguration.getListConfigurationEntry())
+            m_objRootNode.add(GetSubTree(l_objConfigurationEntry));
+        
+        return m_objRootNode;
+    }
+    
+    private MutableTreeNode GetSubTree(QCConfigurationEntry objConfigurationEntry) 
+    {
+        DefaultMutableTreeNode l_objNode = new DefaultMutableTreeNode(objConfigurationEntry);
+        
+        if (objConfigurationEntry.isMenu())
+        {
+            for (QCConfigurationEntry l_objConfigurationEntry : objConfigurationEntry.getListConfigurationEntry())
+                l_objNode.add(GetSubTree(l_objConfigurationEntry));
+        }
+        
+        return l_objNode;
+    }
+    
     // Variables declaration - do not modify                     
-    private javax.swing.Box.Filler filler1;
-    private javax.swing.Box.Filler filler5;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JToolBar QCConfigTB;
+    private javax.swing.JScrollPane QCSP;
+    private javax.swing.JTree QCTree;
     private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSplitPane jSplitPane1;
-    private javax.swing.JToolBar jToolBar1;
-    private javax.swing.JToolBar jToolBar2;
-    private javax.swing.JTree jTree1;
     // End of variables declaration                   
 
     /**
@@ -170,7 +190,13 @@ public class QCConfig
                 @Override
                 public void windowClosing(WindowEvent e) 
                 {
-                    if(JOptionPane.showConfirmDialog(self().m_objFrame, "Are you sure ?") == JOptionPane.OK_OPTION)
+                    int l_iSelectedOption = JOptionPane.showConfirmDialog(self().m_objFrame, 
+                                                      "Are you sure? Any changes not saved will be lost...", 
+                                                      "Did you save the changes?", 
+                                                      JOptionPane.YES_NO_OPTION,
+                                                      JOptionPane.QUESTION_MESSAGE); 
+                    
+                    if (l_iSelectedOption == JOptionPane.YES_OPTION) 
                     {
                         self().getConfiguration().getQC().UpdateQC(true);
                         self().m_objFrame.setVisible(false);
@@ -186,7 +212,7 @@ public class QCConfig
             });
         }
         
-        m_objFrame.setTitle("Editing QC configuration: " + m_objConfiguration.getDescription());
+        m_objFrame.setTitle("Editing : " + m_objConfiguration.getDescription());
         m_objFrame.setVisible(true);                    
     }
 
