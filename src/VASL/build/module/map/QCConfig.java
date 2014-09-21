@@ -19,9 +19,11 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 
 /**
  *
@@ -30,6 +32,7 @@ import javax.swing.tree.TreePath;
 public class QCConfig 
 {
     private QCConfiguration m_objConfiguration;
+    private QCConfiguration m_objWorkingConfiguration;
     private JFrame m_objFrame;
     final private QCConfig m_objSelf = this;
     private DefaultMutableTreeNode m_objRootNode;
@@ -37,6 +40,7 @@ public class QCConfig
     public QCConfig() 
     {
         m_objConfiguration  = null;
+        m_objWorkingConfiguration = null;
         m_objFrame = null;       
         m_objRootNode = null;
     }
@@ -54,7 +58,7 @@ public class QCConfig
         QCConfigTB = new javax.swing.JToolBar();
         jButton5 = new javax.swing.JButton();
         QCSP = new javax.swing.JScrollPane();
-        QCTree = new javax.swing.JTree(LoadConfiguration());
+        QCTree = new javax.swing.JTree(m_objWorkingConfiguration);
         
         expandAll(QCTree);
         
@@ -76,7 +80,7 @@ public class QCConfig
         QCSP.setRequestFocusEnabled(false);
 
         QCTree.setShowsRootHandles(true);
-        QCTree.setToggleClickCount(1);
+        QCTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         QCSP.setViewportView(QCTree);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(m_objFrame.getContentPane());
@@ -121,29 +125,6 @@ public class QCConfig
       // tree.collapsePath(parent);
     }
     
-    private TreeNode LoadConfiguration()     
-    {
-        m_objRootNode = new DefaultMutableTreeNode(m_objConfiguration);
-
-        for (QCConfigurationEntry l_objConfigurationEntry : m_objConfiguration.getListConfigurationEntry())
-            m_objRootNode.add(GetSubTree(l_objConfigurationEntry));
-        
-        return m_objRootNode;
-    }
-    
-    private MutableTreeNode GetSubTree(QCConfigurationEntry objConfigurationEntry) 
-    {
-        DefaultMutableTreeNode l_objNode = new DefaultMutableTreeNode(objConfigurationEntry);
-        
-        if (objConfigurationEntry.isMenu())
-        {
-            for (QCConfigurationEntry l_objConfigurationEntry : objConfigurationEntry.getListConfigurationEntry())
-                l_objNode.add(GetSubTree(l_objConfigurationEntry));
-        }
-        
-        return l_objNode;
-    }
-    
     // Variables declaration - do not modify                     
     private javax.swing.JToolBar QCConfigTB;
     private javax.swing.JScrollPane QCSP;
@@ -165,6 +146,9 @@ public class QCConfig
     public void setConfiguration(QCConfiguration objConfiguration) 
     {
         m_objConfiguration = objConfiguration;
+        m_objWorkingConfiguration = new QCConfiguration(m_objConfiguration.getQC(), null);
+        
+        m_objWorkingConfiguration.ReadDataFrom(m_objConfiguration);
         
         if (m_objFrame == null)
         {
@@ -211,8 +195,15 @@ public class QCConfig
                 public void windowDeactivated(WindowEvent e) {}
             });
         }
+        else        
+        {
+            DefaultTreeModel l_objModel = new DefaultTreeModel(m_objWorkingConfiguration);
+            QCTree.setModel(l_objModel);
+            
+            expandAll(QCTree);
+        }
         
-        m_objFrame.setTitle("Editing : " + m_objConfiguration.getDescription());
+        m_objFrame.setTitle("Editing : " + m_objWorkingConfiguration.getDescription());
         m_objFrame.setVisible(true);                    
     }
 
