@@ -391,10 +391,22 @@ class QCConfiguration extends DefaultMutableTreeNode
         m_bBuiltinConfiguration = objMaster.isBuiltinConfiguration();
         m_strDescription = objMaster.getDescription();
         
+        FreeAllNodes(this);
+        
         Enumeration<QCConfigurationEntry> l_objChildrenEnum = objMaster.children();
 
         while(l_objChildrenEnum.hasMoreElements())
             add(new QCConfigurationEntry(l_objChildrenEnum.nextElement()));        
+    }
+    
+    private void FreeAllNodes(DefaultMutableTreeNode objNode)
+    {
+        Enumeration<QCConfigurationEntry> l_objChildrenEnum = objNode.children();
+
+        while(l_objChildrenEnum.hasMoreElements())
+            FreeAllNodes(l_objChildrenEnum.nextElement());        
+        
+        objNode.removeAllChildren();
     }
         
     /**
@@ -520,6 +532,8 @@ class QCConfiguration extends DefaultMutableTreeNode
 class QCConfigurationEntry  extends DefaultMutableTreeNode
 // <editor-fold defaultstate="collapsed">
 {
+    private static BufferedImage m_objMnuBtn = null;
+    
     private final QC m_objQC;
     private boolean m_bMenu;
     private String m_strGpID, m_strText;    
@@ -656,6 +670,100 @@ class QCConfigurationEntry  extends DefaultMutableTreeNode
     public void setText(String m_strText) {
         this.m_strText = m_strText;
     }
+    
+    public BufferedImage CreateButtonIcon() 
+    {
+        final int l_iSize = 30, l_iSizeRendering = 35;
+        final BufferedImage l_objBI = ImageUtils.createCompatibleTranslucentImage(l_iSize, l_iSize);
+        final Graphics2D l_objGraphics = l_objBI.createGraphics();
+        
+        l_objGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        
+        final GamePiece l_objPiece = getPieceSlot().getPiece();
+        final Rectangle r = l_objPiece.getShape().getBounds();
+        final double l_dZoom = l_iSizeRendering / (double)r.width;
+
+        r.x = (int) Math.round(r.x * l_dZoom);
+        r.y = (int) Math.round(r.y * l_dZoom);
+        r.width = l_iSize;
+        r.height = l_iSize;
+
+        l_objPiece.draw(l_objGraphics, -r.x-3, -r.y-3, null, l_dZoom);
+        l_objGraphics.dispose();
+        
+        return l_objBI;
+    }    
+    
+    public BufferedImage CreateButtonMenuIcon() 
+    {
+        QCConfigurationEntry l_objConfigurationEntryIcon = null;
+        
+        if (getPieceSlot() != null)
+        {
+            l_objConfigurationEntryIcon = this;            
+        }
+        else
+        {
+            Enumeration<QCConfigurationEntry> l_objChildrenEnum = children();
+
+            while(l_objChildrenEnum.hasMoreElements())
+            {
+                QCConfigurationEntry l_objConfigurationEntry = l_objChildrenEnum.nextElement();
+                
+                if (l_objConfigurationEntry.getPieceSlot() != null)
+                {
+                    l_objConfigurationEntryIcon = l_objConfigurationEntry;            
+                    break;
+                }
+            }          
+        }
+        
+        if (l_objConfigurationEntryIcon != null)
+        {
+            final BufferedImage l_objBI = l_objConfigurationEntryIcon.CreateButtonIcon();
+            final Graphics2D l_objGraphics = l_objBI.createGraphics();
+    
+            l_objGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);            
+            l_objGraphics.drawImage(GetMenuOverlay(), 0, 0, null);            
+            l_objGraphics.dispose();
+
+            return l_objBI;
+        }       
+        else
+        {
+            final int l_iSize = 30;
+            final BufferedImage l_objBI = ImageUtils.createCompatibleTranslucentImage(l_iSize, l_iSize);
+            final Graphics2D l_objGraphics = l_objBI.createGraphics();
+
+            l_objGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            
+            l_objGraphics.setColor(Color.WHITE);
+            l_objGraphics.fillRect(0, 0, l_iSize, l_iSize);            
+            
+            l_objGraphics.drawImage(GetMenuOverlay(), 0, 0, null);
+            
+            l_objGraphics.dispose();
+            
+            return l_objBI;
+        }
+    }
+    
+    private static BufferedImage GetMenuOverlay() 
+    {
+        if (m_objMnuBtn == null)
+        {
+            try
+            {
+                m_objMnuBtn = Op.load("QC/mnubtn.png").getImage();
+            }
+            catch (Exception ex) 
+            {
+                ex.printStackTrace();
+            }
+        }
+        
+        return m_objMnuBtn;
+    }
 }
 // </editor-fold>
 
@@ -784,7 +892,6 @@ public class QC implements Buildable
     private final ArrayList<QCConfiguration> mar_objListQCConfigurations = new ArrayList<QCConfiguration>();
     private QCConfiguration m_objQCWorkingConfiguration = null;
     private Timer m_objLinkTimer;
-    private BufferedImage m_objMnuBtn = null;
     private QCConfig m_objQCConfig = null;
     private boolean m_bEditing = false;
 
@@ -1079,7 +1186,7 @@ public class QC implements Buildable
 
             try 
             {
-                l_objQCButtonMenu.setIcon(new ImageIcon(CreateButtonMenuIcon(objConfigurationEntry)));
+                l_objQCButtonMenu.setIcon(new ImageIcon(objConfigurationEntry.CreateButtonMenuIcon()));
                 l_objQCButtonMenu.setMargin(new Insets(0, 0, 0, 0));
                 
                 CreatePopupMenu(objConfigurationEntry, l_objQCButtonMenu);                
@@ -1102,7 +1209,7 @@ public class QC implements Buildable
                 try 
                 {
                     l_objQCButton.InitDragDrop();
-                    l_objQCButton.setIcon(new ImageIcon(CreateButtonIcon(objConfigurationEntry.getPieceSlot())));
+                    l_objQCButton.setIcon(new ImageIcon(objConfigurationEntry.CreateButtonIcon()));
                     l_objQCButton.setMargin(new Insets(0, 0, 0, 0));
                 } 
                 catch (Exception ex) 
@@ -1119,95 +1226,6 @@ public class QC implements Buildable
         return null;
     }
 
-    private BufferedImage CreateButtonIcon(PieceSlot pieceSlot) 
-    {
-        final int l_iSize = 30, l_iSizeRendering = 35;
-        final BufferedImage l_objBI = ImageUtils.createCompatibleTranslucentImage(l_iSize, l_iSize);
-        final Graphics2D l_objGraphics = l_objBI.createGraphics();
-        
-        l_objGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        
-        final GamePiece l_objPiece = pieceSlot.getPiece();
-        final Rectangle r = l_objPiece.getShape().getBounds();
-        final double l_dZoom = l_iSizeRendering / (double)r.width;
-
-        r.x = (int) Math.round(r.x * l_dZoom);
-        r.y = (int) Math.round(r.y * l_dZoom);
-        r.width = l_iSize;
-        r.height = l_iSize;
-
-        l_objPiece.draw(l_objGraphics, -r.x-3, -r.y-3, null, l_dZoom);
-        l_objGraphics.dispose();
-        
-        return l_objBI;
-    }
-
-    private BufferedImage  CreateButtonMenuIcon(QCConfigurationEntry objConfigurationEntry) 
-    {
-        PieceSlot l_objPieceSlot = objConfigurationEntry.getPieceSlot();
-        
-        if (l_objPieceSlot == null)
-        {
-            Enumeration<QCConfigurationEntry> l_objChildrenEnum = objConfigurationEntry.children();
-
-            while(l_objChildrenEnum.hasMoreElements())
-            {
-                l_objPieceSlot = l_objChildrenEnum.nextElement().getPieceSlot();
-                
-                if (l_objPieceSlot != null)
-                    break;
-            }          
-        }
-        
-        if (l_objPieceSlot != null)
-        {
-            final BufferedImage l_objBI = CreateButtonIcon(l_objPieceSlot);
-            final Graphics2D l_objGraphics = l_objBI.createGraphics();
-    
-            l_objGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            
-            l_objGraphics.drawImage(GetMenuOverlay(), 0, 0, null);
-            
-            l_objGraphics.dispose();
-
-            return l_objBI;
-        }       
-        else
-        {
-            final int l_iSize = 30;
-            final BufferedImage l_objBI = ImageUtils.createCompatibleTranslucentImage(l_iSize, l_iSize);
-            final Graphics2D l_objGraphics = l_objBI.createGraphics();
-
-            l_objGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            
-            l_objGraphics.setColor(Color.WHITE);
-            l_objGraphics.fillRect(0, 0, l_iSize, l_iSize);            
-            
-            l_objGraphics.drawImage(GetMenuOverlay(), 0, 0, null);
-            
-            l_objGraphics.dispose();
-            
-            return l_objBI;
-        }
-    }
-    
-    private BufferedImage GetMenuOverlay() 
-    {
-        if (m_objMnuBtn == null)
-        {
-            try
-            {
-                m_objMnuBtn = Op.load("QC/mnubtn.png").getImage();
-            }
-            catch (Exception ex) 
-            {
-                ex.printStackTrace();
-            }
-        }
-        
-        return m_objMnuBtn;
-    }
-    
     private void CreatePopupMenu(QCConfigurationEntry objConfigurationEntry, QCButtonMenu objQCButtonMenu) 
     {
         JPopupMenu l_objPopupMenu = objQCButtonMenu.getPopupMenu();
@@ -1236,7 +1254,7 @@ public class QC implements Buildable
                 else
                     l_objMenu.setText("submenu");
 
-                l_objMenu.setIcon(new ImageIcon(CreateButtonMenuIcon(objConfigurationEntry)));
+                l_objMenu.setIcon(new ImageIcon(objConfigurationEntry.CreateButtonMenuIcon()));
             } 
             catch (Exception ex) 
             {
@@ -1264,7 +1282,7 @@ public class QC implements Buildable
                 try 
                 {
                     l_MenuItem.setText(objConfigurationEntry.getPieceSlot().getPiece().getName());
-                    l_MenuItem.setIcon(new ImageIcon(CreateButtonIcon(objConfigurationEntry.getPieceSlot())));
+                    l_MenuItem.setIcon(new ImageIcon(objConfigurationEntry.CreateButtonIcon()));
                     l_MenuItem.InitDragDrop();
                 } 
                 catch (Exception ex) 
