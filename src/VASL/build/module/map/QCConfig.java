@@ -8,6 +8,7 @@ package VASL.build.module.map;
 
 import VASSAL.build.module.map.PieceMover;
 import VASSAL.tools.imageop.Op;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.dnd.DnDConstants;
@@ -16,14 +17,63 @@ import java.awt.event.WindowListener;
 import java.util.Enumeration;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
+
+//class QCTreeCellRenderer implements TreeCellRenderer {
+class QCTreeCellRenderer extends DefaultTreeCellRenderer {
+
+    QCTreeCellRenderer() {}
+
+    @Override
+    public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) 
+    {
+        JLabel l_objLabel = (JLabel)super.getTreeCellRendererComponent(
+                            tree, value, selected,
+                            expanded, leaf, row,
+                            hasFocus); 
+   
+        DefaultMutableTreeNode l_objObject = ((DefaultMutableTreeNode) value);
+        
+        if (l_objObject instanceof QCConfiguration) 
+        {
+            QCConfiguration l_objQCConfiguration = (QCConfiguration) l_objObject;
+            //m_objLabel.setIcon(new ImageIcon(country.getFlagIcon()));
+            l_objLabel.setIcon(null);
+            l_objLabel.setText(l_objQCConfiguration.getDescription());
+        } 
+        else if (l_objObject instanceof QCConfigurationEntry) 
+        {
+            QCConfigurationEntry l_objQCConfigurationEntry = (QCConfigurationEntry) l_objObject;
+            
+            if (l_objQCConfigurationEntry.isMenu())
+            {
+                l_objLabel.setIcon(null);
+                
+                if (l_objQCConfigurationEntry.getText() != null)
+                    l_objLabel.setText(l_objQCConfigurationEntry.getText());
+                else
+                    l_objLabel.setText("submenu");
+            }
+            else
+            {
+                l_objLabel.setIcon(null);
+                l_objLabel.setText("nodo");
+            }
+        }
+        
+        return l_objLabel;
+    }
+}
 
 /**
  *
@@ -36,6 +86,7 @@ public class QCConfig
     private JFrame m_objFrame;
     final private QCConfig m_objSelf = this;
     private DefaultMutableTreeNode m_objRootNode;
+    DefaultTreeModel m_objModelTree;
     
     public QCConfig() 
     {
@@ -43,6 +94,7 @@ public class QCConfig
         m_objWorkingConfiguration = null;
         m_objFrame = null;       
         m_objRootNode = null;
+        m_objModelTree = null;
     }
     
     
@@ -58,8 +110,11 @@ public class QCConfig
         QCConfigTB = new javax.swing.JToolBar();
         jButton5 = new javax.swing.JButton();
         QCSP = new javax.swing.JScrollPane();
-        QCTree = new javax.swing.JTree(m_objWorkingConfiguration);
         
+        m_objModelTree = new DefaultTreeModel(m_objWorkingConfiguration);
+        QCTree = new javax.swing.JTree(m_objModelTree);
+        QCTree.setCellRenderer(new QCTreeCellRenderer());
+    
         expandAll(QCTree);
         
         QCConfigTB.setFloatable(false);
@@ -103,26 +158,28 @@ public class QCConfig
         m_objFrame.pack();
     }// </editor-fold>                        
     
-    public void expandAll(JTree tree) {
-        TreeNode root = (TreeNode) tree.getModel().getRoot();
-        expandAll(tree, new TreePath(root));
+    public void expandAll(JTree objTree) 
+    {
+        TreeNode objRootNode = (TreeNode) objTree.getModel().getRoot();
+        
+        expandAll(objTree, new TreePath(objRootNode));
     }
 
-    private void expandAll(JTree tree, TreePath parent) 
+    private void expandAll(JTree objTree, TreePath objParentPath) 
     {
-        TreeNode node = (TreeNode) parent.getLastPathComponent();
+        TreeNode objNode = (TreeNode) objParentPath.getLastPathComponent();
 
-        if (node.getChildCount() >= 0) 
+        if (objNode.getChildCount() >= 0) 
         {
-            for (Enumeration e = node.children(); e.hasMoreElements();) 
+            for (Enumeration e = objNode.children(); e.hasMoreElements();) 
             {
               TreeNode n = (TreeNode) e.nextElement();
-              TreePath path = parent.pathByAddingChild(n);
-              expandAll(tree, path);
+              TreePath path = objParentPath.pathByAddingChild(n);
+              expandAll(objTree, path);
             }
         }
-        tree.expandPath(parent);
-      // tree.collapsePath(parent);
+        
+        objTree.expandPath(objParentPath);
     }
     
     // Variables declaration - do not modify                     
@@ -197,8 +254,8 @@ public class QCConfig
         }
         else        
         {
-            DefaultTreeModel l_objModel = new DefaultTreeModel(m_objWorkingConfiguration);
-            QCTree.setModel(l_objModel);
+            m_objModelTree = new DefaultTreeModel(m_objWorkingConfiguration);
+            QCTree.setModel(m_objModelTree);
             
             expandAll(QCTree);
         }

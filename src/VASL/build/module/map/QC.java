@@ -303,7 +303,6 @@ class QCConfigurationParser extends DefaultHandler
             QCConfigurationEntry l_newEntry = new QCConfigurationEntry(m_objQCConfiguration.getQC());
             
             l_newEntry.setMenu(true);
-            l_newEntry.setGpID(attributes.getValue("slot"));
             l_newEntry.setText(attributes.getValue("text"));
             
             if (m_objCurrentSubMenu != m_objQCConfiguration)
@@ -529,7 +528,7 @@ class QCConfiguration extends DefaultMutableTreeNode
 }
 // </editor-fold>
 
-class QCConfigurationEntry  extends DefaultMutableTreeNode
+class QCConfigurationEntry extends DefaultMutableTreeNode
 // <editor-fold defaultstate="collapsed">
 {
     private static BufferedImage m_objMnuBtn = null;
@@ -541,6 +540,8 @@ class QCConfigurationEntry  extends DefaultMutableTreeNode
     
     public QCConfigurationEntry(QC objQC)
     {
+        super();
+        
         m_objQC = objQC;
         m_bMenu = false;
         m_strGpID = null;
@@ -550,6 +551,8 @@ class QCConfigurationEntry  extends DefaultMutableTreeNode
 
     public QCConfigurationEntry(QCConfigurationEntry objMaster)
     {
+        super();
+        
         m_objQC = objMaster.getQC();
         m_bMenu = objMaster.isMenu();
         
@@ -607,13 +610,6 @@ class QCConfigurationEntry  extends DefaultMutableTreeNode
         {
             Element l_objEntry = objDocument.createElement("qcsubmenu");
 
-            if (getGpID() != null)
-            {
-                Attr l_objAttribute = objDocument.createAttribute("slot");
-                l_objAttribute.setValue(getGpID());
-                l_objEntry.setAttributeNode(l_objAttribute);
-            }
-            
             if (getText() != null)
             {
                 Attr l_objAttribute = objDocument.createAttribute("text");
@@ -787,7 +783,7 @@ public class QC implements Buildable
 "	<qcentry slot=\"2\"/>\n" +
 "	<qcentry slot=\"4\"/>\n" +
 "	<qcentry slot=\"63\"/>\n" +
-"	<qcsubmenu slot=\"47\">\n" +
+"	<qcsubmenu text=\"Residual Fires\">\n" +
 "		<qcentry slot=\"47\"/>\n" +
 "		<qcentry slot=\"48\"/>\n" +
 "		<qcentry slot=\"49\"/>\n" +
@@ -795,13 +791,13 @@ public class QC implements Buildable
 "		<qcentry slot=\"51\"/>\n" +
 "		<qcentry slot=\"52\"/>\n" +
 "	</qcsubmenu>\n" +
-"	<qcsubmenu slot=\"53\">\n" +
+"	<qcsubmenu text=\"Fire Lanes\">\n" +
 "		<qcentry slot=\"53\"/>\n" +
 "		<qcentry slot=\"54\"/>\n" +
 "		<qcentry slot=\"55\"/>\n" +
 "		<qcentry slot=\"56\"/>\n" +
 "	</qcsubmenu>\n" +
-"	<qcsubmenu slot=\"6\">\n" +
+"	<qcsubmenu text=\"Smokes\">\n" +
 "		<qcentry slot=\"6\"/>\n" +
 "		<qcentry slot=\"57\"/>\n" +
 "		<qcentry slot=\"59\"/>\n" +
@@ -815,24 +811,24 @@ public class QC implements Buildable
 "	<qcentry slot=\"69\"/>\n" +
 "	<qcentry slot=\"146\"/>\n" +
 "	<qcentry slot=\"64\"/>\n" +
-"	<qcsubmenu slot=\"73\">\n" +
+"	<qcsubmenu text=\"CC, HW\">\n" +
 "		<qcentry slot=\"73\"/>\n" +
 "		<qcentry slot=\"74\"/>\n" +
 "		<qcentry slot=\"83\"/>\n" +
 "		<qcentry slot=\"85\"/>\n" +
 "		<qcentry slot=\"88\"/>\n" +
 "	</qcsubmenu>\n" +
-"	<qcsubmenu slot=\"6390\">\n" +
+"	<qcsubmenu text=\"Prisoners\">\n" +
 "		<qcentry slot=\"6390\"/>\n" +
 "		<qcentry slot=\"6391\"/>\n" +
 "	</qcsubmenu>\n" +
-"	<qcsubmenu slot=\"68\">\n" +
+"	<qcsubmenu text=\"TI, Labor, CA, Low Ammo\">\n" +
 "		<qcentry slot=\"68\"/>\n" +
 "		<qcentry slot=\"66\"/>\n" +
 "		<qcentry slot=\"5903\"/>\n" +
 "		<qcentry slot=\"5902\"/>\n" +
 "	</qcsubmenu>\n" +
-"	<qcsubmenu slot=\"423\">\n" +
+"	<qcsubmenu text=\"Acquisitions\">\n" +
 "		<qcentry slot=\"423\"/>\n" +
 "		<qcentry slot=\"773\"/>\n" +
 "		<qcentry slot=\"1066\"/>\n" +
@@ -847,7 +843,7 @@ public class QC implements Buildable
 "		<qcentry slot=\"3634\"/>\n" +
 "		<qcentry slot=\"3916\"/>\n" +
 "	</qcsubmenu>\n" +
-"	<qcsubmenu slot=\"41\">\n" +
+"	<qcsubmenu text=\"AFV Bad Things\">\n" +
 "		<qcentry slot=\"41\"/>\n" +
 "		<qcentry slot=\"5918\"/>\n" +
 "		<qcentry slot=\"5919\"/>\n" +
@@ -864,7 +860,7 @@ public class QC implements Buildable
 "	<qcentry slot=\"123\"/>\n" +
 "	<qcentry slot=\"104\"/>\n" +
 "	<qcentry slot=\"344\"/>\n" +
-"	<qcsubmenu slot=\"171\">\n" +
+"	<qcsubmenu text=\"Building Levels\">\n" +
 "		<qcentry slot=\"171\"/>\n" +
 "		<qcentry slot=\"167\"/>\n" +
 "		<qcentry slot=\"169\"/>\n" +
@@ -874,7 +870,7 @@ public class QC implements Buildable
 "		<qcentry slot=\"203\"/>\n" +
 "		<qcentry slot=\"204\"/>\n" +
 "	</qcsubmenu>\n" +
-"	<qcsubmenu slot=\"359\">\n" +
+"	<qcsubmenu text=\"SASL Counters\">\n" +
 "		<qcentry slot=\"359\"/>\n" +
 "		<qcentry slot=\"360\"/>\n" +
 "		<qcentry slot=\"361\"/>\n" +
