@@ -1537,14 +1537,15 @@ public class QC implements Buildable
         l_objPopupMenu.add(l_objEditConfigurationMenuItem, l_iStartPos++);
     }
     
-    public void UpdateQC(boolean bClosing)
+    public void UpdateQC(boolean bClosing, boolean bSaving)
     {
         if (bClosing)
-        {
             m_bEditing = false;
+
+        if (bSaving)
+        {            
             RebuildPopupMenu();
+            RebuildToolBar();
         }
-        
-        RebuildToolBar();
     }
 }

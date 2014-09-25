@@ -7,19 +7,25 @@
 package VASL.build.module.map;
 
 import VASSAL.build.module.map.PieceMover;
+import VASSAL.tools.image.ImageUtils;
 import VASSAL.tools.imageop.Op;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.dnd.DnDConstants;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.image.BufferedImage;
 import java.util.Enumeration;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTree;
+import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
@@ -34,6 +40,28 @@ class QCTreeCellRenderer extends DefaultTreeCellRenderer {
 
     QCTreeCellRenderer() {}
 
+    public BufferedImage CreateIcon(BufferedImage objCounterIcon) 
+    {
+        final int l_iBorder = 3;
+        final int l_iSizeOrigin = objCounterIcon.getWidth();
+        final int l_iSize = l_iSizeOrigin + 2 * l_iBorder;
+        final BufferedImage l_objBI = ImageUtils.createCompatibleTranslucentImage(l_iSize, l_iSize);
+        final Graphics2D l_objGraphics = l_objBI.createGraphics();
+
+        l_objGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        l_objGraphics.setColor(Color.WHITE);
+        l_objGraphics.fillRect(0, 0, l_iSize, l_iSize);            
+        l_objGraphics.setColor(Color.BLACK);
+        l_objGraphics.drawRect(l_iBorder - 1, l_iBorder - 1, l_iSizeOrigin + 1, l_iSizeOrigin + 1);
+
+        l_objGraphics.drawImage(objCounterIcon, l_iBorder, l_iBorder, null);
+
+        l_objGraphics.dispose();
+
+        return l_objBI;        
+    }
+    
     @Override
     public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) 
     {
@@ -53,21 +81,43 @@ class QCTreeCellRenderer extends DefaultTreeCellRenderer {
         } 
         else if (l_objObject instanceof QCConfigurationEntry) 
         {
-            QCConfigurationEntry l_objQCConfigurationEntry = (QCConfigurationEntry) l_objObject;
+            QCConfigurationEntry l_objConfigurationEntry = (QCConfigurationEntry) l_objObject;
             
-            if (l_objQCConfigurationEntry.isMenu())
+            if (l_objConfigurationEntry.isMenu())
             {
-                l_objLabel.setIcon(null);
+                l_objLabel.setIcon(new ImageIcon(CreateIcon(l_objConfigurationEntry.CreateButtonMenuIcon())));
                 
-                if (l_objQCConfigurationEntry.getText() != null)
-                    l_objLabel.setText(l_objQCConfigurationEntry.getText());
+                if (l_objConfigurationEntry.getText() != null)
+                    l_objLabel.setText(l_objConfigurationEntry.getText());
                 else
                     l_objLabel.setText("submenu");
             }
             else
             {
-                l_objLabel.setIcon(null);
-                l_objLabel.setText("nodo");
+                if (l_objConfigurationEntry.getPieceSlot() != null)
+                {
+                    l_objLabel.setIcon(new ImageIcon(CreateIcon(l_objConfigurationEntry.CreateButtonIcon())));
+                    l_objLabel.setText(l_objConfigurationEntry.getPieceSlot().getPiece().getName());
+                }
+                else
+                {
+                    BufferedImage l_objUnknown = null;
+                    try
+                    {
+                        l_objUnknown = Op.load("QC/unknown.png").getImage();
+                    }
+                    catch (Exception ex) 
+                    {
+                        ex.printStackTrace();
+                    }
+                    
+                    if (l_objUnknown != null)
+                        l_objLabel.setIcon(new ImageIcon(CreateIcon(l_objUnknown)));
+                    else
+                        l_objLabel.setIcon(null);
+                    
+                    l_objLabel.setText("Unknown counter");
+                }
             }
         }
         
@@ -114,6 +164,7 @@ public class QCConfig
         m_objModelTree = new DefaultTreeModel(m_objWorkingConfiguration);
         QCTree = new javax.swing.JTree(m_objModelTree);
         QCTree.setCellRenderer(new QCTreeCellRenderer());
+        ((BasicTreeUI)QCTree.getUI()).setLeftChildIndent(20);        
     
         expandAll(QCTree);
         
@@ -239,7 +290,7 @@ public class QCConfig
                     
                     if (l_iSelectedOption == JOptionPane.YES_OPTION) 
                     {
-                        self().getConfiguration().getQC().UpdateQC(true);
+                        self().getConfiguration().getQC().UpdateQC(true, false);
                         self().m_objFrame.setVisible(false);
                     }
                 }
