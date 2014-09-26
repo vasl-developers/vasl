@@ -1182,6 +1182,10 @@ public class QC implements Buildable
 
             try 
             {
+                if (objConfigurationEntry.getText() != null)
+                    l_objQCButtonMenu.setToolTipText(objConfigurationEntry.getText());
+                else
+                    l_objQCButtonMenu.setToolTipText("submenu");
                 l_objQCButtonMenu.setIcon(new ImageIcon(objConfigurationEntry.CreateButtonMenuIcon()));
                 l_objQCButtonMenu.setMargin(new Insets(0, 0, 0, 0));
                 
@@ -1542,10 +1546,9 @@ public class QC implements Buildable
         if (bClosing)
             m_bEditing = false;
 
+        RebuildPopupMenu();
+        
         if (bSaving)
-        {            
-            RebuildPopupMenu();
             RebuildToolBar();
-        }
     }
 }

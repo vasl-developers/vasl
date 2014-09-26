@@ -20,10 +20,17 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.util.Enumeration;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -75,7 +82,6 @@ class QCTreeCellRenderer extends DefaultTreeCellRenderer {
         if (l_objObject instanceof QCConfiguration) 
         {
             QCConfiguration l_objQCConfiguration = (QCConfiguration) l_objObject;
-            //m_objLabel.setIcon(new ImageIcon(country.getFlagIcon()));
             l_objLabel.setIcon(null);
             l_objLabel.setText(l_objQCConfiguration.getDescription());
         } 
@@ -131,11 +137,11 @@ class QCTreeCellRenderer extends DefaultTreeCellRenderer {
  */
 public class QCConfig 
 {
+    private boolean m_bDataModified;
     private QCConfiguration m_objConfiguration;
     private QCConfiguration m_objWorkingConfiguration;
     private JFrame m_objFrame;
     final private QCConfig m_objSelf = this;
-    private DefaultMutableTreeNode m_objRootNode;
     DefaultTreeModel m_objModelTree;
     
     public QCConfig() 
@@ -143,8 +149,8 @@ public class QCConfig
         m_objConfiguration  = null;
         m_objWorkingConfiguration = null;
         m_objFrame = null;       
-        m_objRootNode = null;
         m_objModelTree = null;
+        m_bDataModified = false;
     }
     
     
@@ -157,37 +163,79 @@ public class QCConfig
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
 
-        QCConfigTB = new javax.swing.JToolBar();
-        jButton5 = new javax.swing.JButton();
-        QCSP = new javax.swing.JScrollPane();
+        m_objToolbar = new JToolBar();
+        m_objBtnMoveUp = new JButton();
+        m_objBtnMoveDown = new JButton();
+        QCSP = new JScrollPane();
         
         m_objModelTree = new DefaultTreeModel(m_objWorkingConfiguration);
-        QCTree = new javax.swing.JTree(m_objModelTree);
-        QCTree.setCellRenderer(new QCTreeCellRenderer());
-        ((BasicTreeUI)QCTree.getUI()).setLeftChildIndent(20);        
+        m_objTree = new JTree(m_objModelTree);
+        m_objTree.setCellRenderer(new QCTreeCellRenderer());
+        ((BasicTreeUI)m_objTree.getUI()).setLeftChildIndent(20);        
     
-        expandAll(QCTree);
+        expandAll(m_objTree);
+
+        TreePath l_objRootPath = new TreePath(((DefaultMutableTreeNode)m_objModelTree.getRoot()).getPath());
+
+        m_objTree.scrollPathToVisible(l_objRootPath);
+        m_objTree.setSelectionPath(l_objRootPath);
         
-        QCConfigTB.setFloatable(false);
-        QCConfigTB.setOrientation(javax.swing.SwingConstants.VERTICAL);
-        QCConfigTB.setRollover(true);
-        QCConfigTB.setMaximumSize(new java.awt.Dimension(64, 23));
-        QCConfigTB.setMinimumSize(new java.awt.Dimension(64, 23));
-        QCConfigTB.setPreferredSize(new java.awt.Dimension(64, 23));
+        m_objToolbar.setFloatable(false);
+        m_objToolbar.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        m_objToolbar.setRollover(true);
+        m_objToolbar.setMaximumSize(new java.awt.Dimension(64, 23));
+        m_objToolbar.setMinimumSize(new java.awt.Dimension(50, 23));
+        m_objToolbar.setPreferredSize(new java.awt.Dimension(50, 23));
 
-        jButton5.setText("jButton5");
-        jButton5.setFocusable(false);
-        jButton5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton5.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        QCConfigTB.add(jButton5);
-
+        try 
+        {
+            m_objBtnMoveUp.setIcon(new ImageIcon(Op.load("QC/up.png").getImage(null))); // NOI18N
+        } 
+        catch (Exception ex) 
+        {
+            ex.printStackTrace();
+        }
+        
+        m_objBtnMoveUp.setToolTipText("Move up the selected node");
+        m_objBtnMoveUp.setFocusable(false);
+        m_objBtnMoveUp.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        m_objBtnMoveUp.setText("");
+        m_objBtnMoveUp.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        m_objBtnMoveUp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                m_objBtnMoveUpActionPerformed(evt);
+            }
+        });
+        m_objToolbar.add(m_objBtnMoveUp);
+        
+        try 
+        {
+            m_objBtnMoveDown.setIcon(new ImageIcon(Op.load("QC/down.png").getImage(null))); // NOI18N
+        } 
+        catch (Exception ex) 
+        {
+            ex.printStackTrace();
+        }
+        
+        m_objBtnMoveDown.setToolTipText("Move down the selected node");
+        m_objBtnMoveDown.setFocusable(false);
+        m_objBtnMoveDown.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        m_objBtnMoveDown.setText("");
+        m_objBtnMoveDown.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        m_objBtnMoveDown.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                m_objButtonDownActionPerformed(evt);
+            }
+        });
+        m_objToolbar.add(m_objBtnMoveDown);
+        
         QCSP.setName(""); // NOI18N
         QCSP.setPreferredSize(new java.awt.Dimension(300, 500));
         QCSP.setRequestFocusEnabled(false);
 
-        QCTree.setShowsRootHandles(true);
-        QCTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-        QCSP.setViewportView(QCTree);
+        m_objTree.setShowsRootHandles(true);
+        m_objTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        QCSP.setViewportView(m_objTree);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(m_objFrame.getContentPane());
         m_objFrame.getContentPane().setLayout(layout);
@@ -195,19 +243,54 @@ public class QCConfig
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(QCSP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(QCConfigTB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(m_objToolbar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(QCConfigTB, javax.swing.GroupLayout.DEFAULT_SIZE, 750, Short.MAX_VALUE)
+            .addComponent(m_objToolbar, javax.swing.GroupLayout.DEFAULT_SIZE, 750, Short.MAX_VALUE)
             .addComponent(QCSP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         QCSP.getAccessibleContext().setAccessibleName("");
 
         m_objFrame.pack();
-    }// </editor-fold>                        
+    }    
+    private void m_objButtonDownActionPerformed(java.awt.event.ActionEvent evt) {                                                
+        // TODO add your handling code here:
+    }                                               
+
+    private void m_objBtnMoveUpActionPerformed(java.awt.event.ActionEvent evt) 
+    {
+        TreePath l_objTreePath = m_objTree.getSelectionPath();        // get path of selected node.
+
+        if (l_objTreePath == null) 
+            return;
+
+        boolean l_bIsExpanded = m_objTree.isExpanded(l_objTreePath);
+
+        DefaultMutableTreeNode l_objNode = (DefaultMutableTreeNode) l_objTreePath.getLastPathComponent();
+        DefaultMutableTreeNode l_objParentNode = (DefaultMutableTreeNode) l_objNode.getParent();
+
+        //now get the index of the selected node in the DefaultTreeModel
+        int l_iIndex = m_objModelTree.getIndexOfChild(l_objParentNode, l_objNode);
+
+        // if selected node is first, return (can't move it up)
+        if (l_iIndex != 0) 
+        {
+            m_objModelTree.removeNodeFromParent(l_objNode);
+            m_objModelTree.insertNodeInto(l_objNode, l_objParentNode, l_iIndex - 1);    // move the node
+
+            TreePath l_objNodePath = new TreePath(l_objNode.getPath());
+
+            if (l_bIsExpanded) 
+                m_objTree.expandPath(l_objNodePath);
+
+            m_objTree.scrollPathToVisible(l_objNodePath);
+            m_objTree.setSelectionPath(l_objNodePath);
+        
+            m_bDataModified = true;
+        }
+    }                                              
     
     public void expandAll(JTree objTree) 
     {
@@ -218,15 +301,15 @@ public class QCConfig
 
     private void expandAll(JTree objTree, TreePath objParentPath) 
     {
-        TreeNode objNode = (TreeNode) objParentPath.getLastPathComponent();
+        TreeNode l_objNode = (TreeNode) objParentPath.getLastPathComponent();
 
-        if (objNode.getChildCount() >= 0) 
+        if (l_objNode.getChildCount() >= 0) 
         {
-            for (Enumeration e = objNode.children(); e.hasMoreElements();) 
+            for (Enumeration l_en = l_objNode.children(); l_en.hasMoreElements();) 
             {
-              TreeNode n = (TreeNode) e.nextElement();
-              TreePath path = objParentPath.pathByAddingChild(n);
-              expandAll(objTree, path);
+              TreeNode l_objCurrentNode = (TreeNode) l_en.nextElement();
+              TreePath l_objTreePath = objParentPath.pathByAddingChild(l_objCurrentNode);
+              expandAll(objTree, l_objTreePath);
             }
         }
         
@@ -234,10 +317,11 @@ public class QCConfig
     }
     
     // Variables declaration - do not modify                     
-    private javax.swing.JToolBar QCConfigTB;
+    private javax.swing.JToolBar m_objToolbar;
     private javax.swing.JScrollPane QCSP;
-    private javax.swing.JTree QCTree;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JTree m_objTree;
+    private javax.swing.JButton m_objBtnMoveUp;
+    private javax.swing.JButton m_objBtnMoveDown;
     // End of variables declaration                   
 
     /**
@@ -282,12 +366,17 @@ public class QCConfig
                 @Override
                 public void windowClosing(WindowEvent e) 
                 {
-                    int l_iSelectedOption = JOptionPane.showConfirmDialog(self().m_objFrame, 
-                                                      "Are you sure? Any changes not saved will be lost...", 
-                                                      "Did you save the changes?", 
-                                                      JOptionPane.YES_NO_OPTION,
-                                                      JOptionPane.QUESTION_MESSAGE); 
+                    int l_iSelectedOption = JOptionPane.YES_OPTION;
                     
+                    if (m_bDataModified)
+                    {
+                        l_iSelectedOption = JOptionPane.showConfirmDialog(self().m_objFrame, 
+                                                          "Are you sure? Any changes not saved will be lost...", 
+                                                          "Did you save the changes?", 
+                                                          JOptionPane.YES_NO_OPTION,
+                                                          JOptionPane.QUESTION_MESSAGE); 
+                    }
+
                     if (l_iSelectedOption == JOptionPane.YES_OPTION) 
                     {
                         self().getConfiguration().getQC().UpdateQC(true, false);
@@ -306,13 +395,19 @@ public class QCConfig
         else        
         {
             m_objModelTree = new DefaultTreeModel(m_objWorkingConfiguration);
-            QCTree.setModel(m_objModelTree);
+            m_objTree.setModel(m_objModelTree);
             
-            expandAll(QCTree);
+            expandAll(m_objTree);
+            
+            TreePath l_objRootPath = new TreePath(((DefaultMutableTreeNode)m_objModelTree.getRoot()).getPath());
+            
+            m_objTree.scrollPathToVisible(l_objRootPath);
+            m_objTree.setSelectionPath(l_objRootPath);
         }
         
         m_objFrame.setTitle("Editing : " + m_objWorkingConfiguration.getDescription());
         m_objFrame.setVisible(true);                    
+        m_bDataModified = false;
     }
 
     /**
