@@ -93,7 +93,7 @@ class QCTreeCellRenderer extends DefaultTreeCellRenderer {
                 if (l_objConfigurationEntry.getText() != null)
                     l_objLabel.setText(l_objConfigurationEntry.getText());
                 else
-                    l_objLabel.setText("submenu");
+                    l_objLabel.setText(QCConfiguration.EmptyMenuTitle());
             }
             else
             {
@@ -184,6 +184,7 @@ public class QCConfig
         m_objToolbar = new JToolBar();
         m_objBtnMoveUp = new JButton();
         m_objBtnMoveDown = new JButton();
+        m_objBtnMoveUpLevel = new JButton();
         m_objBtnAddCounter = new JButton();
         m_objBtnAddMenu = new JButton();
         m_objBtnSetTitle = new JButton();
@@ -225,6 +226,13 @@ public class QCConfig
             }
         });
         
+        SetButtonProperties(m_objBtnMoveUpLevel, "QC/uplev.png", "Move the selected node one level up", new ActionListener() {
+            public void actionPerformed(ActionEvent evt) 
+            {
+                m_objBtnMoveUpLevelActionPerformed(evt);
+            }
+        });
+        
         SetButtonProperties(m_objBtnAddCounter, "QC/add.png", "Add a new button to the toolbar", new ActionListener() {
             public void actionPerformed(ActionEvent evt) 
             {
@@ -239,7 +247,7 @@ public class QCConfig
             }
         });
         
-        SetButtonProperties(m_objBtnSetTitle, "QC/title.png", "Edit the title of a menu or the description of the whole configuration", new ActionListener() {
+        SetButtonProperties(m_objBtnSetTitle, "QC/title.png", "Edit the title of a menu/submenu or the description of the whole configuration", new ActionListener() {
             public void actionPerformed(ActionEvent evt) 
             {
                 m_objBtnSetTitleActionPerformed(evt);
@@ -360,22 +368,121 @@ public class QCConfig
         }
     }                                              
     
+    private void m_objBtnMoveUpLevelActionPerformed(ActionEvent evt) 
+    {
+        TreePath l_objTreePath = m_objTree.getSelectionPath();        // get path of selected node.
+
+        if (l_objTreePath == null) 
+            return;
+
+        boolean l_bIsExpanded = m_objTree.isExpanded(l_objTreePath);
+
+        DefaultMutableTreeNode l_objNode = (DefaultMutableTreeNode) l_objTreePath.getLastPathComponent();
+        DefaultMutableTreeNode l_objParentNode = (DefaultMutableTreeNode) l_objNode.getParent();
+        DefaultMutableTreeNode l_objGrandParentNode = (DefaultMutableTreeNode) l_objParentNode.getParent();
+        
+        if (l_objGrandParentNode == null)
+            return;
+
+         m_objModelTree.removeNodeFromParent(l_objNode);
+         m_objModelTree.insertNodeInto(l_objNode, l_objGrandParentNode, m_objModelTree.getChildCount(l_objGrandParentNode));
+
+        TreePath l_objNodePath = new TreePath(l_objNode.getPath());
+
+        if (l_bIsExpanded) 
+            m_objTree.expandPath(l_objNodePath);
+         
+        m_objTree.scrollPathToVisible(l_objNodePath);
+        m_objTree.setSelectionPath(l_objNodePath);
+        
+        setDataModified(true);
+    }
+    
     private void m_objBtnAddCounterActionPerformed(ActionEvent evt) 
     {
         JOptionPane.showMessageDialog(self().m_objFrame, 
             "To add a button to the toolbar you must simply do a drag & drop from the VASL counters window to the tree." 
                 + "\nThe new button will be inserted after the currently selected node (if there is no node selected or if the selected \nnode represents "
-                + "a submenu, it will be added as last child).", 
+                + "a menu/submenu, it will be added as last child).", 
             "To add a button to the toolbar", 
             INFORMATION_MESSAGE);
     }
     
     private void m_objBtnAddMenuActionPerformed(ActionEvent evt) 
     {
+        DefaultMutableTreeNode l_objSelectedNode = null;
+        DefaultMutableTreeNode l_objNewNode = new QCConfigurationEntry(m_objWorkingConfiguration.getQC());
+        
+        ((QCConfigurationEntry)l_objNewNode).setMenu(true);
+        ((QCConfigurationEntry)l_objNewNode).setText(QCConfiguration.EmptyMenuTitle());
+            
+        TreePath l_objTreePath = m_objTree.getSelectionPath();        // get path of selected node.
+
+        if (l_objTreePath == null) 
+            l_objSelectedNode = (DefaultMutableTreeNode)m_objModelTree.getRoot();
+        else
+            l_objSelectedNode = (DefaultMutableTreeNode) l_objTreePath.getLastPathComponent();
+        
+        if (l_objSelectedNode.isRoot())
+        {
+             m_objModelTree.insertNodeInto(l_objNewNode, l_objSelectedNode, m_objModelTree.getChildCount(l_objSelectedNode));
+        }
+        else if (((QCConfigurationEntry)l_objSelectedNode).isMenu())
+        {
+             m_objModelTree.insertNodeInto(l_objNewNode, l_objSelectedNode, m_objModelTree.getChildCount(l_objSelectedNode));
+        }
+        else
+        {
+            DefaultMutableTreeNode l_objParentNode = (DefaultMutableTreeNode) l_objSelectedNode.getParent();
+
+            int l_iIndex = m_objModelTree.getIndexOfChild(l_objParentNode, l_objSelectedNode);            
+             m_objModelTree.insertNodeInto(l_objNewNode, l_objParentNode, l_iIndex + 1);
+        }
+
+        TreePath l_objNodePath = new TreePath(l_objNewNode.getPath());
+
+        m_objTree.expandPath(l_objNodePath);
+        m_objTree.scrollPathToVisible(l_objNodePath);
+        m_objTree.setSelectionPath(l_objNodePath);
+        
+        setDataModified(true);
     }
     
     private void m_objBtnSetTitleActionPerformed(ActionEvent evt) 
     {
+        TreePath l_objTreePath = m_objTree.getSelectionPath();        // get path of selected node.
+
+        if (l_objTreePath == null) 
+            return;
+        
+        DefaultMutableTreeNode l_objNode = (DefaultMutableTreeNode) l_objTreePath.getLastPathComponent();
+        
+        if (l_objNode.isRoot())
+        {
+            String strTitle = JOptionPane.showInputDialog (self().m_objFrame, "Enter the configuration description", m_objWorkingConfiguration.getDescription());
+            
+            if ((strTitle != null) && (!strTitle.isEmpty()))
+            {
+                ((QCConfiguration)l_objNode).setDescription(strTitle);
+                m_objModelTree.nodeChanged(l_objNode);
+
+                setDataModified(true);
+            }         
+        }
+        else if (((QCConfigurationEntry)l_objNode).isMenu())
+        {
+            String strTitle = JOptionPane.showInputDialog (self().m_objFrame, "Enter the menu/submenu title", ((QCConfigurationEntry)l_objNode).getText());
+
+            if ((strTitle != null) && (!strTitle.isEmpty()))
+            {
+                ((QCConfigurationEntry)l_objNode).setText(strTitle);
+                m_objModelTree.nodeChanged(l_objNode);
+                
+                setDataModified(true);
+            }         
+        }
+        else
+            return;
     }
     
     private void m_objBtnRemCounterActionPerformed(ActionEvent evt) 
@@ -396,7 +503,7 @@ public class QCConfig
         {
             l_iSelectedOption = JOptionPane.showConfirmDialog(self().m_objFrame, 
                                               "Are you sure? All the child items also will be removed...", 
-                                              "Do you want to remove this menu?", 
+                                              "Do you want to remove this menu/submenu?", 
                                               JOptionPane.YES_NO_OPTION,
                                               JOptionPane.QUESTION_MESSAGE);
         }
@@ -445,7 +552,30 @@ public class QCConfig
     
     private void m_objBtnSaveActionPerformed(ActionEvent evt) 
     {
-        
+        if (isDataModified())
+        {
+            if (JOptionPane.showConfirmDialog(self().m_objFrame, 
+                                              "Are you sure? The previous configuration data will be lost...", 
+                                              "Do you want to save the changes?", 
+                                              JOptionPane.YES_NO_OPTION,
+                                              JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) 
+            {
+                m_objConfiguration.ReadDataFrom(m_objWorkingConfiguration);
+
+                if (m_objConfiguration.SaveXML())
+                {
+                    m_objFrame.setTitle("Editing : " + m_objWorkingConfiguration.getDescription());
+
+                    self().getConfiguration().getQC().UpdateQC(false, true);
+                    setDataModified(false);
+                }
+                else
+                    JOptionPane.showMessageDialog(self().m_objFrame, 
+                                                  "Oooops, error saving the configuration xml file... Sorry!", 
+                                                  "Error!", 
+                                                  JOptionPane.ERROR_MESSAGE);                 
+            }
+        }
     }
     
     private void m_objBtnExitActionPerformed(ActionEvent evt) 
@@ -483,6 +613,7 @@ public class QCConfig
     private JTree m_objTree;
     private JButton m_objBtnMoveUp;
     private JButton m_objBtnMoveDown;
+    private JButton m_objBtnMoveUpLevel;
     private JButton m_objBtnAddCounter;
     private JButton m_objBtnAddMenu;
     private JButton m_objBtnSetTitle;

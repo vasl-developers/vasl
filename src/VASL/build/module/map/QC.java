@@ -305,6 +305,9 @@ class QCConfigurationParser extends DefaultHandler
             l_newEntry.setMenu(true);
             l_newEntry.setText(attributes.getValue("text"));
             
+            if (l_newEntry.getText() == null)
+                l_newEntry.setText(QCConfiguration.EmptyMenuTitle());
+            
             if (m_objCurrentSubMenu != m_objQCConfiguration)
                 ((DefaultMutableTreeNode)m_objCurrentSubMenu).add(l_newEntry);
             else
@@ -338,6 +341,15 @@ class QCConfigurationParser extends DefaultHandler
 class QCConfiguration extends DefaultMutableTreeNode
 // <editor-fold defaultstate="collapsed">
 {
+    private static final String mc_EmptyMenuTitle = "Empty menu title";
+
+    /**
+     * @return the mc_EmptyMenuTitle
+     */
+    public static String EmptyMenuTitle() {
+        return mc_EmptyMenuTitle;
+    }
+    
     private boolean m_bBuiltinConfiguration;
     private QC m_objQC;
     private File m_objFile;
@@ -388,6 +400,7 @@ class QCConfiguration extends DefaultMutableTreeNode
     public void ReadDataFrom(QCConfiguration objMaster)
     {
         m_bBuiltinConfiguration = objMaster.isBuiltinConfiguration();
+        m_objQC = objMaster.getQC();
         m_strDescription = objMaster.getDescription();
         
         FreeAllNodes(this);
@@ -1185,7 +1198,7 @@ public class QC implements Buildable
                 if (objConfigurationEntry.getText() != null)
                     l_objQCButtonMenu.setToolTipText(objConfigurationEntry.getText());
                 else
-                    l_objQCButtonMenu.setToolTipText("submenu");
+                    l_objQCButtonMenu.setToolTipText(QCConfiguration.EmptyMenuTitle());
                 l_objQCButtonMenu.setIcon(new ImageIcon(objConfigurationEntry.CreateButtonMenuIcon()));
                 l_objQCButtonMenu.setMargin(new Insets(0, 0, 0, 0));
                 
@@ -1252,7 +1265,7 @@ public class QC implements Buildable
                 if (objConfigurationEntry.getText() != null)
                     l_objMenu.setText(objConfigurationEntry.getText()); 
                 else
-                    l_objMenu.setText("submenu");
+                    l_objMenu.setText(QCConfiguration.EmptyMenuTitle());
 
                 l_objMenu.setIcon(new ImageIcon(objConfigurationEntry.CreateButtonMenuIcon()));
             } 
@@ -1418,12 +1431,8 @@ public class QC implements Buildable
                         m_objQCWorkingConfiguration = l_objNewConfiguration;
                         saveWorkingConfiguration();
                         
-                        QCConfiguration l_objBuiltinConfiguration = mar_objListQCConfigurations.get(0);
-                        mar_objListQCConfigurations.remove(l_objBuiltinConfiguration);
-
-                        Collections.sort(mar_objListQCConfigurations, new QCConfigurationComparator());
-                        mar_objListQCConfigurations.add(0, l_objBuiltinConfiguration);
-                        
+                        ResortConfigurations();
+    
                         RebuildPopupMenu();
                         RebuildToolBar();
                     }
@@ -1546,9 +1555,21 @@ public class QC implements Buildable
         if (bClosing)
             m_bEditing = false;
 
+        if (bSaving)
+            ResortConfigurations();
+        
         RebuildPopupMenu();
         
         if (bSaving)
-            RebuildToolBar();
+            RebuildToolBar();            
+    }
+    
+    private void ResortConfigurations()
+    {
+        QCConfiguration l_objBuiltinConfiguration = mar_objListQCConfigurations.get(0);
+        mar_objListQCConfigurations.remove(l_objBuiltinConfiguration);
+
+        Collections.sort(mar_objListQCConfigurations, new QCConfigurationComparator());
+        mar_objListQCConfigurations.add(0, l_objBuiltinConfiguration);
     }
 }
