@@ -6,6 +6,12 @@
 
 package VASL.build.module.map;
 
+import VASSAL.build.module.map.PieceMover;
+import VASSAL.counters.DragBuffer;
+import VASSAL.counters.GamePiece;
+import VASSAL.counters.PieceIterator;
+import VASSAL.counters.Properties;
+import VASSAL.counters.Stack;
 import VASSAL.tools.image.ImageUtils;
 import VASSAL.tools.imageop.Op;
 import java.awt.Color;
@@ -14,6 +20,11 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -31,6 +42,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.SwingConstants;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
@@ -132,7 +145,7 @@ class QCTreeCellRenderer extends DefaultTreeCellRenderer {
  *
  * @author Federico
  */
-public class QCConfig 
+public class QCConfig implements DropTargetListener
 {
     private boolean m_bDataModified;
     private QCConfiguration m_objConfiguration;
@@ -198,6 +211,8 @@ public class QCConfig
         m_objTree.setCellRenderer(new QCTreeCellRenderer());
         ((BasicTreeUI)m_objTree.getUI()).setLeftChildIndent(20);        
     
+        m_objTree.addTreeSelectionListener(createSelectionListener());
+        
         expandAll(m_objTree);
 
         TreePath l_objRootPath = new TreePath(((DefaultMutableTreeNode)m_objModelTree.getRoot()).getPath());
@@ -300,7 +315,32 @@ public class QCConfig
         QCSP.getAccessibleContext().setAccessibleName("");
 
         m_objFrame.pack();
+        
+        m_objTree.setDropTarget(PieceMover.DragHandler.makeDropTarget(m_objTree, DnDConstants.ACTION_MOVE, this));
+        
     }    
+
+    private TreeSelectionListener createSelectionListener() 
+    {
+        return new TreeSelectionListener() 
+        {
+            public void valueChanged(TreeSelectionEvent e) 
+            {
+                TreePath l_objNewPath = e.getNewLeadSelectionPath();
+
+                if (l_objNewPath != null) 
+                {
+                    DefaultMutableTreeNode l_objNode = (DefaultMutableTreeNode) l_objNewPath.getLastPathComponent();
+                    EnableButtons(l_objNode);
+                } 
+                else 
+                {
+                    EnableButtons(null);
+                }
+            }
+        };
+    }
+
     private void m_objBtnMoveDownActionPerformed(ActionEvent evt) 
     {
         TreePath l_objTreePath = m_objTree.getSelectionPath();        // get path of selected node.
@@ -513,6 +553,7 @@ public class QCConfig
             int l_iIndex = m_objModelTree.getIndexOfChild(l_objParentNode, l_objNode);
             
             m_objModelTree.removeNodeFromParent(l_objNode);            
+            FreeAllNodes(l_objNode);
             
             while (true)
             {
@@ -549,6 +590,16 @@ public class QCConfig
             setDataModified(true);
         }
     }
+    
+    private void FreeAllNodes(DefaultMutableTreeNode objNode)
+    {
+        Enumeration<QCConfigurationEntry> l_objChildrenEnum = objNode.children();
+
+        while(l_objChildrenEnum.hasMoreElements())
+            FreeAllNodes(l_objChildrenEnum.nextElement());        
+        
+        objNode.removeAllChildren();
+    }    
     
     private void m_objBtnSaveActionPerformed(ActionEvent evt) 
     {
@@ -733,6 +784,94 @@ public class QCConfig
 
     private void EnableButtons() 
     {
-        
+        TreePath l_objTreePath = m_objTree.getSelectionPath();        // get path of selected node.
+
+        if (l_objTreePath == null) 
+            EnableButtons(null);
+        else
+        {
+            DefaultMutableTreeNode l_objNode = (DefaultMutableTreeNode) l_objTreePath.getLastPathComponent();
+            
+            EnableButtons(l_objNode);
+        }
     }
+
+    private void EnableButtons(DefaultMutableTreeNode objSelectedNode) 
+    {
+        if (objSelectedNode != null)
+        {
+            DefaultMutableTreeNode l_objParentNode = (DefaultMutableTreeNode) objSelectedNode.getParent();
+            int l_iIndex = -1;
+            int l_iIndexMax = -1;
+            
+            if (l_objParentNode != null)
+            {
+                l_iIndex = m_objModelTree.getIndexOfChild(l_objParentNode, objSelectedNode);
+                l_iIndexMax = m_objModelTree.getChildCount(l_objParentNode) - 1;
+            }
+
+            m_objBtnMoveUp.setEnabled((l_iIndex != -1) && (l_iIndex > 0));
+            m_objBtnMoveDown.setEnabled((l_iIndex != -1) && (l_iIndex < l_iIndexMax));
+            m_objBtnMoveUpLevel.setEnabled((l_objParentNode != null) && (!l_objParentNode.isRoot()));
+            m_objBtnAddCounter.setEnabled(true);        
+            m_objBtnAddMenu.setEnabled(true);
+            m_objBtnSetTitle.setEnabled(((objSelectedNode.isRoot()) || ((objSelectedNode instanceof QCConfigurationEntry) && ((QCConfigurationEntry)objSelectedNode).isMenu())));
+            m_objBtnRemCounter.setEnabled(!objSelectedNode.isRoot());
+            m_objBtnSave.setEnabled(isDataModified());
+            m_objBtnExit.setEnabled(true);
+        }
+        else
+        {
+            m_objBtnMoveUp.setEnabled(false);
+            m_objBtnMoveDown.setEnabled(false);
+            m_objBtnMoveUpLevel.setEnabled(false);
+            m_objBtnAddCounter.setEnabled(true);        
+            m_objBtnAddMenu.setEnabled(true);
+            m_objBtnSetTitle.setEnabled(false);
+            m_objBtnRemCounter.setEnabled(false);
+            m_objBtnSave.setEnabled(isDataModified());
+            m_objBtnExit.setEnabled(true);
+        }
+    }
+
+    public void dragEnter(DropTargetDragEvent dtde) {
+    }
+
+    public void dragOver(DropTargetDragEvent dtde) {
+    }
+
+    public void dropActionChanged(DropTargetDragEvent dtde) {
+    }
+
+    public void dragExit(DropTargetEvent dte) {
+    }
+
+    public void drop(DropTargetDropEvent dtde) 
+    {
+        final PieceIterator it = DragBuffer.getBuffer().getIterator();
+        
+        if (it.hasMoreElements())
+        {
+            GamePiece l_objPiece = it.nextPiece();
+            
+            if (l_objPiece instanceof Stack) 
+            {
+                int l_iSize = ((Stack) l_objPiece).getPieceCount();
+                l_objPiece = ((Stack) l_objPiece).getPieceAt(l_iSize - 1);
+            }
+            
+            CreateNewNode(l_objPiece);
+        }
+        
+        dtde.dropComplete(true);
+    }
+
+    private void CreateNewNode(GamePiece objPiece) 
+    {
+        if ((!Boolean.TRUE.equals(objPiece.getProperty(Properties.INVISIBLE_TO_ME))) 
+            && (!Boolean.TRUE.equals(objPiece.getProperty(Properties.OBSCURED_TO_ME))))
+        {
+            
+        }
+    }    
 }
