@@ -501,25 +501,35 @@ public class QCConfig implements DropTargetListener
         {
             String strTitle = JOptionPane.showInputDialog (self().m_objFrame, "Enter the configuration description", m_objWorkingConfiguration.getDescription());
             
-            if ((strTitle != null) && (!strTitle.isEmpty()))
+            if (strTitle != null)
             {
-                ((QCConfiguration)l_objNode).setDescription(strTitle);
-                m_objModelTree.nodeChanged(l_objNode);
+                strTitle = strTitle.trim();
+                
+                if (!strTitle.isEmpty())
+                {
+                    ((QCConfiguration)l_objNode).setDescription(strTitle);
+                    m_objModelTree.nodeChanged(l_objNode);
 
-                setDataModified(true);
+                    setDataModified(true);
+                }
             }         
         }
         else if (((QCConfigurationEntry)l_objNode).isMenu())
         {
             String strTitle = JOptionPane.showInputDialog (self().m_objFrame, "Enter the menu/submenu title", ((QCConfigurationEntry)l_objNode).getText());
 
-            if ((strTitle != null) && (!strTitle.isEmpty()))
+            if (strTitle != null)
             {
-                ((QCConfigurationEntry)l_objNode).setText(strTitle);
-                m_objModelTree.nodeChanged(l_objNode);
+                strTitle = strTitle.trim();
                 
-                setDataModified(true);
-            }         
+                if (!strTitle.isEmpty())
+                {
+                    ((QCConfigurationEntry)l_objNode).setText(strTitle);
+                    m_objModelTree.nodeChanged(l_objNode);
+
+                    setDataModified(true);
+                }         
+            }
         }
         else
             return;
@@ -871,7 +881,44 @@ public class QCConfig implements DropTargetListener
         if ((!Boolean.TRUE.equals(objPiece.getProperty(Properties.INVISIBLE_TO_ME))) 
             && (!Boolean.TRUE.equals(objPiece.getProperty(Properties.OBSCURED_TO_ME))))
         {
-            
+            DefaultMutableTreeNode l_objSelectedNode = null;
+            DefaultMutableTreeNode l_objNewNode = new QCConfigurationEntry(m_objWorkingConfiguration.getQC());
+
+            ((QCConfigurationEntry)l_objNewNode).setMenu(false);
+            ((QCConfigurationEntry)l_objNewNode).setGpID((String)objPiece.getProperty(Properties.PIECE_ID));
+            ((QCConfigurationEntry)l_objNewNode).setText(objPiece.getName());
+            ((QCConfigurationEntry)l_objNewNode).setPieceSlot(m_objWorkingConfiguration.getQC().getPieceSlot(((QCConfigurationEntry)l_objNewNode).getGpID()));
+
+            TreePath l_objTreePath = m_objTree.getSelectionPath();        // get path of selected node.
+
+            if (l_objTreePath == null) 
+                l_objSelectedNode = (DefaultMutableTreeNode)m_objModelTree.getRoot();
+            else
+                l_objSelectedNode = (DefaultMutableTreeNode) l_objTreePath.getLastPathComponent();
+
+            if (l_objSelectedNode.isRoot())
+            {
+                 m_objModelTree.insertNodeInto(l_objNewNode, l_objSelectedNode, m_objModelTree.getChildCount(l_objSelectedNode));
+            }
+            else if (((QCConfigurationEntry)l_objSelectedNode).isMenu())
+            {
+                 m_objModelTree.insertNodeInto(l_objNewNode, l_objSelectedNode, m_objModelTree.getChildCount(l_objSelectedNode));
+            }
+            else
+            {
+                DefaultMutableTreeNode l_objParentNode = (DefaultMutableTreeNode) l_objSelectedNode.getParent();
+
+                int l_iIndex = m_objModelTree.getIndexOfChild(l_objParentNode, l_objSelectedNode);            
+                 m_objModelTree.insertNodeInto(l_objNewNode, l_objParentNode, l_iIndex + 1);
+            }
+
+            TreePath l_objNodePath = new TreePath(l_objNewNode.getPath());
+
+            m_objTree.expandPath(l_objNodePath);
+            m_objTree.scrollPathToVisible(l_objNodePath);
+            m_objTree.setSelectionPath(l_objNodePath);
+
+            setDataModified(true);
         }
     }    
 }

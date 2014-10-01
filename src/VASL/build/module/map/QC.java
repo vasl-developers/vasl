@@ -18,10 +18,11 @@ import org.w3c.dom.Element;
 import VASSAL.Info;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
-import VASSAL.build.module.Inventory;
+import VASSAL.build.module.GameComponent;
 import VASSAL.build.module.Map;
 import VASSAL.build.module.map.PieceMover;
 import VASSAL.build.widget.PieceSlot;
+import VASSAL.command.Command;
 import VASSAL.counters.DragBuffer;
 import VASSAL.counters.GamePiece;
 import VASSAL.counters.KeyBuffer;
@@ -29,15 +30,10 @@ import VASSAL.counters.PieceCloner;
 import VASSAL.counters.Properties;
 import VASSAL.tools.image.ImageUtils;
 import VASSAL.tools.imageop.Op;
-import java.awt.AlphaComposite;
 import java.awt.Component;
-import java.awt.Container;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
-import java.awt.PopupMenu;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.dnd.DnDConstants;
@@ -61,7 +57,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.UUID;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JOptionPane;
@@ -779,7 +774,7 @@ class QCConfigurationEntry extends DefaultMutableTreeNode
 /**
  * A class to represent the counters toolbar
  */
-public class QC implements Buildable 
+public class QC implements Buildable, GameComponent
 {
 // <editor-fold defaultstate="collapsed">
     private final String mc_strBuiltinConfig = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
@@ -900,9 +895,9 @@ public class QC implements Buildable
     private Map m_Map;
     private final ArrayList<QCConfiguration> mar_objListQCConfigurations = new ArrayList<QCConfiguration>();
     private QCConfiguration m_objQCWorkingConfiguration = null;
-    private Timer m_objLinkTimer;
     private QCConfig m_objQCConfig = null;
     private boolean m_bEditing = false;
+    private Hashtable mar_HashPieceSlot = new Hashtable();
 
     public void loadConfigurations() 
     {
@@ -1074,7 +1069,7 @@ public class QC implements Buildable
     public void addTo(Buildable b) 
     {
         m_Map = (Map) b;
-        
+
         ((ASLMap)m_Map).getPopupMenu().add(new QCStartMenuItem());
         ((ASLMap)m_Map).getPopupMenu().add(new QCEndMenuItem());
         
@@ -1083,28 +1078,15 @@ public class QC implements Buildable
         m_Map.getToolBar().add(new QCStartToolBarItem());
         m_Map.getToolBar().add(new QCEndToolBarItem());
         
-        m_objLinkTimer = new Timer(5000, new ActionListener() 
-        {
-            public void actionPerformed(ActionEvent e) 
-            {
-                m_objLinkTimer.stop();
-                
-                ReadPiecesSlot();
-                RebuildToolBar();
-            }
-        });
-            
-        m_objLinkTimer.setRepeats(false);
-        m_objLinkTimer.start();
+        GameModule.getGameModule().getGameState().addGameComponent(this);
     }
     
     private void ReadPiecesSlot()
     {
         List<PieceSlot> lar_PieceSlotL = GameModule.getGameModule().getAllDescendantComponentsOf(PieceSlot.class);
-        Hashtable lar_HashPieceSlot = new Hashtable();
 
         for (PieceSlot l_objPieceSlot : lar_PieceSlotL) 
-            lar_HashPieceSlot.put(l_objPieceSlot.getGpId(), l_objPieceSlot);
+            mar_HashPieceSlot.put(l_objPieceSlot.getGpId(), l_objPieceSlot);
         
         lar_PieceSlotL = null;
         
@@ -1113,17 +1095,17 @@ public class QC implements Buildable
             Enumeration<QCConfigurationEntry> l_objChildrenEnum = l_objQCConfiguration.children();
 
             while(l_objChildrenEnum.hasMoreElements())
-                setPieceSlot(l_objChildrenEnum.nextElement(), lar_HashPieceSlot);
+                setPieceSlot(l_objChildrenEnum.nextElement());
         }
     }
     
-    private void setPieceSlot(QCConfigurationEntry objConfigurationEntry, Hashtable ar_HashPieceSlot) 
+    private void setPieceSlot(QCConfigurationEntry objConfigurationEntry) 
     {
         PieceSlot l_objPieceSlot = null;
         
         if (objConfigurationEntry.getGpID() != null)
         {
-            l_objPieceSlot = (PieceSlot) ar_HashPieceSlot.get(objConfigurationEntry.getGpID());
+            l_objPieceSlot = (PieceSlot) mar_HashPieceSlot.get(objConfigurationEntry.getGpID());
 
             if (l_objPieceSlot != null)
                 objConfigurationEntry.setPieceSlot(l_objPieceSlot);
@@ -1134,7 +1116,7 @@ public class QC implements Buildable
             Enumeration<QCConfigurationEntry> l_objChildrenEnum = objConfigurationEntry.children();
 
             while(l_objChildrenEnum.hasMoreElements())
-                setPieceSlot(l_objChildrenEnum.nextElement(), ar_HashPieceSlot);
+                setPieceSlot(l_objChildrenEnum.nextElement());
         }
     }
 
@@ -1571,5 +1553,30 @@ public class QC implements Buildable
 
         Collections.sort(mar_objListQCConfigurations, new QCConfigurationComparator());
         mar_objListQCConfigurations.add(0, l_objBuiltinConfiguration);
+    }
+
+    public PieceSlot getPieceSlot(String strGpID) 
+    {
+        PieceSlot l_objPieceSlot = null;
+        
+        if (strGpID != null)
+            l_objPieceSlot = (PieceSlot) mar_HashPieceSlot.get(strGpID);
+        
+        return l_objPieceSlot;
+    }
+
+    public void setup(boolean bln) {
+        if (bln)
+        {
+            if (mar_HashPieceSlot.isEmpty())
+            {
+                ReadPiecesSlot();
+                RebuildToolBar();
+            }
+        }
+    }
+
+    public Command getRestoreCommand() {
+        return null;
     }
 }
