@@ -47,9 +47,6 @@ import java.awt.dnd.DragSourceListener;
 import java.awt.image.BufferedImage;
 import java.io.FilenameFilter;
 import java.io.StringReader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -61,7 +58,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JOptionPane;
 import javax.swing.JToolBar;
-import javax.swing.Timer;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.xml.parsers.DocumentBuilder;
@@ -374,22 +370,31 @@ class QCConfiguration extends DefaultMutableTreeNode
         while(l_objChildrenEnum.hasMoreElements())
             add(new QCConfigurationEntry(l_objChildrenEnum.nextElement()));        
         
-        Path l_pathConfigs = Paths.get(Info.getHomeDir() + System.getProperty("file.separator","\\") + "qcconfigs");
+        File l_dirConfigs = new File(Info.getHomeDir() + System.getProperty("file.separator","\\") + "qcconfigs");
         
-        if (Files.notExists(l_pathConfigs)) 
+        if (!l_dirConfigs.exists())
         {
             try
             {
-                Files.createDirectory(l_pathConfigs);
+                l_dirConfigs.mkdir();
             } 
             catch(Exception e)
             {
             }        
         }
+        else if (!l_dirConfigs.isDirectory())
+        {
+            try
+            {
+                l_dirConfigs.delete();
+                l_dirConfigs.mkdir();
+            } 
+            catch(Exception e)
+            {
+            }        
+        }            
 
-        Path l_pathFile = Paths.get(l_pathConfigs + System.getProperty("file.separator","\\") + UUID.randomUUID().toString() + ".xml");
-
-        m_objFile = l_pathFile.toFile();
+        m_objFile = new File(l_dirConfigs.getPath() + System.getProperty("file.separator","\\") + UUID.randomUUID().toString() + ".xml");
     }
     
     public void ReadDataFrom(QCConfiguration objMaster)
@@ -486,8 +491,11 @@ class QCConfiguration extends DefaultMutableTreeNode
                 TransformerFactory l_objTransformerFactory = TransformerFactory.newInstance();
                 Transformer l_objTransformer = l_objTransformerFactory.newTransformer();
                 DOMSource l_objDOMSource = new DOMSource(l_objDocument);
+                
+                FileOutputStream l_objFOS = new FileOutputStream(m_objFile);
 
-                l_objTransformer.transform(l_objDOMSource, new StreamResult(new FileOutputStream(m_objFile)));
+                l_objTransformer.transform(l_objDOMSource, new StreamResult(l_objFOS));
+                l_objFOS.close();
             }
             
             return true;
@@ -902,7 +910,7 @@ public class QC implements Buildable, GameComponent
     public void loadConfigurations() 
     {
         SAXParser l_objXMLParser;
-        Path l_pathConfigs = Paths.get(Info.getHomeDir() + System.getProperty("file.separator","\\") + "qcconfigs");
+        File l_dirConfigs = new File(Info.getHomeDir() + System.getProperty("file.separator","\\") + "qcconfigs");
         
         try 
         {
@@ -939,19 +947,30 @@ public class QC implements Buildable, GameComponent
             
             // now read the custom configuration files
             // check for configs dir
-            if (Files.notExists(l_pathConfigs)) 
+            if (!l_dirConfigs.exists())
             {
                 try
                 {
-                    Files.createDirectory(l_pathConfigs);
+                    l_dirConfigs.mkdir();
                 } 
                 catch(Exception e)
                 {
                 }        
             }
+            else if (!l_dirConfigs.isDirectory())
+            {
+                try
+                {
+                    l_dirConfigs.delete();
+                    l_dirConfigs.mkdir();
+                } 
+                catch(Exception e)
+                {
+                }        
+            }            
             else // browsing configs files
             {
-                File[] lar_objConfigFiles = l_pathConfigs.toFile().listFiles(new FilenameFilter() { public boolean accept(File objFile, String strName) 
+                File[] lar_objConfigFiles = l_dirConfigs.listFiles(new FilenameFilter() { public boolean accept(File objFile, String strName) 
                                                                                     {
                                                                                         return strName.toLowerCase().endsWith(".xml");
                                                                                     }});            
@@ -986,10 +1005,10 @@ public class QC implements Buildable, GameComponent
                 }
                 
                 Collections.sort(mar_objListQCConfigurations, new QCConfigurationComparator());
-                
-                if (m_objQCWorkingConfiguration != null)
-                    mar_objListQCConfigurations.add(0, m_objQCWorkingConfiguration);
             }      
+                
+            if (m_objQCWorkingConfiguration != null)
+                mar_objListQCConfigurations.add(0, m_objQCWorkingConfiguration);
         }
     }
     public void readWorkingConfiguration() 

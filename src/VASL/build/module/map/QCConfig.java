@@ -210,6 +210,7 @@ public class QCConfig implements DropTargetListener
         m_objTree = new JTree(m_objModelTree);
         m_objTree.setCellRenderer(new QCTreeCellRenderer());
         ((BasicTreeUI)m_objTree.getUI()).setLeftChildIndent(20);        
+        m_objTree.setRowHeight(35);
     
         m_objTree.addTreeSelectionListener(createSelectionListener());
         
