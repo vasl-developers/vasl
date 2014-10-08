@@ -38,6 +38,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
@@ -198,13 +199,14 @@ public class QCConfig implements DropTargetListener
         m_objBtnMoveUp = new JButton();
         m_objBtnMoveDown = new JButton();
         m_objBtnMoveUpLevel = new JButton();
-        m_objBtnAddCounter = new JButton();
         m_objBtnAddMenu = new JButton();
         m_objBtnSetTitle = new JButton();
         m_objBtnRemCounter = new JButton();
         m_objBtnSave = new JButton();
         m_objBtnExit = new JButton();
         QCSP = new JScrollPane();
+        m_objAddPanel = new JPanel();
+        m_objLabelAdd = new JLabel();
         
         m_objModelTree = new DefaultTreeModel(m_objWorkingConfiguration);
         m_objTree = new JTree(m_objModelTree);
@@ -249,13 +251,6 @@ public class QCConfig implements DropTargetListener
             }
         });
         
-        SetButtonProperties(m_objBtnAddCounter, "QC/add.png", "Add a new button to the toolbar", new ActionListener() {
-            public void actionPerformed(ActionEvent evt) 
-            {
-                m_objBtnAddCounterActionPerformed(evt);
-            }
-        });
-        
         SetButtonProperties(m_objBtnAddMenu, "QC/submenu.png", "Add a new menu/submenu to the toolbar", new ActionListener() {
             public void actionPerformed(ActionEvent evt) 
             {
@@ -292,13 +287,42 @@ public class QCConfig implements DropTargetListener
         });
         
         QCSP.setName(""); // NOI18N
-        QCSP.setPreferredSize(new Dimension(300, 500));
+        QCSP.setPreferredSize(new Dimension(330, 500));
         QCSP.setRequestFocusEnabled(false);
 
         m_objTree.setShowsRootHandles(true);
         m_objTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         QCSP.setViewportView(m_objTree);
 
+        m_objAddPanel.setBackground(new java.awt.Color(255, 255, 204));
+        m_objAddPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+
+        m_objLabelAdd.setBackground(new java.awt.Color(255, 255, 255));
+        try 
+        {
+            m_objLabelAdd.setIcon(new ImageIcon(Op.load("QC/add.png").getImage(null))); // NOI18N
+        } 
+        catch (Exception ex) 
+        {
+            ex.printStackTrace();
+        }
+        m_objLabelAdd.setText("<html><p align=justify style=\"padding: 5px\">To add a new node drag a <b>counter</b> or a <b>draggable overlay</b> and drop it on the tree.</p></html>");
+        m_objLabelAdd.setIconTextGap(4);
+        m_objLabelAdd.setPreferredSize(new java.awt.Dimension(330, 75));
+        
+        javax.swing.GroupLayout m_objAddPanelLayout = new javax.swing.GroupLayout(m_objAddPanel);
+        m_objAddPanel.setLayout(m_objAddPanelLayout);
+        m_objAddPanelLayout.setHorizontalGroup(
+            m_objAddPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, m_objAddPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(m_objLabelAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        m_objAddPanelLayout.setVerticalGroup(
+            m_objAddPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(m_objLabelAdd, javax.swing.GroupLayout.DEFAULT_SIZE, 68, Short.MAX_VALUE)
+        );
+        
         GroupLayout layout = new GroupLayout(m_objFrame.getContentPane());
         m_objFrame.getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -306,11 +330,15 @@ public class QCConfig implements DropTargetListener
             .addGroup(layout.createSequentialGroup()
                 .addComponent(QCSP, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(m_objToolbar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+            .addComponent(m_objAddPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(m_objToolbar, GroupLayout.DEFAULT_SIZE, 750, Short.MAX_VALUE)
-            .addComponent(QCSP, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(m_objToolbar, GroupLayout.DEFAULT_SIZE, 750, Short.MAX_VALUE)
+                    .addComponent(QCSP, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(m_objAddPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         QCSP.getAccessibleContext().setAccessibleName("");
@@ -437,16 +465,6 @@ public class QCConfig implements DropTargetListener
         m_objTree.setSelectionPath(l_objNodePath);
         
         setDataModified(true);
-    }
-    
-    private void m_objBtnAddCounterActionPerformed(ActionEvent evt) 
-    {
-        JOptionPane.showMessageDialog(self().m_objFrame, 
-            "To add a button to the toolbar you must simply do a drag & drop from the VASL counters window to the tree." 
-                + "\nThe new button will be inserted after the currently selected node (if there is no node selected or if the selected \nnode represents "
-                + "a menu/submenu, it will be added as last child).", 
-            "To add a button to the toolbar", 
-            INFORMATION_MESSAGE);
     }
     
     private void m_objBtnAddMenuActionPerformed(ActionEvent evt) 
@@ -676,12 +694,13 @@ public class QCConfig implements DropTargetListener
     private JButton m_objBtnMoveUp;
     private JButton m_objBtnMoveDown;
     private JButton m_objBtnMoveUpLevel;
-    private JButton m_objBtnAddCounter;
     private JButton m_objBtnAddMenu;
     private JButton m_objBtnSetTitle;
     private JButton m_objBtnRemCounter;
     private JButton m_objBtnSave;
     private JButton m_objBtnExit;
+    private JPanel m_objAddPanel;
+    private JLabel m_objLabelAdd;
     // End of variables declaration                   
 
     /**
@@ -824,7 +843,6 @@ public class QCConfig implements DropTargetListener
             m_objBtnMoveUp.setEnabled((l_iIndex != -1) && (l_iIndex > 0));
             m_objBtnMoveDown.setEnabled((l_iIndex != -1) && (l_iIndex < l_iIndexMax));
             m_objBtnMoveUpLevel.setEnabled((l_objParentNode != null) && (!l_objParentNode.isRoot()));
-            m_objBtnAddCounter.setEnabled(true);        
             m_objBtnAddMenu.setEnabled(true);
             m_objBtnSetTitle.setEnabled(((objSelectedNode.isRoot()) || ((objSelectedNode instanceof QCConfigurationEntry) && ((QCConfigurationEntry)objSelectedNode).isMenu())));
             m_objBtnRemCounter.setEnabled(!objSelectedNode.isRoot());
@@ -836,7 +854,6 @@ public class QCConfig implements DropTargetListener
             m_objBtnMoveUp.setEnabled(false);
             m_objBtnMoveDown.setEnabled(false);
             m_objBtnMoveUpLevel.setEnabled(false);
-            m_objBtnAddCounter.setEnabled(true);        
             m_objBtnAddMenu.setEnabled(true);
             m_objBtnSetTitle.setEnabled(false);
             m_objBtnRemCounter.setEnabled(false);
