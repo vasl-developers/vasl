@@ -148,9 +148,8 @@ class QCTreeCellRenderer extends DefaultTreeCellRenderer {
  */
 public class QCConfig implements DropTargetListener
 {
-    private boolean m_bDataModified;
     private QCConfiguration m_objConfiguration;
-    private QCConfiguration m_objWorkingConfiguration;
+    private QCConfiguration m_objOriginalConfiguration;
     private JFrame m_objFrame;
     final private QCConfig m_objSelf = this;
     DefaultTreeModel m_objModelTree;
@@ -158,10 +157,9 @@ public class QCConfig implements DropTargetListener
     public QCConfig() 
     {
         m_objConfiguration  = null;
-        m_objWorkingConfiguration = null;
+        m_objOriginalConfiguration = null;
         m_objFrame = null;       
         m_objModelTree = null;
-        m_bDataModified = false;
     }
     
     private void SetButtonProperties(JButton objButton, String strImage, String strTooltip, ActionListener objActionListener)
@@ -202,13 +200,12 @@ public class QCConfig implements DropTargetListener
         m_objBtnAddMenu = new JButton();
         m_objBtnSetTitle = new JButton();
         m_objBtnRemCounter = new JButton();
-        m_objBtnSave = new JButton();
-        m_objBtnExit = new JButton();
+        m_objBtnReset = new JButton();
         QCSP = new JScrollPane();
         m_objAddPanel = new JPanel();
         m_objLabelAdd = new JLabel();
         
-        m_objModelTree = new DefaultTreeModel(m_objWorkingConfiguration);
+        m_objModelTree = new DefaultTreeModel(m_objConfiguration);
         m_objTree = new JTree(m_objModelTree);
         m_objTree.setCellRenderer(new QCTreeCellRenderer());
         ((BasicTreeUI)m_objTree.getUI()).setLeftChildIndent(20);        
@@ -272,17 +269,10 @@ public class QCConfig implements DropTargetListener
             }
         });
         
-        SetButtonProperties(m_objBtnSave, "QC/save.png", "Save the configuration and apply the changes", new ActionListener() {
+        SetButtonProperties(m_objBtnReset, "QC/reset.png", "Reset the configuration to the starting state", new ActionListener() {
             public void actionPerformed(ActionEvent evt) 
             {
-                m_objBtnSaveActionPerformed(evt);
-            }
-        });
-        
-        SetButtonProperties(m_objBtnExit, "QC/exit.png", "Exit the window and discard the unsaved changes", new ActionListener() {
-            public void actionPerformed(ActionEvent evt) 
-            {
-                m_objBtnExitActionPerformed(evt);
+                m_objBtnResetActionPerformed(evt);
             }
         });
         
@@ -400,7 +390,7 @@ public class QCConfig implements DropTargetListener
             m_objTree.scrollPathToVisible(l_objNodePath);
             m_objTree.setSelectionPath(l_objNodePath);
         
-            setDataModified(true);
+            SaveDataModified();
         }
     }                                               
 
@@ -433,7 +423,7 @@ public class QCConfig implements DropTargetListener
             m_objTree.scrollPathToVisible(l_objNodePath);
             m_objTree.setSelectionPath(l_objNodePath);
         
-            setDataModified(true);
+            SaveDataModified();
         }
     }                                              
     
@@ -464,13 +454,13 @@ public class QCConfig implements DropTargetListener
         m_objTree.scrollPathToVisible(l_objNodePath);
         m_objTree.setSelectionPath(l_objNodePath);
         
-        setDataModified(true);
+        SaveDataModified();
     }
     
     private void m_objBtnAddMenuActionPerformed(ActionEvent evt) 
     {
         DefaultMutableTreeNode l_objSelectedNode = null;
-        DefaultMutableTreeNode l_objNewNode = new QCConfigurationEntry(m_objWorkingConfiguration.getQC());
+        DefaultMutableTreeNode l_objNewNode = new QCConfigurationEntry(m_objConfiguration.getQC());
         
         ((QCConfigurationEntry)l_objNewNode).setMenu(true);
         ((QCConfigurationEntry)l_objNewNode).setText(QCConfiguration.EmptyMenuTitle());
@@ -504,7 +494,7 @@ public class QCConfig implements DropTargetListener
         m_objTree.scrollPathToVisible(l_objNodePath);
         m_objTree.setSelectionPath(l_objNodePath);
         
-        setDataModified(true);
+        SaveDataModified();
     }
     
     private void m_objBtnSetTitleActionPerformed(ActionEvent evt) 
@@ -518,7 +508,7 @@ public class QCConfig implements DropTargetListener
         
         if (l_objNode.isRoot())
         {
-            String strTitle = JOptionPane.showInputDialog (self().m_objFrame, "Enter the configuration description", m_objWorkingConfiguration.getDescription());
+            String strTitle = JOptionPane.showInputDialog (self().m_objFrame, "Enter the configuration description", m_objConfiguration.getDescription());
             
             if (strTitle != null)
             {
@@ -529,7 +519,7 @@ public class QCConfig implements DropTargetListener
                     ((QCConfiguration)l_objNode).setDescription(strTitle);
                     m_objModelTree.nodeChanged(l_objNode);
 
-                    setDataModified(true);
+                    SaveDataModified();
                 }
             }         
         }
@@ -546,7 +536,7 @@ public class QCConfig implements DropTargetListener
                     ((QCConfigurationEntry)l_objNode).setText(strTitle);
                     m_objModelTree.nodeChanged(l_objNode);
 
-                    setDataModified(true);
+                    SaveDataModified();
                 }         
             }
         }
@@ -616,7 +606,7 @@ public class QCConfig implements DropTargetListener
                 }
             }
             
-            setDataModified(true);
+            SaveDataModified();
         }
     }
     
@@ -630,37 +620,38 @@ public class QCConfig implements DropTargetListener
         objNode.removeAllChildren();
     }    
     
-    private void m_objBtnSaveActionPerformed(ActionEvent evt) 
+    private void m_objBtnResetActionPerformed(ActionEvent evt) 
     {
-        if (isDataModified())
+        if (JOptionPane.showConfirmDialog(self().m_objFrame, 
+                                          "Are you sure? All the changes you made will be lost...", 
+                                          "Do you want to reset the configuration?", 
+                                          JOptionPane.YES_NO_OPTION,
+                                          JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) 
         {
-            if (JOptionPane.showConfirmDialog(self().m_objFrame, 
-                                              "Are you sure? The previous configuration data will be lost...", 
-                                              "Do you want to save the changes?", 
-                                              JOptionPane.YES_NO_OPTION,
-                                              JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) 
+            m_objConfiguration.ReadDataFrom(m_objOriginalConfiguration);
+
+            if (m_objConfiguration.SaveXML())
             {
-                m_objConfiguration.ReadDataFrom(m_objWorkingConfiguration);
+                m_objFrame.setTitle("Editing : " + m_objConfiguration.getDescription());
 
-                if (m_objConfiguration.SaveXML())
-                {
-                    m_objFrame.setTitle("Editing : " + m_objWorkingConfiguration.getDescription());
+                m_objModelTree = new DefaultTreeModel(m_objConfiguration);
+                m_objTree.setModel(m_objModelTree);
 
-                    self().getConfiguration().getQC().UpdateQC(false, true);
-                    setDataModified(false);
-                }
-                else
-                    JOptionPane.showMessageDialog(self().m_objFrame, 
-                                                  "Oooops, error saving the configuration xml file... Sorry!", 
-                                                  "Error!", 
-                                                  JOptionPane.ERROR_MESSAGE);                 
+                expandAll(m_objTree);
+
+                TreePath l_objRootPath = new TreePath(((DefaultMutableTreeNode)m_objModelTree.getRoot()).getPath());
+
+                m_objTree.scrollPathToVisible(l_objRootPath);
+                m_objTree.setSelectionPath(l_objRootPath);
+                
+                self().getConfiguration().getQC().UpdateQC(false, true);
             }
+            else
+                JOptionPane.showMessageDialog(self().m_objFrame, 
+                                              "Oooops, error saving the configuration xml file... Sorry!", 
+                                              "Error!", 
+                                              JOptionPane.ERROR_MESSAGE);                 
         }
-    }
-    
-    private void m_objBtnExitActionPerformed(ActionEvent evt) 
-    {
-        m_objFrame.dispatchEvent(new WindowEvent(m_objFrame, WindowEvent.WINDOW_CLOSING));         
     }
     
     public void expandAll(JTree objTree) 
@@ -697,8 +688,7 @@ public class QCConfig implements DropTargetListener
     private JButton m_objBtnAddMenu;
     private JButton m_objBtnSetTitle;
     private JButton m_objBtnRemCounter;
-    private JButton m_objBtnSave;
-    private JButton m_objBtnExit;
+    private JButton m_objBtnReset;
     private JPanel m_objAddPanel;
     private JLabel m_objLabelAdd;
     // End of variables declaration                   
@@ -717,9 +707,9 @@ public class QCConfig implements DropTargetListener
     public void setConfiguration(QCConfiguration objConfiguration) 
     {
         m_objConfiguration = objConfiguration;
-        m_objWorkingConfiguration = new QCConfiguration(m_objConfiguration.getQC(), null);
+        m_objOriginalConfiguration = new QCConfiguration(m_objConfiguration.getQC(), null);
         
-        m_objWorkingConfiguration.ReadDataFrom(m_objConfiguration);
+        m_objOriginalConfiguration.ReadDataFrom(m_objConfiguration);
         
         if (m_objFrame == null)
         {
@@ -745,22 +735,8 @@ public class QCConfig implements DropTargetListener
                 @Override
                 public void windowClosing(WindowEvent e) 
                 {
-                    int l_iSelectedOption = JOptionPane.YES_OPTION;
-                    
-                    if (isDataModified())
-                    {
-                        l_iSelectedOption = JOptionPane.showConfirmDialog(self().m_objFrame, 
-                                                          "Are you sure? Any changes not saved will be lost...", 
-                                                          "Did you save the changes?", 
-                                                          JOptionPane.YES_NO_OPTION,
-                                                          JOptionPane.QUESTION_MESSAGE); 
-                    }
-
-                    if (l_iSelectedOption == JOptionPane.YES_OPTION) 
-                    {
-                        self().getConfiguration().getQC().UpdateQC(true, false);
-                        self().m_objFrame.setVisible(false);
-                    }
+                    self().getConfiguration().getQC().UpdateQC(true, false);
+                    self().m_objFrame.setVisible(false);
                 }
 
                 public void windowOpened(WindowEvent e) {}
@@ -773,7 +749,7 @@ public class QCConfig implements DropTargetListener
         }
         else        
         {
-            m_objModelTree = new DefaultTreeModel(m_objWorkingConfiguration);
+            m_objModelTree = new DefaultTreeModel(m_objConfiguration);
             m_objTree.setModel(m_objModelTree);
             
             expandAll(m_objTree);
@@ -784,10 +760,10 @@ public class QCConfig implements DropTargetListener
             m_objTree.setSelectionPath(l_objRootPath);
         }
         
-        m_objFrame.setTitle("Editing : " + m_objWorkingConfiguration.getDescription());
+        m_objFrame.setTitle("Editing : " + m_objConfiguration.getDescription());
         m_objFrame.setVisible(true);
         
-        setDataModified(false);
+        EnableButtons();
     }
 
     /**
@@ -797,19 +773,19 @@ public class QCConfig implements DropTargetListener
         return m_objSelf;
     }
 
-    /**
-     * @return the m_bDataModified
-     */
-    public boolean isDataModified() {
-        return m_bDataModified;
-    }
+    public void SaveDataModified() 
+    {
+        if (m_objConfiguration.SaveXML())
+        {
+            m_objFrame.setTitle("Editing : " + m_objConfiguration.getDescription());
 
-    /**
-     * @param m_bDataModified the m_bDataModified to set
-     */
-    public void setDataModified(boolean m_bDataModified) {
-        this.m_bDataModified = m_bDataModified;
-        EnableButtons();
+            self().getConfiguration().getQC().UpdateQC(false, true);
+        }
+        else
+            JOptionPane.showMessageDialog(self().m_objFrame, 
+                                          "Oooops, error saving the configuration xml file... Sorry!", 
+                                          "Error!", 
+                                          JOptionPane.ERROR_MESSAGE);                 
     }
 
     private void EnableButtons() 
@@ -846,8 +822,7 @@ public class QCConfig implements DropTargetListener
             m_objBtnAddMenu.setEnabled(true);
             m_objBtnSetTitle.setEnabled(((objSelectedNode.isRoot()) || ((objSelectedNode instanceof QCConfigurationEntry) && ((QCConfigurationEntry)objSelectedNode).isMenu())));
             m_objBtnRemCounter.setEnabled(!objSelectedNode.isRoot());
-            m_objBtnSave.setEnabled(isDataModified());
-            m_objBtnExit.setEnabled(true);
+            m_objBtnReset.setEnabled(true);
         }
         else
         {
@@ -857,8 +832,7 @@ public class QCConfig implements DropTargetListener
             m_objBtnAddMenu.setEnabled(true);
             m_objBtnSetTitle.setEnabled(false);
             m_objBtnRemCounter.setEnabled(false);
-            m_objBtnSave.setEnabled(isDataModified());
-            m_objBtnExit.setEnabled(true);
+            m_objBtnReset.setEnabled(true);
         }
     }
 
@@ -900,12 +874,12 @@ public class QCConfig implements DropTargetListener
             && (!Boolean.TRUE.equals(objPiece.getProperty(Properties.OBSCURED_TO_ME))))
         {
             DefaultMutableTreeNode l_objSelectedNode = null;
-            DefaultMutableTreeNode l_objNewNode = new QCConfigurationEntry(m_objWorkingConfiguration.getQC());
+            DefaultMutableTreeNode l_objNewNode = new QCConfigurationEntry(m_objConfiguration.getQC());
 
             ((QCConfigurationEntry)l_objNewNode).setMenu(false);
             ((QCConfigurationEntry)l_objNewNode).setGpID((String)objPiece.getProperty(Properties.PIECE_ID));
             ((QCConfigurationEntry)l_objNewNode).setText(objPiece.getName());
-            ((QCConfigurationEntry)l_objNewNode).setPieceSlot(m_objWorkingConfiguration.getQC().getPieceSlot(((QCConfigurationEntry)l_objNewNode).getGpID()));
+            ((QCConfigurationEntry)l_objNewNode).setPieceSlot(m_objConfiguration.getQC().getPieceSlot(((QCConfigurationEntry)l_objNewNode).getGpID()));
 
             TreePath l_objTreePath = m_objTree.getSelectionPath();        // get path of selected node.
 
@@ -936,7 +910,7 @@ public class QCConfig implements DropTargetListener
             m_objTree.scrollPathToVisible(l_objNodePath);
             m_objTree.setSelectionPath(l_objNodePath);
 
-            setDataModified(true);
+            SaveDataModified();
         }
     }    
 }
