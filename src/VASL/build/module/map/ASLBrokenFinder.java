@@ -141,12 +141,9 @@ public class ASLBrokenFinder extends AbstractConfigurable implements GameCompone
         }
     }
 
-    public void findBrokenPiece() 
+    public void findBrokenPiece(boolean bVisible) 
     {
-        if (!m_bVisible)
-            m_bVisible = true;
-        else
-            m_bVisible = false;
+        m_bVisible = bVisible;
         
         m_objMap.getView().repaint();
     }

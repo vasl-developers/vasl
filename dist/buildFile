@@ -110,7 +110,6 @@
         <VASL.build.module.map.ASLPieceMover hotkey="119,0"/>
         <VASL.build.module.map.ASLDiceOverlay/>
         <VASL.build.module.map.QC/>
-        <VASL.build.module.map.QCMod/>
     </VASL.build.module.ASLMap>
     <VASSAL.build.module.NotesWindow buttonText="" hotkey="" icon="notesV.gif" tooltip="Notes"/>
     <VASSAL.build.module.Documentation>

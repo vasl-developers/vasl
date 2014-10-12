@@ -18,16 +18,19 @@ import org.w3c.dom.Element;
 import VASSAL.Info;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
+import VASSAL.build.module.BasicLogger;
 import VASSAL.build.module.GameComponent;
 import VASSAL.build.module.Map;
 import VASSAL.build.module.map.PieceMover;
 import VASSAL.build.widget.PieceSlot;
 import VASSAL.command.Command;
+import VASSAL.configure.StringConfigurer;
 import VASSAL.counters.DragBuffer;
 import VASSAL.counters.GamePiece;
 import VASSAL.counters.KeyBuffer;
 import VASSAL.counters.PieceCloner;
 import VASSAL.counters.Properties;
+import VASSAL.preferences.PositionOption;
 import VASSAL.tools.image.ImageUtils;
 import VASSAL.tools.imageop.Op;
 import java.awt.Component;
@@ -57,6 +60,7 @@ import java.util.UUID;
 import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JOptionPane;
+import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -865,10 +869,12 @@ public class QC implements Buildable, GameComponent
 "		<qcentry slot=\"5919\"/>\n" +
 "		<qcentry slot=\"5920\"/>\n" +
 "	</qcsubmenu>\n" +
-"	<qcentry slot=\"101\"/>\n" +
-"	<qcentry slot=\"109\"/>\n" +
-"	<qcentry slot=\"111\"/>\n" +
-"	<qcentry slot=\"113\"/>\n" +
+"	<qcsubmenu text=\"AFV Motion status\">\n" +
+"               <qcentry slot=\"101\"/>\n" +
+"               <qcentry slot=\"111\"/>\n" +
+"               <qcentry slot=\"109\"/>\n" +
+"               <qcentry slot=\"113\"/>\n" +
+"	</qcsubmenu>\n" +
 "	<qcentry slot=\"126\"/>\n" +
 "	<qcentry slot=\"128\"/>\n" +
 "	<qcentry slot=\"129\"/>\n" +
@@ -886,26 +892,21 @@ public class QC implements Buildable, GameComponent
 "		<qcentry slot=\"203\"/>\n" +
 "		<qcentry slot=\"204\"/>\n" +
 "	</qcsubmenu>\n" +
-"	<qcsubmenu text=\"SASL Counters\">\n" +
-"		<qcentry slot=\"359\"/>\n" +
-"		<qcentry slot=\"360\"/>\n" +
-"		<qcentry slot=\"361\"/>\n" +
-"		<qcentry slot=\"362\"/>\n" +
-"		<qcentry slot=\"363\"/>\n" +
-"		<qcentry slot=\"364\"/>\n" +
-"		<qcentry slot=\"365\"/>\n" +
-"		<qcentry slot=\"366\"/>\n" +
-"		<qcentry slot=\"367\"/>\n" +
-"	</qcsubmenu>\n" +
 "</qcconfig>";
 // </editor-fold>
 
-    private Map m_Map;
+    private JButton m_objUndoButton = null;
+    private JButton m_objCountersWindowButton = null;
+    private JButton m_objDraggableOverlaysWindowButton = null;
+    private JButton m_objDeluxeDraggableOverlaysWindowButton = null;
+    private JToggleButton m_objBrokenFinderButton = null;
+    private Map m_objMap;
     private final ArrayList<QCConfiguration> mar_objListQCConfigurations = new ArrayList<QCConfiguration>();
     private QCConfiguration m_objQCWorkingConfiguration = null;
     private QCConfig m_objQCConfig = null;
     private boolean m_bEditing = false;
     private Hashtable mar_HashPieceSlot = new Hashtable();
+    private final String QCLastConfigurationUsed = "QCLastConfigurationUsed"; //$NON-NLS-1$
 
     public void loadConfigurations() 
     {
@@ -1013,34 +1014,9 @@ public class QC implements Buildable, GameComponent
     }
     public void readWorkingConfiguration() 
     {
-        java.util.Properties l_objProperties = new java.util.Properties();
-        InputStream l_objInputStream;
-        String l_strWorkingConfigurationName = "";
-
-        // try loading QC.properties from from the home directory
-        try 
-        {
-            l_objInputStream = new FileInputStream(new File(Info.getHomeDir() + System.getProperty("file.separator","\\") + "QC.properties"));
-        }
-        catch (Exception ex) 
-        { 
-            l_objInputStream = null; 
-        }
+        String l_strWorkingConfigurationName = (String)GameModule.getGameModule().getPrefs().getValue(QCLastConfigurationUsed);
         
-        if (l_objInputStream != null)
-        {
-            try 
-            {
-                l_objProperties.load(l_objInputStream);
-
-                l_objInputStream.close();
-
-                l_strWorkingConfigurationName = l_objProperties.getProperty("QC_working_configuration", "");
-            }
-            catch (Exception ex) 
-            { 
-            }
-        }
+        if (l_strWorkingConfigurationName == null) l_strWorkingConfigurationName = "";
         
         for (QCConfiguration l_objQCConfiguration : mar_objListQCConfigurations)
         {
@@ -1055,27 +1031,13 @@ public class QC implements Buildable, GameComponent
     public void saveWorkingConfiguration() 
     {
         if (m_objQCWorkingConfiguration != null)
-        {
-            try 
-            {
-                java.util.Properties l_Props = new java.util.Properties();
-                l_Props.setProperty("QC_working_configuration", m_objQCWorkingConfiguration.getName());
-
-                OutputStream l_objOutputStream = new FileOutputStream(new File(Info.getHomeDir() + System.getProperty("file.separator","\\") + "QC.properties"));
-
-                l_Props.store(l_objOutputStream, "QC working configuration");
-
-                l_objOutputStream.flush();
-                l_objOutputStream.close();
-            }
-            catch (Exception ex) 
-            {
-            }
-        }
+            GameModule.getGameModule().getPrefs().setValue(QCLastConfigurationUsed, m_objQCWorkingConfiguration.getName());
     }
 
     public void build(Element e)
     {
+        GameModule.getGameModule().getPrefs().addOption(null, new StringConfigurer(QCLastConfigurationUsed, null));            
+        
         loadConfigurations();
         readWorkingConfiguration();
     }
@@ -1087,15 +1049,51 @@ public class QC implements Buildable, GameComponent
   
     public void addTo(Buildable b) 
     {
-        m_Map = (Map) b;
+        m_objMap = (Map) b;
 
-        ((ASLMap)m_Map).getPopupMenu().add(new QCStartMenuItem());
-        ((ASLMap)m_Map).getPopupMenu().add(new QCEndMenuItem());
+        ((ASLMap)m_objMap).getPopupMenu().add(new QCStartMenuItem());
+        ((ASLMap)m_objMap).getPopupMenu().add(new QCEndMenuItem());
         
         RebuildPopupMenu();
 
-        m_Map.getToolBar().add(new QCStartToolBarItem());
-        m_Map.getToolBar().add(new QCEndToolBarItem());
+        if (!m_objMap.shouldDockIntoMainWindow())
+        {
+            m_objMap.getToolBar().add(new JToolBar.Separator(), 1);
+            m_objUndoButton = new JButton();
+            m_objMap.getToolBar().add(m_objUndoButton, 2);
+        }
+        
+        m_objMap.getToolBar().add(new JToolBar.Separator());
+        
+        if (!m_objMap.shouldDockIntoMainWindow())
+        {
+            if (m_objCountersWindowButton == null)
+            {
+                m_objCountersWindowButton = new JButton();
+                m_objMap.getToolBar().add(m_objCountersWindowButton);       
+            }
+            
+            if (m_objDraggableOverlaysWindowButton == null)
+            {
+                m_objDraggableOverlaysWindowButton = new JButton();
+                m_objMap.getToolBar().add(m_objDraggableOverlaysWindowButton);
+            }
+            
+            if (m_objDeluxeDraggableOverlaysWindowButton == null)
+            {
+                m_objDeluxeDraggableOverlaysWindowButton = new JButton();
+                m_objMap.getToolBar().add(m_objDeluxeDraggableOverlaysWindowButton);
+            }
+        }
+        
+        if (m_objBrokenFinderButton == null)
+        {
+            m_objBrokenFinderButton = new JToggleButton();
+            m_objMap.getToolBar().add(m_objBrokenFinderButton);       
+        }
+
+        m_objMap.getToolBar().add(new QCStartToolBarItem());
+        m_objMap.getToolBar().add(new QCEndToolBarItem());
         
         GameModule.getGameModule().getGameState().addGameComponent(this);
     }
@@ -1143,7 +1141,7 @@ public class QC implements Buildable, GameComponent
 
     private void RebuildToolBar() 
     {
-        JToolBar l_objToolBar = m_Map.getToolBar();
+        JToolBar l_objToolBar = m_objMap.getToolBar();
         boolean l_bEndElementNotFound = true;
         int l_iStartPos = 0;
         
@@ -1313,7 +1311,7 @@ public class QC implements Buildable, GameComponent
     
     private void RebuildPopupMenu() 
     {
-        JPopupMenu l_objPopupMenu = ((ASLMap)m_Map).getPopupMenu();
+        JPopupMenu l_objPopupMenu = ((ASLMap)m_objMap).getPopupMenu();
         final JMenuItem l_objCopyConfigurationMenuItem  = new JMenuItem(), l_objRemoveConfigurationMenuItem  = new JMenuItem(), l_objEditConfigurationMenuItem = new JMenuItem();;
         int l_iStartPos = 0;
         boolean l_bEndElementNotFound = true;
@@ -1472,7 +1470,7 @@ public class QC implements Buildable, GameComponent
             {
                 if (m_objQCWorkingConfiguration != null)
                 {
-                    int l_iSelectedOption = JOptionPane.showConfirmDialog(m_Map.getView(), 
+                    int l_iSelectedOption = JOptionPane.showConfirmDialog(m_objMap.getView(), 
                                                       "Do you really want to delete the '" + m_objQCWorkingConfiguration.getDescription() + "' QC configuration? This is NOT undoable or reversible!", 
                                                       "Delete the current QC configuration", 
                                                       JOptionPane.YES_NO_OPTION,
@@ -1587,6 +1585,105 @@ public class QC implements Buildable, GameComponent
     public void setup(boolean bln) {
         if (bln)
         {
+            if ((m_objUndoButton != null) && (m_objUndoButton.getAction() == null))
+            {
+                for (int l_i = 0; l_i < GameModule.getGameModule().getToolBar().getComponentCount(); l_i++)
+                {
+                    if (GameModule.getGameModule().getToolBar().getComponent(l_i) instanceof JButton)
+                    {
+                        JButton l_objB = ((JButton)(GameModule.getGameModule().getToolBar().getComponent(l_i)));
+
+                        if (l_objB.getAction() instanceof BasicLogger.UndoAction)
+                        {
+                            CopyActionButton(m_objUndoButton, l_objB, true);
+                            break;
+                        }                        
+                    }
+                }
+            }
+            
+            if ((m_objCountersWindowButton != null) && (m_objCountersWindowButton.getActionListeners().length == 0))
+            {
+                for (int l_i = 0; l_i < GameModule.getGameModule().getToolBar().getComponentCount(); l_i++)
+                {
+                    if (GameModule.getGameModule().getToolBar().getComponent(l_i) instanceof JButton)
+                    {
+                        JButton l_objB = ((JButton)(GameModule.getGameModule().getToolBar().getComponent(l_i)));
+
+                        if (l_objB.getToolTipText().contains("VASL Counters window"))
+                        {
+                            CopyActionButton(m_objCountersWindowButton, l_objB, false);
+                            break;
+                        }                        
+                    }
+                }
+            }
+            
+            if ((m_objDraggableOverlaysWindowButton != null) && (m_objDraggableOverlaysWindowButton.getActionListeners().length == 0))
+            {
+                for (int l_i = 0; l_i < GameModule.getGameModule().getToolBar().getComponentCount(); l_i++)
+                {
+                    if (GameModule.getGameModule().getToolBar().getComponent(l_i) instanceof JButton)
+                    {
+                        JButton l_objB = ((JButton)(GameModule.getGameModule().getToolBar().getComponent(l_i)));
+
+                        if (l_objB.getToolTipText().contains("the Draggable Overlays window"))
+                        {
+                            CopyActionButton(m_objDraggableOverlaysWindowButton, l_objB, false);
+                            break;
+                        }                        
+                    }
+                }
+            }
+            
+            if ((m_objDeluxeDraggableOverlaysWindowButton != null) && (m_objDeluxeDraggableOverlaysWindowButton.getActionListeners().length == 0))
+            {
+                for (int l_i = 0; l_i < GameModule.getGameModule().getToolBar().getComponentCount(); l_i++)
+                {
+                    if (GameModule.getGameModule().getToolBar().getComponent(l_i) instanceof JButton)
+                    {
+                        JButton l_objB = ((JButton)(GameModule.getGameModule().getToolBar().getComponent(l_i)));
+
+                        if (l_objB.getToolTipText().contains("Deluxe Draggable Overlays"))
+                        {
+                            CopyActionButton(m_objDeluxeDraggableOverlaysWindowButton, l_objB, false);
+                            break;
+                        }                        
+                    }
+                }
+            }
+            
+            if ((m_objBrokenFinderButton != null) && (m_objBrokenFinderButton.getActionListeners().length == 0))
+            {
+                try
+                {
+                    m_objBrokenFinderButton.setIcon(new ImageIcon(Op.load("malf").getImage(null)));
+                }
+                catch (Exception ex)
+                {
+                }
+
+                ActionListener l_objAL = new ActionListener()
+                {
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        try
+                        {
+                            ASLBrokenFinder l_objBrokenFinder = (ASLBrokenFinder) m_objMap.getComponentsOf(ASLBrokenFinder.class).iterator().next();
+
+                            if (l_objBrokenFinder != null)
+                                l_objBrokenFinder.findBrokenPiece(m_objBrokenFinderButton.isSelected());
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+                    }
+                };
+
+                m_objBrokenFinderButton.addActionListener(l_objAL);
+                m_objBrokenFinderButton.setToolTipText("Turn on/off the highlighting of broken units/weapons");
+            }
+            
             if (mar_HashPieceSlot.isEmpty())
             {
                 ReadPiecesSlot();
@@ -1598,4 +1695,32 @@ public class QC implements Buildable, GameComponent
     public Command getRestoreCommand() {
         return null;
     }
+    
+    private void CopyActionButton(JButton objDestButton, JButton objSourceButton, boolean bAction) 
+    {
+        objDestButton.setText(objSourceButton.getText());
+        
+        try
+        {
+            if (objSourceButton.getIcon() != null)
+                objDestButton.setIcon(objSourceButton.getIcon());
+        }
+        catch (Exception ex)
+        {
+        }
+        
+        if (bAction)
+        {
+            if (objSourceButton.getAction() != null)
+                objDestButton.setAction(objSourceButton.getAction());            
+        }
+        else
+        {
+            for (int l_i = 0; l_i < objSourceButton.getActionListeners().length; l_i++)
+                objDestButton.addActionListener(objSourceButton.getActionListeners()[l_i]);
+        }
+        
+        objDestButton.setToolTipText(objSourceButton.getToolTipText());
+    }
+    
 }

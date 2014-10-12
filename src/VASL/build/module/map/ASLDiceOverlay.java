@@ -44,6 +44,7 @@ import VASSAL.build.module.GlobalOptions;
 import VASSAL.configure.ColorConfigurer;
 import VASSAL.configure.FontConfigurer;
 import VASSAL.configure.LongConfigurer;
+import VASSAL.configure.StringConfigurer;
 import VASSAL.preferences.Prefs;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -282,13 +283,11 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
     }
     private ArrayList<NeedRepaintEvent> needrepaint_listeners = new ArrayList<NeedRepaintEvent>();
     private ArrayList<DiceRollHandler> mar_DRH = new ArrayList<DiceRollHandler>();
-    private Timer m_objClock;
+    private Timer m_objClock = null;
     private boolean m_bRegisteredForDiceEvents = false;
     
     public DiceRollQueueHandler() 
     {
-        m_objClock = new Timer (5000, this);
-        m_objClock.start();
     }   
     
     public void SetupPreferences()
@@ -730,16 +729,39 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
         }
     }
     
-    private boolean RegisterForDiceEvents(boolean bAdd)
+    public boolean RegisterForDiceEvents(boolean bAdd)
     {
         if ((!m_bRegisteredForDiceEvents) && (bAdd))
         {
             if (GameModule.getGameModule().getChatter() instanceof ASLChatter) 
             {
                 if (bAdd) 
+                {
                     ((ASLChatter) (GameModule.getGameModule().getChatter())).addListener(this);
+                    
+                    if (m_objClock == null)
+                    {
+                        m_objClock = new Timer (1000, this);
+                        m_objClock.start();
+                    }
+                    else
+                    {
+                        m_objClock.stop();
+                        m_objClock.setInitialDelay(1000);
+                        m_objClock.setDelay(1000);
+                        m_objClock.restart();
+                    }                    
+                }
                 else
+                {
                     ((ASLChatter) (GameModule.getGameModule().getChatter())).removeListener(this);
+
+                    if (m_objClock != null)
+                    {
+                        m_objClock.stop();
+                        m_objClock = null;                      
+                    }
+                }
 
                 m_bRegisteredForDiceEvents = bAdd;
                 
@@ -926,17 +948,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
     @Override
     public void actionPerformed(ActionEvent e) 
     {
-        if (RegisterForDiceEvents(true)) 
-        {
-            m_objClock.stop();
-            m_objClock.setInitialDelay(1000);
-            m_objClock.setDelay(1000);
-            m_objClock.restart();
-        }
-        else
-        {    
-            ClockTick();
-        }
+        ClockTick();
     }
 
     public void DiceRoll(String strCategory, String strUser, String strSAN, int iFirstDice, int iSecondDice) {
@@ -990,7 +1002,9 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
     private JToolBar m_Toolbar = null;
     private DiceRollQueueHandler m_objDRQH = null;
     private ToolBarPosition m_enToolbarPosition = ToolBarPosition.TP_EAST;
-    
+    private boolean m_bToolbarActive = false;
+    private final String DiceOverlayToolbarPos = "DiceOverlayToolbarPos";
+    private final String DiceOverlayToolbarActive = "DiceOverlayToolbarActive";    
       
     // this component is not configurable
     @Override
@@ -1011,6 +1025,12 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
     @Override
     public void addTo(Buildable parent) {
 
+        GameModule.getGameModule().getPrefs().addOption(null, new StringConfigurer(DiceOverlayToolbarPos, null));            
+        GameModule.getGameModule().getPrefs().addOption(null, new StringConfigurer(DiceOverlayToolbarActive, null));
+        
+        readToolbarPos();
+        readToolbarActive();
+        
         // add this component to the game and register a mouse listener
         if (parent instanceof ASLMap) 
         {
@@ -1025,17 +1045,18 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
 
             // button toolbar activation
             JCheckBoxMenuItem l_objToolbarVisibleChange = new JCheckBoxMenuItem("Toolbar activation (on/off)");
+            
+            l_objToolbarVisibleChange.setSelected(m_bToolbarActive);
 
             l_objToolbarVisibleChange.addActionListener(new ActionListener() 
             {
                 public void actionPerformed(ActionEvent evt) 
                 {
-                    boolean l_bVisible = true;
+                    m_bToolbarActive = !m_bToolbarActive;
                     
-                    if (m_Toolbar != null)
-                        l_bVisible = !m_Toolbar.isVisible();
+                    CreateToolbar();
                     
-                    CreateToolbar(l_bVisible);
+                    saveToolbarActive();
                 }
             });
             
@@ -1044,10 +1065,60 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
             m_objDRQH = new DiceRollQueueHandler();
             m_objDRQH.addRepaintListener(this);
             
-            m_objDRQH.SetupPreferences();            
+            m_objDRQH.SetupPreferences();   
         }
+        
+        GameModule.getGameModule().getGameState().addGameComponent(this);        
     }
 
+    public void readToolbarPos() 
+    {
+        String l_strPref = (String)GameModule.getGameModule().getPrefs().getValue(DiceOverlayToolbarPos);
+        
+        if (l_strPref == null) l_strPref = "EAST";
+        
+        if (l_strPref.compareToIgnoreCase("EAST") == 0)
+        {
+            m_enToolbarPosition = ToolBarPosition.TP_EAST;
+        }        
+        else if (l_strPref.compareToIgnoreCase("WEST") == 0)
+        {
+            m_enToolbarPosition = ToolBarPosition.TP_WEST;
+        }      
+    }	
+    
+    public void readToolbarActive() 
+    {
+        String l_strPref = (String)GameModule.getGameModule().getPrefs().getValue(DiceOverlayToolbarActive);
+        
+        if (l_strPref == null) l_strPref = "NO";
+        
+        if (l_strPref.compareToIgnoreCase("YES") == 0)
+        {
+            m_bToolbarActive = true;
+        }        
+        else if (l_strPref.compareToIgnoreCase("NO") == 0)
+        {
+            m_bToolbarActive = false;
+        }      
+    }	
+    
+    public void saveToolbarPos() 
+    {
+        if (m_enToolbarPosition == ToolBarPosition.TP_EAST)
+            GameModule.getGameModule().getPrefs().setValue(DiceOverlayToolbarPos, "EAST");
+        else if (m_enToolbarPosition == ToolBarPosition.TP_WEST)
+            GameModule.getGameModule().getPrefs().setValue(DiceOverlayToolbarPos, "WEST");
+    }
+    
+    public void saveToolbarActive() 
+    {
+        if (m_bToolbarActive)
+            GameModule.getGameModule().getPrefs().setValue(DiceOverlayToolbarActive, "YES");
+        else 
+            GameModule.getGameModule().getPrefs().setValue(DiceOverlayToolbarActive, "NO");
+    }
+    
     @Override
     public void draw(Graphics g, Map map) 
     {
@@ -1068,12 +1139,24 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
     public Class[] getAllowableConfigureComponents() {return new Class[0];}
 
     @Override
-    public void setup(boolean gameStarting) {}
+    public void setup(boolean gameStarting) 
+    {
+        if (gameStarting)
+        {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    CreateToolbar();
+                }
+            });
+            
+            m_objDRQH.RegisterForDiceEvents(true);
+        }
+    }
 
     @Override
     public Command getRestoreCommand() {return null;}
     
-    public void CreateToolbar(boolean bVisible)
+    public void CreateToolbar()
     {
         if (m_Toolbar == null)
         {
@@ -1142,11 +1225,21 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
             
             l_objBtn = CreateActionButton("chatter/ARROW.png", "", "Move the toolbar to the other side", new ActionListener() {public void actionPerformed(ActionEvent e) {ToolbarMove();}});
             AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
-            
-            SwingUtilities.getWindowAncestor(m_objASLMap.getLayeredPane()).add(m_Toolbar, BorderLayout.EAST);                
+    
+            try
+            {
+                if (m_enToolbarPosition == ToolBarPosition.TP_EAST)
+                    SwingUtilities.getWindowAncestor(m_objASLMap.getLayeredPane()).add(m_Toolbar, BorderLayout.EAST);                
+                else if (m_enToolbarPosition == ToolBarPosition.TP_WEST)
+                    SwingUtilities.getWindowAncestor(m_objASLMap.getLayeredPane()).add(m_Toolbar, BorderLayout.WEST);                
+            }
+            catch (Exception ex)
+            {
+                ex.printStackTrace();
+            }
         }
         
-        m_Toolbar.setVisible(bVisible);
+        m_Toolbar.setVisible(m_bToolbarActive);
         
         m_objASLMap.getView().revalidate();
         m_Toolbar.revalidate();
@@ -1168,6 +1261,8 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
             SwingUtilities.getWindowAncestor(m_objASLMap.getLayeredPane()).getLayout().removeLayoutComponent(m_Toolbar);
             SwingUtilities.getWindowAncestor(m_objASLMap.getLayeredPane()).add(m_Toolbar, BorderLayout.EAST);
         }
+        
+        saveToolbarPos();
         
         m_objASLMap.getView().revalidate();
         m_Toolbar.revalidate();
