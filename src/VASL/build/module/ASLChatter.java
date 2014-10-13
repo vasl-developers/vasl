@@ -88,6 +88,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
   
   public static final String BEFORE_CATEGORY = "   ";
   private static final String USE_DICE_IMAGES = "useDiceImages"; //$NON-NLS-1$
+  private static final String SHOW_DICE_STATS = "showDiceStats"; //$NON-NLS-1$
   private static final String CHAT_BACKGROUND_COLOR = "chatBackgroundColor"; //$NON-NLS-1$
   private static final String COLORED_DICE_COLOR = "coloredDiceColor"; //$NON-NLS-1$
   private static final String SINGLE_DIE_COLOR = "singleDieColor"; //$NON-NLS-1$
@@ -122,6 +123,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
   private Style m_objMainStyle;
   private Style m_objIconStyle;
   private boolean m_bUseDiceImages;
+  private boolean m_bShowDiceStats;
   
   private final Icon [] mar_objWhiteDCIcon = new Icon[6];
   private final Icon [] mar_objColoredDCIcon = new Icon[6];
@@ -472,6 +474,10 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                 {
                     ParseOlddr(strMsg);
                 }
+                else if (strMsg.startsWith("*** 3d6 = "))
+                {
+                    Parse3d6(strMsg);
+                }                
                 else if (strMsg.startsWith("*** ("))
                 {
                     ParseNewDiceRoll(strMsg);
@@ -594,7 +600,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                             m_objDocument.insertString(m_objDocument.getLength(), "\n*** dr = ", m_objMainStyle);
                             if (m_bUseDiceImages)
                             {
-                                PaintIcon(l_iDice, true, true);
+                                PaintIcon(l_iDice, true, true, "");
                             }
                             else
                             {
@@ -613,7 +619,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                         else
                         {
                             m_objDocument.insertString(m_objDocument.getLength(), "\n*** dr = ", m_objMainStyle);
-                            PaintIcon(l_iDice, true, true);                            
+                            PaintIcon(l_iDice, true, true, "");                            
                             m_objDocument.insertString(m_objDocument.getLength(), l_strLast, m_objMainStyle);
 
                             FireDiceRoll("", "?", "", l_iDice, -1);
@@ -707,9 +713,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     
                                     if (m_bUseDiceImages)
                                     {
-                                        PaintIcon(l_iFirstDice, true, false);
+                                        PaintIcon(l_iFirstDice, true, false, (m_bShowDiceStats ? "" : l_strRestOfMsg));
                                         m_objDocument.insertString(m_objDocument.getLength(), " ", m_objMainStyle);
-                                        PaintIcon(l_iSecondDice, false, false);
+                                        PaintIcon(l_iSecondDice, false, false, (m_bShowDiceStats ? "" : l_strRestOfMsg));
                                     }
                                     else
                                     {
@@ -731,7 +737,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     
                                     StyleConstants.setBold(m_objMainStyle, false);
                                     StyleConstants.setUnderline(m_objMainStyle, false);
-                                    m_objDocument.insertString(m_objDocument.getLength(), l_strRestOfMsg, m_objMainStyle);                                    
+                                    
+                                    if (m_bShowDiceStats)
+                                        m_objDocument.insertString(m_objDocument.getLength(), l_strRestOfMsg, m_objMainStyle);                                    
                                     
                                     FireDiceRoll(l_strCategory, l_strUser, l_strSAN, l_iFirstDice, l_iSecondDice);
                                 }
@@ -792,7 +800,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     
                                     if (m_bUseDiceImages)
                                     {
-                                        PaintIcon(l_iDice, true, true);
+                                        PaintIcon(l_iDice, true, true, (m_bShowDiceStats ? "" : l_strRestOfMsg));
                                     }
                                     else
                                     {
@@ -806,7 +814,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     m_objDocument.insertString(m_objDocument.getLength(), l_strUser, m_objMainStyle);
                                     
                                     StyleConstants.setBold(m_objMainStyle, false);
-                                    m_objDocument.insertString(m_objDocument.getLength(), "   " + l_strRestOfMsg, m_objMainStyle);                                    
+                                    
+                                    if (m_bShowDiceStats)
+                                        m_objDocument.insertString(m_objDocument.getLength(), "   " + l_strRestOfMsg, m_objMainStyle);                                    
 
                                     FireDiceRoll(l_strCategory, l_strUser, "", l_iDice, -1);
                                 }
@@ -830,6 +840,100 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         {
             ex.printStackTrace();
         }        
+    }
+    
+    private void Parse3d6(String strMsg)  
+    {
+        try
+        {// *** 3d6 = 5,4,6 *** <FredKors>
+            String l_strRestOfMsg = strMsg.substring("*** 3d6 = ".length());
+            int l_iPos = l_strRestOfMsg.indexOf(" ***");
+            String l_strUser = "";
+            
+            StyleConstants.setForeground(m_objMainStyle, m_clrGameMsg);
+            
+            if (l_iPos != -1)
+            {
+                String l_strLast = l_strRestOfMsg.substring(l_iPos);
+                String l_strDice = l_strRestOfMsg.substring(0, l_iPos);
+        
+                if (l_strDice.length() == 5)
+                {
+                    String [] lar_strDice = l_strDice.split(",");
+
+                    if (lar_strDice.length == 3)
+                    {
+                        int l_iFirstDice = Integer.parseInt(lar_strDice[0]);
+                        int l_iSecondDice = Integer.parseInt(lar_strDice[1]);
+                        int l_iThirdDice = Integer.parseInt(lar_strDice[2]);
+
+                        if ((l_iFirstDice > 0)
+                            && (l_iFirstDice < 7)
+                            && (l_iSecondDice > 0)
+                            && (l_iSecondDice < 7)
+                            && (l_iThirdDice > 0)
+                            && (l_iThirdDice < 7))
+                        {
+                            String[] lar_strParts = FindUser(l_strLast);
+
+                            if ((!lar_strParts[1].isEmpty()) && (!lar_strParts[2].isEmpty()))
+                            {
+                                l_strUser = lar_strParts[1];
+                                
+                                m_objDocument.insertString(m_objDocument.getLength(), "\n*** 3d6 = ", m_objMainStyle);
+                                if (m_bUseDiceImages)
+                                {
+                                    PaintIcon(l_iFirstDice, true, false, "");
+                                    m_objDocument.insertString(m_objDocument.getLength(), " ", m_objMainStyle);
+                                    PaintIcon(l_iSecondDice, false, false, "");
+                                    m_objDocument.insertString(m_objDocument.getLength(), " ", m_objMainStyle);
+                                    PaintIcon(l_iThirdDice, true, true, "");
+                                }
+                                else
+                                {
+                                    StyleConstants.setBold(m_objMainStyle, true);
+                                    m_objDocument.insertString(m_objDocument.getLength(), l_strDice, m_objMainStyle);
+                                    StyleConstants.setBold(m_objMainStyle, false);
+                                }
+                                m_objDocument.insertString(m_objDocument.getLength(), lar_strParts[0], m_objMainStyle);
+                                StyleConstants.setBold(m_objMainStyle, true);
+                                m_objDocument.insertString(m_objDocument.getLength(), lar_strParts[1], m_objMainStyle);
+                                StyleConstants.setBold(m_objMainStyle, false);
+                                m_objDocument.insertString(m_objDocument.getLength(), lar_strParts[2], m_objMainStyle);
+                                
+                                FireDiceRoll("", l_strUser, "", l_iFirstDice, l_iSecondDice);
+                                FireDiceRoll("", l_strUser, "", l_iThirdDice, -1);
+                            }
+                            else
+                            {
+                                m_objDocument.insertString(m_objDocument.getLength(), "\n*** 3d6 = ", m_objMainStyle);
+                                PaintIcon(l_iFirstDice, true, false, "");
+                                m_objDocument.insertString(m_objDocument.getLength(), " ", m_objMainStyle);
+                                PaintIcon(l_iSecondDice, false, false, "");
+                                m_objDocument.insertString(m_objDocument.getLength(), " ", m_objMainStyle);
+                                PaintIcon(l_iThirdDice, true, true, "");
+                                m_objDocument.insertString(m_objDocument.getLength(), l_strLast, m_objMainStyle);
+
+                                FireDiceRoll("", "?", "", l_iFirstDice, l_iSecondDice);
+                                FireDiceRoll("", "?", "", l_iThirdDice, -1);
+                            }
+                        }
+                        else
+                            m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
+                    }
+                    else
+                        m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
+                }
+                else
+                    m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
+            }
+            else
+                m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
     }
     
     private void ParseOldDR(String strMsg)  
@@ -872,9 +976,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                 m_objDocument.insertString(m_objDocument.getLength(), "\n*** DR = ", m_objMainStyle);
                                 if (m_bUseDiceImages)
                                 {
-                                    PaintIcon(l_iFirstDice, true, false);
+                                    PaintIcon(l_iFirstDice, true, false, "");
                                     m_objDocument.insertString(m_objDocument.getLength(), " ", m_objMainStyle);
-                                    PaintIcon(l_iSecondDice, false, false);
+                                    PaintIcon(l_iSecondDice, false, false, "");
                                 }
                                 else
                                 {
@@ -906,9 +1010,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                             else
                             {
                                 m_objDocument.insertString(m_objDocument.getLength(), "\n*** DR = ", m_objMainStyle);
-                                PaintIcon(l_iFirstDice, true, false);
+                                PaintIcon(l_iFirstDice, true, false, "");
                                 m_objDocument.insertString(m_objDocument.getLength(), " ", m_objMainStyle);
-                                PaintIcon(l_iSecondDice, false, false);
+                                PaintIcon(l_iSecondDice, false, false, "");
                                 m_objDocument.insertString(m_objDocument.getLength(), l_strLast, m_objMainStyle);
 
                                 if (l_strLast.contains("Axis SAN"))
@@ -945,12 +1049,15 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
     }
 
-    private void PaintIcon(int l_iDice, boolean bColored, boolean bSingle) 
+    private void PaintIcon(int l_iDice, boolean bColored, boolean bSingle, String strTooltip) 
     {
         try
         {
             JLabel l_objLabel = new JLabel((bSingle ? mar_objSingleDieIcon[l_iDice - 1] : (bColored ? mar_objColoredDCIcon[l_iDice - 1] : mar_objWhiteDCIcon[l_iDice - 1])));
             l_objLabel.setAlignmentY(0.7f);
+            
+            if (!strTooltip.isEmpty())
+                l_objLabel.setToolTipText(strTooltip.trim());
             
             StyleConstants.setComponent(m_objIconStyle, l_objLabel);        
             m_objDocument.insertString(m_objDocument.getLength(), "Ignored", m_objIconStyle);
@@ -1261,6 +1368,27 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             public void propertyChange(PropertyChangeEvent e) 
             {
                 m_bUseDiceImages = (Boolean) e.getNewValue();
+            }
+        });
+        
+        BooleanConfigurer l_objShowDiceStatsOption = null;
+        BooleanConfigurer l_objShowDiceStatsOption_Exist = (BooleanConfigurer)l_objGlobalPrefs.getOption(SHOW_DICE_STATS);
+        
+        if (l_objShowDiceStatsOption_Exist == null)
+        {
+            l_objShowDiceStatsOption = new BooleanConfigurer(SHOW_DICE_STATS, "Show dice stats after each dice rolls", Boolean.FALSE);  //$NON-NLS-1$
+            l_objGlobalPrefs.addOption(Resources.getString("Chatter.chat_window"), l_objShowDiceStatsOption); //$NON-NLS-1$
+        }
+        else
+            l_objShowDiceStatsOption = l_objShowDiceStatsOption_Exist;
+        
+        m_bShowDiceStats = (Boolean) (l_objGlobalPrefs.getValue(SHOW_DICE_STATS));
+        
+        l_objShowDiceStatsOption.addPropertyChangeListener(new PropertyChangeListener() 
+        {
+            public void propertyChange(PropertyChangeEvent e) 
+            {
+                m_bShowDiceStats = (Boolean) e.getNewValue();
             }
         });
         
