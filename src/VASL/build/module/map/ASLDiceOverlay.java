@@ -1003,8 +1003,8 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
     private DiceRollQueueHandler m_objDRQH = null;
     private ToolBarPosition m_enToolbarPosition = ToolBarPosition.TP_EAST;
     private boolean m_bToolbarActive = false;
-    private final String DiceOverlayToolbarPos = "DiceOverlayToolbarPos";
-    private final String DiceOverlayToolbarActive = "DiceOverlayToolbarActive";    
+    private final String DICEOVERLAYTOOLBARPOS = "DiceOverlayToolbarPos";
+    private final String DICEOVERLAYTOOLBARACTIVE = "DiceOverlayToolbarActive";    
       
     // this component is not configurable
     @Override
@@ -1025,8 +1025,12 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
     @Override
     public void addTo(Buildable parent) {
 
-        GameModule.getGameModule().getPrefs().addOption(null, new StringConfigurer(DiceOverlayToolbarPos, null));            
-        GameModule.getGameModule().getPrefs().addOption(null, new StringConfigurer(DiceOverlayToolbarActive, null));
+        if (GameModule.getGameModule().getPrefs().getOption(DICEOVERLAYTOOLBARPOS) == null)
+            GameModule.getGameModule().getPrefs().addOption(null, new StringConfigurer(DICEOVERLAYTOOLBARPOS, null));            
+        
+        
+        if (GameModule.getGameModule().getPrefs().getOption(DICEOVERLAYTOOLBARACTIVE) == null)
+            GameModule.getGameModule().getPrefs().addOption(null, new StringConfigurer(DICEOVERLAYTOOLBARACTIVE, null));
         
         readToolbarPos();
         readToolbarActive();
@@ -1073,7 +1077,7 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
 
     public void readToolbarPos() 
     {
-        String l_strPref = (String)GameModule.getGameModule().getPrefs().getValue(DiceOverlayToolbarPos);
+        String l_strPref = (String)GameModule.getGameModule().getPrefs().getValue(DICEOVERLAYTOOLBARPOS);
         
         if (l_strPref == null) l_strPref = "EAST";
         
@@ -1089,7 +1093,7 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
     
     public void readToolbarActive() 
     {
-        String l_strPref = (String)GameModule.getGameModule().getPrefs().getValue(DiceOverlayToolbarActive);
+        String l_strPref = (String)GameModule.getGameModule().getPrefs().getValue(DICEOVERLAYTOOLBARACTIVE);
         
         if (l_strPref == null) l_strPref = "NO";
         
@@ -1106,17 +1110,35 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
     public void saveToolbarPos() 
     {
         if (m_enToolbarPosition == ToolBarPosition.TP_EAST)
-            GameModule.getGameModule().getPrefs().setValue(DiceOverlayToolbarPos, "EAST");
+            GameModule.getGameModule().getPrefs().setValue(DICEOVERLAYTOOLBARPOS, "EAST");
         else if (m_enToolbarPosition == ToolBarPosition.TP_WEST)
-            GameModule.getGameModule().getPrefs().setValue(DiceOverlayToolbarPos, "WEST");
+            GameModule.getGameModule().getPrefs().setValue(DICEOVERLAYTOOLBARPOS, "WEST");
+        
+        try
+        {
+            GameModule.getGameModule().getPrefs().save();
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
     }
     
     public void saveToolbarActive() 
     {
         if (m_bToolbarActive)
-            GameModule.getGameModule().getPrefs().setValue(DiceOverlayToolbarActive, "YES");
+            GameModule.getGameModule().getPrefs().setValue(DICEOVERLAYTOOLBARACTIVE, "YES");
         else 
-            GameModule.getGameModule().getPrefs().setValue(DiceOverlayToolbarActive, "NO");
+            GameModule.getGameModule().getPrefs().setValue(DICEOVERLAYTOOLBARACTIVE, "NO");
+        
+        try
+        {
+            GameModule.getGameModule().getPrefs().save();
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
     }
     
     @Override

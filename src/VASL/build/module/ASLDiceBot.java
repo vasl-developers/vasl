@@ -2,18 +2,15 @@ package VASL.build.module;
 
 import java.io.*;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
-import java.awt.event.*;
-
-import javax.swing.KeyStroke;
 
 import VASSAL.build.*;
 import VASSAL.build.module.GlobalOptions;
 import VASSAL.configure.BooleanConfigurer;
+import VASSAL.configure.StringConfigurer;
 import VASSAL.i18n.Resources;
 import VASSAL.preferences.Prefs;
 import VASSAL.tools.LaunchButton;
@@ -21,7 +18,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.HttpURLConnection;
 import java.text.NumberFormat;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 class InstanceNumber 
 {
@@ -192,6 +191,14 @@ class CategoryDiceStats
         return l_nf.format((double) getTotSumRolls() / (double) getTotNumRolls());
     }
     
+    public double GetNumericAvg()
+    {
+        if (getTotNumRolls() == 0)
+            return 0;
+
+        return (double) getTotSumRolls() / (double) getTotNumRolls();
+    }
+    
     public String GetAvgColored()
     {
         NumberFormat l_nf = NumberFormat.getInstance();
@@ -298,7 +305,28 @@ public class ASLDiceBot extends AbstractBuildable
     public static final String NAME = "name"; //$NON-NLS-1$
     public static final String ICON = "icon"; //$NON-NLS-1$
     public static final String HOTKEY = "hotkey"; //$NON-NLS-1$
+    public static final String m_strHTMLSingle = 
+        
+"<html><style>\n" +
+"	.demo { border:0px solid #C0C0C0; border-collapse:collapse; border-spacing:0px; padding:0px; }\n" +
+"	.demo th { border:1px solid #C0C0C0; padding:5px; background:#FCFEE2;}\n" +
+"	.demo td {border:1px solid #C0C0C0; padding:5px; text-align: right;}\n" +
+"	.demo tr.total {border:2px solid #black; background:#DFF1FA;}\n" +
+"	.demo td.up {border-top:2px solid black; padding:5px; font-weight: bold; text-align: right;}\n" +
+"</style>\n" +
+"<table class=\"demo\"><thead><tr><th colspan=\"3\">%s</th></tr><tr><th>Category</th><th>drs</th><th>Avg</th></tr></thead><tbody>%s</tbody></table</html>";
 
+    public static final String m_strHTMLDouble = 
+        
+"<html><style>\n" +
+"	.demo { border:0px solid #C0C0C0; border-collapse:collapse; border-spacing:0px; padding:0px; }\n" +
+"	.demo th { border:1px solid #C0C0C0; padding:5px; background:#FCFEE2;}\n" +
+"	.demo td {border:1px solid #C0C0C0; padding:5px; text-align: right;}\n" +
+"	.demo tr.total {border-top:2px solid black; background:#DFF1FA;}\n" +
+"	.demo td.up {border-top:2px solid black; padding:5px; font-weight: bold; text-align: right;}\n" +
+"</style>\n" +
+"<table class=\"demo\"><thead><tr><th colspan=\"5\">%s</th></tr><tr><th>Category</th><th>DRs</th><th>Avg 1st</th><th>Avg 2nd</th><th>Avg</th></tr></thead><tbody>%s</tbody></table</html>";
+    
     private LaunchButton m_objButtonStats; //, m_objButtonDR, m_objButtondr;
 
     private final int m_MaxInstancesPerSeries = 99;
@@ -336,55 +364,22 @@ public class ASLDiceBot extends AbstractBuildable
     }
     
     public void addTo(Buildable parent) {
-        GameModule l_objGameModule = (GameModule) parent;
+        final Prefs l_objModulePrefs = ((GameModule) parent).getPrefs();
+        BooleanConfigurer l_objRandomOrgOption = null;
+        
+        BooleanConfigurer l_objRandomOrgOption_Exist = (BooleanConfigurer)l_objModulePrefs.getOption(RANDOM_ORG_OPTION);
+        
+        if (l_objRandomOrgOption_Exist == null)
+        {
+            l_objRandomOrgOption = new BooleanConfigurer(RANDOM_ORG_OPTION, "Get DR/dr random numbers from random.org", Boolean.FALSE);  //$NON-NLS-1$
+            l_objModulePrefs.addOption(Resources.getString("Prefs.general_tab"), l_objRandomOrgOption); //$NON-NLS-1$
+        }
+        else
+            l_objRandomOrgOption = l_objRandomOrgOption_Exist;
 
-// Removed after adding of the dice buttons to the chatter
-//
-//        m_objButtonDR = new LaunchButton(null, TOOLTIP, BUTTON_TEXT, HOTKEY, ICON, new ActionListener() {
-//                public void actionPerformed(ActionEvent event) {
-//                    DR(OTHER_CATEGORY);
-//                }
-//        });
-//        
-//        m_objButtonDR.setAttribute(NAME, "ASLDC_DR");
-//        m_objButtonDR.setAttribute(TOOLTIP, "DR");
-//        m_objButtonDR.setAttribute(HOTKEY, KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
-//        m_objButtonDR.setAttribute(ICON, "DRs.gif");
-//        l_objGameModule.getToolBar().add(m_objButtonDR);
-//
-//        m_objButtondr = new LaunchButton(null, TOOLTIP, BUTTON_TEXT, HOTKEY, ICON, new ActionListener() {
-//
-//                public void actionPerformed(ActionEvent event) {    
-//                    dr(OTHER_CATEGORY);
-//                }
-//        });
-//        
-//        m_objButtondr.setAttribute(NAME, "ASLDC_dr");
-//        m_objButtondr.setAttribute(TOOLTIP, "dr");
-//        m_objButtondr.setAttribute(HOTKEY, KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
-//        m_objButtondr.setAttribute(ICON, "dr.gif");
-//        l_objGameModule.getToolBar().add(m_objButtondr);
-
-        m_objButtonStats = new LaunchButton(null, TOOLTIP, BUTTON_TEXT, HOTKEY, ICON, new ActionListener(){
-            public void actionPerformed(ActionEvent event) {
-                statsToday();
-            }
-        });
+        m_bUseRandomOrg = (Boolean) (l_objModulePrefs.getValue(RANDOM_ORG_OPTION));
         
-        m_objButtonStats.setAttribute(NAME, "ASLDC_stat");
-        m_objButtonStats.setAttribute(TOOLTIP, "Dice rolls stats");
-        m_objButtonStats.setAttribute(HOTKEY, KeyStroke.getKeyStroke(KeyEvent.VK_F3, InputEvent.CTRL_MASK));
-        m_objButtonStats.setAttribute(ICON, "stat.png");
-        l_objGameModule.getToolBar().add(m_objButtonStats);
-        
-        final Prefs l_objGlobalPrefs = l_objGameModule.getPrefs();
-        
-        BooleanConfigurer l_objRandomOrgOption = new BooleanConfigurer(RANDOM_ORG_OPTION, "Get DR/dr random numbers from random.org", Boolean.FALSE);  //$NON-NLS-1$
-        l_objGlobalPrefs.addOption(Resources.getString("Prefs.general_tab"), l_objRandomOrgOption); //$NON-NLS-1$
-
-        m_bUseRandomOrg = (Boolean) (l_objGlobalPrefs.getValue(RANDOM_ORG_OPTION));
-        
-        l_objGlobalPrefs.getOption(RANDOM_ORG_OPTION).addPropertyChangeListener(new PropertyChangeListener() 
+        l_objRandomOrgOption.addPropertyChangeListener(new PropertyChangeListener() 
         {
             public void propertyChange(PropertyChangeEvent e) 
             {
@@ -467,7 +462,9 @@ public class ASLDiceBot extends AbstractBuildable
             {
                 mar_iRandomNumbers[l_i] = (int)((l_RND.nextFloat() * 6) + 1);
                 mar_iDereferencingIndex.add(l_i);
-            }            
+            }        
+            
+            OutputString(" Data correctly generated");
         }
     }
 
@@ -611,15 +608,26 @@ public class ASLDiceBot extends AbstractBuildable
 
     public void statsToday() 
     {
-        String l_strOutput;
+        StringBuilder l_objStringBuilder = new StringBuilder();
+        List<CategoryDiceStats> lar_objStats = new ArrayList<CategoryDiceStats>(map_objStats.values());
 
-        OutputString(" ");
-        OutputString("  " + GetPlayer() + "'s dice rolls today:");
-        OutputString(" ");
-        OutputString(" --  dr rolled (category / number / avg)");
-        OutputString(" ");
-        
-        for (CategoryDiceStats l_objCat_dr : map_objStats.values())
+        Collections.sort(lar_objStats, new Comparator<CategoryDiceStats>() {
+
+            public int compare(CategoryDiceStats o1, CategoryDiceStats o2) 
+            {
+                double l_dAvg1 = o1.GetNumericAvg();
+                double l_dAvg2 = o2.GetNumericAvg();
+                
+                if (l_dAvg1 > l_dAvg2)
+                    return 1;
+                else if (l_dAvg1 < l_dAvg2)
+                    return -1;
+                else
+                    return 0;
+            }
+        });
+
+        for (CategoryDiceStats l_objCat_dr : lar_objStats)
         {
             if (l_objCat_dr.IsTwoDice())
                 continue;
@@ -627,64 +635,77 @@ public class ASLDiceBot extends AbstractBuildable
             if (l_objCat_dr.getCategory().compareToIgnoreCase(TOTAL_CATEGORY) == 0)
                 continue;
             
-            l_strOutput = String.format("      category: %6s .... number %s .... avg %s", 
+            l_objStringBuilder.append(String.format("<tr><td>%s</td><td>%s</td><td>%s</td></tr>", 
                                                 l_objCat_dr.getCategory(), 
                                                 l_objCat_dr.getTotNumRolls(),
-                                                l_objCat_dr.GetAvg()
+                                                l_objCat_dr.GetAvg())
                                         );
-            
-            OutputString(l_strOutput);
         }
 
         CategoryDiceStats l_objCat_dr = map_objStats.get("D1_" + TOTAL_CATEGORY);
         
         if (l_objCat_dr != null)
         {
-            l_strOutput = String.format("      category: %6s .... number %s .... avg %s", 
+            l_objStringBuilder.append(String.format("<tr class=\"total\"><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td></tr>", 
                                                 l_objCat_dr.getCategory(), 
                                                 l_objCat_dr.getTotNumRolls(),
-                                                l_objCat_dr.GetAvg()
+                                                l_objCat_dr.GetAvg())
                                             );
-            OutputString(l_strOutput);
         }
         
-        OutputString(" ");
-        OutputString(" -- DR rolled (category / number / avg total / avg colored / avg white)");
-        OutputString(" ");
+        OutputString(String.format(m_strHTMLSingle, GetPlayer() + "'s drs today", l_objStringBuilder.toString()));
         
-        for (CategoryDiceStats l_objCat_DR : map_objStats.values())
+        
+        l_objStringBuilder = new StringBuilder();
+        
+        for (CategoryDiceStats l_objCat_DR : lar_objStats)
         {
             if (!l_objCat_DR.IsTwoDice())
                 continue;
             
             if (l_objCat_DR.getCategory().compareToIgnoreCase(TOTAL_CATEGORY) == 0)
                 continue;
+
+            String l_strBgColor = "";
+            double l_dAvg = l_objCat_DR.GetNumericAvg();
             
-            l_strOutput = String.format("      category %6s .... number %s .... avg %s .... avg col %s .... avg whi %s", 
+            if (l_dAvg < 6.75)
+                l_strBgColor = "bgcolor=#83C07A";
+            else if (l_dAvg > 7.25)
+                l_strBgColor = "bgcolor=#FE686D";
+            
+            l_objStringBuilder.append(String.format("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td %s>%s</td></tr>", 
                                                 l_objCat_DR.getCategory(), 
                                                 l_objCat_DR.getTotNumRolls(),
-                                                l_objCat_DR.GetAvg(),
                                                 l_objCat_DR.GetAvgColored(),
-                                                l_objCat_DR.GetAvgWhite()
+                                                l_objCat_DR.GetAvgWhite(),
+                                                l_strBgColor,
+                                                l_objCat_DR.GetAvg())
                                         );
-            
-            OutputString(l_strOutput);
         }
 
         CategoryDiceStats l_objCat_DR = map_objStats.get("D2_" + TOTAL_CATEGORY);
         
         if (l_objCat_DR != null)
         {
-            l_strOutput = String.format("      category %6s .... number %s .... avg %s .... avg col %s .... avg whi %s", 
+            String l_strBgColor = "";
+            double l_dAvg = l_objCat_DR.GetNumericAvg();
+            
+            if (l_dAvg < 6.75)
+                l_strBgColor = "bgcolor=#83C07A";
+            else if (l_dAvg > 7.25)
+                l_strBgColor = "bgcolor=#FE686D";
+            
+            l_objStringBuilder.append(String.format("<tr class=\"total\"><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\" %s>%s</td></tr>", 
                                                 l_objCat_DR.getCategory(), 
                                                 l_objCat_DR.getTotNumRolls(),
-                                                l_objCat_DR.GetAvg(),
                                                 l_objCat_DR.GetAvgColored(),
-                                                l_objCat_DR.GetAvgWhite()
+                                                l_objCat_DR.GetAvgWhite(),
+                                                l_strBgColor,
+                                                l_objCat_DR.GetAvg())
                                             );
-            OutputString(l_strOutput);
         }
-        
-        OutputString(" ");
+
+        OutputString(String.format(m_strHTMLDouble, GetPlayer() + "'s DRs today", l_objStringBuilder.toString()));        
     }
 }

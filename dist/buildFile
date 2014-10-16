@@ -123,7 +123,6 @@
         <VASSAL.build.module.documentation.HelpFile fileName="Migrate.txt" fileType="archive" title="For VASL 4.0 Users"/>
         <VASSAL.build.module.documentation.HelpFile fileName="Credits.txt" fileType="archive" title="Credits"/>
     </VASSAL.build.module.Documentation>
-    <VASSAL.build.module.Inventory centerOnPiece="true" drawPieces="true" foldersOnly="false" forwardKeystroke="true" groupBy="CurrentBoard,LocationName" hotkey="" icon="malf" include="InvisibleToOthers != true &amp;&amp; BRK_Active = true || PieceName = DM || PieceName = Disrupt" leafFormat="$PieceName$" name="Broken" nonLeafFormat="$PropertyValue$" pieceZoom="0.75" showMenu="true" sides="" sortFormat="$PieceName$" sortPieces="true" sorting="alpha" text="" tooltip="Show inventory of broken units"/>
     <VASL.build.module.ASLCommandEncoder noColorPreferences="true"/>
     <VASSAL.build.module.PieceWindow hidden="false" hotkey="67,520" icon="counters" name="VASL Counters" text="" tooltip="Show/Hide the VASL Counters window">
         <VASSAL.build.widget.TabWidget>
