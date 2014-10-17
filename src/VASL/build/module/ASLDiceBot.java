@@ -464,6 +464,7 @@ public class ASLDiceBot extends AbstractBuildable
                 mar_iDereferencingIndex.add(l_i);
             }        
             
+            OutputString(" ");
             OutputString(" Data correctly generated");
         }
     }
