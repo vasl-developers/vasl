@@ -19,12 +19,9 @@ package VASL.LOS.Map;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Shape;
+import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.HashSet;
-
-import VASL.build.module.map.boardPicker.board.ASLHexGrid;
-
-import static java.lang.StrictMath.cos;
 
 /**
  * The <code>Map</code> class is the map API.
@@ -39,19 +36,23 @@ import static java.lang.StrictMath.cos;
  * B0 would be (1,0), and so on. Note that the number of hexes in each column will
  * depend upon whether the column is odd or even.
  */
-@SuppressWarnings("ALL")
 public class Map  {
 
-	// hex geometry
-	public static final double DEFAULT_HEX_HEIGHT = 64.5;
-	public static final double DEFAULT_HEX_WIDTH = 56.265;
-	private double hexHeight = DEFAULT_HEX_HEIGHT;
-	private double hexWidth = DEFAULT_HEX_WIDTH;
-	private double A1CenterX;
-	private double A1CenterY;
+    // constants for standard geomorphics boards, which compensate for VASL "fuzzy" geometry. Hexes are slightly too wide.
+    public static final double GEO_WIDTH = 33;
+    public static final double GEO_HEIGHT = 10;
+    public static final double GEO_IMAGE_WIDTH = 1800;
+    public static final double GEO_IMAGE_HEIGHT = 645;
+    public static final double GEO_HEX_HEIGHT = GEO_IMAGE_HEIGHT/GEO_HEIGHT;
+    public static final double GEO_HEX_WIDTH = GEO_IMAGE_WIDTH/(GEO_WIDTH - 1.0);
+    private static final Point2D.Double GEO_A1_Center = new Point2D.Double(0, GEO_HEX_HEIGHT/2.0);
 
-	// todo: used only by hex - move to hex object
-	private double h;
+    // default hex geometry
+    private double hexHeight = GEO_HEX_HEIGHT;
+    private double hexWidth = GEO_HEX_WIDTH;
+
+    private double A1CenterX;
+	private double A1CenterY;
 
 	// width and height of the map in hexes
 	private int width;
@@ -72,91 +73,30 @@ public class Map  {
     // map terrain names to the terrain objects
     private static HashMap<String, Terrain> terrainNameMap;
 
-
-	/**
-	 * Constructs a new <code>Map</code> object using custom hex size and/or offset.
-	 * A standard geomorphic map board is 10 x 33 hexes.
-	 * @param width the width of the map in hexes
-	 * @param height the height of the map in hexes
-	 * @param xOffset x-offset of the A1 hex center dot
-	 * @param yOffset y-offset of the A1 hex center dot
-	 * @param hexHeight the height of a hex in board pixels
-	 * @param terrainNameMap mapping of terrain names to terrain objects
-	 */
-	public Map(int width, int height, int xOffset, int yOffset, double hexHeight, HashMap<String, Terrain> terrainNameMap){
-
-		this.width = width;
-		this.height = height;
-
-		//Set the hex geometry
-		this.hexHeight = hexHeight;
-		A1CenterY = hexHeight /2.0;
-		h = A1CenterY /cos(Math.toRadians(30.0)) * 1.00727476217123670956911024062675; // cludge for standard geo board
-		A1CenterX = h /2.0;
-		hexWidth = h + A1CenterX;
-
-		// get the terrain
-		setTerrain(terrainNameMap);
-
-		// create a VASL hex grid
-		ASLHexGrid aslHexGrid = new ASLHexGrid(hexHeight, false);
-		Hex[][] tempHexGrid = new Hex[width + 2][height + 2];
-
-		// default values are zero, so level zero and open ground
-		gridWidth = (int) (((double) width - 1.0) * hexWidth);
-		gridHeight = (int) ((double) height * hexHeight);
-
-		// use the image size if possible
-
-		terrainGrid = new char[gridWidth][gridHeight];
-		elevationGrid = new byte[gridWidth][gridHeight];
-
-		// create the hex grid
-		hexGrid = new Hex[this.width][];
-		for (int col = 0; col < this.width; col++) {
-
-			hexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
-			for (int row = 0; row < this.height + (col % 2); row++) {
-				hexGrid[col][row] = new Hex(col, row, this, 0, terrainList[0]);
-			}
-		}
-
-		// create the hex locations
-		for (int col = 0; col < this.width; col++) {
-			for (int row = 0; row < this.height + (col % 2); row++) {
-				hexGrid[col][row].resetHexsideLocationNames();
-			}
-		}
-	}
-
 	/**
 	 * Constructs a new <code>Map</code> object using custom hex size and explicite image size.
 	 * A standard geomorphic map board is 10 x 33 hexes.
 	 * @param width the width of the map in hexes
 	 * @param height the height of the map in hexes
 	 * @param xOffset x-offset of the A1 hex center dot
+     * @param yOffset y-offset of the A1 hex center dot
 	 * @param imageWidth width of the board image in pixels
 	 * @param imageHeight height of the board image in pixels
-	 * @param yOffset y-offset of the A1 hex center dot
-	 * @param hexHeight the height of a hex in board pixels
 	 * @param terrainNameMap mapping of terrain names to terrain objects
 	 */
-	public Map(int width, int height, int xOffset, int yOffset, int imageWidth, int imageHeight, double hexHeight, HashMap<String, Terrain> terrainNameMap){
+	public Map(int width, int height, double xOffset, double yOffset, int imageWidth, int imageHeight, HashMap<String, Terrain> terrainNameMap){
 
 		this.width = width;
 		this.height = height;
 
 		//Set the hex geometry
-		this.hexHeight = hexHeight;
-		A1CenterY = hexHeight /2.0;
-		h = A1CenterY /cos(Math.toRadians(30.0)) * 1.00727476217123670956911024062675; // cludge for standard geo board
-		A1CenterX = h /2.0;
-		hexWidth = h + A1CenterX;
+		hexHeight = (double) imageHeight/ (double) height;
+        hexWidth = (double) imageWidth/((double) width - 1);
+        A1CenterX = xOffset;
+		A1CenterY = yOffset;
 
-		// get the terrain
+		// initialize
 		setTerrain(terrainNameMap);
-
-		// default values are zero, so level zero and open ground
 		gridWidth = imageWidth;
 		gridHeight = imageHeight;
 		terrainGrid = new char[gridWidth][gridHeight];
@@ -168,11 +108,11 @@ public class Map  {
 
 			hexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
 			for (int row = 0; row < this.height + (col % 2); row++) {
-				hexGrid[col][row] = new Hex(col, row, this, 0, terrainList[0]);
+				hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row), getGEOHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
 			}
 		}
 
-		// create the hex locations
+		// reset the hex locations to map grid
 		for (int col = 0; col < this.width; col++) {
 			for (int row = 0; row < this.height + (col % 2); row++) {
 				hexGrid[col][row].resetHexsideLocationNames();
@@ -180,26 +120,53 @@ public class Map  {
 		}
 	}
 
+    /**
+     * Finds the center point of a hex in the hexgrid of a geometric board
+     * @param col the hex column (0 = the first column in the grid)
+     * @param row the hex row (0 = the first row in the column)
+     * @return the hex center point
+     */
+    private Point2D.Double getGEOHexCenterPoint(int col, int row) {
+
+        // odd columns will be offset half a hex toward the top of the map
+        return new Point2D.Double(
+                A1CenterX + hexWidth * (double) col,
+                A1CenterY + hexHeight * (double) row - hexHeight/2.0 * (double) (col%2)
+        );
+    }
+
+    /**
+     * Find the hex name for a hex on a board
+     * By convension the columns are A-Z, then AA-ZZ, then AAA-ZZZ for max of 26*3 columns
+     * Row number can be any integer
+     * @param col the hex column (0 = the first column in the grid)
+     * @param row the hex row (0 = the first row in the column)
+     * @return the hex name. If invalid the empty string is returned
+     */
+    private String getGEOHexName(int col, int row) {
+
+        char c = (char) ((int) 'A' + col%26);
+        String name = "" + c;
+
+        for (int x = 0; x < (col + 1)/26; x++) {
+            name += c;
+        }
+
+        // add row as suffix - even cols (e.g. A = 0) will start with 1; odd cols will start with zero
+        return name += (row + (col%2 == 0 ? 1 : 0));
+    }
+
 	/**
-     * Constructs a new <code>Map</code> object using the default hex size.
-	 * A standard geomorphic map board is 10 x 33 hexes.
+     * Constructs a new <code>Map</code> as a standard geomorphic map board (10 x 33 hexes)
      * @param w the width of the map in hexes
      * @param h the height of the map in hexes
      */
     public Map(int w, int h, HashMap<String, Terrain> terrainNameMap) {
 
-		this(w, h, 0, 0, DEFAULT_HEX_HEIGHT, terrainNameMap);
+//		this(w, h, 0, 0, GEO_HEX_HEIGHT, terrainNameMap);
+        this(w, h, GEO_A1_Center.x, GEO_A1_Center.y, (int) GEO_IMAGE_WIDTH, (int) GEO_IMAGE_HEIGHT, terrainNameMap);
 
     }
-
-
-	/**
-	 * @return the hex height
-	 */
-	public double getHexHeight() {
-		return hexHeight;
-	}
-
 
 	/**
 	 * @return the hex width
@@ -207,30 +174,6 @@ public class Map  {
 	public double getHexWidth() {
 		return hexWidth;
 	}
-
-
-	/**
-	 * @return the y component of the hex A1 center dot
-	 */
-	public double getA1CenterY() {
-		return A1CenterY;
-	}
-
-
-	/**
-	 * @return the distance from the hex center dot to the vertex
-	 */
-	public double getH() {
-		return h;
-	}
-
-	/**
-	 * @return the x component of the hex A1 center dot
-	 */
-	public double getA1CenterX() {
-		return A1CenterX;
-	}
-
 
 	/**
      * Returns the <code>Terrain</code> type code for the pixel at row, col of
@@ -379,7 +322,7 @@ public class Map  {
 		for (int col = 0; col < hexGrid.length; col++) {
             for (int row = 0; row < hexGrid[col].length; row++) {
 
-				final Hex hex = getHex(col, row);
+				Hex hex = getHex(col, row);
 
 				if (hex.getName().equalsIgnoreCase(name)) {
 
@@ -408,8 +351,7 @@ public class Map  {
     public boolean hexOnMap(int col, int row) {
 
         try {
-            @SuppressWarnings("unused")
-            final Hex temp = hexGrid[col][row];
+            @SuppressWarnings("unused") Hex temp = hexGrid[col][row];
             return true;
         }
         catch (Exception e) {
@@ -432,7 +374,7 @@ public class Map  {
 
         int col = h.getColumnNumber();
         int row = h.getRowNumber();
-        final boolean colIsEven = (col % 2 == 0);
+        boolean colIsEven = (col % 2 == 0);
 
 		//noinspection SwitchStatementWithoutDefaultBranch
 		switch (hexside) {
@@ -481,9 +423,9 @@ public class Map  {
 			return null;
 		}
 
-		final int z = (int) ((double) x / (hexWidth / 3.0));
-		final int row;
-		final int col;
+		int z = (int) ((double) x / (hexWidth / 3.0));
+		int row;
+		int col;
 
 		// in "grey area" between columns?
 		if ((z - 1) % 3 == 0) {
@@ -519,11 +461,16 @@ public class Map  {
 		}
 		else {
 
-			col = (int) Math.ceil((double) z / 3.0);
-			row = (int) ((col % 2 == 0) ? (double) y / hexHeight
-				: ((double) y + hexHeight / 2.0) / hexHeight);
-			return hexGrid[col][row];
-		}
+            try {
+                col = (int) Math.ceil((double) z / 3.0);
+                row = (int) ((col % 2 == 0) ? (double) y / hexHeight
+                    : ((double) y + hexHeight / 2.0) / hexHeight);
+                return hexGrid[col][row];
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
     }
 
     /**
@@ -534,8 +481,8 @@ public class Map  {
      */
     public static int range(Hex source, Hex target) {
 
-        final int dirX = target.getColumnNumber() > source.getColumnNumber() ? 1 : -1;
-        final int dirY = target.getRowNumber() > source.getRowNumber() ? 1 : -1;
+        int dirX = target.getColumnNumber() > source.getColumnNumber() ? 1 : -1;
+        int dirY = target.getRowNumber() > source.getRowNumber() ? 1 : -1;
 
         int rng = 0;
 
@@ -591,7 +538,7 @@ public class Map  {
             return;
         }
 
-        final LOSStatus status = new LOSStatus(source, useAuxSourceLOSPoint, target, useAuxTargetLOSPoint, result, VASLGameInterface);
+        LOSStatus status = new LOSStatus(source, useAuxSourceLOSPoint, target, useAuxTargetLOSPoint, result, VASLGameInterface);
 
         if(checkSameHexSmokeRule(status, result)) {
             return;
@@ -606,7 +553,7 @@ public class Map  {
 
             // set row variables
             status.currentRow = (int) status.enter;
-            final int numRows = Math.abs((int) status.exit - (int) status.enter) + 1;
+            int numRows = Math.abs((int) status.exit - (int) status.enter) + 1;
 
             // step through the current row
             for (int row = 0; row < numRows; row++) {
@@ -752,7 +699,7 @@ public class Map  {
      */
     protected AdjacentHexes getAdjacentHexes(LOSStatus status, Hex rangeHex) {
 
-        final Hex sourceHex = status.source.getHex();
+        Hex sourceHex = status.source.getHex();
 
         // ensure we're truly on a hexside
         if(status.sourceHex.getExtendedHexBorder().contains(status.currentCol, status.currentRow) ||
@@ -762,7 +709,7 @@ public class Map  {
         }
 
         for(int x = 0; x < 6; x++){
-            final Hex temp = getAdjacentHex(rangeHex, x);
+            Hex temp = getAdjacentHex(rangeHex, x);
             if(temp != null && temp.getExtendedHexBorder().contains(status.currentCol, status.currentRow)) {
 
                 // ignore any pairs that include source/target hex
@@ -888,9 +835,8 @@ public class Map  {
                             (targetElevation < sourceElevation ||
                                     (targetElevation - sourceElevation > 0 &&
                                             targetElevation - sourceElevation < range) ||
-                                    (source.isDepressionTerrain() &&
-                                            target.isDepressionTerrain() &&
-                                            targetElevation == sourceElevation));
+                                    (target.isDepressionTerrain() &&
+                                     targetElevation == sourceElevation));
 
             // Entering depression restriction placed when looking into a depression
             // reverse of above
@@ -911,11 +857,11 @@ public class Map  {
             // LOS slope variables
             LOSisHorizontal = (sourceY == targetY);
             result.setLOSisHorizontal(LOSisHorizontal);
-            final double doubleSourceX = useAuxSourceLOSPoint ? source.getAuxLOSPoint().getX() : source.getLOSPoint().getX();
-			final double doubleSourceY = useAuxSourceLOSPoint ? source.getAuxLOSPoint().getY() : source.getLOSPoint().getY();
-			final double doubleTargetX = useAuxTargetLOSPoint ? target.getAuxLOSPoint().getX() : target.getLOSPoint().getX();
-			final double doubleTargetY = useAuxTargetLOSPoint ? target.getAuxLOSPoint().getY() : target.getLOSPoint().getY();
-			final double slope = Math.abs((doubleSourceY - doubleTargetY) / (doubleSourceX - doubleTargetX));
+            double doubleSourceX = useAuxSourceLOSPoint ? source.getAuxLOSPoint().getX() : source.getLOSPoint().getX();
+			double doubleSourceY = useAuxSourceLOSPoint ? source.getAuxLOSPoint().getY() : source.getLOSPoint().getY();
+			double doubleTargetX = useAuxTargetLOSPoint ? target.getAuxLOSPoint().getX() : target.getLOSPoint().getX();
+			double doubleTargetY = useAuxTargetLOSPoint ? target.getAuxLOSPoint().getY() : target.getLOSPoint().getY();
+			double slope = Math.abs((doubleSourceY - doubleTargetY) / (doubleSourceX - doubleTargetX));
 
             // set the tolerance to compensate for "fuzzy" geometry of VASL boards
             //TODO - this is a cludge and fails at very long ranges - replace with algorithm
@@ -1154,7 +1100,7 @@ public class Map  {
         if (status.source.getHex().equals(status.target.getHex())) {
             if(status.VASLGameInterface != null) {
 
-                final HashSet<Smoke> hexSmoke = status.VASLGameInterface.getSmoke(status.source.getHex());
+                HashSet<Smoke> hexSmoke = status.VASLGameInterface.getSmoke(status.source.getHex());
                 if (hexSmoke != null && !hexSmoke.isEmpty()) {
 
                     int hindrance = 0;
@@ -1203,9 +1149,9 @@ public class Map  {
         // check for smoke in source hex here
         if(status.VASLGameInterface != null) {
 
-            final Hex hex = status.currentHex;
+            Hex hex = status.currentHex;
 
-            final HashSet<Smoke> hexSmoke = status.VASLGameInterface.getSmoke(hex);
+            HashSet<Smoke> hexSmoke = status.VASLGameInterface.getSmoke(hex);
             if (hexSmoke != null && !hexSmoke.isEmpty()) {
 
                 int hindrance = 0;
@@ -1291,9 +1237,9 @@ public class Map  {
         // check for vehicles in source hex here
         if(status.VASLGameInterface != null) {
 
-            final Hex hex = status.currentHex;
+            Hex hex = status.currentHex;
 
-            final HashSet<Vehicle> vehicles = status.VASLGameInterface.getVehicles(hex);
+            HashSet<Vehicle> vehicles = status.VASLGameInterface.getVehicles(hex);
             if (vehicles != null && !vehicles.isEmpty()) {
 
                 int hindrance = 0;
@@ -1307,14 +1253,12 @@ public class Map  {
                            status.source.getAbsoluteHeight() == v.getLocation().getAbsoluteHeight()){
 
                             // if vehicle in bypass the LOS must cross the bypassed hexside
-                            if(v.getLocation().isCenterLocation() ||
-                                    (!v.getLocation().isCenterLocation() &&
-										v.getLocation().equals(hex.getNearestLocation(status.currentCol, status.currentRow)))) {
+                            if(v.getLocation().isCenterLocation() || v.getLocation().equals(hex.getNearestLocation(status.currentCol, status.currentRow))) {
 
 
                                 // both source and target must have an LOS to the vehicle
-                                final LOSResult result1 = new LOSResult();
-                                final LOSResult result2 = new LOSResult();
+                                LOSResult result1 = new LOSResult();
+                                LOSResult result2 = new LOSResult();
                                 LOS(status.source, status.useAuxSourceLOSPoint, v.getLocation(), false, result1, status.VASLGameInterface);
                                 LOS(status.target, status.useAuxTargetLOSPoint, v.getLocation(), false, result2, status.VASLGameInterface);
                                 if(!result1.isBlocked() && !result2.isBlocked())
@@ -1347,7 +1291,7 @@ public class Map  {
         // check for OBA in current hex
         if(status.VASLGameInterface != null) {
 
-            final HashSet<OBA> obaList = status.VASLGameInterface.getOBA();
+            HashSet<OBA> obaList = status.VASLGameInterface.getOBA();
             if (obaList != null && !obaList.isEmpty()) {
 
                 for (OBA oba: obaList) {
@@ -1540,7 +1484,7 @@ public class Map  {
             else {
 
                 // should we ignore the hexside terrain?
-                final boolean ignore =
+                boolean ignore =
                         isIgnorableHexsideTerrain(status.sourceHex, status.currentHex.getNearestLocation(status.currentCol, status.currentRow), status.result.getSourceExitHexspine()) ||
                         isIgnorableHexsideTerrain(status.targetHex, status.currentHex.getNearestLocation(status.currentCol, status.currentRow), status.result.getTargetEnterHexspine());
 
@@ -1687,6 +1631,7 @@ public class Map  {
         if (status.groundLevel + status.currentTerrainHgt == Math.max(status.sourceElevation, status.targetElevation) &&
             status.groundLevel + status.currentTerrainHgt > Math.min(status.sourceElevation, status.targetElevation) &&
                 // are exiting gully restrictions satisfied?
+                //TODO - this (and map flip) is the only place the hex extended border is used - is it really needed?
                 !(status.ignoreGroundLevelHex != null &&
                   status.ignoreGroundLevelHex.containsExtended(status.currentCol, status.currentRow)) &&
                 // are entering gully restrictions satisfied?
@@ -1881,7 +1826,7 @@ public class Map  {
         for (int x = 0; x < 6; x++) {
 
             // get the adjacent hex for this hexside
-            final Hex h2 = getAdjacentHex(h, x);
+            Hex h2 = getAdjacentHex(h, x);
             if (h2 != null) {
 
                 // adjacent to this hexside?
@@ -1906,7 +1851,7 @@ public class Map  {
         for (int x = 0; x < 6; x++) {
 
             // get the adjacent hex for this hexside
-            final Hex h2 = getAdjacentHex(h, x);
+            Hex h2 = getAdjacentHex(h, x);
             if (h2 != null) {
 
                 // hexspine location?
@@ -1933,7 +1878,7 @@ public class Map  {
         // some useful variables
         Hex locationHex = l.getHex();
         int locationHexside = locationHex.getLocationHexside(l);
-        final Terrain locationHexsideTerrain = locationHex.getHexsideTerrain(locationHexside);
+        Terrain locationHexsideTerrain = locationHex.getHexsideTerrain(locationHexside);
 
         // too far away?
         if (range(h, locationHex) > 2) {
@@ -1964,7 +1909,7 @@ public class Map  {
             if (range(h, locationHex) == 2) {
 
                 // find the hex across the location hexside
-                final Hex oppositeHex = getAdjacentHex(locationHex, locationHexside);
+                Hex oppositeHex = getAdjacentHex(locationHex, locationHexside);
 
                 if (oppositeHex == null) {
                     return true;
@@ -1993,20 +1938,20 @@ public class Map  {
             //
             //	where x is the adjacent hex, y is the hexside
 
-            final int hexside = LOSHexspine == 0 ? 5 : LOSHexspine - 1;
-            final int hexspine = LOSHexspine < 2 ? LOSHexspine + 4 : LOSHexspine - 2;
+            int hexside = LOSHexspine == 0 ? 5 : LOSHexspine - 1;
+            int hexspine = LOSHexspine < 2 ? LOSHexspine + 4 : LOSHexspine - 2;
 
-            final Hex hex1 = getAdjacentHex(h, hexside);
-            final Hex hex2 = getAdjacentHex(h, LOSHexspine);
+            Hex hex1 = getAdjacentHex(h, hexside);
+            Hex hex2 = getAdjacentHex(h, LOSHexspine);
 
             if(hex1 == null || hex2 == null) return false;
 
-            final Location l2 = hex1.getHexsideLocation(LOSHexspine);
-            final Location l3 = hex2.getHexsideLocation(hexside);
+            Location l2 = hex1.getHexsideLocation(LOSHexspine);
+            Location l3 = hex2.getHexsideLocation(hexside);
 
-            final Terrain t1 = hex2.getHexsideTerrain(hexspine);
-            final Terrain t2 = hex1.getHexsideTerrain(LOSHexspine);
-            final Terrain t3 = hex2.getHexsideTerrain(hexside);
+            Terrain t1 = hex2.getHexsideTerrain(hexspine);
+            Terrain t2 = hex1.getHexsideTerrain(LOSHexspine);
+            Terrain t3 = hex2.getHexsideTerrain(hexside);
 
            return t1 != null && (l.equals(l2) || l.equals(l3)) && (t2 == null || t3 == null);
        }
@@ -2020,8 +1965,8 @@ public class Map  {
      */
     protected boolean nearestHexsideIsCliff(int x, int y) {
 
-        final Hex hex = gridToHex(x, y);
-        final Location l = gridToHex(x, y).getNearestLocation(x, y);
+        Hex hex = gridToHex(x, y);
+        Location l = gridToHex(x, y).getNearestLocation(x, y);
 
         return !l.isCenterLocation() && hex.hasCliff(hex.getLocationHexside(l));
     }
@@ -2143,11 +2088,11 @@ public class Map  {
         for (int x = 0; x < (gridWidth+1) / 2; x++) {
             for (int y = 0; y < gridHeight; y++) {
 
-				final char terrain = terrainGrid[x][y];
+				char terrain = terrainGrid[x][y];
 				terrainGrid[x][y] = terrainGrid[gridWidth - x - 1][gridHeight - y - 1];
                 terrainGrid[gridWidth - x - 1][gridHeight - y - 1] = terrain;
 
-				final byte elevation = elevationGrid[x][y];
+				byte elevation = elevationGrid[x][y];
 				elevationGrid[x][y] = elevationGrid[gridWidth - x - 1][gridHeight - y - 1];
                 elevationGrid[gridWidth - x - 1][gridHeight - y - 1] = elevation;
             }
@@ -2158,8 +2103,8 @@ public class Map  {
             for (int y = 0; y < (x == hexGrid.length / 2 ? (hexGrid[x].length - 1) / 2 + 1 : hexGrid[x].length); y++) {
 
                 // get the next two hexes
-				final Hex h1 = hexGrid[x][y];
-				final Hex h2 = hexGrid[width - x - 1][hexGrid[width - x - 1].length - y - 1];
+				Hex h1 = hexGrid[x][y];
+				Hex h2 = hexGrid[width - x - 1][hexGrid[width - x - 1].length - y - 1];
 
 				// swap the hexes in the grid
                 hexGrid[x][y] = h2;
@@ -2202,8 +2147,8 @@ public class Map  {
     public boolean insertMap(Map map, Hex upperLeft) {
 
         // determine where the upper-left point of the inserted map will be
-        final int left = upperLeft.getCenterLocation().getLOSPoint().x;
-        final int upper = upperLeft.getCenterLocation().getLOSPoint().y - (int) hexHeight / 2;
+        int left = upperLeft.getCenterLocation().getLOSPoint().x;
+        int upper = upperLeft.getCenterLocation().getLOSPoint().y - (int) hexHeight / 2;
 
         // ensure the map will fit
         if (!onMap(left, upper)) {
@@ -2227,8 +2172,8 @@ public class Map  {
         }
 
         // copy the hex grid
-        final int hexRow = upperLeft.getRowNumber();
-        final int hexCol = upperLeft.getColumnNumber();
+        int hexRow = upperLeft.getRowNumber();
+        int hexCol = upperLeft.getColumnNumber();
         for (int x = 0; x < map.hexGrid.length; x++) {
             for (int y = 0; y < map.hexGrid[x].length; y++) {
 
@@ -2249,17 +2194,17 @@ public class Map  {
      */
     public Map crop(Point upperLeft, Point lowerRight){
 
-        final int localGridWidth = lowerRight.x - upperLeft.x;
-        final int localGridHeight = lowerRight.y - upperLeft.y;
+        int localGridWidth = lowerRight.x - upperLeft.x;
+        int localGridHeight = lowerRight.y - upperLeft.y;
         int localHexWidth = (int) Math.round((double)localGridWidth / getHexWidth()) + 1;
-        final int localHexHeight = (int) Math.round((double)localGridHeight / hexHeight);
+        int localHexHeight = (int) Math.round((double)localGridHeight / hexHeight);
 
         // the hex width must be odd - if not extend to include the next half hex
         if (localHexWidth%2 != 1) {
             localHexWidth++;
         }
 
-        final Map newMap = new Map(localHexWidth, localHexHeight, terrainNameMap);
+        Map newMap = new Map(localHexWidth, localHexHeight, terrainNameMap);
 
         // copy the map grid
         for(int x = 0; x < newMap.gridWidth; x++) {
@@ -2271,7 +2216,7 @@ public class Map  {
         }
 
         //copy the hex grid
-        final Hex upperLeftHex = gridToHex(upperLeft.x, upperLeft.y);
+        Hex upperLeftHex = gridToHex(upperLeft.x, upperLeft.y);
         for (int x = 0; x < newMap.hexGrid.length; x++) {
             for (int y = 0; y < newMap.hexGrid[x].length; y++) {
 

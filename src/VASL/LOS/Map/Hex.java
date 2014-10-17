@@ -48,16 +48,17 @@ public class Hex {
 	private Map map;
 
 	// geometric variables
-	private	Point   center;
-	private	Polygon hexBorder 		= new Polygon();
-	private	Polygon extendedHexBorder	= new Polygon();
+	private	Point2D.Double   center;
+	private	Polygon hexBorder 		= new Polygon(); // the hex border
+	private	Polygon extendedHexBorder	= new Polygon(); // one pixel larger than the hex border
 
 	// location variables (center and each hexside)
+    // the point for each hexside location will be the midpoint of the hexside offset one pixel toward the center of the hex
 	private	Location[] hexsideLocations = new Location[6];
 	private	Location centerLocation;
 
 	// terrain variables
-	private Terrain[] hexsideTerrain  = new Terrain[6]; // hexside has wall, hedge, etc.
+	private Terrain[] hexsideTerrain  = new Terrain[6]; // hexside terrain is wall, hedge, etc.
 	private	boolean[] hexsideHasCliff  = new boolean[6];
 
 	// other stuff
@@ -65,256 +66,250 @@ public class Hex {
 	private	Bridge	bridge;
     private	boolean stairway;
 
-	// constructors
-	public Hex(int col, int row, Map map, int baseHgt, Terrain terr) {
-
-		baseHeight   = baseHgt;
-		columnNumber = col;
-		rowNumber	= row;
-		this.map	= map;
-		initHex(terr, map);
-	}
-
-	public Hex(int col, int row, String name, Point centerDot, double hexHeight, Map map, int baseHeight, Terrain terrain) {
+    /**
+     * Create a new hex
+     * @param col the hex column - the first is 0
+     * @param row the hex row - first is 0
+     * @param name hex name
+     * @param centerDot location of hex center dot on map
+     * @param hexHeight hex height
+     * @param hexWidth hex width
+     * @param map the map
+     * @param baseHeight base height/elevation
+     * @param terrain default terrain used for all locations
+     */
+    public Hex(int col, int row, String name, Point2D.Double centerDot, double hexHeight, double hexWidth, Map map, int baseHeight, Terrain terrain) {
 
 		this.baseHeight = baseHeight;
 		columnNumber = col;
 		rowNumber	= row;
 		this.map	= map;
-		initCustomHex(name, centerDot, hexHeight, terrain, map);
+        this.name = name;
+        center = fixMapEdgePoints(centerDot.getX(), centerDot.getY());
+		initHexNew(centerDot, hexHeight, hexWidth, terrain);
 
 	}
-
 
 	/**
 	 * Initialized the hex using custom geometry
 	 */
-	private void initCustomHex(String name, Point centerDot, double hexHeight, Terrain terr, Map map){
+	private void initHexNew(Point2D.Double centerDot, double hexHeight, double hexWidth, Terrain terr){
 
-		final double x = centerDot.getX();
+        final double x = centerDot.getX();
 		final double y = centerDot.getY();
 
-		final double h = (hexHeight/2.0) /cos(Math.toRadians(30.0)) * 1.00727476217123670956911024062675;
+        // create the hex geometry. Hexes are assumed to be oriented with the top and bottom hexsides
+        // parallel to the map top/bottom
 
-		final double[] vertexPointsX  =	{-h/2.0, h/2.0, h/2.0 + x, h/2.0, -h/2.0, -h/2.0 - x};
-		final double[] vertexPointsY  =	{0.0,    0.0,   y,     2.0*y, 2.0*y,	y};
+        // the length of the a hexside equals the distance from the center point to the vertexes
+        // final double hexside = hexHeight/(2.0*cos(Math.toRadians(30.0)));
+        final double hexside = hexWidth*2.0/3.0;
+        final double verticalOffset = hexHeight/2.0;
 
-		final double[] extendedVertexPointsX  =	{-h/2.0 - 1.0, h/2.0 + 1.0, h/2.0+x+1, h/2.0+1.0, -h/2.0-1.0, -h/2.0-x-1};
-		final double[] extendedVertexPointsY  =	{-1.0,   -1.0,    y,       2.0*y+1.0, 2.0*y+1.0,  y};
+        // [0] is the left-most vertex on the top hexside and the other points are clockwise from there
+        Point2D.Double[] vertexPoints = new Point2D.Double[6];
+        vertexPoints[0] = fixMapEdgePoints(-hexside / 2.0 + x, -verticalOffset + y);
+        vertexPoints[1] = fixMapEdgePoints(hexside / 2.0 + x, -verticalOffset + y);
+        vertexPoints[2] = fixMapEdgePoints(hexside + x, y);
+        vertexPoints[3] = fixMapEdgePoints(hexside / 2.0 + x, verticalOffset + y);
+        vertexPoints[4] = fixMapEdgePoints(-hexside / 2.0 + x, verticalOffset + y);
+        vertexPoints[5] = fixMapEdgePoints(-hexside + x, y);
+        for (int i = 0; i < 6; i++) {
 
-		final double[] hexsidePointsX  =	{0.0, (h+x)/2.0-1.0, (h+x)/2.0-1.0, 0.0,     -(h+x)/2.0, -(h+x)/2.0};
-		final double[] hexsidePointsY  =	{1.0, y/2.0+1.0,      y/2.0+y-1.0,  2.0*y-1.0, y/2.0+y-1.0, y/2.0+1.0};
+            // create the hex borders - extended being one pixel larger
+            hexBorder.addPoint((int) Math.round(vertexPoints[i].x), (int) Math.round(vertexPoints[i].y));
+            switch (i) {
+                case 0:
+                    extendedHexBorder.addPoint((int) vertexPoints[i].x - 1, (int) vertexPoints[i].y - 1);
+                    break;
+                case 1:
+                    extendedHexBorder.addPoint((int) vertexPoints[i].x - 1, (int) vertexPoints[i].y + 1);
+                    break;
+                case 2:
+                    extendedHexBorder.addPoint((int) vertexPoints[i].x + 1, (int) vertexPoints[i].y);
+                    break;
+                case 3:
+                    extendedHexBorder.addPoint((int) vertexPoints[i].x + 1, (int) vertexPoints[i].y + 1);
+                    break;
+                case 4:
+                    extendedHexBorder.addPoint((int) vertexPoints[i].x - 1, (int) vertexPoints[i].y + 1);
+                    break;
+                case 5:
+                    extendedHexBorder.addPoint((int) vertexPoints[i].x - 1, (int) vertexPoints[i].y);
+                    break;
+            }
 
+        }
+
+        // the hexside point is the hexside center point translated one pixel toward the hex center point
+        // [0] is the top hexside and the other points are clock-wise from there
+        Point2D.Double[] hexsidePoints = new Point2D.Double[6];
+        final double horizontalOffset = cos(Math.toRadians(30.0)) * verticalOffset;
+
+        hexsidePoints[0] = fixMapEdgePoints((int) x,                           (int) (-verticalOffset + y + 1.0));
+        hexsidePoints[1] = fixMapEdgePoints((int) (horizontalOffset + x - 1),  (int) (-verticalOffset/2.0 + y + 1.0));
+        hexsidePoints[2] = fixMapEdgePoints((int) (horizontalOffset + x - 1),  (int) (verticalOffset/2.0 + y - 1.0));
+        hexsidePoints[3] = fixMapEdgePoints((int) x,                           (int) (verticalOffset + y - 1.0));
+        hexsidePoints[4] = fixMapEdgePoints((int) (-horizontalOffset + x + 1),  (int) (verticalOffset/2.0 + y - 1.0));
+        hexsidePoints[5] = fixMapEdgePoints((int) (-horizontalOffset + x + 1),  (int) (-verticalOffset/2.0 + y + 1.0));
+
+        setHexFlags();
+
+        createLocations(terr, vertexPoints, hexsidePoints);
 	}
 
-	// initialize the hex
-	private void initHex(Terrain terr, Map map){
+    /**
+     * Create the the set of "empty" hex locations - i.e they will not reflect the grid terrain
+     * @param terr a default terrain used for all locations
+     * @param vertexPoints the hex vertex points
+     * @param hexsidePoints the hex hexside points
+     */
+    private void createLocations(Terrain terr, Point2D.Double[] vertexPoints, Point2D.Double[] hexsidePoints) {
 
-		final double x = map.getA1CenterX();
-		final double y = map.getA1CenterY();
-		final double h = map.getH();
-		final double width = map.getHexWidth();
-
-		boolean lastCol	= false;
-		boolean lastRow	= false;
-
-		final double[] vertexPointsX  =	{-h/2.0, h/2.0, h/2.0 + x, h/2.0, -h/2.0, -h/2.0 - x};
-		final double[] vertexPointsY  =	{0.0,    0.0,   y,     2.0*y, 2.0*y,	y};
-
-		final double[] extendedVertexPointsX  =	{-h/2.0 - 1.0, h/2.0 + 1.0, h/2.0+x+1, h/2.0+1.0, -h/2.0-1.0, -h/2.0-x-1};
-		final double[] extendedVertexPointsY  =	{-1.0,   -1.0,    y,       2.0*y+1.0, 2.0*y+1.0,  y};
-
-		final double[] hexsidePointsX  =	{0.0, (h+x)/2.0-1.0, (h+x)/2.0-1.0, 0.0,     -(h+x)/2.0, -(h+x)/2.0};
-		final double[] hexsidePointsY  =	{1.0, y/2.0+1.0,      y/2.0+y-1.0,  2.0*y-1.0, y/2.0+y-1.0, y/2.0+1.0};
-
-		// set name
-		final int  rowName = rowNumber + (columnNumber%2 == 0 ? 1 : 0);
-		if (columnNumber < 26) {
-
-			final char[] chars = {' '};
-
-			// geomorphic board numbering
-			chars[0]	 =  (char) ((int) 'A' + columnNumber%26);
-			name		 =  new String(chars);
-			name		 += rowName;
-		}
-		else {
-			final char[] chars = {' ', ' '};
-
-			// geomorphic board numbering
-			chars[0] =  (char) ((int) 'A' + (columnNumber)%26);
-			chars[1] =  chars[0];
-			name		 =  new String(chars);
-			name		 += rowName;
-		}
-
-		// set "on map" flags
-		// first column?
-		if (columnNumber == 0) {
-
-			southWestOnMap  = false;
-			northWestOnMap  = false;
-		}
-
-		// last column?
-		if (columnNumber + 1 == map.getWidth()) {
-
-			southEastOnMap  = false;
-			northEastOnMap  = false;
-			lastCol = true;
-		}
-
-		// first hex in odd column?
-		if ((columnNumber%2 == 1) &&  (rowNumber == 0)){
-
-			northOnMap  = false;
-			northEastOnMap  = false;
-			northWestOnMap  = false;
-		}
-
-		// last hex in odd column?
-		if ((columnNumber%2 == 1) &&  (rowNumber == map.getHeight())){
-
-			southOnMap  = false;
-			southEastOnMap  = false;
-			southWestOnMap  = false;
-			lastRow = true;
-		}
-
-		// set last row for even columns
-		else if ((columnNumber%2 == 0) &&  (rowNumber == map.getHeight() - 1)){
-
-			lastRow = true;
-		}
-
-		// translate and create the hex borders, center, hexsides (ensure they are on the map)
-		final double deltaX = ((double) columnNumber * width);
-		final double deltaY = ((double) rowNumber	* map.getHexHeight()) - (columnNumber%2 == 1 ? map.getHexHeight() /2.0 : 0.0);
-
-		final Point[] hexsidePoints		= new Point[6];
-		final Point[] vertexPoints 		= new Point[6];
-		final Point[] extendedVertexPoints	= new Point[6];
-
-		center 	= new Point((int)deltaX + (lastCol ? -1 : 0), (int)(deltaY + map.getHexHeight() /2.0) + (lastRow ? -1 : 0));
-		for (int i = 0; i < 6; i++){
-
-			// do we need to tweak points to keep them on the map?
-			final int verticalOffset;
-			if (lastRow && columnNumber%2 == 0 && (i == 3 || i == 4)) {
-
-				verticalOffset = -1;
-			}
-			else if (lastRow && columnNumber%2 == 1 && i != 0 && i != 1) {
-
-				verticalOffset = -1;
-			}
-			else {
-				verticalOffset = 0;
-			}
-
-			vertexPoints[i] = new Point(
-				(int)(vertexPointsX[i] + deltaX),
-				(int)(vertexPointsY[i] + deltaY + verticalOffset));
-			extendedVertexPoints[i]	= new Point(
-				(int)(extendedVertexPointsX[i] + deltaX),
-				(int)(extendedVertexPointsY[i] + deltaY + verticalOffset));
-			hexsidePoints[i] = new Point(
-				(int)(hexsidePointsX[i] + deltaX + (lastCol ? -1 : 0)),
-				(int)(hexsidePointsY[i] + deltaY));
-
-			hexBorder.addPoint((int)vertexPoints[i].getX(), (int)vertexPoints[i].getY());
-			extendedHexBorder.addPoint((int)extendedVertexPoints[i].getX(), (int)extendedVertexPoints[i].getY());
-		}
-
-		// create center and hexside locations
-		centerLocation = new Location(
-			name,
-			baseHeight,
-			center,
-			center,
-			center,
-			this,
+        // create center and hexside locations
+        centerLocation = new Location(
+                name,
+                baseHeight,
+                getHexCenter(),
+                getHexCenter(),
+                getHexCenter(),
+                this,
                 terr
-		);
+        );
 
-		hexsideLocations[0] = new Location(
-			name + ":North",
-			baseHeight,
-			new Point((int)vertexPoints[0].getX(),
-					  (int)vertexPoints[0].getY()),
-			new Point((int)vertexPoints[1].getX(),
-					  (int)vertexPoints[1].getY()),
-			new Point((int)hexsidePoints[0].getX(),
-					  (int)hexsidePoints[0].getY()),
-			this,
+        hexsideLocations[0] = new Location(
+                name + ":North",
+                baseHeight,
+                new Point((int)vertexPoints[0].getX(),
+                        (int)vertexPoints[0].getY()),
+                new Point((int)vertexPoints[1].getX(),
+                        (int)vertexPoints[1].getY()),
+                new Point((int)hexsidePoints[0].getX(),
+                        (int)hexsidePoints[0].getY()),
+                this,
                 terr
-		);
+        );
 
-		hexsideLocations[1] = new Location(
-			name +  ":NorthEast",
-			baseHeight,
-			new Point((int)vertexPoints[1].getX(),
-					  (int)vertexPoints[1].getY()),
-			new Point((int)vertexPoints[2].getX(),
-					  (int)vertexPoints[2].getY()),
-			new Point((int)hexsidePoints[1].getX(),
-					  (int)hexsidePoints[1].getY()),
-			this,
+        hexsideLocations[1] = new Location(
+                name +  ":NorthEast",
+                baseHeight,
+                new Point((int)vertexPoints[1].getX(),
+                        (int)vertexPoints[1].getY()),
+                new Point((int)vertexPoints[2].getX(),
+                        (int)vertexPoints[2].getY()),
+                new Point((int)hexsidePoints[1].getX(),
+                        (int)hexsidePoints[1].getY()),
+                this,
                 terr
-		);
+        );
 
-		hexsideLocations[2] = new Location(
-			name +  ":SouthEast",
-			baseHeight,
-			new Point((int)vertexPoints[2].getX(),
-					  (int)vertexPoints[2].getY()),
-			new Point((int)vertexPoints[3].getX(),
-					  (int)vertexPoints[3].getY()),
-			new Point((int)hexsidePoints[2].getX(),
-					  (int)hexsidePoints[2].getY()),
-			this,
+        hexsideLocations[2] = new Location(
+                name +  ":SouthEast",
+                baseHeight,
+                new Point((int)vertexPoints[2].getX(),
+                        (int)vertexPoints[2].getY()),
+                new Point((int)vertexPoints[3].getX(),
+                        (int)vertexPoints[3].getY()),
+                new Point((int)hexsidePoints[2].getX(),
+                        (int)hexsidePoints[2].getY()),
+                this,
                 terr
-		);
+        );
 
-		hexsideLocations[3] = new Location(
-			name +  ":South",
-			baseHeight,
-			new Point((int)vertexPoints[3].getX(),
-					  (int)vertexPoints[3].getY()),
-			new Point((int)vertexPoints[4].getX(),
-					  (int)vertexPoints[4].getY()),
-			new Point((int)hexsidePoints[3].getX(),
-					  (int)hexsidePoints[3].getY()),
-			this,
+        hexsideLocations[3] = new Location(
+                name +  ":South",
+                baseHeight,
+                new Point((int)vertexPoints[3].getX(),
+                        (int)vertexPoints[3].getY()),
+                new Point((int)vertexPoints[4].getX(),
+                        (int)vertexPoints[4].getY()),
+                new Point((int)hexsidePoints[3].getX(),
+                        (int)hexsidePoints[3].getY()),
+                this,
                 terr
-		);
+        );
 
-		hexsideLocations[4] = new Location(
-			name +  ":SouthWest",
-			baseHeight,
-			new Point((int)vertexPoints[4].getX(),
-					  (int)vertexPoints[4].getY()),
-			new Point((int)vertexPoints[5].getX(),
-					  (int)vertexPoints[5].getY()),
-			new Point((int)hexsidePoints[4].getX(),
-					  (int)hexsidePoints[4].getY()),
-			this,
+        hexsideLocations[4] = new Location(
+                name +  ":SouthWest",
+                baseHeight,
+                new Point((int)vertexPoints[4].getX(),
+                        (int)vertexPoints[4].getY()),
+                new Point((int)vertexPoints[5].getX(),
+                        (int)vertexPoints[5].getY()),
+                new Point((int)hexsidePoints[4].getX(),
+                        (int)hexsidePoints[4].getY()),
+                this,
                 terr
-		);
+        );
 
-		hexsideLocations[5] = new Location(
-			name +  ":NorthWest",
-			baseHeight,
-			new Point((int)vertexPoints[5].getX(),
-					  (int)vertexPoints[5].getY()),
-			new Point((int)vertexPoints[0].getX(),
-					  (int)vertexPoints[0].getY()),
-			new Point((int)hexsidePoints[5].getX(),
-					  (int)hexsidePoints[5].getY()),
-			this,
+        hexsideLocations[5] = new Location(
+                name +  ":NorthWest",
+                baseHeight,
+                new Point((int)vertexPoints[5].getX(),
+                        (int)vertexPoints[5].getY()),
+                new Point((int)vertexPoints[0].getX(),
+                        (int)vertexPoints[0].getY()),
+                new Point((int)hexsidePoints[5].getX(),
+                        (int)hexsidePoints[5].getY()),
+                this,
                 terr
-		);
-	}
+        );
+    }
+
+    /**
+     * @param x the x coordinate of the point
+     * @param y the y coordinate of the point
+     * @return a point that has been adjusted so it is on the map if x or y are off the map by a pixel or two
+     */
+    private Point2D.Double fixMapEdgePoints(double x, double y) {
+
+        double newX = x == -1.0 ? 0.0 : x;
+        double newY = y == -1.0 ? 0.0 : y;
+        newX = (int) newX == map.getGridWidth()  || (int) newX == (map.getGridWidth() + 1.0)  ? (map.getGridWidth()  - 1.0) : newX;
+        newY = (int) newY == map.getGridHeight() || (int) newY == (map.getGridHeight() + 1.0) ? (map.getGridHeight() - 1.0) : newY;
+
+        if((int) newY == 645 || (int) newY == 646) {
+            System.out.println("Point adjusted - x: " + x + " y: " + y);
+        }
+        return new Point2D.Double(newX, newY);
+    }
+
+    /**
+     * set the "on map?" flags
+     */
+    private void setHexFlags() {
+
+        // first column?
+        if (columnNumber == 0) {
+
+            southWestOnMap  = false;
+            northWestOnMap  = false;
+        }
+
+        // last column?
+        if (columnNumber + 1 == map.getWidth()) {
+
+            southEastOnMap  = false;
+            northEastOnMap  = false;
+        }
+
+        // first hex in odd column?
+        if ((columnNumber%2 == 1) &&  (rowNumber == 0)){
+
+            northOnMap  = false;
+            northEastOnMap  = false;
+            northWestOnMap  = false;
+        }
+
+        // last hex in odd column?
+        if ((columnNumber%2 == 1) &&  (rowNumber == map.getHeight())){
+
+            southOnMap  = false;
+            southEastOnMap  = false;
+            southWestOnMap  = false;
+        }
+
+    }
 
 	// used to update the hexside location once the map has been fully initialized
 	public void resetHexsideLocationNames(){
@@ -389,7 +384,7 @@ public class Hex {
 	public int	    getRowNumber()			{return rowNumber;}
 	public Polygon  getHexBorder()			{return hexBorder;}
 	public Polygon  getExtendedHexBorder()	{return extendedHexBorder;}
-	public Point	getHexCenter()			{return center;}
+	public Point	getHexCenter()			{return new Point((int) center.getX(), (int) center.getY());}
 	public int	    getBaseHeight()			{return baseHeight;}
 
 	public Location getCenterLocation() { return centerLocation;}
@@ -418,7 +413,6 @@ public class Hex {
 			default: return -1;
 		}
 	}
-
 
 	/**
 	 * @param l a location
@@ -464,13 +458,11 @@ public class Hex {
 		return -1;
 	}
 
-	@SuppressWarnings("unused")
-	public boolean isHexsideLocation(Location l) {
-
-		return !isCenterLocation(l);
-	}
-
-	public void setDepressionTerrain(Terrain terr) {
+    /**
+     * Set the depression terrain
+     * @param terr the depression terrain - pass null to remove depression terrain
+     */
+    public void setDepressionTerrain(Terrain terr) {
 
 		// change the depression terrain in the center location
 		centerLocation.setDepressionTerrain(terr);
@@ -506,6 +498,9 @@ public class Hex {
         // set the center location terrain
         final Terrain centerLocationTerrain = map.getGridTerrain((int) centerLocation.getLOSPoint().getX(), (int) centerLocation.getLOSPoint().getY());
 
+        if(centerLocationTerrain == null) {
+            System.out.println();
+        }
         centerLocation.setTerrain(centerLocationTerrain);
 
         // add building locations

@@ -76,10 +76,13 @@ public class LOSDataEditor {
         // create an empty geomorphic map
 		if(hexHeight != BoardMetadata.MISSING) {
 
-			map = new Map(boardArchive.getBoardWidth(), boardArchive.getBoardHeight(), 0, 0, hexHeight, sharedBoardMetadata.getTerrainTypes());
+			map = new Map(boardArchive.getBoardWidth(), boardArchive.getBoardHeight(), sharedBoardMetadata.getTerrainTypes());
 		}
 		else {
-			map = new Map(boardArchive.getBoardWidth(), boardArchive.getBoardHeight(), sharedBoardMetadata.getTerrainTypes());
+			map = new Map(
+                    boardArchive.getBoardWidth(),
+                    boardArchive.getBoardHeight(),
+                    sharedBoardMetadata.getTerrainTypes());
 		}
     }
 
@@ -393,8 +396,8 @@ public class LOSDataEditor {
 //        try {
 
             // step through each pixel
-            for (int i = Math.max(x, 0); i < Math.min(x + width + 1, map.getGridWidth()); i++) {
-                for (int j = Math.max(y, 0); j < Math.min(y + height + 1, map.getGridHeight()); j++) {
+            for (int i = Math.max(x, 0); i < Math.min(x + width + 1, map.getGridWidth() - 1); i++) {
+                for (int j = Math.max(y, 0); j < Math.min(y + height + 1, map.getGridHeight() - 1); j++) {
 
                     // should we use the depression terrain? (ignore switch for sunken roads,
                     // non open ground terrain)

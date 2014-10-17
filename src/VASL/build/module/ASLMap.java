@@ -228,9 +228,10 @@ public class ASLMap extends Map {
             mapBoundary.height -= edgeBuffer.height;
 
             // create the VASL map
+            //TODO - modify for alternate hex sizes
             VASLMap = new VASL.LOS.Map.Map(
-                    (int) Math.round(mapBoundary.width/ VASL.LOS.Map.Map.DEFAULT_HEX_WIDTH) + 1,
-                    (int) Math.round(mapBoundary.height / VASL.LOS.Map.Map.DEFAULT_HEX_HEIGHT),
+                    (int) Math.round(mapBoundary.width/ VASL.LOS.Map.Map.GEO_HEX_WIDTH) + 1,
+                    (int) Math.round(mapBoundary.height / VASL.LOS.Map.Map.GEO_HEX_HEIGHT),
                     sharedBoardMetadata.getTerrainTypes());
         }
         // clean up and fall back to legacy mode if an unexpected exception is thrown
