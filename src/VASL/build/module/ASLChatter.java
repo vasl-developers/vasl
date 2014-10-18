@@ -386,7 +386,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     {
         JButton l_btn = new JButton(strCaption);
         
-        l_btn.setMargin(new Insets(0, 0, 0, 0));       
+        l_btn.setMinimumSize(new Dimension(5, 30));
+        l_btn.setMargin(new Insets(0, 0, 0, -1));       
         
         try
         {
@@ -427,8 +428,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     private JButton CreateChatterDiceButton(String strImage, String strCaption, String strTooltip, KeyStroke keyStroke, final boolean bDice, final String strCat) 
     {
         JButton l_btn = new JButton(strCaption);
-        
-        l_btn.setMargin(new Insets(0, 0, 0, 0));       
+    
+        l_btn.setMinimumSize(new Dimension(5, 30));
+        l_btn.setMargin(new Insets(0, 0, 0, -1));       
         
         try
         {
@@ -1652,4 +1654,4 @@ class ColorChanger
         int[] rgbArr = getRGBArray(rgb);
         return Color.RGBtoHSB(rgbArr[RED], rgbArr[GREEN], rgbArr[BLUE], null);
     }
-}
+}        
