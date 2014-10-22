@@ -731,7 +731,6 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
 
         private JComboBox<String> bdName;
 
-
         protected Overlayer(Frame f) {
             super(f, true);
             setTitle("Overlays");
@@ -837,10 +836,11 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
         private JPanel options;
         private CardLayout card;
         private Vector basicOptions = new Vector();
-        private JTextField board;
         private TerrainMediator mediator = new TerrainMediator();
         private Vector boards;
         protected JButton apply, reset, done;
+
+        private JComboBox<String> bdName = new JComboBox<String>();
 
         protected TerrainEditor() {
             super((Frame) null, true);
@@ -865,12 +865,12 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
             Box box = Box.createHorizontalBox();
             JPanel p = new JPanel();
             p.setLayout(new GridLayout(4, 1));
+
             JPanel pp = new JPanel();
-            pp.setLayout(new GridLayout(1, 2));
+            pp.setLayout(new GridBagLayout());
             pp.add(new JLabel("Board "));
-            board = new JTextField(2);
-            board.setMaximumSize(new Dimension(board.getMaximumSize().width, board.getPreferredSize().height));
-            pp.add(board);
+            pp.add(bdName);
+
             p.add(pp);
             apply = new JButton("Apply");
             apply.addActionListener(this);
@@ -1020,7 +1020,6 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
         }
 
         public void reset() {
-            board.setText("");
             reset(basicOptions);
             reset(optionGroup);
         }
@@ -1032,7 +1031,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
                     String opText = optionText();
                     String bText = basicText();
                     try {
-                        String boardName = board.getText().trim();
+                        String boardName = (String) bdName.getSelectedItem();
                         int n = 0;
                         ASLBoardSlot slot;
                         while ((slot = (ASLBoardSlot) getSlot(n++)) != null) {
@@ -1046,7 +1045,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
                         if (opText.length() > 0) {
                             bText = bText.length() == 0 ? opText : bText + ", " + opText;
                         }
-                        warn((boardName.length() == 0 ? "All boards" : "Board " + board.getText()) + ": " + bText);
+                        warn((boardName.length() == 0 ? "All boards" : "Board " + bdName.getSelectedItem()) + ": " + bText);
                     } catch (BoardException e1) {
                         e1.printStackTrace();
                         warn(e1.getMessage());
@@ -1611,6 +1610,22 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
                 }
                 return s;
             }
+        }
+
+        @Override
+        public void setVisible(boolean visible) {
+
+            // update the board list when the dialog is shown
+            if(visible) {
+                bdName.removeAllItems();
+                bdName.addItem(""); // need a blank board name for "all"
+                Iterator it = getBoardsFromControls().iterator();
+                while (it.hasNext()) {
+                    bdName.addItem(((ASLBoard) it.next()).getCommonName());
+                }
+            }
+
+            super.setVisible(visible);
         }
     }
 }
