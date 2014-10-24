@@ -211,16 +211,18 @@ public class ASLMap extends Map {
             legacyMode = false;
             final Rectangle mapBoundary = new Rectangle(0,0);
 			double hexHeight = 0.0;
+            double hexWidth = 0.0;
             for(Board b: boards) {
                 final VASLBoard board = (VASLBoard) b;
                 mapBoundary.add(b.bounds());
                 VASLBoards.add(board);
 
-				// make sure the hex height of all boards is the same
-				if (hexHeight != 0.0 && (double) board.getHexHeight() != hexHeight ) {
+				// make sure the hex geometry of all boards is the same
+				if (hexHeight != 0.0 && board.getHexHeight() != hexHeight || hexWidth != 0.0 && board.getHexWidth() != hexWidth) {
 					throw new BoardException("Map configuration contains multiple hex sizes - disabling LOS");
 				}
-				hexHeight = (double) board.getHexHeight();
+				hexHeight = board.getHexHeight();
+                hexWidth = board.getHexWidth();
             }
 
             // remove the edge buffer from the map boundary size
@@ -228,12 +230,17 @@ public class ASLMap extends Map {
             mapBoundary.height -= edgeBuffer.height;
 
             // create the VASL map
-            //TODO - modify for alternate hex sizes
+            VASLBoard b = VASLBoards.get(0); // we can use the geometry of any board - assuming all are the same
             VASLMap = new VASL.LOS.Map.Map(
-                    (int) Math.round(mapBoundary.width/ VASL.LOS.Map.Map.GEO_HEX_WIDTH) + 1,
-                    (int) Math.round(mapBoundary.height / VASL.LOS.Map.Map.GEO_HEX_HEIGHT),
+                    (int) Math.round(mapBoundary.width/ b.getHexWidth()) + 1,
+                    (int) Math.round(mapBoundary.height/ b.getHexHeight()),
+                    b.getA1CenterX(),
+                    b.getA1CenterY(),
+                    mapBoundary.width,
+                    mapBoundary.height,
                     sharedBoardMetadata.getTerrainTypes());
         }
+
         // clean up and fall back to legacy mode if an unexpected exception is thrown
         catch (Exception e) {
 

@@ -72,13 +72,40 @@ public class VASLBoard extends ASLBoard {
         }
     }
 
+// 	public Map(int width, int height, double A1CenterX, double A1CenterY, int imageWidth, int imageHeight, HashMap<String, Terrain> terrainNameMap){
 
-	/**
-	 * @return the hex of the map hexes in pixels
+    /**
+     * @return the width of the board in hexes
+     */
+    public int getWidth() {return VASLBoardArchive.getBoardWidth();}
+
+    /**
+     * @return the height of the board in hexes
+     */
+    public int getHeight() {return VASLBoardArchive.getBoardHeight();}
+
+    /**
+	 * @return the height of the map hexes in pixels
 	 */
-	public float getHexHeight() {
+	public double getHexHeight() {
 		return VASLBoardArchive.getHexHeight();
 	}
+
+    /**
+     * @return the width of the map hexes in pixels
+     */
+    public double getHexWidth(){ return VASLBoardArchive.getHexWidth();}
+
+    /**
+     * @return x location of the A1 center hex dot
+     */
+    public double getA1CenterX() { return VASLBoardArchive.getA1CenterX();}
+
+    /**
+     * @return y location of the A1 center hex dot
+     */
+    public double getA1CenterY() { return VASLBoardArchive.getA1CenterY();}
+
     /**
      * @return true if this board is legacy format (pre 6.0)
      */
@@ -148,10 +175,10 @@ public class VASLBoard extends ASLBoard {
 
             version = VASLBoardArchive.getVersion();
             if(VASLBoardArchive.getA1CenterX() != BoardArchive.missingValue()){
-                ((Translatable)getGrid()).setAttribute(HexGrid.X0, VASLBoardArchive.getA1CenterX());
+                ((Translatable)getGrid()).setAttribute(HexGrid.X0, (int) VASLBoardArchive.getA1CenterX());
             }
             if(VASLBoardArchive.getA1CenterY() != BoardArchive.missingValue()){
-                ((Translatable)getGrid()).setAttribute(HexGrid.Y0, VASLBoardArchive.getA1CenterY());
+                ((Translatable)getGrid()).setAttribute(HexGrid.Y0, (int) VASLBoardArchive.getA1CenterY());
             }
             if((int) VASLBoardArchive.getHexWidth() != BoardArchive.missingValue()){
                 ((Translatable)getGrid()).setAttribute(HexGrid.DX, VASLBoardArchive.getHexWidth());

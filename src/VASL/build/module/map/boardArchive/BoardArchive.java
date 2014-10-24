@@ -1,6 +1,7 @@
 package VASL.build.module.map.boardArchive;
 
 import java.awt.Color;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -34,7 +35,17 @@ import static VASSAL.tools.io.IOUtils.closeQuietly;
  */
 public class BoardArchive {
 
-	private String qualifiedBoardArchive;
+    // constants for standard geomorphic boards, which compensate for VASL "fuzzy" geometry. Hexes are slightly too wide.
+    public static final double GEO_WIDTH = 33;
+    public static final double GEO_HEIGHT = 10;
+    public static final double GEO_IMAGE_WIDTH = 1800;
+    public static final double GEO_IMAGE_HEIGHT = 645;
+    public static final double GEO_HEX_WIDTH = GEO_IMAGE_WIDTH/(GEO_WIDTH - 1.0);
+    public static final double GEO_HEX_HEIGHT = GEO_IMAGE_HEIGHT/GEO_HEIGHT;
+    public static final Point2D.Double GEO_A1_Center = new Point2D.Double(0, GEO_HEX_HEIGHT/2.0);
+
+
+    private String qualifiedBoardArchive;
     private SharedBoardMetadata sharedBoardMetadata;
     private static final String LOSDataFileName = "LOSData";    // name of the LOS data file in archive
     private static final String boardMetadataFile = "BoardMetadata.xml"; // name of the board metadata file
@@ -111,7 +122,14 @@ public class BoardArchive {
 				final int gridWidth = infile.readInt();
 				final int gridHeight = infile.readInt();
 
-                map  = new Map(width, height, terrainTypes);
+                if(isGEO()) {
+
+                    map  = new Map(width, height, terrainTypes);
+                }
+                else {
+                    map = new Map(width, height, getA1CenterX(), getA1CenterY(), gridWidth, gridHeight, terrainTypes);
+
+                }
 
                 // read the terrain and elevations grids
                 for(int x = 0; x < gridWidth; x++) {
@@ -213,6 +231,16 @@ public class BoardArchive {
 
     }
 
+    /**
+     * @return true if the board is a stand GEO board (10 x 33)
+     */
+    public boolean isGEO(){
+        return
+                metadata.getHexWidth() == BoardMetadata.MISSING &&
+                metadata.getHexHeight() == BoardMetadata.MISSING &&
+                metadata.getA1CenterX() == BoardMetadata.MISSING &&
+                metadata.getA1CenterY() == BoardMetadata.MISSING;
+    }
     /**
      * Get the board image from the archive
      */
@@ -381,6 +409,10 @@ public class BoardArchive {
         return getTerrainForVASLColor(metadata.getVASLColorName(color));
     }
 
+    /**
+     * @param color a color
+     * @return  true if the color is a stairway color
+     */
     public boolean isStairwayColor(Color color) {
 
         if(color == null || metadata.getVASLColorName(color) == null) {
@@ -465,7 +497,7 @@ public class BoardArchive {
      * @return width in hexes
      */
     public int getBoardWidth() {
-        // return losMetadataFile.getBoardWidth();
+
         return metadata.getBoardWidth();
     }
 
@@ -474,7 +506,7 @@ public class BoardArchive {
      * @return height in hexes
      */
     public int getBoardHeight() {
-        // return losMetadataFile.getBoardHeight();
+
         return metadata.getBoardHeight();
     }
 
@@ -489,29 +521,29 @@ public class BoardArchive {
     /**
      * @return x location of the A1 center hex dot
      */
-    public int getA1CenterX() {
-        return metadata.getA1CenterX();
+    public double getA1CenterX() {
+        return metadata.getA1CenterX() == missingValue() ? GEO_A1_Center.x : metadata.getA1CenterX();
     }
 
     /**
      * @return y location of the A1 center hex dot
      */
-    public int getA1CenterY() {
-        return metadata.getA1CenterY();
+    public double getA1CenterY() {
+        return metadata.getA1CenterY() == missingValue() ? GEO_A1_Center.y : metadata.getA1CenterY();
     }
 
     /**
      * @return hex width in pixels
      */
-    public float getHexWidth() {
-        return metadata.getHexWidth();
+    public double getHexWidth() {
+        return metadata.getHexWidth() == missingValue() ? GEO_HEX_WIDTH : metadata.getHexWidth();
     }
 
     /**
      * @return hex height in pixels
      */
-    public float getHexHeight() {
-        return metadata.getHexHeight();
+    public double getHexHeight() {
+        return metadata.getHexHeight() == missingValue() ? GEO_HEX_HEIGHT : metadata.getHexHeight();
     }
 
     /**

@@ -16,6 +16,8 @@
  */
 package VASL.LOS.Map;
 
+import VASL.build.module.map.boardArchive.BoardArchive;
+
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
@@ -28,8 +30,8 @@ import java.awt.geom.AffineTransform;
 public class Bridge {
 
 	// public constants
-	public static final int	CUSTOM_BRIDGE_WIDTH	= (int) Map.GEO_HEX_HEIGHT /4;
-	public static final int	CUSTOM_BRIDGE_HEIGHT	= (int) Map.GEO_HEX_HEIGHT;
+	public static final int	CUSTOM_BRIDGE_WIDTH	= (int) BoardArchive.GEO_HEX_HEIGHT /4;
+	public static final int	CUSTOM_BRIDGE_HEIGHT	= (int) BoardArchive.GEO_HEX_HEIGHT;
 	public static final int	ROAD_AREA_INSET		= 2;
 
 	public static final int	SINGLE_HEX_CUSTOM_BRIDGE_WIDTH	= 32;

@@ -268,9 +268,6 @@ public class Hex {
         newX = (int) newX == map.getGridWidth()  || (int) newX == (map.getGridWidth() + 1.0)  ? (map.getGridWidth()  - 1.0) : newX;
         newY = (int) newY == map.getGridHeight() || (int) newY == (map.getGridHeight() + 1.0) ? (map.getGridHeight() - 1.0) : newY;
 
-        if((int) newY == 645 || (int) newY == 646) {
-            System.out.println("Point adjusted - x: " + x + " y: " + y);
-        }
         return new Point2D.Double(newX, newY);
     }
 
@@ -499,7 +496,7 @@ public class Hex {
         final Terrain centerLocationTerrain = map.getGridTerrain((int) centerLocation.getLOSPoint().getX(), (int) centerLocation.getLOSPoint().getY());
 
         if(centerLocationTerrain == null) {
-            System.out.println();
+            return;
         }
         centerLocation.setTerrain(centerLocationTerrain);
 

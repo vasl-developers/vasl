@@ -36,7 +36,7 @@ public class BoardMetadata extends AbstractMetadata {
     private LinkedHashMap<String, UnderlaySSRule> underlaySSRules = new LinkedHashMap<String, UnderlaySSRule>();
 
     // Board-level metadata
-    public final static int MISSING = -1; // used to indicate the value was not in the metadata (for optional attributes)
+    public final static int MISSING = -999; // used to indicate the value was not in the metadata (for optional attributes)
     private String name;
     private String version;
     private String versionDate;
@@ -46,10 +46,10 @@ public class BoardMetadata extends AbstractMetadata {
     private int width;
     private int height;
 
-    private int A1CenterX = (int) MISSING;  // location of the hex A1 center dot
-    private int A1CenterY = (int) MISSING;
-    private float hexWidth = (float) MISSING;
-    private float hexHeight = (float )MISSING;
+    private double A1CenterX = (int) MISSING;  // location of the hex A1 center dot
+    private double A1CenterY = (int) MISSING;
+    private double hexWidth = (float) MISSING;
+    private double hexHeight = (float )MISSING;
     private boolean altHexGrain = false; // upper left is A0, B1 is higher
 
     // Board metadata file element and attribute constants
@@ -84,6 +84,11 @@ public class BoardMetadata extends AbstractMetadata {
     private static final String underlaySSRImageAttribute = "image";
     private static final String underlayColorElement = "color";
     private static final String underlayColorNameAttribute = "name";
+
+    private static final String slopeElement = "slope";
+    private static final String slopesElement = "slopes";
+    private static final String slopeHexNameAttribute = "hex";
+    private static final String slopeHexsidesAttribute = "hexsides";
 
     public BoardMetadata(SharedBoardMetadata sharedBoardMetadata){
 
@@ -126,16 +131,16 @@ public class BoardMetadata extends AbstractMetadata {
 
                 // optional attributes
                 if(root.getAttribute(boardMetadataA1CenterXAttr)!= null){
-                    A1CenterX = root.getAttribute(boardMetadataA1CenterXAttr).getIntValue();
+                    A1CenterX = root.getAttribute(boardMetadataA1CenterXAttr).getDoubleValue();
                 }
                 if(root.getAttribute(boardMetadataA1CenterYAttr) != null){
-                    A1CenterY = root.getAttribute(boardMetadataA1CenterYAttr).getIntValue();
+                    A1CenterY = root.getAttribute(boardMetadataA1CenterYAttr).getDoubleValue();
                 }
                 if(root.getAttribute(boardMetadataHexHeightAttr) != null){
-                    hexHeight = root.getAttribute(boardMetadataHexHeightAttr).getFloatValue();
+                    hexHeight = root.getAttribute(boardMetadataHexHeightAttr).getDoubleValue();
                 }
                 if(root.getAttribute(boardMetadataHexWidthAttr) != null){
-                    hexWidth = root.getAttribute(boardMetadataHexWidthAttr).getFloatValue();
+                    hexWidth = root.getAttribute(boardMetadataHexWidthAttr).getDoubleValue();
                 }
                 if(root.getAttribute(boardMetadataAltHexGrainAttr) != null){
                     altHexGrain = root.getAttribute(boardMetadataAltHexGrainAttr).getBooleanValue();
@@ -307,28 +312,28 @@ public class BoardMetadata extends AbstractMetadata {
     /**
      * @return x location of the A1 center hex dot
      */
-    public int getA1CenterX() {
+    public double getA1CenterX() {
         return A1CenterX;
     }
 
     /**
      * @return y location of the A1 center hex dot
      */
-    public int getA1CenterY() {
+    public double getA1CenterY() {
         return A1CenterY;
     }
 
     /**
      * @return hex width in pixels
      */
-    public float getHexWidth() {
+    public double getHexWidth() {
         return hexWidth;
     }
 
     /**
      * @return hex height in pixels
      */
-    public float getHexHeight() {
+    public double getHexHeight() {
         return hexHeight;
     }
 

@@ -73,22 +73,30 @@ public class LOSDataEditor {
 
 		final double hexHeight = boardArchive.getHexHeight();
 
-        // create an empty geomorphic map
-		if(hexHeight != BoardMetadata.MISSING) {
+        // create an empty map
+        map = createNewLOSData();
+    }
 
-			map = new Map(boardArchive.getBoardWidth(), boardArchive.getBoardHeight(), sharedBoardMetadata.getTerrainTypes());
-		}
-		else {
-			map = new Map(
+    public Map createNewLOSData(){
+
+        if(boardArchive.isGEO()) {
+
+            return new Map(
                     boardArchive.getBoardWidth(),
                     boardArchive.getBoardHeight(),
                     sharedBoardMetadata.getTerrainTypes());
-		}
-    }
+        }
+        else {
+            return new Map(
+                    boardArchive.getBoardWidth(),
+                    boardArchive.getBoardHeight(),
+                    boardArchive.getA1CenterX(),
+                    boardArchive.getA1CenterY(),
+                    boardArchive.getBoardImage().getWidth(),
+                    boardArchive.getBoardImage().getHeight(),
+                    sharedBoardMetadata.getTerrainTypes());
+        }
 
-    public void createNewLOSData(int width, int height){
-
-        map = new Map(width, height, sharedBoardMetadata.getTerrainTypes());
     }
 
     //TODO: removed redundancy in these private methods
@@ -188,7 +196,7 @@ public class LOSDataEditor {
                 // set the elevation in the map grid
                 if(boardArchive.boardHasElevations()) { // ignore boards without elevation
 
-                    if(elevation == boardArchive.getNoElevationColorCode()){
+                    if(elevation == BoardArchive.getNoElevationColorCode()){
                         map.setGridElevation(UNKNOWN_ELEVATION, x, y);
                     }
                     else {
@@ -197,7 +205,7 @@ public class LOSDataEditor {
                 }
 
                 // set the terrain type in the map grid
-                if(terrain == boardArchive.getNoTerrainColorCode()){
+                if(terrain == BoardArchive.getNoTerrainColorCode()){
                     map.setGridTerrainCode(UNKNOWN_TERRAIN, x, y);
                 }
                 else {
@@ -249,9 +257,7 @@ public class LOSDataEditor {
     public void createLOSData(){
 
         // create an empty map
-        map = new Map(boardArchive.getBoardWidth(),
-                boardArchive.getBoardHeight(),
-                sharedBoardMetadata.getTerrainTypes());
+        map = createNewLOSData();
 
         // spin through the terrain and elevation grids and add the terrain codes
         setAllTerrain();
@@ -380,6 +386,7 @@ public class LOSDataEditor {
      * @param mapImage the map image
      * @param imageList list of the terrain images to use
      */
+    @SuppressWarnings("UnusedDeclaration")
     public void paintMapArea(int x, int y, int width, int height,
                              BufferedImage mapImage,
                              BufferedImage[] imageList,

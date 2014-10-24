@@ -16,6 +16,8 @@
  */
 package VASL.LOS.Map;
 
+import VASL.build.module.map.boardArchive.BoardArchive;
+
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Shape;
@@ -38,19 +40,11 @@ import java.util.HashSet;
  */
 public class Map  {
 
-    // constants for standard geomorphics boards, which compensate for VASL "fuzzy" geometry. Hexes are slightly too wide.
-    public static final double GEO_WIDTH = 33;
-    public static final double GEO_HEIGHT = 10;
-    public static final double GEO_IMAGE_WIDTH = 1800;
-    public static final double GEO_IMAGE_HEIGHT = 645;
-    public static final double GEO_HEX_HEIGHT = GEO_IMAGE_HEIGHT/GEO_HEIGHT;
-    public static final double GEO_HEX_WIDTH = GEO_IMAGE_WIDTH/(GEO_WIDTH - 1.0);
-    private static final Point2D.Double GEO_A1_Center = new Point2D.Double(0, GEO_HEX_HEIGHT/2.0);
-
     // default hex geometry
-    private double hexHeight = GEO_HEX_HEIGHT;
-    private double hexWidth = GEO_HEX_WIDTH;
+    private double hexHeight = BoardArchive.GEO_HEX_HEIGHT;
+    private double hexWidth = BoardArchive.GEO_HEX_WIDTH;
 
+    // the "upper left" hex - even if it's not A1 (e.g. boards 1b-6b) 
     private double A1CenterX;
 	private double A1CenterY;
 
@@ -74,17 +68,17 @@ public class Map  {
     private static HashMap<String, Terrain> terrainNameMap;
 
 	/**
-	 * Constructs a new <code>Map</code> object using custom hex size and explicite image size.
+	 * Constructs a new <code>Map</code> object using custom hex size and explicit image size.
 	 * A standard geomorphic map board is 10 x 33 hexes.
 	 * @param width the width of the map in hexes
 	 * @param height the height of the map in hexes
-	 * @param xOffset x-offset of the A1 hex center dot
-     * @param yOffset y-offset of the A1 hex center dot
+	 * @param A1CenterX x-offset of the A1 hex center dot
+     * @param A1CenterY y-offset of the A1 hex center dot
 	 * @param imageWidth width of the board image in pixels
 	 * @param imageHeight height of the board image in pixels
 	 * @param terrainNameMap mapping of terrain names to terrain objects
 	 */
-	public Map(int width, int height, double xOffset, double yOffset, int imageWidth, int imageHeight, HashMap<String, Terrain> terrainNameMap){
+	public Map(int width, int height, double A1CenterX, double A1CenterY, int imageWidth, int imageHeight, HashMap<String, Terrain> terrainNameMap){
 
 		this.width = width;
 		this.height = height;
@@ -92,8 +86,8 @@ public class Map  {
 		//Set the hex geometry
 		hexHeight = (double) imageHeight/ (double) height;
         hexWidth = (double) imageWidth/((double) width - 1);
-        A1CenterX = xOffset;
-		A1CenterY = yOffset;
+        this.A1CenterX = (A1CenterX == BoardArchive.missingValue() ? BoardArchive.GEO_A1_Center.x : A1CenterX);
+		this.A1CenterY = (A1CenterY == BoardArchive.missingValue() ? BoardArchive.GEO_A1_Center.y : A1CenterY);
 
 		// initialize
 		setTerrain(terrainNameMap);
@@ -108,7 +102,7 @@ public class Map  {
 
 			hexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
 			for (int row = 0; row < this.height + (col % 2); row++) {
-				hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row), getGEOHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+				hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
 			}
 		}
 
@@ -122,38 +116,68 @@ public class Map  {
 
     /**
      * Finds the center point of a hex in the hexgrid of a geometric board
+     * NOTE - does NOT handle arbitrary relationships between the hex grid and the image
+     *        Assumes [0][0] is the upper left hex on the map
      * @param col the hex column (0 = the first column in the grid)
      * @param row the hex row (0 = the first row in the column)
      * @return the hex center point
      */
-    private Point2D.Double getGEOHexCenterPoint(int col, int row) {
+    private Point2D.Double getHexCenterPoint(int col, int row) {
+
+        double p = -A1CenterX/hexWidth;
 
         // odd columns will be offset half a hex toward the top of the map
+        // if the A1 x offset is negative (e.g. boards 1b-6b), assume it's zero
         return new Point2D.Double(
-                A1CenterX + hexWidth * (double) col,
+                (A1CenterX < 0.0 ? 20.0 : A1CenterX) + hexWidth * (double) col,
                 A1CenterY + hexHeight * (double) row - hexHeight/2.0 * (double) (col%2)
         );
+
+        // -881 to 21
+        // *-1 = 881
+        // divide by hex width and get remainder
+
+
     }
 
     /**
      * Find the hex name for a hex on a board
-     * By convension the columns are A-Z, then AA-ZZ, then AAA-ZZZ for max of 26*3 columns
+     * By convention the columns are A-Z, then AA-ZZ, then AAA-ZZZ for max of 26*3 columns
      * Row number can be any integer
+     * NOTE - does NOT handle arbitrary negative offsets for A1 - assumes offsets < 0 are for boards 1b - 6b, etc.
      * @param col the hex column (0 = the first column in the grid)
      * @param row the hex row (0 = the first row in the column)
      * @return the hex name. If invalid the empty string is returned
      */
     private String getGEOHexName(int col, int row) {
 
-        char c = (char) ((int) 'A' + col%26);
-        String name = "" + c;
+        char c;
+        String name = "";
 
-        for (int x = 0; x < (col + 1)/26; x++) {
+        // negative A1 x offset implies boards 1b-6b
+        if(A1CenterX < 0.0) {
+
+            if (col < 10) {
+                c = (char) ((int) 'Q' + col);
+                name += c;
+            }
+            else {
+                c = (char) ((int) 'A' + (col - 10)%26);
+                name += c;
+                name += c;
+            }
+        }
+        else {
+            c = (char) ((int) 'A' + col%26);
             name += c;
+
+            for (int x = 0; x < (col + 1)/26; x++) {
+                name += c;
+            }
         }
 
         // add row as suffix - even cols (e.g. A = 0) will start with 1; odd cols will start with zero
-        return name += (row + (col%2 == 0 ? 1 : 0));
+        return name + (row + (col%2 == 0 ? 1 : 0));
     }
 
 	/**
@@ -163,8 +187,7 @@ public class Map  {
      */
     public Map(int w, int h, HashMap<String, Terrain> terrainNameMap) {
 
-//		this(w, h, 0, 0, GEO_HEX_HEIGHT, terrainNameMap);
-        this(w, h, GEO_A1_Center.x, GEO_A1_Center.y, (int) GEO_IMAGE_WIDTH, (int) GEO_IMAGE_HEIGHT, terrainNameMap);
+        this(w, h, BoardArchive.GEO_A1_Center.x, BoardArchive.GEO_A1_Center.y, (int) BoardArchive.GEO_IMAGE_WIDTH, (int) BoardArchive.GEO_IMAGE_HEIGHT, terrainNameMap);
 
     }
 
@@ -467,7 +490,6 @@ public class Map  {
                     : ((double) y + hexHeight / 2.0) / hexHeight);
                 return hexGrid[col][row];
             } catch (Exception e) {
-                e.printStackTrace();
                 return null;
             }
         }
@@ -2156,15 +2178,9 @@ public class Map  {
             return false;
         }
 
-        // ensure the map will fit
-        if (left + map.getGridWidth() > this.gridWidth || upper + map.getGridHeight() > this.gridHeight) {
-
-            return false;
-        }
-
         // copy the terrain and elevation grids
-        for (int x = 0; x < map.gridWidth; x++) {
-            for (int y = 0; y < map.gridHeight; y++) {
+        for (int x = 0; x < map.gridWidth && x < this.gridWidth; x++) {
+            for (int y = 0; y < map.gridHeight && y < this.gridHeight; y++) {
 
                 terrainGrid[left + x][upper + y] = (char) map.getGridTerrain(x, y).getType();
                 elevationGrid[left + x][upper + y] = (byte) map.getGridElevation(x, y);
@@ -2174,8 +2190,8 @@ public class Map  {
         // copy the hex grid
         int hexRow = upperLeft.getRowNumber();
         int hexCol = upperLeft.getColumnNumber();
-        for (int x = 0; x < map.hexGrid.length; x++) {
-            for (int y = 0; y < map.hexGrid[x].length; y++) {
+        for (int x = 0; x < map.hexGrid.length && x < this.hexGrid.length; x++) {
+            for (int y = 0; y < map.hexGrid[x].length && y < this.hexGrid[x].length; y++) {
 
                 hexGrid[x + hexCol][y + hexRow].copy(map.getHex(x, y));
 
@@ -2204,11 +2220,12 @@ public class Map  {
             localHexWidth++;
         }
 
-        Map newMap = new Map(localHexWidth, localHexHeight, terrainNameMap);
+        // Map newMap = new Map(localHexWidth, localHexHeight, terrainNameMap);
+        Map newMap = new Map(localHexWidth, localHexHeight, A1CenterX, A1CenterY, localGridWidth, localGridHeight, terrainNameMap);
 
         // copy the map grid
-        for(int x = 0; x < newMap.gridWidth; x++) {
-            for(int y = 0; y < newMap.gridHeight; y++){
+        for(int x = 0; x < newMap.gridWidth && x < gridWidth; x++) {
+            for(int y = 0; y < newMap.gridHeight && y < gridHeight; y++){
 
                 newMap.terrainGrid[x][y] = terrainGrid[x + upperLeft.x][y + upperLeft.y];
                 newMap.elevationGrid[x][y] = elevationGrid[x + upperLeft.x][y + upperLeft.y];
