@@ -52,6 +52,14 @@ public class ASLAreaOfEffect extends AreaOfEffect {
         super(type, inner);
     }
 
+    @Override
+  public String getDescription() {
+    String d = "ASL Area Of Effect";
+    if (description.length() > 0) {
+      d += " - " + description;
+    }
+    return d;
+  }
     public MapGrid GetASLGrid()
     {
         MapGrid l_objGrid = new ASLHexGrid(DEFAULT_HEX_HEIGHT, false);
