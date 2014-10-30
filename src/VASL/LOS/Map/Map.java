@@ -17,10 +17,9 @@
 package VASL.LOS.Map;
 
 import VASL.build.module.map.boardArchive.BoardArchive;
+import VASL.build.module.map.boardArchive.Slopes;
 
-import java.awt.Point;
-import java.awt.Polygon;
-import java.awt.Shape;
+import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -123,8 +122,6 @@ public class Map  {
      * @return the hex center point
      */
     private Point2D.Double getHexCenterPoint(int col, int row) {
-
-        double p = -A1CenterX/hexWidth;
 
         // odd columns will be offset half a hex toward the top of the map
         // if the A1 x offset is negative (e.g. boards 1b-6b), assume it's zero
@@ -562,6 +559,7 @@ public class Map  {
 
         LOSStatus status = new LOSStatus(source, useAuxSourceLOSPoint, target, useAuxTargetLOSPoint, result, VASLGameInterface);
 
+        // check same hex rules
         if(checkSameHexSmokeRule(status, result)) {
             return;
         }
@@ -799,6 +797,9 @@ public class Map  {
         public boolean LOSis60Degree;
         public boolean LOSisHorizontal;
 
+        // LOS across slope hexside
+        boolean slopes;
+
         // Exiting depression restriction placed when looking out of a depression
         // to a higher elevation where the "elevation difference <= range" restriction has not
         // been satisfied. Must be satisfied before leaving the depression.
@@ -815,6 +816,8 @@ public class Map  {
         public double exit;
         public int currentCol;
         public int currentRow;
+
+        public double slope;
 
         private LOSStatus(Location source, boolean useAuxSourceLOSPoint, Location target, boolean useAuxTargetLOSPoint, LOSResult result, VASLGameInterface VASLGameInterface) {
 
@@ -873,20 +876,15 @@ public class Map  {
 
             // initialize some result variables
             result.setRange(rangeToTarget);
-            result.setSourceExitHexside(LOSResult.UNKNOWN);
-            result.setTargetEnterHexside(LOSResult.UNKNOWN);
 
             // LOS slope variables
             LOSisHorizontal = (sourceY == targetY);
             result.setLOSisHorizontal(LOSisHorizontal);
-            double doubleSourceX = useAuxSourceLOSPoint ? source.getAuxLOSPoint().getX() : source.getLOSPoint().getX();
-			double doubleSourceY = useAuxSourceLOSPoint ? source.getAuxLOSPoint().getY() : source.getLOSPoint().getY();
-			double doubleTargetX = useAuxTargetLOSPoint ? target.getAuxLOSPoint().getX() : target.getLOSPoint().getX();
-			double doubleTargetY = useAuxTargetLOSPoint ? target.getAuxLOSPoint().getY() : target.getLOSPoint().getY();
-			double slope = Math.abs((doubleSourceY - doubleTargetY) / (doubleSourceX - doubleTargetX));
+            slope = Math.abs((double) (sourceY - targetY) / (double) (sourceX - targetX));
+
 
             // set the tolerance to compensate for "fuzzy" geometry of VASL boards
-            //TODO - this is a cludge and fails at very long ranges - replace with algorithm
+            //TODO - this is a kludge and fails at very long ranges - replace with algorithm
             double tolerance = 0.05;
             if (range == 3 || range == 4) {
 
@@ -936,6 +934,160 @@ public class Map  {
                     result.setTargetEnterHexspine(2);
                 }
             }
+
+            // slope rules are in effect if the higher location is up-slope
+            slopes = (exitsSlopeHexside() && sourceElevation >= targetElevation) ||
+                     (entersSlopeHexside() && targetElevation >= sourceElevation);
+        }
+
+        /**
+         * @return true if the LOS exits the source hex via a slope hexside
+         */
+        public boolean exitsSlopeHexside() {
+
+            final double slope = (double) (sourceY - targetY) / (double) (sourceX - targetX);
+
+            if(slope == Double.POSITIVE_INFINITY) {
+                return sourceHex.hasSlope(0);
+            }
+            else if(slope == Double.NEGATIVE_INFINITY) {
+                return sourceHex.hasSlope(3);
+            }
+            else if(LOSisHorizontal) {
+                if(colDir == 1) {
+                    return sourceHex.hasSlope(1) || sourceHex.hasSlope(2);
+                }
+                else {
+                    return sourceHex.hasSlope(4) || sourceHex.hasSlope(5);
+                }
+            }
+            else if (LOSis60Degree) {
+                if(colDir == 1) {
+                    if (slope > 0) {
+                        return sourceHex.hasSlope(2) || sourceHex.hasSlope(3);
+                    }
+                    else {
+                        return sourceHex.hasSlope(0) || sourceHex.hasSlope(1);
+
+                    }
+                }
+                else  {
+                    if (slope > 0) {
+                        return sourceHex.hasSlope(5) || sourceHex.hasSlope(0);
+                    }
+                    else {
+                        return sourceHex.hasSlope(3) || sourceHex.hasSlope(4);
+                    }
+                }
+            }
+            else if(slope > Math.tan(Math.toRadians(60))) {
+                if(colDir == 1) {
+                    return sourceHex.hasSlope(3);
+                }
+                else  {
+                    return sourceHex.hasSlope(0);
+                }
+            }
+            else if(slope > Math.tan(Math.toRadians(0))) {
+                if(colDir == 1) {
+                    return sourceHex.hasSlope(2);
+                }
+                else {
+                    return sourceHex.hasSlope(5);
+                }
+            }
+            else if(slope < Math.tan(Math.toRadians(-60))) {
+                if (colDir == 1) {
+                    return sourceHex.hasSlope(0);
+                }
+                else {
+                    return sourceHex.hasSlope(3);
+                }
+            }
+            else if(slope < Math.tan(Math.toRadians(0))) {
+                if(colDir == 1) {
+                    return sourceHex.hasSlope(1);
+                }
+                else {
+                    return sourceHex.hasSlope(4);
+                }
+            }
+            return false;
+        }
+
+        /**
+         * @return true if the LOS enters the target hex via a slope hexside
+         */
+        public boolean entersSlopeHexside() {
+
+            double slope = (double) (sourceY - targetY) / (double) (sourceX - targetX);
+
+            if(slope == Double.POSITIVE_INFINITY) {
+                return targetHex.hasSlope(3);
+            }
+            else if(slope == Double.NEGATIVE_INFINITY) {
+                return targetHex.hasSlope(0);
+            }
+            else if(LOSisHorizontal) {
+                if(colDir == 1) {
+                    return targetHex.hasSlope(4) || targetHex.hasSlope(5);
+                }
+                else {
+                    return targetHex.hasSlope(1) || targetHex.hasSlope(2);
+                }
+            }
+            else if (LOSis60Degree) {
+                if(colDir == 1) {
+                    if (slope > 0) {
+                        return targetHex.hasSlope(5) || targetHex.hasSlope(0);
+                    }
+                    else {
+                        return targetHex.hasSlope(3) || targetHex.hasSlope(4);
+
+                    }
+                }
+                else  {
+                    if (slope > 0) {
+                        return targetHex.hasSlope(2) || targetHex.hasSlope(3);
+                    }
+                    else {
+                        return targetHex.hasSlope(0) || targetHex.hasSlope(1);
+                    }
+                }
+            }
+            else if(slope > Math.tan(Math.toRadians(60))) {
+                if(colDir == 1) {
+                    return targetHex.hasSlope(0);
+                }
+                else  {
+                    return targetHex.hasSlope(3);
+                }
+            }
+            else if(slope > Math.tan(Math.toRadians(0))) {
+                if(colDir == 1) {
+                    return targetHex.hasSlope(5);
+                }
+                else {
+                    return targetHex.hasSlope(2);
+                }
+            }
+            else if(slope < Math.tan(Math.toRadians(-60))) {
+                if (colDir == 1) {
+                    return targetHex.hasSlope(3);
+                }
+                else {
+                    return targetHex.hasSlope(0);
+                }
+            }
+            else if(slope < Math.tan(Math.toRadians(0))) {
+                if(colDir == 1) {
+                    return targetHex.hasSlope(4);
+                }
+                else {
+                    return targetHex.hasSlope(1);
+                }
+            }
+            return false;
         }
     }
 
@@ -1215,13 +1367,7 @@ public class Map  {
                             hindrance += s.getHindrance();
                         }
                         // smoke creates "blind hex"
-                        else if (isBlindHex(
-                                status.sourceElevation,
-                                status.targetElevation,
-                                status.rangeToSource,
-                                status.rangeToTarget,
-                                status.groundLevel,
-                                s.getHeight())){
+                        else if (isBlindHex(status, s.getHeight())){
 
                             hindrance += s.getHindrance();
                         }
@@ -1272,7 +1418,8 @@ public class Map  {
 
                         // vehicle must be same elevation as both source and target
                         if(status.source.getAbsoluteHeight() == status.target.getAbsoluteHeight() &&
-                           status.source.getAbsoluteHeight() == v.getLocation().getAbsoluteHeight()){
+                           status.source.getAbsoluteHeight() == v.getLocation().getAbsoluteHeight() &&
+                           !status.slopes){
 
                             // if vehicle in bypass the LOS must cross the bypassed hexside
                             if(v.getLocation().isCenterLocation() || v.getLocation().equals(hex.getNearestLocation(status.currentCol, status.currentRow))) {
@@ -1342,13 +1489,7 @@ public class Map  {
                             }
                         }
                         // OBA creates "blind hex"
-                        else if (isBlindHex(
-                                status.sourceElevation,
-                                status.targetElevation,
-                                status.rangeToSource,
-                                status.rangeToTarget,
-                                status.groundLevel,
-                                oba.getBlastHeight())){
+                        else if (isBlindHex(status, oba.getBlastHeight())){
 
                             result.addOBAHindrance(oba, status.currentCol, status.currentRow);
                             if(result.isBlocked()){
@@ -1464,14 +1605,7 @@ public class Map  {
             }
 
             // otherwise check for blind hexes
-            else if (isBlindHex(
-                    status.sourceElevation,
-                    status.targetElevation,
-                    status.rangeToSource,
-                    status.rangeToTarget,
-                    status.groundLevel,
-                    status.currentTerrainHgt
-            )) {
+            else if (isBlindHex(status, status.currentTerrainHgt)) {
 
                 status.reason = "Source or Target location is in a blind hex";
                 status.blocked = true;
@@ -1535,14 +1669,7 @@ public class Map  {
                         }
 
                         // otherwise check for blind hexes
-                        else if (isBlindHex(
-                                status.sourceElevation,
-                                status.targetElevation,
-                                status.rangeToSource,
-                                status.rangeToTarget,
-                                status.groundLevel,
-                                status.currentTerrainHgt
-                        )) {
+                        else if (isBlindHex(status, status.currentTerrainHgt)) {
 
                             status.reason = "Source or Target location is in a blind hex (B9.52)";
                             status.blocked = true;
@@ -1552,7 +1679,7 @@ public class Map  {
                     }
 
                     // on the same level?
-                    else if (status.groundLevel == status.sourceElevation && status.groundLevel == status.targetElevation) {
+                    else if (status.groundLevel == status.sourceElevation && status.groundLevel == status.targetElevation && !status.slopes) {
 
                         status.blocked = true;
                         status.reason = "Intervening hexside terrain (B9.2)";
@@ -1572,26 +1699,31 @@ public class Map  {
      * @return true if the LOS is blocked
      */
     protected boolean checkBlindHexRule(LOSStatus status, LOSResult result) {
+
+        // special case when LOS is up-slope
+        if (status.groundLevel + status.currentTerrainHgt == Math.max(status.sourceElevation, status.targetElevation) &&
+            status.groundLevel + status.currentTerrainHgt >  Math.min(status.sourceElevation, status.targetElevation)) {
+
+            // can ignore this rule for slopes unless blind hex
+            if(status.slopes && isBlindHex(status, status.currentTerrainHgt)) {
+                status.reason = "Source or Target location is in a blind hex from an up-slope location (F2.3)";
+                status.blocked = true;
+                result.setBlocked(status.currentCol, status.currentRow, status.reason);
+                return true;
+            }
+        }
+
         if (status.groundLevel + status.currentTerrainHgt > Math.min(status.sourceElevation, status.targetElevation) &&
             status.groundLevel + status.currentTerrainHgt < Math.max(status.sourceElevation, status.targetElevation)
                 ) {
 
-            if (isBlindHex(
-				status.sourceElevation,
-				status.targetElevation,
-				status.rangeToSource,
-				status.rangeToTarget,
-				status.groundLevel,
-				status.currentTerrainHgt,
-				nearestHexsideIsCliff(status.currentCol, status.currentRow)
-			)) {
+            if (isBlindHex(status, status.currentTerrainHgt,nearestHexsideIsCliff(status.currentCol, status.currentRow))) {
 
                 // blocked if terrain is obstacle
                 if (status.currentTerrain.isLOSObstacle()) {
 
                     // ignore inherent terrain that is not the same as center location
-                    if(!status.currentTerrain.isInherentTerrain() ||
-                      ( status.currentTerrain.isInherentTerrain() && status.currentHex.getCenterLocation().getTerrain().equals(status.currentTerrain))) {
+                    if(!status.currentTerrain.isInherentTerrain() || (status.currentHex.getCenterLocation().getTerrain().equals(status.currentTerrain))) {
 
                         status.reason = "Source or Target location is in a blind hex (A6.4)";
                         status.blocked = true;
@@ -1603,16 +1735,8 @@ public class Map  {
                 // see if ground level alone creates blind hex
                 else if (status.groundLevel > Math.min(status.sourceElevation, status.targetElevation) &&
                         status.groundLevel < Math.max(status.sourceElevation, status.targetElevation) &&
-                        isBlindHex(
-                                status.sourceElevation,
-                                status.targetElevation,
-                                status.rangeToSource,
-                                status.rangeToTarget,
-                                status.groundLevel,
-                                0,
-                                nearestHexsideIsCliff(status.currentCol, status.currentRow)
-                        )
-                        ) {
+                        isBlindHex(status, 0, nearestHexsideIsCliff(status.currentCol, status.currentRow))) {
+
                     status.reason = "Source or Target location is in a blind hex (B10.23)";
                     status.blocked = true;
                     result.setBlocked(status.currentCol, status.currentRow, status.reason);
@@ -1651,38 +1775,44 @@ public class Map  {
     protected boolean checkTerrainHeightRule(LOSStatus status, LOSResult result) {
 
         if (status.groundLevel + status.currentTerrainHgt == Math.max(status.sourceElevation, status.targetElevation) &&
-            status.groundLevel + status.currentTerrainHgt > Math.min(status.sourceElevation, status.targetElevation) &&
-                // are exiting gully restrictions satisfied?
-                //TODO - this (and map flip) is the only place the hex extended border is used - is it really needed?
-                !(status.ignoreGroundLevelHex != null &&
-                  status.ignoreGroundLevelHex.containsExtended(status.currentCol, status.currentRow)) &&
-                // are entering gully restrictions satisfied?
-                !(status.entersTargetDepression && status.currentHex.isDepressionTerrain()) &&
-                !(status.exitsSourceDepression && status.currentHex.isDepressionTerrain())
-                ) {
+            status.groundLevel + status.currentTerrainHgt > Math.min(status.sourceElevation, status.targetElevation)) {
 
-            // Need to handle special case where source unit is adjacent to a water obstacle looking
-            // at a target in the water obstacle. We can ignore the bit of open ground that extends into
-            // the first water hex.
-            if (!(status.currentHex.getCenterLocation().getTerrain().isWaterTerrain() &&
-                    status.currentTerrain.getHeight() < 1 &&
-                    ((status.rangeToSource == 1 && status.sourceElevation > status.targetElevation &&
-                            status.target.getHex().getCenterLocation().getTerrain().isWaterTerrain()) ||
-                            (status.rangeToTarget == 1 && status.targetElevation > status.sourceElevation &&
-                                    status.source.getHex().getCenterLocation().getTerrain().isWaterTerrain())))) {
+            // can ignore this rule for slopes - handled by blind hex rule
+            if(status.slopes) {
+                return false;
+            }
 
-                // if orchard, then hindrance
-                if ("Orchard, Out of Season".equals(status.currentTerrain.getName())) {
+            // are exiting gully restrictions satisfied?
+            //TODO - this (and map flip) is the only place the hex extended border is used - is it really needed?
+            if (!(status.ignoreGroundLevelHex != null &&
+                    status.ignoreGroundLevelHex.containsExtended(status.currentCol, status.currentRow)) &&
+                    // are entering gully restrictions satisfied?
+                    !(status.entersTargetDepression && status.currentHex.isDepressionTerrain()) &&
+                    !(status.exitsSourceDepression && status.currentHex.isDepressionTerrain())
+                    ) {
 
-                    if (addHindranceHex(status, result))
+                // Need to handle special case where source unit is adjacent to a water obstacle looking
+                // at a target in the water obstacle. We can ignore the bit of open ground that extends into
+                // the first water hex.
+                if (!(status.currentHex.getCenterLocation().getTerrain().isWaterTerrain() &&
+                        status.currentTerrain.getHeight() < 1 &&
+                        ((status.rangeToSource == 1 && status.sourceElevation > status.targetElevation &&
+                                status.target.getHex().getCenterLocation().getTerrain().isWaterTerrain()) ||
+                                (status.rangeToTarget == 1 && status.targetElevation > status.sourceElevation &&
+                                        status.source.getHex().getCenterLocation().getTerrain().isWaterTerrain())))) {
+
+                    // if orchard, then hindrance
+                    if ("Orchard, Out of Season".equals(status.currentTerrain.getName())) {
+
+                        if (addHindranceHex(status, result))
+                            return true;
+
+                    } else {
+                        status.reason = "Must have a height advantage to see over this terrain (A6.2)";
+                        status.blocked = true;
+                        result.setBlocked(status.currentCol, status.currentRow, status.reason);
                         return true;
-
-                }
-                else {
-                    status.reason = "Must have a height advantage to see over this terrain (A6.2)";
-                    status.blocked = true;
-                    result.setBlocked(status.currentCol, status.currentRow, status.reason);
-                    return true;
+                    }
                 }
             }
         }
@@ -1736,7 +1866,8 @@ public class Map  {
         if (status.currentTerrain.isHalfLevelHeight() &&
                 !status.currentTerrain.isHexsideTerrain() &&
                 status.groundLevel + status.currentTerrainHgt == status.sourceElevation &&
-                status.groundLevel + status.currentTerrainHgt == status.targetElevation) {
+                status.groundLevel + status.currentTerrainHgt == status.targetElevation &&
+                !status.slopes) {
 
             // terrain blocks LOS?
             if (status.currentTerrain.isLOSObstacle()) {
@@ -1768,7 +1899,22 @@ public class Map  {
                 status.groundLevel == status.sourceElevation &&
                 status.groundLevel == status.targetElevation) {
 
-            if (status.currentTerrain.isLowerLOSObstacle()) {
+            // special case for slopes
+            if(status.slopes) {
+
+                if (status.currentTerrain.isLOSObstacle()) {
+
+                    status.reason = "This terrain blocks LOS to up-slope location";
+                    status.blocked = true;
+                    result.setBlocked(status.currentCol, status.currentRow, status.reason);
+                    return true;
+                }
+
+                // must be hindrance
+                if (addHindranceHex(status, result))
+                    return true;
+            }
+            else if (status.currentTerrain.isLowerLOSObstacle()) {
 
                 status.reason = "This terrain blocks LOS to same same elevation Source and Target";
                 status.blocked = true;
@@ -2017,34 +2163,18 @@ public class Map  {
         return false;
     }
 
-    protected static boolean isBlindHex(
-		int sourceElevation,
-		int targetElevation,
-		int rangeToSource,
-		int rangeToTarget,
-		int groundLevel,
-		int currentTerrainHgt
-	) {
+    protected static boolean isBlindHex(LOSStatus status, int terrainHeight) {
 
-        return isBlindHex(
-                sourceElevation,
-                targetElevation,
-                rangeToSource,
-                rangeToTarget,
-                groundLevel,
-                currentTerrainHgt,
-                false);
+        return isBlindHex(status, terrainHeight, false);
     }
 
-    protected static boolean isBlindHex(
-		int sourceElevation,
-		int targetElevation,
-		int rangeToSource,
-		int rangeToTarget,
-		int groundLevel,
-		int currentTerrainHgt,
-		boolean isCliffHexside
-	) {
+    protected static boolean isBlindHex(LOSStatus status, int terrainHeight, boolean isCliffHexside) {
+
+        int sourceElevation = status.sourceElevation;
+        int targetElevation = status.targetElevation;
+        int rangeToSource = status.rangeToSource;
+        int rangeToTarget = status.rangeToTarget;
+        int groundLevel = status.groundLevel;
 
 		// blind hex NA for same-level LOS
         if(sourceElevation == targetElevation){
@@ -2065,15 +2195,19 @@ public class Map  {
             rangeToTarget = temp;
         }
 
+        // increment source elevation for slopes
+        if(status.slopes) {
+            sourceElevation++;
+        }
 
-        // is the obstacle a non-cliff crestline?
-        if (currentTerrainHgt == 0 && !isCliffHexside) {
+        // is the obstacle a non-cliff crest line?
+        if (terrainHeight == 0 && !isCliffHexside) {
 
-            return rangeToTarget <= Math.max(2 * (groundLevel + currentTerrainHgt) + (rangeToSource / 5) - sourceElevation - targetElevation, 0);
+            return rangeToTarget <= Math.max(2 * (groundLevel + terrainHeight) + (rangeToSource / 5) - sourceElevation - targetElevation, 0);
         }
         else {
 
-            return rangeToTarget <= Math.max(2 * (groundLevel + currentTerrainHgt) + (rangeToSource / 5) - sourceElevation - targetElevation + 1, 1);
+            return rangeToTarget <= Math.max(2 * (groundLevel + terrainHeight) + (rangeToSource / 5) - sourceElevation - targetElevation + 1, 1);
         }
     }
 
@@ -2082,7 +2216,6 @@ public class Map  {
      */
 	public final void setTerrain(HashMap<String, Terrain> nameMap) {
 
-		//noinspection AssignmentToStaticFieldFromInstanceMethod
 		terrainNameMap = nameMap;
         for(String name : nameMap.keySet()) {
 
@@ -2243,5 +2376,18 @@ public class Map  {
 
         return newMap;
     }
+
+    /**
+     * Set the hexes with slopes
+     * @param slopes the slopes
+     */
+    public void setSlopes(Slopes slopes) {
+        for(java.util.Map.Entry<String, boolean[]> hex : slopes.getAllSlopes().entrySet()){
+            if(getHex(hex.getKey()) != null){
+                getHex(hex.getKey()).setSlopes(hex.getValue());
+            }
+        }
+    }
 }
+
 

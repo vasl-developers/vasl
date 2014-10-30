@@ -39,8 +39,6 @@ public class LOSResult {
 	private Point   blockedAtPoint;
 	protected Point firstHindranceAt;
 	private int	 	range;
-	private int	 	sourceExitHexside;
-	private int	 	targetEnterHexside;
 	protected int	sourceExitHexspine	= UNKNOWN;
 	private int	 	targetEnterHexspine	= UNKNOWN;
 	private String	reason				= "";
@@ -191,9 +189,7 @@ public class LOSResult {
 	public void	setTargetLocation(Location l){targetLocation = l;}
 
 	// hexside methods
-	public void		setSourceExitHexside(int h)	{sourceExitHexside  = h;}
 	public void		setSourceExitHexspine(int h){sourceExitHexspine = h;}
-	public void		setTargetEnterHexside(int h){targetEnterHexside = h;}
 	public void		setTargetEnterHexspine(int h){targetEnterHexspine = h;}
 	public int		getSourceExitHexspine()		{return sourceExitHexspine;}
 	public int		getTargetEnterHexspine()	{return targetEnterHexspine;}
@@ -228,8 +224,6 @@ public class LOSResult {
 		blockedAtPoint		= null;
 		firstHindranceAt 	= null;
 		range				= 0;
-		sourceExitHexside	= UNKNOWN;
-		targetEnterHexside	= UNKNOWN;
 		reason				= "";
 		continuousSlope 	= false;
 		LOSis60Degree		= false;

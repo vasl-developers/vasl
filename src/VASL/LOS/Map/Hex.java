@@ -384,6 +384,29 @@ public class Hex {
 	public Point	getHexCenter()			{return new Point((int) center.getX(), (int) center.getY());}
 	public int	    getBaseHeight()			{return baseHeight;}
 
+    private boolean[] slopes = new boolean[6]; // flags for hexsides having slopes - all false by default
+
+    /**
+     * Set the hexside slopes flags
+     * @param slopes the slopes array of length 6 - [0] is the top hexside and the others are clockwise from there
+     */
+    public void setSlopes(boolean[] slopes) {
+
+        // must be an array of 6 flags;
+        if(slopes.length != 6) {
+            return;
+        }
+        this.slopes = slopes;
+    }
+
+    /**
+     * @param hexside the hexside - 0 is the top hexside and the others are clockwise from there
+     * @return true if hexside has slope
+     */
+    public boolean hasSlope(int hexside) {
+        return slopes[hexside];
+    }
+
 	public Location getCenterLocation() { return centerLocation;}
 
 	public void setHexBorder(Polygon newHexBorder) {
@@ -880,7 +903,18 @@ public class Hex {
 		southEastOnMap  = northWestOnMap;
 		northWestOnMap   = bTemp;
 
-		// up and down locations
+        // shuffle the slope flags
+        bTemp = slopes[0];
+        slopes[0] = slopes[3];
+        slopes[3] = bTemp;
+        bTemp = slopes[1];
+        slopes[1] = slopes[4];
+        slopes[4] = bTemp;
+        bTemp = slopes[2];
+        slopes[2] = slopes[5];
+        slopes[5] = bTemp;
+
+        // up and down locations
 		Location l = centerLocation.getUpLocation();
 		while (l != null){
 
@@ -1022,9 +1056,14 @@ public class Hex {
 			));
 		}
 
-        //stairways
+        //stairways and slopes
         stairway = h.hasStairway();
+        slopes = h.getSlopes();
 	}
+
+    private boolean[] getSlopes() {
+        return slopes;
+    }
 
     public boolean hasStairway() {
         return stairway;

@@ -155,6 +155,9 @@ public class BoardArchive {
                     }
                 }
 
+                // set the slopes
+                map.setSlopes(metadata.getSlopes());
+
             } catch(Exception e) {
                 System.err.println("Could not read the LOS data in board " + qualifiedBoardArchive);
 				System.err.println(e.toString());
@@ -585,6 +588,13 @@ public class BoardArchive {
     public HashMap<String, ColorSSRule> getColorSSRules() {
 
         return metadata.getColorSSRules();
+    }
+
+    /**
+     * @return the set of hexes with slopes
+     */
+    public Slopes getSlopes() {
+        return metadata.getSlopes();
     }
 }
 

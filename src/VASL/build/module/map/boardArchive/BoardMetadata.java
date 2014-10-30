@@ -35,6 +35,9 @@ public class BoardMetadata extends AbstractMetadata {
     // Maps SSR name to the underlay rule object
     private LinkedHashMap<String, UnderlaySSRule> underlaySSRules = new LinkedHashMap<String, UnderlaySSRule>();
 
+    // set of hexes with slopes
+    private Slopes slopes = new Slopes();
+
     // Board-level metadata
     public final static int MISSING = -999; // used to indicate the value was not in the metadata (for optional attributes)
     private String name;
@@ -151,6 +154,7 @@ public class BoardMetadata extends AbstractMetadata {
                 parseColors(root.getChild(colorsElement), true); // replace existing colors with those in board metadata
                 parseColorSSRules(root.getChild(colorSSRulesElement));
                 parseOverlaySSRules(root.getChild(overlaySSRulesElement));
+                parseSlopes(root.getChild(slopesElement));
             }
 
         } catch (IOException e) {
@@ -228,6 +232,51 @@ public class BoardMetadata extends AbstractMetadata {
                         e.getAttributeValue(buildingTypeBuildingTypeNameAttr)
                 );
             }
+        }
+    }
+
+    /**
+     * Parses the board slopes
+     * @param element the slopeElement element
+     * @throws JDOMException
+     */
+    private void parseSlopes(Element element) throws JDOMException {
+
+        // make sure we have the right element
+        if (element != null) {
+            assertElementName(element, slopesElement);
+
+            for(Element e: element.getChildren()) {
+
+                // ignore any child elements that are not slopes
+                if(e.getName().equals(slopeElement)){
+
+                    slopes.addSlope(
+                            e.getAttributeValue(slopeHexNameAttribute),
+                            parseSlopeHexsides(e.getAttributeValue(slopeHexsidesAttribute))
+                    );
+                }
+            }
+        }
+    }
+
+    /**
+     * Translates a string of hexside numbers into an array of boolean flags
+     * @param hexsides the hexside string - e.g. 012345
+     * @return the boolean flags
+     * @throws JDOMException
+     */
+    private boolean[] parseSlopeHexsides (String hexsides) throws JDOMException {
+        boolean[] hexsideFlags = new boolean[6];
+
+        try {
+            for (int x = 0; x < hexsides.length() && x < 6; x++) {
+                char c = hexsides.charAt(x);
+                hexsideFlags[(int) c - (int) '0'] = true;
+            }
+            return hexsideFlags;
+        } catch (Exception e) {
+            throw new JDOMException("Invalid " + slopeHexsidesAttribute +" attribute in board metadata: " + hexsides);
         }
     }
 
@@ -357,5 +406,10 @@ public class BoardMetadata extends AbstractMetadata {
     public LinkedHashMap<String, UnderlaySSRule> getUnderlaySSRules() {
         return underlaySSRules;
     }
+
+    /**
+     * @return the set of hexes with slopes
+     */
+    public Slopes getSlopes(){ return slopes;}
 
 }

@@ -71,23 +71,23 @@ public class LOSDataEditor {
         boardArchive = new BoardArchive(boardName, boardDirectory, sharedBoardMetadata);
         this.sharedBoardMetadata = sharedBoardMetadata;
 
-		final double hexHeight = boardArchive.getHexHeight();
-
         // create an empty map
         map = createNewLOSData();
     }
 
     public Map createNewLOSData(){
 
+        Map m;
         if(boardArchive.isGEO()) {
 
-            return new Map(
+            m = new Map(
                     boardArchive.getBoardWidth(),
                     boardArchive.getBoardHeight(),
                     sharedBoardMetadata.getTerrainTypes());
+            m.setSlopes(boardArchive.getSlopes());
         }
         else {
-            return new Map(
+            m = new Map(
                     boardArchive.getBoardWidth(),
                     boardArchive.getBoardHeight(),
                     boardArchive.getA1CenterX(),
@@ -95,8 +95,9 @@ public class LOSDataEditor {
                     boardArchive.getBoardImage().getWidth(),
                     boardArchive.getBoardImage().getHeight(),
                     sharedBoardMetadata.getTerrainTypes());
+            m.setSlopes(boardArchive.getSlopes());
         }
-
+        return m;
     }
 
     //TODO: removed redundancy in these private methods
@@ -789,6 +790,40 @@ public class LOSDataEditor {
     }
 
     /**
+     * Paints hex terrain that is not in a location - e.g. slopes and railroads
+     */
+    public void paintAncillaryHexTerrain(BufferedImage img) {
+
+        // get graphics handle
+        Graphics2D workSpace = (Graphics2D) img.getGraphics();
+        workSpace.setColor(Color.RED);
+        workSpace.setFont(new Font("Arial", Font.BOLD, 12));
+
+        Hex currentHex = null;
+        for (int x = 0; x < map.getWidth(); x++) {
+            for (int y = 0; y < map.getHeight() + (x % 2); y++) { // add 1 hex if odd
+                currentHex = map.getHex(x, y);
+                for (int z = 0; z < 6; z++){
+                    if(currentHex.hasSlope(z)) {
+
+                        String s = "S";
+                        workSpace.drawString(
+                                s,
+                                currentHex.getHexsideLocation(z).getEdgeCenterPoint().x - workSpace.getFontMetrics().stringWidth(s) / 2,
+                                currentHex.getHexsideLocation(z).getEdgeCenterPoint().y
+//                                        h.getCenterLocation().getLOSPoint().x -
+//                                                workSpace.getFontMetrics().stringWidth(h.getName()) / 2 +
+//                                                (h.getColumnNumber() == 0 ? 6 : 0) +
+//                                                (h.getColumnNumber() == map.getHexGrid().length - 1 ? -7 : 0),
+//                                        h.getHexsideLocation(0).getLOSPoint().y + 10
+                        );
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Sets all pixels within the given rectangle to the new terrain type.
      * @param rect map area to update
      * @param terr new terrain type
@@ -871,11 +906,12 @@ public class LOSDataEditor {
      */
     private boolean noShadows(Terrain terrain) {
 
-      return   terrain.getName().equals("Wooden Rubble")||
-                terrain.getName().equals("Stone Rubble") ||
-                terrain.getName().equals("Crags")  ||
-                terrain.getName().equals("Orchard, Out of Season") ||
-                terrain.getName().equals("Orchard");
+        return false;
+//      return   terrain.getName().equals("Wooden Rubble")||
+//                terrain.getName().equals("Stone Rubble") ||
+//                terrain.getName().equals("Crags")  ||
+//                terrain.getName().equals("Orchard, Out of Season") ||
+//                terrain.getName().equals("Orchard");
     }
 
     /**
