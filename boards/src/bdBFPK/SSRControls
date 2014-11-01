@@ -1,0 +1,7 @@
+<SSRControls>
+ <Option name="Board BFPK Special overlays">
+ <Checkbox name="">
+         <entry name="Remove the Stream" rule="BSO_BFPK_NoStream" text="remove bdBFPK Stream"/>
+ </Checkbox>
+    </Option>
+</SSRControls>
