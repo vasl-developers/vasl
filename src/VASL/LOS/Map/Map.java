@@ -1652,14 +1652,15 @@ public class Map  {
                         // always blocks if...
                         if (//higher than both source/target
                                 (status.groundLevel + status.currentTerrainHgt > status.sourceElevation &&
-                                        status.groundLevel + status.currentTerrainHgt > status.targetElevation) ||
-                                        //same height as both source/target, but 1/2 level
-                                        (status.groundLevel + status.currentTerrainHgt == status.sourceElevation &&
-                                                status.groundLevel + status.currentTerrainHgt == status.targetElevation &&
-                                                status.currentTerrain.isHalfLevelHeight()) ||
-                                        //same height as higher source/target, but other is lower
-                                        (status.groundLevel + status.currentTerrainHgt == Math.max(status.sourceElevation, status.targetElevation) &&
-                                                status.groundLevel + status.currentTerrainHgt > Math.min(status.sourceElevation, status.targetElevation))
+                                 status.groundLevel + status.currentTerrainHgt > status.targetElevation) ||
+                                 //same height as both source/target, but 1/2 level
+                                 (status.groundLevel + status.currentTerrainHgt == status.sourceElevation &&
+                                  status.groundLevel + status.currentTerrainHgt == status.targetElevation &&
+                                  status.currentTerrain.isHalfLevelHeight()) ||
+                                  //same height as higher source/target, but other is lower
+                                  (status.groundLevel + status.currentTerrainHgt == Math.max(status.sourceElevation, status.targetElevation) &&
+                                   status.groundLevel + status.currentTerrainHgt > Math.min(status.sourceElevation, status.targetElevation)) &&
+                                   !status.slopes
                                 ) {
 
                             status.reason = "Cannot see through/over bocage (B9.52)";
@@ -1687,6 +1688,9 @@ public class Map  {
                         return true;
                     }
                 }
+                else {
+                    // return true;
+                }
             }
         }
         return false;
@@ -1711,6 +1715,11 @@ public class Map  {
                 result.setBlocked(status.currentCol, status.currentRow, status.reason);
                 return true;
             }
+        }
+
+        // special case for bocage - blind hexes checked in hexside rule
+        if("Bocage".equals(status.currentTerrain.getName())){
+            return false;
         }
 
         if (status.groundLevel + status.currentTerrainHgt > Math.min(status.sourceElevation, status.targetElevation) &&
@@ -1834,8 +1843,13 @@ public class Map  {
             return false;
         }
 
+        // ignore bocage - different rule
+        if("Bocage".equals(status.currentTerrain.getName())){
+            return false;
+        }
+
         if (status.groundLevel + status.currentTerrainHgt > status.sourceElevation &&
-                status.groundLevel + status.currentTerrainHgt > status.targetElevation) {
+            status.groundLevel + status.currentTerrainHgt > status.targetElevation) {
 
             // terrain blocks LOS?
             if (status.currentTerrain.isLOSObstacle()) {
@@ -2195,9 +2209,12 @@ public class Map  {
             rangeToTarget = temp;
         }
 
-        // increment source elevation for slopes
+        // increment source elevation for slopes in special case where terrain is same height as upper location
         if(status.slopes) {
-            sourceElevation++;
+            if (status.groundLevel + status.currentTerrainHgt == Math.max(status.sourceElevation, status.targetElevation)) {
+
+                sourceElevation++;
+            }
         }
 
         // is the obstacle a non-cliff crest line?
