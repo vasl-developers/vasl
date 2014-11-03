@@ -18,6 +18,7 @@
  */
 package VASL.build.module.map;
 
+import static VASL.build.module.map.boardPicker.ASLBoard.DEFAULT_HEX_HEIGHT;
 import VASSAL.build.AbstractConfigurable;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
@@ -108,6 +109,8 @@ public class ASLPieceFinder extends AbstractConfigurable implements CommandEncod
 
         if (active && clickPoint != null) {
 
+            int l_iCircleSize = (int)(map.getZoom() * DEFAULT_HEX_HEIGHT * 2);
+
             // translate the piece center for current zoom
             Point p = new Point(clickPoint);
             p.x *= map.getZoom();
@@ -117,7 +120,7 @@ public class ASLPieceFinder extends AbstractConfigurable implements CommandEncod
             Graphics2D gg = (Graphics2D) g;
             g.setColor(Color.RED);
             gg.setStroke(new BasicStroke(3));
-            gg.drawOval(p.x - CIRCLE_SIZE/2, p.y - CIRCLE_SIZE/2, CIRCLE_SIZE, CIRCLE_SIZE);
+            gg.drawOval(p.x - l_iCircleSize/2, p.y - l_iCircleSize/2, l_iCircleSize, l_iCircleSize);
         }
     }
 
