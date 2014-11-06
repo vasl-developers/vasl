@@ -39,6 +39,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
@@ -331,4 +332,33 @@ public class ASLMap extends Map {
     private void logException(Throwable error) {
         logger.info("", error);
     }
+    
+    public BufferedImage getImgMapIcon(Point pt, double width) 
+    {
+      // map rectangle
+      Rectangle rectDraw = null;
+      BufferedImage img = new BufferedImage((int)width, (int)width, BufferedImage.TYPE_INT_ARGB);
+      final Graphics2D gg = img.createGraphics();
+      
+        for (Board b : boards) 
+        {
+            if (rectDraw == null)
+            {
+                rectDraw = new Rectangle();
+                
+                rectDraw.x = (int)((pt.x - (int)((width / 2.0) * b.getMagnification())) / b.getMagnification());
+                rectDraw.y = (int)((pt.y - (int)((width / 2.0) * b.getMagnification())) / b.getMagnification());
+                rectDraw.width = (int)(width * b.getMagnification());
+                rectDraw.height = (int)(width * b.getMagnification());
+
+                gg.translate(-rectDraw.x, -rectDraw.y);      
+            }
+      
+            b.drawRegion(gg, getLocation(b, 1.0 / b.getMagnification()), rectDraw, 1.0 / b.getMagnification(), null);
+        }
+        
+        gg.dispose();
+        
+        return img;
+    }    
 }

@@ -46,7 +46,6 @@ public class ASLPieceFinder extends AbstractConfigurable implements CommandEncod
     private Map map;
 
     // animation control - for drawing the red circle
-    final private static int CIRCLE_SIZE = 100;
     final private static int CIRCLE_DURATION = 2000;
     private Point clickPoint;
     private Boolean active = false;
