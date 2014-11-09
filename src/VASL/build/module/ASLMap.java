@@ -27,6 +27,9 @@ import VASL.build.module.map.boardPicker.VASLBoard;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.Map;
 import VASSAL.build.module.map.boardPicker.Board;
+import VASSAL.counters.GamePiece;
+import VASSAL.counters.Properties;
+import VASSAL.counters.Stack;
 import VASSAL.tools.DataArchive;
 import VASSAL.tools.ErrorDialog;
 import VASSAL.tools.imageop.Op;
@@ -339,26 +342,53 @@ public class ASLMap extends Map {
       Rectangle rectDraw = null;
       BufferedImage img = new BufferedImage((int)width, (int)width, BufferedImage.TYPE_INT_ARGB);
       final Graphics2D gg = img.createGraphics();
+      double dMagnification = 0.0;
       
         for (Board b : boards) 
         {
             if (rectDraw == null)
             {
+                dMagnification = b.getMagnification();
                 rectDraw = new Rectangle();
                 
-                rectDraw.x = (int)((pt.x - (int)((width / 2.0) * b.getMagnification())) / b.getMagnification());
-                rectDraw.y = (int)((pt.y - (int)((width / 2.0) * b.getMagnification())) / b.getMagnification());
-                rectDraw.width = (int)(width * b.getMagnification());
-                rectDraw.height = (int)(width * b.getMagnification());
+                rectDraw.x = (int)((pt.x - (int)((width / 2.0) * dMagnification)) / dMagnification);
+                rectDraw.y = (int)((pt.y - (int)((width / 2.0) * dMagnification)) / dMagnification);
+                rectDraw.width = (int)(width * dMagnification);
+                rectDraw.height = (int)(width * dMagnification);
 
                 gg.translate(-rectDraw.x, -rectDraw.y);      
             }
       
-            b.drawRegion(gg, getLocation(b, 1.0 / b.getMagnification()), rectDraw, 1.0 / b.getMagnification(), null);
+            b.drawRegion(gg, getLocation(b, 1.0 / dMagnification), rectDraw, 1.0 / dMagnification, null);
         }
         
+        drawPiecesNonStackableInRegion(gg, rectDraw, dMagnification, 1.0 / dMagnification);
+                
         gg.dispose();
         
         return img;
+    }   
+    
+  public void drawPiecesNonStackableInRegion(Graphics g, Rectangle visibleRect, double dMagnification, double dZoom) 
+  {
+      Graphics2D g2d = (Graphics2D) g;
+      Composite oldComposite = g2d.getComposite();
+      
+      g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pieceOpacity));
+      
+      GamePiece[] stack = pieces.getPieces();
+      
+      for (int i = 0; i < stack.length; ++i) 
+      {
+        Point pt = componentCoordinates(stack[i].getPosition());
+        
+        if (stack[i].getClass() != Stack.class) 
+        {
+          if (Boolean.TRUE.equals(stack[i].getProperty(Properties.NO_STACK))) 
+              stack[i].draw(g, (int)(pt.x / (getZoom() * dMagnification)), (int)(pt.y / (getZoom() * dMagnification)), null, dZoom);
+        }
+      }
+      
+      g2d.setComposite(oldComposite);
     }    
 }
