@@ -39,8 +39,14 @@ import java.awt.Shape;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 
-public class CounterDetailViewer extends VASSAL.build.module.map.CounterDetailViewer {
+public class CounterDetailViewer extends VASSAL.build.module.map.CounterDetailViewer 
+{
+    final int MAX_NUM_PIECES_PER_ROW = 9;
+    final int MAP_ICON_SIZE = (int)(DEFAULT_HEX_HEIGHT * 1.2);
+    Point [] ar_Pieces_Pos = null;
+    
   @Override
   protected Rectangle getBounds(GamePiece piece) {
     TextInfo info = (TextInfo) Decorator.getDecorator(piece, TextInfo.class);
@@ -54,15 +60,83 @@ public class CounterDetailViewer extends VASSAL.build.module.map.CounterDetailVi
   
   /** Set the bounds field large enough to accommodate the given set of pieces */
   @Override
-  protected void fixBounds(List<GamePiece> pieces) {
-    for (GamePiece piece : pieces) {
-      final Dimension pieceBounds = getBounds(piece).getSize();
-      bounds.width += (int) Math.round(pieceBounds.width * graphicsZoomLevel) + borderWidth;
-      bounds.height = Math.max(bounds.height, (int) Math.round(pieceBounds.height * graphicsZoomLevel) + borderWidth * 2);
-    }
+  protected void fixBounds(List<GamePiece> pieces) 
+  {
+    int iNumRows = pieces.size() / (MAX_NUM_PIECES_PER_ROW + 1) + 1;
+    int iPiecePos, iCurTotalWidth = borderWidth * 2 + MAP_ICON_SIZE, iCurTotalHeight = borderWidth;
+    int iMaxTotalWidth = 0;
+    int [] ar_iMaxHeigth = new int [iNumRows];
+    int [] ar_iMaxWidth = new int [MAX_NUM_PIECES_PER_ROW];
+    
+    // calculate each row and col max size
+    for (int iRow = 0; iRow < iNumRows; iRow++)
+    {
+        for (int iCol = 0; iCol < MAX_NUM_PIECES_PER_ROW; iCol++)
+        {
+            iPiecePos = iRow * MAX_NUM_PIECES_PER_ROW + iCol; 
+            
+            if (iPiecePos < pieces.size())
+            {
+                GamePiece piece = pieces.get(iPiecePos);
+                final Dimension pieceBounds = getBounds(piece).getSize();
+                
+                if (Math.round(pieceBounds.height * graphicsZoomLevel) > ar_iMaxHeigth[iRow])
+                    ar_iMaxHeigth[iRow] = (int)Math.round(pieceBounds.height * graphicsZoomLevel);
 
-    bounds.height = Math.max(bounds.height, (int)(DEFAULT_HEX_HEIGHT * 1.2) + borderWidth * 2);
-    bounds.width += borderWidth * 2 + DEFAULT_HEX_HEIGHT * 1.2;
+                if (Math.round(pieceBounds.width * graphicsZoomLevel) > ar_iMaxWidth[iCol])
+                    ar_iMaxWidth[iCol] = (int)Math.round(pieceBounds.width * graphicsZoomLevel);
+            }
+            else
+                break;
+        }
+    }
+    
+    // where save the position of each piece  
+    ar_Pieces_Pos = new Point [pieces.size()];
+
+    iCurTotalHeight = borderWidth;
+    // calculate the pos of each pieces
+    for (int iRow = 0; iRow < iNumRows; iRow++)
+    {
+        iCurTotalWidth = borderWidth * 2 + MAP_ICON_SIZE;
+        
+        for (int iCol = 0; iCol < MAX_NUM_PIECES_PER_ROW; iCol++)
+        {
+            iPiecePos = iRow * MAX_NUM_PIECES_PER_ROW + iCol; 
+            
+            if (iPiecePos < pieces.size())
+            {
+                GamePiece piece = pieces.get(iPiecePos);
+                final Dimension pieceBounds = getBounds(piece).getSize();
+                
+                ar_Pieces_Pos[iPiecePos] = new Point();
+                
+                if (Math.round(pieceBounds.width * graphicsZoomLevel) < ar_iMaxWidth[iCol])
+                    ar_Pieces_Pos[iPiecePos].x = iCurTotalWidth + ((ar_iMaxWidth[iCol] - (int)Math.round(pieceBounds.width * graphicsZoomLevel)) / 2);
+                else
+                    ar_Pieces_Pos[iPiecePos].x = iCurTotalWidth;
+
+                if (Math.round(pieceBounds.height * graphicsZoomLevel) < ar_iMaxHeigth[iRow])
+                    ar_Pieces_Pos[iPiecePos].y = iCurTotalHeight + ((ar_iMaxHeigth[iRow] - (int)Math.round(pieceBounds.height * graphicsZoomLevel)) / 2);
+                else
+                    ar_Pieces_Pos[iPiecePos].y = iCurTotalHeight;
+
+                iCurTotalWidth += ar_iMaxWidth[iCol] + borderWidth;
+            }
+            else
+                break;
+        }
+        
+        if (iCurTotalWidth > iMaxTotalWidth)
+            iMaxTotalWidth = iCurTotalWidth;
+        
+        iCurTotalHeight += ar_iMaxHeigth[iRow] + borderWidth + (isTextUnderCounters() ? 15 : 0);
+    }
+    
+    bounds.width += iMaxTotalWidth;
+    bounds.height += iCurTotalHeight;
+    bounds.height = Math.max(bounds.height, MAP_ICON_SIZE + borderWidth * 2);
+    
     bounds.y -= bounds.height;
   }
   
@@ -73,32 +147,36 @@ public class CounterDetailViewer extends VASSAL.build.module.map.CounterDetailVi
 
     fixBounds(pieces);
 
-    if (bounds.width > 0) {
-
+    if (bounds.width > 0) 
+    {
       Rectangle visibleRect = comp.getVisibleRect();
-      bounds.x = Math.min(bounds.x, visibleRect.x + visibleRect.width - bounds.width);
+      
+      bounds.x = Math.min(bounds.x, visibleRect.x + visibleRect.width - bounds.width - 1);
       if (bounds.x < visibleRect.x)
         bounds.x = visibleRect.x;
-      bounds.y = Math.min(bounds.y, visibleRect.y + visibleRect.height - bounds.height) - (isTextUnderCounters() ? 15 : 0);
+      
+      bounds.y = Math.min(bounds.y, visibleRect.y + visibleRect.height - bounds.height - 1);
       int minY = visibleRect.y + (textVisible ? g.getFontMetrics().getHeight() + 6 : 0);
+      
       if (bounds.y < minY)
         bounds.y = minY;
 
-      if (bgColor != null) {
+      if (bgColor != null) 
+      {
         g.setColor(bgColor);
         g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
       }
-      if (fgColor != null) {
+      
+      if (fgColor != null) 
+      {
         g.setColor(fgColor);
         g.drawRect(bounds.x - 1, bounds.y - 1, bounds.width + 1, bounds.height + 1);
         g.drawRect(bounds.x - 2, bounds.y - 2, bounds.width + 3, bounds.height + 3);
       }
+      
       Shape oldClip = g.getClip();
 
-      int borderOffset = borderWidth;
-      double dMapIconWidth = DEFAULT_HEX_HEIGHT * 1.2;
-
-      // get coordinates of the stack
+      // draw the map
       Point ptPosition = map.mapCoordinates(currentMousePosition.getPoint());
       
       if (!pieces.isEmpty())
@@ -108,7 +186,7 @@ public class CounterDetailViewer extends VASSAL.build.module.map.CounterDetailVi
       }
 
       // get the icon of the map
-      BufferedImage imgMapIcon = ((ASLMap)map).getImgMapIcon(ptPosition, dMapIconWidth);
+      BufferedImage imgMapIcon = ((ASLMap)map).getImgMapIcon(ptPosition, DEFAULT_HEX_HEIGHT * 1.2);
       
       // draw the image 
       g.setClip(bounds.x - 3, bounds.y - 3, bounds.width + 5, bounds.height + 5);
@@ -116,41 +194,52 @@ public class CounterDetailViewer extends VASSAL.build.module.map.CounterDetailVi
       g.setColor(fgColor);
       g.drawRect(bounds.x + borderWidth, bounds.y + borderWidth, imgMapIcon.getWidth(), imgMapIcon.getHeight());
       g.setClip(oldClip);
-      bounds.translate((int) (dMapIconWidth), 0);
-      borderOffset += borderWidth;
       
       // draw pieces
-      double graphicsZoom = graphicsZoomLevel;
-      for (int i = 0; i < pieces.size(); i++) {
-        // Draw the next piece
-        // pt is the location of the left edge of the piece
+      for (int i = 0; i < pieces.size(); i++) 
+      {
+        if (ar_Pieces_Pos[i] == null)
+            continue;
+          
         GamePiece piece = pieces.get(i);
         Rectangle pieceBounds = getBounds(piece);
-        if (unrotatePieces) piece.setProperty(Properties.USE_UNROTATED_SHAPE, Boolean.TRUE);
+        
+        if (unrotatePieces) 
+            piece.setProperty(Properties.USE_UNROTATED_SHAPE, Boolean.TRUE);
+        
         g.setClip(bounds.x - 3, bounds.y - 3, bounds.width + 5, bounds.height + 5);
+        
         final Stack parent = piece.getParent();
-        if (parent instanceof Deck) {
+        
+        if (parent instanceof Deck) 
+        {
           owner = piece.getProperty(Properties.OBSCURED_BY);
           final boolean faceDown = ((Deck) parent).isFaceDown();
           piece.setProperty(Properties.OBSCURED_BY, faceDown ? Deck.NO_USER : null);
         }
-        piece.draw(g, bounds.x - (int) (pieceBounds.x * graphicsZoom) + borderOffset, bounds.y - (int) (pieceBounds.y * graphicsZoom) + borderWidth, comp,
-            graphicsZoom);
-        if (parent instanceof Deck) piece.setProperty(Properties.OBSCURED_BY, owner);
-        if (unrotatePieces) piece.setProperty(Properties.USE_UNROTATED_SHAPE, Boolean.FALSE);
+        
+        piece.draw(g, bounds.x + ar_Pieces_Pos[i].x - (int) (pieceBounds.x * graphicsZoomLevel), bounds.y + ar_Pieces_Pos[i].y - (int) (pieceBounds.y * graphicsZoomLevel), comp, graphicsZoomLevel);
+        
+        if (parent instanceof Deck) 
+            piece.setProperty(Properties.OBSCURED_BY, owner);
+        
+        if (unrotatePieces) 
+            piece.setProperty(Properties.USE_UNROTATED_SHAPE, Boolean.FALSE);
+        
         g.setClip(oldClip);
 
-        if (isTextUnderCounters()) {
+        if (isTextUnderCounters()) 
+        {
           String text = counterReportFormat.getLocalizedText(piece);
-          if (text.length() > 0) {
-            int x = bounds.x - (int) (pieceBounds.x * graphicsZoom) + borderOffset;
-            int y = bounds.y + bounds.height + 10;
-            drawLabel(g, new Point(x, y), text, Labeler.CENTER, Labeler.CENTER);
+          
+          if (text.length() > 0) 
+          {
+            int x = bounds.x + ar_Pieces_Pos[i].x - (int) (pieceBounds.x * graphicsZoomLevel);
+            int y = bounds.y + ar_Pieces_Pos[i].y + (int)Math.round(pieceBounds.height * graphicsZoomLevel) + 5;
+            
+            drawLabel(g, new Point(x, y), text, Labeler.CENTER, Labeler.TOP);
           }
         }
-
-        bounds.translate((int) (pieceBounds.width * graphicsZoom), 0);
-        borderOffset += borderWidth;
       }
     }
   }
@@ -164,7 +253,7 @@ public class CounterDetailViewer extends VASSAL.build.module.map.CounterDetailVi
      * location name above the centre of the first piece in the stack.
      */
     String report = "";
-    int x = bounds.x - bounds.width;
+    int x = bounds.x;
     int y = bounds.y - 5;
     String offboard = Resources.getString("Map.offboard");  //$NON-NLS-1$
 
@@ -188,7 +277,7 @@ public class CounterDetailViewer extends VASSAL.build.module.map.CounterDetailVi
       String locationName = (String) topPiece.getLocalizedProperty(BasicPiece.LOCATION_NAME);
       emptyHexReportFormat.setProperty(BasicPiece.LOCATION_NAME, locationName.equals(offboard) ? "" : locationName);
       report = summaryReportFormat.getLocalizedText(new SumProperties(displayablePieces));
-      x += borderWidth * (pieces.size() + 1) + 2;
+      x -= borderWidth;
     }
 
     if (report.length() > 0) {
