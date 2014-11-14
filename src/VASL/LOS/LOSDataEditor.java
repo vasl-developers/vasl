@@ -702,7 +702,7 @@ public class LOSDataEditor {
             }
 
             // add half level height
-            if (currentTerrain.isHalfLevelHeight() && currentTerrain.getName().equals("Crags")) {
+            if (currentTerrain.isHalfLevelHeight()) {
                 currentHeight += pixelsPerHalfLevel;
 
             }
@@ -736,7 +736,7 @@ public class LOSDataEditor {
                         currentTerrainHeight = currentTerrain.getHeight() * pixelsPerLevel;
                     }
 
-                    if (currentTerrain.isHalfLevelHeight() && currentTerrain.getName().equals("Crags")) {
+                    if (currentTerrain.isHalfLevelHeight()) {
 
                         currentTerrainHeight += pixelsPerHalfLevel;
                     }
