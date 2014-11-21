@@ -63,6 +63,7 @@ public class ASLMap extends Map {
 
     // used to log errors in the VASSAL error log
     private static final Logger logger = LoggerFactory.getLogger(ASLMap.class);
+    private ShowMapLevel m_showMapLevel = ShowMapLevel.ShowAll;
 
   public ASLMap() {
 
@@ -391,4 +392,116 @@ public class ASLMap extends Map {
       
       g2d.setComposite(oldComposite);
     }    
+  
+    public void setShowMapLevel(ShowMapLevel showMapLevel) {
+       m_showMapLevel = showMapLevel;
+  }
+    
+    @Override
+  public boolean isPiecesVisible() {
+    return (pieceOpacity != 0);
+  }   
+  
+    @Override
+    public void drawPiecesInRegion(Graphics g,
+                                 Rectangle visibleRect,
+                                 Component c) {
+    if (m_showMapLevel != ShowMapLevel.ShowMapOnly) 
+    {
+        Graphics2D g2d = (Graphics2D) g;
+        Composite oldComposite = g2d.getComposite();
+        GamePiece[] stack = pieces.getPieces();
+        
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pieceOpacity));
+        
+        for (int i = 0; i < stack.length; ++i) 
+        {
+            Point pt = componentCoordinates(stack[i].getPosition());
+            
+            if (stack[i].getClass() == Stack.class) 
+            {
+                if (m_showMapLevel == ShowMapLevel.ShowAll) 
+                    getStackMetrics().draw((Stack) stack[i], pt, g, this, getZoom(), visibleRect);
+            }
+            else 
+            {
+                if (m_showMapLevel == ShowMapLevel.ShowAll) 
+                {
+                    stack[i].draw(g, pt.x, pt.y, c, getZoom());
+
+                    if (Boolean.TRUE.equals(stack[i].getProperty(Properties.SELECTED))) 
+                        highlighter.draw(stack[i], g, pt.x, pt.y, c, getZoom());
+                }
+                else if (m_showMapLevel == ShowMapLevel.ShowMapAndOverlay) 
+                {
+                    if (Boolean.TRUE.equals(stack[i].getProperty(Properties.NO_STACK))) 
+                    {
+                        stack[i].draw(g, pt.x, pt.y, c, getZoom());
+
+                        if (Boolean.TRUE.equals(stack[i].getProperty(Properties.SELECTED))) 
+                            highlighter.draw(stack[i], g, pt.x, pt.y, c, getZoom());
+                    }
+                }
+            }
+/*
+        // draw bounding box for debugging
+        final Rectangle bb = stack[i].boundingBox();
+        g.drawRect(pt.x + bb.x, pt.y + bb.y, bb.width, bb.height);
+*/
+        }
+        
+        g2d.setComposite(oldComposite); 
+    }
+  }
+
+    @Override
+  public void drawPieces(Graphics g, int xOffset, int yOffset) 
+  {
+    if (m_showMapLevel != ShowMapLevel.ShowMapOnly) 
+    {
+        Graphics2D g2d = (Graphics2D) g;
+        Composite oldComposite = g2d.getComposite();
+        GamePiece[] stack = pieces.getPieces();
+        
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pieceOpacity));
+        
+        for (int i = 0; i < stack.length; ++i) 
+        {
+            if (m_showMapLevel == ShowMapLevel.ShowAll) 
+            {
+                Point pt = componentCoordinates(stack[i].getPosition());
+                
+                stack[i].draw(g, pt.x + xOffset, pt.y + yOffset, theMap, getZoom());
+
+                if (Boolean.TRUE.equals(stack[i].getProperty(Properties.SELECTED))) 
+                    highlighter.draw(stack[i], g, pt.x - xOffset, pt.y - yOffset, theMap, getZoom());
+            }
+            else if (m_showMapLevel == ShowMapLevel.ShowMapAndOverlay) 
+            {
+                if (stack[i].getClass() != Stack.class) 
+                {
+                    if (Boolean.TRUE.equals(stack[i].getProperty(Properties.NO_STACK))) 
+                    {
+                        Point pt = componentCoordinates(stack[i].getPosition());
+                        
+                        stack[i].draw(g, pt.x + xOffset, pt.y + yOffset, theMap, getZoom());
+
+                        if (Boolean.TRUE.equals(stack[i].getProperty(Properties.SELECTED))) 
+                            highlighter.draw(stack[i], g, pt.x - xOffset, pt.y - yOffset, theMap, getZoom());
+                    }
+                }
+            }
+        }
+
+        g2d.setComposite(oldComposite);
+    }
+  }
+
+  
+  public enum ShowMapLevel
+  {
+      ShowAll,
+      ShowMapAndOverlay,
+      ShowMapOnly        
+  }
 }
