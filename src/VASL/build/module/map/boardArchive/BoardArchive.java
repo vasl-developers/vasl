@@ -135,7 +135,7 @@ public class BoardArchive {
                 for(int x = 0; x < gridWidth; x++) {
                     for(int y = 0; y < gridHeight; y++) {
                         map.setGridElevation((int) infile.readByte(), x, y);
-                        map.setGridTerrainCode((int) infile.readByte(), x, y);
+                        map.setGridTerrainCode((int) infile.readByte() & (0xff), x, y);
 
                     }
                 }
@@ -160,7 +160,7 @@ public class BoardArchive {
 
             } catch(Exception e) {
                 System.err.println("Could not read the LOS data in board " + qualifiedBoardArchive);
-				System.err.println(e.toString());
+                e.printStackTrace(System.err);
                 return null;
             }
             finally {

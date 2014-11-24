@@ -51,6 +51,8 @@ public class Map  {
     private final static String BOCAGE = "Bocage";
     private final static String STONE_RUBBLE = "Stone Rubble";
     private final static String WOODEN_RUBBLE = "Wooden Rubble";
+    private final static String GRAIN = "Grain";
+    private final static String BRUSH = "Brush";
 
     // the "upper left" hex - even if it's not A1 (e.g. boards 1b-6b) 
     private double A1CenterX;
@@ -139,7 +141,7 @@ public class Map  {
         // if the A1 x offset is negative (e.g. boards 1b-6b), assume it's zero
         return new Point2D.Double(
                 (A1CenterX < 0.0 ? 20.0 : A1CenterX) + hexWidth * (double) col,
-                A1CenterY + hexHeight * (double) row - hexHeight/2.0 * (double) (col%2)
+                (A1CenterY < 0.0 ? hexHeight/2.0 : A1CenterY) + hexHeight * (double) row - hexHeight/2.0 * (double) (col%2)
         );
 
         // -881 to 21
@@ -180,13 +182,15 @@ public class Map  {
             c = (char) ((int) 'A' + col%26);
             name += c;
 
-            for (int x = 0; x < (col + 1)/26; x++) {
+            for (int x = 0; x < col/26; x++) {
                 name += c;
             }
         }
 
         // add row as suffix - even cols (e.g. A = 0) will start with 1; odd cols will start with zero
-        return name + (row + (col%2 == 0 ? 1 : 0));
+        // negative A1 y offset implies boards BFP DW 2b
+        int rowOffset = A1CenterY < 0.0 ? (int) (-A1CenterY/hexHeight) + 1: 0;
+        return name + (row + rowOffset + (col%2 == 0 ? 1 : 0));
     }
 
 	/**
@@ -227,10 +231,15 @@ public class Map  {
      */
     public Terrain getGridTerrain(int row, int col) {
 
-        if (onMap(row, col)) {
-            return terrainList[(int) terrainGrid[row][col]];
+        try {
+            if (onMap(row, col)) {
+                return terrainList[(int) terrainGrid[row][col]];
+            }
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     /**
@@ -627,7 +636,7 @@ public class Map  {
                 // check the LOS rules for this point and return if blocked
                 if(adjacentHexes == null){
 
-                    if (checkPointLOSRules(status, result)) {
+                    if (applyLOSRules(status, result)) {
                         return;
                     }
                 }
@@ -665,7 +674,6 @@ public class Map  {
 
         // set continuous slope result
         result.setContinuousSlope(status.continuousSlope);
-        System.out.println("Hillocks crossed: " + status.crossedHillocks.size());
     }
 
     /**
@@ -687,7 +695,7 @@ public class Map  {
         // force check of hexside terrain for hexes with inherent terrain
         // (e.g. for case where orchard hex has wall)
         if(status.currentTerrain.isHexsideTerrain() && hex.getCenterLocation().getTerrain().isInherentTerrain()) {
-            if (checkPointLOSRules(status, result)) {
+            if (applyLOSRules(status, result)) {
                 return true;
             }
         }
@@ -697,7 +705,7 @@ public class Map  {
             status.currentTerrain = status.tempHex.getCenterLocation().getTerrain();
         }
 
-        return checkPointLOSRules(status, result);
+        return applyLOSRules(status, result);
     }
 
     /**
@@ -825,8 +833,10 @@ public class Map  {
         public HashSet<Hillock> crossedHillocks = new HashSet<Hillock>();  // hillocks that have been crossed (starting hillock inclusive)
         public Hillock sourceAdjacentHillock = null;
         public Hillock targetAdjacentHillock = null;
-        public Location firstWallCrossed;   // the first wall/hedge point/pixel touched be LOS
-        public Hex firstRubbleCrossed; // ditto for rubble
+        public Location firstWallCrossed = null;    // the first wall/hedge point/pixel touched be LOS
+        public Point firstWallPoint = null;
+        public Hex firstRubbleCrossed = null;       // ditto for rubble
+        public Hex firstHalfLevelHindrance = null;  // ditto for the first half-level hindrance
 
         // LOS across slope hexside
         boolean slopes;
@@ -1023,6 +1033,7 @@ public class Map  {
                 crossingHillock = hillock;
             }
 
+            // because rubble is inherent terrain we can put this check here
             if(STONE_RUBBLE.equals(currentTerrain.getName())  && STONE_RUBBLE.equals(currentHex.getCenterLocation().getTerrain().getName())||
                WOODEN_RUBBLE.equals(currentTerrain.getName()) && WOODEN_RUBBLE.equals(currentHex.getCenterLocation().getTerrain().getName())) {
                 if(firstRubbleCrossed == null) {
@@ -1259,7 +1270,7 @@ public class Map  {
      * @param result the LOS result
      * @return true if the LOS is blocked
      */
-    protected boolean checkPointLOSRules(LOSStatus status, LOSResult result) {
+    protected boolean applyLOSRules(LOSStatus status, LOSResult result) {
 
 
         // if there's a terrain counter in the hex use that terrain instead
@@ -1586,8 +1597,12 @@ public class Map  {
 
                         // vehicle must be same elevation as both source and target
                         if(status.source.getAbsoluteHeight() == status.target.getAbsoluteHeight() &&
-                           status.source.getAbsoluteHeight() == v.getLocation().getAbsoluteHeight() &&
-                           !status.slopes){
+                           status.source.getAbsoluteHeight() == v.getLocation().getAbsoluteHeight()){
+
+                            // no hindrance if up-slope or both units on hillocks (unless, in the later case, vehicle is also on hillock)
+                            if(status.slopes || (status.startsOnHillock && status.endsOnHillock && status.crossingHillock == null)) {
+                                return false;
+                            }
 
                             // if vehicle in bypass the LOS must cross the bypassed hexside
                             if(v.getLocation().isCenterLocation() || v.getLocation().equals(hex.getNearestLocation(status.currentCol, status.currentRow))) {
@@ -1875,12 +1890,12 @@ public class Map  {
      */
     protected boolean checkBlindHexRule(LOSStatus status, LOSResult result) {
 
-        // special case when LOS is up-slope
+        // special case when LOS is up-slope or on hillock
         if (status.groundLevel + status.currentTerrainHgt == Math.max(status.sourceElevation, status.targetElevation) &&
             status.groundLevel + status.currentTerrainHgt >  Math.min(status.sourceElevation, status.targetElevation)) {
 
-            // can ignore this rule for slopes unless blind hex
-            if(status.slopes && isBlindHex(status, status.currentTerrainHgt)) {
+            // can ignore this rule for slopes/hillocks unless blind hex
+            if((status.startsOnHillock || status.slopes) && isBlindHex(status, status.currentTerrainHgt)) {
                 status.reason = "Source or Target location is in a blind hex from an up-slope location (F2.3)";
                 status.blocked = true;
                 result.setBlocked(status.currentCol, status.currentRow, status.reason);
@@ -1957,8 +1972,8 @@ public class Map  {
         if (status.groundLevel + status.currentTerrainHgt == Math.max(status.sourceElevation, status.targetElevation) &&
             status.groundLevel + status.currentTerrainHgt > Math.min(status.sourceElevation, status.targetElevation)) {
 
-            // can ignore this rule for slopes - handled by blind hex rule
-            if(status.slopes) {
+            // can ignore this rule for slopes/hillocks - handled by blind hex rule
+            if(status.slopes || status.startsOnHillock || status.endsOnHillock) {
                 return false;
             }
 
@@ -2063,11 +2078,17 @@ public class Map  {
             else if(status.startsOnHillock || status.endsOnHillock) {
 
                 // check intervening hillocks
-                if(status.startsOnHillock && status.crossedHillocks.size() - (status.targetAdjacentHillock != null ? 1 : 0) > 2) {
+                if(status.startsOnHillock && status.crossedHillocks.size()
+                        - (status.targetAdjacentHillock != null ? 1 : 0) // ignore hillock adjacent to target
+                        + (status.exitsSlopeHexside()           ? 1 : 0) // adjust if starting on slope
+                        > 2) {
 
                     return blockByHillock(status, result);
 
-                } else if(status.endsOnHillock && status.crossedHillocks.size() - (status.sourceAdjacentHillock != null ? 1 : 0) > 1) {
+                } else if(status.endsOnHillock && status.crossedHillocks.size()
+                        - (status.sourceAdjacentHillock != null ? 1 : 0) // ignore hillock adjacent to source
+                        + (status.entersSlopeHexside()          ? 1 : 0) // adjust if ending on slope
+                        > 1) {
 
                     return blockByHillock(status, result);
                 }
@@ -2078,6 +2099,7 @@ public class Map  {
                     if(status.firstWallCrossed == null) {
 
                         status.firstWallCrossed = status.currentHex.getNearestLocation(status.currentCol, status.currentRow);
+                        status.firstWallPoint = new Point(status.currentCol, status.currentRow);
                     }
 
                     else  {
@@ -2089,15 +2111,30 @@ public class Map  {
                         Location oppositeLocation = oppositeHex.getHexsideLocation(Hex.getOppositeHexside(locationHexside));
 
                         if(!nearestLocation.isCenterLocation() &&
-                                (nearestLocation == status.firstWallCrossed || oppositeLocation == status.firstWallCrossed)) {
+                           (nearestLocation == status.firstWallCrossed || oppositeLocation == status.firstWallCrossed)) {
 
                             return false;
                         }
                         else {
-                            status.reason = "More than one intervening wall/hedge (F6.4)";
-                            status.blocked = true;
-                            result.setBlocked(status.currentCol, status.currentRow, status.reason);
-                            return true;
+
+                            // pretend we're not on a hillock and use check hexside rule to see if wall/hedge blocks
+                            boolean startsOnHillock = status.startsOnHillock;
+                            boolean endsOnHillock = status.endsOnHillock;
+                            status.startsOnHillock = false;
+                            status.endsOnHillock = false;
+                            if (checkHexsideTerrainRule(status, new LOSResult()) && status.firstWallPoint.distance(status.currentCol, status.currentRow) > 15) {
+
+                                status.reason = "More than one intervening wall/hedge (F6.4)";
+                                status.blocked = true;
+                                result.setBlocked(status.currentCol, status.currentRow, status.reason);
+                                return true;
+                            }
+                            else {
+                                status.startsOnHillock = startsOnHillock;
+                                status.endsOnHillock = endsOnHillock;
+                                status.blocked = false;
+                                status.reason = "";
+                            }
                         }
                     }
                 }
@@ -2123,7 +2160,7 @@ public class Map  {
 
             //check other 1/2 level terrain
             else if(status.currentTerrain.isHalfLevelHeight() && !status.currentTerrain.isHexsideTerrain()) {
-                return blockedByHalfLevelTerrain(status, result);
+                return applyHalfLevelTerrain(status, result);
             }
         }
         return false;
@@ -2150,7 +2187,6 @@ public class Map  {
 
         if(status.groundLevel + status.currentTerrainHgt == status.sourceElevation &&
            status.groundLevel + status.currentTerrainHgt == status.targetElevation &&
-           !status.slopes &&
            (status.crossingHillock != null ||
                   status.startsOnHillock ||
                   status.endsOnHillock ||
@@ -2273,7 +2309,7 @@ public class Map  {
      * Build the hillocks
      * Assumes the hexgrid is current
      */
-    private void buildHillocks() {
+    public void buildHillocks() {
 
         // remove existing hillocks
         hillocks = new HashSet<Hillock>();
@@ -2335,34 +2371,47 @@ public class Map  {
      */
     protected boolean checkHalfLevelTerrainRule(LOSStatus status, LOSResult result) {
 
-        if(hillockRuleApplicable(status)) {
+        // special rules for hillocks
+        if((hillockRuleApplicable(status) && !status.slopes) || hillockHindranceToLowerElevation(status)) {
+
+            // apply max one hindrance for grain/brush
+            if(status.firstHalfLevelHindrance == null &&
+              (BRUSH.equals(status.currentTerrain.getName()) || GRAIN.equals(status.currentTerrain.getName())) &&
+             !(status.startsOnHillock && status.endsOnHillock)) {
+
+                status.firstHalfLevelHindrance = status.currentHex;
+                if (addHindranceHex(status, result)) {
+                    return true;
+                }
+            }
             return false;
         }
 
         if (status.currentTerrain.isHalfLevelHeight() &&
-                !status.currentTerrain.isHexsideTerrain() &&
-                status.groundLevel + status.currentTerrainHgt == status.sourceElevation &&
-                status.groundLevel + status.currentTerrainHgt == status.targetElevation &&
-                !status.slopes) {
+           !status.currentTerrain.isHexsideTerrain() &&
+            status.groundLevel + status.currentTerrainHgt == status.sourceElevation &&
+            status.groundLevel + status.currentTerrainHgt == status.targetElevation &&
+           !status.slopes) {
 
-            return blockedByHalfLevelTerrain(status, result);
+            return applyHalfLevelTerrain(status, result);
 
-/*
-            if (status.currentTerrain.isLOSObstacle()) {
-                status.reason = "Half level terrain is higher than both the source and target (A6.2)";
-                status.blocked = true;
-                result.setBlocked(status.currentCol, status.currentRow, status.reason);
-                return true;
-            }
-            else {
-
-                // must be hindrance
-                if (addHindranceHex(status, result))
-                    return true;
-            }
-*/
         }
         return false;
+    }
+
+    /**
+     * Logic for when to apply grain/brush hindrance from hillock to lower elevation
+     * @param status the LOS status
+     * @return true in hindrance applicable
+     */
+    private boolean hillockHindranceToLowerElevation(LOSStatus status) {
+        return (status.startsOnHillock &&
+                       status.groundLevel + status.currentTerrainHgt == status.sourceElevation &&
+                       status.groundLevel + status.currentTerrainHgt >  status.targetElevation)
+                         ||
+               (status.endsOnHillock &&
+                       status.groundLevel + status.currentTerrainHgt == status.targetElevation &&
+                       status.groundLevel + status.currentTerrainHgt >  status.sourceElevation);
     }
 
     /**
@@ -2371,7 +2420,7 @@ public class Map  {
      * @param result the LOS result
      * @return true if the LOS is blocked
      */
-    private boolean blockedByHalfLevelTerrain(LOSStatus status, LOSResult result) {
+    private boolean applyHalfLevelTerrain(LOSStatus status, LOSResult result) {
 
         if (status.currentTerrain.isLOSObstacle()) {
 
@@ -2383,12 +2432,12 @@ public class Map  {
         else {
 
             // must be hindrance
-            if (addHindranceHex(status, result))
+            if (addHindranceHex(status, result)) {
                 return true;
+            }
         }
         return false;
     }
-
 
     /**
      * Applies the LOS rules for terrain having two terrain types (e.g. orchard)
@@ -2666,11 +2715,22 @@ public class Map  {
         return false;
     }
 
+    /**
+     * @param status the LOS status
+     * @param terrainHeight the terrain height
+     * @return true if target is in a blind hex
+     */
     protected static boolean isBlindHex(LOSStatus status, int terrainHeight) {
 
         return isBlindHex(status, terrainHeight, false);
     }
 
+    /**
+     * @param status the LOS status
+     * @param terrainHeight the terrain height
+     * @param isCliffHexside is a cliff hexside?
+     * @return true if target is in a blind hex
+     */
     protected static boolean isBlindHex(LOSStatus status, int terrainHeight, boolean isCliffHexside) {
 
         int sourceElevation = status.sourceElevation;
@@ -2698,8 +2758,8 @@ public class Map  {
             rangeToTarget = temp;
         }
 
-        // increment source elevation for slopes in special case where terrain is same height as upper location
-        if(status.slopes) {
+        // increment source elevation for slopes/hillocks in special case where terrain is same height as upper location
+        if(status.slopes || status.startsOnHillock) {
             if (status.groundLevel + status.currentTerrainHgt == Math.max(status.sourceElevation, status.targetElevation)) {
 
                 sourceElevation++;
@@ -2836,6 +2896,9 @@ public class Map  {
 
             }
         }
+
+        // need to rebuild the hillocks
+        buildHillocks();
 
         return true;
     }

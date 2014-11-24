@@ -296,6 +296,7 @@ public class LOSDataEditor {
             Terrain toTerrain = map.getTerrain(buildingTypes.get(hex));
             changeAllTerrain(h.getCenterLocation().getTerrain(), toTerrain, h.getHexBorder());
         }
+        setExteriorFactoryWalls();
 
         map.resetHexTerrain();
 
@@ -853,6 +854,44 @@ public class LOSDataEditor {
     }
 
     /**
+     * Determine where exterior factory wall exist
+     * For factories, we need to set where the "boundary" of the factory is,
+     * replacing it with the appropriate factory wall terrain.
+     */
+    private void setExteriorFactoryWalls() {
+
+        // set the walls
+        for (int x = 0; x < map.getGridWidth(); x++) {
+            for (int y = 0; y < map.getGridHeight(); y++) {
+
+                Terrain terr = map.getGridTerrain(x, y);
+                int newTerr = terr.getType();
+                if(terr.getName().equals("Wooden Factory, 1.5 Level")) {
+                    newTerr = map.getTerrain("Wooden Factory Wall, 1.5 Level").getType();
+                }
+                else if(terr.getName().equals("Wooden Factory, 2.5 Level")) {
+                    newTerr = map.getTerrain("Wooden Factory Wall, 2.5 Level").getType();
+                }
+                else if(terr.getName().equals("Stone Factory, 1.5 Level")) {
+                    newTerr = map.getTerrain("Stone Factory Wall, 1.5 Level").getType();
+                }
+                else if(terr.getName().equals("Stone Factory, 2.5 Level")) {
+                    newTerr = map.getTerrain("Stone Factory Wall, 2.5 Level").getType();
+                }
+
+                if (map.getGridTerrain(x,y).isFactoryTerrain() &&
+                        (!map.getGridTerrain(Math.max(x - 1, 0), y).isFactoryTerrain() ||
+                         !map.getGridTerrain(Math.min(x + 1, map.getGridWidth()), y).isFactoryTerrain()  ||
+                         !map.getGridTerrain(x, Math.max(y - 1, 0)).isFactoryTerrain()  ||
+                         !map.getGridTerrain(x, Math.min(y + 1, map.getGridHeight())).isFactoryTerrain())
+                        ) {
+                    map.setGridTerrainCode(newTerr, x, y);
+                }
+            }
+        }
+    }
+
+    /**
      * Determine where factory wall exist for the given terrain type within a rectangular area.
      * For factories, we need to set where the "boundry" of the factory is,
      * replacing it with the appropriate factory wall terrian.
@@ -1000,23 +1039,31 @@ public class LOSDataEditor {
 
                 if (s.contains(x, y)) {
 
-                    // only apply rowhouse walls to buildings
+                    // only apply rowhouse/factory walls to buildings
                     if (terr.isRowhouseWall()) {
 
+                        Terrain currentTerrain = map.getGridTerrain(x, y);
+
                         //map rowhouse height to current building height
-                        if(terr.getName().equals("Stone Building") || terr.getName().equals("Wooden Building")){
+                        if(currentTerrain.getName().equals("Stone Building") || currentTerrain.getName().equals("Wooden Building")){
                             map.setGridTerrainCode(map.getTerrain("Rowhouse Wall").getType(), x, y);
                         }
-                        else if(terr.getName().equals("Stone Building, 1 Level") || terr.getName().equals("Wooden Building, 1 Level")){
+                        else if(currentTerrain.getName().equals("Stone Building, 1 Level") ||
+                                currentTerrain.getName().equals("Wooden Building, 1 Level") ||
+                                currentTerrain.getName().equals("Stone Factory, 1.5 Level") ||
+                                currentTerrain.getName().equals("Wooden Factory, 1.5 Level")){
                             map.setGridTerrainCode(map.getTerrain("Rowhouse Wall, 1 Level").getType(), x, y);
                         }
-                        else if(terr.getName().equals("Stone Building, 2 Level") || terr.getName().equals("Wooden Building, 2 Level")){
+                        else if(currentTerrain.getName().equals("Stone Building, 2 Level") ||
+                                currentTerrain.getName().equals("Wooden Building, 2 Level") ||
+                                currentTerrain.getName().equals("Stone Factory, 2.5 Level") ||
+                                currentTerrain.getName().equals("Wooden Factory, 2.5 Level")){
                             map.setGridTerrainCode(map.getTerrain("Rowhouse Wall, 2 Level").getType(), x, y);
                         }
-                        else if(terr.getName().equals("Stone Building, 3 Level") || terr.getName().equals("Wooden Building, 3 Level")){
+                        else if(currentTerrain.getName().equals("Stone Building, 3 Level") || currentTerrain.getName().equals("Wooden Building, 3 Level")){
                             map.setGridTerrainCode(map.getTerrain("Rowhouse Wall, 3 Level").getType(), x, y);
                         }
-                        else if(terr.getName().equals("Stone Building, 4 Level") || terr.getName().equals("Wooden Building, 4 Level")){
+                        else if(currentTerrain.getName().equals("Stone Building, 4 Level") || currentTerrain.getName().equals("Wooden Building, 4 Level")){
                             map.setGridTerrainCode(map.getTerrain("Rowhouse Wall, 4 Level").getType(), x, y);
                         }
                     }
@@ -1025,11 +1072,6 @@ public class LOSDataEditor {
                     }
                 }
             }
-        }
-
-        // set the factory walls, if necessary
-        if (terr.isFactoryTerrain()) {
-            setFactoryWalls(s.getBounds(), terr);
         }
     }
 
@@ -1421,5 +1463,12 @@ public class LOSDataEditor {
 
         return terrainNames;
 
+    }
+
+    /**
+     * @return the shared board metadata
+     */
+    public SharedBoardMetadata getSharedBoardMetadata() {
+        return sharedBoardMetadata;
     }
 }
