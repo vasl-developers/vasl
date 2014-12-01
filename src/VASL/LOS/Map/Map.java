@@ -205,10 +205,10 @@ public class Map  {
     }
 
 	/**
-	 * @return the hex width
+	 * @return the hex height
 	 */
-	public double getHexWidth() {
-		return hexWidth;
+	public double getHexHeight() {
+		return hexHeight;
 	}
 
 	/**
@@ -702,7 +702,14 @@ public class Map  {
 
         // ensure inherent terrain is not missed
         if(status.tempHex.getCenterLocation().getTerrain().isInherentTerrain()) {
-            status.currentTerrain = status.tempHex.getCenterLocation().getTerrain();
+
+            // special case for PTO and water along hexside
+            if(!(("Dense Jungle".equals(status.tempHex.getCenterLocation().getTerrain().getName()) ||
+                  "Bamboo".equals(status.tempHex.getCenterLocation().getTerrain().getName())) &&
+                   status.currentTerrain.getLOSCategory() == Terrain.LOSCategories.WATER))
+            {
+                status.currentTerrain = status.tempHex.getCenterLocation().getTerrain();
+            }
         }
 
         return applyLOSRules(status, result);
@@ -833,7 +840,7 @@ public class Map  {
         public HashSet<Hillock> crossedHillocks = new HashSet<Hillock>();  // hillocks that have been crossed (starting hillock inclusive)
         public Hillock sourceAdjacentHillock = null;
         public Hillock targetAdjacentHillock = null;
-        public Location firstWallCrossed = null;    // the first wall/hedge point/pixel touched be LOS
+        public Location firstWallCrossed = null;    // the first wall/hedge point/pixel touched by LOS
         public Point firstWallPoint = null;
         public Hex firstRubbleCrossed = null;       // ditto for rubble
         public Hex firstHalfLevelHindrance = null;  // ditto for the first half-level hindrance
@@ -1130,9 +1137,6 @@ public class Map  {
                     }
                 }
             }
-
-//            System.out.println("Source: " + sourceExitHexsides[0] + " " + sourceExitHexsides[1] +
-//                              " Target: " + targetEnterHexsides[0] + " " + targetEnterHexsides[1]);
         }
 
         /**
@@ -1978,7 +1982,6 @@ public class Map  {
             }
 
             // are exiting gully restrictions satisfied?
-            //TODO - this (and map flip) is the only place the hex extended border is used - is it really needed?
             if (!(status.ignoreGroundLevelHex != null &&
                     status.ignoreGroundLevelHex.containsExtended(status.currentCol, status.currentRow)) &&
                     // are entering gully restrictions satisfied?
@@ -2914,7 +2917,7 @@ public class Map  {
 
         int localGridWidth = lowerRight.x - upperLeft.x;
         int localGridHeight = lowerRight.y - upperLeft.y;
-        int localHexWidth = (int) Math.round((double)localGridWidth / getHexWidth()) + 1;
+        int localHexWidth = (int) Math.round((double)localGridWidth / hexWidth) + 1;
         int localHexHeight = (int) Math.round((double)localGridHeight / hexHeight);
 
         // the hex width must be odd - if not extend to include the next half hex

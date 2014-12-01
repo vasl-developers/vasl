@@ -21,11 +21,15 @@ package VASL.build.module.map.boardPicker;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.geom.Ellipse2D;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.StringTokenizer;
 
+import VASL.LOS.LOSDataEditor;
 import VASL.LOS.Map.Hex;
 import VASL.LOS.Map.Map;
 import VASL.LOS.Map.Terrain;
@@ -71,8 +75,6 @@ public class VASLBoard extends ASLBoard {
             legacyBoard = true;
         }
     }
-
-// 	public Map(int width, int height, double A1CenterX, double A1CenterY, int imageWidth, int imageHeight, HashMap<String, Terrain> terrainNameMap){
 
     /**
      * @return the width of the board in hexes
@@ -210,6 +212,10 @@ public class VASLBoard extends ASLBoard {
 
             boolean changed = false; // changes made?
 
+            // PTO status so we only do this once
+            boolean PTO = false;
+            boolean PTOWithDenseJungle = false;
+
             // step through each SSR token
             final StringTokenizer st = new StringTokenizer(terrainChanges, "\t");
             while (st.hasMoreTokens()) {
@@ -237,7 +243,7 @@ public class VASLBoard extends ASLBoard {
                     }
                     else if("RowhouseBarsToBuildings".equals(s)) {
 
-                        // for simplicity assume stone building as type will not impact LOD
+                        // for simplicity assume stone building as type will not impact LOS
                         changeGridTerrain(LOSData.getTerrain("Rowhouse Wall"), LOSData.getTerrain("Stone Building"), LOSData);
                         changeGridTerrain(LOSData.getTerrain("Rowhouse Wall, 1 Level"), LOSData.getTerrain("Stone Building, 1 Level"), LOSData);
                         changeGridTerrain(LOSData.getTerrain("Rowhouse Wall, 2 Level"), LOSData.getTerrain("Stone Building, 2 Level"), LOSData);
@@ -264,6 +270,16 @@ public class VASLBoard extends ASLBoard {
                                  throw new BoardException("Board " + name + " has a bridge so it does not support NoBridge SSR.");
                                 }
                             }
+                        }
+                    }
+                    else if("SwampToSwampPattern".equals(s) ||
+                            "PalmTrees".equals(s) ||
+                            "DenseJungle".equals(s) ||
+                            "Bamboo".equals(s)) {
+
+                        PTO = true;
+                        if("DenseJungle".equals(s)) {
+                            PTOWithDenseJungle = true;
                         }
                     }
                     else {
@@ -294,11 +310,150 @@ public class VASLBoard extends ASLBoard {
                 }
             }
 
+            // apply PTO changes
+            if(PTO) {
+                applyPTOTransformations(PTOWithDenseJungle, LOSData);
+                changed = true;
+            }
+
             // update the hex grid
             if(changed){
                 LOSData.resetHexTerrain();
             }
         }
+    }
+
+    /**
+     * Apply PTO terrain transformations
+     * @param denseJungle Dense Jungle in effect?
+     */
+    private void applyPTOTransformations(boolean denseJungle, Map LOSData) {
+
+        LOSDataEditor losDataEditor = new LOSDataEditor(LOSData);
+
+        // No roads exist (all woods-roads are Paths, with no Open Ground in the woods-road portion of those hexes)
+        for (int col = 0; col < losDataEditor.getMap().getWidth(); col++) {
+            for (int row = 0; row < losDataEditor.getMap().getHeight() + (col % 2); row++) {
+
+                // Add some woods to center of forest-road hexes to block LOS
+                Hex hex = losDataEditor.getMap().getHex(col, row);
+                if(isForestRoadHex(hex)) {
+
+                    losDataEditor.setGridTerrain(
+                            new Ellipse2D.Double(
+                                    hex.getCenterLocation().getLOSPoint().x - LOSData.getHexHeight()/3,
+                                    hex.getCenterLocation().getLOSPoint().y - LOSData.getHexHeight()/3,
+                                    LOSData.getHexHeight()*2/3,
+                                    LOSData.getHexHeight()*2/3),
+                            LOSData.getTerrain("Woods"));
+                }
+            }
+        }
+
+        // All woods are Jungle; Dense Jungle is inherent terrain;
+        if(denseJungle) {
+            for (int col = 0; col < losDataEditor.getMap().getWidth(); col++) {
+                for (int row = 0; row < losDataEditor.getMap().getHeight() + (col % 2); row++) {
+
+                    Hex hex = LOSData.getHex(col, row);
+                    if("Woods".equals(hex.getCenterLocation().getTerrain().getName())){
+                        losDataEditor.setGridTerrain(hex.getHexBorder(), LOSData.getTerrain("Dense Jungle"));
+                    }
+                }
+            }
+            changeGridTerrain(LOSData.getTerrain("Woods"), LOSData.getTerrain("Dense Jungle"), LOSData);
+        }
+        else {
+            changeGridTerrain(LOSData.getTerrain("Woods"), LOSData.getTerrain("Light Jungle"), LOSData);
+        }
+
+        // All brush is Bamboo
+        changeGridTerrain(LOSData.getTerrain("Brush"), LOSData.getTerrain("Bamboo"), LOSData);
+        for (int col = 0; col < losDataEditor.getMap().getWidth(); col++) {
+            for (int row = 0; row < losDataEditor.getMap().getHeight() + (col % 2); row++) {
+
+                Hex hex = LOSData.getHex(col, row);
+                if("Bamboo".equals(hex.getCenterLocation().getTerrain().getName())){
+                    losDataEditor.setGridTerrain(hex.getHexBorder(), LOSData.getTerrain("Bamboo"));
+                }
+            }
+        }
+
+        // All orchards are Palm Trees
+        changeGridTerrain(LOSData.getTerrain("Orchard"), LOSData.getTerrain("Palm Trees"), LOSData);
+        changeGridTerrain(LOSData.getTerrain("Orchard, Out of Season"), LOSData.getTerrain("Palm Trees"), LOSData);
+
+        // All grain is Kunai
+        changeGridTerrain(LOSData.getTerrain("Grain"), LOSData.getTerrain("Kunai"), LOSData);
+
+        // Each marsh hex adjacent to ≥ one Jungle hex is a Swamp hex;
+        for (int col = 0; col < losDataEditor.getMap().getWidth(); col++) {
+            for (int row = 0; row < losDataEditor.getMap().getHeight() + (col % 2); row++) {
+
+                Hex currentHex = LOSData.getHex(col,row);
+                for(int x = 0; x < 6; x++) {
+
+                    Hex adjacentHex = LOSData.getAdjacentHex(currentHex, x);
+                    if(adjacentHex != null && "Marsh".equals(adjacentHex.getCenterLocation().getTerrain().getName())) {
+                        losDataEditor.setGridTerrain(adjacentHex.getHexBorder(), LOSData.getTerrain("Swamp"));
+                    }
+                }
+            }
+        }
+
+        // All bridges are Fords
+        bridgesToFord(LOSData);
+    }
+
+    /**
+     * Change all bridges to fords by setting roads and bridge terrain to gully
+     */
+    private void bridgesToFord(Map LOSData) {
+
+        HashSet<Hex> bridgeHexes = new HashSet<Hex>();
+
+        // find bridge hexes and change bridge terrain to open ground
+        for(int x = 0; x < LOSData.getGridWidth(); x++) {
+            for(int y = 0; y < LOSData.getGridHeight(); y++ ) {
+
+                Hex currentHex = LOSData.gridToHex(x, y);
+
+                if(LOSData.getGridTerrain(x,y).getLOSCategory() == Terrain.LOSCategories.BRIDGE) {
+
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Gully").getType(), x, y);
+                    bridgeHexes.add(currentHex);
+                }
+            }
+        }
+
+        // set the center of the bridge hexes to gully to remove road
+        LOSDataEditor editor = new LOSDataEditor(LOSData);
+        for (Hex h : bridgeHexes) {
+
+            editor.setGridGroundLevel(
+                    new Ellipse2D.Double(
+                            h.getCenterLocation().getLOSPoint().x - LOSData.getHexHeight()/3,
+                            h.getCenterLocation().getLOSPoint().y - LOSData.getHexHeight()/3,
+                            LOSData.getHexHeight()*2/3,
+                            LOSData.getHexHeight()*2/3),
+                    LOSData.getTerrain("Gully"),
+                    0);
+        }
+    }
+
+    /**
+     * @param hex the hex
+     * @return true if hex is a forest-road hex
+     */
+    private boolean isForestRoadHex(Hex hex) {
+
+        return hex.getCenterLocation().getTerrain().getLOSCategory() == Terrain.LOSCategories.ROAD &&
+               ("Woods".equals(hex.getHexsideLocation(0).getTerrain().getName()) ||
+                "Woods".equals(hex.getHexsideLocation(1).getTerrain().getName()) ||
+                "Woods".equals(hex.getHexsideLocation(2).getTerrain().getName()) ||
+                "Woods".equals(hex.getHexsideLocation(3).getTerrain().getName()) ||
+                "Woods".equals(hex.getHexsideLocation(4).getTerrain().getName()) ||
+                "Woods".equals(hex.getHexsideLocation(5).getTerrain().getName()));
     }
 
     /**

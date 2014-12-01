@@ -187,7 +187,6 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
      */
     public void finish() {
         currentBoards = new ArrayList<Board>(getBoardsFromControls());
-        // map.setBoards(getSelectedBoards());
     }
 
     public void setGlobalMapScale() {

@@ -517,9 +517,9 @@
         <terrainType name="Pine Woods" typeCode="62" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="2" mapColorRed="47" mapColorGreen="131" mapColorBlue="47" LOSCategory="WOODS"  />
         <terrainType name="Orchard" typeCode="63" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="TRUE" split="0.5" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="1" mapColorRed="51" mapColorGreen="163" mapColorBlue="51" LOSCategory="OTHER"  />
         <terrainType name="Orchard, Out of Season" typeCode="64" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="FALSE" isInherentTerrain="TRUE" split="0.5" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="1" mapColorRed="51" mapColorGreen="163" mapColorBlue="51" LOSCategory="OTHER"  />
-        <terrainType name="Dirt Road" typeCode="65" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="220" mapColorGreen="205" mapColorBlue="123" LOSCategory="OPEN"  />
-        <terrainType name="Paved Road" typeCode="66" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="192" mapColorGreen="192" mapColorBlue="207" LOSCategory="OPEN"  />
-        <terrainType name="Elevated Road" typeCode="67" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="231" mapColorGreen="227" mapColorBlue="143" LOSCategory="OPEN"  />
+        <terrainType name="Dirt Road" typeCode="65" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="220" mapColorGreen="205" mapColorBlue="123" LOSCategory="ROAD"  />
+        <terrainType name="Paved Road" typeCode="66" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="192" mapColorGreen="192" mapColorBlue="207" LOSCategory="ROAD"  />
+        <terrainType name="Elevated Road" typeCode="67" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="231" mapColorGreen="227" mapColorBlue="143" LOSCategory="ROAD"  />
         <terrainType name="Sunken Road" typeCode="68" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="231" mapColorGreen="227" mapColorBlue="143" LOSCategory="DEPRESSION"  />
         <terrainType name="Runway" typeCode="69" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="215" mapColorGreen="215" mapColorBlue="215" LOSCategory="OPEN"  />
         <terrainType name="Path" typeCode="70" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="200" mapColorGreen="175" mapColorBlue="83" LOSCategory="OPEN"  />
@@ -1432,6 +1432,11 @@
         <LOSSSRule name="RowhouseBarsToOpenGround" type="customCode" fromValue="" toValue="" />
         <LOSSSRule name="NoStairwells" type="customCode" fromValue="" toValue="" />
         <LOSSSRule name="NoBridge" type="customCode" fromValue="" toValue="" />
+        <!-- Any of the following imply PTO is in effect -->
+        <LOSSSRule name="SwampToSwampPattern" type="customCode" fromValue="" toValue="" />
+        <LOSSSRule name="PalmTrees" type="customCode" fromValue="" toValue="" />
+        <LOSSSRule name="DenseJungle" type="customCode" fromValue="" toValue="" />
+        <LOSSSRule name="Bamboo" type="customCode" fromValue="" toValue="" />
 
         <!-- simple terrain mappings -->
         <LOSSSRule name="BrushToOpenGround" type="terrainMap" fromValue="Brush" toValue="Open Ground" />

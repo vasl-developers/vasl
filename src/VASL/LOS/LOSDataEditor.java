@@ -28,7 +28,8 @@ import VASL.build.module.map.boardArchive.SharedBoardMetadata;
  * LOSDataEditor is used to edit the LOS data.
  * It's used by the LOS GUI and dynamically by VASL to perform SSR terrain changes
  */
-//TODO: separate GUI methods from non-GUI methods and move the GUI methods
+//TODO: this class is a mess and needs a complete refactoring
+// Need to move the methods used solely by the LOS editor to a subclass in the los-gui project
 public class LOSDataEditor {
 
     // the LOS data
@@ -61,7 +62,7 @@ public class LOSDataEditor {
     private static final int ELEVATION_OFFSET = 50;
 
     /**
-     * Creates an LOS data editor
+     * Creates an LOS data editor for a VASL archive
      * @param boardName the name of the VASL board archive file
      * @param boardDirectory the VASL board archive directory
      * @exception java.io.IOException if the archive cannot be opened
@@ -73,6 +74,15 @@ public class LOSDataEditor {
 
         // create an empty map
         map = createNewLOSData();
+    }
+
+    /**
+     * Creates an LOS data editor for an existing map
+     * IMPORTANT use only for changing the terrain on an existing map
+     * @param map the map
+     */
+    public LOSDataEditor(Map map) {
+        this.map = map;
     }
 
     public Map createNewLOSData(){
@@ -692,15 +702,7 @@ public class LOSDataEditor {
             // set the height of the first location in the grid column
             currentTerrain = map.getGridTerrain(col, Math.max(y - 1, 0));
 
-            // ignore the following terrains for shadowing
-            if (noShadows(currentTerrain)) {
-
-                currentHeight = pixelsPerLevel * map.getGridElevation(col, Math.max(y - 1, 0));
-            }
-            else {
-
-                currentHeight = pixelsPerLevel * (currentTerrain.getHeight() + map.getGridElevation(col, Math.max(y - 1, 0)));
-            }
+            currentHeight = pixelsPerLevel * (currentTerrain.getHeight() + map.getGridElevation(col, Math.max(y - 1, 0)));
 
             // add half level height
             if (currentTerrain.isHalfLevelHeight()) {
@@ -729,13 +731,7 @@ public class LOSDataEditor {
 
                     currentTerrain = map.getGridTerrain(col, row);
 
-                    if (noShadows(currentTerrain)) {
-
-                        currentTerrainHeight = 0;
-                    }
-                    else {
-                        currentTerrainHeight = currentTerrain.getHeight() * pixelsPerLevel;
-                    }
+                    currentTerrainHeight = currentTerrain.getHeight() * pixelsPerLevel;
 
                     if (currentTerrain.isHalfLevelHeight()) {
 
@@ -774,11 +770,15 @@ public class LOSDataEditor {
                     int green = (pixel & 0x0000FF00) >> 8;
                     int blue = (pixel & 0x00FF0000) >> 16;
 
-                    // apply shadow
-                    red = (int) Math.min(255, (float) red * 2);
-                    green = (int) Math.min(255, (float) green * 2);
-                    blue = (int) Math.min(255, (float) blue * 2);
+                    // apply highlight
+                    red = (int) Math.min(255, (float) (red + 50));
+                    green = (int) Math.min(255, (float) (green + 50));
+                    blue = (int) Math.min(255, (float) (blue + 50));
 
+                    // need to use custom color for woods
+                    if(currentTerrain.getName().equals("Woods")) {
+                        green = 250;
+                    }
                     // re-assemble and paint
                     pixel = alpha | red | (green << 8) | (blue << 16);
                     img.setRGB(col, row, pixel);
@@ -939,21 +939,6 @@ public class LOSDataEditor {
     }
 
     /**
-     * Terrain does not cause shadow
-     * @param terrain the terrain
-     * @return if terrain should have shadow
-     */
-    private boolean noShadows(Terrain terrain) {
-
-        return false;
-//      return   terrain.getName().equals("Wooden Rubble")||
-//                terrain.getName().equals("Stone Rubble") ||
-//                terrain.getName().equals("Crags")  ||
-//                terrain.getName().equals("Orchard, Out of Season") ||
-//                terrain.getName().equals("Orchard");
-    }
-
-    /**
      * Paints the hex grid into the map image. Also paints the hex centers mark (including
      * tunnel/sewer, stairway symbols). Shows if smoke and entrenchments exist in hex (for now).
      * This should be called after all other map painting routines when recreating the map image.
@@ -1065,6 +1050,14 @@ public class LOSDataEditor {
                         }
                         else if(currentTerrain.getName().equals("Stone Building, 4 Level") || currentTerrain.getName().equals("Wooden Building, 4 Level")){
                             map.setGridTerrainCode(map.getTerrain("Rowhouse Wall, 4 Level").getType(), x, y);
+                        }
+                    }
+
+                    // special rule for Heavy Jungle - don't replace water
+                    else if ("Dense Jungle".equals(terr.getName())){
+
+                        if(!(map.getGridTerrain(x, y).getLOSCategory() == Terrain.LOSCategories.WATER)) {
+                            map.setGridTerrainCode(terrType, x, y);
                         }
                     }
                     else {

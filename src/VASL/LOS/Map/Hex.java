@@ -346,7 +346,7 @@ public class Hex {
 	}
 
 	public boolean hasBridge(){
-		// return (bridge != null) || this.hasBridgeTerrain();
+
         return (bridge != null);
 	}
 
@@ -518,14 +518,18 @@ public class Hex {
         // set the center location terrain
         final Terrain centerLocationTerrain = map.getGridTerrain((int) centerLocation.getLOSPoint().getX(), (int) centerLocation.getLOSPoint().getY());
 
-        if(centerLocationTerrain == null) {
-            return;
-        }
         centerLocation.setTerrain(centerLocationTerrain);
+
+        boolean oldStairway = false;
 
         // add building locations
         if (centerLocationTerrain.getLOSCategory() == Terrain.LOSCategories.BUILDING ||
             centerLocationTerrain.getLOSCategory() == Terrain.LOSCategories.MARKETPLACE){
+
+            // keep stairway if resetting a multi-level building
+            oldStairway = stairway &&
+                    !"Stone Building, 1 Level".equals(centerLocation.getTerrain().getName()) &&
+                    !"Wooden Building, 1 Level".equals(centerLocation.getTerrain().getName());
 
             // special case for marketplace
             if(centerLocationTerrain.getLOSCategory() == Terrain.LOSCategories.MARKETPLACE) {
@@ -561,7 +565,8 @@ public class Hex {
             // set inherent stairway
             stairway =
 				"Stone Building, 1 Level".equals(centerLocation.getTerrain().getName()) ||
-				"Wooden Building, 1 Level".equals(centerLocation.getTerrain().getName());
+				"Wooden Building, 1 Level".equals(centerLocation.getTerrain().getName()) ||
+                oldStairway;
         }
 
         // set the hexside location terrain
