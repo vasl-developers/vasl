@@ -1,27 +1,16 @@
 package VASL.LOS;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Shape;
+import VASL.LOS.Map.*;
+import VASL.build.module.map.boardArchive.BoardArchive;
+import VASL.build.module.map.boardArchive.SharedBoardMetadata;
+
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
-
-import VASL.LOS.Map.Bridge;
-import VASL.LOS.Map.Hex;
-import VASL.LOS.Map.Location;
-import VASL.LOS.Map.Map;
-import VASL.LOS.Map.Terrain;
-import VASL.build.module.map.boardArchive.BoardArchive;
-import VASL.build.module.map.boardArchive.BoardMetadata;
-import VASL.build.module.map.boardArchive.SharedBoardMetadata;
 
 
 /**
@@ -37,23 +26,23 @@ public class LOSDataEditor {
 
     // the board archive and shared board metadata
     BoardArchive boardArchive;
-   SharedBoardMetadata sharedBoardMetadata;
+    SharedBoardMetadata sharedBoardMetadata;
 
     // standard elevation colors
-    public final static Color VALLEY2_COLOR		= new Color(88, 110, 50);
-    public final static Color VALLEY1_COLOR		= new Color(119, 146, 74);
-    public final static Color LEVEL1_COLOR		= new Color(176, 147, 70);
-    public final static Color LEVEL2_COLOR		= new Color(147, 111, 31);
-    public final static Color LEVEL3_COLOR		= new Color(118, 80, 0);
-    public final static Color LEVEL4_COLOR		= new Color(94, 57, 0);
-    public final static Color LEVEL5_COLOR		= new Color(74, 45, 0);
-    public final static Color LEVEL6_COLOR		= new Color(56, 34, 0);
-    public final static Color LEVEL7_COLOR		= new Color(60, 25, 0);
-    public final static Color LEVEL8_COLOR		= new Color(50, 20, 0);
-    public final static Color LEVEL9_COLOR		= new Color(40, 15, 0);
-    public final static Color LEVEL10_COLOR		= new Color(30, 10, 0);
-    public final static Color WATER_EDGE_COLOR	= new Color(253, 255, 255);
-    public final static Color GULLY_INTERIOR_COLOR	= new Color(148, 95, 35);
+    public final static Color VALLEY2_COLOR = new Color(88, 110, 50);
+    public final static Color VALLEY1_COLOR = new Color(119, 146, 74);
+    public final static Color LEVEL1_COLOR = new Color(176, 147, 70);
+    public final static Color LEVEL2_COLOR = new Color(147, 111, 31);
+    public final static Color LEVEL3_COLOR = new Color(118, 80, 0);
+    public final static Color LEVEL4_COLOR = new Color(94, 57, 0);
+    public final static Color LEVEL5_COLOR = new Color(74, 45, 0);
+    public final static Color LEVEL6_COLOR = new Color(56, 34, 0);
+    public final static Color LEVEL7_COLOR = new Color(60, 25, 0);
+    public final static Color LEVEL8_COLOR = new Color(50, 20, 0);
+    public final static Color LEVEL9_COLOR = new Color(40, 15, 0);
+    public final static Color LEVEL10_COLOR = new Color(30, 10, 0);
+    public final static Color WATER_EDGE_COLOR = new Color(253, 255, 255);
+    public final static Color GULLY_INTERIOR_COLOR = new Color(148, 95, 35);
 
     // for terrain and elevation encoding while creating LOS data
     private static final int UNKNOWN_TERRAIN = 255;
@@ -63,9 +52,10 @@ public class LOSDataEditor {
 
     /**
      * Creates an LOS data editor for a VASL archive
-     * @param boardName the name of the VASL board archive file
+     *
+     * @param boardName      the name of the VASL board archive file
      * @param boardDirectory the VASL board archive directory
-     * @exception java.io.IOException if the archive cannot be opened
+     * @throws java.io.IOException if the archive cannot be opened
      */
     public LOSDataEditor(String boardName, String boardDirectory, SharedBoardMetadata sharedBoardMetadata) throws IOException {
 
@@ -79,24 +69,24 @@ public class LOSDataEditor {
     /**
      * Creates an LOS data editor for an existing map
      * IMPORTANT use only for changing the terrain on an existing map
+     *
      * @param map the map
      */
     public LOSDataEditor(Map map) {
         this.map = map;
     }
 
-    public Map createNewLOSData(){
+    public Map createNewLOSData() {
 
         Map m;
-        if(boardArchive.isGEO()) {
+        if (boardArchive.isGEO()) {
 
             m = new Map(
                     boardArchive.getBoardWidth(),
                     boardArchive.getBoardHeight(),
                     sharedBoardMetadata.getTerrainTypes());
             m.setSlopes(boardArchive.getSlopes());
-        }
-        else {
+        } else {
             m = new Map(
                     boardArchive.getBoardWidth(),
                     boardArchive.getBoardHeight(),
@@ -111,33 +101,35 @@ public class LOSDataEditor {
     }
 
     //TODO: removed redundancy in these private methods
+
     /**
      * Find the nearest terrain to a pixel of unknown terrain. E.g. the hex center dot will have unknown terrain
+     *
      * @param x x value of pixel
      * @param y y value of pixel
      * @return
      */
-    private Terrain getNearestTerrain(int x, int y){
+    private Terrain getNearestTerrain(int x, int y) {
 
         int min = 0;
         int max = 1;
         Terrain terrainType;
 
         // search at most 5 pixels out
-        while (max <= 5 ) {
-            for (int i = x - max; i <= x + max; i++){
-                for (int j = y - max; j <= y + max; j++){
+        while (max <= 5) {
+            for (int i = x - max; i <= x + max; i++) {
+                for (int j = y - max; j <= y + max; j++) {
 
                     // this logic make the search radius circular
-                    if(	map.onMap(i, j) && Point.distance((double)x, (double)y, (double)i, (double)j) > min &&
-                            Point.distance((double)x, (double)y, (double)i, (double)j) <= max &&
+                    if (map.onMap(i, j) && Point.distance((double) x, (double) y, (double) i, (double) j) > min &&
+                            Point.distance((double) x, (double) y, (double) i, (double) j) <= max &&
                             map.getGridTerrainCode(i, j) != UNKNOWN_TERRAIN &&
-                            map.getGridTerrainCode(i, j) < TERRAIN_OFFSET){
+                            map.getGridTerrainCode(i, j) < TERRAIN_OFFSET) {
 
                         terrainType = map.getGridTerrain(i, j);
 
                         // ignore inherent terrain
-                        if (!terrainType.isInherentTerrain()){
+                        if (!terrainType.isInherentTerrain()) {
                             return terrainType;
                         }
                     }
@@ -154,25 +146,26 @@ public class LOSDataEditor {
 
     /**
      * Find the nearest elevation to a pixel of unknown elevation. E.g. the hex center dot will have unknown elevation
+     *
      * @param x x value of pixel
      * @param y y value of pixel
      * @return
      */
-    private int getNearestElevation(int x, int y){
+    private int getNearestElevation(int x, int y) {
 
         int min = 0;
         int max = 1;
 
         // search at most 50 pixels out
-        while (max <= 50 ) {
-            for (int i = x - max; i <= x + max; i++){
-                for (int j = y - max; j <= y + max; j++){
+        while (max <= 50) {
+            for (int i = x - max; i <= x + max; i++) {
+                for (int j = y - max; j <= y + max; j++) {
 
                     // this logic makes the search radius circular
-                    if(	map.onMap(i, j) && Point.distance((double)x, (double)y, (double)i, (double)j) > min &&
-                            Point.distance((double)x, (double)y, (double)i, (double)j) <= max &&
+                    if (map.onMap(i, j) && Point.distance((double) x, (double) y, (double) i, (double) j) > min &&
+                            Point.distance((double) x, (double) y, (double) i, (double) j) <= max &&
                             map.getGridElevation(i, j) != UNKNOWN_ELEVATION &&
-                            map.getGridElevation(i, j) < ELEVATION_OFFSET - 5){ // need a buffer for negative elevations
+                            map.getGridElevation(i, j) < ELEVATION_OFFSET - 5) { // need a buffer for negative elevations
 
                         return map.getGridElevation(i, j);
                     }
@@ -196,8 +189,8 @@ public class LOSDataEditor {
         // read the board image
         BufferedImage boardImage = boardArchive.getBoardImage();
 
-        for(int x = 0; x < map.getGridWidth(); x++) {
-            for(int y = 0; y < map.getGridHeight(); y++) {
+        for (int x = 0; x < map.getGridWidth(); x++) {
+            for (int y = 0; y < map.getGridHeight(); y++) {
 
                 Color color = getRGBColor(boardImage, x, y);
 
@@ -205,21 +198,19 @@ public class LOSDataEditor {
                 int terrain = boardArchive.getTerrainForColor(color);
 
                 // set the elevation in the map grid
-                if(boardArchive.boardHasElevations()) { // ignore boards without elevation
+                if (boardArchive.boardHasElevations()) { // ignore boards without elevation
 
-                    if(elevation == BoardArchive.getNoElevationColorCode()){
+                    if (elevation == BoardArchive.getNoElevationColorCode()) {
                         map.setGridElevation(UNKNOWN_ELEVATION, x, y);
-                    }
-                    else {
+                    } else {
                         map.setGridElevation(elevation, x, y);
                     }
                 }
 
                 // set the terrain type in the map grid
-                if(terrain == BoardArchive.getNoTerrainColorCode()){
+                if (terrain == BoardArchive.getNoTerrainColorCode()) {
                     map.setGridTerrainCode(UNKNOWN_TERRAIN, x, y);
-                }
-                else {
+                } else {
                     map.setGridTerrainCode(terrain, x, y);
                 }
             }
@@ -232,29 +223,29 @@ public class LOSDataEditor {
      * but allows us to ignore the pixel when finding the nearest terrain/elevation of its neighbors.
      * Otherwise the "nearest terrain" will bleed to pixels it shouldn't
      */
-    private void setAllUnknownTerrain(){
+    private void setAllUnknownTerrain() {
 
         // find the nearest terrain encoding as we go
-        for(int x = 0; x < map.getGridWidth(); x++) {
-            for(int y = 0; y < map.getGridHeight(); y++) {
+        for (int x = 0; x < map.getGridWidth(); x++) {
+            for (int y = 0; y < map.getGridHeight(); y++) {
 
                 if (map.getGridTerrainCode(x, y) == UNKNOWN_TERRAIN) {
-                    map.setGridTerrainCode(getNearestTerrain(x,y).getType() + TERRAIN_OFFSET, x, y);
+                    map.setGridTerrainCode(getNearestTerrain(x, y).getType() + TERRAIN_OFFSET, x, y);
                 }
 
-                if (map.getGridElevation(x, y) == UNKNOWN_ELEVATION){
-                    map.setGridElevation(getNearestElevation(x,y) + ELEVATION_OFFSET, x, y);
+                if (map.getGridElevation(x, y) == UNKNOWN_ELEVATION) {
+                    map.setGridElevation(getNearestElevation(x, y) + ELEVATION_OFFSET, x, y);
                 }
             }
         }
 
         // remove the terrain encoding
-        for (int x = 0; x < map.getGridWidth(); x++){
-            for (int y = 0; y < map.getGridHeight(); y++){
+        for (int x = 0; x < map.getGridWidth(); x++) {
+            for (int y = 0; y < map.getGridHeight(); y++) {
                 if (map.getGridTerrainCode(x, y) >= TERRAIN_OFFSET) {
                     map.setGridTerrainCode(map.getGridTerrainCode(x, y) - TERRAIN_OFFSET, x, y);
                 }
-                if (map.getGridElevation(x, y) >= ELEVATION_OFFSET/2){
+                if (map.getGridElevation(x, y) >= ELEVATION_OFFSET / 2) {
                     map.setGridElevation(map.getGridElevation(x, y) - ELEVATION_OFFSET, x, y);
                 }
             }
@@ -265,7 +256,7 @@ public class LOSDataEditor {
      * Create the LOS data from the board image in the VASL archive
      * Assumes the file helpers have been set
      */
-    public void createLOSData(){
+    public void createLOSData() {
 
         // create an empty map
         map = createNewLOSData();
@@ -280,18 +271,17 @@ public class LOSDataEditor {
         map.resetHexTerrain();
 
         // fix cliff elevation pixels - set them to the lower of the two hex elevations
-        for(int x = 0; x < map.getGridWidth(); x++) {
-            for(int y = 0; y < map.getGridHeight(); y++) {
+        for (int x = 0; x < map.getGridWidth(); x++) {
+            for (int y = 0; y < map.getGridHeight(); y++) {
 
                 if (map.getGridTerrain(x, y) == map.getTerrain("Cliff")) {
 
                     Hex hex = map.gridToHex(x, y);
                     Hex oppositeHex = map.getAdjacentHex(hex, hex.getLocationHexside(hex.getNearestLocation(x, y)));
 
-                    if(oppositeHex == null){
+                    if (oppositeHex == null) {
                         map.setGridElevation(hex.getBaseHeight(), x, y);
-                    }
-                    else {
+                    } else {
                         map.setGridElevation(Math.min(hex.getBaseHeight(), oppositeHex.getBaseHeight()), x, y);
                     }
                 }
@@ -299,8 +289,8 @@ public class LOSDataEditor {
         }
 
         // apply building-type transformations
-        HashMap<String,String> buildingTypes = boardArchive.getBuildingTypes();
-        for(String hex : buildingTypes.keySet()){
+        HashMap<String, String> buildingTypes = boardArchive.getBuildingTypes();
+        for (String hex : buildingTypes.keySet()) {
 
             Hex h = map.getHex(hex);
             Terrain toTerrain = map.getTerrain(buildingTypes.get(hex));
@@ -311,12 +301,12 @@ public class LOSDataEditor {
         map.resetHexTerrain();
 
         // set depression elevations
-        for(int x = 0; x < map.getGridWidth(); x++) {
-            for(int y = 0; y < map.getGridHeight(); y++) {
+        for (int x = 0; x < map.getGridWidth(); x++) {
+            for (int y = 0; y < map.getGridHeight(); y++) {
 
                 if (map.getGridTerrain(x, y).isDepression()) {
 
-                    map.setGridElevation(map.getGridElevation(x,y) - 1, x, y);
+                    map.setGridElevation(map.getGridElevation(x, y) - 1, x, y);
                 }
             }
         }
@@ -337,10 +327,10 @@ public class LOSDataEditor {
 
         BufferedImage boardImage = boardArchive.getBoardImage();
 
-        for(int x = 0; x < map.getGridWidth(); x++) {
-            for(int y = 0; y < map.getGridHeight(); y++){
+        for (int x = 0; x < map.getGridWidth(); x++) {
+            for (int y = 0; y < map.getGridHeight(); y++) {
 
-                if(boardArchive.isStairwayColor(getRGBColor(boardImage, x, y))) {
+                if (boardArchive.isStairwayColor(getRGBColor(boardImage, x, y))) {
                     map.gridToHex(x, y).setStairway(true);
                 }
             }
@@ -350,23 +340,21 @@ public class LOSDataEditor {
     /**
      * This is a kludge to fix elevated and sunken roads as they use the same colors
      */
-    private void fixElevatedSunkenRoads(){
+    private void fixElevatedSunkenRoads() {
 
-        for(int x = 0; x < map.getGridWidth(); x++) {
-            for(int y = 0; y < map.getGridHeight(); y++) {
+        for (int x = 0; x < map.getGridWidth(); x++) {
+            for (int y = 0; y < map.getGridHeight(); y++) {
 
-                if (map.getGridTerrain(x, y).getName().equals("Sunken Road") ) {
+                if (map.getGridTerrain(x, y).getName().equals("Sunken Road")) {
 
                     // fix elevated roads
-                    if( map.gridToHex(x,y).getBaseHeight() == 1)
-                    {
+                    if (map.gridToHex(x, y).getBaseHeight() == 1) {
                         map.setGridElevation(1, x, y);
                         map.setGridTerrainCode(map.getTerrain("Elevated Road").getType(), x, y);
                     }
 
                     // fix sunken roads
-                    else
-                    {
+                    else {
                         map.setGridElevation(-1, x, y);
                     }
                 }
@@ -379,11 +367,11 @@ public class LOSDataEditor {
      */
     private Color getRGBColor(BufferedImage image, int x, int y) {
 
-        int c = image.getRGB(x,y);
-        int  red = (c & 0x00ff0000) >> 16;
-        int  green = (c & 0x0000ff00) >> 8;
-        int  blue = c & 0x000000ff;
-        return new Color(red,green,blue);
+        int c = image.getRGB(x, y);
+        int red = (c & 0x00ff0000) >> 16;
+        int green = (c & 0x0000ff00) >> 8;
+        int blue = c & 0x000000ff;
+        return new Color(red, green, blue);
 
     }
 
@@ -391,11 +379,12 @@ public class LOSDataEditor {
      * Repaints an area of the map image. If a bridge or prefab building touches the paint area,
      * the entire bridge/building is repainted as well. This should be the first paint routine
      * called when recreating an area of the map image.
-     * @param x left-most pixel column
-     * @param y right-most pixel column
-     * @param width width of the paint area
-     * @param height height of the paint area
-     * @param mapImage the map image
+     *
+     * @param x         left-most pixel column
+     * @param y         right-most pixel column
+     * @param width     width of the paint area
+     * @param height    height of the paint area
+     * @param mapImage  the map image
      * @param imageList list of the terrain images to use
      */
     @SuppressWarnings("UnusedDeclaration")
@@ -412,230 +401,82 @@ public class LOSDataEditor {
         Rectangle paintArea = new Rectangle(x, y, width, height);
 
 
-//        try {
+        // step through each pixel
+        for (int i = Math.max(x, 0); i < Math.min(x + width + 1, map.getGridWidth() - 1); i++) {
+            for (int j = Math.max(y, 0); j < Math.min(y + height + 1, map.getGridHeight() - 1); j++) {
 
-            // step through each pixel
-            for (int i = Math.max(x, 0); i < Math.min(x + width + 1, map.getGridWidth() - 1); i++) {
-                for (int j = Math.max(y, 0); j < Math.min(y + height + 1, map.getGridHeight() - 1); j++) {
+                currentHex = map.gridToHex(i, j);
 
-                    // should we use the depression terrain? (ignore switch for sunken roads,
-                    // non open ground terrain)
-                    currentHex = map.gridToHex(i, j);
-                    depressionTerrain = currentHex.getCenterLocation().getDepressionTerrain();
+                terrType = map.getGridTerrain(i, j).getType();
 
-                    if (depressionTerrain != null &&
-                            map.getGridTerrain(i,j).isOpen() &&
-                            !depressionTerrain.getName().equals("Sunken Road") &&
-                            map.getGridElevation(i,j) == currentHex.getBaseHeight()) {
+                // get color for non-ground level open ground
+                Color c = null;
+                switch (map.getGridElevation(i, j)) {
 
-                        terrType = depressionTerrain.getType();
-                    }
-                    else {
-
-                        terrType = map.getGridTerrain(i,j).getType();
-                    }
-
-                    // get color for non-ground level open ground
-                    Color c = null;
-                    switch (map.getGridElevation(i,j)) {
-
-                        case -2:
-                            c = VALLEY2_COLOR;
-                            break;
-                        case -1:
-                            c = VALLEY1_COLOR;
-                            break;
-                        case 1:
-                            c = LEVEL1_COLOR;
-                            break;
-                        case 2:
-                            c = LEVEL2_COLOR;
-                            break;
-                        case 3:
-                            c = LEVEL3_COLOR;
-                            break;
-                        case 4:
-                            c = LEVEL4_COLOR;
-                            break;
-                        case 5:
-                            c = LEVEL5_COLOR;
-                            break;
-                        case 6:
-                            c = LEVEL6_COLOR;
-                            break;
-                        case 7:
-                            c = LEVEL7_COLOR;
-                            break;
-                        case 8:
-                            c = LEVEL8_COLOR;
-                            break;
-                        case 9:
-                            c = LEVEL9_COLOR;
-                            break;
-                        case 10:
-                            c = LEVEL10_COLOR;
-                            break;
-                    }
-
-                    // create the two-tone colors for depression terrain
-                    boolean overridePixelColor = false;
-//                    if (map.getTerrain(terrType).isWaterTerrain() || map.getTerrain(terrType).getName().equals("Gully")) {
-                    if (map.getTerrain(terrType).getName().equals("Gully")) {
-
-                        // get the distance to the nearest non-water terrain
-                        double dist = 10.0;
-                        double currDist;
-                        Point p = new Point(0, 0);
-                        for (int a = -6; a <= 6; a++) {
-                            for (int b = -6; b <= 6; b++) {
-
-                                if ( map.onMap(i + a, j + b) &&
-                                        (((map.getTerrain(terrType).getName().equals("Gully") ||
-                                                map.getTerrain(terrType).getName().equals("Shallow Stream") ||
-                                                map.getTerrain(terrType).getName().equals("Deep Stream")) &&
-                                                map.getGridElevation(i,j) != map.getGridElevation(i + a,j + b) ||
-                                                (!(map.getTerrain(terrType).getName().equals("Gully") ||
-                                                        map.getTerrain(terrType).getName().equals("Shallow Stream") ||
-                                                        map.getTerrain(terrType).getName().equals("Deep Stream") &&
-                                                                map.getGridTerrain(i + a,j + b).isWaterTerrain()))))) {
-
-                                    currDist = p.distance((double) a, (double) b);
-                                    if (currDist < dist) {
-
-                                        dist = currDist;
-                                    }
-                                }
-                            }
-                        }
-
-                        // set the outer-color pixel
-                        if (map.getTerrain(terrType).getName().equals("Gully")) {
-
-                            // brown middle for Gullies
-                            if (5.0 < dist) {
-
-                                mapImage.setRGB(i, j, GULLY_INTERIOR_COLOR.getRGB());
-                                overridePixelColor = true;
-                            }
-                        }
-                        else if (map.getTerrain(terrType).isStream()) {
-
-                            if (0.0 < dist && dist <= 5.0) {
-
-                                mapImage.setRGB(i, j, VALLEY1_COLOR.getRGB());
-                                overridePixelColor = true;
-                            }
-                            else if (5.0 < dist && dist < 10.0) {
-
-                                mapImage.setRGB(i, j, WATER_EDGE_COLOR.getRGB());
-                                overridePixelColor = true;
-                            }
-                        }
-                        else {
-
-                            if (0.0 < dist && dist <= 5.0) {
-
-                                mapImage.setRGB(i, j, WATER_EDGE_COLOR.getRGB());
-                                overridePixelColor = true;
-                            }
-
-                        }
-                    }
-
-                    // image exist for this terrain?
-                    if (!overridePixelColor && imageList[terrType] == null) {
-
-                        // open ground color on an elevation?
-                        if (map.getTerrain(terrType).getMapColor().equals(map.getTerrain("Open Ground").getMapColor())
-                                && map.getGridElevation(i,j)  != 0) {
-
-                            mapImage.setRGB(i, j, c.getRGB());
-
-                        }
-                        else {
-                            mapImage.setRGB(i, j, map.getTerrain(terrType).getMapColor().getRGB());
-                        }
-                    }
-                    else if (!overridePixelColor) {
-
-                        // open ground color on an elevation?
-                        if (imageList[terrType].getRGB(i % imageList[terrType].getWidth(), j % imageList[terrType].getHeight()) ==
-                                map.getTerrain("Open Ground").getMapColor().getRGB() &&
-                                map.getGridElevation(i,j)  != 0) {
-
-                            mapImage.setRGB(i, j, c.getRGB());
-                        }
-                        else {
-                            mapImage.setRGB(i, j, imageList[terrType].getRGB(i % imageList[terrType].getWidth(), j % imageList[terrType].getHeight()));
-                        }
-                    }
+                    case -2:
+                        c = VALLEY2_COLOR;
+                        break;
+                    case -1:
+                        c = VALLEY1_COLOR;
+                        break;
+                    case 1:
+                        c = LEVEL1_COLOR;
+                        break;
+                    case 2:
+                        c = LEVEL2_COLOR;
+                        break;
+                    case 3:
+                        c = LEVEL3_COLOR;
+                        break;
+                    case 4:
+                        c = LEVEL4_COLOR;
+                        break;
+                    case 5:
+                        c = LEVEL5_COLOR;
+                        break;
+                    case 6:
+                        c = LEVEL6_COLOR;
+                        break;
+                    case 7:
+                        c = LEVEL7_COLOR;
+                        break;
+                    case 8:
+                        c = LEVEL8_COLOR;
+                        break;
+                    case 9:
+                        c = LEVEL9_COLOR;
+                        break;
+                    case 10:
+                        c = LEVEL10_COLOR;
+                        break;
                 }
-            }
 
+                // image exist for this terrain?
+                if (imageList[terrType] == null) {
 
-        // paint the bridges...
-        // create a temp image for translated bridge image
-        Bridge bridge = null;
-        Image bridgeImage = null;
+                    // open ground color on an elevation?
+                    if (map.getTerrain(terrType).getMapColor().equals(map.getTerrain("Open Ground").getMapColor())
+                            && map.getGridElevation(i, j) != 0) {
 
-        Hex[][] hexGrid = map.getHexGrid();
-        for (int col = 0; col < hexGrid.length; col++) {
-            for (int row = 0; row < hexGrid[col].length; row++) {
+                        mapImage.setRGB(i, j, c.getRGB());
 
-                currentHex = hexGrid[col][row];
-
-                // has a bridge?
-                if (currentHex.hasBridge() && currentHex.getExtendedHexBorder().getBounds().intersects(paintArea)) {
-
-                    // set the bridge, etc.
-                    bridge = currentHex.getBridge();
-
-                    // set the image
-                    if (bridge.getTerrain().getName().equals("Single Hex Stone Bridge")) {
-
-                        bridgeImage = singleHexStoneBridgeImage;
+                    } else {
+                        mapImage.setRGB(i, j, map.getTerrain(terrType).getMapColor().getRGB());
                     }
-                    else if (bridge.getTerrain().getName().equals("Single Hex Wooden Bridge")) {
+                } else {
 
-                        bridgeImage = singleHexWoodenBridgeImage;
-                    }
-                    else {
+                    // open ground color on an elevation?
+                    if (imageList[terrType].getRGB(i % imageList[terrType].getWidth(), j % imageList[terrType].getHeight()) ==
+                            map.getTerrain("Open Ground").getMapColor().getRGB() &&
+                            map.getGridElevation(i, j) != 0) {
 
-                        bridgeImage = imageList[bridge.getTerrain().getType()];
-                    }
-
-                    // has image?
-                    if (bridgeImage == null) {
-
-                        System.err.println("No image found for bridge " + bridge.getTerrain().getName() + " in hex " + currentHex.getName());
-
-                    }
-                    else {
-
-                        Graphics2D g = (Graphics2D) mapImage.getGraphics();
-
-                        // need to translate?
-                        if (bridge.getRotation() != 0) {
-                            g.setTransform(AffineTransform.getRotateInstance(
-                                    Math.toRadians(bridge.getRotation()),
-                                    (int) bridge.getCenter().getX(),
-                                    (int) bridge.getCenter().getY()
-                            ));
-                        }
-
-                        g.drawImage(
-                                bridgeImage,
-                                (int) bridge.getCenter().getX() - bridgeImage.getWidth(null) / 2,
-                                (int) bridge.getCenter().getY() - bridgeImage.getHeight(null) / 2,
-                                null);
-
-                        // free resources
-                        g.dispose();
+                        mapImage.setRGB(i, j, c.getRGB());
+                    } else {
+                        mapImage.setRGB(i, j, imageList[terrType].getRGB(i % imageList[terrType].getWidth(), j % imageList[terrType].getHeight()));
                     }
                 }
             }
         }
-
     }
 
     public Map getMap() {
@@ -645,11 +486,12 @@ public class LOSDataEditor {
     /**
      * Paints the contour lines into an area of the map image.
      * This should be called after paintMapArea when recreating the map image.
-     * @param x left-most pixel column
-     * @param y right-most pixel column
-     * @param width width of the paint area
+     *
+     * @param x      left-most pixel column
+     * @param y      right-most pixel column
+     * @param width  width of the paint area
      * @param height height of the paint area
-     * @param img the map image
+     * @param img    the map image
      */
     public void paintMapContours(int x, int y, int width, int height, BufferedImage img) {
 
@@ -660,10 +502,10 @@ public class LOSDataEditor {
             for (int row = Math.max(y, 0); row < Math.min(y + height, gridHeight); row++) {
 
                 // grid adjacent to lower ground level?
-                if (((col > 0 && map.getGridElevation(col, row) > map.getGridElevation(col - 1,row)) ||
+                if (((col > 0 && map.getGridElevation(col, row) > map.getGridElevation(col - 1, row)) ||
                         (row > 0 && map.getGridElevation(col, row) > map.getGridElevation(col, row - 1)) ||
-                        (col < gridWidth - 1 && map.getGridElevation(col, row) > map.getGridElevation(col + 1,row)) ||
-                        (row < gridHeight - 1 && map.getGridElevation(col, row) > map.getGridElevation(col,row + 1)))
+                        (col < gridWidth - 1 && map.getGridElevation(col, row) > map.getGridElevation(col + 1, row)) ||
+                        (row < gridHeight - 1 && map.getGridElevation(col, row) > map.getGridElevation(col, row + 1)))
                         ) {
                     img.setRGB(col, row, 0xFFFF0F0F);
                 }
@@ -674,11 +516,12 @@ public class LOSDataEditor {
     /**
      * Paints the shadows into an area of the map image.
      * This should be called after paintMapArea when recreating the map image.
-     * @param x left-most pixel column
-     * @param y right-most pixel column
-     * @param width width of the paint area
+     *
+     * @param x      left-most pixel column
+     * @param y      right-most pixel column
+     * @param width  width of the paint area
      * @param height height of the paint area
-     * @param img the map image
+     * @param img    the map image
      */
     public void paintMapShadows(int x, int y, int width, int height, BufferedImage img) {
 
@@ -726,8 +569,7 @@ public class LOSDataEditor {
                     groundLevel = bridge.getRoadLevel() * pixelsPerLevel;
                     currentTerrainHeight = pixelsPerHalfLevel;
 
-                }
-                else {
+                } else {
 
                     currentTerrain = map.getGridTerrain(col, row);
 
@@ -760,8 +602,7 @@ public class LOSDataEditor {
                     img.setRGB(col, row, pixel);
 
                     currentHeight -= 1;
-                }
-                else if (currentTerrainHeight + groundLevel > currentHeight) {
+                } else if (currentTerrainHeight + groundLevel > currentHeight) {
 
                     // parse the pixel
                     int pixel = img.getRGB(col, row);
@@ -776,7 +617,7 @@ public class LOSDataEditor {
                     blue = (int) Math.min(255, (float) (blue + 50));
 
                     // need to use custom color for woods
-                    if(currentTerrain.getName().equals("Woods")) {
+                    if (currentTerrain.getName().equals("Woods")) {
                         green = 250;
                     }
                     // re-assemble and paint
@@ -804,8 +645,8 @@ public class LOSDataEditor {
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight() + (x % 2); y++) { // add 1 hex if odd
                 currentHex = map.getHex(x, y);
-                for (int z = 0; z < 6; z++){
-                    if(currentHex.hasSlope(z)) {
+                for (int z = 0; z < 6; z++) {
+                    if (currentHex.hasSlope(z)) {
 
                         String s = "S";
                         workSpace.drawString(
@@ -826,6 +667,7 @@ public class LOSDataEditor {
 
     /**
      * Sets all pixels within the given rectangle to the new terrain type.
+     *
      * @param rect map area to update
      * @param terr new terrain type
      */
@@ -866,24 +708,21 @@ public class LOSDataEditor {
 
                 Terrain terr = map.getGridTerrain(x, y);
                 int newTerr = terr.getType();
-                if(terr.getName().equals("Wooden Factory, 1.5 Level")) {
+                if (terr.getName().equals("Wooden Factory, 1.5 Level")) {
                     newTerr = map.getTerrain("Wooden Factory Wall, 1.5 Level").getType();
-                }
-                else if(terr.getName().equals("Wooden Factory, 2.5 Level")) {
+                } else if (terr.getName().equals("Wooden Factory, 2.5 Level")) {
                     newTerr = map.getTerrain("Wooden Factory Wall, 2.5 Level").getType();
-                }
-                else if(terr.getName().equals("Stone Factory, 1.5 Level")) {
+                } else if (terr.getName().equals("Stone Factory, 1.5 Level")) {
                     newTerr = map.getTerrain("Stone Factory Wall, 1.5 Level").getType();
-                }
-                else if(terr.getName().equals("Stone Factory, 2.5 Level")) {
+                } else if (terr.getName().equals("Stone Factory, 2.5 Level")) {
                     newTerr = map.getTerrain("Stone Factory Wall, 2.5 Level").getType();
                 }
 
-                if (map.getGridTerrain(x,y).isFactoryTerrain() &&
+                if (map.getGridTerrain(x, y).isFactoryTerrain() &&
                         (!map.getGridTerrain(Math.max(x - 1, 0), y).isFactoryTerrain() ||
-                         !map.getGridTerrain(Math.min(x + 1, map.getGridWidth()), y).isFactoryTerrain()  ||
-                         !map.getGridTerrain(x, Math.max(y - 1, 0)).isFactoryTerrain()  ||
-                         !map.getGridTerrain(x, Math.min(y + 1, map.getGridHeight())).isFactoryTerrain())
+                                !map.getGridTerrain(Math.min(x + 1, map.getGridWidth()), y).isFactoryTerrain() ||
+                                !map.getGridTerrain(x, Math.max(y - 1, 0)).isFactoryTerrain() ||
+                                !map.getGridTerrain(x, Math.min(y + 1, map.getGridHeight())).isFactoryTerrain())
                         ) {
                     map.setGridTerrainCode(newTerr, x, y);
                 }
@@ -895,6 +734,7 @@ public class LOSDataEditor {
      * Determine where factory wall exist for the given terrain type within a rectangular area.
      * For factories, we need to set where the "boundry" of the factory is,
      * replacing it with the appropriate factory wall terrian.
+     *
      * @param rect map area to update
      * @param terr building terrain type
      */
@@ -905,16 +745,15 @@ public class LOSDataEditor {
 
         // map the terrain
         int newTerr = terr.getType();
-        if(terr.getName().equals("Wooden Factory, 1.5 Level")) {
+        if (terr.getName().equals("Wooden Factory, 1.5 Level")) {
             newTerr = map.getTerrain("Wooden Factory Wall, 1.5 Level").getType();
-        }
-        else if(terr.getName().equals("Wooden Factory, 2.5 Level")) {
+        } else if (terr.getName().equals("Wooden Factory, 2.5 Level")) {
             newTerr = map.getTerrain("Wooden Factory Wall, 2.5 Level").getType();
         }
-        if(terr.getName().equals("Stone Factory, 1.5 Level")) {
+        if (terr.getName().equals("Stone Factory, 1.5 Level")) {
             newTerr = map.getTerrain("Stone Factory Wall, 1.5 Level").getType();
         }
-        if(terr.getName().equals("Stone Factory, 2.5 Level")) {
+        if (terr.getName().equals("Stone Factory, 2.5 Level")) {
             newTerr = map.getTerrain("Stone Factory Wall, 2.5 Level").getType();
         }
 
@@ -926,10 +765,10 @@ public class LOSDataEditor {
                  y < Math.min(startY + rect.getHeight(), map.getGridHeight());
                  y++) {
 
-                if (map.getGridTerrain(x,y).isFactoryTerrain() &&
+                if (map.getGridTerrain(x, y).isFactoryTerrain() &&
                         (!map.getGridTerrain(Math.max(x - 1, 0), y).isFactoryTerrain() ||
-                                !map.getGridTerrain(Math.min(x + 1, map.getGridWidth()), y).isFactoryTerrain()  ||
-                                !map.getGridTerrain(x, Math.max(y - 1, 0)).isFactoryTerrain()  ||
+                                !map.getGridTerrain(Math.min(x + 1, map.getGridWidth()), y).isFactoryTerrain() ||
+                                !map.getGridTerrain(x, Math.max(y - 1, 0)).isFactoryTerrain() ||
                                 !map.getGridTerrain(x, Math.min(y + 1, map.getGridHeight())).isFactoryTerrain())
                         ) {
                     map.setGridTerrainCode(newTerr, x, y);
@@ -942,6 +781,7 @@ public class LOSDataEditor {
      * Paints the hex grid into the map image. Also paints the hex centers mark (including
      * tunnel/sewer, stairway symbols). Shows if smoke and entrenchments exist in hex (for now).
      * This should be called after all other map painting routines when recreating the map image.
+     *
      * @param img the map image
      */
     // create hex outlines in image
@@ -990,12 +830,11 @@ public class LOSDataEditor {
             // draw hex center
             workSpace.setColor(Color.white);
             if (h.hasStairway() &&
-                    !(h.getCenterLocation().getTerrain().getName().equals("Stone Building, 1 Level")||
+                    !(h.getCenterLocation().getTerrain().getName().equals("Stone Building, 1 Level") ||
                             h.getCenterLocation().getTerrain().getName().equals("Wooden Building, 1 Level"))) {
 
                 workSpace.fillRect(h.getHexCenter().x - 3, h.getHexCenter().y - 3, 6, 6);
-            }
-            else {
+            } else {
                 workSpace.fillRect(h.getHexCenter().x - 1, h.getHexCenter().y - 1, 2, 2);
             }
         }
@@ -1003,7 +842,8 @@ public class LOSDataEditor {
 
     /**
      * Sets all pixels within the given shape to the new terrain type.
-     * @param s map area to update
+     *
+     * @param s    map area to update
      * @param terr new terrain type
      */
     // set the grid terrain for an arbitrary shape
@@ -1030,37 +870,32 @@ public class LOSDataEditor {
                         Terrain currentTerrain = map.getGridTerrain(x, y);
 
                         //map rowhouse height to current building height
-                        if(currentTerrain.getName().equals("Stone Building") || currentTerrain.getName().equals("Wooden Building")){
+                        if (currentTerrain.getName().equals("Stone Building") || currentTerrain.getName().equals("Wooden Building")) {
                             map.setGridTerrainCode(map.getTerrain("Rowhouse Wall").getType(), x, y);
-                        }
-                        else if(currentTerrain.getName().equals("Stone Building, 1 Level") ||
+                        } else if (currentTerrain.getName().equals("Stone Building, 1 Level") ||
                                 currentTerrain.getName().equals("Wooden Building, 1 Level") ||
                                 currentTerrain.getName().equals("Stone Factory, 1.5 Level") ||
-                                currentTerrain.getName().equals("Wooden Factory, 1.5 Level")){
+                                currentTerrain.getName().equals("Wooden Factory, 1.5 Level")) {
                             map.setGridTerrainCode(map.getTerrain("Rowhouse Wall, 1 Level").getType(), x, y);
-                        }
-                        else if(currentTerrain.getName().equals("Stone Building, 2 Level") ||
+                        } else if (currentTerrain.getName().equals("Stone Building, 2 Level") ||
                                 currentTerrain.getName().equals("Wooden Building, 2 Level") ||
                                 currentTerrain.getName().equals("Stone Factory, 2.5 Level") ||
-                                currentTerrain.getName().equals("Wooden Factory, 2.5 Level")){
+                                currentTerrain.getName().equals("Wooden Factory, 2.5 Level")) {
                             map.setGridTerrainCode(map.getTerrain("Rowhouse Wall, 2 Level").getType(), x, y);
-                        }
-                        else if(currentTerrain.getName().equals("Stone Building, 3 Level") || currentTerrain.getName().equals("Wooden Building, 3 Level")){
+                        } else if (currentTerrain.getName().equals("Stone Building, 3 Level") || currentTerrain.getName().equals("Wooden Building, 3 Level")) {
                             map.setGridTerrainCode(map.getTerrain("Rowhouse Wall, 3 Level").getType(), x, y);
-                        }
-                        else if(currentTerrain.getName().equals("Stone Building, 4 Level") || currentTerrain.getName().equals("Wooden Building, 4 Level")){
+                        } else if (currentTerrain.getName().equals("Stone Building, 4 Level") || currentTerrain.getName().equals("Wooden Building, 4 Level")) {
                             map.setGridTerrainCode(map.getTerrain("Rowhouse Wall, 4 Level").getType(), x, y);
                         }
                     }
 
                     // special rule for Heavy Jungle - don't replace water
-                    else if ("Dense Jungle".equals(terr.getName())){
+                    else if ("Dense Jungle".equals(terr.getName())) {
 
-                        if(!(map.getGridTerrain(x, y).getLOSCategory() == Terrain.LOSCategories.WATER)) {
+                        if (!(map.getGridTerrain(x, y).getLOSCategory() == Terrain.LOSCategories.WATER)) {
                             map.setGridTerrainCode(terrType, x, y);
                         }
-                    }
-                    else {
+                    } else {
                         map.setGridTerrainCode(terrType, x, y);
                     }
                 }
@@ -1071,7 +906,8 @@ public class LOSDataEditor {
 
     /**
      * Sets the hex terrain for an area of the map. All locations within the given shape are changed.
-     * @param s map area to change
+     *
+     * @param s    map area to change
      * @param terr new terrain type
      */
     public void setHexTerrain(Shape s, Terrain terr) {
@@ -1100,8 +936,9 @@ public class LOSDataEditor {
 
     /**
      * Sets the ground level of all pixels within the given shape to the new terrain height.
-     * @param s map area to update
-     * @param terr applicable depression terrain
+     *
+     * @param s     map area to update
+     * @param terr  applicable depression terrain
      * @param level new ground level
      */
     public void setGridGroundLevel(Shape s, Terrain terr, int level) {
@@ -1111,6 +948,7 @@ public class LOSDataEditor {
 
     /**
      * Returns a set of hexes that intersect ("touch") the given rectangle.
+     *
      * @param rect map area
      * @return a Vector containing the intersecting hexes
      */
@@ -1157,11 +995,13 @@ public class LOSDataEditor {
     }
 
     //TODO: does area need to be a parameter?
+
     /**
      * Sets the grid map ground level for a section of map
-     * @param s the area to set
-     * @param area area of the map to update
-     * @param terr applicable depression terrain
+     *
+     * @param s            the area to set
+     * @param area         area of the map to update
+     * @param terr         applicable depression terrain
      * @param newElevation the new elevation
      */
     private void setGridGroundLevel(Shape s, Rectangle area, Terrain terr, int newElevation) {
@@ -1190,12 +1030,10 @@ public class LOSDataEditor {
                         // if we're already a depression, use the current elevation
                         if (currentHex.isDepressionTerrain()) {
                             map.setGridElevation(currentHex.getBaseHeight(), x, y);
-                        }
-                        else {
+                        } else {
                             map.setGridElevation(currentHex.getBaseHeight() - 1, x, y);
                         }
-                    }
-                    else {
+                    } else {
                         map.setGridElevation(newElevation, x, y);
                     }
                 }
@@ -1206,8 +1044,9 @@ public class LOSDataEditor {
     /**
      * Sets the hex ground level/depression terrain for a section of map.
      * Should be called after setGridGroundLevel.
-     * @param s map area to update
-     * @param terr applicable depression terrain
+     *
+     * @param s        map area to update
+     * @param terr     applicable depression terrain
      * @param newLevel new ground level
      */
     public void setHexGroundLevel(Shape s, Terrain terr, int newLevel) {
@@ -1259,16 +1098,14 @@ public class LOSDataEditor {
                                         ) {
                                     currentHex.getHexsideLocation(x).setBaseHeight(0);
                                     currentHex.getHexsideLocation(x).setDepressionTerrain(terr);
-                                }
-                                else {
+                                } else {
                                     // non-depression hexside locations are one level higher
                                     currentHex.getHexsideLocation(x).setBaseHeight(1);
                                 }
                             }
                         }
                     }
-                }
-                else {
+                } else {
                     currentHex.setBaseHeight(newLevel);
                 }
 
@@ -1295,6 +1132,7 @@ public class LOSDataEditor {
 
     /**
      * Maps all terrain from one type to another in the whole map.
+     *
      * @parameter fromTerrain original terrain to replace
      * @parameter toTerrain new terrain type
      */
@@ -1305,6 +1143,7 @@ public class LOSDataEditor {
 
     /**
      * Maps all terrain from one type to another within a given shape.
+     *
      * @parameter fromTerrain original terrain to replace
      * @parameter toTerrain new terrain type
      * @parameter s area of the map to change
@@ -1346,6 +1185,7 @@ public class LOSDataEditor {
 
     /**
      * Maps all ground level elevation from one level to another in the whole map.
+     *
      * @parameter fromElevation original ground level elevation to replace
      * @parameter toTerrain new ground level elevation
      */
@@ -1356,6 +1196,7 @@ public class LOSDataEditor {
 
     /**
      * Maps all ground level elevation from one level to another within a given shape.
+     *
      * @parameter fromElevation original ground level elevation to replace
      * @parameter toTerrain new ground level elevation
      */
@@ -1400,10 +1241,10 @@ public class LOSDataEditor {
     }
 
     /**
-     *	This method is intended to be used only to copy geomorphic maps into
-     *	a larger map "grid" for VASL. As such, 1) it is assumed the half hex along board
-     *	edges are compatible, and 2) the hex/location names from the map that is being
-     *	inserted should be used. Other uses will produce unexpected results.
+     * This method is intended to be used only to copy geomorphic maps into
+     * a larger map "grid" for VASL. As such, 1) it is assumed the half hex along board
+     * edges are compatible, and 2) the hex/location names from the map that is being
+     * inserted should be used. Other uses will produce unexpected results.
      */
     public boolean insertMap(Map insertMap, Hex upperLeft) {
 
@@ -1421,7 +1262,7 @@ public class LOSDataEditor {
     /**
      * Read the LOS data or create it if it doesn't exist
      */
-    public void readLOSData(){
+    public void readLOSData() {
 
         map = boardArchive.getLOSData();
 
@@ -1436,20 +1277,21 @@ public class LOSDataEditor {
         return boardArchive.getBoardName();
     }
 
-    public BufferedImage getBoardImage(){
+    public BufferedImage getBoardImage() {
 
         return boardArchive.getBoardImage();
     }
 
     /**
      * Return a map of all terrain names and types
+     *
      * @return
      */
-    public HashMap<String,String> getTerrainNames(){
+    public HashMap<String, String> getTerrainNames() {
 
         HashMap<String, String> terrainNames = new HashMap<String, String>(boardArchive.getTerrainTypes().size());
 
-        for (String key: boardArchive.getTerrainTypes().keySet()){
+        for (String key : boardArchive.getTerrainTypes().keySet()) {
 
             terrainNames.put(key, boardArchive.getTerrainTypes().get(key).getLOSCategory().toString());
         }

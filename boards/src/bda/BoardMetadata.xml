@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<!--
+    This file contains the board metadata specific to a VASL board archive.
+    Create one file per VASL board and place it in the archive.
+-->
+
+<!-- 
+    Board-level metadata
+	name - the name of the board (as it will appear in board selector drop-down - not yet supported)
+	version - the board version
+	versionDate - the date the last version was created
+	author - the caring soul who created the board
+    boardImage - the name of the VASL image file in the board archive; the name is case sensitive
+    hasHills - TRUE/FALSE if the board contains base elevations above ground level
+                if not we can assume the ground level under the terrain is zero, which
+                makes the VASL LOS image translation faster and more accurate
+    height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
+	hexHeight - the height of a hex in pixels - decimal - should be image/height
+	hexWidth - the width of a hex in pixels - decimal - center point to center point
+	A1CenterX - x location of the A1 center dot
+	A1CenterY - y location of the A1 center dot 
+-->
+<boardMetadata 
+	name="a" 
+	version="6.0" 
+	versionDate="Sep 2008" 
+	author="TR" 
+	boardImageFileName="bda.gif" 
+	hasHills="FALSE" 
+	width="15" 
+	height="5"
+	hexHeight = "194.2"
+	hexWidth = "168.7857142857"
+	A1CenterX = "0"
+	A1CenterY = "97.1"
+	snapScale = "2"
+	>
+
+    <!--
+        The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
+        determine the proper building type when creating the LOS information and assumes buildings are single-hex stone or 
+        wooden buildings. Use these elements to override the building type. 
+        
+        See the terrainType elements for a complete list of building names
+    -->
+    <buildingTypes>
+	
+        <buildingType hexName="C2" buildingTypeName="Stone Building, 2 Level" />
+        <buildingType hexName="C3" buildingTypeName="Stone Building, 2 Level" />
+        <buildingType hexName="D2" buildingTypeName="Stone Building, 2 Level" />
+        <buildingType hexName="D3" buildingTypeName="Stone Building, 2 Level" />
+		
+        <buildingType hexName="B4" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="C5" buildingTypeName="Wooden Building, 1 Level" />
+
+        <buildingType hexName="F2" buildingTypeName="Stone Building, 2 Level" />
+        <buildingType hexName="G2" buildingTypeName="Stone Building, 2 Level" />
+        <buildingType hexName="G3" buildingTypeName="Stone Building, 2 Level" />
+		
+		<buildingType hexName="I1" buildingTypeName="Stone Building, 2 Level" />
+        <buildingType hexName="I2" buildingTypeName="Stone Building, 2 Level" />
+        <buildingType hexName="I3" buildingTypeName="Stone Building, 2 Level" />
+		<buildingType hexName="J1" buildingTypeName="Stone Building, 2 Level" />
+        <buildingType hexName="J2" buildingTypeName="Stone Building, 2 Level" />
+        <buildingType hexName="K2" buildingTypeName="Stone Building, 2 Level" />
+        <buildingType hexName="K3" buildingTypeName="Stone Building, 2 Level" />
+        <buildingType hexName="L1" buildingTypeName="Stone Building, 2 Level" />
+        <buildingType hexName="L2" buildingTypeName="Stone Building, 2 Level" />
+
+        <buildingType hexName="M1" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="N1" buildingTypeName="Wooden Building, 1 Level" />
+
+		<buildingType hexName="M5" buildingTypeName="Stone Building, 2 Level" />
+        <buildingType hexName="N4" buildingTypeName="Stone Building, 2 Level" />
+		
+	</buildingTypes>
+	
+	<overlaySSRules>
+	    <!--
+			Scenario-specific overlay rules. 
+			name - the VASL SSR name
+			image - the image name
+			x - x coordinate of overly upper left
+			y - y coordinate of overlay upper left
+		-->
+
+		<underlaySSRule name="WallsOnly" image="WallPattern.gif">
+			<color name="HedgeGreen" />
+		</underlaySSRule>
+		<underlaySSRule name="WallToCactus" image="CactusPattern.gif">
+			<color name="WallBrown" />
+			<color name="WallGrey1" />
+			<color name="WallGrey2" />
+		</underlaySSRule>
+		<underlaySSRule name="HedgeToCactus" image="CactusPattern.gif">
+			<color name="HedgeGreen" />
+		</underlaySSRule>
+		
+		<overlaySSRule name="SSO_J89" image="a_SSO_J89.gif" x="1178" y="1" />
+		<overlaySSRule name="DenseJungle" image="a_DenseJungle.gif" x="1" y="1" />
+		<overlaySSRule name="PalmTrees" image="a_PalmTrees.gif" x="920" y="650" />
+		<overlaySSRule name="OrchardsToShellholes" image="a_Orch2Shell.gif" x="911" y="575" />
+		<overlaySSRule name="WallsToBocage" image="a_WallToBocage.gif" x="1231" y="1" />
+		<overlaySSRule name="NoRoads" image="a_NoRoads.gif" x="1" y="1" />
+		
+	</overlaySSRules>
+	
+	<colors>
+		<!--
+			The VASL board colors. Used for color-specific SSR transformations. Use this element to override the shared color pallet. 
+			name - the VASL color name
+			red, green, blue - the RBG value of the color in the image
+			terrain - the LOS terrain type
+			elevation - the base elevation of the terrain
+			
+		-->
+		<color name="StoneBldg1" red="72" green="56" blue="49" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg2" red="89" green="71" blue="64" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg3" red="96" green="83" blue="58" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg4" red="102" green="86" blue="78" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg5" red="102" green="85" blue="95" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg6" red="113" green="101" blue="85" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg7" red="114" green="108" blue="78" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg8" red="114" green="101" blue="91" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg9" red="115" green="101" blue="99" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg10" red="123" green="117" blue="98" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg11" red="120" green="110" blue="117" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg12" red="124" green="116" blue="110" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg13" red="133" green="130" blue="142" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg14" red="134" green="134" blue="110" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg15" red="135" green="131" blue="125" terrain="Stone Building" elevation="UNKNOWN" />
+
+		<color name="WoodBldg1" red="83" green="41" blue="35" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg2" red="92" green="48" blue="34" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg3" red="101" green="56" blue="40" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg4" red="95" green="63" blue="43" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg5" red="101" green="55" blue="48" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg6" red="111" green="58" blue="44" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg7" red="115" green="51" blue="51" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg8" red="115" green="56" blue="46" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg9" red="109" green="63" blue="46" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg10" red="120" green="54" blue="46" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg11" red="118" green="72" blue="53" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg12" red="109" green="82" blue="52" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg13" red="122" green="75" blue="48" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg14" red="124" green="69" blue="53" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg15" red="128" green="66" blue="53" terrain="Wooden Building" elevation="UNKNOWN" />
+
+	</colors>
+	
+	<colorSSRules>
+		<!--
+			The board color scenario-specific rules. Use this element to override the shared SSRs.		
+		-->
+	</colorSSRules>
+</boardMetadata>
