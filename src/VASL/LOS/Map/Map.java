@@ -140,7 +140,7 @@ public class Map  {
         // odd columns will be offset half a hex toward the top of the map
         // if the A1 x offset is negative (e.g. boards 1b-6b), assume it's zero
         return new Point2D.Double(
-                (A1CenterX < 0.0 ? 20.0 : A1CenterX) + hexWidth * (double) col,
+                (A1CenterX < 0.0 ? 0.0 : A1CenterX) + hexWidth * (double) col,
                 (A1CenterY < 0.0 ? hexHeight/2.0 : A1CenterY) + hexHeight * (double) row - hexHeight/2.0 * (double) (col%2)
         );
 

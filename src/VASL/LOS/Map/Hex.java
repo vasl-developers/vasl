@@ -265,8 +265,8 @@ public class Hex {
 
         double newX = x == -1.0 ? 0.0 : x;
         double newY = y == -1.0 ? 0.0 : y;
-        newX = (int) newX == map.getGridWidth()  || (int) newX == (map.getGridWidth() + 1.0)  ? (map.getGridWidth()  - 1.0) : newX;
-        newY = (int) newY == map.getGridHeight() || (int) newY == (map.getGridHeight() + 1.0) ? (map.getGridHeight() - 1.0) : newY;
+        newX = (int) newX == map.getGridWidth()  || (int) newX == map.getGridWidth() || (int) newX == (map.getGridWidth() + 1.0)  ? (map.getGridWidth()  - 1.0) : newX;
+        newY = (int) newY == map.getGridHeight() || (int) newY == map.getGridHeight() || (int) newY == (map.getGridHeight() + 1.0) ? (map.getGridHeight() - 1.0) : newY;
 
         return new Point2D.Double(newX, newY);
     }
