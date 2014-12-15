@@ -18,7 +18,7 @@
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
 -->
-<boardMetadata name="BFPL" version="6.0" versionDate="Nov 2011" author="TR" boardImageFileName="bdBFPL.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="BFPE" version="6.0" versionDate="Jun 2009" author="TR" boardImageFileName="bdBFPE.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -28,15 +28,10 @@
         See the terrainType elements for a complete list of building names
     -->
     <buildingTypes>
-	
-		<buildingType hexName="M5" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="N4" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="U7" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="L3" buildingTypeName="Stone Building, 1 Level" />
 
-        <buildingType hexName="X1" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="X2" buildingTypeName="Wooden Building, 1 Level" />
     </buildingTypes>
-	
+
 	<overlaySSRules>
 	    <!--
 			Scenario-specific overlay rules. 
@@ -45,7 +40,6 @@
 			x - x coordinate of overly upper left
 			y - y coordinate of overlay upper left
 		-->
-
 		<underlaySSRule name="WallsOnly" image="WallPattern.gif">
 			<color name="HedgeGreen" />
 		</underlaySSRule>
@@ -57,16 +51,19 @@
 		<underlaySSRule name="HedgeToCactus" image="CactusPattern.gif">
 			<color name="HedgeGreen" />
 		</underlaySSRule>
-		<overlaySSRule name="DenseJungle" image="BFPL_DenseJungle.gif" x="1" y="1" />
-		<overlaySSRule name="LightWoods" image="BFPL_LightWoods.gif" x="1" y="1" />
-		<overlaySSRule name="OrchardsToCrags" image="BFPL_Orch2Crag.gif" x="91" y="74" />
-		<overlaySSRule name="OrchardsToShellholes" image="BFPL_Orch2Shell.gif" x="88" y="74" />
-		<overlaySSRule name="PalmTrees" image="BFPL_PalmTrees.gif" x="86" y="74" />
-		<overlaySSRule name="HedgesToBocage" image="BFPL_HedgesToBocage.gif" x="916" y="417" />
-		<overlaySSRule name="WallsToBocage" image="BFPL_WallsToBocage.gif" x="766" y="61" />
-		<overlaySSRule name="Bamboo" image="BFPL_Bamboo.gif" x="191" y="125" />
-		<overlaySSRule name="NoRoads" image="BFPL_NoRoads.gif" x="1" y="1" />
-		<overlaySSRule name="NoSlopes" image="BFPL_NoSlopes.gif" x="745" y="65" />
+		<overlaySSRule name="DenseJungle" image="BFPE_DenseJungle.gif" x="1" y="1" />
+		<overlaySSRule name="RoadsToPaths" image="BFPE_RoadsToPaths.gif" x="139" y="267" />
+		<overlaySSRule name="NoWoodsRoad" image="BFPE_NoWoodsRoad.gif" x="149" y="271" />
+		<overlaySSRule name="BridgeToFord" image="BFPE_BridgeToFord.gif" x="469" y="230" />
+		<overlaySSRule name="NoBridge" image="BFPE_NoBridge.gif" x="469" y="230" />
+		<overlaySSRule name="PalmTrees" image="BFPE_PalmTrees.gif" x="593" y="11" />
+		<overlaySSRule name="OrchardsToCrags" image="BFPE_OrchardsToCrags.gif" x="593" y="11" />
+		<overlaySSRule name="OrchardsToShellholes" image="BFPE_OrchardsToShellholes.gif" x="591" y="10" />
+		<overlaySSRule name="Bamboo" image="BFPE_Bamboo.gif" x="417" y="127" />
+		<overlaySSRule name="HedgesToBocage" image="BFPE_HedgesToBocage.gif" x="14" y="1" />
+		<overlaySSRule name="HedgesToOG" image="BFPE_HedgesToOG.gif" x="14" y="1" />
+		<overlaySSRule name="WallsToBocage" image="BFPE_WallsToBocage.gif" x="522" y="125" />
+		<overlaySSRule name="NoRoads" image="BFPE_NoRoads.gif" x="1" y="1" />
 
 	</overlaySSRules>
 	
@@ -78,7 +75,10 @@
 			terrain - the LOS terrain type
 			elevation - the base elevation of the terrain
 			
+    		<color name="Level0" red="175" green="188" blue="106" terrain="Open Ground" elevation="0" />
 		-->
+
+		
 	</colors>
 	
 	<colorSSRules>
@@ -86,15 +86,5 @@
 			The board color scenario-specific rules. Use this element to override the shared SSRs.		
 		-->
 	</colorSSRules>
-	
-	<slopes>
-		<!--
-			List of hexes with slope hexsides. Create one hex element per hex.
-			For hexsides 0 is the top hexside with 1 being clockwise from there, etc. 
-			Example hex A1 has slopes on top and bottom hexsides: <slope hex="A1" hexsides="03" />
-		-->
-		<slope hex="O2" hexsides="45" />
-		<slope hex="O3" hexsides="45" />
-		<slope hex="O4" hexsides="5" />
-	</slopes>
+
 </boardMetadata>

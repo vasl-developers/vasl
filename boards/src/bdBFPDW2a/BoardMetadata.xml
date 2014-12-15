@@ -11,14 +11,22 @@
 	versionDate - the date the last version was created
 	author - the caring soul who created the board
     boardImage - the name of the VASL image file in the board archive; the name is case sensitive
-    hasHills - TRUE/FALSE if the board contains base elevations above ground level
+    hasHills - TRUE if the board contains base elevations above ground level
                 if not we can assume the ground level under the terrain is zero, which
                 makes the VASL LOS image translation faster and more accurate
     height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
 -->
-<boardMetadata name="BFPL" version="6.0" versionDate="Nov 2011" author="TR" boardImageFileName="bdBFPL.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata 
+	name="BFPDW2a" 
+	version="6.0" 
+	versionDate="Nov 2011" 
+	author="TR" 
+	boardImageFileName="bdBFPDW2a.gif" 
+	hasHills="TRUE" 
+	width="33" 
+	height="10" >
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -28,13 +36,7 @@
         See the terrainType elements for a complete list of building names
     -->
     <buildingTypes>
-	
-		<buildingType hexName="M5" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="N4" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="U7" buildingTypeName="Wooden Building, 1 Level" />
 
-        <buildingType hexName="X1" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="X2" buildingTypeName="Wooden Building, 1 Level" />
     </buildingTypes>
 	
 	<overlaySSRules>
@@ -45,7 +47,6 @@
 			x - x coordinate of overly upper left
 			y - y coordinate of overlay upper left
 		-->
-
 		<underlaySSRule name="WallsOnly" image="WallPattern.gif">
 			<color name="HedgeGreen" />
 		</underlaySSRule>
@@ -57,17 +58,17 @@
 		<underlaySSRule name="HedgeToCactus" image="CactusPattern.gif">
 			<color name="HedgeGreen" />
 		</underlaySSRule>
-		<overlaySSRule name="DenseJungle" image="BFPL_DenseJungle.gif" x="1" y="1" />
-		<overlaySSRule name="LightWoods" image="BFPL_LightWoods.gif" x="1" y="1" />
-		<overlaySSRule name="OrchardsToCrags" image="BFPL_Orch2Crag.gif" x="91" y="74" />
-		<overlaySSRule name="OrchardsToShellholes" image="BFPL_Orch2Shell.gif" x="88" y="74" />
-		<overlaySSRule name="PalmTrees" image="BFPL_PalmTrees.gif" x="86" y="74" />
-		<overlaySSRule name="HedgesToBocage" image="BFPL_HedgesToBocage.gif" x="916" y="417" />
-		<overlaySSRule name="WallsToBocage" image="BFPL_WallsToBocage.gif" x="766" y="61" />
-		<overlaySSRule name="Bamboo" image="BFPL_Bamboo.gif" x="191" y="125" />
-		<overlaySSRule name="NoRoads" image="BFPL_NoRoads.gif" x="1" y="1" />
-		<overlaySSRule name="NoSlopes" image="BFPL_NoSlopes.gif" x="745" y="65" />
-
+		<overlaySSRule name="DenseJungle" image="BFPDW2a_DenseJungle.gif" x="1" y="1" />
+		<overlaySSRule name="LightWoods" image="BFPDW2a_LightWoods.gif" x="1" y="1" />
+		<overlaySSRule name="BridgeToFord" image="BFPDW2a_BridgeToFord.gif" x="1035" y="621" />
+		<overlaySSRule name="NoBridge" image="BFPDW2a_NoBridge.gif" x="1035" y="621" />
+		<overlaySSRule name="OrchardsToCrags" image="BFPDW2a_Orch2Crag.gif" x="932" y="45" />
+		<overlaySSRule name="OrchardsToShellholes" image="BFPDW2a_Orch2Shell.gif" x="931" y="43" />
+		<overlaySSRule name="PalmTrees" image="BFPDW2a_PalmTrees.gif" x="930" y="41" />
+		<overlaySSRule name="NoSlopes" image="BFPDW2a_NoSlopes.gif" x="185" y="296" />
+		<overlaySSRule name="Bamboo" image="BFPDW2a_Bamboo.gif" x="1202" y="352" />
+		<overlaySSRule name="NoRoads" image="BFPDW2a_NoRoads.gif" x="1" y="1" />
+		<overlaySSRule name="Winter" image="BFPDW2a_WinterGully.gif" x="1254" y="438" />
 	</overlaySSRules>
 	
 	<colors>
@@ -79,6 +80,12 @@
 			elevation - the base elevation of the terrain
 			
 		-->
+		<color name="Hillock" red="68" green="23" blue="0" terrain="Hillock" elevation="0" />
+		<color name="Hillock" red="84" green="45" blue="4" terrain="Hillock" elevation="0" />
+		<color name="Hillock" red="106" green="74" blue="24" terrain="Hillock" elevation="0" />
+		<color name="Hillock" red="139" green="134" blue="57" terrain="Hillock" elevation="0" />
+		<color name="Hillock" red="115" green="95" blue="35" terrain="Hillock" elevation="0" />
+
 	</colors>
 	
 	<colorSSRules>
@@ -87,14 +94,23 @@
 		-->
 	</colorSSRules>
 	
-	<slopes>
+		<slopes>
 		<!--
 			List of hexes with slope hexsides. Create one hex element per hex.
 			For hexsides 0 is the top hexside with 1 being clockwise from there, etc. 
 			Example hex A1 has slopes on top and bottom hexsides: <slope hex="A1" hexsides="03" />
 		-->
-		<slope hex="O2" hexsides="45" />
-		<slope hex="O3" hexsides="45" />
-		<slope hex="O4" hexsides="5" />
+		<slope hex="E6" hexsides="34" />
+		<slope hex="F6" hexsides="34" />
+		<slope hex="G6" hexsides="3" />
+		<slope hex="G7" hexsides="3" />
+		<slope hex="H6" hexsides="34" />
+		<slope hex="I7" hexsides="4" />
+
+		<slope hex="K6" hexsides="23" />
+		<slope hex="L5" hexsides="23" />
+		<slope hex="M5" hexsides="23" />
+		<slope hex="N4" hexsides="3" />
+
 	</slopes>
 </boardMetadata>

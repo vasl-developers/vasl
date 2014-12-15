@@ -218,7 +218,7 @@ public class ASLMap extends Map {
                 VASLBoards.add(board);
 
 				// make sure the hex geometry of all boards is the same
-				if (hexHeight != 0.0 && board.getHexHeight() != hexHeight || hexWidth != 0.0 && board.getHexWidth() != hexWidth) {
+				if (hexHeight != 0.0 && Math.round(board.getHexHeight()) != Math.round(hexHeight) || hexWidth != 0.0 && Math.round(board.getHexWidth()) != Math.round(hexWidth)) {
 					throw new BoardException("Map configuration contains multiple hex sizes - disabling LOS");
 				}
 				hexHeight = board.getHexHeight();

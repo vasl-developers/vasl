@@ -523,8 +523,7 @@ public class Hex {
         boolean oldStairway = false;
 
         // add building locations
-        if (centerLocationTerrain.getLOSCategory() == Terrain.LOSCategories.BUILDING ||
-            centerLocationTerrain.getLOSCategory() == Terrain.LOSCategories.MARKETPLACE){
+        if (centerLocationTerrain.isBuilding()){
 
             // keep stairway if resetting a multi-level building
             oldStairway = stairway &&
