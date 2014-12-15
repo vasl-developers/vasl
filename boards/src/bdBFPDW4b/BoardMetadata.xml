@@ -19,14 +19,19 @@
 	others - TBD e.g. alternate hex grain, etc. 
 -->
 <boardMetadata 
-	name="BFPDW2a" 
+	name="BFPDW4b" 
 	version="6.0" 
 	versionDate="Nov 2011" 
 	author="TR" 
-	boardImageFileName="bdBFPDW2a.gif" 
+	boardImageFileName="bdBFPDW4b.gif" 
 	hasHills="TRUE" 
 	width="33" 
-	height="10" >
+	height="10" 
+	hexHeight = "64.5"
+	hexWidth = "56.3125"
+	A1CenterX = "0"
+	A1CenterY = "-612.75"
+	>
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -58,17 +63,14 @@
 		<underlaySSRule name="HedgeToCactus" image="CactusPattern.gif">
 			<color name="HedgeGreen" />
 		</underlaySSRule>
-		<overlaySSRule name="DenseJungle" image="BFPDW2a_DenseJungle.gif" x="1" y="1" />
-		<overlaySSRule name="LightWoods" image="BFPDW2a_LightWoods.gif" x="1" y="1" />
-		<overlaySSRule name="BridgeToFord" image="BFPDW2a_BridgeToFord.gif" x="1035" y="621" />
-		<overlaySSRule name="NoBridge" image="BFPDW2a_NoBridge.gif" x="1035" y="621" />
-		<overlaySSRule name="OrchardsToCrags" image="BFPDW2a_Orch2Crag.gif" x="932" y="45" />
-		<overlaySSRule name="OrchardsToShellholes" image="BFPDW2a_Orch2Shell.gif" x="931" y="43" />
-		<overlaySSRule name="PalmTrees" image="BFPDW2a_PalmTrees.gif" x="930" y="41" />
-		<overlaySSRule name="NoSlopes" image="BFPDW2a_NoSlopes.gif" x="185" y="296" />
-		<overlaySSRule name="Bamboo" image="BFPDW2a_Bamboo.gif" x="1202" y="352" />
-		<overlaySSRule name="NoRoads" image="BFPDW2a_NoRoads.gif" x="1" y="1" />
-		<overlaySSRule name="Winter" image="BFPDW2a_WinterGully.gif" x="1254" y="438" />
+		<overlaySSRule name="DenseJungle" image="BFPDW4b_DenseJungle.gif" x="1" y="191" />
+		<overlaySSRule name="LightWoods" image="BFPDW4b_LightWoods.gif" x="1" y="204" />
+		<overlaySSRule name="HedgesToBocage" image="BFPDW4b_HedgesToBocage.gif" x="374" y="156" />
+		<overlaySSRule name="OrchardsToCrags" image="BFPDW4b_Orch2Crag.gif" x="370" y="12" />
+		<overlaySSRule name="OrchardsToShellholes" image="BFPDW4b_Orch2Shell.gif" x="370" y="9" />
+		<overlaySSRule name="PalmTrees" image="BFPDW4b_PalmTrees.gif" x="368" y="12" />
+		<overlaySSRule name="NoRoads" image="BFPDW4b_NoRoads.gif" x="1" y="1" />
+		<overlaySSRule name="NoSlopes" image="BFPDW4b_NoSlopes.gif" x="641" y="96" />
 	</overlaySSRules>
 	
 	<colors>
@@ -93,23 +95,21 @@
 			The board color scenario-specific rules. Use this element to override the shared SSRs.		
 		-->
 	</colorSSRules>
-	
-		<slopes>
+
+	<slopes>
 		<!--
 			List of hexes with slope hexsides. Create one hex element per hex.
 			For hexsides 0 is the top hexside with 1 being clockwise from there, etc. 
 			Example hex A1 has slopes on top and bottom hexsides: <slope hex="A1" hexsides="03" />
 		-->
-		<slope hex="E6" hexsides="34" />
-		<slope hex="F6" hexsides="34" />
-		<slope hex="G6" hexsides="3" />
-		<slope hex="H6" hexsides="34" />
-		<slope hex="I7" hexsides="4" />
-
-		<slope hex="K6" hexsides="23" />
-		<slope hex="L5" hexsides="23" />
-		<slope hex="M5" hexsides="23" />
-		<slope hex="N4" hexsides="3" />
+		<slope hex="L12" hexsides="1" />
+		<slope hex="M13" hexsides="01" />
+		<slope hex="N13" hexsides="01" />
+		<slope hex="O14" hexsides="12" />
+		<slope hex="O15" hexsides="12" />
+		<slope hex="N16" hexsides="123" />
+		<slope hex="M17" hexsides="23" />
 
 	</slopes>
+	
 </boardMetadata>

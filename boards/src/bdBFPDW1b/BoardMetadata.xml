@@ -19,12 +19,12 @@
 	others - TBD e.g. alternate hex grain, etc. 
 -->
 <boardMetadata 
-	name="BFPDW2b" 
+	name="BFPDW1b" 
 	version="6.0" 
-	versionDate="Nov 2011" 
+	versionDate="Feb 2009" 
 	author="TR" 
-	boardImageFileName="bdBFPDW2b.gif" 
-	hasHills="TRUE" 
+	boardImageFileName="bdBFPDW1b.gif" 
+	hasHills="False" 
 	width="33" 
 	height="10" 
 	hexHeight = "64.5"
@@ -41,8 +41,96 @@
         See the terrainType elements for a complete list of building names
     -->
     <buildingTypes>
+        <buildingType hexName="B13" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="C13" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="C14" buildingTypeName="Stone Building, 1 Level" />
 
-    </buildingTypes>
+        <buildingType hexName="D10" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="D11" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="D12" buildingTypeName="Stone Building, 1 Level" />
+		
+        <buildingType hexName="B16" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="C16" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="D15" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="E16" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="F16" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="G17" buildingTypeName="Wooden Building, 1 Level" />
+		
+        <buildingType hexName="F10" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="F11" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="G11" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="H11" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="I11" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="J10" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="J11" buildingTypeName="Stone Building, 1 Level" />
+
+        <buildingType hexName="F13" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="G13" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="H13" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="I13" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="J13" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="K13" buildingTypeName="Stone Building, 1 Level" />
+		
+        <buildingType hexName="G18" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="G19" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="H17" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="H18" buildingTypeName="Stone Building, 1 Level" />
+		
+        <buildingType hexName="J16" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="K16" buildingTypeName="Stone Building, 1 Level" />
+		
+        <buildingType hexName="J18" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="J19" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="K19" buildingTypeName="Stone Building, 1 Level" />
+		
+        <buildingType hexName="L10" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="L11" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="M11" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="N11" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="O12" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="P12" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="Q13" buildingTypeName="Wooden Building, 1 Level" />
+		
+        <buildingType hexName="L13" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="L14" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="L15" buildingTypeName="Stone Building, 1 Level" />
+		
+        <buildingType hexName="M12" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="N12" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="O13" buildingTypeName="Stone Building, 1 Level" />
+		
+        <buildingType hexName="M14" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="M15" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="N14" buildingTypeName="Stone Building, 1 Level" />
+
+        <buildingType hexName="N16" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="N17" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="O17" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="O18" buildingTypeName="Stone Building, 1 Level" />
+
+        <buildingType hexName="O19" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="O20" buildingTypeName="Wooden Building, 1 Level" />
+
+        <buildingType hexName="Q11" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="R10" buildingTypeName="Stone Building, 1 Level" />
+
+        <buildingType hexName="S12" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="T12" buildingTypeName="Stone Building, 1 Level" />
+
+        <buildingType hexName="P15" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="Q15" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="Q16" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="R15" buildingTypeName="Stone Building, 1 Level" />
+
+        <buildingType hexName="Q18" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="Q19" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="R17" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="R18" buildingTypeName="Stone Building, 1 Level" />
+		
+        <buildingType hexName="AA16" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="BB15" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="CC15" buildingTypeName="Wooden Building, 1 Level" />
+	</buildingTypes>
 	
 	<overlaySSRules>
 	    <!--
@@ -64,16 +152,13 @@
 		<underlaySSRule name="HedgeToCactus" image="CactusPattern.gif">
 			<color name="HedgeGreen" />
 		</underlaySSRule>
-		<overlaySSRule name="DenseJungle" image="BFPDW2b_DenseJungle.gif" x="1" y="191" />
-		<overlaySSRule name="LightWoods" image="BFPDW2b_LightWoods.gif" x="1" y="206" />
-		<overlaySSRule name="BridgeToFord" image="BFPDW2b_BridgeToFord.gif" x="1047" y="1" />
-		<overlaySSRule name="NoBridge" image="BFPDW2b_NoBridge.gif" x="1051" y="1" />
-		<overlaySSRule name="OrchardsToCrags" image="BFPDW2b_Orch2Crag.gif" x="480" y="40" />
-		<overlaySSRule name="OrchardsToShellholes" image="BFPDW2b_Orch2Shell.gif" x="476" y="39" />
-		<overlaySSRule name="PalmTrees" image="BFPDW2b_PalmTrees.gif" x="480" y="40" />
-		<overlaySSRule name="Bamboo" image="BFPDW2b_Bamboo.gif" x="977" y="95" />
-		<overlaySSRule name="NoRoads" image="BFPDW2b_NoRoads.gif" x="1" y="1" />
-		<overlaySSRule name="Winter" image="BFPDW2b_WinterGully.gif" x="1049" y="129" />
+		<overlaySSRule name="PalmTrees" image="bdBFPDW1b_PalmTrees.gif" x="86" y="5" />
+		<overlaySSRule name="OrchardsToCrags" image="bdBFPDW1b_OrchardsToCrags.gif" x="88" y="11" />
+		<overlaySSRule name="OrchardsToShellholes" image="bdBFPDW1b_OrchardsToShellholes.gif" x="84" y="6" />
+		<overlaySSRule name="WallsToBocage" image="bdBFPDW1b_WallsToBocage.gif" x="205" y="255" />
+		<overlaySSRule name="RowhouseBarsToOpenGround" image="bdBFPDW1b_RowhouseBarsToOpenGround.gif" x="299" y="3" />
+		<overlaySSRule name="DenseJungle" image="bdBFPDW1b_DenseJungle.gif" x="1" y="1" />
+		<overlaySSRule name="NoRoads" image="bdBFPDW1b_NoRoads.gif" x="1" y="1" />
 		
 	</overlaySSRules>
 	
@@ -86,11 +171,6 @@
 			elevation - the base elevation of the terrain
 			
 		-->
-		<color name="Hillock" red="68" green="23" blue="0" terrain="Hillock" elevation="0" />
-		<color name="Hillock" red="84" green="45" blue="4" terrain="Hillock" elevation="0" />
-		<color name="Hillock" red="106" green="74" blue="24" terrain="Hillock" elevation="0" />
-		<color name="Hillock" red="139" green="134" blue="57" terrain="Hillock" elevation="0" />
-		<color name="Hillock" red="115" green="95" blue="35" terrain="Hillock" elevation="0" />
 
 	</colors>
 	
