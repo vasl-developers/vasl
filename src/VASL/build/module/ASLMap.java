@@ -19,23 +19,6 @@
 
 package VASL.build.module;
 
-import java.awt.Color;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.LinkedList;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-
 import VASL.build.module.map.boardArchive.BoardArchive;
 import VASL.build.module.map.boardArchive.SharedBoardMetadata;
 import VASL.build.module.map.boardPicker.BoardException;
@@ -79,6 +62,7 @@ public class ASLMap extends Map {
 
     // used to log errors in the VASSAL error log
     private static final Logger logger = LoggerFactory.getLogger(ASLMap.class);
+    private ShowMapLevel m_showMapLevel = ShowMapLevel.ShowAll;
 
   public ASLMap() {
 
@@ -223,11 +207,20 @@ public class ASLMap extends Map {
             // and determine the size of the map
             unsupportedFeature = false;
             legacyMode = false;
-            Rectangle mapBoundary = new Rectangle(0,0);
+            final Rectangle mapBoundary = new Rectangle(0,0);
+            double hexHeight = 0.0;
+            double hexWidth = 0.0;
             for(Board b: boards) {
-                VASLBoard board = (VASLBoard) b;
+                final VASLBoard board = (VASLBoard) b;
                 mapBoundary.add(b.bounds());
                 VASLBoards.add(board);
+
+                // make sure the hex geometry of all boards is the same
+                if (hexHeight != 0.0 && Math.round(board.getHexHeight()) != Math.round(hexHeight) || hexWidth != 0.0 && Math.round(board.getHexWidth()) != Math.round(hexWidth)) {
+                    throw new BoardException("Map configuration contains multiple hex sizes - disabling LOS");
+                }
+                hexHeight = board.getHexHeight();
+                hexWidth = board.getHexWidth();
             }
 
             // remove the edge buffer from the map boundary size
@@ -235,11 +228,17 @@ public class ASLMap extends Map {
             mapBoundary.height -= edgeBuffer.height;
 
             // create the VASL map
+            VASLBoard b = VASLBoards.get(0); // we can use the geometry of any board - assuming all are the same
             VASLMap = new VASL.LOS.Map.Map(
-                    (int) Math.round(mapBoundary.width/ Hex.WIDTH) + 1,
-                    (int) Math.round(mapBoundary.height / Hex.HEIGHT),
+                    (int) Math.round(mapBoundary.width/ b.getHexWidth()) + 1,
+                    (int) Math.round(mapBoundary.height/ b.getHexHeight()),
+                    b.getA1CenterX(),
+                    b.getA1CenterY(),
+                    mapBoundary.width,
+                    mapBoundary.height,
                     sharedBoardMetadata.getTerrainTypes());
         }
+
         // clean up and fall back to legacy mode if an unexpected exception is thrown
         catch (Exception e) {
 
@@ -262,21 +261,15 @@ public class ASLMap extends Map {
                     VASL.LOS.Map.Map LOSData = board.getLOSData(sharedBoardMetadata.getTerrainTypes());
 
                     // check for overlays
-                    Enumeration overlays = board.getOverlays();
+                    final Enumeration overlays = board.getOverlays();
                     while (overlays.hasMoreElements()) {
-                        if(overlays.nextElement().toString().length() > 0) {
+                        if(!overlays.nextElement().toString().isEmpty()) {
                             throw new BoardException("Overlays are not supported - disabling LOS");
                         }
                     }
 
                     // apply the SSR changes, crop and flip if needed
-                    try {
-                        board.applyColorSSRules(LOSData, sharedBoardMetadata.getLOSSSRules());
-                    }
-                    catch (BoardException e) {
-                        logError(e.getMessage());
-                        throw e;
-                    }
+                    board.applyColorSSRules(LOSData, sharedBoardMetadata.getLOSSSRules());
 
                     if(board.isCropped()) {
                         LOSData = board.cropLOSData(LOSData);
@@ -351,4 +344,172 @@ public class ASLMap extends Map {
     private void logException(Throwable error) {
         logger.info("", error);
     }
+    
+    public BufferedImage getImgMapIcon(Point pt, double width) 
+    {
+      // map rectangle
+      Rectangle rectDraw = null;
+      BufferedImage img = new BufferedImage((int)width, (int)width, BufferedImage.TYPE_INT_ARGB);
+      final Graphics2D gg = img.createGraphics();
+      double dMagnification = 0.0;
+      
+        for (Board b : boards) 
+        {
+            if (rectDraw == null)
+            {
+                dMagnification = b.getMagnification();
+                rectDraw = new Rectangle();
+                
+                rectDraw.x = (int)((pt.x - (int)((width / 2.0) * dMagnification)) / dMagnification);
+                rectDraw.y = (int)((pt.y - (int)((width / 2.0) * dMagnification)) / dMagnification);
+                rectDraw.width = (int)(width * dMagnification);
+                rectDraw.height = (int)(width * dMagnification);
+
+                gg.translate(-rectDraw.x, -rectDraw.y);      
+            }
+      
+            b.drawRegion(gg, getLocation(b, 1.0 / dMagnification), rectDraw, 1.0 / dMagnification, null);
+        }
+        
+        drawPiecesNonStackableInRegion(gg, rectDraw, dMagnification, 1.0 / dMagnification);
+                
+        gg.dispose();
+        
+        return img;
+    }   
+    
+  public void drawPiecesNonStackableInRegion(Graphics g, Rectangle visibleRect, double dMagnification, double dZoom) 
+  {
+      Graphics2D g2d = (Graphics2D) g;
+      Composite oldComposite = g2d.getComposite();
+      
+      g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pieceOpacity));
+      
+      GamePiece[] stack = pieces.getPieces();
+      
+      for (int i = 0; i < stack.length; ++i) 
+      {
+        Point pt = componentCoordinates(stack[i].getPosition());
+        
+        if (stack[i].getClass() != Stack.class) 
+        {
+          if (Boolean.TRUE.equals(stack[i].getProperty(Properties.NO_STACK))) 
+              stack[i].draw(g, (int)(pt.x / (getZoom() * dMagnification)), (int)(pt.y / (getZoom() * dMagnification)), null, dZoom);
+        }
+      }
+      
+      g2d.setComposite(oldComposite);
+    }    
+  
+    public void setShowMapLevel(ShowMapLevel showMapLevel) {
+       m_showMapLevel = showMapLevel;
+  }
+    
+    @Override
+  public boolean isPiecesVisible() {
+    return (pieceOpacity != 0);
+  }   
+  
+    @Override
+    public void drawPiecesInRegion(Graphics g,
+                                 Rectangle visibleRect,
+                                 Component c) {
+    if (m_showMapLevel != ShowMapLevel.ShowMapOnly) 
+    {
+        Graphics2D g2d = (Graphics2D) g;
+        Composite oldComposite = g2d.getComposite();
+        GamePiece[] stack = pieces.getPieces();
+        
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pieceOpacity));
+        
+        for (int i = 0; i < stack.length; ++i) 
+        {
+            Point pt = componentCoordinates(stack[i].getPosition());
+            
+            if (stack[i].getClass() == Stack.class) 
+            {
+                if (m_showMapLevel == ShowMapLevel.ShowAll) 
+                    getStackMetrics().draw((Stack) stack[i], pt, g, this, getZoom(), visibleRect);
+            }
+            else 
+            {
+                if (m_showMapLevel == ShowMapLevel.ShowAll) 
+                {
+                    stack[i].draw(g, pt.x, pt.y, c, getZoom());
+
+                    if (Boolean.TRUE.equals(stack[i].getProperty(Properties.SELECTED))) 
+                        highlighter.draw(stack[i], g, pt.x, pt.y, c, getZoom());
+                }
+                else if (m_showMapLevel == ShowMapLevel.ShowMapAndOverlay) 
+                {
+                    if (Boolean.TRUE.equals(stack[i].getProperty(Properties.NO_STACK))) 
+                    {
+                        stack[i].draw(g, pt.x, pt.y, c, getZoom());
+
+                        if (Boolean.TRUE.equals(stack[i].getProperty(Properties.SELECTED))) 
+                            highlighter.draw(stack[i], g, pt.x, pt.y, c, getZoom());
+                    }
+                }
+            }
+/*
+        // draw bounding box for debugging
+        final Rectangle bb = stack[i].boundingBox();
+        g.drawRect(pt.x + bb.x, pt.y + bb.y, bb.width, bb.height);
+*/
+        }
+        
+        g2d.setComposite(oldComposite); 
+    }
+  }
+
+    @Override
+  public void drawPieces(Graphics g, int xOffset, int yOffset) 
+  {
+    if (m_showMapLevel != ShowMapLevel.ShowMapOnly) 
+    {
+        Graphics2D g2d = (Graphics2D) g;
+        Composite oldComposite = g2d.getComposite();
+        GamePiece[] stack = pieces.getPieces();
+        
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pieceOpacity));
+        
+        for (int i = 0; i < stack.length; ++i) 
+        {
+            if (m_showMapLevel == ShowMapLevel.ShowAll) 
+            {
+                Point pt = componentCoordinates(stack[i].getPosition());
+                
+                stack[i].draw(g, pt.x + xOffset, pt.y + yOffset, theMap, getZoom());
+
+                if (Boolean.TRUE.equals(stack[i].getProperty(Properties.SELECTED))) 
+                    highlighter.draw(stack[i], g, pt.x - xOffset, pt.y - yOffset, theMap, getZoom());
+            }
+            else if (m_showMapLevel == ShowMapLevel.ShowMapAndOverlay) 
+            {
+                if (stack[i].getClass() != Stack.class) 
+                {
+                    if (Boolean.TRUE.equals(stack[i].getProperty(Properties.NO_STACK))) 
+                    {
+                        Point pt = componentCoordinates(stack[i].getPosition());
+                        
+                        stack[i].draw(g, pt.x + xOffset, pt.y + yOffset, theMap, getZoom());
+
+                        if (Boolean.TRUE.equals(stack[i].getProperty(Properties.SELECTED))) 
+                            highlighter.draw(stack[i], g, pt.x - xOffset, pt.y - yOffset, theMap, getZoom());
+                    }
+                }
+            }
+        }
+
+        g2d.setComposite(oldComposite);
+    }
+  }
+
+  
+  public enum ShowMapLevel
+  {
+      ShowAll,
+      ShowMapAndOverlay,
+      ShowMapOnly        
+  }
 }
