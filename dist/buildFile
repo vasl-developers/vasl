@@ -99,7 +99,7 @@
         <VASL.build.module.map.ASLTextSaver buttonText="Save Text" hotkey="" icon="" tooltip="Save map contents as plain text file"/>
         <VASL.build.module.map.BoardSwapper/>
         <VASL.build.module.map.ASLStackMetrics bottom="40,0" color="255,255,255" disabled="false" down="37,0" exSepX="16" exSepY="32" top="38,0" unexSepX="2" unexSepY="4" up="39,0"/>
-        <VASSAL.build.module.map.HidePiecesButton buttonText="" hiddenIcon="/images/globe_selected.gif" hotkey="121,130" showingIcon="/images/globe_unselected.gif" tooltip="Hide all pieces on this map"/>
+        <VASL.build.module.map.HidePiecesButton buttonText="" showMapOnlyIcon="showmaponly.png" showMapAndOverlayIcon="showmapandoverlay.png" hotkey="121,130" showAllIcon="showall.png" tooltip="Hide/Show pieces/draggable overlays/map"/>
         <VASSAL.build.module.map.MapShader alwaysOn="false" boardList="" boards="Yes" border="false" borderColor="0,0,0" borderOpacity="100" borderWidth="1" buttonText="" color="0,0,0" drawOver="true" hotkey="120,0" icon="night" name="Night" opacity="33" pattern="nightshade" scaleImage="false" startsOn="false" tooltip="Night" type="Background"/>
         <VASSAL.build.module.map.MapShader alwaysOn="false" boardList="" boards="Yes" border="false" borderColor="0,0,0" borderOpacity="100" borderWidth="1" buttonText="" color="255,255,255" drawOver="false" hotkey="122,0" icon="lvhind" name="LV Hindrance" opacity="25" pattern="nightshade" scaleImage="false" startsOn="false" tooltip="LV Hindrance" type="Background"/>
         <VASSAL.build.module.map.HighlightLastMoved color="255,0,0" enabled="true" thickness="3"/>

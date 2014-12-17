@@ -86,16 +86,26 @@ public class Concealable extends Obscurable implements EditablePiece {
   protected void drawObscuredToMe(Graphics g, int x, int y, Component obs, double zoom) {
     loadImages(obs);
     int size = (int) (zoom * imageSize.width);
+    
+    // FredKors 08.nov.2014
+    // fix of the concealed counter 'corner effect'
+    /*
     g.setColor(getColor(nation));
     g.fillRect(x - size / 2, y - size / 2, size, size);
     if (nation2 != null) {
       g.setColor(getColor(nation2));
       g.fillRect(x - size / 2 + size / 8, y - size / 2 + size / 8, size - size / 4, size - size / 4);
     }
-    if (conceal != null) {
-        conceal.draw(g, x - size / 2, y - size / 2, zoom, obs);
-    } else {
-        g.drawImage(concealedToMe, x - size / 2, y - size / 2, size, size, obs);
+    */
+    
+    try {
+        if (conceal != null) {
+            conceal.draw(g, x - size / 2, y - size / 2, zoom, obs);
+        } else {
+            g.drawImage(concealedToMe, x - size / 2, y - size / 2, size, size, obs);
+        }
+    }
+    catch (Exception e) {
     }
   }
 

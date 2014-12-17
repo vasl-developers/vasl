@@ -43,6 +43,9 @@ import VASL.build.module.map.boardPicker.VASLBoard;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.Map;
 import VASSAL.build.module.map.boardPicker.Board;
+import VASSAL.counters.GamePiece;
+import VASSAL.counters.Properties;
+import VASSAL.counters.Stack;
 import VASSAL.tools.DataArchive;
 import VASSAL.tools.ErrorDialog;
 import VASSAL.tools.imageop.Op;
@@ -50,6 +53,17 @@ import VASSAL.tools.io.IOUtils;
 import org.jdom2.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.LinkedList;
 
 public class ASLMap extends Map {
 
@@ -80,7 +94,7 @@ public class ASLMap extends Map {
 
       // FredKors: creation of the toolbar button
       // that opens the popup menu
-      final JButton l_Menu = new JButton();
+      JButton l_Menu = new JButton();
 
     try
     {
@@ -104,7 +118,7 @@ public class ASLMap extends Map {
     });
 
     // add the first element to the popupp menu
-    final JMenuItem l_SelectItem = new JMenuItem("Select");
+    JMenuItem l_SelectItem = new JMenuItem("Select");
     l_SelectItem.setBackground(new Color(255,255,255));
     m_mnuMainPopup.add(l_SelectItem);
     m_mnuMainPopup.addSeparator();    
@@ -166,14 +180,14 @@ public class ASLMap extends Map {
     }
 
     /**
-     * read the shared board metadata from the game archive
+     * read the shared board metadata
      */
     private void readSharedBoardMetadata() throws JDOMException {
 
         // read the shared board metadata
         InputStream metadata = null;
         try {
-            final DataArchive archive = GameModule.getGameModule().getDataArchive();
+            DataArchive archive = GameModule.getGameModule().getDataArchive();
 
             metadata =  archive.getInputStream(BoardArchive.getSharedBoardMetadataFileName());
 
@@ -209,20 +223,11 @@ public class ASLMap extends Map {
             // and determine the size of the map
             unsupportedFeature = false;
             legacyMode = false;
-            final Rectangle mapBoundary = new Rectangle(0,0);
-			double hexHeight = 0.0;
-            double hexWidth = 0.0;
+            Rectangle mapBoundary = new Rectangle(0,0);
             for(Board b: boards) {
-                final VASLBoard board = (VASLBoard) b;
+                VASLBoard board = (VASLBoard) b;
                 mapBoundary.add(b.bounds());
                 VASLBoards.add(board);
-
-				// make sure the hex geometry of all boards is the same
-				if (hexHeight != 0.0 && Math.round(board.getHexHeight()) != Math.round(hexHeight) || hexWidth != 0.0 && Math.round(board.getHexWidth()) != Math.round(hexWidth)) {
-					throw new BoardException("Map configuration contains multiple hex sizes - disabling LOS");
-				}
-				hexHeight = board.getHexHeight();
-                hexWidth = board.getHexWidth();
             }
 
             // remove the edge buffer from the map boundary size
@@ -230,17 +235,11 @@ public class ASLMap extends Map {
             mapBoundary.height -= edgeBuffer.height;
 
             // create the VASL map
-            VASLBoard b = VASLBoards.get(0); // we can use the geometry of any board - assuming all are the same
             VASLMap = new VASL.LOS.Map.Map(
-                    (int) Math.round(mapBoundary.width/ b.getHexWidth()) + 1,
-                    (int) Math.round(mapBoundary.height/ b.getHexHeight()),
-                    b.getA1CenterX(),
-                    b.getA1CenterY(),
-                    mapBoundary.width,
-                    mapBoundary.height,
+                    (int) Math.round(mapBoundary.width/ Hex.WIDTH) + 1,
+                    (int) Math.round(mapBoundary.height / Hex.HEIGHT),
                     sharedBoardMetadata.getTerrainTypes());
         }
-
         // clean up and fall back to legacy mode if an unexpected exception is thrown
         catch (Exception e) {
 
@@ -263,15 +262,21 @@ public class ASLMap extends Map {
                     VASL.LOS.Map.Map LOSData = board.getLOSData(sharedBoardMetadata.getTerrainTypes());
 
                     // check for overlays
-                    final Enumeration overlays = board.getOverlays();
+                    Enumeration overlays = board.getOverlays();
                     while (overlays.hasMoreElements()) {
-                        if(!overlays.nextElement().toString().isEmpty()) {
+                        if(overlays.nextElement().toString().length() > 0) {
                             throw new BoardException("Overlays are not supported - disabling LOS");
                         }
                     }
 
                     // apply the SSR changes, crop and flip if needed
-					board.applyColorSSRules(LOSData, sharedBoardMetadata.getLOSSSRules());
+                    try {
+                        board.applyColorSSRules(LOSData, sharedBoardMetadata.getLOSSSRules());
+                    }
+                    catch (BoardException e) {
+                        logError(e.getMessage());
+                        throw e;
+                    }
 
                     if(board.isCropped()) {
                         LOSData = board.cropLOSData(LOSData);
