@@ -211,16 +211,22 @@ public class ASLMap extends Map {
             double hexHeight = 0.0;
             double hexWidth = 0.0;
             for(Board b: boards) {
-                final VASLBoard board = (VASLBoard) b;
-                mapBoundary.add(b.bounds());
-                VASLBoards.add(board);
 
-                // make sure the hex geometry of all boards is the same
-                if (hexHeight != 0.0 && Math.round(board.getHexHeight()) != Math.round(hexHeight) || hexWidth != 0.0 && Math.round(board.getHexWidth()) != Math.round(hexWidth)) {
-                    throw new BoardException("Map configuration contains multiple hex sizes - disabling LOS");
+                final VASLBoard board = (VASLBoard) b;
+
+                // ignore null boards
+                if(!"NUL".equals(b.getName()) && !"NULV".equals(b.getName())){
+
+                    mapBoundary.add(b.bounds());
+                    VASLBoards.add(board);
+
+                    // make sure the hex geometry of all boards is the same
+                    if (hexHeight != 0.0 && Math.round(board.getHexHeight()) != Math.round(hexHeight) || hexWidth != 0.0 && Math.round(board.getHexWidth()) != Math.round(hexWidth)) {
+                        throw new BoardException("Map configuration contains multiple hex sizes - disabling LOS");
+                    }
+                    hexHeight = board.getHexHeight();
+                    hexWidth = board.getHexWidth();
                 }
-                hexHeight = board.getHexHeight();
-                hexWidth = board.getHexWidth();
             }
 
             // remove the edge buffer from the map boundary size
