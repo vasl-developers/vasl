@@ -1,0 +1,7 @@
+<SSRControls>
+ <Option name="BFPD Special rules">
+ <Checkbox name="">
+         <entry name="No Slopes" rule="BSO_BFPD_NoSlopes" text="BSO_BFPD_NoSlopes"/>
+ </Checkbox>
+   </Option>
+</SSRControls>

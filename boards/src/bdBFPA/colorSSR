@@ -1,0 +1,72 @@
+// colorSSR file for Bounding Fire Productions boards
+NoStairwells
+  WoodStairwell=WoodBldg6
+  StoneStairwell=StoneBldg6
+
+RowhouseBarsToBuildings
+   StoneRowhouseBar=StoneBldg6
+   WoodRowhouseBar=WoodBldg6
+
++AllStone
+  WoodBldg8=StoneBldg8
+  WoodBldg9=StoneBldg9
+
+AllWood
+  StoneBldg1=WoodBldg1
+  StoneBldg2=WoodBldg1
+  StoneBldg3=WoodBldg2
+  StoneBldg4=WoodBldg3
+  StoneBldg5=WoodBldg4
+  StoneBldg6=WoodBldg5
+  StoneBldg7=WoodBldg6
+  StoneBldg8=WoodBldg7
+  StoneBldg9=WoodBldg8
+  StoneBldg10=WoodBldg9
+  StoneBldg11=WoodBldg9
+  StoneBldg12=WoodBldg9
+
+HedgesOnly
+  WallGrey1=HedgeGreen
+  WallGrey2=HedgeGreen
+
+HedgesToOG
+  HedgeGreen=Level0
+
+//WallsOnly
+WallsOnly
+HedgeGreen = WallGrey2
+
+//WallsToBocage - handled via overlays in each board's overlaySSR file
+
+//HedgesToBocage - handled via overlays in each board's overlaySSR file
+
+// Winter must always be last
++Winter
+  WhiteHexNumbers=Black
+  WoodBldg8=WoodBldg8Winter
+  WoodBldg9=WoodBldg9Winter
+
+
+  StoneBldg8=StoneBldg8Winter
+  StoneBldg9=StoneBldg9Winter
+  StoneBldg10=StoneBldg10Winter
+  StoneBldg11=StoneBldg11Winter
+  StoneBldg12=StoneBldg12Winter
+
+  HedgeGreen=HedgeGreenWinter
+
+  WallGrey1=StoneBldg7Winter
+  WallGrey2=StoneBldg4Winter
+
+  Lumberyard1=WoodBldg2Winter
+  Lumberyard2=WoodBldg5Winter
+  Lumberyard3=WoodBldg9Winter
+  Lumberyard4=WoodBldg3Winter
+  Lumberyard5=WoodBldg3Winter
+
+  Rails1=Rails1Winter
+  Rails2=Rails2Winter
+  RailTies=RailTiesWinter
+  RailBed1=RailBed1Winter
+  RailBed2=RailBed2Winter
+  RailBed3=RailBed3Winter

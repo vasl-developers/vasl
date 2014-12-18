@@ -1,0 +1,435 @@
+<?xml version="1.0"?>
+<!--
+    This file contains the board metadata specific to a VASL board archive.
+    Create one file per VASL board and place it in the archive.
+-->
+
+<!-- 
+    Board-level metadata
+	name - the name of the board (as it will appear in board selector drop-down - not yet supported)
+	version - the board version
+	versionDate - the date the last version was created
+	author - the caring soul who created the board
+    boardImage - the name of the VASL image file in the board archive; the name is case sensitive
+    hasHills - TRUE/FALSE if the board contains base elevations above ground level
+                if not we can assume the ground level under the terrain is zero, which
+                makes the VASL LOS image translation faster and more accurate
+    height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
+	hexHeight - the height of a hex in pixels - decimal - should be image/height
+	hexWidth - the width of a hex in pixels - decimal - center point to center point
+	A1CenterX - x location of the A1 center dot
+	A1CenterY - y location of the A1 center dot 
+-->
+<boardMetadata 
+	name="g" 
+	version="6.0" 
+	versionDate="Dec 2011" 
+	author="TR" 
+	boardImageFileName="bdg.gif" 
+	hasHills="FALSE" 
+	width="15" 
+	height="5"
+	hexHeight = "194.2"
+	hexWidth = "168.7857142857"
+	A1CenterX = "0"
+	A1CenterY = "97.1"
+	snapScale = "2"
+	>
+
+    <!--
+        The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
+        determine the proper building type when creating the LOS information and assumes buildings are single-hex stone or 
+        wooden buildings. Use these elements to override the building type. 
+        
+        See the terrainType elements for a complete list of building names
+    -->
+    <buildingTypes>
+	
+	</buildingTypes>
+	
+	<overlaySSRules>
+	    <!--
+			Scenario-specific overlay rules. 
+			name - the VASL SSR name
+			image - the image name
+			x - x coordinate of overly upper left
+			y - y coordinate of overlay upper left
+		-->
+
+		<underlaySSRule name="GrainToVineyard" image="VineyardPattern.gif">
+			<color name="GrainColor01" />
+			<color name="GrainColor02" />
+			<color name="GrainColor03" />
+			<color name="GrainColor04" />
+			<color name="GrainColor05" />
+			<color name="GrainColor06" />
+			<color name="GrainColor07" />
+			<color name="GrainColor08" />
+			<color name="GrainColor09" />
+			<color name="GrainColor10" />
+			<color name="GrainColor11" />
+			<color name="GrainColor12" />
+			<color name="FurrowColor01" />
+			<color name="FurrowColor02" />
+			<color name="FurrowColor03" />
+			<color name="FurrowColor04" />
+			<color name="FurrowColor05" />
+			<color name="FurrowColor06" />
+			<color name="FurrowColor07" />
+			<color name="FurrowColor08" />
+			<color name="FurrowColor09" />
+			<color name="FurrowColor10" />
+			<color name="FurrowColor11" />
+			<color name="FurrowColor12" />
+		</underlaySSRule>
+		<underlaySSRule name="GrainToPaddy" image="PaddyPattern.gif">
+			<color name="GrainColor01" />
+			<color name="GrainColor02" />
+			<color name="GrainColor03" />
+			<color name="GrainColor04" />
+			<color name="GrainColor05" />
+			<color name="GrainColor06" />
+			<color name="GrainColor07" />
+			<color name="GrainColor08" />
+			<color name="GrainColor09" />
+			<color name="GrainColor10" />
+			<color name="GrainColor11" />
+			<color name="GrainColor12" />
+			<color name="FurrowColor01" />
+			<color name="FurrowColor02" />
+			<color name="FurrowColor03" />
+			<color name="FurrowColor04" />
+			<color name="FurrowColor05" />
+			<color name="FurrowColor06" />
+			<color name="FurrowColor07" />
+			<color name="FurrowColor08" />
+			<color name="FurrowColor09" />
+			<color name="FurrowColor10" />
+			<color name="FurrowColor11" />
+			<color name="FurrowColor12" />
+		</underlaySSRule>
+		<underlaySSRule name="GrainToBrush" image="BrushPattern.gif">
+			<color name="GrainColor01" />
+			<color name="GrainColor02" />
+			<color name="GrainColor03" />
+			<color name="GrainColor04" />
+			<color name="GrainColor05" />
+			<color name="GrainColor06" />
+			<color name="GrainColor07" />
+			<color name="GrainColor08" />
+			<color name="GrainColor09" />
+			<color name="GrainColor10" />
+			<color name="GrainColor11" />
+			<color name="GrainColor12" />
+			<color name="FurrowColor01" />
+			<color name="FurrowColor02" />
+			<color name="FurrowColor03" />
+			<color name="FurrowColor04" />
+			<color name="FurrowColor05" />
+			<color name="FurrowColor06" />
+			<color name="FurrowColor07" />
+			<color name="FurrowColor08" />
+			<color name="FurrowColor09" />
+			<color name="FurrowColor10" />
+			<color name="FurrowColor11" />
+			<color name="FurrowColor12" />
+		</underlaySSRule>
+		<underlaySSRule name="GrainToWoods" image="WoodsPattern.gif">
+			<color name="GrainColor01" />
+			<color name="GrainColor02" />
+			<color name="GrainColor03" />
+			<color name="GrainColor04" />
+			<color name="GrainColor05" />
+			<color name="GrainColor06" />
+			<color name="GrainColor07" />
+			<color name="GrainColor08" />
+			<color name="GrainColor09" />
+			<color name="GrainColor10" />
+			<color name="GrainColor11" />
+			<color name="GrainColor12" />
+			<color name="FurrowColor01" />
+			<color name="FurrowColor02" />
+			<color name="FurrowColor03" />
+			<color name="FurrowColor04" />
+			<color name="FurrowColor05" />
+			<color name="FurrowColor06" />
+			<color name="FurrowColor07" />
+			<color name="FurrowColor08" />
+			<color name="FurrowColor09" />
+			<color name="FurrowColor10" />
+			<color name="FurrowColor11" />
+			<color name="FurrowColor12" />
+		</underlaySSRule>
+		<underlaySSRule name="GrainToMarsh" image="MarshPattern.gif">
+			<color name="GrainColor01" />
+			<color name="GrainColor02" />
+			<color name="GrainColor03" />
+			<color name="GrainColor04" />
+			<color name="GrainColor05" />
+			<color name="GrainColor06" />
+			<color name="GrainColor07" />
+			<color name="GrainColor08" />
+			<color name="GrainColor09" />
+			<color name="GrainColor10" />
+			<color name="GrainColor11" />
+			<color name="GrainColor12" />
+			<color name="FurrowColor01" />
+			<color name="FurrowColor02" />
+			<color name="FurrowColor03" />
+			<color name="FurrowColor04" />
+			<color name="FurrowColor05" />
+			<color name="FurrowColor06" />
+			<color name="FurrowColor07" />
+			<color name="FurrowColor08" />
+			<color name="FurrowColor09" />
+			<color name="FurrowColor10" />
+			<color name="FurrowColor11" />
+			<color name="FurrowColor12" />
+		</underlaySSRule>
+		<underlaySSRule name="MarshToVineyard" image="VineyardPattern.gif">
+			<color name="MarshColor1" />
+			<color name="MarshColor2" />
+			<color name="MarshColor3" />
+			<color name="MarshColor4" />
+			<color name="MarshColor5" />
+			<color name="MarshColor6" />
+			<color name="MarshColor7" />
+			<color name="MarshColor8" />
+			<color name="SwampColor1" />
+			<color name="SwampColor2" />
+			<color name="SwampColor3" />
+			<color name="SwampColor4" />
+			<color name="SwampColor5" />
+			<color name="SwampColor6" />
+			<color name="SwampColor7" />
+			<color name="SwampColor8" />
+		</underlaySSRule>
+		<underlaySSRule name="MarshToPaddy" image="PaddyPattern.gif">
+			<color name="MarshColor1" />
+			<color name="MarshColor2" />
+			<color name="MarshColor3" />
+			<color name="MarshColor4" />
+			<color name="MarshColor5" />
+			<color name="MarshColor6" />
+			<color name="MarshColor7" />
+			<color name="MarshColor8" />
+			<color name="SwampColor1" />
+			<color name="SwampColor2" />
+			<color name="SwampColor3" />
+			<color name="SwampColor4" />
+			<color name="SwampColor5" />
+			<color name="SwampColor6" />
+			<color name="SwampColor7" />
+			<color name="SwampColor8" />
+		</underlaySSRule>
+		<underlaySSRule name="MarshToBrush" image="BrushPattern.gif">
+			<color name="MarshColor1" />
+			<color name="MarshColor2" />
+			<color name="MarshColor3" />
+			<color name="MarshColor4" />
+			<color name="MarshColor5" />
+			<color name="MarshColor6" />
+			<color name="MarshColor7" />
+			<color name="MarshColor8" />
+			<color name="SwampColor1" />
+			<color name="SwampColor2" />
+			<color name="SwampColor3" />
+			<color name="SwampColor4" />
+			<color name="SwampColor5" />
+			<color name="SwampColor6" />
+			<color name="SwampColor7" />
+			<color name="SwampColor8" />
+		</underlaySSRule>
+		<underlaySSRule name="MarshToWoods" image="WoodsPattern.gif">
+			<color name="MarshColor1" />
+			<color name="MarshColor2" />
+			<color name="MarshColor3" />
+			<color name="MarshColor4" />
+			<color name="MarshColor5" />
+			<color name="MarshColor6" />
+			<color name="MarshColor7" />
+			<color name="MarshColor8" />
+			<color name="SwampColor1" />
+			<color name="SwampColor2" />
+			<color name="SwampColor3" />
+			<color name="SwampColor4" />
+			<color name="SwampColor5" />
+			<color name="SwampColor6" />
+			<color name="SwampColor7" />
+			<color name="SwampColor8" />
+		</underlaySSRule>
+		<underlaySSRule name="MarshToGrain" image="GrainPattern.gif">
+			<color name="MarshColor1" />
+			<color name="MarshColor2" />
+			<color name="MarshColor3" />
+			<color name="MarshColor4" />
+			<color name="MarshColor5" />
+			<color name="MarshColor6" />
+			<color name="MarshColor7" />
+			<color name="MarshColor8" />
+			<color name="SwampColor1" />
+			<color name="SwampColor2" />
+			<color name="SwampColor3" />
+			<color name="SwampColor4" />
+			<color name="SwampColor5" />
+			<color name="SwampColor6" />
+			<color name="SwampColor7" />
+			<color name="SwampColor8" />
+		</underlaySSRule>
+		<underlaySSRule name="WallsOnly" image="WallPattern.gif">
+			<color name="HedgeGreen" />
+		</underlaySSRule>
+		<underlaySSRule name="WallToCactus" image="CactusPattern.gif">
+			<color name="WallBrown" />
+			<color name="WallGrey1" />
+			<color name="WallGrey2" />
+		</underlaySSRule>
+		<underlaySSRule name="HedgeToCactus" image="CactusPattern.gif">
+			<color name="HedgeGreen" />
+		</underlaySSRule>
+		<overlaySSRule name="OrchardsToShellholes" image="g_Orch2Shell.gif" x="79" y="1" />
+		<overlaySSRule name="PalmTrees" image="g_PalmTrees.gif" x="79" y="1" />
+		<overlaySSRule name="OrchardsToCrags" image="g_Orch2Crag.gif" x="79" y="1" />
+		<overlaySSRule name="HedgesToBocage" image="g_HedgesToBocage.gif" x="45" y="1" />
+		<overlaySSRule name="WallsToBocage" image="g_WallsToBocage.gif" x="223" y="384" />
+		<overlaySSRule name="BridgeToFord" image="g_BridgeToFord.gif" x="1587" y="224" />
+		<overlaySSRule name="NoBridge" image="g_NoBridge.gif" x="1587" y="224" />
+		<overlaySSRule name="DenseJungle" image="g_DenseJungle.gif" x="1" y="1" />
+		<overlaySSRule name="NoRoads" image="g_NoRoads.gif" x="1" y="1" />
+	</overlaySSRules>
+	
+	<colors>
+		<!--
+			The VASL board colors. Used for color-specific SSR transformations. Use this element to override the shared color pallet. 
+			name - the VASL color name
+			red, green, blue - the RBG value of the color in the image
+			terrain - the LOS terrain type
+			elevation - the base elevation of the terrain
+			
+		-->
+		<color name="MarshColor1" red="98" green="87" blue="17" terrain="Marsh" elevation="UNKNOWN" />
+		<color name="MarshColor2" red="119" green="108" blue="38" terrain="Marsh" elevation="UNKNOWN" />
+		<color name="MarshColor3" red="121" green="118" blue="25" terrain="Marsh" elevation="UNKNOWN" />
+		<color name="MarshColor4" red="124" green="113" blue="26" terrain="Marsh" elevation="UNKNOWN" />
+		<color name="MarshColor5" red="133" green="127" blue="20" terrain="Marsh" elevation="UNKNOWN" />
+		<color name="MarshColor6" red="133" green="129" blue="35" terrain="Marsh" elevation="UNKNOWN" />
+		<color name="MarshColor7" red="134" green="137" blue="19" terrain="Marsh" elevation="UNKNOWN" />
+		<color name="MarshColor8" red="155" green="153" blue="65" terrain="Marsh" elevation="UNKNOWN" />
+		
+		<color name="SunkRoadColor1" red="86" green="53" blue="14" terrain="Sunken Road" elevation="UNKNOWN" />
+		<color name="SunkRoadColor2" red="91" green="70" blue="8" terrain="Sunken Road" elevation="UNKNOWN" />
+		<color name="SunkRoadColor3" red="100" green="65" blue="9" terrain="Sunken Road" elevation="UNKNOWN" />
+		<color name="SunkRoadColor4" red="106" green="57" blue="11" terrain="Sunken Road" elevation="UNKNOWN" />
+		<color name="SunkRoadColor5" red="138" green="98" blue="12" terrain="Sunken Road" elevation="UNKNOWN" />
+		<color name="SunkRoadColor6" red="139" green="88" blue="12" terrain="Sunken Road" elevation="UNKNOWN" />
+
+		<color name="GrainColor01" red="165" green="144" blue="36" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainColor02" red="166" green="145" blue="27" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainColor03" red="167" green="146" blue="14" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainColor04" red="169" green="150" blue="43" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainColor05" red="170" green="155" blue="36" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainColor06" red="172" green="151" blue="34" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainColor07" red="172" green="156" blue="27" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainColor08" red="173" green="151" blue="23" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainColor09" red="175" green="158" blue="17" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainColor10" red="177" green="154" blue="12" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainColor11" red="179" green="163" blue="36" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainColor12" red="181" green="165" blue="8" terrain="Grain" elevation="UNKNOWN" />
+
+		<color name="FurrowColor01" red="166" green="144" blue="36" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowColor02" red="167" green="145" blue="27" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowColor03" red="168" green="146" blue="14" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowColor04" red="170" green="150" blue="43" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowColor05" red="171" green="155" blue="36" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowColor06" red="173" green="151" blue="34" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowColor07" red="173" green="156" blue="27" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowColor08" red="174" green="151" blue="23" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowColor09" red="176" green="158" blue="17" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowColor10" red="178" green="154" blue="12" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowColor11" red="180" green="163" blue="36" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowColor12" red="182" green="165" blue="8" terrain="Open Ground" elevation="UNKNOWN" />
+
+		<color name="Shallow StreamColor01" red="121" green="88" blue="52" terrain="Shallow Stream" elevation="UNKNOWN" />
+		<color name="Shallow StreamColor02" red="122" green="114" blue="26" terrain="Shallow Stream" elevation="UNKNOWN" />
+		<color name="Shallow StreamColor03" red="124" green="136" blue="24" terrain="Shallow Stream" elevation="UNKNOWN" />
+		<color name="Shallow StreamColor04" red="126" green="145" blue="23" terrain="Shallow Stream" elevation="UNKNOWN" />
+		<color name="Shallow StreamColor05" red="131" green="96" blue="26" terrain="Shallow Stream" elevation="UNKNOWN" />
+		<color name="Shallow StreamColor06" red="132" green="136" blue="144" terrain="Shallow Stream" elevation="UNKNOWN" />
+		<color name="Shallow StreamColor07" red="139" green="105" blue="15" terrain="Shallow Stream" elevation="UNKNOWN" />
+		<color name="Shallow StreamColor08" red="141" green="91" blue="22" terrain="Shallow Stream" elevation="UNKNOWN" />
+		<color name="Shallow StreamColor09" red="147" green="86" blue="23" terrain="Shallow Stream" elevation="UNKNOWN" />
+		<color name="Shallow StreamColor10" red="147" green="154" blue="161" terrain="Shallow Stream" elevation="UNKNOWN" />
+		<color name="Shallow StreamColor11" red="161" green="162" blue="154" terrain="Shallow Stream" elevation="UNKNOWN" />
+		<color name="Shallow StreamColor12" red="174" green="171" blue="147" terrain="Shallow Stream" elevation="UNKNOWN" />
+		<color name="Shallow StreamColor13" red="194" green="189" blue="103" terrain="Shallow Stream" elevation="UNKNOWN" />
+		<color name="Shallow StreamColor14" red="196" green="193" blue="182" terrain="Shallow Stream" elevation="UNKNOWN" />
+		<color name="Shallow StreamColor15" red="207" green="203" blue="170" terrain="Shallow Stream" elevation="UNKNOWN" />
+
+		<color name="DirtRoadColor01" red="159" green="121" blue="10" terrain="Dirt Road" elevation="UNKNOWN" />
+		<color name="DirtRoadColor02" red="164" green="105" blue="11" terrain="Dirt Road" elevation="UNKNOWN" />
+		<color name="DirtRoadColor03" red="169" green="150" blue="23" terrain="Dirt Road" elevation="UNKNOWN" />
+		<color name="DirtRoadColor04" red="170" green="140" blue="47" terrain="Dirt Road" elevation="UNKNOWN" />
+		<color name="DirtRoadColor05" red="175" green="139" blue="16" terrain="Dirt Road" elevation="UNKNOWN" />
+		<color name="DirtRoadColor06" red="180" green="143" blue="0" terrain="Dirt Road" elevation="UNKNOWN" />
+		<color name="DirtRoadColor07" red="182" green="134" blue="16" terrain="Dirt Road" elevation="UNKNOWN" />
+		<color name="DirtRoadColor08" red="185" green="153" blue="20" terrain="Dirt Road" elevation="UNKNOWN" />
+		<color name="DirtRoadColor09" red="185" green="162" blue="13" terrain="Dirt Road" elevation="UNKNOWN" />
+		<color name="DirtRoadColor10" red="189" green="148" blue="18" terrain="Dirt Road" elevation="UNKNOWN" />
+		<color name="DirtRoadColor11" red="190" green="157" blue="3" terrain="Dirt Road" elevation="UNKNOWN" />
+		<color name="DirtRoadColor12" red="191" green="143" blue="7" terrain="Dirt Road" elevation="UNKNOWN" />
+		<color name="DirtRoadColor13" red="195" green="152" blue="1" terrain="Dirt Road" elevation="UNKNOWN" />
+		<color name="DirtRoadColor14" red="195" green="172" blue="22" terrain="Dirt Road" elevation="UNKNOWN" />
+		<color name="DirtRoadColor15" red="198" green="164" blue="20" terrain="Dirt Road" elevation="UNKNOWN" />
+
+		<color name="SwampColor1" red="99" green="87" blue="17" terrain="Swamp" elevation="UNKNOWN" />
+		<color name="SwampColor2" red="120" green="108" blue="38" terrain="Swamp" elevation="UNKNOWN" />
+		<color name="SwampColor3" red="122" green="118" blue="25" terrain="Swamp" elevation="UNKNOWN" />
+		<color name="SwampColor4" red="125" green="113" blue="26" terrain="Swamp" elevation="UNKNOWN" />
+		<color name="SwampColor5" red="134" green="127" blue="20" terrain="Swamp" elevation="UNKNOWN" />
+		<color name="SwampColor6" red="134" green="129" blue="35" terrain="Swamp" elevation="UNKNOWN" />
+		<color name="SwampColor7" red="135" green="137" blue="19" terrain="Swamp" elevation="UNKNOWN" />
+		<color name="SwampColor8" red="156" green="153" blue="65" terrain="Swamp" elevation="UNKNOWN" />
+
+		<color name="StoneBldg1" red="59" green="40" blue="19" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg2" red="96" green="75" blue="44" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg3" red="101" green="81" blue="35" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg4" red="113" green="101" blue="21" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg5" red="114" green="101" blue="30" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg6" red="117" green="99" blue="45" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg7" red="118" green="99" blue="59" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg8" red="118" green="100" blue="71" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg9" red="131" green="116" blue="60" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg10" red="133" green="117" blue="72" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg11" red="134" green="119" blue="82" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg12" red="135" green="120" blue="93" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg13" red="147" green="135" blue="85" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg14" red="148" green="135" blue="98" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg15" red="152" green="140" blue="113" terrain="Stone Building" elevation="UNKNOWN" />
+
+		<color name="WoodBldg1" red="83" green="51" blue="35" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg2" red="86" green="58" blue="29" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg3" red="96" green="56" blue="33" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg4" red="105" green="74" blue="40" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg5" red="108" green="67" blue="42" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg6" red="112" green="69" blue="36" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg7" red="117" green="75" blue="47" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg8" red="119" green="68" blue="45" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg9" red="122" green="77" blue="42" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg10" red="124" green="90" blue="49" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg11" red="125" green="72" blue="42" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg12" red="128" green="71" blue="49" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg13" red="130" green="72" blue="43" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg14" red="135" green="86" blue="50" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg15" red="139" green="80" blue="48" terrain="Wooden Building" elevation="UNKNOWN" />
+
+		<color name="BridgeBrown" red="115" green="100" blue="52" terrain="Single Hex Stone Bridge" elevation="UNKNOWN" />
+		<color name="BridgeGrey1" red="145" green="135" blue="89" terrain="Single Hex Stone Bridge" elevation="UNKNOWN" />
+		<color name="BridgeGrey2" red="166" green="160" blue="120" terrain="Single Hex Stone Bridge" elevation="UNKNOWN" />
+	</colors>
+	
+	<colorSSRules>
+		<!--
+			The board color scenario-specific rules. Use this element to override the shared SSRs.		
+		-->
+	</colorSSRules>
+</boardMetadata>

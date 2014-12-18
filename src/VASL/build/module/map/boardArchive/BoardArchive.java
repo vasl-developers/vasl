@@ -1,16 +1,32 @@
 package VASL.build.module.map.boardArchive;
 
-import VASL.LOS.Map.Map;
-import VASL.LOS.Map.Terrain;
-import org.jdom2.JDOMException;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.zip.*;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
+
+import javax.imageio.ImageIO;
+
+import VASL.LOS.Map.Map;
+import VASL.LOS.Map.Terrain;
+import VASSAL.tools.io.IOUtils;
+import org.jdom2.JDOMException;
 
 import static VASSAL.tools.io.IOUtils.closeQuietly;
 
@@ -19,19 +35,25 @@ import static VASSAL.tools.io.IOUtils.closeQuietly;
  */
 public class BoardArchive {
 
-    // the board archive details
-    private String boardName;
-    private String boardDirectory;
-    private String qualifiedBoardArchive;
-    SharedBoardMetadata sharedBoardMetadata;
-    private final static String LOSDataFileName = "LOSData";    // name of the LOS data file in archive
-    private final static String boardMetadataFile = "BoardMetadata.xml"; // name of the board metadata file
+    // constants for standard geomorphic boards, which compensate for VASL "fuzzy" geometry. Hexes are slightly too wide.
+    public static final double GEO_WIDTH = 33;
+    public static final double GEO_HEIGHT = 10;
+    public static final double GEO_IMAGE_WIDTH = 1800;
+    public static final double GEO_IMAGE_HEIGHT = 645;
+    public static final double GEO_HEX_WIDTH = GEO_IMAGE_WIDTH/(GEO_WIDTH - 1.0);
+    public static final double GEO_HEX_HEIGHT = GEO_IMAGE_HEIGHT/GEO_HEIGHT;
+    public static final Point2D.Double GEO_A1_Center = new Point2D.Double(0, GEO_HEX_HEIGHT/2.0);
 
-    private final static String sharedBoardMetadataFile = "SharedBoardMetadata.xml"; // name of the shared board metadata file
+
+    private String qualifiedBoardArchive;
+    private SharedBoardMetadata sharedBoardMetadata;
+    private static final String LOSDataFileName = "LOSData";    // name of the LOS data file in archive
+    private static final String boardMetadataFile = "BoardMetadata.xml"; // name of the board metadata file
+    private static final String sharedBoardMetadataFile = "SharedBoardMetadata.xml"; // name of the shared board metadata file
     private BufferedImage boardImage;
     private Map map;
 
-    BoardMetadata metadata;
+    private BoardMetadata metadata;
 
     /**
      * Defines the interface to a VASL board archive in the VASL boards directory
@@ -43,8 +65,7 @@ public class BoardArchive {
     public BoardArchive(String archiveName, String boardDirectory, SharedBoardMetadata sharedBoardMetadata) throws IOException {
 
         // set the archive name, etc.
-        this.boardDirectory = boardDirectory;
-        qualifiedBoardArchive = this.boardDirectory +
+		qualifiedBoardArchive = boardDirectory +
                 System.getProperty("file.separator", "\\") +
                 archiveName;
         this.sharedBoardMetadata = sharedBoardMetadata;
@@ -72,16 +93,16 @@ public class BoardArchive {
      * Reads the map from disk using terrain types read from the board archive
      * @return <code>Map</code> object. Null if the LOS data does not exist or an error occurred.
      */
-    public VASL.LOS.Map.Map getLOSData(){
+    public Map getLOSData(){
 
-        return this.getLOSData(sharedBoardMetadata.getTerrainTypes());
+        return getLOSData(sharedBoardMetadata.getTerrainTypes());
     }
 
     /**
      * Reads the map from disk using the provide terrain types.
      * @return <code>Map</code> object. Null if the LOS data does not exist or an error occurred.
      */
-    public VASL.LOS.Map.Map getLOSData(HashMap<String, Terrain> terrainTypes){
+    public Map getLOSData(HashMap<String, Terrain> terrainTypes){
 
         // read the map if necessary
         if (map == null){
@@ -96,18 +117,25 @@ public class BoardArchive {
                                         new GZIPInputStream(
                                                 getInputStreamForArchiveFile(archive, LOSDataFileName))));
                 // read the map-level data
-                int width = infile.readInt();
-                int height = infile.readInt();
-                int gridWidth = infile.readInt();
-                int gridHeight = infile.readInt();
+                final int width = infile.readInt();
+				final int height = infile.readInt();
+				final int gridWidth = infile.readInt();
+				final int gridHeight = infile.readInt();
 
-                map  = new Map(width, height, terrainTypes);
+                if(isGEO()) {
+
+                    map  = new Map(width, height, terrainTypes);
+                }
+                else {
+                    map = new Map(width, height, getA1CenterX(), getA1CenterY(), gridWidth, gridHeight, terrainTypes);
+
+                }
 
                 // read the terrain and elevations grids
                 for(int x = 0; x < gridWidth; x++) {
                     for(int y = 0; y < gridHeight; y++) {
-                        map.setGridElevation(infile.readByte(), x, y);
-                        map.setGridTerrainCode(infile.readByte(), x, y);
+                        map.setGridElevation((int) infile.readByte(), x, y);
+                        map.setGridTerrainCode((int) infile.readByte() & (0xff), x, y);
 
                     }
                 }
@@ -117,8 +145,8 @@ public class BoardArchive {
                 // read the hex information
                 for (int col = 0; col < map.getWidth(); col++) {
                     for (int row = 0; row < map.getHeight() + (col % 2); row++) {
-                        byte stairway = infile.readByte();
-                        if(stairway == 1) {
+                        final byte stairway = infile.readByte();
+                        if((int) stairway == 1) {
                             map.getHex(col, row).setStairway(true);
                         }
                         else {
@@ -127,14 +155,18 @@ public class BoardArchive {
                     }
                 }
 
+                // set the slopes
+                map.setSlopes(metadata.getSlopes());
+
             } catch(Exception e) {
                 System.err.println("Could not read the LOS data in board " + qualifiedBoardArchive);
+                e.printStackTrace(System.err);
                 return null;
             }
             finally {
 
-                VASSAL.tools.io.IOUtils.closeQuietly((InputStream) infile);
-                VASSAL.tools.io.IOUtils.closeQuietly(archive);
+				org.apache.commons.io.IOUtils.closeQuietly(infile);
+                IOUtils.closeQuietly(archive);
             }
         }
         return map;
@@ -150,7 +182,7 @@ public class BoardArchive {
         try {
 
             // write the LOS data to a local temp file
-            File tempFile = new File("VASL.temp.LOSData");
+            final File tempFile = new File("VASL.temp.LOSData");
             outfile =
                     new ObjectOutputStream(
                             new BufferedOutputStream(
@@ -166,15 +198,15 @@ public class BoardArchive {
             // write the elevation and terrain grids
             for(int x = 0; x < map.getGridWidth(); x++) {
                 for(int y = 0; y < map.getGridHeight(); y++) {
-                    outfile.writeByte((byte) map.getGridElevation(x, y));
-                    outfile.writeByte((byte) map.getGridTerrainCode(x, y));
+                    outfile.writeByte(map.getGridElevation(x, y));
+                    outfile.writeByte(map.getGridTerrainCode(x, y));
                 }
             }
 
             // write the hex information
             for (int col = 0; col < map.getWidth(); col++) {
                 for (int row = 0; row < map.getHeight() + (col % 2); row++) {
-                    outfile.writeByte( map.getHex(col, row).hasStairway() ? (byte) 1: (byte) 0);
+                    outfile.writeByte( map.getHex(col, row).hasStairway() ? 1: 0);
                 }
             }
 
@@ -185,22 +217,33 @@ public class BoardArchive {
 
             // clean up
             if (!tempFile.delete()) {
-                throw new IOException("Cannot delete the temporary file: " + tempFile.getAbsolutePath());
+				//noinspection ThrowCaughtLocally
+				throw new IOException("Cannot delete the temporary file: " + tempFile.getAbsolutePath());
             }
 
         } catch(Exception e) {
 
-            System.err.println("Cannot save the LOS data to board " + boardName);
+            System.err.println("Cannot save the LOS data to board " + metadata.getName());
             System.err.println("Make sure the archive is not locked by another process/application");
             e.printStackTrace(System.err);
             System.exit(-1);
         }
         finally {
-            VASSAL.tools.io.IOUtils.closeQuietly((OutputStream) outfile);
+			org.apache.commons.io.IOUtils.closeQuietly(outfile);
         }
 
     }
 
+    /**
+     * @return true if the board is a stand GEO board (10 x 33)
+     */
+    public boolean isGEO(){
+        return
+                metadata.getHexWidth() == BoardMetadata.MISSING &&
+                metadata.getHexHeight() == BoardMetadata.MISSING &&
+                metadata.getA1CenterX() == BoardMetadata.MISSING &&
+                metadata.getA1CenterY() == BoardMetadata.MISSING;
+    }
     /**
      * Get the board image from the archive
      */
@@ -210,7 +253,7 @@ public class BoardArchive {
         if (boardImage == null) {
 
             // String imageFileName = losMetadataFile.getBoardImageFileName();
-            String imageFileName = metadata.getBoardImageFileName();
+            final String imageFileName = metadata.getBoardImageFileName();
 
             // read the image
             InputStream file = null;
@@ -225,6 +268,7 @@ public class BoardArchive {
             catch (IOException e) {
 
                 System.err.println("Could not open the board image: " + imageFileName);
+				System.err.println(e.toString());
                 return null;
             }
             finally {
@@ -243,13 +287,13 @@ public class BoardArchive {
     private void addLOSDataToArchive(File losData) throws IOException {
 
         // get a temp losData and delete as we just want the name
-        File tempFile = File.createTempFile("board" + this.getBoardName(), null);
+        final File tempFile = File.createTempFile("board" + getBoardName(), null);
         if (!tempFile.delete()) {
             throw new IOException("Cannot delete the temporary file: " + tempFile.getAbsolutePath());
         }
 
         // rename exist archive to the temp file
-        File boardArchive = new File(qualifiedBoardArchive);
+        final File boardArchive = new File(qualifiedBoardArchive);
         if (!boardArchive.renameTo(tempFile)) {
 
             throw new RuntimeException("could not rename the losData "+
@@ -258,12 +302,12 @@ public class BoardArchive {
         }
 
         // copy the archive skipping the losData if it exists
-        byte[] buf = new byte[1024];
-        ZipInputStream currentArchive = new ZipInputStream(new FileInputStream(tempFile));
-        ZipOutputStream newArchive = new ZipOutputStream(new FileOutputStream(boardArchive));
+        final byte[] buf = new byte[1024];
+        final ZipInputStream currentArchive = new ZipInputStream(new FileInputStream(tempFile));
+        final ZipOutputStream newArchive = new ZipOutputStream(new FileOutputStream(boardArchive));
         ZipEntry entry = currentArchive.getNextEntry();
         while (entry != null) {
-            String entryName = entry.getName();
+            final String entryName = entry.getName();
             if (!entryName.equals(LOSDataFileName)) {
 
                 // Add ZIP entry to output stream.
@@ -271,7 +315,8 @@ public class BoardArchive {
 
                 // Transfer bytes from the ZIP losData to the output losData
                 int len;
-                while ((len = currentArchive.read(buf)) > 0) {
+				//noinspection NestedAssignment
+				while ((len = currentArchive.read(buf)) > 0) {
                     newArchive.write(buf, 0, len);
                 }
             }
@@ -282,10 +327,11 @@ public class BoardArchive {
         currentArchive.close();
 
         // add the losData
-        InputStream in = new FileInputStream(losData);
+        final InputStream in = new FileInputStream(losData);
         newArchive.putNextEntry(new ZipEntry(LOSDataFileName));
         int len;
-        while ((len = in.read(buf)) > 0) {
+		//noinspection NestedAssignment
+		while ((len = in.read(buf)) > 0) {
             newArchive.write(buf, 0, len);
         }
         // Complete the entry
@@ -304,14 +350,14 @@ public class BoardArchive {
      * @param fileName the file to open in the archive
      * @return InputStream to the desired file
      */
-    public InputStream getInputStreamForArchiveFile(ZipFile archive, String fileName) throws IOException {
+    public final InputStream getInputStreamForArchiveFile(ZipFile archive, String fileName) throws IOException {
 
         try {
 
-            Enumeration<? extends ZipEntry> entries = archive.entries();
+            final Enumeration<? extends ZipEntry> entries = archive.entries();
             while (entries.hasMoreElements()){
 
-                ZipEntry entry = entries.nextElement();
+                final ZipEntry entry = entries.nextElement();
 
                 // if found return an InputStream
                 if(entry.getName().equals(fileName)){
@@ -366,13 +412,17 @@ public class BoardArchive {
         return getTerrainForVASLColor(metadata.getVASLColorName(color));
     }
 
+    /**
+     * @param color a color
+     * @return  true if the color is a stairway color
+     */
     public boolean isStairwayColor(Color color) {
 
         if(color == null || metadata.getVASLColorName(color) == null) {
             return false;
         }
-        String colorName = metadata.getVASLColorName(color);
-        return colorName.equals("WoodStairwell") || colorName.equals("StoneStairwell");
+        final String colorName = metadata.getVASLColorName(color);
+        return "WoodStairwell".equals(colorName) || "StoneStairwell".equals(colorName);
     }
 
     /**
@@ -382,9 +432,9 @@ public class BoardArchive {
      */
     public int getElevationForVASLColor(String VASLColorName) {
 
-        String elevation = metadata.getBoardColors().get(VASLColorName).getElevation();
-        if(elevation.equals(metadata.UNKNOWN)) {
-            return metadata.NO_ELEVATION;
+        final String elevation = metadata.getBoardColors().get(VASLColorName).getElevation();
+        if(elevation.equals(BoardMetadata.UNKNOWN)) {
+            return BoardMetadata.NO_ELEVATION;
         }
         else {
             return Integer.parseInt(metadata.getBoardColors().get(VASLColorName).getElevation());
@@ -398,9 +448,9 @@ public class BoardArchive {
      */
     public int getTerrainForVASLColor(String VASLColorName) {
 
-        String terrainName = metadata.getBoardColors().get(VASLColorName).getTerrainName();
-        if(terrainName.equals(metadata.UNKNOWN)) {
-            return metadata.NO_TERRAIN;
+        final String terrainName = metadata.getBoardColors().get(VASLColorName).getTerrainName();
+        if(terrainName.equals(BoardMetadata.UNKNOWN)) {
+            return BoardMetadata.NO_TERRAIN;
         }
         else {
             return sharedBoardMetadata.getTerrainTypes().get(terrainName).getType();
@@ -410,19 +460,19 @@ public class BoardArchive {
     /**
      * @return the code indicating a color has no elevation
      */
-    public int getNoElevationColorCode(){
+    public static int getNoElevationColorCode(){
 
         // return LOSColorMapFile.NO_ELEVATION;
-        return metadata.NO_ELEVATION;
+        return BoardMetadata.NO_ELEVATION;
     }
 
     /**
      * @return the code indicating a color has no terrain type
      */
-    public int getNoTerrainColorCode(){
+    public static int getNoTerrainColorCode(){
 
         // return  LOSColorMapFile.NO_TERRAIN;
-        return metadata.NO_TERRAIN;
+        return BoardMetadata.NO_TERRAIN;
     }
 
     /**
@@ -450,7 +500,7 @@ public class BoardArchive {
      * @return width in hexes
      */
     public int getBoardWidth() {
-        // return losMetadataFile.getBoardWidth();
+
         return metadata.getBoardWidth();
     }
 
@@ -459,7 +509,7 @@ public class BoardArchive {
      * @return height in hexes
      */
     public int getBoardHeight() {
-        // return losMetadataFile.getBoardHeight();
+
         return metadata.getBoardHeight();
     }
 
@@ -474,34 +524,35 @@ public class BoardArchive {
     /**
      * @return x location of the A1 center hex dot
      */
-    public int getA1CenterX() {
-        return metadata.getA1CenterX();
+    public double getA1CenterX() {
+        return metadata.getA1CenterX() == missingValue() ? GEO_A1_Center.x : metadata.getA1CenterX();
     }
 
     /**
      * @return y location of the A1 center hex dot
      */
-    public int getA1CenterY() {
-        return metadata.getA1CenterY();
+    public double getA1CenterY() {
+        return metadata.getA1CenterY() == missingValue() ? GEO_A1_Center.y : metadata.getA1CenterY();
     }
 
     /**
      * @return hex width in pixels
      */
-    public float getHexWidth() {
-        return metadata.getHexWidth();
+    public double getHexWidth() {
+        return metadata.getHexWidth() == missingValue() ? GEO_HEX_WIDTH : metadata.getHexWidth();
     }
 
     /**
      * @return hex height in pixels
      */
-    public float getHexHeight() {
-        return metadata.getHexHeight();
+    public double getHexHeight() {
+        return metadata.getHexHeight() == missingValue() ? GEO_HEX_HEIGHT : metadata.getHexHeight();
     }
 
     /**
      * @return true if upper left hex is A0, B1 is higher, etc.
      */
+	@SuppressWarnings("unused")
     public boolean isAltHexGrain() {
         return metadata.isAltHexGrain();
     }
@@ -527,8 +578,8 @@ public class BoardArchive {
     /**
      * @return int code for a value not read from the archive
      */
-    public int missingValue() {
-        return metadata.MISSING;
+    public static int missingValue() {
+        return BoardMetadata.MISSING;
     }
 
     /**
@@ -537,6 +588,13 @@ public class BoardArchive {
     public HashMap<String, ColorSSRule> getColorSSRules() {
 
         return metadata.getColorSSRules();
+    }
+
+    /**
+     * @return the set of hexes with slopes
+     */
+    public Slopes getSlopes() {
+        return metadata.getSlopes();
     }
 }
 

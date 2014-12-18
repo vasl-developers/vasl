@@ -1,0 +1,118 @@
+// Bounding Fire Productions color file
+
+// VASL v5 colors
+Level0   175,188,106
+Level1 176,147,70
+PavedRdL0  192,192,207
+DirtRdL0  220,205,123
+
+WoodStairwell 250,254,255
+StoneStairwell 251,254,255
+StoneRowhouseBar  1,1,0
+StoneRowhouseBarWinter 71,70,70
+
+WoodsGreen  85,95,45
+WoodsBlack  44,42,22
+WoodsGreenWinter  166,171,145
+WoodsBlackWinter  94,90,75
+
+HedgeGreen 62,91,47
+HedgeGreenWinter 160,174,154
+
+OrchL0  83,98,46
+OrchL1  83,98,47
+OrchTrees  82,98,46
+
+GrainL0 255,240,111
+FurrowsL0 255,239,111
+
+BrushL0  123,165,85
+BrushBlackL0  68,64,27
+BrushL1 123,165,86
+BrushBlackL1 68,65,27
+BrushWinter 196,207,187
+WhiteHexNumbers 251,252,253
+StaWhiteHexDots 255,254,253
+
+WallGrey1  158,157,157
+WallGrey2  92,91,92
+
+// BFP specific colors
+WoodBldg1 49,36,35
+WoodBldg2 73,55,47
+WoodBldg3 91,70,58
+WoodBldg4  95,47,46
+WoodBldg5 116,74,59
+WoodBldg6  120,52,48
+WoodBldg7  148,63,51
+WoodBldg8  155,80,60
+WoodBldg9  165,71,54
+
+
+WoodBldg1Winter  87,72,71
+WoodBldg2Winter 107,89,81
+WoodBldg3Winter  121,102,91
+WoodBldg4Winter  126,81,80
+WoodBldg5Winter 142,105,92
+WoodBldg6Winter  145,86,83
+WoodBldg7Winter 167,97,87
+WoodBldg8Winter 168,113,98
+WoodBldg9Winter  174,109,96
+
+
+
+StoneBldg1   23,20,24
+StoneBldg2   44,43,57
+StoneBldg3   59,69,77
+StoneBldg4   90,96,82
+StoneBldg5   88,103,121
+StoneBldg6   121,127,129
+StoneBldg7   140,155,150
+StoneBldg8   158,176,190
+StoneBldg9   191,187,189
+StoneBldg10  193,193,203
+StoneBldg11  194,207,215
+StoneBldg12  218,221,227
+
+
+StoneBldg1Winter  69,63,71
+StoneBldg2Winter   83,82,98
+StoneBldg3Winter   95,105,113
+StoneBldg4Winter  122,127,115
+StoneBldg5Winter  123,133,147
+StoneBldg6Winter   148,151,152
+StoneBldg7Winter 164,172,169
+StoneBldg8Winter  180,190,198
+StoneBldg9Winter   202,200,201
+StoneBldg10Winter 206,206,212
+StoneBldg11Winter   208,215,220
+StoneBldg12Winter  227,228,231
+
+
+Lumberyard1  84,57,54
+Lumberyard2  119,61,56
+Lumberyard3  168,60,53
+Lumberyard4  113,103,74
+Lumberyard5  113,115,88
+
+Rails1 142,137,132
+Rails2 120,122,126
+RailTies 110,69,48
+RailBed1 124,115,92
+RailBed2 98,98,84
+RailBed3 65,55,46
+
+Rails1Winter 181,179,177
+Rails2Winter 169,170,171
+RailTiesWinter 170,131,112
+RailBed1Winter 169,164,151
+RailBed2Winter 154,154,144
+RailBed3Winter 141,126,113
+
+
+
+
+
+
+
+

@@ -19,7 +19,6 @@
 
 package VASL.build.module;
 
-import VASL.LOS.Map.Hex;
 import VASL.build.module.map.boardArchive.BoardArchive;
 import VASL.build.module.map.boardArchive.SharedBoardMetadata;
 import VASL.build.module.map.boardPicker.BoardException;
@@ -208,11 +207,20 @@ public class ASLMap extends Map {
             // and determine the size of the map
             unsupportedFeature = false;
             legacyMode = false;
-            Rectangle mapBoundary = new Rectangle(0,0);
+            final Rectangle mapBoundary = new Rectangle(0,0);
+            double hexHeight = 0.0;
+            double hexWidth = 0.0;
             for(Board b: boards) {
-                VASLBoard board = (VASLBoard) b;
+                final VASLBoard board = (VASLBoard) b;
                 mapBoundary.add(b.bounds());
                 VASLBoards.add(board);
+
+                // make sure the hex geometry of all boards is the same
+                if (hexHeight != 0.0 && Math.round(board.getHexHeight()) != Math.round(hexHeight) || hexWidth != 0.0 && Math.round(board.getHexWidth()) != Math.round(hexWidth)) {
+                    throw new BoardException("Map configuration contains multiple hex sizes - disabling LOS");
+                }
+                hexHeight = board.getHexHeight();
+                hexWidth = board.getHexWidth();
             }
 
             // remove the edge buffer from the map boundary size
@@ -220,11 +228,17 @@ public class ASLMap extends Map {
             mapBoundary.height -= edgeBuffer.height;
 
             // create the VASL map
+            VASLBoard b = VASLBoards.get(0); // we can use the geometry of any board - assuming all are the same
             VASLMap = new VASL.LOS.Map.Map(
-                    (int) Math.round(mapBoundary.width/ Hex.WIDTH) + 1,
-                    (int) Math.round(mapBoundary.height / Hex.HEIGHT),
+                    (int) Math.round(mapBoundary.width/ b.getHexWidth()) + 1,
+                    (int) Math.round(mapBoundary.height/ b.getHexHeight()),
+                    b.getA1CenterX(),
+                    b.getA1CenterY(),
+                    mapBoundary.width,
+                    mapBoundary.height,
                     sharedBoardMetadata.getTerrainTypes());
         }
+
         // clean up and fall back to legacy mode if an unexpected exception is thrown
         catch (Exception e) {
 
@@ -247,21 +261,15 @@ public class ASLMap extends Map {
                     VASL.LOS.Map.Map LOSData = board.getLOSData(sharedBoardMetadata.getTerrainTypes());
 
                     // check for overlays
-                    Enumeration overlays = board.getOverlays();
+                    final Enumeration overlays = board.getOverlays();
                     while (overlays.hasMoreElements()) {
-                        if(overlays.nextElement().toString().length() > 0) {
+                        if(!overlays.nextElement().toString().isEmpty()) {
                             throw new BoardException("Overlays are not supported - disabling LOS");
                         }
                     }
 
                     // apply the SSR changes, crop and flip if needed
-                    try {
-                        board.applyColorSSRules(LOSData, sharedBoardMetadata.getLOSSSRules());
-                    }
-                    catch (BoardException e) {
-                        logError(e.getMessage());
-                        throw e;
-                    }
+                    board.applyColorSSRules(LOSData, sharedBoardMetadata.getLOSSSRules());
 
                     if(board.isCropped()) {
                         LOSData = board.cropLOSData(LOSData);

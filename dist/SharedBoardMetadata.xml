@@ -499,8 +499,8 @@
         <terrainType name="Stone Building, 4 Level" typeCode="44" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="4" mapColorRed="91" mapColorGreen="91" mapColorBlue="91" LOSCategory="BUILDING"  />
         <terrainType name="Stone Factory Wall, 1.5 Level" typeCode="45" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="0" mapColorGreen="0" mapColorBlue="0" LOSCategory="FACTORY"  />
         <terrainType name="Stone Factory Wall, 2.5 Level" typeCode="46" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="2" mapColorRed="0" mapColorGreen="0" mapColorBlue="0" LOSCategory="FACTORY"  />
-        <terrainType name="Stone Factory, 1.5 Level" typeCode="47" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="1.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="1" mapColorRed="135" mapColorGreen="135" mapColorBlue="135" LOSCategory="BUILDING"  />
-        <terrainType name="Stone Factory, 2.5 Level" typeCode="48" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="2.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="2" mapColorRed="115" mapColorGreen="115" mapColorBlue="115" LOSCategory="BUILDING"  />
+        <terrainType name="Stone Factory, 1.5 Level" typeCode="47" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="1.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="1" mapColorRed="135" mapColorGreen="135" mapColorBlue="135" LOSCategory="FACTORY"  />
+        <terrainType name="Stone Factory, 2.5 Level" typeCode="48" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="2.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="2" mapColorRed="115" mapColorGreen="115" mapColorBlue="115" LOSCategory="FACTORY"  />
         <terrainType name="Stone Market Place" typeCode="49" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.5" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="125" mapColorGreen="125" mapColorBlue="125" LOSCategory="MARKETPLACE"  />
         <terrainType name="Wooden Building" typeCode="50" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="163" mapColorGreen="115" mapColorBlue="63" LOSCategory="BUILDING"  />
         <terrainType name="Wooden Building, 1 Level" typeCode="51" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="163" mapColorGreen="111" mapColorBlue="7" LOSCategory="BUILDING"  />
@@ -509,21 +509,20 @@
         <terrainType name="Wooden Building, 4 Level" typeCode="54" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="4" mapColorRed="59" mapColorGreen="55" mapColorBlue="19" LOSCategory="BUILDING"  />
         <terrainType name="Wooden Factory Wall, 1.5 Level" typeCode="55" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="1.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="0" mapColorGreen="0" mapColorBlue="0" LOSCategory="FACTORY"  />
         <terrainType name="Wooden Factory Wall, 2.5 Level" typeCode="56" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="2.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="2" mapColorRed="0" mapColorGreen="0" mapColorBlue="0" LOSCategory="FACTORY"  />
-        <terrainType name="Wooden Factory, 1.5 Level" typeCode="57" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="1.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="1" mapColorRed="163" mapColorGreen="111" mapColorBlue="7" LOSCategory="BUILDING"  />
-        <terrainType name="Wooden Factory, 2.5 Level" typeCode="58" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="2.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="2" mapColorRed="151" mapColorGreen="99" mapColorBlue="43" LOSCategory="BUILDING"  />
+        <terrainType name="Wooden Factory, 1.5 Level" typeCode="57" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="1.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="1" mapColorRed="163" mapColorGreen="111" mapColorBlue="7" LOSCategory="FACTORY"  />
+        <terrainType name="Wooden Factory, 2.5 Level" typeCode="58" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="2.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="2" mapColorRed="151" mapColorGreen="99" mapColorBlue="43" LOSCategory="FACTORY"  />
         <terrainType name="Wooden Market Place" typeCode="59" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.5" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="163" mapColorGreen="111" mapColorBlue="7" LOSCategory="MARKETPLACE"  />
         <terrainType name="Woods" typeCode="60" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="47" mapColorGreen="131" mapColorBlue="47" LOSCategory="WOODS"  />
         <terrainType name="Forest" typeCode="61" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="2" mapColorRed="47" mapColorGreen="131" mapColorBlue="47" LOSCategory="OTHER"  />
         <terrainType name="Pine Woods" typeCode="62" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="2" mapColorRed="47" mapColorGreen="131" mapColorBlue="47" LOSCategory="WOODS"  />
         <terrainType name="Orchard" typeCode="63" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="TRUE" split="0.5" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="1" mapColorRed="51" mapColorGreen="163" mapColorBlue="51" LOSCategory="OTHER"  />
         <terrainType name="Orchard, Out of Season" typeCode="64" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="FALSE" isInherentTerrain="TRUE" split="0.5" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="1" mapColorRed="51" mapColorGreen="163" mapColorBlue="51" LOSCategory="OTHER"  />
-        <terrainType name="Dirt Road" typeCode="65" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="220" mapColorGreen="205" mapColorBlue="123" LOSCategory="OPEN"  />
-        <terrainType name="Paved Road" typeCode="66" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="192" mapColorGreen="192" mapColorBlue="207" LOSCategory="OPEN"  />
-        <terrainType name="Elevated Road" typeCode="67" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="231" mapColorGreen="227" mapColorBlue="143" LOSCategory="OPEN"  />
+        <terrainType name="Dirt Road" typeCode="65" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="220" mapColorGreen="205" mapColorBlue="123" LOSCategory="ROAD"  />
+        <terrainType name="Paved Road" typeCode="66" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="192" mapColorGreen="192" mapColorBlue="207" LOSCategory="ROAD"  />
+        <terrainType name="Elevated Road" typeCode="67" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="231" mapColorGreen="227" mapColorBlue="143" LOSCategory="ROAD"  />
         <terrainType name="Sunken Road" typeCode="68" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="231" mapColorGreen="227" mapColorBlue="143" LOSCategory="DEPRESSION"  />
         <terrainType name="Runway" typeCode="69" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="215" mapColorGreen="215" mapColorBlue="215" LOSCategory="OPEN"  />
         <terrainType name="Path" typeCode="70" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="200" mapColorGreen="175" mapColorBlue="83" LOSCategory="OPEN"  />
-        <terrainType name="Railroad Embankment" typeCode="71" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="128" mapColorGreen="0" mapColorBlue="0" LOSCategory="OPEN"  />
         <terrainType name="Wall" typeCode="72" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="128" mapColorGreen="127" mapColorBlue="127" LOSCategory="HEXSIDE"  />
         <terrainType name="Hedge" typeCode="73" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="46" mapColorGreen="131" mapColorBlue="47" LOSCategory="HEXSIDE"  />
         <terrainType name="Bocage" typeCode="74" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="51" mapColorGreen="163" mapColorBlue="50" LOSCategory="HEXSIDE"  />
@@ -550,7 +549,7 @@
         <terrainType name="Dier" typeCode="102" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="OPEN"  />
         <terrainType name="Dier Lip" typeCode="103" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="OPEN"  />
         <terrainType name="Wadi" typeCode="104" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="191" mapColorGreen="111" mapColorBlue="7" LOSCategory="DEPRESSION"  />
-        <terrainType name="Hillock" typeCode="105" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="OTHER"  />
+        <terrainType name="Hillock" typeCode="105" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="85" mapColorGreen="45" mapColorBlue="4" LOSCategory="OTHER"  />
         <terrainType name="Hillock Summit" typeCode="106" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="OPEN"  />
         <terrainType name="Sand" typeCode="107" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="OPEN"  />
         <terrainType name="Sand Dune" typeCode="108" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="OTHER"  />
@@ -571,7 +570,7 @@
         <terrainType name="Dense Jungle" typeCode="127" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="2" mapColorRed="47" mapColorGreen="131" mapColorBlue="47" LOSCategory="WOODS"  />
         <terrainType name="Bamboo" typeCode="128" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="0" mapColorGreen="128" mapColorBlue="0" LOSCategory="OTHER"  />
         <terrainType name="Palm Trees" typeCode="129" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="TRUE" split="0.5" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="1" mapColorRed="51" mapColorGreen="163" mapColorBlue="51" LOSCategory="OTHER"  />
-        <terrainType name="Huts" typeCode="130" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.5" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="1" mapColorRed="147" mapColorGreen="95" mapColorBlue="35" LOSCategory="BUILDING"  />
+        <terrainType name="Huts" typeCode="130" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="1" mapColorRed="147" mapColorGreen="95" mapColorBlue="35" LOSCategory="BUILDING"  />
         <terrainType name="Collapsed Huts" typeCode="131" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="1" mapColorRed="147" mapColorGreen="95" mapColorBlue="35" LOSCategory="OTHER"  />
         <terrainType name="Kunai" typeCode="132" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="0" mapColorRed="255" mapColorGreen="255" mapColorBlue="127" LOSCategory="OTHER"  />
         <terrainType name="Swamp" typeCode="133" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="2" mapColorRed="47" mapColorGreen="99" mapColorBlue="36" LOSCategory="OTHER"  />
@@ -589,14 +588,22 @@
         <terrainType name="Beach, Steep Slope" typeCode="146" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="204" mapColorGreen="240" mapColorBlue="153" LOSCategory="OPEN"  />
         <terrainType name="Exposed Reef" typeCode="147" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="204" mapColorGreen="240" mapColorBlue="153" LOSCategory="OPEN"  />
         <terrainType name="Submerged Reef" typeCode="148" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="204" mapColorGreen="240" mapColorBlue="153" LOSCategory="OPEN"  />
+        <terrainType name="Railway Embankment" typeCode="152" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="128" mapColorGreen="0" mapColorBlue="0" LOSCategory="HEXSIDE"  />
         <terrainType name="Railroad, Ground Level" typeCode="153" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="204" mapColorGreen="240" mapColorBlue="153" LOSCategory="OPEN"  />
         <terrainType name="Railroad, Embankment" typeCode="154" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="204" mapColorGreen="240" mapColorBlue="153" LOSCategory="OPEN"  />
-        <terrainType name="Tower Hindrance" typeCode="160" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="1" mapColorRed="115" mapColorGreen="115" mapColorBlue="115" LOSCategory="BUILDING"  />
-        <terrainType name="Tower, 2 Level Hindrance" typeCode="161" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="2" mapColorRed="115" mapColorGreen="115" mapColorBlue="115" LOSCategory="BUILDING"  />
-        <terrainType name="Tower, 3 Level Hindrance" typeCode="162" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="3" mapColorRed="115" mapColorGreen="115" mapColorBlue="115" LOSCategory="BUILDING"  />
+        <terrainType name="Railroad, Elevated" typeCode="155" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="204" mapColorGreen="240" mapColorBlue="153" LOSCategory="OPEN"  />
+        <terrainType name="Railroad, Sunken" typeCode="156" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="204" mapColorGreen="240" mapColorBlue="153" LOSCategory="OPEN"  />
+        <terrainType name="Tower Hindrance" typeCode="160" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="1" mapColorRed="115" mapColorGreen="115" mapColorBlue="115" LOSCategory="BUILDING"  />
+        <terrainType name="Tower, 2 Level Hindrance" typeCode="161" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="2" mapColorRed="115" mapColorGreen="115" mapColorBlue="115" LOSCategory="BUILDING"  />
+        <terrainType name="Tower, 3 Level Hindrance" typeCode="162" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="3" mapColorRed="115" mapColorGreen="115" mapColorBlue="115" LOSCategory="BUILDING"  />
         <terrainType name="Tower Obstacle" typeCode="163" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="115" mapColorGreen="115" mapColorBlue="115" LOSCategory="BUILDING"  />
         <terrainType name="Tower, 2 Level Obstacle" typeCode="164" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="2" mapColorRed="115" mapColorGreen="115" mapColorBlue="115" LOSCategory="BUILDING"  />
         <terrainType name="Tower, 3 Level Obstacle" typeCode="165" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="3" mapColorRed="115" mapColorGreen="115" mapColorBlue="115" LOSCategory="BUILDING"  />
+        <terrainType name="Storage Tank" typeCode="166" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="115" mapColorGreen="115" mapColorBlue="115" LOSCategory="BUILDING"  />
+        <terrainType name="Storage Tank, 2 Level" typeCode="167" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="2" mapColorRed="115" mapColorGreen="115" mapColorBlue="115" LOSCategory="BUILDING"  />
+        <terrainType name="BFP Tower, 1 Level" typeCode="168" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.5" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="1" mapColorRed="163" mapColorGreen="115" mapColorBlue="63" LOSCategory="BUILDING"  />
+        <terrainType name="BFP Tower, 2 Level" typeCode="169" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="1.5" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="2" mapColorRed="151" mapColorGreen="99" mapColorBlue="43" LOSCategory="BUILDING"  />
+
     </terrainTypes>
 
 	<colorSSRules>
@@ -1393,8 +1400,8 @@
 	</colorSSRules>
 
     <!-- the rules applied to the LOS data for the SSR transformations. 
-		"type" must be one of the following: ignore, customCode, terrainMap, elevationMap, terrainToElevationMap, or elevationToTerrainmap
-		Use type="ignore" for SSRS that do not impact the LOS data
+		"type" must be one of the following: ignore, customCode, terrainMap, elevationMap, terrainToElevationMap, or elevationToTerrainMap
+		Use type="ignore" for SSRs that do not impact the LOS data
 		Use type="customCode" to mark SSRs that need code support
 		All attributes are required
 		Any VASL SSR tokens not explicitly listed below imply an unsupported transformation and will disable LOS
@@ -1425,6 +1432,13 @@
         <LOSSSRule name="RowhouseBarsToOpenGround" type="customCode" fromValue="" toValue="" />
         <LOSSSRule name="NoStairwells" type="customCode" fromValue="" toValue="" />
         <LOSSSRule name="NoBridge" type="customCode" fromValue="" toValue="" />
+        <LOSSSRule name="BridgeToFord" type="customCode" fromValue="" toValue="" />
+        <LOSSSRule name="SwampToSwampPattern" type="customCode" fromValue="" toValue="" />
+        <LOSSSRule name="PalmTrees" type="customCode" fromValue="" toValue="" />
+        <LOSSSRule name="DenseJungle" type="customCode" fromValue="" toValue="" />
+        <LOSSSRule name="Bamboo" type="customCode" fromValue="" toValue="" />
+        <LOSSSRule name="RoadsToPaths" type="customCode" fromValue="" toValue="" />
+        <LOSSSRule name="NoWoodsRoads" type="customCode" fromValue="" toValue="" />
 
         <!-- simple terrain mappings -->
         <LOSSSRule name="BrushToOpenGround" type="terrainMap" fromValue="Brush" toValue="Open Ground" />
@@ -1579,6 +1593,45 @@
         <OBACounter name="Green OBA FFE:1"/>
         <OBACounter name="Green OBA FFE:2"/>
         <OBACounter name="Green OBA FFE:C"/>
+        <OBACounter name="RU OBA FFE:1"/>
+        <OBACounter name="RU OBA FFE:2"/>
+        <OBACounter name="RU OBA FFE:C"/>
+        <OBACounter name="AM OBA FFE:1"/>
+        <OBACounter name="AM OBA FFE:2"/>
+        <OBACounter name="AM OBA FFE:C"/>
+        <OBACounter name="BR OBA FFE:1"/>
+        <OBACounter name="BR OBA FFE:2"/>
+        <OBACounter name="BR OBA FFE:C"/>
+        <OBACounter name="FR OBA FFE:1"/>
+        <OBACounter name="FR OBA FFE:2"/>
+        <OBACounter name="FR OBA FFE:C"/>
+        <OBACounter name="CH OBA FFE:1"/>
+        <OBACounter name="CH OBA FFE:2"/>
+        <OBACounter name="CH OBA FFE:C"/>
+        <OBACounter name="AL OBA FFE:1"/>
+        <OBACounter name="AL OBA FFE:2"/>
+        <OBACounter name="AL OBA FFE:C"/>
+        <OBACounter name="GE OBA FFE:1"/>
+        <OBACounter name="GE OBA FFE:2"/>
+        <OBACounter name="GE OBA FFE:C"/>
+        <OBACounter name="SS OBA FFE:1"/>
+        <OBACounter name="SS OBA FFE:2"/>
+        <OBACounter name="SS OBA FFE:C"/>
+        <OBACounter name="JA OBA FFE:1"/>
+        <OBACounter name="JA OBA FFE:2"/>
+        <OBACounter name="JA OBA FFE:C"/>
+        <OBACounter name="IT OBA FFE:1"/>
+        <OBACounter name="IT OBA FFE:2"/>
+        <OBACounter name="IT OBA FFE:C"/>
+        <OBACounter name="FI OBA FFE:1"/>
+        <OBACounter name="FI OBA FFE:2"/>
+        <OBACounter name="FI OBA FFE:C"/>
+        <OBACounter name="AX OBA FFE:1"/>
+        <OBACounter name="AX OBA FFE:2"/>
+        <OBACounter name="AX OBA FFE:C"/>
+        <OBACounter name="HU OBA FFE:1"/>
+        <OBACounter name="HU OBA FFE:2"/>
+        <OBACounter name="HU OBA FFE:C"/>
 
         <!-- These counters should be ignored as they will create false LOS conditions (e.g. treated as hindrances) -->
         <ignoreCounter name="Barricade" />

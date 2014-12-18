@@ -1,0 +1,10 @@
+<SSRControls>
+ <Option name="Board BFP-G Special overlays">
+ <Checkbox name="">
+         <entry name="Hexrow 1 side is water" rule="BSO_BFPG_Hexrow1SideIsWater" text="Hexrow 1 side is water"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Hexrow 10 side is water" rule="BSO_BFPG_Hexrow10SideIsWater" text="Hexrow 10 side is water"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

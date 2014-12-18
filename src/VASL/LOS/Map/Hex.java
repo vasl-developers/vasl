@@ -16,7 +16,13 @@
  */
 package VASL.LOS.Map;
 
-import java.awt.*;
+import java.awt.Point;
+import java.awt.Polygon;
+import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.geom.Point2D;
+
+import static java.lang.StrictMath.cos;
 
 /**
  * Title:        Hex.java
@@ -26,18 +32,11 @@ import java.awt.*;
  */
 public class Hex {
 
-	// static constant variables
-	public 		static double HEIGHT	= 64.5;
-	private		static double y			= HEIGHT/2;
-	private		static double h			= y/Math.cos(Math.toRadians(30)) * 1.00727476217123670956911024062675;
-	private		static double x			= h/2;
-	public		static double WIDTH		= h + x;
-
 	// Property variables
-	private	String	name			= null;
-	private	int		columnNumber	= 0;
-	private	int		rowNumber		= 0;
-	private	int		baseHeight		= 0;
+	private	String	name;
+	private	int		columnNumber;
+	private	int		rowNumber;
+	private	int		baseHeight;
 	private	boolean northOnMap		= true;
 	private	boolean northEastOnMap  = true;
 	private	boolean southEastOnMap  = true;
@@ -46,239 +45,268 @@ public class Hex {
 	private	boolean northWestOnMap  = true;
 
 	// the parent map
-	Map map;
+	private Map map;
 
 	// geometric variables
-	private	Point   center;
-	private	Polygon hexBorder 		= new Polygon();
-	private	Polygon extendedHexBorder	= new Polygon();
+	private	Point2D.Double   center;
+	private	Polygon hexBorder 		= new Polygon(); // the hex border
+	private	Polygon extendedHexBorder	= new Polygon(); // one pixel larger than the hex border
 
 	// location variables (center and each hexside)
-	private	Location hexsideLocations[] = new Location[6];
+    // the point for each hexside location will be the midpoint of the hexside offset one pixel toward the center of the hex
+	private	Location[] hexsideLocations = new Location[6];
 	private	Location centerLocation;
 
 	// terrain variables
-	private Terrain hexsideTerrain[]  = new Terrain[6]; // hexside has wall, hedge, etc.
-	private	boolean hexsideHasCliff[]  = new boolean[6];
+	private Terrain[] hexsideTerrain  = new Terrain[6]; // hexside terrain is wall, hedge, etc.
+	private	boolean[] hexsideHasCliff  = new boolean[6];
 
 	// other stuff
     //TODO: bridge object no longer used
 	private	Bridge	bridge;
     private	boolean stairway;
 
-	// constructors
-	public Hex(int col, int row, Map map, int baseHgt, Terrain terr) {
+    /**
+     * Create a new hex
+     * @param col the hex column - the first is 0
+     * @param row the hex row - first is 0
+     * @param name hex name
+     * @param centerDot location of hex center dot on map
+     * @param hexHeight hex height
+     * @param hexWidth hex width
+     * @param map the map
+     * @param baseHeight base height/elevation
+     * @param terrain default terrain used for all locations
+     */
+    public Hex(int col, int row, String name, Point2D.Double centerDot, double hexHeight, double hexWidth, Map map, int baseHeight, Terrain terrain) {
 
-		baseHeight   = baseHgt;
+		this.baseHeight = baseHeight;
 		columnNumber = col;
 		rowNumber	= row;
 		this.map	= map;
-		initHex(terr, map);
+        this.name = name;
+        center = fixMapEdgePoints(centerDot.getX(), centerDot.getY());
+		initHexNew(centerDot, hexHeight, hexWidth, terrain);
+
 	}
 
-	// initialize the hex
-	public void initHex(Terrain terr, Map map){
+	/**
+	 * Initialized the hex using custom geometry
+	 */
+	private void initHexNew(Point2D.Double centerDot, double hexHeight, double hexWidth, Terrain terr){
 
-		boolean lastCol	= false;
-		boolean lastRow	= false;
+        final double x = centerDot.getX();
+		final double y = centerDot.getY();
 
-		double[] vertexPointsX  =	{-h/2, h/2, h/2+x, h/2, -h/2, -h/2-x};
-		double[] vertexPointsY  =	{0,    0,   y,     2*y, 2*y,	y};
+        // create the hex geometry. Hexes are assumed to be oriented with the top and bottom hexsides
+        // parallel to the map top/bottom
 
-		double[] extendedVertexPointsX  =	{-h/2-1, h/2+1, h/2+x+1, h/2+1, -h/2-1, -h/2-x-1};
-		double[] extendedVertexPointsY  =	{-1,     -1,    y,       2*y+1, 2*y+1,  y};
+        // the length of the a hexside equals the distance from the center point to the vertexes
+        // final double hexside = hexHeight/(2.0*cos(Math.toRadians(30.0)));
+        final double hexside = hexWidth*2.0/3.0;
+        final double verticalOffset = hexHeight/2.0;
 
-		double[] hexsidePointsX  =	{0, (h+x)/2-1, (h+x)/2-1, 0,     -(h+x)/2, -(h+x)/2};
-		double[] hexsidePointsY  =	{1, y/2+1,      y/2+y-1,  2*y-1, y/2+y-1, y/2+1};
+        // [0] is the left-most vertex on the top hexside and the other points are clockwise from there
+        Point2D.Double[] vertexPoints = new Point2D.Double[6];
+        vertexPoints[0] = fixMapEdgePoints(-hexside / 2.0 + x, -verticalOffset + y);
+        vertexPoints[1] = fixMapEdgePoints(hexside / 2.0 + x, -verticalOffset + y);
+        vertexPoints[2] = fixMapEdgePoints(hexside + x, y);
+        vertexPoints[3] = fixMapEdgePoints(hexside / 2.0 + x, verticalOffset + y);
+        vertexPoints[4] = fixMapEdgePoints(-hexside / 2.0 + x, verticalOffset + y);
+        vertexPoints[5] = fixMapEdgePoints(-hexside + x, y);
+        for (int i = 0; i < 6; i++) {
 
-		// set name
-		int  rowName = rowNumber + (columnNumber%2 == 0 ? 1 : 0);
-		if (columnNumber < 26) {
+            // create the hex borders - extended being one pixel larger
+            hexBorder.addPoint((int) Math.round(vertexPoints[i].x), (int) Math.round(vertexPoints[i].y));
+            switch (i) {
+                case 0:
+                    extendedHexBorder.addPoint((int) vertexPoints[i].x - 1, (int) vertexPoints[i].y - 1);
+                    break;
+                case 1:
+                    extendedHexBorder.addPoint((int) vertexPoints[i].x - 1, (int) vertexPoints[i].y + 1);
+                    break;
+                case 2:
+                    extendedHexBorder.addPoint((int) vertexPoints[i].x + 1, (int) vertexPoints[i].y);
+                    break;
+                case 3:
+                    extendedHexBorder.addPoint((int) vertexPoints[i].x + 1, (int) vertexPoints[i].y + 1);
+                    break;
+                case 4:
+                    extendedHexBorder.addPoint((int) vertexPoints[i].x - 1, (int) vertexPoints[i].y + 1);
+                    break;
+                case 5:
+                    extendedHexBorder.addPoint((int) vertexPoints[i].x - 1, (int) vertexPoints[i].y);
+                    break;
+            }
 
-			char chars[] = {' '};
+        }
 
-			// geomorphic board numbering
-			chars[0]	 =  (char) ('A' + columnNumber%26);
-			name		 =  new String(chars);
-			name		 += rowName;
-		}
-		else {
-			char chars[] = {' ', ' '};
+        // the hexside point is the hexside center point translated one pixel toward the hex center point
+        // [0] is the top hexside and the other points are clock-wise from there
+        Point2D.Double[] hexsidePoints = new Point2D.Double[6];
+        final double horizontalOffset = cos(Math.toRadians(30.0)) * verticalOffset;
 
-			// geomorphic board numbering
-			chars[0] =  (char) ('A' + (columnNumber)%26);
-			chars[1] =  chars[0];
-			name		 =  new String(chars);
-			name		 += rowName;
-		}
+        hexsidePoints[0] = fixMapEdgePoints((int) x,                           (int) (-verticalOffset + y + 1.0));
+        hexsidePoints[1] = fixMapEdgePoints((int) (horizontalOffset + x - 1),  (int) (-verticalOffset/2.0 + y + 1.0));
+        hexsidePoints[2] = fixMapEdgePoints((int) (horizontalOffset + x - 1),  (int) (verticalOffset/2.0 + y - 1.0));
+        hexsidePoints[3] = fixMapEdgePoints((int) x,                           (int) (verticalOffset + y - 1.0));
+        hexsidePoints[4] = fixMapEdgePoints((int) (-horizontalOffset + x + 1),  (int) (verticalOffset/2.0 + y - 1.0));
+        hexsidePoints[5] = fixMapEdgePoints((int) (-horizontalOffset + x + 1),  (int) (-verticalOffset/2.0 + y + 1.0));
 
-		// set "on map" flags
-		// first column?
-		if (columnNumber == 0) {
+        setHexFlags();
 
-			southWestOnMap  = false;
-			northWestOnMap  = false;
-		}
-
-		// last column?
-		if (columnNumber + 1 == map.getWidth()) {
-
-			southEastOnMap  = false;
-			northEastOnMap  = false;
-			lastCol = true;
-		}
-
-		// first hex in odd column?
-		if ((columnNumber%2 == 1) &&  (rowNumber == 0)){
-
-			northOnMap  = false;
-			northEastOnMap  = false;
-			northWestOnMap  = false;
-		}
-
-		// last hex in odd column?
-		if ((columnNumber%2 == 1) &&  (rowNumber == map.getHeight())){
-
-			southOnMap  = false;
-			southEastOnMap  = false;
-			southWestOnMap  = false;
-			lastRow = true;
-		}
-
-		// set last row for even columns
-		else if ((columnNumber%2 == 0) &&  (rowNumber == map.getHeight() - 1)){
-
-			lastRow = true;
-		}
-
-		// translate and create the hex borders, center, hexsides (ensure they are on the map)
-		double deltaX = (columnNumber * WIDTH);
-		double deltaY = (rowNumber	* HEIGHT) - (columnNumber%2 == 1 ? HEIGHT/2 : 0);
-
-		Point hexsidePoints[]		= new Point[6];
-		Point vertexPoints[] 		= new Point[6];
-		Point extendedVertexPoints[]	= new Point[6];
-
-		center 	= new Point((int)deltaX + (lastCol ? -1 : 0), (int)(deltaY + HEIGHT/2) + (lastRow ? -1 : 0));
-		int verticleOffset 	= 0;
-		for (int i = 0; i < 6; i++){
-
-			// do we need to tweek points to keep them on the map?
-			if (lastRow && columnNumber%2 == 0 && (i == 3 || i == 4)) {
-
-				verticleOffset = -1;
-			}
-			else if (lastRow && columnNumber%2 == 1 && i != 0 && i != 1) {
-
-				verticleOffset = -1;
-			}
-			else {
-				verticleOffset = 0;
-			}
-
-			vertexPoints[i] = new Point(
-				(int)(vertexPointsX[i] + deltaX),
-				(int)(vertexPointsY[i] + deltaY + verticleOffset));
-			extendedVertexPoints[i]	= new Point(
-				(int)(extendedVertexPointsX[i] + deltaX),
-				(int)(extendedVertexPointsY[i] + deltaY + verticleOffset));
-			hexsidePoints[i] = new Point(
-				(int)(hexsidePointsX[i] + deltaX + (lastCol ? -1 : 0)),
-				(int)(hexsidePointsY[i] + deltaY));
-
-			hexBorder.addPoint((int)vertexPoints[i].getX(), (int)vertexPoints[i].getY());
-			extendedHexBorder.addPoint((int)extendedVertexPoints[i].getX(), (int)extendedVertexPoints[i].getY());
-		}
-
-		// create center and hexside locations
-		centerLocation = new Location(
-			name,
-			baseHeight,
-			center,
-			center,
-			center,
-			this,
-                terr
-		);
-
-		hexsideLocations[0] = new Location(
-			name + ":North",
-			baseHeight,
-			new Point((int)vertexPoints[0].getX(),
-					  (int)vertexPoints[0].getY()),
-			new Point((int)vertexPoints[1].getX(),
-					  (int)vertexPoints[1].getY()),
-			new Point((int)hexsidePoints[0].getX(),
-					  (int)hexsidePoints[0].getY()),
-			this,
-                terr
-		);
-
-		hexsideLocations[1] = new Location(
-			name +  ":NorthEast",
-			baseHeight,
-			new Point((int)vertexPoints[1].getX(),
-					  (int)vertexPoints[1].getY()),
-			new Point((int)vertexPoints[2].getX(),
-					  (int)vertexPoints[2].getY()),
-			new Point((int)hexsidePoints[1].getX(),
-					  (int)hexsidePoints[1].getY()),
-			this,
-                terr
-		);
-
-		hexsideLocations[2] = new Location(
-			name +  ":SouthEast",
-			baseHeight,
-			new Point((int)vertexPoints[2].getX(),
-					  (int)vertexPoints[2].getY()),
-			new Point((int)vertexPoints[3].getX(),
-					  (int)vertexPoints[3].getY()),
-			new Point((int)hexsidePoints[2].getX(),
-					  (int)hexsidePoints[2].getY()),
-			this,
-                terr
-		);
-
-		hexsideLocations[3] = new Location(
-			name +  ":South",
-			baseHeight,
-			new Point((int)vertexPoints[3].getX(),
-					  (int)vertexPoints[3].getY()),
-			new Point((int)vertexPoints[4].getX(),
-					  (int)vertexPoints[4].getY()),
-			new Point((int)hexsidePoints[3].getX(),
-					  (int)hexsidePoints[3].getY()),
-			this,
-                terr
-		);
-
-		hexsideLocations[4] = new Location(
-			name +  ":SouthWest",
-			baseHeight,
-			new Point((int)vertexPoints[4].getX(),
-					  (int)vertexPoints[4].getY()),
-			new Point((int)vertexPoints[5].getX(),
-					  (int)vertexPoints[5].getY()),
-			new Point((int)hexsidePoints[4].getX(),
-					  (int)hexsidePoints[4].getY()),
-			this,
-                terr
-		);
-
-		hexsideLocations[5] = new Location(
-			name +  ":NorthWest",
-			baseHeight,
-			new Point((int)vertexPoints[5].getX(),
-					  (int)vertexPoints[5].getY()),
-			new Point((int)vertexPoints[0].getX(),
-					  (int)vertexPoints[0].getY()),
-			new Point((int)hexsidePoints[5].getX(),
-					  (int)hexsidePoints[5].getY()),
-			this,
-                terr
-		);
+        createLocations(terr, vertexPoints, hexsidePoints);
 	}
+
+    /**
+     * Create the the set of "empty" hex locations - i.e they will not reflect the grid terrain
+     * @param terr a default terrain used for all locations
+     * @param vertexPoints the hex vertex points
+     * @param hexsidePoints the hex hexside points
+     */
+    private void createLocations(Terrain terr, Point2D.Double[] vertexPoints, Point2D.Double[] hexsidePoints) {
+
+        // create center and hexside locations
+        centerLocation = new Location(
+                name,
+                baseHeight,
+                getHexCenter(),
+                getHexCenter(),
+                getHexCenter(),
+                this,
+                terr
+        );
+
+        hexsideLocations[0] = new Location(
+                name + ":North",
+                baseHeight,
+                new Point((int)vertexPoints[0].getX(),
+                        (int)vertexPoints[0].getY()),
+                new Point((int)vertexPoints[1].getX(),
+                        (int)vertexPoints[1].getY()),
+                new Point((int)hexsidePoints[0].getX(),
+                        (int)hexsidePoints[0].getY()),
+                this,
+                terr
+        );
+
+        hexsideLocations[1] = new Location(
+                name +  ":NorthEast",
+                baseHeight,
+                new Point((int)vertexPoints[1].getX(),
+                        (int)vertexPoints[1].getY()),
+                new Point((int)vertexPoints[2].getX(),
+                        (int)vertexPoints[2].getY()),
+                new Point((int)hexsidePoints[1].getX(),
+                        (int)hexsidePoints[1].getY()),
+                this,
+                terr
+        );
+
+        hexsideLocations[2] = new Location(
+                name +  ":SouthEast",
+                baseHeight,
+                new Point((int)vertexPoints[2].getX(),
+                        (int)vertexPoints[2].getY()),
+                new Point((int)vertexPoints[3].getX(),
+                        (int)vertexPoints[3].getY()),
+                new Point((int)hexsidePoints[2].getX(),
+                        (int)hexsidePoints[2].getY()),
+                this,
+                terr
+        );
+
+        hexsideLocations[3] = new Location(
+                name +  ":South",
+                baseHeight,
+                new Point((int)vertexPoints[3].getX(),
+                        (int)vertexPoints[3].getY()),
+                new Point((int)vertexPoints[4].getX(),
+                        (int)vertexPoints[4].getY()),
+                new Point((int)hexsidePoints[3].getX(),
+                        (int)hexsidePoints[3].getY()),
+                this,
+                terr
+        );
+
+        hexsideLocations[4] = new Location(
+                name +  ":SouthWest",
+                baseHeight,
+                new Point((int)vertexPoints[4].getX(),
+                        (int)vertexPoints[4].getY()),
+                new Point((int)vertexPoints[5].getX(),
+                        (int)vertexPoints[5].getY()),
+                new Point((int)hexsidePoints[4].getX(),
+                        (int)hexsidePoints[4].getY()),
+                this,
+                terr
+        );
+
+        hexsideLocations[5] = new Location(
+                name +  ":NorthWest",
+                baseHeight,
+                new Point((int)vertexPoints[5].getX(),
+                        (int)vertexPoints[5].getY()),
+                new Point((int)vertexPoints[0].getX(),
+                        (int)vertexPoints[0].getY()),
+                new Point((int)hexsidePoints[5].getX(),
+                        (int)hexsidePoints[5].getY()),
+                this,
+                terr
+        );
+    }
+
+    /**
+     * @param x the x coordinate of the point
+     * @param y the y coordinate of the point
+     * @return a point that has been adjusted so it is on the map if x or y are off the map by a pixel or two
+     */
+    private Point2D.Double fixMapEdgePoints(double x, double y) {
+
+        double newX = x == -1.0 ? 0.0 : x;
+        double newY = y == -1.0 ? 0.0 : y;
+        newX = (int) newX == map.getGridWidth()  || (int) newX == map.getGridWidth() || (int) newX == (map.getGridWidth() + 1.0)  ? (map.getGridWidth()  - 1.0) : newX;
+        newY = (int) newY == map.getGridHeight() || (int) newY == map.getGridHeight() || (int) newY == (map.getGridHeight() + 1.0) ? (map.getGridHeight() - 1.0) : newY;
+
+        return new Point2D.Double(newX, newY);
+    }
+
+    /**
+     * set the "on map?" flags
+     */
+    private void setHexFlags() {
+
+        // first column?
+        if (columnNumber == 0) {
+
+            southWestOnMap  = false;
+            northWestOnMap  = false;
+        }
+
+        // last column?
+        if (columnNumber + 1 == map.getWidth()) {
+
+            southEastOnMap  = false;
+            northEastOnMap  = false;
+        }
+
+        // first hex in odd column?
+        if ((columnNumber%2 == 1) &&  (rowNumber == 0)){
+
+            northOnMap  = false;
+            northEastOnMap  = false;
+            northWestOnMap  = false;
+        }
+
+        // last hex in odd column?
+        if ((columnNumber%2 == 1) &&  (rowNumber == map.getHeight())){
+
+            southOnMap  = false;
+            southEastOnMap  = false;
+            southWestOnMap  = false;
+        }
+
+    }
 
 	// used to update the hexside location once the map has been fully initialized
 	public void resetHexsideLocationNames(){
@@ -296,13 +324,12 @@ public class Hex {
 
 	// bridge methods
 	public Bridge  getBridge(){ return bridge;}
-	public void    removeBridge(){ bridge = null;}
 	public void    setBridge(Bridge bridge){
 
 		this.bridge = bridge;
 
 		// create the new bridge location
-		Location l = new Location(
+		final Location l = new Location(
 			name + ":Bridge",
 			bridge.getRoadLevel() - baseHeight,
 			new Point((int) center.getX(), (int)center.getY()),
@@ -319,7 +346,7 @@ public class Hex {
 	}
 
 	public boolean hasBridge(){
-		// return (bridge != null) || this.hasBridgeTerrain();
+
         return (bridge != null);
 	}
 
@@ -354,8 +381,31 @@ public class Hex {
 	public int	    getRowNumber()			{return rowNumber;}
 	public Polygon  getHexBorder()			{return hexBorder;}
 	public Polygon  getExtendedHexBorder()	{return extendedHexBorder;}
-	public Point	getHexCenter()			{return center;}
+	public Point	getHexCenter()			{return new Point((int) center.getX(), (int) center.getY());}
 	public int	    getBaseHeight()			{return baseHeight;}
+
+    private boolean[] slopes = new boolean[6]; // flags for hexsides having slopes - all false by default
+
+    /**
+     * Set the hexside slopes flags
+     * @param slopes the slopes array of length 6 - [0] is the top hexside and the others are clockwise from there
+     */
+    public void setSlopes(boolean[] slopes) {
+
+        // must be an array of 6 flags;
+        if(slopes.length != 6) {
+            return;
+        }
+        this.slopes = slopes;
+    }
+
+    /**
+     * @param hexside the hexside - 0 is the top hexside and the others are clockwise from there
+     * @return true if hexside has slope
+     */
+    public boolean hasSlope(int hexside) {
+        return slopes[hexside];
+    }
 
 	public Location getCenterLocation() { return centerLocation;}
 
@@ -371,46 +421,48 @@ public class Hex {
 		rowNumber = newRowNumber;
 	}
 
-	public int getOppositeHexside(int hexside){
+	public static int getOppositeHexside(int hexside){
 
 		switch (hexside){
-			case 0: return 3;
-			case 1: return 4;
-			case 2: return 5;
-			case 3: return 0;
-			case 4: return 1;
-			case 5: return 2;
+			case 0:
+			case 1:
+			case 2: return hexside + 3;
+			case 3:
+			case 4:
+			case 5: return hexside - 3;
+			default: return -1;
 		}
-		return -1;
 	}
 
-	// location methods
+	/**
+	 * @param l a location
+	 * @return true if l is the center location or any location above/below the center location
+	 */
 	public boolean isCenterLocation(Location l) {
 
-        if(centerLocation == l) {
+        if(centerLocation.equals(l)) {
             return true;
         }
 
-		Location cent = centerLocation;
-
 		// center, up locations
-		while(cent.getUpLocation() != null){
-			if (l == cent.getUpLocation()){
+		Location temp1 = centerLocation;
+		while(temp1.getUpLocation() != null){
+			if (l.equals(temp1.getUpLocation())){
 				return true;
 			}
 			else {
-				cent = cent.getUpLocation();
+				temp1 = temp1.getUpLocation();
 			}
 		}
 
 		// down locations
-		cent = centerLocation;
-		while(cent.getDownLocation() != null){
-			if (l == cent.getDownLocation()){
+		Location temp2 = centerLocation;
+		while(temp2.getDownLocation() != null){
+			if (l.equals(temp2.getDownLocation())){
 				return true;
 			}
 			else {
-				cent = cent.getDownLocation();
+				temp2 = temp2.getDownLocation();
 			}
 		}
 		return false;
@@ -419,18 +471,18 @@ public class Hex {
 	public int getLocationHexside(Location l){
 
 		for(int x = 0; x < 6; x++) {
-			if (l == hexsideLocations[x])
+			if (l.equals(hexsideLocations[x])){
 				return x;
+			}
 		}
 		return -1;
 	}
 
-	public boolean isHexsideLocation(Location l) {
-
-		return !isCenterLocation(l);
-	}
-
-	public void setDepressionTerrain(Terrain terr) {
+    /**
+     * Set the depression terrain
+     * @param terr the depression terrain - pass null to remove depression terrain
+     */
+    public void setDepressionTerrain(Terrain terr) {
 
 		// change the depression terrain in the center location
 		centerLocation.setDepressionTerrain(terr);
@@ -464,13 +516,19 @@ public class Hex {
     public void resetTerrain() {
 
         // set the center location terrain
-        Terrain centerLocationTerrain = map.getGridTerrain((int) centerLocation.getLOSPoint().getX(), (int) centerLocation.getLOSPoint().getY());
+        final Terrain centerLocationTerrain = map.getGridTerrain((int) centerLocation.getLOSPoint().getX(), (int) centerLocation.getLOSPoint().getY());
 
         centerLocation.setTerrain(centerLocationTerrain);
 
+        boolean oldStairway = false;
+
         // add building locations
-        if (centerLocationTerrain.getLOSCategory() == Terrain.LOSCategories.BUILDING ||
-            centerLocationTerrain.getLOSCategory() == Terrain.LOSCategories.MARKETPLACE){
+        if (centerLocationTerrain.isBuilding()){
+
+            // keep stairway if resetting a multi-level building
+            oldStairway = stairway &&
+                    !"Stone Building, 1 Level".equals(centerLocation.getTerrain().getName()) &&
+                    !"Wooden Building, 1 Level".equals(centerLocation.getTerrain().getName());
 
             // special case for marketplace
             if(centerLocationTerrain.getLOSCategory() == Terrain.LOSCategories.MARKETPLACE) {
@@ -485,9 +543,9 @@ public class Hex {
             for (int level = 1; level <= centerLocationTerrain.getHeight(); level++) {
 
                 // need to ignore buildings without upper level locations - bit of a hack so we can use the building height
-                if(!centerLocationTerrain.getName().equals("Wooden Building") &&
-                   !centerLocationTerrain.getName().equals("Stone Building")) {
-                    Location l = new Location(
+                if(!"Wooden Building".equals(centerLocationTerrain.getName()) &&
+                   !"Stone Building".equals(centerLocationTerrain.getName())) {
+                    final Location l = new Location(
                             centerLocation.getName() + " Level " + level,
                             level,
                             centerLocation.getLOSPoint(),
@@ -504,8 +562,10 @@ public class Hex {
             }
 
             // set inherent stairway
-            stairway = centerLocation.getTerrain().getName().equals("Stone Building, 1 Level") ||
-                       centerLocation.getTerrain().getName().equals("Wooden Building, 1 Level");
+            stairway =
+				"Stone Building, 1 Level".equals(centerLocation.getTerrain().getName()) ||
+				"Wooden Building, 1 Level".equals(centerLocation.getTerrain().getName()) ||
+                oldStairway;
         }
 
         // set the hexside location terrain
@@ -518,21 +578,20 @@ public class Hex {
                         (int) getHexsideLocation(x).getEdgeCenterPoint().getY());
 
                 // if no hexside terrain use opposite location hexside terrain
-                Terrain oppositeHexsideTerrain;
-                Hex oppositeHex = map.getAdjacentHex(this, x);
+				final Hex oppositeHex = map.getAdjacentHex(this, x);
                 if(oppositeHex != null){
-                    int oppositeHexside = (x + 3) % 6;
-                    oppositeHexsideTerrain =  map.getGridTerrain(
-                            (int) oppositeHex.getHexsideLocation(oppositeHexside).getEdgeCenterPoint().getX(),
-                            (int) oppositeHex.getHexsideLocation(oppositeHexside).getEdgeCenterPoint().getY());
-                    if(!terrain.isHexsideTerrain() && oppositeHexsideTerrain.isHexsideTerrain()) {
+                    final int oppositeHexside = (x + 3) % 6;
+					final Terrain oppositeHexsideTerrain = map.getGridTerrain(
+						(int)oppositeHex.getHexsideLocation(oppositeHexside).getEdgeCenterPoint().getX(),
+						(int)oppositeHex.getHexsideLocation(oppositeHexside).getEdgeCenterPoint().getY());
+					if(!terrain.isHexsideTerrain() && oppositeHexsideTerrain.isHexsideTerrain()) {
                         terrain = oppositeHexsideTerrain;
                     }
                 }
 
                 if(terrain.isHexsideTerrain()) {
                     hexsideTerrain[x] = terrain;
-                    if(terrain.getName().equals("Cliff")) {
+                    if("Cliff".equals(terrain.getName())) {
                         hexsideHasCliff[x] = true;
                     }
                 }
@@ -561,7 +620,7 @@ public class Hex {
      */
     private boolean hasBridgeTerrain(){
 
-        Rectangle rectangle = getHexBorder().getBounds();
+        final Rectangle rectangle = getHexBorder().getBounds();
         for(int x = rectangle.x; x < rectangle.x + rectangle.width; x++) {
             for(int y = rectangle.y; y < rectangle.y + rectangle.height; y++) {
 
@@ -582,16 +641,16 @@ public class Hex {
      */
     private void fixBridges() {
 
-        if(this.hasBridgeTerrain()) {
+        if(hasBridgeTerrain()) {
 
             // make the center location the road location by removing the depression terrain
-            Terrain depressionTerrain = centerLocation.getDepressionTerrain();
+            final Terrain depressionTerrain = centerLocation.getDepressionTerrain();
 
-            int height = centerLocation.getBaseHeight();
+            final int height = centerLocation.getBaseHeight();
             centerLocation.setDepressionTerrain(null);
             centerLocation.setBaseHeight(height);
 
-            Location newLocation = new Location(centerLocation);
+            final Location newLocation = new Location(centerLocation);
             newLocation.setDepressionTerrain(depressionTerrain);
             newLocation.setBaseHeight(baseHeight - 1);
 
@@ -605,7 +664,7 @@ public class Hex {
      */
     private void setDepressionTerrain(){
 
-        Rectangle rectangle = getHexBorder().getBounds();
+        final Rectangle rectangle = getHexBorder().getBounds();
         for(int x = rectangle.x; x < rectangle.x + rectangle.width; x++) {
             for(int y = rectangle.y; y < rectangle.y + rectangle.height; y++) {
 
@@ -624,7 +683,7 @@ public class Hex {
      */
     private void setInherentTerrain(){
 
-        Rectangle rectangle = getHexBorder().getBounds();
+        final Rectangle rectangle = getHexBorder().getBounds();
         Terrain terrain = null;
         for(int x = rectangle.x; x < rectangle.x + rectangle.width && terrain == null; x++) {
             for(int y = rectangle.y; y < rectangle.y + rectangle.height  && terrain == null; y++) {
@@ -632,7 +691,7 @@ public class Hex {
                 if(rectangle.getBounds().contains(x,y) &&
                         map.onMap(x,y) &&
                         map.getGridTerrain(x,y).isInherentTerrain() &&
-                        getNearestLocation(x, y) == centerLocation) {
+					getNearestLocation(x, y).equals(centerLocation)) {
                     terrain = map.getGridTerrain(x,y);
                 }
             }
@@ -645,17 +704,15 @@ public class Hex {
 
     public void resetHexsideTerrain() {
 
-        Location l;
-        Terrain t;
-        for (int x = 0; x < 6; x++) {
+		for (int x = 0; x < 6; x++) {
 
             // this hexside on the map?
             if (isHexsideOnMap(x)) {
 
-                l = getHexsideLocation(x);
-                t = map.getGridTerrain((int) l.getEdgeCenterPoint().getX(), (int) l.getEdgeCenterPoint().getY());
+				final Location l = getHexsideLocation(x);
+				final Terrain t = map.getGridTerrain((int)l.getEdgeCenterPoint().getX(), (int)l.getEdgeCenterPoint().getY());
 
-                if (t.isHexsideTerrain()) {
+				if (t.isHexsideTerrain()) {
 
                     setHexsideTerrain(x, t);
                 }
@@ -665,7 +722,7 @@ public class Hex {
                 }
 
                 // if adjacent to hexside terrain, make it the same
-                Hex h2 = map.getAdjacentHex(this, x);
+                final Hex h2 = map.getAdjacentHex(this, x);
                 if (h2 != null && h2.getHexsideTerrain(getOppositeHexside(x)) != null) {
 
                     setHexsideTerrain(x, h2.getHexsideTerrain(getOppositeHexside(x)));
@@ -694,7 +751,7 @@ public class Hex {
 		}
         else if(terr.isHexsideTerrain()) {
             hexsideTerrain[side] = terr;
-            if(terr.getName().equals("Cliff")) {
+            if("Cliff".equals(terr.getName())) {
                 hexsideHasCliff[side] = true;
             }
         }
@@ -726,15 +783,14 @@ public class Hex {
 	public Location getNearestLocation(int x, int y) {
 
 		// get distance to center
-		double  distance	 = Point.distance(
-                x,
-                y,
-                (int) centerLocation.getLOSPoint().getX(),
-                (int) centerLocation.getLOSPoint().getY());
+		double  distance	 = Point2D.distance(
+			(double) x,
+			(double) y,
+			centerLocation.getLOSPoint().getX(),
+			centerLocation.getLOSPoint().getY());
 		Location currentLocation = centerLocation;
-		double   nextDistance;
 
-		// compare distance to center to distances to vertixes
+		// compare distance to center to distances to vertices
 		for(int side = 0; side < 6; side++) {
 
 			// screen out locations off the map
@@ -745,12 +801,12 @@ public class Hex {
 				side == 4 && southWestOnMap 	||
 				side == 5 && northWestOnMap){
 
-				nextDistance = Point.distance(
-					x,
-					y,
-					(int) hexsideLocations[side].getEdgeCenterPoint().getX(),
-					(int) hexsideLocations[side].getEdgeCenterPoint().getY()
-				 );
+				final double nextDistance = Point2D.distance(
+					(double) x,
+					(double) y,
+					hexsideLocations[side].getEdgeCenterPoint().getX(),
+					hexsideLocations[side].getEdgeCenterPoint().getY()
+				);
 
 				// side is closer?
 				if (nextDistance < distance) {
@@ -773,7 +829,7 @@ public class Hex {
 	// change all terrain within hex
 	public void changeAllTerrain(Terrain fromTerrain, Terrain toTerrain, Shape s){
 
-		boolean containsCenter =  s.contains(centerLocation.getLOSPoint());
+		final boolean containsCenter =  s.contains(centerLocation.getLOSPoint());
 
 		// change the center location
 		if (centerLocation.getTerrain().getType() == fromTerrain.getType() && containsCenter){
@@ -810,7 +866,7 @@ public class Hex {
 
 	public void flip(){
 
-		// trasform the hex polygons
+		// transform the hex polygons
 
 		// flip the points in the center location
 		flipHexPoint(centerLocation.getEdgeCenterPoint());
@@ -826,34 +882,43 @@ public class Hex {
 		}
 
 		// shuffle the indexes of the hexside variables
-		boolean  btemp;
-		Location ltemp;
-		Terrain ttemp;
+		boolean  bTemp;
 		for (int x = 0; x < 3; x++){
 
-			ltemp = hexsideLocations[x];
-			btemp = hexsideHasCliff[x];
-			ttemp = hexsideTerrain[x];
+			final Location lTemp = hexsideLocations[x];
+			bTemp = hexsideHasCliff[x];
+			final Terrain tTemp = hexsideTerrain[x];
 			hexsideLocations[x]     = hexsideLocations[x + 3];
 			hexsideHasCliff[x]         = hexsideHasCliff[x + 3];
 			hexsideTerrain[x]          = hexsideTerrain[x + 3];
-			hexsideLocations[x + 3] = ltemp;
-			hexsideHasCliff[x + 3]     = btemp;
-			hexsideTerrain[x + 3]      = ttemp;
+			hexsideLocations[x + 3] = lTemp;
+			hexsideHasCliff[x + 3]     = bTemp;
+			hexsideTerrain[x + 3]      = tTemp;
 		}
 
 		// shuffle the "on map" flags
-		btemp       = northOnMap;
+		bTemp       = northOnMap;
 		northOnMap  = southOnMap;
-		southOnMap  = btemp;
-		btemp       = northEastOnMap;
+		southOnMap  = bTemp;
+		bTemp = northEastOnMap;
 		northEastOnMap  = southWestOnMap;
-		southWestOnMap  = btemp;
-		btemp           = southEastOnMap;
+		southWestOnMap  = bTemp;
+		bTemp           = southEastOnMap;
 		southEastOnMap  = northWestOnMap;
-		northWestOnMap   = btemp;
+		northWestOnMap   = bTemp;
 
-		// up and down locations
+        // shuffle the slope flags
+        bTemp = slopes[0];
+        slopes[0] = slopes[3];
+        slopes[3] = bTemp;
+        bTemp = slopes[1];
+        slopes[1] = slopes[4];
+        slopes[4] = bTemp;
+        bTemp = slopes[2];
+        slopes[2] = slopes[5];
+        slopes[5] = bTemp;
+
+        // up and down locations
 		Location l = centerLocation.getUpLocation();
 		while (l != null){
 
@@ -862,12 +927,12 @@ public class Hex {
 			l = l.getUpLocation();
 		}
 
-		l = centerLocation.getDownLocation();
-		while (l != null){
+		Location l2 = centerLocation.getDownLocation();
+		while (l2 != null){
 
-			flipHexPoint(l.getLOSPoint());
-			flipHexPoint(l.getAuxLOSPoint());
-			l = l.getDownLocation();
+			flipHexPoint(l2.getLOSPoint());
+			flipHexPoint(l2.getAuxLOSPoint());
+			l2 = l2.getDownLocation();
 		}
 
 		// flip bridge
@@ -880,8 +945,8 @@ public class Hex {
 
 	private void flipHexPoint(Point p){
 
-		p.x = map.gridWidth  - p.x - 1;
-		p.y = map.gridHeight - p.y - 1;
+		p.x = map.getGridWidth() - p.x - 1;
+		p.y = map.getGridHeight() - p.y - 1;
 	}
 
 	public void copy(Hex h){
@@ -906,7 +971,7 @@ public class Hex {
 		while (source != null){
 
 			// create a new location
-			Location temp = new Location (
+			final Location temp = new Location (
 				source.getName(),
 				source.getBaseHeight(),
 				(Point) current.getLOSPoint().clone(),
@@ -925,29 +990,29 @@ public class Hex {
 			current = current.getUpLocation();
 			source  = source.getUpLocation();
 		}
-		current = centerLocation;
-		source  = h.getCenterLocation().getDownLocation();
-		while (source != null){
+		Location current2 = centerLocation;
+		Location source2  = h.getCenterLocation().getDownLocation();
+		while (source2 != null){
 
 			// create a new location
-			Location temp = new Location (
-				source.getName(),
-				source.getBaseHeight(),
-				(Point) current.getLOSPoint().clone(),
-				(Point) current.getAuxLOSPoint().clone(),
-				(Point) current.getEdgeCenterPoint().clone(),
+			final Location temp = new Location (
+				source2.getName(),
+				source2.getBaseHeight(),
+				(Point) current2.getLOSPoint().clone(),
+				(Point) current2.getAuxLOSPoint().clone(),
+				(Point) current2.getEdgeCenterPoint().clone(),
 				this,
-                    source.getTerrain()
+                    source2.getTerrain()
 			);
-			temp.copyLocation(source);
+			temp.copyLocation(source2);
 
 			// set up/down links
-			current.setDownLocation(temp);
-			temp.setUpLocation(current);
+			current2.setDownLocation(temp);
+			temp.setUpLocation(current2);
 
 			// increment the pointers
-			current = current.getDownLocation();
-			source  = source.getDownLocation();
+			current2 = current2.getDownLocation();
+			source2  = source2.getDownLocation();
 		}
 
 		// set the hexside locations
@@ -995,9 +1060,14 @@ public class Hex {
 			));
 		}
 
-        //stairways
+        //stairways and slopes
         stairway = h.hasStairway();
+        slopes = h.getSlopes();
 	}
+
+    private boolean[] getSlopes() {
+        return slopes;
+    }
 
     public boolean hasStairway() {
         return stairway;

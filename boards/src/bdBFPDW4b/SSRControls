@@ -1,0 +1,7 @@
+<SSRControls>
+ <Option name="Board BFPDW4b Special overlays">
+ <Checkbox name="">
+         <entry name="No Slopes" rule="NoSlopes" text="No Slopes"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

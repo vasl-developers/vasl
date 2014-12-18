@@ -1,0 +1,7 @@
+<SSRControls>
+ <Option name="Board BFPJ Special overlays">
+ <Checkbox name="">
+         <entry name="Remove the Stream" rule="BSO_BFPJ_NoStream" text="remove bdBFPJ Stream"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

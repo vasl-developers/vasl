@@ -1,0 +1,7 @@
+<SSRControls>
+ <Option name="Board BFPF Special overlays">
+ <Checkbox name="">
+         <entry name="No Slopes" rule="BFPF_BSO_NoSlopes" text="BFPF_BSO_NoSlopes"/>
+ </Checkbox>
+   </Option>
+</SSRControls>

@@ -19,18 +19,25 @@
 
 package VASL.build.module.map.boardPicker;
 
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.geom.Ellipse2D;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.StringTokenizer;
+
+import VASL.LOS.LOSDataEditor;
 import VASL.LOS.Map.Hex;
+import VASL.LOS.Map.Map;
 import VASL.LOS.Map.Terrain;
 import VASL.build.module.ASLMap;
 import VASL.build.module.map.boardArchive.BoardArchive;
 import VASL.build.module.map.boardArchive.LOSSSRule;
 import VASSAL.build.module.map.boardPicker.board.HexGrid;
-
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.StringTokenizer;
+import VASSAL.i18n.Translatable;
 
 /**
  * Extends ASLBoard to add support for version 6+ boards
@@ -51,7 +58,8 @@ public class VASLBoard extends ASLBoard {
      * @param f the archive file
      */
     //TODO: refactor the board picker so there's a better way to initialize the board and instantiate the archive interface
-    public void setBaseImageFileName(String s, File f) {
+    @Override
+	public void setBaseImageFileName(String s, File f) {
 
         //TODO: eliminate the need to call the super class method
         super.setBaseImageFileName(s,f);
@@ -69,6 +77,38 @@ public class VASLBoard extends ASLBoard {
     }
 
     /**
+     * @return the width of the board in hexes
+     */
+    public int getWidth() {return VASLBoardArchive.getBoardWidth();}
+
+    /**
+     * @return the height of the board in hexes
+     */
+    public int getHeight() {return VASLBoardArchive.getBoardHeight();}
+
+    /**
+	 * @return the height of the map hexes in pixels
+	 */
+	public double getHexHeight() {
+		return VASLBoardArchive.getHexHeight();
+	}
+
+    /**
+     * @return the width of the map hexes in pixels
+     */
+    public double getHexWidth(){ return VASLBoardArchive.getHexWidth();}
+
+    /**
+     * @return x location of the A1 center hex dot
+     */
+    public double getA1CenterX() { return VASLBoardArchive.getA1CenterX();}
+
+    /**
+     * @return y location of the A1 center hex dot
+     */
+    public double getA1CenterY() { return VASLBoardArchive.getA1CenterY();}
+
+    /**
      * @return true if this board is legacy format (pre 6.0)
      */
     public boolean isLegacyBoard() {
@@ -79,21 +119,21 @@ public class VASLBoard extends ASLBoard {
      * Is the board cropped?
      */
     public boolean isCropped() {
-        Rectangle croppedBounds = getCropBounds();
+        final Rectangle croppedBounds = getCropBounds();
         return !(croppedBounds.x == 0 && croppedBounds.y == 0 && croppedBounds.width == -1 && croppedBounds.height == -1);
     }
 
     /**
      * Crops the LOS data
-     * @param losData
+     * @param losData the map LOS data
      */
-    public VASL.LOS.Map.Map cropLOSData(VASL.LOS.Map.Map losData) {
+    public Map cropLOSData(Map losData) {
         if(!isCropped()) {
             return null;
         }
         else {
 
-            Rectangle bounds = new Rectangle(getCropBounds());
+			final Rectangle bounds = new Rectangle(getCropBounds());
             if(bounds.width == -1) {
                 bounds.width = getUncroppedSize().width;
             }
@@ -110,7 +150,7 @@ public class VASLBoard extends ASLBoard {
     public Rectangle getBoardLocation() {
 
         // the easiest way to do this is to use the boundary rectangle and remove the edge buffer
-        Rectangle rectangle = new Rectangle(this.boundaries);
+		final Rectangle rectangle = new Rectangle(boundaries);
         rectangle.translate(-1 * map.getEdgeBuffer().width, -1 * map.getEdgeBuffer().height);
         return rectangle;
     }
@@ -119,7 +159,7 @@ public class VASLBoard extends ASLBoard {
      * @return the LOS data
      * @param terrainTypes the terrain types
      */
-    public VASL.LOS.Map.Map getLOSData(HashMap<String, Terrain> terrainTypes){
+    public Map getLOSData(HashMap<String, Terrain> terrainTypes){
         return VASLBoardArchive.getLOSData(terrainTypes);
     }
 
@@ -136,23 +176,24 @@ public class VASLBoard extends ASLBoard {
         else {
 
             version = VASLBoardArchive.getVersion();
-            if(VASLBoardArchive.getA1CenterX() != VASLBoardArchive.missingValue()){
-                ((HexGrid) getGrid()).setAttribute(HexGrid.X0, VASLBoardArchive.getA1CenterX());
+            if(VASLBoardArchive.getA1CenterX() != BoardArchive.missingValue()){
+                ((Translatable)getGrid()).setAttribute(HexGrid.X0, (int) VASLBoardArchive.getA1CenterX());
             }
-            if(VASLBoardArchive.getA1CenterY() != VASLBoardArchive.missingValue()){
-                ((HexGrid) getGrid()).setAttribute(HexGrid.Y0, VASLBoardArchive.getA1CenterY());
+            if(VASLBoardArchive.getA1CenterY() != BoardArchive.missingValue()){
+                ((Translatable)getGrid()).setAttribute(HexGrid.Y0, (int) VASLBoardArchive.getA1CenterY());
             }
-            if(VASLBoardArchive.getHexWidth() != VASLBoardArchive.missingValue()){
-                ((HexGrid) getGrid()).setAttribute(HexGrid.DX, VASLBoardArchive.getHexWidth());
+            if((int) VASLBoardArchive.getHexWidth() != BoardArchive.missingValue()){
+                ((Translatable)getGrid()).setAttribute(HexGrid.DX, VASLBoardArchive.getHexWidth());
             }
-            if(VASLBoardArchive.getHexHeight() != VASLBoardArchive.missingValue()){
-                ((HexGrid) getGrid()).setAttribute(HexGrid.DY, VASLBoardArchive.getHexHeight());
+            if((int) VASLBoardArchive.getHexHeight() != BoardArchive.missingValue()){
+                ((Translatable)getGrid()).setAttribute(HexGrid.DY, VASLBoardArchive.getHexHeight());
             }
         }
 
     }
 
-    public String getName() {
+    @Override
+	public String getName() {
         if(isLegacyBoard()) {
             return super.getName();
         }
@@ -165,29 +206,34 @@ public class VASLBoard extends ASLBoard {
      * Applies the color scenario-specific rules to the LOS data
      * @param LOSData the LOS data to modify
      */
-    public void applyColorSSRules(VASL.LOS.Map.Map LOSData, HashMap<String, LOSSSRule> losssRules) throws BoardException {
+    public void applyColorSSRules(Map LOSData, HashMap<String, LOSSSRule> losssRules) throws BoardException {
 
-        if(!this.legacyBoard && terrainChanges.length() > 0) {
+        if(!legacyBoard && !terrainChanges.isEmpty()) {
 
             boolean changed = false; // changes made?
 
+            // There is no explicit PTO rule so it has to be inferred so we don't miss Light Jungle
+            boolean PTO = false;
+
             // step through each SSR token
-            StringTokenizer st = new StringTokenizer(terrainChanges, "\t");
+            final StringTokenizer st = new StringTokenizer(terrainChanges, "\t");
             while (st.hasMoreTokens()) {
 
-                String s = st.nextToken();
+				final String s = st.nextToken();
 
-                LOSSSRule rule = losssRules.get(s);
+                // System.out.println(s);
+
+				final LOSSSRule rule = losssRules.get(s);
                 if(rule == null) {
                     throw new BoardException("Unsupported scenario-specific rule: " + s + ". LOS disabled");
                 }
 
                 // these are rules that have to be handled in the code
-                if(rule.getType().equals("customCode")) {
+                if("customCode".equals(rule.getType())) {
 
-                    if(s.equals("NoStairwells")) {
+                    if("NoStairwells".equals(s)) {
 
-                        Hex[][] hexGrid = LOSData.getHexGrid();
+						final Hex[][] hexGrid = LOSData.getHexGrid();
                         for (int x = 0; x < hexGrid.length; x++) {
                             for (int y = 0; y < hexGrid[x].length; y++) {
                                 LOSData.getHex(x, y).setStairway(false);
@@ -196,9 +242,9 @@ public class VASLBoard extends ASLBoard {
                         changed = true;
 
                     }
-                    else if(s.equals("RowhouseBarsToBuildings")) {
+                    else if("RowhouseBarsToBuildings".equals(s)) {
 
-                        // for simplicity assume stone building as type will not impact LOD
+                        // for simplicity assume stone building as type will not impact LOS
                         changeGridTerrain(LOSData.getTerrain("Rowhouse Wall"), LOSData.getTerrain("Stone Building"), LOSData);
                         changeGridTerrain(LOSData.getTerrain("Rowhouse Wall, 1 Level"), LOSData.getTerrain("Stone Building, 1 Level"), LOSData);
                         changeGridTerrain(LOSData.getTerrain("Rowhouse Wall, 2 Level"), LOSData.getTerrain("Stone Building, 2 Level"), LOSData);
@@ -206,7 +252,7 @@ public class VASLBoard extends ASLBoard {
                         changeGridTerrain(LOSData.getTerrain("Rowhouse Wall, 4 Level"), LOSData.getTerrain("Stone Building, 4 Level"), LOSData);
                         changed = true;
                     }
-                    else if(s.equals("RowhouseBarsToOpenGround")) {
+                    else if("RowhouseBarsToOpenGround".equals(s)) {
 
                         changeGridTerrain(LOSData.getTerrain("Rowhouse Wall"), LOSData.getTerrain("Open Ground"), LOSData);
                         changeGridTerrain(LOSData.getTerrain("Rowhouse Wall, 1 Level"), LOSData.getTerrain("Open Ground"), LOSData);
@@ -215,44 +261,124 @@ public class VASLBoard extends ASLBoard {
                         changeGridTerrain(LOSData.getTerrain("Rowhouse Wall, 4 Level"), LOSData.getTerrain("Open Ground"), LOSData);
                         changed = true;
                     }
-                    else if(s.equals("NoBridge")) {
+                    else if("NoBridge".equals(s) || "BridgeToFord".equals(s)) {
 
-                        // OK if board has no bridges otherwise unsupported
-                        Hex[][] hexGrid = LOSData.getHexGrid();
-                        for (int x = 0; x < hexGrid.length; x++) {
-                            for (int y = 0; y < hexGrid[x].length; y++) {
-                                if(LOSData.getHex(x, y).hasBridge()){
-                                 throw new BoardException("Board " + name + " has a bridge so it does not support NoBridge SSR.");
+                        bridgesToFord(LOSData);
+                        changed = true;
+                    }
+                    else if("RoadsToPaths".equals(s) || "NoWoodsRoads".equals(s)){
+
+                        fillWoodsRoadHexes(LOSData);
+                        changed = true;
+
+                    }
+                    else if("Bamboo".equals(s)) {
+
+                        // All brush is Bamboo
+                        LOSDataEditor losDataEditor = new LOSDataEditor(LOSData);
+                        changeGridTerrain(LOSData.getTerrain("Brush"), LOSData.getTerrain("Bamboo"), LOSData);
+                        for (int col = 0; col < losDataEditor.getMap().getWidth(); col++) {
+                            for (int row = 0; row < losDataEditor.getMap().getHeight() + (col % 2); row++) {
+
+                                Hex hex = LOSData.getHex(col, row);
+                                if("Bamboo".equals(hex.getCenterLocation().getTerrain().getName())){
+                                    losDataEditor.setGridTerrain(hex.getHexBorder(), LOSData.getTerrain("Bamboo"));
                                 }
                             }
                         }
+                        changed = true;
+                        PTO = true;
+                    }
+                    else if("PalmTrees".equals(s)) {
+
+                        changeGridTerrain(LOSData.getTerrain("Orchard"), LOSData.getTerrain("Palm Trees"), LOSData);
+                        changeGridTerrain(LOSData.getTerrain("Orchard, Out of Season"), LOSData.getTerrain("Palm Trees"), LOSData);
+                        changed = true;
+                        PTO = true;
+                    }
+                    else if("SwampToSwampPattern".equals(s)) {
+
+                        // Each marsh hex adjacent to ≥ one Jungle hex is a Swamp hex;
+                        LOSDataEditor losDataEditor = new LOSDataEditor(LOSData);
+                        for (int col = 0; col < losDataEditor.getMap().getWidth(); col++) {
+                            for (int row = 0; row < losDataEditor.getMap().getHeight() + (col % 2); row++) {
+
+                                Hex currentHex = LOSData.getHex(col,row);
+                                if( "Marsh".equals(currentHex.getCenterLocation().getTerrain().getName())){
+
+                                    boolean apply = false;
+                                    for(int x = 0; x < 6; x++) {
+
+                                        Hex adjacentHex = LOSData.getAdjacentHex(currentHex, x);
+                                        if(adjacentHex != null &&
+                                                ("Woods".equals(adjacentHex.getCenterLocation().getTerrain().getName()) ||
+                                                        "Light Jungle".equals(adjacentHex.getCenterLocation().getTerrain().getName()) ||
+                                                        "Dense Jungle".equals(adjacentHex.getCenterLocation().getTerrain().getName()))) {
+
+                                            apply = true;
+                                        }
+                                    }
+                                    if(apply) {
+                                        losDataEditor.changeAllTerrain(losDataEditor.getMap().getTerrain("Marsh"),
+                                                losDataEditor.getMap().getTerrain("Swamp"),
+                                                currentHex.getHexBorder());
+                                    }
+                                }
+                            }
+                        }
+                        changed = true;
+                        PTO = true;
+                    }
+                    else if("DenseJungle".equals(s)) {
+
+                        LOSDataEditor losDataEditor = new LOSDataEditor(LOSData);
+                        for (int col = 0; col < losDataEditor.getMap().getWidth(); col++) {
+                            for (int row = 0; row < losDataEditor.getMap().getHeight() + (col % 2); row++) {
+
+                                Hex hex = LOSData.getHex(col, row);
+                                if("Woods".equals(hex.getCenterLocation().getTerrain().getName())){
+                                    losDataEditor.setGridTerrain(hex.getHexBorder(), LOSData.getTerrain("Dense Jungle"));
+                                }
+                            }
+                        }
+                        changeGridTerrain(LOSData.getTerrain("Woods"), LOSData.getTerrain("Dense Jungle"), LOSData);
+                        changed = true;
+                        PTO = true;
+
                     }
                     else {
                         throw new BoardException("Unsupported custom code SSR: " + s);
                     }
                 }
-                else if(rule.getType().equals("terrainMap")) {
+                else if("terrainMap".equals(rule.getType())) {
 
                     applyTerrainMapRule(rule, LOSData);
                     changed = true;
 
                 }
-                else if(rule.getType().equals("elevationMap")) {
+                else if("elevationMap".equals(rule.getType())) {
 
                     applyElevationMapRule(rule, LOSData);
                     changed = true;
 
                 }
-                else if(rule.getType().equals("terrainToElevationMap")) {
+                else if("terrainToElevationMap".equals(rule.getType())) {
 
                     applyTerrainToElevationMapRule(rule, LOSData);
                     changed = true;
                 }
-                else if(rule.getType().equals("elevationToTerrainMap")) {
+                else if("elevationToTerrainMap".equals(rule.getType())) {
 
                     applyElevationToTerrainMapRule(rule, LOSData);
                     changed = true;
                 }
+            }
+
+            // transform woods to Light Jungle and buildings to huts if PTO changes
+            if(PTO) {
+                changeGridTerrain(LOSData.getTerrain("Woods"), LOSData.getTerrain("Light Jungle"), LOSData);
+                buildingsToHuts(LOSData);
+                changed = true;
             }
 
             // update the hex grid
@@ -263,21 +389,99 @@ public class VASLBoard extends ASLBoard {
     }
 
     /**
+     * Fills the center of woods-road hexes with woods
+     */
+    private void fillWoodsRoadHexes(Map LOSData) {
+
+        LOSDataEditor losDataEditor = new LOSDataEditor(LOSData);
+
+        // No roads exist (all woods-roads are Paths, with no Open Ground in the woods-road portion of those hexes)
+        for (int col = 0; col < losDataEditor.getMap().getWidth(); col++) {
+            for (int row = 0; row < losDataEditor.getMap().getHeight() + (col % 2); row++) {
+
+                // Add some woods to center of forest-road hexes to block LOS
+                Hex hex = losDataEditor.getMap().getHex(col, row);
+                if(isForestRoadHex(hex)) {
+
+                    losDataEditor.setGridTerrain(
+                            new Ellipse2D.Double(
+                                    hex.getCenterLocation().getLOSPoint().x - LOSData.getHexHeight()/3,
+                                    hex.getCenterLocation().getLOSPoint().y - LOSData.getHexHeight()/3,
+                                    LOSData.getHexHeight()*2/3,
+                                    LOSData.getHexHeight()*2/3),
+                            LOSData.getTerrain("Woods"));
+                }
+            }
+        }
+    }
+
+    /**
+     * Change all bridges to fords by setting roads and bridge terrain to gully
+     */
+    private void bridgesToFord(Map LOSData) {
+
+        HashSet<Hex> bridgeHexes = new HashSet<Hex>();
+
+        // find bridge hexes and change bridge terrain to open ground
+        for(int x = 0; x < LOSData.getGridWidth(); x++) {
+            for(int y = 0; y < LOSData.getGridHeight(); y++ ) {
+
+                Hex currentHex = LOSData.gridToHex(x, y);
+
+                if(LOSData.getGridTerrain(x,y).getLOSCategory() == Terrain.LOSCategories.BRIDGE) {
+
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Gully").getType(), x, y);
+                    bridgeHexes.add(currentHex);
+                }
+            }
+        }
+
+        // set the center of the bridge hexes to gully to remove road
+        LOSDataEditor editor = new LOSDataEditor(LOSData);
+        for (Hex h : bridgeHexes) {
+
+            editor.setGridGroundLevel(
+                    new Ellipse2D.Double(
+                            h.getCenterLocation().getLOSPoint().x - LOSData.getHexHeight()/3,
+                            h.getCenterLocation().getLOSPoint().y - LOSData.getHexHeight()/3,
+                            LOSData.getHexHeight()*2/3,
+                            LOSData.getHexHeight()*2/3),
+                    LOSData.getTerrain("Gully"),
+                    0);
+        }
+    }
+
+    /**
+     * @param hex the hex
+     * @return true if hex is a forest-road hex
+     */
+    private boolean isForestRoadHex(Hex hex) {
+
+        return hex.getCenterLocation().getTerrain().getLOSCategory() == Terrain.LOSCategories.ROAD &&
+               ("Woods".equals(hex.getHexsideLocation(0).getTerrain().getName()) ||
+                "Woods".equals(hex.getHexsideLocation(1).getTerrain().getName()) ||
+                "Woods".equals(hex.getHexsideLocation(2).getTerrain().getName()) ||
+                "Woods".equals(hex.getHexsideLocation(3).getTerrain().getName()) ||
+                "Woods".equals(hex.getHexsideLocation(4).getTerrain().getName()) ||
+                "Woods".equals(hex.getHexsideLocation(5).getTerrain().getName()));
+    }
+
+    /**
      * Apply elevation rule to the LOS data
      * @param rule the elevation map rule
      * @param LOSData the LOS data
      * @throws BoardException
      */
-    private void applyElevationMapRule(LOSSSRule rule, VASL.LOS.Map.Map LOSData) throws BoardException {
+    private static void applyElevationMapRule(LOSSSRule rule, Map LOSData) throws BoardException {
 
-        int fromElevation;
-        int toElevation;
+		final int fromElevation;
+		final int toElevation;
         try {
             fromElevation = Integer.parseInt(rule.getFromValue());
             toElevation = Integer.parseInt(rule.getToValue());
         }
         catch (Exception e) {
-            throw new BoardException("Invalid from or to value in SSR elevation map " + rule.getName());
+            throw new BoardException("Invalid from or to value in SSR elevation map " + rule.getName(), e);
         }
         changeGridElevation(fromElevation, toElevation, LOSData);
     }
@@ -288,16 +492,16 @@ public class VASLBoard extends ASLBoard {
      * @param LOSData the LOS data
      * @throws BoardException
      */
-    private void applyTerrainMapRule(LOSSSRule rule, VASL.LOS.Map.Map LOSData) throws BoardException {
+    private static void applyTerrainMapRule(LOSSSRule rule, Map LOSData) throws BoardException {
 
-        Terrain fromTerrain;
-        Terrain toTerrain;
+        final Terrain fromTerrain;
+        final Terrain toTerrain;
         try {
             fromTerrain = LOSData.getTerrain(rule.getFromValue());
             toTerrain = LOSData.getTerrain(rule.getToValue());
         }
         catch (Exception e) {
-            throw new BoardException("Invalid from or to terrain in SSR terrain map " + rule.getName());
+            throw new BoardException("Invalid from or to terrain in SSR terrain map " + rule.getName(), e);
         }
         changeGridTerrain(fromTerrain, toTerrain, LOSData);
     }
@@ -308,17 +512,17 @@ public class VASLBoard extends ASLBoard {
      * @param LOSData the LOS data
      * @throws BoardException
      */
-    private void applyElevationToTerrainMapRule(LOSSSRule rule, VASL.LOS.Map.Map LOSData) throws BoardException {
+    private static void applyElevationToTerrainMapRule(LOSSSRule rule, Map LOSData) throws BoardException {
 
-        int fromElevation;
-        Terrain toTerrain;
+        final int fromElevation;
+        final Terrain toTerrain;
 
         try {
             fromElevation = Integer.parseInt(rule.getFromValue());
             toTerrain = LOSData.getTerrain(rule.getToValue());
         }
         catch (Exception e) {
-            throw new BoardException("Invalid from or to value in SSR elevation to terrain map " + rule.getName());
+            throw new BoardException("Invalid from or to value in SSR elevation to terrain map " + rule.getName(), e);
         }
 
         // adjust the terrain and elevation
@@ -339,28 +543,103 @@ public class VASLBoard extends ASLBoard {
      * @param LOSData the LOS data
      * @throws BoardException
      */
-    private void applyTerrainToElevationMapRule(LOSSSRule rule, VASL.LOS.Map.Map LOSData) throws BoardException {
+    private static void applyTerrainToElevationMapRule(LOSSSRule rule, Map LOSData) throws BoardException {
 
-        Terrain fromTerrain;
-        int toElevation;
+        final Terrain fromTerrain;
+        final int toElevation;
         try {
             fromTerrain = LOSData.getTerrain(rule.getFromValue());
             toElevation = Integer.parseInt(rule.getToValue());
         }
         catch (Exception e) {
-            throw new BoardException("Invalid from or to value in SSR terrain to elevation map " + rule.getName());
+            throw new BoardException("Invalid from or to value in SSR terrain to elevation map " + rule.getName(), e);
         }
 
         // adjust the terrain and elevation
         for(int x = 0; x < LOSData.getGridWidth(); x++) {
             for(int y = 0; y < LOSData.getGridHeight(); y++ ) {
 
-                if(LOSData.getGridTerrain(x, y) == fromTerrain){
+                if(LOSData.getGridTerrain(x, y).equals(fromTerrain)){
                     LOSData.setGridElevation(toElevation, x, y);
                     LOSData.setGridTerrainCode(LOSData.getTerrain("Open Ground").getType(), x, y);
                 }
             }
         }
+    }
+
+    /**
+     * Converts all single-story houses with multiple buildings to huts
+     * @param LOSData the LOS data
+     */
+    //TODO find a better way
+    private void buildingsToHuts(Map LOSData) {
+
+        return;
+
+/*
+        LOSDataEditor losDataEditor = new LOSDataEditor(LOSData);
+        Hex[][] hexGrid = LOSData.getHexGrid();
+        for (int x = 0; x < hexGrid.length; x++) {
+            for (int y = 0; y < hexGrid[x].length; y++) {
+
+                Hex hex = LOSData.getHex(x, y);
+                if(isHut(hex, LOSData)) {
+
+                    System.out.println(hex.getName() + ": true" );
+                }
+            }
+        }
+*/
+    }
+
+    /**
+     * @param hex the hex
+     * @return true if hex qualifies for conversion to huts in PTO
+     */
+    //TODO find a better way
+    private boolean isHut(Hex hex, Map LOSData) {
+
+        return false;
+
+/*
+        HashSet<Point> buildingPoints  = new HashSet<Point>();
+
+        // collect all building points
+        final Rectangle rectangle = hex.getHexBorder().getBounds();
+        for(int x = rectangle.x; x < rectangle.x + rectangle.width; x++) {
+            for(int y = rectangle.y; y < rectangle.y + rectangle.height; y++) {
+
+                if(hex.getHexBorder().contains(x,y) &&
+                        LOSData.onMap(x,y) &&
+                        ("Wooden Building".equals(LOSData.getGridTerrain(x,y).getName()) ||
+                         "Stone Building".equals(LOSData.getGridTerrain(x,y).getName()))) {
+
+                    buildingPoints.add(new Point(x,y));
+                }
+            }
+        }
+
+        // remove adjacent points to count the buildings
+        int max = buildingPoints.size();
+        for (int x = 0; x < max && buildingPoints.size() > 1; x++) {
+
+            Point p = buildingPoints.iterator().next();
+            Iterator<Point> iterator = buildingPoints.iterator();
+            boolean adjacent = false;
+            while (iterator.hasNext() && !adjacent) {
+                Point p2 = iterator.next();
+                if((p2.x != p.x || p2.y != p.y) && p2.distance(p) <= 1.5){
+                    adjacent = true;
+                }
+            }
+            if(adjacent) {
+                buildingPoints.remove(p);
+            }
+        }
+
+        return buildingPoints.size() > 1;
+
+*/
     }
 
     /**
@@ -370,16 +649,16 @@ public class VASLBoard extends ASLBoard {
      * @param toTerrain the to terrain
      * @param LOSData the LOS data
      */
-    private void changeGridTerrain(
-            VASL.LOS.Map.Terrain fromTerrain,
-            VASL.LOS.Map.Terrain toTerrain,
-            VASL.LOS.Map.Map LOSData
-    ){
+    private static void changeGridTerrain(
+		Terrain fromTerrain,
+		Terrain toTerrain,
+		Map LOSData
+	){
 
         for(int x = 0; x < LOSData.getGridWidth(); x++) {
             for(int y = 0; y < LOSData.getGridHeight(); y++ ) {
 
-                if(LOSData.getGridTerrain(x, y) == fromTerrain){
+                if(LOSData.getGridTerrain(x, y).equals(fromTerrain)){
                     LOSData.setGridTerrainCode(toTerrain.getType(), x, y);
                 }
             }
@@ -393,11 +672,11 @@ public class VASLBoard extends ASLBoard {
      * @param toElevation the to elevation
      * @param LOSData the LOS data
      */
-    private void changeGridElevation(
-            int fromElevation,
-            int toElevation,
-            VASL.LOS.Map.Map LOSData
-    ){
+    private static void changeGridElevation(
+		int fromElevation,
+		int toElevation,
+		Map LOSData
+	){
 
         for(int x = 0; x < LOSData.getGridWidth(); x++) {
             for(int y = 0; y < LOSData.getGridHeight(); y++ ) {
