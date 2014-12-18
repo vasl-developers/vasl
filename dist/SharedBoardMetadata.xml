@@ -570,7 +570,7 @@
         <terrainType name="Dense Jungle" typeCode="127" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="2" mapColorRed="47" mapColorGreen="131" mapColorBlue="47" LOSCategory="WOODS"  />
         <terrainType name="Bamboo" typeCode="128" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="0" mapColorGreen="128" mapColorBlue="0" LOSCategory="OTHER"  />
         <terrainType name="Palm Trees" typeCode="129" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="TRUE" split="0.5" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="1" mapColorRed="51" mapColorGreen="163" mapColorBlue="51" LOSCategory="OTHER"  />
-        <terrainType name="Huts" typeCode="130" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.5" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="1" mapColorRed="147" mapColorGreen="95" mapColorBlue="35" LOSCategory="BUILDING"  />
+        <terrainType name="Huts" typeCode="130" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="1" mapColorRed="147" mapColorGreen="95" mapColorBlue="35" LOSCategory="BUILDING"  />
         <terrainType name="Collapsed Huts" typeCode="131" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="1" mapColorRed="147" mapColorGreen="95" mapColorBlue="35" LOSCategory="OTHER"  />
         <terrainType name="Kunai" typeCode="132" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="0" mapColorRed="255" mapColorGreen="255" mapColorBlue="127" LOSCategory="OTHER"  />
         <terrainType name="Swamp" typeCode="133" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="2" mapColorRed="47" mapColorGreen="99" mapColorBlue="36" LOSCategory="OTHER"  />
@@ -1400,8 +1400,8 @@
 	</colorSSRules>
 
     <!-- the rules applied to the LOS data for the SSR transformations. 
-		"type" must be one of the following: ignore, customCode, terrainMap, elevationMap, terrainToElevationMap, or elevationToTerrainmap
-		Use type="ignore" for SSRS that do not impact the LOS data
+		"type" must be one of the following: ignore, customCode, terrainMap, elevationMap, terrainToElevationMap, or elevationToTerrainMap
+		Use type="ignore" for SSRs that do not impact the LOS data
 		Use type="customCode" to mark SSRs that need code support
 		All attributes are required
 		Any VASL SSR tokens not explicitly listed below imply an unsupported transformation and will disable LOS
@@ -1432,11 +1432,13 @@
         <LOSSSRule name="RowhouseBarsToOpenGround" type="customCode" fromValue="" toValue="" />
         <LOSSSRule name="NoStairwells" type="customCode" fromValue="" toValue="" />
         <LOSSSRule name="NoBridge" type="customCode" fromValue="" toValue="" />
-        <!-- Any of the following imply PTO is in effect -->
+        <LOSSSRule name="BridgeToFord" type="customCode" fromValue="" toValue="" />
         <LOSSSRule name="SwampToSwampPattern" type="customCode" fromValue="" toValue="" />
         <LOSSSRule name="PalmTrees" type="customCode" fromValue="" toValue="" />
         <LOSSSRule name="DenseJungle" type="customCode" fromValue="" toValue="" />
         <LOSSSRule name="Bamboo" type="customCode" fromValue="" toValue="" />
+        <LOSSSRule name="RoadsToPaths" type="customCode" fromValue="" toValue="" />
+        <LOSSSRule name="NoWoodsRoads" type="customCode" fromValue="" toValue="" />
 
         <!-- simple terrain mappings -->
         <LOSSSRule name="BrushToOpenGround" type="terrainMap" fromValue="Brush" toValue="Open Ground" />
@@ -1591,6 +1593,45 @@
         <OBACounter name="Green OBA FFE:1"/>
         <OBACounter name="Green OBA FFE:2"/>
         <OBACounter name="Green OBA FFE:C"/>
+        <OBACounter name="RU OBA FFE:1"/>
+        <OBACounter name="RU OBA FFE:2"/>
+        <OBACounter name="RU OBA FFE:C"/>
+        <OBACounter name="AM OBA FFE:1"/>
+        <OBACounter name="AM OBA FFE:2"/>
+        <OBACounter name="AM OBA FFE:C"/>
+        <OBACounter name="BR OBA FFE:1"/>
+        <OBACounter name="BR OBA FFE:2"/>
+        <OBACounter name="BR OBA FFE:C"/>
+        <OBACounter name="FR OBA FFE:1"/>
+        <OBACounter name="FR OBA FFE:2"/>
+        <OBACounter name="FR OBA FFE:C"/>
+        <OBACounter name="CH OBA FFE:1"/>
+        <OBACounter name="CH OBA FFE:2"/>
+        <OBACounter name="CH OBA FFE:C"/>
+        <OBACounter name="AL OBA FFE:1"/>
+        <OBACounter name="AL OBA FFE:2"/>
+        <OBACounter name="AL OBA FFE:C"/>
+        <OBACounter name="GE OBA FFE:1"/>
+        <OBACounter name="GE OBA FFE:2"/>
+        <OBACounter name="GE OBA FFE:C"/>
+        <OBACounter name="SS OBA FFE:1"/>
+        <OBACounter name="SS OBA FFE:2"/>
+        <OBACounter name="SS OBA FFE:C"/>
+        <OBACounter name="JA OBA FFE:1"/>
+        <OBACounter name="JA OBA FFE:2"/>
+        <OBACounter name="JA OBA FFE:C"/>
+        <OBACounter name="IT OBA FFE:1"/>
+        <OBACounter name="IT OBA FFE:2"/>
+        <OBACounter name="IT OBA FFE:C"/>
+        <OBACounter name="FI OBA FFE:1"/>
+        <OBACounter name="FI OBA FFE:2"/>
+        <OBACounter name="FI OBA FFE:C"/>
+        <OBACounter name="AX OBA FFE:1"/>
+        <OBACounter name="AX OBA FFE:2"/>
+        <OBACounter name="AX OBA FFE:C"/>
+        <OBACounter name="HU OBA FFE:1"/>
+        <OBACounter name="HU OBA FFE:2"/>
+        <OBACounter name="HU OBA FFE:C"/>
 
         <!-- These counters should be ignored as they will create false LOS conditions (e.g. treated as hindrances) -->
         <ignoreCounter name="Barricade" />

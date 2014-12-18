@@ -212,15 +212,16 @@ public class VASLBoard extends ASLBoard {
 
             boolean changed = false; // changes made?
 
-            // PTO status so we only do this once
+            // There is no explicit PTO rule so it has to be inferred so we don't miss Light Jungle
             boolean PTO = false;
-            boolean PTOWithDenseJungle = false;
 
             // step through each SSR token
             final StringTokenizer st = new StringTokenizer(terrainChanges, "\t");
             while (st.hasMoreTokens()) {
 
 				final String s = st.nextToken();
+
+                // System.out.println(s);
 
 				final LOSSSRule rule = losssRules.get(s);
                 if(rule == null) {
@@ -260,27 +261,90 @@ public class VASLBoard extends ASLBoard {
                         changeGridTerrain(LOSData.getTerrain("Rowhouse Wall, 4 Level"), LOSData.getTerrain("Open Ground"), LOSData);
                         changed = true;
                     }
-                    else if("NoBridge".equals(s)) {
+                    else if("NoBridge".equals(s) || "BridgeToFord".equals(s)) {
 
-                        // OK if board has no bridges otherwise unsupported
-						final Hex[][] hexGrid = LOSData.getHexGrid();
-                        for (int x = 0; x < hexGrid.length; x++) {
-                            for (int y = 0; y < hexGrid[x].length; y++) {
-                                if(LOSData.getHex(x, y).hasBridge()){
-                                 throw new BoardException("Board " + name + " has a bridge so it does not support NoBridge SSR.");
+                        bridgesToFord(LOSData);
+                        changed = true;
+                    }
+                    else if("RoadsToPaths".equals(s) || "NoWoodsRoads".equals(s)){
+
+                        fillWoodsRoadHexes(LOSData);
+                        changed = true;
+
+                    }
+                    else if("Bamboo".equals(s)) {
+
+                        // All brush is Bamboo
+                        LOSDataEditor losDataEditor = new LOSDataEditor(LOSData);
+                        changeGridTerrain(LOSData.getTerrain("Brush"), LOSData.getTerrain("Bamboo"), LOSData);
+                        for (int col = 0; col < losDataEditor.getMap().getWidth(); col++) {
+                            for (int row = 0; row < losDataEditor.getMap().getHeight() + (col % 2); row++) {
+
+                                Hex hex = LOSData.getHex(col, row);
+                                if("Bamboo".equals(hex.getCenterLocation().getTerrain().getName())){
+                                    losDataEditor.setGridTerrain(hex.getHexBorder(), LOSData.getTerrain("Bamboo"));
                                 }
                             }
                         }
-                    }
-                    else if("SwampToSwampPattern".equals(s) ||
-                            "PalmTrees".equals(s) ||
-                            "DenseJungle".equals(s) ||
-                            "Bamboo".equals(s)) {
-
+                        changed = true;
                         PTO = true;
-                        if("DenseJungle".equals(s)) {
-                            PTOWithDenseJungle = true;
+                    }
+                    else if("PalmTrees".equals(s)) {
+
+                        changeGridTerrain(LOSData.getTerrain("Orchard"), LOSData.getTerrain("Palm Trees"), LOSData);
+                        changeGridTerrain(LOSData.getTerrain("Orchard, Out of Season"), LOSData.getTerrain("Palm Trees"), LOSData);
+                        changed = true;
+                        PTO = true;
+                    }
+                    else if("SwampToSwampPattern".equals(s)) {
+
+                        // Each marsh hex adjacent to ≥ one Jungle hex is a Swamp hex;
+                        LOSDataEditor losDataEditor = new LOSDataEditor(LOSData);
+                        for (int col = 0; col < losDataEditor.getMap().getWidth(); col++) {
+                            for (int row = 0; row < losDataEditor.getMap().getHeight() + (col % 2); row++) {
+
+                                Hex currentHex = LOSData.getHex(col,row);
+                                if( "Marsh".equals(currentHex.getCenterLocation().getTerrain().getName())){
+
+                                    boolean apply = false;
+                                    for(int x = 0; x < 6; x++) {
+
+                                        Hex adjacentHex = LOSData.getAdjacentHex(currentHex, x);
+                                        if(adjacentHex != null &&
+                                                ("Woods".equals(adjacentHex.getCenterLocation().getTerrain().getName()) ||
+                                                        "Light Jungle".equals(adjacentHex.getCenterLocation().getTerrain().getName()) ||
+                                                        "Dense Jungle".equals(adjacentHex.getCenterLocation().getTerrain().getName()))) {
+
+                                            apply = true;
+                                        }
+                                    }
+                                    if(apply) {
+                                        losDataEditor.changeAllTerrain(losDataEditor.getMap().getTerrain("Marsh"),
+                                                losDataEditor.getMap().getTerrain("Swamp"),
+                                                currentHex.getHexBorder());
+                                    }
+                                }
+                            }
                         }
+                        changed = true;
+                        PTO = true;
+                    }
+                    else if("DenseJungle".equals(s)) {
+
+                        LOSDataEditor losDataEditor = new LOSDataEditor(LOSData);
+                        for (int col = 0; col < losDataEditor.getMap().getWidth(); col++) {
+                            for (int row = 0; row < losDataEditor.getMap().getHeight() + (col % 2); row++) {
+
+                                Hex hex = LOSData.getHex(col, row);
+                                if("Woods".equals(hex.getCenterLocation().getTerrain().getName())){
+                                    losDataEditor.setGridTerrain(hex.getHexBorder(), LOSData.getTerrain("Dense Jungle"));
+                                }
+                            }
+                        }
+                        changeGridTerrain(LOSData.getTerrain("Woods"), LOSData.getTerrain("Dense Jungle"), LOSData);
+                        changed = true;
+                        PTO = true;
+
                     }
                     else {
                         throw new BoardException("Unsupported custom code SSR: " + s);
@@ -310,9 +374,10 @@ public class VASLBoard extends ASLBoard {
                 }
             }
 
-            // apply PTO changes
+            // transform woods to Light Jungle and buildings to huts if PTO changes
             if(PTO) {
-                applyPTOTransformations(PTOWithDenseJungle, LOSData);
+                changeGridTerrain(LOSData.getTerrain("Woods"), LOSData.getTerrain("Light Jungle"), LOSData);
+                buildingsToHuts(LOSData);
                 changed = true;
             }
 
@@ -324,10 +389,9 @@ public class VASLBoard extends ASLBoard {
     }
 
     /**
-     * Apply PTO terrain transformations
-     * @param denseJungle Dense Jungle in effect?
+     * Fills the center of woods-road hexes with woods
      */
-    private void applyPTOTransformations(boolean denseJungle, Map LOSData) {
+    private void fillWoodsRoadHexes(Map LOSData) {
 
         LOSDataEditor losDataEditor = new LOSDataEditor(LOSData);
 
@@ -349,60 +413,6 @@ public class VASLBoard extends ASLBoard {
                 }
             }
         }
-
-        // All woods are Jungle; Dense Jungle is inherent terrain;
-        if(denseJungle) {
-            for (int col = 0; col < losDataEditor.getMap().getWidth(); col++) {
-                for (int row = 0; row < losDataEditor.getMap().getHeight() + (col % 2); row++) {
-
-                    Hex hex = LOSData.getHex(col, row);
-                    if("Woods".equals(hex.getCenterLocation().getTerrain().getName())){
-                        losDataEditor.setGridTerrain(hex.getHexBorder(), LOSData.getTerrain("Dense Jungle"));
-                    }
-                }
-            }
-            changeGridTerrain(LOSData.getTerrain("Woods"), LOSData.getTerrain("Dense Jungle"), LOSData);
-        }
-        else {
-            changeGridTerrain(LOSData.getTerrain("Woods"), LOSData.getTerrain("Light Jungle"), LOSData);
-        }
-
-        // All brush is Bamboo
-        changeGridTerrain(LOSData.getTerrain("Brush"), LOSData.getTerrain("Bamboo"), LOSData);
-        for (int col = 0; col < losDataEditor.getMap().getWidth(); col++) {
-            for (int row = 0; row < losDataEditor.getMap().getHeight() + (col % 2); row++) {
-
-                Hex hex = LOSData.getHex(col, row);
-                if("Bamboo".equals(hex.getCenterLocation().getTerrain().getName())){
-                    losDataEditor.setGridTerrain(hex.getHexBorder(), LOSData.getTerrain("Bamboo"));
-                }
-            }
-        }
-
-        // All orchards are Palm Trees
-        changeGridTerrain(LOSData.getTerrain("Orchard"), LOSData.getTerrain("Palm Trees"), LOSData);
-        changeGridTerrain(LOSData.getTerrain("Orchard, Out of Season"), LOSData.getTerrain("Palm Trees"), LOSData);
-
-        // All grain is Kunai
-        changeGridTerrain(LOSData.getTerrain("Grain"), LOSData.getTerrain("Kunai"), LOSData);
-
-        // Each marsh hex adjacent to ≥ one Jungle hex is a Swamp hex;
-        for (int col = 0; col < losDataEditor.getMap().getWidth(); col++) {
-            for (int row = 0; row < losDataEditor.getMap().getHeight() + (col % 2); row++) {
-
-                Hex currentHex = LOSData.getHex(col,row);
-                for(int x = 0; x < 6; x++) {
-
-                    Hex adjacentHex = LOSData.getAdjacentHex(currentHex, x);
-                    if(adjacentHex != null && "Marsh".equals(adjacentHex.getCenterLocation().getTerrain().getName())) {
-                        losDataEditor.setGridTerrain(adjacentHex.getHexBorder(), LOSData.getTerrain("Swamp"));
-                    }
-                }
-            }
-        }
-
-        // All bridges are Fords
-        bridgesToFord(LOSData);
     }
 
     /**
@@ -555,6 +565,81 @@ public class VASLBoard extends ASLBoard {
                 }
             }
         }
+    }
+
+    /**
+     * Converts all single-story houses with multiple buildings to huts
+     * @param LOSData the LOS data
+     */
+    //TODO find a better way
+    private void buildingsToHuts(Map LOSData) {
+
+        return;
+
+/*
+        LOSDataEditor losDataEditor = new LOSDataEditor(LOSData);
+        Hex[][] hexGrid = LOSData.getHexGrid();
+        for (int x = 0; x < hexGrid.length; x++) {
+            for (int y = 0; y < hexGrid[x].length; y++) {
+
+                Hex hex = LOSData.getHex(x, y);
+                if(isHut(hex, LOSData)) {
+
+                    System.out.println(hex.getName() + ": true" );
+                }
+            }
+        }
+*/
+    }
+
+    /**
+     * @param hex the hex
+     * @return true if hex qualifies for conversion to huts in PTO
+     */
+    //TODO find a better way
+    private boolean isHut(Hex hex, Map LOSData) {
+
+        return false;
+
+/*
+        HashSet<Point> buildingPoints  = new HashSet<Point>();
+
+        // collect all building points
+        final Rectangle rectangle = hex.getHexBorder().getBounds();
+        for(int x = rectangle.x; x < rectangle.x + rectangle.width; x++) {
+            for(int y = rectangle.y; y < rectangle.y + rectangle.height; y++) {
+
+                if(hex.getHexBorder().contains(x,y) &&
+                        LOSData.onMap(x,y) &&
+                        ("Wooden Building".equals(LOSData.getGridTerrain(x,y).getName()) ||
+                         "Stone Building".equals(LOSData.getGridTerrain(x,y).getName()))) {
+
+                    buildingPoints.add(new Point(x,y));
+                }
+            }
+        }
+
+        // remove adjacent points to count the buildings
+        int max = buildingPoints.size();
+        for (int x = 0; x < max && buildingPoints.size() > 1; x++) {
+
+            Point p = buildingPoints.iterator().next();
+            Iterator<Point> iterator = buildingPoints.iterator();
+            boolean adjacent = false;
+            while (iterator.hasNext() && !adjacent) {
+                Point p2 = iterator.next();
+                if((p2.x != p.x || p2.y != p.y) && p2.distance(p) <= 1.5){
+                    adjacent = true;
+                }
+            }
+            if(adjacent) {
+                buildingPoints.remove(p);
+            }
+        }
+
+        return buildingPoints.size() > 1;
+
+*/
     }
 
     /**
