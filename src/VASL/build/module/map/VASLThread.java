@@ -201,7 +201,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             return;
         }
 
-        setSourceFromEventPoint(e.getPoint());
+        setSourceFromMousePressedEvent(new Point(e.getPoint()));
 
         if(source == null) {
             return;
@@ -220,15 +220,13 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
     }
 
     /**
-     * Sets the source location using an event point
-     * @param eventPoint the point in plain ol' VASSAL coordinates
+     * Sets the source location using a mouse-pressed event point
+     * @param eventPoint the point in mouse pressed coordinates
      */
-    private void setSourceFromEventPoint(Point eventPoint) {
+    private void setSourceFromMousePressedEvent(Point eventPoint) {
 
         final Point p = mapMouseToMapCoordinates(eventPoint);
         if (p == null || !LOSMap.onMap(p.x, p.y)) return;
-
-        // get the nearest location
         source = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
         useAuxSourceLOSPoint = useAuxLOSPoint(source, p.x, p.y);
     }
@@ -250,7 +248,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             final Location oldLocation = target;
             final boolean oldAuxFlag = useAuxTargetLOSPoint;
 
-            setTargetFromEventPoint(e.getPoint());
+            setTargetFromMouseDraggedEvent(new Point(e.getPoint()));
 
             // are we really in a new location?
             if (target == null || (target.equals(oldLocation) && useAuxTargetLOSPoint == oldAuxFlag)) {
@@ -270,12 +268,25 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
     }
 
     /**
-     * Sets the target location using an event point
-     * @param eventPoint the point in plain ol' VASSAL coordinates
+     * Sets the target using a mouse-dragged event point
+     * @param eventPoint the point in mouse dragged coordinates
      */
-    private void setTargetFromEventPoint(Point eventPoint) {
+    private void setTargetFromMouseDraggedEvent(Point eventPoint) {
 
-        final Point p = mapMouseToMapCoordinates(eventPoint);
+        final Point p = map.mapCoordinates(eventPoint);
+        p.translate(-map.getEdgeBuffer().width, -map.getEdgeBuffer().height);
+        if (p == null || !LOSMap.onMap(p.x, p.y)) return;
+        target = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
+        useAuxTargetLOSPoint = useAuxLOSPoint(target, p.x, p.y);
+    }
+
+    /**
+     * Sets the target using a remote event point
+     * @param eventPoint the point in remote event coordinates
+     */
+    private void setTargetFromRemoteEvent(Point eventPoint) {
+
+         final Point p = mapMouseToMapCoordinates(eventPoint);
         if (p == null || !LOSMap.onMap(p.x, p.y)) return;
         target = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
         useAuxTargetLOSPoint = useAuxLOSPoint(target, p.x, p.y);
@@ -650,8 +661,8 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         initializeMap();
 
         if (!legacyMode) {
-            setSourceFromEventPoint(newAnchor);
-            setTargetFromEventPoint(newArrow);
+            setSourceFromMousePressedEvent(newAnchor);
+            setTargetFromRemoteEvent(newArrow);
             doLOS();
         }
 
