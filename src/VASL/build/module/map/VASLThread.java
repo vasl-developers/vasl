@@ -41,6 +41,8 @@ import VASL.build.module.ASLMap;
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASSAL.build.Buildable;
 import VASSAL.build.module.GameComponent;
+import VASSAL.build.module.map.LOS_Thread;
+import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.build.module.map.boardPicker.board.HexGrid;
 import VASSAL.command.Command;
 import VASSAL.configure.BooleanConfigurer;
@@ -48,12 +50,13 @@ import VASSAL.configure.ColorConfigurer;
 
 import static VASSAL.build.GameModule.getGameModule;
 
-public class VASLThread extends ASLThread implements KeyListener, GameComponent {
+public class VASLThread extends LOS_Thread implements KeyListener, GameComponent {
 
     public static final String ENABLED = "LosCheckEnabled";
     public static final String HINDRANCE_THREAD_COLOR = "hindranceThreadColor";
     public static final String BLOCKED_THREAD_COLOR = "blockedThreadColor";
     private boolean legacyMode;
+    private boolean initialized; // LOS has been initialized?
     private static final String preferenceTabName = "LOS";
     private VASL.LOS.Map.Map LOSMap;
 
@@ -72,6 +75,15 @@ public class VASLThread extends ASLThread implements KeyListener, GameComponent 
     private Color hindranceColor;
     private Color blockedColor;
 
+    private void setGridSnapToVertex(boolean toVertex) {
+        for (Board b : map.getBoards()) {
+            HexGrid grid =
+                    (HexGrid)b.getGrid();
+            grid.setCornersLegal(toVertex);
+            grid.setEdgesLegal(!toVertex);
+        }
+    }
+
     /**
      * Called when the LOS check is started
      */
@@ -79,6 +91,12 @@ public class VASLThread extends ASLThread implements KeyListener, GameComponent 
 	protected void launch() {
 
         super.launch();
+        setGridSnapToVertex(true);
+        initializeMap();
+
+    }
+
+    private void initializeMap(){
 
         // make sure we have a map otherwise disable LOS
         final ASLMap theMap = (ASLMap) map;
@@ -110,6 +128,8 @@ public class VASLThread extends ASLThread implements KeyListener, GameComponent 
             blockedColor = (Color) getGameModule().getPrefs().getValue(BLOCKED_THREAD_COLOR);
             map.getView().requestFocus();
         }
+
+        initialized = true;
     }
 
     @Override
@@ -134,7 +154,7 @@ public class VASLThread extends ASLThread implements KeyListener, GameComponent 
         getGameModule().getPrefs().addOption(preferenceTabName, blocked);
         getGameModule().getPrefs().addOption(preferenceTabName, verbose);
         final ItemListener l = new ItemListener() {
-            @Override
+
 			public void itemStateChanged(ItemEvent evt) {
                 enableAll(hindrance.getControls(), enableBox.isSelected());
                 enableAll(blocked.getControls(), enableBox.isSelected());
@@ -180,15 +200,12 @@ public class VASLThread extends ASLThread implements KeyListener, GameComponent 
         if (!isEnabled() || legacyMode) {
             return;
         }
-        result.reset();
 
-        // get the map point
-        final Point p = mapMouseToMapCoordinates(e.getPoint());
-        if (p == null || !LOSMap.onMap(p.x, p.y)) return;
+        setSourceFromEventPoint(e.getPoint());
 
-        // get the nearest location
-        source = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
-        useAuxSourceLOSPoint = useAuxLOSPoint(source, p.x, p.y);
+        if(source == null) {
+            return;
+        }
 
         // if Ctrl click, use upper location
         if (e.isControlDown()) {
@@ -202,10 +219,27 @@ public class VASLThread extends ASLThread implements KeyListener, GameComponent 
         useAuxTargetLOSPoint = useAuxSourceLOSPoint;
     }
 
+    /**
+     * Sets the source location using an event point
+     * @param eventPoint the point in plain ol' VASSAL coordinates
+     */
+    private void setSourceFromEventPoint(Point eventPoint) {
+
+        final Point p = mapMouseToMapCoordinates(eventPoint);
+        if (p == null || !LOSMap.onMap(p.x, p.y)) return;
+
+        // get the nearest location
+        source = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
+        useAuxSourceLOSPoint = useAuxLOSPoint(source, p.x, p.y);
+    }
+
     @Override
 	public void mouseReleased(MouseEvent e) {
 
         super.mouseReleased(e);
+        if (!isVisible()) {
+            setGridSnapToVertex(false);
+        }
     }
 
     @Override
@@ -213,18 +247,15 @@ public class VASLThread extends ASLThread implements KeyListener, GameComponent 
 
         if (!legacyMode && source != null && isEnabled()) {
 
-            // get the map point, ensure the point is on the CASL map
-            final Point p = mapMouseToMapCoordinates(map.mapCoordinates(e.getPoint()));
-            if (p == null || !LOSMap.onMap(p.x, p.y)) return;
-            final Location newLocation = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
-            final boolean useAuxNewLOSPoint = useAuxLOSPoint(newLocation, p.x, p.y);
+            final Location oldLocation = target;
+            final boolean oldAuxFlag = useAuxTargetLOSPoint;
+
+            setTargetFromEventPoint(e.getPoint());
 
             // are we really in a new location?
-            if (target.equals(newLocation) && useAuxTargetLOSPoint == useAuxNewLOSPoint) {
+            if (target == null || (target.equals(oldLocation) && useAuxTargetLOSPoint == oldAuxFlag)) {
                 return;
             }
-            target = newLocation;
-            useAuxTargetLOSPoint = useAuxNewLOSPoint;
 
             // if Ctrl click, use upper location
             if (e.isControlDown()) {
@@ -236,6 +267,19 @@ public class VASLThread extends ASLThread implements KeyListener, GameComponent 
         }
         super.mouseDragged(e);
         map.repaint();
+    }
+
+    /**
+     * Sets the target location using an event point
+     * @param eventPoint the point in plain ol' VASSAL coordinates
+     */
+    private void setTargetFromEventPoint(Point eventPoint) {
+
+        final Point p = mapMouseToMapCoordinates(eventPoint);
+        if (p == null || !LOSMap.onMap(p.x, p.y)) return;
+        target = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
+        useAuxTargetLOSPoint = useAuxLOSPoint(target, p.x, p.y);
+
     }
 
     private boolean isEnabled() {
@@ -439,15 +483,12 @@ public class VASLThread extends ASLThread implements KeyListener, GameComponent 
         return Boolean.TRUE.equals(getGameModule().getPrefs().getValue("verboseLOS"));
     }
 
-    @Override
 	public void keyTyped(KeyEvent e) {
     }
 
-    @Override
 	public void keyReleased(KeyEvent e) {
     }
 
-    @Override
 	public void keyPressed(KeyEvent e) {
 
         if (!isEnabled() && legacyMode) {
@@ -511,7 +552,6 @@ public class VASLThread extends ASLThread implements KeyListener, GameComponent 
 		return Point2D.distance((double)x, (double)y, (double)LOSPoint.x, (double)LOSPoint.y) > Point2D.distance((double)x, (double)y, (double)AuxLOSPoint.x, (double)AuxLOSPoint.y);
 	}
 
-    @Override
 	public Command getRestoreCommand() {
         return null;
     }
@@ -575,6 +615,7 @@ public class VASLThread extends ASLThread implements KeyListener, GameComponent 
         }
 
         // do the LOS
+        result = new LOSResult();
         LOSMap.LOS(source, useAuxSourceLOSPoint, target, useAuxTargetLOSPoint, result, VASLGameInterface);
 
         // set the result string
@@ -599,4 +640,21 @@ public class VASLThread extends ASLThread implements KeyListener, GameComponent 
 		return super.decode(command);
 	}
 
+    @Override
+    protected void setEndPoints(Point newAnchor, Point newArrow) {
+        anchor.x = newAnchor.x;
+        anchor.y = newAnchor.y;
+        arrow.x = newArrow.x;
+        arrow.y = newArrow.y;
+
+        initializeMap();
+
+        if (!legacyMode) {
+            setSourceFromEventPoint(newAnchor);
+            setTargetFromEventPoint(newArrow);
+            doLOS();
+        }
+
+        map.repaint();
+    }
 }

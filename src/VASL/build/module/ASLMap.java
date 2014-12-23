@@ -58,7 +58,6 @@ public class ASLMap extends Map {
     private VASL.LOS.Map.Map VASLMap;
     private static SharedBoardMetadata sharedBoardMetadata = null;
     private boolean legacyMode;                     // true if unable to create a VASL map or LOS data is missing
-    private boolean unsupportedFeature = false;     // true if one or more boards in legacy format, overlays not supported, etc
 
     // used to log errors in the VASSAL error log
     private static final Logger logger = LoggerFactory.getLogger(ASLMap.class);
@@ -199,13 +198,14 @@ public class ASLMap extends Map {
      */
     protected void buildVASLMap() {
 
+        legacyMode = false;
+
         // create an empty VASL map of the correct size
         LinkedList<VASLBoard> VASLBoards = new LinkedList<VASLBoard>(); // keep the boards so they are instantiated once
         try {
 
             // see if there are any legacy boards in the board set
             // and determine the size of the map
-            unsupportedFeature = false;
             legacyMode = false;
             final Rectangle mapBoundary = new Rectangle(0,0);
             double hexHeight = 0.0;
@@ -214,6 +214,9 @@ public class ASLMap extends Map {
 
                 final VASLBoard board = (VASLBoard) b;
 
+                if(board.isLegacyBoard()) {
+                    throw new BoardException("LOS disabled - Board " + board.getName() + " does not support LOS checking");
+                }
                 // ignore null boards
                 if(!"NUL".equals(b.getName()) && !"NULV".equals(b.getName())){
 
@@ -246,10 +249,14 @@ public class ASLMap extends Map {
         }
 
         // clean up and fall back to legacy mode if an unexpected exception is thrown
+        catch (BoardException e) {
+
+            setLegacyMode();
+            logError(e.toString());
+        }
         catch (Exception e) {
 
-            legacyMode = true;
-            VASLMap = null;
+            setLegacyMode();
             VASLBoards = null;
             logError("LOS disabled - unexpected error");
             logException(e);
@@ -259,7 +266,7 @@ public class ASLMap extends Map {
         try {
 
             // load the LOS data
-            if(!(legacyMode)) {
+            if(!legacyMode) {
 
                 for (VASLBoard board : VASLBoards) {
 
@@ -270,7 +277,7 @@ public class ASLMap extends Map {
                     final Enumeration overlays = board.getOverlays();
                     while (overlays.hasMoreElements()) {
                         if(!overlays.nextElement().toString().isEmpty()) {
-                            throw new BoardException("Overlays are not supported - disabling LOS");
+                            throw new BoardException("LOS disabled - Overlays are not supported");
                         }
                     }
 
@@ -296,17 +303,16 @@ public class ASLMap extends Map {
                 }
             }
         }
-        // assume we're using an unsupported feature if an exception is thrown
         catch (BoardException e) {
 
+            setLegacyMode();
             logError(e.toString());
-            unsupportedFeature = true;
         }
         catch (Exception e) {
 
+            setLegacyMode();
             logError("LOS disabled - unexpected error");
             logException(e);
-            unsupportedFeature = true;
         }
         finally {
             // free up memory
@@ -314,6 +320,14 @@ public class ASLMap extends Map {
         }
     }
 
+    /**
+     * Sets status of LOS engine to legacy mode
+     */
+    private void setLegacyMode() {
+        legacyMode = true;
+        VASLMap = null;
+
+    }
     /**
      * @return the VASL map
      */
@@ -332,7 +346,7 @@ public class ASLMap extends Map {
      * @return true if the map is in legacy mode (i.e. pre-6.0)
      */
     public boolean isLegacyMode(){
-        return legacyMode || unsupportedFeature;
+        return legacyMode;
     }
 
     /**
