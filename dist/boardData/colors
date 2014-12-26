@@ -10,6 +10,9 @@
 // Fixed BrushCrestL1-6 colors
 // Added BldgShadowL4(winter/mud) colors
 // Added GullyHill (normal and winter/mud) colors
+//
+// 24 Dec 2014 DS for VASL 6.2 (Merry Christmas!)
+// Added Level1Winter as 33 boards currently reference it as a color
 
 // Bocage
 BocageGreen     62,90,47
@@ -269,6 +272,7 @@ L5Winter  230,205,194
 L6Winter  240,236,230
 L_1Winter 213,224,194
 L_2Winter 225,239,187
+Level1Winter  222,213,188
 
 
 // Orchards

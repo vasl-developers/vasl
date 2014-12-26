@@ -17,7 +17,10 @@
 		<!-- Fixed BrushCrestL1-6 colors  -->
 		<!-- Added BldgShadowL4(winter/mud) colors  -->
 		<!-- Added GullyHill (normal and winter/mud) colors  -->
-		<!-- Bocage  -->
+		<!-- Bocage
+		    24 Dec 2014 DS for VASL 6.2 (Merry Christmas!)
+            Added Level1Winter as 33 boards currently reference it as a color
+        -->
 		<color name="BocageGreen" red="62" green="90" blue="47" terrain="Bocage" elevation="UNKNOWN" />
 		<color name="BocageBrownL0" red="176" green="145" blue="70" terrain="Bocage" elevation="0" />
 		<color name="BocageBrownL1" red="149" green="113" blue="33" terrain="Bocage" elevation="1" />
@@ -228,6 +231,7 @@
 		<color name="L0Winter" red="255" green="255" blue="255" terrain="Open Ground" elevation="0" />
 		<color name="L_1Winter" red="213" green="224" blue="194" terrain="Open Ground" elevation="-1" />
 		<color name="L_2Winter" red="225" green="239" blue="187" terrain="Open Ground" elevation="-2" />
+        <color name="Level1Winter" red="222" green="213" blue="188" terrain="Open Ground" elevation="1" />
 		<!-- Orchards  -->
 		<color name="OrchL_2" red="85" green="100" blue="46" terrain="Orchard" elevation="-2" />
 		<color name="OrchL_1" red="83" green="98" blue="45" terrain="Orchard" elevation="-1" />

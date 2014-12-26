@@ -469,7 +469,15 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
             b.setTerrain(bd.substring(bd.indexOf("SSR") + 4));
         }
         if (bd.indexOf("ZOOM") >= 0) {
-            b.setMagnification(Double.parseDouble(bd.substring(bd.indexOf("ZOOM") + 5)));
+
+            // occasionally ZOOM is encoded multiple times - ignore this error as it's very rare
+            // and ignoring zoom has no real side effects
+            try {
+                b.setMagnification(Double.parseDouble(bd.substring(bd.indexOf("ZOOM") + 5)));
+            }
+            catch (Exception e) {
+                // bury
+            }
         }
     }
 

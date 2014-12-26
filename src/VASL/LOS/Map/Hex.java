@@ -516,7 +516,12 @@ public class Hex {
     public void resetTerrain() {
 
         // set the center location terrain
-        final Terrain centerLocationTerrain = map.getGridTerrain((int) centerLocation.getLOSPoint().getX(), (int) centerLocation.getLOSPoint().getY());
+        Terrain centerLocationTerrain = map.getGridTerrain((int) centerLocation.getLOSPoint().getX(), (int) centerLocation.getLOSPoint().getY());
+
+        // fix center location when building misses the center dot
+        if(!centerLocationTerrain.isBuilding() && getHexsideBuildingTerrain() != null) {
+            centerLocationTerrain = getHexsideBuildingTerrain();
+        }
 
         centerLocation.setTerrain(centerLocationTerrain);
 
@@ -533,9 +538,6 @@ public class Hex {
             // special case for marketplace
             if(centerLocationTerrain.getLOSCategory() == Terrain.LOSCategories.MARKETPLACE) {
                 centerLocation.setTerrain(map.getTerrain("Open Ground"));
-            }
-            else {
-                centerLocation.setTerrain(centerLocationTerrain);
             }
 
             // add upper level building locations
@@ -613,6 +615,28 @@ public class Hex {
 
         // correct for single hex bridges
         fixBridges();
+    }
+
+    /**
+     * This is a bit of hack for when buildings do not cover the hex center
+     * so the hex terrain is open ground but should really be the building
+     * @return the building terrain
+     */
+    private Terrain getHexsideBuildingTerrain(){
+
+        for(int x = 0; x <6; x++) {
+
+            if(name.equals("K1") && x == 3){
+                System.out.println();
+            }
+            // we need to read the terrain from the map as the hexside location may not be current when this is called
+            Point p = hexsideLocations[x].getEdgeCenterPoint();
+            Terrain terrain = map.getGridTerrain(p.x, p.y);
+            if(terrain != null && terrain.isBuilding()) {
+                return terrain;
+            }
+        }
+        return null;
     }
 
     /**
