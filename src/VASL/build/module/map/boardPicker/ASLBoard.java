@@ -40,473 +40,471 @@ import java.io.*;
 import java.util.*;
 import java.util.List;
 
-/** A Board is a geomorphic or HASL board. */
+/**
+ * A Board is a geomorphic or HASL board.
+ */
 public class ASLBoard extends Board {
-  public static final double DEFAULT_HEX_WIDTH = 56.24;
-  public static final double DEFAULT_HEX_HEIGHT = 64.51;
-  public String version = "0.0";
-  private Rectangle cropBounds = new Rectangle(0, 0, -1, -1);
-  private Dimension uncroppedSize;
-  private List<Overlay> overlays = new ArrayList();
-  protected String terrainChanges = "";
-  private SSRFilter terrain;
-  private File boardFile;
-  private ImageOp baseImageOp;
-  private DataArchive boardArchive;
+    public static final double DEFAULT_HEX_WIDTH = 56.24;
+    public static final double DEFAULT_HEX_HEIGHT = 64.51;
+    public String version = "0.0";
+    private Rectangle cropBounds = new Rectangle(0, 0, -1, -1);
+    private Dimension uncroppedSize;
+    private List<Overlay> overlays = new ArrayList();
+    protected String terrainChanges = "";
+    private SSRFilter terrain;
+    private File boardFile;
+    private ImageOp baseImageOp;
+    private DataArchive boardArchive;
 
-  public ASLBoard() {
-    new ASLHexGrid(DEFAULT_HEX_HEIGHT, false).addTo(this);
-    ((HexGrid) getGrid()).setHexWidth(DEFAULT_HEX_WIDTH);
-    ((HexGrid) getGrid()).setEdgesLegal(true);
-    reversible = true;
-  }
-
-  public Rectangle getCropBounds() {
-    return cropBounds;
-  }
-
-  public void setMagnification(double mag) {
-    super.setMagnification(mag);
-    ((ASLHexGrid) grid).setSnapScale(mag > 1.0 ? 2 : 1);
-  }
-
-  /**
-   * *
-   *
-   * @return the size of the board if it were not cropped
-   */
-  public Dimension getUncroppedSize() {
-    return uncroppedSize;
-  }
-
-  public Image getBaseImage() {
-    try {
-      return baseImageOp.getImage(null);
+    public ASLBoard() {
+        new ASLHexGrid(DEFAULT_HEX_HEIGHT, false).addTo(this);
+        ((HexGrid) getGrid()).setHexWidth(DEFAULT_HEX_WIDTH);
+        ((HexGrid) getGrid()).setEdgesLegal(true);
+        reversible = true;
     }
-    catch (Exception e) {
-      e.printStackTrace();
-      return null;
+
+    public Rectangle getCropBounds() {
+        return cropBounds;
     }
-  }
 
-  public Enumeration getOverlays() {
-    return Collections.enumeration(overlays);
-  }
-
-  public SSRFilter getTerrain() {
-    return terrain;
-  }
-
-  public String getCommonName() {
-    return getConfigureName();
-  }
-
-  public void setCommonName(String s) {
-    setConfigureName(s);
-  }
-
-  public String getLocalizedName() {
-    return getConfigureName();
-  }
-
-  public String getBaseImageFileName() {
-    return imageFile;
-  }
-
-  public void setBaseImageFileName(String s, File f) {
-    imageFile = s;
-    boardFile = f;
-    try {
-      boardArchive = boardFile.getName().equals(imageFile) ? null : new DataArchive(boardFile.getPath(), "");
+    public void setMagnification(double mag) {
+        super.setMagnification(mag);
+        ((ASLHexGrid) grid).setSnapScale(mag > 1.0 ? 2 : 1);
     }
-    catch (IOException e) {
-      ErrorDialog.dataError(new BadDataReport("Unable to open board file", boardFile.getName(), e));
-    }
-    resetImage();
-  }
 
-  public File getFile() {
-    return boardFile;
-  }
-
-  public void setTerrain(String changes) throws BoardException {
-    terrainChanges = changes;
-    terrain = null;
-    if (changes == null) {
-      return;
+    /**
+     * *
+     *
+     * @return the size of the board if it were not cropped
+     */
+    public Dimension getUncroppedSize() {
+        return uncroppedSize;
     }
-    for (int i = 0; i < overlays.size(); ++i) {
-      if ((Overlay) overlays.get(i) instanceof SSROverlay) {
-        overlays.remove(i--);
-      }
-    }
-    if (changes.length() > 0) {
-      terrain = new SSRFilter(changes, boardFile, this);
-      for (SSROverlay o : terrain.getOverlays()) {
-            overlays.add(0, o);
-      }
-    }
-    resetImage();
-  }
 
-  public String getVersion() {
-    return version;
-  }
-
-  public void readData() {
-    if (boardArchive != null) {
-      InputStream in = null;
-      try {
-        in = boardArchive.getInputStream("data");
-        BufferedReader file = new BufferedReader(new InputStreamReader(in));
-        String s;
-        while ((s = file.readLine()) != null) {
-          parseDataLine(s);
+    public Image getBaseImage() {
+        try {
+            return baseImageOp.getImage(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-      }
-      catch (IOException e) {
-        ErrorDialog.dataError(new BadDataReport("Unable to read data from board", boardArchive.getName(), e));
-      }
-      finally {
-        IOUtils.closeQuietly(in);
-      }
-    }
-  }
-
-  protected void parseDataLine(String s) {
-    StringTokenizer st = new StringTokenizer(s);
-    if (st.countTokens() >= 2) {
-      String s1 = st.nextToken().toLowerCase();
-      if ("version".equals(s1)) {
-        version = st.nextToken();
-      }
-      else {
-        ((HexGrid) getGrid()).setAttribute(s1, st.nextToken());
-      }
-    }
-  }
-
-  protected void resetImage() {
-    final ImageTileSource ts =
-      GameModule.getGameModule().getImageTileSource();
-
-    boolean tiled = false;
-    try {
-      tiled = ts.tileExists(imageFile, 0, 0, 1.0);
-    }
-    catch (ImageIOException e) {
-      // ignore, not tiled
     }
 
-    if (tiled) {
-      FileArchive fa = null;
-      try {
-        fa = new ZipArchive(boardFile);
-      }
-      catch (IOException e) {
-        e.printStackTrace();
-      }
-
-      baseImageOp = new SourceOpTiledBitmapImpl(imageFile, fa);
-    }
-    else {
-      baseImageOp = Op.load(imageFile);
+    public Enumeration getOverlays() {
+        return Collections.enumeration(overlays);
     }
 
-    boardImageOp = new BoardOp();
-
-    uncroppedSize = baseImageOp.getSize();
-    fixedBoundaries = false;
-    scaledImageOp = null;
-  }
-
-  public static String archiveName(String s) {
-    return "bd" + s.toUpperCase();
-  }
-
-  public static String fileName(String s) {
-    return "bd" + s + ".gif";
-  }
-
-  public void addOverlay(Overlay o) {
-    overlays.add(o);
-    resetImage();
-  }
-
-  public boolean removeOverlay(String s) {
-    boolean changed = false;
-    for (int i = 0; i < overlays.size(); ++i) {
-      Overlay o = (Overlay) overlays.get(i);
-      if (o.name.equals(s)) {
-        overlays.remove(i--);
-        changed = true;
-      }
-    }
-    if (changed) {
-      resetImage();
-    }
-    return changed;
-  }
-
-  public void setCropBounds(Rectangle r) {
-    cropBounds = new Rectangle(r);
-    resetImage();
-  }
-
-  public void crop(String row1, String row2, String coord1, String coord2) throws MapGrid.BadCoords {
-    crop(row1, row2, coord1, coord2, true);
-  }
-
-  public void crop(String row1, String row2, String coord1, String coord2, boolean nearestFullRow) throws MapGrid.BadCoords {
-    double dx = ((HexGrid) getGrid()).getHexWidth();
-    double dy = ((HexGrid) getGrid()).getHexSize();
-    Rectangle newCropBounds = new Rectangle(0, 0, -1, -1);
-    newCropBounds.x = (row1.length() == 0 ? 0 : getGrid().getLocation(row1 + "0").x);
-    newCropBounds.width = row2.length() == 0 ? -1 : (getGrid().getLocation(row2 + "0").x - newCropBounds.x);
-    newCropBounds.y = coord1.length() == 0 ? 0 : (getGrid().getLocation("a" + coord1).y - (int) (dy / 2));
-    newCropBounds.height = coord2.length() == 0 ? -1 : (getGrid().getLocation("a" + coord2).y + (int) (dy / 2) - newCropBounds.y);
-    if (nearestFullRow) {
-      if (newCropBounds.width > 0 && Math.abs(newCropBounds.x + newCropBounds.width - uncroppedSize.width) > dx / 4) {
-        newCropBounds.width += (int) (dx / 2);
-      }
-      if (newCropBounds.x != 0) {
-        newCropBounds.x -= (int) (dx / 2);
-        newCropBounds.width += (int) (dx / 2);
-      }
-    }
-    setCropBounds(newCropBounds);
-  }
-
-  public String locationName(Point p) {
-    if (getMap() != null && getMap().getBoardCount() > 1) {
-      return getName() + super.locationName(p);
-    }
-    else {
-      return super.locationName(p);
-    }
-  }
-
-  @Override
-  public String localizedLocationName(Point p) {
-    return locationName(p);
-  }
-
-  public Point localCoordinates(Point p1) {
-    Point p = new Point(p1.x, p1.y);
-    if (reversed) {
-      p.x = bounds().width - p.x;
-      p.y = bounds().height - p.y;
-    }
-    if (magnification != 1.0) {
-      p.x = (int) Math.round(p.x / magnification);
-      p.y = (int) Math.round(p.y / magnification);
-    }
-    p.translate(cropBounds.x, cropBounds.y);
-    return p;
-  }
-
-  public Point globalCoordinates(Point input) {
-    Point p = new Point(input);
-    p.translate(-cropBounds.x, -cropBounds.y);
-    if (magnification != 1.0) {
-      p.x = (int) Math.round(p.x * magnification);
-      p.y = (int) Math.round(p.y * magnification);
-    }
-    if (reversed) {
-      p.x = bounds().width - p.x;
-      p.y = bounds().height - p.y;
-    }
-    return p;
-  }
-
-  public Point snapToVertex(Point p) {
-    return globalCoordinates(((HexGrid) getGrid()).snapToHexVertex(localCoordinates(p)));
-  }
-
-  public String getState() {
-    String val = relativePosition().x + "\t" + relativePosition().y + "\t" + (reversed ? "r" : "") + imageFile.substring(2, imageFile.indexOf(".gif")) + "\t";
-    if (cropBounds.width > 0 || cropBounds.height > 0)
-      val += cropBounds.x + "\t" + cropBounds.y + "\t" + cropBounds.width + "\t" + cropBounds.height + "\t";
-    val += "VER\t" + getVersion() + '\t';
-    for (Overlay o : overlays) {
-      val += o + "\t";
-    }
-    if (terrainChanges.length() > 0) {
-      val += "SSR\t" + terrainChanges;
-    }
-    if (magnification != 1.0) {
-      val += "\tZOOM\t" + magnification;
-    }
-    return val;
-  }
-
-  private class BoardOp extends AbstractTiledOpImpl implements SourceOp {
-    private String boardState;
-    private int hash;
-
-    private BoardOp() {
-      boardState = ASLBoard.this.getState();
-      hash = boardState.hashCode();
+    public SSRFilter getTerrain() {
+        return terrain;
     }
 
-    @Override
-    protected ImageOp createTileOp(int tileX, int tileY) {
-      return new SourceTileOpBitmapImpl(this, tileX, tileY);
+    public String getCommonName() {
+        return getConfigureName();
     }
 
-    public List<VASSAL.tools.opcache.Op<?>> getSources() {
-      return Collections.emptyList();
+    public void setCommonName(String s) {
+        setConfigureName(s);
     }
 
-    @Override
-    public BufferedImage eval() throws Exception {
-      if (size == null) {
-        fixSize();
-      }
+    public String getLocalizedName() {
+        return getConfigureName();
+    }
 
-      final ImageOp base = boardArchive == null
-        ? baseImageOp : new SourceOpBitmapImpl(imageFile, boardArchive);
+    public String getBaseImageFileName() {
+        return imageFile;
+    }
 
-    	if (terrain == null && overlays.isEmpty() &&
-          cropBounds.width < 0 && cropBounds.height < 0)
-      {
-    	  return base.getImage();
-    	}
-
-    	final BufferedImage im =
-    	  ImageUtils.createCompatibleTranslucentImage(size.width, size.height);
-
-      final Graphics2D g = (Graphics2D) im.getGraphics();
-      Rectangle visible = new Rectangle(cropBounds.getLocation(), ASLBoard.this.bounds().getSize());
-      visible.width = (int) Math.round(visible.width / magnification);
-      visible.height = (int) Math.round(visible.height / magnification);
-      g.drawImage(
-        base.getImage(null),
-        0,
-        0,
-        visible.width,
-        visible.height,
-        cropBounds.x,
-        cropBounds.y,
-        cropBounds.x + visible.width,
-        cropBounds.y + visible.height,
-        null
-      );
-
-      for (Enumeration e = ASLBoard.this.getOverlays(); e.hasMoreElements(); ) {
-        Overlay o = (Overlay) e.nextElement();
-        Rectangle r = visible.intersection(o.bounds());
-        if (!r.isEmpty()) {
-          int x = Math.max(visible.x - o.bounds().x, 0);
-          int y = Math.max(visible.y - o.bounds().y, 0);
-          g.drawImage(
-            o.getImage(),
-            r.x - visible.x,
-            r.y - visible.y,
-            r.x - visible.x + r.width,
-            r.y - visible.y + r.height,
-            x,
-            y,
-            x + r.width, y + r.height,
-            null
-          );
+    public void setBaseImageFileName(String s, File f) {
+        imageFile = s;
+        boardFile = f;
+        try {
+            boardArchive = boardFile.getName().equals(imageFile) ? null : new DataArchive(boardFile.getPath(), "");
+        } catch (IOException e) {
+            ErrorDialog.dataError(new BadDataReport("Unable to open board file", boardFile.getName(), e));
         }
+        resetImage();
+    }
 
-        if (o.getTerrain() != getTerrain() && o.getTerrain() != null) {
-          for (SSROverlay ssrOverlay : o.getTerrain().getOverlays()) {
-            if (ssrOverlay.getImage() != null) {
-              Rectangle oBounds = ssrOverlay.bounds();
-              if (o.getOrientation() == 'a') {
-                oBounds.translate(o.bounds().x, o.bounds().y);
-                r = visible.intersection(oBounds);
-                if (!r.isEmpty()) {
-                  int x = Math.max(visible.x - o.bounds().x, 0);
-                  int y = Math.max(visible.y - o.bounds().y, 0);
-                  g.drawImage(
-                    ssrOverlay.getImage(),
-                    r.x - visible.x,
-                    r.y - visible.y,
-                    r.x - visible.x + r.width,
-                    r.y - visible.y + r.height,
-                    x,
-                    y,
-                    x + r.width,
-                    y + r.height,
-                    null
-                  );
-                }
-              }
-              else {
-                try {
-                  Point p1 = o.offset(o.getOrientation(), ASLBoard.this);
-                  Point p2 = o.offset('a', ASLBoard.this);
-                  Point p = new Point(
-                    p1.x + p2.x - oBounds.x + o.bounds().x - visible.x,
-                    p1.y + p2.y - oBounds.y + o.bounds().y - visible.y
-                  );
-                  g.drawImage(
-                    ssrOverlay.getImage(),
-                    p.x,
-                    p.y,
-                    p.x - oBounds.width,
-                    p.y - oBounds.height,
-                    0,
-                    0,
-                    oBounds.width,
-                    oBounds.height,
-                    null
-                  );
-                }
-                catch (BoardException e1) {
-                  e1.printStackTrace();
-                }
-              }
+    public File getFile() {
+        return boardFile;
+    }
+
+    public void setTerrain(String changes) throws BoardException {
+        terrainChanges = changes;
+        terrain = null;
+        if (changes == null) {
+            return;
+        }
+        for (int i = 0; i < overlays.size(); ++i) {
+            if ((Overlay) overlays.get(i) instanceof SSROverlay) {
+                overlays.remove(i--);
             }
-          }
         }
-      }
+        if (changes.length() > 0) {
+            terrain = new SSRFilter(changes, boardFile, this);
+            for (SSROverlay o : terrain.getOverlays()) {
+                overlays.add(0, o);
+            }
+        }
+        resetImage();
+    }
 
-      g.dispose();
+    public String getVersion() {
+        return version;
+    }
 
-      if (terrain != null) {
-        terrain.transform(im);
-      }
-      return im;
+    public void readData() {
+        if (boardArchive != null) {
+            InputStream in = null;
+            try {
+                in = boardArchive.getInputStream("data");
+                BufferedReader file = new BufferedReader(new InputStreamReader(in));
+                String s;
+                while ((s = file.readLine()) != null) {
+                    parseDataLine(s);
+                }
+            } catch (IOException e) {
+                ErrorDialog.dataError(new BadDataReport("Unable to read data from board", boardArchive.getName(), e));
+            } finally {
+                IOUtils.closeQuietly(in);
+            }
+        }
+    }
+
+    protected void parseDataLine(String s) {
+        StringTokenizer st = new StringTokenizer(s);
+        if (st.countTokens() >= 2) {
+            String s1 = st.nextToken().toLowerCase();
+            if ("version".equals(s1)) {
+                version = st.nextToken();
+            } else {
+                ((HexGrid) getGrid()).setAttribute(s1, st.nextToken());
+            }
+        }
+    }
+
+    protected void resetImage() {
+        final ImageTileSource ts =
+                GameModule.getGameModule().getImageTileSource();
+
+        boolean tiled = false;
+        try {
+            tiled = ts.tileExists(imageFile, 0, 0, 1.0);
+        } catch (ImageIOException e) {
+            // ignore, not tiled
+        }
+
+        if (tiled) {
+            FileArchive fa = null;
+            try {
+                fa = new ZipArchive(boardFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            baseImageOp = new SourceOpTiledBitmapImpl(imageFile, fa);
+        } else {
+            baseImageOp = Op.load(imageFile);
+        }
+
+        boardImageOp = new BoardOp();
+
+        uncroppedSize = baseImageOp.getSize();
+        fixedBoundaries = false;
+        scaledImageOp = null;
+    }
+
+    public static String archiveName(String s) {
+        return "bd" + s.toUpperCase();
+    }
+
+    public static String fileName(String s) {
+        return "bd" + s + ".gif";
+    }
+
+    public void addOverlay(Overlay o) {
+        overlays.add(o);
+        resetImage();
+    }
+
+    public boolean removeOverlay(String s) {
+        boolean changed = false;
+        for (int i = 0; i < overlays.size(); ++i) {
+            Overlay o = (Overlay) overlays.get(i);
+            if (o.name.equals(s)) {
+                overlays.remove(i--);
+                changed = true;
+            }
+        }
+        if (changed) {
+            resetImage();
+        }
+        return changed;
+    }
+
+    public void setCropBounds(Rectangle r) {
+        cropBounds = new Rectangle(r);
+        resetImage();
+    }
+
+    public void crop(String row1, String row2, String coord1, String coord2) throws MapGrid.BadCoords {
+        crop(row1, row2, coord1, coord2, true);
+    }
+
+    public void crop(String row1, String row2, String coord1, String coord2, boolean nearestFullRow) throws MapGrid.BadCoords {
+        double dx = ((HexGrid) getGrid()).getHexWidth();
+        double dy = ((HexGrid) getGrid()).getHexSize();
+        Rectangle newCropBounds = new Rectangle(0, 0, -1, -1);
+        newCropBounds.x = (row1.length() == 0 ? 0 : getGrid().getLocation(row1 + "0").x);
+        newCropBounds.width = row2.length() == 0 ? -1 : (getGrid().getLocation(row2 + "0").x - newCropBounds.x);
+        newCropBounds.y = coord1.length() == 0 ? 0 : (getGrid().getLocation("a" + coord1).y - (int) (dy / 2));
+        newCropBounds.height = coord2.length() == 0 ? -1 : (getGrid().getLocation("a" + coord2).y + (int) (dy / 2) - newCropBounds.y);
+        if (nearestFullRow) {
+            if (newCropBounds.width > 0 && Math.abs(newCropBounds.x + newCropBounds.width - uncroppedSize.width) > dx / 4) {
+                newCropBounds.width += (int) (dx / 2);
+            }
+            if (newCropBounds.x != 0) {
+                newCropBounds.x -= (int) (dx / 2);
+                newCropBounds.width += (int) (dx / 2);
+            }
+        }
+        setCropBounds(newCropBounds);
+    }
+
+    public String locationName(Point p) {
+        if (getMap() != null && getMap().getBoardCount() > 1) {
+            return getName() + super.locationName(p);
+        } else {
+            return super.locationName(p);
+        }
     }
 
     @Override
-    protected void fixSize() {
-      size = new Dimension(cropBounds.width > 0 ? cropBounds.width : uncroppedSize.width, cropBounds.height > 0 ? cropBounds.height : uncroppedSize.height);
-      tileSize = new Dimension(256, 256);
-      numXTiles = (int) Math.ceil((double) size.width / tileSize.width);
-      numYTiles = (int) Math.ceil((double) size.height / tileSize.height);
-      tiles = new ImageOp[numXTiles * numYTiles];
+    public String localizedLocationName(Point p) {
+        return locationName(p);
     }
 
-    public ImageOp getSource() {
-      return null;
+    public Point localCoordinates(Point p1) {
+        Point p = new Point(p1.x, p1.y);
+        if (reversed) {
+            p.x = bounds().width - p.x;
+            p.y = bounds().height - p.y;
+        }
+        if (magnification != 1.0) {
+            p.x = (int) Math.round(p.x / magnification);
+            p.y = (int) Math.round(p.y / magnification);
+        }
+        p.translate(cropBounds.x, cropBounds.y);
+        return p;
     }
 
-    public String getName() {
-      return ASLBoard.this.fileName(ASLBoard.this.getName());
+    public Point globalCoordinates(Point input) {
+        Point p = new Point(input);
+        p.translate(-cropBounds.x, -cropBounds.y);
+        if (magnification != 1.0) {
+            p.x = (int) Math.round(p.x * magnification);
+            p.y = (int) Math.round(p.y * magnification);
+        }
+        if (reversed) {
+            p.x = bounds().width - p.x;
+            p.y = bounds().height - p.y;
+        }
+        return p;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-      if (!(obj instanceof BoardOp)) {
-        return false;
-      }
-      final BoardOp op = (BoardOp) obj;
-      return boardState.equals(op.boardState);
+    public Point snapToVertex(Point p) {
+        return globalCoordinates(((HexGrid) getGrid()).snapToHexVertex(localCoordinates(p)));
     }
 
-    @Override
-    public int hashCode() {
-      return hash;
-    }
-  }
+    public String getState() {
 
-  public DataArchive getBoardArchive() {
-    return boardArchive;
-  }
+        // gracefully handle boards that are not archives
+        String val;
+        try {
+            val = relativePosition().x + "\t" + relativePosition().y + "\t" + (reversed ? "r" : "") + imageFile.substring(2, imageFile.indexOf(".gif")) + "\t";
+        } catch (Exception e) {
+            val = relativePosition().x + "\t" + relativePosition().y + "\t" + (reversed ? "r" : "") + name + "\t";
+        }
+
+        if (cropBounds.width > 0 || cropBounds.height > 0)
+            val += cropBounds.x + "\t" + cropBounds.y + "\t" + cropBounds.width + "\t" + cropBounds.height + "\t";
+        val += "VER\t" + getVersion() + '\t';
+        for (Overlay o : overlays) {
+            val += o + "\t";
+        }
+        if (terrainChanges.length() > 0) {
+            val += "SSR\t" + terrainChanges;
+        }
+        if (magnification != 1.0) {
+            val += "\tZOOM\t" + magnification;
+        }
+        return val;
+    }
+
+    private class BoardOp extends AbstractTiledOpImpl implements SourceOp {
+        private String boardState;
+        private int hash;
+
+        private BoardOp() {
+            boardState = ASLBoard.this.getState();
+            hash = boardState.hashCode();
+        }
+
+        @Override
+        protected ImageOp createTileOp(int tileX, int tileY) {
+            return new SourceTileOpBitmapImpl(this, tileX, tileY);
+        }
+
+        public List<VASSAL.tools.opcache.Op<?>> getSources() {
+            return Collections.emptyList();
+        }
+
+        @Override
+        public BufferedImage eval() throws Exception {
+            if (size == null) {
+                fixSize();
+            }
+
+            final ImageOp base = boardArchive == null
+                    ? baseImageOp : new SourceOpBitmapImpl(imageFile, boardArchive);
+
+            if (terrain == null && overlays.isEmpty() &&
+                    cropBounds.width < 0 && cropBounds.height < 0) {
+                return base.getImage();
+            }
+
+            final BufferedImage im =
+                    ImageUtils.createCompatibleTranslucentImage(size.width, size.height);
+
+            final Graphics2D g = (Graphics2D) im.getGraphics();
+            Rectangle visible = new Rectangle(cropBounds.getLocation(), ASLBoard.this.bounds().getSize());
+            visible.width = (int) Math.round(visible.width / magnification);
+            visible.height = (int) Math.round(visible.height / magnification);
+            g.drawImage(
+                    base.getImage(null),
+                    0,
+                    0,
+                    visible.width,
+                    visible.height,
+                    cropBounds.x,
+                    cropBounds.y,
+                    cropBounds.x + visible.width,
+                    cropBounds.y + visible.height,
+                    null
+            );
+
+            for (Enumeration e = ASLBoard.this.getOverlays(); e.hasMoreElements(); ) {
+                Overlay o = (Overlay) e.nextElement();
+                Rectangle r = visible.intersection(o.bounds());
+                if (!r.isEmpty()) {
+                    int x = Math.max(visible.x - o.bounds().x, 0);
+                    int y = Math.max(visible.y - o.bounds().y, 0);
+                    g.drawImage(
+                            o.getImage(),
+                            r.x - visible.x,
+                            r.y - visible.y,
+                            r.x - visible.x + r.width,
+                            r.y - visible.y + r.height,
+                            x,
+                            y,
+                            x + r.width, y + r.height,
+                            null
+                    );
+                }
+
+                if (o.getTerrain() != getTerrain() && o.getTerrain() != null) {
+                    for (SSROverlay ssrOverlay : o.getTerrain().getOverlays()) {
+                        if (ssrOverlay.getImage() != null) {
+                            Rectangle oBounds = ssrOverlay.bounds();
+                            if (o.getOrientation() == 'a') {
+                                oBounds.translate(o.bounds().x, o.bounds().y);
+                                r = visible.intersection(oBounds);
+                                if (!r.isEmpty()) {
+                                    int x = Math.max(visible.x - o.bounds().x, 0);
+                                    int y = Math.max(visible.y - o.bounds().y, 0);
+                                    g.drawImage(
+                                            ssrOverlay.getImage(),
+                                            r.x - visible.x,
+                                            r.y - visible.y,
+                                            r.x - visible.x + r.width,
+                                            r.y - visible.y + r.height,
+                                            x,
+                                            y,
+                                            x + r.width,
+                                            y + r.height,
+                                            null
+                                    );
+                                }
+                            } else {
+                                try {
+                                    Point p1 = o.offset(o.getOrientation(), ASLBoard.this);
+                                    Point p2 = o.offset('a', ASLBoard.this);
+                                    Point p = new Point(
+                                            p1.x + p2.x - oBounds.x + o.bounds().x - visible.x,
+                                            p1.y + p2.y - oBounds.y + o.bounds().y - visible.y
+                                    );
+                                    g.drawImage(
+                                            ssrOverlay.getImage(),
+                                            p.x,
+                                            p.y,
+                                            p.x - oBounds.width,
+                                            p.y - oBounds.height,
+                                            0,
+                                            0,
+                                            oBounds.width,
+                                            oBounds.height,
+                                            null
+                                    );
+                                } catch (BoardException e1) {
+                                    e1.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            g.dispose();
+
+            if (terrain != null) {
+                terrain.transform(im);
+            }
+            return im;
+        }
+
+        @Override
+        protected void fixSize() {
+            size = new Dimension(cropBounds.width > 0 ? cropBounds.width : uncroppedSize.width, cropBounds.height > 0 ? cropBounds.height : uncroppedSize.height);
+            tileSize = new Dimension(256, 256);
+            numXTiles = (int) Math.ceil((double) size.width / tileSize.width);
+            numYTiles = (int) Math.ceil((double) size.height / tileSize.height);
+            tiles = new ImageOp[numXTiles * numYTiles];
+        }
+
+        public ImageOp getSource() {
+            return null;
+        }
+
+        public String getName() {
+            return ASLBoard.this.fileName(ASLBoard.this.getName());
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof BoardOp)) {
+                return false;
+            }
+            final BoardOp op = (BoardOp) obj;
+            return boardState.equals(op.boardState);
+        }
+
+        @Override
+        public int hashCode() {
+            return hash;
+        }
+    }
+
+    public DataArchive getBoardArchive() {
+        return boardArchive;
+    }
 }
