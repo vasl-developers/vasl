@@ -229,9 +229,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
         for (int i = 0; i < files.length; ++i) {
             if (files[i].startsWith("bd") && !(new File(boardDir, files[i])).isDirectory()) {
                 String name = files[i].substring(2);
-                if (name.endsWith(".gif")) {
-                    name = name.substring(0, name.indexOf(".gif"));
-                } else if (name.indexOf(".") >= 0) {
+
+                if (name.indexOf(".") >= 0) {
                     name = null;
                 }
                 if (name != null && !sorted.contains(name)) {
