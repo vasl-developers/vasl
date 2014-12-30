@@ -26,7 +26,8 @@ import javax.imageio.ImageIO;
 import VASL.LOS.Map.Map;
 import VASL.LOS.Map.Terrain;
 import VASSAL.tools.io.IOUtils;
-import org.jdom2.JDOMException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static VASSAL.tools.io.IOUtils.closeQuietly;
 
@@ -44,16 +45,23 @@ public class BoardArchive {
     public static final double GEO_HEX_HEIGHT = GEO_IMAGE_HEIGHT/GEO_HEIGHT;
     public static final Point2D.Double GEO_A1_Center = new Point2D.Double(0, GEO_HEX_HEIGHT/2.0);
 
-
+    private String archiveName;
     private String qualifiedBoardArchive;
     private SharedBoardMetadata sharedBoardMetadata;
     private static final String LOSDataFileName = "LOSData";    // name of the LOS data file in archive
-    private static final String boardMetadataFile = "BoardMetadata.xml"; // name of the board metadata file
-    private static final String sharedBoardMetadataFile = "SharedBoardMetadata.xml"; // name of the shared board metadata file
+    private static final String boardMetadataFileName = "BoardMetadata.xml"; // name of the board metadata file
+    private static final String sharedBoardMetadataFileName = "SharedBoardMetadata.xml"; // name of the shared board metadata file
+    private static final String dataFileName = "data"; // name of the legacy data file
     private BufferedImage boardImage;
     private Map map;
 
     private BoardMetadata metadata;
+
+    protected boolean legacyBoard = true;        // is the board legacy (i.e. V5) format?
+    private static final Logger logger = LoggerFactory.getLogger(BoardArchive.class);
+    private DataFile dataFile;
+    private String boardName;
+    private String imageName;
 
     /**
      * Defines the interface to a VASL board archive in the VASL boards directory
@@ -64,6 +72,8 @@ public class BoardArchive {
      */
     public BoardArchive(String archiveName, String boardDirectory, SharedBoardMetadata sharedBoardMetadata) throws IOException {
 
+        this.archiveName = archiveName;
+
         // set the archive name, etc.
 		qualifiedBoardArchive = boardDirectory +
                 System.getProperty("file.separator", "\\") +
@@ -73,19 +83,28 @@ public class BoardArchive {
         // parse the board metadata
         metadata = new BoardMetadata(sharedBoardMetadata);
         InputStream file = null;
+        InputStream dataFileStream = null;
         ZipFile archive = null;
         try {
             archive = new ZipFile(qualifiedBoardArchive);
-            file = getInputStreamForArchiveFile(archive, boardMetadataFile);
+            file = getInputStreamForArchiveFile(archive, boardMetadataFileName);
             metadata.parseBoardMetadataFile(file);
+            legacyBoard = false;
 
-        } catch (JDOMException e) {
 
-            throw new IOException("Unable to read the board metadata", e);
+        } catch (Exception e) {
+
+            // no metadata file so read legacy files from archive
+            logger.info("Unable to read the board metadata in board archive " + archiveName);
+            legacyBoard = true;
+            dataFileStream = getInputStreamForArchiveFile(archive, dataFileName);
+            dataFile = new DataFile(dataFileStream);
+
         }
         finally {
             closeQuietly(file);
             closeQuietly(archive);
+            closeQuietly(dataFileStream);
         }
     }
 
@@ -244,6 +263,7 @@ public class BoardArchive {
                 metadata.getA1CenterX() == BoardMetadata.MISSING &&
                 metadata.getA1CenterY() == BoardMetadata.MISSING;
     }
+
     /**
      * Get the board image from the archive
      */
@@ -382,7 +402,12 @@ public class BoardArchive {
      */
     public String getBoardName() {
 
-        return metadata.getName();
+        if(legacyBoard){
+            return archiveName.substring(2);
+        }
+        else {
+            return metadata.getName();
+        }
     }
 
     /**
@@ -525,28 +550,52 @@ public class BoardArchive {
      * @return x location of the A1 center hex dot
      */
     public double getA1CenterX() {
-        return metadata.getA1CenterX() == missingValue() ? GEO_A1_Center.x : metadata.getA1CenterX();
+
+        if(legacyBoard){
+            return dataFile.getX0() == null ? GEO_A1_Center.x : Double.parseDouble(dataFile.getX0());
+        }
+        else {
+            return metadata.getA1CenterX() == missingValue() ? GEO_A1_Center.x : metadata.getA1CenterX();
+        }
     }
 
     /**
      * @return y location of the A1 center hex dot
      */
     public double getA1CenterY() {
-        return metadata.getA1CenterY() == missingValue() ? GEO_A1_Center.y : metadata.getA1CenterY();
+
+        if(legacyBoard){
+            return dataFile.getY0() == null ? GEO_A1_Center.y : Double.parseDouble(dataFile.getY0());
+        }
+        else {
+            return metadata.getA1CenterY() == missingValue() ? GEO_A1_Center.y : metadata.getA1CenterY();
+        }
     }
 
     /**
      * @return hex width in pixels
      */
     public double getHexWidth() {
-        return metadata.getHexWidth() == missingValue() ? GEO_HEX_WIDTH : metadata.getHexWidth();
+
+        if(legacyBoard){
+            return dataFile.getDX() == null ? GEO_HEX_WIDTH : Double.parseDouble(dataFile.getDX());
+        }
+        else {
+            return metadata.getHexWidth() == missingValue() ? GEO_HEX_WIDTH : metadata.getHexWidth();
+        }
     }
 
     /**
      * @return hex height in pixels
      */
     public double getHexHeight() {
-        return metadata.getHexHeight() == missingValue() ? GEO_HEX_HEIGHT : metadata.getHexHeight();
+
+        if(legacyBoard){
+            return dataFile.getDY() == null ? GEO_HEX_HEIGHT: Double.parseDouble(dataFile.getDY());
+        }
+        else {
+            return metadata.getHexHeight() == missingValue() ? GEO_HEX_HEIGHT : metadata.getHexHeight();
+        }
     }
 
     /**
@@ -557,22 +606,39 @@ public class BoardArchive {
         return metadata.isAltHexGrain();
     }
 
+    /**
+     * @return the board version string
+     */
     public String getVersion(){
-        return  metadata.getVersion();
+
+        if(legacyBoard){
+            return dataFile.getVersion();
+        }
+        else {
+            return  metadata.getVersion();
+        }
     }
 
     /**
      * @return the name of the shared metadata file
      */
     public static String getSharedBoardMetadataFileName() {
-        return sharedBoardMetadataFile;
+        return sharedBoardMetadataFileName;
     }
 
     /**
      * @return the board image file name
      */
     public String getBoardImageFileName() {
-        return metadata.getBoardImageFileName();
+
+        if(legacyBoard) {
+
+            // default image naming for legacy boards
+            return "bd" + getBoardName() + ".gif";
+        }
+        else {
+            return metadata.getBoardImageFileName();
+        }
     }
 
     /**
@@ -595,6 +661,13 @@ public class BoardArchive {
      */
     public Slopes getSlopes() {
         return metadata.getSlopes();
+    }
+
+    /**
+     * @return true if board archive is legacy (i.e. V5) format
+     */
+    public boolean isLegacyBoard() {
+        return legacyBoard;
     }
 }
 

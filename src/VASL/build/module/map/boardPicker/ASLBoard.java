@@ -18,12 +18,16 @@
  */
 package VASL.build.module.map.boardPicker;
 
+import VASL.build.module.ASLMap;
+import VASL.build.module.map.boardArchive.BoardArchive;
+import VASL.build.module.map.boardArchive.DataFile;
 import VASL.build.module.map.boardPicker.board.ASLHexGrid;
 import VASSAL.build.BadDataReport;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.build.module.map.boardPicker.board.HexGrid;
 import VASSAL.build.module.map.boardPicker.board.MapGrid;
+import VASSAL.i18n.Translatable;
 import VASSAL.tools.DataArchive;
 import VASSAL.tools.ErrorDialog;
 import VASSAL.tools.image.ImageIOException;
@@ -33,6 +37,8 @@ import VASSAL.tools.imageop.*;
 import VASSAL.tools.io.FileArchive;
 import VASSAL.tools.io.IOUtils;
 import VASSAL.tools.io.ZipArchive;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -56,7 +62,11 @@ public class ASLBoard extends Board {
     private ImageOp baseImageOp;
     private DataArchive boardArchive;
 
+    protected BoardArchive VASLBoardArchive;
+    private static final Logger logger = LoggerFactory.getLogger(ASLMap.class);
+
     public ASLBoard() {
+
         new ASLHexGrid(DEFAULT_HEX_HEIGHT, false).addTo(this);
         ((HexGrid) getGrid()).setHexWidth(DEFAULT_HEX_WIDTH);
         ((HexGrid) getGrid()).setEdgesLegal(true);
@@ -110,19 +120,31 @@ public class ASLBoard extends Board {
         return getConfigureName();
     }
 
-    public String getBaseImageFileName() {
-        return imageFile;
-    }
+    /**
+     * Have the board initialize itself from its board archive
+     * @param archiveFile the board archive
+     */
+    public void initializeFromArchive(File archiveFile) {
 
-    public void setBaseImageFileName(String s, File f) {
-        imageFile = s;
-        boardFile = f;
         try {
-            boardArchive = boardFile.getName().equals(imageFile) ? null : new DataArchive(boardFile.getPath(), "");
+            VASLBoardArchive = new BoardArchive(archiveFile.getName(), archiveFile.getParent(), ASLMap.getSharedBoardMetadata());
+
         } catch (IOException e) {
+
             ErrorDialog.dataError(new BadDataReport("Unable to open board file", boardFile.getName(), e));
         }
+
+        boardFile = archiveFile;
+        setCommonName(VASLBoardArchive.getBoardName());
+        imageFile = VASLBoardArchive.getBoardImageFileName();
+        version = VASLBoardArchive.getVersion();
+
         resetImage();
+
+        ((Translatable)getGrid()).setAttribute(HexGrid.X0, (int) VASLBoardArchive.getA1CenterX());
+        ((Translatable)getGrid()).setAttribute(HexGrid.Y0, (int) VASLBoardArchive.getA1CenterY());
+        ((Translatable)getGrid()).setAttribute(HexGrid.DX, VASLBoardArchive.getHexWidth());
+        ((Translatable)getGrid()).setAttribute(HexGrid.DY, VASLBoardArchive.getHexHeight());
     }
 
     public File getFile() {
@@ -153,34 +175,11 @@ public class ASLBoard extends Board {
         return version;
     }
 
-    public void readData() {
-        if (boardArchive != null) {
-            InputStream in = null;
-            try {
-                in = boardArchive.getInputStream("data");
-                BufferedReader file = new BufferedReader(new InputStreamReader(in));
-                String s;
-                while ((s = file.readLine()) != null) {
-                    parseDataLine(s);
-                }
-            } catch (IOException e) {
-                ErrorDialog.dataError(new BadDataReport("Unable to read data from board", boardArchive.getName(), e));
-            } finally {
-                IOUtils.closeQuietly(in);
-            }
-        }
-    }
-
-    protected void parseDataLine(String s) {
-        StringTokenizer st = new StringTokenizer(s);
-        if (st.countTokens() >= 2) {
-            String s1 = st.nextToken().toLowerCase();
-            if ("version".equals(s1)) {
-                version = st.nextToken();
-            } else {
-                ((HexGrid) getGrid()).setAttribute(s1, st.nextToken());
-            }
-        }
+    /**
+     * @return true if this board is legacy format (pre 6.0)
+     */
+    public boolean isLegacyBoard() {
+        return VASLBoardArchive.isLegacyBoard();
     }
 
     protected void resetImage() {
@@ -212,10 +211,6 @@ public class ASLBoard extends Board {
         uncroppedSize = baseImageOp.getSize();
         fixedBoundaries = false;
         scaledImageOp = null;
-    }
-
-    public static String archiveName(String s) {
-        return "bd" + s.toUpperCase();
     }
 
     public static String fileName(String s) {

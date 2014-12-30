@@ -428,14 +428,11 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
             File f;
             f = new File(boardDir, "bd" + unReversedBoardName);
             if (f.exists()) {
-                b.setCommonName(unReversedBoardName);
-                b.setBaseImageFileName("bd" + unReversedBoardName + ".gif", f);
+                b.initializeFromArchive(f);
             } else {
                 throw new BoardException("Unable to find board " + baseName);
             }
-            b.readData();
         } catch (Exception eParse) {
-//      eParse.printStackTrace();
             throw new BoardException(eParse.getMessage(), eParse);
         }
         try {
