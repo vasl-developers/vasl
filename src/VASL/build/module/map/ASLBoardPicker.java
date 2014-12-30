@@ -313,7 +313,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
         Collections.sort(sorted, comp);
         possibleBoards.clear();
         for (int i = 0; i < sorted.size(); ++i) {
-            addBoard((String) sorted.get(i));
+            addBoard(sorted.get(i));
         }
     }
 
@@ -406,26 +406,14 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
     public void buildBoard(ASLBoard b, String bd) throws BoardException {
         StringTokenizer st2 = new StringTokenizer(bd, "\t\n");
         try {
+
             b.relativePosition().move(Integer.parseInt(st2.nextToken()), Integer.parseInt(st2.nextToken()));
             String baseName = st2.nextToken();
-            String unReversedBoardName;
-            if (baseName.startsWith("r")) {
-                if (baseName.equalsIgnoreCase("r")) {
-                    // board r or R, this is ok
-                    unReversedBoardName = baseName;
-                    b.setReversed(false);
-                } else {
-                    // board rX, this is really X
-                    // Red Barricades (RB) and Ruweisat Ridge (RR) should not have gotten here
-                    unReversedBoardName = baseName.substring(1);
-                    b.setReversed(true);
-                }
-            } else {
-                unReversedBoardName = baseName;
-                b.setReversed(false);
-            }
+            b.setReversed(false);
             File f;
-            f = new File(boardDir, "bd" + unReversedBoardName);
+
+            // TODO - remove requirement that boards start with "bd"
+            f = new File(boardDir, "bd" + baseName);
             if (f.exists()) {
                 b.initializeFromArchive(f);
             } else {
