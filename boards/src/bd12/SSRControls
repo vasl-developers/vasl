@@ -22,7 +22,7 @@
          <entry name="Scenario J67 - The Lawless Roads" rule="SSO_12_J67" text="Bd12 Scen J67 SSO"/>
  </Checkbox>
 <Checkbox name="">
-         <entry name="Scenario J118	- The Marketplace at Wormhoudt" rule="SSO_12_J118" text="Bd12 Scen J118 SSO"/>
+         <entry name="Scenario J114	- The Marketplace at Wormhoudt" rule="SSO_12_J114" text="Bd12 Scen J114 SSO"/>
  </Checkbox>
     </Option>
 </SSRControls>
