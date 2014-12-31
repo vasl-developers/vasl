@@ -5,6 +5,7 @@ import org.jdom2.Element;
 import org.jdom2.JDOMException;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 /**
@@ -39,15 +40,28 @@ public abstract class AbstractMetadata {
     };
 
     protected static final String LOSCounterRulesElement = "LOSCounterRules";
+    protected static final String LOSCounterRuleNameAttribute = "name";
+    protected static final String LOSCounterRuleHindranceAttribute = "hindrance";
+    protected static final String LOSCounterRuleHeightAttribute = "height";
+    protected static final String LOSCounterRuleTerrainAttribute = "terrain";
+
     protected static final String smokeCounterElement = "smokeCounter";
     protected static final String OBACounterElement = "OBACounter";
     protected static final String terrainCounterElement = "terrainCounter";
     protected static final String wreckCounterElement = "wreckCounter";
     protected static final String ignoreCounterElement = "ignoreCounter";
-    protected static final String LOSCounterRuleNameAttribute = "name";
-    protected static final String LOSCounterRuleHindranceAttribute = "hindrance";
-    protected static final String LOSCounterRuleHeightAttribute = "height";
-    protected static final String LOSCounterRuleTerrainAttribute = "terrain";
+
+    protected static final String overlaySSRulesElement = "overlaySSRules";
+    private static final String overlaySSRuleElement = "overlaySSRule";
+    private static final String overlaySSRNameAttribute = "name";
+    private static final String overlaySSRImageAttribute = "image";
+    private static final String overlaySSRXAttribute = "x";
+    private static final String overlaySSRYAttribute = "y";
+    private static final String underLaySSRuleElement = "underlaySSRule";
+    private static final String underlaySSRNameAttribute = "name";
+    private static final String underlaySSRImageAttribute = "image";
+    private static final String underlayColorElement = "color";
+    private static final String underlayColorNameAttribute = "name";
 
     // Maps color names to board color object
     protected LinkedHashMap<String, BoardColor> boardColors = new LinkedHashMap<String, BoardColor>(100);
@@ -63,6 +77,10 @@ public abstract class AbstractMetadata {
 
     // Lists of the counter rules
     protected LinkedHashMap<String, LOSCounterRule> LOSCounterRules = new LinkedHashMap<String, LOSCounterRule>(30);
+    // Maps SSR name to the overlay rule object
+    protected LinkedHashMap<String, OverlaySSRule> overlaySSRules = new LinkedHashMap<String, OverlaySSRule>();
+    // Maps SSR name to the underlay rule object
+    protected LinkedHashMap<String, UnderlaySSRule> underlaySSRules = new LinkedHashMap<String, UnderlaySSRule>();
 
     /**
      * Assert the element has the given name otherwise throw an exception
@@ -295,5 +313,68 @@ public abstract class AbstractMetadata {
      */
     public LinkedHashMap<String, LOSCounterRule> getLOSCounterRules(){
         return LOSCounterRules;
+    }
+
+    /**
+     * Parses the scenario-specific overlay and underlay rules
+     * @param element the overlaySSRules element
+     * @throws org.jdom2.JDOMException
+     */
+    protected void parseOverlaySSRules(Element element) throws JDOMException {
+
+        // make sure we have the right element
+        assertElementName(element, overlaySSRulesElement);
+
+        for (Element e: element.getChildren()) {
+
+            // overlay rules
+            if(e.getName().equals(overlaySSRuleElement)){
+
+                overlaySSRules.put(
+                        e.getAttributeValue(overlaySSRNameAttribute),
+                        new OverlaySSRule(
+                                e.getAttributeValue(overlaySSRNameAttribute),
+                                e.getAttributeValue(overlaySSRImageAttribute),
+                                e.getAttribute(overlaySSRXAttribute).getIntValue(),
+                                e.getAttribute(overlaySSRYAttribute).getIntValue()
+                        )
+                );
+            }
+
+            //underlay rules
+            else if(e.getName().equals(underLaySSRuleElement)) {
+
+                // read the SSR underlay attributes
+                String name = e.getAttributeValue(underlaySSRNameAttribute);
+                String imageName = e.getAttributeValue(underlaySSRImageAttribute);
+                ArrayList<String> colors = new ArrayList<String>();
+
+                // read all of the color names
+                for (Element el: e.getChildren()) {
+
+                    if(el.getName().equals(underlayColorElement)) {
+
+                        colors.add(el.getAttributeValue(underlayColorNameAttribute));
+                    }
+
+                }
+
+                underlaySSRules.put(name, new UnderlaySSRule(name, imageName, colors));
+            }
+        }
+    }
+
+    /**
+     * @return the scenario-specific overlay rules
+     */
+    public LinkedHashMap<String, OverlaySSRule> getOverlaySSRules() {
+        return overlaySSRules;
+    }
+
+    /**
+     * @return the scenario-specific underlay rules
+     */
+    public LinkedHashMap<String, UnderlaySSRule> getUnderlaySSRules() {
+        return underlaySSRules;
     }
 }

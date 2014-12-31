@@ -4,6 +4,538 @@
 	This information can be customized in the BoardMetadata.xml file. 
 -->
 <sharedBoardMetadata>
+
+	<overlaySSRules>
+		<!--
+		    Scenario-specific underlay rules.
+		    name - the VASL SSR name
+		    image - the image name
+    		color - the VASL color name
+
+    		Example:
+    		<underlaySSRule name="WallToCactus" image="CactusPattern.gif">
+        		<color name="WallBrown" />
+        		<color name="WallGrey1" />
+        		<color name="WallGrey2" />
+    		</underlaySSRule>
+		-->
+
+		<underlaySSRule name="WoodsToVineyard" image="VineyardPattern.gif">
+			<color name="WoodsGreen" />
+			<color name="WoodsBlack" />
+		</underlaySSRule>
+		<underlaySSRule name="BrushToVineyard" image="VineyardPattern.gif">
+			<color name="BrushL0" />
+			<color name="BrushL1" />
+			<color name="BrushL2" />
+			<color name="BrushL3" />
+			<color name="BrushL4" />
+			<color name="BrushL5" />
+			<color name="BrushL6" />
+			<color name="BrushL_1" />
+			<color name="BrushL_2" />
+			<color name="BrushBlackL_2" />
+			<color name="BrushBlackL_1" />
+			<color name="BrushBlackL0" />
+			<color name="BrushBlackL1" />
+			<color name="BrushBlackL2" />
+			<color name="BrushBlackL3" />
+			<color name="BrushBlackL4" />
+			<color name="BrushBlackL5" />
+			<color name="BrushBlackL6" />
+		</underlaySSRule>
+		<underlaySSRule name="GrainToVineyard" image="VineyardPattern.gif">
+			<color name="GrainL0" />
+			<color name="GrainL1" />
+			<color name="GrainL2" />
+			<color name="GrainL3" />
+			<color name="GrainL4" />
+			<color name="GrainL5" />
+			<color name="GrainL6" />
+			<color name="GrainL_1" />
+			<color name="GrainL_2" />
+			<color name="PlowedFields" />
+			<color name="Furrows" />
+			<color name="FurrowsL0" />
+			<color name="FurrowsL1" />
+			<color name="FurrowsL2" />
+			<color name="FurrowsL3" />
+			<color name="FurrowsL4" />
+			<color name="FurrowsL5" />
+			<color name="FurrowsL6" />
+			<color name="FurrowsL_1" />
+			<color name="FurrowsL_2" />
+		</underlaySSRule>
+		<underlaySSRule name="MarshToVineyard" image="VineyardPattern.gif">
+			<color name="StreamMarshGreenL_1" />
+			<color name="StreamMarshGreenL0" />
+			<color name="StreamMarshBrownL_1" />
+			<color name="StreamMarshBrownL0" />
+			<color name="StreamSwampGreenL_1" />
+			<color name="StreamSwampGreenL0" />
+			<color name="StreamSwampBrownL_1" />
+			<color name="StreamSwampBrownL0" />
+			<color name="RiverMarshGreenL_1" />
+			<color name="RiverMarshGreenL0" />
+			<color name="RiverMarshBrownL_1" />
+			<color name="RiverMarshBrownL0" />
+			<color name="RiverSwampGreenL_1" />
+			<color name="RiverSwampGreenL0" />
+			<color name="RiverSwampBrownL_1" />
+			<color name="RiverSwampBrownL0" />
+			<color name="SeparatedMarshGreenL_1" />
+			<color name="SeparatedMarshGreenL0" />
+			<color name="SeparatedMarshBrownL_1" />
+			<color name="SeparatedMarshBrownL0" />
+			<color name="SeparatedSwampGreenL_1" />
+			<color name="SeparatedSwampGreenL0" />
+			<color name="SeparatedSwampBrownL_1" />
+			<color name="SeparatedSwampBrownL0" />
+		</underlaySSRule>
+		<underlaySSRule name="SwampToSwampPattern" image="SwampPattern.gif">
+			<color name="StreamSwampGreenL_1" />
+			<color name="StreamSwampGreenL0" />
+			<color name="StreamSwampBrownL_1" />
+			<color name="StreamSwampBrownL0" />
+			<color name="RiverSwampGreenL_1" />
+			<color name="RiverSwampGreenL0" />
+			<color name="RiverSwampBrownL_1" />
+			<color name="RiverSwampBrownL0" />
+			<color name="SeparatedSwampGreenL_1" />
+			<color name="SeparatedSwampGreenL0" />
+			<color name="SeparatedSwampBrownL_1" />
+			<color name="SeparatedSwampBrownL0" />
+		</underlaySSRule>
+		<underlaySSRule name="Level_1ToVineyard" image="VineyardPattern.gif">
+			<color name="Level_1" />
+		</underlaySSRule>
+		<underlaySSRule name="Level1ToVineyard" image="VineyardPattern.gif">
+			<color name="Level1" />
+		</underlaySSRule>
+		<underlaySSRule name="WoodsToPaddy" image="PaddyPattern.gif">
+			<color name="WoodsGreen" />
+			<color name="WoodsBlack" />
+		</underlaySSRule>
+		<underlaySSRule name="BrushToPaddy" image="PaddyPattern.gif">
+			<color name="BrushL0" />
+			<color name="BrushL1" />
+			<color name="BrushL2" />
+			<color name="BrushL3" />
+			<color name="BrushL4" />
+			<color name="BrushL5" />
+			<color name="BrushL6" />
+			<color name="BrushL_1" />
+			<color name="BrushL_2" />
+			<color name="BrushBlackL_2" />
+			<color name="BrushBlackL_1" />
+			<color name="BrushBlackL0" />
+			<color name="BrushBlackL1" />
+			<color name="BrushBlackL2" />
+			<color name="BrushBlackL3" />
+			<color name="BrushBlackL4" />
+			<color name="BrushBlackL5" />
+			<color name="BrushBlackL6" />
+		</underlaySSRule>
+		<underlaySSRule name="GrainToPaddy" image="PaddyPattern.gif">
+			<color name="GrainL0" />
+			<color name="GrainL1" />
+			<color name="GrainL2" />
+			<color name="GrainL3" />
+			<color name="GrainL4" />
+			<color name="GrainL5" />
+			<color name="GrainL6" />
+			<color name="GrainL_1" />
+			<color name="GrainL_2" />
+			<color name="PlowedFields" />
+			<color name="Furrows" />
+			<color name="FurrowsL0" />
+			<color name="FurrowsL1" />
+			<color name="FurrowsL2" />
+			<color name="FurrowsL3" />
+			<color name="FurrowsL4" />
+			<color name="FurrowsL5" />
+			<color name="FurrowsL6" />
+			<color name="FurrowsL_1" />
+			<color name="FurrowsL_2" />
+		</underlaySSRule>
+		<underlaySSRule name="MarshToPaddy" image="PaddyPattern.gif">
+			<color name="StreamMarshGreenL_1" />
+			<color name="StreamMarshGreenL0" />
+			<color name="StreamMarshBrownL_1" />
+			<color name="StreamMarshBrownL0" />
+			<color name="StreamSwampGreenL_1" />
+			<color name="StreamSwampGreenL0" />
+			<color name="StreamSwampBrownL_1" />
+			<color name="StreamSwampBrownL0" />
+			<color name="RiverMarshGreenL_1" />
+			<color name="RiverMarshGreenL0" />
+			<color name="RiverMarshBrownL_1" />
+			<color name="RiverMarshBrownL0" />
+			<color name="RiverSwampGreenL_1" />
+			<color name="RiverSwampGreenL0" />
+			<color name="RiverSwampBrownL_1" />
+			<color name="RiverSwampBrownL0" />
+			<color name="SeparatedMarshGreenL_1" />
+			<color name="SeparatedMarshGreenL0" />
+			<color name="SeparatedMarshBrownL_1" />
+			<color name="SeparatedMarshBrownL0" />
+			<color name="SeparatedSwampGreenL_1" />
+			<color name="SeparatedSwampGreenL0" />
+			<color name="SeparatedSwampBrownL_1" />
+			<color name="SeparatedSwampBrownL0" />
+		</underlaySSRule>
+		<underlaySSRule name="Level_1ToPaddy" image="PaddyPattern.gif">
+			<color name="Level_1" />
+		</underlaySSRule>
+		<underlaySSRule name="Level1ToPaddy" image="PaddyPattern.gif">
+			<color name="Level1" />
+		</underlaySSRule>
+		<underlaySSRule name="WallsOnly" image="WallPattern.gif">
+			<color name="HedgeGreen" />
+		</underlaySSRule>
+		<underlaySSRule name="WallToCactus" image="CactusPattern.gif">
+			<color name="WallBrown" />
+			<color name="WallGrey1" />
+			<color name="WallGrey2" />
+		</underlaySSRule>
+		<underlaySSRule name="HedgeToCactus" image="CactusPattern.gif">
+			<color name="HedgeGreen" />
+		</underlaySSRule>
+		<underlaySSRule name="OrchardsToCactusPatches" image="CactusPattern.gif">
+			<color name="OrchL_2" />
+			<color name="OrchL_1" />
+			<color name="OrchL0" />
+			<color name="OrchL1" />
+			<color name="OrchL2" />
+			<color name="OrchL3" />
+			<color name="OrchL4" />
+			<color name="OrchL5" />
+			<color name="OrchL6" />
+			<color name="OrchTrees" />
+		</underlaySSRule>
+		<underlaySSRule name="ShellholesToCactusPatches" image="CactusPattern.gif">
+			<color name="Shellhole1" />
+			<color name="Shellhole2" />
+			<color name="Shellhole3" />
+		</underlaySSRule>
+		<underlaySSRule name="CragsToCactusPatches" image="CactusPattern.gif">
+			<color name="CragGrey" />
+			<color name="CragBlack" />
+		</underlaySSRule>
+		<underlaySSRule name="WoodsToBrush" image="BrushPattern.gif">
+			<color name="WoodsGreen" />
+			<color name="WoodsBlack" />
+		</underlaySSRule>
+		<underlaySSRule name="GrainToBrush" image="BrushPattern.gif">
+			<color name="GrainL0" />
+			<color name="GrainL1" />
+			<color name="GrainL2" />
+			<color name="GrainL3" />
+			<color name="GrainL4" />
+			<color name="GrainL5" />
+			<color name="GrainL6" />
+			<color name="GrainL_1" />
+			<color name="GrainL_2" />
+			<color name="PlowedFields" />
+			<color name="Furrows" />
+			<color name="FurrowsL0" />
+			<color name="FurrowsL1" />
+			<color name="FurrowsL2" />
+			<color name="FurrowsL3" />
+			<color name="FurrowsL4" />
+			<color name="FurrowsL5" />
+			<color name="FurrowsL6" />
+			<color name="FurrowsL_1" />
+			<color name="FurrowsL_2" />
+		</underlaySSRule>
+		<underlaySSRule name="MarshToBrush" image="BrushPattern.gif">
+			<color name="StreamMarshGreenL_1" />
+			<color name="StreamMarshGreenL0" />
+			<color name="StreamMarshBrownL_1" />
+			<color name="StreamMarshBrownL0" />
+			<color name="StreamSwampGreenL_1" />
+			<color name="StreamSwampGreenL0" />
+			<color name="StreamSwampBrownL_1" />
+			<color name="StreamSwampBrownL0" />
+			<color name="RiverMarshGreenL_1" />
+			<color name="RiverMarshGreenL0" />
+			<color name="RiverMarshBrownL_1" />
+			<color name="RiverMarshBrownL0" />
+			<color name="RiverSwampGreenL_1" />
+			<color name="RiverSwampGreenL0" />
+			<color name="RiverSwampBrownL_1" />
+			<color name="RiverSwampBrownL0" />
+			<color name="SeparatedMarshGreenL_1" />
+			<color name="SeparatedMarshGreenL0" />
+			<color name="SeparatedMarshBrownL_1" />
+			<color name="SeparatedMarshBrownL0" />
+			<color name="SeparatedSwampGreenL_1" />
+			<color name="SeparatedSwampGreenL0" />
+			<color name="SeparatedSwampBrownL_1" />
+			<color name="SeparatedSwampBrownL0" />
+		</underlaySSRule>
+		<underlaySSRule name="Level_2ToBrush" image="BrushPattern.gif">
+			<color name="Level_2" />
+		</underlaySSRule>
+		<underlaySSRule name="Level_1ToBrush" image="BrushPattern.gif">
+			<color name="Level_1" />
+		</underlaySSRule>
+		<underlaySSRule name="Level1ToBrush" image="BrushPattern.gif">
+			<color name="Level1" />
+		</underlaySSRule>
+		<underlaySSRule name="Level2ToBrush" image="BrushPattern.gif">
+			<color name="Level2" />
+		</underlaySSRule>
+		<underlaySSRule name="Level3ToBrush" image="BrushPattern.gif">
+			<color name="Level3" />
+		</underlaySSRule>
+		<underlaySSRule name="Level4ToBrush" image="BrushPattern.gif">
+			<color name="Level4" />
+		</underlaySSRule>
+		<underlaySSRule name="Level5ToBrush" image="BrushPattern.gif">
+			<color name="Level5" />
+		</underlaySSRule>
+		<underlaySSRule name="Level6ToBrush" image="BrushPattern.gif">
+			<color name="Level6" />
+		</underlaySSRule>
+		<underlaySSRule name="BrushToWoods" image="WoodsPattern.gif">
+			<color name="BrushL0" />
+			<color name="BrushL1" />
+			<color name="BrushL2" />
+			<color name="BrushL3" />
+			<color name="BrushL4" />
+			<color name="BrushL5" />
+			<color name="BrushL6" />
+			<color name="BrushL_1" />
+			<color name="BrushL_2" />
+			<color name="BrushBlackL_2" />
+			<color name="BrushBlackL_1" />
+			<color name="BrushBlackL0" />
+			<color name="BrushBlackL1" />
+			<color name="BrushBlackL2" />
+			<color name="BrushBlackL3" />
+			<color name="BrushBlackL4" />
+			<color name="BrushBlackL5" />
+			<color name="BrushBlackL6" />
+		</underlaySSRule>
+		<underlaySSRule name="GrainToWoods" image="WoodsPattern.gif">
+			<color name="GrainL0" />
+			<color name="GrainL1" />
+			<color name="GrainL2" />
+			<color name="GrainL3" />
+			<color name="GrainL4" />
+			<color name="GrainL5" />
+			<color name="GrainL6" />
+			<color name="GrainL_1" />
+			<color name="GrainL_2" />
+			<color name="PlowedFields" />
+			<color name="Furrows" />
+			<color name="FurrowsL0" />
+			<color name="FurrowsL1" />
+			<color name="FurrowsL2" />
+			<color name="FurrowsL3" />
+			<color name="FurrowsL4" />
+			<color name="FurrowsL5" />
+			<color name="FurrowsL6" />
+			<color name="FurrowsL_1" />
+			<color name="FurrowsL_2" />
+		</underlaySSRule>
+		<underlaySSRule name="MarshToWoods" image="WoodsPattern.gif">
+			<color name="StreamMarshGreenL_1" />
+			<color name="StreamMarshGreenL0" />
+			<color name="StreamMarshBrownL_1" />
+			<color name="StreamMarshBrownL0" />
+			<color name="StreamSwampGreenL_1" />
+			<color name="StreamSwampGreenL0" />
+			<color name="StreamSwampBrownL_1" />
+			<color name="StreamSwampBrownL0" />
+			<color name="RiverMarshGreenL_1" />
+			<color name="RiverMarshGreenL0" />
+			<color name="RiverMarshBrownL_1" />
+			<color name="RiverMarshBrownL0" />
+			<color name="RiverSwampGreenL_1" />
+			<color name="RiverSwampGreenL0" />
+			<color name="RiverSwampBrownL_1" />
+			<color name="RiverSwampBrownL0" />
+			<color name="SeparatedMarshGreenL_1" />
+			<color name="SeparatedMarshGreenL0" />
+			<color name="SeparatedMarshBrownL_1" />
+			<color name="SeparatedMarshBrownL0" />
+			<color name="SeparatedSwampGreenL_1" />
+			<color name="SeparatedSwampGreenL0" />
+			<color name="SeparatedSwampBrownL_1" />
+			<color name="SeparatedSwampBrownL0" />
+		</underlaySSRule>
+		<underlaySSRule name="Level_2ToWoods" image="WoodsPattern.gif">
+			<color name="Level_2" />
+		</underlaySSRule>
+		<underlaySSRule name="Level_1ToWoods" image="WoodsPattern.gif">
+			<color name="Level_1" />
+		</underlaySSRule>
+		<underlaySSRule name="Level1ToWoods" image="WoodsPattern.gif">
+			<color name="Level1" />
+		</underlaySSRule>
+		<underlaySSRule name="Level2ToWoods" image="WoodsPattern.gif">
+			<color name="Level2" />
+		</underlaySSRule>
+		<underlaySSRule name="Level3ToWoods" image="WoodsPattern.gif">
+			<color name="Level3" />
+		</underlaySSRule>
+		<underlaySSRule name="Level4ToWoods" image="WoodsPattern.gif">
+			<color name="Level4" />
+		</underlaySSRule>
+		<underlaySSRule name="Level5ToWoods" image="WoodsPattern.gif">
+			<color name="Level5" />
+		</underlaySSRule>
+		<underlaySSRule name="Level6ToWoods" image="WoodsPattern.gif">
+			<color name="Level6" />
+		</underlaySSRule>
+		<underlaySSRule name="WoodsToMarsh" image="MarshPattern.gif">
+			<color name="WoodsGreen" />
+			<color name="WoodsBlack" />
+		</underlaySSRule>
+		<underlaySSRule name="BrushToMarsh" image="MarshPattern.gif">
+			<color name="BrushL0" />
+			<color name="BrushL1" />
+			<color name="BrushL2" />
+			<color name="BrushL3" />
+			<color name="BrushL4" />
+			<color name="BrushL5" />
+			<color name="BrushL6" />
+			<color name="BrushL_1" />
+			<color name="BrushL_2" />
+			<color name="BrushBlackL_2" />
+			<color name="BrushBlackL_1" />
+			<color name="BrushBlackL0" />
+			<color name="BrushBlackL1" />
+			<color name="BrushBlackL2" />
+			<color name="BrushBlackL3" />
+			<color name="BrushBlackL4" />
+			<color name="BrushBlackL5" />
+			<color name="BrushBlackL6" />
+		</underlaySSRule>
+		<underlaySSRule name="GrainToMarsh" image="MarshPattern.gif">
+			<color name="GrainL0" />
+			<color name="GrainL1" />
+			<color name="GrainL2" />
+			<color name="GrainL3" />
+			<color name="GrainL4" />
+			<color name="GrainL5" />
+			<color name="GrainL6" />
+			<color name="GrainL_1" />
+			<color name="GrainL_2" />
+			<color name="PlowedFields" />
+			<color name="Furrows" />
+			<color name="FurrowsL0" />
+			<color name="FurrowsL1" />
+			<color name="FurrowsL2" />
+			<color name="FurrowsL3" />
+			<color name="FurrowsL4" />
+			<color name="FurrowsL5" />
+			<color name="FurrowsL6" />
+			<color name="FurrowsL_1" />
+			<color name="FurrowsL_2" />
+		</underlaySSRule>
+		<underlaySSRule name="Level_2ToMarsh" image="MarshPattern.gif">
+			<color name="Level_2" />
+		</underlaySSRule>
+		<underlaySSRule name="Level_1ToMarsh" image="MarshPattern.gif">
+			<color name="Level_1" />
+		</underlaySSRule>
+		<underlaySSRule name="Level1ToMarsh" image="MarshPattern.gif">
+			<color name="Level1" />
+		</underlaySSRule>
+		<underlaySSRule name="Level2ToMarsh" image="MarshPattern.gif">
+			<color name="Level2" />
+		</underlaySSRule>
+		<underlaySSRule name="Level3ToMarsh" image="MarshPattern.gif">
+			<color name="Level3" />
+		</underlaySSRule>
+		<underlaySSRule name="Level4ToMarsh" image="MarshPattern.gif">
+			<color name="Level4" />
+		</underlaySSRule>
+		<underlaySSRule name="Level5ToMarsh" image="MarshPattern.gif">
+			<color name="Level5" />
+		</underlaySSRule>
+		<underlaySSRule name="Level6ToMarsh" image="MarshPattern.gif">
+			<color name="Level6" />
+		</underlaySSRule>
+		<underlaySSRule name="WoodsToGrain" image="GrainPattern.gif">
+			<color name="WoodsGreen" />
+			<color name="WoodsBlack" />
+		</underlaySSRule>
+		<underlaySSRule name="BrushToGrain" image="GrainPattern.gif">
+			<color name="BrushL0" />
+			<color name="BrushL1" />
+			<color name="BrushL2" />
+			<color name="BrushL3" />
+			<color name="BrushL4" />
+			<color name="BrushL5" />
+			<color name="BrushL6" />
+			<color name="BrushL_1" />
+			<color name="BrushL_2" />
+			<color name="BrushBlackL_2" />
+			<color name="BrushBlackL_1" />
+			<color name="BrushBlackL0" />
+			<color name="BrushBlackL1" />
+			<color name="BrushBlackL2" />
+			<color name="BrushBlackL3" />
+			<color name="BrushBlackL4" />
+			<color name="BrushBlackL5" />
+			<color name="BrushBlackL6" />
+		</underlaySSRule>
+		<underlaySSRule name="MarshToGrain" image="GrainPattern.gif">
+			<color name="StreamMarshGreenL_1" />
+			<color name="StreamMarshGreenL0" />
+			<color name="StreamMarshBrownL_1" />
+			<color name="StreamMarshBrownL0" />
+			<color name="StreamSwampGreenL_1" />
+			<color name="StreamSwampGreenL0" />
+			<color name="StreamSwampBrownL_1" />
+			<color name="StreamSwampBrownL0" />
+			<color name="RiverMarshGreenL_1" />
+			<color name="RiverMarshGreenL0" />
+			<color name="RiverMarshBrownL_1" />
+			<color name="RiverMarshBrownL0" />
+			<color name="RiverSwampGreenL_1" />
+			<color name="RiverSwampGreenL0" />
+			<color name="RiverSwampBrownL_1" />
+			<color name="RiverSwampBrownL0" />
+			<color name="SeparatedMarshGreenL_1" />
+			<color name="SeparatedMarshGreenL0" />
+			<color name="SeparatedMarshBrownL_1" />
+			<color name="SeparatedMarshBrownL0" />
+			<color name="SeparatedSwampGreenL_1" />
+			<color name="SeparatedSwampGreenL0" />
+			<color name="SeparatedSwampBrownL_1" />
+			<color name="SeparatedSwampBrownL0" />
+		</underlaySSRule>
+		<underlaySSRule name="Level_2ToGrain" image="GrainPattern.gif">
+			<color name="Level_2" />
+		</underlaySSRule>
+		<underlaySSRule name="Level_1ToGrain" image="GrainPattern.gif">
+			<color name="Level_1" />
+		</underlaySSRule>
+		<underlaySSRule name="Level1ToGrain" image="GrainPattern.gif">
+			<color name="Level1" />
+		</underlaySSRule>
+		<underlaySSRule name="Level2ToGrain" image="GrainPattern.gif">
+			<color name="Level2" />
+		</underlaySSRule>
+		<underlaySSRule name="Level3ToGrain" image="GrainPattern.gif">
+			<color name="Level3" />
+		</underlaySSRule>
+		<underlaySSRule name="Level4ToGrain" image="GrainPattern.gif">
+			<color name="Level4" />
+		</underlaySSRule>
+		<underlaySSRule name="Level5ToGrain" image="GrainPattern.gif">
+			<color name="Level5" />
+		</underlaySSRule>
+		<underlaySSRule name="Level6ToGrain" image="GrainPattern.gif">
+			<color name="Level6" />
+		</underlaySSRule>
+	</overlaySSRules>
+
 	<colors>
 		<!-- 11 Dec 2012 TR for vasl 5.9.3  -->
 		<!-- Changed WinterDepression to 216 216 208  -->

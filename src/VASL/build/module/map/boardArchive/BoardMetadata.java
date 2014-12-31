@@ -3,7 +3,6 @@ package VASL.build.module.map.boardArchive;
 import java.awt.Color;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -28,12 +27,6 @@ public class BoardMetadata extends AbstractMetadata {
 
     // maps hex names to building types
     private LinkedHashMap<String, String> buildingTypes = new LinkedHashMap<String, String>();
-
-    // Maps SSR name to the overlay rule object
-    private LinkedHashMap<String, OverlaySSRule> overlaySSRules = new LinkedHashMap<String, OverlaySSRule>();
-
-    // Maps SSR name to the underlay rule object
-    private LinkedHashMap<String, UnderlaySSRule> underlaySSRules = new LinkedHashMap<String, UnderlaySSRule>();
 
     // set of hexes with slopes
     private Slopes slopes = new Slopes();
@@ -76,18 +69,6 @@ public class BoardMetadata extends AbstractMetadata {
     private static final String buildingTypeHexNameAttr = "hexName";
     private static final String buildingTypeBuildingTypeNameAttr = "buildingTypeName";
 
-    private static final String overlaySSRulesElement = "overlaySSRules";
-    private static final String overlaySSRuleElement = "overlaySSRule";
-    private static final String overlaySSRNameAttribute = "name";
-    private static final String overlaySSRImageAttribute = "image";
-    private static final String overlaySSRXAttribute = "x";
-    private static final String overlaySSRYAttribute = "y";
-    private static final String underLaySSRuleElement = "underlaySSRule";
-    private static final String underlaySSRNameAttribute = "name";
-    private static final String underlaySSRImageAttribute = "image";
-    private static final String underlayColorElement = "color";
-    private static final String underlayColorNameAttribute = "name";
-
     private static final String slopeElement = "slope";
     private static final String slopesElement = "slopes";
     private static final String slopeHexNameAttribute = "hex";
@@ -100,6 +81,8 @@ public class BoardMetadata extends AbstractMetadata {
         boardColors.putAll(sharedBoardMetadata.getBoardColors());
         colorSSRules.putAll(sharedBoardMetadata.getColorSSRules());
         colorToVASLColorName.putAll(sharedBoardMetadata.getColorToVASLColorName());
+        overlaySSRules.putAll(sharedBoardMetadata.getOverlaySSRules());
+        underlaySSRules.putAll(sharedBoardMetadata.getUnderlaySSRules());
 
     }
 
@@ -160,55 +143,6 @@ public class BoardMetadata extends AbstractMetadata {
         } catch (IOException e) {
             System.err.println("Error reading the board archive metadata");
             e.printStackTrace(System.err);
-        }
-    }
-
-    /**
-     * Parses the scenario-specific overlay and underlay rules
-     * @param element the overlaySSRules element
-     * @throws JDOMException
-     */
-    private void parseOverlaySSRules(Element element) throws JDOMException {
-
-        // make sure we have the right element
-        assertElementName(element, overlaySSRulesElement);
-
-        for (Element e: element.getChildren()) {
-
-            // overlay rules
-            if(e.getName().equals(overlaySSRuleElement)){
-
-                overlaySSRules.put(
-                        e.getAttributeValue(overlaySSRNameAttribute),
-                        new OverlaySSRule(
-                                e.getAttributeValue(overlaySSRNameAttribute),
-                                e.getAttributeValue(overlaySSRImageAttribute),
-                                e.getAttribute(overlaySSRXAttribute).getIntValue(),
-                                e.getAttribute(overlaySSRYAttribute).getIntValue()
-                        )
-                );
-            }
-
-            //underlay rules
-            else if(e.getName().equals(underLaySSRuleElement)) {
-
-                // read the SSR underlay attributes
-                String name = e.getAttributeValue(underlaySSRNameAttribute);
-                String imageName = e.getAttributeValue(underlaySSRImageAttribute);
-                ArrayList<String> colors = new ArrayList<String>();
-
-                // read all of the color names
-                for (Element el: e.getChildren()) {
-
-                    if(el.getName().equals(underlayColorElement)) {
-
-                        colors.add(el.getAttributeValue(underlayColorNameAttribute));
-                    }
-
-                }
-
-                underlaySSRules.put(name, new UnderlaySSRule(name, imageName, colors));
-            }
         }
     }
 
@@ -391,20 +325,6 @@ public class BoardMetadata extends AbstractMetadata {
      */
     public boolean isAltHexGrain() {
         return altHexGrain;
-    }
-
-    /**
-     * @return the scenario-specific overlay rules
-     */
-    public LinkedHashMap<String, OverlaySSRule> getOverlaySSRules() {
-        return overlaySSRules;
-    }
-
-    /**
-     * @return the scenario-specific underlay rules
-     */
-    public LinkedHashMap<String, UnderlaySSRule> getUnderlaySSRules() {
-        return underlaySSRules;
     }
 
     /**

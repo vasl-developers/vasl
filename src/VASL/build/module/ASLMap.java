@@ -56,6 +56,7 @@ public class ASLMap extends Map {
     // board metadata
     //TODO: the shared metadata is static so it doesn't have to be passed around. Is there a better way?
     private VASL.LOS.Map.Map VASLMap;
+    private static final String sharedBoardMetadataFileName = "boardData/SharedBoardMetadata.xml"; // name of the shared board metadata file
     private static SharedBoardMetadata sharedBoardMetadata = null;
     private boolean legacyMode;                     // true if unable to create a VASL map or LOS data is missing
 
@@ -172,7 +173,7 @@ public class ASLMap extends Map {
         try {
             DataArchive archive = GameModule.getGameModule().getDataArchive();
 
-            metadata =  archive.getInputStream(BoardArchive.getSharedBoardMetadataFileName());
+            metadata =  archive.getInputStream(sharedBoardMetadataFileName);
 
             sharedBoardMetadata = new SharedBoardMetadata();
             sharedBoardMetadata.parseSharedBoardMetadataFile(metadata);

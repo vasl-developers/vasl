@@ -1,5 +1,5 @@
 /*
- * $Id: ASLMap.java 8530 2012-12-26 04:37:04Z David Sullivan $
+ * $Id$
  *
  * Copyright (c) 2015 by David Sullivan
  *

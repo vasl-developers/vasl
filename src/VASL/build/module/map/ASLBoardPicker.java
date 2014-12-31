@@ -227,6 +227,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
         String files[] = boardDir == null ? new String[0] : boardDir.list();
         List<String> sorted = new ArrayList<String>();
         for (int i = 0; i < files.length; ++i) {
+            // TODO - remove requirement that boards start with "bd"
             if (files[i].startsWith("bd") && !(new File(boardDir, files[i])).isDirectory()) {
                 String name = files[i].substring(2);
 
@@ -343,6 +344,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
             unReversedBoardName = commonName;
         }
 
+        // TODO - remove requirement that boards start with "bd"
         final File fpath = new File(boardDir, "bd" + unReversedBoardName);
 
         final ASLTilingHandler th = new ASLTilingHandler(
