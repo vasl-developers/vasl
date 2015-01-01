@@ -36,7 +36,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.Map.Entry;
@@ -144,8 +143,9 @@ public class SSRFilter extends RGBImageFilter {
     }
     return rval;
   }
-
-  public void readAllRules() {
+  
+  private Vector loadRules()
+  {
     // Build the list of rules in use
     Vector rules = new Vector();
     StringTokenizer st = new StringTokenizer(saveRules);
@@ -155,6 +155,13 @@ public class SSRFilter extends RGBImageFilter {
         rules.addElement(s);
       }
     }
+    
+    return rules;
+  }
+
+  public void readAllRules() {
+    // Build the list of rules in use
+    Vector rules = loadRules();
 
     mappings = new HashMap<Integer, Integer>();
     colorValues = new HashMap<String, Integer>();
@@ -209,13 +216,15 @@ public class SSRFilter extends RGBImageFilter {
     }
 
     overlays.clear();
+    rules = loadRules();
+    
     // SSR Overlays are applied in reverse order to the order they're listed
     // in the overlaySSR file. Therefore, reading board-specific
     // overlay rules first will override defaults
     in = null;
     try {
       in = archive.getInputStream("overlaySSR");
-      readOverlayRules(in);
+      readOverlayRules(in, rules);
     }
     catch (IOException ignore) {
     }
@@ -226,7 +235,7 @@ public class SSRFilter extends RGBImageFilter {
     in = null;
     try {
       in = da.getInputStream("boardData/overlaySSR");
-      readOverlayRules(in);
+      readOverlayRules(in, rules);
     }
     catch (IOException ignore) {
     }
@@ -354,7 +363,7 @@ public class SSRFilter extends RGBImageFilter {
     }
   }
 
-  public void readOverlayRules(InputStream in) {
+  public void readOverlayRules(InputStream in, Vector rules) {
     if (in == null) {
       return;
     }
@@ -367,7 +376,13 @@ public class SSRFilter extends RGBImageFilter {
         if (s.trim().length() == 0) {
           continue;
         }
-        if (saveRules.indexOf(s.trim()) >= 0) {
+        // FredKors 02.jan.2015
+        // when a OverlaySSR rule is found, remove it from the list to discard any subsequent
+        // rule with the same name
+        //if (saveRules.indexOf(s.trim()) >= 0) {
+        if (rules.contains(s.trim())) {
+          rules.remove(s.trim());
+            
           while ((s = file.readLine()) != null) {
             if (s.length() == 0) {
               break;
