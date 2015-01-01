@@ -186,7 +186,11 @@ public class ASLBoardSlot extends BoardSlot {
       p.translate(offX, offY);
       p = otherBoard.localCoordinates(p);
       String hex2 = otherBoard.getGrid().locationName(p);
-      o = new Overlay(o.getName() + "\t" + hex1 + "\t" + hex2, getASLBoard(),new File(((ASLBoardPicker) picker)
+      // FredKors 01.01.2015 When an overlay is shared between two maps, the copy added to the other map
+      // should report a reference to the 'other' map and not to the getASLBoard()
+      //o = new Overlay(o.getName() + "\t" + hex1 + "\t" + hex2, getASLBoard(),new File(((ASLBoardPicker) picker)
+      //    .getBoardDir(), "overlays"));
+      o = new Overlay(o.getName() + "\t" + hex1 + "\t" + hex2, otherBoard, new File(((ASLBoardPicker) picker)
           .getBoardDir(), "overlays"));
       otherBoard.addOverlay(o);
     }
