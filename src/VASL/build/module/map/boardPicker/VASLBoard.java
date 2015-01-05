@@ -143,10 +143,10 @@ public class VASLBoard extends ASLBoard {
                 ((HexGrid) getGrid()).setAttribute(HexGrid.Y0, VASLBoardArchive.getA1CenterY());
             }
             if(VASLBoardArchive.getHexWidth() != VASLBoardArchive.missingValue()){
-                ((HexGrid) getGrid()).setAttribute(HexGrid.DX, VASLBoardArchive.getHexWidth());
+                ((HexGrid) getGrid()).setAttribute(HexGrid.DX, String.valueOf(VASLBoardArchive.getHexWidth()));
             }
             if(VASLBoardArchive.getHexHeight() != VASLBoardArchive.missingValue()){
-                ((HexGrid) getGrid()).setAttribute(HexGrid.DY, VASLBoardArchive.getHexHeight());
+                ((HexGrid) getGrid()).setAttribute(HexGrid.DY, String.valueOf(VASLBoardArchive.getHexHeight()));
             }
         }
 
