@@ -214,11 +214,12 @@ public class ASLMap extends Map {
 
                 final VASLBoard board = (VASLBoard) b;
 
-                if(board.isLegacyBoard()) {
-                    throw new BoardException("LOS disabled - Board " + board.getName() + " does not support LOS checking");
-                }
                 // ignore null boards
                 if(!"NUL".equals(b.getName()) && !"NULV".equals(b.getName())){
+
+                    if(board.isLegacyBoard()) {
+                        throw new BoardException("LOS disabled - Board " + board.getName() + " does not support LOS checking");
+                    }
 
                     mapBoundary.add(b.bounds());
                     VASLBoards.add(board);
