@@ -280,13 +280,25 @@ public class Overlay implements Cloneable {
                 origin = st.nextToken();
             }
             // hack-o-potomous for boards 1b - 9b (with some room to grow) which use a different hex grid
-            String[] words = {"1b", "2b", "3b", "4b", "5b", "6b", "7b", "8b", "9b", "10b", "11b", "12b", "13b", "14b", "15b"};
-            if (Arrays.asList(words).contains(board.getName())) {
+            String[] boards = {"1b", "2b", "3b", "4b", "5b", "6b", "7b", "8b", "9b", "10b", "11b", "12b", "13b", "14b", "15b"};
+            if (Arrays.asList(boards).contains(board.getName())) {
 
                 char[] temp = origin.toCharArray();
                 temp[0] += 16;
                 origin = String.valueOf(temp);
             }
+            // ...and again for BFP boards
+            String[] moreBoards = {"BFPDW1b", "BFPDW2b", "BFPDW3b", "BFPDW4b"};
+            if (Arrays.asList(moreBoards).contains(board.getName())) {
+
+                try {
+                    int row = Integer.parseInt(origin.substring(1));
+                    origin = origin.substring(0,1) + String.valueOf(row + 10);
+                } catch (Exception e) {
+                    // bury
+                }
+            }
+
 
             return board.getGrid().getLocation(origin);
         } catch (Exception e) {
