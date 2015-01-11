@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<VASSAL.launch.BasicModule VassalVersion="3.2.13" description="Virtual Advanced Squad Leader" name="VASL" nextPieceSlotId="6684" version="${project.version}">
+<VASSAL.launch.BasicModule VassalVersion="3.2.14" description="Virtual Advanced Squad Leader" name="VASL" nextPieceSlotId="6684" version="${project.version}">
     <VASL.build.module.OBA hotkey="117,0"/>
     <VASL.build.module.ScenInfo/>
     <VASSAL.build.module.GlobalOptions autoReport="Use Preferences Setting" centerOnMove="Use Preferences Setting" nonOwnerUnmaskable="Use Preferences Setting" playerIdFormat="$playerName$" promptString="Let opponent unconceal my units" specifyExtensionDirInPrefs="true">
