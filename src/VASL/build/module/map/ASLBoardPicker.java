@@ -719,6 +719,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
     }
 
     protected class Overlayer extends JDialog implements ActionListener {
+
         private JTextField hex1, hex2, ovrName;
         private JLabel status;
 
@@ -798,8 +799,6 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
                 ovrName.setText("");
                 hex1.setText("");
                 hex2.setText("");
-                if (false)
-                    throw new BoardException("Now that's weird");
             } catch (BoardException excep) {
                 status.setText(excep.getMessage());
             }

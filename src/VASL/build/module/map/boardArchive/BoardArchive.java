@@ -89,7 +89,7 @@ public class BoardArchive {
         this.sharedBoardMetadata = sharedBoardMetadata;
 
         metadata = new BoardMetadata(sharedBoardMetadata);
-        InputStream file = null;
+        InputStream metadataFileStream = null;
         InputStream dataFileStream = null;
         InputStream overlaySSRFileStream = null;
         InputStream colorsFileStream = null;
@@ -100,8 +100,8 @@ public class BoardArchive {
 
         // read the board metadata file
         try {
-            file = getInputStreamForArchiveFile(archive, boardMetadataFileName);
-            metadata.parseBoardMetadataFile(file);
+            metadataFileStream = getInputStreamForArchiveFile(archive, boardMetadataFileName);
+            metadata.parseBoardMetadataFile(metadataFileStream);
             legacyBoard = false;
 
 
@@ -113,7 +113,7 @@ public class BoardArchive {
 
         }
         finally {
-            closeQuietly(file);
+            closeQuietly(metadataFileStream);
         }
 
         // read the legacy data file
@@ -125,6 +125,7 @@ public class BoardArchive {
 
             // required for legacy boards
             if(!legacyBoard) {
+                dataFile = null;
                 throw new IOException("Cannot read the data file in board " + archiveName, e);
             }
         }
@@ -138,6 +139,7 @@ public class BoardArchive {
             overlaySSRFile = new OverlaySSRFile(overlaySSRFileStream, archiveName);
         } catch (Exception ignore) {
             // bury
+            overlaySSRFile = null;
         }
         finally {
             closeQuietly(overlaySSRFileStream);
@@ -150,6 +152,7 @@ public class BoardArchive {
         }
         catch (Exception ignore) {
             // bury
+            colorsFile = null;
         }
         finally {
             closeQuietly(colorsFileStream);
@@ -159,9 +162,11 @@ public class BoardArchive {
         try {
             colorSSRFileStream = getInputStreamForArchiveFile(archive, colorSSRFileName);
             colorSSRFile = new ColorSSRFile(colorSSRFileStream, archiveName);
+            // colorSSRFile.printAsXML();
         }
         catch (Exception ignore) {
             // bury
+            colorSSRFile = null;
         }
         finally {
             closeQuietly(colorSSRFileStream);
@@ -175,13 +180,14 @@ public class BoardArchive {
      */
     public LinkedHashMap<String, BoardColor> getBoardColors(){
 
-        if(legacyBoard) {
+        // get colors from legacy file if they exist and none in metadata
+        if(legacyBoard ||  !metadata.hasBoardSpecificColors()) {
 
             // board colors replace the shared metadata colors
             LinkedHashMap<String, BoardColor> boardColors = new LinkedHashMap<String, BoardColor>(sharedBoardMetadata.getBoardColors().size());
             boardColors.putAll(sharedBoardMetadata.getBoardColors());
             if(colorsFile != null) {
-                boardColors.putAll(colorsFile.getColorRules());
+                boardColors.putAll(colorsFile.getColors());
             }
             return boardColors;
         }
@@ -195,7 +201,8 @@ public class BoardArchive {
      */
     public LinkedHashMap<String, ColorSSRule> getColorSSRules() {
 
-        if(legacyBoard){
+        // get color SSR from legacy file if they exist and none in metadata
+        if(legacyBoard || !metadata.hasBoardSpecificColorSSR()){
 
             // board color SSR replace the shared metadata color SSR
             LinkedHashMap<String, ColorSSRule> colorSSRules = new LinkedHashMap<String, ColorSSRule>();
@@ -215,7 +222,7 @@ public class BoardArchive {
      */
     public LinkedHashMap<String, OverlaySSRule> getOverlaySSRules() {
 
-        if(legacyBoard){
+        if(legacyBoard || !metadata.hasBoardSpecificOverlayRules()){
 
             // board overlay rules replace the shared metadata overlay rules
             LinkedHashMap<String, OverlaySSRule> overlaySSRules = new LinkedHashMap<String, OverlaySSRule>();
@@ -320,8 +327,7 @@ public class BoardArchive {
                 map.setSlopes(metadata.getSlopes());
 
             } catch(Exception e) {
-                System.err.println("Could not read the LOS data in board " + qualifiedBoardArchive);
-                e.printStackTrace(System.err);
+                logger.warn("Could not read the LOS data in board " + qualifiedBoardArchive);
                 return null;
             }
             finally {
@@ -337,6 +343,7 @@ public class BoardArchive {
      * Write the LOS data to the board archive
      * @param map the LOS data
      */
+    @SuppressWarnings("unused")  // want to keep write method with read for simplicity
     public void writeLOSData(Map map){
 
         ObjectOutputStream outfile = null;
@@ -429,8 +436,8 @@ public class BoardArchive {
             }
             catch (IOException e) {
 
-                System.err.println("Could not open the board image: " + imageFileName);
-				System.err.println(e.toString());
+                logger.warn("Could not open the board image: " + imageFileName);
+                logger.warn(e.toString());
                 return null;
             }
             finally {

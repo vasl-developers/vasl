@@ -26,12 +26,12 @@ import java.util.LinkedHashMap;
 import java.util.Scanner;
 
 /**
- * A class that accesses the "colorSSR" file in the board archive
+ * A class that accesses the "color" file in the board archive
  */
 public class ColorsFile {
 
     // the collection of all colors SSR rules in the file
-    private LinkedHashMap<String, BoardColor> colorRules = new LinkedHashMap<String, BoardColor>();
+    private LinkedHashMap<String, BoardColor> colors = new LinkedHashMap<String, BoardColor>();
 
     public ColorsFile(InputStream overlaysFile, String archiveName) throws IOException{
 
@@ -63,15 +63,15 @@ public class ColorsFile {
                         green = Integer.parseInt(tokens[2].trim());
                         blue = Integer.parseInt(tokens[3].trim());
 
-                        colorRules.put(colorName, new BoardColor(colorName, new Color(red, green, blue), BoardMetadata.UNKNOWN, BoardMetadata.UNKNOWN));
+                        colors.put(colorName, new BoardColor(colorName, new Color(red, green, blue), BoardMetadata.UNKNOWN, BoardMetadata.UNKNOWN));
                     }
 
                     // two token assumes color is mnemonic - replace with real color
                     else if(tokens.length == 2) {
 
-                        BoardColor color = colorRules.get(tokens[1].trim());
+                        BoardColor color = colors.get(tokens[1].trim());
                         if(color != null) {
-                            colorRules.put(tokens[0].trim(), color);
+                            colors.put(color.getVASLColorName(), color);
                         }
                     }
                 }
@@ -87,5 +87,5 @@ public class ColorsFile {
         overlaysFile.close();
     }
 
-    public LinkedHashMap<String, BoardColor> getColorRules(){ return colorRules;}
+    public LinkedHashMap<String, BoardColor> getColors(){ return colors;}
 }

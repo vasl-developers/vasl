@@ -74,6 +74,12 @@ public class BoardMetadata extends AbstractMetadata {
     private static final String slopeHexNameAttribute = "hex";
     private static final String slopeHexsidesAttribute = "hexsides";
 
+    // flags for board specific metadata
+    private boolean boardSpecificColors = false;
+    private boolean boardSpecificColorSSR = false;
+    private boolean boardSpecificOverlayRules = false;
+    private boolean boardSpecificUnderlayRules = false; // Needed?
+
     public BoardMetadata(SharedBoardMetadata sharedBoardMetadata){
 
         // we copy the shared board metadata as this board may change it
@@ -138,6 +144,14 @@ public class BoardMetadata extends AbstractMetadata {
                 parseColorSSRules(root.getChild(colorSSRulesElement));
                 parseOverlaySSRules(root.getChild(overlaySSRulesElement));
                 parseSlopes(root.getChild(slopesElement));
+
+                // set flags indicating board-specific information
+                boardSpecificColors = root.getChild(colorSSRulesElement) != null &&
+                        root.getChild(colorSSRulesElement).getChildren().size() > 0;
+                boardSpecificColorSSR = root.getChild(colorSSRulesElement) != null &&
+                        root.getChild(colorSSRulesElement).getChildren().size() >0;
+                boardSpecificOverlayRules = root.getChild(overlaySSRulesElement) != null &&
+                        root.getChild(overlaySSRulesElement).getChildren().size() > 0;
             }
 
         } catch (IOException e) {
@@ -332,4 +346,24 @@ public class BoardMetadata extends AbstractMetadata {
      */
     public Slopes getSlopes(){ return slopes;}
 
+    /**
+     * @return true if board metadata contains custom colors
+     */
+    public boolean hasBoardSpecificColors() {
+        return boardSpecificColors;
+    }
+
+    /**
+     * @return true if board metadata contains custom color SSR
+     */
+    public boolean hasBoardSpecificColorSSR() {
+        return boardSpecificColorSSR;
+    }
+
+    /**
+     * @return true if board metadata contains custom overlay rules
+     */
+    public boolean hasBoardSpecificOverlayRules() {
+        return boardSpecificOverlayRules;
+    }
 }

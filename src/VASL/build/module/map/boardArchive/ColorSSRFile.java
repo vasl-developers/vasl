@@ -21,8 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.LinkedHashMap;
-import java.util.Scanner;
+import java.util.*;
 
 public class ColorSSRFile {
 
@@ -38,8 +37,8 @@ public class ColorSSRFile {
 
         // read each line
         String ruleName;
-        ColorSSRule colorSSRule = null;
-        String line = scanner.next();;
+        ColorSSRule colorSSRule;
+        String line = scanner.next();
 
         while (scanner.hasNext()){
 
@@ -75,7 +74,7 @@ public class ColorSSRFile {
                         }
                     }
 
-                    if(ruleName != null && ruleName.length() > 0 && colorSSRule.getColorMaps().size() > 0){
+                    if(ruleName.length() > 0 && colorSSRule.getColorMaps().size() > 0){
                         colorSSRules.put(ruleName, colorSSRule);
                     }
 
@@ -98,4 +97,26 @@ public class ColorSSRFile {
     }
 
     public LinkedHashMap<String, ColorSSRule> getColorSSRules() {return colorSSRules;}
+
+    /**
+     * Prints the color SSR as XML for the metadata file
+     */
+    @SuppressWarnings("unused")
+    public void printAsXML(){
+
+        System.out.println("\t<colorSSRules>");
+        for (Map.Entry<String, ColorSSRule> rule : colorSSRules.entrySet()) {
+
+
+            System.out.println("\t\t<colorSSR name=\"" + rule.getKey() + "\">");
+
+            for(Map.Entry<String, String> mapping: colorSSRules.get(rule.getKey()).getColorMaps().entrySet()){
+                System.out.println("\t\t\t<colorMap fromColor=\"" + mapping.getKey() + "\" toColor=\"" + mapping.getValue() + "\"/>");
+            }
+
+            System.out.println("\t\t</colorSSR>");
+        }
+
+        System.out.println("\t</colorSSRules>");
+    }
 }
