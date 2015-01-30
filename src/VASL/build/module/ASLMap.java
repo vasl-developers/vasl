@@ -200,6 +200,7 @@ public class ASLMap extends Map {
     protected void buildVASLMap() {
 
         legacyMode = false;
+        boolean nullBoards = false; // are null boards being used?
 
         // create an empty VASL map of the correct size
         LinkedList<VASLBoard> VASLBoards = new LinkedList<VASLBoard>(); // keep the boards so they are instantiated once
@@ -207,7 +208,6 @@ public class ASLMap extends Map {
 
             // see if there are any legacy boards in the board set
             // and determine the size of the map
-            legacyMode = false;
             final Rectangle mapBoundary = new Rectangle(0,0);
             double hexHeight = 0.0;
             double hexWidth = 0.0;
@@ -215,11 +215,12 @@ public class ASLMap extends Map {
 
                 final VASLBoard board = (VASLBoard) b;
 
-                if(board.isLegacyBoard()) {
-                    throw new BoardException("LOS disabled - Board " + board.getName() + " does not support LOS checking");
-                }
                 // ignore null boards
                 if(!"NUL".equals(b.getName()) && !"NULV".equals(b.getName())){
+
+                    if(board.isLegacyBoard()) {
+                        throw new BoardException("LOS disabled - Board " + board.getName() + " does not support LOS checking");
+                    }
 
                     mapBoundary.add(b.bounds());
                     VASLBoards.add(board);
@@ -230,6 +231,9 @@ public class ASLMap extends Map {
                     }
                     hexHeight = board.getHexHeight();
                     hexWidth = board.getHexWidth();
+                }
+                else {
+                    nullBoards = true;
                 }
             }
 
@@ -296,7 +300,7 @@ public class ASLMap extends Map {
                     // add the board LOS data to the map
                     if (!VASLMap.insertMap(
                             LOSData,
-                            VASLMap.gridToHex(board.getBoardLocation().x, board.getBoardLocation().y))) {
+                            VASLMap.gridToHex(board.getBoardLocation().x, board.getBoardLocation().y + (nullBoards ? 1 : 0)))) {
 
                         // didn't work, so assume an unsupported feature
                         throw  new BoardException("Unable to insert board " + board.getName() + " into the VASL map - LOS disabled");

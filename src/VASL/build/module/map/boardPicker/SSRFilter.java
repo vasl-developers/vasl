@@ -33,6 +33,10 @@ import java.awt.image.RGBImageFilter;
 import java.io.*;
 import java.util.*;
 import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.StringTokenizer;
+import java.util.Vector;
 import java.util.Map.Entry;
 
 public class SSRFilter extends RGBImageFilter {
@@ -103,6 +107,9 @@ public class SSRFilter extends RGBImageFilter {
     public String toString() {
         return saveRules;
     }
+    
+    return rules;
+  }
 
 /*
     private int parseRGB(String s) {

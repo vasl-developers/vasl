@@ -626,9 +626,6 @@ public class Hex {
 
         for(int x = 0; x <6; x++) {
 
-            if(name.equals("K1") && x == 3){
-                System.out.println();
-            }
             // we need to read the terrain from the map as the hexside location may not be current when this is called
             Point p = hexsideLocations[x].getEdgeCenterPoint();
             Terrain terrain = map.getGridTerrain(p.x, p.y);

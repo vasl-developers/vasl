@@ -398,7 +398,7 @@ public class ASLDiceBot extends AbstractBuildable
 
     private BufferedReader GetRemoteDataReader() throws Exception 
     {
-        URL l_Url = new URL("http://www.random.org/integers/?num=" + String.valueOf(m_iMAXNUM) + "&min=1&max=6&col=1&base=10&format=plain&rnd=new");
+        URL l_Url = new URL("https://www.random.org/integers/?num=" + String.valueOf(m_iMAXNUM) + "&min=1&max=6&col=1&base=10&format=plain&rnd=new");
         HttpURLConnection l_Conn = (HttpURLConnection)l_Url.openConnection();
 
         l_Conn.setConnectTimeout(60000);
