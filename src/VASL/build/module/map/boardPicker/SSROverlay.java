@@ -19,6 +19,7 @@
 package VASL.build.module.map.boardPicker;
 
 import VASL.build.module.map.boardArchive.OverlaySSRule;
+import VASL.build.module.map.boardArchive.OverlaySSRuleImage;
 import VASSAL.tools.DataArchive;
 import VASSAL.tools.image.ImageUtils;
 import VASSAL.tools.io.IOUtils;
@@ -38,12 +39,12 @@ public class SSROverlay extends Overlay {
   protected SSROverlay() {
   }
 
-  public SSROverlay(OverlaySSRule rule, File archiveFile) {
+  public SSROverlay(OverlaySSRuleImage image, File archiveFile) {
     try {
 
-      basePos = new Point(rule.getX(), rule.getY());
+      basePos = new Point(image.getX(), image.getY());
       overlayFile = archiveFile;
-      name = rule.getImageName();
+      name = image.getImageName();
 
       try {
         archive = new DataArchive(overlayFile.getPath(),"");

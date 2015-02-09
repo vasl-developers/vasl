@@ -8,16 +8,22 @@ public class BoardBuilder {
 
     private static String INPUT_FOLDER = "boards/src";
     private static String OUTPUT_FOLDER = "boardsOut";
+    private static String BOARD_NAME = null;
 
     public static void main(String[] args) {
 
-        // read the input/output folders
-        if (args.length != 2) {
-            System.out.println("Usage: BoardBuilder <board source folder>  <output folder>");
+        // read the input/output folders - note board name is optional parameter used to build a single board
+        if (args.length < 2 || args.length > 3) {
+            System.out.println("Usage: BoardBuilder <board source folder>  <output folder> <board name>");
             System.exit(1);
         }
         INPUT_FOLDER = args[0];
         OUTPUT_FOLDER = args[1];
+
+        if(args.length == 3) {
+            BOARD_NAME = args[2];
+            System.out.println("Building single board: " + BOARD_NAME);
+        }
 
 	    BoardBuilder program = new BoardBuilder();
         program.run();
@@ -69,51 +75,54 @@ public class BoardBuilder {
 
         for (File aBoard : allBoards) {
 
-            String boardName = aBoard.getName();
-            ZipOutputStream boardArchive;
+            if(BOARD_NAME == null || BOARD_NAME.equals(aBoard.getName())) {
 
-            try {
-                boardArchive = new ZipOutputStream(new FileOutputStream(new File(outFolder, boardName)));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                return;
-            }
+                String boardName = aBoard.getName();
+                ZipOutputStream boardArchive;
 
-            File[] contents = aBoard.listFiles(boardContentFilter);
-            if (contents == null) {
-                System.out.println(String.format("No acceptable content found in %s. Skipping.", aBoard));
-                continue;
-            } else {
-                System.out.println(String.format("Adding %d files to archive %s.", contents.length, boardName));
-            }
-
-            try {
-                for (File file : contents) {
-                    ZipEntry zipEntry = new ZipEntry(file.getName());
-                    System.out.println(String.format("Adding %s to archive %s.", file.getName(), boardName));
-                    boardArchive.putNextEntry(zipEntry);
-                    FileInputStream in = null;
-                    try {
-                        in = new FileInputStream(file);
-                        int len;
-                        while ((len = in.read(buffer)) > 0) {
-                            boardArchive.write(buffer, 0, len);
-                        }
-                        in.close();
-                        boardArchive.closeEntry();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } finally {
-                        if (in != null) in.close();
-                    }
+                try {
+                    boardArchive = new ZipOutputStream(new FileOutputStream(new File(outFolder, boardName)));
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    return;
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                try { boardArchive.close(); } catch (IOException ignored) {}
+
+                File[] contents = aBoard.listFiles(boardContentFilter);
+                if (contents == null) {
+                    System.out.println(String.format("No acceptable content found in %s. Skipping.", aBoard));
+                    continue;
+                } else {
+                    System.out.println(String.format("Adding %d files to archive %s.", contents.length, boardName));
+                }
+
+                try {
+                    for (File file : contents) {
+                        ZipEntry zipEntry = new ZipEntry(file.getName());
+                        System.out.println(String.format("Adding %s to archive %s.", file.getName(), boardName));
+                        boardArchive.putNextEntry(zipEntry);
+                        FileInputStream in = null;
+                        try {
+                            in = new FileInputStream(file);
+                            int len;
+                            while ((len = in.read(buffer)) > 0) {
+                                boardArchive.write(buffer, 0, len);
+                            }
+                            in.close();
+                            boardArchive.closeEntry();
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } finally {
+                            if (in != null) in.close();
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try { boardArchive.close(); } catch (IOException ignored) {}
+                }
+                System.out.println(String.format("Archive %s completed.", boardName));
             }
-            System.out.println(String.format("Archive %s completed.", boardName));
-        }
+         }
 
         System.out.println(String.format("Done."));
     }

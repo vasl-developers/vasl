@@ -35,6 +35,7 @@ public class ColorsFile {
 
     public ColorsFile(InputStream overlaysFile, String archiveName) throws IOException{
 
+        final String COMMENT_CHARS = "//";
         Logger logger = LoggerFactory.getLogger(OverlaySSRFile.class);
 
         Scanner scanner = new Scanner(overlaysFile).useDelimiter("\n");
@@ -45,9 +46,14 @@ public class ColorsFile {
             String line = scanner.next();
 
             // skip empty lines and comments (//)
-            if(line.trim().length() > 1 && !line.startsWith("//")){
+            if(line.trim().length() > 1 && !line.startsWith(COMMENT_CHARS)){
 
                 try {
+
+                    // remove end-of-line comments
+                    if(line.contains(COMMENT_CHARS)) {
+                        line = line.substring(0, line.indexOf(COMMENT_CHARS) - 1);
+                    }
 
                     String tokens[] = line.split("[, ]+");
 

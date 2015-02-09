@@ -44,6 +44,7 @@ public class OverlaySSRFile {
 
         // open the overlay SSR file and set up the text scanner
         Scanner scanner = new Scanner(overlaySSRFile).useDelimiter("\n");
+        final String COMMENT_CHARS = "//";
 
         // read each line
         String ruleName;
@@ -53,7 +54,12 @@ public class OverlaySSRFile {
             String line = scanner.next();
 
             // skip empty lines and comments (//)
-            if(line.length() > 1 && !line.startsWith("//")){
+            if(line.length() > 1 && !line.startsWith(COMMENT_CHARS)){
+
+                // remove end-of-line comments
+                if(line.contains(COMMENT_CHARS)) {
+                    line = line.substring(0, line.indexOf(COMMENT_CHARS) - 1);
+                }
 
                 // set up the new rule
                 ruleName = line.trim();
@@ -90,18 +96,36 @@ public class OverlaySSRFile {
 
                     try {
 
-                        String imageName = nextLine.substring(0, nextLine.indexOf(" ")).trim();
-                        nextLine = nextLine.substring(nextLine.indexOf(" "));
-                        String x = nextLine.substring(0, nextLine.indexOf(",")).trim();
-                        String y = nextLine.substring(nextLine.indexOf(",") + 1).trim();
+                        OverlaySSRule rule = new OverlaySSRule(ruleName);
 
-                        overlaySSRules.put(
-                                ruleName,
-                                new OverlaySSRule(
-                                        ruleName,
-                                        imageName,
-                                        Integer.parseInt(x),
-                                        Integer.parseInt(y)));
+                        // overlays can have multiple images
+                        boolean moreLines = true;
+                        while (moreLines){
+
+                            String imageName = nextLine.substring(0, nextLine.indexOf(" ")).trim();
+                            nextLine = nextLine.substring(nextLine.indexOf(" "));
+                            String x = nextLine.substring(0, nextLine.indexOf(",")).trim();
+                            String y = nextLine.substring(nextLine.indexOf(",") + 1).trim();
+
+                            rule.addImage(new OverlaySSRuleImage(
+                                    imageName,
+                                    Integer.parseInt(x),
+                                    Integer.parseInt(y)));
+
+                            // no more overlay images if the next line is blank
+                            if(scanner.hasNext()) {
+                                nextLine = scanner.next();
+                                if(nextLine.trim().isEmpty()) {
+                                    moreLines = false;
+                                }
+                            }
+                            else {
+                                moreLines = false;
+                            }
+                        }
+
+                        overlaySSRules.put(rule.getName(), rule);
+
                     } catch (Exception e) {
                         logger.warn("Invalid underlay value ignored in overlaySSR file " + archiveName);
                         logger.warn(nextLine);

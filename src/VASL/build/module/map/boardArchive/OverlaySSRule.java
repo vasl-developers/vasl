@@ -1,36 +1,29 @@
 package VASL.build.module.map.boardArchive;
 
+import java.util.HashMap;
+
 /**
- * A simple class for an SSR underlay transformation
+ * A simple class for an SSR overlay transformation
  */
 public class OverlaySSRule {
 
     String name;
-    String imageName;
-    int x;
-    int y;
+    HashMap<String, OverlaySSRuleImage> images = new HashMap<String, OverlaySSRuleImage>(1);
 
-    OverlaySSRule (String name, String imageName, int x, int y) {
+    OverlaySSRule (String name) {
 
         this.name = name;
-        this.imageName = imageName;
-        this.x = x;
-        this.y = y;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getImageName() {
-        return imageName;
+    public HashMap<String, OverlaySSRuleImage> getImages() {
+        return images;
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
+    public void addImage(OverlaySSRuleImage image) {
+        images.put(image.getImageName(), image);
     }
 }

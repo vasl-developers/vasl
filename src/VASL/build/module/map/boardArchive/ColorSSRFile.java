@@ -31,6 +31,7 @@ public class ColorSSRFile {
     public ColorSSRFile(InputStream overlaySSRFile, String archiveName) throws IOException {
 
         Logger logger = LoggerFactory.getLogger(OverlaySSRFile.class);
+        final String COMMENT_CHARS = "//";
 
         // open the overlay SSR file and set up the text scanner
         Scanner scanner = new Scanner(overlaySSRFile).useDelimiter("\n");
@@ -43,13 +44,15 @@ public class ColorSSRFile {
         while (scanner.hasNext()){
 
             // skip empty lines and comments (//)
-            if(line.length() > 1 && !line.startsWith("//")){
+            if(line.length() > 1 && !line.startsWith(COMMENT_CHARS)){
 
                 try {
-                    // set up the new rule - remove comments if necessary
-                    if(line.indexOf("//") > 0) {
-                        line = line.substring(0, line.indexOf("//"));
+                    // remove end-of-line comments
+                    if(line.contains(COMMENT_CHARS)) {
+                        line = line.substring(0, line.indexOf(COMMENT_CHARS) - 1);
                     }
+
+
                     ruleName = line.trim();
                     line = scanner.next();
                     colorSSRule = new ColorSSRule();

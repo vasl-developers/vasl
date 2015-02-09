@@ -53,10 +53,13 @@ public abstract class AbstractMetadata {
 
     protected static final String overlaySSRulesElement = "overlaySSRules";
     private static final String overlaySSRuleElement = "overlaySSRule";
+    private static final String overlaySSRuleSetElement = "overlaySSRuleSet"; // supports a set of images
+    private static final String overlaySSRuleImageElement = "overlaySSRuleImage";
     private static final String overlaySSRNameAttribute = "name";
     private static final String overlaySSRImageAttribute = "image";
     private static final String overlaySSRXAttribute = "x";
     private static final String overlaySSRYAttribute = "y";
+
     private static final String underLaySSRuleElement = "underlaySSRule";
     private static final String underlaySSRNameAttribute = "name";
     private static final String underlaySSRImageAttribute = "image";
@@ -330,15 +333,29 @@ public abstract class AbstractMetadata {
             // overlay rules
             if(e.getName().equals(overlaySSRuleElement)){
 
-                overlaySSRules.put(
-                        e.getAttributeValue(overlaySSRNameAttribute),
-                        new OverlaySSRule(
-                                e.getAttributeValue(overlaySSRNameAttribute),
-                                e.getAttributeValue(overlaySSRImageAttribute),
-                                e.getAttribute(overlaySSRXAttribute).getIntValue(),
-                                e.getAttribute(overlaySSRYAttribute).getIntValue()
-                        )
-                );
+                OverlaySSRule rule = new OverlaySSRule(e.getAttributeValue(overlaySSRNameAttribute));
+                rule.addImage(new OverlaySSRuleImage(
+                        e.getAttributeValue(overlaySSRImageAttribute),
+                        e.getAttribute(overlaySSRXAttribute).getIntValue(),
+                        e.getAttribute(overlaySSRYAttribute).getIntValue()));
+                overlaySSRules.put(rule.getName(), rule);
+
+            }
+
+            // overlay rules sets - those having multiple images
+            else if(e.getName().equals(overlaySSRuleSetElement)){
+
+                OverlaySSRule rule = new OverlaySSRule(e.getAttributeValue(overlaySSRNameAttribute));
+                for (Element image: e.getChildren()) {
+
+                    if(image.getName().equals(overlaySSRuleImageElement)){
+                        rule.addImage(new OverlaySSRuleImage(
+                                image.getAttributeValue(overlaySSRImageAttribute),
+                                image.getAttribute(overlaySSRXAttribute).getIntValue(),
+                                image.getAttribute(overlaySSRYAttribute).getIntValue()));
+                    }
+                }
+                overlaySSRules.put(rule.getName(), rule);
             }
 
             //underlay rules

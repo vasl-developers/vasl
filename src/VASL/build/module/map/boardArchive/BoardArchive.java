@@ -60,13 +60,14 @@ public class BoardArchive {
 
     private BoardMetadata metadata;
 
-    // legacy board (i.e. V5) stuff
+    // legacy board (i.e. V5) file names
     private static final String dataFileName = "data"; // name of the legacy data file
     private static final String overlaySSRFileName = "overlaySSR"; // name of the legacy overlay SSR file
     private static final String colorsFileName = "colors"; // name of the legacy colors file
     private static final String colorSSRFileName = "colorSSR"; // name of the legacy colorSSR file
 
     protected boolean legacyBoard = true;
+    // for legacy files null means they do not exist
     private DataFile dataFile;
     private OverlaySSRFile overlaySSRFile;
     private ColorsFile colorsFile;
@@ -79,6 +80,7 @@ public class BoardArchive {
      * @param boardDirectory the boards directory
      * @exception java.io.IOException if the archive cannot be opened
      */
+    @SuppressWarnings("AssignmentToNull")
     public BoardArchive(String archiveName, String boardDirectory, SharedBoardMetadata sharedBoardMetadata) throws IOException {
 
         // set the archive name, etc.

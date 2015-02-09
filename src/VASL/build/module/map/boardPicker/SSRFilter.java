@@ -20,36 +20,29 @@ package VASL.build.module.map.boardPicker;
 
 import VASL.build.module.ASLMap;
 import VASL.build.module.map.boardArchive.*;
-import VASSAL.build.GameModule;
 import VASSAL.tools.DataArchive;
-import VASSAL.tools.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.FilteredImageSource;
 import java.awt.image.RGBImageFilter;
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.StringTokenizer;
-import java.util.Vector;
 import java.util.Map.Entry;
 
+/**
+ * A class to swap colors according to specified rules * A set of color names is read from an input file with the
+ * format * White 255,255,255 * Black 0,0,0 * * The swapping rules are read from an input file with the format: *
+ * <key> * <color>=<color> * <color>=<color> * <color>=<color> * There can be any number of color entries per key. *
+ * The color entries are names of colors as defined in the color file * Example: * * WoodsToBrush * WoodsGreen=BrushL0 *
+ * WoodsBlack=BrushL0
+ */
 public class SSRFilter extends RGBImageFilter {
-    /*
-     * * A class to swap colors according to specified rules * A set of color names is read from an input file with the
-     * format * White 255,255,255 * Black 0,0,0 * * The swapping rules are read from an input file with the format: *
-     * <key> * <color>=<color> * <color>=<color> * <color>=<color> * There can be any number of color entries per key. *
-     * The color entries are names of colors as defined in the color file * Example: * * WoodsToBrush * WoodsGreen=BrushL0 *
-     * WoodsBlack=BrushL0
-     */
-//    private Map<Integer, Integer> mappings_old;
-//    private Map<String, Integer> colorValues_old;
-//    private List<SSROverlay> overlays;
+
     private String saveRules;
     private File archiveFile;
     private DataArchive archive;
@@ -57,8 +50,7 @@ public class SSRFilter extends RGBImageFilter {
 
     private BoardArchive boardArchive;
     private Map<Integer, Integer> mappings;
-    private Map<String, Integer> colorValues;
-    private List<SSROverlay> _overlays;
+    private List<SSROverlay> overlays;
 
     Logger logger = LoggerFactory.getLogger(SSRFilter.class);
 
@@ -80,22 +72,28 @@ public class SSRFilter extends RGBImageFilter {
         }
 
         this.board = board;
-        initialize();
-        // readAllRules();
+        loadRules();
     }
 
     public Iterable<SSROverlay> getOverlays() {
-        return _overlays;
+        return overlays;
     }
 
-    public int filterRGB(int x, int y, int rgb) {
-        return ((0xff000000 & rgb) | newValue(rgb & 0xffffff));
-    }
-
-    private int newValue(int rgb) {
-    /*
-     * * Maps the color to it's transformed value by going through * the rules. All rules are applied in sequence.
+    /**
+     * We ignore the pixel location and just map the color per SSR rules
+     * {@inheritDoc}
      */
+    @Override
+    public int filterRGB(int x, int y, int rgb) {
+        return ((0xff000000 & rgb) | mapColor(rgb & 0xffffff));
+    }
+
+    /**
+     * Maps the color to it's transformed value by going through the rules. All rules are applied in sequence.
+     * @param rgb int value of RGB color
+     * @return int value of transformed color
+     */
+    private int mapColor(int rgb) {
         int rval = rgb;
         Integer mappedValue = mappings.get(rgb);
         if (mappedValue != null) {
@@ -107,141 +105,22 @@ public class SSRFilter extends RGBImageFilter {
     public String toString() {
         return saveRules;
     }
-    
-    return rules;
-  }
-
-/*
-    private int parseRGB(String s) {
-
-     // Calculate integer value from rr,gg,bb or 40a38f format
-        int rval = -1;
-        try {
-            Integer test = (Integer) colorValues_old.get(s);
-            if (test != null) {
-                rval = test.intValue();
-            } else if (s.indexOf(',') >= 0) {
-                StringTokenizer st = new StringTokenizer(s, ",");
-                if (st.countTokens() == 3) {
-                    int red, green, blue;
-                    red = Integer.parseInt(st.nextToken());
-                    green = Integer.parseInt(st.nextToken());
-                    blue = Integer.parseInt(st.nextToken());
-                    if ((red >= 0 && red <= 255) && (green >= 0 && green <= 255) && (blue >= 0 && blue <= 255)) {
-                        rval = (red << 16) + (green << 8) + blue;
-                    }
-                }
-            } else if (s.length() == 6) {
-                rval = Integer.parseInt(s, 16);
-            }
-        } catch (Exception e) {
-            rval = -1;
-        }
-        return rval;
-    }
-
-    public void readAllRules() {
-        // Build the list of rules in use
-        Vector rules = new Vector();
-        StringTokenizer st = new StringTokenizer(saveRules);
-        while (st.hasMoreTokens()) {
-            String s = st.nextToken();
-            if (!rules.contains(s)) {
-                rules.addElement(s);
-            }
-        }
-
-        mappings_old = new HashMap<Integer, Integer>();
-        colorValues_old = new HashMap<String, Integer>();
-        overlays = new Vector();
-
-        final DataArchive da = GameModule.getGameModule().getDataArchive();
-
-        // Read board-specific colors last to override defaults
-        InputStream in = null;
-        try {
-            in = da.getInputStream("boardData/colors");
-            readColorValues(in);
-        } catch (IOException ignore) {
-        } finally {
-            IOUtils.closeQuietly(in);
-        }
-
-        in = null;
-        try {
-            in = archive.getInputStream("colors");
-            readColorValues(in);
-        } catch (IOException ignore) {
-        } finally {
-            IOUtils.closeQuietly(in);
-        }
-
-        // Read board-specific rules first to be applied before defaults
-        in = null;
-        try {
-            in = archive.getInputStream("colorSSR");
-            readColorRules(in, rules);
-        } catch (IOException ignore) {
-        } finally {
-            IOUtils.closeQuietly(in);
-        }
-
-        in = null;
-        try {
-            in = da.getInputStream("boardData/colorSSR");
-            readColorRules(in, rules);
-        } catch (IOException ignore) {
-        } finally {
-            IOUtils.closeQuietly(in);
-        }
-
-*/
-/*
-        // check for any differences in color mappings
-        for (Integer color : mappings.keySet()) {
-            if (mappings_old.containsKey(color) && !mappings_old.get(color).equals(mappings.get(color))) {
-                System.out.println("Color mapping not the same for " + color + ": Old: " + mappings_old.get(color) + " New: " + mappings.get(color));
-            }
-        }
-*//*
-
-
-        overlays.clear();
-        // SSR Overlays are applied in reverse order to the order they're listed
-        // in the overlaySSR file. Therefore, reading board-specific
-        // overlay rules first will override defaults
-        in = null;
-        try {
-            in = archive.getInputStream("overlaySSR");
-            readOverlayRules(in);
-        } catch (IOException ignore) {
-        } finally {
-            IOUtils.closeQuietly(in);
-        }
-
-        in = null;
-        try {
-            in = da.getInputStream("boardData/overlaySSR");
-            readOverlayRules(in);
-        } catch (IOException ignore) {
-        } finally {
-            IOUtils.closeQuietly(in);
-        }
-    }
-*/
 
     private int colorToInt(Color color) {
         return (color.getRed() << 16) + (color.getGreen() << 8) + color.getBlue();
     }
 
-    private void initialize() {
+    /**
+     * Load all color/SSR rules for the board
+     */
+    private void loadRules() {
 
-        colorValues = new HashMap<String, Integer>();
+        Map<String, Integer> colorValues = new HashMap<String, Integer>();
         mappings = new HashMap<Integer, Integer>();
-        _overlays = new Vector<SSROverlay>();
+        overlays = new Vector<SSROverlay>();
 
         // Build the list of rules in use
-        Vector rules = new Vector();
+        Vector<String> rules = new Vector<String>();
         StringTokenizer st = new StringTokenizer(saveRules);
         while (st.hasMoreTokens()) {
             String s = st.nextToken();
@@ -261,7 +140,6 @@ public class SSRFilter extends RGBImageFilter {
             String ruleName = entry.getKey();
 
             if (rules.contains(ruleName)) {
-                // System.out.println(ruleName);
 
                 ColorSSRule colorSSRule = boardArchive.getColorSSRules().get(ruleName);
 
@@ -272,24 +150,28 @@ public class SSRFilter extends RGBImageFilter {
                     try {
                         fromColor = colorValues.get(entry1.getKey());
                         toColor = colorValues.get(entry1.getValue());
-                    } catch (Exception e) {
-                        logger.warn("Missing color entry in color SSR mapping: " + entry1.getKey() + " or " + entry1.getValue());
-                    }
-                    if (fromColor >= 0 && toColor >= 0) {
 
-                        if (!mappings.containsKey(fromColor)) {
-                            mappings.put(fromColor, toColor);
-                            // System.out.println("Refactored mapped " + entry1.getKey() + " to " + entry1.getValue());
+                        if (fromColor >= 0 && toColor >= 0 && fromColor != toColor) {
 
-                        }
-
-                        // Also apply this mapping to previous mappings
-                        if (mappings.containsValue(fromColor)) {
-
-                            for (Entry<Integer, Integer> e : mappings.entrySet()) {
-                                if (e.getValue() == fromColor)
-                                    e.setValue(toColor);
+                            if (!mappings.containsKey(fromColor)) {
+                                mappings.put(fromColor, toColor);
                             }
+
+                            // Also apply this mapping to previous mappings
+                            if (mappings.containsValue(fromColor)) {
+
+                                for (Entry<Integer, Integer> e : mappings.entrySet()) {
+                                    if (e.getValue() == fromColor)
+                                        e.setValue(toColor);
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        if (colorValues.get(entry1.getKey()) == null){
+                            logger.warn("Board " + board.getName() + " missing color entry in color SSR mapping: " + entry1.getKey());
+                        }
+                        if (colorValues.get(entry1.getValue()) == null){
+                            logger.warn("Board " + board.getName() + " missing color entry in color SSR mapping: " + entry1.getValue());
                         }
                     }
                 }
@@ -300,7 +182,15 @@ public class SSRFilter extends RGBImageFilter {
         for(Map.Entry<String, OverlaySSRule> entry: boardArchive.getOverlaySSRules().entrySet()) {
 
             try {
-                _overlays.add(new SSROverlay(entry.getValue(), archiveFile));
+                if(rules.contains(entry.getKey())) {
+
+                    OverlaySSRule rule = boardArchive.getOverlaySSRules().get(entry.getKey());
+                    for(Map.Entry<String, OverlaySSRuleImage> image: rule.getImages().entrySet()) {
+
+                        overlays.add(new SSROverlay(image.getValue(), archiveFile));
+                    }
+                    rules.remove(entry.getKey());
+                }
             }
             catch (IllegalArgumentException e) {
                 logger.warn("Invalid Overlay SSR: " + entry.getKey() + " - " + e.getMessage());
@@ -313,185 +203,25 @@ public class SSRFilter extends RGBImageFilter {
             UnderlaySSRule rule = entry.getValue();
 
             try {
-                // create the array of transparency colors
-                int[] colors = new int[rule.getColors().size()];
-                int current = 0;
-                for (String color: rule.getColors()) {
-                    colors[current++] = colorValues.get(color);
+
+                if(rules.contains(entry.getKey())) {
+
+                    // create the array of transparency colors
+                    int[] colors = new int[rule.getColors().size()];
+                    int current = 0;
+                    for (String color: rule.getColors()) {
+                        colors[current] = colorValues.get(color);
+                        current++;
+                    }
+                     overlays.add(new Underlay(rule.getImageName(), colors, archive, board));
+                    rules.remove(entry.getKey());
                 }
-                _overlays.add(new Underlay(rule.getImageName(), colors, archive, board));
             }
             catch (Exception e) {
                 logger.warn("Invalid Underlay SSR: " + entry.getKey() + " - " + e.getMessage());
             }
         }
     }
-
-/*
-    protected void readColorValues(InputStream in) {
-    */
-/*
-     * * Add to the list of color definitions, as read from input file
-     *//*
-
-        if (in == null) {
-            return;
-        }
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-        StreamTokenizer st = new StreamTokenizer(reader);
-        st.resetSyntax();
-        st.wordChars((int) ' ', 0xff);
-        st.commentChar((int) '/');
-        st.whitespaceChars((int) ' ', (int) ' ');
-        st.whitespaceChars((int) '\n', (int) '\n');
-        st.whitespaceChars((int) '\t', (int) '\t');
-        st.slashSlashComments(true);
-        st.slashStarComments(true);
-        st.eolIsSignificant(false);
-        try {
-            for (String s = reader.readLine(); s != null; s = reader.readLine()) {
-                if (s.startsWith("/")) {
-                    continue;
-                }
-                StringTokenizer st2 = new StringTokenizer(s);
-                if (st2.countTokens() < 2) {
-                    continue;
-                }
-                String s1 = st2.nextToken();
-                int rgb = parseRGB(st2.nextToken());
-                if (rgb >= 0) {
-                    colorValues_old.put(s1, new Integer(rgb));
-                } else {
-                    
-                    logger.warn("Invalid color alias: " + s);
-                }
-            }
-        } catch (Exception e) {
-            logger.warn("Caught " + e + " reading colors");
-        }
-    }
-
-    public void readColorRules(InputStream in, Vector rules) {
-    */
-/*
-     * * Define the color transformations defined by each rule * as read in from input file
-     *//*
-
-        if (in == null) {
-            return;
-        }
-
-        StreamTokenizer st = new StreamTokenizer(new BufferedReader(new InputStreamReader(in)));
-        st.resetSyntax();
-        st.wordChars((int) ' ', 0xff);
-        st.commentChar((int) '/');
-        st.whitespaceChars((int) ' ', (int) ' ');
-        st.whitespaceChars((int) '\n', (int) '\n');
-        st.whitespaceChars((int) '\t', (int) '\t');
-        st.slashSlashComments(true);
-        st.slashStarComments(true);
-        st.eolIsSignificant(false);
-        boolean inCategory = false; */
-/* are we in a "selected" category *//*
-
-        try {
-            while (st.nextToken() != StreamTokenizer.TT_EOF) {
-                String s = st.sval;
-                if (s == null) {
-                    continue;
-                }
-                int n = s.indexOf('=');
-                if (n < 0) {
-                    if (s.charAt(0) == '+') {
-                        inCategory = rules.contains(s.substring(1));
-                    } else {
-                        inCategory = rules.removeElement(s);
-                    }
-                } else if (inCategory) {
-                    int len = s.length();
-                    boolean valid = true;
-                    if (n + 1 == len) {
-                        valid = false;
-                    } else {
-                        String sfrom = s.substring(0, n);
-                        String sto = s.substring(n + 1, len);
-                        int ifrom = parseRGB(sfrom);
-                        int ito = parseRGB(sto);
-                        if (ifrom >= 0 && ito >= 0) {
-
-                            if (!mappings_old.containsKey(ifrom))
-                                mappings_old.put(ifrom, ito);
-                            // System.out.println("Legacy mapped " + sfrom + " to " + sto);
-
-              */
-/*
-               * Also apply this mapping to previous mappings
-               *//*
-
-                            if (mappings_old.containsValue(ifrom)) {
-                                for (Iterator<Entry<Integer, Integer>> it = mappings_old.entrySet().iterator(); it.hasNext(); ) {
-                                    Entry<Integer, Integer> e = it.next();
-                                    if (e.getValue() == ifrom)
-                                        e.setValue(ito);
-                                }
-                            }
-                        } else {
-                            valid = false;
-                            System.err.println("Invalid color mapping: " + s + " mapped to " + ifrom + "=" + ito);
-                        }
-                    }
-                    if (!valid) {
-                        System.err.println("Invalid color mapping: " + s);
-                    }
-                }
-            }
-        } catch (Exception e) {
-        }
-    }
-
-    public void readOverlayRules(InputStream in) {
-        if (in == null) {
-            return;
-        }
-
-        try {
-            BufferedReader file;
-            file = new BufferedReader(new InputStreamReader(in));
-            String s;
-            while ((s = file.readLine()) != null) {
-                if (s.trim().length() == 0) {
-                    continue;
-                }
-                if (saveRules.indexOf(s.trim()) >= 0) {
-                    while ((s = file.readLine()) != null) {
-                        if (s.length() == 0) {
-                            break;
-                        } else if (s.toLowerCase().startsWith("underlay")) {
-                            try {
-                                StringTokenizer st = new StringTokenizer(s);
-                                st.nextToken();
-                                String underImage = st.nextToken();
-                                st = new StringTokenizer(st.nextToken(), ",");
-                                int trans[] = new int[st.countTokens()];
-                                int n = 0;
-                                while (st.hasMoreTokens()) {
-                                    trans[n++] = ((Integer) colorValues_old.get(st.nextToken())).intValue();
-                                }
-                                overlays.add(new Underlay(underImage, trans, archive, board));
-                            } catch (NoSuchElementException end) {
-                            }
-                        } else {
-                            overlays.add(new SSROverlay_old(s.trim(), archiveFile));
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            System.err.println("Error opening rules file " + e);
-        }
-    }
-*/
 
     public void transform(BufferedImage image) {
         if (!mappings.isEmpty()) {
