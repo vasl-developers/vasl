@@ -30,7 +30,10 @@ import VASL.LOS.LOSDataEditor;
 import VASL.LOS.Map.Hex;
 import VASL.LOS.Map.Map;
 import VASL.LOS.Map.Terrain;
+import VASL.build.module.map.boardArchive.BoardArchive;
 import VASL.build.module.map.boardArchive.LOSSSRule;
+import VASSAL.build.module.map.boardPicker.board.HexGrid;
+import VASSAL.i18n.Translatable;
 
 /**
  * Extends ASLBoard to add support for version 6+ boards

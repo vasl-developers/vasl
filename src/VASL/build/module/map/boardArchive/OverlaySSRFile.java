@@ -142,4 +142,68 @@ public class OverlaySSRFile {
     public LinkedHashMap<String, OverlaySSRule> getOverlaySSRules(){return overlaySSRules;}
 
     public LinkedHashMap<String, UnderlaySSRule> getUnderlaySSRules(){return underlaySSRules;}
+
+    /**
+     * A handy-dandy method for printing the file as XML
+     */
+    @SuppressWarnings("unused")
+    public void printAsXML(){
+
+        System.out.println("\t<overlaySSRules>");
+
+        // print underlays
+        for (String rule: underlaySSRules.keySet()) {
+
+            UnderlaySSRule underlay = underlaySSRules.get(rule);
+            System.out.println(
+                    "\t\t<underlaySSRule name=\"" + underlay.getName() +
+                            "\" image=\"" + underlay.getImageName() +
+                            "\">"
+            );
+
+            for(String color: underlay.getColors()) {
+
+                System.out.println(
+                        "\t\t\t<color name=\"" + color + "\" />"
+                );
+
+            }
+            System.out.println("\t\t</underlaySSRule>");
+        }
+
+        // print overlays
+        for (String rule: overlaySSRules.keySet()) {
+
+            OverlaySSRule overlay = overlaySSRules.get(rule);
+            if(overlay.getImages().size() == 1) {
+
+                for(OverlaySSRuleImage image: overlay.getImages().values()) {
+
+                    System.out.println(
+                            "\t\t<overlaySSRule name=\"" + overlay.getName() +
+                                    "\" image=\"" + image.getImageName() +
+                                    "\" x=\"" + image.getX() +
+                                    "\" y=\"" + image.getY() +
+                                    "\" />"
+                    );
+                }
+            }
+            else {
+
+                System.out.println("\t\t<overlaySSRuleSet name=\"" + overlay.getName() + "\" />");
+
+                for(OverlaySSRuleImage image: overlay.getImages().values()) {
+
+                    System.out.println(
+                            "\t\t\t<overlaySSRuleImage image=\"" + image.getImageName() +
+                                    "\" x=\"" + image.getX() +
+                                    "\" y=\"" + image.getY() +
+                                    "\" />"
+                    );
+                }
+                System.out.println("\t\t</overlaySSRuleSet>");
+            }
+        }
+        System.out.println("\t</overlaySSRules>");
+    }
 }

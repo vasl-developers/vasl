@@ -23,6 +23,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -94,4 +95,33 @@ public class ColorsFile {
     }
 
     public LinkedHashMap<String, BoardColor> getColors(){ return colors;}
+
+    /**
+     * Prints the color SSR as XML for the metadata file
+     */
+    @SuppressWarnings("unused")
+    public void printAsXML(){
+
+        /*
+            XML format:
+            <colors>
+        		<color name="WoodBldg1" red="49" green="36" blue="35" terrain="Wooden Building" elevation="0" />
+            </colors>
+         */
+        System.out.println("\t<colors>");
+        for (Map.Entry<String, BoardColor> color : colors.entrySet()) {
+
+            System.out.println(
+                    "\t\t<color name=\"" + color.getKey() +
+                    "\" red=\"" + color.getValue().getColor().getRed() +
+                    "\" green=\"" + color.getValue().getColor().getGreen() +
+                    "\" blue=\"" + color.getValue().getColor().getBlue() +
+                    "\" terrain=\"" + color.getValue().getTerrainName() +
+                    "\" elevation=\"" + color.getValue().getElevation() + "\" />"
+            );
+        }
+
+        System.out.println("\t</colors>");
+    }
+
 }

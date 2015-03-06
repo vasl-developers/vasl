@@ -1,10 +1,6 @@
     /**
      * @return the hex snap scale
      */
-    public int getSnapScale() {
-        return snapScale;
-    }
-
 package VASL.build.module.map.boardArchive;
 
 import java.awt.Color;
@@ -344,6 +340,10 @@ public class BoardMetadata extends AbstractMetadata {
      */
     public double getHexHeight() {
         return hexHeight;
+    }
+
+    public int getSnapScale() {
+        return snapScale;
     }
 
     /**

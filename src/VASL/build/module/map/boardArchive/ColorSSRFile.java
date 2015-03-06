@@ -25,13 +25,15 @@ import java.util.*;
 
 public class ColorSSRFile {
 
+    private final String COMMENT_CHARS = "//";
+
     // Maps rule name to the rule object
     protected LinkedHashMap<String, ColorSSRule> colorSSRules = new LinkedHashMap<String, ColorSSRule>(100);
 
     public ColorSSRFile(InputStream overlaySSRFile, String archiveName) throws IOException {
 
         Logger logger = LoggerFactory.getLogger(OverlaySSRFile.class);
-        final String COMMENT_CHARS = "//";
+
 
         // open the overlay SSR file and set up the text scanner
         Scanner scanner = new Scanner(overlaySSRFile).useDelimiter("\n");
@@ -47,12 +49,8 @@ public class ColorSSRFile {
             if(line.length() > 1 && !line.startsWith(COMMENT_CHARS)){
 
                 try {
-                    // remove end-of-line comments
-                    if(line.contains(COMMENT_CHARS)) {
-                        line = line.substring(0, line.indexOf(COMMENT_CHARS) - 1);
-                    }
 
-
+                    line = removeEOLComments(line);
                     ruleName = line.trim();
                     line = scanner.next();
                     colorSSRule = new ColorSSRule();
@@ -66,6 +64,7 @@ public class ColorSSRFile {
 
                         if(line.length() > 2) {
 
+                            line = removeEOLComments(line);
                             String tokens[] = line.split("=");
                             if(tokens.length == 2){
                                 colorSSRule.addColorMap(tokens[0].trim(), tokens[1].trim());
@@ -100,6 +99,20 @@ public class ColorSSRFile {
     }
 
     public LinkedHashMap<String, ColorSSRule> getColorSSRules() {return colorSSRules;}
+
+    /**
+     * Remove end of line comments
+     * @param line the line
+     * @return a string with comments removed
+     */
+    private String removeEOLComments(String line) {
+
+        // remove end-of-line comments
+        if(line.length() > 1 && line.contains(COMMENT_CHARS)) {
+            return line.substring(0, line.indexOf(COMMENT_CHARS) - 1);
+        }
+        return line;
+    }
 
     /**
      * Prints the color SSR as XML for the metadata file
