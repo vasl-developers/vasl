@@ -197,7 +197,7 @@ public class VASLBoard extends ASLBoard {
                         bridgesToFord(LOSData);
                         changed = true;
                     }
-                    else if("RoadsToPaths".equals(s) || "NoWoodsRoads".equals(s)){
+                    else if("RoadsToPaths".equals(s) || "NoWoodsRoads".equals(s) || "NoWoodsRoad".equals(s)){
 
                         fillWoodsRoadHexes(LOSData);
                         changed = true;

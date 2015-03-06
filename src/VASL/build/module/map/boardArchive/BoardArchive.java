@@ -66,7 +66,7 @@ public class BoardArchive {
     private static final String overlaySSRFileName = "overlaySSR"; // name of the legacy overlay SSR file
     private static final String colorsFileName = "colors"; // name of the legacy colors file
     private static final String colorSSRFileName = "colorSSR"; // name of the legacy colorSSR file
-    private static final String SSRControlsFileName = "SSRControls"; // name of the legacy colorSSR file
+    private static final String SSRControlsFileName = "SSRControls";
 
     protected boolean legacyBoard = true;
     // for legacy files null means they do not exist
