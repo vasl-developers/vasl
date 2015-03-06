@@ -1,3 +1,10 @@
+    /**
+     * @return the hex snap scale
+     */
+    public int getSnapScale() {
+        return snapScale;
+    }
+
 package VASL.build.module.map.boardArchive;
 
 import java.awt.Color;
@@ -42,10 +49,11 @@ public class BoardMetadata extends AbstractMetadata {
     private int width;
     private int height;
 
-    private double A1CenterX = (int) MISSING;  // location of the hex A1 center dot
-    private double A1CenterY = (int) MISSING;
+    private double A1CenterX = MISSING;  // location of the hex A1 center dot
+    private double A1CenterY = MISSING;
     private double hexWidth = (float) MISSING;
-    private double hexHeight = (float )MISSING;
+    private double hexHeight = (float) MISSING;
+    private int snapScale = MISSING;
     private boolean altHexGrain = false; // upper left is A0, B1 is higher
 
     // Board metadata file element and attribute constants
@@ -63,6 +71,7 @@ public class BoardMetadata extends AbstractMetadata {
     private static final String boardMetadataHexWidthAttr = "hexWidth";
     private static final String boardMetadataHexHeightAttr = "hexHeight";
     private static final String boardMetadataAltHexGrainAttr = "altHexGrain";
+    private static final String boardMetadataSnapPointAttr = "snapScale";
 
     private static final String buildingTypesElement = "buildingTypes";
     private static final String buildingTypeElement = "buildingType";
@@ -136,6 +145,9 @@ public class BoardMetadata extends AbstractMetadata {
                 }
                 if(root.getAttribute(boardMetadataAltHexGrainAttr) != null){
                     altHexGrain = root.getAttribute(boardMetadataAltHexGrainAttr).getBooleanValue();
+                }
+                if(root.getAttribute(boardMetadataSnapPointAttr) != null){
+                    snapScale = root.getAttribute(boardMetadataSnapPointAttr).getIntValue();
                 }
 
                 // parse the board metadata elements

@@ -502,4 +502,8 @@ public class ASLBoard extends Board {
     public DataArchive getBoardArchive() {
         return boardArchive;
     }
+
+    public BoardArchive getVASLBoardArchive() {
+        return VASLBoardArchive;
+    }
 }

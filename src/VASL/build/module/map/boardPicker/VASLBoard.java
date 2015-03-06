@@ -122,38 +122,6 @@ public class VASLBoard extends ASLBoard {
         return VASLBoardArchive.getLOSData(terrainTypes);
     }
 
-/*
-    */
-/**
-     * Set the information formerly in the data file
-     *//*
-
-    @Override
-    public void readData(){
-
-        version = VASLBoardArchive.getVersion();
-        if (isLegacyBoard()) {
-            super.readData();
-        }
-        else {
-
-            if(VASLBoardArchive.getA1CenterX() != BoardArchive.missingValue()){
-                ((Translatable)getGrid()).setAttribute(HexGrid.X0, (int) VASLBoardArchive.getA1CenterX());
-            }
-            if(VASLBoardArchive.getA1CenterY() != BoardArchive.missingValue()){
-                ((Translatable)getGrid()).setAttribute(HexGrid.Y0, (int) VASLBoardArchive.getA1CenterY());
-            }
-            if((int) VASLBoardArchive.getHexWidth() != BoardArchive.missingValue()){
-                ((Translatable)getGrid()).setAttribute(HexGrid.DX, VASLBoardArchive.getHexWidth());
-            }
-            if((int) VASLBoardArchive.getHexHeight() != BoardArchive.missingValue()){
-                ((Translatable)getGrid()).setAttribute(HexGrid.DY, VASLBoardArchive.getHexHeight());
-            }
-        }
-
-    }
-*/
-
     @Override
 	public String getName() {
 
@@ -347,6 +315,12 @@ public class VASLBoard extends ASLBoard {
             // update the hex grid
             if(changed){
                 LOSData.resetHexTerrain();
+            }
+            if((int) VASLBoardArchive.getHexHeight() != BoardArchive.missingValue()){
+                ((Translatable)getGrid()).setAttribute(HexGrid.DY, VASLBoardArchive.getHexHeight());
+            }
+            if((int) VASLBoardArchive.getSnapScale() != BoardArchive.missingValue()){
+                ((Translatable)getGrid()).setAttribute(HexGrid.SNAP_SCALE, VASLBoardArchive.getSnapScale());
             }
         }
     }

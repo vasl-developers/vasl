@@ -29,6 +29,7 @@ import VASL.LOS.Map.Terrain;
 import VASSAL.tools.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.NodeList;
 
 import static VASSAL.tools.io.IOUtils.closeQuietly;
 
@@ -65,6 +66,7 @@ public class BoardArchive {
     private static final String overlaySSRFileName = "overlaySSR"; // name of the legacy overlay SSR file
     private static final String colorsFileName = "colors"; // name of the legacy colors file
     private static final String colorSSRFileName = "colorSSR"; // name of the legacy colorSSR file
+    private static final String SSRControlsFileName = "SSRControls"; // name of the legacy colorSSR file
 
     protected boolean legacyBoard = true;
     // for legacy files null means they do not exist
@@ -72,6 +74,7 @@ public class BoardArchive {
     private OverlaySSRFile overlaySSRFile;
     private ColorsFile colorsFile;
     private ColorSSRFile colorSSRFile;
+    private SSRControlsFile SSRControlsFile;
 
     /**
      * Defines the interface to a VASL board archive in the VASL boards directory
@@ -96,6 +99,7 @@ public class BoardArchive {
         InputStream overlaySSRFileStream = null;
         InputStream colorsFileStream = null;
         InputStream colorSSRFileStream = null;
+        InputStream SSRControlsFileStream = null;
 
         // open the archive
         ZipFile archive = new ZipFile(qualifiedBoardArchive);
@@ -172,6 +176,19 @@ public class BoardArchive {
         }
         finally {
             closeQuietly(colorSSRFileStream);
+        }
+
+        // read the SSR controls file
+        try {
+            SSRControlsFileStream = getInputStreamForArchiveFile(archive, SSRControlsFileName);
+            SSRControlsFile = new SSRControlsFile(SSRControlsFileStream, archiveName);
+        }
+        catch (Exception ignore) {
+            // bury
+            SSRControlsFileStream = null;
+        }
+        finally {
+            closeQuietly(SSRControlsFileStream);
         }
 
         closeQuietly(archive);
@@ -730,6 +747,13 @@ public class BoardArchive {
     }
 
     /**
+     * @return the hex snap scale
+     */
+    public int getSnapScale() {
+        return metadata.getSnapScale();
+    }
+
+    /**
      * @return true if upper left hex is A0, B1 is higher, etc.
      */
 	@SuppressWarnings("unused")
@@ -784,6 +808,21 @@ public class BoardArchive {
      */
     public boolean isLegacyBoard() {
         return legacyBoard;
+    }
+
+    /**
+     * @return  a list of the "basic" nodes in the SSR control file
+     */
+    public NodeList getBasicNodes() {
+
+        return SSRControlsFile.getBasicNodes();
+    }
+
+    /**
+     * @return  a list of the "option" nodes in the SSR control file
+     */
+    public NodeList getOptionNodes() {
+        return SSRControlsFile.getOptionNodes();
     }
 }
 
