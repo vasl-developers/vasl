@@ -244,6 +244,7 @@ public class BoardArchive {
                 metadata.getA1CenterX() == BoardMetadata.MISSING &&
                 metadata.getA1CenterY() == BoardMetadata.MISSING;
     }
+
     /**
      * Get the board image from the archive
      */
@@ -547,6 +548,13 @@ public class BoardArchive {
      */
     public double getHexHeight() {
         return metadata.getHexHeight() == missingValue() ? GEO_HEX_HEIGHT : metadata.getHexHeight();
+    }
+
+    /**
+     * @return the hex snap scale
+     */
+    public int getSnapScale() {
+        return metadata.getSnapScale();
     }
 
     /**
