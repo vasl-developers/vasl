@@ -29,7 +29,7 @@ import java.util.StringTokenizer;
  */
 public class DataFile {
 
-    public static final String VERSION = "version";
+    public static final String VERSION_KEY = "version";
     public static final String DEFAULT_VERSION = "0.0";
 
     private InputStream dataFile;
@@ -38,7 +38,7 @@ public class DataFile {
     public DataFile(InputStream file) throws IOException {
 
         this.dataFile = file;
-        attributes.put(VERSION, DEFAULT_VERSION); // set a default version
+        attributes.put(VERSION_KEY, DEFAULT_VERSION); // set a default version
         readData();
     }
 
@@ -77,5 +77,6 @@ public class DataFile {
     public String getDX() { return attributes.get(HexGrid.DX);}
     public String getDY() { return attributes.get(HexGrid.DY);}
     public String getSnapScale() {return attributes.get(HexGrid.SNAP_SCALE);}
-    public String getVersion() {return  attributes.get(VERSION);}
+    public String getVersion() {return  attributes.get(VERSION_KEY);}
+    public String getAltHexGrid() {return attributes.get(BoardArchive.ALT_HEX_GRID_KEY);}
 }

@@ -49,6 +49,8 @@ public class BoardArchive {
     public static final double GEO_HEX_HEIGHT = GEO_IMAGE_HEIGHT/GEO_HEIGHT;
     public static final Point2D.Double GEO_A1_Center = new Point2D.Double(0, GEO_HEX_HEIGHT/2.0);
 
+    public static final String ALT_HEX_GRID_KEY = "alternate"; // key used in the hex grid for setting alt hexgrid
+
     private String archiveName;
     private String qualifiedBoardArchive;
     private SharedBoardMetadata sharedBoardMetadata;
@@ -762,9 +764,15 @@ public class BoardArchive {
     /**
      * @return true if upper left hex is A0, B1 is higher, etc.
      */
-	@SuppressWarnings("unused")
     public boolean isAltHexGrain() {
-        return metadata.isAltHexGrain();
+
+        if(isLegacyBoard()){
+            return dataFile.getAltHexGrid() != null && Boolean.parseBoolean(dataFile.getAltHexGrid());
+        }
+        else {
+            return metadata.isAltHexGrain();
+
+        }
     }
 
     /**
