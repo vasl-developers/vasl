@@ -231,15 +231,10 @@ public class Map  {
      */
     public Terrain getGridTerrain(int row, int col) {
 
-        try {
-            if (onMap(row, col)) {
-                return terrainList[(int) terrainGrid[row][col]];
-            }
-            return null;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+        if (onMap(row, col)) {
+            return terrainList[(int) terrainGrid[row][col]];
         }
+        return null;
     }
 
     /**
@@ -257,12 +252,14 @@ public class Map  {
      * Returns the ground level for the pixel at row, col of the map image.
      * @param row the row coordinate
      * @param col the col coordinate
-     * @return the ground level at (row, col)
+     * @return the ground level at (row, col) or 0 if not on map
      */
     public int getGridElevation(int row, int col) {
 
-        // ground level
-        return (int) elevationGrid[row][col];
+        if (onMap(row, col)) {
+            return (int) elevationGrid[row][col];
+        }
+        return 0;
     }
 
     /**
@@ -603,7 +600,7 @@ public class Map  {
             for (int row = 0; row < numRows; row++) {
 
                 status.currentTerrain = getGridTerrain(status.currentCol, status.currentRow);
-                status.groundLevel = (int) elevationGrid[status.currentCol][status.currentRow];
+                status.groundLevel = getGridElevation(status.currentCol, status.currentRow); //int) elevationGrid[status.currentCol][status.currentRow];
 
                 // temp hex is the hex the LOS point is in
                 if (status.sourceHex.getExtendedHexBorder().contains(status.currentCol, status.currentRow)) {
