@@ -50,8 +50,8 @@ import java.util.List;
  * A Board is a geomorphic or HASL board.
  */
 public class ASLBoard extends Board {
-    public static final double DEFAULT_HEX_WIDTH = 56.24;
-    public static final double DEFAULT_HEX_HEIGHT = 64.51;
+    public static final double DEFAULT_HEX_WIDTH = BoardArchive.GEO_HEX_WIDTH;
+    public static final double DEFAULT_HEX_HEIGHT = BoardArchive.GEO_HEX_HEIGHT;
     public String version = "0.0";
     private Rectangle cropBounds = new Rectangle(0, 0, -1, -1);
     private Dimension uncroppedSize;
