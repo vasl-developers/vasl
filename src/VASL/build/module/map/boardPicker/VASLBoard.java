@@ -319,12 +319,6 @@ public class VASLBoard extends ASLBoard {
             if(changed){
                 LOSData.resetHexTerrain();
             }
-            if((int) VASLBoardArchive.getHexHeight() != BoardArchive.missingValue()){
-                ((Translatable)getGrid()).setAttribute(HexGrid.DY, VASLBoardArchive.getHexHeight());
-            }
-            if((int) VASLBoardArchive.getSnapScale() != BoardArchive.missingValue()){
-                ((Translatable)getGrid()).setAttribute(HexGrid.SNAP_SCALE, VASLBoardArchive.getSnapScale());
-            }
         }
     }
 

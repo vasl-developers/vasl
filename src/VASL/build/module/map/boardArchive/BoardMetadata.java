@@ -342,6 +342,9 @@ public class BoardMetadata extends AbstractMetadata {
         return hexHeight;
     }
 
+    /**
+     * @return the hex snap scale
+     */
     public int getSnapScale() {
         return snapScale;
     }

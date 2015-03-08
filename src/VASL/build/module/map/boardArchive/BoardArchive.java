@@ -750,7 +750,13 @@ public class BoardArchive {
      * @return the hex snap scale
      */
     public int getSnapScale() {
-        return metadata.getSnapScale();
+
+        if(legacyBoard){
+            return dataFile.getSnapScale() == null ? 1 : Integer.parseInt(dataFile.getSnapScale());
+        }
+        else {
+            return metadata.getSnapScale() == BoardMetadata.MISSING ? 1 : metadata.getSnapScale();
+        }
     }
 
     /**

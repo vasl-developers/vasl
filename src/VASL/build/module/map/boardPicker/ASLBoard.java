@@ -145,6 +145,7 @@ public class ASLBoard extends Board {
         ((Translatable)getGrid()).setAttribute(HexGrid.Y0, (int) VASLBoardArchive.getA1CenterY());
         ((Translatable)getGrid()).setAttribute(HexGrid.DX, VASLBoardArchive.getHexWidth());
         ((Translatable)getGrid()).setAttribute(HexGrid.DY, VASLBoardArchive.getHexHeight());
+        ((Translatable)getGrid()).setAttribute(HexGrid.SNAP_SCALE, VASLBoardArchive.getSnapScale());
     }
 
     public File getFile() {
@@ -481,7 +482,7 @@ public class ASLBoard extends Board {
         }
 
         public String getName() {
-            return ASLBoard.this.fileName(ASLBoard.this.getName());
+            return fileName(ASLBoard.this.getName());
         }
 
         @Override

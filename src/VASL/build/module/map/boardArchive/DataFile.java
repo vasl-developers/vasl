@@ -76,5 +76,6 @@ public class DataFile {
     public String getY0() { return attributes.get(HexGrid.Y0);}
     public String getDX() { return attributes.get(HexGrid.DX);}
     public String getDY() { return attributes.get(HexGrid.DY);}
+    public String getSnapScale() {return attributes.get(HexGrid.SNAP_SCALE);}
     public String getVersion() {return  attributes.get(VERSION);}
 }
