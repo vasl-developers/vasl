@@ -18,6 +18,7 @@ package VASL.LOS.Map;
 
 import VASL.build.module.map.boardArchive.BoardArchive;
 import VASL.build.module.map.boardArchive.Slopes;
+import com.sun.istack.internal.Nullable;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
@@ -143,11 +144,6 @@ public class Map  {
                 (A1CenterX < 0.0 ? 0.0 : A1CenterX) + hexWidth * (double) col,
                 (A1CenterY < 0.0 ? hexHeight/2.0 : A1CenterY) + hexHeight * (double) row - hexHeight/2.0 * (double) (col%2)
         );
-
-        // -881 to 21
-        // *-1 = 881
-        // divide by hex width and get remainder
-
 
     }
 
@@ -2185,17 +2181,13 @@ public class Map  {
      */
     private boolean hillockRuleApplicable(LOSStatus status) {
 
-        if(status.groundLevel + status.currentTerrainHgt == status.sourceElevation &&
-           status.groundLevel + status.currentTerrainHgt == status.targetElevation &&
-           (status.crossingHillock != null ||
-                  status.startsOnHillock ||
-                  status.endsOnHillock ||
-                  status.sourceAdjacentHillock != null ||
-                  status.targetAdjacentHillock != null)
-                ) {
-            return true;
-        }
-        return false;
+        return status.groundLevel + status.currentTerrainHgt == status.sourceElevation &&
+                status.groundLevel + status.currentTerrainHgt == status.targetElevation &&
+                (status.crossingHillock != null ||
+                        status.startsOnHillock ||
+                        status.endsOnHillock ||
+                        status.sourceAdjacentHillock != null ||
+                        status.targetAdjacentHillock != null);
     }
 
     /**
@@ -2232,6 +2224,7 @@ public class Map  {
          * @param hex the hex
          * @return true if the given hex is not part of the hillock but adjacent to one of the hexes
          */
+        @SuppressWarnings("unused")
         public boolean isAdjacent(Hex hex) {
 
             if(hexes.contains(hex)) {
@@ -2315,7 +2308,6 @@ public class Map  {
         hillocks = new HashSet<Hillock>();
 
         // create one hillock for each hillock hex
-        ArrayList<String> hexes = new ArrayList<String>();
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height + (x % 2); y++) { // add 1 hex if odd
                 if (HILLOCK.equals(getHex(x, y).getCenterLocation().getTerrain().getName())) {
@@ -2344,7 +2336,7 @@ public class Map  {
                 while (i.hasNext()) {
 
                     // consolidate one adjacent hillock
-                    Hillock h = (Hillock) i.next();
+                    Hillock h = i.next();
                     if (hillock.isAdjacent(h)) {
                         hillock.merge(h);
                         i.remove();
@@ -2372,12 +2364,12 @@ public class Map  {
     protected boolean checkHalfLevelTerrainRule(LOSStatus status, LOSResult result) {
 
         // special rules for hillocks
-        if((hillockRuleApplicable(status) && !status.slopes) || hillockHindranceToLowerElevation(status)) {
+        if ((hillockRuleApplicable(status) && !status.slopes) || hillockHindranceToLowerElevation(status)) {
 
             // apply max one hindrance for grain/brush
-            if(status.firstHalfLevelHindrance == null &&
-              (BRUSH.equals(status.currentTerrain.getName()) || GRAIN.equals(status.currentTerrain.getName())) &&
-             !(status.startsOnHillock && status.endsOnHillock)) {
+            if (status.firstHalfLevelHindrance == null &&
+                    (BRUSH.equals(status.currentTerrain.getName()) || GRAIN.equals(status.currentTerrain.getName())) &&
+                    !(status.startsOnHillock && status.endsOnHillock)) {
 
                 status.firstHalfLevelHindrance = status.currentHex;
                 if (addHindranceHex(status, result)) {
@@ -2387,16 +2379,11 @@ public class Map  {
             return false;
         }
 
-        if (status.currentTerrain.isHalfLevelHeight() &&
-           !status.currentTerrain.isHexsideTerrain() &&
-            status.groundLevel + status.currentTerrainHgt == status.sourceElevation &&
-            status.groundLevel + status.currentTerrainHgt == status.targetElevation &&
-           !status.slopes) {
-
-            return applyHalfLevelTerrain(status, result);
-
-        }
-        return false;
+        return status.currentTerrain.isHalfLevelHeight() &&
+                !status.currentTerrain.isHexsideTerrain() &&
+                status.groundLevel + status.currentTerrainHgt == status.sourceElevation &&
+                status.groundLevel + status.currentTerrainHgt == status.targetElevation &&
+                !status.slopes && applyHalfLevelTerrain(status, result);
     }
 
     /**

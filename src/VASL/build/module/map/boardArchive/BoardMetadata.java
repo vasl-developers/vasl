@@ -357,13 +357,6 @@ public class BoardMetadata extends AbstractMetadata {
     }
 
     /**
-     * @return the hex snap scale
-     */
-    public int getSnapScale() {
-        return snapScale;
-    }
-
-    /**
      * @return the scenario-specific overlay rules
      */
     public Slopes getSlopes(){ return slopes;}

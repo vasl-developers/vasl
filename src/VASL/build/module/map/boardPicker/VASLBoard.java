@@ -155,8 +155,6 @@ public class VASLBoard extends ASLBoard {
 
 				final String s = st.nextToken();
 
-                // System.out.println(s);
-
 				final LOSSSRule rule = losssRules.get(s);
                 if(rule == null) {
                     throw new BoardException("Unsupported scenario-specific rule: " + s + ". LOS disabled");

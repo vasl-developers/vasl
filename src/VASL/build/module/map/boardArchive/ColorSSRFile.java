@@ -55,10 +55,6 @@ public class ColorSSRFile {
                     line = scanner.next();
                     colorSSRule = new ColorSSRule();
 
-                    if(ruleName.equals("ETOtoDTO")) {
-                        System.out.println();
-                    }
-
                     // mapping lines start with two spaces
                     while (scanner.hasNext() && ((line.startsWith("  ") && line.length() > 2) || line.length() < 2)) {
 

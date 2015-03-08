@@ -760,13 +760,6 @@ public class BoardArchive {
     }
 
     /**
-     * @return the hex snap scale
-     */
-    public int getSnapScale() {
-        return metadata.getSnapScale();
-    }
-
-    /**
      * @return true if upper left hex is A0, B1 is higher, etc.
      */
 	@SuppressWarnings("unused")
