@@ -20,7 +20,6 @@ package VASL.build.module.map.boardPicker;
 
 import VASL.build.module.ASLMap;
 import VASL.build.module.map.boardArchive.BoardArchive;
-import VASL.build.module.map.boardArchive.DataFile;
 import VASL.build.module.map.boardPicker.board.ASLHexGrid;
 import VASSAL.build.BadDataReport;
 import VASSAL.build.GameModule;
@@ -35,7 +34,6 @@ import VASSAL.tools.image.ImageTileSource;
 import VASSAL.tools.image.ImageUtils;
 import VASSAL.tools.imageop.*;
 import VASSAL.tools.io.FileArchive;
-import VASSAL.tools.io.IOUtils;
 import VASSAL.tools.io.ZipArchive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -146,6 +144,7 @@ public class ASLBoard extends Board {
         ((Translatable)getGrid()).setAttribute(HexGrid.DX, VASLBoardArchive.getHexWidth());
         ((Translatable)getGrid()).setAttribute(HexGrid.DY, VASLBoardArchive.getHexHeight());
         ((Translatable)getGrid()).setAttribute(HexGrid.SNAP_SCALE, VASLBoardArchive.getSnapScale());
+        ((Translatable)getGrid()).setAttribute(BoardArchive.ALT_HEX_GRID_KEY, Boolean.toString(VASLBoardArchive.isAltHexGrain()));
     }
 
     public File getFile() {
@@ -212,10 +211,6 @@ public class ASLBoard extends Board {
         uncroppedSize = baseImageOp.getSize();
         fixedBoundaries = false;
         scaledImageOp = null;
-    }
-
-    public static String fileName(String s) {
-        return "bd" + s + ".gif";
     }
 
     public void addOverlay(Overlay o) {
@@ -482,7 +477,7 @@ public class ASLBoard extends Board {
         }
 
         public String getName() {
-            return fileName(ASLBoard.this.getName());
+            return VASLBoardArchive.getBoardImageFileName();
         }
 
         @Override
