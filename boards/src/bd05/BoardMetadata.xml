@@ -68,7 +68,7 @@
 			<overlaySSRuleImage image="5_NoBridge_EE2.gif" x="1651" y="68" />
 			<overlaySSRuleImage image="5_NoBridge_Y8.gif" x="1315" y="454" />
 		</overlaySSRuleSet>
-		<overlaySSRule name="NoWoodsRoad" image="5_NoWoodsRoad.gif" x="409" y="116" />
+		<overlaySSRule name="NoWoodsRoads" image="5_NoWoodsRoad.gif" x="409" y="116" />
 		<overlaySSRule name="RoadsToPaths" image="5_WoodsRoad2Path.gif" x="426" y="116" />
 		<overlaySSRule name="SSO_A21" image="5_SSO_A21.gif" x="1199" y="493" />
 		<overlaySSRule name="SSO_A40" image="5_SSO_A40.gif" x="1210" y="50" />
