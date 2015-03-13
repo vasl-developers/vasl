@@ -16,11 +16,13 @@
                 makes the VASL LOS image translation faster and more accurate
     height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
     width - width of the board in hexes.
-	others - TBD e.g. alternate hex grain, etc. 
+	others - TBD e.g. alternate hex grain, etc.
+
+	3/14/15 - fixed "Crags to Palms" SSR rule
 -->
 <boardMetadata 
 	name="7a" 
-	version="6.0" 
+	version="6.1"
 	versionDate="Mar 2014" 
 	author="BK" 
 	boardImageFileName="bd7a.gif" 
@@ -72,7 +74,7 @@
 		<overlaySSRule name="OrchardsToShellholes" image="7a_OrchardsToShellholes.gif" x="30" y="105" />
 		<overlaySSRule name="OrchardsToCrags" image="7a_OrchardsToCrags.gif" x="33" y="105" />
 		<overlaySSRule name="CragsToOrchards" image="7a_CragsToOrchards.gif" x="318" y="398" />
-		<overlaySSRule name="CragsToPalmTrees" image="7a_CragsToPalmTrees.gif" x="315" y="398" />
+		<overlaySSRule name="CragsToPalm" image="7a_CragsToPalmTrees.gif" x="315" y="398" />
 		<overlaySSRule name="CragsToShellholes" image="7a_CragsToShellholes.gif" x="315" y="399" />
 		<overlaySSRule name="NoCliffs" image="7a_NoCliffs.gif" x="296" y="383" />
 		<overlaySSRule name="PalmTrees" image="7a_PalmTrees.gif" x="33" y="105" />

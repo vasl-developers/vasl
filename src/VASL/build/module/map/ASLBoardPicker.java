@@ -968,7 +968,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
 
         public void readOptions(NodeList basicNodes, NodeList optionNodes) {
             try {
-                if (basicNodes.getLength() > 0) {
+                if (basicNodes != null && basicNodes.getLength() > 0) {
                     basicNodes = (basicNodes.item(0)).getChildNodes();
                     Box basicPanel = Box.createHorizontalBox();
                     for (int j = 0; j < basicNodes.getLength(); ++j) {
@@ -982,19 +982,22 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
                     }
                     getContentPane().add(basicPanel, 0);
                 }
-                for (int i = 0; i < optionNodes.getLength(); ++i) {
-                    Element el = (Element) optionNodes.item(i);
-                    Box box = Box.createVerticalBox();
-                    NodeList nl = el.getChildNodes();
-                    for (int j = 0; j < nl.getLength(); ++j) {
-                        if (nl.item(j).getNodeType() == Node.ELEMENT_NODE) {
-                            Element el2 = (Element) nl.item(j);
-                            TerrainOption opt = new TerrainOption(mediator, el2);
-                            box.add(opt.getComponent());
-                            optionGroup.addElement(opt);
+                if(optionNodes != null){
+
+                    for (int i = 0; i < optionNodes.getLength(); ++i) {
+                        Element el = (Element) optionNodes.item(i);
+                        Box box = Box.createVerticalBox();
+                        NodeList nl = el.getChildNodes();
+                        for (int j = 0; j < nl.getLength(); ++j) {
+                            if (nl.item(j).getNodeType() == Node.ELEMENT_NODE) {
+                                Element el2 = (Element) nl.item(j);
+                                TerrainOption opt = new TerrainOption(mediator, el2);
+                                box.add(opt.getComponent());
+                                optionGroup.addElement(opt);
+                            }
                         }
+                        addOption(el.getAttribute("name"), box);
                     }
-                    addOption(el.getAttribute("name"), box);
                 }
             } catch (Exception e) {
                 logger.warn("Error processing SSR control file: " + e.getMessage());

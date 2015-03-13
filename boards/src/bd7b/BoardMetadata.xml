@@ -18,11 +18,13 @@
 	hexHeight - the height of a hex in pixels - decimal - should be image/height
 	hexWidth - the width of a hex in pixels - decimal - center point to center point
 	A1CenterX - x location of the A1 center dot
-	A1CenterY - y location of the A1 center dot 
+	A1CenterY - y location of the A1 center dot
+
+	3/14/15 - fixed "Crags to Palms" SSR rule
 -->
 <boardMetadata 
 	name="7b" 
-	version="6.0" 
+	version="6.1"
 	versionDate="Mar 2014" 
 	author="BK" 
 	boardImageFileName="bd7b.gif" 
@@ -77,7 +79,7 @@
 		<overlaySSRule name="OrchardsToShellholes" image="7b_OrchardsToShellholes.gif" x="30" y="105" />
 		<overlaySSRule name="OrchardsToCrags" image="7b_OrchardsToCrags.gif" x="33" y="105" />
 		<overlaySSRule name="CragsToOrchards" image="7b_CragsToOrchards.gif" x="318" y="398" />
-		<overlaySSRule name="CragsToPalmTrees" image="7b_CragsToPalmTrees.gif" x="315" y="398" />
+		<overlaySSRule name="CragsToPalm" image="7b_CragsToPalmTrees.gif" x="315" y="398" />
 		<overlaySSRule name="CragsToShellholes" image="7b_CragsToShellholes.gif" x="315" y="399" />
 		<overlaySSRule name="NoCliffs" image="7b_NoCliffs.gif" x="296" y="383" />
 		<overlaySSRule name="PalmTrees" image="7b_PalmTrees.gif" x="33" y="105" />

@@ -19,6 +19,7 @@
 	others - TBD e.g. alternate hex grain, etc. 
 
 	2/8/15 - fixed overlay SSR rules adding rule sets
+	3/11/15 - fixed "no woods roads" SSR rule
 -->
 <boardMetadata name="50" version="6.1" versionDate="Aug 2008" author="TR" boardImageFileName="bd50.gif" hasHills="TRUE" width="33" height="10">
 
@@ -79,7 +80,7 @@
 			<overlaySSRuleImage image="50_NoBridge_Q2.gif" x="881" y="56" />
 			<overlaySSRuleImage image="50_NoBridge_V5.gif" x="1145" y="295" />
 		</overlaySSRuleSet>
-		<overlaySSRule name="NoWoodsRoad" image="50_NoWoodsRoads.gif" x="582" y="9" />
+		<overlaySSRule name="NoWoodsRoads" image="50_NoWoodsRoads.gif" x="582" y="9" />
 		<overlaySSRule name="RoadsToPaths" image="50_WoodsRoad2Path.gif" x="596" y="21" />
 		<overlaySSRule name="WallsToOG" image="50_Walls2OG.gif" x="73" y="254" />
 		<overlaySSRule name="NoWalls" image="50_Walls2OG.gif" x="73" y="254" />

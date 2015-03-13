@@ -18,7 +18,6 @@ package VASL.LOS.Map;
 
 import VASL.build.module.map.boardArchive.BoardArchive;
 import VASL.build.module.map.boardArchive.Slopes;
-import com.sun.istack.internal.Nullable;
 
 import java.awt.*;
 import java.awt.geom.Line2D;

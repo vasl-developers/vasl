@@ -19,6 +19,8 @@
 	others - TBD e.g. alternate hex grain, etc.
 
 	2/8/15 - fixed overlay SSR rules adding rule sets
+	3/11/15 - fixed "no woods roads" SSR rule
+
 -->
 <boardMetadata name="05" version="6.1" versionDate="Nov 2013" author="TR" boardImageFileName="bd05.gif" hasHills="FALSE" width="33" height="10">
 

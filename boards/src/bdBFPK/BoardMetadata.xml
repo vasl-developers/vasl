@@ -17,8 +17,10 @@
     height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
+	
+	3/11/15 - fixed "no woods roads" SSR rule
 -->
-<boardMetadata name="BFPK" version="6.0" versionDate="Jan 2011" author="TR" boardImageFileName="bdBFPK.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="BFPK" version="6.1" versionDate="Jan 2011" author="TR" boardImageFileName="bdBFPK.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -79,7 +81,7 @@
 		<overlaySSRule name="WallsToOG" image="BFPK_WallsToOG.gif" x="298" y="1" />
 		<overlaySSRule name="HedgesToOG" image="BFPK_HedgesToOG.gif" x="409" y="27" />
 		<overlaySSRule name="NoCliffs" image="BFPK_NoCliffs.gif" x="521" y="63" />
-		<overlaySSRule name="NoWoodsRoad" image="BFPK_NoWoodsRoad.gif" x="473" y="26" />
+		<overlaySSRule name="NoWoodsRoads" image="BFPK_NoWoodsRoad.gif" x="473" y="26" />
 		<overlaySSRule name="RoadsToPaths" image="BFPK_RoadsToPaths.gif" x="473" y="26" />
 		<overlaySSRule name="NoSunkElevRoads" image="BFPK_NoSunkElevRoads.gif" x="310" y="393" />
 		<overlaySSRule name="NoRoads" image="BFPK_NoRoads.gif" x="1" y="1" />

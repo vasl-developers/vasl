@@ -825,18 +825,29 @@ public class BoardArchive {
     }
 
     /**
-     * @return  a list of the "basic" nodes in the SSR control file
+     * @return  a list of the "basic" nodes in the SSR control file; null if file does not exist
      */
     public NodeList getBasicNodes() {
 
-        return SSRControlsFile.getBasicNodes();
+        if(SSRControlsFile == null) {
+            return null;
+        }
+        else {
+            return SSRControlsFile.getBasicNodes();
+        }
     }
 
     /**
-     * @return  a list of the "option" nodes in the SSR control file
+     * @return  a list of the "option" nodes in the SSR control file; null if file does not exist
      */
     public NodeList getOptionNodes() {
-        return SSRControlsFile.getOptionNodes();
+
+        if(SSRControlsFile  == null) {
+            return null;
+        }
+        else {
+            return SSRControlsFile.getOptionNodes();
+        }
     }
 }
 
