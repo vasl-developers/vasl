@@ -18,7 +18,10 @@
  */
 package VASL.build.module.map.boardPicker;
 
+import VASL.build.module.map.boardArchive.OverlaySSRule;
+import VASL.build.module.map.boardArchive.OverlaySSRuleImage;
 import VASSAL.tools.DataArchive;
+import VASSAL.tools.image.ImageUtils;
 import VASSAL.tools.io.IOUtils;
 
 import java.awt.*;
@@ -36,25 +39,20 @@ public class SSROverlay extends Overlay {
   protected SSROverlay() {
   }
 
-  public SSROverlay(String s, File archiveFile) {
+  public SSROverlay(OverlaySSRuleImage image, File archiveFile) {
     try {
-      StringTokenizer st = new StringTokenizer(s);
-      name = st.nextToken();
-      String position = st.nextToken();
 
-      basePos = new Point(Integer.parseInt(position.substring
-                                           (0, position.indexOf(','))),
-                          Integer.parseInt(position.substring
-                                           (position.indexOf(',') + 1)));
+      basePos = new Point(image.getX(), image.getY());
       overlayFile = archiveFile;
+      name = image.getImageName();
+
       try {
         archive = new DataArchive(overlayFile.getPath(),"");
       }
       catch (IOException e) {
-        throw new IllegalArgumentException("Unable to open "+overlayFile);
+        throw new IllegalArgumentException("Unable to open " + overlayFile);
       }
-      boundaries.setSize(archive.getImageSize(name));
-
+      boundaries.setSize(ImageUtils.getImageSize(name, archive.getInputStream(name)));
       boundaries.setLocation(basePos);
     }
     catch (Exception e) {

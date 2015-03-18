@@ -18,6 +18,7 @@
  */
 package VASL.build.module.map;
 
+import VASL.build.module.map.boardArchive.SSRControlsFile;
 import VASL.build.module.map.boardPicker.*;
 import VASSAL.Info;
 import VASSAL.build.*;
@@ -36,7 +37,6 @@ import VASSAL.tools.io.IOUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -69,6 +69,9 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
      * The key for the preferences setting giving the board directory
      */
     public static final String BOARD_DIR = "boardURL";
+    private static final String MODULE_SSR_CONTROL_FILE_NAME = "boardData/SSRControls";
+    private static final String OVERLAY_SSR_CONTROL_FILE_NAME = "SSRControls";
+
     private File boardDir;
     protected TerrainEditor terrain;
     private SetupControls setupControls;
@@ -211,9 +214,11 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
 
             InputStream in = null;
             try {
-                in = GameModule.getGameModule().getDataArchive().getInputStream("boardData/SSRControls");
-                terrain.readOptions(in);
-            } catch (IOException ignore) {
+                in = GameModule.getGameModule().getDataArchive().getInputStream(MODULE_SSR_CONTROL_FILE_NAME);
+                SSRControlsFile ssrControlsFile = new SSRControlsFile(in, "game module");
+                terrain.readOptions(ssrControlsFile.getBasicNodes(), ssrControlsFile.getOptionNodes());
+            } catch (IOException e) {
+                logger.warn("Error reading SSR controls file in module archive: " + e.getMessage());
             } finally {
                 IOUtils.closeQuietly(in);
             }
@@ -226,12 +231,12 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
     public void refreshPossibleBoards() {
         String files[] = boardDir == null ? new String[0] : boardDir.list();
         List<String> sorted = new ArrayList<String>();
-        for (int i = 0; i < files.length; ++i) {
-            if (files[i].startsWith("bd") && !(new File(boardDir, files[i])).isDirectory()) {
-                String name = files[i].substring(2);
-                if (name.endsWith(".gif")) {
-                    name = name.substring(0, name.indexOf(".gif"));
-                } else if (name.indexOf(".") >= 0) {
+        for (String file : files) {
+            // TODO - remove requirement that boards start with "bd"
+            if (file.startsWith("bd") && !(new File(boardDir, file)).isDirectory()) {
+                String name = file.substring(2);
+
+                if (name.contains(".")) {
                     name = null;
                 }
                 if (name != null && !sorted.contains(name)) {
@@ -313,8 +318,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
 
         Collections.sort(sorted, comp);
         possibleBoards.clear();
-        for (int i = 0; i < sorted.size(); ++i) {
-            addBoard((String) sorted.get(i));
+        for (String aSorted : sorted) {
+            addBoard(aSorted);
         }
     }
 
@@ -344,6 +349,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
             unReversedBoardName = commonName;
         }
 
+        // TODO - remove requirement that boards start with "bd"
         final File fpath = new File(boardDir, "bd" + unReversedBoardName);
 
         final ASLTilingHandler th = new ASLTilingHandler(
@@ -428,14 +434,11 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
             File f;
             f = new File(boardDir, "bd" + unReversedBoardName);
             if (f.exists()) {
-                b.setCommonName(unReversedBoardName);
-                b.setBaseImageFileName("bd" + unReversedBoardName + ".gif", f);
+                b.initializeFromArchive(f);
             } else {
                 throw new BoardException("Unable to find board " + baseName);
             }
-            b.readData();
         } catch (Exception eParse) {
-//      eParse.printStackTrace();
             throw new BoardException(eParse.getMessage(), eParse);
         }
         try {
@@ -448,7 +451,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
             b.setCropBounds(new Rectangle(0, 0, -1, -1));
         }
 
-        if (bd.indexOf("VER") >= 0) {
+        if (bd.contains("VER")) {
             StringTokenizer st = new StringTokenizer(bd.substring(bd.indexOf("VER") + 4), "\t");
             if (st.countTokens() >= 1) {
                 String reqver = st.nextToken();
@@ -457,7 +460,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
             }
         }
 
-        while (bd.indexOf("OVR") >= 0) {
+        while (bd.contains("OVR")) {
             bd = bd.substring(bd.indexOf("OVR") + 4);
             try {
                 b.addOverlay(new Overlay(bd, b, new File(getBoardDir(), "overlays")));
@@ -465,10 +468,10 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
                 e.printStackTrace();
             }
         }
-        if (bd.indexOf("SSR") >= 0) {
+        if (bd.contains("SSR")) {
             b.setTerrain(bd.substring(bd.indexOf("SSR") + 4));
         }
-        if (bd.indexOf("ZOOM") >= 0) {
+        if (bd.contains("ZOOM")) {
 
             // occasionally ZOOM is encoded multiple times - ignore this error as it's very rare
             // and ignoring zoom has no real side effects
@@ -559,8 +562,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
     }
 
     public org.w3c.dom.Element getBuildElement(org.w3c.dom.Document doc) {
-        org.w3c.dom.Element el = doc.createElement(getClass().getName());
-        return el;
+        return doc.createElement(getClass().getName());
     }
 
     public Component getControls() {
@@ -733,6 +735,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
     }
 
     protected class Overlayer extends JDialog implements ActionListener {
+
         private JTextField hex1, hex2, ovrName;
         private JLabel status;
 
@@ -812,8 +815,6 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
                 ovrName.setText("");
                 hex1.setText("");
                 hex2.setText("");
-                if (false)
-                    throw new BoardException("Now that's weird");
             } catch (BoardException excep) {
                 status.setText(excep.getMessage());
             }
@@ -918,24 +919,19 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
                 ASLBoard b = (ASLBoard) board;
                 boards.addElement(b);
                 if (b != null) {
-                    if (b.getBoardArchive() != null) {
-                        InputStream in = null;
-                        try {
-                            in = b.getBoardArchive().getInputStream("SSRControls");
-                            readOptions(in);
-                        } catch (IOException ignore) {
-                        } finally {
-                            IOUtils.closeQuietly(in);
-                        }
-                    }
+
+                    readOptions(b.getVASLBoardArchive().getBasicNodes(), b.getVASLBoardArchive().getOptionNodes());
 
                     for (Enumeration oEnum = b.getOverlays(); oEnum.hasMoreElements(); ) {
                         Overlay o = (Overlay) oEnum.nextElement();
                         if (!(o instanceof SSROverlay)) {
                             InputStream in = null;
                             try {
-                                in = o.getDataArchive().getInputStream("SSRControls");
-                                readOptions(in);
+
+                                in = GameModule.getGameModule().getDataArchive().getInputStream(OVERLAY_SSR_CONTROL_FILE_NAME);
+                                SSRControlsFile ssrControlsFile = new SSRControlsFile(in, o.getName());
+                                readOptions(ssrControlsFile.getBasicNodes(), ssrControlsFile.getOptionNodes());
+
                             } catch (IOException ignore) {
                             } finally {
                                 IOUtils.closeQuietly(in);
@@ -970,28 +966,26 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
             c.repaint();
         }
 
-        public void readOptions(InputStream in) {
-            if (in != null) {
-                try {
-                    Document doc = Builder.createDocument(in);
-                    NodeList n = doc.getElementsByTagName("Basic");
-                    if (n.getLength() > 0) {
-                        n = (n.item(0)).getChildNodes();
-                        Box basicPanel = Box.createHorizontalBox();
-                        for (int j = 0; j < n.getLength(); ++j) {
-                            if (n.item(j).getNodeType() == Node.ELEMENT_NODE) {
-                                Element el2 = (Element) n.item(j);
-                                TerrainOption opt = new TerrainOption(mediator, el2);
-                                ((Container) opt.getComponent()).setLayout(new BoxLayout((Container) opt.getComponent(), BoxLayout.Y_AXIS));
-                                basicPanel.add(opt.getComponent());
-                                basicOptions.addElement(opt);
-                            }
+        public void readOptions(NodeList basicNodes, NodeList optionNodes) {
+            try {
+                if (basicNodes != null && basicNodes.getLength() > 0) {
+                    basicNodes = (basicNodes.item(0)).getChildNodes();
+                    Box basicPanel = Box.createHorizontalBox();
+                    for (int j = 0; j < basicNodes.getLength(); ++j) {
+                        if (basicNodes.item(j).getNodeType() == Node.ELEMENT_NODE) {
+                            Element el2 = (Element) basicNodes.item(j);
+                            TerrainOption opt = new TerrainOption(mediator, el2);
+                            ((Container) opt.getComponent()).setLayout(new BoxLayout((Container) opt.getComponent(), BoxLayout.Y_AXIS));
+                            basicPanel.add(opt.getComponent());
+                            basicOptions.addElement(opt);
                         }
-                        getContentPane().add(basicPanel, 0);
                     }
-                    n = doc.getElementsByTagName("Option");
-                    for (int i = 0; i < n.getLength(); ++i) {
-                        Element el = (Element) n.item(i);
+                    getContentPane().add(basicPanel, 0);
+                }
+                if(optionNodes != null){
+
+                    for (int i = 0; i < optionNodes.getLength(); ++i) {
+                        Element el = (Element) optionNodes.item(i);
                         Box box = Box.createVerticalBox();
                         NodeList nl = el.getChildNodes();
                         for (int j = 0; j < nl.getLength(); ++j) {
@@ -1004,9 +998,9 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
                         }
                         addOption(el.getAttribute("name"), box);
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
+            } catch (Exception e) {
+                logger.warn("Error processing SSR control file: " + e.getMessage());
             }
         }
 

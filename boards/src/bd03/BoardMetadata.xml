@@ -82,13 +82,13 @@
 		<overlaySSRule name="WallsToBocage" image="3_Walls2Bocage.gif" x="521" y="62" />
 		<overlaySSRule name="HedgesToBocage" image="3_Hedges2Bocage.gif" x="634" y="63" />
 		<overlaySSRule name="ShellholesToOrchards" image="3_Shellhole2Orch.gif" x="256" y="9" />
-		<overlaySSRule name="ShellholesToPalmTrees" image="3_Shellhole2Palm.gif" x="256" y="9" />
+		<overlaySSRule name="ShellholesToPalmTrees" image="3_Shellhole2PalmTrees.gif" x="256" y="9" />
 		<overlaySSRule name="BSO_TR3-1" image="3_BSO_TR3-1.gif" x="194" y="136" />
 		<overlaySSRule name="BSO_TR3-2" image="3_BSO_TR3-2.gif" x="1028" y="123" />
 		<overlaySSRule name="BSO_3_HillsToL0Woods" image="3_Hills2L0Woods.gif" x="88" y="4" />
 		<overlaySSRule name="SSO_A8" image="3_SSO_A8.gif" x="88" y="9" />
 		<overlaySSRule name="SSO_A26" image="3_SSO_A26.gif" x="88" y="9" />
-		<overlaySSRule name="SSO_J29" image="3_SSO_J26.gif" x="88" y="7" />
+		<overlaySSRule name="SSO_J29" image="3_SSO_J29.gif" x="88" y="7" />
 		<overlaySSRule name="SSO_J94" image="3_SSO_J94.gif" x="88" y="7" />
 		<overlaySSRule name="SSO_O" image="3_SSO_O.png" x="0" y="484" />
 		<overlaySSRule name="SSO_G34" image="3_SSO_G34.gif" x="88" y="7" />

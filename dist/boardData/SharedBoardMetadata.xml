@@ -4,6 +4,538 @@
 	This information can be customized in the BoardMetadata.xml file. 
 -->
 <sharedBoardMetadata>
+
+	<overlaySSRules>
+		<!--
+		    Scenario-specific underlay rules.
+		    name - the VASL SSR name
+		    image - the image name
+    		color - the VASL color name
+
+    		Example:
+    		<underlaySSRule name="WallToCactus" image="CactusPattern.gif">
+        		<color name="WallBrown" />
+        		<color name="WallGrey1" />
+        		<color name="WallGrey2" />
+    		</underlaySSRule>
+		-->
+
+		<underlaySSRule name="WoodsToVineyard" image="VineyardPattern.gif">
+			<color name="WoodsGreen" />
+			<color name="WoodsBlack" />
+		</underlaySSRule>
+		<underlaySSRule name="BrushToVineyard" image="VineyardPattern.gif">
+			<color name="BrushL0" />
+			<color name="BrushL1" />
+			<color name="BrushL2" />
+			<color name="BrushL3" />
+			<color name="BrushL4" />
+			<color name="BrushL5" />
+			<color name="BrushL6" />
+			<color name="BrushL_1" />
+			<color name="BrushL_2" />
+			<color name="BrushBlackL_2" />
+			<color name="BrushBlackL_1" />
+			<color name="BrushBlackL0" />
+			<color name="BrushBlackL1" />
+			<color name="BrushBlackL2" />
+			<color name="BrushBlackL3" />
+			<color name="BrushBlackL4" />
+			<color name="BrushBlackL5" />
+			<color name="BrushBlackL6" />
+		</underlaySSRule>
+		<underlaySSRule name="GrainToVineyard" image="VineyardPattern.gif">
+			<color name="GrainL0" />
+			<color name="GrainL1" />
+			<color name="GrainL2" />
+			<color name="GrainL3" />
+			<color name="GrainL4" />
+			<color name="GrainL5" />
+			<color name="GrainL6" />
+			<color name="GrainL_1" />
+			<color name="GrainL_2" />
+			<color name="PlowedFields" />
+			<color name="Furrows" />
+			<color name="FurrowsL0" />
+			<color name="FurrowsL1" />
+			<color name="FurrowsL2" />
+			<color name="FurrowsL3" />
+			<color name="FurrowsL4" />
+			<color name="FurrowsL5" />
+			<color name="FurrowsL6" />
+			<color name="FurrowsL_1" />
+			<color name="FurrowsL_2" />
+		</underlaySSRule>
+		<underlaySSRule name="MarshToVineyard" image="VineyardPattern.gif">
+			<color name="StreamMarshGreenL_1" />
+			<color name="StreamMarshGreenL0" />
+			<color name="StreamMarshBrownL_1" />
+			<color name="StreamMarshBrownL0" />
+			<color name="StreamSwampGreenL_1" />
+			<color name="StreamSwampGreenL0" />
+			<color name="StreamSwampBrownL_1" />
+			<color name="StreamSwampBrownL0" />
+			<color name="RiverMarshGreenL_1" />
+			<color name="RiverMarshGreenL0" />
+			<color name="RiverMarshBrownL_1" />
+			<color name="RiverMarshBrownL0" />
+			<color name="RiverSwampGreenL_1" />
+			<color name="RiverSwampGreenL0" />
+			<color name="RiverSwampBrownL_1" />
+			<color name="RiverSwampBrownL0" />
+			<color name="SeparatedMarshGreenL_1" />
+			<color name="SeparatedMarshGreenL0" />
+			<color name="SeparatedMarshBrownL_1" />
+			<color name="SeparatedMarshBrownL0" />
+			<color name="SeparatedSwampGreenL_1" />
+			<color name="SeparatedSwampGreenL0" />
+			<color name="SeparatedSwampBrownL_1" />
+			<color name="SeparatedSwampBrownL0" />
+		</underlaySSRule>
+		<underlaySSRule name="SwampToSwampPattern" image="SwampPattern.gif">
+			<color name="StreamSwampGreenL_1" />
+			<color name="StreamSwampGreenL0" />
+			<color name="StreamSwampBrownL_1" />
+			<color name="StreamSwampBrownL0" />
+			<color name="RiverSwampGreenL_1" />
+			<color name="RiverSwampGreenL0" />
+			<color name="RiverSwampBrownL_1" />
+			<color name="RiverSwampBrownL0" />
+			<color name="SeparatedSwampGreenL_1" />
+			<color name="SeparatedSwampGreenL0" />
+			<color name="SeparatedSwampBrownL_1" />
+			<color name="SeparatedSwampBrownL0" />
+		</underlaySSRule>
+		<underlaySSRule name="Level_1ToVineyard" image="VineyardPattern.gif">
+			<color name="Level_1" />
+		</underlaySSRule>
+		<underlaySSRule name="Level1ToVineyard" image="VineyardPattern.gif">
+			<color name="Level1" />
+		</underlaySSRule>
+		<underlaySSRule name="WoodsToPaddy" image="PaddyPattern.gif">
+			<color name="WoodsGreen" />
+			<color name="WoodsBlack" />
+		</underlaySSRule>
+		<underlaySSRule name="BrushToPaddy" image="PaddyPattern.gif">
+			<color name="BrushL0" />
+			<color name="BrushL1" />
+			<color name="BrushL2" />
+			<color name="BrushL3" />
+			<color name="BrushL4" />
+			<color name="BrushL5" />
+			<color name="BrushL6" />
+			<color name="BrushL_1" />
+			<color name="BrushL_2" />
+			<color name="BrushBlackL_2" />
+			<color name="BrushBlackL_1" />
+			<color name="BrushBlackL0" />
+			<color name="BrushBlackL1" />
+			<color name="BrushBlackL2" />
+			<color name="BrushBlackL3" />
+			<color name="BrushBlackL4" />
+			<color name="BrushBlackL5" />
+			<color name="BrushBlackL6" />
+		</underlaySSRule>
+		<underlaySSRule name="GrainToPaddy" image="PaddyPattern.gif">
+			<color name="GrainL0" />
+			<color name="GrainL1" />
+			<color name="GrainL2" />
+			<color name="GrainL3" />
+			<color name="GrainL4" />
+			<color name="GrainL5" />
+			<color name="GrainL6" />
+			<color name="GrainL_1" />
+			<color name="GrainL_2" />
+			<color name="PlowedFields" />
+			<color name="Furrows" />
+			<color name="FurrowsL0" />
+			<color name="FurrowsL1" />
+			<color name="FurrowsL2" />
+			<color name="FurrowsL3" />
+			<color name="FurrowsL4" />
+			<color name="FurrowsL5" />
+			<color name="FurrowsL6" />
+			<color name="FurrowsL_1" />
+			<color name="FurrowsL_2" />
+		</underlaySSRule>
+		<underlaySSRule name="MarshToPaddy" image="PaddyPattern.gif">
+			<color name="StreamMarshGreenL_1" />
+			<color name="StreamMarshGreenL0" />
+			<color name="StreamMarshBrownL_1" />
+			<color name="StreamMarshBrownL0" />
+			<color name="StreamSwampGreenL_1" />
+			<color name="StreamSwampGreenL0" />
+			<color name="StreamSwampBrownL_1" />
+			<color name="StreamSwampBrownL0" />
+			<color name="RiverMarshGreenL_1" />
+			<color name="RiverMarshGreenL0" />
+			<color name="RiverMarshBrownL_1" />
+			<color name="RiverMarshBrownL0" />
+			<color name="RiverSwampGreenL_1" />
+			<color name="RiverSwampGreenL0" />
+			<color name="RiverSwampBrownL_1" />
+			<color name="RiverSwampBrownL0" />
+			<color name="SeparatedMarshGreenL_1" />
+			<color name="SeparatedMarshGreenL0" />
+			<color name="SeparatedMarshBrownL_1" />
+			<color name="SeparatedMarshBrownL0" />
+			<color name="SeparatedSwampGreenL_1" />
+			<color name="SeparatedSwampGreenL0" />
+			<color name="SeparatedSwampBrownL_1" />
+			<color name="SeparatedSwampBrownL0" />
+		</underlaySSRule>
+		<underlaySSRule name="Level_1ToPaddy" image="PaddyPattern.gif">
+			<color name="Level_1" />
+		</underlaySSRule>
+		<underlaySSRule name="Level1ToPaddy" image="PaddyPattern.gif">
+			<color name="Level1" />
+		</underlaySSRule>
+		<underlaySSRule name="WallsOnly" image="WallPattern.gif">
+			<color name="HedgeGreen" />
+		</underlaySSRule>
+		<underlaySSRule name="WallToCactus" image="CactusPattern.gif">
+			<color name="WallBrown" />
+			<color name="WallGrey1" />
+			<color name="WallGrey2" />
+		</underlaySSRule>
+		<underlaySSRule name="HedgeToCactus" image="CactusPattern.gif">
+			<color name="HedgeGreen" />
+		</underlaySSRule>
+		<underlaySSRule name="OrchardsToCactusPatches" image="CactusPattern.gif">
+			<color name="OrchL_2" />
+			<color name="OrchL_1" />
+			<color name="OrchL0" />
+			<color name="OrchL1" />
+			<color name="OrchL2" />
+			<color name="OrchL3" />
+			<color name="OrchL4" />
+			<color name="OrchL5" />
+			<color name="OrchL6" />
+			<color name="OrchTrees" />
+		</underlaySSRule>
+		<underlaySSRule name="ShellholesToCactusPatches" image="CactusPattern.gif">
+			<color name="Shellhole1" />
+			<color name="Shellhole2" />
+			<color name="Shellhole3" />
+		</underlaySSRule>
+		<underlaySSRule name="CragsToCactusPatches" image="CactusPattern.gif">
+			<color name="CragGrey" />
+			<color name="CragBlack" />
+		</underlaySSRule>
+		<underlaySSRule name="WoodsToBrush" image="BrushPattern.gif">
+			<color name="WoodsGreen" />
+			<color name="WoodsBlack" />
+		</underlaySSRule>
+		<underlaySSRule name="GrainToBrush" image="BrushPattern.gif">
+			<color name="GrainL0" />
+			<color name="GrainL1" />
+			<color name="GrainL2" />
+			<color name="GrainL3" />
+			<color name="GrainL4" />
+			<color name="GrainL5" />
+			<color name="GrainL6" />
+			<color name="GrainL_1" />
+			<color name="GrainL_2" />
+			<color name="PlowedFields" />
+			<color name="Furrows" />
+			<color name="FurrowsL0" />
+			<color name="FurrowsL1" />
+			<color name="FurrowsL2" />
+			<color name="FurrowsL3" />
+			<color name="FurrowsL4" />
+			<color name="FurrowsL5" />
+			<color name="FurrowsL6" />
+			<color name="FurrowsL_1" />
+			<color name="FurrowsL_2" />
+		</underlaySSRule>
+		<underlaySSRule name="MarshToBrush" image="BrushPattern.gif">
+			<color name="StreamMarshGreenL_1" />
+			<color name="StreamMarshGreenL0" />
+			<color name="StreamMarshBrownL_1" />
+			<color name="StreamMarshBrownL0" />
+			<color name="StreamSwampGreenL_1" />
+			<color name="StreamSwampGreenL0" />
+			<color name="StreamSwampBrownL_1" />
+			<color name="StreamSwampBrownL0" />
+			<color name="RiverMarshGreenL_1" />
+			<color name="RiverMarshGreenL0" />
+			<color name="RiverMarshBrownL_1" />
+			<color name="RiverMarshBrownL0" />
+			<color name="RiverSwampGreenL_1" />
+			<color name="RiverSwampGreenL0" />
+			<color name="RiverSwampBrownL_1" />
+			<color name="RiverSwampBrownL0" />
+			<color name="SeparatedMarshGreenL_1" />
+			<color name="SeparatedMarshGreenL0" />
+			<color name="SeparatedMarshBrownL_1" />
+			<color name="SeparatedMarshBrownL0" />
+			<color name="SeparatedSwampGreenL_1" />
+			<color name="SeparatedSwampGreenL0" />
+			<color name="SeparatedSwampBrownL_1" />
+			<color name="SeparatedSwampBrownL0" />
+		</underlaySSRule>
+		<underlaySSRule name="Level_2ToBrush" image="BrushPattern.gif">
+			<color name="Level_2" />
+		</underlaySSRule>
+		<underlaySSRule name="Level_1ToBrush" image="BrushPattern.gif">
+			<color name="Level_1" />
+		</underlaySSRule>
+		<underlaySSRule name="Level1ToBrush" image="BrushPattern.gif">
+			<color name="Level1" />
+		</underlaySSRule>
+		<underlaySSRule name="Level2ToBrush" image="BrushPattern.gif">
+			<color name="Level2" />
+		</underlaySSRule>
+		<underlaySSRule name="Level3ToBrush" image="BrushPattern.gif">
+			<color name="Level3" />
+		</underlaySSRule>
+		<underlaySSRule name="Level4ToBrush" image="BrushPattern.gif">
+			<color name="Level4" />
+		</underlaySSRule>
+		<underlaySSRule name="Level5ToBrush" image="BrushPattern.gif">
+			<color name="Level5" />
+		</underlaySSRule>
+		<underlaySSRule name="Level6ToBrush" image="BrushPattern.gif">
+			<color name="Level6" />
+		</underlaySSRule>
+		<underlaySSRule name="BrushToWoods" image="WoodsPattern.gif">
+			<color name="BrushL0" />
+			<color name="BrushL1" />
+			<color name="BrushL2" />
+			<color name="BrushL3" />
+			<color name="BrushL4" />
+			<color name="BrushL5" />
+			<color name="BrushL6" />
+			<color name="BrushL_1" />
+			<color name="BrushL_2" />
+			<color name="BrushBlackL_2" />
+			<color name="BrushBlackL_1" />
+			<color name="BrushBlackL0" />
+			<color name="BrushBlackL1" />
+			<color name="BrushBlackL2" />
+			<color name="BrushBlackL3" />
+			<color name="BrushBlackL4" />
+			<color name="BrushBlackL5" />
+			<color name="BrushBlackL6" />
+		</underlaySSRule>
+		<underlaySSRule name="GrainToWoods" image="WoodsPattern.gif">
+			<color name="GrainL0" />
+			<color name="GrainL1" />
+			<color name="GrainL2" />
+			<color name="GrainL3" />
+			<color name="GrainL4" />
+			<color name="GrainL5" />
+			<color name="GrainL6" />
+			<color name="GrainL_1" />
+			<color name="GrainL_2" />
+			<color name="PlowedFields" />
+			<color name="Furrows" />
+			<color name="FurrowsL0" />
+			<color name="FurrowsL1" />
+			<color name="FurrowsL2" />
+			<color name="FurrowsL3" />
+			<color name="FurrowsL4" />
+			<color name="FurrowsL5" />
+			<color name="FurrowsL6" />
+			<color name="FurrowsL_1" />
+			<color name="FurrowsL_2" />
+		</underlaySSRule>
+		<underlaySSRule name="MarshToWoods" image="WoodsPattern.gif">
+			<color name="StreamMarshGreenL_1" />
+			<color name="StreamMarshGreenL0" />
+			<color name="StreamMarshBrownL_1" />
+			<color name="StreamMarshBrownL0" />
+			<color name="StreamSwampGreenL_1" />
+			<color name="StreamSwampGreenL0" />
+			<color name="StreamSwampBrownL_1" />
+			<color name="StreamSwampBrownL0" />
+			<color name="RiverMarshGreenL_1" />
+			<color name="RiverMarshGreenL0" />
+			<color name="RiverMarshBrownL_1" />
+			<color name="RiverMarshBrownL0" />
+			<color name="RiverSwampGreenL_1" />
+			<color name="RiverSwampGreenL0" />
+			<color name="RiverSwampBrownL_1" />
+			<color name="RiverSwampBrownL0" />
+			<color name="SeparatedMarshGreenL_1" />
+			<color name="SeparatedMarshGreenL0" />
+			<color name="SeparatedMarshBrownL_1" />
+			<color name="SeparatedMarshBrownL0" />
+			<color name="SeparatedSwampGreenL_1" />
+			<color name="SeparatedSwampGreenL0" />
+			<color name="SeparatedSwampBrownL_1" />
+			<color name="SeparatedSwampBrownL0" />
+		</underlaySSRule>
+		<underlaySSRule name="Level_2ToWoods" image="WoodsPattern.gif">
+			<color name="Level_2" />
+		</underlaySSRule>
+		<underlaySSRule name="Level_1ToWoods" image="WoodsPattern.gif">
+			<color name="Level_1" />
+		</underlaySSRule>
+		<underlaySSRule name="Level1ToWoods" image="WoodsPattern.gif">
+			<color name="Level1" />
+		</underlaySSRule>
+		<underlaySSRule name="Level2ToWoods" image="WoodsPattern.gif">
+			<color name="Level2" />
+		</underlaySSRule>
+		<underlaySSRule name="Level3ToWoods" image="WoodsPattern.gif">
+			<color name="Level3" />
+		</underlaySSRule>
+		<underlaySSRule name="Level4ToWoods" image="WoodsPattern.gif">
+			<color name="Level4" />
+		</underlaySSRule>
+		<underlaySSRule name="Level5ToWoods" image="WoodsPattern.gif">
+			<color name="Level5" />
+		</underlaySSRule>
+		<underlaySSRule name="Level6ToWoods" image="WoodsPattern.gif">
+			<color name="Level6" />
+		</underlaySSRule>
+		<underlaySSRule name="WoodsToMarsh" image="MarshPattern.gif">
+			<color name="WoodsGreen" />
+			<color name="WoodsBlack" />
+		</underlaySSRule>
+		<underlaySSRule name="BrushToMarsh" image="MarshPattern.gif">
+			<color name="BrushL0" />
+			<color name="BrushL1" />
+			<color name="BrushL2" />
+			<color name="BrushL3" />
+			<color name="BrushL4" />
+			<color name="BrushL5" />
+			<color name="BrushL6" />
+			<color name="BrushL_1" />
+			<color name="BrushL_2" />
+			<color name="BrushBlackL_2" />
+			<color name="BrushBlackL_1" />
+			<color name="BrushBlackL0" />
+			<color name="BrushBlackL1" />
+			<color name="BrushBlackL2" />
+			<color name="BrushBlackL3" />
+			<color name="BrushBlackL4" />
+			<color name="BrushBlackL5" />
+			<color name="BrushBlackL6" />
+		</underlaySSRule>
+		<underlaySSRule name="GrainToMarsh" image="MarshPattern.gif">
+			<color name="GrainL0" />
+			<color name="GrainL1" />
+			<color name="GrainL2" />
+			<color name="GrainL3" />
+			<color name="GrainL4" />
+			<color name="GrainL5" />
+			<color name="GrainL6" />
+			<color name="GrainL_1" />
+			<color name="GrainL_2" />
+			<color name="PlowedFields" />
+			<color name="Furrows" />
+			<color name="FurrowsL0" />
+			<color name="FurrowsL1" />
+			<color name="FurrowsL2" />
+			<color name="FurrowsL3" />
+			<color name="FurrowsL4" />
+			<color name="FurrowsL5" />
+			<color name="FurrowsL6" />
+			<color name="FurrowsL_1" />
+			<color name="FurrowsL_2" />
+		</underlaySSRule>
+		<underlaySSRule name="Level_2ToMarsh" image="MarshPattern.gif">
+			<color name="Level_2" />
+		</underlaySSRule>
+		<underlaySSRule name="Level_1ToMarsh" image="MarshPattern.gif">
+			<color name="Level_1" />
+		</underlaySSRule>
+		<underlaySSRule name="Level1ToMarsh" image="MarshPattern.gif">
+			<color name="Level1" />
+		</underlaySSRule>
+		<underlaySSRule name="Level2ToMarsh" image="MarshPattern.gif">
+			<color name="Level2" />
+		</underlaySSRule>
+		<underlaySSRule name="Level3ToMarsh" image="MarshPattern.gif">
+			<color name="Level3" />
+		</underlaySSRule>
+		<underlaySSRule name="Level4ToMarsh" image="MarshPattern.gif">
+			<color name="Level4" />
+		</underlaySSRule>
+		<underlaySSRule name="Level5ToMarsh" image="MarshPattern.gif">
+			<color name="Level5" />
+		</underlaySSRule>
+		<underlaySSRule name="Level6ToMarsh" image="MarshPattern.gif">
+			<color name="Level6" />
+		</underlaySSRule>
+		<underlaySSRule name="WoodsToGrain" image="GrainPattern.gif">
+			<color name="WoodsGreen" />
+			<color name="WoodsBlack" />
+		</underlaySSRule>
+		<underlaySSRule name="BrushToGrain" image="GrainPattern.gif">
+			<color name="BrushL0" />
+			<color name="BrushL1" />
+			<color name="BrushL2" />
+			<color name="BrushL3" />
+			<color name="BrushL4" />
+			<color name="BrushL5" />
+			<color name="BrushL6" />
+			<color name="BrushL_1" />
+			<color name="BrushL_2" />
+			<color name="BrushBlackL_2" />
+			<color name="BrushBlackL_1" />
+			<color name="BrushBlackL0" />
+			<color name="BrushBlackL1" />
+			<color name="BrushBlackL2" />
+			<color name="BrushBlackL3" />
+			<color name="BrushBlackL4" />
+			<color name="BrushBlackL5" />
+			<color name="BrushBlackL6" />
+		</underlaySSRule>
+		<underlaySSRule name="MarshToGrain" image="GrainPattern.gif">
+			<color name="StreamMarshGreenL_1" />
+			<color name="StreamMarshGreenL0" />
+			<color name="StreamMarshBrownL_1" />
+			<color name="StreamMarshBrownL0" />
+			<color name="StreamSwampGreenL_1" />
+			<color name="StreamSwampGreenL0" />
+			<color name="StreamSwampBrownL_1" />
+			<color name="StreamSwampBrownL0" />
+			<color name="RiverMarshGreenL_1" />
+			<color name="RiverMarshGreenL0" />
+			<color name="RiverMarshBrownL_1" />
+			<color name="RiverMarshBrownL0" />
+			<color name="RiverSwampGreenL_1" />
+			<color name="RiverSwampGreenL0" />
+			<color name="RiverSwampBrownL_1" />
+			<color name="RiverSwampBrownL0" />
+			<color name="SeparatedMarshGreenL_1" />
+			<color name="SeparatedMarshGreenL0" />
+			<color name="SeparatedMarshBrownL_1" />
+			<color name="SeparatedMarshBrownL0" />
+			<color name="SeparatedSwampGreenL_1" />
+			<color name="SeparatedSwampGreenL0" />
+			<color name="SeparatedSwampBrownL_1" />
+			<color name="SeparatedSwampBrownL0" />
+		</underlaySSRule>
+		<underlaySSRule name="Level_2ToGrain" image="GrainPattern.gif">
+			<color name="Level_2" />
+		</underlaySSRule>
+		<underlaySSRule name="Level_1ToGrain" image="GrainPattern.gif">
+			<color name="Level_1" />
+		</underlaySSRule>
+		<underlaySSRule name="Level1ToGrain" image="GrainPattern.gif">
+			<color name="Level1" />
+		</underlaySSRule>
+		<underlaySSRule name="Level2ToGrain" image="GrainPattern.gif">
+			<color name="Level2" />
+		</underlaySSRule>
+		<underlaySSRule name="Level3ToGrain" image="GrainPattern.gif">
+			<color name="Level3" />
+		</underlaySSRule>
+		<underlaySSRule name="Level4ToGrain" image="GrainPattern.gif">
+			<color name="Level4" />
+		</underlaySSRule>
+		<underlaySSRule name="Level5ToGrain" image="GrainPattern.gif">
+			<color name="Level5" />
+		</underlaySSRule>
+		<underlaySSRule name="Level6ToGrain" image="GrainPattern.gif">
+			<color name="Level6" />
+		</underlaySSRule>
+	</overlaySSRules>
+
 	<colors>
 		<!-- 11 Dec 2012 TR for vasl 5.9.3  -->
 		<!-- Changed WinterDepression to 216 216 208  -->
@@ -21,7 +553,9 @@
 		    24 Dec 2014 DS for VASL 6.2 (Merry Christmas!)
             Added Level1Winter as 33 boards currently reference it as a color
         -->
+		<!-- 21 Jan 15 - DS - Added missing PTO colors  -->
 		<color name="BocageGreen" red="62" green="90" blue="47" terrain="Bocage" elevation="UNKNOWN" />
+		<color name="BocageBrown" red="176" green="145" blue="70" terrain="Bocage" elevation="UNKNOWN" />
 		<color name="BocageBrownL0" red="176" green="145" blue="70" terrain="Bocage" elevation="0" />
 		<color name="BocageBrownL1" red="149" green="113" blue="33" terrain="Bocage" elevation="1" />
 		<color name="BocageBrownL2" red="123" green="92" blue="27" terrain="Bocage" elevation="2" />
@@ -171,11 +705,27 @@
 		<color name="Lumberyard3" red="105" green="73" blue="36" terrain="Lumberyard" elevation="UNKNOWN" />
 		<color name="Lumberyard4" red="75" green="52" blue="26" terrain="Lumberyard" elevation="UNKNOWN" />
 		<color name="Lumberyard5" red="45" green="31" blue="16" terrain="Lumberyard" elevation="UNKNOWN" />
-		<!-- Marsh  -->
+		<!-- Marsh and swamp -->
+		<color name="MarshBrownL_2" red="49" green="0" blue="22" terrain="Marsh" elevation="-2" />
+		<color name="MarshBrownL_1" red="50" green="0" blue="22" terrain="Marsh" elevation="-1" />
+		<color name="MarshBrownL0" red="51" green="0" blue="22" terrain="Marsh" elevation="0" />
+		<color name="MarshBrownL1" red="52" green="0" blue="22" terrain="Marsh" elevation="1" />
+		<color name="MarshGreenL_2" red="68" green="98" blue="39" terrain="Marsh" elevation="-2" />
+		<color name="MarshGreenL_1" red="68" green="98" blue="40" terrain="Marsh" elevation="-1" />
+		<color name="MarshGreenL0" red="68" green="98" blue="41" terrain="Marsh" elevation="0" />
+		<color name="MarshGreenL1" red="68" green="98" blue="42" terrain="Marsh" elevation="1" />
 		<color name="StreamMarshGreenL_1" red="83" green="110" blue="51" terrain="Marsh" elevation="-1" />
 		<color name="StreamMarshGreenL0" red="83" green="110" blue="52" terrain="Marsh" elevation="0" />
 		<color name="StreamMarshBrownL_1" red="50" green="2" blue="21" terrain="Marsh" elevation="-1" />
 		<color name="StreamMarshBrownL0" red="50" green="2" blue="22" terrain="Marsh" elevation="0" />
+		<color name="SwampBrownL_2" red="49" green="1" blue="22" terrain="Swamp" elevation="-2" />
+		<color name="SwampBrownL_1" red="50" green="1" blue="22" terrain="Swamp" elevation="-1" />
+		<color name="SwampBrownL0" red="51" green="1" blue="22" terrain="Swamp" elevation="0" />
+		<color name="SwampBrownL1" red="52" green="1" blue="22" terrain="Swamp" elevation="1" />
+		<color name="SwampGreenL0" red="69" green="98" blue="41" terrain="Swamp" elevation="0" />
+		<color name="SwampGreenL1" red="69" green="98" blue="42" terrain="Swamp" elevation="1" />
+		<color name="SwampGreenL_2" red="69" green="98" blue="39" terrain="Swamp" elevation="-2" />
+		<color name="SwampGreenL_1" red="69" green="98" blue="40" terrain="Swamp" elevation="-1" />
 		<color name="StreamSwampGreenL_1" red="84" green="110" blue="51" terrain="Marsh" elevation="-1" />
 		<color name="StreamSwampGreenL0" red="84" green="110" blue="52" terrain="Marsh" elevation="0" />
 		<color name="StreamSwampBrownL_1" red="51" green="2" blue="21" terrain="Marsh" elevation="-1" />
@@ -188,6 +738,10 @@
 		<color name="RiverSwampGreenL0" red="81" green="110" blue="52" terrain="Marsh" elevation="0" />
 		<color name="RiverSwampBrownL_1" red="48" green="2" blue="21" terrain="Marsh" elevation="-1" />
 		<color name="RiverSwampBrownL0" red="48" green="2" blue="22" terrain="Marsh" elevation="0" />
+		<color name="SeparatedMarshBrownL1" red="52" green="0" blue="21" terrain="Marsh" elevation="1" />
+		<color name="SeparatedMarshBrownL_2" red="49" green="0" blue="21" terrain="Marsh" elevation="-2" />
+		<color name="SeparatedMarshGreenL1" red="67" green="98" blue="42" terrain="Marsh" elevation="1" />
+		<color name="SeparatedMarshGreenL_2" red="67" green="98" blue="39" terrain="Marsh" elevation="-2" />
 		<color name="SeparatedMarshGreenL_1" red="85" green="110" blue="51" terrain="Marsh" elevation="-1" />
 		<color name="SeparatedMarshGreenL0" red="85" green="110" blue="52" terrain="Marsh" elevation="0" />
 		<color name="SeparatedMarshBrownL_1" red="52" green="2" blue="21" terrain="Marsh" elevation="-1" />
@@ -231,7 +785,7 @@
 		<color name="L0Winter" red="255" green="255" blue="255" terrain="Open Ground" elevation="0" />
 		<color name="L_1Winter" red="213" green="224" blue="194" terrain="Open Ground" elevation="-1" />
 		<color name="L_2Winter" red="225" green="239" blue="187" terrain="Open Ground" elevation="-2" />
-        <color name="Level1Winter" red="222" green="213" blue="188" terrain="Open Ground" elevation="1" />
+		<color name="Level1Winter" red="222" green="213" blue="188" terrain="Open Ground" elevation="1" />
 		<!-- Orchards  -->
 		<color name="OrchL_2" red="85" green="100" blue="46" terrain="Orchard" elevation="-2" />
 		<color name="OrchL_1" red="83" green="98" blue="45" terrain="Orchard" elevation="-1" />
@@ -403,7 +957,7 @@
 		<color name="MudGullyBrown1" red="120" green="100" blue="60" terrain="Gully" elevation="UNKNOWN" />
 		<color name="MudGullyBrown2" red="108" green="78" blue="40" terrain="Gully" elevation="UNKNOWN" />
 		<color name="MudMarshGreen" red="74" green="84" blue="42" terrain="Marsh" elevation="UNKNOWN" />
-		<!-- Desert  -->
+		<!-- Desert colors for non-desert boards -->
 		<color name="DesertL_2" red="187" green="168" blue="133" terrain="Open Ground" elevation="-2" />
 		<color name="DesertL_1" red="220" green="194" blue="147" terrain="Open Ground" elevation="-1" />
 		<color name="DesertL0" red="251" green="223" blue="147" terrain="Open Ground" elevation="0" />
@@ -449,6 +1003,85 @@
 		<color name="CactusTan" red="222" green="189" blue="99" terrain="Cactus Patch" elevation="UNKNOWN" />
 		<color name="CactusGreen" red="123" green="132" blue="8" terrain="Cactus Patch" elevation="UNKNOWN" />
 		<color name="CactusBrown" red="90" green="66" blue="33" terrain="Cactus Patch" elevation="UNKNOWN" />
+		<!-- Desert colors for desert boards -->
+		<color name="Hammada1" red="190" green="149" blue="52" terrain="Hammada" elevation="UNKNOWN" />
+		<color name="Hammada2" red="169" green="127" blue="35" terrain="Hammada" elevation="UNKNOWN" />
+		<color name="Hammada3" red="148" green="113" blue="38" terrain="Hammada" elevation="UNKNOWN" />
+		<color name="Hammada4" red="123" green="92" blue="27" terrain="Hammada" elevation="UNKNOWN" />
+		<color name="Hammada5" red="108" green="75" blue="16" terrain="Hammada" elevation="UNKNOWN" />
+		<color name="Scrub_1" red="189" green="165" blue="51" terrain="Scrub" elevation="UNKNOWN" />
+		<color name="Scrub_2" red="168" green="141" blue="34" terrain="Scrub" elevation="UNKNOWN" />
+		<color name="Scrub_3" red="148" green="126" blue="37" terrain="Scrub" elevation="UNKNOWN" />
+		<color name="Scrub_4" red="142" green="134" blue="22" terrain="Scrub" elevation="UNKNOWN" />
+		<color name="Scrub_5" red="122" green="96" blue="26" terrain="Scrub" elevation="UNKNOWN" />
+		<color name="Scrub_6" red="112" green="115" blue="5" terrain="Scrub" elevation="UNKNOWN" />
+		<color name="Scrub_7" red="108" green="75" blue="15" terrain="Scrub" elevation="UNKNOWN" />
+		<color name="Scrub_8" red="99" green="104" blue="22" terrain="Scrub" elevation="UNKNOWN" />
+		<color name="Sand1" red="230" green="192" blue="16" terrain="Sand" elevation="UNKNOWN" />
+		<color name="Track" red="102" green="78" blue="37" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="WadiBrown1" red="204" green="159" blue="52" terrain="Wadi" elevation="UNKNOWN" />
+		<color name="WadiBrown2" red="164" green="123" blue="0" terrain="Wadi" elevation="UNKNOWN" />
+		<color name="WadiBrown3" red="127" green="91" blue="33" terrain="Wadi" elevation="UNKNOWN" />
+		<color name="WadiBlack" red="83" green="51" blue="37" terrain="Wadi" elevation="UNKNOWN" />
+		<color name="WadiCliff" red="65" green="54" blue="28" terrain="Wadi" elevation="UNKNOWN" />
+		<color name="DTO_BrushL0" red="161" green="161" blue="56" terrain="Brush" elevation="0" />
+		<color name="DTO_BrushL1" red="161" green="162" blue="56" terrain="Brush" elevation="1" />
+		<color name="DTO_BrushL2" red="161" green="163" blue="56" terrain="Brush" elevation="2" />
+		<color name="DTO_BrushL3" red="161" green="164" blue="56" terrain="Brush" elevation="3" />
+		<color name="DTO_BrushL4" red="161" green="165" blue="56" terrain="Brush" elevation="4" />
+		<color name="DTO_BrushL5" red="161" green="166" blue="56" terrain="Brush" elevation="5" />
+		<color name="DTO_BrushL6" red="161" green="167" blue="56" terrain="Brush" elevation="6" />
+		<color name="DTO_BrushBlackL_2" red="68" green="62" blue="28" terrain="Brush" elevation="-2" />
+		<color name="DTO_BrushBlackL_1" red="68" green="63" blue="28" terrain="Brush" elevation="-1" />
+		<color name="DTO_BrushBlackL0" red="68" green="64" blue="28" terrain="Brush" elevation="0" />
+		<color name="DTO_BrushBlackL1" red="68" green="65" blue="28" terrain="Brush" elevation="1" />
+		<color name="DTO_BrushBlackL2" red="68" green="66" blue="28" terrain="Brush" elevation="2" />
+		<color name="DTO_BrushBlackL3" red="68" green="67" blue="28" terrain="Brush" elevation="3" />
+		<color name="DTO_BrushBlackL4" red="68" green="68" blue="28" terrain="Brush" elevation="4" />
+		<color name="DTO_BrushBlackL5" red="68" green="69" blue="28" terrain="Brush" elevation="5" />
+		<color name="DTO_BrushBlackL6" red="68" green="70" blue="28" terrain="Brush" elevation="6" />
+		<color name="DTO_BldgShadowL0" red="193" green="166" blue="88" terrain="UNKNOWN" elevation="UNKNOWN" />
+		<color name="DTO_BoardNum" red="255" green="229" blue="57" terrain="Dirt Road" elevation="UNKNOWN" />
+		<color name="DTO_DirtRdL0" red="229" green="201" blue="126" terrain="Dirt Road" elevation="0" />
+		<color name="DTO_DirtRdL1" red="229" green="201" blue="127" terrain="Dirt Road" elevation="1" />
+		<color name="DTO_DirtRdL2" red="229" green="201" blue="128" terrain="Dirt Road" elevation="2" />
+		<color name="DTO_DirtRdL3" red="229" green="201" blue="129" terrain="Dirt Road" elevation="3" />
+		<color name="DTO_DirtRdL4" red="229" green="201" blue="130" terrain="Dirt Road" elevation="4" />
+		<color name="DTO_DirtRdL5" red="229" green="201" blue="131" terrain="Dirt Road" elevation="5" />
+		<color name="DTO_DirtRdL6" red="229" green="201" blue="132" terrain="Dirt Road" elevation="6" />
+		<color name="DTO_DirtRdBridge" red="229" green="200" blue="126" terrain="Dirt Road" elevation="UNKNOWN" />
+		<color name="DTO_GraveyardGreen" red="130" green="128" blue="58" terrain="Graveyard" elevation="UNKNOWN" />
+		<color name="DTO_GraveyardShadow" red="102" green="98" blue="40" terrain="Graveyard" elevation="UNKNOWN" />
+		<color name="DTO_HedgeGreen" red="114" green="117" blue="21" terrain="Hedge" elevation="UNKNOWN" />
+		<color name="DTO_PavedRdL0" red="193" green="193" blue="193" terrain="Paved Road" elevation="0" />
+		<color name="DTO_PavedRdL1" red="193" green="194" blue="193" terrain="Paved Road" elevation="1" />
+		<color name="DTO_PavedRdL2" red="193" green="195" blue="193" terrain="Paved Road" elevation="2" />
+		<color name="DTO_PavedRdL3" red="193" green="196" blue="193" terrain="Paved Road" elevation="3" />
+		<color name="DTO_PavedRdL4" red="193" green="197" blue="193" terrain="Paved Road" elevation="4" />
+		<color name="DTO_PavedRdL5" red="193" green="198" blue="193" terrain="Paved Road" elevation="5" />
+		<color name="DTO_PavedRdL6" red="193" green="199" blue="193" terrain="Paved Road" elevation="6" />
+		<color name="DTO_PavedRdBridge" red="193" green="193" blue="192" terrain="Paved Road" elevation="UNKNOWN" />
+		<color name="DTO_Level0_1" red="233" green="197" blue="40" terrain="Open Ground" elevation="0" />
+		<color name="DTO_Level0_2" red="232" green="188" blue="0" terrain="Open Ground" elevation="0" />
+		<color name="DTO_Level0_3" red="222" green="181" blue="19" terrain="Open Ground" elevation="0" />
+		<color name="DTO_Level0_4" red="218" green="178" blue="42" terrain="Open Ground" elevation="0" />
+		<color name="DTO_Level0_5" red="217" green="188" blue="92" terrain="Open Ground" elevation="0" />
+		<color name="DTO_Level0_6" red="201" green="158" blue="14" terrain="Open Ground" elevation="0" />
+		<color name="DTO_Level1" red="197" green="158" blue="53" terrain="Open Ground" elevation="1" />
+		<color name="DTO_Level2" red="169" green="131" blue="49" terrain="Open Ground" elevation="2" />
+		<color name="DTO_Level3" red="145" green="107" blue="27" terrain="Open Ground" elevation="3" />
+		<color name="DTO_Level4" red="114" green="83" blue="42" terrain="Open Ground" elevation="4" />
+		<color name="DTO_OrchL0" red="118" green="114" blue="36" terrain="Orchard" elevation="0" />
+		<color name="DTO_OrchL1" red="118" green="115" blue="36" terrain="Orchard" elevation="1" />
+		<color name="DTO_OrchL2" red="118" green="116" blue="36" terrain="Orchard" elevation="2" />
+		<color name="DTO_OrchL3" red="118" green="117" blue="36" terrain="Orchard" elevation="3" />
+		<color name="DTO_OrchL4" red="118" green="118" blue="36" terrain="Orchard" elevation="4" />
+		<color name="DTO_OrchL5" red="118" green="119" blue="36" terrain="Orchard" elevation="5" />
+		<color name="DTO_OrchL6" red="118" green="120" blue="36" terrain="Orchard" elevation="6" />
+		<color name="DTO_OrchTrees" red="118" green="114" blue="37" terrain="Orchard" elevation="UNKNOWN" />
+		<color name="DTO_WoodsGreen" red="119" green="119" blue="57" terrain="Woods" elevation="UNKNOWN" />
+		<color name="DTO_WoodsBlack" red="44" green="42" blue="23" terrain="Woods" elevation="UNKNOWN" />
+
 	</colors>
 
 	<terrainTypes>
@@ -569,6 +1202,7 @@
         <terrainType name="Olive Grove" typeCode="118" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="TRUE" split="0.5" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="1" mapColorRed="51" mapColorGreen="163" mapColorBlue="51" LOSCategory="OTHER"  />
         <terrainType name="Vineyard" typeCode="119" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="0" mapColorRed="46" mapColorGreen="131" mapColorBlue="47" LOSCategory="OTHER"  />
         <terrainType name="Broken Ground" typeCode="120" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="OPEN"  />
+		<terrainType name="Scrub" typeCode="121" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="175" mapColorGreen="188" mapColorBlue="106" LOSCategory="OPEN"  />
         <terrainType name="Temple" typeCode="125" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="115" mapColorGreen="115" mapColorBlue="115" LOSCategory="BUILDING"  />
         <terrainType name="Light Jungle" typeCode="126" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="2" mapColorRed="47" mapColorGreen="131" mapColorBlue="47" LOSCategory="WOODS"  />
         <terrainType name="Dense Jungle" typeCode="127" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="2" mapColorRed="47" mapColorGreen="131" mapColorBlue="47" LOSCategory="WOODS"  />
@@ -761,7 +1395,53 @@
 			<colorMap fromColor="BrushCrestL_1" toColor="Level_1"/>
 		</colorSSR>
 		<!-- must be ahead of any other swamp/marsh rule!-->
+		<colorSSR name="BrushToLevel_1">
+			<colorMap fromColor="BrushL0" toColor="Level_1"/>
+			<colorMap fromColor="BrushL1" toColor="Level_1"/>
+			<colorMap fromColor="BrushL2" toColor="Level_1"/>
+			<colorMap fromColor="BrushL3" toColor="Level_1"/>
+			<colorMap fromColor="BrushL4" toColor="Level_1"/>
+			<colorMap fromColor="BrushL_1" toColor="Level_1"/>
+			<colorMap fromColor="BrushBlackL0" toColor="Level_1"/>
+			<colorMap fromColor="BrushBlackL1" toColor="Level_1"/>
+			<colorMap fromColor="BrushBlackL2" toColor="Level_1"/>
+			<colorMap fromColor="BrushBlackL3" toColor="Level_1"/>
+			<colorMap fromColor="BrushBlackL4" toColor="Level_1"/>
+			<colorMap fromColor="BrushBlackL_1" toColor="Level_1"/>
+		</colorSSR>
+		<colorSSR name="BrushToLevel0">
+			<colorMap fromColor="BrushL0" toColor="Level0"/>
+			<colorMap fromColor="BrushL1" toColor="Level0"/>
+			<colorMap fromColor="BrushL2" toColor="Level0"/>
+			<colorMap fromColor="BrushL3" toColor="Level0"/>
+			<colorMap fromColor="BrushL4" toColor="Level0"/>
+			<colorMap fromColor="BrushL_1" toColor="Level0"/>
+			<colorMap fromColor="BrushBlackL0" toColor="Level0"/>
+			<colorMap fromColor="BrushBlackL1" toColor="Level0"/>
+			<colorMap fromColor="BrushBlackL2" toColor="Level0"/>
+			<colorMap fromColor="BrushBlackL3" toColor="Level0"/>
+			<colorMap fromColor="BrushBlackL4" toColor="Level0"/>
+			<colorMap fromColor="BrushBlackL_1" toColor="Level0"/>
+		</colorSSR>
+		<colorSSR name="BrushToLevel1">
+			<colorMap fromColor="BrushL0" toColor="Level1"/>
+			<colorMap fromColor="BrushL1" toColor="Level1"/>
+			<colorMap fromColor="BrushL2" toColor="Level1"/>
+			<colorMap fromColor="BrushL3" toColor="Level1"/>
+			<colorMap fromColor="BrushL4" toColor="Level1"/>
+			<colorMap fromColor="BrushL_1" toColor="Level1"/>
+			<colorMap fromColor="BrushBlackL0" toColor="Level1"/>
+			<colorMap fromColor="BrushBlackL1" toColor="Level1"/>
+			<colorMap fromColor="BrushBlackL2" toColor="Level1"/>
+			<colorMap fromColor="BrushBlackL3" toColor="Level1"/>
+			<colorMap fromColor="BrushBlackL4" toColor="Level1"/>
+			<colorMap fromColor="BrushBlackL_1" toColor="Level1"/>
+		</colorSSR>
 		<colorSSR name="SwampToMarsh">
+			<colorMap fromColor="SwampGreenL0" toColor="MarshGreenL0"/>
+			<colorMap fromColor="SwampBrownL0" toColor="MarshBrownL0"/>
+			<colorMap fromColor="SwampGreenL_1" toColor="MarshGreenL_1"/>
+			<colorMap fromColor="SwampBrownL_1" toColor="MarshBrownL_1"/>
 			<colorMap fromColor="StreamSwampGreenL0" toColor="StreamMarshGreenL0"/>
 			<colorMap fromColor="StreamSwampBrownL0" toColor="StreamMarshBrownL0"/>
 			<colorMap fromColor="StreamSwampGreenL_1" toColor="StreamMarshGreenL_1"/>
@@ -776,6 +1456,10 @@
 			<colorMap fromColor="SeparatedSwampBrownL_1" toColor="SeparatedMarshBrownL_1"/>
 		</colorSSR>
 		<colorSSR name="MarshToOpenGround">
+			<colorMap fromColor="MarshGreenL0" toColor="Level0"/>
+			<colorMap fromColor="MarshBrownL0" toColor="Level0"/>
+			<colorMap fromColor="MarshGreenL_1" toColor="Level_1"/>
+			<colorMap fromColor="MarshBrownL_1" toColor="Level_1"/>
 			<colorMap fromColor="StreamMarshGreenL0" toColor="Level0"/>
 			<colorMap fromColor="StreamMarshBrownL0" toColor="Level0"/>
 			<colorMap fromColor="StreamMarshGreenL_1" toColor="Level_1"/>
@@ -794,12 +1478,70 @@
 			<colorMap fromColor="RiverSwampBrownL_1" toColor="Level_1"/>
 			<colorMap fromColor="SeparatedMarshGreenL0" toColor="Level0"/>
 			<colorMap fromColor="SeparatedMarshBrownL0" toColor="Level0"/>
+			<colorMap fromColor="SeparatedMarshGreenL1" toColor="Level1"/>
+			<colorMap fromColor="SeparatedMarshBrownL1" toColor="Level1"/>
 			<colorMap fromColor="SeparatedMarshGreenL_1" toColor="Level_1"/>
 			<colorMap fromColor="SeparatedMarshBrownL_1" toColor="Level_1"/>
 			<colorMap fromColor="SeparatedSwampGreenL0" toColor="Level0"/>
 			<colorMap fromColor="SeparatedSwampBrownL0" toColor="Level0"/>
 			<colorMap fromColor="SeparatedSwampGreenL_1" toColor="Level_1"/>
 			<colorMap fromColor="SeparatedSwampBrownL_1" toColor="Level_1"/>
+		</colorSSR>
+		<colorSSR name="MarshToLevel_1">
+			<colorMap fromColor="MarshGreenL0" toColor="Level_1"/>
+			<colorMap fromColor="MarshBrownL0" toColor="Level_1"/>
+			<colorMap fromColor="MarshGreenL_1" toColor="Level_1"/>
+			<colorMap fromColor="MarshBrownL_1" toColor="Level_1"/>
+			<colorMap fromColor="SeparatedMarshGreenL0" toColor="Level_1"/>
+			<colorMap fromColor="SeparatedMarshBrownL0" toColor="Level_1"/>
+			<colorMap fromColor="SeparatedMarshGreenL1" toColor="Level_1"/>
+			<colorMap fromColor="SeparatedMarshBrownL1" toColor="Level_1"/>
+			<colorMap fromColor="SeparatedMarshGreenL_1" toColor="Level_1"/>
+			<colorMap fromColor="SeparatedMarshBrownL_1" toColor="Level_1"/>
+		</colorSSR>
+		<colorSSR name="MarshToLevel0">
+			<colorMap fromColor="MarshGreenL0" toColor="Level0"/>
+			<colorMap fromColor="MarshBrownL0" toColor="Level0"/>
+			<colorMap fromColor="MarshGreenL_1" toColor="Level0"/>
+			<colorMap fromColor="MarshBrownL_1" toColor="Level0"/>
+			<colorMap fromColor="SeparatedMarshGreenL0" toColor="Level0"/>
+			<colorMap fromColor="SeparatedMarshBrownL0" toColor="Level0"/>
+			<colorMap fromColor="SeparatedMarshGreenL1" toColor="Level0"/>
+			<colorMap fromColor="SeparatedMarshBrownL1" toColor="Level0"/>
+			<colorMap fromColor="SeparatedMarshGreenL_1" toColor="Level0"/>
+			<colorMap fromColor="SeparatedMarshBrownL_1" toColor="Level0"/>
+		</colorSSR>
+		<colorSSR name="MarshToLevel1">
+			<colorMap fromColor="MarshGreenL0" toColor="Level1"/>
+			<colorMap fromColor="MarshBrownL0" toColor="Level1"/>
+			<colorMap fromColor="MarshGreenL_1" toColor="Level1"/>
+			<colorMap fromColor="MarshBrownL_1" toColor="Level1"/>
+			<colorMap fromColor="SeparatedMarshGreenL0" toColor="Level1"/>
+			<colorMap fromColor="SeparatedMarshBrownL0" toColor="Level1"/>
+			<colorMap fromColor="SeparatedMarshGreenL1" toColor="Level1"/>
+			<colorMap fromColor="SeparatedMarshBrownL1" toColor="Level1"/>
+			<colorMap fromColor="SeparatedMarshGreenL_1" toColor="Level1"/>
+			<colorMap fromColor="SeparatedMarshBrownL_1" toColor="Level1"/>
+		</colorSSR>
+		<colorSSR name="GulliesToStreams">
+			<colorMap fromColor="GullyGreen2" toColor="StreamGreen2"/>
+			<colorMap fromColor="GullyGreen3" toColor="StreamGreen3"/>
+			<colorMap fromColor="GullyGreen1" toColor="StreamGreen1"/>
+			<colorMap fromColor="GullyBrown2" toColor="StreamBrown"/>
+			<colorMap fromColor="GullyBrown3" toColor="StreamWater"/>
+			<colorMap fromColor="GullyBlack" toColor="StreamWater"/>
+		</colorSSR>
+		<colorSSR name="Flooded">
+			<colorMap fromColor="StreamWhite" toColor="Water"/>
+			<colorMap fromColor="StreamBrown" toColor="Water"/>
+			<colorMap fromColor="StreamGreen3" toColor="Water"/>
+			<colorMap fromColor="StreamGreen2" toColor="Water"/>
+			<colorMap fromColor="MarshGreenL0" toColor="Water"/>
+			<colorMap fromColor="MarshGreenL_1" toColor="Water"/>
+			<colorMap fromColor="MarshBrownL0" toColor="Water"/>
+			<colorMap fromColor="MarshBrownL_1" toColor="Water"/>
+			<colorMap fromColor="WaterWhite" toColor="Water"/>
+			<colorMap fromColor="PondWhite" toColor="PondWater"/>
 		</colorSSR>
 		<colorSSR name="FloodedStreams">
 			<colorMap fromColor="StreamWhite" toColor="Water"/>
@@ -819,6 +1561,9 @@
 			<colorMap fromColor="StreamWater" toColor="DryStream2"/>
 			<colorMap fromColor="StreamMarshGreenL0" toColor="MudflatL0"/>
 			<colorMap fromColor="StreamMarshGreenL_1" toColor="MudflatL_1"/>
+			<colorMap fromColor="MarshGreenL0" toColor="MudflatL0"/>
+			<colorMap fromColor="MarshGreenL_1" toColor="MudflatL_1"/>
+			<colorMap fromColor="PondWhite" toColor="DryStream1"/>
 		</colorSSR>
 		<colorSSR name="StreamsToGullies">
 			<colorMap fromColor="StreamWater" toColor="GullyBlack"/>
@@ -854,6 +1599,7 @@
 			<colorMap fromColor="OrchL_1" toColor="Level_1"/>
 			<colorMap fromColor="OrchL_2" toColor="Level_2"/>
 			<colorMap fromColor="OrchTrees" toColor="Black"/>
+			<colorMap fromColor="OrchDesertL_1" toColor="DesertL_1"/>
 			<colorMap fromColor="OrchDesertL0" toColor="DesertL0"/>
 			<colorMap fromColor="OrchDesertL1" toColor="Level1"/>
 			<colorMap fromColor="OrchDesertL2" toColor="Level2"/>
@@ -892,6 +1638,66 @@
 			<colorMap fromColor="GrainCrestL5" toColor="Level5"/>
 			<colorMap fromColor="GrainCrestL6" toColor="Level6"/>
 			<colorMap fromColor="GrainCrestL_1" toColor="Level_1"/>
+		</colorSSR>
+		<colorSSR name="GrainToLevel_1">
+			<colorMap fromColor="GrainL0" toColor="Level_1"/>
+			<colorMap fromColor="GrainL1" toColor="Level_1"/>
+			<colorMap fromColor="GrainL2" toColor="Level_1"/>
+			<colorMap fromColor="GrainL3" toColor="Level_1"/>
+			<colorMap fromColor="GrainL4" toColor="Level_1"/>
+			<colorMap fromColor="GrainL_1" toColor="Level_1"/>
+			<colorMap fromColor="FurrowsL0" toColor="Level_1"/>
+			<colorMap fromColor="FurrowsL1" toColor="Level_1"/>
+			<colorMap fromColor="FurrowsL2" toColor="Level_1"/>
+			<colorMap fromColor="FurrowsL3" toColor="Level_1"/>
+			<colorMap fromColor="FurrowsL4" toColor="Level_1"/>
+			<colorMap fromColor="FurrowsL_1" toColor="Level_1"/>
+		</colorSSR>
+		<colorSSR name="GrainToLevel0">
+			<colorMap fromColor="GrainL0" toColor="Level0"/>
+			<colorMap fromColor="GrainL1" toColor="Level0"/>
+			<colorMap fromColor="GrainL2" toColor="Level0"/>
+			<colorMap fromColor="GrainL3" toColor="Level0"/>
+			<colorMap fromColor="GrainL4" toColor="Level0"/>
+			<colorMap fromColor="GrainL_1" toColor="Level0"/>
+			<colorMap fromColor="FurrowsL0" toColor="Level0"/>
+			<colorMap fromColor="FurrowsL1" toColor="Level0"/>
+			<colorMap fromColor="FurrowsL2" toColor="Level0"/>
+			<colorMap fromColor="FurrowsL3" toColor="Level0"/>
+			<colorMap fromColor="FurrowsL4" toColor="Level0"/>
+			<colorMap fromColor="FurrowsL_1" toColor="Level0"/>
+		</colorSSR>
+		<colorSSR name="GrainToLevel1">
+			<colorMap fromColor="GrainL0" toColor="Level1"/>
+			<colorMap fromColor="GrainL1" toColor="Level1"/>
+			<colorMap fromColor="GrainL2" toColor="Level1"/>
+			<colorMap fromColor="GrainL3" toColor="Level1"/>
+			<colorMap fromColor="GrainL4" toColor="Level1"/>
+			<colorMap fromColor="GrainL_1" toColor="Level1"/>
+			<colorMap fromColor="FurrowsL0" toColor="Level1"/>
+			<colorMap fromColor="FurrowsL1" toColor="Level1"/>
+			<colorMap fromColor="FurrowsL2" toColor="Level1"/>
+			<colorMap fromColor="FurrowsL3" toColor="Level1"/>
+			<colorMap fromColor="FurrowsL4" toColor="Level1"/>
+			<colorMap fromColor="FurrowsL_1" toColor="Level1"/>
+		</colorSSR>
+		<colorSSR name="NoSunkElevRoads">
+			<colorMap fromColor="SunkRoad1" toColor="Level0"/>
+			<colorMap fromColor="SunkRoad2" toColor="Level0"/>
+		</colorSSR>
+		<colorSSR name="NoRoads">
+			<colorMap fromColor="PavedRdL0" toColor="Level0"/>
+			<colorMap fromColor="PavedRdL1" toColor="Level1"/>
+			<colorMap fromColor="PavedRdL2" toColor="Level2"/>
+			<colorMap fromColor="PavedRdL3" toColor="Level3"/>
+			<colorMap fromColor="PavedRdL4" toColor="Level4"/>
+			<colorMap fromColor="PavedRdL_1" toColor="Level_1"/>
+			<colorMap fromColor="DirtRdL0" toColor="Level0"/>
+			<colorMap fromColor="DirtRdL1" toColor="Level1"/>
+			<colorMap fromColor="DirtRdL2" toColor="Level2"/>
+			<colorMap fromColor="DirtRdL3" toColor="Level3"/>
+			<colorMap fromColor="DirtRdL4" toColor="Level4"/>
+			<colorMap fromColor="DirtRdL_1" toColor="Level_1"/>
 		</colorSSR>
 		<colorSSR name="Level6ToLevel5">
 			<colorMap fromColor="Level6" toColor="Level5"/>
@@ -1049,11 +1855,15 @@
 			<colorMap fromColor="BrushDesertL5" toColor="BrushL5"/>
 			<colorMap fromColor="BrushDesertL6" toColor="BrushL6"/>
 			<colorMap fromColor="DirtRdDesertBridge" toColor="DirtRdBridge"/>
+			<colorMap fromColor="DirtRdBridgeDesert" toColor="DirtRdBridge"/>
 			<colorMap fromColor="OrchTreesDesert" toColor="OrchTrees"/>
 			<colorMap fromColor="WadiBrown1" toColor="GullyGreen1"/>
 			<colorMap fromColor="WadiBrown2" toColor="GullyBrown2"/>
 			<colorMap fromColor="WadiBrown3" toColor="GullyBrown3"/>
 			<colorMap fromColor="WadiBlack" toColor="GullyBlack"/>
+			<colorMap fromColor="Wadi1" toColor="GullyGreen1"/>
+			<colorMap fromColor="Wadi2" toColor="GullyBrown2"/>
+			<colorMap fromColor="Wadi3" toColor="GullyBlack"/>
 		</colorSSR>
 		<!-- Winter must always be last -->
 		<colorSSR name="Winter">
@@ -1137,6 +1947,7 @@
 			<colorMap fromColor="WoodsGreen" toColor="WoodsGreenWinter"/>
 			<colorMap fromColor="HedgeGreen" toColor="HedgeGreenWinter"/>
 			<colorMap fromColor="BocageGreen" toColor="HedgeGreenWinter"/>
+			<colorMap fromColor="BocageBrown" toColor="L2Winter"/>
 			<colorMap fromColor="BocageBrownL0" toColor="L2Winter"/>
 			<colorMap fromColor="BocageBrownL1" toColor="L3Winter"/>
 			<colorMap fromColor="BocageBrownL2" toColor="L4Winter"/>
@@ -1339,12 +2150,18 @@
 			<colorMap fromColor="StreamMarshGreenL_1" toColor="MudMarshGreen"/>
 			<colorMap fromColor="StreamMarshGreenL0" toColor="MudMarshGreen"/>
 			<colorMap fromColor="StreamMarshGreenL1" toColor="MudMarshGreen"/>
+			<colorMap fromColor="MarshGreenL_1" toColor="MudMarshGreen"/>
+			<colorMap fromColor="MarshGreenL0" toColor="MudMarshGreen"/>
+			<colorMap fromColor="MarshGreenL1" toColor="MudMarshGreen"/>
 			<colorMap fromColor="RiverMarshGreenL_1" toColor="MudMarshGreen"/>
 			<colorMap fromColor="RiverMarshGreenL0" toColor="MudMarshGreen"/>
 			<colorMap fromColor="RiverMarshGreenL1" toColor="MudMarshGreen"/>
 			<colorMap fromColor="SeparatedMarshGreenL_1" toColor="MudMarshGreen"/>
 			<colorMap fromColor="SeparatedMarshGreenL0" toColor="MudMarshGreen"/>
 			<colorMap fromColor="SeparatedMarshGreenL1" toColor="MudMarshGreen"/>
+			<colorMap fromColor="SwampGreenL_1" toColor="MudMarshGreen"/>
+			<colorMap fromColor="SwampGreenL0" toColor="MudMarshGreen"/>
+			<colorMap fromColor="SwampGreenL1" toColor="MudMarshGreen"/>
 			<colorMap fromColor="StreamSwampGreenL_1" toColor="MudMarshGreen"/>
 			<colorMap fromColor="StreamSwampGreenL0" toColor="MudMarshGreen"/>
 			<colorMap fromColor="StreamSwampGreenL1" toColor="MudMarshGreen"/>
@@ -1392,7 +2209,7 @@
 			<colorMap fromColor="BrushL4" toColor="BrushDesertL4"/>
 			<colorMap fromColor="BrushL5" toColor="BrushDesertL5"/>
 			<colorMap fromColor="BrushL6" toColor="BrushDesertL6"/>
-			<colorMap fromColor="DirtRdBridge" toColor="DirtRdDesertBridge"/>
+			<colorMap fromColor="DirtRdBridge" toColor="DirtRdBridgeDesert"/>
 			<colorMap fromColor="OrchTrees" toColor="OrchTreesDesert"/>
 			<colorMap fromColor="GullyBlack" toColor="WadiBlack"/>
 			<colorMap fromColor="GullyBrown1" toColor="WadiBrown2"/>

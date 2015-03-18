@@ -22,18 +22,14 @@ package VASL.build.module.map.boardPicker;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Ellipse2D;
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import VASL.LOS.LOSDataEditor;
 import VASL.LOS.Map.Hex;
 import VASL.LOS.Map.Map;
 import VASL.LOS.Map.Terrain;
-import VASL.build.module.ASLMap;
 import VASL.build.module.map.boardArchive.BoardArchive;
 import VASL.build.module.map.boardArchive.LOSSSRule;
 import VASSAL.build.module.map.boardPicker.board.HexGrid;
@@ -44,36 +40,9 @@ import VASSAL.i18n.Translatable;
  */
 public class VASLBoard extends ASLBoard {
 
-    private boolean legacyBoard = true;        // is the board legacy (i.e. V5) format?
-    private BoardArchive VASLBoardArchive;
-
     public VASLBoard(){
 
         super();
-    }
-
-    /**
-     * Sets the board archive and all archive variables
-     * @param s the image file name - not used
-     * @param f the archive file
-     */
-    //TODO: refactor the board picker so there's a better way to initialize the board and instantiate the archive interface
-    @Override
-	public void setBaseImageFileName(String s, File f) {
-
-        //TODO: eliminate the need to call the super class method
-        super.setBaseImageFileName(s,f);
-
-        // set the board archive
-        try {
-            VASLBoardArchive = new BoardArchive(f.getName(), f.getParent(), ASLMap.getSharedBoardMetadata());
-            legacyBoard = false;
-
-        } catch (IOException e) {
-
-            // must be a legacy board
-            legacyBoard = true;
-        }
     }
 
     /**
@@ -107,13 +76,6 @@ public class VASLBoard extends ASLBoard {
      * @return y location of the A1 center hex dot
      */
     public double getA1CenterY() { return VASLBoardArchive.getA1CenterY();}
-
-    /**
-     * @return true if this board is legacy format (pre 6.0)
-     */
-    public boolean isLegacyBoard() {
-        return legacyBoard;
-    }
 
     /**
      * Is the board cropped?
@@ -163,42 +125,9 @@ public class VASLBoard extends ASLBoard {
         return VASLBoardArchive.getLOSData(terrainTypes);
     }
 
-    /**
-     * Set the information formerly in the data file
-     */
-    //TODO: deprecate when pre-6.0 boards are no longer supported
-    @Override
-    public void readData(){
-
-        if (isLegacyBoard()) {
-            super.readData();
-        }
-        else {
-
-            version = VASLBoardArchive.getVersion();
-            if(VASLBoardArchive.getA1CenterX() != BoardArchive.missingValue()){
-                ((Translatable)getGrid()).setAttribute(HexGrid.X0, (int) VASLBoardArchive.getA1CenterX());
-            }
-            if(VASLBoardArchive.getA1CenterY() != BoardArchive.missingValue()){
-                ((Translatable)getGrid()).setAttribute(HexGrid.Y0, (int) VASLBoardArchive.getA1CenterY());
-            }
-            if((int) VASLBoardArchive.getHexWidth() != BoardArchive.missingValue()){
-                ((Translatable)getGrid()).setAttribute(HexGrid.DX, VASLBoardArchive.getHexWidth());
-            }
-            if((int) VASLBoardArchive.getHexHeight() != BoardArchive.missingValue()){
-                ((Translatable)getGrid()).setAttribute(HexGrid.DY, VASLBoardArchive.getHexHeight());
-            }
-            if((int) VASLBoardArchive.getHexHeight() != BoardArchive.missingValue()){
-                ((Translatable)getGrid()).setAttribute(HexGrid.DY, VASLBoardArchive.getHexHeight());
-            }
-            if((int) VASLBoardArchive.getSnapScale() != BoardArchive.missingValue()){
-                ((Translatable)getGrid()).setAttribute(HexGrid.SNAP_SCALE, VASLBoardArchive.getSnapScale());
-            }
-        }
-    }
-
     @Override
 	public String getName() {
+
         if(isLegacyBoard()) {
             return super.getName();
         }
@@ -213,7 +142,7 @@ public class VASLBoard extends ASLBoard {
      */
     public void applyColorSSRules(Map LOSData, HashMap<String, LOSSSRule> losssRules) throws BoardException {
 
-        if(!legacyBoard && !terrainChanges.isEmpty()) {
+        if(!isLegacyBoard() && !terrainChanges.isEmpty()) {
 
             boolean changed = false; // changes made?
 
@@ -225,8 +154,6 @@ public class VASLBoard extends ASLBoard {
             while (st.hasMoreTokens()) {
 
 				final String s = st.nextToken();
-
-                // System.out.println(s);
 
 				final LOSSSRule rule = losssRules.get(s);
                 if(rule == null) {
@@ -271,7 +198,7 @@ public class VASLBoard extends ASLBoard {
                         bridgesToFord(LOSData);
                         changed = true;
                     }
-                    else if("RoadsToPaths".equals(s) || "NoWoodsRoads".equals(s)){
+                    else if("RoadsToPaths".equals(s) || "NoWoodsRoads".equals(s) || "NoWoodsRoad".equals(s)){
 
                         fillWoodsRoadHexes(LOSData);
                         changed = true;
@@ -578,8 +505,6 @@ public class VASLBoard extends ASLBoard {
      */
     //TODO find a better way
     private void buildingsToHuts(Map LOSData) {
-
-        return;
 
 /*
         LOSDataEditor losDataEditor = new LOSDataEditor(LOSData);

@@ -17,8 +17,11 @@
     height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
+
+	2/8/15 - fixed overlay SSR rules adding rule sets
+	3/11/15 - fixed "no woods roads" SSR rule
 -->
-<boardMetadata name="50" version="6.0" versionDate="Aug 2008" author="TR" boardImageFileName="bd50.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="50" version="6.1" versionDate="Aug 2008" author="TR" boardImageFileName="bd50.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -66,12 +69,18 @@
 			image - the image name
 			x - x coordinate of overly upper left
 			y - y coordinate of overlay upper left
-		-->		
+		-->
 		<overlaySSRule name="DenseJungle" image="50_DenseJungle.gif" x="1" y="1" />
 		<overlaySSRule name="Bamboo" image="50_Bamboo.gif" x="304" y="62" />
-		<overlaySSRule name="BridgeToFord" image="50_Bridge2Ford_Q2.gif" x="881" y="56" />
-		<overlaySSRule name="NoBridge" image="50_NoBridge_Q2.gif" x="881" y="56" />
-		<overlaySSRule name="NoWoodsRoad" image="50_NoWoodsRoads.gif" x="582" y="9" />
+		<overlaySSRuleSet name="BridgeToFord">
+			<overlaySSRuleImage image="50_Bridge2Ford_Q2.gif" x="881" y="56" />
+			<overlaySSRuleImage image="50_Bridge2Ford_V5.gif" x="1145" y="295" />
+		</overlaySSRuleSet>
+		<overlaySSRuleSet name="NoBridge">
+			<overlaySSRuleImage image="50_NoBridge_Q2.gif" x="881" y="56" />
+			<overlaySSRuleImage image="50_NoBridge_V5.gif" x="1145" y="295" />
+		</overlaySSRuleSet>
+		<overlaySSRule name="NoWoodsRoads" image="50_NoWoodsRoads.gif" x="582" y="9" />
 		<overlaySSRule name="RoadsToPaths" image="50_WoodsRoad2Path.gif" x="596" y="21" />
 		<overlaySSRule name="WallsToOG" image="50_Walls2OG.gif" x="73" y="254" />
 		<overlaySSRule name="NoWalls" image="50_Walls2OG.gif" x="73" y="254" />

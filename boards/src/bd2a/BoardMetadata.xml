@@ -17,10 +17,12 @@
     height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
+	
+	3/11/15 - fixed "no woods roads" SSR rule
 -->
 <boardMetadata 
 	name="2a" 
-	version="6.0" 
+	version="6.1" 
 	versionDate="Dec 2011" 
 	author="TR" 
 	boardImageFileName="bd2a.gif" 
@@ -75,7 +77,7 @@
 		<overlaySSRule name="HedgesToOG" image="bd2a_HedgesToOG.gif" x="185" y="320" />
 		<overlaySSRule name="WallsToBocage" image="bd2a_WallsToBocage.gif" x="297" y="191" />
 		<overlaySSRule name="RoadsToPaths" image="bd2a_RoadsToPaths.gif" x="391" y="60" />
-		<overlaySSRule name="NoWoodsRoad" image="bd2a_NoWoodsRoad.gif" x="402" y="71" />
+		<overlaySSRule name="NoWoodsRoads" image="bd2a_NoWoodsRoad.gif" x="402" y="71" />
 		<overlaySSRule name="PalmTrees" image="bd2a_PalmTrees.gif" x="256" y="237" />
 		<overlaySSRule name="OrchardsToCrags" image="bd2a_Orch2Crag.gif" x="256" y="237" />
 		<overlaySSRule name="OrchardsToShellholes" image="bd2a_Orch2Shell.gif" x="253" y="235" />

@@ -16,9 +16,11 @@
                 makes the VASL LOS image translation faster and more accurate
     height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
     width - width of the board in hexes.
-	others - TBD e.g. alternate hex grain, etc. 
+	others - TBD e.g. alternate hex grain, etc.
+
+	3/14/15 - fixed "Crags to Palms" SSR rule
 -->
-<boardMetadata name="24" version="6.1" versionDate="Aug 2008" author="TR" boardImageFileName="bd24.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="24" version="6.2" versionDate="Aug 2008" author="TR" boardImageFileName="bd24.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -95,7 +97,7 @@
 		<overlaySSRule name="NoCliffs" image="24_NoCliffs.gif" x="182" y="86" />
 		<overlaySSRule name="CragsToShellholes" image="24_Crag2Shell.gif" x="148" y="40" />
 		<overlaySSRule name="CragsToOrchards" image="24_Crag2Orch.gif" x="151" y="40" />
-		<overlaySSRule name="CragsToPalmTrees" image="24_Crag2Palm.gif" x="150" y="40" />
+		<overlaySSRule name="CragsToPalm" image="24_Crag2Palm.gif" x="150" y="40" />
 		<overlaySSRule name="OrchardsToShellholes" image="24_Orch2Shell.gif" x="599" y="141" />
 		<overlaySSRule name="OrchardsToCrags" image="24_Orch2Crag.gif" x="598" y="140" />
 		<overlaySSRule name="PalmTrees" image="24_Orch2Palm.gif" x="597" y="141" />
