@@ -1,9 +1,0 @@
-target/
-.idea/
-.gitignore
-vasl.iml
-out/
-boardsOut/
-to-do.txt
-LOS Enter-Exit hexside mapping.txt
-test/test.iml
