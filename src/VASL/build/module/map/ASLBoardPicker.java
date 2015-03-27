@@ -32,6 +32,7 @@ import VASSAL.command.NullCommand;
 import VASSAL.configure.DirectoryConfigurer;
 import VASSAL.configure.ValidationReport;
 import VASSAL.tools.ErrorDialog;
+import VASSAL.tools.PropertiesEncoder;
 import VASSAL.tools.ReadErrorDialog;
 import VASSAL.tools.io.IOUtils;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -101,6 +102,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
                         StringTokenizer st2 = new StringTokenizer(boardDesc, "\t\n");
                         b.relativePosition().move(Integer.parseInt(st2.nextToken()), Integer.parseInt(st2.nextToken()));
                         String baseName = st2.nextToken();
+                        updateBoard(baseName);
                         this.tileBoard(baseName);
                         buildBoard(b, boardDesc);
                         v.add(b);
@@ -114,6 +116,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
                     StringTokenizer st2 = new StringTokenizer(command, "\t\n");
                     b.relativePosition().move(Integer.parseInt(st2.nextToken()), Integer.parseInt(st2.nextToken()));
                     String baseName = st2.nextToken();
+                    updateBoard(baseName);
                     this.tileBoard(baseName);
                     buildBoard(b, command);
                     v.add(b);
@@ -349,7 +352,6 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
             unReversedBoardName = commonName;
         }
 
-        // TODO - remove requirement that boards start with "bd"
         final File fpath = new File(boardDir, "bd" + unReversedBoardName);
 
         final ASLTilingHandler th = new ASLTilingHandler(
@@ -364,6 +366,74 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
             th.sliceTiles();
         } catch (IOException e) {
             ReadErrorDialog.error(e, fpath);
+        }
+    }
+
+    /**
+     * Ensures the given board exists and is up to date. If not it fetches it from the repository
+     * @param baseName the board base name (i.e. reversed board may start with r)
+     */
+    private void updateBoard(String baseName) {
+
+        // normalize the base name by stripping r from reversed board
+        String unReversedBoardName = baseName;
+        if (baseName.startsWith("r") && !baseName.equalsIgnoreCase("r")) {
+            // board rX, this is really X; r or R are ok
+            // Red Barricades (RB) and Ruweisat Ridge (RR) should not have gotten here
+            unReversedBoardName = baseName.substring(1);
+        }
+
+        final File boardFile = new File(boardDir, "bd" + unReversedBoardName);
+
+        // try to grab the board from repository if missing
+        if(!boardFile.exists()) {
+
+            // try to fetch the missing board
+            if(boardDir != null) {
+
+                GameModule.getGameModule().warn("Board " + unReversedBoardName + " is missing. Downloading...");
+                if(!BoardVersionChecker.updateBoard(unReversedBoardName)) {
+                    GameModule.getGameModule().warn("Board download failed");
+                }
+                else {
+                    GameModule.getGameModule().warn("Board download succeeded");
+                }
+            }
+        }
+
+        // Update the board if it's out of date
+        else {
+
+            // get the board version
+            VASLBoard b = new VASLBoard();
+            b.initializeFromArchive(boardFile);
+
+            // get the current board version from the game properties
+            Properties properties;
+            String availableVersion = null;
+            String boardVersions = ((String) GameModule.getGameModule().getPrefs().getValue(BoardVersionChecker.BOARD_VERSION_PROPERTY_KEY));
+            if (boardVersions != null && boardVersions.length() > 0) {
+                try {
+                    properties = new PropertiesEncoder(boardVersions).getProperties();
+                    availableVersion = properties.getProperty(unReversedBoardName);
+
+                } catch (Exception e) {
+                    // Fail silently if we can't find a version
+                    return;
+                }
+            }
+
+            if (boardDir != null && availableVersion != null && !b.getVersion().equals(availableVersion)) {
+
+                // try to update board if out of date
+                GameModule.getGameModule().warn("Board " + unReversedBoardName + " is out of date. Updating...");
+                if (!BoardVersionChecker.updateBoard(unReversedBoardName)) {
+                    GameModule.getGameModule().warn("Update failed");
+                }
+                else {
+                    GameModule.getGameModule().warn("Update succeeded");
+                }
+            }
         }
     }
 
@@ -389,6 +459,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
     }
 
     public Board getBoard(String name, boolean localized) {
+
+        updateBoard(name);
         this.tileBoard(name);
         ASLBoard b = new VASLBoard();
         if (name != null) {
@@ -433,11 +505,11 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
             }
             File f;
             f = new File(boardDir, "bd" + unReversedBoardName);
-            if (f.exists()) {
-                b.initializeFromArchive(f);
-            } else {
+            if (!f.exists()) {
+
                 throw new BoardException("Unable to find board " + baseName);
             }
+            b.initializeFromArchive(f);
         } catch (Exception eParse) {
             throw new BoardException(eParse.getMessage(), eParse);
         }
