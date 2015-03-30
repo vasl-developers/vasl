@@ -188,3 +188,5 @@ STN = 1.0
 ESG1 = 1.0
 ESG2 = 1.0
 PBR = 1.1
+Blank0 = 6.0
+Blank1 = 6.0
