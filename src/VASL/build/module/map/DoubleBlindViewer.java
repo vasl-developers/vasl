@@ -273,6 +273,10 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
      */
     public boolean isViewable(GamePiece piece1, GamePiece piece2) {
 
+/*        // can the unit spot?
+        if (!VASLGameInterface.isDBUnit(piece1)) {
+            return false;
+        }*/
         // get the piece location
         Location l1 = getLocation(piece1);
         Location l2 = getLocation(piece2);
@@ -577,7 +581,7 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
      * @param message the message
      */
     private void debug(String message) {
-        getGameModule().warn(message);
+        // getGameModule().warn(message);
         System.out.println(message);
     }
 
@@ -658,6 +662,7 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
 
         protected void executeCommand() {
 
+            debug("Executing DB command ");
             players.put(player.getName(), player);
             updateView();
         }

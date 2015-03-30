@@ -26,6 +26,7 @@ import VASSAL.counters.GamePiece;
 import VASSAL.counters.PieceIterator;
 import VASSAL.counters.Properties;
 import VASSAL.counters.Stack;
+import VASSAL.tools.imports.adc2.ADC2Module;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -42,6 +43,9 @@ public class VASLGameInterface {
 
     // the LOS counter rules from the shared metadata file
     LinkedHashMap<String, CounterMetadata> counterMetadata;
+
+    // the marker used to tag units for DB play
+    private final static String DB_MARKER_KEY = "isDBUnit";
 
     // the counter lists
     protected HashMap<Hex, Terrain> terrainList;
@@ -339,7 +343,7 @@ public class VASLGameInterface {
             return location;
         }
 
-        // otherwise create a location appropriate
+        // otherwise create a location appropriately
         else {
 
             switch (locationCounter.getType()) {
@@ -386,6 +390,19 @@ public class VASLGameInterface {
         }
     }
 
+
+    /**
+     * @param piece a game piece
+     * @return true if piece has DB marker set
+     */
+    public boolean isDBUnit(GamePiece piece) {
+
+        if(piece.getProperty(DB_MARKER_KEY) != null) {
+            return true;
+        }
+        return false;
+    }
+
     private void printCounterLocations(){
 
         GamePiece[] p = gameMap.getPieces();
@@ -395,7 +412,7 @@ public class VASLGameInterface {
                     GamePiece p2 = pi.nextPiece();
                     LocationCounter location = getLocationCounterForPiece(p2);
                     if(location == null) {
-                        System.out.println(p2.getName() + " has no location ");
+                        System.out.println(p2.getName() + " has no location counter piece");
                     }
                     else {
                         System.out.println(p2.getName()  + " is in location " + location.getName());
@@ -404,7 +421,7 @@ public class VASLGameInterface {
             } else {
                 LocationCounter location = getLocationCounterForPiece(aP);
                 if(location == null) {
-                    System.out.println(aP.getName() + " has no location ");
+                    System.out.println(aP.getName() + " has no location counter piece");
                 }
                 else {
                     System.out.println(aP.getName()  + " is in location " + location.getName());

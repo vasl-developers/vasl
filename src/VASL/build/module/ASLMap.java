@@ -20,6 +20,7 @@
 package VASL.build.module;
 
 import VASL.build.module.map.boardArchive.BoardArchive;
+import VASL.LOS.counters.CounterMetadataFile;
 import VASL.build.module.map.boardArchive.SharedBoardMetadata;
 import VASL.build.module.map.boardPicker.BoardException;
 import VASL.build.module.map.boardPicker.VASLBoard;
@@ -60,6 +61,9 @@ public class ASLMap extends Map {
     private static SharedBoardMetadata sharedBoardMetadata = null;
     private boolean legacyMode;                     // true if unable to create a VASL map or LOS data is missing
 
+    // counter metadata
+    private static CounterMetadataFile counterMetadata = null;
+
     // used to log errors in the VASSAL error log
     private static final Logger logger = LoggerFactory.getLogger(ASLMap.class);
     private ShowMapLevel m_showMapLevel = ShowMapLevel.ShowAll;
@@ -68,7 +72,7 @@ public class ASLMap extends Map {
 
       super();
       try {
-          readSharedBoardMetadata();
+          readMetadata();
       } catch (JDOMException e) {
 
           // give up if there's any problem reading the shared metadata file
@@ -166,17 +170,17 @@ public class ASLMap extends Map {
     /**
      * read the shared board metadata
      */
-    private void readSharedBoardMetadata() throws JDOMException {
+    private void readMetadata() throws JDOMException {
 
-        // read the shared board metadata
-        InputStream metadata = null;
+        InputStream inputStream = null;
         try {
+
             DataArchive archive = GameModule.getGameModule().getDataArchive();
 
-            metadata =  archive.getInputStream(sharedBoardMetadataFileName);
-
+            // shared board metadata
+            inputStream =  archive.getInputStream(sharedBoardMetadataFileName);
             sharedBoardMetadata = new SharedBoardMetadata();
-            sharedBoardMetadata.parseSharedBoardMetadataFile(metadata);
+            sharedBoardMetadata.parseSharedBoardMetadataFile(inputStream);
 
         // give up on any errors
         } catch (IOException e) {
@@ -190,8 +194,9 @@ public class ASLMap extends Map {
             throw new JDOMException("Cannot read the shared metadata file", e);
         }
         finally {
-            IOUtils.closeQuietly(metadata);
+            IOUtils.closeQuietly(inputStream);
         }
+
     }
 
     /**
@@ -345,6 +350,13 @@ public class ASLMap extends Map {
      */
     public static SharedBoardMetadata getSharedBoardMetadata() {
         return sharedBoardMetadata;
+    }
+
+    /**
+     * @return the counter metadata
+     */
+    public static CounterMetadataFile getCounterMetadata() {
+        return counterMetadata;
     }
 
     /**

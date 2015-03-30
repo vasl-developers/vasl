@@ -19,6 +19,11 @@ package VASL.LOS.Map;
 import VASL.build.module.map.boardArchive.BoardArchive;
 import VASL.build.module.map.boardArchive.Slopes;
 
+import VASL.LOS.VASLGameInterface;
+import VASL.LOS.counters.OBA;
+import VASL.LOS.counters.Smoke;
+import VASL.LOS.counters.Vehicle;
+
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.PathIterator;
@@ -777,7 +782,7 @@ public class Map  {
         public Location target;
         public boolean useAuxTargetLOSPoint;
         public LOSResult result;
-        public VASL.LOS.Map.VASLGameInterface VASLGameInterface;
+        public VASL.LOS.VASLGameInterface VASLGameInterface;
 
         // location variables
         public int sourceX;
@@ -2912,8 +2917,8 @@ public class Map  {
         Map newMap = new Map(localHexWidth, localHexHeight, A1CenterX, A1CenterY, localGridWidth, localGridHeight, terrainNameMap);
 
         // copy the map grid
-        for(int x = 0; x < newMap.gridWidth && x < gridWidth; x++) {
-            for(int y = 0; y < newMap.gridHeight && y < gridHeight; y++){
+        for(int x = 0; x < newMap.gridWidth && x + upperLeft.x < gridWidth; x++) {
+            for(int y = 0; y < newMap.gridHeight && y + upperLeft.y < gridHeight; y++){
 
                 newMap.terrainGrid[x][y] = terrainGrid[x + upperLeft.x][y + upperLeft.y];
                 newMap.elevationGrid[x][y] = elevationGrid[x + upperLeft.x][y + upperLeft.y];

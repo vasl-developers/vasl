@@ -16,6 +16,8 @@
  */
 package VASL.LOS.Map;
 
+import VASL.LOS.counters.OBA;
+
 import java.awt.*;
 import java.util.HashMap;
 import java.util.HashSet;

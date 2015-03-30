@@ -79,9 +79,11 @@ public abstract class AbstractMetadata {
     protected LinkedHashMap<String, LOSSSRule> LOSSSRules = new LinkedHashMap<String, LOSSSRule>(100);
 
     // Lists of the counter rules
-    protected LinkedHashMap<String, LOSCounterRule> LOSCounterRules = new LinkedHashMap<String, LOSCounterRule>(30);
+    // protected LinkedHashMap<String, LOSCounterRule> LOSCounterRules = new LinkedHashMap<String, LOSCounterRule>(30);
+
     // Maps SSR name to the overlay rule object
     protected LinkedHashMap<String, OverlaySSRule> overlaySSRules = new LinkedHashMap<String, OverlaySSRule>();
+
     // Maps SSR name to the underlay rule object
     protected LinkedHashMap<String, UnderlaySSRule> underlaySSRules = new LinkedHashMap<String, UnderlaySSRule>();
 
@@ -239,51 +241,6 @@ public abstract class AbstractMetadata {
     }
 
     /**
-     * Parses the LOS counter rules element
-     * @param element the LOSCounterRules element
-     * @throws org.jdom2.JDOMException
-     */
-    protected void parseLOSCounterRules(Element element) throws JDOMException {
-
-        // make sure we have the right element
-        assertElementName(element, LOSCounterRulesElement);
-
-        for(Element e: element.getChildren()) {
-
-            LOSCounterRule losCounterRule = null;
-            String name = e.getAttributeValue(LOSCounterRuleNameAttribute);
-
-            // ignore any child elements that are not counter rules
-            if(e.getName().equals(smokeCounterElement)) {
-
-                // read the height and hindrance
-                losCounterRule = new LOSCounterRule(name, LOSCounterRule.CounterType.SMOKE);
-                losCounterRule.setHeight(e.getAttribute(LOSCounterRuleHeightAttribute).getIntValue());
-                losCounterRule.setHindrance(e.getAttribute(LOSCounterRuleHindranceAttribute).getIntValue());
-
-            }
-            else if(e.getName().equals(terrainCounterElement)) {
-                losCounterRule = new LOSCounterRule(name, LOSCounterRule.CounterType.TERRAIN);
-                losCounterRule.setTerrain(e.getAttributeValue(LOSCounterRuleTerrainAttribute));
-
-            }
-            else if(e.getName().equals(OBACounterElement)) {
-                losCounterRule = new LOSCounterRule(name, LOSCounterRule.CounterType.OBA);
-
-            }
-            else if(e.getName().equals(wreckCounterElement)) {
-                losCounterRule = new LOSCounterRule(name, LOSCounterRule.CounterType.WRECK);
-
-            }
-            else if(e.getName().equals(ignoreCounterElement)) {
-                losCounterRule = new LOSCounterRule(name, LOSCounterRule.CounterType.IGNORE);
-            }
-
-            LOSCounterRules.put(name, losCounterRule);
-        }
-    }
-
-    /**
      * @return the board colors
      */
     protected LinkedHashMap<String, BoardColor> getBoardColors() {
@@ -309,13 +266,6 @@ public abstract class AbstractMetadata {
      */
     public LinkedHashMap<String, LOSSSRule> getLOSSSRules(){
         return LOSSSRules;
-    }
-
-    /**
-     * @return the list of LOS counter rules
-     */
-    public LinkedHashMap<String, LOSCounterRule> getLOSCounterRules(){
-        return LOSCounterRules;
     }
 
     /**
