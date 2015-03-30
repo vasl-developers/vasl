@@ -134,7 +134,6 @@ public class BoardArchive {
             // required for legacy boards
             if(!legacyBoard) {
                 dataFile = null;
-                throw new IOException("Cannot read the data file in board " + archiveName, e);
             }
         }
         finally {
