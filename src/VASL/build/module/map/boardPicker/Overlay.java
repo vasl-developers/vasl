@@ -18,6 +18,8 @@
  */
 package VASL.build.module.map.boardPicker;
 
+import VASL.build.module.map.BoardVersionChecker;
+import VASSAL.build.GameModule;
 import VASSAL.build.module.map.boardPicker.board.MapGrid;
 import VASSAL.build.module.map.boardPicker.board.MapGrid.BadCoords;
 import VASSAL.tools.DataArchive;
@@ -62,8 +64,24 @@ public class Overlay implements Cloneable {
         }
         this.board = board;
         overlayFile = new File(overlayDir, archiveName());
+
+        // try to fetch the overlay file if missing
+/*
+        if(!overlayFile.exists()) {
+            GameModule.getGameModule().warn("Overlay " + name + " is missing. Downloading...");
+            if(!BoardVersionChecker.updateOverlayFile(name)) {
+                GameModule.getGameModule().warn("Overlay download failed");
+            }
+            else {
+                GameModule.getGameModule().warn("Overlay download succeeded");
+            }
+        }
+*/
+
         archive = new DataArchive(overlayFile.getPath(), "");
         readData();
+
+
         try {
             setBounds();
         } catch (BadCoords e) {

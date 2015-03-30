@@ -144,11 +144,6 @@ public class Map  {
                 (A1CenterY < 0.0 ? hexHeight/2.0 : A1CenterY) + hexHeight * (double) row - hexHeight/2.0 * (double) (col%2)
         );
 
-        // -881 to 21
-        // *-1 = 881
-        // divide by hex width and get remainder
-
-
     }
 
     /**
@@ -231,15 +226,10 @@ public class Map  {
      */
     public Terrain getGridTerrain(int row, int col) {
 
-        try {
-            if (onMap(row, col)) {
-                return terrainList[(int) terrainGrid[row][col]];
-            }
-            return null;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+        if (onMap(row, col)) {
+            return terrainList[(int) terrainGrid[row][col]];
         }
+        return null;
     }
 
     /**
@@ -257,12 +247,14 @@ public class Map  {
      * Returns the ground level for the pixel at row, col of the map image.
      * @param row the row coordinate
      * @param col the col coordinate
-     * @return the ground level at (row, col)
+     * @return the ground level at (row, col) or 0 if not on map
      */
     public int getGridElevation(int row, int col) {
 
-        // ground level
-        return (int) elevationGrid[row][col];
+        if (onMap(row, col)) {
+            return (int) elevationGrid[row][col];
+        }
+        return 0;
     }
 
     /**
@@ -603,7 +595,7 @@ public class Map  {
             for (int row = 0; row < numRows; row++) {
 
                 status.currentTerrain = getGridTerrain(status.currentCol, status.currentRow);
-                status.groundLevel = (int) elevationGrid[status.currentCol][status.currentRow];
+                status.groundLevel = getGridElevation(status.currentCol, status.currentRow); //int) elevationGrid[status.currentCol][status.currentRow];
 
                 // temp hex is the hex the LOS point is in
                 if (status.sourceHex.getExtendedHexBorder().contains(status.currentCol, status.currentRow)) {
@@ -2188,17 +2180,13 @@ public class Map  {
      */
     private boolean hillockRuleApplicable(LOSStatus status) {
 
-        if(status.groundLevel + status.currentTerrainHgt == status.sourceElevation &&
-           status.groundLevel + status.currentTerrainHgt == status.targetElevation &&
-           (status.crossingHillock != null ||
-                  status.startsOnHillock ||
-                  status.endsOnHillock ||
-                  status.sourceAdjacentHillock != null ||
-                  status.targetAdjacentHillock != null)
-                ) {
-            return true;
-        }
-        return false;
+        return status.groundLevel + status.currentTerrainHgt == status.sourceElevation &&
+                status.groundLevel + status.currentTerrainHgt == status.targetElevation &&
+                (status.crossingHillock != null ||
+                        status.startsOnHillock ||
+                        status.endsOnHillock ||
+                        status.sourceAdjacentHillock != null ||
+                        status.targetAdjacentHillock != null);
     }
 
     /**
@@ -2235,6 +2223,7 @@ public class Map  {
          * @param hex the hex
          * @return true if the given hex is not part of the hillock but adjacent to one of the hexes
          */
+        @SuppressWarnings("unused")
         public boolean isAdjacent(Hex hex) {
 
             if(hexes.contains(hex)) {
@@ -2318,7 +2307,6 @@ public class Map  {
         hillocks = new HashSet<Hillock>();
 
         // create one hillock for each hillock hex
-        ArrayList<String> hexes = new ArrayList<String>();
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height + (x % 2); y++) { // add 1 hex if odd
                 if (HILLOCK.equals(getHex(x, y).getCenterLocation().getTerrain().getName())) {
@@ -2347,7 +2335,7 @@ public class Map  {
                 while (i.hasNext()) {
 
                     // consolidate one adjacent hillock
-                    Hillock h = (Hillock) i.next();
+                    Hillock h = i.next();
                     if (hillock.isAdjacent(h)) {
                         hillock.merge(h);
                         i.remove();
@@ -2375,12 +2363,12 @@ public class Map  {
     protected boolean checkHalfLevelTerrainRule(LOSStatus status, LOSResult result) {
 
         // special rules for hillocks
-        if((hillockRuleApplicable(status) && !status.slopes) || hillockHindranceToLowerElevation(status)) {
+        if ((hillockRuleApplicable(status) && !status.slopes) || hillockHindranceToLowerElevation(status)) {
 
             // apply max one hindrance for grain/brush
-            if(status.firstHalfLevelHindrance == null &&
-              (BRUSH.equals(status.currentTerrain.getName()) || GRAIN.equals(status.currentTerrain.getName())) &&
-             !(status.startsOnHillock && status.endsOnHillock)) {
+            if (status.firstHalfLevelHindrance == null &&
+                    (BRUSH.equals(status.currentTerrain.getName()) || GRAIN.equals(status.currentTerrain.getName())) &&
+                    !(status.startsOnHillock && status.endsOnHillock)) {
 
                 status.firstHalfLevelHindrance = status.currentHex;
                 if (addHindranceHex(status, result)) {
@@ -2390,16 +2378,11 @@ public class Map  {
             return false;
         }
 
-        if (status.currentTerrain.isHalfLevelHeight() &&
-           !status.currentTerrain.isHexsideTerrain() &&
-            status.groundLevel + status.currentTerrainHgt == status.sourceElevation &&
-            status.groundLevel + status.currentTerrainHgt == status.targetElevation &&
-           !status.slopes) {
-
-            return applyHalfLevelTerrain(status, result);
-
-        }
-        return false;
+        return status.currentTerrain.isHalfLevelHeight() &&
+                !status.currentTerrain.isHexsideTerrain() &&
+                status.groundLevel + status.currentTerrainHgt == status.sourceElevation &&
+                status.groundLevel + status.currentTerrainHgt == status.targetElevation &&
+                !status.slopes && applyHalfLevelTerrain(status, result);
     }
 
     /**
@@ -2929,8 +2912,8 @@ public class Map  {
         Map newMap = new Map(localHexWidth, localHexHeight, A1CenterX, A1CenterY, localGridWidth, localGridHeight, terrainNameMap);
 
         // copy the map grid
-        for(int x = 0; x < newMap.gridWidth && x < gridWidth; x++) {
-            for(int y = 0; y < newMap.gridHeight && y < gridHeight; y++){
+        for(int x = 0; x < newMap.gridWidth && x + upperLeft.x < gridWidth; x++) {
+            for(int y = 0; y < newMap.gridHeight && y + upperLeft.y < gridHeight; y++){
 
                 newMap.terrainGrid[x][y] = terrainGrid[x + upperLeft.x][y + upperLeft.y];
                 newMap.elevationGrid[x][y] = elevationGrid[x + upperLeft.x][y + upperLeft.y];

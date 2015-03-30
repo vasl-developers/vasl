@@ -50,26 +50,6 @@ public class ASLTilingHandler extends VASSAL.launch.TilingHandler {
     super(aname, cdir, tdim, mhlim, pid);
   }
 
-/*
-  @Override
-  protected boolean isFresh(FileArchive archive,
-                            FileStore tcache, String iname)
-                                                           throws IOException {
-    final String apath = iname;
-
-    // look at the first 1:1 tile
-    final String tpath = TileUtils.tileName(iname, 0, 0, 1);
-
-    // check whether the image is older than the tile
-    final long imtime = archive.getMTime(apath);
-
-System.out.println(apath + ", " + imtime + ", " + tcache.getMTime(tpath));
-
-    return imtime > 0 && // time in archive might be goofy
-           imtime <= tcache.getMTime(tpath);
-  }
-*/
-
   @Override
   protected Dimension getImageSize(DataArchive archive, String iname)
                                                            throws IOException {

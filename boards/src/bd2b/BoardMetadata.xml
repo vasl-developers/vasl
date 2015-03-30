@@ -19,10 +19,12 @@
 	hexWidth - the width of a hex in pixels - decimal - center point to center point
 	A1CenterX - x location of the A1 center dot
 	A1CenterY - y location of the A1 center dot 
+	
+	3/11/15 - fixed "no woods roads" SSR rule
 -->
 <boardMetadata 
 	name="2b" 
-	version="6.0" 
+	version="6.1" 
 	versionDate="Jan 2010" 
 	author="TR" 
 	boardImageFileName="bd2b.gif" 
@@ -80,7 +82,7 @@
 		<overlaySSRule name="HedgesToOG" image="bd2b_HedgesToOG.gif" x="185" y="320" />
 		<overlaySSRule name="WallsToBocage" image="bd2b_WallsToBocage.gif" x="297" y="191" />
 		<overlaySSRule name="RoadsToPaths" image="bd2b_RoadsToPaths.gif" x="391" y="60" />
-		<overlaySSRule name="NoWoodsRoad" image="bd2b_NoWoodsRoad.gif" x="402" y="71" />
+		<overlaySSRule name="NoWoodsRoads" image="bd2b_NoWoodsRoad.gif" x="402" y="71" />
 		<overlaySSRule name="PalmTrees" image="bd2b_PalmTrees.gif" x="256" y="237" />
 		<overlaySSRule name="OrchardsToCrags" image="bd2b_Orch2Crag.gif" x="256" y="237" />
 		<overlaySSRule name="OrchardsToShellholes" image="bd2b_Orch2Shell.gif" x="253" y="235" />

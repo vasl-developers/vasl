@@ -14,6 +14,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
@@ -26,7 +27,9 @@ import javax.imageio.ImageIO;
 import VASL.LOS.Map.Map;
 import VASL.LOS.Map.Terrain;
 import VASSAL.tools.io.IOUtils;
-import org.jdom2.JDOMException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.NodeList;
 
 import static VASSAL.tools.io.IOUtils.closeQuietly;
 
@@ -34,6 +37,8 @@ import static VASSAL.tools.io.IOUtils.closeQuietly;
  * This class is used to read and write files in the board archive
  */
 public class BoardArchive {
+
+    private static final Logger logger = LoggerFactory.getLogger(BoardArchive.class);
 
     // constants for standard geomorphic boards, which compensate for VASL "fuzzy" geometry. Hexes are slightly too wide.
     public static final double GEO_WIDTH = 33;
@@ -44,16 +49,34 @@ public class BoardArchive {
     public static final double GEO_HEX_HEIGHT = GEO_IMAGE_HEIGHT/GEO_HEIGHT;
     public static final Point2D.Double GEO_A1_Center = new Point2D.Double(0, GEO_HEX_HEIGHT/2.0);
 
+    public static final String ALT_HEX_GRID_KEY = "alternate"; // key used in the hex grid for setting alt hexgrid
 
+    private String archiveName;
     private String qualifiedBoardArchive;
     private SharedBoardMetadata sharedBoardMetadata;
+
     private static final String LOSDataFileName = "LOSData";    // name of the LOS data file in archive
-    private static final String boardMetadataFile = "BoardMetadata.xml"; // name of the board metadata file
-    private static final String sharedBoardMetadataFile = "SharedBoardMetadata.xml"; // name of the shared board metadata file
+    private static final String boardMetadataFileName = "BoardMetadata.xml"; // name of the board metadata file
+
     private BufferedImage boardImage;
     private Map map;
 
     private BoardMetadata metadata;
+
+    // legacy board (i.e. V5) file names
+    private static final String dataFileName = "data"; // name of the legacy data file
+    private static final String overlaySSRFileName = "overlaySSR"; // name of the legacy overlay SSR file
+    private static final String colorsFileName = "colors"; // name of the legacy colors file
+    private static final String colorSSRFileName = "colorSSR"; // name of the legacy colorSSR file
+    private static final String SSRControlsFileName = "SSRControls";
+
+    protected boolean legacyBoard = true;
+    // for legacy files null means they do not exist
+    private DataFile dataFile;
+    private OverlaySSRFile overlaySSRFile;
+    private ColorsFile colorsFile;
+    private ColorSSRFile colorSSRFile;
+    private SSRControlsFile SSRControlsFile;
 
     /**
      * Defines the interface to a VASL board archive in the VASL boards directory
@@ -62,30 +85,195 @@ public class BoardArchive {
      * @param boardDirectory the boards directory
      * @exception java.io.IOException if the archive cannot be opened
      */
+    @SuppressWarnings("AssignmentToNull")
     public BoardArchive(String archiveName, String boardDirectory, SharedBoardMetadata sharedBoardMetadata) throws IOException {
 
         // set the archive name, etc.
+        this.archiveName = archiveName;
 		qualifiedBoardArchive = boardDirectory +
                 System.getProperty("file.separator", "\\") +
                 archiveName;
         this.sharedBoardMetadata = sharedBoardMetadata;
 
-        // parse the board metadata
         metadata = new BoardMetadata(sharedBoardMetadata);
-        InputStream file = null;
-        ZipFile archive = null;
+        InputStream metadataFileStream = null;
+        InputStream dataFileStream = null;
+        InputStream overlaySSRFileStream = null;
+        InputStream colorsFileStream = null;
+        InputStream colorSSRFileStream = null;
+        InputStream SSRControlsFileStream = null;
+
+        // open the archive
+        ZipFile archive = new ZipFile(qualifiedBoardArchive);
+
+        // read the board metadata file
         try {
-            archive = new ZipFile(qualifiedBoardArchive);
-            file = getInputStreamForArchiveFile(archive, boardMetadataFile);
-            metadata.parseBoardMetadataFile(file);
+            metadataFileStream = getInputStreamForArchiveFile(archive, boardMetadataFileName);
+            metadata.parseBoardMetadataFile(metadataFileStream);
+            legacyBoard = false;
 
-        } catch (JDOMException e) {
 
-            throw new IOException("Unable to read the board metadata", e);
+        } catch (Exception e) {
+
+            // no metadata file so legacy archive
+            logger.info("Unable to read the board metadata in board archive " + archiveName);
+            legacyBoard = true;
+
         }
         finally {
-            closeQuietly(file);
-            closeQuietly(archive);
+            closeQuietly(metadataFileStream);
+        }
+
+        // read the legacy data file
+        try {
+            dataFileStream = getInputStreamForArchiveFile(archive, dataFileName);
+            dataFile = new DataFile(dataFileStream);
+        }
+        catch (IOException e) {
+
+            // required for legacy boards
+            if(!legacyBoard) {
+                dataFile = null;
+            }
+        }
+        finally {
+            closeQuietly(dataFileStream);
+        }
+
+        // read the legacy overlay SSR file
+        try {
+            overlaySSRFileStream = getInputStreamForArchiveFile(archive, overlaySSRFileName);
+            overlaySSRFile = new OverlaySSRFile(overlaySSRFileStream, archiveName);
+        } catch (Exception ignore) {
+            // bury
+            overlaySSRFile = null;
+        }
+        finally {
+            closeQuietly(overlaySSRFileStream);
+        }
+
+        // read the legacy colors file
+        try {
+            colorsFileStream = getInputStreamForArchiveFile(archive, colorsFileName);
+            colorsFile = new ColorsFile(colorsFileStream, archiveName);
+        }
+        catch (Exception ignore) {
+            // bury
+            colorsFile = null;
+        }
+        finally {
+            closeQuietly(colorsFileStream);
+        }
+
+        // read the legacy color SSR file
+        try {
+            colorSSRFileStream = getInputStreamForArchiveFile(archive, colorSSRFileName);
+            colorSSRFile = new ColorSSRFile(colorSSRFileStream, archiveName);
+            // colorSSRFile.printAsXML();
+        }
+        catch (Exception ignore) {
+            // bury
+            colorSSRFile = null;
+        }
+        finally {
+            closeQuietly(colorSSRFileStream);
+        }
+
+        // read the SSR controls file
+        try {
+            SSRControlsFileStream = getInputStreamForArchiveFile(archive, SSRControlsFileName);
+            SSRControlsFile = new SSRControlsFile(SSRControlsFileStream, archiveName);
+        }
+        catch (Exception ignore) {
+            // bury
+            SSRControlsFileStream = null;
+        }
+        finally {
+            closeQuietly(SSRControlsFileStream);
+        }
+
+        closeQuietly(archive);
+    }
+
+    /**
+     * @return the list of all board colors
+     */
+    public LinkedHashMap<String, BoardColor> getBoardColors(){
+
+        // get colors from legacy file if they exist and none in metadata
+        if(legacyBoard ||  !metadata.hasBoardSpecificColors()) {
+
+            // board colors replace the shared metadata colors
+            LinkedHashMap<String, BoardColor> boardColors = new LinkedHashMap<String, BoardColor>(sharedBoardMetadata.getBoardColors().size());
+            boardColors.putAll(sharedBoardMetadata.getBoardColors());
+            if(colorsFile != null) {
+                boardColors.putAll(colorsFile.getColors());
+            }
+            return boardColors;
+        }
+        else {
+            return metadata.getBoardColors();
+        }
+    }
+
+    /**
+     * @return the set of color SSR rules
+     */
+    public LinkedHashMap<String, ColorSSRule> getColorSSRules() {
+
+        // get color SSR from legacy file if they exist and none in metadata
+        if(legacyBoard || !metadata.hasBoardSpecificColorSSR()){
+
+            // board color SSR replace the shared metadata color SSR
+            LinkedHashMap<String, ColorSSRule> colorSSRules = new LinkedHashMap<String, ColorSSRule>();
+            colorSSRules.putAll(sharedBoardMetadata.getColorSSRules());
+            if(colorSSRFile != null) {
+                colorSSRules.putAll(colorSSRFile.getColorSSRules());
+            }
+            return colorSSRules;
+        }
+        else {
+            return metadata.getColorSSRules();
+        }
+    }
+
+    /**
+     * @return the set of overlay rules
+     */
+    public LinkedHashMap<String, OverlaySSRule> getOverlaySSRules() {
+
+        if(legacyBoard || !metadata.hasBoardSpecificOverlayRules()){
+
+            // board overlay rules replace the shared metadata overlay rules
+            LinkedHashMap<String, OverlaySSRule> overlaySSRules = new LinkedHashMap<String, OverlaySSRule>();
+            overlaySSRules.putAll(sharedBoardMetadata.getOverlaySSRules());
+            if(overlaySSRFile != null) {
+                overlaySSRules.putAll(overlaySSRFile.getOverlaySSRules());
+            }
+            return overlaySSRules;
+        }
+        else {
+            return metadata.getOverlaySSRules();
+        }
+
+    }
+
+    /**
+     * @return the set of underlay rules
+     */
+    public LinkedHashMap<String, UnderlaySSRule> getUnderlaySSRules() {
+
+        if(legacyBoard){
+
+            // board underlay rules replace the shared metadata underlay rules
+            LinkedHashMap<String, UnderlaySSRule> underlaySSRules = new LinkedHashMap<String, UnderlaySSRule>();
+            underlaySSRules.putAll(sharedBoardMetadata.getUnderlaySSRules());
+            if(overlaySSRFile != null) {
+                underlaySSRules.putAll(overlaySSRFile.getUnderlaySSRules());
+            }
+            return underlaySSRules;
+        } else {
+            return metadata.getUnderlaySSRules();
         }
     }
 
@@ -159,8 +347,7 @@ public class BoardArchive {
                 map.setSlopes(metadata.getSlopes());
 
             } catch(Exception e) {
-                System.err.println("Could not read the LOS data in board " + qualifiedBoardArchive);
-                e.printStackTrace(System.err);
+                logger.warn("Could not read the LOS data in board " + qualifiedBoardArchive);
                 return null;
             }
             finally {
@@ -176,6 +363,7 @@ public class BoardArchive {
      * Write the LOS data to the board archive
      * @param map the LOS data
      */
+    @SuppressWarnings("unused")  // want to keep write method with read for simplicity
     public void writeLOSData(Map map){
 
         ObjectOutputStream outfile = null;
@@ -244,6 +432,7 @@ public class BoardArchive {
                 metadata.getA1CenterX() == BoardMetadata.MISSING &&
                 metadata.getA1CenterY() == BoardMetadata.MISSING;
     }
+
     /**
      * Get the board image from the archive
      */
@@ -267,8 +456,8 @@ public class BoardArchive {
             }
             catch (IOException e) {
 
-                System.err.println("Could not open the board image: " + imageFileName);
-				System.err.println(e.toString());
+                logger.warn("Could not open the board image: " + imageFileName);
+                logger.warn(e.toString());
                 return null;
             }
             finally {
@@ -350,27 +539,19 @@ public class BoardArchive {
      * @param fileName the file to open in the archive
      * @return InputStream to the desired file
      */
-    public final InputStream getInputStreamForArchiveFile(ZipFile archive, String fileName) throws IOException {
+    private InputStream getInputStreamForArchiveFile(ZipFile archive, String fileName) throws IOException {
 
-        try {
+        final Enumeration<? extends ZipEntry> entries = archive.entries();
+        while (entries.hasMoreElements()){
 
-            final Enumeration<? extends ZipEntry> entries = archive.entries();
-            while (entries.hasMoreElements()){
+            final ZipEntry entry = entries.nextElement();
 
-                final ZipEntry entry = entries.nextElement();
+            // if found return an InputStream
+            if(entry.getName().equals(fileName)){
 
-                // if found return an InputStream
-                if(entry.getName().equals(fileName)){
+                return archive.getInputStream(entry);
 
-                    return archive.getInputStream(entry);
-
-                }
             }
-        }
-        catch (IOException e){
-
-            System.err.println("Could not read the file '" + fileName + "' in archive " + qualifiedBoardArchive);
-            throw e;
         }
 
         // file not found
@@ -382,7 +563,12 @@ public class BoardArchive {
      */
     public String getBoardName() {
 
-        return metadata.getName();
+        if(legacyBoard){
+            return archiveName.substring(2);
+        }
+        else {
+            return metadata.getName();
+        }
     }
 
     /**
@@ -462,7 +648,6 @@ public class BoardArchive {
      */
     public static int getNoElevationColorCode(){
 
-        // return LOSColorMapFile.NO_ELEVATION;
         return BoardMetadata.NO_ELEVATION;
     }
 
@@ -471,7 +656,6 @@ public class BoardArchive {
      */
     public static int getNoTerrainColorCode(){
 
-        // return  LOSColorMapFile.NO_TERRAIN;
         return BoardMetadata.NO_TERRAIN;
     }
 
@@ -483,16 +667,6 @@ public class BoardArchive {
 
         // return losMetadataFile.getBuildingTypes();
         return metadata.getBuildingTypes();
-    }
-
-    /**
-     * Get the terrain types
-     * @return a list of terrain names mapped to terrain objects
-     */
-    public HashMap<String, Terrain> getTerrainTypes(){
-
-        // return losMetadataFile.getTerrainTypes();
-        return sharedBoardMetadata.getTerrainTypes();
     }
 
     /**
@@ -525,54 +699,107 @@ public class BoardArchive {
      * @return x location of the A1 center hex dot
      */
     public double getA1CenterX() {
-        return metadata.getA1CenterX() == missingValue() ? GEO_A1_Center.x : metadata.getA1CenterX();
+
+        if(legacyBoard){
+            return dataFile.getX0() == null ? GEO_A1_Center.x : Double.parseDouble(dataFile.getX0());
+        }
+        else {
+            return metadata.getA1CenterX() == missingValue() ? GEO_A1_Center.x : metadata.getA1CenterX();
+        }
     }
 
     /**
      * @return y location of the A1 center hex dot
      */
     public double getA1CenterY() {
-        return metadata.getA1CenterY() == missingValue() ? GEO_A1_Center.y : metadata.getA1CenterY();
+
+        if(legacyBoard){
+            return dataFile.getY0() == null ? GEO_A1_Center.y : Double.parseDouble(dataFile.getY0());
+        }
+        else {
+            return metadata.getA1CenterY() == missingValue() ? GEO_A1_Center.y : metadata.getA1CenterY();
+        }
     }
 
     /**
      * @return hex width in pixels
      */
     public double getHexWidth() {
-        return metadata.getHexWidth() == missingValue() ? GEO_HEX_WIDTH : metadata.getHexWidth();
+
+        if(legacyBoard){
+            return dataFile.getDX() == null ? GEO_HEX_WIDTH : Double.parseDouble(dataFile.getDX());
+        }
+        else {
+            return metadata.getHexWidth() == missingValue() ? GEO_HEX_WIDTH : metadata.getHexWidth();
+        }
     }
 
     /**
      * @return hex height in pixels
      */
     public double getHexHeight() {
-        return metadata.getHexHeight() == missingValue() ? GEO_HEX_HEIGHT : metadata.getHexHeight();
+
+        if(legacyBoard){
+            return dataFile.getDY() == null ? GEO_HEX_HEIGHT: Double.parseDouble(dataFile.getDY());
+        }
+        else {
+            return metadata.getHexHeight() == missingValue() ? GEO_HEX_HEIGHT : metadata.getHexHeight();
+        }
+    }
+
+    /**
+     * @return the hex snap scale
+     */
+    public int getSnapScale() {
+
+        if(legacyBoard){
+            return dataFile.getSnapScale() == null ? 1 : Integer.parseInt(dataFile.getSnapScale());
+        }
+        else {
+            return metadata.getSnapScale() == BoardMetadata.MISSING ? 1 : metadata.getSnapScale();
+        }
     }
 
     /**
      * @return true if upper left hex is A0, B1 is higher, etc.
      */
-	@SuppressWarnings("unused")
     public boolean isAltHexGrain() {
-        return metadata.isAltHexGrain();
-    }
 
-    public String getVersion(){
-        return  metadata.getVersion();
+        if(isLegacyBoard()){
+            return dataFile.getAltHexGrid() != null && Boolean.parseBoolean(dataFile.getAltHexGrid());
+        }
+        else {
+            return metadata.isAltHexGrain();
+
+        }
     }
 
     /**
-     * @return the name of the shared metadata file
+     * @return the board version string
      */
-    public static String getSharedBoardMetadataFileName() {
-        return sharedBoardMetadataFile;
+    public String getVersion(){
+
+        if(legacyBoard){
+            return dataFile.getVersion();
+        }
+        else {
+            return  metadata.getVersion();
+        }
     }
 
     /**
      * @return the board image file name
      */
     public String getBoardImageFileName() {
-        return metadata.getBoardImageFileName();
+
+        if(legacyBoard) {
+
+            // default image naming for legacy boards
+            return "bd" + getBoardName() + ".gif";
+        }
+        else {
+            return metadata.getBoardImageFileName();
+        }
     }
 
     /**
@@ -583,20 +810,44 @@ public class BoardArchive {
     }
 
     /**
-     * @return the set of color SSR rules
-     */
-    public HashMap<String, ColorSSRule> getColorSSRules() {
-
-        return metadata.getColorSSRules();
-    }
-
-    /**
      * @return the set of hexes with slopes
      */
     public Slopes getSlopes() {
         return metadata.getSlopes();
     }
-}
 
+    /**
+     * @return true if board archive is legacy (i.e. V5) format
+     */
+    public boolean isLegacyBoard() {
+        return legacyBoard;
+    }
+
+    /**
+     * @return  a list of the "basic" nodes in the SSR control file; null if file does not exist
+     */
+    public NodeList getBasicNodes() {
+
+        if(SSRControlsFile == null) {
+            return null;
+        }
+        else {
+            return SSRControlsFile.getBasicNodes();
+        }
+    }
+
+    /**
+     * @return  a list of the "option" nodes in the SSR control file; null if file does not exist
+     */
+    public NodeList getOptionNodes() {
+
+        if(SSRControlsFile  == null) {
+            return null;
+        }
+        else {
+            return SSRControlsFile.getOptionNodes();
+        }
+    }
+}
 
 
