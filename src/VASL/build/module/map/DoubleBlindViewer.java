@@ -59,7 +59,7 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
 
     protected static final String COMMAND_SEPARATOR = ":";
     public static final String COMMAND_PREFIX = "DOUBLE_BLIND" + COMMAND_SEPARATOR;
-    protected static final String ICON_FILE_NAME = "/images/sauroneye.png";
+    protected static final String ICON_FILE_NAME = "sauroneye.png";
     protected static final String TEXT_ICON = "<(o)>";
     protected static final String DEFAULT_PASSWORD = "#$none$#";
     protected static final String PLAYER_NAME = "RealName";
@@ -107,7 +107,6 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
             }
         };
         launchButton = new LaunchButton("", TOOLTIP, LABEL, HOT_KEY, ICON_NAME, al);
-        launchButton.setAttribute(ICON_NAME, ICON_FILE_NAME);
         launchButton.setAttribute(TOOLTIP, "Update DB View");
     }
 
@@ -116,10 +115,6 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
      */
     public void buttonAction() {
 
-        // get the VASL interface if necessary
-        if(VASLGameInterface == null){
-            VASLGameInterface = new VASLGameInterface(map, map.getVASLMap());
-        }
         VASLGameInterface.updatePieces();
 
         // warn only if the DB preference is turned off
@@ -140,6 +135,15 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
      */
     private void updateView() {
 
+        // gotta have a map to update the view
+        if(map == null ||  map.getVASLMap() == null) {
+            return;
+        }
+
+        // get the VASL interface if necessary
+        if(VASLGameInterface == null){
+            VASLGameInterface = new VASLGameInterface(map, map.getVASLMap());
+        }
         // turn off "report move" and "center on opponents move" options
         getGameModule().getPrefs().getOption("centerOnMove").setValue(Boolean.FALSE);
         getGameModule().getPrefs().getOption("autoReport").setValue(Boolean.FALSE);
@@ -164,11 +168,14 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
      */
     public void setPieceVisibility(GamePiece piece) {
 
-        // player owns piece?
-        if(piece.getProperty(OWNER_PROPERTY) == null)  {
+        // global pieces and unowned pieces are always visible
+        if(VASLGameInterface.isDBGlobalCounter(piece) || piece.getProperty(OWNER_PROPERTY) == null){
             setPieceInLOS(piece);
+            return;
         }
-        else if(!isMyPiece(piece)){
+
+        // player owns piece?
+        if(!isMyPiece(piece)) {
 
             // step through all pieces owned by me and check for LOS
             GamePiece[] allPieces = map.getAllPieces();
@@ -178,7 +185,7 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
                         GamePiece p2 = pi.nextPiece();
                         if (isMyPiece(p2)) {
 
-                            if (isViewable(piece, p2)) {
+                            if (isViewable(p2, piece)) {
                                 setPieceInLOS(piece);
                                 return;
                             }
@@ -186,14 +193,13 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
                     }
                 } else {
 
-                    if (isViewable(piece, p)) {
-                        setPieceInLOS(p);
+                    if (isViewable(p, piece)) {
+                        setPieceInLOS(piece);
                         return;
                     }
                 }
             }
 
-            // this piece was not seen if we get this far
             setPieceNotInLOS(piece);
         }
     }
@@ -233,7 +239,7 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
             gamePassword = opponent.getGamePassword();
         }
 
-        // use owner's game password to hid the piece
+        // use owner's game password to hide the piece
         if(!isHIP(piece)) {
             piece.setProperty(Properties.HIDDEN_BY, gamePassword);
         }
@@ -268,15 +274,16 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
      * Can piece1 see piece2?
      * Sub-classes could override this method to implement custom sighting rules
      * @param piece1 the viewing game piece
-     * @param piece2 the
+     * @param piece2 the piece being viewed
      * @return true if piece1 can see piece2
      */
     public boolean isViewable(GamePiece piece1, GamePiece piece2) {
 
-/*        // can the unit spot?
-        if (!VASLGameInterface.isDBUnit(piece1)) {
+        // can the unit spot?
+        if (!VASLGameInterface.isDBUnitCounter(piece1)) {
             return false;
-        }*/
+        }
+
         // get the piece location
         Location l1 = getLocation(piece1);
         Location l2 = getLocation(piece2);
@@ -305,19 +312,6 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
         }
 
         return VASLGameInterface.getLocation(piece);
-
-/*        // determine what hex and location the piece is in
-        Point p = map.mapCoordinates(new Point(piece.getPosition()));
-        p.x *= map.getZoom();
-        p.y *= map.getZoom();
-        p.translate(-map.getEdgeBuffer().width, -map.getEdgeBuffer().height);
-
-        if (map == null || map.getVASLMap() == null || !map.getVASLMap().onMap(p.x, p.y)) {
-            return null;
-        }
-        Hex h = map.getVASLMap().gridToHex(p.x, p.y);
-        return h.getNearestLocation(p.x, p.y);
- */
     }
 
     @Override

@@ -26,7 +26,6 @@ import VASSAL.counters.GamePiece;
 import VASSAL.counters.PieceIterator;
 import VASSAL.counters.Properties;
 import VASSAL.counters.Stack;
-import VASSAL.tools.imports.adc2.ADC2Module;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -44,8 +43,23 @@ public class VASLGameInterface {
     // the LOS counter rules from the shared metadata file
     LinkedHashMap<String, CounterMetadata> counterMetadata;
 
-    // the marker used to tag units for DB play
-    private final static String DB_MARKER_KEY = "isDBUnit";
+    /* the DBCounterType marker
+    unit = counter is a unit and can spot
+    global = global counters such as fire markers, wrecks, terrain, etc.
+             because global counters are always visible they do not need an owner
+    common = All other counters
+
+    Type    Can spot?   Visible to opponent?
+    ----    ---------   --------------------
+    unit    Yes         If in LOS
+    global  No          Always
+    common  No          If in LOS
+    none    No          treated as common
+    */
+    public final static String DB_COUNTER_TYPE_MARKER_KEY = "DBCounterType";
+    public final static String DB_UNIT_TYPE = "unit";
+    public final static String DB_GLOBAL_TYPE = "global";
+    public final static String DB_COMMON_TYPE = "common";
 
     // the counter lists
     protected HashMap<Hex, Terrain> terrainList;
@@ -244,7 +258,7 @@ public class VASLGameInterface {
      */
     public HashSet<Vehicle> getVehicles(Hex h){
 
-		if(vehicleList.get(h) != null){
+		if(vehicleList != null && vehicleList.get(h) != null){
             return vehicleList.get(h);
         }
         else {
@@ -259,7 +273,7 @@ public class VASLGameInterface {
      */
     public HashSet<Smoke> getSmoke(Hex hex) {
 
-        if(smokeList.get(hex) != null){
+        if(smokeList != null && smokeList.get(hex) != null){
             return  smokeList.get(hex);
         }
         else {
@@ -273,7 +287,11 @@ public class VASLGameInterface {
      * @return the terrain
      */
     public Terrain getTerrain(Hex hex) {
-        return terrainList.get(hex);
+
+        if(terrainList != null) {
+            return terrainList.get(hex);
+        }
+        return null;
     }
 
     /**
@@ -283,7 +301,7 @@ public class VASLGameInterface {
      */
     public HashSet<OBA> getOBA(Hex hex){
 
-        if(OBAList.get(hex) != null){
+        if(OBAList != null && OBAList.get(hex) != null){
             return OBAList.get(hex);
         }
         else {
@@ -295,11 +313,15 @@ public class VASLGameInterface {
      * @return all OBA counters - if none an empty list is returned
      */
     public HashSet<OBA> getOBA(){
-        HashSet<OBA> OBACounters = new HashSet<OBA>();
-        for(Hex hex : OBAList.keySet()) {
-            OBACounters.addAll(getOBA(hex));
+        if(OBAList != null && OBAList.size() > 0) {
+
+            HashSet<OBA> OBACounters = new HashSet<OBA>();
+            for(Hex hex : OBAList.keySet()) {
+                OBACounters.addAll(getOBA(hex));
+            }
+            return OBACounters;
         }
-        return OBACounters;
+        return emptyOBAList;
     }
 
     /**
@@ -309,7 +331,7 @@ public class VASLGameInterface {
      */
     public HashSet<Wreck> getWreck(Hex hex){
 
-        if(wreckList.get(hex) != null){
+        if(wreckList != null && wreckList.get(hex) != null){
             return wreckList.get(hex);
         }
         else {
@@ -393,14 +415,32 @@ public class VASLGameInterface {
 
     /**
      * @param piece a game piece
-     * @return true if piece has DB marker set
+     * @return true if piece has the unit marker set
      */
-    public boolean isDBUnit(GamePiece piece) {
+    public boolean isDBUnitCounter(GamePiece piece) {
 
-        if(piece.getProperty(DB_MARKER_KEY) != null) {
-            return true;
-        }
-        return false;
+        return isPropertySet(piece, DB_COUNTER_TYPE_MARKER_KEY, DB_UNIT_TYPE);
+    }
+
+    /**
+     * @param piece a game piece
+     * @return true if piece has the fire marker set
+     */
+    public boolean isDBGlobalCounter(GamePiece piece) {
+
+        return isPropertySet(piece, DB_COUNTER_TYPE_MARKER_KEY, DB_GLOBAL_TYPE);
+    }
+
+    /**
+     * Checks if a given property is set to a given value
+     * @param piece the game piece
+     * @param key the property key
+     * @param value the value
+     * @return true if the property is set and equals the value, otherwise false
+     */
+    public boolean isPropertySet(GamePiece piece, String key, String value) {
+
+        return piece.getProperty(key) != null && piece.getProperty(key).equals(value);
     }
 
     private void printCounterLocations(){
@@ -411,21 +451,25 @@ public class VASLGameInterface {
                 for (PieceIterator pi = new PieceIterator(((Stack) aP).getPiecesIterator()); pi.hasMoreElements(); ) {
                     GamePiece p2 = pi.nextPiece();
                     LocationCounter location = getLocationCounterForPiece(p2);
+/*
                     if(location == null) {
                         System.out.println(p2.getName() + " has no location counter piece");
                     }
                     else {
                         System.out.println(p2.getName()  + " is in location " + location.getName());
                     }
+*/
                 }
             } else {
                 LocationCounter location = getLocationCounterForPiece(aP);
+/*
                 if(location == null) {
                     System.out.println(aP.getName() + " has no location counter piece");
                 }
                 else {
                     System.out.println(aP.getName()  + " is in location " + location.getName());
                 }
+*/
             }
         }
     }
