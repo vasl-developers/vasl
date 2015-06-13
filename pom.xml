@@ -59,8 +59,8 @@
                     <verbose>true</verbose>
                     <fork>true</fork>
                     <executable>${jdk}/bin/javac</executable>
-                    <source>1.5</source>
-                    <target>1.5</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>
