@@ -748,29 +748,67 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                             {
                                 String[] lar_strParts = FindUser(l_strRestOfMsg);
 
+                                ArrayList<String> specialMessages = new ArrayList<String>();
+
                                 if ((!lar_strParts[1].isEmpty()) && (!lar_strParts[2].isEmpty()))
                                 {
                                     l_strUser = lar_strParts[1];
                                     l_strRestOfMsg = lar_strParts[2]; // >      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)        
                                     
                                     l_strRestOfMsg = l_strRestOfMsg.replace(">", " ").trim(); //Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)        
-                                    
+
+
+                                    // Add special event hints, if necessary
+                                    // First, SAN
                                     if (l_strRestOfMsg.startsWith("Axis SAN"))
                                     {
-                                        l_strSAN = "Axis SAN";
+                                        specialMessages.add("Axis SAN");
                                         l_strRestOfMsg = l_strRestOfMsg.substring("Axis SAN".length());
                                     }
                                     else if (l_strRestOfMsg.startsWith("Allied SAN"))
                                     {
-                                        l_strSAN = "Allied SAN";
+                                        specialMessages.add("Allied SAN");
                                         l_strRestOfMsg = l_strRestOfMsg.substring("Allied SAN".length());
                                     }
                                     else if (l_strRestOfMsg.startsWith("Axis/Allied SAN"))
                                     {
-                                        l_strSAN = "Axis/Allied SAN";
+                                        specialMessages.add("Axis/Allied SAN");
                                         l_strRestOfMsg = l_strRestOfMsg.substring("Axis/Allied SAN".length());
                                     }
-                                    
+
+                                    // For TH rolls only, show possible hit location
+                                    if(l_strCategory.equals("TH"))
+                                    {
+                                        if(l_iFirstDice < l_iSecondDice)
+                                        {
+                                            specialMessages.add("Turret");
+                                        }
+                                        else
+                                        {
+                                            specialMessages.add("Hull");
+                                        }
+                                    }
+
+                                    else if(l_strCategory.equals("IFT"))
+                                    {
+                                        // check for cowering
+                                        if(l_iFirstDice == l_iSecondDice)
+                                        {
+                                            specialMessages.add("Cower if MMC w/o LDR");
+                                        }
+                                    }
+
+                                    // Construct Special Message string
+                                    String l_strSpecialMessages = "";
+                                    for(int i = 0; i < specialMessages.size(); ++i)
+                                    {
+                                        l_strSpecialMessages += specialMessages.get(i);
+                                        if(i < specialMessages.size() - 1)
+                                        {
+                                            l_strSpecialMessages += ", ";
+                                        }
+                                    }
+
                                     StyleConstants.setForeground(m_objMainStyle, Color.BLACK);
                                     StyleConstants.setBold(m_objMainStyle, true);
                                     
@@ -801,7 +839,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     
                                     StyleConstants.setBold(m_objMainStyle, true);
                                     StyleConstants.setUnderline(m_objMainStyle, true);
-                                    m_objDocument.insertString(m_objDocument.getLength(), l_strSAN, m_objMainStyle);                                    
+                                    m_objDocument.insertString(m_objDocument.getLength(), l_strSpecialMessages, m_objMainStyle);
                                     
                                     StyleConstants.setBold(m_objMainStyle, false);
                                     StyleConstants.setUnderline(m_objMainStyle, false);
@@ -809,8 +847,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     if (m_bShowDiceStats)
                                         m_objDocument.insertString(m_objDocument.getLength(), l_strRestOfMsg, m_objMainStyle);                                    
                                     else
-                                        m_objDocument.insertString(m_objDocument.getLength(), " ", m_objMainStyle);                                    
-                                    
+                                        m_objDocument.insertString(m_objDocument.getLength(), " ", m_objMainStyle);
+
                                     FireDiceRoll(l_strCategory, l_strUser, l_strSAN, l_iFirstDice, l_iSecondDice);
                                 }
                                 else
