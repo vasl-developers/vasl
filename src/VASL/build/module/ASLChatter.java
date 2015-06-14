@@ -810,7 +810,19 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                         m_objDocument.insertString(m_objDocument.getLength(), l_strRestOfMsg, m_objMainStyle);                                    
                                     else
                                         m_objDocument.insertString(m_objDocument.getLength(), " ", m_objMainStyle);                                    
-                                    
+
+                                    if(l_strCategory.equals("TH"))
+                                    {
+                                        if(l_iFirstDice < l_iSecondDice)
+                                        {
+                                            m_objDocument.insertString(m_objDocument.getLength(), " < Turret >", m_objMainStyle);
+                                        }
+                                        else
+                                        {
+                                            m_objDocument.insertString(m_objDocument.getLength(), " < Hull >", m_objMainStyle);
+                                        }
+                                    }
+
                                     FireDiceRoll(l_strCategory, l_strUser, l_strSAN, l_iFirstDice, l_iSecondDice);
                                 }
                                 else
