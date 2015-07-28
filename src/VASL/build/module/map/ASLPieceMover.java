@@ -30,12 +30,14 @@ import VASSAL.command.Command;
 import VASSAL.command.NullCommand;
 import VASSAL.counters.*;
 import VASSAL.tools.LaunchButton;
+import java.awt.Component;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Vector;
+import javax.swing.JButton;
 
 public class ASLPieceMover extends PieceMover {
   /** Preferences key for whether to mark units as having moved */
@@ -100,6 +102,34 @@ public class ASLPieceMover extends PieceMover {
 */
   }
 
+  @Override
+  public void setup(boolean gameStarting) {
+    super.setup(gameStarting);
+
+    if (gameStarting) 
+    {
+      if (markUnmovedButton != null)
+      {
+          for (int l_i = map.getToolBar().getComponents().length - 1; l_i >= 0; l_i--)
+          {
+              Component l_objComponent = map.getToolBar().getComponent(l_i);
+
+              if (l_objComponent instanceof JButton)
+              {
+                  if ("MarkMovedPlaceHolder".equals(((JButton)l_objComponent).getName()))
+                  {
+                     map.getToolBar().remove(markUnmovedButton);
+                     map.getToolBar().remove(l_objComponent);
+
+                     map.getToolBar().add(markUnmovedButton, l_i);
+                     break;
+                  }
+              }     
+          }
+      }
+    }
+  }
+  
   /**
    * In addition to moving pieces normally, we mark units that have moved
    * and adjust the concealment status of units
