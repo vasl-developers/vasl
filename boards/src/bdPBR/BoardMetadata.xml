@@ -11,25 +11,19 @@
 	versionDate - the date the last version was created
 	author - the caring soul who created the board
     boardImage - the name of the VASL image file in the board archive; the name is case sensitive
-    hasHills - TRUE if the board contains base elevations above ground level
+    hasHills - TRUE/FALSE if the board contains base elevations above ground level
                 if not we can assume the ground level under the terrain is zero, which
                 makes the VASL LOS image translation faster and more accurate
     height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
     width - width of the board in hexes.
-	others - TBD e.g. alternate hex grain, etc. 
+	A1CenterX - x coordinate of hex A1 center dot
+	A1CenterY - Y coordinate of hex A1 center dot
+	hexWidth - x.x width of each hex in pixels
+	hexHeight - x.x height of each hex in pixels
+	altHexGrain - TRUE/FALSE if the board uses an alternate hex grain for hex numbering
+	others - TBD 
 -->
-<boardMetadata 
-	name="BFPDW2b" 
-	version="6.1" 
-	versionDate="Nov 2011" 
-	author="TR" 
-	boardImageFileName="bdBFPDW2b.gif" 
-	hasHills="TRUE" 
-	width="33" 
-	height="10" 
-	A1CenterX = "0"
-	A1CenterY = "-612.75"
-	>
+<boardMetadata name="PBR" version="1.1" versionDate="Mar 2015" author="TR" boardImageFileName="bdPBR.gif" hasHills="FALSE" width="25" height="28" A1CenterX="1" A1CenterY="98" hexWidth="56.1818" hexHeight="64.2857" altHexGrain="TRUE">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -39,7 +33,6 @@
         See the terrainType elements for a complete list of building names
     -->
     <buildingTypes>
-
     </buildingTypes>
 	
 	<overlaySSRules>
@@ -54,25 +47,17 @@
 		<underlaySSRule name="WallsOnly" image="WallPattern.gif">
 			<color name="HedgeGreen" />
 		</underlaySSRule>
+		
 		<underlaySSRule name="WallToCactus" image="CactusPattern.gif">
 			<color name="WallBrown" />
 			<color name="WallGrey1" />
 			<color name="WallGrey2" />
 		</underlaySSRule>
+		
 		<underlaySSRule name="HedgeToCactus" image="CactusPattern.gif">
 			<color name="HedgeGreen" />
-		</underlaySSRule>
-		<overlaySSRule name="DenseJungle" image="BFPDW2b_DenseJungle.gif" x="1" y="191" />
-		<overlaySSRule name="LightWoods" image="BFPDW2b_LightWoods.gif" x="1" y="206" />
-		<overlaySSRule name="BridgeToFord" image="BFPDW2b_BridgeToFord.gif" x="1047" y="1" />
-		<overlaySSRule name="NoBridge" image="BFPDW2b_NoBridge.gif" x="1051" y="1" />
-		<overlaySSRule name="OrchardsToCrags" image="BFPDW2b_Orch2Crag.gif" x="480" y="40" />
-		<overlaySSRule name="OrchardsToShellholes" image="BFPDW2b_Orch2Shell.gif" x="476" y="39" />
-		<overlaySSRule name="PalmTrees" image="BFPDW2b_PalmTrees.gif" x="480" y="40" />
-		<overlaySSRule name="Bamboo" image="BFPDW2b_Bamboo.gif" x="977" y="95" />
-		<overlaySSRule name="NoRoads" image="BFPDW2b_NoRoads.gif" x="1" y="1" />
-		<overlaySSRule name="Winter" image="BFPDW2b_WinterGully.gif" x="1049" y="129" />
-		
+		</underlaySSRule>	
+
 	</overlaySSRules>
 	
 	<colors>
@@ -84,12 +69,6 @@
 			elevation - the base elevation of the terrain
 			
 		-->
-		<color name="Hillock" red="68" green="23" blue="0" terrain="Hillock" elevation="0" />
-		<color name="Hillock" red="84" green="45" blue="4" terrain="Hillock" elevation="0" />
-		<color name="Hillock" red="106" green="74" blue="24" terrain="Hillock" elevation="0" />
-		<color name="Hillock" red="139" green="134" blue="57" terrain="Hillock" elevation="0" />
-		<color name="Hillock" red="115" green="95" blue="35" terrain="Hillock" elevation="0" />
-
 	</colors>
 	
 	<colorSSRules>
@@ -97,5 +76,4 @@
 			The board color scenario-specific rules. Use this element to override the shared SSRs.		
 		-->
 	</colorSSRules>
-	
 </boardMetadata>

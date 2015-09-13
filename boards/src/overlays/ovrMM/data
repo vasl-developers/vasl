@@ -1,0 +1,12 @@
+mm3 b9; ; ;l1; ; 
+
+version 1
+Jan 2015 ATC
+For use with 2009 March Madness scenario PP07 Cabanatuan.
+Overlay is officially named MM03 but renamed MM3 for VASL use.
+
+To place overlay:
+select bd16
+Flip bd16
+Add Overlay
+Use MM3 as overlay name and h9 h8 as hex locations

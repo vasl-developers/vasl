@@ -523,7 +523,7 @@ public class ASLDiceBot extends AbstractBuildable
         return 0;
     }
 
-    public void DR(String strCategory) 
+    public void DR(String strCategory)
     {
         int l_iWhiteDie = 0;
         int l_iColoredDie = GetDieRoll();
@@ -538,7 +538,7 @@ public class ASLDiceBot extends AbstractBuildable
             map_objStats.Add_DR(TOTAL_CATEGORY, l_iColoredDie, l_iWhiteDie);
             map_objStats.Add_DR(strCategory, l_iColoredDie, l_iWhiteDie);
 
-            l_strOutput = String.format("*** (%s DR) %s,%s ***   <%s>      %s[%s   avg   %s (%s)]    (%s%s", 
+            l_strOutput = String.format("*** (%s DR) %s,%s ***   <%s>      %s[%s   avg   %s (%s)]    (%s%s",
                                         strCategory, 
                                         Integer.toString(l_iColoredDie),
                                         Integer.toString(l_iWhiteDie),
@@ -550,6 +550,17 @@ public class ASLDiceBot extends AbstractBuildable
                                         getSerieInstanceNumber(),
                                         (m_bUseRandomOrg ? " - by random.org)" : ")")
                                         );
+
+            // If this was a TH roll, add a reminder for hit location for stupid people
+            if(strCategory.equals(("TH"))){
+                if(l_iColoredDie < l_iWhiteDie){
+                    l_strOutput += " <Turret>";
+                }
+                else
+                {
+                    l_strOutput += "<Hull>";
+                }
+            }
                 
             OutputString(l_strOutput);
         }
@@ -708,3 +719,4 @@ public class ASLDiceBot extends AbstractBuildable
         OutputString(String.format(m_strHTMLDouble, GetPlayer() + "'s DRs today", l_objStringBuilder.toString()));        
     }
 }
+

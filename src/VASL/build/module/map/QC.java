@@ -232,6 +232,10 @@ class QCMenuItem extends JMenuItem implements DragSourceListener
                 l_objNewPiece.setProperty(Properties.PIECE_ID, m_objPieceSlot.getGpId());
                 DragBuffer.getBuffer().add(l_objNewPiece);
             }
+
+            // FredKors 29.03.2015 Fix a small annoying thing dragging a counter from a menu
+            if (m_objParentPopupMenu != null)
+                m_objParentPopupMenu.setVisible(false);            
         }
     }
 
@@ -248,9 +252,6 @@ class QCMenuItem extends JMenuItem implements DragSourceListener
     }
 
     public void dragDropEnd(DragSourceDropEvent dsde) {
-        
-        if (m_objParentPopupMenu != null)
-            m_objParentPopupMenu.setVisible(false);
         
         DragSource.getDefaultDragSource().removeDragSourceListener(this);
     }
@@ -1104,6 +1105,10 @@ public class QC implements Buildable, GameComponent
             m_objMap.getToolBar().add(m_objBrokenFinderButton);       
         }
 
+        JButton l_objButtonMarkMoved = new JButton();
+        l_objButtonMarkMoved.setName("MarkMovedPlaceHolder");
+        m_objMap.getToolBar().add(l_objButtonMarkMoved);
+        
         m_objMap.getToolBar().add(new QCStartToolBarItem());
         m_objMap.getToolBar().add(new QCEndToolBarItem());
         

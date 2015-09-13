@@ -137,8 +137,6 @@ public class ASLBoard extends Board {
         imageFile = VASLBoardArchive.getBoardImageFileName();
         version = VASLBoardArchive.getVersion();
 
-        resetImage();
-
         ((Translatable)getGrid()).setAttribute(HexGrid.X0, (int) VASLBoardArchive.getA1CenterX());
         ((Translatable)getGrid()).setAttribute(HexGrid.Y0, (int) VASLBoardArchive.getA1CenterY());
         ((Translatable)getGrid()).setAttribute(HexGrid.DX, VASLBoardArchive.getHexWidth());
