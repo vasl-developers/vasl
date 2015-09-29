@@ -22,6 +22,7 @@ import VASL.LOS.Map.LOSResult;
 import VASL.LOS.Map.Location;
 import VASL.LOS.VASLGameInterface;
 import VASL.build.module.ASLMap;
+import VASL.build.module.map.EnableDoubleBlindCommand;
 import VASL.counters.ASLProperties;
 import VASSAL.build.AbstractConfigurable;
 import VASSAL.build.AutoConfigurable;
@@ -43,9 +44,6 @@ import VASSAL.i18n.TranslatableConfigurerFactory;
 import VASSAL.tools.FormattedString;
 import VASSAL.tools.LaunchButton;
 import VASSAL.tools.NamedKeyStroke;
-
-import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -57,17 +55,15 @@ import static VASSAL.build.GameModule.getGameModule;
  */
 public class DoubleBlindViewer extends AbstractConfigurable implements CommandEncoder, GameComponent {
 
+    // todo - this is a hack to allow the board picker to find the DB viewer
+    public static DoubleBlindViewer doubleBlindViewer;
+
     protected static final String COMMAND_SEPARATOR = ":";
     public static final String COMMAND_PREFIX = "DOUBLE_BLIND" + COMMAND_SEPARATOR;
     public static final String ENABLE_COMMAND_PREFIX = "ENABLE_DOUBLE_BLIND" + COMMAND_SEPARATOR;
-    protected static final String ICON_FILE_NAME = "sauroneye.png";
-    protected static final String TEXT_ICON = "<(o)>";
+    protected static final String TEXT_ICON = "DB Synch";
     protected static final String DEFAULT_PASSWORD = "#$none$#";
     protected static final String PLAYER_NAME = "RealName";
-
-    // preference constants
-    public static final String DB_ENABLED = "DoubleBlindEnabled";
-    public static final String GAME_PASSWORD = "gamePassword";
 
     // VASSAL attribute codes
     public static final String PROPERTY_TAB = "propertiesTab"; // properties tab name
@@ -110,14 +106,38 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
         };
         launchButton = new LaunchButton("", TOOLTIP, LABEL, HOT_KEY, ICON_NAME, al);
         launchButton.setAttribute(TOOLTIP, "Update DB View");
+        launchButton.setEnabled(false); // button inactive unless DB explicitly enabled.
+
+        doubleBlindViewer = this;
     }
 
+    /**
+     * Enable/disable DB play
+     * @param e
+     */
+    public void enableDB(boolean e) {
+
+        if(enabled && !e) {
+            getGameModule().getChatter().send("Double blind play has been disabled for this game");
+        }
+        else if(!enabled && e) {
+            getGameModule().getChatter().send("Double blind play has been enabled for this game");
+        }
+
+        enabled = e;
+        launchButton.setEnabled(e);
+    }
+
+    /**
+     * @return true if DB play has been enabled
+     */
+    public boolean isEnabled() {
+        return enabled;
+    }
     /**
      * Sends the command and updates the view when the button or button hot key is pressed
      */
     public void buttonAction() {
-
-        VASLGameInterface.updatePieces();
 
         // warn only if the DB preference is turned off
         if(!enabled) {
@@ -146,6 +166,8 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
         if(VASLGameInterface == null){
             VASLGameInterface = new VASLGameInterface(map, map.getVASLMap());
         }
+        VASLGameInterface.updatePieces();
+
         // turn off "report move" and "center on opponents move" options
         getGameModule().getPrefs().getOption("centerOnMove").setValue(Boolean.FALSE);
         getGameModule().getPrefs().getOption("autoReport").setValue(Boolean.FALSE);
@@ -170,8 +192,12 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
      */
     public void setPieceVisibility(GamePiece piece) {
 
+        // HIP pieces never touched
+        if(isHIP(piece)) {
+            return;
+        }
         // global pieces and unowned pieces are always visible
-        if(VASLGameInterface.isDBGlobalCounter(piece) || piece.getProperty(OWNER_PROPERTY) == null){
+        if(VASLGameInterface.isDBGlobalCounter(piece) || (piece.getProperty(OWNER_PROPERTY) == null)){
             setPieceSpotted(piece);
             return;
         }
@@ -224,10 +250,8 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
      */
     private void setPieceSpotted(GamePiece piece) {
 
-        // ignore HIP pieces
-        if (!isHIP(piece)){
-            piece.setProperty(Properties.HIDDEN_BY, null);
-        }
+        debug("Setting piece spotted: " + piece.getName());
+        piece.setProperty(Properties.HIDDEN_BY, null);
     }
 
     /**
@@ -245,9 +269,8 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
         }
 
         // use owner's game password to hide the piece
-        if(!isHIP(piece)) {
-            piece.setProperty(Properties.HIDDEN_BY, gamePassword);
-        }
+        debug("Setting piece UNspotted: " + piece.getName());
+        piece.setProperty(Properties.HIDDEN_BY, gamePassword);
     }
 
     /**
@@ -262,16 +285,16 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
             return false;
         }
 
-        // otherwise check other players
+        // not HIP if hidden by me
         for (Player p : players.values()) {
-            if(!p.getName().equals(myPlayerName)) {
-                if(hiddenBy.equals(p.getID())) {
-                    debug("Piece " + piece.getName() + " is HIP by " + hiddenBy);
-                    return true;
+            if(p.getName().equals(myPlayerName)) {
+                if(hiddenBy.equals(p.getID()) || hiddenBy.equals(p.getGamePassword())) {
+                    return false;
                 }
             }
         }
-        return false;
+        // must be HIP
+        return true;
     }
 
     /**
@@ -398,24 +421,6 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
 
     public void addTo(Buildable parent) {
 
-        // player preferences - enable double blind and game password
-        final BooleanConfigurer doubleBlind = new BooleanConfigurer(DB_ENABLED, "Enable double blind", Boolean.FALSE);
-        getGameModule().getPrefs().addOption(propertyTab, doubleBlind);
-
-
-/*
-        final JCheckBox enableBox = findBox(doubleBlind.getControls());
-        final StringConfigurer gamePassword = new StringConfigurer(GAME_PASSWORD, "Game password: " , DEFAULT_PASSWORD);
-        getGameModule().getPrefs().addOption(propertyTab, gamePassword);
-        java.awt.event.ItemListener l = new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                enableAll(gamePassword.getControls(), enableBox.isSelected());
-            }
-        };
-        enableBox.addItemListener(l);
-        enableAll(gamePassword.getControls(), Boolean.TRUE.equals(doubleBlind.getValue()));
-*/
-
         // add this component to the map toolbar
         if (parent instanceof Map) {
             this.map = (ASLMap) parent;
@@ -425,45 +430,9 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
 
         // record the player information
         myPlayerName = (String) getGameModule().getPrefs().getValue(PLAYER_NAME);
-
-/*
-        String myGamePassword = (String) getGameModule().getPrefs().getValue(GAME_PASSWORD);
-        if (myGamePassword == null || myGamePassword.equals("")) {
-            myGamePassword = DEFAULT_PASSWORD;
-        }
-*/
         players.put(myPlayerName, new Player(myPlayerName, GameModule.getUserId(), GameModule.getUserId() + "-DB"));
-
         GameModule.getGameModule().getGameState().addGameComponent(this);
     }
-
-/*
-    protected JCheckBox findBox(Component c) {
-        JCheckBox val = null;
-        if (c instanceof JCheckBox) {
-            val = (JCheckBox) c;
-        }
-        for (int i = 0; i < ((Container) c).getComponentCount(); ++i) {
-            val = findBox(((Container) c).getComponent(i));
-            if (val != null) {
-                break;
-            }
-        }
-        return val;
-    }
-*/
-
-
-/*
-    private void enableAll(Component c, boolean enable) {
-        c.setEnabled(enable);
-        if (c instanceof Container) {
-            for (int i = 0; i < ((Container) c).getComponentCount(); ++i) {
-                enableAll(((Container) c).getComponent(i), enable);
-            }
-        }
-    }
-*/
 
     public void removeFrom(Buildable parent) {
 
@@ -475,6 +444,7 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
 
     /**
      * The DOUBLE_BLIND command is used to exchange player information and trigger an update of the DB view
+     * The ENABLE_DOUBLE_BLIND command marks the game as a DB game
      * @param c the command
      * @return the command string
      */
@@ -486,15 +456,13 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
             debug("Encoding synch command");
             GameModule.getGameModule().sendAndLog(new DoubleBlindUpdateCommand(players.get(myPlayerName)));
         }
-/*
 
         // Command string is ENABLE_DOUBLE_BLIND:<enable>
         if(c instanceof  EnableDoubleBlindCommand) {
 
             debug("Encoded enable DB command string: " + enabled);
-            return  COMMAND_PREFIX + Boolean.toString(enabled);
+            return  ENABLE_COMMAND_PREFIX + Boolean.toString(enabled);
         }
-*/
 
         // Command string is DOUBLE_BLIND:<player name>:<player ID>:<game password>
         if (c instanceof DoubleBlindUpdateCommand) {
@@ -524,8 +492,7 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
         if (s.startsWith(ENABLE_COMMAND_PREFIX)) {
             debug("Decoded enable DB command string: " + s);
             String strings[] = s.split(COMMAND_SEPARATOR);
-            boolean enabled = Boolean.valueOf(strings[1]);
-            return new EnableDoubleBlindCommand(enabled);
+            return new EnableDoubleBlindCommand(this, Boolean.valueOf(strings[1]));
         }
 
         // Command string is DOUBLE_BLIND:<player name>:<player ID>:<game password>
@@ -565,25 +532,33 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
 
         debug("Set up called");
 
-        if(gameStarting) {
+        if(enabled){
 
-            // push player information
-            GameModule.getGameModule().sendAndLog(new DoubleBlindUpdateCommand(players.get(myPlayerName)));
+            if(gameStarting) {
 
-            // save preferences 'cause we disable them during DB play
-            oldAutoReport   = (Boolean) getGameModule().getPrefs().getOption("centerOnMove").getValue();
-            oldCenterOnMove = (Boolean) getGameModule().getPrefs().getOption("autoReport").getValue();
+                // push player information
+                GameModule.getGameModule().sendAndLog(new DoubleBlindUpdateCommand(players.get(myPlayerName)));
 
-            //reclaim my pieces and update the view
-            reclaimMyPieces();
-            updateView();
+                // save preferences 'cause we disable them during DB play
+                oldAutoReport   = (Boolean) getGameModule().getPrefs().getOption("centerOnMove").getValue();
+                oldCenterOnMove = (Boolean) getGameModule().getPrefs().getOption("autoReport").getValue();
 
+                //reclaim my pieces and update the view
+                reclaimMyPieces();
+                updateView();
+
+            }
+            else {
+
+                // restore preference settings
+                getGameModule().getPrefs().getOption("centerOnMove").setValue(oldCenterOnMove);
+                getGameModule().getPrefs().getOption("autoReport").setValue(oldAutoReport);
+            }
         }
         else {
 
-            // restore preference settings
-            getGameModule().getPrefs().getOption("centerOnMove").setValue(oldCenterOnMove);
-            getGameModule().getPrefs().getOption("autoReport").setValue(oldAutoReport);
+            // disable the DB button
+
         }
     }
 
@@ -593,7 +568,7 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
      */
     private void debug(String message) {
         // getGameModule().warn(message);
-        // System.out.println(message);
+        System.out.println(message);
     }
 
     /**
@@ -632,14 +607,14 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
      */
     public Command getRestoreCommand() {
 
-        debug("Creating restore command. Player count = " + players.size());
+        debug("Creating restore command for DB - " + enabled + ". Player count = " + players.size());
         Command c = new NullCommand();
         if(enabled) {
 
             for (Player p: players.values()) {
                 c = c.append(new DoubleBlindUpdateCommand(p));
             }
-            c = c.append(new EnableDoubleBlindCommand(enabled));
+            c = c.append(new EnableDoubleBlindCommand(this, enabled));
         }
         return c;
     }
@@ -649,7 +624,7 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
      */
     public static class IconConfig implements ConfigurerFactory {
         public Configurer getConfigurer(AutoConfigurable c, String key, String name) {
-            return new IconConfigurer(key, name, ICON_FILE_NAME);
+            return new IconConfigurer(key, name, "");
         }
     }
 
@@ -680,35 +655,6 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
             debug("Executing DB update command ");
             players.put(player.getName(), player);
             updateView();
-        }
-
-        protected Command myUndoCommand() {
-            return null;
-        }
-
-        public int getValue() {
-            return 0;
-        }
-    }
-
-    /**
-     * Use this command to enable or disable double blind for the game
-     */
-
-    public class EnableDoubleBlindCommand extends Command {
-
-        private boolean enabledFlag;
-
-        public EnableDoubleBlindCommand(boolean enabled) {
-            this.enabledFlag = enabled;
-        }
-
-        protected void executeCommand() {
-
-            enabled = enabledFlag;
-            debug("Executing DB enable command ");
-            GameModule.getGameModule().getChatter().send("Double blind has been " + (enabled ? "enabled" : "disabled"));
-
         }
 
         protected Command myUndoCommand() {

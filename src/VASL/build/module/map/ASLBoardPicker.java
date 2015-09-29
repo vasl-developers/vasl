@@ -77,6 +77,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
     protected TerrainEditor terrain;
     private SetupControls setupControls;
     private boolean enableDeluxe;
+    private boolean enableDB = false;
 
     public ASLBoardPicker() {
     }
@@ -193,6 +194,10 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
      */
     public void finish() {
         currentBoards = new ArrayList<Board>(getBoardsFromControls());
+
+        //set DB state on finish
+        DoubleBlindViewer.doubleBlindViewer.enableDB(enableDB);
+
     }
 
     public void setGlobalMapScale() {
@@ -584,6 +589,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
+
         String label = e.getActionCommand();
         if ("Add overlays".equals(label)) {
             Overlayer o;
@@ -651,8 +657,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
             dirConfig = new DirectoryConfigurer(null, pref.getName());
             dirConfig.setValue(pref.getFileValue());
             add(dirConfig.getControls());
+
             JCheckBox deluxe = new JCheckBox("Deluxe-size hexes");
-            deluxe.setAlignmentX(0.0F);
             deluxe.addItemListener(new ItemListener() {
                 public void itemStateChanged(ItemEvent e) {
                     enableDeluxe = e.getStateChange() == ItemEvent.SELECTED;
@@ -669,6 +675,21 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
                 }
             });
             add(deluxe);
+
+            // check-box for DB flag
+            JCheckBox db = new JCheckBox("Enable double blind");
+            if(DoubleBlindViewer.doubleBlindViewer != null){
+                db.setSelected(DoubleBlindViewer.doubleBlindViewer.isEnabled());
+            }
+            db.addItemListener(new ItemListener() {
+                public void itemStateChanged(ItemEvent e) {
+                    enableDB = e.getStateChange() == ItemEvent.SELECTED;
+                }
+            });
+            add(db);
+
+            //setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS))
+
             add(controls);
             dirConfig.addPropertyChangeListener(new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent evt) {

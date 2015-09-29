@@ -11,7 +11,7 @@
     </VASSAL.build.module.GlobalOptions>
     <VASL.build.module.ASLMap allowMultiple="true" backgroundcolor="255,255,255" buttonName="Map" changeFormat="$message$" color="0,0,0" createFormat="$pieceName$ created in $location$ *" edgeHeight="400" edgeWidth="400" hotkey="" icon="/images/map.gif" launch="false" mapName="" markMoved="Use Preferences Setting" markUnmovedIcon="mov.gif" markUnmovedText="" markUnmovedTooltip="mark all units unmoved" moveKey="77,650" moveToFormat="$pieceName$ moves $previousLocation$ -&gt; $location$ *" moveWithinFormat="$pieceName$ moves $previousLocation$ -&gt; $location$ *" thickness="3">
         <VASL.build.module.map.ASLBoardPicker/>
-        <VASL.build.module.map.DoubleBlindViewer hotKey="77,195" iconName="sauroneye.png" label="DB" propertiesTab="LOS" report="true" reportFormat="&lt;(o)&gt;" tooltip="Update DB view"/>
+        <VASL.build.module.map.DoubleBlindViewer hotKey="77,195" label="DB" propertiesTab="LOS" report="true" reportFormat="DB synch" tooltip="Update DB view"/>
         <VASL.build.module.map.ASLGlobalMap buttonText="" color="0,0,0" hotkey="79,195" icon="overview.gif" scale="0.19444444" tooltip="Show/Hide overview window"/>
         <VASL.build.module.map.HindranceKeeper/>
         <VASSAL.build.module.map.ForwardToKeyBuffer/>
