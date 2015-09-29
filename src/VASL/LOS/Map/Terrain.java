@@ -44,7 +44,7 @@ public class Terrain {
     }
 
     public boolean isEntrenchmentTerrain() {
-        return false;
+        return LOSCategory == LOSCategories.ENTRENCHMENT;
     }
 
     /**

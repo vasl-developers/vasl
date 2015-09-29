@@ -95,6 +95,7 @@ public class BoardArchive {
                 archiveName;
         this.sharedBoardMetadata = sharedBoardMetadata;
 
+        // parse the board metadata
         metadata = new BoardMetadata(sharedBoardMetadata);
         InputStream metadataFileStream = null;
         InputStream dataFileStream = null;

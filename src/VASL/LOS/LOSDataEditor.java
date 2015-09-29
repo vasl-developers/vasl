@@ -490,6 +490,12 @@ public class LOSDataEditor {
                         } else if (currentTerrain.getName().equals("Stone Building, 4 Level") || currentTerrain.getName().equals("Wooden Building, 4 Level")) {
                             map.setGridTerrainCode(map.getTerrain("Rowhouse Wall, 4 Level").getType(), x, y);
                         }
+                        else if(terr.getName().equals("Stone Factory, 1.5 Level") || terr.getName().equals("Wooden Factory, 1.5 Level")){
+                            map.setGridTerrainCode(map.getTerrain("Factory Wall, 1.5 Level").getType(), x, y);
+                        }
+                        else if(terr.getName().equals("Stone Factory, 2.5 Level") || terr.getName().equals("Wooden Factory, 2.5 Level")){
+                            map.setGridTerrainCode(map.getTerrain("Factory Wall, 2.5 Level").getType(), x, y);
+                        }
                     }
 
                     // special rule for Heavy Jungle - don't replace water

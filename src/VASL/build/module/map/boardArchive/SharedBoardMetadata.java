@@ -60,7 +60,7 @@ public class SharedBoardMetadata extends AbstractMetadata {
                 parseColorSSRules(root.getChild(colorSSRulesElement));
                 parseTerrainTypes(root.getChild(terrainTypesElement));
                 parseLOSSSRules(root.getChild(LOSSSRulesElement));
-                parseLOSCounterRules(root.getChild(LOSCounterRulesElement));
+                // parseLOSCounterRules(root.getChild(LOSCounterRulesElement));
                 parseOverlaySSRules(root.getChild(overlaySSRulesElement));
             }
 

@@ -36,8 +36,8 @@ import javax.swing.JCheckBox;
 
 import VASL.LOS.Map.LOSResult;
 import VASL.LOS.Map.Location;
-import VASL.LOS.Map.VASLGameInterface;
 import VASL.build.module.ASLMap;
+import VASL.LOS.VASLGameInterface;
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASSAL.build.Buildable;
 import VASSAL.build.module.GameComponent;

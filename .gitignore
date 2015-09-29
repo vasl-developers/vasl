@@ -1,6 +1,4 @@
 .idea/
-.gitignore
 target/
-out/
 boardsOut/
-vasl-build.iml
+out/

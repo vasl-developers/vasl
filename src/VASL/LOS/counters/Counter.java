@@ -16,7 +16,7 @@
  * License along with this library; if not, copies are available
  * at http://www.opensource.org.
  */
-package VASL.LOS.Map;
+package VASL.LOS.counters;
 
 /**
  * A simple class that represents a VASL counter

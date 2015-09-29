@@ -14,7 +14,10 @@
  * License along with this library; if not, copies are available
  * at http://www.opensource.org.
  */
-package VASL.LOS.Map;
+package VASL.LOS.counters;
+
+import VASL.LOS.Map.Location;
+import VASL.LOS.counters.Counter;
 
 /**
  * Title:        Smoke.java
@@ -27,7 +30,7 @@ public	class Smoke extends Counter {
 	// smoke attributes
 	private	int 		height;
     private	int     	hindrance;
-	private	Location	location;
+	private Location location;
 
     public Smoke(String name, Location location, int height, int hindrance ) {
 
