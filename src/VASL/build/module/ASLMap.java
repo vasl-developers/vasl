@@ -279,12 +279,12 @@ public class ASLMap extends Map {
                     VASL.LOS.Map.Map LOSData = board.getLOSData(sharedBoardMetadata.getTerrainTypes());
 
                     // check for overlays
-                    final Enumeration overlays = board.getOverlays();
-                    while (overlays.hasMoreElements()) {
-                        if(!overlays.nextElement().toString().isEmpty()) {
-                            throw new BoardException("LOS disabled - Overlays are not supported");
-                        }
-                    }
+                    //final Enumeration overlays = board.getOverlays();
+                    //while (overlays.hasMoreElements()) {
+                    //    if(!overlays.nextElement().toString().isEmpty()) {
+                     //      throw new BoardException("LOS disabled - Overlays are not supported");
+                    //    }
+                    //}
 
                     // apply the SSR changes, crop and flip if needed
                     board.applyColorSSRules(LOSData, sharedBoardMetadata.getLOSSSRules());
