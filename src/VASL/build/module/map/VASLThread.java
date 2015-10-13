@@ -128,6 +128,11 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             result = new LOSResult();
             VASLGameInterface = new VASLGameInterface(theMap, LOSMap);
             VASLGameInterface.updatePieces();
+
+            // setting these to null prevents the last LOS from being shown when launched
+            source = null;
+            target = null;
+
             ovrZoom = theMap.getZoom();
             // shrink the boundaries of overlay rectangles to limit LOS Checking disablement
             try {
