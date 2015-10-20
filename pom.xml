@@ -57,8 +57,6 @@
                 <version>3.1</version>
                 <configuration>
                     <verbose>true</verbose>
-                    <fork>true</fork>
-                    <executable>${jdk}/bin/javac</executable>
                     <source>1.5</source>
                     <target>1.5</target>
                 </configuration>
