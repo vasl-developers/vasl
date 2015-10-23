@@ -202,7 +202,6 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             LOSColor = (Color) getGameModule().getPrefs().getValue(LOS_COLOR);
             hindranceColor = (Color) getGameModule().getPrefs().getValue(HINDRANCE_THREAD_COLOR);
             blockedColor = (Color) getGameModule().getPrefs().getValue(BLOCKED_THREAD_COLOR);
-            map.getView().requestFocus();
         }
 
         initialized = true;
