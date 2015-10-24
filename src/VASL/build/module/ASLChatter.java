@@ -33,10 +33,7 @@ import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.GlobalOptions;
 import VASSAL.command.CommandEncoder;
-import VASSAL.configure.BooleanConfigurer;
-import VASSAL.configure.ColorConfigurer;
-import VASSAL.configure.FontConfigurer;
-import VASSAL.configure.HotKeyConfigurer;
+import VASSAL.configure.*;
 import VASSAL.i18n.Resources;
 import VASSAL.preferences.Prefs;
 import VASSAL.tools.KeyStrokeListener;
@@ -94,7 +91,13 @@ public class ASLChatter extends VASSAL.build.module.Chatter
   private static final String CHAT_BACKGROUND_COLOR = "chatBackgroundColor"; //$NON-NLS-1$
   private static final String COLORED_DICE_COLOR = "coloredDiceColor"; //$NON-NLS-1$
   private static final String SINGLE_DIE_COLOR = "singleDieColor"; //$NON-NLS-1$
+  private static final String NOTIFICATION_LEVEL = "notificationLevel"; //$NON-NLS-1$
   private final static String m_strFileNameFormat = "chatter/DC%s_%s.png";
+
+  private final static int DR_NOTIFY_NONE = 0;
+  private final static int DR_NOTIFY_SNIPERS = 1;
+  private final static int DR_NOTIFY_STARTER_KIT = 2;
+  private final static int DR_NOTIFY_ALL = 3;
 
   private Color m_clrBackground;
   private Color m_clrGameMsg;
@@ -136,6 +139,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
   private final JScrollPane m_objScrollPane = new ScrollPane(
        JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
        JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    private int m_DRNotificationLevel;
 
     public void RemoveActionForKeyStroke(KeyStroke aKeyStroke)
     {
@@ -760,110 +764,118 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
                                     // Add special event hints, if necessary
                                     // First, SAN, which should not trigger for Rally, TK and CC rolls
-                                    if((!l_strCategory.equals("TK")) && (!l_strCategory.equals("CC"))
-                                            && (!l_strCategory.equals(("Rally"))))
+                                    // and should happen on "Only Sniper" setting and in Full ASL mode
+                                    if(m_DRNotificationLevel == 3 || m_DRNotificationLevel == 1)
                                     {
-                                        if (l_strRestOfMsg.startsWith("Axis SAN"))
+                                        if ((!l_strCategory.equals("TK")) && (!l_strCategory.equals("CC"))
+                                                && (!l_strCategory.equals(("Rally"))))
                                         {
-                                            specialMessages.add("Axis SAN");
-                                            l_strRestOfMsg = l_strRestOfMsg.substring("Axis SAN".length());
-                                        }
-                                        else if (l_strRestOfMsg.startsWith("Allied SAN"))
-                                        {
-                                            specialMessages.add("Allied SAN");
-                                            l_strRestOfMsg = l_strRestOfMsg.substring("Allied SAN".length());
-                                        }
-                                        else if (l_strRestOfMsg.startsWith("Axis/Allied SAN"))
-                                        {
-                                            specialMessages.add("Axis/Allied SAN");
-                                            l_strRestOfMsg = l_strRestOfMsg.substring("Axis/Allied SAN".length());
-                                        }
-                                    }
-
-                                    // For TH rolls only, show possible hit location, Unlikely hit and multiple hit
-                                    if(l_strCategory.equals("TH"))
-                                    {
-                                        if(l_iFirstDice == l_iSecondDice)
-                                        {
-                                            if(l_iFirstDice == 1)
+                                            if (l_strRestOfMsg.startsWith("Axis SAN"))
                                             {
-                                                specialMessages.add("Unlikely Hit (C3.6)");
-                                            }
-
-                                            // Multiple Hits are possible either way
-                                            specialMessages.add("Multiple Hits 15..40mm (C3.8)");
-                                        }
-                                        if(l_iFirstDice < l_iSecondDice)
-                                        {
-                                            specialMessages.add("Turret");
-                                        }
-                                        else
-                                        {
-                                            specialMessages.add("Hull");
-                                        }
-                                    }
-                                    else if(l_strCategory.equals("TK"))
-                                    {
-                                        if(l_iFirstDice == l_iSecondDice)
-                                        {
-                                            if (l_iFirstDice == 6)
+                                                specialMessages.add("Axis SAN");
+                                                l_strRestOfMsg = l_strRestOfMsg.substring("Axis SAN".length());
+                                            } else if (l_strRestOfMsg.startsWith("Allied SAN"))
                                             {
-                                                specialMessages.add("Dud (C7.35)");
+                                                specialMessages.add("Allied SAN");
+                                                l_strRestOfMsg = l_strRestOfMsg.substring("Allied SAN".length());
+                                            } else if (l_strRestOfMsg.startsWith("Axis/Allied SAN"))
+                                            {
+                                                specialMessages.add("Axis/Allied SAN");
+                                                l_strRestOfMsg = l_strRestOfMsg.substring("Axis/Allied SAN".length());
                                             }
                                         }
                                     }
-                                    else if(l_strCategory.equals("MC"))
+                                    // ALL of these happen only in Starter Kit mode or Full ASL mode
+                                    if(m_DRNotificationLevel >= 2)
                                     {
-                                        if(l_iFirstDice == 1 && l_iSecondDice == 1)
+                                        // For TH rolls only, show possible hit location, Unlikely hit and multiple hit
+                                        if (l_strCategory.equals("TH"))
                                         {
-                                            specialMessages.add("Heat of Battle (A15.1)");
-                                        }
-                                        else if(l_iFirstDice == 6 && l_iSecondDice == 6)
-                                        {
-                                            specialMessages.add("Casualty MC (A10.31)");
-                                        }
-                                    }
-                                    else if(l_strCategory.equals("TC"))
-                                    {
-
-                                    }
-                                    else if(l_strCategory.equals("Rally"))
-                                    {
-                                        if(l_iFirstDice == 1 && l_iSecondDice == 1)
-                                        {
-                                            specialMessages.add("Heat of Battle (A15.1) or Field Promotion (A18.11)");
-                                        }
-                                        else if(l_iFirstDice == 6 && l_iSecondDice == 6)
-                                        {
-                                            specialMessages.add("Fate -> Casualty Reduction (A10.64)");
-                                        }
-                                    }
-                                    else if(l_strCategory.equals("IFT"))
-                                    {
-                                        // check for cowering
-                                        if(l_iFirstDice == l_iSecondDice)
-                                        {
-                                            if(l_iFirstDice == 1)
+                                            if (l_iFirstDice == l_iSecondDice)
                                             {
-                                                specialMessages.add("Unlikely Kill vs * (A7.309)");
+                                                // Starter Kit + Full ASL
+                                                if (l_iFirstDice == 1)
+                                                {
+                                                    specialMessages.add("Unlikely Hit (C3.6)");
+                                                }
+                                                // Full ASL only
+                                                if (m_DRNotificationLevel == 3)
+                                                {
+                                                    specialMessages.add("Multiple Hits 15..40mm (C3.8)");
+                                                }
                                             }
-                                            specialMessages.add("Cower if MMC w/o LDR");
-                                        }
-                                    }
-                                    else if(l_strCategory.equals("CC"))
-                                    {
-                                        if(l_iFirstDice == 1 && l_iSecondDice == 1)
+                                            if (l_iFirstDice < l_iSecondDice)
+                                            {
+                                                specialMessages.add("Turret");
+                                            } else
+                                            {
+                                                specialMessages.add("Hull");
+                                            }
+                                        } else if (l_strCategory.equals("TK"))
                                         {
-                                            specialMessages.add("Field Promotion (A18.12)");
+                                            if (l_iFirstDice == l_iSecondDice)
+                                            {
+                                                if (l_iFirstDice == 6)
+                                                {
+                                                    specialMessages.add("Dud (C7.35)");
+                                                }
+                                            }
+                                        } else if (l_strCategory.equals("MC"))
+                                        {
+                                            // Full ASL only
+                                            if (l_iFirstDice == 1 && l_iSecondDice == 1 && m_DRNotificationLevel == 3)
+                                            {
+                                                specialMessages.add("Heat of Battle (A15.1)");
+                                            }
+                                            // Starter Kit & Full ASL
+                                            else if (l_iFirstDice == 6 && l_iSecondDice == 6)
+                                            {
+                                                specialMessages.add("Casualty MC (A10.31)");
+                                            }
+                                        } else if (l_strCategory.equals("TC"))
+                                        {
+
+                                        } else if (l_strCategory.equals("Rally"))
+                                        {
+                                            // Full ASL only
+                                            if (l_iFirstDice == 1 && l_iSecondDice == 1 && m_DRNotificationLevel == 3)
+                                            {
+                                                specialMessages.add("Heat of Battle (A15.1) or Field Promotion (A18.11)");
+                                            }
+                                            // Starter Kit + Full ASL
+                                            else if (l_iFirstDice == 6 && l_iSecondDice == 6)
+                                            {
+                                                specialMessages.add("Fate -> Casualty Reduction (A10.64)");
+                                            }
+                                        } else if (l_strCategory.equals("IFT"))
+                                        {
+                                            // check for cowering
+                                            if (l_iFirstDice == l_iSecondDice)
+                                            {
+                                                // Full ASL only
+                                                if (l_iFirstDice == 1 && m_DRNotificationLevel == 3)
+                                                {
+                                                    specialMessages.add("Unlikely Kill vs * (A7.309)");
+                                                }
+                                                // Starter Kit + Full ASL
+                                                specialMessages.add("Cower if MMC w/o LDR");
+                                            }
+                                        } else if (l_strCategory.equals("CC"))
+                                        {
+                                            // Full ASL only
+                                            if (l_iFirstDice == 1 && l_iSecondDice == 1 && m_DRNotificationLevel == 3)
+                                            {
+                                                specialMessages.add("Field Promotion (A18.12)");
+                                            }
                                         }
                                     }
 
                                     // Construct Special Message string
                                     String l_strSpecialMessages = "";
-                                    for(int i = 0; i < specialMessages.size(); ++i)
+                                    for (int i = 0; i < specialMessages.size(); ++i)
                                     {
                                         l_strSpecialMessages += specialMessages.get(i);
-                                        if(i < specialMessages.size() - 1)
+                                        if (i < specialMessages.size() - 1)
                                         {
                                             l_strSpecialMessages += ", ";
                                         }
@@ -1602,6 +1614,47 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             {
                 m_clrSingleDieColor = (Color) e.getNewValue();
                 RebuildSingleDieFaces();
+            }
+        });
+
+        StringEnumConfigurer l_objSpecialDiceRollNotificationLevel = (StringEnumConfigurer)l_objModulePrefs.getOption(NOTIFICATION_LEVEL);
+
+        final String[] l_DROptions = {
+                "None",
+                "Snipers only",
+                "Starter Kit",
+                "Full ASL"
+        };
+        if(l_objSpecialDiceRollNotificationLevel == null)
+        {
+            l_objSpecialDiceRollNotificationLevel = new StringEnumConfigurer(NOTIFICATION_LEVEL,
+                    "Notify about special DRs: ", l_DROptions);
+            l_objSpecialDiceRollNotificationLevel.setValue("Full ASL");
+            l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), l_objSpecialDiceRollNotificationLevel);
+        }
+
+        for(int i = 0; i < l_DROptions.length; ++i)
+        {
+            if (l_DROptions[i].equals(l_objSpecialDiceRollNotificationLevel.getValueString()))
+            {
+                m_DRNotificationLevel = i;
+                break;
+            }
+        }
+
+        // just for access from inside the event handler
+        final StringEnumConfigurer __cfg = l_objSpecialDiceRollNotificationLevel;
+        l_objSpecialDiceRollNotificationLevel.addPropertyChangeListener(new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent e)
+            {
+                for(int i = 0; i < l_DROptions.length; ++i){
+                    if(l_DROptions[i].equals(__cfg.getValueString()))
+                    {
+                        m_DRNotificationLevel = i;
+                        return;
+                    }
+                }
+                m_DRNotificationLevel = 3;
             }
         });
 

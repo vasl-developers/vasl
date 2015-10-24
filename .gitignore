@@ -2,3 +2,9 @@
 target/
 boardsOut/
 out/
+.classpath
+.project
+.settings
+settings.xml
+vasl.iml
+.gitignore
