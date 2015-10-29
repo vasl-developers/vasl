@@ -1978,6 +1978,11 @@ public class Map  {
                 return false;
             }
 
+            // can also ignore for bocage
+            if(BOCAGE.equals(status.currentTerrain.getName())){
+                return false;
+            }
+
             // are exiting gully restrictions satisfied?
             if (!(status.ignoreGroundLevelHex != null &&
                     status.ignoreGroundLevelHex.containsExtended(status.currentCol, status.currentRow)) &&
