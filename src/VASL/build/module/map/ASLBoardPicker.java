@@ -18,6 +18,7 @@
  */
 package VASL.build.module.map;
 
+import VASL.build.module.ASLMap;
 import VASL.build.module.map.boardArchive.SSRControlsFile;
 import VASL.build.module.map.boardPicker.*;
 import VASSAL.Info;
@@ -197,6 +198,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
 
         //set DB state on finish
         DoubleBlindViewer.doubleBlindViewer.enableDB(enableDB);
+        DoubleBlindViewer.setMap((ASLMap) map);
 
     }
 

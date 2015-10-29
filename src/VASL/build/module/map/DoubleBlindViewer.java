@@ -90,7 +90,7 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
 
     // class properties
     protected static boolean enabled = false;
-    protected ASLMap map;
+    protected static ASLMap map;
     protected LaunchButton launchButton;
     protected String myPlayerName;
     protected VASLGameInterface VASLGameInterface;
@@ -113,7 +113,7 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
 
     /**
      * Enable/disable DB play
-     * @param e
+     * @param e enabled?
      */
     public void enableDB(boolean e) {
 
@@ -134,6 +134,16 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
     public boolean isEnabled() {
         return enabled;
     }
+
+
+    /**
+     * Update the map
+      * @param m the map
+     */
+    public static void setMap(ASLMap m) {
+        map = m;
+    }
+
     /**
      * Sends the command and updates the view when the button or button hot key is pressed
      */
@@ -157,20 +167,14 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
      */
     private void updateView() {
 
+
         // gotta have a map to update the view
         if(map == null ||  map.getVASLMap() == null) {
             return;
         }
 
-        // get the VASL interface if necessary
-        if(VASLGameInterface == null){
-            VASLGameInterface = new VASLGameInterface(map, map.getVASLMap());
-        }
+        VASLGameInterface = new VASLGameInterface(map, map.getVASLMap());
         VASLGameInterface.updatePieces();
-
-        // turn off "report move" and "center on opponents move" options
-        getGameModule().getPrefs().getOption("centerOnMove").setValue(Boolean.FALSE);
-        getGameModule().getPrefs().getOption("autoReport").setValue(Boolean.FALSE);
 
         // hide all pieces out of LOS
         GamePiece[] allPieces = map.getAllPieces();
@@ -215,7 +219,9 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
 
                             if (isViewable(p2, piece)) {
                                 setPieceSpotted(piece);
-                                debug("Piece " + piece.getName() + " was Spotted by " + p2.getName());
+                                if(!piece.getName().equals("")){
+                                    debug("Piece " + piece.getName() + " was Spotted by " + p2.getName());
+                                }
                                 return;
                             }
                         }
@@ -224,13 +230,17 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
 
                     if (isViewable(p, piece)) {
                         setPieceSpotted(piece);
-                        debug("Piece " + piece.getName() + " was Spotted by " + p.getName());
+                        if(!piece.getName().equals("")){
+                            debug("Piece " + piece.getName() + " was Spotted by " + p.getName());
+                        }
                         return;
                     }
                 }
             }
 
-            debug("Piece " + piece.getName() + " was NOT Spotted");
+            if(!piece.getName().equals("")){
+                debug("Piece " + piece.getName() + " was NOT Spotted");
+            }
             setPieceUnspotted(piece);
         }
     }
@@ -250,7 +260,9 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
      */
     private void setPieceSpotted(GamePiece piece) {
 
-        debug("Setting piece spotted: " + piece.getName());
+        if(!piece.getName().equals("")){
+            debug("Setting piece spotted: " + piece.getName());
+        }
         piece.setProperty(Properties.HIDDEN_BY, null);
     }
 
@@ -269,7 +281,9 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
         }
 
         // use owner's game password to hide the piece
-        debug("Setting piece UNspotted: " + piece.getName());
+        if(!piece.getName().equals("")){
+            debug("Setting piece UNspotted: " + piece.getName());
+        }
         piece.setProperty(Properties.HIDDEN_BY, gamePassword);
     }
 
@@ -287,14 +301,12 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
 
         // not HIP if hidden by me
         for (Player p : players.values()) {
-            if(p.getName().equals(myPlayerName)) {
-                if(hiddenBy.equals(p.getID()) || hiddenBy.equals(p.getGamePassword())) {
-                    return false;
-                }
+            if(hiddenBy.equals(p.getID())) {
+                return true;
             }
         }
-        // must be HIP
-        return true;
+        // must not be HIP
+        return false;
     }
 
     /**
@@ -423,7 +435,7 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
 
         // add this component to the map toolbar
         if (parent instanceof Map) {
-            this.map = (ASLMap) parent;
+            setMap((ASLMap) parent);
             map.getToolBar().add(launchButton);
             GameModule.getGameModule().addCommandEncoder(this);
         }
@@ -460,7 +472,7 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
         // Command string is ENABLE_DOUBLE_BLIND:<enable>
         if(c instanceof  EnableDoubleBlindCommand) {
 
-            debug("Encoded enable DB command string: " + enabled);
+            debug("Encoded enable DB command string");
             return  ENABLE_COMMAND_PREFIX + Boolean.toString(enabled);
         }
 
@@ -474,7 +486,7 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
                             me.getID() +
                             COMMAND_SEPARATOR +
                             me.getGamePassword();
-            debug("Encoded command string: " + commandString);
+            debug("Encoded command string");
             return commandString;
         }
         else {
@@ -498,7 +510,7 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
         // Command string is DOUBLE_BLIND:<player name>:<player ID>:<game password>
         if (s.startsWith(COMMAND_PREFIX)) {
 
-            debug("Decoded command string: " + s);
+            // debug("Decoded command string: " + s);
             // build the player object
             String strings[] = s.split(COMMAND_SEPARATOR);
             Player thePlayer = new Player(strings[1], strings[2], strings[3]);
@@ -530,7 +542,7 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
 
     public void setup(boolean gameStarting) {
 
-        debug("Set up called");
+        debug("Set up called - starting " + gameStarting);
 
         if(enabled){
 
@@ -553,12 +565,9 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
                 // restore preference settings
                 getGameModule().getPrefs().getOption("centerOnMove").setValue(oldCenterOnMove);
                 getGameModule().getPrefs().getOption("autoReport").setValue(oldAutoReport);
+
+                enabled = false;
             }
-        }
-        else {
-
-            // disable the DB button
-
         }
     }
 
@@ -589,13 +598,17 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
                     GamePiece p = pi.nextPiece();
                     if(isMyPiece(p) && p.getProperty(Properties.HIDDEN_BY) != null && !p.getProperty(Properties.HIDDEN_BY).equals(players.get(myPlayerName).getID())){
                         p.setProperty(Properties.HIDDEN_BY, null);
-                        debug("Piece was reclaimed: " + p.getName());
+                        if(!p.getName().equals("")){
+                            debug("Piece was reclaimed: " + p.getName());
+                        }
                     }
                 }
             } else {
-                if(isMyPiece(piece) && !piece.getProperty(Properties.HIDDEN_BY).equals(players.get(myPlayerName).getID())){
+                if(isMyPiece(piece) && piece.getProperty(Properties.HIDDEN_BY) != null && !piece.getProperty(Properties.HIDDEN_BY).equals(players.get(myPlayerName).getID())){
                     piece.setProperty(Properties.HIDDEN_BY, null);
-                    debug("Piece was reclaimed: " + piece.getName());
+                    if(!piece.getName().equals("")){
+                        debug("Piece was reclaimed: " + piece.getName());
+                    }
                 }
             }
         }
