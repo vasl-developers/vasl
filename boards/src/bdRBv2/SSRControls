@@ -1,0 +1,79 @@
+<SSRControls>
+   <Option name="RBv2 Terrain Transformations">
+<Checkbox name="">
+<entry name="Ground Snow" rule="Snow" text="Ground Snow"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="Chemist Shop (BB21) is not rubbled" rule="Chemist" text="Chemist Shop (BB21) is not rubbled"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="F16 Workshop is gutted" rule="F16" text="F16 Workshop"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="G26 Workshop is gutted" rule="G26" text="G26 Workshop"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="J13 Foundry Hall is gutted" rule="J13" text="J13 Foundry Hall"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="J16 Foundry Hall is gutted" rule="J16" text="J16 Foundry Hall"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="J43 Factory is gutted" rule="J43" text="J43 Factory"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="K27 Martin-Electro Furnace is gutted" rule="K27" text="K27 Martin-Electro Furnace"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="L39 Factory is gutted" rule="L39" text="L39 Factory"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="O6 Manufacturing Hall is gutted" rule="O6" text="O6 Manufacturing Hall"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="O10 Assembly Hall is gutted" rule="O10" text="O10 Assembly Hall"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="O40 Factory is gutted" rule="O40" text="O40 Factory"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="P21 Gun Construction Hall is gutted" rule="P21" text="P21 Gun Construction Hall"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="P33 Manufacturing Hall is gutted" rule="P33" text="P33 Manufacturing Hall"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="R17 Gun Tube Hall is gutted" rule="R17" text="R17 Gun Tube Hall"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="R23 Manufacturing Hall is gutted" rule="R23" text="R23 Manufacturing Hall"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="R27 Manufacturing Hall is gutted" rule="R27" text="R27 Manufacturing Hall"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="S43 Factory is gutted" rule="S43" text="S43 Factory"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="T21 Manufacturing Hall is gutted" rule="T21" text="T21 Manufacturing Hall"/>
+</Checkbox>
+   </Option>
+</SSRControls>
