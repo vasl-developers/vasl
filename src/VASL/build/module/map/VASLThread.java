@@ -133,7 +133,6 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             source = null;
             target = null;
 
-            ovrZoom = theMap.getZoom();
             // shrink the boundaries of overlay rectangles to limit LOS Checking disablement
             try {
                 for (Board board : theMap.getBoards()) {
@@ -141,51 +140,60 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                     final Enumeration overlays = b.getOverlays();
                     while (overlays.hasMoreElements()) {
                         Overlay o = (Overlay) overlays.nextElement();
-                        Rectangle ovrRec= o.bounds();
-                        // get the image as a buffered image
-                        Image i = o.getImage();
-                        BufferedImage bi = new BufferedImage(i.getWidth(null), i.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-                        Graphics2D bGr = bi.createGraphics();
-                        bGr.drawImage(i, 0, 0, null);
-                        bGr.dispose();
 
-                        boolean firstPixel = true;
-                        int minx = 0;
-                        int miny = 0;
-                        int maxx = 0;
-                        int maxy = 0;
-                        for(int x = 0; x < bi.getWidth(); x++){
-                            for(int y = 0; y < bi.getHeight(); y++){
+                        // ignore SSR overlays
+                        if (!o.hex1.equals("")) {
+                            Rectangle ovrRec = o.bounds();
+                            // get the image as a buffered image
+                            Image i = o.getImage();
+                            BufferedImage bi = new BufferedImage(i.getWidth(null), i.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+                            Graphics2D bGr = bi.createGraphics();
+                            bGr.drawImage(i, 0, 0, null);
+                            bGr.dispose();
 
-                                int c = bi.getRGB(x, y);
-                                if( (c>>24) != 0x00 ) { // not a transparent pixel
-                                    if (firstPixel){
-                                        minx = x;
-                                        maxx = x;
-                                        miny = y;
-                                        maxy = y;
-                                        firstPixel = false;
-                                    }
-                                    else {
-                                        minx = Math.min(minx,x);
-                                        maxx = Math.max(maxx,x);
-                                        miny = Math.min(miny, y);
-                                        maxy = Math.max(maxy,y);
+                            boolean firstPixel = true;
+                            int minx = 0;
+                            int miny = 0;
+                            int maxx = 0;
+                            int maxy = 0;
+                            for (int x = 0; x < bi.getWidth(); x++) {
+                                for (int y = 0; y < bi.getHeight(); y++) {
+
+                                    int c = bi.getRGB(x, y);
+                                    if ((c >> 24) != 0x00) { // not a transparent pixel
+                                        if (firstPixel) {
+                                            minx = x;
+                                            maxx = x;
+                                            miny = y;
+                                            maxy = y;
+                                            firstPixel = false;
+                                        } else {
+                                            minx = Math.min(minx, x);
+                                            maxx = Math.max(maxx, x);
+                                            miny = Math.min(miny, y);
+                                            maxy = Math.max(maxy, y);
+                                        }
                                     }
                                 }
                             }
+                            //Set the boundaries rectangle
+                            Rectangle ovrMinbounds = new Rectangle(ovrRec.x + minx, ovrRec.y + miny, maxx - minx, maxy - miny);
+                            // Need to adjust y value when board cropped by coordinates
+                            Rectangle CropAdjust = b.getCropBounds();
+                            ovrMinbounds.y = ovrMinbounds.y - CropAdjust.y;
+                            //Now check if need to flip
+                            if (b.isReversed()) {
+                                // flip moves x,y point to bottom right, subtracting width and height resets it to top left
+                                ovrMinbounds.x = b.bounds().width - ovrMinbounds.x - 1;
+                                ovrMinbounds.y = b.bounds().height - ovrMinbounds.y - 1;
+                                ovrMinbounds.x = ovrMinbounds.x - ovrMinbounds.width;
+                                ovrMinbounds.y = ovrMinbounds.y - ovrMinbounds.height;
+                            }
+                            //Now adjust for multiple rows and columns
+                            ovrMinbounds.x = ovrMinbounds.x + b.bounds().x - 400;
+                            ovrMinbounds.y = ovrMinbounds.y + b.bounds().y - 400;
+                            overlayBoundaries.add(ovrMinbounds);
                         }
-                        //Set the boundaries rectangle
-                        Rectangle ovrMinbounds= new Rectangle(ovrRec.x+minx, ovrRec.y+miny, maxx - minx, maxy - miny);
-                        //Now check if need to flip
-                        if (b.isReversed()) {
-                            // flip moves x,y point to bottom right, subtracting width and height resets it to top left
-                            ovrMinbounds.x= b.bounds().width - ovrMinbounds.x - 1;
-                            ovrMinbounds.y=b.bounds().height - ovrMinbounds.y - 1;
-                            ovrMinbounds.x =ovrMinbounds.x- ovrMinbounds.width;
-                            ovrMinbounds.y = ovrMinbounds.y - ovrMinbounds.height;
-                        }
-                        overlayBoundaries.add(ovrMinbounds);
                     }
                 }
             }
@@ -530,6 +538,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                     g.setFont(RANGE_FONT);
                     // inform user that LOS checking disabled due to overlay in LOS - show overlay boundaries and show text message
                     if (losOnOverlay) {
+                        ovrZoom = map.getZoom();
                         oldcolor=g.getColor();
                         g.setColor(Color.red);
                         Point drawboundaries=new Point (showovrboundaries.x, showovrboundaries.y);
