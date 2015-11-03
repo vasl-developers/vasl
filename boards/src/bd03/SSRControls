@@ -10,6 +10,9 @@
          <entry name="J29: Capture of Balta" rule="SSO_J29" text="scenario J29 overlay"/>
  </Checkbox>
  <Checkbox name="">
+         <entry name="J44: Audacity!" rule="SSO_J44" text="scenario J44 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
          <entry name="J94: Kempf at Melikhovo" rule="SSO_J94" text="scenario J94 overlay"/>
  </Checkbox>
  <Checkbox name="">

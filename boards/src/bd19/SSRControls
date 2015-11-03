@@ -12,6 +12,9 @@
 	   <Checkbox name="">
          <entry name="Scenario ESG29 - Blood in the Mud" rule="SSO_19_ESG29" text="Bd19 Scen ESG29 SSO"/>
        </Checkbox>
+           <Checkbox name="">
+         <entry name="Scenario OB3 - Brasche Encounter Overlays" rule="SSO_19_OB3" text="Bd19 Scen OB3 SSO"/>
+       </Checkbox>
 	   </Option>
   </SSRControls>
  

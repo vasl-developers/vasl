@@ -18,7 +18,7 @@
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
 -->
-<boardMetadata name="19" version="6.0" versionDate="Mar 2013" author="BK" boardImageFileName="bd19.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="19" version="6.1" versionDate="Oct 2015" author="BK" boardImageFileName="bd19.gif" hasHills="FALSE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -71,6 +71,7 @@
 		<overlaySSRule name="SSO_19_A52" image="SSO_19_A52.gif" x="1" y="1" />
 		<overlaySSRule name="SSO_19_19" image="SSO_19_19.gif" x="68" y="18" />
 		<overlaySSRule name="SSO_19_ESG29" image="SSO_19_ESG29.gif" x="78" y="1" />
+		<overlaySSRule name="SSO_19_OB3" image="SSO_19_OB3.gif" x="982" y="166" />
 		<overlaySSRule name="DenseJungle" image="19_DenseJungle.gif" x="1" y="1" />
 		<overlaySSRule name="Bamboo" image="19_Bamboo.gif" x="136" y="85" />
 		<overlaySSRule name="OrchardsToCrags" image="19_Orch2Crag.gif" x="535" y="426" />
