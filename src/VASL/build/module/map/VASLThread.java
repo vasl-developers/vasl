@@ -133,7 +133,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             source = null;
             target = null;
 
-            ovrZoom = theMap.getZoom();
+
             // shrink the boundaries of overlay rectangles to limit LOS Checking disablement
             try {
                 for (Board board : theMap.getBoards()) {
@@ -181,14 +181,20 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                             }
                             //Set the boundaries rectangle
                             Rectangle ovrMinbounds= new Rectangle(ovrRec.x+minx, ovrRec.y+miny, maxx - minx, maxy - miny);
+                            // Need to adjust y value when board cropped by coordinates
+                            Rectangle CropAdjust = b.getCropBounds();
+                            ovrMinbounds.y = ovrMinbounds.y - CropAdjust.y;
                             //Now check if need to flip
                             if (b.isReversed()) {
                                 // flip moves x,y point to bottom right, subtracting width and height resets it to top left
-                                ovrMinbounds.x= b.bounds().width - ovrMinbounds.x - 1;
-                                ovrMinbounds.y=b.bounds().height - ovrMinbounds.y - 1;
-                                ovrMinbounds.x =ovrMinbounds.x- ovrMinbounds.width;
+                                ovrMinbounds.x = b.bounds().width - ovrMinbounds.x - 1;
+                                ovrMinbounds.y = b.bounds().height - ovrMinbounds.y - 1;
+                                ovrMinbounds.x = ovrMinbounds.x - ovrMinbounds.width;
                                 ovrMinbounds.y = ovrMinbounds.y - ovrMinbounds.height;
                             }
+                            //Now adjust for multiple rows and columns
+                            ovrMinbounds.x = ovrMinbounds.x + b.bounds().x - 400;
+                            ovrMinbounds.y = ovrMinbounds.y + b.bounds().y - 400;
                             overlayBoundaries.add(ovrMinbounds);
                         }
                     }
@@ -534,6 +540,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                     g.setFont(RANGE_FONT);
                     // inform user that LOS checking disabled due to overlay in LOS - show overlay boundaries and show text message
                     if (losOnOverlay) {
+                        ovrZoom = map.getZoom();
                         oldcolor=g.getColor();
                         g.setColor(Color.red);
                         Point drawboundaries=new Point (showovrboundaries.x, showovrboundaries.y);
