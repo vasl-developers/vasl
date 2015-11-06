@@ -688,7 +688,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
                     enableDB = e.getStateChange() == ItemEvent.SELECTED;
                 }
             });
-            add(db);
+            // add(db);
 
             //setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS))
 

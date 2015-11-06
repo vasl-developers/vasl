@@ -436,7 +436,7 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
         // add this component to the map toolbar
         if (parent instanceof Map) {
             setMap((ASLMap) parent);
-            map.getToolBar().add(launchButton);
+            // map.getToolBar().add(launchButton);
             GameModule.getGameModule().addCommandEncoder(this);
         }
 
@@ -577,7 +577,7 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
      */
     private void debug(String message) {
         // getGameModule().warn(message);
-        System.out.println(message);
+        // System.out.println(message);
     }
 
     /**
