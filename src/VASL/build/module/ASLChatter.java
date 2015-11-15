@@ -865,7 +865,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                             // Full ASL only
                                             if (l_iFirstDice == 1 && l_iSecondDice == 1 && m_DRNotificationLevel == 3)
                                             {
-                                                specialMessages.add("Field Promotion (A18.12)");
+                                                specialMessages.add("Field Promotion (A18.12), Unlikely Kill (A11.501)");
                                             }
                                         }
                                     }
