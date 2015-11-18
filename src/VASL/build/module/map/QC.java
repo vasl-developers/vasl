@@ -203,11 +203,17 @@ class QCMenuItem extends JMenuItem implements DragSourceListener
         {
             public void dragGestureRecognized(DragGestureEvent dge) 
             {
-                if ((dge.getComponent() != null) && (dge.getComponent() instanceof QCMenuItem))
-                    DragSource.getDefaultDragSource().addDragSourceListener(((QCMenuItem)dge.getComponent()));
+                // FredKors 18.11.2015 Seems to be obsolete
+                //if ((dge.getComponent() != null) && (dge.getComponent() instanceof QCMenuItem))
+                    //DragSource.getDefaultDragSource().addDragSourceListener(((QCMenuItem)dge.getComponent()));
                 
                 startDrag();
                 PieceMover.AbstractDragHandler.getTheDragHandler().dragGestureRecognized(dge);
+                
+                // FredKors 18.11.2015 Move the code after the dragGestureRecognized to avoid exception
+                // FredKors 29.03.2015 Fix a small annoying thing dragging a counter from a menu
+                if (m_objParentPopupMenu != null)
+                    m_objParentPopupMenu.setVisible(false);            
             }
         };
         
@@ -232,10 +238,10 @@ class QCMenuItem extends JMenuItem implements DragSourceListener
                 l_objNewPiece.setProperty(Properties.PIECE_ID, m_objPieceSlot.getGpId());
                 DragBuffer.getBuffer().add(l_objNewPiece);
             }
-
+            // FredKors 18.11.2015 Move the code after the dragGestureRecognized to avoid exception
             // FredKors 29.03.2015 Fix a small annoying thing dragging a counter from a menu
-            if (m_objParentPopupMenu != null)
-                m_objParentPopupMenu.setVisible(false);            
+            //if (m_objParentPopupMenu != null)
+                //m_objParentPopupMenu.setVisible(false);            
         }
     }
 
