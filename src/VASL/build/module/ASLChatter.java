@@ -772,15 +772,17 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                         {
                                             if (l_strRestOfMsg.startsWith("Axis SAN"))
                                             {
+                                                l_strSAN = "Axis SAN";
                                                 specialMessages.add("Axis SAN");
                                                 l_strRestOfMsg = l_strRestOfMsg.substring("Axis SAN".length());
                                             } else if (l_strRestOfMsg.startsWith("Allied SAN"))
                                             {
+                                                l_strSAN = "Allied SAN";
                                                 specialMessages.add("Allied SAN");
                                                 l_strRestOfMsg = l_strRestOfMsg.substring("Allied SAN".length());
                                             } else if (l_strRestOfMsg.startsWith("Axis/Allied SAN"))
                                             {
-                                                specialMessages.add("Axis/Allied SAN");
+                                                l_strSAN = "Axis/Allied SAN";                                                specialMessages.add("Axis/Allied SAN");
                                                 l_strRestOfMsg = l_strRestOfMsg.substring("Axis/Allied SAN".length());
                                             }
                                         }
