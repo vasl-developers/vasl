@@ -136,6 +136,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
 
             // shrink the boundaries of overlay rectangles to limit LOS Checking disablement
             try {
+                overlayBoundaries.clear();
                 for (Board board : theMap.getBoards()) {
                     ASLBoard b = (ASLBoard) board;
                     final Enumeration overlays = b.getOverlays();
