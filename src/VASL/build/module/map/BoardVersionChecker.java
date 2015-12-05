@@ -124,11 +124,6 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
 
     public void setup(boolean gameStarting) {
 
-    }
-
-/*
-    public void setup(boolean gameStarting) {
-
         if (gameStarting) {
 
             if (boardVersions != null) {
@@ -139,115 +134,8 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
                 }
                 GameModule.getGameModule().warn(info);
             }
-
-            if (boardVersions != null) {
-                String info = "Using board(s): ";
-                Vector<String> obsolete = new Vector<String>();
-                for (Board board : map.getBoards()) {
-                    ASLBoard b = (ASLBoard) board;
-
-                    String availableVersion = boardVersions.getProperty(b.getName(), b.getVersion());
-                    if (!availableVersion.equals(b.getVersion())) {
-
-                        // try to update board if out of date
-                        GameModule.getGameModule().warn("Board " + b.getName() + " is out of date. Updating...");
-                        if (!updateBoard(b.getName())) {
-                            GameModule.getGameModule().warn("Update failed");
-                            info += b.getName() + "(v" + b.getVersion() + ") ";
-                            obsolete.addElement(b.getName());
-                        }
-                        else {
-                            info += b.getName() + "(v" + availableVersion + ") ";
-                            GameModule.getGameModule().warn("Update succeeded");
-                        }
-                    }
-                    else {
-                        info += b.getName() + "(v" + b.getVersion() + ") ";
-                    }
-
-                    String msg = null;
-                    if (obsolete.size() == 1) {
-                        String name = obsolete.firstElement();
-                        msg = "Version " + boardVersions.getProperty(name) + " of board " + name + " is now available. Please go to \n" + boardPageURL;
-                    } else if (obsolete.size() > 1) {
-                        StringBuffer buff = new StringBuffer();
-                        for (int i = 0, j = obsolete.size(); i < j; ++i) {
-                            buff.append(obsolete.elementAt(i));
-                            if (i < j - 2) {
-                                buff.append(", ");
-                            } else if (i < j - 1) {
-                                buff.append(" and ");
-                            }
-                        }
-                        msg = "New versions of boards " + buff + " are available. Please go to \n" + boardPageURL;
-                    }
-                    if (msg != null) {
-                        final String message = msg;
-                        Runnable runnable = new Runnable() {
-                            public void run() {
-                                JOptionPane.showMessageDialog(map.getView().getTopLevelAncestor(), message);
-                            }
-                        };
-                        SwingUtilities.invokeLater(runnable);
-                    }
-                }
-                GameModule.getGameModule().warn(info);
-
-                if (overlayVersions != null) {
-                    obsolete = new Vector<String>();
-                    for (Board board : map.getBoards()) {
-                        ASLBoard b = (ASLBoard) board;
-                        for (Enumeration e2 = b.getOverlays(); e2.hasMoreElements(); ) {
-                            Overlay o = (Overlay) e2.nextElement();
-                            if (o.getClass().equals(Overlay.class)) { // Don't check for SSROverlays
-                                String name = o.getFile().getName();
-                                String availableVersion = overlayVersions.getProperty(name, o.getVersion());
-                                if (!availableVersion.equals(o.getVersion())) {
-
-                                    // try to update overlay if out of date
-                                    GameModule.getGameModule().warn("Overlay " + name + " is out of date. Updating...");
-                                    if (!updateOverlayFile(name)) {
-                                        obsolete.addElement(b.getName());
-                                        GameModule.getGameModule().warn("Overlay update failed");
-                                    }
-                                    else {
-                                        GameModule.getGameModule().warn("Overlay update succeeded");
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    String msg = null;
-                    if (obsolete.size() == 1) {
-                        String name = obsolete.firstElement();
-                        msg = "Version " + overlayVersions.getProperty(name) + " of overlay " + name + " is now available.\n" + boardPageURL;
-                    } else if (obsolete.size() > 1) {
-                        StringBuffer buff = new StringBuffer();
-                        for (int i = 0, j = obsolete.size(); i < j; ++i) {
-                            buff.append(obsolete.elementAt(i));
-                            if (i < j - 2) {
-                                buff.append(", ");
-                            } else if (i < j - 1) {
-                                buff.append(" and ");
-                            }
-                        }
-                        msg = "New versions of overlays " + buff + " are available.\n" + boardPageURL;
-                    }
-                    if (msg != null) {
-                        final String message = msg;
-                        Runnable runnable = new Runnable() {
-                            public void run() {
-                                JOptionPane.showMessageDialog(map.getView().getTopLevelAncestor(), message);
-                            }
-                        };
-                        SwingUtilities.invokeLater(runnable);
-                    }
-                }
-            }
         }
     }
-*/
-
 
     private Properties readVersionList(String s) {
         Properties p = null;
