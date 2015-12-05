@@ -197,8 +197,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
         currentBoards = new ArrayList<Board>(getBoardsFromControls());
 
         //set DB state on finish
-        DoubleBlindViewer.doubleBlindViewer.enableDB(enableDB);
-        DoubleBlindViewer.setMap((ASLMap) map);
+/*        DoubleBlindViewer.doubleBlindViewer.enableDB(enableDB);
+        DoubleBlindViewer.setMap((ASLMap) map);*/
 
     }
 
@@ -679,6 +679,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
             add(deluxe);
 
             // check-box for DB flag
+/*
             JCheckBox db = new JCheckBox("Enable double blind");
             if(DoubleBlindViewer.doubleBlindViewer != null){
                 db.setSelected(DoubleBlindViewer.doubleBlindViewer.isEnabled());
@@ -688,6 +689,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
                     enableDB = e.getStateChange() == ItemEvent.SELECTED;
                 }
             });
+*/
             // add(db);
 
             //setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS))
