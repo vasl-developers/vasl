@@ -1,0 +1,7 @@
+<SSRControls>
+ <Option name="Board 70 Special overlays">
+   <Checkbox name="">
+         <entry name="AP99 - Bare Foot Beating (includes PTO)" rule="SSO_AP99" text="Bd70 Scen AP99 SSO"/>
+ </Checkbox>
+    </Option>
+</SSRControls>
