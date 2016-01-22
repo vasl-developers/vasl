@@ -11,7 +11,7 @@ Scripts to create Patrick Ireland's standard VASL directory structures, and down
 These instructions were verified on VASSAL 3.2.15 and VASL 6.2.2
 
 ### Download the script
-1. Right-click on the link [vasl_setup.bat](https://raw.githubusercontent.com/vasl-devleopers/vasl/develop/install/vasl_setup.bat), and chose "Save as..." the file to your Downloads folder
+1. Right-click on the link [vasl_setup.bat](https://raw.githubusercontent.com/vasl-developers/vasl/develop/install/vasl_setup.bat), and chose "Save as..." the file to your Downloads folder
 
 ### Update the script
 **If you want to use the default ASL directory location and VASL version, skip this step and move on to "Run the script"**
@@ -90,7 +90,7 @@ These instructions were verified on VASSAL 3.2.15 and VASL 6.2.2
 
 ### Download the script
 1. Launch your browser (i.e. Safari, Firefox, Chrome)
-2. Right-click on the link [vasl_setup.sh](https://raw.githubusercontent.com/vasl-devleopers/vasl/develop/install/vasl_setup.sh), and chose "Save as..." (or "Download Linked File As...") the file to your Downloads folder
+2. Right-click on the link [vasl_setup.sh](https://raw.githubusercontent.com/vasl-developers/vasl/develop/install/vasl_setup.sh), and chose "Save as..." (or "Download Linked File As...") the file to your Downloads folder
 3. Close your browser
 
 ### Update the script
@@ -170,7 +170,7 @@ These instructions were verified on VASSAL 3.2.15 and VASL 6.2.2
 
 ### Download the script
 1. Launch your browser (i.e. Safari, Firefox, Chrome)
-2. Right-click on the link [vasl_setup.sh](https://raw.githubusercontent.com/vasl-devleopers/vasl/develop/install/vasl_setup.sh), and chose "Save as..." (or "Download Linked File As...") the file to your Downloads folder
+2. Right-click on the link [vasl_setup.sh](https://raw.githubusercontent.com/vasl-developers/vasl/develop/install/vasl_setup.sh), and chose "Save as..." (or "Download Linked File As...") the file to your Downloads folder
 3. Close your browser
 
 ### Update the script

@@ -84,7 +84,7 @@ download_and_unzip "http://downloads.sourceforge.net/vassalengine/VASSAL-${VASSA
 mv "${HOME}/Downloads/VASSAL-${VASSAL_VERSION}" "${VASSAL_ROOT}"
 
 echo Downloading the VASSAL application shortcut icon
-download_file "https://raw.githubusercontent.com/vasl-developer/vasl/develop/install/VASSAL.png" "${VASSAL_ROOT}/lib/VASSAL.png"
+download_file "https://raw.githubusercontent.com/vasl-developers/vasl/develop/install/VASSAL.png" "${VASSAL_ROOT}/lib/VASSAL.png"
 
 echo Creating VASSAL application shortcut
 cat - >"${HOME}/.local/share/applications/vassal.desktop" <<EOF
