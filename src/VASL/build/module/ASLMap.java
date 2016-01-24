@@ -283,6 +283,10 @@ public class ASLMap extends Map {
                     // read the LOS data and flip/crop the board if needed
                     VASL.LOS.Map.Map LOSData = board.getLOSData(sharedBoardMetadata.getTerrainTypes());
 
+                    // if the board is not cropped such that left- and right-most hex cols mirror geo board turn off LOS
+                    if((int) (board.getCropBounds().getWidth()/LOSData.getHexWidth())%2 == 1){
+                        throw  new BoardException("Board " + board.getName() + " is not properly cropped - LOS disabled");
+                    }
                     // apply the SSR changes, crop and flip if needed
                     board.applyColorSSRules(LOSData, sharedBoardMetadata.getLOSSSRules());
 
