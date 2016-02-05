@@ -10,6 +10,9 @@ underlay CactusPattern.gif HedgeGreen
 DenseJungle
 2_DenseJungle.gif 1,1
 
+LightWoods
+2_LightWoods.gif 0,0
+
 NoCliffs 
 2_NoCliffs.gif 487,90
 
@@ -32,7 +35,7 @@ SSO_15
 2_SSO_15.gif 479,227
 
 SSO_14
-2_SSO_14.gif 208,8
+2_SSO_14.gif 0,0
 
 SSO_O
 2_SSO_O.png 0,484

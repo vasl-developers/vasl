@@ -1,6 +1,9 @@
 <SSRControls>
  <Option name="Board 3 Special overlays">
  <Checkbox name="">
+         <entry name="14: Silence That Gun" rule="SSO_14" text="scenario 14 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
          <entry name="A8: The Agony of Doom" rule="SSO_A8" text="scenario A8 overlay"/>
  </Checkbox>
  <Checkbox name="">

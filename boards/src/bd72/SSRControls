@@ -1,0 +1,7 @@
+<SSRControls>
+ <Option name="Board 72 Special overlays">
+ <Checkbox name="">
+         <entry name="Stream to Open Ground" rule="BSO_72_NoStream" text="Stream to OG"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

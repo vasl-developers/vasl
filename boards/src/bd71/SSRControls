@@ -1,0 +1,7 @@
+<SSRControls>
+ <Option name="Board 71 Special overlays">
+ <Checkbox name="">
+         <entry name="AP101: When I Call Roll (complete SSR1; no other terrain transformations req'd)" rule="SSO_AP101" text="scenario AP101 overlay"/>
+ </Checkbox>
+   </Option>
+</SSRControls>
