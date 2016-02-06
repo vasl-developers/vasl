@@ -17,8 +17,6 @@
     height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
-
-	01/29/2016 Initial Issue
 -->
 <boardMetadata name="72" version="6.0" versionDate="Jan 2016" author="ATC" boardImageFileName="bd72.gif" hasHills="FALSE" width="33" height="10">
 
@@ -31,10 +29,13 @@
         <buildingType hexName="O4" buildingTypeName="Stone Building, 2 Level" />
 
 	-->
-
-    <buildingTypes>
-
-	
+	<buildingTypes>
+		<buildingType hexName="S1" buildingTypeName="Stone Building, 1 Level" />
+		<buildingType hexName="S2" buildingTypeName="Stone Building, 1 Level" />
+		<buildingType hexName="P3" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="P4" buildingTypeName="Wooden Building, 1 Level" />
+    	</buildingTypes>
+    	
 	<overlaySSRules>
 	    <!--
 			Scenario-specific underlay rules. 
@@ -70,8 +71,8 @@
 			y - y coordinate of overlay upper left
 		-->
 		<overlaySSRule name="DenseJungle" image="72_DenseJungle.gif" x="0" y="0" />
-		<overlaySSRule name="BridgeToFord"> image="72_Bridge2Ford.gif" x="0" y="0" />
-		<overlaySSRule name="NoBridge"> image="72_NoBridge.gif" x="0" Y="0" />
+		<overlaySSRule name="BridgeToFord" image="72_Bridge2Ford.gif" x="0" y="0" />
+		<overlaySSRule name="NoBridge" image="72_NoBridge.gif" x="0" y="0" />
 		<overlaySSRule name="NoWoodsRoads" image="72_NoWoodsRoads.gif" x="0" y="0" />
 		<overlaySSRule name="RoadsToPaths" image="72_WoodsRoad2Path.gif" x="0" y="0" />
 		<overlaySSRule name="WallsToOG" image="72_Walls2OG.gif" x="0" y="0" />

@@ -30,7 +30,10 @@
         <buildingType hexName="O4" buildingTypeName="Stone Building, 2 Level" />
 
 	-->
-		
+	<buildingTypes>
+	
+        </buildingTypes>
+	
 	<overlaySSRules>
 	    <!--
 			Scenario-specific underlay rules. 
@@ -44,7 +47,7 @@
 				<color name="WallGrey1" />
 				<color name="WallGrey2" />
 			</underlaySSRule>			
-		-->
+			-->
 						
 	    <!--
 			Scenario-specific overlay rules. 
