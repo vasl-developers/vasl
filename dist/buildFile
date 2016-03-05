@@ -5818,7 +5818,7 @@
         </VASSAL.build.widget.ListWidget>
         <VASSAL.build.widget.ListWidget divider="-1" entryName="ru" height="0" width="0">
             <VASSAL.build.widget.PieceSlot entryName="?" gpid="4603" height="48" width="68">+/null/prototype;DBCommon	prototype;Unit\	concealment;somevalue;ru\\	piece;K;D;ru\/ruqmark;?/	\	\\	null;0;0;4603</VASSAL.build.widget.PieceSlot>
-            <VASSAL.build.widget.PieceSlot entryName="?" gpid="4604" height="60" width="80">+/null/prototype;DBCommon	rotate;6;88,130;90,130;CA cw;CA ccw;;;\	prototype;Unit58\\	concealment;somevalue;ru\\\	piece;K;D;ru\/ruqmark58;?/	0\	\\	\\\	null;0;0;4604</VASSAL.build.widget.PieceSlot>
+            <VASSAL.build.widget.PieceSlot entryName="L?" gpid="4604" height="60" width="80">+/null/prototype;DBCommon	rotate;6;88,130;90,130;CA cw;CA ccw;;;\	prototype;Unit58\\	concealment;somevalue;ru\\\	piece;K;D;ru\/ruqmark58;?/	0\	\\	\\\	null;0;0;4604</VASSAL.build.widget.PieceSlot>
             <VASSAL.build.widget.ListWidget divider="-1" entryName="WRK" height="0" width="0">
                 <VASSAL.build.widget.PieceSlot entryName="Dozer Wreck" gpid="4605" height="60" width="80">+/null/prototype;DBGlobal	info;no CS\	prototype;ruWRK\\	piece;K;D;sh\/DozerUb;Dozer Wreck/	\	\\	null;0;0;4605</VASSAL.build.widget.PieceSlot>
                 <VASSAL.build.widget.PieceSlot entryName="Armored Dozer Wreck" gpid="4606" height="60" width="80">+/null/prototype;DBGlobal	prototype;DBCommon\	info;no CS\\	prototype;ruWRK\\\	piece;K;D;sh\/DozerAb;Armored Dozer Wreck/	\	\\	\\\	null;0;0;4606</VASSAL.build.widget.PieceSlot>
