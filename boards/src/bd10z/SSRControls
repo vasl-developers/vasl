@@ -1,0 +1,16 @@
+<SSRControls>
+ <Option name="Board 10z Special overlays">
+ <Checkbox name="">
+         <entry name="Remove the Pond" rule="BSO_10z_PondToOG" text="Bd10z Remove Pond"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Woods Path is Dirt Road" rule="BSO_10z_WoodsPathToRoad" text="Bd10z Woods Path To Dirt Rd"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="No Bridge" rule="BSO_10z_NoBridge" text="No Bridge"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="No Stream" rule="BSO_10z_NoStream" text="No Stream"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

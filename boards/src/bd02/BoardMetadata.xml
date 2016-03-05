@@ -18,7 +18,7 @@
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
 -->
-<boardMetadata name="02" version="6.1" versionDate="Nov 2013" author="TR" boardImageFileName="bd02.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="02" version="6.3" versionDate="Nov 2015" author="TR" boardImageFileName="bd02.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -61,12 +61,13 @@
 		<overlaySSRule name="ShellholesToPalmTrees" image="2_Shellhole2Palm.gif" x="1068" y="314" />
 		<overlaySSRule name="2_BSO_TR2-1" image="2_BSO_TR2-1.gif" x="848" y="100" />
 		<overlaySSRule name="SSO_15" image="2_SSO_15.gif" x="479" y="227" />
-		<overlaySSRule name="SSO_14" image="2_SSO_14.gif" x="208" y="8" />
+		<overlaySSRule name="SSO_14" image="2_SSO_14.gif" x="0" y="0" />
 		<overlaySSRule name="SSO_O" image="2_SSO_O.png" x="0" y="484" />
 		<overlaySSRule name="SSO_T11" image="2_SSO_T11.gif" x="1200" y="111" />
 		<overlaySSRule name="SSO_48" image="2_SSO_48.gif" x="208" y="8" />
 		<overlaySSRule name="NoRoads" image="2_NoRoads.gif" x="1" y="1" />
 		<overlaySSRule name="SSO_AP73" image="2_SSO_AP73.gif" x="1" y="1" />
+		<overlaySSRule name="LightWoods" image="2_LightWoods.gif" x="0" y="0" />
 
 	</overlaySSRules>
 	
