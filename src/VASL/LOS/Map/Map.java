@@ -205,13 +205,20 @@ public class Map  {
     }
 
 	/**
-	 * @return the hex height
+	 * @return the hex width
 	 */
-	public double getHexHeight() {
-		return hexHeight;
+	public double getHexWidth() {
+		return hexWidth;
 	}
 
-	/**
+    /**
+     * @return the hex height
+     */
+    public double getHexHeight() {
+        return hexHeight;
+    }
+
+    /**
      * Returns the <code>Terrain</code> type code for the pixel at row, col of
      * the map image.
      * @param row the row coordinate
