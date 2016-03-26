@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <!--
     This file contains the board metadata specific to a VASL board archive.
     Create one file per VASL board and place it in the archive.
@@ -18,7 +18,7 @@
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
 -->
-<boardMetadata name="40" version="6.0" versionDate="Jan 2012" author="TR" boardImageFileName="bd40.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="40" version="6.1" versionDate="Jan 2012" author="TR" boardImageFileName="bd40.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -77,6 +77,7 @@
 	<overlaySSRule name="SSO_40_G28" image="SSO_40_G28.gif" x="438" y="7" />
 	<overlaySSRule name="SSO_AP73" image="40_SSO_AP73.gif" x="22" y="1" />
 	<overlaySSRule name="SSO_AP77" image="40_SSO_AP77.gif" x="1" y="14" />
+	<overlaySSRule name="SSO_AP103” image="40_SSO_AP103.gif" x=“0” y=“0” />
 	<overlaySSRule name="DenseJungle" image="40_DenseJungle.gif" x="24" y="1" />
 	<overlaySSRule name="LightWoods" image="40_LightWoods.gif" x="33" y="1" />
 	<overlaySSRule name="BridgeToFord" image="40_BridgeToFord.gif" x="75" y="328" />
