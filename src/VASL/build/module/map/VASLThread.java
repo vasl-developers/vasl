@@ -551,7 +551,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                         int ovrheight = (int)(showovrboundaries.height * ovrZoom);
                         g.drawRect(drawboundaries.x, drawboundaries.y, ovrwidth, ovrheight);
                         g.setColor(oldcolor);
-                        lastRangeRect.add(drawText(g,targetLOSPoint.x - 20, targetLOSPoint.y + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(), "LOS Check Disabled - Overlay nearby"));
+                        lastRangeRect.add(drawText(g,targetLOSPoint.x - 20, targetLOSPoint.y + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(), "LOS Check Disabled - Overlay nearby. Range: " + LOSMap.range(source.getHex(), target.getHex())));
                     } else {
                         if (isVerbose()) {
                             lastRangeRect = drawText(g,
