@@ -1,2 +1,0 @@
-YASL1 and YASL10 overlays for the Nor'Easter XX Pack created by request of Carl Nogueira.
-(http://forums.gamesquad.com/showthread.php?126342-Nor-Easter-XX-ASL-Pack-is-out&p=1814677&viewfull=1#post1814677)
