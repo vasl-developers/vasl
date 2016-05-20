@@ -128,7 +128,6 @@ public class ASLPieceMover extends PieceMover {
     /**
      * When a piece is moved ensure all pieces are properly stacked
      * This fixes a bug where stacks can be slightly off on older versions of VASL
-     * @param p
      */
     private Command snapErrantPieces() {
 
@@ -142,14 +141,14 @@ public class ASLPieceMover extends PieceMover {
             if (piece instanceof Stack) {
                 for (Iterator<GamePiece> i = ((Stack) piece).getPiecesInVisibleOrderIterator(); i.hasNext();) {
                     final GamePiece p = i.next();
-                    if(!p.getPosition().equals(m.snapTo(p.getPosition()))) {
+                    if(p.getLocalizedProperty(Properties.NO_STACK) == Boolean.FALSE  && !p.getPosition().equals(m.snapTo(p.getPosition()))) {
                         // System.out.println("Piece " + p.getName() + " is off - Current: " + p.getPosition() + " Snap: " + m.snapTo(p.getPosition()));
                         pieces.add(0, p);
                     }
                 }
             }
             else if (piece.getParent() == null) {
-                if(!piece.getPosition().equals(m.snapTo(piece.getPosition()))) {
+                if(piece.getLocalizedProperty(Properties.NO_STACK) == Boolean.FALSE && !piece.getPosition().equals(m.snapTo(piece.getPosition()))) {
                     // System.out.println("Piece " + piece.getName() + " is off - Current: " + piece.getPosition() + " Snap: " + m.snapTo(piece.getPosition()));
                     pieces.add(0, piece);
                 }
