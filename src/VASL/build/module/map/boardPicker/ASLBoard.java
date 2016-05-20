@@ -129,7 +129,7 @@ public class ASLBoard extends Board {
 
         } catch (IOException e) {
 
-            ErrorDialog.dataError(new BadDataReport("Unable to open board file", boardFile.getName(), e));
+            ErrorDialog.dataError(new BadDataReport("Unable to open board file", archiveFile.getName(), e));
         }
 
         boardFile = archiveFile;
