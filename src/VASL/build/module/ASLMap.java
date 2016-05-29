@@ -247,8 +247,11 @@ public class ASLMap extends Map {
             mapBoundary.height -= edgeBuffer.height;
 
             // create the VASL map
+            //DR added code to pass hexWidth and HexHeight
             VASLBoard b = VASLBoards.get(0); // we can use the geometry of any board - assuming all are the same
             VASLMap = new VASL.LOS.Map.Map(
+                    hexWidth,
+                    hexHeight,
                     (int) Math.round(mapBoundary.width/ b.getHexWidth()) + 1,
                     (int) Math.round(mapBoundary.height/ b.getHexHeight()),
                     b.getA1CenterX(),
@@ -299,12 +302,22 @@ public class ASLMap extends Map {
                     }
 
                     // add the board LOS data to the map
-                    if (!VASLMap.insertMap(
-                            LOSData,
-                            VASLMap.gridToHex(board.getBoardLocation().x, board.getBoardLocation().y + (nullBoards ? 1 : 0)))) {
+                    // .insertMap is designed to work with only geo board thus need to test for non-geo boards
+                    // DR added code to handle maps of one board such as HASL maps - need a better approach
+                    if (VASLBoards.size()==1) {
+                        // just add board LOS data for one board
+                        VASLMap.insertOneMap(LOSData);
+                    }
+                    else {
+                        if (board.getWidth()==33 && board.getHeight()==10 || board.getWidth()==17 && board.getHeight()==20) {
+                            if (!VASLMap.insertMap(
+                                    LOSData,
+                                    VASLMap.gridToHex(board.getBoardLocation().x, board.getBoardLocation().y + (nullBoards ? 1 : 0)))) {
 
-                        // didn't work, so assume an unsupported feature
-                        throw  new BoardException("Unable to insert board " + board.getName() + " into the VASL map - LOS disabled");
+                                // didn't work, so assume an unsupported feature
+                                throw new BoardException("Unable to insert board " + board.getName() + " into the VASL map - LOS disabled");
+                            }
+                        }
                     }
                 }
             }

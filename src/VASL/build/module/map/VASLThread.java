@@ -539,6 +539,9 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                             g.setColor(Color.white);
                     }
                     g.setFont(RANGE_FONT);
+                    // code added by DR to handle rooftop levels
+                    double finalLevel=0;
+                    double leveladj=0;
                     // inform user that LOS checking disabled due to overlay in LOS - show overlay boundaries and show text message
                     if (losOnOverlay) {
                         ovrZoom = map.getZoom();
@@ -553,16 +556,20 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                         g.setColor(oldcolor);
                         lastRangeRect.add(drawText(g,targetLOSPoint.x - 20, targetLOSPoint.y + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(), "LOS Check Disabled - Overlay nearby. Range: " + LOSMap.range(source.getHex(), target.getHex())));
                     } else {
+                        if(source.getName().contains("Rooftop")) {
+                            leveladj=-0.5;
+                        }
+                        finalLevel= source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj ;
                         if (isVerbose()) {
                             lastRangeRect = drawText(g,
                                     sourceLOSPoint.x - 20,
                                     sourceLOSPoint.y + (shiftSourceText ? shift : 0) - g.getFontMetrics().getDescent(),
-                                    source.getName() + "  (Level " + (source.getBaseHeight() + source.getHex().getBaseHeight() + ")"));
+                                    source.getName() + "  (Level " + finalLevel + ")");
                         } else if (source.getBaseHeight() != 0) {
                             lastRangeRect = drawText(g,
                                     sourceLOSPoint.x - 20,
                                     sourceLOSPoint.y + (shiftSourceText ? shift : 0) - g.getFontMetrics().getDescent(),
-                                    "Level " + (source.getBaseHeight() + source.getHex().getBaseHeight()));
+                                    "Level " + finalLevel );
                         }
 
                         // draw the target elevation
@@ -583,16 +590,22 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                             default:
                                 g.setColor(Color.white);
                         }
+                        // code added by DR to handle rooftop levels
+                        leveladj=0;
+                        if(target.getName().contains("Rooftop")) {
+                            leveladj=-0.5;
+                        }
+                        finalLevel= target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj ;
                         if (isVerbose()) {
                             lastRangeRect.add(drawText(g,
                                     targetLOSPoint.x - 20,
                                     targetLOSPoint.y + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
-                                    target.getName() + "  (Level " + (target.getBaseHeight() + target.getHex().getBaseHeight() + ")")));
+                                    target.getName() + "  (Level " + finalLevel + ")"));
                         } else if (target.getBaseHeight() != 0) {
                             lastRangeRect.add(drawText(g,
                                     targetLOSPoint.x - 20,
                                     targetLOSPoint.y + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
-                                    "Level " + (target.getBaseHeight() + target.getHex().getBaseHeight())));
+                                    "Level " + finalLevel ));
                         }
                         // draw the verbose text
                         g.setColor(Color.black);

@@ -316,8 +316,8 @@ public class BoardArchive {
                     map  = new Map(width, height, terrainTypes);
                 }
                 else {
-                    map = new Map(width, height, getA1CenterX(), getA1CenterY(), gridWidth, gridHeight, terrainTypes);
-
+                    //DR added code to pass hexWidth and Hexheight
+                    map = new Map(getHexWidth(), getHexHeight(), width, height, getA1CenterX(), getA1CenterY(), gridWidth, gridHeight, terrainTypes);
                 }
 
                 // read the terrain and elevations grids
@@ -328,8 +328,9 @@ public class BoardArchive {
 
                     }
                 }
-
-                map.resetHexTerrain();
+                // code added by DR to enbable rr embankments in RB
+                // set the rr embankments
+                map.setRBrrembankments(metadata.getRBrrembankments());
 
                 // read the hex information
                 for (int col = 0; col < map.getWidth(); col++) {
@@ -343,6 +344,9 @@ public class BoardArchive {
                         }
                     }
                 }
+
+                // code moved from before stairway loop by DR to enable factory quasi-levels in stairway hexes
+                map.resetHexTerrain();
 
                 // set the slopes
                 map.setSlopes(metadata.getSlopes());
@@ -848,6 +852,10 @@ public class BoardArchive {
         else {
             return SSRControlsFile.getOptionNodes();
         }
+    }
+
+    public static String getSharedBoardMetadataFileName() {
+        return "SharedBoardMetadata.xml";
     }
 }
 
