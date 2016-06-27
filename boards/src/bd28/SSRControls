@@ -1,28 +1,25 @@
 <SSRControls>
-   <Option name="Board 28 Special Overlays">
-          <Checkbox name="">
-       <entry name="Use ETO colors" rule="DTOtoETO"/>
-     </Checkbox>
-	 	  <Checkbox name="">
-        <entry name="Hammada is Open Ground" rule="HammadaToOG"/>
-      </Checkbox>
-	  <Checkbox name="">
-        <entry name="Scrub is Open Ground" rule="ScrubToOG"/>
-      </Checkbox>
-	 <Checkbox name="">
-         <entry name="Scenario 38 - Escape From Derna" rule="SSO_28_38" text="Bd28 Scen 38 SSO"/>
-       </Checkbox>
-	   	 <Checkbox name="">
-         <entry name="Scenario 58 - Ci Arrendiamo" rule="SSO_28_58" text="Bd28 Scen 58 SSO"/>
-       </Checkbox>
-	   	   	 <Checkbox name="">
-         <entry name="Scenario 65 - Red Star Red Sun" rule="SSO_28_65" text="Bd28 Scen 65 SSO"/>
-       </Checkbox>
-	   	   	   	 <Checkbox name="">
-         <entry name="Scenario ASLUG16 - Bunshin Gogeki" rule="SSO_28_ASLUG16" text="Bd28 Scen ASLUG16 SSO"/>
-       </Checkbox>
-	   	 <Checkbox name="">
-         <entry name="Scenario G20 - Camp Nibeiwa" rule="SSO_28_G20" text="Bd28 Scen G20 SSO"/>
-       </Checkbox>
-    </Option>
+  <Option name="Board 28 Special Overlays">
+    <Checkbox name="">
+      <entry name="Hammada is Open Ground" rule="HammadaToOG"/>
+    </Checkbox>
+    <Checkbox name="">
+      <entry name="Scrub is Open Ground" rule="ScrubToOG"/>
+    </Checkbox>
+    <Checkbox name="">
+      <entry name="Scenario 38 - Escape From Derna" rule="SSO_28_38" text="Bd28 Scen 38 SSO"/>
+    </Checkbox>
+    <Checkbox name="">
+      <entry name="Scenario 58 - Ci Arrendiamo" rule="SSO_28_58" text="Bd28 Scen 58 SSO"/>
+    </Checkbox>
+    <Checkbox name="">
+      <entry name="Scenario 65 - Red Star Red Sun" rule="SSO_28_65" text="Bd28 Scen 65 SSO"/>
+    </Checkbox>
+    <Checkbox name="">
+      <entry name="Scenario ASLUG16 - Bunshin Gogeki" rule="SSO_28_ASLUG16" text="Bd28 Scen ASLUG16 SSO"/>
+    </Checkbox>
+    <Checkbox name="">
+      <entry name="Scenario G20 - Camp Nibeiwa" rule="SSO_28_G20" text="Bd28 Scen G20 SSO"/>
+    </Checkbox>
+  </Option>
 </SSRControls>
