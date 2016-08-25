@@ -599,6 +599,8 @@ public class Hex {
                     !"Stone Building".equals(centerLocationTerrain.getName()) &&
                     !(centerLocationTerrain.getLOSCategory() == Terrain.LOSCategories.FACTORY)) {
                 if (isMultihexBuilding()) {
+                    Terrain cellarterrain;
+                    cellarterrain = map.getTerrain("Cellar");
                     final Location l = new Location(
                             centerLocation.getName() + " Cellar ",
                             -1,
@@ -606,7 +608,7 @@ public class Hex {
                             centerLocation.getLOSPoint(),
                             null,
                             this,
-                            centerLocationTerrain
+                            cellarterrain
                     );
 
                     previousLocation.setDownLocation(l);
@@ -620,9 +622,10 @@ public class Hex {
             // need to ignore buildings without upper level locations - bit of a hack so we can use the building height
             if (!"Wooden Building".equals(centerLocationTerrain.getName()) &&
                     !"Stone Building".equals(centerLocationTerrain.getName()) &&
-                    !centerLocationTerrain.getName().contains("Roofless")) {
+                    !centerLocationTerrain.isRoofless()) {
                 if (isMultihexBuilding()) {
-
+                    Terrain roofterrain;
+                    roofterrain = map.getTerrain("Rooftop");
                     // move to top level
                     int level = 0;
                     while (previousLocation.getUpLocation() != null) {
@@ -639,7 +642,7 @@ public class Hex {
                             centerLocation.getLOSPoint(),
                             null,
                             this,
-                            centerLocationTerrain
+                            roofterrain
                     );
 
                     previousLocation.setUpLocation(l);
@@ -688,11 +691,13 @@ public class Hex {
         // set the hex base height
         setBaseHeight(map.getGridElevation((int) centerLocation.getLOSPoint().getX(), (int) centerLocation.getLOSPoint().getY()));
 
-        // set inherent terrain in the hex grid
-        setInherentTerrain();
+        // next two methods reversed by DR
 
         // set the depression terrain
         setDepressionTerrain();
+
+        // set inherent terrain in the hex grid
+        setInherentTerrain();
 
         // reset the hexside terrain
          resetHexsideTerrain();
@@ -761,44 +766,116 @@ public class Hex {
     }
 
     /**
-     * Corrects hexes with single-hex bridges by making the center location the road location
+     * Corrects hexes with single-hex bridges by adding a new location (either bridge or depression)
      */
     private void fixBridges() {
 
         if(hasBridgeTerrain()) {
 
+            // determine if existing location is bridge or depression terrain
+
+            if (centerLocation.isDepressionTerrain()) {
+                // need to add new bridge location
+                final Location newLocation = new Location(centerLocation);
+                newLocation.setDepressionTerrain(null);
+                //newLocation.setBaseHeight(baseHeight + 1);
+                newLocation.setTerrain(getBridgeTerrain());
+                newLocation.setDownLocation(centerLocation);
+                centerLocation.setUpLocation(newLocation);
+            }
+            else if (centerLocation.getTerrain().isBridge()) {
+                // need to add new depression location
+                final Location newLocation = new Location(centerLocation);
+                newLocation.setDepressionTerrain(getDepressionTerrain());
+                // added by DR; this is a wonky fix to deal with bridges in non-zero level terrain; not sure why its needed but it works, otherwise bridges and depressions in valleys are two levels apart and those in hills are at same level
+                int depressionadj=0;
+                if (baseHeight ==0 ){
+                    depressionadj=1;
+                }
+                else {
+                    if (baseHeight>0){
+                        depressionadj=2;
+                    }
+                }
+                // DR code not used as boards do not use Elevated Road terrain; see board 13 as example
+                // leaves bug unfixed, depressions below Elevated roads will be one level below instead of two
+                //for (int x = 0; x < 6; x++) {
+                //    // get the adjacent hex for this hexside
+                //    Hex h2 = map.getAdjacentHex(this, x);
+                //    if (h2 != null) {
+                //        // elevated road?
+                //        if (h2.getCenterLocation().getTerrain().getName().contains("Elevated Road")) {
+                //            depressionadj=depressionadj-1;
+                //        }
+                //    }
+                //}
+                newLocation.setBaseHeight(baseHeight - depressionadj);
+                newLocation.setTerrain(getDepressionTerrain());
+                newLocation.setUpLocation(centerLocation);
+                centerLocation.setDownLocation(newLocation);
+            }
+
+            // DR removed the following code as it did not seem to work properly
+
             // make the center location the road location by removing the depression terrain
-            final Terrain depressionTerrain = centerLocation.getDepressionTerrain();
+            //final Terrain depressionTerrain = centerLocation.getDepressionTerrain();
 
-            final int height = centerLocation.getBaseHeight();
-            centerLocation.setDepressionTerrain(null);
-            centerLocation.setBaseHeight(height);
+            //final int height = centerLocation.getBaseHeight();
+            //centerLocation.setDepressionTerrain(null);
+            //centerLocation.setBaseHeight(height);
 
-            final Location newLocation = new Location(centerLocation);
-            newLocation.setDepressionTerrain(depressionTerrain);
-            newLocation.setBaseHeight(baseHeight - 1);
+            //final Location newLocation = new Location(centerLocation);
+            //newLocation.setDepressionTerrain(depressionTerrain);
+            //newLocation.setBaseHeight(baseHeight - 1);
 
-            newLocation.setUpLocation(centerLocation);
-            centerLocation.setDownLocation(newLocation);
+            //newLocation.setUpLocation(centerLocation);
+            //centerLocation.setDownLocation(newLocation);
         }
     }
 
-    /**
-     * Set the depression terrain
-     */
-    private void setDepressionTerrain(){
+    private Terrain getBridgeTerrain(){
 
         final Rectangle rectangle = getHexBorder().getBounds();
         for(int x = rectangle.x; x < rectangle.x + rectangle.width; x++) {
             for(int y = rectangle.y; y < rectangle.y + rectangle.height; y++) {
 
-                if(rectangle.getBounds().contains(x,y) &&
+                if(getHexBorder().contains(x,y) &&
+                        map.onMap(x,y) &&
+                        map.getGridTerrain(x,y).isBridge()) {
+
+                    return map.getGridTerrain(x,y);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private Terrain getDepressionTerrain(){
+
+        final Rectangle rectangle = getHexBorder().getBounds();
+        for(int x = rectangle.x; x < rectangle.x + rectangle.width; x++) {
+            for(int y = rectangle.y; y < rectangle.y + rectangle.height; y++) {
+
+                if(getHexBorder().contains(x,y) &&
                         map.onMap(x,y) &&
                         map.getGridTerrain(x,y).isDepression()) {
 
-                    getNearestLocation(x, y).setDepressionTerrain(map.getGridTerrain(x, y));
+                    return map.getGridTerrain(x,y);
                 }
             }
+        }
+
+        return null;
+    }
+    /**
+     * Set the depression terrain
+     */
+    private void setDepressionTerrain(){
+
+        //code replaced by DR
+        if (centerLocation.getTerrain().isDepression()){
+            centerLocation.setDepressionTerrain(centerLocation.getTerrain());
         }
     }
 
@@ -875,15 +952,24 @@ public class Hex {
 		}
         else if(terr.isHexsideTerrain()) {
             hexsideTerrain[side] = terr;
-            if("Cliff".equals(terr.getName())) {
+            if(terr.isCliff()) {
                 hexsideHasCliff[side] = true;
             }
         }
 	}
 
 	public Location getHexsideLocation(int hexside){
+        //test code wrapped around return line to avoid break; DR
+        if (!(hexside ==-1)) {
 
-		return hexsideLocations[hexside];
+
+            return hexsideLocations[hexside];
+        }
+        else {
+            int reggie=0;
+            return hexsideLocations[reggie];
+        }
+
 	}
 
 	public void setHexsideLocationTerrain(int hexside, Terrain terr){

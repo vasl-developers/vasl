@@ -1164,7 +1164,7 @@
         <terrainType name="Wall" typeCode="72" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="128" mapColorGreen="127" mapColorBlue="127" LOSCategory="HEXSIDE"  />
         <terrainType name="Hedge" typeCode="73" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="46" mapColorGreen="131" mapColorBlue="47" LOSCategory="HEXSIDE"  />
         <terrainType name="Bocage" typeCode="74" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="51" mapColorGreen="163" mapColorBlue="50" LOSCategory="HEXSIDE"  />
-        <terrainType name="Cliff" typeCode="75" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="61" mapColorGreen="55" mapColorBlue="19" LOSCategory="OPEN"  />
+        <terrainType name="Cliff" typeCode="75" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="61" mapColorGreen="55" mapColorBlue="19" LOSCategory="HEXSIDE"  />
         <terrainType name="Rowhouse Wall" typeCode="76" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="1" mapColorGreen="0" mapColorBlue="0" LOSCategory="BUILDING"  />
         <terrainType name="Rowhouse Wall, 1 Level" typeCode="77" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="1" mapColorGreen="0" mapColorBlue="0" LOSCategory="BUILDING"  />
         <terrainType name="Rowhouse Wall, 2 Level" typeCode="78" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="2" mapColorRed="1" mapColorGreen="0" mapColorBlue="0" LOSCategory="BUILDING"  />
@@ -1247,8 +1247,9 @@
 		<terrainType name="Roofless Stone Factory, 2.5 Level" typeCode="171" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="2.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="2" mapColorRed="116" mapColorGreen="116" mapColorBlue="116" LOSCategory="FACTORY"  />
 		<terrainType name="Interior Factory Wall, 1 Level" typeCode="172" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="1" mapColorGreen="1" mapColorBlue="0" LOSCategory="FACTORY"  />
 		<terrainType name="Interior Factory Wall, 2 Level" typeCode="173" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="2" mapColorRed="1" mapColorGreen="1" mapColorBlue="0" LOSCategory="FACTORY"  />
+		<terrainType name="Cellar" typeCode="174" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="155" mapColorGreen="155" mapColorBlue="155" LOSCategory="BUILDING"  />
 
-    </terrainTypes>
+	</terrainTypes>
 
 	<colorSSRules>
 	

@@ -622,7 +622,6 @@ public class Map  {
             for (int row = 0; row < numRows; row++) {
 
                 // code added by DR to enable Roofless factory hexes
-                Terrain tempTerrain=status.currentTerrain;
 
                 status.currentTerrain = getGridTerrain(status.currentCol, status.currentRow);
                 status.groundLevel = getGridElevation(status.currentCol, status.currentRow); //int) elevationGrid[status.currentCol][status.currentRow];
@@ -641,10 +640,6 @@ public class Map  {
                     status.tempHex = gridToHex(status.currentCol, status.currentRow);
                 }
 
-                // are we in a new hex - if so need to reset previous terrain to enable roofless factory hexes, DR
-                if (!status.tempHex.equals(status.currentHex)) {
-                    status.previousTerrain=tempTerrain;
-                }
                 // LOS leaves the source building?
                 if (!status.LOSLeavesBuilding) {
                     if (!status.currentTerrain.isBuilding()) {
@@ -718,6 +713,11 @@ public class Map  {
             return false;
         }
 
+        // code added by DR to deal with cliff hexsides and higher level hex
+        // can ignore hex and hexside terrain in higher level hex when LOS along cliff hexside
+        if(status.currentTerrain.isCliff() && (hex.getBaseHeight()> status.targetElevation || hex.getBaseHeight() > status.sourceElevation)) {
+            return false;
+        }
         // force check of hexside terrain for hexes with inherent terrain
         // (e.g. for case where orchard hex has wall)
         if(status.currentTerrain.isHexsideTerrain() && hex.getCenterLocation().getTerrain().isInherentTerrain()) {
@@ -830,8 +830,6 @@ public class Map  {
         public String reason = "";
 
         public Terrain currentTerrain = null;
-        //code added by DR to enable Roofless factory hexes
-        public Terrain previousTerrain=null;
         public int currentTerrainHgt = 0;
         public int groundLevel = -9999;
 
@@ -886,6 +884,9 @@ public class Map  {
         // Entering depression restriction placed when looking into a depression
         // reverse of above
         public boolean entersTargetDepression;
+        // added by DR to enable LOS along a depression
+        public boolean depressionhexsidesreducerange = false;
+        public Hex previousHex;
 
         // grid column entry/exit points
         public double enter;
@@ -930,24 +931,6 @@ public class Map  {
             // "rise" per grid column
             deltaY = ((double) targetY - (double) sourceY) / (double) numCols;
 
-            // Exiting depression restriction placed when looking out of a depression
-            // to a higher elevation where the "elevation difference <= range" restriction has not
-            // been satisfied. Must be satisfied before leaving the depression.
-            exitsSourceDepression =
-                    source.isDepressionTerrain() &&
-                            (targetElevation < sourceElevation ||
-                                    (targetElevation - sourceElevation > 0 &&
-                                            targetElevation - sourceElevation < range) ||
-                                    (target.isDepressionTerrain() &&
-                                     targetElevation == sourceElevation));
-
-            // Entering depression restriction placed when looking into a depression
-            // reverse of above
-            entersTargetDepression =
-                    target.isDepressionTerrain() &&
-                            sourceElevation - targetElevation > 0 &&
-                            sourceElevation - targetElevation < range;
-
             // grid column entry/exit points
             enter = (double)sourceY;
             exit = enter + deltaY;
@@ -962,13 +945,14 @@ public class Map  {
 
 
             // set the tolerance to compensate for "fuzzy" geometry of VASL boards
+            // DR added >5 test as need larger tolerance at short range on RB board
             //TODO - this is a kludge and fails at very long ranges - replace with algorithm
             double tolerance = 0.05;
             if (range >= 5 && range <= 15) {
 
                 tolerance = 0.03;
             }
-            else if (range > 10) {
+            else if (range > 15) {
 
                 tolerance = 0.015;
             }
@@ -1010,6 +994,38 @@ public class Map  {
             }
             setEnterExitHexsides();
 
+            // DR  revised the depression restiction code below and moved it from above to make use LOSisHorizontal, etc
+
+            // Exiting depression restriction placed when looking out of a depression
+            // to a higher elevation where the "elevation difference <= range" restriction has not
+            // been satisfied. Must be satisfied before leaving the depression.
+            double sourceadj=0;
+            double targetadj=0;
+
+            if(source.getTerrain().isRooftop() ) {
+                sourceadj=-0.5;
+            }
+            if(target.getTerrain().isRooftop() ) {
+                targetadj=-0.5;
+            }
+            exitsSourceDepression =
+                    source.isDepressionTerrain() &&
+                            (((targetElevation+ targetadj) - (sourceElevation+sourceadj) > 0 &&
+                            (targetElevation+ targetadj) - (sourceElevation+sourceadj) < range) ||
+                    ((LOSis60Degree || LOSisHorizontal) && exitsDepressionTerrainHexside() ) ||
+                    (targetElevation+targetadj == sourceElevation+sourceadj) ||
+                    (sourceElevation+ sourceadj > targetElevation+targetadj));
+
+            // Entering depression restriction placed when looking into a depression
+            // reverse of above
+            entersTargetDepression =
+                    target.isDepressionTerrain() &&
+                            (((sourceElevation+ sourceadj) - (targetElevation+targetadj) > 0 &&
+                            (sourceElevation+sourceadj) - (targetElevation+targetadj) < range) ||
+                    ((LOSis60Degree || LOSisHorizontal) && entersDepressionTerrainHexside()) ||
+                    (targetElevation+targetadj == sourceElevation+sourceadj) ||
+                    (targetElevation+targetadj > sourceElevation+sourceadj));
+
             // slope rules are in effect if the higher location is up-slope
             slopes = (exitsSlopeHexside() && sourceElevation >= targetElevation) ||
                      (entersSlopeHexside() && targetElevation >= sourceElevation);
@@ -1046,6 +1062,37 @@ public class Map  {
                 return true;
             }
             else if(targetEnterHexsides[1] != NONE && targetHex.hasSlope(targetEnterHexsides[1])) {
+                return true;
+            }
+            return false;
+        }
+        /**
+         * @return true if the LOS exits the source hex via a depression terrain hexside; added by DR
+         */
+        public boolean exitsDepressionTerrainHexside() {
+            if (LOSis60Degree || LOSisHorizontal) {
+                return false;
+            }
+            if(sourceExitHexsides[0] != NONE && sourceHex.getHexsideLocation(sourceExitHexsides[0]).isDepressionTerrain()) {
+                return true;
+            }
+            else if(sourceExitHexsides[1] != NONE && sourceHex.getHexsideLocation(sourceExitHexsides[1]).isDepressionTerrain()) {
+                return true;
+            }
+            return false;
+        }
+
+        /**
+         * @return true if the LOS enters the target hex via a depression terrain hexside; added by DR
+         */
+        public boolean entersDepressionTerrainHexside() {
+            if (LOSis60Degree || LOSisHorizontal) {
+                return false;
+            }
+            if(targetEnterHexsides[0] != NONE && targetHex.getHexsideLocation(targetEnterHexsides[0]).isDepressionTerrain()) {
+                return true;
+            }
+            else if(targetEnterHexsides[1] != NONE && targetHex.getHexsideLocation(targetEnterHexsides[1]).isDepressionTerrain()) {
                 return true;
             }
             return false;
@@ -1314,14 +1361,23 @@ public class Map  {
         status.currentTerrainHgt = status.currentTerrain.getHeight();
         HashSet<Integer> hexsides;
         // code added by  DR to enable RB rr embankments
-        hexsides=status.getHexsideCrossed(status.tempHex);
+        hexsides = status.getHexsideCrossed(status.tempHex);
         // code added by DR to enable roofless factory hexes
-        Terrain previousTerrain=null;
+        Terrain previousTerrain = null;
         // are we in a new hex?
         if (!status.tempHex.equals(status.currentHex)) {
-            //store terrain in previous hex (needed when checking roofless hexes
+            //store terrain in previous hex (needed when checking roofless hexes and depression hexsides; added by DR)
+            boolean reggie=false;
             previousTerrain = status.currentHex.getCenterLocation().getTerrain();
-
+            if(status.previousHex ==null) {
+                status.previousHex = status.currentHex;
+            }
+            else if(!status.previousHex.equals(status.tempHex)){
+                status.previousHex = status.currentHex;
+            }
+            else {
+                reggie = true;
+            }
             status.currentHex = status.tempHex;
             status.rangeToSource = range(status.currentHex, status.sourceHex);
             status.rangeToTarget = range(status.currentHex, status.targetHex);
@@ -1341,19 +1397,123 @@ public class Map  {
 
                 status.continuousSlope = false;
             }
+            int rangeadj = 0;
+            double sourceadj=0;
+            double targetadj=0;
 
+            if(status.source.getTerrain().isRooftop() ) {
+                sourceadj=-0.5;
+            }
+            if(status.target.getTerrain().isRooftop() ) {
+                targetadj = -0.5;
+            }
+            boolean followsdepression = true;
             // lift the depression exit restriction?
-            if (status.exitsSourceDepression) {
+            if (status.exitsSourceDepression && !reggie) {
 
-                if ((status.currentHex.isDepressionTerrain() &&
-                        status.targetElevation - status.currentHex.getBaseHeight() >= status.rangeToTarget) ||
-                        // LOS leaves gully because hex elevation is <= the elevation of the gully
-                        (!status.currentHex.isDepressionTerrain() &&
-                                status.currentHex.getBaseHeight() <= status.sourceElevation)) {
-
-                    status.ignoreGroundLevelHex = status.currentHex;
-                    status.exitsSourceDepression = false;
+                // LOS cannot follow along a depression if it is along hexside
+                if (!(status.LOSisHorizontal) && !(status.LOSis60Degree)) {
+                    Location testlocation=status.currentHex.getNearestLocation(status.currentCol, status.currentRow);
+                    if (status.targetElevation + targetadj > status.sourceElevation+ sourceadj) {
+                        HashSet<Integer> testhexsides;
+                        testhexsides = status.getHexsideCrossed(status.currentHex);
+                        if (testhexsides != null && !testhexsides.isEmpty()) {
+                            for (Integer hexside : testhexsides) {
+                                if (status.currentHex.getHexsideLocation(hexside).equals(testlocation)) {
+                                    if (status.currentHex.getHexsideLocation(hexside).isDepressionTerrain()) {
+                                        rangeadj = status.rangeToSource - 1;
+                                        if (!((status.targetElevation +targetadj) - (status.sourceElevation+ sourceadj) >= status.rangeToSource - rangeadj)) {
+                                            followsdepression = false;
+                                        }
+                                        else {
+                                            status.ignoreGroundLevelHex = status.currentHex;
+                                        }
+                                    }
+                                    else {
+                                        int depressionadj = 0;
+                                        if (status.currentHex.isDepressionTerrain()) {
+                                            depressionadj = 1;
+                                        }
+                                        else {
+                                            if (status.rangeToSource==1 && status.currentHex.getBaseHeight()<= status.sourceElevation) {
+                                                depressionadj=1;
+                                            }
+                                        }
+                                        // equal range adjustment required
+                                        int equalrangeadj=0;
+                                        if (followsdepression && status.rangeToSource==range(status.sourceHex, status.previousHex)) {
+                                            equalrangeadj=1;
+                                        }
+                                        if (!status.targetHex.equals(status.currentHex) &&
+                                                ((status.currentHex.getBaseHeight() + depressionadj + status.currentTerrainHgt >= status.targetElevation + targetadj) || (status.currentHex.getBaseHeight() + depressionadj + status.currentTerrainHgt > status.sourceElevation + sourceadj)) &&
+                                                (!((status.targetElevation + targetadj) - (status.sourceElevation + sourceadj) >= status.range -(status.rangeToSource-1+ equalrangeadj)))) {
+                                            followsdepression = false;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
+                else {
+                    followsdepression=false;
+                }
+            }
+            if (status.entersTargetDepression && !reggie) {
+                Location testlocation=status.currentHex.getNearestLocation(status.currentCol, status.currentRow);
+                if (!(status.LOSisHorizontal) && !(status.LOSis60Degree)) {
+                    if ((status.sourceElevation + sourceadj > status.targetElevation + targetadj) && !(status.currentHex.equals(status.targetHex))) {
+                        HashSet<Integer> testhexsides;
+                        testhexsides = status.getHexsideCrossed(status.currentHex);
+                        if (testhexsides != null && !testhexsides.isEmpty()) {
+                            for (Integer hexside : testhexsides) {
+                                if (!status.currentHex.getHexsideLocation(hexside).equals(testlocation)) {
+                                    if (status.currentHex.getHexsideLocation(hexside).isDepressionTerrain()) {
+                                        rangeadj = status.rangeToSource - 1;
+                                        if (!((status.sourceElevation + sourceadj) - (status.targetElevation + targetadj) >= status.rangeToSource - rangeadj)) {
+                                            followsdepression = false;
+                                        }
+                                        else {
+                                            status.ignoreGroundLevelHex = status.currentHex;
+                                        }
+                                    } else {
+                                        int depressionadj = 0;
+                                        if (status.currentHex.isDepressionTerrain()) {
+                                            depressionadj = 1;
+                                        }
+                                        // equal range adjustment required
+                                        int equalrangeadj=0;
+                                        int nexthexside=0;
+                                        for (Integer loophexside : testhexsides ) {
+                                            if ((hexside==loophexside)) {
+                                                nexthexside=loophexside;
+                                            }
+                                        }
+                                        if (followsdepression && status.rangeToSource==range(status.sourceHex, getAdjacentHex(status.currentHex, nexthexside))) {
+                                            equalrangeadj=1;
+                                        }
+                                        if (!status.sourceHex.equals(status.currentHex) &&
+                                                ((status.currentHex.getBaseHeight() + depressionadj + status.currentTerrainHgt >= status.targetElevation + targetadj) || (status.currentHex.getBaseHeight() + depressionadj + status.currentTerrainHgt > status.sourceElevation+ sourceadj)) &&
+                                                (!((status.sourceElevation + sourceadj) - (status.targetElevation + targetadj) >= status.range -(status.rangeToTarget-1+ equalrangeadj)))) {
+                                            followsdepression = false;
+                                        }
+                                        else {
+                                            followsdepression=true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    followsdepression = false;
+                }
+            }
+            if (followsdepression) {
+                status.depressionhexsidesreducerange = true;
+            } else {
+                status.depressionhexsidesreducerange = false;
+
             }
 
             // set the hillocks status
@@ -1367,7 +1527,7 @@ public class Map  {
         if (checkBuildingRestrictionRule(status, result, previousTerrain)) {
             return true;
         }
-        if (status.currentTerrain.isHexsideTerrain() && !"Cliff".equals(status.currentTerrain.getName())) {
+        if (status.currentTerrain.isHexsideTerrain() && !status.currentTerrain.isCliff()) {
             if (checkHexsideTerrainRule(status, result)) {
                 return true;
             }
@@ -1755,31 +1915,52 @@ public class Map  {
         // blocked LOS leaving a building?
         // code added by DR for Rooftops, which are created at full level and need to be at lower level for LOS purposes
         int rooftopadj=0;
-        if(status.source.getName().contains("Rooftop")) {
+        if(status.source.getTerrain().isRooftop() || status.target.getTerrain().isRooftop() ) {
             rooftopadj=-1;
         }
-        if (!status.LOSLeavesBuilding &&
-                !status.currentHex.equals(status.sourceHex)) {
-            if (status.currentTerrain.isBuilding() &&
-                    status.target.getTerrain().isBuildingTerrain()) {
-                if (status.sourceElevation != status.targetElevation && status.groundLevel + status.currentTerrainHgt >= (status.sourceElevation + rooftopadj)) {
+
+        if (!status.LOSLeavesBuilding && !status.currentHex.equals(status.sourceHex)) {
+            if (status.currentTerrain.isBuildingTerrain()) {  // LOS is within a non-factory building; not same hex
+                if (status.sourceElevation != status.targetElevation) {
                     status.reason = "LOS must leave the building before leaving the source hex to see a location with a different elevation (A6.8 Example 2)";
                     status.blocked = true;
                     result.setBlocked(status.currentCol, status.currentRow, status.reason);
                     return true;
                 }
             }
-            else {      //LOS is within a factory; eliminate rooftops if source/target are not in same hex (unless current hex is roofless or first roofed hex)
-                if((status.source.getName().contains("Rooftop") | status.target.getName().contains("Rooftop") && !(status.source.getName().contains("Rooftop") && status.target.getName().contains("Rooftop"))) && !status.targetHex.equals(status.sourceHex) && !status.currentHex.getCenterLocation().getTerrain().getName().contains("Roofless") && !status.currentTerrain.getName().contains("Interior Factory Wall,")) {
-                    if (!(previousTerrain==null) && !(previousTerrain.getName().contains("Roofless")) && !status.LOSis60Degree) {
-                        status.reason = "LOS from/to Factory Rooftop within Factory only exists in same hex ground level location (B23.87)";
-                        status.blocked = true;
-                        result.setBlocked(status.currentCol, status.currentRow, status.reason);
-                        return true;
+            else if (!status.LOSLeavesBuilding && (status.target.getTerrain().isFactoryTerrain() | status.source.getTerrain().isFactoryTerrain())  ) {  //LOS is within a factory
+                // no rooftop LOS if source/target are not in same hex (unless current hex is roofless or first roofed hex)
+                if(!status.sourceHex.equals(status.targetHex)) {  //same-hex LOS is ok in factory
+                    if(status.LOSis60Degree || status.LOSisHorizontal) {
+
+                   }
+                    else {
+                        if ((status.source.getTerrain().isRooftop() && !status.target.getTerrain().isRooftop()) &&  //LOS is from rooftop down
+                                (!status.currentHex.getCenterLocation().getTerrain().isRoofless() && !status.currentHex.equals(status.targetHex))) {
+                                //each hex (except source and target) along LOS must be roofless; if not LOS blocked
+                            status.reason = "LOS from/to Factory Rooftop within Factory only exists in same hex ground level location (B23.87)";
+                            status.blocked = true;
+                            result.setBlocked(status.currentCol, status.currentRow, status.reason);
+                            return true;
+                        } else if ((status.target.getTerrain().isRooftop() && !status.source.getTerrain().isRooftop()) &&  // LOS is up to rooftop
+                                ((!status.currentHex.getCenterLocation().getTerrain().isRoofless() && status.rangeToSource==1 && !status.sourceHex.getCenterLocation().getTerrain().isRoofless()) ||
+                                        (!status.currentHex.getCenterLocation().getTerrain().isRoofless() &&  !status.currentHex.equals(status.targetHex) && (status.currentTerrainHgt+ status.currentTerrain.getHeight() >= status.targetElevation + rooftopadj)))) { // status.rangeToTarget == 1)
+                                //each hex (except source and target) along LOS must be roofless; if not LOS blocked
+                                //unless target is higher than factory rooftop; first hex must still be roofless - this will handle some LOS that leaves factory - NOT GOOD BUT . . .
+                            if (status.rangeToSource==1) {
+                                status.reason = "LOS must leave the building before leaving the source hex to see a location with a different elevation (A6.8 Example 2)";
+                            }
+                            else {
+                                status.reason = "LOS from/to Factory Rooftop within Factory only exists in same hex ground level location (B23.87)";
+                            }
+
+                            status.blocked = true;
+                            result.setBlocked(status.currentCol, status.currentRow, status.reason);
+                            return true;
+                        }
                     }
                 }
             }
-
         }
         return false;
     }
@@ -1792,12 +1973,25 @@ public class Map  {
      */
     protected boolean checkDepressionRule(LOSStatus status, LOSResult result) {
 
+        // this method revised entirely by DR
+        double sourceadj=0;
+        double targetadj=0;
+
+        if(status.source.getTerrain().isRooftop() ) {
+            sourceadj=-0.5;
+        }
+        if(status.target.getTerrain().isRooftop() ) {
+            targetadj=-0.5;
+        }
+        // LOS must leave a depression?
         // restricted by exiting a depression? (checked in all hexes)
         if (status.exitsSourceDepression) {
 
             // LOS still in the depression?
-            if (status.groundLevel > status.currentHex.getBaseHeight()) {
-
+            if (status.groundLevel > status.currentHex.getBaseHeight() && !(status.currentHex.equals(status.targetHex)) &&
+                    status.groundLevel > status.sourceElevation + sourceadj && !(status.range==1 && status.exitsDepressionTerrainHexside()) && (status.currentHex.isDepressionTerrain() && status.currentHex.equals(status.sourceHex) && status.targetElevation+ targetadj<= status.sourceElevation+ sourceadj) ||
+                    (status.range==1 && !(status.exitsDepressionTerrainHexside()) && status.targetHex.isDepressionTerrain()) ||
+                    (!status.depressionhexsidesreducerange && !status.currentHex.equals(status.sourceHex) && status.targetElevation+ targetadj - status.sourceElevation+ sourceadj > 0 && status.targetElevation+ targetadj - status.sourceElevation+ sourceadj < status.range)) {  // && (!status.exitsDepressionTerrainHexside())) {
                 status.blocked = true;
                 status.reason = "Exits depression before range/elevation restrictions are satisfied (A6.3)";
                 result.setBlocked(status.currentCol, status.currentRow, status.reason);
@@ -1806,10 +2000,12 @@ public class Map  {
         }
 
         // LOS must enter a depression?
-        // range must be <= elevation difference or be in the depression
         if (status.entersTargetDepression) {
-            if (status.rangeToSource > (status.sourceElevation - status.targetElevation) &&
-                    !(status.currentHex.isDepressionTerrain() && status.groundLevel == status.currentHex.getBaseHeight())) {
+            if (status.groundLevel > status.currentHex.getBaseHeight() && !(status.currentHex.equals(status.sourceHex)) &&
+                    status.groundLevel > status.targetElevation+ targetadj &&!(status.range==1 && status.entersDepressionTerrainHexside()) &&
+                    (!status.currentHex.isDepressionTerrain() || status.currentHex.equals(status.targetHex)&& status.sourceElevation+ sourceadj<= status.targetElevation+ targetadj) ||
+                    (status.range==1 && !(status.exitsDepressionTerrainHexside()) && status.sourceHex.isDepressionTerrain()) ||
+                    (!status.depressionhexsidesreducerange && !status.currentHex.equals(status.sourceHex) && status.sourceElevation+ sourceadj - status.targetElevation+ targetadj > 0 && status.sourceElevation+ sourceadj - status.targetElevation+ targetadj < status.range)) {  // && (!status.entersDepressionTerrainHexside()) ) {
 
                 status.blocked = true;
                 status.reason = "Does not enter depression while range/elevation restrictions are satisfied (A6.3)";
@@ -1835,50 +2031,25 @@ public class Map  {
         // code added by DR to deal with cellars
         int sourceadj=0;
         int targetadj=0;
-        if(status.source.getName().contains("Cellar")) {
+        if(status.source.getTerrain().isCellar()) {
             sourceadj=+1;
         }
-        if(status.target.getName().contains("Cellar")) {
+        if(status.target.getTerrain().isCellar()) {
             targetadj=+1;
         }
-        // rowhouse wall?
+        // rowhouse/factory wall?
         if (status.currentTerrain.isRowhouseFactoryWall()) {
-            // code added by DR to deal with roofless factory fire along Factory wall hexside
+            // code added by DR to deal with factory fire along/across Factory wall hexside
             if (checkRowhouseFactoryWall(status, result)) {
-                status.reason = "Cannot see through rowhouse/factory wall (O5.31)";
-                status.blocked = true;
-                result.setBlocked(status.currentCol, status.currentRow, status.reason);
-                return true;
-            }
-
-            // always blocks if...
-            if (//higher than both source/target
-                    (status.groundLevel + status.currentTerrainHgt > status.sourceElevation &&
-                            status.groundLevel + status.currentTerrainHgt > status.targetElevation) ||
-                            //same height as both source/target, but 1/2 level
-                            (status.groundLevel + status.currentTerrainHgt == status.sourceElevation &&
-                                    status.groundLevel + status.currentTerrainHgt == status.targetElevation &&
-                                    status.currentTerrain.isHalfLevelHeight()) ||
-                            //same height as higher source/target, but other is lower
-                            (status.groundLevel + status.currentTerrainHgt == Math.max(status.sourceElevation, status.targetElevation) &&
-                                    status.groundLevel + status.currentTerrainHgt > Math.min(status.sourceElevation, status.targetElevation))
-                    ) {
-
                 status.reason = "Cannot see through rowhouse/factory wall (B23.71/O5.31)";
                 status.blocked = true;
                 result.setBlocked(status.currentCol, status.currentRow, status.reason);
                 return true;
             }
-
-            // otherwise check for blind hexes
-            else if (isBlindHex(status, status.currentTerrainHgt)) {
-
-                status.reason = "Source or Target location is in a blind hex (O5.31)";
-                status.blocked = true;
-                result.setBlocked(status.currentCol, status.currentRow, status.reason);
-                return true;
+            else {
+                return false;
             }
-        }
+         }
 
         else {
 
@@ -1904,8 +2075,8 @@ public class Map  {
                 }
             }
             // code added by DR to handle cellars
-            else if (status.source.getName().contains("Cellar")) {
-                if ((status.target.getName().contains("Cellar")) | (status.range !=1 && status.rangeToSource == 1 && status.targetElevation + targetadj <= status.sourceElevation+sourceadj)) {
+            else if (status.source.getTerrain().isCellar()) {
+                if ((status.target.getTerrain().isCellar()) | (status.range !=1 && status.rangeToSource == 1 && status.targetElevation + targetadj <= status.sourceElevation+sourceadj)) {
 
                     status.blocked = true;
                     status.reason = "Unit in cellar cannot see over hexside terrain to non-adjacent target (O6.3)";
@@ -1913,7 +2084,7 @@ public class Map  {
                     return true;
                 }
             }
-            else if (status.target.getName().contains("Cellar")) {
+            else if (status.target.getTerrain().isCellar()) {
                 if (status.range != 1 && status.rangeToTarget == 1 && status.targetElevation+targetadj >= status.sourceElevation + sourceadj) {
 
                     status.blocked = true;
@@ -1989,10 +2160,10 @@ public class Map  {
         int sourceadj=0;
         int targetadj=0;
 
-        if(status.source.getName().contains("Cellar")) {
+        if(status.source.getTerrain().isCellar()) {
             sourceadj=+1;
         }
-        if(status.target.getName().contains("Cellar")) {
+        if(status.target.getTerrain().isCellar()) {
             targetadj=+1;
         }
         // special case when LOS is up-slope or on hillock
@@ -2012,12 +2183,16 @@ public class Map  {
         if(BOCAGE.equals(status.currentTerrain.getName())){
             return false;
         }
-
-        if (status.groundLevel + status.currentTerrainHgt > Math.min(status.sourceElevation, status.targetElevation) &&
-            status.groundLevel + status.currentTerrainHgt < Math.max(status.sourceElevation, status.targetElevation)
+        // special case for cliffs - need to trigger blind hex check DR
+        int cliffadj=0;
+        if(status.currentTerrain.isCliff()){
+            cliffadj=1;
+        }
+        if (status.groundLevel + status.currentTerrainHgt + cliffadj > Math.min(status.sourceElevation, status.targetElevation) &&
+            status.groundLevel + status.currentTerrainHgt + cliffadj < Math.max(status.sourceElevation, status.targetElevation)
                 ) {
 
-            if (isBlindHex(status, status.currentTerrainHgt, nearestHexsideIsCliff(status.currentCol, status.currentRow))) {
+            if (isBlindHex(status, status.currentTerrainHgt, nearestHexsideIsCliff(status.currentCol, status.currentRow, status, result))) {
 
                 // blocked if terrain is obstacle and not hexsides such as Rowhouse or Factory Walls (handled in checkHexsideTerrainRule) DR
                 if (status.currentTerrain.isLOSObstacle() && !status.currentTerrain.isHexsideTerrain()) {
@@ -2035,16 +2210,18 @@ public class Map  {
                     }
                 }
                 // code added by DR to handle fire through a factory hex from/to another level outside the factory
-                else if ((status.currentTerrain.getLOSCategory() == Terrain.LOSCategories.FACTORY) && status.LOSLeavesBuilding && (!status.currentTerrain.getName().contains("Roofless")) && (!status.currentTerrain.getName().contains("Interior Factory Wall"))) {
+                else if ((status.currentTerrain.getLOSCategory() == Terrain.LOSCategories.FACTORY) && (status.LOSLeavesBuilding || status.targetElevation> status.currentTerrainHgt + status.currentTerrain.getHeight()) &&
+                        (!status.currentHex.getCenterLocation().getTerrain().getName().contains("Roofless")) && (!status.currentTerrain.getName().contains("Interior Factory Wall"))) {
                     status.reason = "Source or Target location is in a blind hex (B10.23)";
                     status.blocked = true;
                     result.setBlocked(status.currentCol, status.currentRow, status.reason);
                     return true;
                 }
                 // see if ground level alone creates blind hex
-                else if (status.groundLevel > Math.min(status.sourceElevation + sourceadj, status.targetElevation + targetadj) &&
-                        status.groundLevel < Math.max(status.sourceElevation + sourceadj, status.targetElevation + targetadj) &&
-                        isBlindHex(status, 0, nearestHexsideIsCliff(status.currentCol, status.currentRow))) {
+                else if (status.groundLevel + cliffadj > Math.min(status.sourceElevation + sourceadj, status.targetElevation + targetadj) &&
+                        status.groundLevel +cliffadj < Math.max(status.sourceElevation + sourceadj, status.targetElevation + targetadj) &&
+                        //(!status.sourceHex.isDepressionTerrain() && !status.targetHex.isDepressionTerrain()) &&
+                        isBlindHex(status, 0, nearestHexsideIsCliff(status.currentCol, status.currentRow, status, result))) {
 
                     status.reason = "Source or Target location is in a blind hex (B10.23)";
                     status.blocked = true;
@@ -2089,19 +2266,19 @@ public class Map  {
         double sourceadj=0;
         double targetadj=0;
         double obstacleadj=0;
-        if(status.source.getName().contains("Rooftop") ) {
+        if(status.source.getTerrain().isRooftop() ) {
             sourceadj=-0.5;
         }
-        if(status.target.getName().contains("Rooftop") ) {
+        if(status.target.getTerrain().isRooftop() ) {
             targetadj=-0.5;
         }
-        if(status.currentTerrain.isHalfLevelHeight()) {
+        if(status.currentTerrain.isHalfLevelHeight() && status.currentTerrain.isBuilding()) {
             obstacleadj=+0.5;
         }
-        if(status.source.getName().contains("Cellar")) {
+        if(status.source.getTerrain().isCellar()) {
             sourceadj=+1;
         }
-        if(status.target.getName().contains("Cellar")) {
+        if(status.target.getTerrain().isCellar()) {
             targetadj=+1;
         }
 
@@ -2123,8 +2300,8 @@ public class Map  {
             if (!(status.ignoreGroundLevelHex != null &&
                     status.ignoreGroundLevelHex.containsExtended(status.currentCol, status.currentRow)) &&
                     // are entering gully restrictions satisfied?
-                    !(status.entersTargetDepression && status.currentHex.isDepressionTerrain()) &&
-                    !(status.exitsSourceDepression && status.currentHex.isDepressionTerrain())
+                    !(status.entersTargetDepression && (status.currentHex.isDepressionTerrain() && status.currentTerrainHgt==0) && (!(status.LOSis60Degree) && !(status.LOSisHorizontal))) &&
+                    !(status.exitsSourceDepression && (status.currentHex.isDepressionTerrain() && status.currentTerrainHgt==0) && (!(status.LOSis60Degree) && !(status.LOSisHorizontal)))
                     ) {
 
                 // Need to handle special case where source unit is adjacent to a water obstacle looking
@@ -2144,7 +2321,7 @@ public class Map  {
                             return true;
 
                     } else {
-                        status.reason = "Must have a height advantage to see over this terrain (A6.2)";
+                         status.reason = "Must have a height advantage to see over this terrain (A6.2)";
                         status.blocked = true;
                         result.setBlocked(status.currentCol, status.currentRow, status.reason);
                         return true;
@@ -2163,28 +2340,28 @@ public class Map  {
      */
     protected boolean checkTerrainIsHigherRule(LOSStatus status, LOSResult result) {
         // code added by DR to deal with rooftop 1/2 level and cellars
-        int sourceadj=0;
-        int targetadj=0;
+        double sourceadj=0;
+        double targetadj=0;
         double obstacleadj=0;
-        if(status.source.getName().contains("Rooftop")) {
-            sourceadj=-1;
+        if(status.source.getTerrain().isRooftop()) {
+            sourceadj=-0.5; //1;
         }
-        if(status.target.getName().contains("Rooftop")) {
-            targetadj=-1;
+        if(status.target.getTerrain().isRooftop()) {
+            targetadj=-0.5; //1;
         }
-        if(status.currentTerrain.isHalfLevelHeight()) {
+        if(status.currentTerrain.isHalfLevelHeight() && !status.currentTerrain.isHexsideTerrain()) {
             obstacleadj=+0.5;
         }
-        if(status.source.getName().contains("Cellar")) {
+        if(status.source.getTerrain().isCellar()) {
             sourceadj=+1;
         }
-        if(status.target.getName().contains("Cellar")) {
+        if(status.target.getTerrain().isCellar()) {
             targetadj=+1;
         }
         // ignore special case for split terrain - different rule
         if(status.currentTerrain.hasSplit() &&
-                status.groundLevel == status.sourceElevation &&
-                status.groundLevel == status.targetElevation){
+                status.groundLevel == status.sourceElevation + sourceadj &&
+                status.groundLevel == status.targetElevation + targetadj){
             return false;
         }
 
@@ -2197,7 +2374,7 @@ public class Map  {
                 status.groundLevel + status.currentTerrainHgt + obstacleadj > status.targetElevation + targetadj) {
 
             // terrain blocks LOS?
-            if (status.currentTerrain.isLOSObstacle()) {
+            if (status .currentTerrain.isLOSObstacle()) {
                 status.reason = "Terrain is higher than both the source and target (A6.2)";
                 status.blocked = true;
                 result.setBlocked(status.currentCol, status.currentRow, status.reason);
@@ -2555,10 +2732,10 @@ public class Map  {
         // code added by DR to deal with rooftop 1/2 level
         double sourceadj=0;
         double targetadj=0;
-        if(status.source.getName().contains("Rooftop") && !(status.target.getName().contains("Rooftop"))) {
+        if(status.source.getTerrain().isRooftop() && !(status.target.getTerrain().isRooftop())) {
             sourceadj=-0.5;
         }
-        if(status.target.getName().contains("Rooftop") && !(status.source.getName().contains("Rooftop"))) {
+        if(status.target.getTerrain().isRooftop() && !(status.source.getTerrain().isRooftop())) {
             targetadj=-0.5;
         }
 
@@ -2616,10 +2793,25 @@ public class Map  {
      * @return true if the LOS is blocked
      */
     protected boolean checkSplitTerrainRule(LOSStatus status, LOSResult result) {
+        double sourceadj=0;
+        double targetadj=0;
 
+        //if(status.source.getTerrain().isRooftop()) {
+        //    sourceadj=-0.5; //1;
+        //}
+        //if(status.target.getTerrain().isRooftop()) {
+        //    targetadj=-0.5; //1;
+        //}
+
+        if(status.source.getTerrain().isCellar()) {
+            sourceadj=+1;
+        }
+        if(status.target.getTerrain().isCellar()) {
+            targetadj=+1;
+        }
         if (status.currentTerrain.hasSplit() &&
-                status.groundLevel == status.sourceElevation &&
-                status.groundLevel == status.targetElevation) {
+                status.groundLevel == status.sourceElevation + sourceadj &&
+                status.groundLevel == status.targetElevation + targetadj) {
 
             // special case for slopes
             if(status.slopes) {
@@ -2663,10 +2855,10 @@ public class Map  {
         // code added by DR to deal with cellars
         int sourceadj=0;
         int targetadj=0;
-        if(status.source.getName().contains("Cellar")) {
+        if(status.source.getTerrain().isCellar()) {
             sourceadj=+1;
         }
-        if(status.target.getName().contains("Cellar")) {
+        if(status.target.getTerrain().isCellar()) {
             targetadj=+1;
         }
         if (status.groundLevel > status.sourceElevation + sourceadj && status.groundLevel > status.targetElevation+ targetadj) {
@@ -2862,12 +3054,43 @@ public class Map  {
      * @param y y coordinate
      * @return true if the nearest hexside is a cliff
      */
-    protected boolean nearestHexsideIsCliff(int x, int y) {
+    protected boolean  nearestHexsideIsCliff(int x, int y, LOSStatus status, LOSResult result) {
 
-        Hex hex = gridToHex(x, y);
-        Location l = gridToHex(x, y).getNearestLocation(x, y);
+        if (!(result.isLOSis60Degree()) &&  !(result.isLOSisHorizontal()) ) {
+            Hex hex = gridToHex(x, y);
+            Location l = gridToHex(x, y).getNearestLocation(x, y);
 
-        return !l.isCenterLocation() && hex.hasCliff(hex.getLocationHexside(l));
+            return !l.isCenterLocation() && hex.hasCliff(hex.getLocationHexside(l));
+        }
+        else {
+            // special case of LOS along hexside; need to check for depression cliff hexsides in source/target hex - code above does not work all the time
+            if (status.sourceHex.isDepressionTerrain()) {
+                int firsthexside = result.getSourceExitHexspine();
+                int secondhexside = firsthexside + 1;
+                if (secondhexside >= 6) {
+                    secondhexside = secondhexside - 6;
+                }
+
+                // need to check now for cliffs connected to LOS hexside; if cliff these will need to be tested for blind hexes
+                if (status.sourceHex.hasCliff(firsthexside) || status.sourceHex.hasCliff(secondhexside)) {
+                    return true;
+                }
+            }
+            if (status.targetHex.isDepressionTerrain()) {
+                int firsthexside = result.getTargetEnterHexspine();
+                int secondhexside = firsthexside + 1;
+                if (secondhexside >= 6) {
+                    secondhexside = secondhexside - 6;
+                }
+
+                // need to check now for cliffs connected to LOS hexside; if cliff these will need to be tested for blind hexes
+                if (status.targetHex.hasCliff(firsthexside) || status.targetHex.hasCliff(secondhexside)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
     }
 
     /**
@@ -2911,7 +3134,14 @@ public class Map  {
      * @return true if target is in a blind hex
      */
     protected static boolean isBlindHex(LOSStatus status, int terrainHeight, boolean isCliffHexside) {
-
+        int sourceadj=0;
+        int targetadj=0;
+        if(status.source.getTerrain().isRooftop()) {
+            sourceadj=-1;
+        }
+        if(status.target.getTerrain().isRooftop()) {
+            targetadj=-1;
+        }
         int sourceElevation = status.sourceElevation;
         int targetElevation = status.targetElevation;
         int rangeToSource = status.rangeToSource;
@@ -2923,6 +3153,12 @@ public class Map  {
             return false;
         }
 
+        // now do rooftop adjustment - not before or will mess up previous test
+        sourceElevation=sourceElevation + sourceadj;
+        targetElevation=targetElevation + targetadj;
+
+        Hex starthex=status.sourceHex;
+        Hex finishhex=status.targetHex;
         // if LOS raising, swap source/target and use the same logic as LOS falling
         if (sourceElevation < targetElevation) {
 
@@ -2930,12 +3166,14 @@ public class Map  {
 			int temp = sourceElevation;
 			sourceElevation = targetElevation;
             targetElevation = temp;
-
+            starthex=status.targetHex;
+            finishhex=status.sourceHex;
             // swap range
             temp = rangeToSource;
             rangeToSource = rangeToTarget;
             rangeToTarget = temp;
         }
+
 
         // increment source elevation for slopes/hillocks in special case where terrain is same height as upper location
         if(status.slopes || status.startsOnHillock) {
@@ -2945,10 +3183,46 @@ public class Map  {
             }
         }
 
+        if(isCliffHexside &&!status.LOSis60Degree && !status.LOSisHorizontal) {
+            Location testlocation = status.currentHex.getNearestLocation(status.currentCol, status.currentRow);
+            int testhexside =status.currentHex.getLocationHexside(testlocation);
+            int newhexside=testhexside+3;
+            if(newhexside>= 6) {newhexside=newhexside-6;}
+
+            if (rangeToSource==1 && !(rangeToTarget==1) && sourceElevation >= terrainHeight && testlocation.getTerrain().isCliff() && !starthex.getHexsideLocation(newhexside).getTerrain().isCliff()) {
+                isCliffHexside= false;
+            }
+            if (rangeToTarget==1 && !(rangeToSource==1) && targetElevation >= terrainHeight && testlocation.getTerrain().isCliff() && !finishhex.getHexsideLocation(newhexside).getTerrain().isCliff()) {
+                isCliffHexside= false;
+            }
+            else if(testlocation.getTerrain().isCliff()) {
+                isCliffHexside=true;
+            }
+        }
+        if(status.currentTerrain.isRowhouseFactoryWall()) {
+            // hex containing IFW hexside is "first" blind hex; use range adjustment to handle
+            rangeToTarget=rangeToTarget+1;
+            // range from Source to IFW is to hex with exit IFW not hex with entry IFW
+
+        }
+
         // is the obstacle a non-cliff crest line?
         if (terrainHeight == 0 && !isCliffHexside) {
-
-            return rangeToTarget <= Math.max(2 * (groundLevel + terrainHeight) + (rangeToSource / 5) - sourceElevation - targetElevation, 0);
+            int depressionadj=0;
+            HashSet<Integer> sidecrossed= status.getHexsideCrossed(status.currentHex);
+            Iterator<Integer> i = sidecrossed.iterator();
+            if(i.hasNext()) {
+                int testforDepressionhexside = i.next();
+                if (status.currentHex.getHexsideLocation(testforDepressionhexside).isDepressionTerrain()) {
+                   depressionadj=-1;
+                }
+            }
+            if( rangeToTarget <= Math.max(2 * (groundLevel + depressionadj + terrainHeight) + (rangeToSource / 5) - sourceElevation - targetElevation, 0)) {
+                return true;
+            }
+            else {
+                return false;
+            }
         }
         else {
 
@@ -3203,7 +3477,7 @@ public class Map  {
                         }
                     }
                     // handle cellars
-                    else if (status.source.getName().contains("Cellar")) {
+                    else if (status.source.getTerrain().isCellar()) {
                         if (status.range != 1 && status.rangeToSource == 1 && status.targetElevation <= status.sourceElevation+1) {
                             status.blocked = true;
                             status.reason = "Unit in cellar cannot see over hexside terrain to non-adjacent target (O6.3)";
@@ -3211,7 +3485,7 @@ public class Map  {
                             return true;
                         }
                     }
-                    else if (status.target.getName().contains("Cellar")) {
+                    else if (status.target.getTerrain().isCellar()) {
                         if (status.range != 1 && status.rangeToTarget == 1 && status.targetElevation+1 >= status.sourceElevation) {
                             status.blocked = true;
                             status.reason = "Unit in cellar cannot be seen over hexside terrain by non-adjacent target (O6.3)";
@@ -3241,48 +3515,187 @@ public class Map  {
         return false;
     }
 
-    // method added by DR to handle LOS along/across Interior Factory Walls
+    // method added by DR to handle LOS along/across Rowhouse and Interior Factory Walls
     public boolean checkRowhouseFactoryWall (LOSStatus status,LOSResult result) {
-        if (status.currentTerrain.getName().contains("Interior Factory Wall")) {
-            if (result.isLOSis60Degree()) {
-                if (!status.currentHex.equals(status.sourceHex) && !status.currentHex.equals(status.targetHex)) {
-                    int usehexside = result.getSourceExitHexspine()+1;
-                    if (usehexside >= 6) { usehexside=usehexside-6; }
-                    int althexside = usehexside+3;
-                    if (althexside >= 6) { althexside=althexside-6; }
-                    Hex altHex = getAdjacentHex(status.currentHex, althexside);
-                    if (status.currentTerrain.equals(status.currentHex.getHexsideTerrain(usehexside)) || status.currentTerrain.equals(altHex.getHexsideTerrain(usehexside))) {
-                        // LOS is blocked along an Interior Factory Wall UNLESS from Rooftop and one of the IFW hexes is roofless
-                        if (status.source.getName().contains("Rooftop") || status.target.getName().contains("Rooftop")) {
-                            return false;
-                        }
+        // must be rowhouse wall or IFW to get here
+        double sourceadj=0;
+        double targetadj=0;
+        if (status.source.getTerrain().isRooftop()) {
+            sourceadj = -1;
+        }
+        if (status.target.getTerrain().isRooftop()) {
+            targetadj=-1;
+        }
+        if (status.currentTerrain.getName().contains("Interior Factory Wall") && (result.isLOSis60Degree() | result.isLOSisHorizontal())   ) {
+            // special case of LOS along IFW
+            int firsthexside = result.getSourceExitHexspine() + 1;
+            if (firsthexside >= 6) {
+                firsthexside = firsthexside - 6;
+            }
+            int secondhexside = firsthexside + 3;
+            if (secondhexside >= 6) {
+                secondhexside = secondhexside - 6;
+            }
+
+            if (!status.currentHex.equals(status.sourceHex) && !status.currentHex.equals(status.targetHex)) {
+
+                if(status.currentTerrain.equals(status.currentHex.getHexsideTerrain(firsthexside)) || status.currentTerrain.equals(status.currentHex.getHexsideTerrain(secondhexside))){
+                    Hex altHex;
+                    int firstvertexside;
+                    int secondvertexside;
+                    int thirdvertexside;
+                    int fourthvertexside;
+                    if (status.currentTerrain.equals(status.currentHex.getHexsideTerrain(firsthexside))) {
+                        altHex = getAdjacentHex(status.currentHex, firsthexside);
+                        firstvertexside=firsthexside-1;
+                        secondvertexside=firsthexside+1;
+                        thirdvertexside= secondhexside-1;
+                        fourthvertexside=secondhexside+1;
+                    } else {
+                        altHex = getAdjacentHex(status.currentHex, secondhexside);
+                        firstvertexside=secondhexside-1;
+                        secondvertexside=secondhexside+1;
+                        thirdvertexside= firsthexside-1;
+                        fourthvertexside=firsthexside+1;
                     }
+                    if( firstvertexside==-1) { firstvertexside=5;}
+                    if( firstvertexside==6) { firstvertexside=0;}
+                    if( secondvertexside==-1) { secondvertexside=5;}
+                    if( secondvertexside==6) { secondvertexside=0;}
+                    if( thirdvertexside==-1) { thirdvertexside=5;}
+                    if( thirdvertexside==6) { thirdvertexside=0;}
+                    if( fourthvertexside==-1) { fourthvertexside=5;}
+                    if( fourthvertexside==6) { fourthvertexside=0;}
+
+                    // LOS is blocked along an Interior Factory Wall UNLESS from Rooftop or higher and one of the IFW hexes is roofless or both on rooftop or higher elevation
+                    if ((status.groundLevel + status.currentTerrainHgt <= status.sourceElevation + sourceadj ||
+                            status.groundLevel + status.currentTerrainHgt <= status.targetElevation + targetadj) && (status.currentHex.getCenterLocation().getTerrain().getName().contains("Roofless") || altHex.getCenterLocation().getTerrain().getName().contains("Roofless"))) {
+                        // need to check now for IFW connected to IFW along hexside; these will block LOS
+                        Terrain ter1 = status.currentHex.getHexsideTerrain(firstvertexside);
+                        Terrain ter2 = status.currentHex.getHexsideTerrain(secondvertexside);
+                        Terrain ter3 = status.currentHex.getHexsideTerrain(thirdvertexside);
+                        Terrain ter4 = status.currentHex.getHexsideTerrain(fourthvertexside);
+
+                        if(( ter1 != null && status.currentHex.getHexsideTerrain(firstvertexside).isRowhouseFactoryWall() && !status.sourceHex.equals(getAdjacentHex(status.currentHex, firstvertexside))) ||
+                                ( ter2 !=null && status.currentHex.getHexsideTerrain(secondvertexside).isRowhouseFactoryWall() && !status.sourceHex.equals(getAdjacentHex(status.currentHex, secondvertexside))) ||
+                                ( ter3 !=null && status.currentHex.getHexsideTerrain(thirdvertexside).isRowhouseFactoryWall() && !status.sourceHex.equals(getAdjacentHex(altHex, thirdvertexside))) ||
+                                ( ter4 !=null && status.currentHex.getHexsideTerrain(fourthvertexside).isRowhouseFactoryWall() && !status.sourceHex.equals(getAdjacentHex(altHex, fourthvertexside)))) {
+                            if(isBlindHex(status, status.currentTerrainHgt)) {
+                                return true;
+                            }
+                            else {
+                                return false;
+                            }
+                        }
+                        return false;
+                    } else if (status.groundLevel + status.currentTerrainHgt <= status.sourceElevation + sourceadj && status.groundLevel + status.currentTerrainHgt <= status.targetElevation + targetadj) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                    // }
                 }
                 else {
-                    return false;
+                    // have to handle IFW here because can't call getAdjacentHex from within isBlindHex
+                    // deal with rooftop los across IFW DR
+                    boolean sourcehexsidetest= (status.currentHex.equals(getAdjacentHex(status.sourceHex, status.sourceExitHexsides[0])) || status.currentHex.equals(getAdjacentHex(status.sourceHex, status.sourceExitHexsides[1])));
+                    boolean targethexsidetest= (status.currentHex.equals(getAdjacentHex(status.targetHex, status.targetEnterHexsides[0])) || status.currentHex.equals(getAdjacentHex(status.targetHex, status.targetEnterHexsides[1])));
+                    if(status.source.getTerrain().isRooftop()  && (status.rangeToSource==0 | (status.rangeToSource==1 && sourcehexsidetest ))) {
+
+                        return false;
+                    }
+                    else if(status.target.getTerrain().isRooftop() && (status.rangeToTarget==0 | (status.rangeToTarget==1 && targethexsidetest))) {
+                        return false;
+                    }
+                    // moved code below from checkHexsideTerrainRule to keep all rowhouse/IF walls in one method
+                    else if (  //now deal with all non-special situations
+                        //higher than both source/target
+                            (status.groundLevel + status.currentTerrainHgt > status.sourceElevation + sourceadj &&
+                                    status.groundLevel + status.currentTerrainHgt > status.targetElevation + targetadj) ||
+                                    //same height as both source/target, but 1/2 level
+                                    (status.groundLevel + status.currentTerrainHgt == status.sourceElevation + sourceadj &&
+                                            status.groundLevel + status.currentTerrainHgt == status.targetElevation + targetadj &&
+                                            !(status.source.getTerrain().isRooftop() && status.target.getTerrain().isRooftop()) &&
+                                            status.currentTerrain.isHalfLevelHeight()) ||
+                                    //same height as higher source/target, but other is lower
+                                    (status.groundLevel + status.currentTerrainHgt == Math.max(status.sourceElevation + sourceadj, status.targetElevation + targetadj) &&
+                                            status.groundLevel + status.currentTerrainHgt > Math.min(status.sourceElevation + sourceadj, status.targetElevation + targetadj))
+                            ) {
+                        return true;
+                    }
+                    // otherwise check for blind hexes
+                    else if (isBlindHex(status, status.currentTerrainHgt)) {
+                        return true;
+                    }
                 }
             }
             else {
+                return false;
+            }
+        }
+        else {
                 // have to handle IFW here because can't call getAdjacentHex from within isBlindHex
                 // deal with rooftop los across IFW DR
                 boolean sourcehexsidetest= status.currentHex.equals(getAdjacentHex(status.sourceHex, status.sourceExitHexsides[0]));
                 boolean targethexsidetest= status.currentHex.equals(getAdjacentHex(status.targetHex, status.targetEnterHexsides[0]));
-                if(status.source.getName().contains("Rooftop") && (status.rangeToSource==0 || (status.rangeToSource==1 && sourcehexsidetest ))) {
+                if(status.source.getTerrain().isRooftop()  && (status.rangeToSource==0 || (status.rangeToSource==1 && sourcehexsidetest ))) {
                     return false;
                 }
-                else if(status.target.getName().contains("Rooftop") && (status.rangeToTarget==0 || (status.rangeToTarget==1 && targethexsidetest))) {
+                else if(status.target.getTerrain().isRooftop() && (status.rangeToTarget==0 || (status.rangeToTarget==1 && targethexsidetest))) {
                     return false;
                 }
-                else if((status.sourceElevation> status.groundLevel + status.currentTerrainHgt) && status.rangeToTarget >=1) {
-                    return false;
+                // moved code below from checkHexsideTerrainRule to keep all rowhouse/IF walls in one method
+                else if (  //now deal with all non-special situations
+                    //higher than both source/target
+                    (status.groundLevel + status.currentTerrainHgt > status.sourceElevation + sourceadj &&
+                            status.groundLevel + status.currentTerrainHgt > status.targetElevation + targetadj) ||
+                            //same height as both source/target, but 1/2 level
+                            (status.groundLevel + status.currentTerrainHgt == status.sourceElevation + sourceadj &&
+                                    status.groundLevel + status.currentTerrainHgt == status.targetElevation + targetadj &&
+                                    !(status.source.getTerrain().isRooftop() && status.target.getTerrain().isRooftop()) &&
+                                    status.currentTerrain.isHalfLevelHeight()) ||
+                            //same height as higher source/target, but other is lower
+                            (status.groundLevel + status.currentTerrainHgt == Math.max(status.sourceElevation + sourceadj, status.targetElevation + targetadj) &&
+                                    status.groundLevel + status.currentTerrainHgt > Math.min(status.sourceElevation + sourceadj, status.targetElevation + targetadj))
+                    ) {
+                    return true;
                 }
-                else if ((status.targetElevation > status.groundLevel + status.currentTerrainHgt) && status.rangeToSource >= 1 ) {
-                    return false;
+                // otherwise check for blind hexes
+                else {
+                    if (status.sourceElevation > status.targetElevation) {
+                        int testhexside = status.currentHex.getLocationHexside(status.currentHex.getNearestLocation(status.currentCol, status.currentRow));
+                        Hex testhex = getAdjacentHex(status.currentHex, testhexside);
+                        int testrange = range(status.sourceHex, testhex);
+                        int oldrange = status.rangeToSource;
+                        if (status.rangeToSource > testrange) {
+                            status.rangeToSource = testrange;
+                        }
+                        if (isBlindHex(status, status.currentTerrainHgt)) {
+                            status.rangeToSource = oldrange;
+                            return true;
+                        } else {
+                            status.rangeToSource = oldrange;
+                        }
+                    } else if (status.targetElevation > status.sourceElevation) {
+                        int testhexside = status.currentHex.getLocationHexside(status.currentHex.getNearestLocation(status.currentCol, status.currentRow));
+                        Hex testhex = getAdjacentHex(status.currentHex, testhexside);
+                        int testrange = range(status.sourceHex, testhex);
+                        int oldrange = status.rangeToTarget;
+                        if (status.rangeToTarget > testrange) {
+                            status.rangeToTarget = testrange;
+                        }
+                        if (isBlindHex(status, status.currentTerrainHgt)) {
+                            status.rangeToTarget = oldrange;
+                            return true;
+                        } else {
+                            status.rangeToTarget = oldrange;
+                        }
+
+                    }
                 }
-            }
         }
-        // LOS is blocked
-        return true;
+        // LOS is not blocked
+        return false;
     }
 }
 

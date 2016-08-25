@@ -313,6 +313,36 @@ public class Terrain {
                 name.equals("Flooded Stream");
     }
 
+    // DR added to test for Rooftops, roofless buildings, cellars and cliffs
+    /**
+     * @return true if the terrain is a cellar
+     */
+    public boolean isCellar(){
+
+        return name.contains("Cellar");
+    }
+    /**
+     * @return true if the terrain is a rooftop
+     */
+    public boolean isRooftop(){
+
+        return name.contains("Rooftop");
+    }
+
+    /**
+     * @return true if the terrain is a roofless building
+     */
+    public boolean isRoofless(){
+
+        return name.contains("Roofless");
+    }
+    /**
+     * @return true if the terrain is a cliff
+     */
+    public boolean isCliff(){
+
+        return name.contains("Cliff");
+    }
     /**
      * @return true if the terrain is a factory
      */
