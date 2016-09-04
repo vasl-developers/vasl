@@ -474,28 +474,24 @@ public class Map  {
         if(!onMap(x, y)) {
             return null;
         }
-        // DR added -A1CenterX to handle x offset on HASL maps
-        // also trapped all errors in finding a column and row; return null rather than break
-        int z = (int) ((double) (x-A1CenterX) / (hexWidth / 3.0));
-        int row;
-        int col;
+        try {
+            // DR added -A1CenterX to handle x offset on HASL maps
+            // also trapped all errors in finding a column and row; return null rather than break
+            int z = (int) ((double) (x - (A1CenterX < 0.0 ? 0 : A1CenterX)) / (hexWidth / 3.0));
+            int row;
+            int col;
 
-        // in "grey area" between columns?
-        if ((z - 1) % 3 == 0) {
+            // in "grey area" between columns?
+            if ((z - 1) % 3 == 0) {
 
-            col = (int) Math.ceil(((double) z - 1.0) / 3.0);
-            row = (int) ((col % 2 == 0) ? (double) y / hexHeight
-                    : ((double) y + hexHeight / 2.0) / hexHeight);
+                col = (int) Math.ceil(((double) z - 1.0) / 3.0);
+                row = (int) ((col % 2 == 0) ? (double) y / hexHeight
+                        : ((double) y + hexHeight / 2.0) / hexHeight);
 
-            if (hexGrid[col][row].contains(x, y)) {
-                try {
+                if (hexGrid[col][row].contains(x, y)) {
                     return hexGrid[col][row];
-                } catch (Exception e) {
-                    return null;
                 }
-            }
-            else if (col % 2 == 0) {
-                try {
+                else if (col % 2 == 0) {
                     if (hexGrid[col + 1][row + 1].contains(x, y)) {
 
                         return hexGrid[col + 1][row + 1];
@@ -503,12 +499,8 @@ public class Map  {
                     else {
                         return hexGrid[col + 1][row];
                     }
-                } catch (Exception e) {
-                    return null;
                 }
-            }
-            else {
-                try{
+                else {
                     if ((row - 1 >= 0 && hexGrid[col + 1][row - 1].contains(x, y)) ||
                             (row == height)) {
 
@@ -517,21 +509,18 @@ public class Map  {
                     else {
                         return hexGrid[col + 1][row];
                     }
-                } catch (Exception e) {
-                    return null;
                 }
             }
-        }
-        else {
+            else {
 
-            try {
                 col = (int) Math.ceil((double) z / 3.0);
                 row = (int) ((col % 2 == 0) ? (double) y / hexHeight
                         : ((double) y + hexHeight / 2.0) / hexHeight);
                 return hexGrid[col][row];
-            } catch (Exception e) {
-                return null;
             }
+         // return null on any error
+        } catch (Exception e) {
+            return null;
         }
     }
 
