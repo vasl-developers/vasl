@@ -1920,33 +1920,26 @@ public class Map  {
             else if (!status.LOSLeavesBuilding && (status.target.getTerrain().isFactoryTerrain() | status.source.getTerrain().isFactoryTerrain())  ) {  //LOS is within a factory
                 // no rooftop LOS if source/target are not in same hex (unless current hex is roofless or first roofed hex)
                 if(!status.sourceHex.equals(status.targetHex)) {  //same-hex LOS is ok in factory
-                    if(status.LOSis60Degree || status.LOSisHorizontal) {
-
+                    if(status.LOSis60Degree || status.LOSisHorizontal) {  //need one of the adjacent hexes to be roofless
+                        if(status.rangeToSource % 2 ==0){ // at even range do normal hex change
+                            return isRooftopLOSBlocked(status.currentHex, status.currentTerrain, status.currentTerrainHgt, status, result, rooftopadj);
+                        }
+                        else {  // range is odd so need one of the adjacent hexes to be roofless
+                            if (!isRooftopLOSBlocked(status.currentHex, status.currentTerrain, status.currentTerrainHgt, status, result, rooftopadj)) {
+                                return false;  // if first hex is roofless then LOS not blocked
+                            }
+                            else {  //need to check if second hex is roofless
+                                status.reason="";  //reset variables
+                                status.blocked=false;
+                                result.reset();
+                                int testhexside = status.currentHex.getLocationHexside(status.currentHex.getNearestLocation(status.currentCol, status.currentRow));
+                                Hex testhex = getAdjacentHex(status.currentHex, testhexside);
+                                return isRooftopLOSBlocked(testhex, testhex.getCenterLocation().getTerrain(), testhex.getCenterLocation().getTerrain().getHeight(), status, result, rooftopadj);
+                            }
+                        }
                    }
                     else {
-                        if ((status.source.getTerrain().isRooftop() && !status.target.getTerrain().isRooftop()) &&  //LOS is from rooftop down
-                                (!status.currentHex.getCenterLocation().getTerrain().isRoofless() && !status.currentHex.equals(status.targetHex))) {
-                                //each hex (except source and target) along LOS must be roofless; if not LOS blocked
-                            status.reason = "LOS from/to Factory Rooftop within Factory only exists in same hex ground level location (B23.87)";
-                            status.blocked = true;
-                            result.setBlocked(status.currentCol, status.currentRow, status.reason);
-                            return true;
-                        } else if ((status.target.getTerrain().isRooftop() && !status.source.getTerrain().isRooftop()) &&  // LOS is up to rooftop
-                                ((!status.currentHex.getCenterLocation().getTerrain().isRoofless() && status.rangeToSource==1 && !status.sourceHex.getCenterLocation().getTerrain().isRoofless()) ||
-                                        (!status.currentHex.getCenterLocation().getTerrain().isRoofless() &&  !status.currentHex.equals(status.targetHex) && (status.currentTerrainHgt+ status.currentTerrain.getHeight() >= status.targetElevation + rooftopadj)))) { // status.rangeToTarget == 1)
-                                //each hex (except source and target) along LOS must be roofless; if not LOS blocked
-                                //unless target is higher than factory rooftop; first hex must still be roofless - this will handle some LOS that leaves factory - NOT GOOD BUT . . .
-                            if (status.rangeToSource==1) {
-                                status.reason = "LOS must leave the building before leaving the source hex to see a location with a different elevation (A6.8 Example 2)";
-                            }
-                            else {
-                                status.reason = "LOS from/to Factory Rooftop within Factory only exists in same hex ground level location (B23.87)";
-                            }
-
-                            status.blocked = true;
-                            result.setBlocked(status.currentCol, status.currentRow, status.reason);
-                            return true;
-                        }
+                        return isRooftopLOSBlocked(status.currentHex, status.currentTerrain, status.currentTerrainHgt, status, result, rooftopadj);
                     }
                 }
             }
@@ -1954,6 +1947,32 @@ public class Map  {
         return false;
     }
 
+    private boolean isRooftopLOSBlocked(Hex passcurrentHex, Terrain passcurrentTerrain, int passcurrentTerrainHgt, LOSStatus status, LOSResult result, int rooftopadj) {
+        if ((status.source.getTerrain().isRooftop() && !status.target.getTerrain().isRooftop()) &&  //LOS is from rooftop down
+                (!passcurrentHex.getCenterLocation().getTerrain().isRoofless() && !passcurrentHex.equals(status.targetHex))) {
+            //each hex (except source and target) along LOS must be roofless; if not LOS blocked
+            status.reason = "LOS from/to Factory Rooftop within Factory only exists in same hex ground level location (B23.87)";
+            status.blocked = true;
+            result.setBlocked(status.currentCol, status.currentRow, status.reason);
+            return true;
+        } else if ((status.target.getTerrain().isRooftop() && !status.source.getTerrain().isRooftop()) &&  // LOS is up to rooftop
+                ((!passcurrentHex.getCenterLocation().getTerrain().isRoofless() && status.rangeToSource==1 && !status.sourceHex.getCenterLocation().getTerrain().isRoofless()) ||
+                        (!passcurrentHex.getCenterLocation().getTerrain().isRoofless() &&  !passcurrentHex.equals(status.targetHex) && (passcurrentTerrainHgt+ passcurrentTerrain.getHeight() >= status.targetElevation + rooftopadj)))) { // status.rangeToTarget == 1)
+            //each hex (except source and target) along LOS must be roofless; if not LOS blocked
+            //unless target is higher than factory rooftop; first hex must still be roofless - this will handle some LOS that leaves factory - NOT GOOD BUT . . .
+            if (status.rangeToSource==1) {
+                status.reason = "LOS must leave the building before leaving the source hex to see a location with a different elevation (A6.8 Example 2)";
+            }
+            else {
+                status.reason = "LOS from/to Factory Rooftop within Factory only exists in same hex ground level location (B23.87)";
+            }
+
+            status.blocked = true;
+            result.setBlocked(status.currentCol, status.currentRow, status.reason);
+            return true;
+        }
+        return false;
+    }
     /**
      * Ensures the elevation/range restriction for source/target IN a depression are met
      * @param status the LOS status
