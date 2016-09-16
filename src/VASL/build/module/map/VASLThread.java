@@ -560,16 +560,23 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                             leveladj=-0.5;
                         }
                         finalLevel= source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj ;
+                        String levelString ="";
+                        if ((int)Math.round(finalLevel) > (int)finalLevel) {  //need to show decimal place
+                            levelString="Level " + finalLevel;
+                        }
+                        else {  // hide decimal place
+                            levelString="Level " + (int)finalLevel;
+                        }
                         if (isVerbose()) {
                             lastRangeRect = drawText(g,
                                     sourceLOSPoint.x - 20,
                                     sourceLOSPoint.y + (shiftSourceText ? shift : 0) - g.getFontMetrics().getDescent(),
-                                    source.getName() + "  (Level " + finalLevel + ")");
+                                    source.getName() + "  (" + levelString + ")");
                         } else if (source.getBaseHeight() != 0) {
                             lastRangeRect = drawText(g,
                                     sourceLOSPoint.x - 20,
                                     sourceLOSPoint.y + (shiftSourceText ? shift : 0) - g.getFontMetrics().getDescent(),
-                                    "Level " + finalLevel );
+                                    levelString );
                         }
 
                         // draw the target elevation
@@ -596,16 +603,22 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                             leveladj=-0.5;
                         }
                         finalLevel= target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj ;
+                        if ((int)Math.round(finalLevel) > (int)finalLevel) {  //need to show decimal place
+                            levelString="Level " + finalLevel;
+                        }
+                        else {  // hide decimal place
+                            levelString="Level " + (int)finalLevel;
+                        }
                         if (isVerbose()) {
                             lastRangeRect.add(drawText(g,
                                     targetLOSPoint.x - 20,
                                     targetLOSPoint.y + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
-                                    target.getName() + "  (Level " + finalLevel + ")"));
+                                    target.getName() + "  (" + levelString + ")"));
                         } else if (target.getBaseHeight() != 0) {
                             lastRangeRect.add(drawText(g,
                                     targetLOSPoint.x - 20,
                                     targetLOSPoint.y + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
-                                    "Level " + finalLevel ));
+                                    levelString ));
                         }
                         // draw the verbose text
                         g.setColor(Color.black);

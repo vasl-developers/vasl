@@ -288,7 +288,7 @@ public class Terrain {
     }
 
     /**
-     * @return true if terrain is a rowhouse wall
+     * @return true if terrain is a rowhouse or interior factory wall
      */
     public boolean isRowhouseFactoryWall(){
 
@@ -300,8 +300,18 @@ public class Terrain {
                 // code added DR to handle interior factory walls
                 name.equals("Interior Factory Wall, 1 Level") ||
                 name.equals("Interior Factory Wall, 2 Level");
-    }
 
+    }
+    /**
+     * @return true if terrain is an exterior factory wall
+     */
+    public boolean isOutsideFactoryWall(){
+
+        return name.equals("Stone Factory Wall, 1.5 Level") ||
+                name.equals("Stone Factory Wall, 2.5 Level")||
+                name.equals("Wooden Factory Wall, 1.5 Level") ||
+                name.equals("Wooden Factory Wall, 2.5 Level") ;
+    }
     /**
      * @return true if the terrain is a stream
      */

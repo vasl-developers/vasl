@@ -49,7 +49,7 @@ public class LOSResult {
 	private boolean LOSisHorizontal;
 
     // the <Integer> is the range to the hindrance hex
-	protected HashSet<Integer> mapHindrances = new HashSet<Integer>();
+	protected HashMap<Integer, Integer>  mapHindrances = new HashMap<Integer, Integer>();
 
     // <Integer, Integer> = <range, hindrance>
 	private	HashMap<Integer, Integer>	smokeHindrances	= new HashMap<Integer, Integer>();
@@ -73,8 +73,10 @@ public class LOSResult {
      * @return total hindrances in results
      */
     public int getHindrance() {
-
-		int hindrance = mapHindrances.size();
+		int hindrance=0;
+		for(Integer range : mapHindrances.keySet()) {
+			hindrance += mapHindrances.get(range);
+		}
 
 		// add the smoke hindrances
         for(Integer range : smokeHindrances.keySet()) {
@@ -97,12 +99,16 @@ public class LOSResult {
      * @param x current x of LOS
      * @param y current y of LOS
      */
-    public void addMapHindrance(Hex h, int x, int y){
+    public void addMapHindrance(Hex h, int hindrance, int x, int y){
 
         setFirstHindrance(x, y);
 
-        // add the range to the hindrance hex, so two hexes at the same range are only one hindrance
-        mapHindrances.add(sourceLocation.getHex().getMap().range(sourceLocation.getHex(), h));
+        // if there's already a terrain hindrance at this range replace if hindrance is greater
+		Integer range = sourceLocation.getHex().getMap().range(sourceLocation.getHex(), h);
+		if(!mapHindrances.containsKey(range) ||
+				(mapHindrances.containsKey(range) && hindrance > mapHindrances.get(range))) {
+			mapHindrances.put(range, hindrance);
+		}
 
         setBlockedByHindrance(x, y);
 	}
@@ -237,5 +243,11 @@ public class LOSResult {
 		targetLocation		= null;
 		sourceExitHexspine	= UNKNOWN;
 		targetEnterHexspine	= UNKNOWN;
+	}
+
+	public void resetreportingonly() {
+		blocked				= false;
+		blockedAtPoint		= null;
+		reason				= "";
 	}
 }
