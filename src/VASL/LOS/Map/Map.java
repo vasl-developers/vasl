@@ -2286,7 +2286,7 @@ public class Map  {
         if(status.target.getTerrain().isRooftop() ) {
             targetadj=-0.5;
         }
-        if(status.currentTerrain.isHalfLevelHeight() && status.currentTerrain.isBuilding()) {
+        if(status.currentTerrain.isHalfLevelHeight() && status.currentTerrain.isBuilding() ) {
             obstacleadj=+0.5;
         }
         if(status.source.getTerrain().isCellar()) {
@@ -2311,10 +2311,13 @@ public class Map  {
 
             // are exiting gully restrictions satisfied?
             if (!(status.ignoreGroundLevelHex != null &&
-                    status.ignoreGroundLevelHex.containsExtended(status.currentCol, status.currentRow)) &&
+                    status.ignoreGroundLevelHex.containsExtended(status.currentCol, status.currentRow)) //&&
                     // are entering gully restrictions satisfied?
-                    !(status.entersTargetDepression && (status.currentHex.isDepressionTerrain() && status.currentTerrainHgt==0) && (!(status.LOSis60Degree) && !(status.LOSisHorizontal))) &&
-                    !(status.exitsSourceDepression && (status.currentHex.isDepressionTerrain() && status.currentTerrainHgt==0) && (!(status.LOSis60Degree) && !(status.LOSisHorizontal)))
+                    //!status.entersTargetDepression && (status.currentHex.isDepressionTerrain() && status.currentTerrainHgt==0) && !status.LOSis60Degree && !status.LOSisHorizontal &&
+                    //!status.exitsSourceDepression // && (status.currentHex.isDepressionTerrain() && status.currentTerrainHgt==0) && (!(status.LOSis60Degree) && !(status.LOSisHorizontal)))
+
+                //!(status.entersTargetDepression && (status.currentHex.isDepressionTerrain() && status.currentTerrainHgt==0) && (!(status.LOSis60Degree) && !(status.LOSisHorizontal))) &&
+                    //!(status.exitsSourceDepression && (status.currentHex.isDepressionTerrain() && status.currentTerrainHgt==0) && (!(status.LOSis60Degree) && !(status.LOSisHorizontal)))
                     ) {
 
                 // Need to handle special case where source unit is adjacent to a water obstacle looking
@@ -3554,7 +3557,7 @@ public class Map  {
         if (status.target.getTerrain().isRooftop()) {
             targetadj=-1;
         }
-        if (status.currentTerrain.getName().contains("Interior Factory Wall") && (result.isLOSis60Degree() | result.isLOSisHorizontal())   ) {
+        if (status.currentTerrain.getName().contains("Interior Factory Wall") && (result.isLOSis60Degree() | result.isLOSisHorizontal()) ) {
             // special case of LOS along IFW
             int firsthexside = result.getSourceExitHexspine() + 1;
             if (firsthexside >= 6) {
@@ -3567,24 +3570,27 @@ public class Map  {
 
             if (!status.currentHex.equals(status.sourceHex) && !status.currentHex.equals(status.targetHex)) {
 
-                if(status.currentTerrain.equals(status.currentHex.getHexsideTerrain(firsthexside)) || status.currentTerrain.equals(status.currentHex.getHexsideTerrain(secondhexside))){
+                if((status.currentTerrain.equals(status.currentHex.getHexsideTerrain(firsthexside)) || status.currentTerrain.equals(status.currentHex.getHexsideTerrain(secondhexside)))&& status.rangeToSource%2!=0){
                     Hex altHex;
                     int firstvertexside;
                     int secondvertexside;
                     int thirdvertexside;
                     int fourthvertexside;
-                    if (status.currentTerrain.equals(status.currentHex.getHexsideTerrain(firsthexside))) {
+                    if (status.currentTerrain.equals(status.currentHex.getHexsideTerrain(firsthexside)) && (status.currentHex.getLocationHexside(status.currentHex.getNearestLocation(status.currentCol, status.currentRow))== firsthexside)) {
                         altHex = getAdjacentHex(status.currentHex, firsthexside);
                         firstvertexside=firsthexside-1;
                         secondvertexside=firsthexside+1;
                         thirdvertexside= secondhexside-1;
                         fourthvertexside=secondhexside+1;
-                    } else {
+                    } else if (status.currentTerrain.equals(status.currentHex.getHexsideTerrain(secondhexside))&& (status.currentHex.getLocationHexside(status.currentHex.getNearestLocation(status.currentCol, status.currentRow))== secondhexside)){
                         altHex = getAdjacentHex(status.currentHex, secondhexside);
                         firstvertexside=secondhexside-1;
                         secondvertexside=secondhexside+1;
                         thirdvertexside= firsthexside-1;
                         fourthvertexside=firsthexside+1;
+                    }
+                    else {
+                        return false;
                     }
                     if( firstvertexside==-1) { firstvertexside=5;}
                     if( firstvertexside==6) { firstvertexside=0;}
@@ -3604,10 +3610,10 @@ public class Map  {
                         Terrain ter3 = status.currentHex.getHexsideTerrain(thirdvertexside);
                         Terrain ter4 = status.currentHex.getHexsideTerrain(fourthvertexside);
 
-                        if(( ter1 != null && status.currentHex.getHexsideTerrain(firstvertexside).isRowhouseFactoryWall() && !status.sourceHex.equals(getAdjacentHex(status.currentHex, firstvertexside))) ||
-                                ( ter2 !=null && status.currentHex.getHexsideTerrain(secondvertexside).isRowhouseFactoryWall() && !status.sourceHex.equals(getAdjacentHex(status.currentHex, secondvertexside))) ||
-                                ( ter3 !=null && status.currentHex.getHexsideTerrain(thirdvertexside).isRowhouseFactoryWall() && !status.sourceHex.equals(getAdjacentHex(altHex, thirdvertexside))) ||
-                                ( ter4 !=null && status.currentHex.getHexsideTerrain(fourthvertexside).isRowhouseFactoryWall() && !status.sourceHex.equals(getAdjacentHex(altHex, fourthvertexside)))) {
+                        if(( ter1 != null && status.currentHex.getHexsideTerrain(firstvertexside).isRowhouseFactoryWall() && !(status.sourceHex.equals(getAdjacentHex(status.currentHex, firstvertexside)) || status.targetHex.equals(getAdjacentHex(status.currentHex, firstvertexside)) )) ||
+                                ( ter2 !=null && status.currentHex.getHexsideTerrain(secondvertexside).isRowhouseFactoryWall() && !(status.sourceHex.equals(getAdjacentHex(status.currentHex, secondvertexside)) || status.targetHex.equals(getAdjacentHex(status.currentHex, secondvertexside)) )) ||
+                                ( ter3 !=null && status.currentHex.getHexsideTerrain(thirdvertexside).isRowhouseFactoryWall() && !(status.sourceHex.equals(getAdjacentHex(altHex, thirdvertexside)) || status.targetHex.equals(getAdjacentHex(altHex, thirdvertexside)) )) ||
+                                ( ter4 !=null && status.currentHex.getHexsideTerrain(fourthvertexside).isRowhouseFactoryWall() && !(status.sourceHex.equals(getAdjacentHex(altHex, fourthvertexside))  || status.targetHex.equals(getAdjacentHex(altHex, fourthvertexside)) ))) {
                             if(isBlindHex(status, status.currentTerrainHgt)) {
                                 return true;
                             }
@@ -3626,6 +3632,23 @@ public class Map  {
                 else {
                     // have to handle IFW here because can't call getAdjacentHex from within isBlindHex
                     // deal with rooftop los across IFW DR
+                    int firstvertexside=firsthexside-1;
+                    int secondvertexside=firsthexside+1;
+                    int thirdvertexside=secondhexside-1;
+                    int fourthvertexside=secondhexside+1;
+                    if( firstvertexside==-1) { firstvertexside=5;}
+                    if( firstvertexside==6) { firstvertexside=0;}
+                    if( secondvertexside==-1) { secondvertexside=5;}
+                    if( secondvertexside==6) { secondvertexside=0;}
+                    if( thirdvertexside==-1) { thirdvertexside=5;}
+                    if( thirdvertexside==6) { thirdvertexside=0;}
+                    if( fourthvertexside==-1) { fourthvertexside=5;}
+                    if( fourthvertexside==6) { fourthvertexside=0;}
+                    // need to check now for IFW connected to IFW along hexside; these will block LOS
+                    Terrain ter1 = status.currentHex.getHexsideTerrain(firstvertexside);
+                    Terrain ter2 = status.currentHex.getHexsideTerrain(secondvertexside);
+                    Terrain ter3 = status.currentHex.getHexsideTerrain(thirdvertexside);
+                    Terrain ter4 = status.currentHex.getHexsideTerrain(fourthvertexside);
                     boolean sourcehexsidetest= (status.currentHex.equals(getAdjacentHex(status.sourceHex, status.sourceExitHexsides[0])) || status.currentHex.equals(getAdjacentHex(status.sourceHex, status.sourceExitHexsides[1])));
                     boolean targethexsidetest= (status.currentHex.equals(getAdjacentHex(status.targetHex, status.targetEnterHexsides[0])) || status.currentHex.equals(getAdjacentHex(status.targetHex, status.targetEnterHexsides[1])));
                     if(status.source.getTerrain().isRooftop()  && (status.rangeToSource==0 | (status.rangeToSource==1 && sourcehexsidetest ))) {
@@ -3633,6 +3656,9 @@ public class Map  {
                         return false;
                     }
                     else if(status.target.getTerrain().isRooftop() && (status.rangeToTarget==0 | (status.rangeToTarget==1 && targethexsidetest))) {
+                        return false;
+                    }
+                    else if((status.source.getTerrain().isRooftop() || status.target.getTerrain().isRooftop()) && status.rangeToSource%2==0 && ter1==null && ter2==null && ter3==null && ter4==null ) {
                         return false;
                     }
                     // moved code below from checkHexsideTerrainRule to keep all rowhouse/IF walls in one method
@@ -3658,7 +3684,50 @@ public class Map  {
                 }
             }
             else {
-                return false;
+                // deal with rooftop los across IFW DR
+                //for (int hexside : status.sourceExitHexsides) {
+                //    if(hexside<0){return false;}
+                //}
+                //for (int hexside : status.targetEnterHexsides) {
+                //    if(hexside<0) {return false;}
+                //}
+                //boolean sourcehexsidetest= (status.currentHex.getHexsideTerrain(status.sourceExitHexsides[0]).equals(status.currentTerrain) || status.currentHex.getHexsideTerrain(status.sourceExitHexsides[1]).equals(status.currentTerrain));
+                //boolean targethexsidetest= (status.currentHex.getHexsideTerrain(status.targetEnterHexsides[0]).equals(status.currentTerrain) || status.currentHex.getHexsideTerrain(status.targetEnterHexsides[1]).equals(status.currentTerrain));
+                if(status.currentHex.equals(status.sourceHex) && status.source.getTerrain().isRooftop() ) { // && status.rangeToSource==0) {  // | (status.rangeToSource==1 && sourcehexsidetest ))) {
+                    return false;
+                }
+                else if(status.currentHex.equals(status.targetHex) && status.target.getTerrain().isRooftop()) {  //&& status.rangeToTarget==0) {  // | (status.rangeToTarget==1 && targethexsidetest))) {
+                    return false;
+                }
+                else {
+                    if(status.currentHex.equals(status.sourceHex) ){
+                        Location testlocation = status.currentHex.getNearestLocation(status.currentCol, status.currentRow);
+                        if (testlocation.getTerrain().isRowhouseFactoryWall()) {
+                            return true;
+                        }
+                        else {
+                            return false;
+                        }
+                    }
+                    else {
+                        boolean targethexsidetest=false;
+                        if( status.targetEnterHexsides[0]!=-1){
+                            if (status.currentHex.getHexsideTerrain(status.targetEnterHexsides[0]) != null) {
+                                if (status.currentHex.getHexsideTerrain(status.targetEnterHexsides[0]).equals(status.currentTerrain)) {
+                                    return true;
+                                }
+                            }
+                        }
+                        if( status.targetEnterHexsides[1]!=-1) {
+                            if (status.currentHex.getHexsideTerrain(status.targetEnterHexsides[1]) != null) {
+                                if (status.currentHex.getHexsideTerrain(status.targetEnterHexsides[1]).equals(status.currentTerrain)) {
+                                    return true;
+                                }
+                            }
+                        }
+                        return false;
+                    }
+                }
             }
         }
         else {
