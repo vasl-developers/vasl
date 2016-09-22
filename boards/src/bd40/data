@@ -1,4 +1,5 @@
-version 6.2
-Aug 2016 DR metadata fix
-Mar 2016 ATC (added SSO for AP103)
-Jan 2012 TR
+version 6.3
+6.3 Sep 2016 ATC LOSDATA fix
+6.2 Aug 2016 DR metadata fix
+6.1 Mar 2016 ATC (added SSO for AP103)
+6.0 Jan 2012 TR
