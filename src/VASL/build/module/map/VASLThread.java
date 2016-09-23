@@ -559,6 +559,9 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                         if(source.getName().contains("Rooftop")) {
                             leveladj=-0.5;
                         }
+                        if(source.getHex().isDepressionTerrain() && !source.isCenterLocation()) {
+                            leveladj=+1;
+                        }
                         finalLevel= source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj ;
                         String levelString ="";
                         if ((int)Math.round(finalLevel) > (int)finalLevel) {  //need to show decimal place
@@ -601,6 +604,9 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                         leveladj=0;
                         if(target.getName().contains("Rooftop")) {
                             leveladj=-0.5;
+                        }
+                        if(target.getHex().isDepressionTerrain() && !target.isCenterLocation()) {
+                            leveladj=+1;
                         }
                         finalLevel= target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj ;
                         if ((int)Math.round(finalLevel) > (int)finalLevel) {  //need to show decimal place
