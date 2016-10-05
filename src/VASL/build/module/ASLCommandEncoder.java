@@ -41,18 +41,7 @@ public class ASLCommandEncoder extends VASSAL.build.module.BasicCommandEncoder i
   public void addTo(Buildable b) {
     super.addTo(b);
     BasicPiece.setHighlighter(new ASLHighlighter());
-/*
-	   // Klaus' colors
-	   initColor("ge","German",new Color(184,232,255));
-	   initColor("ru","Russian",new Color(240,160,0));
-	   initColor("am","American",new Color(207,255,43));
-	   initColor("br","British",new Color(255,232,184));
-	   initColor("ja","Japanese",new Color(255,232,54));
-	   initColor("fr","French",new Color(125,255,255));
-	   initColor("it","Italian",new Color(158,158,158));
-	   initColor("ax","Axis Minor",new Color(217,255,217));
-	   initColor("al","Allied Minor",new Color(102,255,54));
-	*/
+
 // VASL 5.0 colors
     initColor("ge", "German", new Color(145,205,245));
     initColor("fi", "Finnish", new Color(206, 211, 211));
@@ -354,7 +343,7 @@ public class ASLCommandEncoder extends VASSAL.build.module.BasicCommandEncoder i
 
   private void initColor(String key, String name, Color defaultColor) {
     ColorConfigurer c = new Col(key, name, defaultColor);
-    GameModule.getGameModule().getPrefs().addOption(promptForColors ? "Nationality Colors" : null, c);
+    // GameModule.getGameModule().getPrefs().addOption(promptForColors ? "Nationality Colors" : null, c);
     if (c.getValue() == null) {
       c.setValue(defaultColor);
     }
@@ -362,22 +351,6 @@ public class ASLCommandEncoder extends VASSAL.build.module.BasicCommandEncoder i
 
   public Color getColor(String s) {
     return (Color) GameModule.getGameModule().getPrefs().getValue(s);
-/*
-	if (colors == null) {
-	    colors = new java.util.Hashtable();
-	    colors.put("ge",new Color(106,184,255));
-	    colors.put("ru",new Color(145,145,0));
-	    colors.put("al",new Color(130,237,189));
-	    colors.put("am",new Color(102,204,0));
-	    colors.put("ax",new Color(29,226,86));
-	    colors.put("br",new Color(229,206,160));
-	    colors.put("fr",new Color(0,140,255));
-	    colors.put("ja",new Color(255,219,0));
-	    colors.put("it",new Color(166,173,178));
-	}
-	Color c = (Color)colors.get(s);
-	return c == null ? Color.white : c;
-	*/
   }
 
   public Map getMap() {
