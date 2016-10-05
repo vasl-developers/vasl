@@ -6,7 +6,7 @@
 
     <groupId>org.vasl</groupId>
     <artifactId>vasl</artifactId>
-    <version>6.3.4-Snapshot</version>
+    <version>6.4.0-Snapshot</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -57,8 +57,8 @@
                 <version>3.1</version>
                 <configuration>
                     <verbose>true</verbose>
-                    <source>1.5</source>
-                    <target>1.5</target>
+                    <source>1.6</source>
+                    <target>1.6</target>
                 </configuration>
             </plugin>
             <plugin>

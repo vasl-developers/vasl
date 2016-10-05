@@ -1,0 +1,182 @@
+package VASL.build.module.map;
+
+/**
+ * Copyright (c) 2016 by David Sullivan
+ * <p>
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License (LGPL) as published by the Free Software Foundation.
+ * <p>
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, copies are available
+ * at http://www.opensource.org.
+ */
+
+import VASSAL.build.AbstractConfigurable;
+import VASSAL.build.Buildable;
+import VASSAL.build.GameModule;
+import VASSAL.build.module.GameComponent;
+import VASSAL.build.module.Map;
+import VASSAL.build.module.documentation.HelpFile;
+import VASSAL.build.module.map.Drawable;
+import VASSAL.command.Command;
+import VASSAL.configure.PropertyExpression;
+import VASSAL.counters.BasicPiece;
+import VASSAL.counters.Decorator;
+import VASSAL.counters.GamePiece;
+import VASSAL.counters.PieceIterator;
+
+import java.awt.*;
+import java.util.ArrayList;
+
+import static VASL.build.module.map.boardPicker.ASLBoard.DEFAULT_HEX_HEIGHT;
+
+/**
+ * This component highlights the sniper counters.
+ */
+public class ASLSniperFinder extends AbstractConfigurable implements GameComponent, Drawable {
+    private Map map;
+
+    private Boolean visible = false;
+    private final PropertyExpression piecePropertiesFilter = new PropertyExpression();
+    private final ArrayList<Point> pointList = new ArrayList<Point>();
+
+    // this component is not configurable
+    @Override
+    public Class<?>[] getAttributeTypes() {
+        return new Class<?>[]{String.class};
+    }
+
+    @Override
+    public String[] getAttributeNames() {
+        return new String[]{"Name"};
+    }
+
+    @Override
+    public String[] getAttributeDescriptions() {
+        return new String[]{"Name"};
+    }
+
+    @Override
+    public String getAttributeValueString(String key) {
+        return "ASL Sniper Finder";
+    }
+
+    @Override
+    public void setAttribute(String key, Object value) {
+    }
+
+    public void addTo(Buildable parent) {
+
+        // add this component to the game
+        if (parent instanceof Map) {
+            this.map = (Map) parent;
+            map.addDrawComponent(this);
+
+            piecePropertiesFilter.setExpression("InvisibleToOthers != true && " +
+                    "PieceName =  RU Sniper || " +
+                    "PieceName =  AM Sniper || " +
+                    "PieceName =  BR Sniper || " +
+                    "PieceName =  FR Sniper || " +
+                    "PieceName =  CH Sniper || " +
+                    "PieceName =  AL Sniper || " +
+                    "PieceName =  GE Sniper || " +
+                    "PieceName =  SS Sniper || " +
+                    "PieceName =  JA Sniper || " +
+                    "PieceName =  IT Sniper || " +
+                    "PieceName =  FI Sniper || " +
+                    "PieceName =  AX Sniper || " +
+                    "PieceName =  HU Sniper "
+            );
+        }
+    }
+
+    @Override
+    public void draw(Graphics g, Map map) {
+
+        if (visible) {
+            LoadSniperPosition();
+
+            if (pointList.size() > 0) {
+                int circleSize = (int) (this.map.getZoom() * DEFAULT_HEX_HEIGHT * 1.5);
+                g.setColor(Color.RED);
+
+                Graphics2D graph2D = (Graphics2D) g;
+
+                Stroke oldStroke = graph2D.getStroke();
+                graph2D.setStroke(new BasicStroke(4));
+
+                for (Point aPointList : pointList) {
+                    Point point = this.map.componentCoordinates(aPointList);
+
+                    graph2D.drawOval(point.x - circleSize / 2, point.y - circleSize / 2, circleSize, circleSize);
+                }
+
+                graph2D.setStroke(oldStroke);
+            }
+        }
+    }
+
+    private void LoadSniperPosition() {
+        for (VASSAL.build.module.Map m : VASSAL.build.module.Map.getMapList())
+            m.getPieces();
+
+        pointList.clear();
+
+        final PieceIterator pi = new PieceIterator(
+                GameModule.getGameModule().getGameState().getAllPieces().iterator(),
+                piecePropertiesFilter
+        );
+
+        while (pi.hasMoreElements()) {
+            final GamePiece piece = pi.nextPiece();
+
+            if (piece instanceof Decorator || piece instanceof BasicPiece) {
+                Point pos = piece.getPosition();
+
+                if (!pointList.contains(pos))
+                    pointList.add(pos);
+            }
+        }
+    }
+
+    public void findSniper(boolean visible) {
+        this.visible = visible;
+
+        map.getView().repaint();
+    }
+
+    @Override
+    public boolean drawAboveCounters() {
+        return true;
+    }
+
+    @Override
+    public void removeFrom(Buildable parent) {
+
+    }
+
+    @Override
+    public HelpFile getHelpFile() {
+        return null;
+    }
+
+    @Override
+    public Class[] getAllowableConfigureComponents() {
+        return new Class[0];
+    }
+
+    @Override
+    public void setup(boolean gameStarting) {
+    }
+
+    @Override
+    public Command getRestoreCommand() {
+        return null;
+    }
+}
