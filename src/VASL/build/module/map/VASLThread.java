@@ -294,9 +294,9 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             return;
         }
 
-        // if Ctrl click, use upper location
+        // if Ctrl click, use upper-most non-rooftop location
         if (e.isControlDown()) {
-            while (source.getUpLocation() != null) {
+            while (source.getUpLocation() != null && !source.getUpLocation().getName().contains("Rooftop")) {
                 source = source.getUpLocation();
             }
         }
@@ -342,9 +342,9 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                 return;
             }
 
-            // if Ctrl click, use upper location
+            // if Ctrl click, use upper-most non-rooftop location
             if (e.isControlDown()) {
-                while (target.getUpLocation() != null) {
+                while (target.getUpLocation() != null && !target.getUpLocation().getName().contains("Rooftop")) {
                     target = target.getUpLocation();
                 }
             }
