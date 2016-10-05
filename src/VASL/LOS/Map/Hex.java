@@ -399,6 +399,21 @@ public class Hex {
         this.slopes = slopes;
     }
 
+    // code added by DR to enable RB rr embankments
+    private boolean[] rbrrembankments = new boolean[6]; // flags for hexsides having RB rr embankments - all false by default
+    /**
+     * Set the hexside rrembankment flags
+     * [0] is the top hexside and the others are clockwise from there
+     */
+    public void setRBrrembankments(boolean[] rbrrembankments) {
+
+        // must be an array of 6 flags;
+        if(rbrrembankments.length != 6) {
+            return;
+        }
+        this.rbrrembankments = rbrrembankments;
+    }
+
     /**
      * @param hexside the hexside - 0 is the top hexside and the others are clockwise from there
      * @return true if hexside has slope
@@ -528,7 +543,7 @@ public class Hex {
         boolean oldStairway = false;
 
         // add building locations
-        if (centerLocationTerrain.isBuilding()){
+        if (centerLocationTerrain.isBuilding()) {
 
             // keep stairway if resetting a multi-level building
             oldStairway = stairway &&
@@ -536,7 +551,7 @@ public class Hex {
                     !"Wooden Building, 1 Level".equals(centerLocation.getTerrain().getName());
 
             // special case for marketplace
-            if(centerLocationTerrain.getLOSCategory() == Terrain.LOSCategories.MARKETPLACE) {
+            if (centerLocationTerrain.getLOSCategory() == Terrain.LOSCategories.MARKETPLACE) {
                 centerLocation.setTerrain(map.getTerrain("Open Ground"));
             }
 
@@ -545,16 +560,89 @@ public class Hex {
             for (int level = 1; level <= centerLocationTerrain.getHeight(); level++) {
 
                 // need to ignore buildings without upper level locations - bit of a hack so we can use the building height
-                if(!"Wooden Building".equals(centerLocationTerrain.getName()) &&
-                   !"Stone Building".equals(centerLocationTerrain.getName())) {
+                if (!"Wooden Building".equals(centerLocationTerrain.getName()) &&
+                        !"Stone Building".equals(centerLocationTerrain.getName())) {
+
+                    // code added by DR to prevent quasi-levels in Factory hexes without stairways
+                    if ((centerLocationTerrain.getLOSCategory() == Terrain.LOSCategories.FACTORY) &&
+                            !(stairway)) {
+                    } else {
+                        final Location l = new Location(
+                                centerLocation.getName() + " Level " + level,
+                                level,
+                                centerLocation.getLOSPoint(),
+                                centerLocation.getLOSPoint(),
+                                null,
+                                this,
+                                centerLocationTerrain
+                        );
+
+                        previousLocation.setUpLocation(l);
+                        l.setDownLocation(previousLocation);
+                        previousLocation = l;
+                    }
+                }
+            }
+
+            // set inherent stairway
+            stairway =
+                    "Stone Building, 1 Level".equals(centerLocation.getTerrain().getName()) ||
+                            "Wooden Building, 1 Level".equals(centerLocation.getTerrain().getName()) ||
+                            oldStairway;
+
+            // add cellars and rooftops to buildings. will add them to multihex non-factories) DR
+            // need to ignore buildings without upper level locations - bit of a hack so we can use the building height
+
+            // cellars
+            previousLocation = centerLocation;
+            if (!"Wooden Building".equals(centerLocationTerrain.getName()) &&
+                    !"Stone Building".equals(centerLocationTerrain.getName()) &&
+                    !(centerLocationTerrain.getLOSCategory() == Terrain.LOSCategories.FACTORY)) {
+                if (isMultihexBuilding()) {
+                    Terrain cellarterrain;
+                    cellarterrain = map.getTerrain("Cellar");
                     final Location l = new Location(
-                            centerLocation.getName() + " Level " + level,
-                            level,
+                            centerLocation.getName() + " Cellar ",
+                            -1,
                             centerLocation.getLOSPoint(),
                             centerLocation.getLOSPoint(),
                             null,
                             this,
-                            centerLocationTerrain
+                            cellarterrain
+                    );
+
+                    previousLocation.setDownLocation(l);
+                    l.setUpLocation(previousLocation);
+                    previousLocation = l;
+                }
+            }
+
+            // rooftops
+            previousLocation = centerLocation;
+            // need to ignore buildings without upper level locations - bit of a hack so we can use the building height
+            if (!"Wooden Building".equals(centerLocationTerrain.getName()) &&
+                    !"Stone Building".equals(centerLocationTerrain.getName()) &&
+                    !centerLocationTerrain.isRoofless()) {
+                if (isMultihexBuilding()) {
+                    Terrain roofterrain;
+                    roofterrain = map.getTerrain("Rooftop");
+                    // move to top level
+                    int level = 0;
+                    while (previousLocation.getUpLocation() != null) {
+                        previousLocation = previousLocation.getUpLocation();
+                        level = level + 1;
+                    }
+                    if (centerLocationTerrain.getLOSCategory() == Terrain.LOSCategories.FACTORY) {
+                        level = centerLocationTerrain.getHeight();
+                    }
+                    final Location l = new Location(
+                            centerLocation.getName() + " Rooftop ",
+                            level + 1,
+                            centerLocation.getLOSPoint(),
+                            centerLocation.getLOSPoint(),
+                            null,
+                            this,
+                            roofterrain
                     );
 
                     previousLocation.setUpLocation(l);
@@ -562,12 +650,6 @@ public class Hex {
                     previousLocation = l;
                 }
             }
-
-            // set inherent stairway
-            stairway =
-				"Stone Building, 1 Level".equals(centerLocation.getTerrain().getName()) ||
-				"Wooden Building, 1 Level".equals(centerLocation.getTerrain().getName()) ||
-                oldStairway;
         }
 
         // set the hexside location terrain
@@ -579,6 +661,11 @@ public class Hex {
                         (int) getHexsideLocation(x).getEdgeCenterPoint().getX(),
                         (int) getHexsideLocation(x).getEdgeCenterPoint().getY());
 
+                // code added by DR to add RB rr embankment info to Hex
+                if (rbrrembankments[x]){
+                    terrain = map.getTerrain("Rrembankment");
+                    hexsideTerrain[x]=terrain;
+                }
                 // if no hexside terrain use opposite location hexside terrain
 				final Hex oppositeHex = map.getAdjacentHex(this, x);
                 if(oppositeHex != null){
@@ -604,11 +691,13 @@ public class Hex {
         // set the hex base height
         setBaseHeight(map.getGridElevation((int) centerLocation.getLOSPoint().getX(), (int) centerLocation.getLOSPoint().getY()));
 
-        // set inherent terrain in the hex grid
-        setInherentTerrain();
+        // next two methods reversed by DR
 
         // set the depression terrain
         setDepressionTerrain();
+
+        // set inherent terrain in the hex grid
+        setInherentTerrain();
 
         // reset the hexside terrain
          resetHexsideTerrain();
@@ -637,6 +726,25 @@ public class Hex {
     }
 
     /**
+     * This is a hack to check if a building is multi-hex or single hex
+     * Used when creating cellars and rooftops
+     * @return true if any hexside has building terrain
+     * Added by DR to enable HASL LOS
+     */
+    private boolean isMultihexBuilding() {
+        for(int x = 0; x <6; x++) {
+
+            // we need to read the terrain from the map as the hexside location may not be current when this is called
+            Point p = hexsideLocations[x].getEdgeCenterPoint();
+            Terrain terrain = map.getGridTerrain(p.x, p.y);
+            if(terrain != null && terrain.isBuilding()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * @return true if this hex contains bridge terrain
      */
     private boolean hasBridgeTerrain(){
@@ -658,44 +766,116 @@ public class Hex {
     }
 
     /**
-     * Corrects hexes with single-hex bridges by making the center location the road location
+     * Corrects hexes with single-hex bridges by adding a new location (either bridge or depression)
      */
     private void fixBridges() {
 
         if(hasBridgeTerrain()) {
 
+            // determine if existing location is bridge or depression terrain
+
+            if (centerLocation.isDepressionTerrain()) {
+                // need to add new bridge location
+                final Location newLocation = new Location(centerLocation);
+                newLocation.setDepressionTerrain(null);
+                //newLocation.setBaseHeight(baseHeight + 1);
+                newLocation.setTerrain(getBridgeTerrain());
+                newLocation.setDownLocation(centerLocation);
+                centerLocation.setUpLocation(newLocation);
+            }
+            else if (centerLocation.getTerrain().isBridge()) {
+                // need to add new depression location
+                final Location newLocation = new Location(centerLocation);
+                newLocation.setDepressionTerrain(getDepressionTerrain());
+                // added by DR; this is a wonky fix to deal with bridges in non-zero level terrain; not sure why its needed but it works, otherwise bridges and depressions in valleys are two levels apart and those in hills are at same level
+                int depressionadj=0;
+                if (baseHeight ==0 ){
+                    depressionadj=1;
+                }
+                else {
+                    if (baseHeight>0){
+                        depressionadj=2;
+                    }
+                }
+                // DR code not used as boards do not use Elevated Road terrain; see board 13 as example
+                // leaves bug unfixed, depressions below Elevated roads will be one level below instead of two
+                //for (int x = 0; x < 6; x++) {
+                //    // get the adjacent hex for this hexside
+                //    Hex h2 = map.getAdjacentHex(this, x);
+                //    if (h2 != null) {
+                //        // elevated road?
+                //        if (h2.getCenterLocation().getTerrain().getName().contains("Elevated Road")) {
+                //            depressionadj=depressionadj-1;
+                //        }
+                //    }
+                //}
+                newLocation.setBaseHeight(baseHeight - depressionadj);
+                newLocation.setTerrain(getDepressionTerrain());
+                newLocation.setUpLocation(centerLocation);
+                centerLocation.setDownLocation(newLocation);
+            }
+
+            // DR removed the following code as it did not seem to work properly
+
             // make the center location the road location by removing the depression terrain
-            final Terrain depressionTerrain = centerLocation.getDepressionTerrain();
+            //final Terrain depressionTerrain = centerLocation.getDepressionTerrain();
 
-            final int height = centerLocation.getBaseHeight();
-            centerLocation.setDepressionTerrain(null);
-            centerLocation.setBaseHeight(height);
+            //final int height = centerLocation.getBaseHeight();
+            //centerLocation.setDepressionTerrain(null);
+            //centerLocation.setBaseHeight(height);
 
-            final Location newLocation = new Location(centerLocation);
-            newLocation.setDepressionTerrain(depressionTerrain);
-            newLocation.setBaseHeight(baseHeight - 1);
+            //final Location newLocation = new Location(centerLocation);
+            //newLocation.setDepressionTerrain(depressionTerrain);
+            //newLocation.setBaseHeight(baseHeight - 1);
 
-            newLocation.setUpLocation(centerLocation);
-            centerLocation.setDownLocation(newLocation);
+            //newLocation.setUpLocation(centerLocation);
+            //centerLocation.setDownLocation(newLocation);
         }
     }
 
-    /**
-     * Set the depression terrain
-     */
-    private void setDepressionTerrain(){
+    private Terrain getBridgeTerrain(){
 
         final Rectangle rectangle = getHexBorder().getBounds();
         for(int x = rectangle.x; x < rectangle.x + rectangle.width; x++) {
             for(int y = rectangle.y; y < rectangle.y + rectangle.height; y++) {
 
-                if(rectangle.getBounds().contains(x,y) &&
+                if(getHexBorder().contains(x,y) &&
+                        map.onMap(x,y) &&
+                        map.getGridTerrain(x,y).isBridge()) {
+
+                    return map.getGridTerrain(x,y);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private Terrain getDepressionTerrain(){
+
+        final Rectangle rectangle = getHexBorder().getBounds();
+        for(int x = rectangle.x; x < rectangle.x + rectangle.width; x++) {
+            for(int y = rectangle.y; y < rectangle.y + rectangle.height; y++) {
+
+                if(getHexBorder().contains(x,y) &&
                         map.onMap(x,y) &&
                         map.getGridTerrain(x,y).isDepression()) {
 
-                    getNearestLocation(x, y).setDepressionTerrain(map.getGridTerrain(x, y));
+                    return map.getGridTerrain(x,y);
                 }
             }
+        }
+
+        return null;
+    }
+    /**
+     * Set the depression terrain
+     */
+    private void setDepressionTerrain(){
+
+        //code replaced by DR
+        if (centerLocation.getTerrain().isDepression()){
+            centerLocation.setDepressionTerrain(centerLocation.getTerrain());
         }
     }
 
@@ -772,15 +952,24 @@ public class Hex {
 		}
         else if(terr.isHexsideTerrain()) {
             hexsideTerrain[side] = terr;
-            if("Cliff".equals(terr.getName())) {
+            if(terr.isCliff()) {
                 hexsideHasCliff[side] = true;
             }
         }
 	}
 
 	public Location getHexsideLocation(int hexside){
+        //test code wrapped around return line to avoid break; DR
+        if (!(hexside ==-1)) {
 
-		return hexsideLocations[hexside];
+
+            return hexsideLocations[hexside];
+        }
+        else {
+            int reggie=0;
+            return hexsideLocations[reggie];
+        }
+
 	}
 
 	public void setHexsideLocationTerrain(int hexside, Terrain terr){
@@ -1084,10 +1273,16 @@ public class Hex {
         //stairways and slopes
         stairway = h.hasStairway();
         slopes = h.getSlopes();
+        // code added by DR April 2016 to enable RB rr embankments
+        rbrrembankments=h.getRBrrembankments();
 	}
 
     private boolean[] getSlopes() {
         return slopes;
+    }
+    // code added by DR to enable RB rr embankments
+    private boolean[] getRBrrembankments() {
+        return rbrrembankments;
     }
 
     public boolean hasStairway() {

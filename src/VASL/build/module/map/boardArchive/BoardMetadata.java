@@ -33,6 +33,8 @@ public class BoardMetadata extends AbstractMetadata {
 
     // set of hexes with slopes
     private Slopes slopes = new Slopes();
+    // code added by DR to handle RB rr embankments
+    private RBrrembankments rbrrembankments = new RBrrembankments();
 
     // Board-level metadata
     public final static int MISSING = -999; // used to indicate the value was not in the metadata (for optional attributes)
@@ -78,6 +80,12 @@ public class BoardMetadata extends AbstractMetadata {
     private static final String slopesElement = "slopes";
     private static final String slopeHexNameAttribute = "hex";
     private static final String slopeHexsidesAttribute = "hexsides";
+
+    // code added by DR to manage railway embankment on board RB
+    private static final String rrembankmentElement = "rrembankment";
+    private static final String rrembankmentsElement = "rrembankments";
+    private static final String rrembankmentHexNameAttribute = "hex";
+    private static final String rrembankmentHexsidesAttribute = "hexsides";
 
     // flags for board specific metadata
     private boolean boardSpecificColors = false;
@@ -152,6 +160,8 @@ public class BoardMetadata extends AbstractMetadata {
                 parseColorSSRules(root.getChild(colorSSRulesElement));
                 parseOverlaySSRules(root.getChild(overlaySSRulesElement));
                 parseSlopes(root.getChild(slopesElement));
+                // code added by DR to handle RB rr embankments
+                parseRrembankments(root.getChild(rrembankmentsElement));
 
                 // set flags indicating board-specific information
                 boardSpecificColors = root.getChild(colorSSRulesElement) != null &&
@@ -216,6 +226,26 @@ public class BoardMetadata extends AbstractMetadata {
         }
     }
 
+    // code added by DR to handle RB rr embankments
+    private void parseRrembankments(Element element) throws JDOMException {
+
+        // make sure we have the right element
+        if (element != null) {
+            assertElementName(element, rrembankmentsElement);
+
+            for(Element e: element.getChildren()) {
+
+                // ignore any child elements that are not slopes
+                if(e.getName().equals(rrembankmentElement)){
+
+                    rbrrembankments.addRBrrembankment(
+                            e.getAttributeValue(rrembankmentHexNameAttribute),
+                            parseRrembankmentHexsides(e.getAttributeValue(rrembankmentHexsidesAttribute))
+                    );
+                }
+            }
+        }
+    }
     /**
      * Translates a string of hexside numbers into an array of boolean flags
      * @param hexsides the hexside string - e.g. 012345
@@ -236,6 +266,20 @@ public class BoardMetadata extends AbstractMetadata {
         }
     }
 
+    // code added by DR to handle RB rr embankments
+    private boolean[] parseRrembankmentHexsides (String hexsides) throws JDOMException {
+        boolean[] hexsideFlags = new boolean[6];
+
+        try {
+            for (int x = 0; x < hexsides.length() && x < 6; x++) {
+                char c = hexsides.charAt(x);
+                hexsideFlags[(int) c - (int) '0'] = true;
+            }
+            return hexsideFlags;
+        } catch (Exception e) {
+            throw new JDOMException("Invalid " + rrembankmentHexsidesAttribute +" attribute in board metadata: " + hexsides);
+        }
+    }
     /**
      * get the VASL color name for the given color
      * @param color the color
@@ -360,6 +404,9 @@ public class BoardMetadata extends AbstractMetadata {
      * @return the scenario-specific overlay rules
      */
     public Slopes getSlopes(){ return slopes;}
+
+    // code added by DR to handle RB rr embankments
+    public RBrrembankments getRBrrembankments(){ return rbrrembankments;}
 
     /**
      * @return true if board metadata contains custom colors

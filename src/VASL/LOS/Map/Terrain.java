@@ -266,7 +266,7 @@ public class Terrain {
     public boolean isHexsideTerrain() {
 
         return LOSCategory == LOSCategories.HEXSIDE ||
-                isRowhouseWall();
+                isRowhouseFactoryWall();
     }
 
     /**
@@ -288,17 +288,30 @@ public class Terrain {
     }
 
     /**
-     * @return true if terrain is a rowhouse wall
+     * @return true if terrain is a rowhouse or interior factory wall
      */
-    public boolean isRowhouseWall(){
+    public boolean isRowhouseFactoryWall(){
 
         return name.equals("Rowhouse Wall") ||
                 name.equals("Rowhouse Wall, 1 Level") ||
                 name.equals("Rowhouse Wall, 2 Level") ||
                 name.equals("Rowhouse Wall, 3 Level") ||
-                name.equals("Rowhouse Wall, 4 Level");
-    }
+                name.equals("Rowhouse Wall, 4 Level") ||
+                // code added DR to handle interior factory walls
+                name.equals("Interior Factory Wall, 1 Level") ||
+                name.equals("Interior Factory Wall, 2 Level");
 
+    }
+    /**
+     * @return true if terrain is an exterior factory wall
+     */
+    public boolean isOutsideFactoryWall(){
+
+        return name.equals("Stone Factory Wall, 1.5 Level") ||
+                name.equals("Stone Factory Wall, 2.5 Level")||
+                name.equals("Wooden Factory Wall, 1.5 Level") ||
+                name.equals("Wooden Factory Wall, 2.5 Level") ;
+    }
     /**
      * @return true if the terrain is a stream
      */
@@ -310,6 +323,36 @@ public class Terrain {
                 name.equals("Flooded Stream");
     }
 
+    // DR added to test for Rooftops, roofless buildings, cellars and cliffs
+    /**
+     * @return true if the terrain is a cellar
+     */
+    public boolean isCellar(){
+
+        return name.contains("Cellar");
+    }
+    /**
+     * @return true if the terrain is a rooftop
+     */
+    public boolean isRooftop(){
+
+        return name.contains("Rooftop");
+    }
+
+    /**
+     * @return true if the terrain is a roofless building
+     */
+    public boolean isRoofless(){
+
+        return name.contains("Roofless");
+    }
+    /**
+     * @return true if the terrain is a cliff
+     */
+    public boolean isCliff(){
+
+        return name.contains("Cliff");
+    }
     /**
      * @return true if the terrain is a factory
      */

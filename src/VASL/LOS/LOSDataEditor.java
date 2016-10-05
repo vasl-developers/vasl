@@ -28,7 +28,7 @@ public class LOSDataEditor {
 
     // for terrain and elevation encoding while creating LOS data
     private static final int UNKNOWN_TERRAIN = 255;
-    private static final int TERRAIN_OFFSET = 128;
+    private static final int TERRAIN_OFFSET = 500;  //changed by DR to permit terrain types with types values > 128
     private static final int UNKNOWN_ELEVATION = -10;
     private static final int ELEVATION_OFFSET = 50;
 
@@ -70,6 +70,9 @@ public class LOSDataEditor {
             m.setSlopes(boardArchive.getSlopes());
         } else {
             m = new Map(
+                    // DR added two new parameters
+                    boardArchive.getHexWidth(),
+                    boardArchive.getHexHeight(),
                     boardArchive.getBoardWidth(),
                     boardArchive.getBoardHeight(),
                     boardArchive.getA1CenterX(),
@@ -259,12 +262,15 @@ public class LOSDataEditor {
                 if (map.getGridTerrain(x, y) == map.getTerrain("Cliff")) {
 
                     Hex hex = map.gridToHex(x, y);
-                    Hex oppositeHex = map.getAdjacentHex(hex, hex.getLocationHexside(hex.getNearestLocation(x, y)));
+                    // DR code added to trap hex=null
+                    if(!(hex==null)) {
+                        Hex oppositeHex = map.getAdjacentHex(hex, hex.getLocationHexside(hex.getNearestLocation(x, y)));
 
-                    if (oppositeHex == null) {
-                        map.setGridElevation(hex.getBaseHeight(), x, y);
-                    } else {
-                        map.setGridElevation(Math.min(hex.getBaseHeight(), oppositeHex.getBaseHeight()), x, y);
+                        if (oppositeHex == null) {
+                            map.setGridElevation(hex.getBaseHeight(), x, y);
+                        } else {
+                            map.setGridElevation(Math.min(hex.getBaseHeight(), oppositeHex.getBaseHeight()), x, y);
+                        }
                     }
                 }
             }
@@ -468,7 +474,7 @@ public class LOSDataEditor {
                 if (s.contains(x, y)) {
 
                     // only apply rowhouse/factory walls to buildings
-                    if (terr.isRowhouseWall()) {
+                    if (terr.isRowhouseFactoryWall()) {
 
                         Terrain currentTerrain = map.getGridTerrain(x, y);
 
@@ -490,11 +496,16 @@ public class LOSDataEditor {
                         } else if (currentTerrain.getName().equals("Stone Building, 4 Level") || currentTerrain.getName().equals("Wooden Building, 4 Level")) {
                             map.setGridTerrainCode(map.getTerrain("Rowhouse Wall, 4 Level").getType(), x, y);
                         }
-                        else if(terr.getName().equals("Stone Factory, 1.5 Level") || terr.getName().equals("Wooden Factory, 1.5 Level")){
-                            map.setGridTerrainCode(map.getTerrain("Factory Wall, 1.5 Level").getType(), x, y);
+                        // code changed by DR to implement Interior Factory walls
+                        else if(terr.getName().equals("Stone Factory, 1.5 Level")) {
+                            map.setGridTerrainCode(map.getTerrain("Stone Factory Wall, 1.5 Level").getType(), x, y);
+                        } else if (terr.getName().equals("Wooden Factory, 1.5 Level")){
+                            map.setGridTerrainCode(map.getTerrain("Wooden Factory Wall, 1.5 Level").getType(), x, y);
                         }
-                        else if(terr.getName().equals("Stone Factory, 2.5 Level") || terr.getName().equals("Wooden Factory, 2.5 Level")){
-                            map.setGridTerrainCode(map.getTerrain("Factory Wall, 2.5 Level").getType(), x, y);
+                        else if(terr.getName().equals("Stone Factory, 2.5 Level")) {
+                            map.setGridTerrainCode(map.getTerrain("Stone Factory Wall, 2.5 Level").getType(), x, y);
+                        } else if(terr.getName().equals("Wooden Factory, 2.5 Level")){
+                            map.setGridTerrainCode(map.getTerrain("Wooden Factory Wall, 2.5 Level").getType(), x, y);
                         }
                     }
 
