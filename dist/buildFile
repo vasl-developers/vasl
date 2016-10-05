@@ -19,6 +19,7 @@
         <VASL.build.module.map.MapCenterer/>
         <VASL.build.module.map.ASLPieceFinder Name="ASL Piece Finder"/>
         <VASL.build.module.map.ASLBrokenFinder Name="ASL Broken Pieces Finder"/>
+        <VASL.build.module.map.ASLSniperFinder Name="ASL Sniper Finder"/>
         <VASSAL.build.module.map.ForwardToChatter/>
         <VASSAL.build.module.map.StackExpander/>
         <VASL.build.module.map.BoardVersionChecker boardPageURL="http://vasl.info/boards.htm" boardRepositoryURL="https://raw.githubusercontent.com/vasl-developers/vasl-boards-extensions/master/boards" boardVersionURL="https://raw.githubusercontent.com/vasl-developers/vasl/develop/boards/v5boardVersions.txt" overlayVersionURL="https://raw.githubusercontent.com/vasl-developers/vasl/develop/boards/v5overlayVersions.txt"/>

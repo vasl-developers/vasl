@@ -3,6 +3,6 @@
   <version>${project.version}</version>
   <VassalVersion>3.2.14</VassalVersion>
   <dateSaved>1322805026979</dateSaved>
-  <description>Virtual Advanced Squad Leader</description>
+  <description>For testing only</description>
   <name>VASL</name>
 </data>

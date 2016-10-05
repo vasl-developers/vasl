@@ -53,6 +53,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JOptionPane;
@@ -904,6 +905,7 @@ public class QC implements Buildable, GameComponent
     private JButton m_objDraggableOverlaysWindowButton = null;
     private JButton m_objDeluxeDraggableOverlaysWindowButton = null;
     private JToggleButton m_objBrokenFinderButton = null;
+    private JToggleButton sniperFinderButton = null;
     private Map m_objMap;
     private final ArrayList<QCConfiguration> mar_objListQCConfigurations = new ArrayList<QCConfiguration>();
     private QCConfiguration m_objQCWorkingConfiguration = null;
@@ -1109,6 +1111,12 @@ public class QC implements Buildable, GameComponent
         {
             m_objBrokenFinderButton = new JToggleButton();
             m_objMap.getToolBar().add(m_objBrokenFinderButton);       
+        }
+
+        if (sniperFinderButton == null)
+        {
+            sniperFinderButton = new JToggleButton();
+            m_objMap.getToolBar().add(sniperFinderButton);
         }
 
         JButton l_objButtonMarkMoved = new JButton();
@@ -1723,7 +1731,32 @@ public class QC implements Buildable, GameComponent
                 m_objBrokenFinderButton.addActionListener(l_objAL);
                 m_objBrokenFinderButton.setToolTipText("Turn on/off the highlighting of broken units/weapons");
             }
-            
+
+            if ((sniperFinderButton != null) && (sniperFinderButton.getActionListeners().length == 0)){
+
+                try {
+                    sniperFinderButton.setIcon(new ImageIcon(Op.load("sniper").getImage(null)));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                ActionListener al = new ActionListener()
+                {
+                    public void actionPerformed(ActionEvent e)
+                    {
+
+                            ASLSniperFinder sniperFinder = m_objMap.getComponentsOf(ASLSniperFinder.class).iterator().next();
+
+                            if (sniperFinder != null)
+                                sniperFinder.findSniper(sniperFinderButton.isSelected());
+
+                    }
+                };
+
+                sniperFinderButton.addActionListener(al);
+                sniperFinderButton.setToolTipText("Turn on/off the highlighting of sniper counters");
+            }
+
             if (mar_HashPieceSlot.isEmpty())
             {
                 ReadPiecesSlot();
