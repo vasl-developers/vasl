@@ -18,7 +18,7 @@
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
 -->
-<boardMetadata name="26" version="6.0" versionDate="Apr 2013" author="TR" boardImageFileName="bd26.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="26" version="6.2" versionDate="Aug 2016" author="TR" boardImageFileName="bd26.gif" hasHills="FALSE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -204,6 +204,72 @@
 				<colorMap fromColor="WinterBlackHexNumbers" toColor="Black"/>
 			</colorSSR>			
 		-->
-
+		<colorSSR name="DTOtoETO">
+			<colorMap fromColor="DTO_BrushL0" toColor="BrushL0" />
+			<colorMap fromColor="DTO_BrushL1" toColor="BrushL1" />
+			<colorMap fromColor="DTO_BrushL2" toColor="BrushL2" />
+			<colorMap fromColor="DTO_BrushL3" toColor="BrushL3" />
+			<colorMap fromColor="DTO_BrushL4" toColor="BrushL4" />
+			<colorMap fromColor="DTO_BrushL5" toColor="BrushL5" />
+			<colorMap fromColor="DTO_BrushL6" toColor="BrushL6" />
+			
+			<colorMap fromColor="DTO_BldgShadowL0" toColor="BldgShadowL0" />
+			
+			<colorMap fromColor="DTO_DirtRdL0" toColor="DirtRdL0" />
+			<colorMap fromColor="DTO_DirtRdL1" toColor="DirtRdL1" />
+			<colorMap fromColor="DTO_DirtRdL2" toColor="DirtRdL2" />
+			<colorMap fromColor="DTO_DirtRdL3" toColor="DirtRdL3" />
+			<colorMap fromColor="DTO_DirtRdL4" toColor="DirtRdL4" />
+			<colorMap fromColor="DTO_DirtRdL5" toColor="DirtRdL5" />
+			<colorMap fromColor="DTO_DirtRdL6" toColor="DirtRdL6" />			
+			<colorMap fromColor="DTO_DirtRdBridge" toColor="DirtRdBridge" />
+			
+			<colorMap fromColor="DTO_GraveyardGreen" toColor="GraveyardGreen" />
+			<colorMap fromColor="DTO_GraveyardShadow" toColor="GraveyardShadow" />
+			
+			<colorMap fromColor="WadiBrown1" toColor="GullyGreen1" />
+			<colorMap fromColor="WadiBrown1" toColor="GullyGreen2" />
+			<colorMap fromColor="WadiBrown1" toColor="GullyBrown3" />
+			<colorMap fromColor="WadiBlack" toColor="GullyBlack" />
+			<colorMap fromColor="WadiCliff" toColor="GullyCliff" />			
+			
+			<colorMap fromColor="DTO_HedgeGreen" toColor="HedgeGreen" />
+			<colorMap fromColor="DTO_BoardNum" toColor="BoardNum" />	
+						
+			<colorMap fromColor="DTO_Level0_1" toColor="Level0" />
+			<colorMap fromColor="DTO_Level0_2" toColor="Level0" />
+			<colorMap fromColor="DTO_Level0_3" toColor="Level0" />
+			<colorMap fromColor="DTO_Level0_4" toColor="Level0" />
+			<colorMap fromColor="DTO_Level0_5" toColor="Level0" />
+			<colorMap fromColor="DTO_Level0_6" toColor="Level0" />
+			<colorMap fromColor="DTO_Level1" toColor="Level1" />
+			<colorMap fromColor="DTO_Level2" toColor="Level2" />
+			<colorMap fromColor="DTO_Level3" toColor="Level3" />
+			<colorMap fromColor="DTO_Level4" toColor="Level4" />
+			<colorMap fromColor="DTO_Level5" toColor="Level5" />
+			<colorMap fromColor="DTO_Level6" toColor="Level6" />
+			
+			<colorMap fromColor="DTO_OrchL0" toColor="Level0" />
+			<colorMap fromColor="DTO_OrchL1" toColor="Level1" />
+			<colorMap fromColor="DTO_OrchL2" toColor="Level2" />
+			<colorMap fromColor="DTO_OrchL3" toColor="Level3" />
+			<colorMap fromColor="DTO_OrchL4" toColor="Level4" />
+			<colorMap fromColor="DTO_OrchL5" toColor="Level5" />
+			<colorMap fromColor="DTO_OrchL6" toColor="Level6" />			
+			<colorMap fromColor="DTO_OrchTrees" toColor="OrchTrees" />
+			
+			<colorMap fromColor="DTO_PavedRdL0" toColor="PavedRdL0" />
+			<colorMap fromColor="DTO_PavedRdL1" toColor="PavedRdL1" />
+			<colorMap fromColor="DTO_PavedRdL2" toColor="PavedRdL2" />
+			<colorMap fromColor="DTO_PavedRdL3" toColor="PavedRdL3" />
+			<colorMap fromColor="DTO_PavedRdL4" toColor="PavedRdL4" />
+			<colorMap fromColor="DTO_PavedRdL5" toColor="PavedRdL5" />
+			<colorMap fromColor="DTO_PavedRdL6" toColor="PavedRdL6" />			
+			<colorMap fromColor="DTO_PavedRdBridge" toColor="PavedRdBridge" />
+							
+			<colorMap fromColor="DTO_WoodsGreen" toColor="WoodsGreen" />
+			
+		</colorSSR>
+		
 	</colorSSRules>
 </boardMetadata>

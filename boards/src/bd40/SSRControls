@@ -29,6 +29,9 @@
  </Checkbox>
    <Checkbox name="">
          <entry name="AP77 - Texas Flood" rule="SSO_AP77" text="Bd40 Scen AP77 SSO"/>
+</Checkbox>
+<Checkbox name="">
+         <entry name="AP103 - That Damn Bridge (Overlays O2,O4,O5; Shellholes; Marsh)" rule="SSO_AP103" text="Bd40 Scen AP103 SSO"/>
  </Checkbox>
     </Option>
 </SSRControls>

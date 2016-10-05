@@ -1,22 +1,19 @@
 <SSRControls>
-   <Option name="Board 31 Special Overlays">
-          <Checkbox name="">
-       <entry name="Use ETO colors" rule="DTOtoETO"/>
-     </Checkbox>
-	 	  <Checkbox name="">
-        <entry name="Hammada is Open Ground" rule="HammadaToOG"/>
-      </Checkbox>
-	  <Checkbox name="">
-        <entry name="Scrub is Open Ground" rule="ScrubToOG"/>
-      </Checkbox>
-	         <Checkbox name="">
-         <entry name="Scenario A39 - Showdown at Tug Argan Pass" rule="SSO_31_A39" text="Bd31 Scen A39 SSO"/>
-       </Checkbox>
-	   	         <Checkbox name="">
-         <entry name="Scenario ASLUG8 - Desert Citadel" rule="SSO_31_ASLUG8" text="Bd31 Scen ASLUG8 SSO"/>
-       </Checkbox>
-	   	         <Checkbox name="">
-         <entry name="Scenario J79 - Rommel's Remedy" rule="SSO_31_J79" text="Bd31 Scen J79 SSO"/>
-       </Checkbox>
-    </Option>
+  <Option name="Board 31 Special Overlays">
+    <Checkbox name="">
+      <entry name="Hammada is Open Ground" rule="HammadaToOG"/>
+    </Checkbox>
+    <Checkbox name="">
+      <entry name="Scrub is Open Ground" rule="ScrubToOG"/>
+    </Checkbox>
+    <Checkbox name="">
+      <entry name="Scenario A39 - Showdown at Tug Argan Pass" rule="SSO_31_A39" text="Bd31 Scen A39 SSO"/>
+    </Checkbox>
+    <Checkbox name="">
+      <entry name="Scenario ASLUG8 - Desert Citadel" rule="SSO_31_ASLUG8" text="Bd31 Scen ASLUG8 SSO"/>
+    </Checkbox>
+    <Checkbox name="">
+      <entry name="Scenario J79 - Rommel's Remedy" rule="SSO_31_J79" text="Bd31 Scen J79 SSO"/>
+    </Checkbox>
+  </Option>
 </SSRControls>
