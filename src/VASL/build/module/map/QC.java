@@ -1754,7 +1754,7 @@ public class QC implements Buildable, GameComponent
                 };
 
                 sniperFinderButton.addActionListener(al);
-                sniperFinderButton.setToolTipText("Turn on/off the highlighting of sniper counters");
+                sniperFinderButton.setToolTipText("Turn on/off the highlighting of sniperF counters");
             }
 
             if (mar_HashPieceSlot.isEmpty())

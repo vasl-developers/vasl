@@ -91,7 +91,9 @@ public class HindranceKeeper extends AbstractBuildable implements Drawable, KeyL
   private boolean isVisibleHindrance(GamePiece p) {
     return (p.getProperty(ASLProperties.OVERLAY) != null || (Boolean.TRUE.equals(GameModule.getGameModule().getPrefs().getValue(DRAW_HINDRANCES)) && p
         .getProperty(ASLProperties.HINDRANCE) != null))
-        && !Boolean.TRUE.equals(p.getProperty(Properties.INVISIBLE_TO_ME)) && !Boolean.TRUE.equals(p.getProperty(Properties.OBSCURED_TO_ME));
+        && !Boolean.TRUE.equals(p.getProperty(Properties.INVISIBLE_TO_ME)) && !Boolean.TRUE.equals(p.getProperty(Properties.OBSCURED_TO_ME))
+        // always show overlays
+        || p.getProperty("overlay") != null;
   }
 
   private Stack getVisibleHindrances(Stack s) {
