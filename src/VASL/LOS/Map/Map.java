@@ -2209,8 +2209,8 @@ public class Map  {
      */
     protected boolean checkBlindHexRule(LOSStatus status, LOSResult result) {
         // code added by DR to deal with cellars
-        int sourceadj=0;
-        int targetadj=0;
+        double sourceadj=0;
+        double targetadj=0;
         int rangetest=0;
         Hex rangehex=null;
         if(status.source.getTerrain().isCellar()) {
@@ -2220,12 +2220,12 @@ public class Map  {
             targetadj=+1;
         }
         if(status.source.getTerrain().isRooftop()) {
-            sourceadj=-1;
+            sourceadj=-0.5;
             rangetest=status.rangeToSource;
             rangehex=status.sourceHex;
         }
         if(status.target.getTerrain().isRooftop()) {
-            targetadj=-1;
+            targetadj=-0.5;
             rangetest=status.rangeToTarget;
             rangehex=status.targetHex;
         }
@@ -3415,10 +3415,14 @@ public class Map  {
         int sourceadj=0;
         int targetadj=0;
         if(status.source.getTerrain().isRooftop()) {
-            sourceadj=-1;
+            if (!(status.source.getBaseHeight()==2)) {
+                sourceadj=-1;
+            }
         }
         if(status.target.getTerrain().isRooftop()) {
-            targetadj=-1;
+            if (!(status.target.getBaseHeight()==2)) {
+                targetadj=-1;
+            }
         }
         int sourceElevation = status.sourceElevation;
         int targetElevation = status.targetElevation;
@@ -3469,6 +3473,12 @@ public class Map  {
             int newhexside=testhexside+3;
             if(newhexside>= 6) {newhexside=newhexside-6;}
 
+            if (rangeToSource==1 && sourceElevation > terrainHeight && testlocation.getTerrain().isCliff() && starthex.getHexsideLocation(newhexside).getTerrain().isCliff()) {
+                return false;
+            }
+            if (rangeToTarget==1 && targetElevation > terrainHeight && testlocation.getTerrain().isCliff() && finishhex.getHexsideLocation(newhexside).getTerrain().isCliff()) {
+                return false;
+            }
             if (rangeToSource==1 && !(rangeToTarget==1) && sourceElevation >= terrainHeight && testlocation.getTerrain().isCliff() && !starthex.getHexsideLocation(newhexside).getTerrain().isCliff()) {
                 isCliffHexside= false;
             }
@@ -3538,7 +3548,6 @@ public class Map  {
             }
         }
         else {
-
             return rangeToTarget <= Math.max(2 * (groundLevel + terrainHeight) + (rangeToSource / 5) - sourceElevation - targetElevation + 1, 1);
         }
     }
