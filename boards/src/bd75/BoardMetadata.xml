@@ -19,7 +19,7 @@
 	others - TBD e.g. alternate hex grain, etc. 
 	
 -->
-<boardMetadata name="75" version="6.0" versionDate="Sep 2016" author="SWH" boardImageFileName="bd75.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="75" version="6.1" versionDate="Dec 2016" author="SWH" boardImageFileName="bd75.gif" hasHills="FALSE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -27,10 +27,14 @@
         wooden buildings. Use these elements to override the building type. 
         
         See the terrainType elements for a complete list of building names
-        <buildingType hexName="O4" buildingTypeName="Stone Building, 2 Level" />
+
 
 	-->
-		
+	
+	<buildingTypes>
+    
+        	<buildingType hexName="O4" buildingTypeName="Stone Building, 2 Level" />
+	</buildingTypes>	
 	<overlaySSRules>
 	    <!--
 			Scenario-specific underlay rules. 
