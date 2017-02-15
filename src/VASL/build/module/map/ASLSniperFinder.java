@@ -25,11 +25,7 @@ import VASSAL.build.module.Map;
 import VASSAL.build.module.documentation.HelpFile;
 import VASSAL.build.module.map.Drawable;
 import VASSAL.command.Command;
-import VASSAL.configure.PropertyExpression;
-import VASSAL.counters.BasicPiece;
-import VASSAL.counters.Decorator;
-import VASSAL.counters.GamePiece;
-import VASSAL.counters.PieceIterator;
+import VASSAL.counters.*;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -43,7 +39,6 @@ public class ASLSniperFinder extends AbstractConfigurable implements GameCompone
     private Map map;
 
     private Boolean visible = false;
-    private final PropertyExpression piecePropertiesFilter = new PropertyExpression();
     private final ArrayList<Point> pointList = new ArrayList<Point>();
 
     // this component is not configurable
@@ -77,22 +72,6 @@ public class ASLSniperFinder extends AbstractConfigurable implements GameCompone
         if (parent instanceof Map) {
             this.map = (Map) parent;
             map.addDrawComponent(this);
-
-            piecePropertiesFilter.setExpression("InvisibleToOthers != true && " +
-                    "PieceName =  RU Sniper || " +
-                    "PieceName =  AM Sniper || " +
-                    "PieceName =  BR Sniper || " +
-                    "PieceName =  FR Sniper || " +
-                    "PieceName =  CH Sniper || " +
-                    "PieceName =  AL Sniper || " +
-                    "PieceName =  GE Sniper || " +
-                    "PieceName =  SS Sniper || " +
-                    "PieceName =  JA Sniper || " +
-                    "PieceName =  IT Sniper || " +
-                    "PieceName =  FI Sniper || " +
-                    "PieceName =  AX Sniper || " +
-                    "PieceName =  HU Sniper "
-            );
         }
     }
 
@@ -123,20 +102,26 @@ public class ASLSniperFinder extends AbstractConfigurable implements GameCompone
     }
 
     private void LoadSniperPosition() {
-        for (VASSAL.build.module.Map m : VASSAL.build.module.Map.getMapList())
-            m.getPieces();
 
         pointList.clear();
 
-        final PieceIterator pi = new PieceIterator(
-                GameModule.getGameModule().getGameState().getAllPieces().iterator(),
-                piecePropertiesFilter
-        );
+        final PieceIterator pi = new PieceIterator(GameModule.getGameModule().getGameState().getAllPieces().iterator());
 
         while (pi.hasMoreElements()) {
             final GamePiece piece = pi.nextPiece();
 
-            if (piece instanceof Decorator || piece instanceof BasicPiece) {
+            if(piece instanceof Stack) {
+                for (PieceIterator pi2 = new PieceIterator(((Stack) piece).getPiecesIterator()); pi2.hasMoreElements(); ) {
+                    GamePiece piece2 = pi2.nextPiece();
+                    if (piece2.getName().contains("Sniper")) {
+                        Point pos = piece2.getPosition();
+
+                        if (!pointList.contains(pos))
+                            pointList.add(pos);
+                    }
+                }
+            }
+            else if (piece.getName().contains("Sniper")) {
                 Point pos = piece.getPosition();
 
                 if (!pointList.contains(pos))
