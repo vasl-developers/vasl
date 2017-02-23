@@ -67,6 +67,7 @@ public class ASLCommandEncoder extends VASSAL.build.module.BasicCommandEncoder i
   }
 
   public Command decode(String command) {
+
     Command c = super.decode(command);
     if (c == null) {
       c = decodeBackwardCompatible(command);
