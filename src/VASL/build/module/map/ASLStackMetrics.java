@@ -77,103 +77,103 @@ public class ASLStackMetrics extends StackMetrics {
     }
     return val;
   }
-  
-  @Override
-  public void draw(Stack stack, Graphics g, int x, int y, Component obs, double zoom) {
-      
-    Highlighter highlighter = stack.getMap() == null ? BasicPiece.getHighlighter() : stack.getMap().getHighlighter();
-    Point[] positions = new Point[stack.getPieceCount()];
-    getContents(stack, positions, null, null, x, y);
-
-    for (PieceIterator e = new PieceIterator(stack.getPiecesIterator(),
-                                             unselectedVisible);
-         e.hasMoreElements();) {
-      GamePiece next = e.nextPiece();
-      int index = stack.indexOf(next);
-      int nextX = x + (int) (zoom * (positions[index].x - x));
-      int nextY = y + (int) (zoom * (positions[index].y - y));
-      //if (stack.isExpanded() || !e.hasMoreElements()) {
-        next.draw(g,
-                  nextX,
-                  nextY,
-                  obs, zoom);
-      //}
-      //else {
-//        drawUnexpanded(next, g, nextX, nextY, obs, zoom);
-  //    }
-    }
-
-    for (PieceIterator e = new PieceIterator(stack.getPiecesIterator(),
-                                             selectedVisible);
-         e.hasMoreElements();) {
-      GamePiece next = e.nextPiece();
-      int index = stack.indexOf(next);
-      int nextX = x + (int) (zoom * (positions[index].x - x));
-      int nextY = y + (int) (zoom * (positions[index].y - y));
-      next.draw(g,
-                nextX,
-                nextY,
-                obs, zoom);
-      highlighter.draw
-          (next, g,
-           nextX,
-           nextY,
-           obs, zoom);
-    }
-  }
-
-  private boolean isVisible(Rectangle region, Rectangle bounds) {
-    boolean visible = true;
-    if (region != null) {
-      visible = region.intersects(bounds);
-    }
-    return visible;
-  }
-  
-  public void draw(Stack stack, Point location, Graphics g, Map map, double zoom, Rectangle visibleRect) {
-    Highlighter highlighter = map.getHighlighter();
-    Point mapLocation = map.mapCoordinates(location);
-    Rectangle region = visibleRect == null ? null : map.mapRectangle(visibleRect);
-    Point[] positions = new Point[stack.getPieceCount()];
-    Rectangle[] bounds = region == null ? null : new Rectangle[stack.getPieceCount()];
-    getContents(stack, positions, null, bounds, mapLocation.x, mapLocation.y);
-    
-    for (PieceIterator e = new PieceIterator(stack.getPiecesIterator(),
-                                             unselectedVisible);
-         e.hasMoreElements();) {
-      GamePiece next = e.nextPiece();
-      int index = stack.indexOf(next);
-      Point pt = map.componentCoordinates(positions[index]);
-      if (bounds == null || isVisible(region, bounds[index])) {
-//        if (stack.isExpanded() || !e.hasMoreElements()) {
-          next.draw(g,
-                    pt.x,
-                    pt.y,
-                    map.getView(), zoom);
-//        }
-//       else {
-//          drawUnexpanded(next, g, pt.x, pt.y, map.getView(), zoom);
-//        }
-      }
-    }
-
-    for (PieceIterator e = new PieceIterator(stack.getPiecesIterator(),
-                                             selectedVisible);
-         e.hasMoreElements();) {
-      GamePiece next = e.nextPiece();
-      int index = stack.indexOf(next);
-      if (bounds == null || isVisible(region, bounds[index])) {
-        Point pt = map.componentCoordinates(positions[index]);
-        next.draw(g,
-                  pt.x,
-                  pt.y,
-                  map.getView(), zoom);
-        highlighter.draw
-            (next, g,
-             pt.x,
-             pt.y,
-             map.getView(), zoom);
-      }
-    }
-  }
+//  rolled-back due to unintended information leakage
+//  @Override
+//  public void draw(Stack stack, Graphics g, int x, int y, Component obs, double zoom) {
+//
+//    Highlighter highlighter = stack.getMap() == null ? BasicPiece.getHighlighter() : stack.getMap().getHighlighter();
+//    Point[] positions = new Point[stack.getPieceCount()];
+//    getContents(stack, positions, null, null, x, y);
+//
+//    for (PieceIterator e = new PieceIterator(stack.getPiecesIterator(),
+//                                             unselectedVisible);
+//         e.hasMoreElements();) {
+//      GamePiece next = e.nextPiece();
+//      int index = stack.indexOf(next);
+//      int nextX = x + (int) (zoom * (positions[index].x - x));
+//      int nextY = y + (int) (zoom * (positions[index].y - y));
+//      //if (stack.isExpanded() || !e.hasMoreElements()) {
+//        next.draw(g,
+//                  nextX,
+//                  nextY,
+//                  obs, zoom);
+//      //}
+//      //else {
+////        drawUnexpanded(next, g, nextX, nextY, obs, zoom);
+//  //    }
+//    }
+//
+//    for (PieceIterator e = new PieceIterator(stack.getPiecesIterator(),
+//                                             selectedVisible);
+//         e.hasMoreElements();) {
+//      GamePiece next = e.nextPiece();
+//      int index = stack.indexOf(next);
+//      int nextX = x + (int) (zoom * (positions[index].x - x));
+//      int nextY = y + (int) (zoom * (positions[index].y - y));
+//      next.draw(g,
+//                nextX,
+//                nextY,
+//                obs, zoom);
+//      highlighter.draw
+//          (next, g,
+//           nextX,
+//           nextY,
+//           obs, zoom);
+//    }
+//  }
+//
+//  private boolean isVisible(Rectangle region, Rectangle bounds) {
+//    boolean visible = true;
+//    if (region != null) {
+//      visible = region.intersects(bounds);
+//    }
+//    return visible;
+//  }
+//
+//  public void draw(Stack stack, Point location, Graphics g, Map map, double zoom, Rectangle visibleRect) {
+//    Highlighter highlighter = map.getHighlighter();
+//    Point mapLocation = map.mapCoordinates(location);
+//    Rectangle region = visibleRect == null ? null : map.mapRectangle(visibleRect);
+//    Point[] positions = new Point[stack.getPieceCount()];
+//    Rectangle[] bounds = region == null ? null : new Rectangle[stack.getPieceCount()];
+//    getContents(stack, positions, null, bounds, mapLocation.x, mapLocation.y);
+//
+//    for (PieceIterator e = new PieceIterator(stack.getPiecesIterator(),
+//                                             unselectedVisible);
+//         e.hasMoreElements();) {
+//      GamePiece next = e.nextPiece();
+//      int index = stack.indexOf(next);
+//      Point pt = map.componentCoordinates(positions[index]);
+//      if (bounds == null || isVisible(region, bounds[index])) {
+////        if (stack.isExpanded() || !e.hasMoreElements()) {
+//          next.draw(g,
+//                    pt.x,
+//                    pt.y,
+//                    map.getView(), zoom);
+////        }
+////       else {
+////          drawUnexpanded(next, g, pt.x, pt.y, map.getView(), zoom);
+////        }
+//      }
+//    }
+//
+//    for (PieceIterator e = new PieceIterator(stack.getPiecesIterator(),
+//                                             selectedVisible);
+//         e.hasMoreElements();) {
+//      GamePiece next = e.nextPiece();
+//      int index = stack.indexOf(next);
+//      if (bounds == null || isVisible(region, bounds[index])) {
+//        Point pt = map.componentCoordinates(positions[index]);
+//        next.draw(g,
+//                  pt.x,
+//                  pt.y,
+//                  map.getView(), zoom);
+//        highlighter.draw
+//            (next, g,
+//             pt.x,
+//             pt.y,
+//             map.getView(), zoom);
+//      }
+//    }
+//  }
 }
