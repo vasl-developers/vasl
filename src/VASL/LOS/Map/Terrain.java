@@ -69,6 +69,12 @@ public class Terrain {
     }
 
     /**
+     * @return return true if the terrain is a road
+     */
+    public boolean isRoad() {
+        return LOSCategory == LOSCategories.ROAD;
+    }
+    /**
      * @return return true if the terrain is depression terrain
      */
     public boolean isDepression() {

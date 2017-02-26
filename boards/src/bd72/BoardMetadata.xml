@@ -18,7 +18,7 @@
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
 -->
-<boardMetadata name="72" version="6.0" versionDate="Jan 2016" author="ATC" boardImageFileName="bd72.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="72" version="6.1" versionDate="Nov 2016" author="ATC" boardImageFileName="bd72.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -34,6 +34,7 @@
 		<buildingType hexName="S2" buildingTypeName="Stone Building, 1 Level" />
 		<buildingType hexName="P3" buildingTypeName="Wooden Building, 1 Level" />
 		<buildingType hexName="P4" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="G7" buildingTypeName="Wooden Building, 1 Level" />
     	</buildingTypes>
     	
 	<overlaySSRules>
@@ -102,7 +103,7 @@
 				<colorMap fromColor="WinterBlackHexNumbers" toColor="Black"/>
 			</colorSSR>
 		-->
-
+		<color name="WoodenBldg7" red="105" green="73" blue="35" terrain="Wooden Building" elevation="0" />
 	</colors>
 	
 	<colorSSRules>
