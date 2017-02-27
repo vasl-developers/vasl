@@ -816,18 +816,14 @@ public class Hex {
             }
 
             // DR removed the following code as it did not seem to work properly
-
             // make the center location the road location by removing the depression terrain
             //final Terrain depressionTerrain = centerLocation.getDepressionTerrain();
-
             //final int height = centerLocation.getBaseHeight();
             //centerLocation.setDepressionTerrain(null);
             //centerLocation.setBaseHeight(height);
-
             //final Location newLocation = new Location(centerLocation);
             //newLocation.setDepressionTerrain(depressionTerrain);
             //newLocation.setBaseHeight(baseHeight - 1);
-
             //newLocation.setUpLocation(centerLocation);
             //centerLocation.setDownLocation(newLocation);
         }
