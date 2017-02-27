@@ -42,7 +42,7 @@
 			Scenario-specific underlay rules. 
 			name - the VASL SSR name
 			image - the image name
-			color - the VASL color name
+			color - the VASL color  name
 			
 			Example:
 			<underlaySSRule name="WallToCactus" image="CactusPattern.gif">
