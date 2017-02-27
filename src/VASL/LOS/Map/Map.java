@@ -98,7 +98,6 @@ public class Map  {
 	 * @param terrainNameMap mapping of terrain names to terrain objects
 	 */
 
-    //DR new constructor - hexWidth and hexHeight now passed in as parameters
     public Map(double hexWidth, double hexHeight, int width, int height, double A1CenterX, double A1CenterY, int imageWidth, int imageHeight, HashMap<String, Terrain> terrainNameMap){
         this.width = width;
         this.height = height;
