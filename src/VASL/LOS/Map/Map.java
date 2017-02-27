@@ -62,23 +62,23 @@ public class Map  {
 
     // the "upper left" hex - even if it's not A1 (e.g. boards 1b-6b) 
     private double A1CenterX;
-	private double A1CenterY;
+    private double A1CenterY;
 
-	// width and height of the map in hexes
-	private int width;
-	private int	height;
+    // width and height of the map in hexes
+    private int width;
+    private int	height;
 
     // width and height of the terrain grid
-	private int	gridWidth;
-	private int	gridHeight;
+    private int	gridWidth;
+    private int	gridHeight;
 
     // map information
-	private char[][] terrainGrid;  		// terrain for each pixel
-	private byte[][] elevationGrid;  	// height for each pixel
-	private Hex[][]	 hexGrid;			// hex array [column][row]
+    private char[][] terrainGrid;  		// terrain for each pixel
+    private byte[][] elevationGrid;  	// height for each pixel
+    private Hex[][]	 hexGrid;			// hex array [column][row]
 
     // terrain type codes
-	private Terrain[] terrainList = new Terrain[256];
+    private Terrain[] terrainList = new Terrain[256];
 
     // map terrain names to the terrain objects
     private static HashMap<String, Terrain> terrainNameMap;
@@ -86,17 +86,17 @@ public class Map  {
     // the hillocks
     private HashSet<Hillock> hillocks = new HashSet<Hillock>();
 
-	/**
-	 * Constructs a new <code>Map</code> object using custom hex size and explicit image size.
-	 * A standard geomorphic map board is 10 x 33 hexes.
-	 * @param width the width of the map in hexes
-	 * @param height the height of the map in hexes
-	 * @param A1CenterX x-offset of the A1 hex center dot
+    /**
+     * Constructs a new <code>Map</code> object using custom hex size and explicit image size.
+     * A standard geomorphic map board is 10 x 33 hexes.
+     * @param width the width of the map in hexes
+     * @param height the height of the map in hexes
+     * @param A1CenterX x-offset of the A1 hex center dot
      * @param A1CenterY y-offset of the A1 hex center dot
-	 * @param imageWidth width of the board image in pixels
-	 * @param imageHeight height of the board image in pixels
-	 * @param terrainNameMap mapping of terrain names to terrain objects
-	 */
+     * @param imageWidth width of the board image in pixels
+     * @param imageHeight height of the board image in pixels
+     * @param terrainNameMap mapping of terrain names to terrain objects
+     */
 
     public Map(double hexWidth, double hexHeight, int width, int height, double A1CenterX, double A1CenterY, int imageWidth, int imageHeight, HashMap<String, Terrain> terrainNameMap){
         this.width = width;
@@ -108,32 +108,32 @@ public class Map  {
         this.hexWidth=hexWidth;
 
         this.A1CenterX = (A1CenterX == BoardArchive.missingValue() ? BoardArchive.GEO_A1_Center.x : A1CenterX);
-		this.A1CenterY = (A1CenterY == BoardArchive.missingValue() ? BoardArchive.GEO_A1_Center.y : A1CenterY);
+        this.A1CenterY = (A1CenterY == BoardArchive.missingValue() ? BoardArchive.GEO_A1_Center.y : A1CenterY);
 
-		// initialize
-		setTerrain(terrainNameMap);
-		gridWidth = imageWidth;
-		gridHeight = imageHeight;
-		terrainGrid = new char[gridWidth][gridHeight];
-		elevationGrid = new byte[gridWidth][gridHeight];
+        // initialize
+        setTerrain(terrainNameMap);
+        gridWidth = imageWidth;
+        gridHeight = imageHeight;
+        terrainGrid = new char[gridWidth][gridHeight];
+        elevationGrid = new byte[gridWidth][gridHeight];
 
-		// create the hex grid
-		hexGrid = new Hex[this.width][];
-		for (int col = 0; col < this.width; col++) {
+        // create the hex grid
+        hexGrid = new Hex[this.width][];
+        for (int col = 0; col < this.width; col++) {
 
-			hexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
-			for (int row = 0; row < this.height + (col % 2); row++) {
-				hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
-			}
-		}
+            hexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
+            for (int row = 0; row < this.height + (col % 2); row++) {
+                hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+            }
+        }
 
-		// reset the hex locations to map grid
-		for (int col = 0; col < this.width; col++) {
-			for (int row = 0; row < this.height + (col % 2); row++) {
-				hexGrid[col][row].resetHexsideLocationNames();
-			}
-		}
-	}
+        // reset the hex locations to map grid
+        for (int col = 0; col < this.width; col++) {
+            for (int row = 0; row < this.height + (col % 2); row++) {
+                hexGrid[col][row].resetHexsideLocationNames();
+            }
+        }
+    }
 
     /**
      * Finds the center point of a hex in the hexgrid of a geometric board
@@ -196,7 +196,7 @@ public class Map  {
         return name + (row + rowOffset + (col%2 == 0 ? 1 : 0));
     }
 
-	/**
+    /**
      * Constructs a new <code>Map</code> as a standard geomorphic map board (10 x 33 hexes)
      * @param w the width of the map in hexes
      * @param h the height of the map in hexes
@@ -207,12 +207,12 @@ public class Map  {
 
     }
 
-	/**
-	 * @return the hex width
-	 */
-	public double getHexWidth() {
-		return hexWidth;
-	}
+    /**
+     * @return the hex width
+     */
+    public double getHexWidth() {
+        return hexWidth;
+    }
 
     /**
      * @return the hex height
@@ -370,12 +370,12 @@ public class Map  {
      */
     public Hex getHex(String name) {
 
-		for (int col = 0; col < hexGrid.length; col++) {
+        for (int col = 0; col < hexGrid.length; col++) {
             for (int row = 0; row < hexGrid[col].length; row++) {
 
-				Hex hex = getHex(col, row);
+                Hex hex = getHex(col, row);
 
-				if (hex.getName().equalsIgnoreCase(name)) {
+                if (hex.getName().equalsIgnoreCase(name)) {
 
                     return hex;
                 }
@@ -419,16 +419,16 @@ public class Map  {
      */
     public Hex getAdjacentHex(Hex h, int hexside) {
 
-		if(hexside > 5) {
-			return null;
-		}
+        if(hexside > 5) {
+            return null;
+        }
 
         int col = h.getColumnNumber();
         int row = h.getRowNumber();
         boolean colIsEven = (col % 2 == 0);
 
-		//noinspection SwitchStatementWithoutDefaultBranch
-		switch (hexside) {
+        //noinspection SwitchStatementWithoutDefaultBranch
+        switch (hexside) {
             case 0:
                 row -= 1;
                 break;
@@ -517,7 +517,7 @@ public class Map  {
                         : ((double) y + hexHeight / 2.0) / hexHeight);
                 return hexGrid[col][row];
             }
-         // return null on any error
+            // return null on any error
         } catch (Exception e) {
             return null;
         }
@@ -719,8 +719,8 @@ public class Map  {
 
             // special case for PTO and water along hexside
             if(!(("Dense Jungle".equals(status.tempHex.getCenterLocation().getTerrain().getName()) ||
-                  "Bamboo".equals(status.tempHex.getCenterLocation().getTerrain().getName())) &&
-                   status.currentTerrain.getLOSCategory() == Terrain.LOSCategories.WATER))
+                    "Bamboo".equals(status.tempHex.getCenterLocation().getTerrain().getName())) &&
+                    status.currentTerrain.getLOSCategory() == Terrain.LOSCategories.WATER))
             {
                 status.currentTerrain = status.tempHex.getCenterLocation().getTerrain();
             }
@@ -768,8 +768,8 @@ public class Map  {
 
         // ensure we're truly on a hexside
         if(status.sourceHex.getExtendedHexBorder().contains(status.currentCol, status.currentRow) ||
-           status.targetHex.getExtendedHexBorder().contains(status.currentCol, status.currentRow) ||
-          (status.source.getHex().getCenterLocation().equals(status.source) &&  range(sourceHex, rangeHex)%2 == 0)) {
+                status.targetHex.getExtendedHexBorder().contains(status.currentCol, status.currentRow) ||
+                (status.source.getHex().getCenterLocation().equals(status.source) &&  range(sourceHex, rangeHex)%2 == 0)) {
             return null;
         }
 
@@ -999,24 +999,24 @@ public class Map  {
             exitsSourceDepression =
                     source.isDepressionTerrain() &&
                             (((targetElevation+ targetadj) - (sourceElevation+sourceadj) > 0 &&
-                            (targetElevation+ targetadj) - (sourceElevation+sourceadj) <= range) ||
-                    ((LOSis60Degree || LOSisHorizontal) && exitsDepressionTerrainHexside() ) ||
-                    (targetElevation+targetadj == sourceElevation+sourceadj) ||
-                    (sourceElevation+ sourceadj > targetElevation+targetadj));
+                                    (targetElevation+ targetadj) - (sourceElevation+sourceadj) <= range) ||
+                                    ((LOSis60Degree || LOSisHorizontal) && exitsDepressionTerrainHexside() ) ||
+                                    (targetElevation+targetadj == sourceElevation+sourceadj) ||
+                                    (sourceElevation+ sourceadj > targetElevation+targetadj));
 
             // Entering depression restriction placed when looking into a depression
             // reverse of above
             entersTargetDepression =
                     target.isDepressionTerrain() &&
                             (((sourceElevation+ sourceadj) - (targetElevation+targetadj) > 0 &&
-                            (sourceElevation+sourceadj) - (targetElevation+targetadj) <= range) ||
-                    ((LOSis60Degree || LOSisHorizontal) && entersDepressionTerrainHexside()) ||
-                    (targetElevation+targetadj == sourceElevation+sourceadj) ||
-                    (targetElevation+targetadj > sourceElevation+sourceadj));
+                                    (sourceElevation+sourceadj) - (targetElevation+targetadj) <= range) ||
+                                    ((LOSis60Degree || LOSisHorizontal) && entersDepressionTerrainHexside()) ||
+                                    (targetElevation+targetadj == sourceElevation+sourceadj) ||
+                                    (targetElevation+targetadj > sourceElevation+sourceadj));
 
             // slope rules are in effect if the higher location is up-slope
             slopes = (exitsSlopeHexside() && sourceElevation >= targetElevation) ||
-                     (entersSlopeHexside() && targetElevation >= sourceElevation);
+                    (entersSlopeHexside() && targetElevation >= sourceElevation);
 
             // initialize hillock status
             startsOnHillock = HILLOCK.equals(source.getTerrain().getName()) || slopes;
@@ -1106,7 +1106,7 @@ public class Map  {
 
             // because rubble is inherent terrain we can put this check here
             if(STONE_RUBBLE.equals(currentTerrain.getName())  && STONE_RUBBLE.equals(currentHex.getCenterLocation().getTerrain().getName())||
-               WOODEN_RUBBLE.equals(currentTerrain.getName()) && WOODEN_RUBBLE.equals(currentHex.getCenterLocation().getTerrain().getName())) {
+                    WOODEN_RUBBLE.equals(currentTerrain.getName()) && WOODEN_RUBBLE.equals(currentHex.getCenterLocation().getTerrain().getName())) {
                 if(firstRubbleCrossed == null) {
                     firstRubbleCrossed = currentHex;
                 }
@@ -1155,7 +1155,7 @@ public class Map  {
             boolean sourceSet = false;
             boolean targetSet = false;
             if(source.isCenterLocation()) {
-                
+
                 sourceExitHexsides = getExitFromCenterHexsides();
                 sourceSet = true;
             }
@@ -1211,7 +1211,7 @@ public class Map  {
             final double slope = (double) (sourceY - targetY) / (double) (sourceX - targetX);
 
             int[] exitHexsides = {NONE, NONE};
-            
+
             if(slope == Double.POSITIVE_INFINITY) {
                 exitHexsides[0] = 0;
             }
@@ -1322,10 +1322,10 @@ public class Map  {
             while(iterator.hasNext()){
                 Integer i = (Integer) iterator.next();
                 if((hex.getHexsideLocation(i).getLOSPoint().x    == sourceX && hex.getHexsideLocation(i).getLOSPoint().y == sourceY) ||
-                   (hex.getHexsideLocation(i).getAuxLOSPoint().x == sourceX && hex.getHexsideLocation(i).getAuxLOSPoint().y == sourceY) ||
-                   (hex.getHexsideLocation(i).getLOSPoint().x    == targetX && hex.getHexsideLocation(i).getLOSPoint().y == targetY) ||
-                   (hex.getHexsideLocation(i).getAuxLOSPoint().x == targetX && hex.getHexsideLocation(i).getAuxLOSPoint().y == targetY)
-                 ) {
+                        (hex.getHexsideLocation(i).getAuxLOSPoint().x == sourceX && hex.getHexsideLocation(i).getAuxLOSPoint().y == sourceY) ||
+                        (hex.getHexsideLocation(i).getLOSPoint().x    == targetX && hex.getHexsideLocation(i).getLOSPoint().y == targetY) ||
+                        (hex.getHexsideLocation(i).getAuxLOSPoint().x == targetX && hex.getHexsideLocation(i).getAuxLOSPoint().y == targetY)
+                        ) {
                     iterator.remove();
                 }
             }
@@ -1540,8 +1540,8 @@ public class Map  {
         // We can ignore the current hex if we're in source/target and LOS is from center location
         // (non-center location implies bypass and LOS may be blocked)
         if ((!status.currentHex.equals(status.sourceHex) && !status.currentHex.equals(status.targetHex)) ||
-             (status.currentHex.equals(status.sourceHex) && !status.currentTerrain.isOpen() && !status.source.isCenterLocation()) ||
-             (status.currentHex.equals(status.targetHex) && !status.currentTerrain.isOpen() && !status.target.isCenterLocation())
+                (status.currentHex.equals(status.sourceHex) && !status.currentTerrain.isOpen() && !status.source.isCenterLocation()) ||
+                (status.currentHex.equals(status.targetHex) && !status.currentTerrain.isOpen() && !status.target.isCenterLocation())
                 ) {
 
             // ignore inherent terrain that "spills" into adjacent hex
@@ -1681,7 +1681,7 @@ public class Map  {
      */
     protected static boolean locationInSmoke(Location location, Smoke smoke) {
         return location.getBaseHeight() >= smoke.getLocation().getBaseHeight() &&
-               location.getBaseHeight() < smoke.getLocation().getBaseHeight() + smoke.getHeight();
+                location.getBaseHeight() < smoke.getLocation().getBaseHeight() + smoke.getHeight();
     }
 
     /**
@@ -1714,7 +1714,7 @@ public class Map  {
                         else {
                             // shooting down through smoke?
                             if(status.source.getAbsoluteHeight() == s.getLocation().getAbsoluteHeight() + s.getHeight() &&
-                               status.target.getAbsoluteHeight() < status.source.getAbsoluteHeight() ){
+                                    status.target.getAbsoluteHeight() < status.source.getAbsoluteHeight() ){
                                 hindrance += s.getHindrance();
                             }
                         }
@@ -1726,16 +1726,16 @@ public class Map  {
                         }
                         // shooting down through smoke?
                         else if(status.target.getAbsoluteHeight() == s.getLocation().getAbsoluteHeight() + s.getHeight() &&
-                           status.source.getAbsoluteHeight() < status.target.getAbsoluteHeight() ){
+                                status.source.getAbsoluteHeight() < status.target.getAbsoluteHeight() ){
                             hindrance += s.getHindrance();
                         }
                     }
                     else {
                         // source and target level must be within the smoke elevation
                         if (status.source.getAbsoluteHeight() >= s.getLocation().getAbsoluteHeight() &&
-                            status.source.getAbsoluteHeight() < s.getLocation().getAbsoluteHeight() + s.getHeight() &&
-                            status.target.getAbsoluteHeight() >= s.getLocation().getAbsoluteHeight() &&
-                            status.target.getAbsoluteHeight() < s.getLocation().getAbsoluteHeight() + s.getHeight()){
+                                status.source.getAbsoluteHeight() < s.getLocation().getAbsoluteHeight() + s.getHeight() &&
+                                status.target.getAbsoluteHeight() >= s.getLocation().getAbsoluteHeight() &&
+                                status.target.getAbsoluteHeight() < s.getLocation().getAbsoluteHeight() + s.getHeight()){
 
                             hindrance += s.getHindrance();
                         }
@@ -1791,7 +1791,7 @@ public class Map  {
 
                         // vehicle must be same elevation as both source and target
                         if(status.source.getAbsoluteHeight() == status.target.getAbsoluteHeight() &&
-                           status.source.getAbsoluteHeight() == v.getLocation().getAbsoluteHeight()){
+                                status.source.getAbsoluteHeight() == v.getLocation().getAbsoluteHeight()){
 
                             // no hindrance if up-slope or both units on hillocks (unless, in the later case, vehicle is also on hillock)
                             if(status.slopes || (status.startsOnHillock && status.endsOnHillock && status.crossingHillock == null)) {
@@ -1978,7 +1978,7 @@ public class Map  {
 
                             }
                         }
-                   }
+                    }
                     else {
                         return isRooftopLOSBlocked(status.currentHex, status.currentTerrain, status.currentTerrainHgt, status, result, rooftopadj);
                     }
@@ -2100,7 +2100,7 @@ public class Map  {
             else {
                 return false;
             }
-         }
+        }
 
         else {
 
@@ -2149,7 +2149,7 @@ public class Map  {
                 // should we ignore the hexside terrain?
                 boolean ignore =
                         isIgnorableHexsideTerrain(status.sourceHex, status.currentHex.getNearestLocation(status.currentCol, status.currentRow), status.result.getSourceExitHexspine()) ||
-                        isIgnorableHexsideTerrain(status.targetHex, status.currentHex.getNearestLocation(status.currentCol, status.currentRow), status.result.getTargetEnterHexspine());
+                                isIgnorableHexsideTerrain(status.targetHex, status.currentHex.getNearestLocation(status.currentCol, status.currentRow), status.result.getTargetEnterHexspine());
 
                 if (!ignore) {
 
@@ -2159,15 +2159,15 @@ public class Map  {
                         // always blocks if...
                         if (//higher than both source/target
                                 (status.groundLevel + status.currentTerrainHgt > status.sourceElevation &&
-                                 status.groundLevel + status.currentTerrainHgt > status.targetElevation) ||
-                                 //same height as both source/target, but 1/2 level
-                                 (status.groundLevel + status.currentTerrainHgt == status.sourceElevation &&
-                                  status.groundLevel + status.currentTerrainHgt == status.targetElevation &&
-                                  status.currentTerrain.isHalfLevelHeight()) ||
-                                  //same height as higher source/target, but other is lower
-                                  (status.groundLevel + status.currentTerrainHgt == Math.max(status.sourceElevation, status.targetElevation) &&
-                                   status.groundLevel + status.currentTerrainHgt > Math.min(status.sourceElevation, status.targetElevation)) &&
-                                   !status.slopes
+                                        status.groundLevel + status.currentTerrainHgt > status.targetElevation) ||
+                                        //same height as both source/target, but 1/2 level
+                                        (status.groundLevel + status.currentTerrainHgt == status.sourceElevation &&
+                                                status.groundLevel + status.currentTerrainHgt == status.targetElevation &&
+                                                status.currentTerrain.isHalfLevelHeight()) ||
+                                        //same height as higher source/target, but other is lower
+                                        (status.groundLevel + status.currentTerrainHgt == Math.max(status.sourceElevation, status.targetElevation) &&
+                                                status.groundLevel + status.currentTerrainHgt > Math.min(status.sourceElevation, status.targetElevation)) &&
+                                                !status.slopes
                                 ) {
 
                             status.reason = "Cannot see through/over bocage (B9.52)";
@@ -2251,7 +2251,7 @@ public class Map  {
             cliffadj=1;
         }
         if (status.groundLevel + status.currentTerrainHgt + cliffadj > Math.min(status.sourceElevation + sourceadj, status.targetElevation + targetadj) &&
-            status.groundLevel + status.currentTerrainHgt + cliffadj < Math.max(status.sourceElevation + sourceadj, status.targetElevation + targetadj)
+                status.groundLevel + status.currentTerrainHgt + cliffadj < Math.max(status.sourceElevation + sourceadj, status.targetElevation + targetadj)
                 ) {
 
             if (isBlindHex(status, status.currentTerrainHgt, nearestHexsideIsCliff(status.currentCol, status.currentRow, status, result))) {
@@ -2341,21 +2341,21 @@ public class Map  {
                                 if(hexsidetouched==firstsidetest){
                                     Hex testhex = getAdjacentHex(status.currentHex, firstsidetest);
                                     if (!testhex.getCenterLocation().getTerrain().isRoofless()) {
-                                            status.reason = "Source or Target location is in a blind hex (B10.23)";
-                                            status.blocked = true;
-                                            result.setBlocked(status.currentCol, status.currentRow, status.reason);
-                                            return true;
+                                        status.reason = "Source or Target location is in a blind hex (B10.23)";
+                                        status.blocked = true;
+                                        result.setBlocked(status.currentCol, status.currentRow, status.reason);
+                                        return true;
                                     }
                                 }
                                 else if(hexsidetouched==secondsidetest){
                                     Hex testhex = getAdjacentHex(status.currentHex, secondsidetest);
                                     if (!testhex.getCenterLocation().getTerrain().isRoofless()) {
-                                            status.reason = "Source or Target location is in a blind hex (B10.23)";
-                                            status.blocked = true;
-                                            result.setBlocked(status.currentCol, status.currentRow, status.reason);
-                                            return true;
-                                        }
+                                        status.reason = "Source or Target location is in a blind hex (B10.23)";
+                                        status.blocked = true;
+                                        result.setBlocked(status.currentCol, status.currentRow, status.reason);
+                                        return true;
                                     }
+                                }
                                 else {
                                     return false;
                                 }
@@ -2415,7 +2415,7 @@ public class Map  {
      * @return true if the LOS is blocked
      */
     protected boolean  checkTerrainHeightRule(LOSStatus status, LOSResult result) {
-    // code added by DR to deal with rooftop 1/2 level and cellars
+        // code added by DR to deal with rooftop 1/2 level and cellars
         double sourceadj=0;
         double targetadj=0;
         double obstacleadj=0;
@@ -2528,12 +2528,12 @@ public class Map  {
             // are exiting gully restrictions satisfied?
             if (!(status.ignoreGroundLevelHex != null &&
                     status.ignoreGroundLevelHex.containsExtended(status.currentCol, status.currentRow)) //&&
-                    // are entering gully restrictions satisfied?
-                    //&& !(status.currentHex.isDepressionTerrain() && status.currentTerrainHgt==0) //&& !status.LOSis60Degree && !status.LOSisHorizontal //&&
-                    //!status.exitsSourceDepression // && (status.currentHex.isDepressionTerrain() && status.currentTerrainHgt==0) && (!(status.LOSis60Degree) && !(status.LOSisHorizontal)))
+                // are entering gully restrictions satisfied?
+                //&& !(status.currentHex.isDepressionTerrain() && status.currentTerrainHgt==0) //&& !status.LOSis60Degree && !status.LOSisHorizontal //&&
+                //!status.exitsSourceDepression // && (status.currentHex.isDepressionTerrain() && status.currentTerrainHgt==0) && (!(status.LOSis60Degree) && !(status.LOSisHorizontal)))
 
                 //!(status.entersTargetDepression && (status.currentHex.isDepressionTerrain() && status.currentTerrainHgt==0) && (!(status.LOSis60Degree) && !(status.LOSisHorizontal))) &&
-                    //!(status.exitsSourceDepression && (status.currentHex.isDepressionTerrain() && status.currentTerrainHgt==0) && (!(status.LOSis60Degree) && !(status.LOSisHorizontal)))
+                //!(status.exitsSourceDepression && (status.currentHex.isDepressionTerrain() && status.currentTerrainHgt==0) && (!(status.LOSis60Degree) && !(status.LOSisHorizontal)))
                     ) {
 
                 // Need to handle special case where source unit is adjacent to a water obstacle looking
@@ -2690,7 +2690,7 @@ public class Map  {
                         Location oppositeLocation = oppositeHex.getHexsideLocation(Hex.getOppositeHexside(locationHexside));
 
                         if(!nearestLocation.isCenterLocation() &&
-                           (nearestLocation == status.firstWallCrossed || oppositeLocation == status.firstWallCrossed)) {
+                                (nearestLocation == status.firstWallCrossed || oppositeLocation == status.firstWallCrossed)) {
 
                             return false;
                         }
@@ -2986,12 +2986,12 @@ public class Map  {
      */
     private boolean hillockHindranceToLowerElevation(LOSStatus status) {
         return (status.startsOnHillock &&
-                       status.groundLevel + status.currentTerrainHgt == status.sourceElevation &&
-                       status.groundLevel + status.currentTerrainHgt >  status.targetElevation)
-                         ||
-               (status.endsOnHillock &&
-                       status.groundLevel + status.currentTerrainHgt == status.targetElevation &&
-                       status.groundLevel + status.currentTerrainHgt >  status.sourceElevation);
+                status.groundLevel + status.currentTerrainHgt == status.sourceElevation &&
+                status.groundLevel + status.currentTerrainHgt >  status.targetElevation)
+                ||
+                (status.endsOnHillock &&
+                        status.groundLevel + status.currentTerrainHgt == status.targetElevation &&
+                        status.groundLevel + status.currentTerrainHgt >  status.sourceElevation);
     }
 
     /**
@@ -3233,7 +3233,7 @@ public class Map  {
         }
 
         // for LOS along a hexspine, check hexside terrain at the far end of the hexspine
-       if (LOSHexspine >= 0) {
+        if (LOSHexspine >= 0) {
 
             // for locations that are 2 hexes away, let's use the corresponding
             // location in the adjacent hex
@@ -3284,8 +3284,8 @@ public class Map  {
             Terrain t2 = hex1.getHexsideTerrain(LOSHexspine);
             Terrain t3 = hex2.getHexsideTerrain(hexside);
 
-           return t1 != null && (l.equals(l2) || l.equals(l3)) && (t2 == null || t3 == null);
-       }
+            return t1 != null && (l.equals(l2) || l.equals(l3)) && (t2 == null || t3 == null);
+        }
         return false;
     }
 
@@ -3346,7 +3346,7 @@ public class Map  {
 
             // hindrance must be between the source and target
             if(range(status.sourceHex, status.currentHex) < range(status.sourceHex, status.targetHex) &&
-               range(status.targetHex, status.currentHex) < range(status.sourceHex, status.targetHex)){
+                    range(status.targetHex, status.currentHex) < range(status.sourceHex, status.targetHex)){
                 int hindrancevalue =1;
                 // handle special cases where terrain hindrance is not 1
                 // if LOS along hexspine, check for higher hindrance
@@ -3429,7 +3429,7 @@ public class Map  {
         int rangeToTarget = status.rangeToTarget;
         int groundLevel = status.groundLevel;
 
-		// blind hex NA for same-level LOS
+        // blind hex NA for same-level LOS
         if(sourceElevation == targetElevation){
             return false;
         }
@@ -3446,8 +3446,8 @@ public class Map  {
 
             // swap elevations
             swapLOS=true;
-			int temp = sourceElevation;
-			sourceElevation = targetElevation;
+            int temp = sourceElevation;
+            sourceElevation = targetElevation;
             targetElevation = temp;
             starthex=status.targetHex;
             finishhex=status.sourceHex;
@@ -3501,13 +3501,13 @@ public class Map  {
                 //}
                 if (swapLOS) {
                     //if (exithexsidetest == status.sourceExitHexsides[0] || exithexsidetest == status.sourceExitHexsides[1]) {
-                        rangeToTarget += 1;
-                        rangeToSource -= 1;
+                    rangeToTarget += 1;
+                    rangeToSource -= 1;
                     //}
                 } else {
                     //if (exithexsidetest == status.targetEnterHexsides[0] || exithexsidetest == status.targetEnterHexsides[1]) {
-                        rangeToTarget += 1;
-                        rangeToSource -= 1;
+                    rangeToTarget += 1;
+                    rangeToSource -= 1;
                     //}
                 }
             }
@@ -3520,8 +3520,8 @@ public class Map  {
                 //    }
                 //} else {
                 //    if (exithexsidetest == status.targetEnterHexsides[0] || exithexsidetest == status.targetEnterHexsides[1]) {
-                        rangeToTarget += 1;
-                        rangeToSource -= 1;
+                rangeToTarget += 1;
+                rangeToSource -= 1;
                 //    }
                 //}
             }
@@ -3536,7 +3536,7 @@ public class Map  {
             if(i.hasNext()) {
                 int testforDepressionhexside = i.next();
                 if (status.currentHex.getHexsideLocation(testforDepressionhexside).isDepressionTerrain()) {
-                   depressionadj=-1;
+                    depressionadj=-1;
                 }
             }
             if( rangeToTarget <= Math.max(2 * (groundLevel + depressionadj + terrainHeight) + (rangeToSource / 5) - sourceElevation - targetElevation, 0)) {
@@ -3554,9 +3554,9 @@ public class Map  {
     /**
      * Sets the terrain name map and populate the terrain list
      */
-	public final void setTerrain(HashMap<String, Terrain> nameMap) {
+    public final void setTerrain(HashMap<String, Terrain> nameMap) {
 
-		terrainNameMap = nameMap;
+        terrainNameMap = nameMap;
         for(String name : nameMap.keySet()) {
 
             terrainList[nameMap.get(name).getType()] = nameMap.get(name);
@@ -3579,16 +3579,16 @@ public class Map  {
      */
     public void flip() {
 
-		// flip the terrain and elevation grids
+        // flip the terrain and elevation grids
         for (int x = 0; x < (gridWidth+1) / 2; x++) {
             for (int y = 0; y < gridHeight; y++) {
 
-				char terrain = terrainGrid[x][y];
-				terrainGrid[x][y] = terrainGrid[gridWidth - x - 1][gridHeight - y - 1];
+                char terrain = terrainGrid[x][y];
+                terrainGrid[x][y] = terrainGrid[gridWidth - x - 1][gridHeight - y - 1];
                 terrainGrid[gridWidth - x - 1][gridHeight - y - 1] = terrain;
 
-				byte elevation = elevationGrid[x][y];
-				elevationGrid[x][y] = elevationGrid[gridWidth - x - 1][gridHeight - y - 1];
+                byte elevation = elevationGrid[x][y];
+                elevationGrid[x][y] = elevationGrid[gridWidth - x - 1][gridHeight - y - 1];
                 elevationGrid[gridWidth - x - 1][gridHeight - y - 1] = elevation;
             }
         }
@@ -3598,10 +3598,10 @@ public class Map  {
             for (int y = 0; y < (x == hexGrid.length / 2 ? (hexGrid[x].length - 1) / 2 + 1 : hexGrid[x].length); y++) {
 
                 // get the next two hexes
-				Hex h1 = hexGrid[x][y];
-				Hex h2 = hexGrid[width - x - 1][hexGrid[width - x - 1].length - y - 1];
+                Hex h1 = hexGrid[x][y];
+                Hex h2 = hexGrid[width - x - 1][hexGrid[width - x - 1].length - y - 1];
 
-				// swap the hexes in the grid
+                // swap the hexes in the grid
                 hexGrid[x][y] = h2;
                 hexGrid[width - x - 1][hexGrid[width - x - 1].length - y - 1] = h1;
 
@@ -4047,19 +4047,19 @@ public class Map  {
             }
         }
         else {
-                // have to handle IFW here because can't call getAdjacentHex from within isBlindHex
-                // deal with rooftop los across IFW DR
-                boolean sourcehexsidetest= status.currentHex.equals(getAdjacentHex(status.sourceHex, status.sourceExitHexsides[0]));
-                boolean targethexsidetest= status.currentHex.equals(getAdjacentHex(status.targetHex, status.targetEnterHexsides[0]));
-                if(status.source.getTerrain().isRooftop()  && (status.rangeToSource==0 || (status.rangeToSource==1 && sourcehexsidetest ))) {
-                    return false;
-                }
-                else if(status.target.getTerrain().isRooftop() && (status.rangeToTarget==0 || (status.rangeToTarget==1 && targethexsidetest))) {
-                    return false;
-                }
-                // moved code below from checkHexsideTerrainRule to keep all rowhouse/IF walls in one method
-                else if (  //now deal with all non-special situations
-                    //higher than both source/target
+            // have to handle IFW here because can't call getAdjacentHex from within isBlindHex
+            // deal with rooftop los across IFW DR
+            boolean sourcehexsidetest= status.currentHex.equals(getAdjacentHex(status.sourceHex, status.sourceExitHexsides[0]));
+            boolean targethexsidetest= status.currentHex.equals(getAdjacentHex(status.targetHex, status.targetEnterHexsides[0]));
+            if(status.source.getTerrain().isRooftop()  && (status.rangeToSource==0 || (status.rangeToSource==1 && sourcehexsidetest ))) {
+                return false;
+            }
+            else if(status.target.getTerrain().isRooftop() && (status.rangeToTarget==0 || (status.rangeToTarget==1 && targethexsidetest))) {
+                return false;
+            }
+            // moved code below from checkHexsideTerrainRule to keep all rowhouse/IF walls in one method
+            else if (  //now deal with all non-special situations
+                //higher than both source/target
                     (status.groundLevel + status.currentTerrainHgt > status.sourceElevation + sourceadj &&
                             status.groundLevel + status.currentTerrainHgt > status.targetElevation + targetadj) ||
                             //same height as both source/target, but 1/2 level
@@ -4071,41 +4071,41 @@ public class Map  {
                             (status.groundLevel + status.currentTerrainHgt == Math.max(status.sourceElevation + sourceadj, status.targetElevation + targetadj) &&
                                     status.groundLevel + status.currentTerrainHgt > Math.min(status.sourceElevation + sourceadj, status.targetElevation + targetadj))
                     ) {
-                    return true;
-                }
-                // otherwise check for blind hexes
-                else {
-                    if (status.sourceElevation > status.targetElevation) {
-                        int testhexside = status.currentHex.getLocationHexside(status.currentHex.getNearestLocation(status.currentCol, status.currentRow));
-                        Hex testhex = getAdjacentHex(status.currentHex, testhexside);
-                        int testrange = range(status.sourceHex, testhex);
-                        int oldrange = status.rangeToSource;
-                        if (status.rangeToSource > testrange) {
-                            status.rangeToSource = testrange;
-                        }
-                        if (isBlindHex(status, status.currentTerrainHgt)) {
-                            status.rangeToSource = oldrange;
-                            return true;
-                        } else {
-                            status.rangeToSource = oldrange;
-                        }
-                    } else if (status.targetElevation > status.sourceElevation) {
-                        int testhexside = status.currentHex.getLocationHexside(status.currentHex.getNearestLocation(status.currentCol, status.currentRow));
-                        Hex testhex = getAdjacentHex(status.currentHex, testhexside);
-                        int testrange = range(status.sourceHex, testhex);
-                        int oldrange = status.rangeToTarget;
-                        if (status.rangeToTarget > testrange) {
-                            status.rangeToTarget = testrange;
-                        }
-                        if (isBlindHex(status, status.currentTerrainHgt)) {
-                            status.rangeToTarget = oldrange;
-                            return true;
-                        } else {
-                            status.rangeToTarget = oldrange;
-                        }
-
+                return true;
+            }
+            // otherwise check for blind hexes
+            else {
+                if (status.sourceElevation > status.targetElevation) {
+                    int testhexside = status.currentHex.getLocationHexside(status.currentHex.getNearestLocation(status.currentCol, status.currentRow));
+                    Hex testhex = getAdjacentHex(status.currentHex, testhexside);
+                    int testrange = range(status.sourceHex, testhex);
+                    int oldrange = status.rangeToSource;
+                    if (status.rangeToSource > testrange) {
+                        status.rangeToSource = testrange;
                     }
+                    if (isBlindHex(status, status.currentTerrainHgt)) {
+                        status.rangeToSource = oldrange;
+                        return true;
+                    } else {
+                        status.rangeToSource = oldrange;
+                    }
+                } else if (status.targetElevation > status.sourceElevation) {
+                    int testhexside = status.currentHex.getLocationHexside(status.currentHex.getNearestLocation(status.currentCol, status.currentRow));
+                    Hex testhex = getAdjacentHex(status.currentHex, testhexside);
+                    int testrange = range(status.sourceHex, testhex);
+                    int oldrange = status.rangeToTarget;
+                    if (status.rangeToTarget > testrange) {
+                        status.rangeToTarget = testrange;
+                    }
+                    if (isBlindHex(status, status.currentTerrainHgt)) {
+                        status.rangeToTarget = oldrange;
+                        return true;
+                    } else {
+                        status.rangeToTarget = oldrange;
+                    }
+
                 }
+            }
         }
         // LOS is not blocked
         return false;
