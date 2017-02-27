@@ -523,7 +523,6 @@ public class Hex {
     public boolean isDepressionTerrain() {
 
 		return centerLocation.isDepressionTerrain();
-
 	}
 
     /**
@@ -814,9 +813,23 @@ public class Hex {
                 newLocation.setTerrain(getDepressionTerrain());
                 newLocation.setUpLocation(centerLocation);
                 centerLocation.setDownLocation(newLocation);
-
             }
 
+            // DR removed the following code as it did not seem to work properly
+
+            // make the center location the road location by removing the depression terrain
+            //final Terrain depressionTerrain = centerLocation.getDepressionTerrain();
+
+            //final int height = centerLocation.getBaseHeight();
+            //centerLocation.setDepressionTerrain(null);
+            //centerLocation.setBaseHeight(height);
+
+            //final Location newLocation = new Location(centerLocation);
+            //newLocation.setDepressionTerrain(depressionTerrain);
+            //newLocation.setBaseHeight(baseHeight - 1);
+
+            //newLocation.setUpLocation(centerLocation);
+            //centerLocation.setDownLocation(newLocation);
         }
     }
 
@@ -1017,30 +1030,6 @@ public class Hex {
 		return currentLocation;
 	}
 
-    // nearest of two Hexsides to a given point
-    public int getNearestHexside(int x, int y, int side1, int side2) {
-
-        // get distance to center
-        double  firstDistance	 = Point2D.distance(
-                (double) x,
-                (double) y,
-                hexsideLocations[side1].getEdgeCenterPoint().getX(),
-                hexsideLocations[side1].getEdgeCenterPoint().getY());
-
-        double secondDistance = Point2D.distance(
-                        (double) x,
-                        (double) y,
-                        hexsideLocations[side2].getEdgeCenterPoint().getX(),
-                        hexsideLocations[side2].getEdgeCenterPoint().getY());
-
-        // side is closer?
-        if (firstDistance < secondDistance) {
-            return side1;
-        } else {
-            return side2;
-        }
-
-    }
 	// is the hex touched by the given rectangle
 	public boolean isTouchedBy(Rectangle rect) {
 
