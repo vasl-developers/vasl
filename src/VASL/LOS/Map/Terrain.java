@@ -256,8 +256,8 @@ public class Terrain {
 
         return
                 LOSCategory == LOSCategories.BUILDING ||
-                LOSCategory == LOSCategories.FACTORY ||
-                LOSCategory == LOSCategories.MARKETPLACE;
+                        LOSCategory == LOSCategories.FACTORY ||
+                        LOSCategory == LOSCategories.MARKETPLACE;
     }
 
     /**
@@ -283,7 +283,7 @@ public class Terrain {
      * @return true if the terrain has a split. E.g. marketplace
      */
     public boolean hasSplit() {
-        
+
         return split != 0.0;
     }
 
