@@ -69,6 +69,12 @@ public class Terrain {
     }
 
     /**
+     * @return return true if the terrain is a road
+     */
+    public boolean isRoad() {
+        return LOSCategory == LOSCategories.ROAD;
+    }
+    /**
      * @return return true if the terrain is depression terrain
      */
     public boolean isDepression() {
@@ -297,6 +303,7 @@ public class Terrain {
                 name.equals("Rowhouse Wall, 2 Level") ||
                 name.equals("Rowhouse Wall, 3 Level") ||
                 name.equals("Rowhouse Wall, 4 Level") ||
+                // code added DR to handle interior factory walls
                 name.equals("Interior Factory Wall, 1 Level") ||
                 name.equals("Interior Factory Wall, 2 Level");
 
