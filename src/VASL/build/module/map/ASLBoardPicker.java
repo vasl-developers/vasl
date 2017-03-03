@@ -382,63 +382,96 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
      */
     private void updateBoard(String baseName) {
 
-        // normalize the base name by stripping r from reversed board
-        String unReversedBoardName = baseName;
-        if (baseName.startsWith("r") && !baseName.equalsIgnoreCase("r")) {
-            // board rX, this is really X; r or R are ok
-            // Red Barricades (RB) and Ruweisat Ridge (RR) should not have gotten here
-            unReversedBoardName = baseName.substring(1);
-        }
+        // if the boardDir doesn't exist, bail early
+        if (boardDir != null) {
 
-        final File boardFile = new File(boardDir, "bd" + unReversedBoardName);
+            // normalize the base name by stripping r from reversed board
+            String unReversedBoardName = baseName;
+            if (baseName.startsWith("r") && !baseName.equalsIgnoreCase("r")) {
+                // board rX, this is really X; r or R are ok
+                // Red Barricades (RB) and Ruweisat Ridge (RR) should not have gotten here
+                unReversedBoardName = baseName.substring(1);
+            }
 
-        // try to grab the board from repository if missing
-        if(!boardFile.exists()) {
+            final File boardFile = new File(boardDir, "bd" + unReversedBoardName);
 
-            // try to fetch the missing board
-            if(boardDir != null) {
+            // try to grab the board from repository if missing
+            if (!boardFile.exists()) {
 
+                // try to fetch the missing board
                 GameModule.getGameModule().warn("Board " + unReversedBoardName + " is missing. Downloading...");
-                if(!BoardVersionChecker.updateBoard(unReversedBoardName)) {
+                if (!BoardVersionChecker.updateBoard(unReversedBoardName)) {
                     GameModule.getGameModule().warn("Board download failed");
-                }
-                else {
+                } else {
                     GameModule.getGameModule().warn("Board download succeeded");
                 }
-            }
-        }
 
-        // Update the board if it's out of date
-        else {
+            } else {
 
-            // get the board version
-            VASLBoard b = new VASLBoard();
-            b.initializeFromArchive(boardFile);
+                // Update the board if it's out of date
 
-            // get the current board version from the game properties
-            Properties properties;
-            String availableVersion = null;
-            String boardVersions = ((String) GameModule.getGameModule().getPrefs().getValue(BoardVersionChecker.BOARD_VERSION_PROPERTY_KEY));
-            if (boardVersions != null && boardVersions.length() > 0) {
-                try {
-                    properties = new PropertiesEncoder(boardVersions).getProperties();
-                    availableVersion = properties.getProperty(unReversedBoardName);
+                // get the board version
+                VASLBoard b = new VASLBoard();
+                b.initializeFromArchive(boardFile);
 
-                } catch (Exception e) {
-                    // Fail silently if we can't find a version
-                    return;
+                // get the current board version from the game properties
+                Properties properties;
+                String availableVersion = null;
+                String boardVersions = ((String) GameModule.getGameModule().getPrefs().getValue(BoardVersionChecker.BOARD_VERSION_PROPERTY_KEY));
+                if (boardVersions != null && boardVersions.length() > 0) {
+                    try {
+                        properties = new PropertiesEncoder(boardVersions).getProperties();
+                        availableVersion = properties.getProperty(unReversedBoardName);
+
+                    } catch (Exception e) {
+                        // Fail silently if we can't find a version
+                        return;
+                    }
                 }
-            }
 
-            if (boardDir != null && availableVersion != null && !b.getVersion().equals(availableVersion)) {
 
-                // try to update board if out of date
-                GameModule.getGameModule().warn("Board " + unReversedBoardName + " is out of date. Updating...");
-                if (!BoardVersionChecker.updateBoard(unReversedBoardName)) {
-                    GameModule.getGameModule().warn("Update failed");
+                double serverVersion;
+                double localVersion;
+                boolean doUpdate;
+
+                if (availableVersion == null) {
+                    serverVersion = -1;
+                } else {
+                    try {
+                        serverVersion = Double.parseDouble(availableVersion);
+                    } catch (NumberFormatException nfe) {
+                        serverVersion = -1;
+                    }
                 }
-                else {
-                    GameModule.getGameModule().warn("Update succeeded");
+
+                if (b.getVersion() == null) {
+                    localVersion = -1;
+                } else {
+                    try {
+                        localVersion = Double.parseDouble(b.getVersion());
+                    } catch (NumberFormatException nfe) {
+                        localVersion = 0;
+                    }
+                }
+
+                if (localVersion == 0) {
+                    // local board is of an indeterminate state, update the board if the server version is good
+                    doUpdate = (serverVersion > -1);
+                } else {
+                    // update the board if the server version greater than local version
+                    doUpdate = (serverVersion > localVersion);
+                }
+
+                if (doUpdate) {
+
+                    // try to update board if out of date
+                    GameModule.getGameModule().warn("Board " + unReversedBoardName + " is out of date. Updating...");
+                    if (!BoardVersionChecker.updateBoard(unReversedBoardName)) {
+                        GameModule.getGameModule().warn("Update failed");
+                    } else {
+                        GameModule.getGameModule().warn("Update succeeded");
+                    }
+
                 }
             }
         }
