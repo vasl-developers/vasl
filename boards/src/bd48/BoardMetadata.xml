@@ -73,6 +73,7 @@
 		<overlaySSRule name="PalmTrees" image="48_Orch2PalmTrees.gif" x="32" y="37" />
 		<overlaySSRule name="DenseJungle" image="48_DenseJungle.gif" x="1" y="1" />
 		<overlaySSRule name="NoRoads" image="48_NoRoads.gif" x="1" y="1" />
+		<overlaySSRule name="LightWoods" image="48_LightWoods.gif" x="0" y="0" />
 	</overlaySSRules>
 	
 	<colors>

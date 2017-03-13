@@ -85,6 +85,7 @@
 		<overlaySSRule name="DenseJungle" image="42_DenseJungle.gif" x="1" y="1" />
 		<overlaySSRule name="Bamboo" image="42_Bamboo.gif" x="76" y="1" />
 		<overlaySSRule name="NoRoads" image="42_NoRoads.gif" x="1" y="1" />
+		<overlaySSRule name="LightWoods" image="42_LightWoods.gif" x="0" y="0" />
 	</overlaySSRules>
 	
 	<colors>

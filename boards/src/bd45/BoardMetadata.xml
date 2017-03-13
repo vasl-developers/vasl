@@ -183,6 +183,7 @@
 		<overlaySSRule name="RowhouseBarsToOpenGround" image="bd45_RowhouseBarsToOpenGround.gif" x="183" y="194" />
 		<overlaySSRule name="DenseJungle" image="bd45_DenseJungle.gif" x="1" y="1" />
 		<overlaySSRule name="NoRoads" image="bd45_NoRoads.gif" x="1" y="1" />
+		<overlaySSRule name="LightWoods" image="bd45_LightWoods.gif" x="0" y="0" />
 	</overlaySSRules>
 	
 	<colors>
