@@ -79,7 +79,7 @@
 		<overlaySSRule name="HedgesToBocage" image="16_HedgesToBocage.gif" x="802" y="222" />
 		<overlaySSRule name="NoRoads" image="16_NoRoads.gif" x="1" y="1" />
 		<overlaySSRule name="16_SSO_19" image="16_SSO_19.gif" x="84" y="9" />
-		<overlaySSRule name="16_SSO_25" image="16_SSO_25.gif" x="8" y="160" />
+		<overlaySSRule name="16_SSO_25" image="16_SSO_25.gif" x="0" y="0" />
 		<overlaySSRule name="16_SSO_59" image="16_SSO_59.gif" x="1" y="1" />
 		<overlaySSRule name="16_SSO_79" image="16_SSO_79.gif" x="765" y="141" />
 		<overlaySSRule name="16_SSO_A52" image="16_SSO_A52.gif" x="1" y="1" />
@@ -87,6 +87,7 @@
 		<overlaySSRule name="16_SSO_G17" image="16_SSO_G17.gif" x="13" y="1" />
 		<overlaySSRule name="16_SSO_G5" image="16_SSO_G5.gif" x="1" y="1" />
 		<overlaySSRule name="16_SSO_TOT9" image="16_SSO_TOT9.gif" x="1" y="166" />
+		<overlaySSRule name="LightWoods" image="16_LightWoods.gif" x="0" y="0" />
 	</overlaySSRules>
 	
 	<colors>

@@ -67,7 +67,7 @@
 		-->		
 
 		<overlaySSRule name="SSO_07_19" image="SSO_07_19.gif" x="1" y="12" />
-		<overlaySSRule name="SSO_07_25" image="SSO_07_25.gif" x="1" y="35" />
+		<overlaySSRule name="SSO_07_25" image="SSO_07_25.gif" x="0" y="0" />
 		<overlaySSRule name="SSO_07_53" image="SSO_07_53.gif" x="31" y="71" />
 		<overlaySSRule name="SSO_07_54" image="SSO_07_54.gif" x="31" y="71" />
 		<overlaySSRule name="SSO_07_A28" image="SSO_07_A28.gif" x="730" y="210" />
