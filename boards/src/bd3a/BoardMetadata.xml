@@ -80,6 +80,7 @@
 		<overlaySSRule name="RowhouseBarsToOpenGround" image="bd3a_RowhouseBarsToOpenGround.gif" x="636" y="455" />
 		<overlaySSRule name="NoSunkElevRoads" image="bd3a_NoSunkElevRoads.gif" x="31" y="954" />
 		<overlaySSRule name="NoRoads" image="bd3a_NoRoads.gif" x="1" y="1" />
+		<overlaySSRule name="LightWoods" image="bd3a_LightWoods.gif" x="0" y="0" />
 	</overlaySSRules>
 	
 	<colors>
