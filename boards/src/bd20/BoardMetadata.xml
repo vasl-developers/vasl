@@ -205,6 +205,7 @@
 		<overlaySSRule name="OrchardsToCrags" image="20_Orch2Crag.gif" x="929" y="106" />
 		<overlaySSRule name="PalmTrees" image="20_Orch2PalmTrees.gif" x="924" y="106" />
 		<overlaySSRule name="NoRoads" image="20_NoRoads.gif" x="1" y="1" />
+		<overlaySSRule name="LightWoods" image="20_LightWoods.gif" x="0" y="0" />
 	</overlaySSRules>
 	
 	<colors>

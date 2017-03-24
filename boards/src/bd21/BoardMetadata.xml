@@ -187,6 +187,7 @@
 		<overlaySSRule name="Bamboo" image="21_Bamboo.gif" x="199" y="94" />
 		<overlaySSRule name="SSO_ASLUG5" image="21_SSO_ASLUG5.gif" x="519" y="163" />
 		<overlaySSRule name="NoRoads" image="21_NoRoads.gif" x="1" y="1" />
+		<overlaySSRule name="LightWoods" image="21_LightWoods.gif" x="0" y="0" />
 	</overlaySSRules>
 	
 	<colors>

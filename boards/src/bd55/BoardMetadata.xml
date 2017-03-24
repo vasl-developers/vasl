@@ -67,6 +67,7 @@
 		<overlaySSRule name="Winter" image="55_WinterGully.gif" x="494" y="366" />
 		<overlaySSRule name="NoSunkElevRoads" image="55_NoSunkElevRoads.gif" x="985" y="165" />
 		<overlaySSRule name="NoRoads" image="55_NoRoads.gif" x="1" y="1" />
+		<overlaySSRule name="LightWoods" image="55_LightWoods.gif" x="0" y="0" />
 	</overlaySSRules>
 	
 	<colors>

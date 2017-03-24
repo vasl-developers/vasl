@@ -93,6 +93,7 @@
 		<overlaySSRule name="RowhouseBarsToOpenGround" image="bd59_RowhouseBarsToOpenGround.gif" x="721" y="135" />
 		<overlaySSRule name="bd59_BSO_NoStream" image="bd59_BSO_NoStream.gif" x="533" y="1" />
 		<overlaySSRule name="NoRoads" image="bd59_NoRoads.gif" x="1" y="1" />
+		<overlaySSRule name="LightWoods" image="bd59_LightWoods.gif" x="0" y="0" />
 	</overlaySSRules>
 	
 	<colors>
