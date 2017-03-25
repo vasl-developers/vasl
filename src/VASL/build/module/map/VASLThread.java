@@ -32,7 +32,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.util.Enumeration;
 
 import javax.swing.JCheckBox;
@@ -42,7 +41,6 @@ import VASL.LOS.Map.Location;
 import VASL.build.module.ASLMap;
 import VASL.LOS.VASLGameInterface;
 import VASL.build.module.map.boardPicker.ASLBoard;
-import VASL.build.module.map.boardPicker.VASLBoard;
 import VASSAL.build.Buildable;
 import VASSAL.build.module.GameComponent;
 import VASSAL.build.module.map.LOS_Thread;
@@ -55,6 +53,10 @@ import VASSAL.configure.ColorConfigurer;
 import static VASSAL.build.GameModule.getGameModule;
 // Needed to enable LOS checking on boards with overlays
 import VASL.build.module.map.boardPicker.Overlay;
+import VASSAL.counters.GamePiece;
+import VASSAL.counters.PieceIterator;
+import VASSAL.counters.Stack;
+
 import java.util.LinkedList;
 import java.awt.image.BufferedImage;
 import java.awt.Image;
@@ -62,9 +64,9 @@ import java.awt.Graphics2D;
 
 public class VASLThread extends LOS_Thread implements KeyListener, GameComponent {
 
-    public static final String ENABLED = "LosCheckEnabled";
-    public static final String HINDRANCE_THREAD_COLOR = "hindranceThreadColor";
-    public static final String BLOCKED_THREAD_COLOR = "blockedThreadColor";
+    private static final String ENABLED = "LosCheckEnabled";
+    private static final String HINDRANCE_THREAD_COLOR = "hindranceThreadColor";
+    private static final String BLOCKED_THREAD_COLOR = "blockedThreadColor";
     private boolean legacyMode;
     private boolean initialized; // LOS has been initialized?
     private static final String preferenceTabName = "LOS";
@@ -72,10 +74,9 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
 
     // Needed to enable LOS checking on boards with overlays
     private LinkedList<Rectangle> overlayBoundaries = new LinkedList<Rectangle>();
-    private boolean losOnOverlay=false;
-    private Color oldcolor;
+    private LinkedList<GamePiece> draggableOverlays = new LinkedList<GamePiece>();
     private Rectangle showovrboundaries;
-    private double ovrZoom;
+    private GamePiece draggableOverlay;
 
     // LOS stuff
     private LOSResult result;
@@ -134,7 +135,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             target = null;
 
 
-            // shrink the boundaries of overlay rectangles to limit LOS Checking disablement
+            // set the boundaries of overlay rectangles to limit LOS Checking disablement
             try {
                 overlayBoundaries.clear();
                 for (Board board : theMap.getBoards()) {
@@ -184,19 +185,36 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                             Rectangle ovrMinbounds= new Rectangle(ovrRec.x+minx, ovrRec.y+miny, maxx - minx, maxy - miny);
                             // Need to adjust y value when board cropped by coordinates
                             Rectangle CropAdjust = b.getCropBounds();
-                            ovrMinbounds.y = ovrMinbounds.y - CropAdjust.y;
+                            ovrMinbounds.y -= CropAdjust.y;
                             //Now check if need to flip
                             if (b.isReversed()) {
                                 // flip moves x,y point to bottom right, subtracting width and height resets it to top left
                                 ovrMinbounds.x = b.bounds().width - ovrMinbounds.x - 1;
                                 ovrMinbounds.y = b.bounds().height - ovrMinbounds.y - 1;
-                                ovrMinbounds.x = ovrMinbounds.x - ovrMinbounds.width;
-                                ovrMinbounds.y = ovrMinbounds.y - ovrMinbounds.height;
+                                ovrMinbounds.x -= ovrMinbounds.width;
+                                ovrMinbounds.y -= ovrMinbounds.height;
                             }
                             //Now adjust for multiple rows and columns
                             ovrMinbounds.x = ovrMinbounds.x + b.bounds().x - 400;
                             ovrMinbounds.y = ovrMinbounds.y + b.bounds().y - 400;
                             overlayBoundaries.add(ovrMinbounds);
+                        }
+                    }
+                }
+
+                // get the set of new draggable overlays
+                GamePiece[] p = theMap.getPieces();
+                for (GamePiece aP : p) {
+                    if (aP instanceof Stack) {
+                        for (PieceIterator pi = new PieceIterator(((Stack) aP).getPiecesIterator()); pi.hasMoreElements(); ) {
+                            GamePiece p2 = pi.nextPiece();
+                            if(p2.getProperty("overlay") != null){
+                                draggableOverlays.add(p2);
+                            }
+                        }
+                    } else {
+                        if(aP.getProperty("overlay") != null){
+                            draggableOverlays.add(aP);
                         }
                     }
                 }
@@ -426,13 +444,13 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
 
                 // call overlay check function
                 // set the LOS line from source to target - based on map not screen coordinates
-                losOnOverlay=false;
+                boolean losOnOverlay = false;
                 // test if LOS line cross an overlay
                 Line2D losline= new Line2D.Double(sourcestart.getLocation(), targetend.getLocation());
                 if(!checkifLOScrossesOverlay(losline)) {
                     doLOS();
                 } else {
-                    losOnOverlay=true;
+                    losOnOverlay =true;
                 }
 
                 // transform the blocked-at point
@@ -539,23 +557,46 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                             g.setColor(Color.white);
                     }
                     g.setFont(RANGE_FONT);
-                    // code added by DR to handle rooftop levels
-                    double finalLevel=0;
-                    double leveladj=0;
+
                     // inform user that LOS checking disabled due to overlay in LOS - show overlay boundaries and show text message
                     if (losOnOverlay) {
-                        ovrZoom = map.getZoom();
-                        oldcolor=g.getColor();
+
+                        Color oldcolor = g.getColor();
                         g.setColor(Color.red);
-                        Point drawboundaries=new Point (showovrboundaries.x, showovrboundaries.y);
-                        drawboundaries= mapPointToScreen(drawboundaries);
-                        // need to adjust width and height of overlay boundary display rectangle according to level of zoom; x,y are already handled
-                        int ovrwidth = (int)(showovrboundaries.width * ovrZoom);
-                        int ovrheight = (int)(showovrboundaries.height * ovrZoom);
-                        g.drawRect(drawboundaries.x, drawboundaries.y, ovrwidth, ovrheight);
+                        double ovrZoom = map.getZoom();
+
+                        if(showovrboundaries != null) {
+
+                            Point drawboundaries=new Point (showovrboundaries.x, showovrboundaries.y);
+                            drawboundaries= mapPointToScreen(drawboundaries);
+                            // need to adjust width and height of overlay boundary display rectangle according to level of zoom; x,y are already handled
+                            int ovrwidth = (int)(showovrboundaries.width * ovrZoom);
+                            int ovrheight = (int)(showovrboundaries.height * ovrZoom);
+                            g.drawRect(drawboundaries.x, drawboundaries.y, ovrwidth, ovrheight);
+                        }
+
+
+                        else if(draggableOverlay != null) {
+
+                            int overlayWidth  = (int)(draggableOverlay.boundingBox().width * ovrZoom);
+                            int overlayHeight = (int)(draggableOverlay.boundingBox().height * ovrZoom);
+                            Point overlayCenter = new Point ((int)(draggableOverlay.getPosition().x * ovrZoom), (int) (draggableOverlay.getPosition().y * ovrZoom));
+
+                            g.drawRect(
+                                    overlayCenter.x - overlayWidth/2,
+                                    overlayCenter.y - overlayHeight/2,
+                                    overlayWidth,
+                                    overlayHeight);
+                        }
+
                         g.setColor(oldcolor);
                         lastRangeRect.add(drawText(g,targetLOSPoint.x - 20, targetLOSPoint.y + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(), "LOS Check Disabled - Overlay nearby. Range: " + LOSMap.range(source.getHex(), target.getHex())));
+
                     } else {
+                        // code added by DR to handle rooftop levels
+                        double finalLevel=0;
+                        double leveladj=0;
+
                         if(source.getName().contains("Rooftop")) {
                             leveladj=-0.5;
                         }
@@ -828,9 +869,28 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
     private boolean checkifLOScrossesOverlay(Line2D losline) {
 
         try {
+            // this is for standard overlays
             for (Rectangle ovrRec : overlayBoundaries) {
                 if (losline.intersects(ovrRec.x, ovrRec.y, ovrRec.width, ovrRec.height)) {
                     showovrboundaries=ovrRec;
+                    draggableOverlay = null;
+                    return true;
+                }
+            }
+
+            // this is for the new draggable overlays
+            for (GamePiece p : draggableOverlays) {
+                int overlayWidth  = p.boundingBox().width;
+                int overlayHeight = p.boundingBox().height;
+                Point overlayCenter = new Point (p.getPosition().x, p.getPosition().y);
+                if (losline.intersects(
+                        overlayCenter.x - overlayWidth/2  - map.getEdgeBuffer().width,
+                        overlayCenter.y - overlayHeight/2 - map.getEdgeBuffer().height,
+                        overlayWidth,
+                        overlayHeight)){
+
+                    draggableOverlay = p;
+                    showovrboundaries = null;
                     return true;
                 }
             }
