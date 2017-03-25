@@ -88,6 +88,7 @@
 		<overlaySSRule name="OrchardsToShellholes" image="bd2b_Orch2Shell.gif" x="253" y="235" />
 		<overlaySSRule name="DenseJungle" image="bd2b_DenseJungle.gif" x="1" y="1" />
 		<overlaySSRule name="NoRoads" image="bd2b_NoRoads.gif" x="1" y="1" />
+		<overlaySSRule name="LightWoods" image="bd2b_LightWoods.gif" x="0" y="0" />
 	</overlaySSRules>
 	
 	<colors>

@@ -86,6 +86,7 @@
 		<overlaySSRule name="RowhouseBarsToOpenGround" image="bd1a_RowhouseBarsToOG.gif" x="717" y="674" />
 		<overlaySSRule name="NoRoads" image="bd1a_NoRoads.gif" x="1" y="1" />
 		<overlaySSRule name="SSO_AP74" image="1a_SSO_AP74.gif" x="23" y="54" />
+		<overlaySSRule name="LightWoods" image="bd1a_LightWoods.gif" x="0" y="0" />
 	</overlaySSRules>
 	
 	<colors>

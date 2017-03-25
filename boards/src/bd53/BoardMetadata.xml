@@ -94,6 +94,7 @@
 		<overlaySSRule name="HedgesToBocage" image="53_HedgesToBocage.gif" x="37" y="26" />
 		<overlaySSRule name="WallsToBocage" image="53_WallsToBocage.gif" x="577" y="94" />
 		<overlaySSRule name="NoRoads" image="53_NoRoads.gif" x="1" y="1" />
+		<overlaySSRule name="LightWoods" image="53_LightWoods.gif" x="0" y="0" />
 	</overlaySSRules>
 	
 	<colors>

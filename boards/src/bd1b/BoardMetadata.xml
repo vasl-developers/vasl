@@ -88,6 +88,7 @@
 		<overlaySSRule name="OrchardsToCrags" image="bd1b_Orch2Crag.gif" x="202" y="139" />
 		<overlaySSRule name="RowhouseBarsToOpenGround" image="bd1b_RowhouseBarsToOG.gif" x="717" y="674" />
 		<overlaySSRule name="NoRoads" image="bd1b_NoRoads.gif" x="1" y="1" />
+		<overlaySSRule name="LightWoods" image="bd1b_LightWoods.gif" x="0" y="0" />
 	</overlaySSRules>
 	
 	<colors>

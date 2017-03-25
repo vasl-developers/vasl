@@ -78,6 +78,7 @@
 		<overlaySSRule name="BSO_11_Z5IsL2" image="BSO_11_Z5IsL2.gif" x="1333" y="235" />
 		<overlaySSRule name="BSO_11_Rogue" image="BSO_11_Rogue.gif" x="0" y="0" />
 		<overlaySSRule name="NoRoads" image="bd11_NoRoads.gif" x="1" y="1" />
+		<overlaySSRule name="LightWoods" image="bd11_LightWoods.gif" x="0" y="0" />
 		
 	</overlaySSRules>
 	

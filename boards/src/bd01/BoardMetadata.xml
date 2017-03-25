@@ -109,6 +109,7 @@
 		<overlaySSRule name="SSO_O" image="1_SSO_O.png" x="1" y="484" />
 		<overlaySSRule name="SSO_32" image="1_SSO_32.gif" x="61" y="1" />
 		<overlaySSRule name="NoRoads" image="1_NoRoads.gif" x="1" y="1" />
+		<overlaySSRule name="LightWoods" image="1_LightWoods.gif" x="0" y="0" />
 	</overlaySSRules>
 	
 	<colors>
