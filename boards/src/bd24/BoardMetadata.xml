@@ -105,6 +105,7 @@
 		<overlaySSRule name="SSO_J3" image="24_SSO_J3.gif" x="16" y="17" />
 		<overlaySSRule name="Winter" image="24_BSO_WinterGully.gif" x="1" y="100" />
 		<overlaySSRule name="NoRoads" image="24_NoRoads.gif" x="1" y="1" />
+		<overlaySSRule name="LightWoods" image="24_LightWoods.gif" x="0" y="0" />
 	</overlaySSRules>
 	
 	<colors>

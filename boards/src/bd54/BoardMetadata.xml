@@ -65,6 +65,7 @@
 		<overlaySSRule name="OrchardsToCrags" image="54_Orch2Crag.gif" x="92" y="12" />
 		<overlaySSRule name="PalmTrees" image="54_Orch2Palm.gif" x="87" y="11" />
 		<overlaySSRule name="NoRoads" image="54_NoRoads.gif" x="1" y="1" />
+		<overlaySSRule name="LightWoods" image="54_LightWoods.gif" x="0" y="0" />
 	</overlaySSRules>
 	
 	<colors>

@@ -90,6 +90,7 @@
 		<overlaySSRule name="OrchardsToCrags" image="50_Orch2Crag.gif" x="877" y="77" />
 		<overlaySSRule name="PalmTrees" image="50_Orch2Palm.gif" x="874" y="75" />
 		<overlaySSRule name="NoRoads" image="50_NoRoads.gif" x="1" y="1" />
+		<overlaySSRule name="LightWoods" image="50_LightWoods.gif" x="0" y="0" />
 	</overlaySSRules>
 	
 	<colors>
