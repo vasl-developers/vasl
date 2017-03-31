@@ -6576,6 +6576,7 @@
                 <VASSAL.build.widget.PieceSlot entryName="PzKw VIB Wreck" gpid="5246" height="60" width="80">+/null/prototype;DBGlobal	info;CS 6,MG 3\/5\/2\	prototype;geWRK\\	piece;K;D;ge\/veh\/pzvibb;PzKw VIB Wreck/	\	\\	null;0;0;5246</VASSAL.build.widget.PieceSlot>
                 <VASSAL.build.widget.PieceSlot entryName="PzKw Maus Wreck" gpid="5247" height="60" width="80">+/null/prototype;DBGlobal	info;CS 5,MG -\/5\	prototype;geWRK\\	piece;K;D;ge\/veh\/pzmausb;PzKw Maus Wreck/	\	\\	null;0;0;5247</VASSAL.build.widget.PieceSlot>
                 <VASSAL.build.widget.PieceSlot entryName="GE MT Wreck" gpid="5248" height="60" width="80">+/null/prototype;DBGlobal	prototype;geWRK\	piece;K;D;ge\/veh\/pziiiflb;GE MT Wreck/	\	null;0;0;5248</VASSAL.build.widget.PieceSlot>
+				<VASSAL.build.widget.PieceSlot entryName="PzKw 35t Wreck" gpid="7441" height="60" width="80">+/null/prototype;DBGlobal	info;CS 4,sD5\	prototype;geWRK\\	piece;K;D;pz35tb.gif;PzKw 35t Wreck/	\	\\	null;92;30;7441</VASSAL.build.widget.PieceSlot>
             </VASSAL.build.widget.ListWidget>
             <VASSAL.build.widget.ListWidget divider="-1" entryName="AGw" height="0" width="0">
                 <VASSAL.build.widget.PieceSlot entryName="StuG IIIB Wreck" gpid="5249" height="60" width="80">+/null/prototype;DBGlobal	info;CS 4,MG -\/-\	prototype;geWRK\\	piece;K;D;ge\/veh\/stgiiibb;StuG IIIB Wreck/	\	\\	null;0;0;5249</VASSAL.build.widget.PieceSlot>
