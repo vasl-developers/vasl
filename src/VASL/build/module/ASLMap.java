@@ -248,7 +248,9 @@ public class ASLMap extends Map {
 
             // create the VASL map
             //DR added code to pass hexWidth and HexHeight
+            String passgridconfig="Normal";
             VASLBoard b = VASLBoards.get(0); // we can use the geometry of any board - assuming all are the same
+            if (!(b.getA1CenterX()==0) && !(b.getA1CenterX()==-999)) { passgridconfig= passgridconfig +"Offset";}
             VASLMap = new VASL.LOS.Map.Map(
                     hexWidth,
                     hexHeight,
@@ -258,7 +260,7 @@ public class ASLMap extends Map {
                     b.getA1CenterY(),
                     mapBoundary.width,
                     mapBoundary.height,
-                    sharedBoardMetadata.getTerrainTypes());
+                    sharedBoardMetadata.getTerrainTypes(), passgridconfig);
         }
 
         // clean up and fall back to legacy mode if an unexpected exception is thrown
@@ -284,12 +286,14 @@ public class ASLMap extends Map {
                 for (VASLBoard board : VASLBoards) {
 
                     // read the LOS data and flip/crop the board if needed
-                    VASL.LOS.Map.Map LOSData = board.getLOSData(sharedBoardMetadata.getTerrainTypes());
+                    String offset="";
+                    if (!(board.getA1CenterX()==0) && !(board.getA1CenterX()==-999)) { offset="Offset";}
+                    VASL.LOS.Map.Map LOSData = board.getLOSData(sharedBoardMetadata.getTerrainTypes(), offset);
 
                     // if the board is not cropped such that left- and right-most hex cols mirror geo board turn off LOS
-                    if((int) (board.getCropBounds().getWidth()/LOSData.getHexWidth())%2 == 1){
-                        throw  new BoardException("Board " + board.getName() + " is not properly cropped - LOS disabled");
-                    }
+                    //if((int) (board.getCropBounds().getWidth()/LOSData.getHexWidth())%2 == 1){
+                    //    throw  new BoardException("Board " + board.getName() + " is not properly cropped - LOS disabled");
+                    //}
                     // apply the SSR changes, crop and flip if needed
                     board.applyColorSSRules(LOSData, sharedBoardMetadata.getLOSSSRules());
 
@@ -303,21 +307,21 @@ public class ASLMap extends Map {
 
                     // add the board LOS data to the map
                     // .insertMap is designed to work with only geo board thus need to test for non-geo boards
-                    // DR added code to handle maps of one board such as HASL maps - need a better approach
-                    if (VASLBoards.size()==1) {
-                        // just add board LOS data for one board
-                        VASLMap.insertOneMap(LOSData);
-                    }
-                    else {
-                        if (board.getWidth()==33 && board.getHeight()==10 || board.getWidth()==17 && board.getHeight()==20) {
+                    // DR added code to handle maps of one board such as HASL maps
+                    if (board.getWidth()==33 && board.getHeight()==10 || board.getWidth()==17 && board.getHeight()==20) {
+                        //line below is not a good fix; make sure it works in all situations or change
+                            int cropadj=1;  // ensures that cropping a board by row works properly DR (rows such as A7 have uneven total height which results in incorrect choice from gridToHex)
                             if (!VASLMap.insertMap(
                                     LOSData,
-                                    VASLMap.gridToHex(board.getBoardLocation().x, board.getBoardLocation().y + (nullBoards ? 1 : 0)))) {
+                                    VASLMap.gridToHex(board.getBoardLocation().x, board.getBoardLocation().y + cropadj + (nullBoards ? 1 : 0)))) {
 
                                 // didn't work, so assume an unsupported feature
                                 throw new BoardException("Unable to insert board " + board.getName() + " into the VASL map - LOS disabled");
                             }
-                        }
+                    }
+                    else {
+                            // add board LOS data for non-standard size board
+                            VASLMap.insertOneMap(LOSData);
                     }
                 }
             }

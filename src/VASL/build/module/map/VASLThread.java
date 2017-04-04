@@ -377,12 +377,16 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
      * @param eventPoint the point in mouse dragged coordinates
      */
     private void setTargetFromMouseDraggedEvent(Point eventPoint) {
-
-        final Point p = map.mapCoordinates(eventPoint);
-        p.translate(-map.getEdgeBuffer().width, -map.getEdgeBuffer().height);
-        if (p == null || !LOSMap.onMap(p.x, p.y)) return;
-        target = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
-        useAuxTargetLOSPoint = useAuxLOSPoint(target, p.x, p.y);
+        try {
+            final Point p = map.mapCoordinates(eventPoint);
+            p.translate(-map.getEdgeBuffer().width, -map.getEdgeBuffer().height);
+            if (p == null || !LOSMap.onMap(p.x, p.y)) return;
+            target = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
+            useAuxTargetLOSPoint = useAuxLOSPoint(target, p.x, p.y);
+        }
+        catch (Exception e) {
+            // trap error - no need for action DR
+        }
     }
 
     /**
@@ -590,7 +594,8 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                         }
 
                         g.setColor(oldcolor);
-                        lastRangeRect.add(drawText(g,targetLOSPoint.x - 20, targetLOSPoint.y + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(), "LOS Check Disabled - Overlay nearby. Range: " + LOSMap.range(source.getHex(), target.getHex())));
+                        lastRangeRect.add(drawText(g,targetLOSPoint.x - 20, targetLOSPoint.y + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
+                                "LOS Check Disabled - Overlay nearby. Range: " + LOSMap.range(source.getHex(), target.getHex(), LOSMap.getMapConfiguration())));
 
                     } else {
                         // code added by DR to handle rooftop levels
@@ -825,19 +830,24 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         result = new LOSResult();
         LOSMap.LOS(source, useAuxSourceLOSPoint, target, useAuxTargetLOSPoint, result, VASLGameInterface);
 
-        // set the result string
-        resultsString =
-                "Range: " + result.getRange();
-        lastRange = String.valueOf(result.getRange());
-        if (isVerbose()) {
-            if (result.isBlocked()) {
-                resultsString += "  Blocked in " + LOSMap.gridToHex(result.getBlockedAtPoint().x, result.getBlockedAtPoint().y).getName() +
-                        " ( " + result.getReason() + ")";
-            }
-            else {
-                resultsString += (result.getHindrance() > 0 ? ("  Hindrances: " + result.getHindrance()) : "");
+        try {
+            // set the result string
+            resultsString =
+                    "Range: " + result.getRange();
+            lastRange = String.valueOf(result.getRange());
+            if (isVerbose()) {
+                if (result.isBlocked()) {
+                    resultsString += "  Blocked in " + LOSMap.gridToHex(result.getBlockedAtPoint().x, result.getBlockedAtPoint().y).getName() +
+                            " ( " + result.getReason() + ")";
+                } else {
+                    resultsString += (result.getHindrance() > 0 ? ("  Hindrances: " + result.getHindrance()) : "");
+                }
             }
         }
+        catch (Exception e) {
+            //trap error if hex not found - just report nothing DR
+        }
+
     }
 
 	// force a paint when remote LOS command received
