@@ -7,4 +7,4 @@ out/
 .settings
 settings.xml
 vasl.iml
-.gitignore
+vasl-build.iml
