@@ -16,9 +16,11 @@
                 makes the VASL LOS image translation faster and more accurate
     height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
     width - width of the board in hexes.
-	others - TBD e.g. alternate hex grain, etc. 
+	others - TBD e.g. alternate hex grain, etc.
+
+	6.1 - Missing building types for M6, N5
 -->
-<boardMetadata name="56" version="6.0" versionDate="Jan 2009" author="TR" boardImageFileName="bd56.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="56" version="6.1" versionDate="Jan 2009" author="TR" boardImageFileName="bd56.gif" hasHills="FALSE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -35,6 +37,10 @@
         <buildingType hexName="R4" buildingTypeName="Stone Building, 1 Level" />
         <buildingType hexName="P6" buildingTypeName="Stone Building, 1 Level" />
         <buildingType hexName="P7" buildingTypeName="Stone Building, 1 Level" />
+
+		<buildingType hexName="M6" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="N5" buildingTypeName="Wooden Building, 1 Level" />
+
 	</buildingTypes>
 	
 	<overlaySSRules>
