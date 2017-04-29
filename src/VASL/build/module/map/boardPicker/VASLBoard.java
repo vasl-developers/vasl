@@ -32,6 +32,7 @@ import VASL.LOS.Map.Map;
 import VASL.LOS.Map.Terrain;
 import VASL.build.module.map.boardArchive.BoardArchive;
 import VASL.build.module.map.boardArchive.LOSSSRule;
+import VASL.build.module.map.boardArchive.SharedBoardMetadata;
 import VASSAL.build.module.map.boardPicker.board.HexGrid;
 import VASSAL.i18n.Translatable;
 
@@ -94,15 +95,20 @@ public class VASLBoard extends ASLBoard {
             return null;
         }
         else {
-
+            int offset=0;
 			final Rectangle bounds = new Rectangle(getCropBounds());
+            if(!(getA1CenterX()==0) && !(getA1CenterX()==-999)) { offset = (int) (getA1CenterX());}
             if(bounds.width == -1) {
                 bounds.width = getUncroppedSize().width;
             }
             if(bounds.height == -1) {
                 bounds.height = getUncroppedSize().height;
             }
-            return losData.crop(new Point(bounds.x, bounds.y), new Point(bounds.x + bounds.width, bounds.y + bounds.height));
+            String cropconfig="";
+            if(this.nearestFullRow) {
+                cropconfig="FullHex";
+            }
+            return losData.crop(new Point(bounds.x - offset, bounds.y), new Point(bounds.x - offset + bounds.width, bounds.y + bounds.height), offset, cropconfig);
         }
     }
 
@@ -121,8 +127,8 @@ public class VASLBoard extends ASLBoard {
      * @return the LOS data
      * @param terrainTypes the terrain types
      */
-    public Map getLOSData(HashMap<String, Terrain> terrainTypes){
-        return VASLBoardArchive.getLOSData(terrainTypes);
+    public Map getLOSData(HashMap<String, Terrain> terrainTypes, String offset){
+        return VASLBoardArchive.getLOSData(terrainTypes, offset);
     }
 
     @Override
@@ -315,7 +321,7 @@ public class VASLBoard extends ASLBoard {
 
             // update the hex grid
             if(changed){
-                LOSData.resetHexTerrain();
+                LOSData.resetHexTerrain(0);
             }
         }
     }

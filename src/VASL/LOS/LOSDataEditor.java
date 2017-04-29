@@ -61,12 +61,18 @@ public class LOSDataEditor {
     public Map createNewLOSData() {
 
         Map m;
+        String passgridconfig="Doug";
         if (boardArchive.isGEO()) {
 
-            m = new Map(
+            m = new Map(boardArchive.getHexWidth(),
+                    boardArchive.getHexHeight(),
                     boardArchive.getBoardWidth(),
                     boardArchive.getBoardHeight(),
-                    sharedBoardMetadata.getTerrainTypes());
+                    boardArchive.getA1CenterX(),
+                    boardArchive.getA1CenterY(),
+                    boardArchive.getBoardImage().getWidth(),
+                    boardArchive.getBoardImage().getHeight(),
+                    sharedBoardMetadata.getTerrainTypes(), passgridconfig);
             m.setSlopes(boardArchive.getSlopes());
         } else {
             m = new Map(
@@ -79,7 +85,7 @@ public class LOSDataEditor {
                     boardArchive.getA1CenterY(),
                     boardArchive.getBoardImage().getWidth(),
                     boardArchive.getBoardImage().getHeight(),
-                    sharedBoardMetadata.getTerrainTypes());
+                    sharedBoardMetadata.getTerrainTypes(), passgridconfig);
             m.setSlopes(boardArchive.getSlopes());
         }
         return m;
@@ -253,7 +259,7 @@ public class LOSDataEditor {
         setAllUnknownTerrain();
 
         // we need to occasionally update the hex grid as the following processes need updated hex information
-        map.resetHexTerrain();
+        map.resetHexTerrain(0);
 
         // fix cliff elevation pixels - set them to the lower of the two hex elevations
         for (int x = 0; x < map.getGridWidth(); x++) {
@@ -286,7 +292,7 @@ public class LOSDataEditor {
         }
         setExteriorFactoryWalls();
 
-        map.resetHexTerrain();
+        map.resetHexTerrain(0);
 
         // set depression elevations
         for (int x = 0; x < map.getGridWidth(); x++) {
@@ -299,11 +305,11 @@ public class LOSDataEditor {
             }
         }
 
-        map.resetHexTerrain();
+        map.resetHexTerrain(0);
 
         fixElevatedSunkenRoads();
 
-        map.resetHexTerrain();
+        map.resetHexTerrain(0);
 
         addStairways();
     }
@@ -724,7 +730,9 @@ public class LOSDataEditor {
      */
     public void readLOSData() {
 
-        map = boardArchive.getLOSData();
+        // code added by DR to enable unlimited cropping
+        String offset="";
+        map = boardArchive.getLOSData(offset);
 
         if (map == null) {
 

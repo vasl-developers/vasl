@@ -148,5 +148,6 @@ public class Location {
                Point.distance(x, y, auxLOSPoint.x, auxLOSPoint.y);
 
         }
+
 }
 
