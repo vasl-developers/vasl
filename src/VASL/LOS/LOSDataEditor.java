@@ -20,11 +20,11 @@ import java.util.Vector;
 public class LOSDataEditor {
 
     // the LOS data
-    Map map;
+    protected Map map;
 
     // the board archive and shared board metadata
-    BoardArchive boardArchive;
-    SharedBoardMetadata sharedBoardMetadata;
+    protected BoardArchive boardArchive;
+    protected SharedBoardMetadata sharedBoardMetadata;
 
     // for terrain and elevation encoding while creating LOS data
     private static final int UNKNOWN_TERRAIN = 255;
@@ -416,7 +416,7 @@ public class LOSDataEditor {
      * @param rect map area to update
      * @param terr building terrain type
      */
-    protected void setFactoryWalls(Rectangle rect, Terrain terr) {
+    public void setFactoryWalls(Rectangle rect, Terrain terr) {
 
         int startX = (int) rect.getX();
         int startY = (int) rect.getY();
@@ -675,7 +675,6 @@ public class LOSDataEditor {
                 }
             }
         }
-
         return changed;
     }
 
