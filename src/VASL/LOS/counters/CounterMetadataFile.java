@@ -175,6 +175,7 @@ public class CounterMetadataFile {
             else if(e.getName().equals(entrenchmentCounterElement)) {
                 counterMetadata = new CounterMetadata(name, CounterMetadata.CounterType.ENTRENCHMENT);
                 counterMetadata.setPosition(e.getAttributeValue(counterPositionAttribute));
+                counterMetadata.setTerrain("Foxholes");
             }
             else if(e.getName().equals(crestCounterElement)) {
                 counterMetadata = new CounterMetadata(name, CounterMetadata.CounterType.CREST);
