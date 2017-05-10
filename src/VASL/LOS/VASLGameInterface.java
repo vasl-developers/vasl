@@ -160,7 +160,12 @@ public class VASLGameInterface {
                         // we assume there is only one terrain-type counter in a hex
                         terrainList.put(h, LOSMap.getTerrain(counter.getTerrain()));
                         break;
-
+                    case ENTRENCHMENT:
+                        // we assume there is only one terrain-type counter in a hex
+                        terrainList.put(h, LOSMap.getTerrain(counter.getTerrain()));
+                        // now create a "location" in the hex
+                        createLocationinHexForEntrenchments(h);
+                        break;
                     case SMOKE:
                         Smoke smoke = new Smoke(counter.getName(), h.getNearestLocation(p.x, p.y), counter.getHeight(), counter.getHindrance());
                         addCounter(smokeList, smoke, h);
@@ -345,7 +350,7 @@ public class VASLGameInterface {
      * @return the location - null if error or none
      */
     public Location getLocation(GamePiece piece) {
-
+        // this works with double blind viewer only as it requires a unit GamePiece to exist and assumes that hex locations have not been created
         // determine what hex and location the piece is in
         Point p = gameMap.mapCoordinates(new Point(piece.getPosition()));
         p.x *= gameMap.getZoom();
@@ -512,5 +517,22 @@ public class VASLGameInterface {
             somePiece = stack.getPieceAbove(somePiece);
         }
         return null;
+    }
+    /**
+     * Create the appropriate location in the Hex for an entrenchment counter - don't set as different level
+     * Entrenchment Locations are used by Map.checkHexsideTerrainRule to check LOS to entrenchments across hedge/wall
+     * @param h the Hex
+     * create the location and set relationship with centre location of Hex
+     */
+    private void createLocationinHexForEntrenchments(Hex h) {
+        Location location = h.getCenterLocation();
+        // create new location
+        Location newLocation = new Location(location);
+        // location "above" entrenchment is the center location
+        newLocation.setUpLocation(location);
+        // set terrain of new location
+        newLocation.setTerrain(LOSMap.getTerrain("Foxholes")); // use foxholes as all fortifications have the same LOS rules
+        // location 'below' center location is the entrenchment
+        location.setDownLocation((newLocation));
     }
 }

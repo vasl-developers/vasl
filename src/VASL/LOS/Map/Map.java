@@ -2454,6 +2454,7 @@ public class Map  {
         else {
 
             // target elevation must > source if in entrenchment
+            // up down arrows will allow LOS source/target to be set to an entrenchment 'location'
             if (status.source.getTerrain().isEntrenchmentTerrain()) {
 
                 if (status.range > 1 && status.targetElevation <= status.sourceElevation) {
