@@ -349,9 +349,14 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
     private void setSourceFromMousePressedEvent(Point eventPoint) {
 
         final Point p = mapMouseToMapCoordinates(eventPoint);
-        if (p == null || !LOSMap.onMap(p.x, p.y)) return;
-        source = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
-        useAuxSourceLOSPoint = useAuxLOSPoint(source, p.x, p.y);
+        if (p == null || !LOSMap.onMap(p.x, p.y)) {return;}
+        try {
+            source = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
+            useAuxSourceLOSPoint = useAuxLOSPoint(source, p.x, p.y);
+        }
+        catch (Exception e) {
+            return;
+        }
     }
 
     @Override
@@ -519,7 +524,11 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                 // test if LOS line cross an overlay
                 Line2D losline= new Line2D.Double(sourcestart.getLocation(), targetend.getLocation());
                 if(!checkifLOScrossesOverlay(losline)) {
-                    doLOS();
+                    try {
+                        doLOS();
+                    } catch(Exception e) {
+
+                    }
                 } else {
                     losOnOverlay =true;
                 }
@@ -755,7 +764,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
 
 	public void keyPressed(KeyEvent e) {
 
-        if (!isEnabled() && legacyMode) {
+        if ((!isEnabled() && legacyMode) || !isVisible()) {
             return;
         }
         final int code = e.getKeyCode();
