@@ -97,8 +97,8 @@ public class VASLBoard extends ASLBoard {
         else {
             int offset=0;
 			final Rectangle bounds = new Rectangle(getCropBounds());
-            if(!(getA1CenterX()==0) && !(getA1CenterX()==-999) && !(getA1CenterX()==-901)) { offset = (int) (getA1CenterX());}
-             if(bounds.width == -1) {
+            if(!(getA1CenterX()==0) && !(getA1CenterX()==-999)) { offset = (int) (getA1CenterX());}
+            if(bounds.width == -1) {
                 bounds.width = getUncroppedSize().width;
             }
             if(bounds.height == -1) {
@@ -107,10 +107,8 @@ public class VASLBoard extends ASLBoard {
             String cropconfig="";
             if(this.nearestFullRow) {
                 cropconfig="FullHex";
-                if (this.getCropBounds().getX() == 0) {cropconfig = "FullHexLeftHalf";}
-                if (this.getCropBounds().getMaxX() == this.getUncroppedSize().getWidth()) {cropconfig = "FullHexRightHalf";}
             }
-            return losData.crop(new Point(bounds.x , bounds.y), new Point(bounds.x  + bounds.width, bounds.y + bounds.height), offset, cropconfig);
+            return losData.crop(new Point(bounds.x - offset, bounds.y), new Point(bounds.x - offset + bounds.width, bounds.y + bounds.height), offset, cropconfig);
         }
     }
 
@@ -129,8 +127,8 @@ public class VASLBoard extends ASLBoard {
      * @return the LOS data
      * @param terrainTypes the terrain types
      */
-    public Map getLOSData(HashMap<String, Terrain> terrainTypes, String offset, boolean isCropping, double gridadj){
-        return VASLBoardArchive.getLOSData(terrainTypes, offset, isCropping, gridadj);
+    public Map getLOSData(HashMap<String, Terrain> terrainTypes, String offset){
+        return VASLBoardArchive.getLOSData(terrainTypes, offset);
     }
 
     @Override
@@ -148,7 +146,7 @@ public class VASLBoard extends ASLBoard {
      * Applies the color scenario-specific rules to the LOS data
      * @param LOSData the LOS data to modify
      */
-    public void applyColorSSRules(Map LOSData, HashMap<String, LOSSSRule> losssRules, double gridadj) throws BoardException {
+    public void applyColorSSRules(Map LOSData, HashMap<String, LOSSSRule> losssRules) throws BoardException {
 
         if(!isLegacyBoard() && !terrainChanges.isEmpty()) {
 
@@ -323,7 +321,7 @@ public class VASLBoard extends ASLBoard {
 
             // update the hex grid
             if(changed){
-                LOSData.resetHexTerrain(gridadj);
+                LOSData.resetHexTerrain(0);
             }
         }
     }

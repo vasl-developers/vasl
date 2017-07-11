@@ -282,16 +282,16 @@ public class BoardArchive {
      * Reads the map from disk using terrain types read from the board archive
      * @return <code>Map</code> object. Null if the LOS data does not exist or an error occurred.
      */
-    public Map getLOSData(String offset, boolean isCropping){
+    public Map getLOSData(String offset){
 
-        return getLOSData(sharedBoardMetadata.getTerrainTypes(), offset, isCropping, 0);
+        return getLOSData(sharedBoardMetadata.getTerrainTypes(), offset);
     }
 
     /**
      * Reads the map from disk using the provide terrain types.
      * @return <code>Map</code> object. Null if the LOS data does not exist or an error occurred.
      */
-    public Map getLOSData(HashMap<String, Terrain> terrainTypes, String offset, boolean isCropping, double gridadj){
+    public Map getLOSData(HashMap<String, Terrain> terrainTypes, String offset){
 
         // read the map if necessary; need to do so always in case of changes to a cropped or flipped board
          //if (map == null){
@@ -311,40 +311,58 @@ public class BoardArchive {
                 final int gridWidth = infile.readInt();
                 final int gridHeight = infile.readInt();
 
-                String passgridconfig=offset;
+                String passgridconfig="";
                 if (isGEO()) {
-                    map = new Map(width, height, terrainTypes, passgridconfig, isCropping);
+                    passgridconfig="Normal" + offset;
+                    map = new Map(width, height, terrainTypes, passgridconfig);
                 } else {
-                    //DR added code to pass hexWidth and Hexheight plus crop config and flag
-                    map = new Map(getHexWidth(), getHexHeight(), width, height, getA1CenterX(), getA1CenterY(), gridWidth, gridHeight, terrainTypes, passgridconfig, isCropping);
-                }
+                    //DR added code to pass hexWidth and Hexheight
+                    passgridconfig="Normal" + offset;
 
+                    map = new Map(getHexWidth(), getHexHeight(), width, height, getA1CenterX(), getA1CenterY(), gridWidth, gridHeight, terrainTypes, passgridconfig);
+                }
+                int offsetadj=0;
+                if (offset.contains("Offset")) {offsetadj= (int) getA1CenterX();}
                 // read the terrain and elevations grids
-                 for (int x = 0; x < gridWidth; x++) {
+                for (int x = 0+offsetadj; x < gridWidth; x++) {
                     for (int y = 0; y < gridHeight; y++) {
-                        map.setGridElevation((int) infile.readByte(), x, y);
-                        map.setGridTerrainCode((int) infile.readByte() & (0xff), x, y);
+                        map.setGridElevation((int) infile.readByte(), x-offsetadj, y);
+                        map.setGridTerrainCode((int) infile.readByte() & (0xff), x-offsetadj, y);
+
                     }
                 }
-
                 // code added by DR to enbable rr embankments in RB
                 // set the rr embankments
                 map.setRBrrembankments(metadata.getRBrrembankments());
 
-                // read the hex information
-                for (int col = 0; col < map.getWidth(); col++) {
-                    for (int row = 0; row < map.getHeight() + (col % 2); row++) {
-                        final byte stairway = infile.readByte();
-                        if ((int) stairway == 1) {
-                            map.getHex(col, row).setStairway(true);
-                        } else {
+                //if (map.getA1CenterY() == 0) {
+                //    // read the hex information
+                //    for (int col = 0; col < map.getWidth(); col++) {
+                //        int rowadd = col % 2==0 ? 1 : 0;
+                //        for (int row = 0; row < map.getHeight() + rowadd; row++) {
+                //            final byte stairway = infile.readByte();
+                //            if ((int) stairway == 1) {
+                //                map.getHex(col, row).setStairway(true);
+                //            } else {
+                //                map.getHex(col, row).setStairway(false);
+                //            }
+                //        }
+                //    }
+                //} else {
+                    // read the hex information
+                    for (int col = 0; col < map.getWidth(); col++) {
+                        for (int row = 0; row < map.getHeight() + (col % 2); row++) {
+                            final byte stairway = infile.readByte();
+                            if ((int) stairway == 1) {
+                                map.getHex(col, row).setStairway(true);
+                            } else {
                                 map.getHex(col, row).setStairway(false);
+                            }
                         }
                     }
-                }
-
+                //}
                 // code moved from before stairway loop by DR to enable factory quasi-levels in stairway hexes
-                map.resetHexTerrain(gridadj);
+                map.resetHexTerrain(offsetadj);
 
                 // set the slopes
                 map.setSlopes(metadata.getSlopes());
