@@ -23,9 +23,9 @@
 	3/11/15 - fixed "no woods roads" SSR rule
 -->
 <boardMetadata 
-	name="RBv2"
-	version="2.2" 
-	versionDate="Feb 2017" 
+	name="RBv2" 
+	version="2.3" 
+	versionDate="Aug 2017" 
 	author="Allan Cannamore" 
 	boardImageFileName="bdRBv2.gif" 
 	hasHills="TRUE" 
@@ -45,7 +45,7 @@
         See the terrainType elements for a complete list of building names
 	<buildingType hexName="F5" buildingTypeName="Stone Building, 1 Level" />
         <buildingType hexName="F6" buildingTypeName="Stone Building, 1 Level" />
-	<buildingType hexName="I6" buildingTypeName="Stone Building, 1 Level" />
+	
 
     -->
     <buildingTypes>
