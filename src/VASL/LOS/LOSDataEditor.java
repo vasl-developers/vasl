@@ -61,7 +61,7 @@ public class LOSDataEditor {
     public Map createNewLOSData() {
 
         Map m;
-        String passgridconfig="Doug";
+        String passgridconfig="Doug"; boolean isCropping=false;
         if (boardArchive.isGEO()) {
 
             m = new Map(boardArchive.getHexWidth(),
@@ -72,7 +72,7 @@ public class LOSDataEditor {
                     boardArchive.getA1CenterY(),
                     boardArchive.getBoardImage().getWidth(),
                     boardArchive.getBoardImage().getHeight(),
-                    sharedBoardMetadata.getTerrainTypes(), passgridconfig);
+                    sharedBoardMetadata.getTerrainTypes(), passgridconfig, isCropping);
             m.setSlopes(boardArchive.getSlopes());
         } else {
             m = new Map(
@@ -85,7 +85,7 @@ public class LOSDataEditor {
                     boardArchive.getA1CenterY(),
                     boardArchive.getBoardImage().getWidth(),
                     boardArchive.getBoardImage().getHeight(),
-                    sharedBoardMetadata.getTerrainTypes(), passgridconfig);
+                    sharedBoardMetadata.getTerrainTypes(), passgridconfig, isCropping);
             m.setSlopes(boardArchive.getSlopes());
         }
         return m;
@@ -731,7 +731,7 @@ public class LOSDataEditor {
 
         // code added by DR to enable unlimited cropping
         String offset="";
-        map = boardArchive.getLOSData(offset);
+        map = boardArchive.getLOSData(offset, false);
 
         if (map == null) {
 
