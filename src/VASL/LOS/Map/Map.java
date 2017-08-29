@@ -1638,12 +1638,14 @@ public class Map  {
         HashSet<Integer> hexsides;
         // code added by  DR to enable RB rr embankments
         hexsides = status.getHexsideCrossed(status.tempHex);
+        boolean RBrrembankmentsexist = false; // set flag to avoid unnecessary calls to CheckRBrrembankments()
         // code added by DR to enable roofless factory hexes
         Terrain previousTerrain = null;
         // are we in a new hex?
         if (!status.tempHex.equals(status.currentHex)) {
             //store terrain in previous hex (needed when checking depression hexsides; added by DR)
             boolean newequalsprevioushex=false;
+            RBrrembankmentsexist=false; // set every time new hex entered
             previousTerrain = status.currentHex.getCenterLocation().getTerrain();
             if(status.previousHex ==null) {
                 // no previous hex set in this LOS test
@@ -1737,6 +1739,8 @@ public class Map  {
                 else {
                     followsdepression=false;  // LOS is along hexside; cannot follow depression
                 }
+
+
             }
             if (status.entersTargetDepression && !newequalsprevioushex) {
                 Location testlocation=status.currentHex.getNearestLocation(status.currentCol, status.currentRow);
@@ -1797,6 +1801,20 @@ public class Map  {
 
             // set the hillocks status
             status.setHillockStatus();
+
+            // do RR Embankment terrain check here
+            Terrain checkhexside;
+            for (Integer hexside : hexsides) {
+                // get Terrain for hexside
+                checkhexside = status.currentHex.getHexsideTerrain(hexside);
+                if (checkhexside != null) {
+                    // if Terrain is RB rrembankment then set flag
+                    if (checkhexside.isHexsideTerrain() && checkhexside.getName().contains("Rrembankment")) {
+                        RBrrembankmentsexist = true;
+                        break;
+                    }
+                }
+            }
         }
 
         // check the LOS rules
@@ -1812,9 +1830,9 @@ public class Map  {
             }
         }
         // code added by DR to handle RB rrembankments
-        else {
+        else if (RBrrembankmentsexist) {
             if (checkRBrrembankments(status, result, hexsides)) {
-                return true;
+               return true;
             }
         }
 
