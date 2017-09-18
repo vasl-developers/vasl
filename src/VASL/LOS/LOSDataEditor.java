@@ -61,7 +61,7 @@ public class LOSDataEditor {
     public Map createNewLOSData() {
 
         Map m;
-        String passgridconfig="Doug"; boolean isCropping=false;
+        String passgridconfig="Normal"; boolean isCropping=false;
         if (boardArchive.isGEO()) {
 
             m = new Map(boardArchive.getHexWidth(),
