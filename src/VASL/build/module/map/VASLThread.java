@@ -42,6 +42,7 @@ import VASL.build.module.ASLMap;
 import VASL.LOS.VASLGameInterface;
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASSAL.build.Buildable;
+import VASSAL.build.GameModule;
 import VASSAL.build.module.GameComponent;
 import VASSAL.build.module.map.LOS_Thread;
 import VASSAL.build.module.map.boardPicker.Board;
@@ -56,6 +57,9 @@ import VASL.build.module.map.boardPicker.Overlay;
 import VASSAL.counters.GamePiece;
 import VASSAL.counters.PieceIterator;
 import VASSAL.counters.Stack;
+// added as part of fixing remote event problem DR
+import VASSAL.tools.SequenceEncoder;
+import VASSAL.tools.UniqueIdManager;
 
 import java.util.LinkedList;
 import java.awt.image.BufferedImage;
@@ -87,7 +91,9 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
     private boolean useAuxSourceLOSPoint;
     private boolean useAuxTargetLOSPoint;
     private String resultsString = "";
-
+    // fixing remote event problem
+    private double sourcelevel;
+    private double targetlevel;
     // LOS colors
     private Color LOSColor;
     private Color hindranceColor;
@@ -117,6 +123,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
     private void initializeMap(){
 
         // make sure we have a map otherwise disable LOS
+        String VASLVersion=GameModule.getGameModule().getGameVersion();
         final ASLMap theMap = (ASLMap) map;
         if(theMap == null || theMap.isLegacyMode()) {
             legacyMode = true;
@@ -133,6 +140,8 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             // setting these to null prevents the last LOS from being shown when launched
             source = null;
             target = null;
+            sourcelevel=0;
+            targetlevel=0;
 
 
             // set the boundaries of overlay rectangles to limit LOS Checking disablement
@@ -241,7 +250,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
 	public void addTo(Buildable buildable) {
 
         super.addTo(buildable);
-
+        idMgr.add(this);
         // add the key listener
         map.getView().addKeyListener(this);
 
@@ -318,10 +327,19 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                 source = source.getUpLocation();
             }
         }
+        double leveladj=0;
+        if(source.getName().contains("Rooftop")) {
+            leveladj=-0.5;
+        }
+        if(source.getHex().isDepressionTerrain() && !source.isCenterLocation()) {
+            leveladj=+1;
+        }
+        sourcelevel= source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj ;
 
         // make the source and the target the same
         target = source;
         useAuxTargetLOSPoint = useAuxSourceLOSPoint;
+
     }
 
     /**
@@ -331,15 +349,61 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
     private void setSourceFromMousePressedEvent(Point eventPoint) {
 
         final Point p = mapMouseToMapCoordinates(eventPoint);
-        if (p == null || !LOSMap.onMap(p.x, p.y)) return;
-        source = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
-        useAuxSourceLOSPoint = useAuxLOSPoint(source, p.x, p.y);
+        if (p == null || !LOSMap.onMap(p.x, p.y)) {return;}
+        try {
+            source = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
+            useAuxSourceLOSPoint = useAuxLOSPoint(source, p.x, p.y);
+        }
+        catch (Exception e) {
+            return;
+        }
     }
 
     @Override
 	public void mouseReleased(MouseEvent e) {
 
-        super.mouseReleased(e);
+        if(!super.persisting && !super.mirroring) {
+            VASLLOSCommand vasllosCommand;
+            if(!super.retainAfterRelease || super.ctrlWhenClick && super.persistence.equals("Ctrl-Click & Drag")) {
+                if(e.getWhen() != super.lastRelease) {
+                    super.visible = false;
+                    if(super.global.equals("Always") || super.global.equals("When Persisting")) {
+                        if(!super.persistence.equals("Always") && (!super.ctrlWhenClick || !super.persistence.equals("Ctrl-Click & Drag"))) {
+                            vasllosCommand = new VASLLOSCommand(this, this.getAnchor(), this.getArrow(), false, false, sourcelevel,   targetlevel);
+                            GameModule.getGameModule().sendAndLog(vasllosCommand);
+                        } else {
+                            super.anchor = super.lastAnchor;
+                            vasllosCommand = new VASLLOSCommand(this, this.getAnchor(), this.getArrow(), true, false, sourcelevel,   targetlevel);
+                            GameModule.getGameModule().sendAndLog(vasllosCommand);
+                            super.setPersisting(true);
+                        }
+                    }
+
+                    super.map.setPieceOpacity(1.0F);
+                    super.map.popMouseListener();
+                    super.map.repaint();
+                }
+            } else {
+                super.retainAfterRelease = false;
+                if(super.global.equals("Always")) {
+                    vasllosCommand = new VASLLOSCommand(this, this.getAnchor(), this.getArrow(), false, true, sourcelevel,   targetlevel);
+                    GameModule.getGameModule().sendAndLog(vasllosCommand);
+                }
+            }
+
+            this.lastRelease = e.getWhen();
+            if(super.getLosCheckCount() > 0) {
+                super.reportFormat.setProperty("FromLocation", super.anchorLocation);
+                super.reportFormat.setProperty("ToLocation", super.lastLocation);
+                super.reportFormat.setProperty("Range", super.lastRange);
+                super.reportFormat.setProperty("NumberOfLocationsChecked", String.valueOf(super.getLosCheckCount()));
+                super.reportFormat.setProperty("AllLocationsChecked", super.getLosCheckList());
+                GameModule.getGameModule().getChatter().send(super.reportFormat.getLocalizedText());
+            }
+        }
+
+        super.ctrlWhenClick = false;
+
         if (!isVisible()) {
             setGridSnapToVertex(false);
         }
@@ -366,6 +430,14 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                     target = target.getUpLocation();
                 }
             }
+            double leveladj=0;
+            if(target.getName().contains("Rooftop")) {
+                leveladj=-0.5;
+            }
+            if(target.getHex().isDepressionTerrain() && !target.isCenterLocation()) {
+                leveladj=+1;
+            }
+            targetlevel= target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj ;
 
         }
         super.mouseDragged(e);
@@ -377,12 +449,16 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
      * @param eventPoint the point in mouse dragged coordinates
      */
     private void setTargetFromMouseDraggedEvent(Point eventPoint) {
-
-        final Point p = map.mapCoordinates(eventPoint);
-        p.translate(-map.getEdgeBuffer().width, -map.getEdgeBuffer().height);
-        if (p == null || !LOSMap.onMap(p.x, p.y)) return;
-        target = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
-        useAuxTargetLOSPoint = useAuxLOSPoint(target, p.x, p.y);
+        try {
+            final Point p = map.mapCoordinates(eventPoint);
+            p.translate(-map.getEdgeBuffer().width, -map.getEdgeBuffer().height);
+            if (p == null || !LOSMap.onMap(p.x, p.y)) return;
+            target = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
+            useAuxTargetLOSPoint = useAuxLOSPoint(target, p.x, p.y);
+        }
+        catch (Exception e) {
+            // trap error - no need for action DR
+        }
     }
 
     /**
@@ -448,7 +524,11 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                 // test if LOS line cross an overlay
                 Line2D losline= new Line2D.Double(sourcestart.getLocation(), targetend.getLocation());
                 if(!checkifLOScrossesOverlay(losline)) {
-                    doLOS();
+                    try {
+                        doLOS();
+                    } catch(Exception e) {
+
+                    }
                 } else {
                     losOnOverlay =true;
                 }
@@ -590,37 +670,31 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                         }
 
                         g.setColor(oldcolor);
-                        lastRangeRect.add(drawText(g,targetLOSPoint.x - 20, targetLOSPoint.y + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(), "LOS Check Disabled - Overlay nearby. Range: " + LOSMap.range(source.getHex(), target.getHex())));
+                        lastRangeRect.add(drawText(g,targetLOSPoint.x - 20, targetLOSPoint.y + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
+                                "LOS Check Disabled - Overlay nearby. Range: " + LOSMap.range(source.getHex(), target.getHex(), LOSMap.getMapConfiguration())));
 
                     } else {
                         // code added by DR to handle rooftop levels
-                        double finalLevel=0;
                         double leveladj=0;
+                        String sourcelevelString="";
+                        String targetlevelString="";
 
-                        if(source.getName().contains("Rooftop")) {
-                            leveladj=-0.5;
-                        }
-                        if(source.getHex().isDepressionTerrain() && !source.isCenterLocation()) {
-                            leveladj=+1;
-                        }
-                        finalLevel= source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj ;
-                        String levelString ="";
-                        if ((int)Math.round(finalLevel) > (int)finalLevel) {  //need to show decimal place
-                            levelString="Level " + finalLevel;
+                        if ((int)Math.round(sourcelevel) > (int)sourcelevel) {  //need to show decimal place
+                            sourcelevelString="Level " + sourcelevel;
                         }
                         else {  // hide decimal place
-                            levelString="Level " + (int)finalLevel;
+                            sourcelevelString="Level " + (int)sourcelevel;
                         }
                         if (isVerbose()) {
                             lastRangeRect = drawText(g,
                                     sourceLOSPoint.x - 20,
                                     sourceLOSPoint.y + (shiftSourceText ? shift : 0) - g.getFontMetrics().getDescent(),
-                                    source.getName() + "  (" + levelString + ")");
+                                    source.getName() + "  (" + sourcelevelString + ")");
                         } else if (source.getBaseHeight() != 0) {
                             lastRangeRect = drawText(g,
                                     sourceLOSPoint.x - 20,
                                     sourceLOSPoint.y + (shiftSourceText ? shift : 0) - g.getFontMetrics().getDescent(),
-                                    levelString );
+                                    sourcelevelString );
                         }
 
                         // draw the target elevation
@@ -641,31 +715,23 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                             default:
                                 g.setColor(Color.white);
                         }
-                        // code added by DR to handle rooftop levels
-                        leveladj=0;
-                        if(target.getName().contains("Rooftop")) {
-                            leveladj=-0.5;
-                        }
-                        if(target.getHex().isDepressionTerrain() && !target.isCenterLocation()) {
-                            leveladj=+1;
-                        }
-                        finalLevel= target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj ;
-                        if ((int)Math.round(finalLevel) > (int)finalLevel) {  //need to show decimal place
-                            levelString="Level " + finalLevel;
+
+                        if ((int)Math.round(targetlevel) > (int)targetlevel) {  //need to show decimal place
+                            targetlevelString="Level " + targetlevel;
                         }
                         else {  // hide decimal place
-                            levelString="Level " + (int)finalLevel;
+                            targetlevelString="Level " + (int)targetlevel;
                         }
                         if (isVerbose()) {
                             lastRangeRect.add(drawText(g,
                                     targetLOSPoint.x - 20,
                                     targetLOSPoint.y + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
-                                    target.getName() + "  (" + levelString + ")"));
+                                    target.getName() + "  (" + targetlevelString + ")"));
                         } else if (target.getBaseHeight() != 0) {
                             lastRangeRect.add(drawText(g,
                                     targetLOSPoint.x - 20,
                                     targetLOSPoint.y + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
-                                    levelString ));
+                                    targetlevelString ));
                         }
                         // draw the verbose text
                         g.setColor(Color.black);
@@ -698,7 +764,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
 
 	public void keyPressed(KeyEvent e) {
 
-        if (!isEnabled() && legacyMode) {
+        if ((!isEnabled() && legacyMode) || !isVisible()) {
             return;
         }
         final int code = e.getKeyCode();
@@ -706,22 +772,45 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         if (code == KeyEvent.VK_KP_UP || code == KeyEvent.VK_UP) {
 
             e.consume(); // prevents the map from scrolling when trying to move end point
-
+            double leveladj=0;
             // move the source up
             if (e.isControlDown() && source != null) {
                 if (source.getUpLocation() != null) {
                     source = source.getUpLocation();
+
+                    leveladj=0;
+                    if(source.getName().contains("Rooftop")) {
+                        leveladj=-0.5;
+                    }
+                    if(source.getHex().isDepressionTerrain() && !source.isCenterLocation()) {
+                        leveladj=+1;
+                    }
+                    sourcelevel= source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj ;
                     doLOS();
                     map.repaint();
+                }else {
+                    return;
                 }
             }
             // move the target up
             else if (target != null) {
                 if (target.getUpLocation() != null) {
                     target = target.getUpLocation();
+
+                    leveladj=0;
+                    if(target.getName().contains("Rooftop")) {
+                        leveladj=-0.5;
+                    }
+                    if(target.getHex().isDepressionTerrain() && !target.isCenterLocation()) {
+                        leveladj=+1;
+                    }
+                    targetlevel= target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj ;
                     doLOS();
                     map.repaint();
+                } else {
+                    return;
                 }
+
             }
         }
 
@@ -729,25 +818,54 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         else if (code == KeyEvent.VK_KP_DOWN || code == KeyEvent.VK_DOWN) {
 
             e.consume();
-
+            double leveladj=0;
             // move the source down
             if (e.isControlDown() && source != null) {
                 if (source.getDownLocation() != null) {
                     source = source.getDownLocation();
+
+                    leveladj=0;
+                    if(source.getName().contains("Rooftop")) {
+                        leveladj=-0.5;
+                    }
+                    if(source.getHex().isDepressionTerrain() && !source.isCenterLocation()) {
+                        leveladj=+1;
+                    }
+                    sourcelevel= source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj ;
                     doLOS();
                     map.repaint();
+                } else {
+                    return;
                 }
             }
             // move the target down
             else if (target != null) {
                 if (target.getDownLocation() != null) {
                     target = target.getDownLocation();
-                    doLOS();
+
+                    leveladj=0;
+                    if(target.getName().contains("Rooftop")) {
+                        leveladj=-0.5;
+                    }
+                    if(target.getHex().isDepressionTerrain() && !target.isCenterLocation()) {
+                        leveladj=+1;
+                    }
+                    targetlevel= target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj ;
+                     doLOS();
                     map.repaint();
 
+                } else {
+                    return;
                 }
             }
         }
+        else {
+            return;
+        }
+
+        VASLLOSCommand vasllosCommand= new VASLLOSCommand(this, this.getAnchor(), this.getArrow(), true, false, sourcelevel,   targetlevel);
+        GameModule.getGameModule().sendAndLog(vasllosCommand);
+
     }
 
     private static boolean useAuxLOSPoint(Location l, int x, int y) {
@@ -825,30 +943,48 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         result = new LOSResult();
         LOSMap.LOS(source, useAuxSourceLOSPoint, target, useAuxTargetLOSPoint, result, VASLGameInterface);
 
-        // set the result string
-        resultsString =
-                "Range: " + result.getRange();
-        lastRange = String.valueOf(result.getRange());
-        if (isVerbose()) {
-            if (result.isBlocked()) {
-                resultsString += "  Blocked in " + LOSMap.gridToHex(result.getBlockedAtPoint().x, result.getBlockedAtPoint().y).getName() +
-                        " ( " + result.getReason() + ")";
-            }
-            else {
-                resultsString += (result.getHindrance() > 0 ? ("  Hindrances: " + result.getHindrance()) : "");
+        try {
+            // set the result string
+            resultsString =
+                    "Range: " + result.getRange();
+            lastRange = String.valueOf(result.getRange());
+            if (isVerbose()) {
+                if (result.isBlocked()) {
+                    resultsString += "  Blocked in " + LOSMap.gridToHex(result.getBlockedAtPoint().x, result.getBlockedAtPoint().y).getName() +
+                            " ( " + result.getReason() + ")";
+                } else {
+                    resultsString += (result.getHindrance() > 0 ? ("  Hindrances: " + result.getHindrance()) : "");
+                }
             }
         }
+        catch (Exception e) {
+            //trap error if hex not found - just report nothing DR
+        }
+
     }
 
 	// force a paint when remote LOS command received
 	@Override
 	public Command decode(String command) {
-		map.repaint();
-		return super.decode(command);
+        SequenceEncoder.Decoder var2 = null;
+        if(command.startsWith("LOS\tLOS_Thread1")) {
+            var2 = new SequenceEncoder.Decoder(command, '\t');
+            var2.nextToken();
+            var2.nextToken();
+            Point var3 = new Point(var2.nextInt(0), var2.nextInt(0));
+            Point var4 = new Point(var2.nextInt(0), var2.nextInt(0));
+            boolean var5 = var2.nextBoolean(false);
+            boolean var6 = var2.nextBoolean(false);
+            double var7 = var2.nextDouble(0);
+            double var8 = var2.nextDouble(0);
+            return new VASLThread.VASLLOSCommand(this, var3, var4, var5, var6, var7, var8);
+        } else {
+            return null;
+        }
 	}
 
-    @Override
-    protected void setEndPoints(Point newAnchor, Point newArrow) {
+    //@Override
+    protected void setEndPointsandLevels(Point newAnchor, Point newArrow, double sourceLevel, double targetLevel) {
         anchor.x = newAnchor.x;
         anchor.y = newAnchor.y;
         arrow.x = newArrow.x;
@@ -859,10 +995,58 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         if (!legacyMode) {
             setSourceFromMousePressedEvent(newAnchor);
             setTargetFromRemoteEvent(newArrow);
+            setSourceandTargetLevels (sourceLevel, targetLevel);
             doLOS();
         }
 
         map.repaint();
+    }
+    protected void setSourceandTargetLevels(double newsourceLevel, double newtargetLevel) {
+        double leveladj;
+        while (newsourceLevel > sourcelevel) {
+            source = source.getUpLocation();
+            leveladj = 0;
+            if (source.getName().contains("Rooftop")) {
+                leveladj = -0.5;
+            }
+            if (source.getHex().isDepressionTerrain() && !source.isCenterLocation()) {
+                leveladj = +1;
+            }
+            sourcelevel = source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj;
+        }
+        while (newsourceLevel < sourcelevel) {
+            source = source.getDownLocation();
+            leveladj=0;
+            if(source.getName().contains("Rooftop")) {
+                leveladj=-0.5;
+            }
+            if(source.getHex().isDepressionTerrain() && !source.isCenterLocation()) {
+                leveladj=+1;
+            }
+            sourcelevel= source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj ;
+        }
+        while (newtargetLevel > targetlevel) {
+            target = target.getUpLocation();
+            leveladj = 0;
+            if (target.getName().contains("Rooftop")) {
+                leveladj = -0.5;
+            }
+            if (target.getHex().isDepressionTerrain() && !target.isCenterLocation()) {
+                leveladj = +1;
+            }
+            targetlevel = target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj;
+        }
+        while (newtargetLevel < targetlevel) {
+            target = target.getDownLocation();
+            leveladj=0;
+            if(target.getName().contains("Rooftop")) {
+                leveladj=-0.5;
+            }
+            if(target.getHex().isDepressionTerrain() && !target.isCenterLocation()) {
+                leveladj=+1;
+            }
+            targetlevel= target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj ;
+        }
     }
 
     // check if LOS crosses an overlay; if so, set overlay boundaries to be shown
@@ -901,4 +1085,60 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
 
         return false;
     }
+
+    @Override
+    public String encode(Command var1) {
+        if(var1 instanceof LOS_Thread.LOSCommand) {
+            return super.encode(var1);
+        } else if( var1 instanceof VASLLOSCommand) {
+            VASLThread.VASLLOSCommand var2 = (VASLThread.VASLLOSCommand)var1;
+            SequenceEncoder var3 = new SequenceEncoder(var2.target.getId(), '\t');
+            var3.append(var2.newAnchor.x).append(var2.newAnchor.y).append(var2.newArrow.x).append(var2.newArrow.y).append(var2.newPersisting).append(var2.newMirroring).append(var2.sourceLevel).append(var2.targetLevel);
+            return "LOS\t" + var3.getValue();
+        } else {
+            return null;
+        }
+    }
+
+    public static class VASLLOSCommand extends Command {
+        protected VASLThread target;
+        protected String oldState;
+        protected Point newAnchor;
+        protected Point oldAnchor;
+        protected Point newArrow;
+        protected Point oldArrow;
+        protected boolean newPersisting;
+        protected boolean oldPersisting;
+        protected boolean newMirroring;
+        protected boolean oldMirroring;
+        protected double sourceLevel;
+        protected double targetLevel;
+
+        public VASLLOSCommand(VASLThread var1, Point var2, Point var3, boolean var4, boolean var5, double sourcelevel, double targetlevel) {
+            this.target = var1;
+            this.oldAnchor = this.target.getAnchor();
+            this.oldArrow = this.target.getArrow();
+            this.oldPersisting = this.target.isPersisting();
+            this.oldMirroring = this.target.isMirroring();
+            this.newAnchor = var2;
+            this.newArrow = var3;
+            this.newPersisting = var4;
+            this.newMirroring = var5;
+            this.sourceLevel=sourcelevel;
+            this.targetLevel=targetlevel;
+        }
+
+        protected void executeCommand() {
+            this.target.setEndPointsandLevels(this.newAnchor, this.newArrow, this.sourceLevel, this.targetLevel);
+            this.target.setPersisting(this.newPersisting);
+            this.target.setMirroring(this.newMirroring);
+
+        }
+
+        protected Command myUndoCommand() {
+            return new VASLThread.VASLLOSCommand(this.target, this.oldAnchor, this.oldArrow, this.oldPersisting, this.oldMirroring, this.target.sourcelevel, this.target.targetlevel);
+        }
+    }
 }
+
+

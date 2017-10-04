@@ -20,7 +20,7 @@
 
 	3/14/15 - fixed "Crags to Palms" SSR rule
 -->
-<boardMetadata name="24" version="6.3" versionDate="Feb 2017" author="TR" boardImageFileName="bd24.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="24" version="6.4" versionDate="Feb 2017" author="TR" boardImageFileName="bd24.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -105,7 +105,6 @@
 		<overlaySSRule name="SSO_J3" image="24_SSO_J3.gif" x="16" y="17" />
 		<overlaySSRule name="Winter" image="24_BSO_WinterGully.gif" x="1" y="100" />
 		<overlaySSRule name="NoRoads" image="24_NoRoads.gif" x="1" y="1" />
-		<overlaySSRule name="LightWoods" image="24_LightWoods.gif" x="0" y="0" />
 	</overlaySSRules>
 	
 	<colors>

@@ -59,6 +59,7 @@ public class ASLBoard extends Board {
     private File boardFile;
     private ImageOp baseImageOp;
     private DataArchive boardArchive;
+    public boolean nearestFullRow=false;
 
     protected BoardArchive VASLBoardArchive;
     private static final Logger logger = LoggerFactory.getLogger(ASLMap.class);
@@ -257,7 +258,8 @@ public class ASLBoard extends Board {
                 newCropBounds.width += (int) (dx / 2);
             }
         }
-        setCropBounds(newCropBounds);
+         setCropBounds(newCropBounds);
+        this.nearestFullRow=nearestFullRow;
     }
 
     public String locationName(Point p) {

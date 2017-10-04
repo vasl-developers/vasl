@@ -77,6 +77,14 @@ public class Map  {
     private byte[][] elevationGrid;  	// height for each pixel
     private Hex[][]	 hexGrid;			// hex array [column][row]
 
+    // map column configuration and  number of rows
+    private final static String Equal_Rows = "Equal number of Rows";
+    private final static String Unequal_Rows = "Unequal number of Rows";
+
+    // variables added by DR to support cropping
+    private String cropconfiguration;
+    private boolean cropped = false;
+    private String flipconfig="Balanced";
     // terrain type codes
     private Terrain[] terrainList = new Terrain[256];
 
@@ -99,7 +107,7 @@ public class Map  {
      */
 
     //DR new constructor - hexWidth and hexHeight now passed in as parameters
-    public Map(double hexWidth, double hexHeight, int width, int height, double A1CenterX, double A1CenterY, int imageWidth, int imageHeight, HashMap<String, Terrain> terrainNameMap){
+    public Map(double hexWidth, double hexHeight, int width, int height, double A1CenterX, double A1CenterY, int imageWidth, int imageHeight, HashMap<String, Terrain> terrainNameMap, String passgridconfig, boolean isCropping){
         this.width = width;
         this.height = height;
 
@@ -107,9 +115,43 @@ public class Map  {
         //DR set hexHeight, hexWidth values using parameters
         this.hexHeight=hexHeight;
         this.hexWidth=hexWidth;
+        double checkforabboards=(A1CenterX == BoardArchive.missingValue() ? BoardArchive.GEO_A1_Center.x : A1CenterX);
+        boolean isabboard = (checkforabboards == -901);  // added to support cropping of a-b boards
 
-        this.A1CenterX = (A1CenterX == BoardArchive.missingValue() ? BoardArchive.GEO_A1_Center.x : A1CenterX);
-        this.A1CenterY = (A1CenterY == BoardArchive.missingValue() ? BoardArchive.GEO_A1_Center.y : A1CenterY);
+
+        // use passgridconfig to handle cropping
+        if(passgridconfig.contains("Normal")) {
+            this.A1CenterX = (A1CenterX == BoardArchive.missingValue() ? BoardArchive.GEO_A1_Center.x : A1CenterX);
+            this.A1CenterY = (A1CenterY == BoardArchive.missingValue() ? BoardArchive.GEO_A1_Center.y : A1CenterY);
+        }
+        else if(passgridconfig.contains("TopLeftHalfHeight")) {
+            this.A1CenterX = (A1CenterX == BoardArchive.missingValue() ? BoardArchive.GEO_A1_Center.x : A1CenterX);
+        }
+        else if(passgridconfig.equals("FullHex") || passgridconfig.equals("FullHexOffset")) {
+            this.A1CenterX=this.hexWidth/2;
+            this.A1CenterY= 32.25;
+        }
+        else if(passgridconfig.contains("FullHexHalfHeight")) {
+            this.A1CenterX=this.hexWidth/2;
+        }
+        else if(passgridconfig.contains("FullHexLeftHalf")) {   // left board edge is not cropped and so is half width
+            this.A1CenterX=0;
+        }
+        else if(passgridconfig.contains("FullHexRightHalf")) {   // right board edge is not cropped and so is half width
+            this.A1CenterX=this.hexWidth/2;
+        }
+
+        if (passgridconfig.contains("HalfHeight")) {
+            this.A1CenterY=0;
+        } else {
+            this.A1CenterY = (A1CenterY == BoardArchive.missingValue() ? BoardArchive.GEO_A1_Center.y : A1CenterY);
+        }
+        if(passgridconfig.contains("Offset")) {
+            // may be required for certain HASL maps
+        }
+
+        // added by DR to support cropping
+        this.cropconfiguration =passgridconfig;
 
         // initialize
         setTerrain(terrainNameMap);
@@ -118,24 +160,51 @@ public class Map  {
         terrainGrid = new char[gridWidth][gridHeight];
         elevationGrid = new byte[gridWidth][gridHeight];
 
+		//create the hexGrid
+        createtheHexGrid(isCropping, isabboard);
+	}
+
+	private Hex [][] createtheHexGrid(boolean isCropping, boolean isabboard) {
         // create the hex grid
+        // amended by DR to handle different cropping configurations
+
+        if(isCropping && this.cropconfiguration.contains("Offset") && !(this.cropconfiguration.contains("FullHex"))) { A1CenterX=0;}
         hexGrid = new Hex[this.width][];
-        for (int col = 0; col < this.width; col++) {
+        if (this.A1CenterY==32.25) {
+            for (int col = 0; col < this.width; col++) {
+                hexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
+                for (int row = 0; row < this.height + (col % 2); row++) {
+                    hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, isabboard), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                }
+            }
 
-            hexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
-            for (int row = 0; row < this.height + (col % 2); row++) {
-                hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+            // reset the hex locations to map grid
+            for (int col = 0; col < this.width; col++) {
+                for (int row = 0; row < this.height + (col % 2); row++) {
+                    hexGrid[col][row].resetHexsideLocationNames();
+                }
             }
         }
+        else if (this.A1CenterY==0){
+            int evencol =0;
+            for (int col = 0; col < this.width; col++) {
+                evencol = col % 2 == 0 ? 1 : 0;
+                hexGrid[col] = new Hex[this.height + evencol]; // add 1 if even
+                for (int row = 0; row < this.height + evencol; row++) {
+                    hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, isabboard), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                }
+            }
 
-        // reset the hex locations to map grid
-        for (int col = 0; col < this.width; col++) {
-            for (int row = 0; row < this.height + (col % 2); row++) {
-                hexGrid[col][row].resetHexsideLocationNames();
+            // reset the hex locations to map grid
+            for (int col = 0; col < this.width; col++) {
+                evencol = col % 2 == 0 ? 1 : 0;
+                for (int row = 0; row < this.height + evencol; row++) {
+                    hexGrid[col][row].resetHexsideLocationNames();
+                }
             }
         }
+        return hexGrid;
     }
-
     /**
      * Finds the center point of a hex in the hexgrid of a geometric board
      * NOTE - does NOT handle arbitrary relationships between the hex grid and the image
@@ -146,13 +215,24 @@ public class Map  {
      */
     private Point2D.Double getHexCenterPoint(int col, int row) {
 
-        // odd columns will be offset half a hex toward the top of the map
+        // some columns will be offset half a hex toward the top of the map; A1CenterY value determines if it is the odd or even columns
+        // A1CenterY=0 means that top left hex is half height ( col 0 = even column)
         // if the A1 x offset is negative (e.g. boards 1b-6b), assume it's zero
-        return new Point2D.Double(
+
+        // addded by DR to support unlimited cropping
+        int evencol=0;
+        if (A1CenterY==0) {
+            evencol = col % 2 == 0 ? 1 : 0;
+            return new Point2D.Double(
+                    (A1CenterX < 0.0 ? 0.0 : A1CenterX) + hexWidth * (double) col,
+                    32.25 + hexHeight * (double) row - hexHeight/2.0 * evencol ); //(double) (col%2)
+        }
+        else {
+            return new Point2D.Double(
                 (A1CenterX < 0.0 ? 0.0 : A1CenterX) + hexWidth * (double) col,
                 (A1CenterY < 0.0 ? hexHeight/2.0 : A1CenterY) + hexHeight * (double) row - hexHeight/2.0 * (double) (col%2)
         );
-
+        }
     }
 
     /**
@@ -164,13 +244,13 @@ public class Map  {
      * @param row the hex row (0 = the first row in the column)
      * @return the hex name. If invalid the empty string is returned
      */
-    private String getGEOHexName(int col, int row) {
+    private String getGEOHexName(int col, int row, boolean isabboard) {
 
         char c;
         String name = "";
 
-        // negative A1 x offset implies boards 1b-6b
-        if(A1CenterX < 0.0) {
+        // isabboard implies boards 1a-9b
+        if(isabboard) {
 
             if (col < 10) {
                 c = (char) ((int) 'Q' + col);
@@ -202,9 +282,9 @@ public class Map  {
      * @param w the width of the map in hexes
      * @param h the height of the map in hexes
      */
-    public Map(int w, int h, HashMap<String, Terrain> terrainNameMap) {
-        //DR added two variables to pass in hexWidth and hexHeight
-        this(BoardArchive.GEO_HEX_WIDTH, BoardArchive.GEO_HEX_HEIGHT, w, h, BoardArchive.GEO_A1_Center.x, BoardArchive.GEO_A1_Center.y, (int) BoardArchive.GEO_IMAGE_WIDTH, (int) BoardArchive.GEO_IMAGE_HEIGHT, terrainNameMap);
+    public Map(int w, int h, HashMap<String, Terrain> terrainNameMap, String passgridconfig, boolean isCropping) {
+        //DR added four variables to pass in hexWidth and hexHeight, grid configuration and cropping flag
+        this(BoardArchive.GEO_HEX_WIDTH, BoardArchive.GEO_HEX_HEIGHT, w, h, BoardArchive.GEO_A1_Center.x, BoardArchive.GEO_A1_Center.y, (int) BoardArchive.GEO_IMAGE_WIDTH, (int) BoardArchive.GEO_IMAGE_HEIGHT, terrainNameMap, (String) passgridconfig, isCropping);
 
     }
 
@@ -288,12 +368,12 @@ public class Map  {
     /**
      * Sets the hex grid to conform with the terrain and elevation grids
      */
-    public void resetHexTerrain(){
+    public void resetHexTerrain(double gridadj){
 
         // step through each hex and reset the terrain.
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height + (x % 2); y++) { // add 1 hex if odd
-                getHex(x,y).resetTerrain();
+                getHex(x,y).resetTerrain(gridadj);
             }
         }
 
@@ -332,6 +412,11 @@ public class Map  {
     public int getGridHeight() {
         return gridHeight;
     }
+
+    public double getA1CenterX() { return A1CenterX;}
+
+    public double getA1CenterY() { return A1CenterY;}
+
 
     /**
      * Return the <code>Terrain</code> type for the given terrain code.
@@ -429,29 +514,59 @@ public class Map  {
         boolean colIsEven = (col % 2 == 0);
 
         //noinspection SwitchStatementWithoutDefaultBranch
-        switch (hexside) {
-            case 0:
-                row -= 1;
-                break;
-            case 1:
-                col += 1;
-                row += colIsEven ? 0 : -1;
-                break;
-            case 2:
-                col += 1;
-                row += colIsEven ? 1 : 0;
-                break;
-            case 3:
-                row += 1;
-                break;
-            case 4:
-                col -= 1;
-                row += colIsEven ? 1 : 0;
-                break;
-            case 5:
-                col -= 1;
-                row += colIsEven ? 0 : -1;
-                break;
+
+        // DR added cropconfigurations - will effect calculation of adjacent hex
+        if(this.cropconfiguration.contains("Normal") || (this.cropconfiguration.contains("FullHex") && !(this.cropconfiguration.contains("HalfHeight")))) {
+            switch (hexside) {
+                case 0:
+                    row -= 1;
+                    break;
+                case 1:
+                    col += 1;
+                    row += colIsEven ? 0 : -1;
+                    break;
+                case 2:
+                    col += 1;
+                    row += colIsEven ? 1 : 0;
+                    break;
+                case 3:
+                    row += 1;
+                    break;
+                case 4:
+                    col -= 1;
+                    row += colIsEven ? 1 : 0;
+                    break;
+                case 5:
+                    col -= 1;
+                    row += colIsEven ? 0 : -1;
+                    break;
+            }
+        }
+        else if(this.cropconfiguration.contains("HalfHeight")) {
+            switch (hexside) {
+                case 0:
+                    row -= 1;
+                    break;
+                case 1:
+                    col += 1;
+                    row += colIsEven ? -1 : 0;
+                    break;
+                case 2:
+                    col += 1;
+                    row += colIsEven ? 0 : 1;
+                    break;
+                case 3:
+                    row += 1;
+                    break;
+                case 4:
+                    col -= 1;
+                    row += colIsEven ? 0 : 1;
+                    break;
+                case 5:
+                    col -= 1;
+                    row += colIsEven ? -1 : 0;
+                    break;
+            }
         }
 
         if (hexOnMap(col, row)) {
@@ -485,43 +600,122 @@ public class Map  {
             if ((z - 1) % 3 == 0) {
 
                 col = (int) Math.ceil(((double) z - 1.0) / 3.0);
-                row = (int) ((col % 2 == 0) ? (double) y / hexHeight
+                if(this.A1CenterY==0) {
+                    row = (int) ((col % 2 == 0) ?  ((double) y + hexHeight / 2.0) / hexHeight : (double) y / hexHeight);
+                }
+                else {
+                    row = (int) ((col % 2 == 0) ? (double) y / hexHeight
                         : ((double) y + hexHeight / 2.0) / hexHeight);
-
+                }
                 if (hexGrid[col][row].contains(x, y)) {
                     return hexGrid[col][row];
                 }
-                else if (col % 2 == 0) {
-                    if (hexGrid[col + 1][row + 1].contains(x, y)) {
 
+                // DR implemented new approach to handle various crop and flipg configurations
+                // simply looks at possible hexes and uses the one that contains the point
+                if (col < hexGrid.length && row-1 >=0 && row-1 < hexGrid[col].length) {
+                    if(hexGrid[col][row-1].contains(x, y)) {
+                        return hexGrid[col][row - 1];
+                    }
+                }
+                if (col < hexGrid.length && row+1 < hexGrid[col].length) {
+                    if(hexGrid[col][row+1].contains(x, y)) {
+                        return hexGrid[col][row + 1];
+                    }
+                }
+                if (col+1 < hexGrid.length && row < hexGrid[col+1].length) {
+                    if(hexGrid[col+1][row].contains(x, y)) {
+                        return hexGrid[col + 1][row];
+                    }
+                }
+                if (col+1 < hexGrid.length && row-1 >=0 && row-1 < hexGrid[col+1].length) {
+                    if(hexGrid[col+1][row-1].contains(x, y)) {
+                        return hexGrid[col + 1][row - 1];
+                    }
+                }
+                if (col+1 < hexGrid.length && row+1 < hexGrid[col+1].length) {
+                    if(hexGrid[col+1][row+1].contains(x, y)) {
                         return hexGrid[col + 1][row + 1];
                     }
-                    else {
-                        return hexGrid[col + 1][row];
+                }
+                if (col-1 >=0 && row < hexGrid[col-1].length) {
+                    if(hexGrid[col-1][row].contains(x, y)) {
+                        return hexGrid[col - 1][row];
+                    }
+                }
+                if (col-1 >=0 && row-1 >=0 && row-1 < hexGrid[col-1].length) {
+                    if(hexGrid[col-1][row -1].contains(x, y)) {
+                        return hexGrid[col - 1][row - 1];
+                    }
+                }
+                if (col-1>=0 && row + 1 < hexGrid[col-1].length) {
+                    if(hexGrid[col-1][row+1].contains(x, y)) {
+                        return hexGrid[col - 1][row + 1];
+                    }
+                }
+
+                else if (col % 2 == 0 && (this.cropconfiguration.contains("Normal") || this.cropconfiguration.equals("FullHex"))) {
+                    try {
+                        if (col+1 < hexGrid.length && row+1 < hexGrid[col+1].length) {
+                            if (hexGrid[col + 1][row + 1].contains(x, y)) {
+                                return hexGrid[col + 1][row + 1];
+                            } else {
+                                if (row < hexGrid[col+1].length) {
+                                    if (hexGrid[col + 1][row].contains(x, y)) {
+                                        return hexGrid[col + 1][row];
+                                    } else {
+                                        return null;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception e) {
+                        if (col + 1 < hexGrid.length && row < hexGrid[col+1].length) {
+                            if (hexGrid[col + 1][row].contains(x, y)) {
+                                return hexGrid[col + 1][row];
+                            } else {
+                                return null;
+                            }
+                        }
                     }
                 }
                 else {
-                    if ((row - 1 >= 0 && hexGrid[col + 1][row - 1].contains(x, y)) ||
-                            (row == height)) {
+                    if (col+1 < hexGrid.length && row-1 >=0 && row-1 < hexGrid[col+1].length) {
+                        if ((row - 1 >= 0 && hexGrid[col + 1][row - 1].contains(x, y)) || (row == height)) {
+                            return hexGrid[col + 1][row - 1];
+                        }
+                        else {
+                            if (row < hexGrid[col+1].length) {
+                                if (hexGrid[col + 1][row].contains(x, y)) {
+                                    return hexGrid[col + 1][row];
+                                }
+                            }
+                            else {
+                                return null;
+                            }
+                        }
+                    }
 
-                        return hexGrid[col + 1][row - 1];
-                    }
-                    else {
-                        return hexGrid[col + 1][row];
-                    }
                 }
             }
             else {
-
                 col = (int) Math.ceil((double) z / 3.0);
-                row = (int) ((col % 2 == 0) ? (double) y / hexHeight
-                        : ((double) y + hexHeight / 2.0) / hexHeight);
-                return hexGrid[col][row];
+                if (this.A1CenterY == 0) {
+                    row = (int) ((col % 2 == 0) ? ((double) y + hexHeight / 2.0) / hexHeight : (double) y / hexHeight);
+                    return hexGrid[col][row];
+                } else {
+                    row = (int) ((col % 2 == 0) ? (double) y / hexHeight
+                            : ((double) y + hexHeight / 2.0) / hexHeight);
+                    return hexGrid[col][row];
+                }
             }
             // return null on any error
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             return null;
         }
+        return null;
     }
 
     /**
@@ -530,7 +724,7 @@ public class Map  {
      * @param target "target" hex
      * @return the range
      */
-    public static int range(Hex source, Hex target) {
+    public static int range(Hex source, Hex target, String mapconfig) {
 
         int dirX = target.getColumnNumber() > source.getColumnNumber() ? 1 : -1;
         int dirY = target.getRowNumber() > source.getRowNumber() ? 1 : -1;
@@ -539,30 +733,57 @@ public class Map  {
 
         int currentRow = source.getRowNumber();
         int currentCol = source.getColumnNumber();
+        if (mapconfig.contains("Normal") || mapconfig.equals("FullHex")) {  // different configurations require different calculation
+            // step through each row, adjusting the current row as necessary
+            while (currentCol != target.getColumnNumber()) {
 
-        // step through each row, adjusting the current row as necessary
-        while (currentCol != target.getColumnNumber()) {
+                // adjust the row as we step through the columns
+                if ((currentRow != target.getRowNumber()) &&
+                        ((currentCol % 2 == 0 && dirY == 1) ||
+                                (currentCol % 2 == 1 && dirY == -1))) {
 
-            // adjust the row as we step through the columns
-            if ((currentRow != target.getRowNumber()) &&
-                    ((currentCol % 2 == 0 && dirY == 1) ||
-                            (currentCol % 2 == 1 && dirY == -1))) {
+                    currentRow += dirY;
+                }
 
-                currentRow += dirY;
+                currentCol += dirX;
+                rng += 1;
             }
 
-            currentCol += dirX;
-            rng += 1;
+            // we're in the target col: if not in target hex, compute distance
+            if (currentRow != target.getRowNumber()) {
+
+                rng += Math.abs(target.getRowNumber() - currentRow);
+            }
+
+            return rng;
+        } else if (mapconfig.contains("HalfHeight")) {
+            // step through each row, adjusting the current row as necessary
+            while (currentCol != target.getColumnNumber()) {
+
+                // adjust the row as we step through the columns
+                if ((currentRow != target.getRowNumber()) &&
+                        ((currentCol % 2 == 1 && dirY == 1) ||
+                                (currentCol % 2 == 0 && dirY == -1))) {
+
+                    currentRow += dirY;
+                }
+
+                currentCol += dirX;
+                rng += 1;
+            }
+
+            // we're in the target col: if not in target hex, compute distance
+            if (currentRow != target.getRowNumber()) {
+
+                rng += Math.abs(target.getRowNumber() - currentRow);
+            }
+
+            return rng;
         }
+        return rng;  //  returns 0 rather than null/break
 
-        // we're in the target col: if not in target hex, compute distance
-        if (currentRow != target.getRowNumber()) {
-
-            rng += Math.abs(target.getRowNumber() - currentRow);
-        }
-
-        return rng;
     }
+
 
     /**
      * Determines if a line-of-sight exists between two locations. The auxiliary LOS points are used for
@@ -610,6 +831,8 @@ public class Map  {
             // step through the current row
             for (int row = 0; row < numRows; row++) {
 
+                // code added by DR to enable Roofless factory hexes
+
                 status.currentTerrain = getGridTerrain(status.currentCol, status.currentRow);
                 status.groundLevel = getGridElevation(status.currentCol, status.currentRow);
 
@@ -625,6 +848,9 @@ public class Map  {
                 else {
 
                     status.tempHex = gridToHex(status.currentCol, status.currentRow);
+                }
+                if(status.tempHex==null){
+                    return;
                 }
 
                 // LOS leaves the source building?
@@ -700,6 +926,7 @@ public class Map  {
             return false;
         }
 
+
         // force check of hexside terrain for hexes with inherent terrain
         // (e.g. for case where orchard hex has wall)
         else if(status.currentTerrain.isHexsideTerrain() && hex.getCenterLocation().getTerrain().isInherentTerrain()) {
@@ -763,7 +990,7 @@ public class Map  {
         // ensure we're truly on a hexside
         if(status.sourceHex.getExtendedHexBorder().contains(status.currentCol, status.currentRow) ||
                 status.targetHex.getExtendedHexBorder().contains(status.currentCol, status.currentRow) ||
-                (status.source.getHex().getCenterLocation().equals(status.source) &&  range(sourceHex, rangeHex)%2 == 0)) {
+          (status.source.getHex().getCenterLocation().equals(status.source) &&  range(sourceHex, rangeHex, getMapConfiguration())%2 == 0)) {
             return null;
         }
 
@@ -914,10 +1141,11 @@ public class Map  {
             currentHex = sourceHex;
             sourceElevation = sourceHex.getBaseHeight() + source.getBaseHeight();
             targetElevation = targetHex.getBaseHeight() + target.getBaseHeight();
-            range = range(sourceHex, targetHex);
+
+            range = range(sourceHex, targetHex, source.getHex().getMap().getMapConfiguration());
+
             rangeToTarget = range;
 
-            //code change DR to support in-factory LOS
             LOSLeavesBuilding = !sourceHex.getCenterLocation().getTerrain().isBuilding();
 
             // "rise" per grid column
@@ -986,11 +1214,11 @@ public class Map  {
             }
             setEnterExitHexsides();
 
-            // DR  revised the depression restiction code below and moved it from above to make use LOSisHorizontal, etc
-
+            // DR  revised the depression restiction code below and moved it from above to make use of LOSisHorizontal, etc
             // Exiting depression restriction placed when looking out of a depression
             // to a higher elevation where the "elevation difference <= range" restriction has not
             // been satisfied. Must be satisfied before leaving the depression.
+
             double sourceadj=0;
             double targetadj=0;
 
@@ -1322,44 +1550,51 @@ public class Map  {
             Line2D.Double losLine = new Line2D.Double(sourceX, sourceY, targetX, targetY);
 
             // This algorithm courtesy of http://stackoverflow.com/questions/5184815/java-intersection-point-of-a-polygon-and-line
-            final PathIterator polyIt = hex.getExtendedHexBorder().getPathIterator(null); //Getting an iterator along the polygon path
-            final double[] coords = new double[6];      // Double array with length 6 needed by iterator
-            final double[] firstCoords = new double[2]; // First point (needed for closing polygon path)
-            final double[] lastCoords = new double[2];  // Previously visited point
-            polyIt.currentSegment(firstCoords);         // Getting the first coordinate pair
-            lastCoords[0] = firstCoords[0];             // Priming the previous coordinate pair
-            lastCoords[1] = firstCoords[1];
-            polyIt.next();
 
-            HashSet<Integer> hexsides = new HashSet<Integer>();
-            int hexside = 0;
-            while(!polyIt.isDone()) {
-                final int type = polyIt.currentSegment(coords);
-                switch(type) {
-                    case PathIterator.SEG_LINETO : {
-                        final Line2D.Double currentLine = new Line2D.Double(lastCoords[0], lastCoords[1], coords[0], coords[1]);
-                        if(currentLine.intersectsLine(losLine)) {
-                            hexsides.add(hexside);
-                        }
-                        lastCoords[0] = coords[0];
-                        lastCoords[1] = coords[1];
-                        break;
-                    }
-                    case PathIterator.SEG_CLOSE : {
-                        final Line2D.Double currentLine = new Line2D.Double(coords[0], coords[1], firstCoords[0], firstCoords[1]);
-                        if(currentLine.intersectsLine(losLine)) {
-                            hexsides.add(hexside);
-                        }
-                        break;
-                    }
-                    default : {
-                        return null;
-                    }
-                }
+            try {
+                final PathIterator polyIt = hex.getExtendedHexBorder().getPathIterator(null); //Getting an iterator along the polygon path
+                final double[] coords = new double[6];      // Double array with length 6 needed by iterator
+                final double[] firstCoords = new double[2]; // First point (needed for closing polygon path)
+                final double[] lastCoords = new double[2];  // Previously visited point
+                polyIt.currentSegment(firstCoords);         // Getting the first coordinate pair
+                lastCoords[0] = firstCoords[0];             // Priming the previous coordinate pair
+                lastCoords[1] = firstCoords[1];
                 polyIt.next();
-                hexside++;
+
+                HashSet<Integer> hexsides = new HashSet<Integer>();
+                int hexside = 0;
+                while(!polyIt.isDone()) {
+                    final int type = polyIt.currentSegment(coords);
+                    switch(type) {
+                        case PathIterator.SEG_LINETO : {
+                            final Line2D.Double currentLine = new Line2D.Double(lastCoords[0], lastCoords[1], coords[0], coords[1]);
+                            if(currentLine.intersectsLine(losLine)) {
+                                hexsides.add(hexside);
+                            }
+                            lastCoords[0] = coords[0];
+                            lastCoords[1] = coords[1];
+                            break;
+                        }
+                        case PathIterator.SEG_CLOSE : {
+                            final Line2D.Double currentLine = new Line2D.Double(coords[0], coords[1], firstCoords[0], firstCoords[1]);
+                            if(currentLine.intersectsLine(losLine)) {
+                                hexsides.add(hexside);
+                            }
+                            break;
+                        }
+                        default : {
+                            return null;
+                        }
+                    }
+                    polyIt.next();
+                    hexside++;
+                }
+                return hexsides;
             }
-            return hexsides;
+            catch (Exception e){
+                boolean reggie=true;
+                return null;
+            }
         }
 
         /**
@@ -1390,22 +1625,27 @@ public class Map  {
      */
     protected boolean applyLOSRules(LOSStatus status, LOSResult result) {
 
-
         // if there's a terrain counter in the hex use that terrain instead
         if(status.VASLGameInterface != null && status.VASLGameInterface.getTerrain(status.tempHex) != null) {
             status.currentTerrain = status.VASLGameInterface.getTerrain(status.tempHex);
         }
-
-        status.currentTerrainHgt = status.currentTerrain.getHeight();
+        try {
+            status.currentTerrainHgt = status.currentTerrain.getHeight();
+        }
+        catch (Exception e) {
+            return true;
+        }
         HashSet<Integer> hexsides;
-
+        // code added by  DR to enable RB rr embankments
         hexsides = status.getHexsideCrossed(status.tempHex);
+        boolean RBrrembankmentsexist = false; // set flag to avoid unnecessary calls to CheckRBrrembankments()
         // code added by DR to enable roofless factory hexes
         Terrain previousTerrain = null;
         // are we in a new hex?
         if (!status.tempHex.equals(status.currentHex)) {
             //store terrain in previous hex (needed when checking depression hexsides; added by DR)
             boolean newequalsprevioushex=false;
+            RBrrembankmentsexist=false; // set every time new hex entered
             previousTerrain = status.currentHex.getCenterLocation().getTerrain();
             if(status.previousHex ==null) {
                 // no previous hex set in this LOS test
@@ -1420,8 +1660,9 @@ public class Map  {
                 newequalsprevioushex = true;
             }
             status.currentHex = status.tempHex;
-            status.rangeToSource = range(status.currentHex, status.sourceHex);
-            status.rangeToTarget = range(status.currentHex, status.targetHex);
+
+            status.rangeToSource = range(status.currentHex, status.sourceHex, getMapConfiguration());
+            status.rangeToTarget = range(status.currentHex, status.targetHex, getMapConfiguration());
 
             // set the bridge variables
             status.bridge = status.currentHex.getBridge();
@@ -1481,7 +1722,7 @@ public class Map  {
                                         }
                                         // equal range adjustment required
                                         int equalrangeadj=0;
-                                        if (followsdepression && status.rangeToSource==range(status.sourceHex, status.previousHex)) {
+                                        if (followsdepression && status.rangeToSource==range(status.sourceHex, status.previousHex, getMapConfiguration())) {
                                             equalrangeadj=1;
                                         }
                                         if (!status.targetHex.equals(status.currentHex) &&
@@ -1498,6 +1739,8 @@ public class Map  {
                 else {
                     followsdepression=false;  // LOS is along hexside; cannot follow depression
                 }
+
+
             }
             if (status.entersTargetDepression && !newequalsprevioushex) {
                 Location testlocation=status.currentHex.getNearestLocation(status.currentCol, status.currentRow);
@@ -1529,7 +1772,7 @@ public class Map  {
                                                 nexthexside=loophexside;
                                             }
                                         }
-                                        if (followsdepression && status.rangeToSource==range(status.sourceHex, getAdjacentHex(status.currentHex, nexthexside))) {
+                                        if (followsdepression && status.rangeToSource==range(status.sourceHex, getAdjacentHex(status.currentHex, nexthexside), getMapConfiguration())) {
                                             equalrangeadj=1;
                                         }
                                         if (!status.sourceHex.equals(status.currentHex) &&
@@ -1558,6 +1801,20 @@ public class Map  {
 
             // set the hillocks status
             status.setHillockStatus();
+
+            // do RR Embankment terrain check here
+            Terrain checkhexside;
+            for (Integer hexside : hexsides) {
+                // get Terrain for hexside
+                checkhexside = status.currentHex.getHexsideTerrain(hexside);
+                if (checkhexside != null) {
+                    // if Terrain is RB rrembankment then set flag
+                    if (checkhexside.isHexsideTerrain() && checkhexside.getName().contains("Rrembankment")) {
+                        RBrrembankmentsexist = true;
+                        break;
+                    }
+                }
+            }
         }
 
         // check the LOS rules
@@ -1573,9 +1830,9 @@ public class Map  {
             }
         }
         // code added by DR to handle RB rrembankments
-        else {
+        else if (RBrrembankmentsexist) {
             if (checkRBrrembankments(status, result, hexsides)) {
-                return true;
+               return true;
             }
         }
 
@@ -1895,7 +2152,7 @@ public class Map  {
                 for (OBA oba: obaList) {
 
                     // must be within the blast area
-                    if(range(status.currentHex, oba.getHex()) <= oba.getBlastAreaRadius()){
+                    if(range(status.currentHex, oba.getHex(), getMapConfiguration()) <= oba.getBlastAreaRadius()){
 
                         // source or target are within the OBA
                         if(locationInOBA(status.source, oba) || locationInOBA(status.target, oba)) {
@@ -1939,7 +2196,7 @@ public class Map  {
      */
     private boolean locationInOBA(Location location, OBA oba) {
 
-        return  range(oba.getHex(), location.getHex()) <= oba.getBlastAreaRadius() &&
+        return  range(oba.getHex(), location.getHex(), getMapConfiguration()) <= oba.getBlastAreaRadius() &&
                 location.getBaseHeight() >= oba.getHex().getCenterLocation().getBaseHeight() &&
                 location.getBaseHeight() < oba.getHex().getCenterLocation().getBaseHeight() + oba.getBlastHeight();
     }
@@ -2281,6 +2538,7 @@ public class Map  {
         else {
 
             // target elevation must > source if in entrenchment
+            // up down arrows will allow LOS source/target to be set to an entrenchment 'location'
             if (status.source.getTerrain().isEntrenchmentTerrain()) {
 
                 if (status.range > 1 && status.targetElevation <= status.sourceElevation) {
@@ -3021,7 +3279,7 @@ public class Map  {
             }
 
             for(Hex h : hexes) {
-                if(range(h, hex) == 1) {
+                if(range(h, hex, getMapConfiguration()) == 1) {
                     return true;
                 }
 
@@ -3037,7 +3295,7 @@ public class Map  {
 
             for(Hex outer : hillock.getHexes()){
                 for(Hex inner : hexes){
-                    if (range(inner, outer) == 1){
+                    if (range(inner, outer, getMapConfiguration()) == 1){
                         return true;
                     }
                 }
@@ -3096,9 +3354,9 @@ public class Map  {
         // remove existing hillocks
         hillocks = new HashSet<Hillock>();
 
-        // create one hillock for each hillock hex
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height + (x % 2); y++) { // add 1 hex if odd
+        // loop changed by DR to handle unlimited cropping
+        for (int x = 0; x < hexGrid.length; x++) {
+            for (int y = 0; y < hexGrid[x].length; y++) { // add 1 hex if odd
                 if (HILLOCK.equals(getHex(x, y).getCenterLocation().getTerrain().getName())) {
 
                     Hillock h = new Hillock();
@@ -3285,15 +3543,20 @@ public class Map  {
      */
     protected boolean checkGroundLevelRule(LOSStatus status, LOSResult result) {
         // code added by DR to deal with cellars and LOS underneath bridges
-        int sourceadj=0;
-        int targetadj=0;
+        double sourceadj=0;
+        double targetadj=0;
         if(status.source.getTerrain().isCellar()) {
             sourceadj=+1;
         }
         if(status.target.getTerrain().isCellar()) {
             targetadj=+1;
         }
-
+        if(status.source.getTerrain().isRooftop()) {
+            sourceadj=-0.5;
+        }
+        if(status.target.getTerrain().isRooftop()) {
+            targetadj=-0.5;
+        }
         if (status.currentTerrain.isBridge()) {
             status.ignoreGroundLevelHex=status.currentHex;
         }
@@ -3433,7 +3696,7 @@ public class Map  {
         Terrain locationHexsideTerrain = locationHex.getHexsideTerrain(locationHexside);
 
         // too far away?
-        if (range(h, locationHex) > 2) {
+        if (range(h, locationHex, getMapConfiguration()) > 2) {
 
             return false;
         }
@@ -3449,7 +3712,7 @@ public class Map  {
         }
 
         // ignore hexside terrain in adjacent hex that spills into adjacent location
-        if (range(h, locationHex) == 1 && !l.getTerrain().isHexsideTerrain()){
+        if (range(h, locationHex, getMapConfiguration()) == 1 && !l.getTerrain().isHexsideTerrain()){
             return true;
         }
 
@@ -3458,7 +3721,7 @@ public class Map  {
 
             // for locations that are 2 hexes away, let's use the corresponding
             // location in the adjacent hex
-            if (range(h, locationHex) == 2) {
+            if (range(h, locationHex, getMapConfiguration()) == 2) {
 
                 // find the hex across the location hexside
                 Hex oppositeHex = getAdjacentHex(locationHex, locationHexside);
@@ -3466,7 +3729,7 @@ public class Map  {
                 if (oppositeHex == null) {
                     return true;
                 }
-                if (range(h, oppositeHex) > 1) {
+                if (range(h, oppositeHex, getMapConfiguration()) > 1) {
                     return false;
                 }
 
@@ -3566,8 +3829,8 @@ public class Map  {
         if (!status.currentHex.equals(status.sourceHex) && !status.currentHex.equals(status.targetHex)) {
 
             // hindrance must be between the source and target
-            if(range(status.sourceHex, status.currentHex) < range(status.sourceHex, status.targetHex) &&
-                    range(status.targetHex, status.currentHex) < range(status.sourceHex, status.targetHex)){
+            if(range(status.sourceHex, status.currentHex, getMapConfiguration()) < range(status.sourceHex, status.targetHex, getMapConfiguration()) &&
+               range(status.targetHex, status.currentHex, getMapConfiguration()) < range(status.sourceHex, status.targetHex, getMapConfiguration())){
                 int hindrancevalue =1;
                 // handle special cases where terrain hindrance is not 1
                 // if LOS along hexspine, check for higher hindrance
@@ -3631,16 +3894,21 @@ public class Map  {
      */
     protected static boolean isBlindHex(LOSStatus status, int terrainHeight, boolean isCliffHexside, int cliffHexsideTerrainHeightadjustment) {
         // code added by DR to handle LOS to/from rooftops
-        int sourceadj=0;
-        int targetadj=0;
+        double sourceadj=0;
+        double targetadj=0;
+        boolean sourceortargetishalfheight=false;
         if(status.source.getTerrain().isRooftop()) {
-            sourceadj=-1;
+            sourceadj=-0.5;  // could be 0.5 but would that cause other problems?
+            sourceortargetishalfheight=true;
         }
         if(status.target.getTerrain().isRooftop()) {
-            targetadj=-1;
+            targetadj=-0.5;   // could be 0.5 but would that cause other problems? yes with obstacle height.
+            sourceortargetishalfheight=true;
         }
-        int sourceElevation = status.sourceElevation;
-        int targetElevation = status.targetElevation;
+        double terrainHeightadj=0;
+        if(sourceortargetishalfheight==true &&status.currentTerrain.isBuilding() && status.currentTerrain.isHalfLevelHeight()) { terrainHeightadj =0.5;}
+        double sourceElevation = status.sourceElevation;
+        double targetElevation = status.targetElevation;
         int rangeToSource = status.rangeToSource;
         int rangeToTarget = status.rangeToTarget;
         int groundLevel = status.groundLevel;
@@ -3663,15 +3931,15 @@ public class Map  {
 
             // swap elevations
             swapLOS=true;
-            int temp = sourceElevation;
+            double temp = sourceElevation;
             sourceElevation = targetElevation;
             targetElevation = temp;
             starthex=status.targetHex;
             finishhex=status.sourceHex;
             // swap range
-            temp = rangeToSource;
+            int rangetemp = rangeToSource;
             rangeToSource = rangeToTarget;
-            rangeToTarget = temp;
+            rangeToTarget = rangetemp;
         }
 
 
@@ -3730,7 +3998,7 @@ public class Map  {
                     depressionadj=-1;
                 }
             }
-            if( rangeToTarget <= Math.max(2 * (groundLevel + depressionadj + terrainHeight) + (rangeToSource / 5) - sourceElevation - targetElevation, 0)) {
+            if( rangeToTarget <= Math.max(2 * (groundLevel + depressionadj + terrainHeight + terrainHeightadj) + (rangeToSource / 5) - sourceElevation - targetElevation, 0)) {
                 return true;
             }
             else {
@@ -3738,7 +4006,7 @@ public class Map  {
             }
         }
         else {
-            return rangeToTarget <= Math.max(2 * (groundLevel + terrainHeight) + (rangeToSource / 5) - sourceElevation - targetElevation + 1, 1);
+            return rangeToTarget <= Math.max(2 * (groundLevel + terrainHeight+ terrainHeightadj) + (rangeToSource / 5) - sourceElevation - targetElevation + 1, 1);
         }
     }
 
@@ -3771,55 +4039,169 @@ public class Map  {
     public void flip() {
 
         // flip the terrain and elevation grids
-        for (int x = 0; x < (gridWidth+1) / 2; x++) {
+        char[][] newterrainGrid;
+        byte[][] newelevationGrid;
+        newterrainGrid = new char[gridWidth][gridHeight];
+        newelevationGrid = new byte[gridWidth][gridHeight];
+        for (int x = 0; x < gridWidth; x++) {
             for (int y = 0; y < gridHeight; y++) {
 
                 char terrain = terrainGrid[x][y];
-                terrainGrid[x][y] = terrainGrid[gridWidth - x - 1][gridHeight - y - 1];
-                terrainGrid[gridWidth - x - 1][gridHeight - y - 1] = terrain;
+                newterrainGrid[x][y] = terrainGrid[gridWidth - x - 1][gridHeight - y - 1];
 
                 byte elevation = elevationGrid[x][y];
-                elevationGrid[x][y] = elevationGrid[gridWidth - x - 1][gridHeight - y - 1];
-                elevationGrid[gridWidth - x - 1][gridHeight - y - 1] = elevation;
+                newelevationGrid[x][y] = elevationGrid[gridWidth - x - 1][gridHeight - y - 1];
             }
         }
 
-        // flip the hex grid
-        for (int x = 0; x < hexGrid.length / 2 + 1; x++) {
-            for (int y = 0; y < (x == hexGrid.length / 2 ? (hexGrid[x].length - 1) / 2 + 1 : hexGrid[x].length); y++) {
+        terrainGrid=newterrainGrid;
+        elevationGrid=newelevationGrid;
 
-                // get the next two hexes
-                Hex h1 = hexGrid[x][y];
-                Hex h2 = hexGrid[width - x - 1][hexGrid[width - x - 1].length - y - 1];
+        // to increase flipping and cropping flexibility, create a new hex grid then flip it
+        Hex newhexGrid [][];
+        newhexGrid =recreateHexGrid();
 
-                // swap the hexes in the grid
-                hexGrid[x][y] = h2;
-                hexGrid[width - x - 1][hexGrid[width - x - 1].length - y - 1] = h1;
+        int uselength = (hexGrid.length);
+        int fullengthadj=0;
 
-                // flip the hexes themselves
-                h1.flip();
+        for (int x = 0; x < uselength - fullengthadj ; x++) {
+            for (int y = 0; y <  newhexGrid[x].length; y++) {
+
+                // get the new hex
+                Hex    h1 = hexGrid[width - x - 1- fullengthadj][hexGrid[width - x - 1-fullengthadj].length - y - 1];  //}
+                Hex h2=h1;
+
+                // flip the new hex
                 h2.flip();
 
-                // swap the column/row numbers
-                int temp = h1.getColumnNumber();
-                h1.setColumnNumber(h2.getColumnNumber());
+                // change the column/row numbers
+                int temp = newhexGrid[x][y].getColumnNumber();
                 h2.setColumnNumber(temp);
 
-                temp = h1.getRowNumber();
-                h1.setRowNumber(h2.getRowNumber());
+                temp = newhexGrid[x][y].getRowNumber();
                 h2.setRowNumber(temp);
 
-                // swap the hex polygons
-                Polygon poly = h1.getHexBorder();
-                h1.setHexBorder(h2.getHexBorder());
+                // change the hex polygons
+                Polygon poly = newhexGrid[x][y].getHexBorder();
                 h2.setHexBorder(poly);
 
-                poly = h1.getExtendedHexBorder();
-                h1.setExtendedHexBorder(h2.getExtendedHexBorder());
+                poly = newhexGrid[x][y].getExtendedHexBorder();
                 h2.setExtendedHexBorder(poly);
+
+                // replace the current hex with the new hex
+                newhexGrid[x][y] = h2;
+
             }
         }
+        hexGrid=newhexGrid;
+
     }
+
+    /**
+     * Rebuilds the hexgrid based on the cropped status; should work with all maps - DR
+     */
+    public Hex [][] recreateHexGrid() {
+
+        // check configuration - if not symetrical on left and right edges need to revise grid
+
+        if(this.cropconfiguration.contains("Normal") && hexGrid.length % 2 ==0) {  // top left edge is full height; right edge is half-height; need to revise grid
+            this.A1CenterY = 0;
+            flipconfig="FulltoHalfHeight";
+            this.cropconfiguration="TopLeftHalfHeight";
+        }
+        else if(this.cropconfiguration.contains("TopLeftHalfHeight") && hexGrid.length % 2 ==0 ) {  // top left edge is half-height; right edge is full height; need to revise grid
+            this.A1CenterY = 32.25;
+            flipconfig="HalftoFullHeight";
+            this.cropconfiguration="Normal";
+        }
+        else if(this.cropconfiguration.contains("FullHex")) {  // need to test if both left and right are full hexes (if left/right side not cropped will be half hex)
+            if (this.cropconfiguration.contains("LeftHalf")) {  // left edge is not cropped, right edge is cropped and is full width
+                if (hexGrid.length % 2 ==0){ // right edge is half height
+                    this.A1CenterY = 0;
+                    this.A1CenterX=this.hexWidth/2;
+                    flipconfig="FulltoHalfHeight";
+                    this.cropconfiguration="FullHexHalfHeight";
+                }
+                else {  // else right edge is  full height
+                    this.A1CenterY= 32.25;
+                    this.A1CenterX=this.hexWidth/2;
+                    this.flipconfig="HalftoFullWidth";
+                    this.cropconfiguration="FullHexRightHalf";
+                }
+            }
+            else  if (this.cropconfiguration.contains("RightHalf")) { // right side is not cropped; full height and half-width; need to revise grid
+                this.flipconfig = "FulltoHalfWidth";
+                this.A1CenterY=32.25;
+                this.A1CenterX = 0;
+                this.cropconfiguration="Normal";
+                // if right side is not cropped, left cannot be half height when flipped so this case not handled
+            }
+            else {  // both left and right sides are cropped
+                this.A1CenterX = hexWidth / 2;
+                if (this.hexGrid.length % 2 != 0) { // balanced
+                    if (this.hexGrid[0][0].getColumnNumber() % 2  !=0 ) {  // left and right columns are half height in top row
+                        this.flipconfig ="FulltoHalfHeight";
+                        this.cropconfiguration="FullHexHalfHeight";
+                        this.A1CenterY=0;
+                    }
+                } else { // not balanced
+                    if (this.hexGrid[0][0].getColumnNumber() % 2 == 0) {  // left is full height and right column is half height in top row
+                        this.flipconfig = "FulltoHalfHeight";
+                        this.cropconfiguration = "FullHexHalfHeight";
+                        this.A1CenterY=0;
+                    } else if (this.hexGrid[0][0].getColumnNumber() % 2 != 0) {  // left is half height and right column is full height in top row
+                        flipconfig = "HalftoFullHeight";
+                        this.cropconfiguration = "FullHex";
+                        this.A1CenterY=32.25;
+                    }
+                }
+            }
+
+        }
+        if(this.cropconfiguration.contains("Offset") && !(this.cropconfiguration.contains("FullHex"))) { A1CenterX=0;}
+        //if(this.cropconfiguration.contains("Offset")) { A1CenterX=0;}
+
+        // create the hex grid
+        Hex [][] newhexGrid = new Hex[this.width][];
+        if (this.A1CenterY==32.25) {
+            for (int col = 0; col < this.width; col++) {
+
+                newhexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
+                for (int row = 0; row < this.height + (col % 2); row++) {
+                    newhexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                }
+            }
+
+            // reset the hex locations to map grid
+            for (int col = 0; col < this.width; col++) {
+                for (int row = 0; row < this.height + (col % 2); row++) {
+                    newhexGrid[col][row].resetHexsideLocationNames();
+                }
+            }
+        }
+        else if (this.A1CenterY==0){
+            int evencol =0;
+            for (int col = 0; col < this.width; col++) {
+                evencol = col % 2 == 0 ? 1 : 0;
+                newhexGrid[col] = new Hex[this.height + evencol]; // add 1 if even
+                for (int row = 0; row < this.height + evencol; row++) {
+                    newhexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                }
+            }
+
+            // reset the hex locations to map grid
+            for (int col = 0; col < this.width; col++) {
+                evencol = col % 2 == 0 ? 1 : 0;
+                for (int row = 0; row < this.height + evencol; row++) {
+                    newhexGrid[col][row].resetHexsideLocationNames();
+                }
+            }
+        }
+
+        return newhexGrid;
+
+    }
+
 
     /**
      *	This method is intended to be used only to copy geomorphic maps into
@@ -3832,13 +4214,34 @@ public class Map  {
      */
     public boolean insertMap(Map map, Hex upperLeft) {
 
+        // make sure column start/end halfhexes align - added by DR
+
+        if((upperLeft.getColumnNumber()>0 || upperLeft.getRowNumber() >0) &&   // inserting a board in second or greater column
+                ((this.cropconfiguration.contains("Normal") && upperLeft.getColumnNumber() % 2 == 0 && !map.cropconfiguration.contains("Normal")) ||  // previous board has full-height "Normal" config in final col; new board must match
+                (this.cropconfiguration.contains("Normal") && upperLeft.getColumnNumber() % 2 != 0 && !map.cropconfiguration.contains("TopLeftHalfHeight")) ||       // previous board has half-height "TopLeftHalfHeight" config in final col; new board must match
+                (this.cropconfiguration.contains("TopLeftHalfHeight") && upperLeft.getColumnNumber() % 2 ==0  && !map.cropconfiguration.contains("TopLeftHalfHeight")) ||  // previous board has half-height "TopLeftHalfHeight" config in final col; new board must match
+                (this.cropconfiguration.contains("TopLeftHalfHeight") && upperLeft.getColumnNumber() % 2 !=0  && !map.cropconfiguration.contains("Normal"))  ) ) {  // previous board has full-height "Normal" config in final col; new board must match
+
+            return false;
+        }
+
         // determine where the upper-left point of the inserted map will be
+        int upper=0;
         int left = upperLeft.getCenterLocation().getLOSPoint().x;
-        int upper = upperLeft.getCenterLocation().getLOSPoint().y - (int) hexHeight / 2;
+
+        if(upperLeft.getColumnNumber()==0) {
+            left=0;
+        }
+        if(upperLeft.getRowNumber()==0) {
+            upper=0;
+        }else {
+            upper= upperLeft.getCenterLocation().getLOSPoint().y - (map.getHex(0,0).getCenterLocation().getLOSPoint().y);
+        }
+
+        if (upper<0) {upper =0;}
 
         // ensure the map will fit
         if (!onMap(left, upper)) {
-
             return false;
         }
 
@@ -3849,6 +4252,72 @@ public class Map  {
                 terrainGrid[left + x][upper + y] = (char) map.getGridTerrain(x, y).getType();
                 elevationGrid[left + x][upper + y] = (byte) map.getGridElevation(x, y);
             }
+        }
+
+        //reset due to cropping if any - but only for first board
+        if(left==0 && upper==0) {
+            this.A1CenterX = map.A1CenterX;
+            this.A1CenterY = map.getA1CenterY();
+            this.cropconfiguration =map.cropconfiguration;
+            if (this.cropconfiguration.contains("HalfHeight")) {
+                //need to redo the VASLMap hexgrid
+                int evencol = 0;
+                for (int col = 0; col < this.width; col++) {
+                    evencol = col % 2 == 0 ? 1 : 0;
+                    hexGrid[col] = new Hex[this.height + evencol]; // add 1 if even
+                    for (int row = 0; row < this.height + evencol; row++) {
+                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                    }
+                }
+
+                // reset the hex locations to map grid
+                for (int col = 0; col < this.width; col++) {
+                    evencol = col % 2 == 0 ? 1 : 0;
+                    for (int row = 0; row < this.height + evencol; row++) {
+                        hexGrid[col][row].resetHexsideLocationNames();
+                    }
+                }
+            }
+            if (map.flipconfig=="FulltoHalfWidth") {  // need to handle halftofull and odd even col
+                //need to redo the VASLMap hexgrid
+                A1CenterX=0;
+                int evencol = 0;
+                for (int col = 0; col < this.width; col++) {
+                    evencol = col % 2 == 0 ? 0 : 1;
+                    hexGrid[col] = new Hex[this.height + evencol]; // add 1 if odd
+                    for (int row = 0; row < this.height + evencol; row++) {
+                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                    }
+                }
+
+                // reset the hex locations to map grid
+                for (int col = 0; col < this.width; col++) {
+                    evencol = col % 2 == 0 ? 0 : 1;
+                    for (int row = 0; row < this.height + evencol; row++) {
+                        hexGrid[col][row].resetHexsideLocationNames();
+                    }
+                }
+            } else if(map.flipconfig=="HalftoFullWidth") {
+                //need to redo the VASLMap hexgrid
+                A1CenterX=hexWidth/2;
+                int evencol = 0;
+                for (int col = 0; col < this.width; col++) {
+                    evencol = col % 2 == 0 ? 0 : 1;
+                    hexGrid[col] = new Hex[this.height + evencol]; // add 1 if odd
+                    for (int row = 0; row < this.height + evencol; row++) {
+                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                    }
+                }
+
+                // reset the hex locations to map grid
+                for (int col = 0; col < this.width; col++) {
+                    evencol = col % 2 == 0 ? 0 : 1;
+                    for (int row = 0; row < this.height + evencol; row++) {
+                        hexGrid[col][row].resetHexsideLocationNames();
+                    }
+                }
+            }
+
         }
 
         // copy the hex grid
@@ -3880,7 +4349,32 @@ public class Map  {
             }
         }
 
+        // reset due to cropping if any
+        this.A1CenterX=map.A1CenterX;
+        this.A1CenterY=map.getA1CenterY();
         // copy the hex grid
+        if (map.A1CenterY==0) {
+            //need to redo the VASLMap hexgrid
+            this.cropconfiguration =map.cropconfiguration;
+
+            int evencol =0;
+            for (int col = 0; col < this.width; col++) {
+                evencol = col % 2 == 0 ? 1 : 0;
+                hexGrid[col] = new Hex[this.height + evencol]; // add 1 if even
+                for (int row = 0; row < this.height + evencol; row++) {
+                    hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                }
+            }
+
+            // reset the hex locations to map grid
+            for (int col = 0; col < this.width; col++) {
+                evencol = col % 2 == 0 ? 1 : 0;
+                for (int row = 0; row < this.height + evencol; row++) {
+                    hexGrid[col][row].resetHexsideLocationNames();
+                }
+            }
+        }
+
         for (int x = 0; x < map.hexGrid.length && x < this.hexGrid.length; x++) {
             for (int y = 0; y < map.hexGrid[x].length && y < this.hexGrid[x].length; y++) {
 
@@ -3902,39 +4396,73 @@ public class Map  {
      * @param lowerRight the lower-right corner of the map grid
      * @return the cropped map or null if invalid
      */
-    public Map crop(Point upperLeft, Point lowerRight){
+    public Map  crop(Point upperLeft, Point lowerRight, int offsetsize, String cropconfig){
 
         int localGridWidth = lowerRight.x - upperLeft.x;
         int localGridHeight = lowerRight.y - upperLeft.y;
-        int localHexWidth = (int) Math.round((double)localGridWidth / hexWidth) + 1;
+
+        // need to reset some map values in order to properly create the hex grid
+        int offadj = 0;
+        String passgridconfig="Normal"; int fullhexadj=0;
+        if (cropconfig.contains("FullHex") && !(cropconfig.contains("LeftHalf"))) {fullhexadj= (int) hexWidth/2;}
+        offadj=fullhexadj-offsetsize;
+        Hex upperLeftHex = gridToHex(upperLeft.x + fullhexadj+offadj, upperLeft.y);
+        int localHexWidth =0;
+        if(cropconfig.contains("FullHex")) {
+            if(lowerRight.x == this.getGridWidth()) {  // right edge not cropped
+                localHexWidth = (int) this.width - (upperLeftHex.getColumnNumber());
+            } else if (upperLeft.x<=0) {  // left edge not cropped
+                Hex lowerRightHex=gridToHex(lowerRight.x  - (int) hexWidth/2 +offadj, lowerRight.y-1 );
+                localHexWidth=lowerRightHex.getColumnNumber()+1;
+            } else {
+                localHexWidth = (int) Math.round((double) localGridWidth / hexWidth);
+            }
+        } else {
+            localHexWidth = (int) Math.round((double) localGridWidth / hexWidth) + 1;   // geo config adj
+        }
         int localHexHeight = (int) Math.round((double)localGridHeight / hexHeight);
 
-        // the hex width must be odd - if not extend to include the next half hex
-        if (localHexWidth%2 != 1) {
-            localHexWidth++;
+        if (!(upperLeftHex.getColumnNumber() %2 ==0) ) {passgridconfig="TopLeftHalfHeight";}
+        if (cropconfig.contains("FullHex")) {
+            if(passgridconfig=="Normal") {
+                passgridconfig=cropconfig;
+            }
+            else {
+                passgridconfig= cropconfig + "HalfHeight";
+            }
         }
+        if(this.cropconfiguration.contains("Offset")) { passgridconfig=passgridconfig + "Offset";}
+        boolean isCropping = true;
+        //DR amended code to use  cropped width, height in hexes
+        Map newMap = new Map(hexWidth, hexHeight, localHexWidth, localHexHeight, A1CenterX, A1CenterY, localGridWidth, localGridHeight, terrainNameMap, passgridconfig, isCropping);
 
-        //DR amended code to use width, height
-        Map newMap = new Map(hexWidth, hexHeight, width, height, A1CenterX, A1CenterY, localGridWidth, localGridHeight, terrainNameMap);
+
+
+        int  gridadj= upperLeft.x;
 
         // copy the map grid
-        for(int x = 0; x < newMap.gridWidth && x + upperLeft.x < gridWidth; x++) {
+        for(int x = 0; x < newMap.gridWidth && x + gridadj < gridWidth; x++) {
             for(int y = 0; y < newMap.gridHeight && y + upperLeft.y < gridHeight; y++){
-
-                newMap.terrainGrid[x][y] = terrainGrid[x + upperLeft.x][y + upperLeft.y];
-                newMap.elevationGrid[x][y] = elevationGrid[x + upperLeft.x][y + upperLeft.y];
+                if(x+gridadj >=0) { // final RB adjustment - upperLeft.x will be a small negative if cropping to fullhex but keeping row A due to offset;
+                    newMap.terrainGrid[x][y] = terrainGrid[x + gridadj][y + upperLeft.y];
+                    newMap.elevationGrid[x][y] = elevationGrid[x + gridadj][y + upperLeft.y];
+                }
             }
         }
+        // adjust hex grid if cropping an x-offset board
+        this.cropconfiguration =passgridconfig;
 
         //copy the hex grid
-        Hex upperLeftHex = gridToHex(upperLeft.x, upperLeft.y);
         for (int x = 0; x < newMap.hexGrid.length; x++) {
             for (int y = 0; y < newMap.hexGrid[x].length; y++) {
-
-                newMap.hexGrid[x][y] = (hexGrid[x + upperLeftHex.getColumnNumber()][y + upperLeftHex.getRowNumber()]);
+                if (offsetsize<=0) {
+                    newMap.hexGrid[x][y] = (hexGrid[x + upperLeftHex.getColumnNumber()][y + upperLeftHex.getRowNumber()]);
+                } else {
+                    newMap.hexGrid[x][y] = (hexGrid[x + upperLeftHex.getColumnNumber()][y + upperLeftHex.getRowNumber()]);
+                }
             }
         }
-
+        newMap.cropped=true;
         return newMap;
     }
 
@@ -3957,7 +4485,14 @@ public class Map  {
     public void setRBrrembankments(RBrrembankments RBrrembankments) {
         for(java.util.Map.Entry<String, boolean[]> hex : RBrrembankments.getAllRBrrembankments().entrySet()){
             if(getHex(hex.getKey()) != null){
+                // trap errors to enable cropping
+                try {
                 getHex(hex.getKey()).setRBrrembankments(hex.getValue());
+                }
+                catch (Exception e) {
+
+                }
+
             }
         }
     }
@@ -4251,7 +4786,7 @@ public class Map  {
                 if (status.sourceElevation > status.targetElevation) {
                     int testhexside = status.currentHex.getLocationHexside(status.currentHex.getNearestLocation(status.currentCol, status.currentRow));
                     Hex testhex = getAdjacentHex(status.currentHex, testhexside);
-                    int testrange = range(status.sourceHex, testhex);
+                        int testrange = range(status.sourceHex, testhex, getMapConfiguration());
                     int oldrange = status.rangeToSource;
                     if (status.rangeToSource > testrange) {
                         status.rangeToSource = testrange;
@@ -4265,7 +4800,7 @@ public class Map  {
                 } else if (status.targetElevation > status.sourceElevation) {
                     int testhexside = status.currentHex.getLocationHexside(status.currentHex.getNearestLocation(status.currentCol, status.currentRow));
                     Hex testhex = getAdjacentHex(status.currentHex, testhexside);
-                    int testrange = range(status.sourceHex, testhex);
+                        int testrange = range(status.sourceHex, testhex, getMapConfiguration());
                     int oldrange = status.rangeToTarget;
                     if (status.rangeToTarget > testrange) {
                         status.rangeToTarget = testrange;
@@ -4335,6 +4870,24 @@ public class Map  {
             }
         }
         return -1;
+    }
+    //method added by DR in support of cropping / flipping to all columns
+    public String getMapConfiguration() {
+
+        if (cropconfiguration.contains("Normal") || cropconfiguration.equals("FullHexLeftHalf")) {
+            return "Normal";
+        }
+        else if (cropconfiguration.contains("TopLeftHalfHeight")) {
+            return "TopLeftHalfHeight";
+        }
+        else if (cropconfiguration.equals("FullHex")  || cropconfiguration.equals("FullHexRightHalf")) {
+            return "FullHex";
+        }
+        else if (cropconfiguration.contains("FullHex") && cropconfiguration.contains("HalfHeight")) {
+            return "FullHexHalfHeight";
+        }
+
+        return "Normal";
     }
 }
 

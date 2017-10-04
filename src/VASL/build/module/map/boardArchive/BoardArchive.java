@@ -282,19 +282,19 @@ public class BoardArchive {
      * Reads the map from disk using terrain types read from the board archive
      * @return <code>Map</code> object. Null if the LOS data does not exist or an error occurred.
      */
-    public Map getLOSData(){
+    public Map getLOSData(String offset, boolean isCropping){
 
-        return getLOSData(sharedBoardMetadata.getTerrainTypes());
+        return getLOSData(sharedBoardMetadata.getTerrainTypes(), offset, isCropping, 0);
     }
 
     /**
      * Reads the map from disk using the provide terrain types.
      * @return <code>Map</code> object. Null if the LOS data does not exist or an error occurred.
      */
-    public Map getLOSData(HashMap<String, Terrain> terrainTypes){
+    public Map getLOSData(HashMap<String, Terrain> terrainTypes, String offset, boolean isCropping, double gridadj){
 
-        // read the map if necessary
-        if (map == null){
+        // read the map if necessary; need to do so always in case of changes to a cropped or flipped board
+         //if (map == null){
 
             ObjectInputStream infile = null;
             ZipFile archive = null;
@@ -307,27 +307,26 @@ public class BoardArchive {
                                                 getInputStreamForArchiveFile(archive, LOSDataFileName))));
                 // read the map-level data
                 final int width = infile.readInt();
-				final int height = infile.readInt();
-				final int gridWidth = infile.readInt();
-				final int gridHeight = infile.readInt();
+                final int height = infile.readInt();
+                final int gridWidth = infile.readInt();
+                final int gridHeight = infile.readInt();
 
-                if(isGEO()) {
-
-                    map  = new Map(width, height, terrainTypes);
-                }
-                else {
-                    //DR added code to pass hexWidth and Hexheight
-                    map = new Map(getHexWidth(), getHexHeight(), width, height, getA1CenterX(), getA1CenterY(), gridWidth, gridHeight, terrainTypes);
+                String passgridconfig=offset;
+                if (isGEO()) {
+                    map = new Map(width, height, terrainTypes, passgridconfig, isCropping);
+                } else {
+                    //DR added code to pass hexWidth and Hexheight plus crop config and flag
+                    map = new Map(getHexWidth(), getHexHeight(), width, height, getA1CenterX(), getA1CenterY(), gridWidth, gridHeight, terrainTypes, passgridconfig, isCropping);
                 }
 
                 // read the terrain and elevations grids
-                for(int x = 0; x < gridWidth; x++) {
-                    for(int y = 0; y < gridHeight; y++) {
+                 for (int x = 0; x < gridWidth; x++) {
+                    for (int y = 0; y < gridHeight; y++) {
                         map.setGridElevation((int) infile.readByte(), x, y);
                         map.setGridTerrainCode((int) infile.readByte() & (0xff), x, y);
-
                     }
                 }
+
                 // code added by DR to enbable rr embankments in RB
                 // set the rr embankments
                 map.setRBrrembankments(metadata.getRBrrembankments());
@@ -336,17 +335,16 @@ public class BoardArchive {
                 for (int col = 0; col < map.getWidth(); col++) {
                     for (int row = 0; row < map.getHeight() + (col % 2); row++) {
                         final byte stairway = infile.readByte();
-                        if((int) stairway == 1) {
+                        if ((int) stairway == 1) {
                             map.getHex(col, row).setStairway(true);
-                        }
-                        else {
-                            map.getHex(col,row).setStairway(false);
+                        } else {
+                                map.getHex(col, row).setStairway(false);
                         }
                     }
                 }
 
                 // code moved from before stairway loop by DR to enable factory quasi-levels in stairway hexes
-                map.resetHexTerrain();
+                map.resetHexTerrain(gridadj);
 
                 // set the slopes
                 map.setSlopes(metadata.getSlopes());
@@ -360,7 +358,7 @@ public class BoardArchive {
 				org.apache.commons.io.IOUtils.closeQuietly(infile);
                 IOUtils.closeQuietly(archive);
             }
-        }
+        //}
         return map;
     }
 

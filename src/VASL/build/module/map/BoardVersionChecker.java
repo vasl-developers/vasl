@@ -36,6 +36,7 @@ import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.*;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.channels.Channels;
@@ -260,7 +261,7 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
         InputStream in = null;
         try {
 
-            URL website = new URL(url);
+            URL website = new URL( encodeUrl(url) );
             URLConnection conn = website.openConnection();
             conn.setUseCaches(false);
 
@@ -278,6 +279,21 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
         finally {
             IOUtils.closeQuietly(outFile);
             IOUtils.closeQuietly(in);
+        }
+    }
+    
+    // do not use on an already-encoded URL. It will double-encode it.
+    private static String encodeUrl( String unencodedURL ) {
+        try {
+            URL url = new URL(unencodedURL);
+            URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef()); 
+            return uri.toURL().toString();
+        }
+        catch( java.net.URISyntaxException ex ) {
+            return unencodedURL;
+        }
+        catch( java.net.MalformedURLException ex ) {
+            return unencodedURL;
         }
     }
 }

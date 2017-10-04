@@ -104,7 +104,7 @@ public class LOSResult {
         setFirstHindrance(x, y);
 
         // if there's already a terrain hindrance at this range replace if hindrance is greater
-		Integer range = sourceLocation.getHex().getMap().range(sourceLocation.getHex(), h);
+		Integer range = sourceLocation.getHex().getMap().range(sourceLocation.getHex(), h, sourceLocation.getHex().getMap().getMapConfiguration());
 		if(!mapHindrances.containsKey(range) ||
 				(mapHindrances.containsKey(range) && hindrance > mapHindrances.get(range))) {
 			mapHindrances.put(range, hindrance);
@@ -149,7 +149,7 @@ public class LOSResult {
         setFirstHindrance(x, y);
 
         // if there's already smoke at this range replace if hindrance is greater
-        Integer range = sourceLocation.getHex().getMap().range(sourceLocation.getHex(), h);
+        Integer range = sourceLocation.getHex().getMap().range(sourceLocation.getHex(), h, sourceLocation.getHex().getMap().getMapConfiguration());
         if(!smokeHindrances.containsKey(range) ||
            (smokeHindrances.containsKey(range) && hindrance > smokeHindrances.get(range))) {
             smokeHindrances.put(range, hindrance);
@@ -170,7 +170,7 @@ public class LOSResult {
         setFirstHindrance(x, y);
 
         // if there's already a vehicle hindrance at this range replace if hindrance is greater
-        Integer range = sourceLocation.getHex().getMap().range(sourceLocation.getHex(), h);
+        Integer range = sourceLocation.getHex().getMap().range(sourceLocation.getHex(), h, sourceLocation.getHex().getMap().getMapConfiguration());
         if(!vehicleHindrances.containsKey(range) ||
                 (vehicleHindrances.containsKey(range) && hindrance > vehicleHindrances.get(range))) {
             vehicleHindrances.put(range, hindrance);
