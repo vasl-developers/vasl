@@ -170,7 +170,7 @@ public class Map  {
 
         if(isCropping && this.cropconfiguration.contains("Offset") && !(this.cropconfiguration.contains("FullHex"))) { A1CenterX=0;}
         hexGrid = new Hex[this.width][];
-        if (this.A1CenterY==32.25) {
+        if (this.A1CenterY==32.25 || this.A1CenterY == -612.75) {
             for (int col = 0; col < this.width; col++) {
                 hexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
                 for (int row = 0; row < this.height + (col % 2); row++) {
