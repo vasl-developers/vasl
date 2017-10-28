@@ -20,8 +20,8 @@
 -->
 <boardMetadata 
 	name="BFPDW6b" 
-	version="6.0" 
-	versionDate="Jan 2016" 
+	version="6.1" 
+	versionDate="Oct 2017" 
 	author="BK" 
 	boardImageFileName="bdBFPDW6b.gif" 
 	hasHills="TRUE" 
@@ -40,46 +40,46 @@
 
 	-->
     <buildingTypes>
-        <buildingType hexName="G14" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="I11" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="I12" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="J10" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="J14" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="K12" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="K14" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="K16" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="L11" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="L13" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="L14" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="L15" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="M17" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="G14" buildingTypeName="Wooden Building" />
+        <buildingType hexName="I11" buildingTypeName="Wooden Building" />
+        <buildingType hexName="I12" buildingTypeName="Wooden Building" />
+        <buildingType hexName="J10" buildingTypeName="Wooden Building" />
+        <buildingType hexName="J14" buildingTypeName="Wooden Building" />
+        <buildingType hexName="K12" buildingTypeName="Wooden Building" />
+        <buildingType hexName="K14" buildingTypeName="Wooden Building" />
+        <buildingType hexName="K16" buildingTypeName="Wooden Building" />
+        <buildingType hexName="L11" buildingTypeName="Wooden Building" />
+        <buildingType hexName="L13" buildingTypeName="Wooden Building" />
+        <buildingType hexName="L14" buildingTypeName="Wooden Building" />
+        <buildingType hexName="L15" buildingTypeName="Wooden Building" />
+        <buildingType hexName="M17" buildingTypeName="Wooden Building" />
         <buildingType hexName="N10" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="N12" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="N13" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="N14" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="N16" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="N12" buildingTypeName="Wooden Building" />
+        <buildingType hexName="N13" buildingTypeName="Wooden Building" />
+        <buildingType hexName="N14" buildingTypeName="Wooden Building" />
+        <buildingType hexName="N16" buildingTypeName="Wooden Building" />
         <buildingType hexName="O12" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="O13" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="O14" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="O15" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="O13" buildingTypeName="Wooden Building" />
+        <buildingType hexName="O14" buildingTypeName="Wooden Building" />
+        <buildingType hexName="O15" buildingTypeName="Wooden Building" />
         <buildingType hexName="P12" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="P16" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="P16" buildingTypeName="Wooden Building" />
         <buildingType hexName="Q11" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="Q17" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="R11" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="R13" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="S13" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="T13" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="U11" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="U13" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="V10" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="V12" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="Q17" buildingTypeName="Wooden Building" />
+        <buildingType hexName="R11" buildingTypeName="Wooden Building, 2 Level" />
+        <buildingType hexName="R13" buildingTypeName="Wooden Building" />
+        <buildingType hexName="S13" buildingTypeName="Wooden Building" />
+        <buildingType hexName="T13" buildingTypeName="Wooden Building" />
+        <buildingType hexName="U11" buildingTypeName="Wooden Building" />
+        <buildingType hexName="U13" buildingTypeName="Wooden Building" />
+        <buildingType hexName="V10" buildingTypeName="Wooden Building" />
+        <buildingType hexName="V12" buildingTypeName="Wooden Building" />
         <buildingType hexName="W12" buildingTypeName="Wooden Building, 1 Level" />
         <buildingType hexName="X12" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="Y12" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="Y12" buildingTypeName="Wooden Building" />
         <buildingType hexName="Z10" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="AA17" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="BB13" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="AA17" buildingTypeName="Wooden Building" />
+        <buildingType hexName="BB13" buildingTypeName="Wooden Building" />
 		</buildingTypes>
 	
 	<overlaySSRules>
