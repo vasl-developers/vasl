@@ -20,8 +20,8 @@
 -->
 <boardMetadata 
 	name="BFPDW5b" 
-	version="6.0" 
-	versionDate="Jan 2016" 
+	version="6.1" 
+	versionDate="Oct 2017" 
 	author="BK" 
 	boardImageFileName="bdBFPDW5b.gif" 
 	hasHills="TRUE" 
@@ -41,27 +41,27 @@
 
 	-->
     <buildingTypes>
-        <buildingType hexName="C11" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="I11" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="I12" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="C11" buildingTypeName="Stone Building" />
+        <buildingType hexName="I11" buildingTypeName="Stone Building" />
+        <buildingType hexName="I12" buildingTypeName="Stone Building" />
         <buildingType hexName="K11" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="K13" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="K15" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="M12" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="M14" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="M15" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="K13" buildingTypeName="Stone Building" />
+        <buildingType hexName="K15" buildingTypeName="Stone Building" />
+        <buildingType hexName="M12" buildingTypeName="Stone Building" />
+        <buildingType hexName="M14" buildingTypeName="Stone Building" />
+        <buildingType hexName="M15" buildingTypeName="Stone Building" />
         <buildingType hexName="N11" buildingTypeName="Stone Building, 1 Level" />
         <buildingType hexName="N12" buildingTypeName="Stone Building, 1 Level" />
         <buildingType hexName="O11" buildingTypeName="Stone Building, 1 Level" />
         <buildingType hexName="O12" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="O14" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="P10" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="P13" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="Q13" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="R10" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="T10" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="T11" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="Z16" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="O14" buildingTypeName="Stone Building" />
+        <buildingType hexName="P10" buildingTypeName="Stone Building" />
+        <buildingType hexName="P13" buildingTypeName="Stone Building" />
+        <buildingType hexName="Q13" buildingTypeName="Stone Building" />
+        <buildingType hexName="R10" buildingTypeName="Stone Building" />
+        <buildingType hexName="T10" buildingTypeName="Stone Building" />
+        <buildingType hexName="T11" buildingTypeName="Stone Building" />
+        <buildingType hexName="Z16" buildingTypeName="Wooden Building" />
 	</buildingTypes>
 	
 	<overlaySSRules>

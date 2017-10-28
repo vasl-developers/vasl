@@ -18,7 +18,7 @@
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
 -->
-<boardMetadata name="BFPR" version="6.0" versionDate="Jan 2016" author="BK" boardImageFileName="bdBFPR.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="BFPR" version="6.1" versionDate="Oct 2017" author="BK" boardImageFileName="bdBFPR.gif" hasHills="FALSE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -30,17 +30,17 @@
 
 	-->
     <buildingTypes>
-        <buildingType hexName="I5" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="X6" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="Y5" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="Y8" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="Z3" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="Z4" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="Z6" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="BB3" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="CC6" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="DD4" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="DD6" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="I5" buildingTypeName="Wooden Building" />
+        <buildingType hexName="X6" buildingTypeName="Wooden Building" />
+        <buildingType hexName="Y5" buildingTypeName="Wooden Building" />
+        <buildingType hexName="Y8" buildingTypeName="Wooden Building" />
+        <buildingType hexName="Z3" buildingTypeName="Wooden Building" />
+        <buildingType hexName="Z4" buildingTypeName="Wooden Building" />
+        <buildingType hexName="Z6" buildingTypeName="Wooden Building" />
+        <buildingType hexName="BB3" buildingTypeName="Wooden Building" />
+        <buildingType hexName="CC6" buildingTypeName="Wooden Building" />
+        <buildingType hexName="DD4" buildingTypeName="Wooden Building" />
+        <buildingType hexName="DD6" buildingTypeName="Wooden Building" />
 	</buildingTypes>
 	
 	<overlaySSRules>

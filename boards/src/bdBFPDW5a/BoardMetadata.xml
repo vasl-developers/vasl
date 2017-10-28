@@ -18,7 +18,7 @@
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
 -->
-<boardMetadata name="BFPDW5a" version="6.0" versionDate="Jan 2016" author="BK" boardImageFileName="bdBFPDW5a.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="BFPDW5a" version="6.1" versionDate="Oct 2017" author="BK" boardImageFileName="bdBFPDW5a.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -30,30 +30,30 @@
 
 	-->
     <buildingTypes>
-        <buildingType hexName="I7" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="I9" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="J8" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="K8" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="I7" buildingTypeName="Stone Building" />
+        <buildingType hexName="I9" buildingTypeName="Stone Building" />
+        <buildingType hexName="J8" buildingTypeName="Stone Building" />
+        <buildingType hexName="K8" buildingTypeName="Stone Building" />
         <buildingType hexName="K10" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="L6" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="M10" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="N6" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="N9" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="O6" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="O8" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="P8" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="P9" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="P10" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="Q5" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="L6" buildingTypeName="Stone Building" />
+        <buildingType hexName="M10" buildingTypeName="Stone Building" />
+        <buildingType hexName="N6" buildingTypeName="Stone Building" />
+        <buildingType hexName="N9" buildingTypeName="Stone Building" />
+        <buildingType hexName="O6" buildingTypeName="Stone Building" />
+        <buildingType hexName="O8" buildingTypeName="Stone Building" />
+        <buildingType hexName="P8" buildingTypeName="Stone Building" />
+        <buildingType hexName="P9" buildingTypeName="Stone Building" />
+        <buildingType hexName="P10" buildingTypeName="Stone Building" />
+        <buildingType hexName="Q5" buildingTypeName="Stone Building" />
         <buildingType hexName="Q7" buildingTypeName="Stone Building, 1 Level" />
         <buildingType hexName="Q8" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="Q9" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="R5" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="R8" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="R9" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="R10" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="S5" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="T10" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="Q9" buildingTypeName="Stone Building" />
+        <buildingType hexName="R5" buildingTypeName="Stone Building" />
+        <buildingType hexName="R8" buildingTypeName="Stone Building" />
+        <buildingType hexName="R9" buildingTypeName="Stone Building" />
+        <buildingType hexName="R10" buildingTypeName="Stone Building" />
+        <buildingType hexName="S5" buildingTypeName="Stone Building" />
+        <buildingType hexName="T10" buildingTypeName="Stone Building" />
         <buildingType hexName="U7" buildingTypeName="Stone Building, 1 Level" />
 	</buildingTypes>
 	

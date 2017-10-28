@@ -18,7 +18,7 @@
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
 -->
-<boardMetadata name="BFPP" version="6.0" versionDate="Jan 2016" author="BK" boardImageFileName="bdBFPP.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="BFPP" version="6.1" versionDate="Oct 2017" author="BK" boardImageFileName="bdBFPP.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -30,14 +30,14 @@
 
 	-->
     <buildingTypes>
-        <buildingType hexName="D4" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="F6" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="O9" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="P9" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="Q7" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="X7" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="Z6" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="CC8" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="D4" buildingTypeName="Wooden Building" />
+        <buildingType hexName="F6" buildingTypeName="Wooden Building" />
+        <buildingType hexName="O9" buildingTypeName="Stone Building" />
+        <buildingType hexName="P9" buildingTypeName="Stone Building" />
+        <buildingType hexName="Q7" buildingTypeName="Stone Building" />
+        <buildingType hexName="X7" buildingTypeName="Wooden Building" />
+        <buildingType hexName="Z6" buildingTypeName="Wooden Building" />
+        <buildingType hexName="CC8" buildingTypeName="Wooden Building" />
 	</buildingTypes>
 	
 	<overlaySSRules>
