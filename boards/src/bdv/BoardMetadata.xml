@@ -17,8 +17,10 @@
     height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
+	
+	6.1 Nov 2017 ATC: fixed L1 road color for pto transformation
 -->
-<boardMetadata name="v" version="6.0" versionDate="Aug 2008" author="TR" boardImageFileName="bdv.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="v" version="6.1" versionDate="Aug 2008" author="TR" boardImageFileName="bdv.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -55,11 +57,12 @@
 			x - x coordinate of overly upper left
 			y - y coordinate of overlay upper left
 		-->		
-		<overlaySSRule name="DenseJungle" image="w_DenseJungle.gif" x="1" y="1" />
-		<overlaySSRule name="OrchardsToShellholes" image="w_Orch2Shellhole.gif" x="200" y="72" />
-		<overlaySSRule name="PalmTrees" image="w_Orch2Palm.gif" x="200" y="76" />
-		<overlaySSRule name="OrchardsToCrags" image="w_Orch2Crag.gif" x="200" y="76" />
-		<overlaySSRule name="NoRoads" image="w_NoRoads.gif" x="1" y="1" />
+		<overlaySSRule name="DenseJungle" image="v_DenseJungle.gif" x="0" y="0" />
+		<overlaySSRule name="Bamboo" image="v_Bamboo.gif" x="0" y="0" />
+		<overlaySSRule name="OrchardsToShellholes" image="v_Orch2Shell.gif" x="0" y="0" />
+		<overlaySSRule name="PalmTrees" image="v_Orch2Palm.gif" x="0" y="0" />
+		<overlaySSRule name="OrchardsToCrags" image="v_Orch2Crag.gif" x="0" y="0" />
+		<overlaySSRule name="NoRoads" image="v_NoRoads.gif" x="0" y="0" />
 	</overlaySSRules>
 	
 	<colors>
