@@ -1,0 +1,7 @@
+<SSRControls>
+ <Option name="Board BFP2 Special overlays">
+ <Checkbox name="">
+         <entry name="No River" rule="BFP2_BSO_NoRiver" text="River is Level 0"/>
+ </Checkbox>
+   </Option>
+</SSRControls>
