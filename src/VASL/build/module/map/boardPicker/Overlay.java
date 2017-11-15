@@ -306,7 +306,7 @@ public class Overlay implements Cloneable {
                 origin = String.valueOf(temp);
             }
             // ...and again for BFP boards
-            String[] moreBoards = {"BFPDW1b", "BFPDW2b", "BFPDW3b", "BFPDW4b"};
+            String[] moreBoards = {"BFPDW1b", "BFPDW2b", "BFPDW3b", "BFPDW4b", "BFPDW5b", "BFPDW6b", "BFPDW7b"};
             if (Arrays.asList(moreBoards).contains(board.getName())) {
 
                 try {
