@@ -1,0 +1,13 @@
+<SSRControls>
+ <Option name="Board 79 Special Overlays">
+ <Checkbox name="">
+         <entry name="Hexrow 1 side is water" rule="79_BSO_Hexrow1SideisWater" text=""/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="Hexrow 10 side is water" rule="79_BSO_Hexrow10SideisWater" text=""/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="River and Marsh is L0 open ground" rule="79_BSO_NoRiver" text=""/>
+ </Checkbox>
+   </Option>
+</SSRControls>

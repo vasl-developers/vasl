@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<!--
+    This file contains the board metadata specific to a VASL board archive.
+    Create one file per VASL board and place it in the archive.
+-->
+
+<!-- 
+    Board-level metadata
+	name - the name of the board (as it will appear in board selector drop-down - not yet supported)
+	version - the board version
+	versionDate - the date the last version was created
+	author - the caring soul who created the board
+    boardImage - the name of the VASL image file in the board archive; the name is case sensitive
+    hasHills - TRUE/FALSE if the board contains base elevations above ground level
+                if not we can assume the ground level under the terrain is zero, which
+                makes the VASL LOS image translation faster and more accurate
+    height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
+    width - width of the board in hexes.
+	others - TBD e.g. alternate hex grain, etc. 
+	
+	6.1 - Fixed wooden factories
+	
+-->
+<boardMetadata name="bd79" version="6.0" versionDate="Nov 2017" author="ATC" boardImageFileName="bd79.gif" hasHills="FALSE" width="33" height="10">
+
+    <!--
+        The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
+        determine the proper building type when creating the LOS information and assumes buildings are single-hex stone or 
+        wooden buildings. Use these elements to override the building type. 
+        
+        See the terrainType elements for a complete list of building names
+    -->
+    <buildingTypes>
+        <buildingType hexName="B1" buildingTypeName="Stone Building, 1 Level" />
+		<buildingType hexName="B2" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="C1" buildingTypeName="Stone Building, 1 Level" />
+		<buildingType hexName="C2" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="C3" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="D1" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="D2" buildingTypeName="Stone Building, 1 Level" />
+		<buildingType hexName="E3" buildingTypeName="Stone Building, 1 Level" />
+		<buildingType hexName="G1" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="G3" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="H1" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="H7" buildingTypeName="Stone Building, 1 Level" />
+		<buildingType hexName="J1" buildingTypeName="Stone Building, 1 Level" />
+		<buildingType hexName="J6" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="J7" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="K1" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="K3" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="K7" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="K8" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="L2" buildingTypeName="Stone Building, 1 Level" />
+		<buildingType hexName="L7" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="L8" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="N1" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="N7" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="N8" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="O1" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="O3" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="P2" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="P7" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="P8" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="R2" buildingTypeName="Stone Building, 1 Level" />
+		<buildingType hexName="R7" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="R9" buildingTypeName="Stone Building, 1 Level" />
+		<buildingType hexName="S1" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="S3" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="S8" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="T1" buildingTypeName="Stone Building, 1 Level" />
+		<buildingType hexName="T8" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="U1" buildingTypeName="Stone Building, 1 Level" />
+		<buildingType hexName="U3" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="V2" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="V7" buildingTypeName="Stone Building, 1 Level" />
+		<buildingType hexName="W7" buildingTypeName="Stone Building, 1 Level" />
+		<buildingType hexName="X2" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="X8" buildingTypeName="Stone Building, 1 Level" />
+		<buildingType hexName="Z6" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="Z8" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="AA1" buildingTypeName="Stone Building, 1 Level" />
+		<buildingType hexName="AA2" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="AA7" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="AA8" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="BB1" buildingTypeName="Stone Building, 1 Level" />
+		<buildingType hexName="BB2" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="BB7" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="BB8" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="CC1" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="CC2" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="CC7" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="CC8" buildingTypeName="Stone Building, 1 Level" />
+		<buildingType hexName="DD7" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="DD8" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="EE7" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="EE8" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="FF1" buildingTypeName="Stone Building, 1 Level" />
+		<buildingType hexName="FF2" buildingTypeName="Stone Building, 1 Level" />
+		<buildingType hexName="FF7" buildingTypeName="Wooden Building, 1 Level" />
+		<buildingType hexName="FF8" buildingTypeName="Wooden Building, 1 Level" />
+
+    </buildingTypes>
+	
+	<overlaySSRules>
+	    <!--
+			Scenario-specific overlay rules. 
+			name - the VASL SSR name
+			image - the image name
+			x - x coordinate of overly upper left
+			y - y coordinate of overlay upper left
+		-->
+			<overlaySSRule name="79_BSO_Hexrow1SideisWater" image="79_BSO_Hexrow1SideisWater.gif" x="0" y="0" />
+			<overlaySSRule name="79_BSO_Hexrow10SideisWater" image="79_BSO_Hexrow10SideisWater.gif" x="0" y="0" />
+			<overlaySSRule name="79_BSO_NoRiver" image="79_BSO_NoRiver.gif" x="0" y="0" />
+			<overlaySSRule name="DenseJungle" image="79_DenseJungle.gif" x="0" y="0" />
+			<overlaySSRule name="Bamboo" image="79_Bamboo.gif" x="0" y="0" />
+			<overlaySSRule name="LightWoods" image="79_LightWoods.gif" x="0" y="0" />
+			<overlaySSRule name="NoRoads" image="79_NoRoads.gif" x="0" y="0" />
+	
+	</overlaySSRules>
+	
+	<colors>
+		<!--
+			The VASL board colors. Used for color-specific SSR transformations. Use this element to override the shared color pallet. 
+			name - the VASL color name
+			red, green, blue - the RBG value of the color in the image
+			terrain - the LOS terrain type
+			elevation - the base elevation of the terrain
+			
+		-->
+		
+		
+	</colors>
+	
+	<colorSSRules>
+		<!--
+			The board color scenario-specific rules. Use this element to override the shared SSRs.		
+		-->
+	</colorSSRules>
+
+</boardMetadata>
