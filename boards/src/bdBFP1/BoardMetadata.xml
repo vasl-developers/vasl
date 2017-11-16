@@ -22,7 +22,7 @@
 
 <boardMetadata 
 	name="BFP1" 
-	version="6.0" 
+	version="6.1" 
 	versionDate="Nov 2017" 
 	author="ATC" 
 	boardImageFileName="bdBFP1.gif" 
@@ -44,8 +44,8 @@
         See the terrainType elements for a complete list of building names
     -->
     <buildingTypes>
-        <buildingType hexName="D4" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="L2" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="D4" buildingTypeName="Wooden Building"/>
+        <buildingType hexName="L2" buildingTypeName="Wooden Building"/>
 
     </buildingTypes>
 	

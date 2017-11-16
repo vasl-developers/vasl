@@ -21,7 +21,7 @@
 -->
 <boardMetadata 
 	name="BFP2" 
-	version="6.0" 
+	version="6.1" 
 	versionDate="Nov 2017" 
 	author="ATC" 
 	boardImageFileName="bdBFP2.gif" 
@@ -43,28 +43,28 @@
         See the terrainType elements for a complete list of building names
     -->
     <buildingTypes>
-        <buildingType hexName="C2" buildingTypeName="Stone Building, 1 Level" />
-		<buildingType hexName="D3" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="D4" buildingTypeName="Wooden Building, 1 Level" />
-		<buildingType hexName="E1" buildingTypeName="Wooden Building, 1 Level" />
-		<buildingType hexName="E4" buildingTypeName="Wooden Building, 1 Level" />
-		<buildingType hexName="F2" buildingTypeName="Wooden Building, 1 Level" />
-		<buildingType hexName="F4" buildingTypeName="Stone Building, 1 Level" />
-		<buildingType hexName="G1" buildingTypeName="Wooden Building, 1 Level" />
-		<buildingType hexName="G3" buildingTypeName="Wooden Building, 1 Level" />
-		<buildingType hexName="G5" buildingTypeName="Wooden Building, 1 Level" />
-		<buildingType hexName="H1" buildingTypeName="Wooden Building, 1 Level" />
-		<buildingType hexName="I1" buildingTypeName="Wooden Building, 1 Level" />
-		<buildingType hexName="J1" buildingTypeName="Stone Building, 1 Level" />
-		<buildingType hexName="J4" buildingTypeName="Wooden Building, 1 Level" />
-		<buildingType hexName="K4" buildingTypeName="Wooden Building, 1 Level" />
-		<buildingType hexName="K5" buildingTypeName="Wooden Building, 1 Level" />
-		<buildingType hexName="L1" buildingTypeName="Wooden Building, 1 Level" />
-		<buildingType hexName="L4" buildingTypeName="Wooden Building, 1 Level" />
-		<buildingType hexName="M2" buildingTypeName="Wooden Building, 1 Level" />
-		<buildingType hexName="M4" buildingTypeName="Wooden Building, 1 Level" />
-		<buildingType hexName="M5" buildingTypeName="Wooden Building, 1 Level" />
-		<buildingType hexName="N2" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="C2" buildingTypeName="Stone Building" />
+		<buildingType hexName="D3" buildingTypeName="Stone Building" />
+        <buildingType hexName="D4" buildingTypeName="Wooden Building" />
+		<buildingType hexName="E1" buildingTypeName="Wooden Building" />
+		<buildingType hexName="E4" buildingTypeName="Wooden Building" />
+		<buildingType hexName="F2" buildingTypeName="Wooden Building" />
+		<buildingType hexName="F4" buildingTypeName="Stone Building" />
+		<buildingType hexName="G1" buildingTypeName="Wooden Building" />
+		<buildingType hexName="G3" buildingTypeName="Wooden Building" />
+		<buildingType hexName="G5" buildingTypeName="Wooden Building" />
+		<buildingType hexName="H1" buildingTypeName="Wooden Building" />
+		<buildingType hexName="I1" buildingTypeName="Wooden Building" />
+		<buildingType hexName="J1" buildingTypeName="Stone Building" />
+		<buildingType hexName="J4" buildingTypeName="Wooden Building" />
+		<buildingType hexName="K4" buildingTypeName="Wooden Building" />
+		<buildingType hexName="K5" buildingTypeName="Wooden Building" />
+		<buildingType hexName="L1" buildingTypeName="Wooden Building" />
+		<buildingType hexName="L4" buildingTypeName="Wooden Building" />
+		<buildingType hexName="M2" buildingTypeName="Wooden Building" />
+		<buildingType hexName="M4" buildingTypeName="Wooden Building" />
+		<buildingType hexName="M5" buildingTypeName="Wooden Building" />
+		<buildingType hexName="N2" buildingTypeName="Wooden Building" />
 
     </buildingTypes>
 	
