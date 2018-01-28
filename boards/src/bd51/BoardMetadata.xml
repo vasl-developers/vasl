@@ -18,7 +18,7 @@
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
 -->
-<boardMetadata name="51" version="6.0" versionDate="Aug 2008" author="TR" boardImageFileName="bd51.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="51" version="6.1" versionDate="Jan 2018" author="TR" boardImageFileName="bd51.gif" hasHills="FALSE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -70,7 +70,7 @@
 		
         <buildingType hexName="G2" buildingTypeName="Stone Building, 2 Level" />
         <buildingType hexName="H1" buildingTypeName="Stone Building, 2 Level" />
-        <buildingType hexName="H2" buildingTypeName="Stone Building, 2 Level" />
+        <buildingType hexName="H2" buildingTypeName="Stone Building, 3 Level" />
 		
         <buildingType hexName="J1" buildingTypeName="Stone Building, 1 Level" />
         <buildingType hexName="K1" buildingTypeName="Stone Building, 1 Level" />
@@ -260,7 +260,6 @@
 		<overlaySSRule name="OrchardsToShellholes" image="51_Orch2Shell.gif" x="422" y="3" />
 		<overlaySSRule name="PalmTrees" image="51_Orch2Palm.gif" x="427" y="8" />
 		<overlaySSRule name="NoRoads" image="51_NoRoads.gif" x="1" y="1" />
-		<overlaySSRule name="LightWoods" image="51_LightWoods.gif" x="0" y="0" />
 	</overlaySSRules>
 	
 	<colors>
