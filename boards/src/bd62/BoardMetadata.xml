@@ -19,8 +19,9 @@
 	others - TBD e.g. alternate hex grain, etc. 
 	
 	3/11/15 - fixed "no woods roads" SSR rule
+	1/31/18 - Added lightwoods transform
 -->
-<boardMetadata name="62" version="6.1" versionDate="Feb 2011" author="TR" boardImageFileName="bd62.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="62" version="6.2" versionDate="Feb 2011" author="TR" boardImageFileName="bd62.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -66,6 +67,7 @@
 		<overlaySSRule name="OrchardsToCrags" image="62_Orch2Crag.gif" x="86" y="11" />
 		<overlaySSRule name="PalmTrees" image="62_PalmTrees.gif" x="85" y="12" />
 		<overlaySSRule name="NoRoads" image="62_NoRoads.gif" x="1" y="1" />
+		<overlaySSRule name="LightWoods" image="62_LightWoods.gif" x="0" y="0" />
 	</overlaySSRules>
 	
 	<colors>
