@@ -121,6 +121,7 @@
 		<overlaySSRule name="DenseJungle" image="60_DenseJungle.gif" x="1" y="1" />
 		<overlaySSRule name="NoRoads" image="60_NoRoads.gif" x="1" y="1" />
 		<overlaySSRule name="SSO_AP75" image="60_SSO_AP75.gif" x="1" y="1" />
+		<overlaySSRule name="LightWoods" image="60_LightWoods.gif" x="0" y="0" />
 	</overlaySSRules>
 	
 	<colors>

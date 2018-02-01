@@ -260,6 +260,7 @@
 		<overlaySSRule name="OrchardsToShellholes" image="51_Orch2Shell.gif" x="422" y="3" />
 		<overlaySSRule name="PalmTrees" image="51_Orch2Palm.gif" x="427" y="8" />
 		<overlaySSRule name="NoRoads" image="51_NoRoads.gif" x="1" y="1" />
+		<overlaySSRule name="LightWoods" image="51_LightWoods.gif" x="0" y="0" />
 	</overlaySSRules>
 	
 	<colors>
