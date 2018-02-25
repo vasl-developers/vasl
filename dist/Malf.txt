@@ -1,5 +1,5 @@
 This function provides a list of ctrs & markers that require attention during
-the Rally-Phase. Only ctrs dragged to the map from the base v5.5 (or later) tray
+the Rally-Phase. Only ctrs dragged to the map from VASL v5.5 (or later) tray
 will be included - ctrs created in previous versions of VASL, or from Extensions,
 will not show in the list.
 

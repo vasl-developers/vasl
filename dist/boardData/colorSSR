@@ -1,5 +1,8 @@
-// 08 Apr 2012 TR  
-//  Golden Master for v5.9.3          
+// 17 Apr 2013 TR  
+//  Golden Master for v5.9.4
+//
+// 17 Apr 2013 - updated DTO colors and rules   
+//             - removed NoWalls and NoHedges rules, which were there for v4 compatibility anyway     
 //
 // 8 Apr 2012 - commented out NoRoads color change rule, as it's now done by overlay
 //
@@ -44,6 +47,17 @@ AllPaved
   DirtRdL_1=PavedRdL_1
   DirtRdL_2=PavedRdL_2
   DirtRdBridge=PavedRdBridge
+  
+  DTO_DirtRdL0=DTO_PavedRdL0
+  DTO_DirtRdL1=DTO_PavedRdL1
+  DTO_DirtRdL2=DTO_PavedRdL2
+  DTO_DirtRdL3=DTO_PavedRdL3
+  DTO_DirtRdL4=DTO_PavedRdL4
+  DTO_DirtRdL5=DTO_PavedRdL5
+  DTO_DirtRdL6=DTO_PavedRdL6
+  DTO_DirtRdL_1=DTO_PavedRdL_1
+  DTO_DirtRdL_2=DTO_PavedRdL_2
+  DTO_DirtRdBridge=DTO_PavedRdBridge
 
 AllDirt
   PavedRdL0=DirtRdL0
@@ -56,6 +70,17 @@ AllDirt
   PavedRdL_1=DirtRdL_1
   PavedRdL_2=DirtRdL_2
   PavedRdBridge=DirtRdBridge
+  
+  DTO_PavedRdL0=DTO_DirtRdL0
+  DTO_PavedRdL1=DTO_DirtRdL1
+  DTO_PavedRdL2=DTO_DirtRdL2
+  DTO_PavedRdL3=DTO_DirtRdL3
+  DTO_PavedRdL4=DTO_DirtRdL4
+  DTO_PavedRdL5=DTO_DirtRdL5
+  DTO_PavedRdL6=DTO_DirtRdL6
+  DTO_PavedRdL_1=DTO_DirtRdL_1
+  DTO_PavedRdL_2=DTO_DirtRdL_2
+  DTO_PavedRdBridge=DTO_DirtRdBridge
 
 WoodsToLevel0
   WoodsGreen=Level0
@@ -146,6 +171,25 @@ BrushToOpenGround
   BrushCrestL5=Level5 
   BrushCrestL6=Level6 
   BrushCrestL_1=Level_1
+  
+  DTO_BrushL0=DTO_Level0
+  DTO_BrushL1=DTO_Level1
+  DTO_BrushL2=DTO_Level2
+  DTO_BrushL3=DTO_Level3
+  DTO_BrushL4=DTO_Level4
+  DTO_BrushL5=DTO_Level5
+  DTO_BrushL6=DTO_Level6
+  DTO_BrushL_1=DTO_Level_1
+  DTO_BrushL_2=DTO_Level_2
+  DTO_BrushBlackL0=DTO_Level0
+  DTO_BrushBlackL1=DTO_Level1
+  DTO_BrushBlackL2=DTO_Level2
+  DTO_BrushBlackL3=DTO_Level3
+  DTO_BrushBlackL4=DTO_Level4
+  DTO_BrushBlackL5=DTO_Level5
+  DTO_BrushBlackL6=DTO_Level6
+  DTO_BrushBlackL_1=DTO_Level_1
+  DTO_BrushBlackL_2=DTO_Level_2
 
 SwampToMarsh  // must be ahead of any other swamp/marsh rule!
   StreamSwampGreenL0=StreamMarshGreenL0
@@ -244,16 +288,16 @@ OrchardOutOfSeason
   OrchL_1=Level_1
   OrchL_2=Level_2
   OrchTrees=Black
-  OrchDesertL0=DesertL0
-  OrchDesertL1=Level1
-  OrchDesertL2=Level2
-  OrchDesertL3=Level3
-  OrchDesertL4=Level4
-  OrchDesertL5=Level5
-  OrchDesertL6=Level6
-  OrchDesertL_1=DesertL_1
-  OrchDesertL_2=DesertL_2
-  OrchTreesDesert=Black
+//  DTO_OrchL0=DesertL0   handled by an over- or under-lay in the overlaySSR file
+  DTO_OrchL1=DTO_Level1
+  DTO_OrchL2=DTO_Level2
+  DTO_OrchL3=DTO_Level3
+  DTO_OrchL4=DTO_Level4
+  DTO_OrchL5=DTO_Level5
+  DTO_OrchL6=DTO_Level6
+  DTO_OrchL_1=DTO_Level_1
+  DTO_OrchL_2=DTO_Level_2
+  DTO_OrchTrees=Black
 
 NoGrain
   GrainL0=Level0
@@ -309,51 +353,63 @@ NoGrain
 
 Level6ToLevel5
   Level6=Level5
+  DTO_Level6=DTO_Level5
 
 Level5ToLevel4
   Level5=Level4
+  DTO_Level5=DTO_Level4
 
 Level4ToLevel3
   Level4=Level3
+  DTO_Level4=DTO_Level3
 
 Level4ToLevel2
   Level4=Level2
-
+  DTO_Level4=DTO_Level2
+  
 Level4ToLevel1
   Level4=Level1
+  DTO_Level4=DTO_Level1
 
 Level4ToLevel0
   Level4=Level0
-
+  
 Level4ToLevel_1
   Level4=Level_1
+  DTO_Level4=DTO_Level_1
 
 Level3ToLevel2
   Level3=Level2
+  DTO_Level3=DTO_Level2
 
 Level3ToLevel1
   Level3=Level1
+  DTO_Level3=DTO_Level1
 
 Level3ToLevel0
   Level3=Level0
 
 Level3ToLevel_1
   Level3=Level_1
+  DTO_Level3=DTO_Level_1
 
 Level2ToLevel1
   Level2=Level1
+  DTO_Level2=DTO_Level1
 
 Level2ToLevel0
   Level2=Level0
 
 Level2ToLevel_1
   Level2=Level_1
+  DTO_Level2=DTO_Level_1
 
 Level1ToLevel0
   Level1=Level0
 
 Level1ToLevel_1
   Level1=Level_1
+  DTO_Level1=DTO_Level_1
 
 Level_1ToLevel0
   Level_1=Level0
@@ -375,17 +431,9 @@ HedgesOnly
 HedgesToOG
   HedgeGreen=Level0
 
-NoHedges // v4 rule not in v5, included here for backwards compatibility with v4 VASL
-  HedgeGreen=Level0
-
 //WallsOnly - handled via a wall underlay in global overlaySSR file
 
 WallsToOG
-  WallBrown=Level0
-  WallGrey1=Level0
-  WallGrey2=Level0
-
-NoWalls // v4 rule not in v5, included here for backwards compatibility with v4 VASL
   WallBrown=Level0
   WallGrey1=Level0
   WallGrey2=Level0
@@ -443,43 +491,169 @@ InSeasonPaddies
 
 //OrchardsToOliveGroves  - de-implemented as not being real useful
 
+ETOtoDTO
+//  BrushL_2=DTO_BrushL_2
+//  BrushL_1=DTO_BrushL_1
+  BrushL0=DTO_BrushL0
+  BrushL1=DTO_BrushL1
+  BrushL2=DTO_BrushL2
+  BrushL3=DTO_BrushL3
+  BrushL4=DTO_BrushL4
+  BrushL5=DTO_BrushL5
+  BrushL6=DTO_BrushL6
+//  BrushBlackL_2=DTO_BrushBlackL_2
+//  BrushBlackL_1=DTO_BrushBlackL_1
+  BrushBlackL0=DTO_BrushBlackL0
+  BrushBlackL1=DTO_BrushBlackL1
+  BrushBlackL2=DTO_BrushBlackL2
+  BrushBlackL3=DTO_BrushBlackL3
+  BrushBlackL4=DTO_BrushBlackL4
+  BrushBlackL5=DTO_BrushBlackL5
+  BrushBlackL6=DTO_BrushBlackL6
+
+  BldgShadowL0=DTO_BldgShadowL0
+
+//DirtRdL_2=DTO_DirtRdL_2
+//  DirtRdL_1=DTO_DirtRdL_1
+  DirtRdL0=DTO_DirtRdL0
+  DirtRdL1=DTO_DirtRdL1
+  DirtRdL2=DTO_DirtRdL2
+  DirtRdL3=DTO_DirtRdL3
+  DirtRdL4=DTO_DirtRdL4
+  DirtRdL5=DTO_DirtRdL5
+  DirtRdL6=DTO_DirtRdL6
+  DirtRdBridge=DTO_DirtRdBridge
+
+  GraveyardGreen=DTO_GraveyardGreen
+  GraveyardShadow=DTO_GraveyardShadow
+
+  GullyGreen1=WadiBrown1
+  GullyGreen2=WadiBrown2
+  GullyBrown3=WadiBrown3
+  GullyBlack=WadiBlack
+  GullyCliff=WadiCliff
+
+  GullyHill1=WadiBrown1
+  GullyHill2=WadiBrown1
+  GullyHill3=WadiBrown1
+  GullyHill4=WadiBrown1
+  GullyHill5=WadiBrown1
+
+  HedgeGreen=DTO_HedgeGreen
+  BoardNum=DTO_BoardNum
+
+//  Level_2=DTO_Level_2
+//  Level_1=DTO_Level_1
+// DTO Level 0 uses a pattern to replace Level0 color, in the overlaySSR file
+  Level1=DTO_Level1
+  Level2=DTO_Level2
+  Level3=DTO_Level3
+  Level4=DTO_Level4
+// Level5=DTO_Level5
+// Level6=DTO_Level6
+
+// OrchL_2=DTO_OrchL_2
+// OrchL_1=DTO_OrchL_1
+  OrchL0=DTO_OrchL0
+  OrchL1=DTO_OrchL1
+  OrchL2=DTO_OrchL2
+  OrchL3=DTO_OrchL3
+  OrchL4=DTO_OrchL4
+  OrchL5=DTO_OrchL5
+  OrchL6=DTO_OrchL6
+  OrchTrees=DTO_OrchTrees
+
+  PavedRdL0=DTO_PavedRdL0
+  PavedRdL1=DTO_PavedRdL1
+  PavedRdL2=DTO_PavedRdL2
+  PavedRdL3=DTO_PavedRdL3
+  PavedRdL4=DTO_PavedRdL4
+  PavedRdL5=DTO_PavedRdL5
+  PavedRdL6=DTO_PavedRdL6
+  PavedRdBridge=DTO_PavedRdBridge
+
+  StreamBrown=WadiBrown3
+  StreamGreen1=WadiBrown1
+  StreamGreen2=WadiBrown2
+  StreamGreen3=WadiBrown2
+
+  WoodsGreen=DTO_WoodsGreen
+  WoodsBlack=DTO_WoodsBlack
+
 DTOtoETO
-  DesertL_2=Level_2
-  DesertL_1=Level_1
-  DesertL0=Level0
-  DirtRdDesertL_2=DirtRdL_2
-  DirtRdDesertL_1=DirtRdL_1
-  DirtRdDesertL0=DirtRdL0
-  DirtRdDesertL1=DirtRdL1
-  DirtRdDesertL2=DirtRdL2
-  DirtRdDesertL3=DirtRdL3
-  DirtRdDesertL4=DirtRdL4
-  DirtRdDesertL5=DirtRdL5
-  DirtRdDesertL6=DirtRdL6
-  OrchDesertL_2=OrchL_2
-  OrchDesertL_1=OrchL_1
-  OrchDesertL0=OrchL0
-  OrchDesertL1=OrchL1
-  OrchDesertL2=OrchL2
-  OrchDesertL3=OrchL3
-  OrchDesertL4=OrchL4
-  OrchDesertL5=OrchL5
-  OrchDesertL6=OrchL6
-  BrushDesertL_2=BrushL_2
-  BrushDesertL_1=BrushL_1
-  BrushDesertL0=BrushL0
-  BrushDesertL1=BrushL1
-  BrushDesertL2=BrushL2
-  BrushDesertL3=BrushL3
-  BrushDesertL4=BrushL4
-  BrushDesertL5=BrushL5
-  BrushDesertL6=BrushL6
-  DirtRdDesertBridge=DirtRdBridge
-  OrchTreesDesert=OrchTrees
+//  DTO_BrushL_2=BrushL_2
+//  DTO_BrushL_1=BrushL_1
+ DTO_BrushL0=BrushL0
+ DTO_BrushL1=BrushL1
+ DTO_BrushL2=BrushL2
+ DTO_BrushL3=BrushL3
+ DTO_BrushL4=BrushL4
+ DTO_BrushL5=BrushL5
+ DTO_BrushL6=BrushL6
+
+ DTO_BldgShadowL0=BldgShadowL0
+
+//DTO_DirtRdL_2=DirtRdL_2
+//DTO_DirtRdL_1DirtRdL_1
+  DTO_DirtRdL0=DirtRdL0
+  DTO_DirtRdL1=DirtRdL1
+  DTO_DirtRdL2=DirtRdL2
+  DTO_DirtRdL3=DirtRdL3
+  DTO_DirtRdL4=DirtRdL4
+  DTO_DirtRdL5=DirtRdL5
+  DTO_DirtRdL6=DirtRdL6
+  DTO_DirtRdBridge=DirtRdBridge
+
+  DTO_GraveyardGreen=GraveyardGreen
+  DTO_GraveyardShadow=GraveyardShadow
+
   WadiBrown1=GullyGreen1
-  WadiBrown2=GullyBrown2
+  WadiBrown2=GullyGreen2
   WadiBrown3=GullyBrown3
   WadiBlack=GullyBlack
+  WadiCliff=GullyCliff
+
+  DTO_HedgeGreen=HedgeGreen
+  DTO_BoardNum=BoardNum
+
+//  DTO_Level_2=Level_2
+//  DTO_Level_1=Level_1
+  DTO_Level0_1=Level0
+  DTO_Level0_2=Level0
+  DTO_Level0_3=Level0
+  DTO_Level0_4=Level0
+  DTO_Level0_5=Level0
+  DTO_Level0_6=Level0
+  DTO_Level1=Level1
+  DTO_Level2=Level2
+  DTO_Level3=Level3
+  DTO_Level4=Level4
+  DTO_Level5=Level5  
+  DTO_Level6=Level6
+
+// DTO_OrchL_2=OrchL_2
+// DTO_OrchL_1=OrchL_1
+  DTO_OrchL0=OrchL0
+  DTO_OrchL1=OrchL1
+  DTO_OrchL2=OrchL2
+  DTO_OrchL3=OrchL3
+  DTO_OrchL4=OrchL4
+  DTO_OrchL5=OrchL5
+  DTO_OrchL6=OrchL6
+  DTO_OrchTrees=OrchTrees
+
+//  DTO_PavedRdL_2=PavedRdL_2
+//  DTO_PavedRdL_1=PavedRdL_1
+  DTO_PavedRdL0=PavedRdL0
+  DTO_PavedRdL1=PavedRdL1
+  DTO_PavedRdL2=PavedRdL2
+  DTO_PavedRdL3=PavedRdL3
+  DTO_PavedRdL4=PavedRdL4
+  DTO_PavedRdL5=PavedRdL5
+  DTO_PavedRdL6=PavedRdL6
+  DTO_PavedRdBridge=PavedRdBridge
+
+  DTO_WoodsGreen=WoodsGreen
 
 // Winter must always be last
 Winter
@@ -828,47 +1002,3 @@ Mud
 
   SunkRoad1=MudLevel2
   SunkRoad2=MudLevel4
-
-ETOtoDTO
-  Level_2=DesertL_2
-  Level_1=DesertL_1
-  Level0=DesertL0
-  DirtRdL_2=DirtRdDesertL_2
-  DirtRdL_1=DirtRdDesertL_1
-  DirtRdL0=DirtRdDesertL0
-  DirtRdL1=DirtRdDesertL1
-  DirtRdL2=DirtRdDesertL2
-  DirtRdL3=DirtRdDesertL3
-  DirtRdL4=DirtRdDesertL4
-  DirtRdL5=DirtRdDesertL5
-  DirtRdL6=DirtRdDesertL6
-  OrchL_2=OrchDesertL_2
-  OrchL_1=OrchDesertL_1
-  OrchL0=OrchDesertL0
-  OrchL1=OrchDesertL1
-  OrchL2=OrchDesertL2
-  OrchL3=OrchDesertL3
-  OrchL4=OrchDesertL4
-  OrchL5=OrchDesertL5
-  OrchL6=OrchDesertL6
-  BrushL_2=BrushDesertL_2
-  BrushL_1=BrushDesertL_1
-  BrushL0=BrushDesertL0
-  BrushL1=BrushDesertL1
-  BrushL2=BrushDesertL2
-  BrushL3=BrushDesertL3
-  BrushL4=BrushDesertL4
-  BrushL5=BrushDesertL5
-  BrushL6=BrushDesertL6
-  DirtRdBridge=DirtRdDesertBridge
-  OrchTrees=OrchTreesDesert
-  GullyBlack=WadiBlack
-  GullyBrown1=WadiBrown2
-  GullyBrown2=WadiBrown2
-  GullyGreen1=WadiBrown1
-  GullyGreen2=WadiBrown1
-  GullyGreen3=WadiBrown1
-    
-  
-
-

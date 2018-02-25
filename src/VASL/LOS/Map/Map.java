@@ -1848,9 +1848,12 @@ public class Map  {
 
         // We can ignore the current hex if we're in source/target and LOS is from center location
         // (non-center location implies bypass and LOS may be blocked)
-        if ((!status.currentHex.equals(status.sourceHex) && !status.currentHex.equals(status.targetHex)) ||
-                (status.currentHex.equals(status.sourceHex) && !status.currentTerrain.isOpen() && !status.source.isCenterLocation()) ||
-                (status.currentHex.equals(status.targetHex) && !status.currentTerrain.isOpen() && !status.target.isCenterLocation())
+        // if ((!status.currentHex.equals(status.sourceHex) && !status.currentHex.equals(status.targetHex)) ||
+        if (((!status.currentHex.equals(status.sourceHex) && (status.range != status.rangeToTarget)) && (!status.currentHex.equals(status.targetHex) && (status.range != status.rangeToSource))) ||
+                (status.currentHex.equals(status.sourceHex) && !status.currentTerrain.isOpen() && !status.currentTerrain.isHexsideTerrain() && !status.source.isCenterLocation()) ||
+                (status.currentHex.equals(status.targetHex) && !status.currentTerrain.isOpen() && !status.currentTerrain.isHexsideTerrain() && !status.target.isCenterLocation()) ||
+                // DR added this Jan 2017 to correct error in bypass check when LOS is along the hexside in the targethex
+                ((status.range == status.rangeToSource && (status.LOSis60Degree || status.LOSisHorizontal)) & !status.currentTerrain.isOpen() && !status.currentTerrain.isHexsideTerrain() && !status.target.isCenterLocation())
                 ) {
 
             // ignore inherent terrain that "spills" into adjacent hex
@@ -2893,9 +2896,14 @@ public class Map  {
         if(status.sourceHex.isDepressionTerrain() && !status.source.isCenterLocation()) {
             sourceadj=+1;
         }
+
         if(status.targetHex.isDepressionTerrain() && !status.target.isCenterLocation()) {
             targetadj=+1;
         }
+        // code to fix groundlevel when checking LOS to/from vertex
+        if (!(status.sourceHex.getNearestLocation(status.currentCol, status.currentRow).equals(status.sourceHex.getCenterLocation())) && !status.sourceHex.isDepressionTerrain() && status.sourceHex.equals(status.tempHex)){status.groundLevel = status.sourceHex.getBaseHeight();}
+        if (!(status.targetHex.getNearestLocation(status.currentCol, status.currentRow).equals(status.targetHex.getCenterLocation())) && !status.targetHex.isDepressionTerrain() && status.targetHex.equals(status.tempHex)){status.groundLevel = status.targetHex.getBaseHeight();}
+
         if ( (status.groundLevel + status.currentTerrainHgt + obstacleadj== Math.max(status.sourceElevation + sourceadj, status.targetElevation + targetadj)) &&
                 (status.groundLevel + status.currentTerrainHgt+obstacleadj > Math.min(status.sourceElevation+ sourceadj, status.targetElevation + targetadj))) {
             // add a B10.2 EXC test; ignore same level terrain in lower level adj hex and vice versa

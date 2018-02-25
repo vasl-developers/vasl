@@ -5,7 +5,11 @@ About LOS Checking
 VASL provides an integrated tool you can use to check line of sight (LOS).
 
 Version 6 and later boards support LOS checking. Check the release notes for a list of boards supported in the
-version. You can flip and crop boards, but boards must be cropped to half-hexes for LOS checking to work.
+version. For HASL boards, only Red Barricades currently supports LOS Checking. For third party products,
+only BFP boards currently support LOS checking.
+
+You can flip and crop boards, but if you are using VASL versions prior to 6.4.0, boards must be cropped to
+half-hexes for LOS checking to work. From versions 6.4.0 forward, LOS checking should work in any map configuration.
 
 LOS checking can apply ETO terrain rules or PTO terrain rules. DTO terrain rules do not apply. ETO terrain
 transformations available in the board picker apply with the following exceptions
@@ -38,14 +42,11 @@ Checking Line of sight (LOS)
 ----------------------------
 To check LOS:
 1. Click an LOS button.
-All counters on the board are hidden. Note that the following types of counters will still affect the LOS check even
-though hidden:
-• SMOKE (including smoke from blazes and burning wrecks)
-• Rubble
-• OBA FFE
-• vehicles and wrecks
+All counters on the board are hidden. Hindrances from various counters are included in the LOS check even if
+the counters are hidden: SMOKE (including smoke from blazes and burning wrecks), Rubble,
+OBA FFE, and vehicles and wrecks.
 
-2. Click on the center dot of one of the hexes for which you want to check LOS.
+2. Click on the center dot or a vertex of one of the hexes for which you want to check LOS.
 This hex is considered the source or origin hex of the LOS.
 
 3. Drag your mouse cursor to the other hex for which you want to check LOS.
@@ -55,8 +56,6 @@ The thread snaps to the either the center dot of the hex, or to the nearest hex 
 4. LOS is checked at the lowest level of the hex by default. If the source (origin) or target hex have additional levels,
 you can move the LOS thread to those levels using the following key combinations:
 
-This table describes keyboard shortcuts used to adjust the level of the source (original) or target hex of a LOS
-check.
 Keystroke 		Moves...
 ---------		--------
 Up arrow 		the target location up.
@@ -87,6 +86,7 @@ The default thread colors are:
 
 You can change the thread color for each condition. Click the button for the condition for which you want to
 change the color. VASL displays a color picker. Pick the new color you want to use for the condition.
+
 • Counter LOS hindrances
 By default, all counters are removed from the board when you click a LOS button. Check the Retain LOShindrance
 counters box to retain counters that affect LOS on board when checking LOS. Counters that affect
@@ -96,17 +96,22 @@ LOS include
 • OBA counters
 • Vehicles, wrecks, and burning wrecks
 • rubble counters
+
 • Snap to grid
 By default, the thread snaps to the nearest hex center dot or hex vertex. Check the Snap Thread to grid? box
 to disable this behavior. When you uncheck this box, the thread stays at the drag point, and does not snap to the
 nearest center dot or hex vertex.
+
 • Enable and disable LOS checking behavior
 Checking this box enables LOS checking behavior. When this box is unchecked, you can still click the LOS
 buttons to draw LOS, but the color of the thread does not change to indicate condition of the LOS, and range and
 other information is not reported in the VASL interface.
+
 • Verbose LOS checking
 By default, LOS checking only reports the range and displays different threat colors depending on whether LOS is
 clear, hindered, or blocked. When you check the Verbose LOS mode box, LOS checking also reports:
 • hex coordinates of the source hex and the target hex
 • level of the source hex and target hex for which LOS is being checked
 • range from the source hex to the target hex
+• number of hindrances, if any
+• reason for LOS being blocked
