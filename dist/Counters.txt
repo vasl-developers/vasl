@@ -1,25 +1,25 @@
-	Add counters to the map by dragging them from the tray palette.
+Add counters to the map by dragging them from the tray palette.
 
-	Double-click to expand a stack in order to view its contents. (Mac users
+Double-click to expand a stack in order to view its contents. (Mac users
 hold down the apple key.)  Double-click again to return it to compacted form.
 
-	Use the arrow-keys to alter the stack-position of a selected counter:
+Use the arrow-keys to alter the stack-position of a selected counter:
 right-arrow	move upward one position in the stack
 left-arrow	move downward one position in the stack
 up-arrow	move to top of stack
 down-arrow	move to bottom of stack
 
-	Click and drag stacks to move the entire stack, or expand the stack to
+Click and drag stacks to move the entire stack, or expand the stack to
 click and drag an individual counter. Shift-click to select multiple counters.
 
-	Click on a counter to select it. (It will be drawn with a thick black
+Click on a counter to select it. (It will be drawn with a thick black
 border.) Use shift-click to select a draggable overlay. Once a game-piece has
 been selected, use shift-click to select additional counters. Click on an
 un-occupied area of the map to de-select all ctrs. Click & drag to select all
 counters in a rectangular area. All selected counters will respond to a subse-
 quent hotkey command.
 
-	All counters & overlays respond to certain hotkey commands when selected.
+All counters & overlays respond to certain hotkey commands when selected.
 Right-click on a selected game-piece to see a menu of its available choices.
 These choices will usually include at least the following functions:
 ctrl-<numpad-number> - see Help > Movement
@@ -77,11 +77,29 @@ stack. Once dragged to the map, they can only be selected by holding down the
 shift-key while clicking them. Use shift & right-click to access the ctrl-key
 menus.
 
-	Mac users can use the Apple key instead of CTRL.
+Mac users can use the Apple key instead of CTRL.
 
-	It is legal for you to manipulate counters belonging to your opponent.
+It is legal for you to manipulate counters belonging to your opponent.
 Honor system applies. A checkbox in General Preferences allows your opponent
 to unConceal your units. Your own concealed units are drawn with a "?" in the
 upper-left corner, but will appear to your opponent as standard "?" counters.
 Your own HIP units are drawn as 'ghost' images, they are invisible to others.
 
+Counter Linking
+As of version 6.4.0, you can link two counters together and display a line showing the link.
+Great for Guns and acquisition counters or firer-target pairs.
+
+To link: select any two counters, CTRL-ALT-L. Linkline will show. Click elsewhere and
+Linkline will disappear. Reclick one of the counters and Linkline will reappear.
+
+To end link: select both counters, CTRL-ALT-U.
+
+Stack Colors
+As of 6.4.1, VASL contains a preference that allows players to choose whether counters underneath
+a stack show as white or as colored.
+
+To set the preference:
+Click on the File menu. Click on Preferences. Select the General tab.
+Select/Unselect the "Disable full color stacks" option.
+
+Note that you must restart VASL for your choice to take effect.

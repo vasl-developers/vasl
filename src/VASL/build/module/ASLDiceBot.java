@@ -488,6 +488,25 @@ public class ASLDiceBot extends AbstractBuildable
         {
             return "Allied SAN    ";
         }
+        if (l_objScenInfo.getAxisBooby() != "" || l_objScenInfo.getAlliedBooby() != "") {
+            int axisbooby =0;
+            int alliedbooby =0;
+            if (l_objScenInfo.getAxisBooby() == "C" && iTotal == 12 ||
+                    l_objScenInfo.getAxisBooby() == "B" && iTotal == 11 ||
+                    l_objScenInfo.getAxisBooby() == "A" && iTotal >= 11) {
+                if (l_objScenInfo.getAlliedBooby() == "C" && iTotal == 12 ||
+                        l_objScenInfo.getAlliedBooby() == "B" && iTotal == 11 ||
+                        l_objScenInfo.getAlliedBooby() == "A" && iTotal >= 11) {
+                    return "Axis/Allied Booby Trap    ";
+                } else {
+                    return "Axis Booby Trap   ";
+                }
+            } else if (l_objScenInfo.getAlliedBooby() == "C" && iTotal == 12 ||
+                    l_objScenInfo.getAlliedBooby() == "B" && iTotal == 11 ||
+                    l_objScenInfo.getAlliedBooby() == "A" && iTotal >= 11) {
+                return "Allied Booby Trap   ";
+            }
+        }
 
         return "";
     }

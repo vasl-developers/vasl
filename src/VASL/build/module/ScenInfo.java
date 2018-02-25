@@ -37,7 +37,7 @@ import java.util.StringTokenizer;
 
 public class ScenInfo extends AbstractBuildable implements GameComponent, CommandEncoder {
 
-  private JTextField AxisELR, AxisSAN, AlliedELR, AlliedSAN;
+  private JTextField AxisELR, AxisSAN, AlliedELR, AlliedSAN, AxisBoobyTrap, AlliedBoobyTrap;
   private TextConfigurer notes;
   private Hashtable privateNotes = new Hashtable();
   private JComboBox movesFirst;
@@ -51,6 +51,7 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
   private AbstractAction launchAction;
 
   private int axisSAN, alliedSAN;
+  private String axisBooby, alliedBooby;
   private TextConfigurer myPrivate;
 
   public ScenInfo() {
@@ -81,6 +82,11 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
     AxisSAN.setMaximumSize(AxisSAN.getPreferredSize());
     AlliedSAN = new JTextField(" ? ");
     AlliedSAN.setMaximumSize(AlliedSAN.getPreferredSize());
+    AxisBoobyTrap = new JTextField(" ? ");
+    AxisBoobyTrap.setMaximumSize(AxisBoobyTrap.getPreferredSize());
+    AlliedBoobyTrap = new JTextField(" ? ");
+    AlliedBoobyTrap.setMaximumSize(AlliedBoobyTrap.getPreferredSize());
+
     movesFirst = new JComboBox();
     movesFirst.addItemListener(new ItemListener() {
       public void itemStateChanged(ItemEvent evt) {
@@ -123,6 +129,13 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
     b.add(AlliedELR);
     b.add(new JLabel("Allied SAN: "));
     b.add(AlliedSAN);
+    frame.getContentPane().add(b);
+
+    b = Box.createHorizontalBox();
+    b.add(new JLabel("Allied Booby Trap(A/B/C): "));
+    b.add(AlliedBoobyTrap);
+    b.add(new JLabel("Axis Booby Trap(A/B/C): "));
+    b.add(AxisBoobyTrap);
     frame.getContentPane().add(b);
 
     notes = new TextConfigurer(null, "Notes: ");
@@ -168,15 +181,18 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
     reset();
 
     SequenceEncoder.Decoder st = new SequenceEncoder.Decoder(in, '\t');
-    String mf = "Axis",pl = "Axis",c = "1",xELR = "?",lELR = "?",xSAN = "?",lSAN = "?";
+    String mf = "Axis",pl = "Axis",c = "1",xELR = "?",lELR = "?",xSAN = "?",lSAN = "?", xBooby = "?", lBooby = "?";
     try {
       mf = st.nextToken();
       pl = st.nextToken();
       c = st.nextToken();
       xELR = st.nextToken();
       xSAN = st.nextToken();
+      xBooby = st.nextToken();
       lELR = st.nextToken();
       lSAN = st.nextToken();
+      lBooby = st.nextToken();
+
     }
     catch (Exception e) {
     }
@@ -189,11 +205,15 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
     AlliedELR.setText(lELR);
     AxisSAN.setText(xSAN);
     AlliedSAN.setText(lSAN);
+    AxisBoobyTrap.setText(xBooby);
+    AlliedBoobyTrap.setText(lBooby);
 
     turn.repaint();
 
     axisSAN = getSAN(xSAN);
     alliedSAN = getSAN(lSAN);
+    axisBooby = getBooby(xBooby);
+    alliedBooby = getBooby(lBooby);
 
     if (st.hasMoreTokens()) {
       notes.setValue(st.nextToken());
@@ -252,6 +272,26 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
     return n;
   }
 
+  public String getAxisBooby() {
+    return axisBooby;
+  }
+
+  public String getAlliedBooby() {
+    return alliedBooby;
+  }
+
+  private String getBooby(String s) {
+    String n = "";
+    if (s.equals(" A ")){
+      return "A";
+    } else if (s.equals(" B ")){
+      return "B";
+    } else if (s.equals(" C ")){
+      return "C";
+    }
+    return n;
+  }
+
   public void setup(boolean show) {
     launch.setEnabled(show);
     launchAction.setEnabled(show);
@@ -285,11 +325,13 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
   public String getState() {
     axisSAN = getSAN(AxisSAN.getText());
     alliedSAN = getSAN(AlliedSAN.getText());
+    axisBooby = getBooby(AxisBoobyTrap.getText());
+    alliedBooby = getBooby(AlliedBoobyTrap.getText());
 
     SequenceEncoder se = new SequenceEncoder('\t');
     se.append(turn.movesFirst).append(turn.player).append("" + turn.current)
-        .append(AxisELR.getText()).append(AxisSAN.getText())
-        .append(AlliedELR.getText()).append(AlliedSAN.getText());
+        .append(AxisELR.getText()).append(AxisSAN.getText()).append(AxisBoobyTrap.getText())
+        .append(AlliedELR.getText()).append(AlliedSAN.getText()).append(AlliedBoobyTrap.getText());
     se.append(notes.getValueString());
     for (Enumeration e = privateNotes.keys(); e.hasMoreElements();) {
       String id = (String) e.nextElement();
