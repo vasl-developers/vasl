@@ -188,15 +188,22 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
       c = st.nextToken();
       xELR = st.nextToken();
       xSAN = st.nextToken();
-      xBooby = st.nextToken();
       lELR = st.nextToken();
       lSAN = st.nextToken();
+      xBooby = st.nextToken();
       lBooby = st.nextToken();
 
     }
     catch (Exception e) {
     }
 
+    // trap errors when opening games saved in older versions
+    if (!xBooby.equals("?") && !xBooby.equals("A") && !xBooby.equals("B") && !xBooby.equals("C")) {
+      xBooby = "?";
+    }
+    if (!lBooby.equals("?") && !lBooby.equals("A") && !lBooby.equals("B") && !lBooby.equals("C")) {
+      lBooby = "?";
+    }
     turn.movesFirst = mf;
     movesFirst.setSelectedItem(mf + " moves first");
     turn.player = pl;
@@ -282,14 +289,14 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
 
   private String getBooby(String s) {
     String n = "";
-    if (s.equals(" A ")){
+    if (s.trim().equals("A") ){
       return "A";
-    } else if (s.equals(" B ")){
+    } else if (s.trim().equals("B")){
       return "B";
-    } else if (s.equals(" C ")){
+    } else if (s.trim().equals("C")){
       return "C";
     }
-    return n;
+     return n;
   }
 
   public void setup(boolean show) {
@@ -330,8 +337,8 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
 
     SequenceEncoder se = new SequenceEncoder('\t');
     se.append(turn.movesFirst).append(turn.player).append("" + turn.current)
-        .append(AxisELR.getText()).append(AxisSAN.getText()).append(AxisBoobyTrap.getText())
-        .append(AlliedELR.getText()).append(AlliedSAN.getText()).append(AlliedBoobyTrap.getText());
+        .append(AxisELR.getText()).append(AxisSAN.getText())
+        .append(AlliedELR.getText()).append(AlliedSAN.getText()).append(AxisBoobyTrap.getText()).append(AlliedBoobyTrap.getText());
     se.append(notes.getValueString());
     for (Enumeration e = privateNotes.keys(); e.hasMoreElements();) {
       String id = (String) e.nextElement();
