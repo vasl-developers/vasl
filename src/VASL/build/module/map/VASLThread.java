@@ -1040,49 +1040,59 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
     }
     protected void setSourceandTargetLevels(double newsourceLevel, double newtargetLevel) {
         double leveladj;
-        while (newsourceLevel > sourcelevel) {
-            source = source.getUpLocation();
-            leveladj = 0;
-            if (source.getName().contains("Rooftop")) {
-                leveladj = -0.5;
+        if (source != null && target != null) {
+            while (newsourceLevel > sourcelevel) {
+                if (source.getUpLocation() != null) {
+                    source = source.getUpLocation();
+                }
+                leveladj = 0;
+                if (source.getName().contains("Rooftop")) {
+                    leveladj = -0.5;
+                }
+                if (source.getHex().isDepressionTerrain() && !source.isCenterLocation()) {
+                    leveladj = +1;
+                }
+                sourcelevel = source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj;
             }
-            if (source.getHex().isDepressionTerrain() && !source.isCenterLocation()) {
-                leveladj = +1;
+            while (newsourceLevel < sourcelevel) {
+                if (source.getDownLocation() != null) {
+                    source = source.getDownLocation();
+                }
+                leveladj = 0;
+                if (source.getName().contains("Rooftop")) {
+                    leveladj = -0.5;
+                }
+                if (source.getHex().isDepressionTerrain() && !source.isCenterLocation()) {
+                    leveladj = +1;
+                }
+                sourcelevel = source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj;
             }
-            sourcelevel = source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj;
-        }
-        while (newsourceLevel < sourcelevel) {
-            source = source.getDownLocation();
-            leveladj=0;
-            if(source.getName().contains("Rooftop")) {
-                leveladj=-0.5;
+            while (newtargetLevel > targetlevel) {
+                if (target.getUpLocation() != null) {
+                    target = target.getUpLocation();
+                }
+                leveladj = 0;
+                if (target.getName().contains("Rooftop")) {
+                    leveladj = -0.5;
+                }
+                if (target.getHex().isDepressionTerrain() && !target.isCenterLocation()) {
+                    leveladj = +1;
+                }
+                targetlevel = target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj;
             }
-            if(source.getHex().isDepressionTerrain() && !source.isCenterLocation()) {
-                leveladj=+1;
+            while (newtargetLevel < targetlevel) {
+                if (target.getDownLocation() != null) {
+                    target = target.getDownLocation();
+                }
+                leveladj = 0;
+                if (target.getName().contains("Rooftop")) {
+                    leveladj = -0.5;
+                }
+                if (target.getHex().isDepressionTerrain() && !target.isCenterLocation()) {
+                    leveladj = +1;
+                }
+                targetlevel = target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj;
             }
-            sourcelevel= source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj ;
-        }
-        while (newtargetLevel > targetlevel) {
-            target = target.getUpLocation();
-            leveladj = 0;
-            if (target.getName().contains("Rooftop")) {
-                leveladj = -0.5;
-            }
-            if (target.getHex().isDepressionTerrain() && !target.isCenterLocation()) {
-                leveladj = +1;
-            }
-            targetlevel = target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj;
-        }
-        while (newtargetLevel < targetlevel) {
-            target = target.getDownLocation();
-            leveladj=0;
-            if(target.getName().contains("Rooftop")) {
-                leveladj=-0.5;
-            }
-            if(target.getHex().isDepressionTerrain() && !target.isCenterLocation()) {
-                leveladj=+1;
-            }
-            targetlevel= target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj ;
         }
     }
 
