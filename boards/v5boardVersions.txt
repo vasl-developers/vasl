@@ -3,7 +3,7 @@
 # use \u0020 for spaces in board names
 
 00 = 6.0
-01 = 6.0
+01 = 6.1
 02 = 6.4
 03 = 6.3
 04 = 6.0
