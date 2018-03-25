@@ -17,8 +17,10 @@
     height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
+	
+	6.1 add lightwoods transform (ATC) Mar 2018
 -->
-<boardMetadata name="01" version="6.0" versionDate="Nov 2013" author="TR" boardImageFileName="bd01.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="01" version="6.1" versionDate="Mar 2018" author="TR" boardImageFileName="bd01.gif" hasHills="FALSE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
