@@ -19,9 +19,12 @@
 	others - TBD e.g. alternate hex grain, etc. 
 
 	3/11/15 - fixed "no woods roads" SSR rule
+	
+	v6.3 Mar 2017 (TR)
+	v6.4 Mar 2018 update version for lightwoods transform (ATC)
 
 -->
-<boardMetadata name="08" version="6.3" versionDate="Mar 2017" author="TR" boardImageFileName="bd08.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="08" version="6.4" versionDate="Mar 2018" author="TR" boardImageFileName="bd08.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
