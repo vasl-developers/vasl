@@ -20,8 +20,10 @@
 
 	2/8/15 - fixed overlay SSR rules adding rule sets
 	3/11/15 - fixed "no woods roads" SSR rule
+	v6.2 Feb 2017 (TR)
+	v6.3 Mar 2018 update version for lightwoods transform
 -->
-<boardMetadata name="50" version="6.2" versionDate="Feb 2017" author="TR" boardImageFileName="bd50.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="50" version="6.3" versionDate="Mar 2018" author="TR" boardImageFileName="bd50.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
