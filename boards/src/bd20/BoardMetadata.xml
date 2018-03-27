@@ -19,8 +19,10 @@
 	others - TBD e.g. alternate hex grain, etc.
 
 	2/8/15 - fixed overlay SSR rules adding rule sets
+	v6.5 Feb 2017 (TR)
+	v6.6 Mar 2018 update version for lightwoods transform (ATC)
 -->
-<boardMetadata name="20" version="6.5" versionDate="Feb 2017" author="TR" boardImageFileName="bd20.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="20" version="6.6" versionDate="Mar 2018" author="TR" boardImageFileName="bd20.gif" hasHills="FALSE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
