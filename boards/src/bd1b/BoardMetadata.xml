@@ -19,11 +19,14 @@
 	hexWidth - the width of a hex in pixels - decimal - center point to center point
 	A1CenterX - x location of the A1 center dot
 	A1CenterY - y location of the A1 center dot 
+	
+	v6.0 Jan 2010 (TR)
+	V6.1 Mar 2018 update version for lightwoods transform (ATC)
 -->
 <boardMetadata 
 	name="1b" 
-	version="6.0" 
-	versionDate="Jan 2010" 
+	version="6.1" 
+	versionDate="Mar 2018" 
 	author="TR" 
 	boardImageFileName="bd1b.gif" 
 	hasHills="FALSE" 
