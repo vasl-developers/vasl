@@ -17,11 +17,14 @@
     height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
+	
+	v6.2 Aug 2017 (TR)
+	v6.3 Mar 2018 update version for lightwoods transform (ATC)
 -->
 <boardMetadata 
 	name="3a" 
-	version="6.2" 
-	versionDate="Aug 2017" 
+	version="6.3" 
+	versionDate="Mar 2018" 
 	author="TR" 
 	boardImageFileName="bd3a.gif" 
 	hasHills="TRUE" 

@@ -19,11 +19,13 @@
 	others - TBD e.g. alternate hex grain, etc. 
 	
 	3/11/15 - fixed "no woods roads" SSR rule
+	v6.3 Feb 2017 (TR)
+	v6.4 Mar 2018 update version for lightwoods transform (ATC)
 -->
 <boardMetadata 
 	name="2a" 
 	version="6.3" 
-	versionDate="Feb 2017" 
+	versionDate="Mar 2018" 
 	author="TR" 
 	boardImageFileName="bd2a.gif" 
 	hasHills="TRUE" 
