@@ -1,0 +1,8 @@
+This file retained for legacy purposes only. Superseded by boardmetadata file.
+
+version 1.0
+March 2018 Brian Kemp with Tom Repetti and Tim Fachko
+x0 37.00
+y0 33.00
+dx 56.204081
+dy 64.464285
