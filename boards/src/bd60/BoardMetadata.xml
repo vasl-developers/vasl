@@ -19,8 +19,10 @@
 	others - TBD e.g. alternate hex grain, etc.
 
 	3/14/15 - fixed "Crags to Palms" SSR rule
+	v6.1 Jan 2012 (TR)
+	v6.2 Mar 2018 update version for lightwoods transform (ATC)
 -->
-<boardMetadata name="60" version="6.1" versionDate="Jan 2012" author="TR" boardImageFileName="bd60.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="60" version="6.2" versionDate="Mar 2018" author="TR" boardImageFileName="bd60.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
