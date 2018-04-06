@@ -3076,7 +3076,7 @@ public class Map  {
                 status.groundLevel + status.currentTerrainHgt + obstacleadj > status.targetElevation + targetadj) {
 
             // terrain blocks LOS?
-            if (status .currentTerrain.isLOSObstacle()) {
+            if (status .currentTerrain.isLOSObstacle() && !status.currentTerrain.getName().contains("Light Woods")) {
                 status.reason = "Terrain is higher than both the source and target (A6.2)";
                 status.blocked = true;
                 result.setBlocked(status.currentCol, status.currentRow, status.reason);
@@ -3869,6 +3869,9 @@ public class Map  {
                         }
                     }
 
+                }
+                else if(status.currentTerrain.getName().contains("Light Woods")){
+                    hindrancevalue = 2;
                 }
                 else {
                     // roofless factory debris
