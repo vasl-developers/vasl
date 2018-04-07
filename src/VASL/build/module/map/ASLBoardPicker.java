@@ -19,6 +19,7 @@
 package VASL.build.module.map;
 
 import VASL.build.module.ASLMap;
+import VASL.build.module.map.boardArchive.AbstractMetadata;
 import VASL.build.module.map.boardArchive.SSRControlsFile;
 import VASL.build.module.map.boardPicker.*;
 import VASSAL.Info;
@@ -32,11 +33,15 @@ import VASSAL.command.Command;
 import VASSAL.command.NullCommand;
 import VASSAL.configure.DirectoryConfigurer;
 import VASSAL.configure.ValidationReport;
+import VASSAL.tools.DataArchive;
 import VASSAL.tools.ErrorDialog;
 import VASSAL.tools.PropertiesEncoder;
 import VASSAL.tools.ReadErrorDialog;
 import VASSAL.tools.io.IOUtils;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.jdom2.Document;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
@@ -63,7 +68,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ASLBoardPicker extends BoardPicker implements ActionListener {
+public class ASLBoardPicker extends BoardPicker implements ActionListener  {
     private static final Logger logger =
             LoggerFactory.getLogger(ASLBoardPicker.class);
 
@@ -79,6 +84,19 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
     private SetupControls setupControls;
     private boolean enableDeluxe;
     private boolean enableDB = false;
+
+    private static final String boardsFileElement = "boardsMetadata";
+    private static final String coreboardElement = "coreBoards";
+    private static final String boarddataType = "boarddata";
+    private static final String coreboardNameAttr = "name";
+    private static final String coreboardversionAttr = "version";
+    private static final String coreboardversiondateAttr = "versionDate";
+    private static final String coreboarddescAttr = "description";
+    private static final String otherboardElement = "otherBoards";
+    private static final String otherboardNameAttr = "name";
+    private static final String otherboardversionAttr = "version";
+    private static final String otherboardversiondateAttr = "versionDate";
+    private static final String otherboarddescAttr = "description";
 
     public ASLBoardPicker() {
     }
@@ -239,17 +257,21 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
      * Reads the current board directory and constructs the list of available boards
      */
     public void refreshPossibleBoards() {
+
         String files[] = boardDir == null ? new String[0] : boardDir.list();
         List<String> sorted = new ArrayList<String>();
+        // all core boards are added to the list whether in local directory or not
+        sorted = getcoreboards();
         for (String file : files) {
             // TODO - remove requirement that boards start with "bd"
+            // add all non-core boards found in local directory
             if (file.startsWith("bd") && !(new File(boardDir, file)).isDirectory()) {
                 String name = file.substring(2);
 
                 if (name.contains(".")) {
                     name = null;
                 }
-                if (name != null && !sorted.contains(name)) {
+                if (name != null && !sorted.contains(name)) { // prevents duplicate items in list
                     sorted.add(name);
                 }
             }
@@ -331,6 +353,65 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener {
         for (String aSorted : sorted) {
             addBoard(aSorted);
         }
+    }
+
+    // adds all the 'core' boards to the selection list whether present in local directory or not
+    // core board = 1-xx, 1a-9a, r-z MMP boards as listed in v5boardVersions.xml file
+    private ArrayList<String> getcoreboards(){
+        ArrayList<String> coreboardlist = new ArrayList<String>();
+        InputStream inputStream = null;
+        final String boardlist = "v5boardVersions.xml"; // name of the board metadata file
+        try {
+            DataArchive archive = GameModule.getGameModule().getDataArchive();
+            inputStream = archive.getInputStream(boardlist);
+
+             coreboardlist = parseboardversionFile(inputStream);
+        } catch (IOException e){
+
+        } catch (JDOMException e) {
+            // throw new JDOMException("Cannot read the shared metadata file", e);
+        }finally {
+            IOUtils.closeQuietly(inputStream);
+        }
+        return coreboardlist;
+    }
+    /**
+     * Parses the board metadata xml file
+     * @param metadata an <code>InputStream</code> for the v5boardVersions XML file
+     * @throws JDOMException
+     */
+    private ArrayList<String> parseboardversionFile(InputStream metadata) throws JDOMException {
+
+        ArrayList<String> addtoboardlist = new ArrayList<String>();
+        SAXBuilder parser = new SAXBuilder();
+
+        try {
+            // the root element will be the boardsMetadata element
+            Document doc = parser.build(metadata);
+            org.jdom2.Element root = doc.getRootElement();
+
+            // read the shared metadata
+            if(root.getName().equals(boardsFileElement)) {
+
+                for(org.jdom2.Element e: root.getChildren()) {
+
+                    // ignore any child elements that are not coreBoards
+                    if(e.getName().equals(coreboardElement)){
+                        for(org.jdom2.Element f: e.getChildren()) {
+                            if(f.getName().equals(boarddataType)) {
+                                // read the coreBoards attributes
+                                addtoboardlist.add(f.getAttribute(coreboardNameAttr).getValue());
+                            }
+                        }
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace(System.err);
+            throw new JDOMException("Error reading the v5boardVersions.xml metadata", e);
+        }
+        return addtoboardlist;
     }
 
     public void build(Element e) {
