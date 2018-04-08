@@ -62,6 +62,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.Collator;
 import java.util.*;
 import java.util.List;
@@ -85,6 +87,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
     private boolean enableDeluxe;
     private boolean enableDB = false;
 
+    // implement using xml file for board versions
     private static final String boardsFileElement = "boardsMetadata";
     private static final String coreboardElement = "coreBoards";
     private static final String boarddataType = "boarddata";
@@ -360,10 +363,13 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
     private ArrayList<String> getcoreboards(){
         ArrayList<String> coreboardlist = new ArrayList<String>();
         InputStream inputStream = null;
-        final String boardlist = "v5boardVersions.xml"; // name of the board metadata file
+        //final String boardlist = BoardVersionChecker.getboardVersionURL(); //"v5boardVersions.xml"; // name of the board metadata file
         try {
-            DataArchive archive = GameModule.getGameModule().getDataArchive();
-            inputStream = archive.getInputStream(boardlist);
+            URL base = new URL(BoardVersionChecker.getboardVersionURL());
+            URLConnection conn = base.openConnection();
+            conn.setUseCaches(false);
+            //DataArchive archive = GameModule.getGameModule().getDataArchive();
+            inputStream = conn.getInputStream();
 
              coreboardlist = parseboardversionFile(inputStream);
         } catch (IOException e){
@@ -495,7 +501,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 VASLBoard b = new VASLBoard();
                 b.initializeFromArchive(boardFile);
 
-                // get the current board version from the game properties
+                /*// get the current board version from the game properties
                 Properties properties;
                 String availableVersion = null;
                 String boardVersions = ((String) GameModule.getGameModule().getPrefs().getValue(BoardVersionChecker.BOARD_VERSION_PROPERTY_KEY));
@@ -508,8 +514,9 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                         // Fail silently if we can't find a version
                         return;
                     }
-                }
+                }*/
 
+                String availableVersion = BoardVersionChecker.getlatestVersionnumberfromwebrepository(unReversedBoardName);
 
                 double serverVersion;
                 double localVersion;

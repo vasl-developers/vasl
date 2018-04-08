@@ -31,6 +31,9 @@ import VASSAL.command.Command;
 import VASSAL.configure.StringConfigurer;
 import VASSAL.tools.PropertiesEncoder;
 import VASSAL.tools.io.IOUtils;
+import org.jdom2.Document;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
@@ -41,9 +44,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-import java.util.Enumeration;
-import java.util.Properties;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * Copyright (c) 2003 by Rodney Kinney.  All rights reserved.
@@ -51,7 +52,7 @@ import java.util.Vector;
  */
 public class BoardVersionChecker extends AbstractBuildable implements GameComponent, PropertyChangeListener {
 
-    private String boardVersionURL;
+    private static String boardVersionURL;
     private String overlayVersionURL;
     private String boardPageURL;
     private static String boardRepositoryURL;
@@ -59,7 +60,7 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
     public static String BOARD_VERSION_PROPERTY_KEY = "boardVersions";
 
     private Map map;
-    private Properties boardVersions;
+    // private Properties boardVersions;
     private Properties overlayVersions;
 
     private static final String BOARD_VERSION_URL = "boardVersionURL";
@@ -68,6 +69,20 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
     private static final String BOARD_VERSIONS = BOARD_VERSION_PROPERTY_KEY;
     private static final String OVERLAY_VERSIONS = "overlayVersions";
     private static final String BOARD_REPOSITORY_URL = "boardRepositoryURL";
+    // for use with v5boardVersions.xml
+    private static final String boardsFileElement = "boardsMetadata";
+    private static final String coreboardElement = "coreBoards";
+    private static final String boarddataType = "boarddata";
+    private static final String coreboardNameAttr = "name";
+    private static final String coreboardversionAttr = "version";
+    private static final String coreboardversiondateAttr = "versionDate";
+    private static final String coreboarddescAttr = "description";
+    private static final String otherboardElement = "otherBoards";
+    private static final String otherboardNameAttr = "name";
+    private static final String otherboardversionAttr = "version";
+    private static final String otherboardversiondateAttr = "versionDate";
+    private static final String otherboarddescAttr = "description";
+    private static LinkedHashMap<String, BoardVersions> boardversions = new LinkedHashMap<String, BoardVersions>(500);
 
     public String[] getAttributeNames() {
         return new String[]{BOARD_VERSION_URL, OVERLAY_VERSION_URL, BOARD_PAGE_URL, BOARD_REPOSITORY_URL};
@@ -97,8 +112,10 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
             boardRepositoryURL = (String) value;
         }
     }
-
-    public void addTo(Buildable parent) {
+    public static String getboardVersionURL(){
+        return boardVersionURL;
+    }
+    public void addTo(Buildable parent)  {
 
         map = (Map) parent;
         GameModule.getGameModule().getGameState().addGameComponent(this);
@@ -109,11 +126,11 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
         //TODO property change listener not firing - force update
         readVersionFiles();
 
-        Properties p = readVersionList((String) GameModule.getGameModule().getPrefs().getValue(BOARD_VERSIONS));
+        /*Properties p = readVersionList((String) GameModule.getGameModule().getPrefs().getValue(BOARD_VERSIONS));
         if (p != null) {
             boardVersions = p;
-        }
-        p = readVersionList((String) GameModule.getGameModule().getPrefs().getValue(OVERLAY_VERSIONS));
+        }*/
+        Properties p = readVersionList((String) GameModule.getGameModule().getPrefs().getValue(OVERLAY_VERSIONS));
         if (p != null) {
             overlayVersions = p;
         }
@@ -127,7 +144,7 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
 
         if (gameStarting) {
 
-            if (boardVersions != null) {
+            if (boardversions != null) {
                 String info = "Using board(s): ";
                 for (Board board : map.getBoards()) {
                     ASLBoard b = (ASLBoard) board;
@@ -151,7 +168,7 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
         return p;
     }
 
-    public void propertyChange(PropertyChangeEvent evt) {
+    public void propertyChange(PropertyChangeEvent evt)  {
         if (Boolean.TRUE.equals(evt.getNewValue())) {
 
             readVersionFiles();
@@ -161,7 +178,7 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
     /**
      * Reads the board and overlay versions using the URLs in the build file
      */
-    private void readVersionFiles() {
+    private void readVersionFiles()  {
 
         // Need to disable SNI to read from Github
         System.setProperty("jsse.enableSNIExtension", "false");
@@ -171,19 +188,20 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
             URLConnection conn = base.openConnection();
             conn.setUseCaches(false);
 
-            Properties p = new Properties();
+            //Properties p = new Properties();
             InputStream input = null;
             try {
                 input = conn.getInputStream();
-                p.load(input);
+                parseboardversionFile(input);
+                //p.load(input);
 
             }
             finally {
                 IOUtils.closeQuietly(input);
             }
 
-            boardVersions = p;
-            GameModule.getGameModule().getPrefs().getOption(BOARD_VERSIONS).setValue(new PropertiesEncoder(p).getStringValue());
+            //boardVersions = p;
+            //GameModule.getGameModule().getPrefs().getOption(BOARD_VERSIONS).setValue(new PropertiesEncoder(p).getStringValue());
         } catch (IOException e) {
             // Fail silently if we can't contact the server
         }
@@ -207,6 +225,63 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
         } catch (IOException e) {
             // Fail silently if we can't contact the server
         }
+    }
+
+    private void parseboardversionFile(InputStream metadata) {
+
+        ArrayList<String> addtoboardlist = new ArrayList<String>();
+        SAXBuilder parser = new SAXBuilder();
+
+        try {
+            // the root element will be the boardsMetadata element
+            Document doc = parser.build(metadata);
+            org.jdom2.Element root = doc.getRootElement();
+
+            // read the shared metadata
+            if(root.getName().equals(boardsFileElement)) {
+
+                for(org.jdom2.Element e: root.getChildren()) {
+
+                    // handle coreBoards
+                    if(e.getName().equals(coreboardElement)){
+                        for(org.jdom2.Element f: e.getChildren()) {
+                            if(f.getName().equals(boarddataType)) {
+                                // read the coreBoards attributes
+                                BoardVersions bdversion = new BoardVersions();
+                                bdversion.setName(f.getAttribute(coreboardNameAttr).getValue());
+                                bdversion.setboardversion(f.getAttribute(coreboardversionAttr).getValue());
+                                bdversion.setversiondate(f.getAttribute(coreboardversiondateAttr).getValue());
+                                bdversion.setdescription(f.getAttribute(coreboarddescAttr).getValue());
+
+                                // add the terrain type to the terrain list
+                                boardversions.put(bdversion.getName(), bdversion);
+                            }
+                        }
+                    }
+                    else { // handle otherBoards
+                        for(org.jdom2.Element f: e.getChildren()) {
+                            if(f.getName().equals(boarddataType)) {
+                                // read the otherBoards attributes
+                                BoardVersions bdversion = new BoardVersions();
+                                bdversion.setName(f.getAttribute(otherboardNameAttr).getValue());
+                                bdversion.setboardversion(f.getAttribute(otherboardversionAttr).getValue());
+                                bdversion.setversiondate(f.getAttribute(otherboardversiondateAttr).getValue());
+                                bdversion.setdescription(f.getAttribute(otherboarddescAttr).getValue());
+
+                                // add the terrain type to the terrain list
+                                boardversions.put(bdversion.getName(), bdversion);
+                            }
+                        }
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace(System.err);
+        } catch (JDOMException e) {
+
+        }
+
     }
 
     /**
@@ -295,5 +370,28 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
         catch( java.net.MalformedURLException ex ) {
             return unencodedURL;
         }
+    }
+
+    // new method to get latest version number from xml file instead of .txt
+    public static String getlatestVersionnumberfromwebrepository(String unReversedBoardName){
+        BoardVersions findversion = boardversions.get(unReversedBoardName);
+        return findversion.getboardversion();
+
+    }
+
+    public class BoardVersions{
+        private String boardname;
+        private String boardversion;
+        private String versiondate;
+        private String description;
+
+        public String getName(){return boardname;}
+        public void setName(String value ) {boardname = value;}
+        public String getboardversion() {return boardversion;}
+        public void setboardversion(String value){boardversion = value;}
+        public String getversiondate(){return versiondate;}
+        public void setversiondate(String value){versiondate = value;}
+        public String getdescription(){return description;}
+        public void setdescription(String value){description = value;}
     }
 }
