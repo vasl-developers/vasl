@@ -18,8 +18,6 @@
  */
 package VASL.build.module.map;
 
-import VASL.build.module.ASLMap;
-import VASL.build.module.map.boardArchive.AbstractMetadata;
 import VASL.build.module.map.boardArchive.SSRControlsFile;
 import VASL.build.module.map.boardPicker.*;
 import VASSAL.Info;
@@ -33,9 +31,7 @@ import VASSAL.command.Command;
 import VASSAL.command.NullCommand;
 import VASSAL.configure.DirectoryConfigurer;
 import VASSAL.configure.ValidationReport;
-import VASSAL.tools.DataArchive;
 import VASSAL.tools.ErrorDialog;
-import VASSAL.tools.PropertiesEncoder;
 import VASSAL.tools.ReadErrorDialog;
 import VASSAL.tools.io.IOUtils;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -102,6 +98,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
     private static final String otherboarddescAttr = "description";
 
     public ASLBoardPicker() {
+        boolean reg = true;
     }
 
     protected void initComponents() {
@@ -263,19 +260,22 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
 
         String files[] = boardDir == null ? new String[0] : boardDir.list();
         List<String> sorted = new ArrayList<String>();
-        // all core boards are added to the list whether in local directory or not
-        sorted = getcoreboards();
-        for (String file : files) {
-            // TODO - remove requirement that boards start with "bd"
-            // add all non-core boards found in local directory
-            if (file.startsWith("bd") && !(new File(boardDir, file)).isDirectory()) {
-                String name = file.substring(2);
+        // all boards are added to the list whether in local directory or not
+        sorted = getallboards();
+        // if no internet connection, sorted will be 0 size so then load local boards
+        if (sorted == null || sorted.size() == 0) {
+            for (String file : files) {
+                // TODO - remove requirement that boards start with "bd"
+                // add all boards found in local directory
+                if (file.startsWith("bd") && !(new File(boardDir, file)).isDirectory()) {
+                    String name = file.substring(2);
 
-                if (name.contains(".")) {
-                    name = null;
-                }
-                if (name != null && !sorted.contains(name)) { // prevents duplicate items in list
-                    sorted.add(name);
+                    if (name.contains(".")) {
+                        name = null;
+                    }
+                    if (name != null && !sorted.contains(name)) { // prevents duplicate items in list
+                        sorted.add(name);
+                    }
                 }
             }
         }
@@ -358,20 +358,17 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
         }
     }
 
-    // adds all the 'core' boards to the selection list whether present in local directory or not
-    // core board = 1-xx, 1a-9a, r-z MMP boards as listed in v5boardVersions.xml file
-    private ArrayList<String> getcoreboards(){
-        ArrayList<String> coreboardlist = new ArrayList<String>();
+    // adds all the boards to the selection list whether present in local directory or not
+        private ArrayList<String> getallboards(){
+        ArrayList<String> allboardslist = new ArrayList<String>();
         InputStream inputStream = null;
-        //final String boardlist = BoardVersionChecker.getboardVersionURL(); //"v5boardVersions.xml"; // name of the board metadata file
         try {
             URL base = new URL(BoardVersionChecker.getboardVersionURL());
             URLConnection conn = base.openConnection();
             conn.setUseCaches(false);
-            //DataArchive archive = GameModule.getGameModule().getDataArchive();
             inputStream = conn.getInputStream();
 
-             coreboardlist = parseboardversionFile(inputStream);
+             allboardslist = parseboardversionFile(inputStream);
         } catch (IOException e){
 
         } catch (JDOMException e) {
@@ -379,7 +376,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
         }finally {
             IOUtils.closeQuietly(inputStream);
         }
-        return coreboardlist;
+        return allboardslist;
     }
     /**
      * Parses the board metadata xml file
@@ -401,12 +398,21 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
 
                 for(org.jdom2.Element e: root.getChildren()) {
 
-                    // ignore any child elements that are not coreBoards
+                    //add coreBoards
                     if(e.getName().equals(coreboardElement)){
                         for(org.jdom2.Element f: e.getChildren()) {
                             if(f.getName().equals(boarddataType)) {
                                 // read the coreBoards attributes
                                 addtoboardlist.add(f.getAttribute(coreboardNameAttr).getValue());
+                            }
+                        }
+                    }
+                    // add all other boards
+                    if(e.getName().equals(otherboardElement)){
+                        for(org.jdom2.Element f: e.getChildren()) {
+                            if(f.getName().equals(boarddataType)) {
+                                // read the coreBoards attributes
+                                addtoboardlist.add(f.getAttribute(otherboardNameAttr).getValue());
                             }
                         }
                     }
@@ -515,9 +521,13 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                         return;
                     }
                 }*/
-
-                String availableVersion = BoardVersionChecker.getlatestVersionnumberfromwebrepository(unReversedBoardName);
-
+                String availableVersion = null;
+                try {
+                    availableVersion = BoardVersionChecker.getlatestVersionnumberfromwebrepository(unReversedBoardName);
+                } catch (Exception e) {
+                    // Fail silently if we can't find a version
+                    return;
+                }
                 double serverVersion;
                 double localVersion;
                 boolean doUpdate;
@@ -845,7 +855,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
         private JRadioButton halfrow, fullrow;
 
         protected Cropper(Frame owner) {
-            super(owner, true);
+             super(owner, true);
             init();
         }
 
