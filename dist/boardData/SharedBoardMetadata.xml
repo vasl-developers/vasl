@@ -1248,7 +1248,7 @@
 		<terrainType name="Interior Factory Wall, 1 Level" typeCode="172" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="1" mapColorGreen="1" mapColorBlue="0" LOSCategory="FACTORY"  />
 		<terrainType name="Interior Factory Wall, 2 Level" typeCode="173" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="2" mapColorRed="1" mapColorGreen="1" mapColorBlue="0" LOSCategory="FACTORY"  />
 		<terrainType name="Cellar" typeCode="174" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="155" mapColorGreen="155" mapColorBlue="155" LOSCategory="BUILDING"  />
-
+		<terrainType name="Light Woods" typeCode="175" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.5" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="1" mapColorRed="85" mapColorGreen="95" mapColorBlue="45" LOSCategory="OTHER"  />
 	</terrainTypes>
 
 	<colorSSRules>
@@ -2250,7 +2250,7 @@
         <LOSSSRule name="WallsOnly" type="ignore" fromValue="" toValue="" />
         <LOSSSRule name="DTOtoETO" type="ignore" fromValue="" toValue="" />
         <LOSSSRule name="NoWhiteHexIDs" type="ignore" fromValue="" toValue="" />
-        <LOSSSRule name="LightWoods" type="ignore" fromValue="" toValue="" />
+
         <LOSSSRule name="Mud" type="ignore" fromValue="" toValue="" />
         <LOSSSRule name="Winter" type="ignore" fromValue="" toValue="" />
         <LOSSSRule name="NoRoads" type="ignore" fromValue="" toValue="" />
@@ -2286,6 +2286,7 @@
         <LOSSSRule name="NoCliffs" type="terrainMap" fromValue="Cliff" toValue="Open Ground" />
         <LOSSSRule name="WallsToBocage" type="terrainMap" fromValue="Wall" toValue="Bocage" />
         <LOSSSRule name="HedgesToBocage" type="terrainMap" fromValue="Hedge" toValue="Bocage" />
+		<LOSSSRule name="LightWoods" type="terrainMap" fromValue="Woods" toValue="Light Woods" />
         <!-- too many problems around roads to reliably change terrain
         <LOSSSRule name="OrchardsToShellholes" type="terrainMap" fromValue="Orchard" toValue="Shellholes" />
         <LOSSSRule name="OrchardsToCrags" type="terrainMap" fromValue="Orchard" toValue="Crags" />
