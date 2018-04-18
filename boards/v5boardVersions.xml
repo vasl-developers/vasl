@@ -175,7 +175,7 @@
 		<boarddata name="BFPDW6b" version="6.1" versionDate="Aug 2008" description="" />
 		<boarddata name="BFPDW7a" version="6.0" versionDate="Aug 2008" description="" />
 		<boarddata name="BFPDW7b" version="6.0" versionDate="Aug 2008" description="" />
-		<boarddata name="BF1=" version="1.1" versionDate="Aug 2008" description="" />
+		<boarddata name="BF1" version="1.1" versionDate="Aug 2008" description="" />
 		<boarddata name="TRBH" version="1.0" versionDate="Aug 2008" description="" />
 	<!--#KB=2.0 not accurate -->
 		<boarddata name="TO" version="1.2" versionDate="Aug 2008" description="" />
