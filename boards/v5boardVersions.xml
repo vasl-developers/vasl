@@ -380,6 +380,14 @@
 		<boarddata name="HS17" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="DSL" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="HC" version="1.0" versionDate="Aug 2008" description="" />
+		<boarddata name="TR1" version="2.0" versionDate="Aug 2008" description="" />
+		<boarddata name="TR2" version="2.0" versionDate="Aug 2008" description="" />
+		<boarddata name="TR3" version="2.0" versionDate="Aug 2008" description="" />
+		<boarddata name="TR4" version="2.0" versionDate="Aug 2008" description="" />
+		<boarddata name="TR5" version="2.0" versionDate="Aug 2008" description="" />
+		<boarddata name="TR6" version="2.0" versionDate="Aug 2008" description="" />
+		<boarddata name="TR7" version="2.0" versionDate="Aug 2008" description="" />
+		<boarddata name="TR8" version="2.0" versionDate="Aug 2008" description="" />		
 	</otherBoards>
 
 </boardsMetadata>
