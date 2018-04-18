@@ -1,0 +1,7 @@
+<SSRControls>
+ <Option name="Board l Special overlays">
+  <Checkbox name="">
+         <entry name="No J2 Building" rule="BSO_l_NoJ2Bldg" text="No lJ2 Building"/>
+ </Checkbox>
+    </Option>
+</SSRControls>
