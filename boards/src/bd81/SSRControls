@@ -1,0 +1,7 @@
+<SSRControls>
+   <Option name="Board 81 Special">
+ <Checkbox name="">
+         <entry name="Use Hardcopy Board Colors" rule="RogueKorea" text="Rogue board 81"/>
+ </Checkbox>
+   </Option>
+</SSRControls>
