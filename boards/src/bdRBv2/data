@@ -7,3 +7,5 @@ dy
 v2.0 Nov 2014 ATC
 v2.1 Jun 2015 ATC
 v2.2 Feb 2017 DER
+
+Data file updates discontinued v2.3 and higher. Use BoardMetadata to designate version.
