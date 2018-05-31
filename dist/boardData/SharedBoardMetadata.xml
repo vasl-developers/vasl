@@ -1249,6 +1249,14 @@
 		<terrainType name="Interior Factory Wall, 2 Level" typeCode="173" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="2" mapColorRed="1" mapColorGreen="1" mapColorBlue="0" LOSCategory="FACTORY"  />
 		<terrainType name="Cellar" typeCode="174" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="155" mapColorGreen="155" mapColorBlue="155" LOSCategory="BUILDING"  />
 		<terrainType name="Light Woods" typeCode="175" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.5" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="1" mapColorRed="85" mapColorGreen="95" mapColorBlue="45" LOSCategory="OTHER"  />
+		<terrainType name="Gutted Stone Factory, 1.5 Level" typeCode="180" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="1.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="0" mapColorRed="236" mapColorGreen="236" mapColorBlue="236" LOSCategory="FACTORY"  />
+		<terrainType name="Gutted Stone Factory, 2.5 Level" typeCode="181" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="2.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="0" mapColorRed="216" mapColorGreen="216" mapColorBlue="216" LOSCategory="FACTORY"  />
+		<terrainType name="Gutted Stone Building" typeCode="182" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="155" mapColorGreen="155" mapColorBlue="155" LOSCategory="BUILDING"  />
+		<terrainType name="Gutted Stone Building, 1 Level" typeCode="183" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="235" mapColorGreen="235" mapColorBlue="235" LOSCategory="BUILDING"  />
+		<terrainType name="Gutted Stone Building, 2 Level" typeCode="184" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="2" mapColorRed="215" mapColorGreen="215" mapColorBlue="215" LOSCategory="BUILDING"  />
+		<terrainType name="Gutted Stone Building, 3 Level" typeCode="185" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="3" mapColorRed="103" mapColorGreen="203" mapColorBlue="203" LOSCategory="BUILDING"  />
+		<terrainType name="Gutted Stone Building, 4 Level" typeCode="186" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="4" mapColorRed="219" mapColorGreen="219" mapColorBlue="219" LOSCategory="BUILDING"  />
+
 	</terrainTypes>
 
 	<colorSSRules>
@@ -2386,6 +2394,14 @@
         <LOSSSRule name="Level3ToBrush" type="elevationToTerrainMap" fromValue="3" toValue="Brush" />
         <LOSSSRule name="Level4ToBrush" type="elevationToTerrainMap" fromValue="4" toValue="Brush" />
 
+		<!-- custom mapping to convert Stone Buildings to Gutted Stone Buildings -->
+		<LOSSSRule name="StoneToGutted" type="terrainMap" fromValue="Stone Building" toValue="Gutted Stone Building" />
+		<LOSSSRule name="StoneToGutted1" type="terrainMap" fromValue="Stone Building, Level 1" toValue="Gutted Stone Building, Level 1" />
+		<LOSSSRule name="StoneToGutted2" type="terrainMap" fromValue="Stone Building, Level 2" toValue="Gutted Stone Building, Level 2" />
+		<LOSSSRule name="StoneToGutted3" type="terrainMap" fromValue="Stone Building, Level 3" toValue="Gutted Stone Building, Level 3" />
+		<LOSSSRule name="StoneToGutted4" type="terrainMap" fromValue="Stone Building, Level 4" toValue="Gutted Stone Building, Level 4" />
+		<LOSSSRule name="StoneToGuttedFactory1.5" type="terrainMap" fromValue="Stone Factory, Level 1.5" toValue="Gutted Stone Factory, Level 1.5" />
+		<LOSSSRule name="StoneToGuttedFactory2.5" type="terrainMap" fromValue="Stone Factory, Level 2.5" toValue="Gutted Stone Factory, Level 2.5" />
     </LOSSSRules>
 
     <LOSCounterRules>

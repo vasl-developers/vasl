@@ -53,7 +53,7 @@ public class ASLBoard extends Board {
     public String version = "0.0";
     private Rectangle cropBounds = new Rectangle(0, 0, -1, -1);
     private Dimension uncroppedSize;
-    private List<Overlay> overlays = new ArrayList();
+    protected List<Overlay> overlays = new ArrayList();
     protected String terrainChanges = "";
     private SSRFilter terrain;
     private File boardFile;
