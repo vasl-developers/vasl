@@ -350,7 +350,7 @@ public class Terrain {
      */
     public boolean isRoofless(){
 
-        return name.contains("Roofless");
+        return (name.contains("Roofless") || name.contains("Gutted"));
     }
     /**
      * @return true if the terrain is a cliff

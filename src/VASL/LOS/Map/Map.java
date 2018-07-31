@@ -3095,7 +3095,7 @@ public class Map  {
                     // code added by DR to handle LOS underneath a bridge
                 } else if ((status.currentTerrain.isBridge() || status.currentTerrain.getName().contains("Road")) && (status.groundLevel> status.sourceElevation && status.groundLevel > status.targetElevation) ) {
                     return false;
-                } else {
+                } else if (!status.slopes){ // added slopes test to fix issue 502 DR
                     // add hindrance
                     if (addHindranceHex(status, result)) {
                         return true;
