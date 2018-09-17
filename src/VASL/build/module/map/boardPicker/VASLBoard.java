@@ -165,6 +165,9 @@ public class VASLBoard extends ASLBoard {
 
 				final LOSSSRule rule = losssRules.get(s);
                 if(rule == null) {
+                    /* this fix allows LOS checking across BSO on the RB board
+                       an effort was made to expand this to all BSO on all LOS-enabled boards
+                       but too many problems/exceptions were encounted. Since the RB code seemed to work, I have left it in. Doug Rimmer September 2018 */
                     if(this.name.equals("RBv2")){
                        applyRBrule(s, LOSData);
                        changed = true;
@@ -518,6 +521,10 @@ public class VASLBoard extends ASLBoard {
      * @param LOSData the LOS data
      * @throws BoardException
      */
+
+    /* this fix allows LOS checking across BSO on the RB board
+       an effort was made to expand this to all BSO on all LOS-enabled boards
+       but too many problems/exceptions were encounted. Since the RB code seemed to work, I have left it in. Doug Rimmer September 2018 */
     private void applyRBrule(String s, Map LOSData) throws BoardException {
         // convert row letters in rule name (s) to lower case to match .gif name
         s = Character.toLowerCase(s.charAt(0)) + s.substring(1);
