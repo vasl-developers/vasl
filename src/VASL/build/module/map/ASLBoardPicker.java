@@ -771,7 +771,10 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             }
         throw new BoardException("No Such Board");
     }
-
+    public BoardSlot newmatch (int i) throws BoardException {
+        BoardSlot b = getSlot(i);
+        return b;
+    }
     public org.w3c.dom.Element getBuildElement(org.w3c.dom.Document doc) {
         return doc.createElement(getClass().getName());
     }
@@ -887,7 +890,24 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             JLabel l = new JLabel("Board:");
             box.add(l);
 
-            bdName = new JComboBox<String>(getBoards());
+            // code added by DR to enable multiple instances of same board to be cropped
+            ArrayList<BoardNames> boardlist = new ArrayList<BoardNames>();
+            int x = 0;
+            String bdlist[] = getBoards();
+            for (String nextboardname : bdlist) {
+                boardlist.add(new BoardNames(nextboardname, Integer.toString(x)));
+                x=+1;
+            }
+            BoardNames[] bx = new BoardNames[boardlist.size()];
+            Iterator it = boardlist.iterator();
+            for(int y = 0; y < bx.length; y++) {
+                BoardNames newboard = (BoardNames) it.next();
+                bx[y] = newboard;
+            }
+            bdName = new JComboBox(bx);
+            // end of changes
+
+
             box.add(bdName);
 
             getContentPane().add(box);
@@ -948,7 +968,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 return;
             }
             try {
-                BoardSlot b = match((String) bdName.getSelectedItem());
+                BoardSlot b = newmatch((int) bdName.getSelectedIndex());
                 ((ASLBoard) b.getBoard()).crop(row1.getText().toLowerCase().trim(), row2.getText().toLowerCase().trim(), coord1.getText().toLowerCase().trim(), coord2
                         .getText().toLowerCase().trim(), fullrow.isSelected());
                 b.invalidate();
@@ -961,7 +981,16 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             }
         }
     }
-
+    // code added by DR to enable multiple instances of same board to be cropped, have Overlays, and apply SSR
+    public class BoardNames {
+        String bdname;
+        String bdlistid;
+        public BoardNames(String nameinput, String idinput){
+            bdname = nameinput;
+            bdlistid = idinput;
+        }
+        public String toString(){return bdname;}
+    }
     protected class Overlayer extends JDialog implements ActionListener {
 
         private JTextField hex1, hex2, ovrName;
@@ -999,7 +1028,22 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             vBox = Box.createVerticalBox();
             vBox.add(new JLabel("Board"));
 
-            bdName = new JComboBox<String>(getBoards());
+            // code added by DR to enable multiple instances of same board to have ovelays
+            ArrayList<BoardNames> boardlist = new ArrayList<BoardNames>();
+            int x = 0;
+            String bdlist[] = getBoards();
+            for (String nextboardname : bdlist) {
+                boardlist.add(new BoardNames(nextboardname, Integer.toString(x)));
+                x=+1;
+            }
+            BoardNames[] bx = new BoardNames[boardlist.size()];
+            Iterator it = boardlist.iterator();
+            for(int y = 0; y < bx.length; y++) {
+                BoardNames newboard = (BoardNames) it.next();
+                bx[y] = newboard;
+            }
+            bdName = new JComboBox(bx);
+            // end of changes
             vBox.add(bdName);
 
             box.add(vBox);
@@ -1038,8 +1082,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 return;
             }
             try {
-                status.setText(((ASLBoardSlot) (match((String) bdName.getSelectedItem()))).addOverlay(ovrName.getText().toLowerCase(), hex1.getText().toLowerCase(), hex2.getText()
-                        .toLowerCase()));
+                BoardSlot b = newmatch((int) bdName.getSelectedIndex());
+                status.setText(((ASLBoardSlot) (b)).addOverlay(ovrName.getText().toLowerCase(), hex1.getText().toLowerCase(), hex2.getText().toLowerCase()));
                 ovrName.setText("");
                 hex1.setText("");
                 hex2.setText("");
@@ -1076,7 +1120,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
         private Vector boards;
         protected JButton apply, reset, done;
 
-        private JComboBox<String> bdName = new JComboBox<String>();
+        private JComboBox<BoardNames> bdName = new JComboBox<BoardNames>();
 
         protected TerrainEditor() {
             super((Frame) null, true);
@@ -1260,13 +1304,20 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                     String opText = optionText();
                     String bText = basicText();
                     try {
-                        String boardName = (String) bdName.getSelectedItem();
-                        int n = 0;
-                        ASLBoardSlot slot;
-                        while ((slot = (ASLBoardSlot) getSlot(n++)) != null) {
-                            if (boardName.length() == 0 || match(boardName) == slot) {
+                        // changes by DR to support Terrain SSR when using multiple boards of same name
+                        if (bdName.getSelectedIndex() == 0 ) { // all boards
+                            for (int t =0; t < bdName.getItemCount()-1; ++t){
+                                ASLBoardSlot slot = (ASLBoardSlot) newmatch(t);
                                 slot.setTerrain(slot.getTerrain() + '\t' + optionRules());
-                                if (slot.getBoard() == null) continue;
+                                if (slot.getBoard() != null) {
+                                    ((ASLBoard) slot.getBoard()).setTerrain(basicRules() + slot.getTerrain());
+                                    slot.repaint();
+                                }
+                            }
+                        } else { // specific board chosen
+                            ASLBoardSlot slot = (ASLBoardSlot) newmatch((int) bdName.getSelectedIndex()-1);
+                            slot.setTerrain(slot.getTerrain() + '\t' + optionRules());
+                            if (slot.getBoard() != null) {
                                 ((ASLBoard) slot.getBoard()).setTerrain(basicRules() + slot.getTerrain());
                                 slot.repaint();
                             }
@@ -1274,7 +1325,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                         if (opText.length() > 0) {
                             bText = bText.length() == 0 ? opText : bText + ", " + opText;
                         }
-                        warn((boardName.length() == 0 ? "All boards" : "Board " + bdName.getSelectedItem()) + ": " + bText);
+
                     } catch (BoardException e1) {
                         e1.printStackTrace();
                         warn(e1.getMessage());
@@ -1847,11 +1898,21 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             // update the board list when the dialog is shown
             if(visible) {
                 bdName.removeAllItems();
-                bdName.addItem(""); // need a blank board name for "all"
+                // code added by DR to enable multiple instances of same board to have Terrain SSR applied
+                ArrayList<BoardNames> boardlist = new ArrayList<BoardNames>();
+                boardlist.add(new BoardNames("", "0")); // need a blank board name for "all"
+                int x = 0;
                 Iterator it = getBoardsFromControls().iterator();
                 while (it.hasNext()) {
-                    bdName.addItem(((ASLBoard) it.next()).getCommonName());
+                    boardlist.add(new BoardNames(((ASLBoard) it.next()).getCommonName(), Integer.toString(x)));
+                    x=+1;
                 }
+                Iterator itr = boardlist.iterator();
+                for(int y = 0; y < boardlist.size(); y++) {
+                    BoardNames newboard = (BoardNames) itr.next();
+                    bdName.addItem(newboard);
+                }
+                // end of changes
             }
 
             super.setVisible(visible);

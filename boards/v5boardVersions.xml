@@ -72,7 +72,7 @@
 		<boarddata name="42" version="6.2" versionDate="Aug 2008" description="" />
 		<boarddata name="43" version="6.2" versionDate="Aug 2008" description="" />
 		<boarddata name="44" version="6.2" versionDate="Aug 2008" description="" />
-		<boarddata name="45" version="6.1" versionDate="Aug 2008" description="" />
+		<boarddata name="45" version="6.2" versionDate="Aug 2008" description="" />
 		<boarddata name="46" version="6.0" versionDate="Aug 2008" description="" />
 		<boarddata name="47" version="6.1" versionDate="Aug 2008" description="" />
 		<boarddata name="48" version="6.1" versionDate="Aug 2008" description="" />
@@ -245,12 +245,12 @@
 		<boarddata name="BB" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="BERLIN" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="BF" version="1.0" versionDate="Aug 2008" description="" />
-		<boarddata name="BOB\u0020DZN" version="1.0" versionDate="Aug 2008" description="" />
+		<boarddata name="BOB&#x20;DZN" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="BRT" version="1.1" versionDate="Aug 2008" description="" />
 		<boarddata name="Bataan" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="BerlinRV" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="BlankCard" version="1.0" versionDate="Aug 2008" description="" />
-		<boarddata name="Blood\u0020&amp;\u0020Iron" version="1.0" versionDate="Aug 2008" description="" />
+		<boarddata name="Blood&#x20;&amp;&#x20;Iron" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="Bracchi" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="Brecour" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="CAC" version="1.0" versionDate="Aug 2008" description="" />
@@ -318,17 +318,17 @@
 		<boarddata name="KX3" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="LG" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="MC" version="1.0" versionDate="Aug 2008" description="" />
-		<boarddata name="MC1\u0020Snow" version="1.0" versionDate="Aug 2008" description="" />
+		<boarddata name="MC1&#x20;Snow" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="MC2" version="1.0" versionDate="Aug 2008" description="" />
-		<boarddata name="MC2\u0020Snow" version="1.0" versionDate="Aug 2008" description="" />
+		<boarddata name="MC2&#x20;Snow" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="MC2a" version="1.0" versionDate="Aug 2008" description="" />
-		<boarddata name="MC2a\u0020Snow" version="1.0" versionDate="Aug 2008" description="" />
+		<boarddata name="MC2a&#x20;Snow" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="MC3" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="MC4" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="MC" version="1.0" versionDate="Aug 2008" description="" />
-		<boarddata name="MC5\u0020Snow" version="1.0" versionDate="Aug 2008" description="" />
+		<boarddata name="MC5&#x20;Snow" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="MC5A" version="1.0" versionDate="Aug 2008" description="" />
-		<boarddata name="MC5A\u0020Snow" version="1.0" versionDate="Aug 2008" description="" />
+		<boarddata name="MC5A&#x20;Snow" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="MC6" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="MC7" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="MID" version="1.0" versionDate="Aug 2008" description="" />
@@ -346,8 +346,8 @@
 		<boarddata name="PdH" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="Pe" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="QuatreBras" version="1.0" versionDate="Aug 2008" description="" />
-		<boarddata name="RC\u0020Novo" version="1.0" versionDate="Aug 2008" description="" />
-		<boarddata name="RC\u0020Orlovo" version="1.0" versionDate="Aug 2008" description="" />
+		<boarddata name="RC&#x20;Novo" version="1.0" versionDate="Aug 2008" description="" />
+		<boarddata name="RC&#x20;Orlovo" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="RG" version="2.0" versionDate="Aug 2008" description="" />
 		<boarddata name="SCW0" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="SCW1" version="1.0" versionDate="Aug 2008" description="" />

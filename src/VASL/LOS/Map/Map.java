@@ -2057,7 +2057,15 @@ public class Map  {
                             hindrance += s.getHindrance();
                         }
                     }
+                    // check if blaze is wreck blaze; if so reduce Hindrance to 2
+                    if (s.getName().equals("Blaze")) {
+                        if (status.VASLGameInterface.getVehicles(hex) != null && !status.VASLGameInterface.getVehicles(hex).isEmpty() ){
+                            hindrance = 2;
+                        }
+                    }
                 }
+
+
                 if(hindrance > 0) {
 
                     // the max hindrance per location is 3 unless the source location is in the smoke
@@ -2124,6 +2132,18 @@ public class Map  {
                                     hindrance++;
                                 }
                             }
+                        }
+                    }
+                    // check if blaze exists and if so cancel veh hindrance
+                    if (hindrance > 0){
+                        HashSet<Smoke> hexSmoke = status.VASLGameInterface.getSmoke(hex);
+                        if (hexSmoke != null && !hexSmoke.isEmpty()) {
+                            for (Smoke s: hexSmoke) {
+                                if (s.getName().equals("Blaze")){
+                                    hindrance = 0;
+                                }
+                            }
+
                         }
                     }
                 }
@@ -3095,7 +3115,7 @@ public class Map  {
                     // code added by DR to handle LOS underneath a bridge
                 } else if ((status.currentTerrain.isBridge() || status.currentTerrain.getName().contains("Road")) && (status.groundLevel> status.sourceElevation && status.groundLevel > status.targetElevation) ) {
                     return false;
-                } else {
+                } else if (!status.slopes){ // added slopes test to fix issue 502 DR
                     // add hindrance
                     if (addHindranceHex(status, result)) {
                         return true;

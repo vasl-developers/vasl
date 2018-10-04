@@ -165,11 +165,19 @@ public class VASLBoard extends ASLBoard {
 
 				final LOSSSRule rule = losssRules.get(s);
                 if(rule == null) {
-                    throw new BoardException("Unsupported scenario-specific rule: " + s + ". LOS disabled");
+                    /* this fix allows LOS checking across BSO on the RB board
+                       an effort was made to expand this to all BSO on all LOS-enabled boards
+                       but too many problems/exceptions were encounted. Since the RB code seemed to work, I have left it in. Doug Rimmer September 2018 */
+                    if(this.name.equals("RBv2")){
+                       applyRBrule(s, LOSData);
+                       changed = true;
+                    }else {
+                        throw new BoardException("Unsupported scenario-specific rule: " + s + ". LOS disabled");
+                    }
                 }
 
                 // these are rules that have to be handled in the code
-                if("customCode".equals(rule.getType())) {
+                else if("customCode".equals(rule.getType())) {
 
                     if("NoStairwells".equals(s)) {
 
@@ -502,6 +510,48 @@ public class VASLBoard extends ASLBoard {
                 if(LOSData.getGridTerrain(x, y).equals(fromTerrain)){
                     LOSData.setGridElevation(toElevation, x, y);
                     LOSData.setGridTerrainCode(LOSData.getTerrain("Open Ground").getType(), x, y);
+                }
+            }
+        }
+    }
+
+    /**
+     * Apply RB SSR changes to the LOS data
+     * @param s the terrain to be added
+     * @param LOSData the LOS data
+     * @throws BoardException
+     */
+
+    /* this fix allows LOS checking across BSO on the RB board
+       an effort was made to expand this to all BSO on all LOS-enabled boards
+       but too many problems/exceptions were encounted. Since the RB code seemed to work, I have left it in. Doug Rimmer September 2018 */
+    private void applyRBrule(String s, Map LOSData) throws BoardException {
+        // convert row letters in rule name (s) to lower case to match .gif name
+        s = Character.toLowerCase(s.charAt(0)) + s.substring(1);
+        if (!Character.isDigit(s.charAt(1))) {
+            s = s.charAt(0) + Character.toLowerCase(s.charAt(1)) + s.substring(2);
+        }
+        for (Overlay o: super.overlays) {
+            if (o.name.contains(s)){ // the overlay has been applied to the RB map, need to update losdata
+                for(int x = o.boundaries.x; x< (o.boundaries.x + o.boundaries.width +1); x++) {
+                    for(int y = o.boundaries.y; y < (o.boundaries.y + o.boundaries.height +1); y++ ) {
+                        // rb ssr overlays convert stone buildings to gutted; identify type of stone building then convert losdata
+                        if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Stone Factory, 1.5"))){
+                            LOSData.setGridTerrainCode(LOSData.getTerrain("Gutted Stone Factory, 1.5 Level").getType(), x, y);
+                        } else if (LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Stone Factory, 2.5 Level"))){
+                            LOSData.setGridTerrainCode(LOSData.getTerrain("Gutted Stone Factory, 2.5 Level").getType(), x, y);
+                        } else if (LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Stone Building"))){
+                            LOSData.setGridTerrainCode(LOSData.getTerrain("Gutted Stone Building").getType(), x, y);
+                        } else if (LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Stone Building, 1 Level"))){
+                            LOSData.setGridTerrainCode(LOSData.getTerrain("Gutted Stone Building, 1 Level").getType(), x, y);
+                        } else if (LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Stone Building, 2 Level"))){
+                            LOSData.setGridTerrainCode(LOSData.getTerrain("Gutted Stone Building, 2 Level").getType(), x, y);
+                        } else if (LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Stone Building, 3 Level"))){
+                            LOSData.setGridTerrainCode(LOSData.getTerrain("Gutted Stone Building, 3 Level").getType(), x, y);
+                        } else if (LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Stone Building, 4 Level"))) {
+                            LOSData.setGridTerrainCode(LOSData.getTerrain("Gutted Stone Building, 4 Level").getType(), x, y);
+                        }
+                    }
                 }
             }
         }
