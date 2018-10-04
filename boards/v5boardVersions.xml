@@ -395,7 +395,8 @@
 		<boarddata name="TR5" version="2.0" versionDate="Aug 2008" description="" />
 		<boarddata name="TR6" version="2.0" versionDate="Aug 2008" description="" />
 		<boarddata name="TR7" version="2.0" versionDate="Aug 2008" description="" />
-		<boarddata name="TR8" version="2.0" versionDate="Aug 2008" description="" />		
+		<boarddata name="TR8" version="2.0" versionDate="Aug 2008" description="" />
+		<boarddata name="HT" version="1.0" versionDate="Sep 2018" description="" />		
 	</otherBoards>
 
 </boardsMetadata>
