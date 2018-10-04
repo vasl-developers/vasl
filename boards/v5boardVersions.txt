@@ -285,7 +285,6 @@ HB = 1.0
 HFv221 = 1.0
 Hotton = 2.0
 Hurtgen = 1.0
-HT = 1.0
 IvansWar = 1.0
 KB = 0.11
 KX1 = 1.0
