@@ -12,14 +12,33 @@
 	versionDate - the date the last version was created
 	author - the caring soul who created the board
     boardImage - the name of the VASL image file in the board archive; the name is case sensitive
-    hasElevations - TRUE if the board contains non-zero ground levels; E.g. hills, gullies, streams, etc. 
+    hasHills - TRUE if the board contains non-zero ground levels; E.g. hills, gullies, streams, etc.
                 if not we can assume the ground level under the terrain is zero, which
                 makes the VASL LOS image translation faster and more accurate
     height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
     width - width of the board in hexes.
+    The following are optional (but recommended) attributes; most of the geomorphic style boards (33 x 10 hexes) do not need to use them
+    hexHeight - the height of a hex in pixels - decimal - should be image/height
+	hexWidth - the width of a hex in pixels - decimal - center point to center point
+	A1CenterX - x location of the A1 center dot
+	A1CenterY - y location of the A1 center dot
+	HexGridConfig - the type of hex grid used; usually based on the size of the top left hex, only required when this hex is not full-height and half-width.
 	others - TBD e.g. alternate hex grain, etc. 
 -->
-<boardMetadata name="07" version="5.3" versionDate="Aug 2008" author="TR" boardImageFileName="bd07.gif" hasElevations="TRUE" width="33" height="10">
+<boardMetadata
+		name="07"
+		version="5.3"
+		versionDate="Aug 2008"
+		author="TR"
+		boardImageFileName="bd07.gif"
+		hasHills="TRUE"
+		width="33"
+		height="10"
+		hexHeight = "64.47"
+		hexWidth = "56.25"
+		A1CenterX = "22.0"
+		A1CenterY = "32.25"
+>
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
