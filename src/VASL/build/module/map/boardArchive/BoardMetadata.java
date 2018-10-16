@@ -71,6 +71,10 @@ public class BoardMetadata extends AbstractMetadata {
     private static final String boardMetadataAltHexGrainAttr = "altHexGrain";
     private static final String boardMetadataSnapPointAttr = "snapScale";
 
+    // added to handle non-geo hex grid configurations; can be left null for geo type boards
+    private static final String boardMetadataHexGridConfigAttr = "HexGridConfig";
+    private String hexgridconfig;
+
     private static final String buildingTypesElement = "buildingTypes";
     private static final String buildingTypeElement = "buildingType";
     private static final String buildingTypeHexNameAttr = "hexName";
@@ -153,6 +157,11 @@ public class BoardMetadata extends AbstractMetadata {
                 if(root.getAttribute(boardMetadataSnapPointAttr) != null){
                     snapScale = root.getAttribute(boardMetadataSnapPointAttr).getIntValue();
                 }
+                // added to handle non-geo hex grid configurations; can be left null for geo type boards
+                if(root.getAttribute(boardMetadataHexGridConfigAttr) != null){
+                    hexgridconfig = root.getAttributeValue(boardMetadataHexGridConfigAttr);
+                }
+
 
                 // parse the board metadata elements
                 parseBuildingTypes(root.getChild(buildingTypesElement));
@@ -427,5 +436,10 @@ public class BoardMetadata extends AbstractMetadata {
      */
     public boolean hasBoardSpecificOverlayRules() {
         return boardSpecificOverlayRules;
+    }
+
+    // added to handle non-geo hex grid configurations; can be left null for geo type boards
+    public String getHexGridConfig(){
+        return hexgridconfig;
     }
 }

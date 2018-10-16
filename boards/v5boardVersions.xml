@@ -246,7 +246,7 @@
 		<boarddata name="BERLIN" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="BF" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="BOB&#x20;DZN" version="1.0" versionDate="Aug 2008" description="" />
-		<boarddata name="BRT" version="1.1" versionDate="Aug 2008" description="" />
+		<boarddata name="BRT" version="1.2" versionDate="Sep 2018" description="" />
 		<boarddata name="Bataan" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="BerlinRV" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="BlankCard" version="1.0" versionDate="Aug 2008" description="" />
@@ -312,7 +312,7 @@
 		<boarddata name="Hotton" version="2.0" versionDate="Aug 2008" description="" />
 		<boarddata name="Hurtgen" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="IvansWar" version="1.0" versionDate="Aug 2008" description="" />
-		<boarddata name="KB" version="0.11" versionDate="Aug 2008" description="" />
+		<boarddata name="KB" version="2.1" versionDate="Sep 2018" description="" />
 		<boarddata name="KX1" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="KX2" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="KX3" version="1.0" versionDate="Aug 2008" description="" />
@@ -352,7 +352,7 @@
 		<boarddata name="SCW0" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="SCW1" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="SCW2" version="1.0" versionDate="Aug 2008" description="" />
-		<boarddata name="SH" version="1.1" versionDate="Aug 2008" description="" />
+		<boarddata name="SH" version="2.1" versionDate="Aug 2018" description="" />
 		<boarddata name="STB" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="STB1" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="STB2" version="1.0" versionDate="Aug 2008" description="" />

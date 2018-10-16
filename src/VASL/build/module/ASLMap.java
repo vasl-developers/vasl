@@ -253,7 +253,7 @@ public class ASLMap extends Map {
             int fullhexadj=0;
 
             VASLBoard b = VASLBoards.get(0); // we can use the geometry of any board - assuming all are the same
-
+            if (b.getVASLBoardArchive().getHexGridConfig() != null) {passgridconfig = "TopLeftHalfHeight";}
             if (b.isCropped()) { isCropping=true;}
             if (b.nearestFullRow) {
                 passgridconfig = "FullHex";

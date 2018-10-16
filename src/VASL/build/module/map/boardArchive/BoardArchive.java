@@ -855,6 +855,11 @@ public class BoardArchive {
     public static String getSharedBoardMetadataFileName() {
         return "SharedBoardMetadata.xml";
     }
+
+    // added to handle boards with original configuration where top left hex is half height and half width (ie BRT)
+    public String getHexGridConfig(){
+        return metadata.getHexGridConfig();
+    }
 }
 
 

@@ -98,7 +98,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
     private static final String otherboarddescAttr = "description";
 
     public ASLBoardPicker() {
-        boolean reg = true;
+
     }
 
     protected void initComponents() {
@@ -263,7 +263,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
         // all boards are added to the list whether in local directory or not
         sorted = getallboards();
         // if no internet connection, sorted will be 0 size so then load local boards
-        if (sorted == null || sorted.size() == 0) {
+        //if (sorted == null || sorted.size() == 0) {
             for (String file : files) {
                 // TODO - remove requirement that boards start with "bd"
                 // add all boards found in local directory
@@ -278,7 +278,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                     }
                 }
             }
-        }
+        //}
 
         //
         // * Strings with leading zeros sort ahead of those without.
