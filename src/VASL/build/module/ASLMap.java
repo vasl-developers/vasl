@@ -22,6 +22,7 @@ package VASL.build.module;
 import VASL.build.module.map.boardArchive.BoardArchive;
 import VASL.LOS.counters.CounterMetadataFile;
 import VASL.build.module.map.boardArchive.SharedBoardMetadata;
+import VASL.build.module.map.boardPicker.ASLBoard;
 import VASL.build.module.map.boardPicker.BoardException;
 import VASL.build.module.map.boardPicker.VASLBoard;
 import VASSAL.build.GameModule;
@@ -164,6 +165,12 @@ public class ASLMap extends Map {
     public synchronized void setBoards(Collection<Board> c) {
 
         super.setBoards(c);
+        String info = "Using board(s): ";
+        for (Board board : boards) {
+            ASLBoard b = (ASLBoard) board;
+            info += b.getName() + "(v" + b.getVersion() + ") ";
+        }
+        GameModule.getGameModule().warn(info);
         buildVASLMap();
     }
 
