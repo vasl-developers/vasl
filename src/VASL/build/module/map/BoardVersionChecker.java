@@ -144,14 +144,14 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
 
         if (gameStarting) {
 
-            if (boardversions != null) {
+            /*if (boardversions != null) {
                 String info = "Using board(s): ";
                 for (Board board : map.getBoards()) {
                     ASLBoard b = (ASLBoard) board;
                     info += b.getName() + "(v" + b.getVersion() + ") ";
                 }
                 GameModule.getGameModule().warn(info);
-            }
+            }*/
         }
     }
 
