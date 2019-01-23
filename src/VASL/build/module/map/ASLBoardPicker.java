@@ -771,9 +771,40 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             }
         throw new BoardException("No Such Board");
     }
-    public BoardSlot newmatch (int i) throws BoardException {
-        BoardSlot b = getSlot(i);
-        return b;
+    /*public BoardSlot newmatch (int x) throws BoardException {
+        //BoardSlot b = getSlot(x);
+        if (nx == 1 || ny ==1) {return getSlot(x);}
+        for (int i = 0; i < nx; ++i)
+            for (int j = 0; j < ny; ++j) {
+                    if (x == i + nx * j) {return getSlot(i + nx * j);}
+            }
+        throw new BoardException("No Such Board");
+    }*/
+    public BoardSlot newmatch (int y) throws BoardException {
+        //BoardSlot b = getSlot(x);
+
+        List<Board> boards = getBoardsFromControls();
+        Iterator it = boards.iterator();
+        for (int x = 0; x < boards.size(); x++) {
+            ASLBoard b = (ASLBoard) it.next();
+            if (x == y) {
+                for (int i = 0; i < boards.size(); ++i) {
+
+                    ASLBoard c = (ASLBoard) getSlot(i).getBoard();
+                    if (b == c) {
+                        return getSlot(i);
+                    }
+
+                }
+            } //throw new BoardException("No Such Board");
+            //}
+            //}
+
+
+            //if (nx == 1 || ny ==1) {return getSlot(x);}
+
+        }
+        return null;
     }
     public org.w3c.dom.Element getBuildElement(org.w3c.dom.Document doc) {
         return doc.createElement(getClass().getName());
@@ -896,7 +927,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             String bdlist[] = getBoards();
             for (String nextboardname : bdlist) {
                 boardlist.add(new BoardNames(nextboardname, Integer.toString(x)));
-                x=+1;
+                x+=1;
             }
             BoardNames[] bx = new BoardNames[boardlist.size()];
             Iterator it = boardlist.iterator();
