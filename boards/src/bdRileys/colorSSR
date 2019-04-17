@@ -1,0 +1,10 @@
+RowhouseBarsToOpenGround
+//Used for Mud on this map
+
+  DirtRoad=DirtRoadMud
+  DirtRoad1=Level1
+  DirtRoad0=Level0
+  DirtRoad_1=Level_1
+  PlowedField2=PlowedField2Mud
+  Slope=SlopeMud
+//PlowedField1=PlowedField1Mud

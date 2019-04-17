@@ -1,0 +1,22 @@
+Level_1 92,159,43
+Level0 173,220,95
+Level1 207,175,83
+
+DirtRoad 231,227,143
+DirtRoad_1 231,227,146
+DirtRoad0 231,227,145
+DirtRoad1 232,227,144
+
+DirtRoadMud 199,133,72
+DirtRoad_1Mud 92,159,42
+DirtRoad0Mud 173,230,94
+DirtRoad1Mud 206,175,83
+
+PlowedField1 254,247,153
+PlowedField2 247,217,121
+
+PlowedField1Mud 246,216,120
+PlowedField2Mud 163,115,63
+
+Slope 121,89,57
+SlopeMud 64,64,64
