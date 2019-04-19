@@ -126,17 +126,18 @@
         <underlaySSRule name="HedgeToCactus" image="CactusPattern.gif">
             <color name="HedgeGreen" />
         </underlaySSRule>
-        <overlaySSRule name="DenseJungle" image="BFPB_DenseJungle.gif" x="0" y="0" />
-        <overlaySSRule name="RoadsToPaths" image="BFPB_RoadsToPaths.gif" x="0" y="0" />
-        <overlaySSRule name="NoWoodsRoads" image="BFPB_NoWoodsRoad.gif" x="0" y="0" />
-        <overlaySSRule name="PalmTrees" image="BFPB_PalmTrees.gif" x="0" y="0" />
-        <overlaySSRule name="OrchardsToCrags" image="BFPB_Orch2Crag.gif" x="0" y="0" />
-        <overlaySSRule name="OrchardsToShellholes" image="BFPB_OrchardsToShellholes.gif" x="0" y="0" />
-        <overlaySSRule name="Bamboo" image="BFPB_Bamboo.gif" x="0" y="0" />
-        <overlaySSRule name="HedgesToBocage" image="BFPB_HedgesToBocage.gif" x="0" y="0" />
-        <overlaySSRule name="WallsToBocage" image="BFPB_WallsToBocage.gif" x="0" y="0" />
-        <overlaySSRule name="NoRoads" image="BFPB_NoRoads.gif" x="0" y="0" />
-        <overlaySSRule name="LightWoods" image="BFPB_LtWoods.gif" x="0" y="0" />
+        <overlaySSRule name="DenseJungle" image="BFPB_DenseJungle.gif" x="1" y="1" />
+        <overlaySSRule name="RoadsToPaths" image="BFPB_RoadsToPaths.gif" x="1" y="1" />
+        <overlaySSRule name="NoWoodsRoads" image="BFPB_NoWoodsRoad.gif" x="1" y="1" />
+        <overlaySSRule name="PalmTrees" image="BFPB_PalmTrees.gif" x="1" y="1" />
+        <overlaySSRule name="OrchardsToCrags" image="BFPB_OrchardsToCrags.gif" x="1" y="1" />
+        <overlaySSRule name="OrchardsToShellholes" image="BFPB_OrchardsToShellholes.gif" x="1" y="1" />
+        <overlaySSRule name="Bamboo" image="BFPB_Bamboo.gif" x="1" y="1" />
+		<overlaySSRule name="HedgesToOG" image="BFPB_HedgesToOG.gif" x="0" y="0" />
+        <overlaySSRule name="HedgesToBocage" image="BFPB_HedgesToBocage.gif" x="1" y="1" />
+        <overlaySSRule name="WallsToBocage" image="BFPB_WallsToBocage.gif" x="1" y="1" />
+        <overlaySSRule name="NoRoads" image="BFPB_NoRoads.gif" x="1" y="1" />
+        <overlaySSRule name="LightWoods" image="BFPB_LtWoods.gif" x="1" y="1" />
 		
 	</overlaySSRules>
 	
