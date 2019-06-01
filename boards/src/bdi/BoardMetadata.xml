@@ -22,8 +22,8 @@
 -->
 <boardMetadata 
 	name="i" 
-	version="6.0" 
-	versionDate="Apr 2018" 
+	version="6.1" 
+	versionDate="Apr 2019" 
 	author="TR" 
 	boardImageFileName="bdi.gif" 
 	hasHills="FALSE" 
@@ -173,15 +173,15 @@
 <color name="WoodBldg14" red="155" green="104" blue="52" terrain="Wooden Building" elevation="UNKNOWN" />
 <color name="WoodBldg15" red="170" green="119" blue="63" terrain="Wooden Building" elevation="UNKNOWN" />
 
-<color name="ManHoles" red="42" green="42" blue="42" terrain="ManHoles" elevation="UNKNOWN" />
+<color name="ManHoles" red="42" green="42" blue="42" terrain="Sewer" elevation="UNKNOWN" />
 
-<color name="DASLPavedRoadEdge" red="168" green="172" blue="163" terrain="DASLPavedRoadEdge" elevation="UNKNOWN" />
+<color name="DASLPavedRoadEdge" red="168" green="172" blue="163" terrain="Paved Road" elevation="UNKNOWN" />
 
-<color name="DASL_WallGrey1" red="154" green="156" blue="153" terrain="DASL_WallGrey1" elevation="UNKNOWN" />
-<color name="DASL_WallGrey2" red="103" green="105" blue="102" terrain="DASL_WallGrey2" elevation="UNKNOWN" />
-<color name="DASL_WallGrey3" red="126" green="128" blue="125" terrain="DASL_WallGrey3" elevation="UNKNOWN" />
-<color name="DASL_WallGrey4" red="175" green="177" blue="174" terrain="DASL_WallGrey4" elevation="UNKNOWN" />
-<color name="DASL_WallGrey5" red="83" green="85" blue="82" terrain="DASL_WallGrey5" elevation="UNKNOWN" />
+<color name="DASL_WallGrey1" red="154" green="156" blue="153" terrain="Wall" elevation="UNKNOWN" />
+<color name="DASL_WallGrey2" red="103" green="105" blue="102" terrain="Wall" elevation="UNKNOWN" />
+<color name="DASL_WallGrey3" red="126" green="128" blue="125" terrain="Wall" elevation="UNKNOWN" />
+<color name="DASL_WallGrey4" red="175" green="177" blue="174" terrain="Wall" elevation="UNKNOWN" />
+<color name="DASL_WallGrey5" red="83" green="85" blue="82" terrain="Wall" elevation="UNKNOWN" />
 
 	</colors>
 	

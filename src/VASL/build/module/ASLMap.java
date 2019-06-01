@@ -340,9 +340,9 @@ public class ASLMap extends Map {
                     }
 
                     // add the board LOS data to the map
-                    // .insertMap is designed to work with only geo board thus need to test for non-geo boards
+                    // .insertMap is designed to work with only geo board thus need to test for non-geo boards (in this situation geo boards includes AP boards and deluxe boards)
                     // DR added code to handle maps of one board such as HASL maps
-                    if ((board.getWidth()==33 && board.getHeight()==10) || (board.getWidth()==17 && board.getHeight()==20)) {
+                    if ((board.getWidth()==33 && board.getHeight()==10) || (board.getWidth()==17 && board.getHeight()==20) || (board.getWidth() == 15 && board.getHeight()==5)) {
                         //line below is not a good fix; make sure it works in all situations or change
                             int cropadj=1;  // ensures that cropping a board by row works properly DR (rows such as A7 have uneven total height which results in incorrect choice from gridToHex)
                             if (!VASLMap.insertMap(
