@@ -16,9 +16,12 @@
                 makes the VASL LOS image translation faster and more accurate
     height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
     width - width of the board in hexes.
-	others - TBD e.g. alternate hex grain, etc. 
+	others - TBD e.g. alternate hex grain, etc.
+	
+	Updates:
+	Apr 2019 ATC: add road to enter U1 bldg making it a factory; add transformations.
 -->
-<boardMetadata name="BFPB" version="6.0" versionDate="Feb 2008" author="TR" boardImageFileName="bdBFPB.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="BFPB" version="6.2" versionDate="May 2019" author="TR" boardImageFileName="bdBFPB.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -63,10 +66,10 @@
         <buildingType hexName="U8" buildingTypeName="Wooden Building, 1 Level" />	
         <buildingType hexName="V8" buildingTypeName="Wooden Building, 1 Level" />	
 
-        <buildingType hexName="U1" buildingTypeName="Stone Building, 2 Level" />
-        <buildingType hexName="U2" buildingTypeName="Stone Building, 2 Level" />
-        <buildingType hexName="V1" buildingTypeName="Stone Building, 2 Level" />
-        <buildingType hexName="V2" buildingTypeName="Stone Building, 2 Level" />
+        <buildingType hexName="U1" buildingTypeName="Stone Factory, 2.5 Level" />
+        <buildingType hexName="U2" buildingTypeName="Stone Factory, 2.5 Level" />
+        <buildingType hexName="V1" buildingTypeName="Stone Factory, 2.5 Level" />
+        <buildingType hexName="V2" buildingTypeName="Stone Factory, 2.5 Level" />
 		
         <buildingType hexName="W3" buildingTypeName="Storage Tank" />
         <buildingType hexName="X2" buildingTypeName="Storage Tank" />
@@ -112,7 +115,30 @@
 			x - x coordinate of overly upper left
 			y - y coordinate of overlay upper left
 		-->
-
+        <underlaySSRule name="WallsOnly" image="WallPattern.gif">
+            <color name="HedgeGreen" />
+        </underlaySSRule>
+        <underlaySSRule name="WallToCactus" image="CactusPattern.gif">
+            <color name="WallBrown" />
+            <color name="WallGrey1" />
+            <color name="WallGrey2" />
+        </underlaySSRule>
+        <underlaySSRule name="HedgeToCactus" image="CactusPattern.gif">
+            <color name="HedgeGreen" />
+        </underlaySSRule>
+        <overlaySSRule name="DenseJungle" image="BFPB_DenseJungle.gif" x="1" y="1" />
+        <overlaySSRule name="RoadsToPaths" image="BFPB_RoadsToPaths.gif" x="1" y="1" />
+        <overlaySSRule name="NoWoodsRoads" image="BFPB_NoWoodsRoad.gif" x="1" y="1" />
+        <overlaySSRule name="PalmTrees" image="BFPB_PalmTrees.gif" x="1" y="1" />
+        <overlaySSRule name="OrchardsToCrags" image="BFPB_OrchardsToCrags.gif" x="1" y="1" />
+        <overlaySSRule name="OrchardsToShellholes" image="BFPB_OrchardsToShellholes.gif" x="1" y="1" />
+        <overlaySSRule name="Bamboo" image="BFPB_Bamboo.gif" x="1" y="1" />
+		<overlaySSRule name="HedgesToOG" image="BFPB_HedgesToOG.gif" x="0" y="0" />
+        <overlaySSRule name="HedgesToBocage" image="BFPB_HedgesToBocage.gif" x="1" y="1" />
+        <overlaySSRule name="WallsToBocage" image="BFPB_WallsToBocage.gif" x="1" y="1" />
+        <overlaySSRule name="NoRoads" image="BFPB_NoRoads.gif" x="1" y="1" />
+        <overlaySSRule name="LightWoods" image="BFPB_LtWoods.gif" x="1" y="1" />
+		
 	</overlaySSRules>
 	
 	<colors>
@@ -123,73 +149,74 @@
 			terrain - the LOS terrain type
 			elevation - the base elevation of the terrain
 			
+    		<color name="Level0" red="175" green="188" blue="106" terrain="Open Ground" elevation="0" />
 		-->
-		<color name="Level0" red="175" green="188" blue="106" terrain="Open Ground" elevation="0" />
-		<color name="Level1" red="176" green="147" blue="70" terrain="Open Ground" elevation="1" />
-		
-		<color name="PavedRdL0" red="192" green="192" blue="207" terrain="Paved Road" elevation="0" />
-		<color name="DirtRdL0" red="220" green="205" blue="123" terrain="Dirt Road" elevation="0" />
-		
-		<color name="WoodStairwell" red="250" green="254" blue="255" terrain="Wooden Building" elevation="0" />
-		<color name="StoneStairwell" red="251" green="254" blue="255" terrain="Stone Building" elevation="0" />
-		
-		<color name="StoneRowhouseBar" red="1" green="1" blue="0" terrain="Rowhouse Wall, 1 Level" elevation="0" />
-		
-		<color name="WoodsGreen" red="85" green="95" blue="45" terrain="Woods" elevation="UNKNOWN" />
-		<color name="WoodsBlack" red="44" green="42" blue="22" terrain="Woods" elevation="UNKNOWN" />
+        <color name="Level0" red="175" green="188" blue="106" terrain="Open Ground" elevation="0" />
+        <color name="Level1" red="176" green="147" blue="70" terrain="Open Ground" elevation="1" />
 
-		<color name="HedgeGreen" red="62" green="91" blue="47" terrain="Hedge" elevation="UNKNOWN" />
-		
-		<color name="OrchL0" red="83" green="98" blue="46" terrain="Orchard" elevation="0" />
-		<color name="OrchL1" red="83" green="98" blue="47" terrain="Orchard" elevation="1" />
-		<color name="OrchTrees" red="82" green="98" blue="46" terrain="Orchard" elevation="UNKNOWN" />
-		
-		<color name="GrainL0" red="255" green="240" blue="111" terrain="Grain" elevation="UNKNOWN" />
-		<color name="FurrowsL0" red="255" green="239" blue="111" terrain="Open Ground" elevation="0" />
-		
-		<color name="BrushL0" red="123" green="165" blue="85" terrain="Brush" elevation="0" />
-		<color name="BrushBlackL0" red="68" green="64" blue="27" terrain="Brush" elevation="0" />
-		<color name="BrushL1" red="123" green="165" blue="86" terrain="Brush" elevation="1" />
-		<color name="BrushBlackL1" red="68" green="65" blue="27" terrain="Brush" elevation="1" />
-		
-		<color name="WallGrey1" red="158" green="157" blue="157" terrain="Wall" elevation="UNKNOWN" />
-		<color name="WallGrey2" red="92" green="91" blue="92" terrain="Wall" elevation="UNKNOWN" />
-		
-		<color name="WoodBldg1" red="49" green="36" blue="35" terrain="Wooden Building" elevation="0" />
-		<color name="WoodBldg2" red="73" green="55" blue="47" terrain="Wooden Building" elevation="0" />
-		<color name="WoodBldg3" red="91" green="70" blue="58" terrain="Wooden Building" elevation="0" />
-		<color name="WoodBldg4" red="95" green="47" blue="46" terrain="Wooden Building" elevation="0" />
-		<color name="WoodBldg5" red="116" green="74" blue="59" terrain="Wooden Building" elevation="0" />
-		<color name="WoodBldg6" red="120" green="52" blue="48" terrain="Wooden Building" elevation="0" />
-		<color name="WoodBldg7" red="148" green="63" blue="51" terrain="Wooden Building" elevation="0" />
-		<color name="WoodBldg8" red="155" green="80" blue="60" terrain="Wooden Building" elevation="0" />
-		<color name="WoodBldg9" red="165" green="71" blue="54" terrain="Wooden Building" elevation="0" />
+        <color name="PavedRdL0" red="192" green="192" blue="207" terrain="Paved Road" elevation="0" />
+        <color name="DirtRdL0" red="220" green="205" blue="123" terrain="Dirt Road" elevation="0" />
 
-		<color name="StoneBldg1" red="23" green="20" blue="24" terrain="Stone Building" elevation="0" />
-		<color name="StoneBldg2" red="44" green="43" blue="57" terrain="Stone Building" elevation="0" />
-		<color name="StoneBldg3" red="59" green="69" blue="77" terrain="Stone Building" elevation="0" />
-		<color name="StoneBldg4" red="90" green="96" blue="82" terrain="Stone Building" elevation="0" />
-		<color name="StoneBldg5" red="88" green="103" blue="121" terrain="Stone Building" elevation="0" />
-		<color name="StoneBldg6" red="121" green="127" blue="129" terrain="Stone Building" elevation="0" />
-		<color name="StoneBldg7" red="140" green="155" blue="150" terrain="Stone Building" elevation="0" />
-		<color name="StoneBldg8" red="158" green="176" blue="190" terrain="Stone Building" elevation="0" />
-		<color name="StoneBldg9" red="191" green="187" blue="189" terrain="Stone Building" elevation="0" />
-		<color name="StoneBldg10" red="193" green="193" blue="203" terrain="Stone Building" elevation="0" />
-		<color name="StoneBldg11" red="194" green="207" blue="215" terrain="Stone Building" elevation="0" />
-		<color name="StoneBldg12" red="218" green="221" blue="227" terrain="Stone Building" elevation="0" />
-		
-		<color name="Lumberyard1" red="84" green="57" blue="54" terrain="Lumberyard" elevation="0" />
-		<color name="Lumberyard2" red="119" green="61" blue="56" terrain="Lumberyard" elevation="0" />
-		<color name="Lumberyard3" red="168" green="60" blue="53" terrain="Lumberyard" elevation="0" />
-		<color name="Lumberyard4" red="113" green="103" blue="74" terrain="Lumberyard" elevation="0" />
-		<color name="Lumberyard5" red="113" green="115" blue="88" terrain="Lumberyard" elevation="0" />
-		
-		<color name="Rails1" red="142" green="137" blue="132" terrain="Railroad, Ground Level" elevation="0" />
-		<color name="Rails2" red="120" green="122" blue="126" terrain="Railroad, Ground Level" elevation="0" />
-		<color name="RailTies" red="110" green="69" blue="48" terrain="Railroad, Ground Level" elevation="0" />
-		<color name="RailBed1" red="124" green="115" blue="92" terrain="Railroad, Ground Level" elevation="0" />
-		<color name="RailBed2" red="98" green="98" blue="84" terrain="Railroad, Ground Level" elevation="0" />
-		<color name="RailBed3" red="65" green="55" blue="46" terrain="Railroad, Ground Level" elevation="0" />
+        <color name="WoodStairwell" red="250" green="254" blue="255" terrain="Wooden Building" elevation="0" />
+        <color name="StoneStairwell" red="251" green="254" blue="255" terrain="Stone Building" elevation="0" />
+
+        <color name="StoneRowhouseBar" red="1" green="1" blue="0" terrain="Rowhouse Wall, 1 Level" elevation="0" />
+
+        <color name="WoodsGreen" red="85" green="95" blue="45" terrain="Woods" elevation="UNKNOWN" />
+        <color name="WoodsBlack" red="44" green="42" blue="22" terrain="Woods" elevation="UNKNOWN" />
+
+        <color name="HedgeGreen" red="62" green="91" blue="47" terrain="Hedge" elevation="UNKNOWN" />
+
+        <color name="OrchL0" red="83" green="98" blue="46" terrain="Orchard" elevation="0" />
+        <color name="OrchL1" red="83" green="98" blue="47" terrain="Orchard" elevation="1" />
+        <color name="OrchTrees" red="82" green="98" blue="46" terrain="Orchard" elevation="UNKNOWN" />
+
+        <color name="GrainL0" red="255" green="240" blue="111" terrain="Grain" elevation="UNKNOWN" />
+        <color name="FurrowsL0" red="255" green="239" blue="111" terrain="Open Ground" elevation="0" />
+
+        <color name="BrushL0" red="123" green="165" blue="85" terrain="Brush" elevation="0" />
+        <color name="BrushBlackL0" red="68" green="64" blue="27" terrain="Brush" elevation="0" />
+        <color name="BrushL1" red="123" green="165" blue="86" terrain="Brush" elevation="1" />
+        <color name="BrushBlackL1" red="68" green="65" blue="27" terrain="Brush" elevation="1" />
+
+        <color name="WallGrey1" red="158" green="157" blue="157" terrain="Wall" elevation="UNKNOWN" />
+        <color name="WallGrey2" red="92" green="91" blue="92" terrain="Wall" elevation="UNKNOWN" />
+
+        <color name="WoodBldg1" red="49" green="36" blue="35" terrain="Wooden Building" elevation="0" />
+        <color name="WoodBldg2" red="73" green="55" blue="47" terrain="Wooden Building" elevation="0" />
+        <color name="WoodBldg3" red="91" green="70" blue="58" terrain="Wooden Building" elevation="0" />
+        <color name="WoodBldg4" red="95" green="47" blue="46" terrain="Wooden Building" elevation="0" />
+        <color name="WoodBldg5" red="116" green="74" blue="59" terrain="Wooden Building" elevation="0" />
+        <color name="WoodBldg6" red="120" green="52" blue="48" terrain="Wooden Building" elevation="0" />
+        <color name="WoodBldg7" red="148" green="63" blue="51" terrain="Wooden Building" elevation="0" />
+        <color name="WoodBldg8" red="155" green="80" blue="60" terrain="Wooden Building" elevation="0" />
+        <color name="WoodBldg9" red="165" green="71" blue="54" terrain="Wooden Building" elevation="0" />
+
+        <color name="StoneBldg1" red="23" green="20" blue="24" terrain="Stone Building" elevation="0" />
+        <color name="StoneBldg2" red="44" green="43" blue="57" terrain="Stone Building" elevation="0" />
+        <color name="StoneBldg3" red="59" green="69" blue="77" terrain="Stone Building" elevation="0" />
+        <color name="StoneBldg4" red="90" green="96" blue="82" terrain="Stone Building" elevation="0" />
+        <color name="StoneBldg5" red="88" green="103" blue="121" terrain="Stone Building" elevation="0" />
+        <color name="StoneBldg6" red="121" green="127" blue="129" terrain="Stone Building" elevation="0" />
+        <color name="StoneBldg7" red="140" green="155" blue="150" terrain="Stone Building" elevation="0" />
+        <color name="StoneBldg8" red="158" green="176" blue="190" terrain="Stone Building" elevation="0" />
+        <color name="StoneBldg9" red="191" green="187" blue="189" terrain="Stone Building" elevation="0" />
+        <color name="StoneBldg10" red="193" green="193" blue="203" terrain="Stone Building" elevation="0" />
+        <color name="StoneBldg11" red="194" green="207" blue="215" terrain="Stone Building" elevation="0" />
+        <color name="StoneBldg12" red="218" green="221" blue="227" terrain="Stone Building" elevation="0" />
+
+        <color name="Lumberyard1" red="84" green="57" blue="54" terrain="Lumberyard" elevation="0" />
+        <color name="Lumberyard2" red="119" green="61" blue="56" terrain="Lumberyard" elevation="0" />
+        <color name="Lumberyard3" red="168" green="60" blue="53" terrain="Lumberyard" elevation="0" />
+        <color name="Lumberyard4" red="113" green="103" blue="74" terrain="Lumberyard" elevation="0" />
+        <color name="Lumberyard5" red="113" green="115" blue="88" terrain="Lumberyard" elevation="0" />
+
+        <color name="Rails1" red="142" green="137" blue="132" terrain="Railroad, Ground Level" elevation="0" />
+        <color name="Rails2" red="120" green="122" blue="126" terrain="Railroad, Ground Level" elevation="0" />
+        <color name="RailTies" red="110" green="69" blue="48" terrain="Railroad, Ground Level" elevation="0" />
+        <color name="RailBed1" red="124" green="115" blue="92" terrain="Railroad, Ground Level" elevation="0" />
+        <color name="RailBed2" red="98" green="98" blue="84" terrain="Railroad, Ground Level" elevation="0" />
+        <color name="RailBed3" red="65" green="55" blue="46" terrain="Railroad, Ground Level" elevation="0" />
 		
 	</colors>
 	
