@@ -21,8 +21,6 @@ import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 
-import VASL.build.module.ASLMap;
-import VASL.build.module.map.boardArchive.BoardArchive;
 import VASSAL.Info;
 import VASSAL.launch.TilingHandler;
 import VASSAL.build.GameModule;
@@ -75,11 +73,8 @@ public class ASLTilingHandler extends VASSAL.launch.TilingHandler {
     List<Pair<String,IOException>> failed) throws IOException
   {
     final FileArchive fa = archive.getArchive();
+    final String iname = fa.getFile().getName() + ".gif";
 
-    // png code - May 2019 allows board image files to be in either of png and gif formats
-    BoardArchive VASLBoardArchive = new BoardArchive(fa.getName(), "", ASLMap.getSharedBoardMetadata());
-    final String iname =  VASLBoardArchive.getBoardImageFileName();  //fa.getFile().getName() + ".gif";
-    //
     int maxpix = 0; // number of pixels in the largest image
     int tcount = 0; // tile count
 
