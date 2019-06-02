@@ -22,8 +22,8 @@
 -->
 <boardMetadata 
 	name="k" 
-	version="6.0" 
-	versionDate="Apr 2018" 
+	version="6.1" 
+	versionDate="Jun 2019" 
 	author="TR" 
 	boardImageFileName="bdk.gif" 
 	hasHills="FALSE" 
@@ -120,7 +120,7 @@
 <color name="WoodBldg14" red="155" green="104" blue="52" terrain="Wooden Building" elevation="UNKNOWN" />
 <color name="WoodBldg15" red="170" green="119" blue="63" terrain="Wooden Building" elevation="UNKNOWN" />
 
-<color name="DASLDirtRoadEdge" red="177" green="154" blue="82" terrain="DASLDirtRoadEdge" elevation="UNKNOWN" />
+<color name="DASLDirtRoadEdge" red="177" green="154" blue="82" terrain="Dirt Road" elevation="UNKNOWN" />
 
 	</colors>
 	
