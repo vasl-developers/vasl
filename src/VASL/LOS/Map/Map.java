@@ -2248,11 +2248,14 @@ public class Map  {
 
         if (!status.LOSLeavesBuilding && !status.currentHex.equals(status.sourceHex)) {
             if (status.currentTerrain.isBuildingTerrain()) {  // LOS is within a non-factory building; not same hex
-                if (status.sourceElevation != status.targetElevation) {
-                    status.reason = "LOS must leave the building before leaving the source hex to see a location with a different elevation (A6.8 Example 2)";
-                    status.blocked = true;
-                    result.setBlocked(status.currentCol, status.currentRow, status.reason);
-                    return true;
+                // DR added code to handle split level buildings
+                if (!(status.sourceElevation > status.currentTerrainHgt + status.groundLevel)) {
+                    if (status.sourceElevation != status.targetElevation) {
+                        status.reason = "LOS must leave the building before leaving the source hex to see a location with a different elevation (A6.8 Example 2)";
+                        status.blocked = true;
+                        result.setBlocked(status.currentCol, status.currentRow, status.reason);
+                        return true;
+                    }
                 }
             }
             else if (!status.LOSLeavesBuilding && (status.target.getTerrain().isFactoryTerrain() | status.source.getTerrain().isFactoryTerrain())  ) {  //LOS is within a factory
