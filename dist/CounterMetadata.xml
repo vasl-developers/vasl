@@ -30,6 +30,14 @@
     <smoke name="4-level Blaze" hindrance="3" height="7"/>
 
     <terrain name="Stone Rubble" terrain="Stone Rubble"/>
+    <terrain name="Stone Rubble Ground Level" terrain="Stone Rubble Ground Level"/>
+    <terrain name="Stone Rubble Level 1" terrain="Stone Rubble Level 1"/>
+    <terrain name="Stone Rubble Level 2" terrain="Stone Rubble Level 2"/>
+    <terrain name="Stone Rubble Level 3" terrain="Stone Rubble Level 3"/>
+    <terrain name="Wood Rubble Ground Level" terrain="Wooden Rubble Ground Level"/>
+    <terrain name="Wood Rubble Level 1" terrain="Wooden Rubble Level 1"/>
+    <terrain name="Wood Rubble Level 2" terrain="Wooden Rubble Level 2"/>
+    <terrain name="Wood Rubble Level 3" terrain="Wooden Rubble Level 3"/>
     <terrain name="Wood Rubble" terrain="Wooden Rubble"/>
 
     <wreck name="Wreck"/>
