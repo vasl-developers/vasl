@@ -19,8 +19,9 @@
 	others - TBD e.g. alternate hex grain, etc. 
 	
 	3/11/15 - fixed "no woods roads" SSR rule
+	v6.2 Aug 2019 added LightWoods (BK)
 -->
-<boardMetadata name="q" version="6.1" versionDate="Jan 2011" author="TR" boardImageFileName="bdq.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="q" version="6.2" versionDate="Aug 2019" author="TR" boardImageFileName="bdq.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -72,6 +73,7 @@
 		<overlaySSRule name="OrchardsToShellholes" image="q_OrchardsToShellholes.gif" x="85" y="38" />
 		<overlaySSRule name="OrchardsToCrags" image="q_Orch2Crag.gif" x="92" y="39" />
 		<overlaySSRule name="PalmTrees" image="q_PalmTrees.gif" x="89" y="39" />
+		<overlaySSRule name="LightWoods" image="q_LightWoods.gif" x="1" y="1" />
 		<overlaySSRule name="DenseJungle" image="q_DenseJungle.gif" x="1" y="1" />
 		<overlaySSRule name="NoRoads" image="q_NoRoads.gif" x="1" y="1" />
 	</overlaySSRules>

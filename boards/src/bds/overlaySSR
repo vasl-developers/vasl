@@ -7,6 +7,9 @@ underlay CactusPattern.gif WallBrown,WallGrey1,WallGrey2
 HedgeToCactus
 underlay CactusPattern.gif HedgeGreen
 
+LightWoods
+s_LightWoods.gif 1,1
+
 OrchardsToShellholes
 s_Orch2Shell.gif 198,39
 
