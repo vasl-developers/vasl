@@ -21,11 +21,12 @@
 	A1CenterY - y location of the A1 center dot 
 	
 	3/11/15 - fixed "no woods roads" SSR rule
+	v6.2 Aug 2019 added LightWoods (BK)
 -->
 <boardMetadata 
 	name="h" 
-	version="6.1" 
-	versionDate="Sep 2008" 
+	version="6.2" 
+	versionDate="Aug 2019" 
 	author="TR" 
 	boardImageFileName="bdh.gif" 
 	hasHills="FALSE" 
@@ -259,6 +260,7 @@
 		<overlaySSRule name="OrchardsToCrags" image="h_Orch2Crag.gif" x="73" y="10" />
 		<overlaySSRule name="HedgesToBocage" image="h_HedgesToBocage.gif" x="44" y="1" />
 		<overlaySSRule name="WallsToBocage" image="h_WallsToBocage.gif" x="1061" y="1" />
+		<overlaySSRule name="LightWoods" image="h_LightWoods.gif" x="1" y="1" />
 		<overlaySSRule name="DenseJungle" image="h_DenseJungle.gif" x="1" y="1" />
 		<overlaySSRule name="NoRoads" image="h_NoRoads.gif" x="1" y="1" />
 	</overlaySSRules>

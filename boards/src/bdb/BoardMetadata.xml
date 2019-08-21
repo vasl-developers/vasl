@@ -19,11 +19,13 @@
 	hexWidth - the width of a hex in pixels - decimal - center point to center point
 	A1CenterX - x location of the A1 center dot
 	A1CenterY - y location of the A1 center dot 
+	
+	v6.1 Aug 2019 added LightWoods (BK)
 -->
 <boardMetadata 
 	name="b" 
-	version="6.0" 
-	versionDate="Sep 2008" 
+	version="6.1" 
+	versionDate="Aug 2019" 
 	author="TR" 
 	boardImageFileName="bdb.gif" 
 	hasHills="FALSE" 
@@ -98,6 +100,7 @@
 		<overlaySSRule name="HedgesToBocage" image="b_Hedge2Bocage.gif" x="893" y="1" />
 		<overlaySSRule name="WallsToBocage" image="b_Walls2Bocage.gif" x="104" y="1" />
 		<overlaySSRule name="Bamboo" image="b_Bamboo.gif" x="239" y="1" />
+		<overlaySSRule name="LightWoods" image="b_LightWoods.gif" x="1" y="1" />
 		<overlaySSRule name="DenseJungle" image="b_DenseJungle.gif" x="1" y="1" />
 		<overlaySSRule name="PalmTrees" image="b_PalmTrees.gif" x="935" y="513" />
 		<overlaySSRule name="RowhouseBarsToOpenGround" image="b_RHBar2OG.gif" x="731" y="400" />
