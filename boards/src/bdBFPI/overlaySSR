@@ -7,6 +7,9 @@ underlay CactusPattern.gif WallBrown,WallGrey1,WallGrey2
 HedgeToCactus
 underlay CactusPattern.gif HedgeGreen
 
+LightWoods
+BFPI_LightWoods.gif 1,1
+
 DenseJungle
 BFPI_DenseJungle.gif 1,1
 

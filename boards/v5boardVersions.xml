@@ -159,38 +159,38 @@
 		<boarddata name="NULV" version="1" versionDate="Aug 2008" description="" />
 		<boarddata name="BFP1" version="6.1" versionDate="Aug 2008" description="" />
 		<boarddata name="BFP2" version="6.1" versionDate="Aug 2008" description="" />
-		<boarddata name="BFPA" version="6.1" versionDate="Aug 2008" description="" />
+		<boarddata name="BFPA" version="6.2" versionDate="Aug 2019" description="" />
 		<boarddata name="BFPB" version="6.2" versionDate="May 2019" description="" />
-		<boarddata name="BFPC" version="6.1" versionDate="Aug 2008" description="" />
-		<boarddata name="BFPD" version="6.0" versionDate="Aug 2008" description="" />
-		<boarddata name="BFPE" version="6.1" versionDate="Aug 2008" description="" />
-		<boarddata name="BFPF" version="6.0" versionDate="Aug 2008" description="" />
-		<boarddata name="BFPG" version="6.0" versionDate="Aug 2008" description="" />
-		<boarddata name="BFPH" version="6.0" versionDate="Aug 2008" description="" />
-		<boarddata name="BFPI" version="6.1" versionDate="Aug 2008" description="" />
-		<boarddata name="BFPJ" version="6.1" versionDate="Aug 2008" description="" />
-		<boarddata name="BFPK" version="6.1" versionDate="Aug 2008" description="" />
+		<boarddata name="BFPC" version="6.2" versionDate="Aug 2019" description="" />
+		<boarddata name="BFPD" version="6.1" versionDate="Aug 2019" description="" />
+		<boarddata name="BFPE" version="6.2" versionDate="Aug 2019" description="" />
+		<boarddata name="BFPF" version="6.1" versionDate="Aug 2019" description="" />
+		<boarddata name="BFPG" version="6.1" versionDate="Aug 2019" description="" />
+		<boarddata name="BFPH" version="6.1" versionDate="Aug 2019" description="" />
+		<boarddata name="BFPI" version="6.2" versionDate="Aug 2019" description="" />
+		<boarddata name="BFPJ" version="6.2" versionDate="Aug 2019" description="" />
+		<boarddata name="BFPK" version="6.2" versionDate="Aug 2019" description="" />
 		<boarddata name="BFPL" version="6.1" versionDate="Aug 2008" description="" />
 		<boarddata name="BFPM" version="6.0" versionDate="Aug 2008" description="" />
 		<boarddata name="BFPN" version="6.1" versionDate="Aug 2008" description="" />
-		<boarddata name="BFPO" version="6.1" versionDate="Aug 2008" description="" />
-		<boarddata name="BFPP" version="6.1" versionDate="Aug 2008" description="" />
-		<boarddata name="BFPQ" version="6.1" versionDate="Aug 2008" description="" />
-		<boarddata name="BFPR" version="6.1" versionDate="Aug 2008" description="" />
-		<boarddata name="BFPDW1a" version="6.0" versionDate="Aug 2008" description="" />
-		<boarddata name="BFPDW1b" version="6.1" versionDate="Aug 2008" description="" />
+		<boarddata name="BFPO" version="6.2" versionDate="Aug 2019" description="" />
+		<boarddata name="BFPP" version="6.2" versionDate="Aug 2019" description="" />
+		<boarddata name="BFPQ" version="6.2" versionDate="Aug 2019" description="" />
+		<boarddata name="BFPR" version="6.2" versionDate="Aug 2019" description="" />
+		<boarddata name="BFPDW1a" version="6.1" versionDate="Aug 2019" description="" />
+		<boarddata name="BFPDW1b" version="6.2" versionDate="Aug 2019" description="" />
 		<boarddata name="BFPDW2a" version="6.0" versionDate="Aug 2008" description="" />
 		<boarddata name="BFPDW2b" version="6.1" versionDate="Aug 2008" description="" />
 		<boarddata name="BFPDW3a" version="6.1" versionDate="Aug 2008" description="" />
 		<boarddata name="BFPDW3b" version="6.1" versionDate="Aug 2008" description="" />
 		<boarddata name="BFPDW4a" version="6.1" versionDate="Aug 2008" description="" />
 		<boarddata name="BFPDW4b" version="6.1" versionDate="Aug 2008" description="" />
-		<boarddata name="BFPDW5a" version="6.1" versionDate="Aug 2008" description="" />
-		<boarddata name="BFPDW5b" version="6.1" versionDate="Aug 2008" description="" />
-		<boarddata name="BFPDW6a" version="6.1" versionDate="Aug 2008" description="" />
-		<boarddata name="BFPDW6b" version="6.1" versionDate="Aug 2008" description="" />
-		<boarddata name="BFPDW7a" version="6.0" versionDate="Aug 2008" description="" />
-		<boarddata name="BFPDW7b" version="6.0" versionDate="Aug 2008" description="" />
+		<boarddata name="BFPDW5a" version="6.2" versionDate="Aug 2019" description="" />
+		<boarddata name="BFPDW5b" version="6.2" versionDate="Aug 2019" description="" />
+		<boarddata name="BFPDW6a" version="6.2" versionDate="Aug 2019" description="" />
+		<boarddata name="BFPDW6b" version="6.2" versionDate="Aug 2019" description="" />
+		<boarddata name="BFPDW7a" version="6.1" versionDate="Aug 2019" description="" />
+		<boarddata name="BFPDW7b" version="6.1" versionDate="Aug 2019" description="" />
 		<boarddata name="BF1" version="1.1" versionDate="Aug 2008" description="" />
 		<boarddata name="TRBH" version="1.0" versionDate="Aug 2008" description="" />
 	<!--#KB=2.0 not accurate -->

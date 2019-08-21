@@ -19,8 +19,9 @@
 	others - TBD e.g. alternate hex grain, etc. 
 	
 	3/11/15 - fixed "no woods roads" SSR rule
+	v6.2 Aug 2019 added LightWoods (BK)
 -->
-<boardMetadata name="BFPC" version="6.1" versionDate="Aug 2009" author="TR" boardImageFileName="bdBFPC.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="BFPC" version="6.2" versionDate="Aug 2019" author="TR" boardImageFileName="bdBFPC.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -64,6 +65,7 @@
         <underlaySSRule name="HedgeToCactus" image="CactusPattern.gif">
             <color name="HedgeGreen" />
         </underlaySSRule>
+        <overlaySSRule name="LightWoods" image="BFPC_LightWoods.gif" x="1" y="1" />
         <overlaySSRule name="DenseJungle" image="BFPC_DenseJungle.gif" x="1" y="1" />
         <overlaySSRule name="RoadsToPaths" image="BFPC_RoadsToPaths.gif" x="428" y="1" />
         <overlaySSRule name="NoWoodsRoads" image="BFPC_NoWoodsRoad.gif" x="428" y="8" />

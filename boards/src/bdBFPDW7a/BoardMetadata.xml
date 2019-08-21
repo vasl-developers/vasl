@@ -17,11 +17,13 @@
     height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
+	
+	V6.1 Aug 2019 added LightWoods (BK)
 -->
 <boardMetadata 
 	name="BFPDW7a" 
-	version="6.0" 
-	versionDate="Dec 2016" 
+	version="6.1" 
+	versionDate="Aug 2019" 
 	author="SWH" 
 	boardImageFileName="bdBFPDW7a.gif" 
 	hasHills="FALSE" 
@@ -48,6 +50,7 @@
 			y - y coordinate of overlay upper left
 		-->
 		<overlaySSRule name="PalmTrees" image="BFPDW7a_PalmTrees.gif" x="0" y="0" />
+		<overlaySSRule name="LightWoods" image="BFPDW7a_LightWoods.gif" x="1" y="1" />
 		
 	</overlaySSRules>
 	

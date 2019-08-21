@@ -19,8 +19,9 @@
 	others - TBD e.g. alternate hex grain, etc. 
 	
 	3/11/15 - fixed "no woods roads" SSR rule
+	v6.2 Aug 2019 added LightWoods (BK)
 -->
-<boardMetadata name="BFPJ" version="6.1" versionDate="Feb 2011" author="TR" boardImageFileName="bdBFPJ.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="BFPJ" version="6.2" versionDate="Aug 2019" author="TR" boardImageFileName="bdBFPJ.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -64,6 +65,7 @@
 		<overlaySSRule name="BridgeToFord" image="BFPJ_BridgeToFord.gif" x="852" y="311" />
 		<overlaySSRule name="NoBridge" image="BFPJ_NoBridge.gif" x="852" y="311" />
 		<overlaySSRule name="BSO_BFPJ_NoStream" image="BSO_BFPJ_NoStream.gif" x="870" y="10" />
+		<overlaySSRule name="LightWoods" image="BFPJ_LightWoods.gif" x="1" y="1" />
 		<overlaySSRule name="DenseJungle" image="BFPJ_DenseJungle.gif" x="1" y="1" />
 		<overlaySSRule name="WallsToOG" image="BFPJ_WallsToOG.gif" x="713" y="155" />
 		<overlaySSRule name="NoCliffs" image="BFPJ_NoCliffs.gif" x="239" y="89" />
