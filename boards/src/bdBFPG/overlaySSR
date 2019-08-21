@@ -7,6 +7,9 @@ underlay CactusPattern.gif WallBrown,WallGrey1,WallGrey2
 HedgeToCactus
 underlay CactusPattern.gif HedgeGreen
 
+LightWoods
+BFPG_LightWoods.gif 365,1
+
 PalmTrees
 bdBFPG_PalmTrees.gif 32,525
 

@@ -17,8 +17,10 @@
     height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
+	
+	v6.2 Aug 2019 added LightWoods (BK)
 -->
-<boardMetadata name="BFPR" version="6.1" versionDate="Oct 2017" author="BK" boardImageFileName="bdBFPR.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="BFPR" version="6.2" versionDate="Aug 2019" author="BK" boardImageFileName="bdBFPR.gif" hasHills="FALSE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -82,9 +84,9 @@
 		<overlaySSRule name="OrchardsToShellholes" image="BFPR_OrchardsToShellholes.gif" x="143" y="8" />
 		<overlaySSRule name="OrchardsToCrags" image="BFPR_OrchardsToCrags.gif" x="145" y="13" />
 		<overlaySSRule name="PalmTrees" image="BFPR_PalmTrees.gif" x="141" y="7" />
-		<overlaySSRule name="LightWoods" image="BFPR_LightWoods.gif" x="1" y="1" />
 		<overlaySSRule name="NoRoads" image="BFPR_NoRoads.gif" x="1" y="1" />
 	-->
+		<overlaySSRule name="LightWoods" image="BFPR_LightWoods.gif" x="1" y="1" />
 	</overlaySSRules>
 	
 	<colors>

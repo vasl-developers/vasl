@@ -20,9 +20,10 @@
 	
 	3/11/15 - fixed "no woods roads" SSR rule
 	3/14/15 - fixed "Crags to Palms" SSR rule
+	v6.2 Aug 2019 added LightWoods (BK)
 
 -->
-<boardMetadata name="BFPI" version="6.1" versionDate="Jan 2011" author="TR" boardImageFileName="bdBFPI.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="BFPI" version="6.2" versionDate="Aug 2019" author="TR" boardImageFileName="bdBFPI.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -56,6 +57,7 @@
 		<underlaySSRule name="HedgeToCactus" image="CactusPattern.gif">
 			<color name="HedgeGreen" />
 		</underlaySSRule>
+		<overlaySSRule name="LightWoods" image="BFPI_LightWoods.gif" x="1" y="1" />
 		<overlaySSRule name="DenseJungle" image="BFPI_DenseJungle.gif" x="1" y="1" />
 		<overlaySSRule name="Bamboo" image="BFPI_Bamboo.gif" x="22" y="160" />
 		<overlaySSRule name="NoCliffs" image="BFPI_NoCliffs.gif" x="240" y="158" />

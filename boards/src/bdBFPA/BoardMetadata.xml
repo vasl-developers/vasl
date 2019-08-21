@@ -19,9 +19,10 @@
 	others - TBD e.g. alternate hex grain, etc. 
 	
 	6.1 - Fixed wooden factories
+	6.2 - Added Light Woods Aug 2019 BKemp
 	
 -->
-<boardMetadata name="BFPA" version="6.1" versionDate="Feb 2008" author="TR" boardImageFileName="bdBFPA.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="BFPA" version="6.2" versionDate="Aug 2019" author="TR" boardImageFileName="bdBFPA.gif" hasHills="FALSE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -173,7 +174,8 @@
 			x - x coordinate of overly upper left
 			y - y coordinate of overlay upper left
 		-->
-
+		
+		<overlaySSRule name="LightWoods" image="BFPA_LightWoods.gif" x="1" y="1" />
 	</overlaySSRules>
 	
 	<colors>
