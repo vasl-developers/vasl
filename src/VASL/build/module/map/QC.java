@@ -906,6 +906,8 @@ public class QC implements Buildable, GameComponent
     private JButton m_objDeluxeDraggableOverlaysWindowButton = null;
     private JToggleButton m_objBrokenFinderButton = null;
     private JToggleButton sniperFinderButton = null;
+    //ASLCasbin
+    private JToggleButton m_objASLCasbinButton = null;
     private Map m_objMap;
     private final ArrayList<QCConfiguration> mar_objListQCConfigurations = new ArrayList<QCConfiguration>();
     private QCConfiguration m_objQCWorkingConfiguration = null;
@@ -1117,6 +1119,12 @@ public class QC implements Buildable, GameComponent
         {
             sniperFinderButton = new JToggleButton();
             m_objMap.getToolBar().add(sniperFinderButton);
+        }
+        //ASLCasbin
+        if (m_objASLCasbinButton == null)
+        {
+            m_objASLCasbinButton = new JToggleButton();
+            m_objMap.getToolBar().add(m_objASLCasbinButton);
         }
 
         JButton l_objButtonMarkMoved = new JButton();
@@ -1755,6 +1763,37 @@ public class QC implements Buildable, GameComponent
 
                 sniperFinderButton.addActionListener(al);
                 sniperFinderButton.setToolTipText("Turn on/off the highlighting of sniperF counters");
+            }
+            // ASLCasbn
+            if ((m_objASLCasbinButton != null) && (m_objASLCasbinButton.getActionListeners().length == 0))
+            {
+                try
+                {
+                    m_objASLCasbinButton.setIcon(new ImageIcon(Op.load("cpv").getImage(null)));
+                }
+                catch (Exception ex)
+                {
+                }
+
+                ActionListener l_objAL = new ActionListener()
+                {
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        try
+                        {
+                            ASLCasbin l_objCasbin = (ASLCasbin) m_objMap.getComponentsOf(ASLCasbin.class).iterator().next();
+
+                            if (l_objCasbin != null)
+                                l_objCasbin.startcasbin(m_objASLCasbinButton.isSelected());
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+                    }
+                };
+
+                m_objASLCasbinButton.addActionListener(l_objAL);
+                m_objASLCasbinButton.setToolTipText("Report CVP Totals");
             }
 
             if (mar_HashPieceSlot.isEmpty())
