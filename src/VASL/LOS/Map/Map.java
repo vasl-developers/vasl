@@ -4197,7 +4197,7 @@ public class Map  {
 
         // create the hex grid
         Hex [][] newhexGrid = new Hex[this.width][];
-        if (this.A1CenterY==32.25) {
+        if (this.A1CenterY==32.25 || this.A1CenterY == -612.75 || this.A1CenterY == 97.1) {  //extra tests to handle BFP deluxe and DWb boards. 
             for (int col = 0; col < this.width; col++) {
 
                 newhexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd

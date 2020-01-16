@@ -41,6 +41,7 @@ import VASL.LOS.Map.Location;
 import VASL.build.module.ASLMap;
 import VASL.LOS.VASLGameInterface;
 import VASL.build.module.map.boardPicker.ASLBoard;
+import VASL.counters.ASLProperties;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.GameComponent;
@@ -56,6 +57,7 @@ import static VASSAL.build.GameModule.getGameModule;
 import VASL.build.module.map.boardPicker.Overlay;
 import VASSAL.counters.GamePiece;
 import VASSAL.counters.PieceIterator;
+import VASSAL.counters.Properties;
 import VASSAL.counters.Stack;
 // added as part of fixing remote event problem DR
 import VASSAL.tools.SequenceEncoder;
@@ -114,45 +116,11 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
 	protected void launch() {
 
         super.launch();
-        //hideHIP();
         setGridSnapToVertex(true);
         initializeMap();
 
     }
-    /*protected void hideHIP(){
 
-        ASLMap.ShowMapLevel showMapLevel = ASLMap.ShowMapLevel.ShowMapAndOverlay;
-        ((ASLMap)map).setShowMapLevel(showMapLevel);
-        *//*GamePiece[] allPieces = map.getAllPieces();
-        for (GamePiece p : allPieces) {
-            if (p instanceof Stack) {
-                for (PieceIterator pi = new PieceIterator(((Stack) p).getPiecesIterator()); pi.hasMoreElements(); ) {
-                    GamePiece p2 = pi.nextPiece();
-                    if (isMyPiece(p2)) {
-                        String hiddenBy = (String) p2.getProperty(Properties.HIDDEN_BY);
-                        if(hiddenBy != null) {
-                            // hide the piece
-                            //p2.setProperty(ASLProperties.HINDRANCE, "true");
-                            map.repaint();
-                        }
-
-                    }
-                }
-            } else {
-
-
-            }
-        }*//*
-    }
-    *//**
-     * @param piece the piece
-     * @return true if I own the piece
-     *//*
-    private boolean isMyPiece(GamePiece piece) {
-        String PLAYER_NAME = "RealName";
-        String myPlayerName = (String) getGameModule().getPrefs().getValue(PLAYER_NAME);
-        return  piece.getProperty("Owner") != null && piece.getProperty("Owner").equals(myPlayerName);
-    }*/
     private void initializeMap(){
 
         // make sure we have a map otherwise disable LOS
