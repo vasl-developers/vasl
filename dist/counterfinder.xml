@@ -1,0 +1,417 @@
+<?xml version="1.0"?>
+<!--
+	This file contains location of game counters in Counters Palette.
+	Used by Counter Search
+-->
+<counterfinder>
+
+	<!-- metadata for each of the game counters 
+    	Attributes:
+        	name = game piece name (i.e. piece.getName())
+        	paletteloc = location of counter in Counters Palette structure
+        -->
+
+	<counter name ="Prep Fire" palloc="Unit/Basic"/>
+	<counter name ="Pin" palloc="Unit/Basic"/>
+	<counter name ="DM" palloc="Unit/Basic"/>
+	<counter name ="First Fire" palloc="Unit/Basic"/>
+	<counter name ="CX" palloc="Unit/Basic"/>
+	<counter name ="Motion" palloc="Unit/Basic"/>
+	<counter name ="Smoke" palloc="Unit/Basic"/>
+	<counter name ="Residual FP " palloc="Unit/Basic"/>
+	<counter name ="Firelane" palloc="Unit/Basic"/>
+	<counter name ="Building" palloc="Unit/Basic"/>
+
+	<counter name ="Prep Fire" palloc="Unit/Fire/Prep"/>
+	<counter name ="Bounding Fire" palloc="Unit/Fire/Prep"/>
+	<counter name ="Opp Fire" palloc="Unit/Fire/Prep"/>
+	<counter name ="Adv Fired" palloc="Unit/Fire/Prep"/>
+	<counter name ="Int Fire" palloc="Unit/Fire/Prep"/>
+	<counter name ="No Fire" palloc="Unit/Fire/Prep"/>
+	<counter name ="Veh Prep Fire" palloc="Unit/Fire/Prep"/>
+
+    	<counter name ="First Fire" palloc="Unit/Fire/Def"/>
+	<counter name ="First Fire IFP" palloc="Unit/Fire/Def"/>
+	<counter name ="First Fire SW" palloc="Unit/Fire/Def"/>
+	<counter name ="Final Fire" palloc="Unit/Fire/Def"/>
+	<counter name ="Int Def Fire" palloc="Unit/Fire/Def"/>	
+	<counter name ="No Def Fire" palloc="Unit/Fire/Def"/>
+	<counter name ="Veh First Fire" palloc="Unit/Fire/Def"/>
+	<counter name ="Veh Final Fire" palloc="Unit/Fire/Def"/>
+
+	<counter name ="Acq" palloc="Unit/Fire/Acq"/>
+
+	<counter name ="No AP" palloc="Unit/Fire/Ammo"/>
+	<counter name ="No HE" palloc="Unit/Fire/Ammo"/>
+	<counter name ="No HEAT" palloc="Unit/Fire/Ammo"/>
+	<counter name ="No APCR" palloc="Unit/Fire/Ammo"/>
+	<counter name ="No APDS" palloc="Unit/Fire/Ammo"/>
+	<counter name ="No Cannister" palloc="Unit/Fire/Ammo"/>
+	<counter name ="No Smoke" palloc="Unit/Fire/Ammo"/>
+	<counter name ="No WP" palloc="Unit/Fire/Ammo"/>
+	<counter name ="Low Ammo" palloc="Unit/Fire/Ammo"/>
+	<counter name ="Ammo" palloc="Unit/Fire/Ammo"/>
+
+	<counter name ="MG Malf" palloc="Unit/Fire/Malfunction"/>
+	<counter name ="Gun Malf" palloc="Unit/Fire/Malfunction"/>
+	<counter name ="MA Malf" palloc="Unit/Fire/Malfunction"/>
+	<counter name ="SA Malf" palloc="Unit/Fire/Malfunction"/>
+	<counter name ="BMG Malf" palloc="Unit/Fire/Malfunction"/>
+	<counter name ="CMG Malf" palloc="Unit/Fire/Malfunction"/>
+	<counter name ="AAMG Malf" palloc="Unit/Fire/Malfunction"/>
+	<counter name ="One AAMG Malf" palloc="Unit/Fire/Malfunction"/>
+	<counter name ="RMG Malf" palloc="Unit/Fire/Malfunction"/>
+
+	<counter name ="RFP" palloc="Unit/Fire/RFP-Firelane"/>
+	<counter name ="Residual FP" palloc="Unit/Fire/RFP-Firelane"/>
+	<counter name ="RFP" palloc="Unit/Fire/RFP-Firelane"/>
+
+	<counter name ="Smoke" palloc="Unit/Fire/Smoke"/>
+	<counter name ="WP" palloc="Unit/Fire/Smoke"/>
+
+	<counter name ="SA Rockets" palloc="Unit/Fire/Rocket"/>
+
+	<counter name ="Disrupt" palloc="Unit/Inf/Infantry"/>
+	<counter name ="Encircled" palloc="Unit/Inf/Infantry"/>
+	<counter name ="Haz Movement" palloc="Unit/Inf/Infantry"/>
+	<counter name ="Labor" palloc="Unit/Inf/Infantry"/>
+	<counter name ="Inf Smoke" palloc="Unit/Inf/Infantry"/>
+	<counter name ="TI" palloc="Unit/Inf/Infantry"/>
+	<counter name ="Wall Advantage" palloc="Unit/Inf/Infantry"/>
+	<counter name ="Wounded" palloc="Unit/Inf/Infantry"/>
+	<counter name ="Walking Wounded" palloc="Unit/Inf/Infantry"/>
+	<counter name ="Inf WP" palloc="Unit/Inf/Infantry"/>
+	<counter name ="Deserter" palloc="Unit/Inf/Infantry"/>
+	<counter name ="UF" palloc="Unit/Inf/Infantry"/>
+
+	<counter name ="CC" palloc="Unit/Inf/CC - Melee"/>
+	<counter name ="Melee" palloc="Unit/Inf/CC - Melee"/>
+	<counter name ="HtH CC" palloc="Unit/Inf/CC - Melee"/>
+	<counter name ="HtH Melee" palloc="Unit/Inf/CC - Melee"/>
+
+	<counter name ="Human Wave" palloc="Unit/Inf/HW - Banzai"/>
+	<counter name ="HW Dir" palloc="Unit/Inf/HW - Banzai"/>
+	<counter name ="Bayonet" palloc="Unit/Inf/HW - Banzai"/>
+	<counter name ="HW Range" palloc="Unit/Inf/HW - Banzai"/>
+	<counter name ="Banzai" palloc="Unit/Inf/HW - Banzai"/>
+	<counter name ="Lax" palloc="Unit/Inf/HW - Banzai"/>
+	<counter name ="Infantry Charge" palloc="Unit/Inf/HW - Banzai"/>
+
+	<counter name ="Berserk" palloc="Unit/Inf/HoB"/>
+	<counter name ="Fanatic" palloc="Unit/Inf/HoB"/>
+	<counter name ="Heroic" palloc="Unit/Inf/HoB"/>
+
+	<counter name ="POW" palloc="Unit/Inf/Prisoners"/>
+	<counter name ="Unarmed" palloc="Unit/Inf/Prisoners"/>
+	<counter name ="Prisoners" palloc="Unit/Inf/Prisoners"/>
+	<counter name ="No Quarter" palloc="Unit/Inf/Prisoners"/>
+
+	<counter name ="AA mode" palloc="Unit/Gun"/>
+	<counter name ="Low Ammo" palloc="Unit/Gun"/>
+	<counter name ="CA" palloc="Unit/Gun"/>
+	<counter name ="MG CA" palloc="Unit/Gun"/>
+	<counter name ="En Portee" palloc="Unit/Gun"/>
+	<counter name ="Limbered" palloc="Unit/Gun"/>
+	<counter name ="non-Emplaced Gun" palloc="Unit/Gun"/>
+	<counter name ="Pack-TI" palloc="Unit/Gun"/>
+
+	<counter name ="Empl Fascine" palloc="Unit/Veh/Vehicle"/>
+	<counter name ="Fascine" palloc="Unit/Veh/Vehicle"/>
+	<counter name ="Motion" palloc="Unit/Veh/Vehicle"/>
+	<counter name ="Reverse Motion" palloc="Unit/Veh/Vehicle"/>
+	<counter name ="One Lane" palloc="Unit/Veh/Vehicle"/>
+	<counter name ="Trailbreak" palloc="Unit/Veh/Vehicle"/>
+	<counter name ="Trailer Pass" palloc="Unit/Veh/Vehicle"/>
+	<counter name ="VBM hexside" palloc="Unit/Veh/Vehicle"/>
+	<counter name ="BU/CE NT" palloc="Unit/Veh/Vehicle"/>
+	<counter name ="BU/CE T" palloc="Unit/Veh/Vehicle"/>
+	<counter name ="BU" palloc="Unit/Veh/Vehicle"/>
+	<counter name ="CT" palloc="Unit/Veh/Vehicle"/>
+
+	<counter name ="Abandoned" palloc="Unit/Veh/Bad Things"/>
+	<counter name ="Low Ammo" palloc="Unit/Veh/Bad Things"/>
+	<counter name ="Immobilized" palloc="Unit/Veh/Bad Things"/>
+	<counter name ="Out of Gas" palloc="Unit/Veh/Bad Things"/>
+	<counter name ="Scrounged" palloc="Unit/Veh/Bad Things"/>
+	<counter name ="Blaze" palloc="Unit/Veh/Bad Things"/>
+	<counter name ="Bog" palloc="Unit/Veh/Bad Things"/>
+	<counter name ="Mired" palloc="Unit/Veh/Bad Things"/>
+	<counter name ="Bog BRT" palloc="Unit/Veh/Bad Things"/>
+	<counter name ="Mired BRT" palloc="Unit/Veh/Bad Things"/>
+
+	<counter name ="Hull Down" palloc="Unit/Veh/Hull Down"/>
+	<counter name ="HD" palloc="Unit/Veh/Hull Down"/>
+	<counter name ="Veh Crest" palloc="Unit/Veh/Hull Down"/>
+	
+	<counter name ="Shock" palloc="Unit/Veh/Shock - Stun"/>
+	<counter name ="UK" palloc="Unit/Veh/Shock - Stun"/>
+	<counter name ="stun" palloc="Unit/Veh/Shock - Stun"/>
+	<counter name ="stun +1" palloc="Unit/Veh/Shock - Stun"/>
+	<counter name ="Recall" palloc="Unit/Veh/Shock - Stun"/>
+
+	<counter name ="Smoke Attempt" palloc="Unit/Veh/Sm - Mo Att."/>
+	<counter name ="Motion Attempt" palloc="Unit/Veh/Sm - Mo Att."/>
+
+	<counter name ="TKO" palloc="Unit/Veh/TKO - Dust"/>
+	<counter name ="Vehicle Dust" palloc="Unit/Veh/TKO - Dust"/>
+	
+	<counter name ="Crest" palloc="Info/Locate/Basic"/>
+	<counter name ="Culvert" palloc="Info/Locate/Basic"/>
+	<counter name ="Drift" palloc="Info/Locate/Basic"/>
+	<counter name ="Sewer" palloc="Info/Locate/Basic"/>
+	<counter name ="Path" palloc="Info/Locate/Basic"/>
+	<counter name ="Trailbreak" palloc="Info/Locate/Basic"/>
+	
+	<counter name ="Bridge" palloc="Info/Locate/Bridge"/>
+	<counter name ="Foot Bridge" palloc="Info/Locate/Bridge"/>
+	<counter name ="Heavy Bridge" palloc="Info/Locate/Bridge"/>
+	<counter name ="Pontoon Bridge" palloc="Info/Locate/Bridge"/>
+	<counter name ="Destroyed Bridge" palloc="Info/Locate/Bridge"/>
+	<counter name ="Ford" palloc="Info/Locate/Bridge"/>
+	<counter name ="Pier" palloc="Info/Locate/Bridge"/>
+
+	<counter name ="Level" palloc="Info/Locate/Building"/>
+	<counter name ="Building Level" palloc="Info/Locate/Building"/>
+	<counter name ="Roof" palloc="Info/Locate/Building"/>
+	<counter name ="Cellar" palloc="Info/Locate/Building"/>
+
+	<counter name ="Steeple" palloc="Info/Locate/Steeple"/>
+
+	<counter name ="Climb" palloc="Info/Locate/Climb"/>
+
+	<counter name ="Bank" palloc="Info/Locate/PTO - DTO"/>
+	<counter name ="Dune" palloc="Info/Locate/PTO - DTO"/>
+	<counter name ="Hillock" palloc="Info/Locate/PTO - DTO"/>
+	<counter name ="Tower" palloc="Info/Locate/PTO - DTO"/>
+
+	<counter name ="Breach" palloc="Info/Destroy/Basic"/>
+	<counter name ="Gutted" palloc="Info/Destroy/Basic"/>
+	<counter name ="Collapsed Hut" palloc="Info/Destroy/Basic"/>
+	<counter name ="Collapsed Ice" palloc="Info/Destroy/Basic"/>
+	<counter name ="Destroyed Bridge" palloc="Info/Destroy/Basic"/>
+	<counter name ="Burnt Out Wreck" palloc="Info/Destroy/Basic"/>
+	<counter name ="BO Wreck" palloc="Info/Destroy/Basic"/>
+
+	<counter name ="Flame" palloc="Info/Destroy/Flame - Blaze"/>
+	<counter name ="Blaze" palloc="Info/Destroy/Flame - Blaze"/>
+
+	<counter name ="Palm Debris" palloc="Info/Destroy/Rubble"/>
+	<counter name ="Rubble" palloc="Info/Destroy/Rubble"/>
+	<counter name ="Stone Rubble" palloc="Info/Destroy/Rubble"/>
+	<counter name ="Wood Rubble" palloc="Info/Destroy/Rubble"/>
+	<counter name ="Shellholes" palloc="Info/Destroy/Rubble"/>
+
+	<counter name ="Smoke" palloc="Info/Destroy/Smoke"/>
+	<counter name ="WP" palloc="Info/Destroy/Smoke"/>
+
+	<counter name ="A-T Ditch" palloc="Info/Fortify/Basic"/>
+	<counter name ="Foxhole" palloc="Info/Fortify/Basic"/>
+	<counter name ="Trench" palloc="Info/Fortify/Basic"/>
+	<counter name ="Wire" palloc="Info/Fortify/Basic"/>
+	<counter name ="Barricade" palloc="Info/Fortify/Basic"/>
+	<counter name ="Roaddblock" palloc="Info/Fortify/Basic"/>
+
+	<counter name ="DTO Foxhole" palloc="Info/Fortify/DTO"/>
+	<counter name ="DTO Trench" palloc="Info/Fortify/DTO"/>
+	<counter name ="Sanger" palloc="Info/Fortify/DTO"/>
+	<counter name ="DTO Wire" palloc="Info/Fortify/DTO"/>
+
+	<counter name ="PTO Foxhole" palloc="Info/Fortify/PTO - BRT"/>
+	<counter name ="PTO Trench" palloc="Info/Fortify/PTO - BRT"/>
+	<counter name ="Tetrahedron" palloc="Info/Fortify/PTO - BRT"/>
+	<counter name ="Tetrahedron - Wire" palloc="Info/Fortify/PTO - BRT"/>
+	<counter name ="Tower" palloc="Info/Fortify/PTO - BRT"/>
+	<counter name ="Panjis" palloc="Info/Fortify/PTO - BRT"/>
+
+	<counter name ="Mines" palloc="Info/Fortify/Mines/Minefield"/>
+	<counter name ="Dummy Mines" palloc="Info/Fortify/Mines/Minefield Dummy"/>
+	<counter name ="AP Mines" palloc="Info/Fortify/Mines/Minefield AP"/>
+	<counter name ="AT Mines" palloc="Info/Fortify/Mines/Minefield AT"/>
+	<counter name ="Trip Flare" palloc="Info/Fortify/Mines/Trip Flare"/>
+
+	<counter name ="Fortified Building" palloc="Info/Fortify/Fort Bldg"/>
+	<counter name ="Breach" palloc="Info/Fortify/Fort Bldg"/>
+	<counter name ="Cellar" palloc="Info/Fortify/Fort Bldg"/>
+
+	<counter name ="Fanatic Strongpoint" palloc="Info/Fortify/Strongpoint"/>
+	<counter name ="Breach" palloc="Info/Fortify/Strongpoint"/>
+
+	<counter name ="Cave" palloc="Info/Fortify/Cave"/>
+	<counter name ="MouseHole" palloc="Info/Fortify/Cave"/>
+
+	<counter name ="Cupola" palloc="Info/Fortify/Cupola"/>
+	<counter name ="MMG Cupola" palloc="Info/Fortify/Cupola"/>
+	<counter name ="HMG Cupola" palloc="Info/Fortify/Cupola"/>
+	<counter name ="75LL Cupola" palloc="Info/Fortify/Cupola"/>
+	<counter name ="88LL Cupola" palloc="Info/Fortify/Cupola"/>
+
+	<counter name ="Pillbox" palloc="Info/Fortify/Pillbox"/>
+	<counter name ="1+3+5 Pillbox" palloc="Info/Fortify/Pillbox"/>
+	<counter name ="1+4+6 Pillbox" palloc="Info/Fortify/Pillbox"/>
+	<counter name ="1+5+7 Pillbox" palloc="Info/Fortify/Pillbox"/>
+	
+	<counter name ="Alt Pillbox" palloc="Info/Fortify/Pillbox Alternate"/>
+	<counter name ="1+3+5 Alt Pillbox" palloc="Info/Fortify/Pillbox Alternate"/>
+	<counter name ="1+4+6 Alt Pillbox" palloc="Info/Fortify/Pillbox Alternate"/>
+	<counter name ="1+5+7 Alt Pillbox" palloc="Info/Fortify/Pillbox Alternate"/>
+
+	<counter name ="Bombproof" palloc="Info/Fortify/360box"/>
+	<counter name ="1+2+2 360 Pillbox" palloc="Info/Fortify/360box"/>
+	<counter name ="Command Bunker" palloc="Info/Fortify/360box"/>
+	<counter name ="1+5+7 360 Pillbox" palloc="Info/Fortify/360box"/>
+	<counter name ="Island Command Bunker" palloc="Info/Fortify/360box"/>
+	<counter name ="2+5+7 360 Pillbox" palloc="Info/Fortify/360box"/>
+
+	<counter name ="Tunnel Entrance" palloc="Info/Fortify/Tunnels/Tunnel Entrances"/>
+
+	<counter name ="Tunnels" palloc="Info/Fortify/Tunnels/Tunnels"/>
+
+	<counter name ="Saw Tunnel Used" palloc="Info/Fortify/Tunnels/Saw Tunnel Used"/>
+	
+     	<counter name ="Control" palloc="Other/Map/Control"/>
+	<counter name ="Allied Control" palloc="Other/Map/Control"/>
+	<counter name ="Axis Control" palloc="Other/Map/Control"/>
+	<counter name ="Perimeter" palloc="Other/Map/Control"/>
+	<counter name ="Trail" palloc="Other/Map/Control"/>
+
+	<counter name ="Weather" palloc="Other/Map/EC"/>
+	<counter name ="EC" palloc="Other/Map/EC"/>
+	<counter name ="Wind" palloc="Other/Map/EC"/>
+	<counter name ="Wind Dir" palloc="Other/Map/EC"/>
+	<counter name ="Mist" palloc="Other/Map/EC"/>
+	<counter name ="Gusts" palloc="Other/Map/EC"/>
+	<counter name ="Rain" palloc="Other/Map/EC"/>
+	<counter name ="Beach Slope" palloc="Other/Map/EC"/>
+	<counter name ="Compass" palloc="Other/Map/EC"/>
+	<counter name ="Current" palloc="Other/Map/EC"/>
+	<counter name ="Flood" palloc="Other/Map/EC"/>
+
+	<counter name ="Dust" palloc="Other/Map/DTO EC"/>
+	<counter name ="Sun Blindness" palloc="Other/Map/DTO EC"/>
+	<counter name ="Heat Haze" palloc="Other/Map/DTO EC"/>
+
+	<counter name ="Phase Track" palloc="Other/Map/Phase Track"/>
+
+	<counter name ="Turn Markers" palloc="Other/Map/Turn Markers"/>
+	<counter name ="Air Support" palloc="Other/Map/Turn Markers"/>
+
+	<counter name ="Horizontal Turn Tracks" palloc="Other/Map/Turn Tracks/Horizontal"/>
+	<counter name ="Vertical Turn Tracks" palloc="Other/Map/Turn Tracks/Vertical"/>
+	<counter name ="AC Turn Tracks" palloc="Other/Map/Turn Tracks/AC Track"/>
+	<counter name ="RE Turn Tracks" palloc="Other/Map/Turn Tracks/RE Track"/>
+
+	<counter name ="KGP Turn Marker" palloc="Other/Map/KGP/KGP Marker"/>
+	<counter name ="KGP Mist" palloc="Other/Map/KGP/KGP Marker"/>
+
+	<counter name ="KGP Turn Track" palloc="Other/Map/KGP/KGP Turn Track"/>
+
+	<counter name ="IR" palloc="Other/Night/Basic"/>
+	<counter name ="Starshell" palloc="Other/Night/Basic"/>
+	<counter name ="Gunflash" palloc="Other/Night/Basic"/>
+	<counter name ="Trip Flare" palloc="Other/Night/Basic"/>
+	<counter name ="NVR" palloc="Other/Night/Basic"/>
+	<counter name ="Starshell Attempt" palloc="Other/Night/Basic"/>
+	<counter name ="No Move" palloc="Other/Night/Basic"/>
+	
+	<counter name ="Flame" palloc="Other/Night/Flame - Blaze"/>
+	<counter name ="Blaze" palloc="Other/Night/Flame - Blaze"/>
+
+	<counter name ="1-hex shade" palloc="Other/Night/1-hex shade"/>
+	<counter name ="7-hex shade" palloc="Other/Night/7-hex shade"/>
+	<counter name ="19-hex shade" palloc="Other/Night/19-hex shade"/>
+
+	<counter name ="OBA" palloc="Other/OBA"/>
+	<counter name ="RC" palloc="Other/OBA"/>
+	<counter name ="FO" palloc="Other/OBA"/>
+	<counter name ="Pre-reg" palloc="Other/OBA"/>
+	<counter name ="Barrage" palloc="Other/OBA"/>
+
+	<counter name ="Letter Chit" palloc="Other/SASL"/>
+	<counter name ="VPO" palloc="Other/SASL"/>
+	<counter name ="Suspect" palloc="Other/SASL"/>
+	<counter name ="In Command" palloc="Other/SASL"/>
+	<counter name ="Panic" palloc="Other/SASL"/>
+
+	<counter name ="Large Chute" palloc="Other/Air/Chute"/>
+	<counter name ="Small Chute" palloc="Other/Air/Chute"/>
+
+	<counter name ="American Glider" palloc="Other/Air/Glider"/>
+	<counter name ="British Glider" palloc="Other/Air/Glider"/>
+	<counter name ="German Glider" palloc="Other/Air/Glider"/>
+
+	<counter name ="Observation Plane" palloc="Other/Air/Obs Plane"/>
+
+	<counter name ="Russian FB" palloc="Other/Air/RU FB"/>
+
+	<counter name ="39 American FB" palloc="Other/Air/AM FB"/>
+	<counter name ="42 American FB" palloc="Other/Air/AM FB"/>
+	<counter name ="44 American FB" palloc="Other/Air/AM FB"/>
+
+	<counter name ="British FB" palloc="Other/Air/BR FB"/>
+
+	<counter name ="39 German DB" palloc="Other/Air/GE DB"/>
+	<counter name ="42 German DB" palloc="Other/Air/GE DB"/>
+
+	<counter name ="39 German FB" palloc="Other/Air/GE FB"/>
+	<counter name ="42 German FB" palloc="Other/Air/GE FB"/>
+	<counter name ="42 German FB" palloc="Other/Air/GE FB"/>
+
+	<counter name ="39 Japanese FB" palloc="Other/Air/JA FB"/>
+	<counter name ="42 Japanese FB" palloc="Other/Air/JA FB"/>
+	<counter name ="44 Japanese FB" palloc="Other/Air/JA FB"/>
+
+	<counter name ="Assault Boat" palloc="Other/Sea/Boat"/>
+	<counter name ="Motor" palloc="Other/Sea/Boat"/>
+
+	<counter name ="Raft" palloc="Other/Sea/Raft"/>
+
+	<counter name ="DP" palloc="Other/Sea/LC Markers"/>
+	<counter name ="Aground" palloc="Other/Sea/LC Markers"/>
+	<counter name ="Broached" palloc="Other/Sea/LC Markers"/>
+	<counter name ="LC Crew" palloc="Other/Sea/LC Markers"/>
+
+	<counter name ="LCP(L)b" palloc="Other/Sea/LCP(L)"/>
+	<counter name ="LCP(L)" palloc="Other/Sea/LCP(L)"/>
+
+	<counter name ="LCA" palloc="Other/Sea/LCA"/>
+
+	<counter name ="LCVP 6/43" palloc="Other/Sea/LCVP"/>
+	<counter name ="LCVP" palloc="Other/Sea/LCVP"/>
+
+	<counter name ="LCM(3) 11/42" palloc="Other/Sea/LCM(3)"/>
+	<counter name ="LCM(3)" palloc="Other/Sea/LCM(3)"/>
+
+	<counter name ="LCI(S)" palloc="Other/Sea/LCI(S)"/>
+
+	<counter name ="LCT(4) 7/43" palloc="Other/Sea/LCT(4)"/>
+	<counter name ="LCT(4)" palloc="Other/Sea/LCT(4)"/>
+
+	<counter name ="Daihatsu" palloc="Other/Sea/Daihatsu"/>
+	<counter name ="Shohatsu" palloc="Other/Sea/Shohatsu"/>
+
+        <counter name ="Bicycle" palloc="Allied O/B/Russian/SW/white"/>
+	<counter name ="Cycle" palloc="Allied O/B/Russian/SW/white"/>
+	<counter name ="Sidecar" palloc="Allied O/B/Russian/SW/white"/>
+	<counter name ="Horse" palloc="Allied O/B/Russian/SW/white"/>
+	<counter name ="Wagon" palloc="Allied O/B/Russian/SW/white"/>
+	<counter name ="Sledge" palloc="Allied O/B/Russian/SW/white"/>
+	<counter name ="Skis" palloc="Allied O/B/Russian/SW/white"/>
+	<counter name ="Ahkio" palloc="Allied O/B/Russian/SW/white"/>
+	<counter name ="Dozer" palloc="Allied O/B/Russian/SW/white"/>
+	<counter name ="Armored Dozer" palloc="Allied O/B/Russian/SW/white"/>
+
+	<counter name ="Bicycle" palloc="Axis O/B/German/SW/white"/>
+	<counter name ="Cycle" palloc="Axis O/B/German/SW/white"/>
+	<counter name ="Sidecar" palloc="Axis O/B/German/SW/white"/>
+	<counter name ="Horse" palloc="Axis O/B/German/SW/white"/>
+	<counter name ="Wagon" palloc="Axis O/B/German/SW/white"/>
+	<counter name ="Sledge" palloc="Axis O/B/German/SW/white"/>
+	<counter name ="Skis" palloc="Axis O/B/German/SW/white"/>
+	<counter name ="Ahkio" palloc="Axis O/B/German/SW/white"/>
+	<counter name ="Dozer" palloc="Axis O/B/German/SW/white"/>
+	<counter name ="Armored Dozer" palloc="Axis O/B/German/SW/white"/>
+
+</counterfinder>
+            
+    
+        
