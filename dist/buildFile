@@ -2,6 +2,7 @@
 <VASSAL.launch.BasicModule VassalVersion="3.2.17" description="Virtual Advanced Squad Leader" name="VASL" nextPieceSlotId="7490" version="6.4.5">
     <VASL.build.module.OBA hotkey="117,0"/>
     <VASL.build.module.ScenInfo/>
+    <VASL.build.module.CounterPaletteSearch/>
     <VASSAL.build.module.GlobalOptions autoReport="Use Preferences Setting" centerOnMove="Use Preferences Setting" nonOwnerUnmaskable="Use Preferences Setting" playerIdFormat="$playerName$" promptString="Let opponent unconceal my units" specifyExtensionDirInPrefs="true">
         <option name="stepIcon">/images/StepForward16.gif</option>
         <option name="undoIcon">/images/Undo16.gif</option>
