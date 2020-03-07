@@ -21,11 +21,12 @@
 	A1CenterY - y location of the A1 center dot 
 	
 	3/11/15 - fixed "no woods roads" SSR rule
+	3/7/20 - fixed board edge woods hexes
 -->
 <boardMetadata 
 	name="4b" 
-	version="6.3" 
-	versionDate="Feb 2017" 
+	version="6.4" 
+	versionDate="Mar 2020" 
 	author="TR" 
 	boardImageFileName="bd4b.gif" 
 	hasHills="FALSE" 
