@@ -83,6 +83,7 @@
 	<counter name ="Inf WP" palloc="Unit/Inf/Infantry"/>
 	<counter name ="Deserter" palloc="Unit/Inf/Infantry"/>
 	<counter name ="UF" palloc="Unit/Inf/Infantry"/>
+	<counter name ="Infantry Charge" palloc="Unit/Inf/Infantry"/>
 
 	<counter name ="CC" palloc="Unit/Inf/CC - Melee"/>
 	<counter name ="Melee" palloc="Unit/Inf/CC - Melee"/>
@@ -95,7 +96,7 @@
 	<counter name ="HW Range" palloc="Unit/Inf/HW - Banzai"/>
 	<counter name ="Banzai" palloc="Unit/Inf/HW - Banzai"/>
 	<counter name ="Lax" palloc="Unit/Inf/HW - Banzai"/>
-	<counter name ="Infantry Charge" palloc="Unit/Inf/HW - Banzai"/>
+
 
 	<counter name ="Berserk" palloc="Unit/Inf/HoB"/>
 	<counter name ="Fanatic" palloc="Unit/Inf/HoB"/>
@@ -183,6 +184,9 @@
 	<counter name ="Dune" palloc="Info/Locate/PTO - DTO"/>
 	<counter name ="Hillock" palloc="Info/Locate/PTO - DTO"/>
 	<counter name ="Tower" palloc="Info/Locate/PTO - DTO"/>
+
+	<counter name ="KFW Hills" palloc="Info/Locate/KFW - Hills"/>
+	<counter name ="Steep Hills" palloc="Info/Locate/KFW - Hills"/>
 
 	<counter name ="Breach" palloc="Info/Destroy/Basic"/>
 	<counter name ="Gutted" palloc="Info/Destroy/Basic"/>
@@ -274,17 +278,21 @@
 	<counter name ="Perimeter" palloc="Other/Map/Control"/>
 	<counter name ="Trail" palloc="Other/Map/Control"/>
 
-	<counter name ="Weather" palloc="Other/Map/EC"/>
-	<counter name ="EC" palloc="Other/Map/EC"/>
-	<counter name ="Wind" palloc="Other/Map/EC"/>
-	<counter name ="Wind Dir" palloc="Other/Map/EC"/>
-	<counter name ="Mist" palloc="Other/Map/EC"/>
-	<counter name ="Gusts" palloc="Other/Map/EC"/>
-	<counter name ="Rain" palloc="Other/Map/EC"/>
-	<counter name ="Beach Slope" palloc="Other/Map/EC"/>
-	<counter name ="Compass" palloc="Other/Map/EC"/>
-	<counter name ="Current" palloc="Other/Map/EC"/>
-	<counter name ="Flood" palloc="Other/Map/EC"/>
+	<counter name ="Weather" palloc="Other/Map/Weather EC"/>
+	<counter name ="EC" palloc="Other/Map/Weather EC"/>
+	<counter name ="Wind" palloc="Other/Map/Weather EC"/>
+	<counter name ="Wind Dir" palloc="Other/Map/Weather EC"/>
+	<counter name ="Mist" palloc="Other/Map/Weather EC"/>
+	<counter name ="Fog" palloc="Other/Map/Weather EC"/>
+	<counter name ="Gusts" palloc="Other/Map/Weather EC"/>
+	<counter name ="Rain" palloc="Other/Map/Weather EC"/>
+	<counter name ="Snow" palloc="Other/Map/Weather EC"/>
+	<counter name ="River Depth" palloc="Other/Map/Weather EC"/>
+	<counter name ="Stream Depth" palloc="Other/Map/Weather EC"/>
+	<counter name ="Beach Slope" palloc="Other/Map/Weather EC"/>
+	<counter name ="Compass" palloc="Other/Map/Weather EC"/>
+	<counter name ="Current" palloc="Other/Map/Weather EC"/>
+	<counter name ="Flood" palloc="Other/Map/Weather EC"/>
 
 	<counter name ="Dust" palloc="Other/Map/DTO EC"/>
 	<counter name ="Sun Blindness" palloc="Other/Map/DTO EC"/>
@@ -316,6 +324,10 @@
 	<counter name ="Flame" palloc="Other/Night/Flame - Blaze"/>
 	<counter name ="Blaze" palloc="Other/Night/Flame - Blaze"/>
 
+	<counter name ="SearchLights" palloc="Other/Night/Searchlights"/>
+	<counter name ="IB" palloc="Other/Night/Searchlights"/>
+	<counter name ="Illumination Beam" palloc="Other/Night/Searchlights"/>
+
 	<counter name ="1-hex shade" palloc="Other/Night/1-hex shade"/>
 	<counter name ="7-hex shade" palloc="Other/Night/7-hex shade"/>
 	<counter name ="19-hex shade" palloc="Other/Night/19-hex shade"/>
@@ -325,6 +337,9 @@
 	<counter name ="FO" palloc="Other/OBA"/>
 	<counter name ="Pre-reg" palloc="Other/OBA"/>
 	<counter name ="Barrage" palloc="Other/OBA"/>
+
+	<counter name ="TACP" palloc="Other/OBA - Korea"/>
+	<counter name ="VTE" palloc="Other/OBA - Korea"/>
 
 	<counter name ="Letter Chit" palloc="Other/SASL"/>
 	<counter name ="VPO" palloc="Other/SASL"/>
