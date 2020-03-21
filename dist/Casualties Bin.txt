@@ -26,7 +26,7 @@ All Casualties Bin actions will be saved by Save Game.
 To Handle Wrecks and Casualty Reduction:
 
 For Wrecks, before turning the vehicle into a wreck, clone it, send one version to the Casualties Bin and then change the other to a wreck.
-For Casualty Reduction, turn the squad into a hs, clone the hs, send one version to the Casualties Bin and leave the other on the main map and apply any further actions (such as breaking) to it. At present, you must adjust the CVP value of the unit after using the SQ/HS function (in either direction) as this does not happen automatically. 
+For Casualty Reduction, turn the squad into a hs, clone the hs, send one version to the Casualties Bin and leave the other on the main map and apply any further actions (such as breaking) to it.
 
 Version Compatibility:
 
