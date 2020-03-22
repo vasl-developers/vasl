@@ -78,7 +78,12 @@ public class ASLTilingHandler extends VASSAL.launch.TilingHandler {
     final FileArchive fa = archive.getArchive();
     // png code - June 2019 allows board image files to be in either png or gif format
     BoardArchive VASLBoardArchive = new BoardArchive(fa.getName(), "", ASLMap.getSharedBoardMetadata());
-    final String iname = VASLBoardArchive.getBoardImageFileName();  //fa.getFile().getName() + ".gif";
+    String imagename;
+    if (VASLBoardArchive.isLegacyBoard()){
+      imagename = fa.getFile().getName() + ".gif";
+    } else
+      imagename = VASLBoardArchive.getBoardImageFileName();
+    final String iname = imagename;
     //
     int maxpix = 0; // number of pixels in the largest image
     int tcount = 0; // tile count
