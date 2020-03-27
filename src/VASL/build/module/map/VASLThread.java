@@ -1012,6 +1012,8 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             while (newsourceLevel > sourcelevel) {
                 if (source.getUpLocation() != null) {
                     source = source.getUpLocation();
+                } else {
+                    break;
                 }
                 leveladj = 0;
                 if (source.getName().contains("Rooftop")) {
@@ -1025,6 +1027,8 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             while (newsourceLevel < sourcelevel) {
                 if (source.getDownLocation() != null) {
                     source = source.getDownLocation();
+                } else {
+                    break;
                 }
                 leveladj = 0;
                 if (source.getName().contains("Rooftop")) {
@@ -1038,6 +1042,8 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             while (newtargetLevel > targetlevel) {
                 if (target.getUpLocation() != null) {
                     target = target.getUpLocation();
+                } else {
+                    break;
                 }
                 leveladj = 0;
                 if (target.getName().contains("Rooftop")) {
@@ -1051,6 +1057,8 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             while (newtargetLevel < targetlevel) {
                 if (target.getDownLocation() != null) {
                     target = target.getDownLocation();
+                } else {
+                    break;
                 }
                 leveladj = 0;
                 if (target.getName().contains("Rooftop")) {

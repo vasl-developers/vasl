@@ -109,7 +109,7 @@ public class ASLCasbin extends AbstractConfigurable implements KeyListener, Game
 
         while (var7.hasNext()) {
             Buildable CheckforCasbin = (Buildable) var7.next();
-            if (CheckforCasbin instanceof Map && CheckforCasbin != pparent) {
+            if (CheckforCasbin instanceof Map && ((Map) CheckforCasbin).getMapName().equals("Casualties")) {
                 Map casbin = (Map) CheckforCasbin;
                 String alliedkey = "AlliedCVP";
                 String alliedcvp = ((String) casbin.getProperty(alliedkey));
