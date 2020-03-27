@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<VASSAL.launch.BasicModule VassalVersion="3.2.17" description="Virtual Advanced Squad Leader" name="VASL" nextPieceSlotId="12704" version="6.4.5">
+<VASSAL.launch.BasicModule VassalVersion="3.2.17" description="Virtual Advanced Squad Leader" name="VASL" nextPieceSlotId="12705" version="6.5-beta3">
     <VASL.build.module.OBA hotkey="117,0"/>
     <VASL.build.module.ScenInfo/>
     <VASL.build.module.CounterPaletteSearch/>
@@ -126,11 +126,11 @@
         <VASSAL.build.module.documentation.HelpFile fileName="Movement.txt" fileType="archive" title="Movement controls"/>
         <VASSAL.build.module.documentation.HelpFile fileName="Night.txt" fileType="archive" title="Night shading"/>
         <VASSAL.build.module.documentation.HelpFile fileName="Perimeter.txt" fileType="archive" title="Perimeter"/>
-        <VASSAL.build.module.documentation.HelpFile fileName="CasualtiesBin.txt" fileType="archive" title="Casualties Bin"/>
+        <VASSAL.build.module.documentation.HelpFile fileName="Casualties Bin.txt" fileType="archive" title="Casualties Bin"/>
         <VASSAL.build.module.documentation.HelpFile fileName="Migrate.txt" fileType="archive" title="For VASL 4.0 Users"/>
         <VASSAL.build.module.documentation.HelpFile fileName="Credits.txt" fileType="archive" title="Credits"/>
     </VASSAL.build.module.Documentation>
-    <VASL.build.module.ASLCommandEncoder noColorPreferences=""/>
+    <VASL.build.module.ASLCommandEncoder noColorPreferences="true"/>
     <VASSAL.build.module.PieceWindow hidden="false" hotkey="67,520" icon="counters" name="VASL Counters" text="" tooltip="Show/Hide the VASL Counters window">
         <VASSAL.build.widget.TabWidget>
             <VASSAL.build.widget.TabWidget entryName="Unit">
@@ -558,8 +558,9 @@
                         <VASSAL.build.widget.PieceSlot entryName="Stream" gpid="12699" height="60" width="60">+/null/label;;;12;255,255,255;0,0,0;t;0;c;0;b;c;$pieceName$ ($label$);Dialog;0;270;TextLabel;	prototype;DBGlobal\	mark;Hindrance\\	emb2;;2;;Incr;2;;Decr;2;;;;0;false;0;0;ML\/StreamDry.png,ML\/StreamShallow.png,ML\/StreamDeep.png,ML\/StreamFlooded.png;+: Dry,+: Shallow,+: Deep,+: Flooded;true;;;;false;;1;1;true;;93,130;91,130\\\	piece;K;D;;Stream/Stream	\	true\\	2\\\	null;0;0;12699</VASSAL.build.widget.PieceSlot>
                         <VASSAL.build.widget.PieceSlot entryName="River" gpid="12700" height="60" width="60">+/null/label;;;12;255,255,255;0,0,0;t;0;c;0;b;c;$pieceName$ ($label$);Dialog;0;270;TextLabel;	prototype;DBGlobal\	mark;Hindrance\\	emb2;;2;;Incr;2;;Decr;2;;;;0;false;0;0;ML\/RiverFordable.png,ML\/RiverDeep.png,ML\/RiverFlooded.png;+: Fordable,+: Deep,+: Flooded;true;;;;false;;1;1;true;;93,130;91,130\\\	piece;K;D;;River/River	\	true\\	2\\\	null;0;0;12700</VASSAL.build.widget.PieceSlot>
                         <VASSAL.build.widget.PieceSlot entryName="Beach Slope" gpid="290" height="60" width="60">+/null/label;;;12;255,255,255;0,0,0;t;0;c;0;b;c;$pieceName$ ($label$);Dialog;0;270;TextLabel;	prototype;DBGlobal\	mark;Location\\	emb2;;2;;Flip;2;F;;2;;;;0;false;0;0;ML\/SlopeSl,ML\/SlopeMd,ML\/SlopeSt;Slight +,Moderate +,Steep +;true;;;;false;;1;1;true;;70,130;\\\	piece;K;D;ML\/_white58;Beach Slope/Beach	\	\\	1\\\	null;0;0;290</VASSAL.build.widget.PieceSlot>
+                        <VASSAL.build.widget.PieceSlot entryName="XWinter" gpid="12704" height="60" width="60">+/null/label;;;12;;0,0,0;t;0;c;0;b;c;$pieceName$ ($label$);Dialog;0;270;TextLabel;	prototype;DBGlobal\	mark;Location\\	emb2;;2;;;2;;;2;;;;0;false;0;0;ML\/WinterExtreme.png;;true;;;;false;;1;1;true;;;\\\	piece;K;D;ML\/_white58;XWinter/X-Winter	\	\\	1\\\	null;0;0;12704</VASSAL.build.widget.PieceSlot>
                         <VASSAL.build.widget.PieceSlot entryName="North" gpid="291" height="60" width="60">+/null/label;;;12;;0,0,0;t;0;c;0;b;c;$pieceName$ ($label$);Dialog;0;270;TextLabel;	prototype;DBGlobal\	rotate;4;88,130;90,130;cw;ccw;;;\\	mark;Location\\\	emb2;;2;;;2;;;2;;;;0;false;0;0;ML\/North;;true;;;;false;;1;1;true;;;\\\\	piece;K;D;ML\/_white58;North/Compass	\	0\\	\\\	1\\\\	null;0;0;291</VASSAL.build.widget.PieceSlot>
-                        <VASSAL.build.widget.PieceSlot entryName="Current" gpid="292" height="48" width="48">+/null/label;;;12;255,255,255;0,0,0;t;0;c;0;b;c;$pieceName$ ($label$);Dialog;0;270;TextLabel;	prototype;DBGlobal\	mark;Location\\	prototype;repCApill\\\	rotate;6;88,130;90,130;cw;ccw;;;\\\\	emb2;;2;;Flip;2;;;2;;;;0;false;0;0;ML\/CurrentSlow.png,ML\/CurrentModerate.png,ML\/CurrentHeavy.png;Slow+,Moderate +,Heavy +;true;;;;false;;1;1;true;;70,130;\\\\\	piece;K;D;MS\/_white12;Current/Current	\	\\	\\\	0\\\\	1\\\\\	null;0;0;292</VASSAL.build.widget.PieceSlot>
+                        <VASSAL.build.widget.PieceSlot entryName="Current" gpid="292" height="48" width="48">+/null/prototype;DBGlobal	mark;Location\	prototype;repCApill\\	rotate;6;88,130;90,130;cw;ccw;;;\\\	label;;;12;255,255,255;0,0,0;t;0;c;0;b;c;$pieceName$ ($label$);Dialog;0;270;TextLabel;\\\\	emb2;Activate;2;;Dir;2;;;2;;;;1;false;0;0;ML\/Currentright.png,ML\/Currentleft.png;,;true;;;;false;;1;1;true;65,130;80,585;\\\\\	emb2;;2;;Flip;2;;;2;;;;0;false;0;0;ML\/CurrentSlow.png,ML\/CurrentModerate.png,ML\/CurrentHeavy.png;Slow+,Moderate +,Heavy +;true;;;;false;;1;1;true;;70,130;\\\\\\	piece;K;D;MS\/_white12;Current/	\	\\	0\\\	Current\\\\	1\\\\\	1\\\\\\	null;0;0;</VASSAL.build.widget.PieceSlot>
                         <VASSAL.build.widget.PieceSlot entryName="Flood / Sat" gpid="293" height="48" width="48">+/null/label;;;12;255,255,255;0,0,0;t;0;c;0;b;c;$pieceName$ ($label$);Dialog;0;270;TextLabel;	prototype;DBGlobal\	emb2;;2;;Flip;2;;;2;;;;0;false;0;0;MS\/Saturated,MS\/Flooded;Saturated,Flooded;true;;;;false;;1;1;true;;70,130;\\	piece;K;D; ;Flood \/ Sat/Flooded	\	1\\	null;0;0;293</VASSAL.build.widget.PieceSlot>
                     </VASSAL.build.widget.PanelWidget>
                     <VASSAL.build.widget.PanelWidget entryName="DTO EC" fixed="false" nColumns="3" vert="true">
