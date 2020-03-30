@@ -129,6 +129,10 @@
 		<boarddata name="8b" version="6.5" versionDate="Aug 2008" description="" />
 		<boarddata name="9a" version="6.1" versionDate="Aug 2008" description="" />
 		<boarddata name="9b" version="6.1" versionDate="Aug 2008" description="" />
+		<boarddata name="10a" version="6.2" versionDate="Mar 2020" description="" />
+		<boarddata name="10b" version="6.2" versionDate="Mar 2020" description="" />
+		<boarddata name="11a" version="6.2" versionDate="Mar 2020" description="" />
+		<boarddata name="11b" version="6.2" versionDate="Mar 2020" description="" />
 		<boarddata name="a" version="6.2" versionDate="Aug 2019" description="" />
 		<boarddata name="b" version="6.1" versionDate="Aug 2019" description="" />
 		<boarddata name="c" version="6.1" versionDate="Aug 2019" description="" />
