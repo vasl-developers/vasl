@@ -396,7 +396,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             if(super.getLosCheckCount() > 0) {
                 super.reportFormat.setProperty("FromLocation", super.anchorLocation);
                 super.reportFormat.setProperty("ToLocation", super.lastLocation);
-                super.reportFormat.setProperty("Range", super.lastRange);
+                super.reportFormat.setProperty("Range", String.valueOf(LOSMap.range(source.getHex(), target.getHex(), LOSMap.getMapConfiguration()))); //super.lastRange);
                 super.reportFormat.setProperty("NumberOfLocationsChecked", String.valueOf(super.getLosCheckCount()));
                 super.reportFormat.setProperty("AllLocationsChecked", super.getLosCheckList());
                 GameModule.getGameModule().getChatter().send(super.reportFormat.getLocalizedText());

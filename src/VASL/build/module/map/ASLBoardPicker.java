@@ -909,7 +909,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             coord2 = new JTextField(2);
             coord2.addActionListener(this);
             halfrow = new JRadioButton("Crop to middle of hex row");
-            fullrow = new JRadioButton("Crop to nearest full hex row (no LOS)");
+            fullrow = new JRadioButton("Crop to nearest full hex row");
             fullrow.setSelected(true);
             ButtonGroup bg = new ButtonGroup();
             bg.add(halfrow);
