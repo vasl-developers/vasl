@@ -81,7 +81,7 @@ public class CounterPaletteSearch extends AbstractBuildable implements GameCompo
         Scrolllabel.setForeground(Color.blue);
 
         JPanel p = new JPanel();
-        p.setSize(new Dimension(600,400));
+        //p.setSize(new Dimension(700,400));
         p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
         p.add(Box.createVerticalStrut(10));
         p.add(Searchlabel);
@@ -105,6 +105,7 @@ public class CounterPaletteSearch extends AbstractBuildable implements GameCompo
         }
         // add counter metadata to table
         createtabledisplay(p);
+
         frame.getContentPane().add(p);
         frame.pack();
     }
@@ -216,7 +217,7 @@ public class CounterPaletteSearch extends AbstractBuildable implements GameCompo
             n+=1;
         }
         final JTable table = new JTable(data, columnNames);
-        table.setPreferredScrollableViewportSize(new Dimension(350, 200));
+        //table.setPreferredScrollableViewportSize(new Dimension(350, 200));
         JScrollPane scrollPane = new JScrollPane(table);
         p.add(scrollPane);
 
