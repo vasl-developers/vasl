@@ -202,6 +202,10 @@
 		<boarddata name="BFPDW6b" version="6.2" versionDate="Aug 2019" description="" />
 		<boarddata name="BFPDW7a" version="6.1" versionDate="Aug 2019" description="" />
 		<boarddata name="BFPDW7b" version="6.1" versionDate="Aug 2019" description="" />
+		<boarddata name="BFPDW8a" version="6.0" versionDate="Apr 2020" description="" />
+		<boarddata name="BFPDW8b" version="6.0" versionDate="Apr 2020" description="" />
+		<boarddata name="BFPDW9a" version="6.0" versionDate="Apr 2020" description="" />
+		<boarddata name="BFPDW9b" version="6.0" versionDate="Apr 2020" description="" />
 		<boarddata name="BF1" version="1.1" versionDate="Aug 2008" description="" />
 		<boarddata name="TRBH" version="1.0" versionDate="Aug 2008" description="" />
 	<!--#KB=2.0 not accurate -->
