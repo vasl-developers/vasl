@@ -692,6 +692,17 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 // bury
             }
         }
+
+        if (bd.contains("FH")) {
+
+            // if board is cropped to a full hex must set flag
+            try {
+                b.nearestFullRow = true;
+            }
+            catch (Exception e) {
+                // bury
+            }
+        }
     }
 
     protected void addColumn() {
