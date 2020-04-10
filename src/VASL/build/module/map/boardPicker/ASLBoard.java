@@ -59,7 +59,7 @@ public class ASLBoard extends Board {
     private File boardFile;
     private ImageOp baseImageOp;
     private DataArchive boardArchive;
-    public boolean nearestFullRow=false;
+    public boolean nearestFullRow;
 
     protected BoardArchive VASLBoardArchive;
     private static final Logger logger = LoggerFactory.getLogger(ASLMap.class);
@@ -328,6 +328,9 @@ public class ASLBoard extends Board {
         }
         if (magnification != 1.0) {
             val += "\tZOOM\t" + magnification;
+        }
+        if (nearestFullRow){
+            val += "\tFH\t" + nearestFullRow;
         }
         return val;
     }
