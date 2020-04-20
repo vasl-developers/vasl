@@ -414,6 +414,8 @@
 		<boarddata name="TR7" version="2.0" versionDate="Aug 2008" description="" />
 		<boarddata name="TR8" version="2.0" versionDate="Aug 2008" description="" />
 		<boarddata name="HT" version="1.1" versionDate="Oct 2018" description="" />		
+		<boarddata name="RM" version="1.0" versionDate="Apr 2020" description="" />		
+		<boarddata name="KBR" version="1.0" versionDate="Apr 2020" description="" />		
 	</otherBoards>
 
 </boardsMetadata>
