@@ -60,6 +60,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -373,10 +374,10 @@ class QCConfiguration extends DefaultMutableTreeNode
         
         m_strDescription = objMaster.getDescription() + " (copy)";
         
-        Enumeration<QCConfigurationEntry> l_objChildrenEnum = objMaster.children();
+        Enumeration<TreeNode> l_objChildrenEnum = objMaster.children();
 
-        while(l_objChildrenEnum.hasMoreElements())
-            add(new QCConfigurationEntry(l_objChildrenEnum.nextElement()));        
+        while (l_objChildrenEnum.hasMoreElements())
+            add(new QCConfigurationEntry((QCConfigurationEntry) l_objChildrenEnum.nextElement()));        
         
         File l_dirConfigs = new File(Info.getHomeDir() + System.getProperty("file.separator","\\") + "qcconfigs");
         
@@ -413,18 +414,18 @@ class QCConfiguration extends DefaultMutableTreeNode
         
         FreeAllNodes(this);
         
-        Enumeration<QCConfigurationEntry> l_objChildrenEnum = objMaster.children();
+        Enumeration<TreeNode> l_objChildrenEnum = objMaster.children();
 
-        while(l_objChildrenEnum.hasMoreElements())
-            add(new QCConfigurationEntry(l_objChildrenEnum.nextElement()));        
+        while (l_objChildrenEnum.hasMoreElements())
+            add(new QCConfigurationEntry((QCConfigurationEntry) l_objChildrenEnum.nextElement()));        
     }
     
     private void FreeAllNodes(DefaultMutableTreeNode objNode)
     {
-        Enumeration<QCConfigurationEntry> l_objChildrenEnum = objNode.children();
+        Enumeration<TreeNode> l_objChildrenEnum = objNode.children();
 
-        while(l_objChildrenEnum.hasMoreElements())
-            FreeAllNodes(l_objChildrenEnum.nextElement());        
+        while (l_objChildrenEnum.hasMoreElements())
+            FreeAllNodes((DefaultMutableTreeNode) l_objChildrenEnum.nextElement());    
         
         objNode.removeAllChildren();
     }
@@ -490,10 +491,10 @@ class QCConfiguration extends DefaultMutableTreeNode
 
                 l_objDocument.appendChild(l_objRootElement);
 
-                Enumeration<QCConfigurationEntry> l_objChildrenEnum = children();
+                Enumeration<TreeNode> l_objChildrenEnum = children();
                 
-                while(l_objChildrenEnum.hasMoreElements())
-                    l_objChildrenEnum.nextElement().WriteXML(l_objDocument, l_objRootElement);
+                while (l_objChildrenEnum.hasMoreElements())
+                    ((QCConfigurationEntry) l_objChildrenEnum.nextElement()).WriteXML(l_objDocument, l_objRootElement);
 
                 // write the content into xml file
                 TransformerFactory l_objTransformerFactory = TransformerFactory.newInstance();
@@ -582,10 +583,10 @@ class QCConfigurationEntry extends DefaultMutableTreeNode
         
         if (m_bMenu)
         {
-            Enumeration<QCConfigurationEntry> l_objChildrenEnum = objMaster.children();
+            Enumeration<TreeNode> l_objChildrenEnum = objMaster.children();
 
             while(l_objChildrenEnum.hasMoreElements())
-                add(new QCConfigurationEntry(l_objChildrenEnum.nextElement()));        
+                add(new QCConfigurationEntry((QCConfigurationEntry) l_objChildrenEnum.nextElement()));        
         }
         
         m_strGpID = objMaster.getGpID();
@@ -643,10 +644,10 @@ class QCConfigurationEntry extends DefaultMutableTreeNode
             
             objElement.appendChild(l_objEntry);
             
-            Enumeration<QCConfigurationEntry> l_objChildrenEnum = children();
+            Enumeration<TreeNode> l_objChildrenEnum = children();
 
             while(l_objChildrenEnum.hasMoreElements())
-                l_objChildrenEnum.nextElement().WriteXML(objDocument, l_objEntry);
+                ((QCConfigurationEntry) l_objChildrenEnum.nextElement()).WriteXML(objDocument, l_objEntry);
         }
         else
         {
@@ -724,11 +725,11 @@ class QCConfigurationEntry extends DefaultMutableTreeNode
         }
         else
         {
-            Enumeration<QCConfigurationEntry> l_objChildrenEnum = children();
+            Enumeration<TreeNode> l_objChildrenEnum = children();
 
             while(l_objChildrenEnum.hasMoreElements())
             {
-                QCConfigurationEntry l_objConfigurationEntry = l_objChildrenEnum.nextElement();
+                QCConfigurationEntry l_objConfigurationEntry = (QCConfigurationEntry) l_objChildrenEnum.nextElement();
                 
                 if (l_objConfigurationEntry.getPieceSlot() != null)
                 {
@@ -1148,10 +1149,10 @@ public class QC implements Buildable, GameComponent
         
         for (QCConfiguration l_objQCConfiguration : mar_objListQCConfigurations)
         {
-            Enumeration<QCConfigurationEntry> l_objChildrenEnum = l_objQCConfiguration.children();
+            Enumeration<TreeNode> l_objChildrenEnum = l_objQCConfiguration.children();
 
             while(l_objChildrenEnum.hasMoreElements())
-                setPieceSlot(l_objChildrenEnum.nextElement());
+                setPieceSlot((QCConfigurationEntry) l_objChildrenEnum.nextElement());
         }
     }
     
@@ -1169,10 +1170,10 @@ public class QC implements Buildable, GameComponent
 
         if (objConfigurationEntry.isMenu())
         {
-            Enumeration<QCConfigurationEntry> l_objChildrenEnum = objConfigurationEntry.children();
+            Enumeration<TreeNode> l_objChildrenEnum = objConfigurationEntry.children();
 
             while(l_objChildrenEnum.hasMoreElements())
-                setPieceSlot(l_objChildrenEnum.nextElement());
+                setPieceSlot((QCConfigurationEntry) l_objChildrenEnum.nextElement());
         }
     }
 
@@ -1210,11 +1211,11 @@ public class QC implements Buildable, GameComponent
                 }
             }
             
-            Enumeration<QCConfigurationEntry> l_objChildrenEnum = m_objQCWorkingConfiguration.children();
+            Enumeration<TreeNode> l_objChildrenEnum = m_objQCWorkingConfiguration.children();
 
-            while(l_objChildrenEnum.hasMoreElements())
+            while (l_objChildrenEnum.hasMoreElements())
             {                
-                Component l_objComponent = CreateToolBarItem(l_objChildrenEnum.nextElement());
+                Component l_objComponent = CreateToolBarItem((QCConfigurationEntry) l_objChildrenEnum.nextElement());
 
                 if (l_objComponent != null)
                     l_objToolBar.add(l_objComponent, l_iStartPos++);                
@@ -1281,11 +1282,11 @@ public class QC implements Buildable, GameComponent
     {
         JPopupMenu l_objPopupMenu = objQCButtonMenu.getPopupMenu();
         
-        Enumeration<QCConfigurationEntry> l_objChildrenEnum = objConfigurationEntry.children();
+        Enumeration<TreeNode> l_objChildrenEnum = objConfigurationEntry.children();
 
-        while(l_objChildrenEnum.hasMoreElements())
+        while (l_objChildrenEnum.hasMoreElements())
         {
-            JMenuItem l_objMenuItem = CreateMenuItem(l_objChildrenEnum.nextElement(), l_objPopupMenu);
+            JMenuItem l_objMenuItem = CreateMenuItem((QCConfigurationEntry) l_objChildrenEnum.nextElement(), l_objPopupMenu);
             
             if (l_objMenuItem != null)
                 l_objPopupMenu.add(l_objMenuItem);
@@ -1312,11 +1313,11 @@ public class QC implements Buildable, GameComponent
                 ex.printStackTrace();
             }
             
-            Enumeration<QCConfigurationEntry> l_objChildrenEnum = objConfigurationEntry.children();
+            Enumeration<TreeNode> l_objChildrenEnum = objConfigurationEntry.children();
 
             while(l_objChildrenEnum.hasMoreElements())
             {
-                JMenuItem l_objMenuItem = CreateMenuItem(l_objChildrenEnum.nextElement(), objPopupMenu);
+                JMenuItem l_objMenuItem = CreateMenuItem((QCConfigurationEntry) l_objChildrenEnum.nextElement(), objPopupMenu);
 
                 if (l_objMenuItem != null)
                     l_objMenu.add(l_objMenuItem);
