@@ -381,17 +381,17 @@ public class ASLPieceMover extends PieceMover {
      * are those with the ASLProperties.LOCATION property set.
      */
     public void extractMovable() {
-        Vector movable = new Vector();
+        ArrayList<GamePiece> movable = new ArrayList<GamePiece>();
         for (PieceIterator it = DragBuffer.getBuffer().getIterator();
              it.hasMoreElements(); ) {
             GamePiece p = it.nextPiece();
             if (p instanceof Stack) {
-                Vector toMove = new Vector();
+                ArrayList<GamePiece> toMove = new ArrayList<GamePiece>();
                 for (PieceIterator pi = new PieceIterator(((Stack) p).getPiecesIterator());
                      pi.hasMoreElements(); ) {
                     GamePiece p1 = pi.nextPiece();
                     if (p1.getProperty(ASLProperties.LOCATION) == null) {
-                        toMove.addElement(p1);
+                        toMove.add(p1);
                     } else // FRedKors 20/12/2013 If a stack contains an immobile counter, I don't move it AND I deselect it
                     {
                         KeyBuffer.getBuffer().remove(p1);
@@ -399,23 +399,20 @@ public class ASLPieceMover extends PieceMover {
                 }
                 if (toMove.size() == ((Stack) p).getPieceCount()
                         || toMove.size() == 0) {
-                    movable.addElement(p);
+                    movable.add(p);
                 } else {
-                    for (int i = 0; i < toMove.size(); ++i) {
-                        movable.addElement(toMove.elementAt(i));
-                    }
+                    movable.addAll(toMove);
                 }
             } else {
-                movable.addElement(p);
+                movable.add(p);
             }
         }
 
         // FredKors 30/11/2013 : PRB if a stack contains INVISIBLE_TO_ME counters, they are added as single counters as movable
         DragBuffer.getBuffer().clear();
 
-        for (Enumeration e = movable.elements();
-             e.hasMoreElements(); ) {
-            GamePiece p = (GamePiece) e.nextElement();
+        for (Iterator<GamePiece> i = movable.iterator(); i.hasNext(); ) {
+            GamePiece p = i.next();
 
             if (p.getProperty(ASLProperties.LOCATION) == null)
                 DragBuffer.getBuffer().add(p);
@@ -425,9 +422,8 @@ public class ASLPieceMover extends PieceMover {
                 boolean bOnlyFixedCounters = true;
 
                 if (s != null) {
-                    for (Enumeration en = movable.elements();
-                         en.hasMoreElements(); ) {
-                        GamePiece pp = (GamePiece) en.nextElement();
+                    for (Iterator<GamePiece> j = movable.iterator(); j.hasNext(); ) {
+                        GamePiece pp = j.next();
 
                         if (pp.getParent() == s) {
                             iNumSameParent++;
