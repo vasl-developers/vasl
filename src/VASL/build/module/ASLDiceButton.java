@@ -30,7 +30,7 @@ public class ASLDiceButton extends DiceButton {
 
   public void addTo(Buildable b) {
     super.addTo(b);
-    info = (ScenInfo) GameModule.getGameModule().getComponentsOf(ScenInfo.class).iterator().next();
+    info = GameModule.getGameModule().getComponentsOf(ScenInfo.class).iterator().next();
   }
 
   protected void DR() {

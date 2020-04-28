@@ -408,7 +408,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             {
                 try
                 {
-                    ASLDiceBot l_objDice = (ASLDiceBot) GameModule.getGameModule().getComponentsOf(ASLDiceBot.class).iterator().next();
+                    ASLDiceBot l_objDice = GameModule.getGameModule().getComponentsOf(ASLDiceBot.class).iterator().next();
 
                     if (l_objDice != null)
                         l_objDice.statsToday();
@@ -451,7 +451,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             {
                 try
                 {
-                    ASLDiceBot l_objDice = (ASLDiceBot) GameModule.getGameModule().getComponentsOf(ASLDiceBot.class).iterator().next();
+                    ASLDiceBot l_objDice = GameModule.getGameModule().getComponentsOf(ASLDiceBot.class).iterator().next();
 
                     if (l_objDice != null)
                     {

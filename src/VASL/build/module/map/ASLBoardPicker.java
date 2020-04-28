@@ -1010,7 +1010,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 return;
             }
             try {
-                BoardSlot b = newmatch((int) bdName.getSelectedIndex());
+                BoardSlot b = newmatch(bdName.getSelectedIndex());
                 ((ASLBoard) b.getBoard()).crop(row1.getText().toLowerCase().trim(), row2.getText().toLowerCase().trim(), coord1.getText().toLowerCase().trim(), coord2
                         .getText().toLowerCase().trim(), fullrow.isSelected());
                 b.invalidate();
@@ -1124,7 +1124,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 return;
             }
             try {
-                BoardSlot b = newmatch((int) bdName.getSelectedIndex());
+                BoardSlot b = newmatch(bdName.getSelectedIndex());
                 status.setText(((ASLBoardSlot) (b)).addOverlay(ovrName.getText().toLowerCase(), hex1.getText().toLowerCase(), hex2.getText().toLowerCase()));
                 ovrName.setText("");
                 hex1.setText("");
@@ -1357,7 +1357,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                                 }
                             }
                         } else { // specific board chosen
-                            ASLBoardSlot slot = (ASLBoardSlot) newmatch((int) bdName.getSelectedIndex()-1);
+                            ASLBoardSlot slot = (ASLBoardSlot) newmatch(bdName.getSelectedIndex()-1);
                             slot.setTerrain(slot.getTerrain() + '\t' + optionRules());
                             if (slot.getBoard() != null) {
                                 ((ASLBoard) slot.getBoard()).setTerrain(basicRules() + slot.getTerrain());

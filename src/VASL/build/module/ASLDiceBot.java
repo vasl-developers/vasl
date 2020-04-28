@@ -389,7 +389,7 @@ public class ASLDiceBot extends AbstractBuildable
 
     private ScenInfo GetScenInfo() 
     {
-        return (ScenInfo) GameModule.getGameModule().getComponentsOf(ScenInfo.class).iterator().next();
+        return GameModule.getGameModule().getComponentsOf(ScenInfo.class).iterator().next();
     }
 
     private Random GetRandomizer() {
@@ -538,7 +538,6 @@ public class ASLDiceBot extends AbstractBuildable
             return l_iRet;
         }
 
-        // se torno 0 qualcosa è andato storto
         return 0;
     }
 

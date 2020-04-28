@@ -99,8 +99,8 @@ public class BoardSwapper extends AbstractBuildable {
     m_MenuItem = new JMenuItem(launch.getToolTipText());
 
     // copy the properties from the jbutton
-    m_MenuItem.addActionListener(((JButton)launch).getListeners(ActionListener.class)[0]);
-    m_MenuItem.setIcon(((JButton)launch).getIcon());
+    m_MenuItem.addActionListener(launch.getListeners(ActionListener.class)[0]);
+    m_MenuItem.setIcon(launch.getIcon());
     
     // doesn't add the button to the toolbar
     //map.getToolBar().add(launch);

@@ -157,7 +157,7 @@ public class ASLBoard extends Board {
             return;
         }
         for (int i = 0; i < overlays.size(); ++i) {
-            if ((Overlay) overlays.get(i) instanceof SSROverlay) {
+            if (overlays.get(i) instanceof SSROverlay) {
                 overlays.remove(i--);
             }
         }
@@ -220,7 +220,7 @@ public class ASLBoard extends Board {
     public boolean removeOverlay(String s) {
         boolean changed = false;
         for (int i = 0; i < overlays.size(); ++i) {
-            Overlay o = (Overlay) overlays.get(i);
+            Overlay o = overlays.get(i);
             if (o.name.equals(s)) {
                 overlays.remove(i--);
                 changed = true;
