@@ -501,36 +501,39 @@ public class ASLMap extends Map {
 
     Graphics2D g2d = (Graphics2D) g;
     Composite oldComposite = g2d.getComposite();
-    GamePiece[] stack = pieces.getPieces();
-
     g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pieceOpacity));
+
+    final double os_scale = g2d.getDeviceConfiguration().getDefaultTransform().getScaleX();
+    final double dzoom = getZoom() * os_scale;
+
+    GamePiece[] stack = pieces.getPieces();
 
     for (int i = 0; i < stack.length; ++i)
     {
-        Point pt = componentCoordinates(stack[i].getPosition());
+        Point pt = mapToDrawing(stack[i].getPosition(), os_scale);
 
         if (stack[i].getClass() == Stack.class)
         {
             if (m_showMapLevel == ShowMapLevel.ShowAll)
-                getStackMetrics().draw((Stack) stack[i], pt, g, this, getZoom(), visibleRect);
+                getStackMetrics().draw((Stack) stack[i], pt, g, this, dzoom, visibleRect);
         }
         else
         {
             if (m_showMapLevel == ShowMapLevel.ShowAll  || (stack[i].getProperty("overlay") != null && m_showMapLevel == ShowMapLevel.ShowMapOnly)) // always show overlays
             {
-                stack[i].draw(g, pt.x, pt.y, c, getZoom());
+                stack[i].draw(g, pt.x, pt.y, c, dzoom);
 
                 if (Boolean.TRUE.equals(stack[i].getProperty(Properties.SELECTED)))
-                    highlighter.draw(stack[i], g, pt.x, pt.y, c, getZoom());
+                    highlighter.draw(stack[i], g, pt.x, pt.y, c, dzoom);
             }
             else if (m_showMapLevel == ShowMapLevel.ShowMapAndOverlay)
             {
                 if (Boolean.TRUE.equals(stack[i].getProperty(Properties.NO_STACK)))
                 {
-                    stack[i].draw(g, pt.x, pt.y, c, getZoom());
+                    stack[i].draw(g, pt.x, pt.y, c, dzoom);
 
                     if (Boolean.TRUE.equals(stack[i].getProperty(Properties.SELECTED)))
-                        highlighter.draw(stack[i], g, pt.x, pt.y, c, getZoom());
+                        highlighter.draw(stack[i], g, pt.x, pt.y, c, dzoom);
                 }
             }
         }
@@ -550,20 +553,23 @@ public class ASLMap extends Map {
 
     Graphics2D g2d = (Graphics2D) g;
     Composite oldComposite = g2d.getComposite();
-    GamePiece[] stack = pieces.getPieces();
-
     g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pieceOpacity));
+
+    final double os_scale = g2d.getDeviceConfiguration().getDefaultTransform().getScaleX();
+    final double dzoom = getZoom() * os_scale;
+
+    GamePiece[] stack = pieces.getPieces();
 
     for (int i = 0; i < stack.length; ++i)
     {
         if (m_showMapLevel == ShowMapLevel.ShowAll || (stack[i].getProperty("overlay") != null && m_showMapLevel == ShowMapLevel.ShowMapOnly)) // always show overlays
         {
-            Point pt = componentCoordinates(stack[i].getPosition());
+            Point pt = mapToDrawing(stack[i].getPosition(), os_scale);
 
-            stack[i].draw(g, pt.x + xOffset, pt.y + yOffset, theMap, getZoom());
+            stack[i].draw(g, pt.x + xOffset, pt.y + yOffset, theMap, dzoom);
 
             if (Boolean.TRUE.equals(stack[i].getProperty(Properties.SELECTED)))
-                highlighter.draw(stack[i], g, pt.x - xOffset, pt.y - yOffset, theMap, getZoom());
+                highlighter.draw(stack[i], g, pt.x - xOffset, pt.y - yOffset, theMap, dzoom);
         }
         else if (m_showMapLevel == ShowMapLevel.ShowMapAndOverlay)
         {
@@ -571,12 +577,12 @@ public class ASLMap extends Map {
             {
                 if (Boolean.TRUE.equals(stack[i].getProperty(Properties.NO_STACK)))
                 {
-                    Point pt = componentCoordinates(stack[i].getPosition());
+                    Point pt = mapToDrawing(stack[i].getPosition(), os_scale);
 
-                    stack[i].draw(g, pt.x + xOffset, pt.y + yOffset, theMap, getZoom());
+                    stack[i].draw(g, pt.x + xOffset, pt.y + yOffset, theMap, dzoom);
 
                     if (Boolean.TRUE.equals(stack[i].getProperty(Properties.SELECTED)))
-                        highlighter.draw(stack[i], g, pt.x - xOffset, pt.y - yOffset, theMap, getZoom());
+                        highlighter.draw(stack[i], g, pt.x - xOffset, pt.y - yOffset, theMap, dzoom);
                 }
             }
         }
