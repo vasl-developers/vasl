@@ -49,8 +49,8 @@ public class ASLTranslate extends Translate {
       Command c;
       if (target instanceof Stack) {
           Stack s = (Stack) target;
-          ArrayList movable = new ArrayList();
-          ArrayList visibleToMe = new ArrayList();
+          ArrayList<GamePiece> movable = new ArrayList<GamePiece>();
+          ArrayList<GamePiece> visibleToMe = new ArrayList<GamePiece>();
 
           for (Iterator<GamePiece> it = s.getPiecesIterator(); it.hasNext();) {
               GamePiece piece = it.next();
@@ -60,8 +60,8 @@ public class ASLTranslate extends Translate {
               }
           }
 
-          for (Iterator it = visibleToMe.iterator(); it.hasNext();) {
-              GamePiece piece = (GamePiece) it.next();
+          for (Iterator<GamePiece> it = visibleToMe.iterator(); it.hasNext();) {
+              GamePiece piece = it.next();
 
               if (piece.getProperty(ASLProperties.LOCATION) == null) {
                   movable.add(piece);
@@ -76,8 +76,8 @@ public class ASLTranslate extends Translate {
               return super.moveTarget(s);
           } else {
               c = new NullCommand();
-              for (Iterator it = movable.iterator(); it.hasNext();) {
-                  GamePiece gamePiece = (GamePiece) it.next();
+              for (Iterator<GamePiece> it = movable.iterator(); it.hasNext();) {
+                  GamePiece gamePiece = it.next();
                   c.append(super.moveTarget(gamePiece));
               }
           }

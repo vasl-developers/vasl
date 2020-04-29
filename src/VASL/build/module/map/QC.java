@@ -1725,7 +1725,7 @@ public class QC implements Buildable, GameComponent
                     {
                         try
                         {
-                            ASLBrokenFinder l_objBrokenFinder = (ASLBrokenFinder) m_objMap.getComponentsOf(ASLBrokenFinder.class).iterator().next();
+                            ASLBrokenFinder l_objBrokenFinder = m_objMap.getComponentsOf(ASLBrokenFinder.class).iterator().next();
 
                             if (l_objBrokenFinder != null)
                                 l_objBrokenFinder.findBrokenPiece(m_objBrokenFinderButton.isSelected());
@@ -1781,7 +1781,7 @@ public class QC implements Buildable, GameComponent
                     {
                         try
                         {
-                            ASLCasbin l_objCasbin = (ASLCasbin) m_objMap.getComponentsOf(ASLCasbin.class).iterator().next();
+                            ASLCasbin l_objCasbin = m_objMap.getComponentsOf(ASLCasbin.class).iterator().next();
 
                             if (l_objCasbin != null)
                                 l_objCasbin.startcasbin(m_objASLCasbinButton.isSelected());

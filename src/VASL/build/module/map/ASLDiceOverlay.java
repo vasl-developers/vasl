@@ -1404,7 +1404,7 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
             {
                 try
                 {
-                    ASLDiceBot l_objDice = (ASLDiceBot) GameModule.getGameModule().getComponentsOf(ASLDiceBot.class).iterator().next();
+                    ASLDiceBot l_objDice = GameModule.getGameModule().getComponentsOf(ASLDiceBot.class).iterator().next();
 
                     if (l_objDice != null)
                     {

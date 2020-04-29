@@ -38,6 +38,7 @@ import javax.swing.JCheckBox;
 
 import VASL.LOS.Map.LOSResult;
 import VASL.LOS.Map.Location;
+import VASL.LOS.Map.Map;
 import VASL.build.module.ASLMap;
 import VASL.LOS.VASLGameInterface;
 import VASL.build.module.map.boardPicker.ASLBoard;
@@ -399,7 +400,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                 if (LOSMap == null) {
                     super.reportFormat.setProperty("Range", super.lastRange);
                 } else {
-                    super.reportFormat.setProperty("Range", String.valueOf(LOSMap.range(source.getHex(), target.getHex(), LOSMap.getMapConfiguration()))); //super.lastRange);
+                    super.reportFormat.setProperty("Range", String.valueOf(Map.range(source.getHex(), target.getHex(), LOSMap.getMapConfiguration()))); //super.lastRange);
                 }
                 super.reportFormat.setProperty("NumberOfLocationsChecked", String.valueOf(super.getLosCheckCount()));
                 super.reportFormat.setProperty("AllLocationsChecked", super.getLosCheckList());
@@ -676,7 +677,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
 
                         g.setColor(oldcolor);
                         lastRangeRect.add(drawText(g, targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), targetLOSPoint.y + targetLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
-                                "LOS Check Disabled - Overlay nearby. Range: " + LOSMap.range(source.getHex(), target.getHex(), LOSMap.getMapConfiguration())));
+                                "LOS Check Disabled - Overlay nearby. Range: " + Map.range(source.getHex(), target.getHex(), LOSMap.getMapConfiguration())));
 
                     } else {
                         // code added by DR to handle rooftop levels

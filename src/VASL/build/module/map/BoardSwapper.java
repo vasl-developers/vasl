@@ -23,9 +23,11 @@ import VASL.build.module.map.boardPicker.ASLBoard;
 import VASSAL.build.AbstractBuildable;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
+import VASSAL.build.module.GameComponent;
 import VASSAL.build.module.Map;
 import VASSAL.build.module.map.BoardPicker;
 import VASSAL.build.module.map.GlobalMap;
+import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.counters.GamePiece;
 import VASSAL.tools.imageop.Op;
 
@@ -99,8 +101,8 @@ public class BoardSwapper extends AbstractBuildable {
     m_MenuItem = new JMenuItem(launch.getToolTipText());
 
     // copy the properties from the jbutton
-    m_MenuItem.addActionListener(((JButton)launch).getListeners(ActionListener.class)[0]);
-    m_MenuItem.setIcon(((JButton)launch).getIcon());
+    m_MenuItem.addActionListener(launch.getListeners(ActionListener.class)[0]);
+    m_MenuItem.setIcon(launch.getIcon());
     
     // doesn't add the button to the toolbar
     //map.getToolBar().add(launch);
@@ -135,7 +137,7 @@ public class BoardSwapper extends AbstractBuildable {
         if (boards.elementAt(n) != null) {
           String boardName = (String) boards.elementAt(n);
           GamePiece piece = (GamePiece) pieces.elementAt(n);
-          for (Iterator it = map.getBoards().iterator();
+          for (Iterator<Board> it = map.getBoards().iterator();
                it.hasNext();) {
             ASLBoard board = (ASLBoard) it.next();
             if (boardName.equals(board.getName())) {
@@ -173,7 +175,7 @@ public class BoardSwapper extends AbstractBuildable {
 
     public void finish() {
       super.finish();
-      for (Iterator e = GameModule.getGameModule().getGameState().getGameComponents().iterator();
+      for (Iterator<GameComponent> e = GameModule.getGameModule().getGameState().getGameComponents().iterator();
            e.hasNext();) {
         Object o = e.next();
         if (o instanceof GlobalMap) {

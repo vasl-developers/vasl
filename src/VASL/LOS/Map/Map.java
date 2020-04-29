@@ -284,7 +284,7 @@ public class Map  {
      */
     public Map(int w, int h, HashMap<String, Terrain> terrainNameMap, String passgridconfig, boolean isCropping) {
         //DR added four variables to pass in hexWidth and hexHeight, grid configuration and cropping flag
-        this(BoardArchive.GEO_HEX_WIDTH, BoardArchive.GEO_HEX_HEIGHT, w, h, BoardArchive.GEO_A1_Center.x, BoardArchive.GEO_A1_Center.y, (int) BoardArchive.GEO_IMAGE_WIDTH, (int) BoardArchive.GEO_IMAGE_HEIGHT, terrainNameMap, (String) passgridconfig, isCropping);
+        this(BoardArchive.GEO_HEX_WIDTH, BoardArchive.GEO_HEX_HEIGHT, w, h, BoardArchive.GEO_A1_Center.x, BoardArchive.GEO_A1_Center.y, (int) BoardArchive.GEO_IMAGE_WIDTH, (int) BoardArchive.GEO_IMAGE_HEIGHT, terrainNameMap, passgridconfig, isCropping);
 
     }
 
@@ -592,7 +592,7 @@ public class Map  {
         try {
             // DR added -A1CenterX to handle x offset on HASL maps
             // also trapped all errors in finding a column and row; return null rather than break
-            int z = (int) ((double) (x - (A1CenterX < 0.0 ? 0 : A1CenterX)) / (hexWidth / 3.0));
+            int z = (int) ((x - (A1CenterX < 0.0 ? 0 : A1CenterX)) / (hexWidth / 3.0));
             int row;
             int col;
 
@@ -4444,7 +4444,7 @@ public class Map  {
         int localHexWidth =0;
         if(cropconfig.contains("FullHex")) {
             if(lowerRight.x == this.getGridWidth()) {  // right edge not cropped
-                localHexWidth = (int) this.width - (upperLeftHex.getColumnNumber());
+                localHexWidth = this.width - (upperLeftHex.getColumnNumber());
             } else if (upperLeft.x<=0) {  // left edge not cropped
                 Hex lowerRightHex=gridToHex(lowerRight.x  - (int) hexWidth/2 +offadj, lowerRight.y-1 );
                 localHexWidth=lowerRightHex.getColumnNumber()+1;
