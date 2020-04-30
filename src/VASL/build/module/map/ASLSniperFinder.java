@@ -77,26 +77,32 @@ public class ASLSniperFinder extends AbstractConfigurable implements GameCompone
 
     @Override
     public void draw(Graphics g, Map map) {
-
         if (visible) {
             LoadSniperPosition();
 
             if (pointList.size() > 0) {
-                int circleSize = (int) (this.map.getZoom() * DEFAULT_HEX_HEIGHT * 1.5);
                 g.setColor(Color.RED);
 
-                Graphics2D graph2D = (Graphics2D) g;
+                Graphics2D g2d = (Graphics2D) g;
 
-                Stroke oldStroke = graph2D.getStroke();
-                graph2D.setStroke(new BasicStroke(4));
+                Stroke oldStroke = g2d.getStroke();
+                g2d.setStroke(new BasicStroke(4));
+
+                final double os_scale = g2d.getDeviceConfiguration().getDefaultTransform().getScaleX();
+
+                final int circleSize = (int) (os_scale * map.getZoom() * DEFAULT_HEX_HEIGHT * 1.5);
 
                 for (Point aPointList : pointList) {
-                    Point point = this.map.componentCoordinates(aPointList);
-
-                    graph2D.drawOval(point.x - circleSize / 2, point.y - circleSize / 2, circleSize, circleSize);
+                    final Point point = map.mapToDrawing(aPointList, os_scale);
+                    g2d.drawOval(
+                      point.x - circleSize / 2,
+                      point.y - circleSize / 2,
+                      circleSize,
+                      circleSize
+                    );
                 }
 
-                graph2D.setStroke(oldStroke);
+                g2d.setStroke(oldStroke);
             }
         }
     }
