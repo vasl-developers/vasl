@@ -102,8 +102,8 @@ public class ASLKeyBufferer extends KeyBufferer {
       return null;
     }
   }
-  
-    public void mousePressed(MouseEvent e) {
+
+  public void mousePressed(MouseEvent e) {
     if (e.isConsumed()) {
       return;
     }
@@ -166,7 +166,7 @@ public class ASLKeyBufferer extends KeyBufferer {
       if (!e.isShiftDown() && !e.isControlDown()) { // No deselect if shift key down
         KeyBuffer.getBuffer().clear();
       }
-      anchor = map.componentCoordinates(e.getPoint());
+      anchor = map.mapToComponent(e.getPoint());
       selection = new Rectangle(anchor.x, anchor.y, 0, 0);
       if (map.getHighlighter() instanceof ColoredBorder) {
         ColoredBorder b = (ColoredBorder) map.getHighlighter();
