@@ -20,6 +20,7 @@ package VASL.build.module.map;
 
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -136,7 +137,6 @@ public class ASLStackMetrics extends StackMetrics {
         }
     }
 
-
     private boolean isVisible(Rectangle region, Rectangle bounds) {
         boolean visible = true;
         if (region != null) {
@@ -151,9 +151,14 @@ public class ASLStackMetrics extends StackMetrics {
         if (disableFullColorStacks) {
             super.draw(stack, location, g, map, zoom, visibleRect);
         } else {
+            final Graphics2D g2d = (Graphics2D) g;
+            final double os_scale = g2d.getDeviceConfiguration().getDefaultTransform().getScaleX();
+
+            final Component view = map.getView();
+
             Highlighter highlighter = map.getHighlighter();
-            Point mapLocation = map.mapCoordinates(location);
-            Rectangle region = visibleRect == null ? null : map.mapRectangle(visibleRect);
+            Point mapLocation = map.drawingToMap(location, os_scale);
+            Rectangle region = visibleRect == null ? null : map.drawingToMap(visibleRect, os_scale);
             Point[] positions = new Point[stack.getPieceCount()];
             Rectangle[] bounds = region == null ? null : new Rectangle[stack.getPieceCount()];
             getContents(stack, positions, null, bounds, mapLocation.x, mapLocation.y);
@@ -161,10 +166,10 @@ public class ASLStackMetrics extends StackMetrics {
             for (PieceIterator e = new PieceIterator(stack.getPiecesIterator(), unselectedVisible); e.hasMoreElements(); ) {
                 GamePiece next = e.nextPiece();
                 int index = stack.indexOf(next);
-                Point pt = map.componentCoordinates(positions[index]);
+                Point pt = map.mapToDrawing(positions[index], os_scale);
                 if (bounds == null || isVisible(region, bounds[index])) {
 //if (stack.isExpanded() || !e.hasMoreElements()) {
-                    next.draw(g, pt.x, pt.y, map.getView(), zoom);
+                    next.draw(g, pt.x, pt.y, view, zoom);
 //} else {
 //    drawUnexpanded(next, g, pt.x, pt.y, map.getView(), zoom);
 //}
@@ -175,12 +180,11 @@ public class ASLStackMetrics extends StackMetrics {
                 GamePiece next = e.nextPiece();
                 int index = stack.indexOf(next);
                 if (bounds == null || isVisible(region, bounds[index])) {
-                    Point pt = map.componentCoordinates(positions[index]);
-                    next.draw(g, pt.x, pt.y, map.getView(), zoom);
-                    highlighter.draw(next, g, pt.x, pt.y, map.getView(), zoom);
+                    Point pt = map.mapToDrawing(positions[index], os_scale);
+                    next.draw(g, pt.x, pt.y, view, zoom);
+                    highlighter.draw(next, g, pt.x, pt.y, view, zoom);
                 }
             }
-
         }
     }
 }
