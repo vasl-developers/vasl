@@ -65,21 +65,28 @@ public class HindranceKeeper extends AbstractBuildable implements Drawable, KeyL
   }
 
   public void draw(Graphics g, Map m) {
-    if (!m.isPiecesVisible()) {
-      GamePiece[] p = m.getPieces();
-      java.awt.Point pt;
-      for (int i = 0; i < p.length; ++i) {
-        if (p[i] instanceof Stack) {
-          Stack temp = getVisibleHindrances((Stack) p[i]);
-          if (temp != null) {
-            pt = map.componentCoordinates(p[i].getPosition());
-            map.getStackMetrics().draw(temp, g, pt.x, pt.y, map.getView(), map.getZoom());
-          }
+    if (m.isPiecesVisible()) {
+      return;
+    }
+
+    final JComponent view = map.getView();
+
+    final Graphics2D g2d = (Graphics2D) g;
+    final double os_scale = g2d.getDeviceConfiguration().getDefaultTransform().getScaleX();
+    final double dzoom = map.getZoom() * os_scale;
+
+    java.awt.Point pt;
+    for (GamePiece p: m.getPieces()) {
+      if (p instanceof Stack) {
+        Stack temp = getVisibleHindrances((Stack) p);
+        if (temp != null) {
+          pt = map.mapToDrawing(p.getPosition(), os_scale);
+          map.getStackMetrics().draw(temp, g, pt.x, pt.y, view, dzoom);
         }
-        else if (isVisibleHindrance(p[i])) {
-          pt = map.componentCoordinates(p[i].getPosition());
-          p[i].draw(g, pt.x, pt.y, map.getView(), map.getZoom());
-        }
+      }
+      else if (isVisibleHindrance(p)) {
+        pt = map.mapToDrawing(p.getPosition(), os_scale);
+        p.draw(g, pt.x, pt.y, view, dzoom);
       }
     }
   }
