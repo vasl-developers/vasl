@@ -88,7 +88,7 @@ class DiceRollHandler
         m_iFirstDice = iFirstDice;
         m_iSecondDice = iSecondDice;
         
-        if ((strSAN == null) || (strSAN.isEmpty()))
+        if (strSAN == null || strSAN.isEmpty())
         {
             m_bAxisSAN = false;
             m_bAlliedSAN = false;
