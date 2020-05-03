@@ -142,103 +142,102 @@ public class CounterDetailViewer extends VASSAL.build.module.map.CounterDetailVi
   
   @Override
     protected void drawGraphics(Graphics g, Point pt, JComponent comp, List<GamePiece> pieces) {
-
-    Object owner = null;
-
     fixBounds(pieces);
 
-    if (bounds.width > 0) 
+    if (bounds.width <= 0) {
+      return;
+    }
+ 
+    Rectangle visibleRect = comp.getVisibleRect();
+    
+    bounds.x = Math.min(bounds.x, visibleRect.x + visibleRect.width - bounds.width - 1);
+    if (bounds.x < visibleRect.x)
+      bounds.x = visibleRect.x;
+    
+    bounds.y = Math.min(bounds.y, visibleRect.y + visibleRect.height - bounds.height - 1);
+    int minY = visibleRect.y + (textVisible ? g.getFontMetrics().getHeight() + 6 : 0);
+    
+    if (bounds.y < minY)
+      bounds.y = minY;
+
+    if (bgColor != null) 
     {
-      Rectangle visibleRect = comp.getVisibleRect();
-      
-      bounds.x = Math.min(bounds.x, visibleRect.x + visibleRect.width - bounds.width - 1);
-      if (bounds.x < visibleRect.x)
-        bounds.x = visibleRect.x;
-      
-      bounds.y = Math.min(bounds.y, visibleRect.y + visibleRect.height - bounds.height - 1);
-      int minY = visibleRect.y + (textVisible ? g.getFontMetrics().getHeight() + 6 : 0);
-      
-      if (bounds.y < minY)
-        bounds.y = minY;
-
-      if (bgColor != null) 
-      {
-        g.setColor(bgColor);
-        g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
-      }
-      
-      if (fgColor != null) 
-      {
-        g.setColor(fgColor);
-        g.drawRect(bounds.x - 1, bounds.y - 1, bounds.width + 1, bounds.height + 1);
-        g.drawRect(bounds.x - 2, bounds.y - 2, bounds.width + 3, bounds.height + 3);
-      }
-      
-      Shape oldClip = g.getClip();
-
-      // draw the map
-      Point ptPosition = map.mapCoordinates(currentMousePosition.getPoint());
-      
-      if (!pieces.isEmpty())
-      {
-        GamePiece topPiece = pieces.get(0);
-        ptPosition = topPiece.getPosition();        
-      }
-
-      // get the icon of the map
-      BufferedImage imgMapIcon = ((ASLMap)map).getImgMapIcon(ptPosition, DEFAULT_HEX_HEIGHT * 1.2);
-      
-      // draw the image 
-      g.setClip(bounds.x - 3, bounds.y - 3, bounds.width + 5, bounds.height + 5);
-      g.drawImage(imgMapIcon, bounds.x + borderWidth, bounds.y + borderWidth, null);
+      g.setColor(bgColor);
+      g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+    }
+    
+    if (fgColor != null) 
+    {
       g.setColor(fgColor);
-      g.drawRect(bounds.x + borderWidth, bounds.y + borderWidth, imgMapIcon.getWidth(), imgMapIcon.getHeight());
-      g.setClip(oldClip);
-      
-      // draw pieces
-      for (int i = 0; i < pieces.size(); i++) 
-      {
-        if (ar_Pieces_Pos[i] == null)
-            continue;
-          
-        GamePiece piece = pieces.get(i);
-        Rectangle pieceBounds = getBounds(piece);
-        
-        if (unrotatePieces) 
-            piece.setProperty(Properties.USE_UNROTATED_SHAPE, Boolean.TRUE);
-        
-        g.setClip(bounds.x - 3, bounds.y - 3, bounds.width + 5, bounds.height + 5);
-        
-        final Stack parent = piece.getParent();
-        
-        if (parent instanceof Deck) 
-        {
-          owner = piece.getProperty(Properties.OBSCURED_BY);
-          final boolean faceDown = ((Deck) parent).isFaceDown();
-          piece.setProperty(Properties.OBSCURED_BY, faceDown ? Deck.NO_USER : null);
-        }
-        
-        piece.draw(g, bounds.x + ar_Pieces_Pos[i].x - (int) (pieceBounds.x * graphicsZoomLevel), bounds.y + ar_Pieces_Pos[i].y - (int) (pieceBounds.y * graphicsZoomLevel), comp, graphicsZoomLevel);
-        
-        if (parent instanceof Deck) 
-            piece.setProperty(Properties.OBSCURED_BY, owner);
-        
-        if (unrotatePieces) 
-            piece.setProperty(Properties.USE_UNROTATED_SHAPE, Boolean.FALSE);
-        
-        g.setClip(oldClip);
+      g.drawRect(bounds.x - 1, bounds.y - 1, bounds.width + 1, bounds.height + 1);
+      g.drawRect(bounds.x - 2, bounds.y - 2, bounds.width + 3, bounds.height + 3);
+    }
+    
+    Shape oldClip = g.getClip();
 
-        if (isTextUnderCounters()) 
+    // draw the map
+    Point ptPosition = map.mapCoordinates(currentMousePosition.getPoint());
+    
+    if (!pieces.isEmpty())
+    {
+      GamePiece topPiece = pieces.get(0);
+      ptPosition = topPiece.getPosition();        
+    }
+
+    // get the icon of the map
+    BufferedImage imgMapIcon = ((ASLMap)map).getImgMapIcon(ptPosition, DEFAULT_HEX_HEIGHT * 1.2);
+    
+    // draw the image 
+    g.setClip(bounds.x - 3, bounds.y - 3, bounds.width + 5, bounds.height + 5);
+    g.drawImage(imgMapIcon, bounds.x + borderWidth, bounds.y + borderWidth, null);
+    g.setColor(fgColor);
+    g.drawRect(bounds.x + borderWidth, bounds.y + borderWidth, imgMapIcon.getWidth(), imgMapIcon.getHeight());
+    g.setClip(oldClip);
+    
+    // draw pieces
+    for (int i = 0; i < pieces.size(); i++) 
+    {
+      if (ar_Pieces_Pos[i] == null)
+          continue;
+        
+      GamePiece piece = pieces.get(i);
+      Rectangle pieceBounds = getBounds(piece);
+      
+      if (unrotatePieces) 
+          piece.setProperty(Properties.USE_UNROTATED_SHAPE, Boolean.TRUE);
+      
+      g.setClip(bounds.x - 3, bounds.y - 3, bounds.width + 5, bounds.height + 5);
+
+      Object owner = null;
+      final Stack parent = piece.getParent();
+      
+      if (parent instanceof Deck) 
+      {
+        owner = piece.getProperty(Properties.OBSCURED_BY);
+        final boolean faceDown = ((Deck) parent).isFaceDown();
+        piece.setProperty(Properties.OBSCURED_BY, faceDown ? Deck.NO_USER : null);
+      }
+      
+      piece.draw(g, bounds.x + ar_Pieces_Pos[i].x - (int) (pieceBounds.x * graphicsZoomLevel), bounds.y + ar_Pieces_Pos[i].y - (int) (pieceBounds.y * graphicsZoomLevel), comp, graphicsZoomLevel);
+      
+      if (parent instanceof Deck) 
+          piece.setProperty(Properties.OBSCURED_BY, owner);
+      
+      if (unrotatePieces) 
+          piece.setProperty(Properties.USE_UNROTATED_SHAPE, Boolean.FALSE);
+      
+      g.setClip(oldClip);
+
+      if (isTextUnderCounters()) 
+      {
+        String text = counterReportFormat.getLocalizedText(piece);
+        
+        if (text.length() > 0) 
         {
-          String text = counterReportFormat.getLocalizedText(piece);
+          int x = bounds.x + ar_Pieces_Pos[i].x - (int) (pieceBounds.x * graphicsZoomLevel);
+          int y = bounds.y + ar_Pieces_Pos[i].y + (int)Math.round(pieceBounds.height * graphicsZoomLevel) + 5;
           
-          if (text.length() > 0) 
-          {
-            int x = bounds.x + ar_Pieces_Pos[i].x - (int) (pieceBounds.x * graphicsZoomLevel);
-            int y = bounds.y + ar_Pieces_Pos[i].y + (int)Math.round(pieceBounds.height * graphicsZoomLevel) + 5;
-            
-            drawLabel(g, new Point(x, y), text, Labeler.CENTER, Labeler.TOP);
-          }
+          drawLabel(g, new Point(x, y), text, Labeler.CENTER, Labeler.TOP);
         }
       }
     }
