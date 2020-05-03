@@ -43,9 +43,9 @@ import javax.swing.JOptionPane;
 
 public class CounterDetailViewer extends VASSAL.build.module.map.CounterDetailViewer 
 {
-    final int MAX_NUM_PIECES_PER_ROW = 9;
-    final int MAP_ICON_SIZE = (int)(DEFAULT_HEX_HEIGHT * 1.2);
-    Point [] ar_Pieces_Pos = null;
+  final int MAX_NUM_PIECES_PER_ROW = 9;
+  final int MAP_ICON_SIZE = (int)(DEFAULT_HEX_HEIGHT * 1.2);
+  Point [] ar_Pieces_Pos = null;
     
   @Override
   protected Rectangle getBounds(GamePiece piece) {
