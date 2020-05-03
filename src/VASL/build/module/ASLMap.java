@@ -429,56 +429,53 @@ public class ASLMap extends Map {
         logger.info("", error);
     }
 
-    public BufferedImage getImgMapIcon(Point pt, double width) 
-    {
-      // map rectangle
-      Rectangle rectDraw = null;
-      BufferedImage img = new BufferedImage((int)width, (int)width, BufferedImage.TYPE_INT_ARGB);
-      final Graphics2D gg = img.createGraphics();
-      double dMagnification = 0.0;
-      
-        for (Board b : boards) 
-        {
-            if (rectDraw == null)
-            {
-                dMagnification = b.getMagnification();
-                rectDraw = new Rectangle();
-                
-                rectDraw.x = (int)((pt.x - (int)((width / 2.0) * dMagnification)) / dMagnification);
-                rectDraw.y = (int)((pt.y - (int)((width / 2.0) * dMagnification)) / dMagnification);
-                rectDraw.width = (int)(width * dMagnification);
-                rectDraw.height = (int)(width * dMagnification);
+    public BufferedImage getImgMapIcon(Point pt, double size, double os_scale) {
+        BufferedImage img = new BufferedImage((int)size, (int)size, BufferedImage.TYPE_INT_ARGB);
+        final Graphics2D g2d = img.createGraphics();
 
-                gg.translate(-rectDraw.x, -rectDraw.y);      
+        double dzoom = 0.0;
+        Rectangle rect = null;
+
+        for (Board b: getBoards()) {
+            if (rect == null) {
+                final double mag = b.getMagnification();
+                dzoom = os_scale / mag;
+
+                rect = new Rectangle(
+                  (int)((pt.x * os_scale - size/2) / mag),
+                  (int)((pt.y * os_scale - size/2) / mag),
+                  (int)(size / mag),
+                  (int)(size / mag)
+                );
+
+                g2d.translate(-rect.x, -rect.y);
             }
-      
-            b.drawRegion(gg, getLocation(b, 1.0 / dMagnification), rectDraw, 1.0 / dMagnification, null);
+
+            b.drawRegion(g2d, getLocation(b, dzoom), rect, dzoom, null);
         }
-        
-        drawPiecesNonStackableInRegion(gg, rectDraw, dMagnification, 1.0 / dMagnification);
-                
-        gg.dispose();
-        
+
+        drawPiecesNonStackableInRegion(g2d, rect, dzoom);
+
+        g2d.dispose();
         return img;
-    }   
-    
-  public void drawPiecesNonStackableInRegion(Graphics g, Rectangle visibleRect, double dMagnification, double dZoom) 
+    }
+
+  protected void drawPiecesNonStackableInRegion(Graphics g, Rectangle visibleRect, double dZoom)
   {
       Graphics2D g2d = (Graphics2D) g;
       Composite oldComposite = g2d.getComposite();
-      
       g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pieceOpacity));
       
       GamePiece[] stack = pieces.getPieces();
       
       for (int i = 0; i < stack.length; ++i) 
       {
-        Point pt = componentCoordinates(stack[i].getPosition());
+        Point pt = stack[i].getPosition();
         
         if (stack[i].getClass() != Stack.class) 
         {
           if (Boolean.TRUE.equals(stack[i].getProperty(Properties.NO_STACK))) 
-              stack[i].draw(g, (int)(pt.x / (getZoom() * dMagnification)), (int)(pt.y / (getZoom() * dMagnification)), null, dZoom);
+              stack[i].draw(g, (int)(pt.x * dZoom), (int)(pt.y * dZoom), null, dZoom);
         }
       }
       
