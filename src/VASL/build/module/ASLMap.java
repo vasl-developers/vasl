@@ -428,7 +428,7 @@ public class ASLMap extends Map {
     private void logException(Throwable error) {
         logger.info("", error);
     }
-    
+
     public BufferedImage getImgMapIcon(Point pt, double width) 
     {
       // map rectangle
@@ -483,15 +483,15 @@ public class ASLMap extends Map {
       }
       
       g2d.setComposite(oldComposite);
-    }    
+  }    
   
-    public void setShowMapLevel(ShowMapLevel showMapLevel) {
-       m_showMapLevel = showMapLevel;
+  public void setShowMapLevel(ShowMapLevel showMapLevel) {
+      m_showMapLevel = showMapLevel;
   }
     
     @Override
   public boolean isPiecesVisible() {
-    return (pieceOpacity != 0);
+    return pieceOpacity != 0;
   }   
   
     @Override

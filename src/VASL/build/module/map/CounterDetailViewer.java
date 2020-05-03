@@ -45,7 +45,7 @@ public class CounterDetailViewer extends VASSAL.build.module.map.CounterDetailVi
 {
   final int MAX_NUM_PIECES_PER_ROW = 9;
   final int MAP_ICON_SIZE = (int)(DEFAULT_HEX_HEIGHT * 1.2);
-  Point [] ar_Pieces_Pos = null;
+  Point[] ar_Pieces_Pos = null;
     
   @Override
   protected Rectangle getBounds(GamePiece piece) {
@@ -57,7 +57,7 @@ public class CounterDetailViewer extends VASSAL.build.module.map.CounterDetailVi
       return super.getBounds(piece);
     }
   }
-  
+
   /** Set the bounds field large enough to accommodate the given set of pieces */
   @Override
   protected void fixBounds(List<GamePiece> pieces) 
@@ -65,8 +65,8 @@ public class CounterDetailViewer extends VASSAL.build.module.map.CounterDetailVi
     int iNumRows = pieces.size() / (MAX_NUM_PIECES_PER_ROW + 1) + 1;
     int iPiecePos, iCurTotalWidth = borderWidth * 2 + MAP_ICON_SIZE, iCurTotalHeight = borderWidth;
     int iMaxTotalWidth = 0;
-    int [] ar_iMaxHeigth = new int [iNumRows];
-    int [] ar_iMaxWidth = new int [MAX_NUM_PIECES_PER_ROW];
+    int[] ar_iMaxHeigth = new int [iNumRows];
+    int[] ar_iMaxWidth = new int [MAX_NUM_PIECES_PER_ROW];
     
     // calculate each row and col max size
     for (int iRow = 0; iRow < iNumRows; iRow++)
@@ -92,7 +92,7 @@ public class CounterDetailViewer extends VASSAL.build.module.map.CounterDetailVi
     }
     
     // where save the position of each piece  
-    ar_Pieces_Pos = new Point [pieces.size()];
+    ar_Pieces_Pos = new Point[pieces.size()];
 
     iCurTotalHeight = borderWidth;
     // calculate the pos of each pieces
