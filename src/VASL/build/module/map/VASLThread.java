@@ -496,8 +496,11 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             return;
         }
 
-        lastAnchor = map.componentCoordinates(anchor);
-        lastArrow = map.componentCoordinates(arrow);
+        final Graphics2D g2d = (Graphics2D) g;
+        final double os_scale = g2d.getDeviceConfiguration().getDefaultTransform().getScaleX();
+
+        lastAnchor = map.mapToDrawing(anchor, os_scale);
+        lastArrow = map.mapToDrawing(arrow, os_scale);
 
         if (source != null && target != null) {
             // source LOS point
@@ -510,7 +513,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             }
             // preserve point on map for overlay checking
             Point sourcestart = sourceLOSPoint;
-            sourceLOSPoint = mapPointToScreen(sourceLOSPoint);
+            sourceLOSPoint = mapPointToScreen(sourceLOSPoint, os_scale);
 
             // target LOS point
             Point targetLOSPoint;
@@ -522,7 +525,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             }
             // preserve point on map for overlay checking
             Point targetend = targetLOSPoint;
-            targetLOSPoint = mapPointToScreen(targetLOSPoint);
+            targetLOSPoint = mapPointToScreen(targetLOSPoint, os_scale);
 
             // call overlay check function
             // set the LOS line from source to target - based on map not screen coordinates
@@ -542,14 +545,12 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             // transform the blocked-at point
             Point b = null;
             if (result.isBlocked()) {
-                b = new Point(result.getBlockedAtPoint());
-                b = mapPointToScreen(b);
+                b = mapPointToScreen(result.getBlockedAtPoint(), os_scale);
             }
             // transform the hindrance point
             Point h = null;
             if (result.hasHindrance()) {
-                h = new Point(result.firstHindranceAt());
-                h = mapPointToScreen(h);
+                h = mapPointToScreen(result.firstHindranceAt(), os_scale);
             }
             // draw the LOS thread
             if (losOnOverlay) {
@@ -642,19 +643,20 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                     default:
                         g.setColor(Color.white);
                 }
-                g.setFont(RANGE_FONT);
+
+                g.setFont(RANGE_FONT.deriveFont((float)(RANGE_FONT.getSize() * os_scale)));
 
                 // inform user that LOS checking disabled due to overlay in LOS - show overlay boundaries and show text message
                 if (losOnOverlay) {
 
                     Color oldcolor = g.getColor();
                     g.setColor(Color.red);
-                    double ovrZoom = map.getZoom();
+                    double ovrZoom = map.getZoom() * os_scale;
 
                     if (showovrboundaries != null) {
 
                         Point drawboundaries = new Point(showovrboundaries.x, showovrboundaries.y);
-                        drawboundaries= mapPointToScreen(drawboundaries);
+                        drawboundaries = mapPointToScreen(drawboundaries, os_scale);
                         // need to adjust width and height of overlay boundary display rectangle according to level of zoom; x,y are already handled
                         int ovrwidth = (int)(showovrboundaries.width * ovrZoom);
                         int ovrheight = (int)(showovrboundaries.height * ovrZoom);
@@ -664,7 +666,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
 
                         int overlayWidth  = (int)(draggableOverlay.boundingBox().width * ovrZoom);
                         int overlayHeight = (int)(draggableOverlay.boundingBox().height * ovrZoom);
-                        Point overlayCenter = new Point ((int)(draggableOverlay.getPosition().x * ovrZoom), (int) (draggableOverlay.getPosition().y * ovrZoom));
+                        Point overlayCenter = new Point((int)(draggableOverlay.getPosition().x * ovrZoom), (int) (draggableOverlay.getPosition().y * ovrZoom));
 
                         g.drawRect(
                                 overlayCenter.x - overlayWidth/2,
@@ -883,15 +885,17 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         return null;
     }
 
-    private Point mapPointToScreen(Point p) {
-
-        final Point temp = map.mapToComponent(p);
+    private Point mapPointToScreen(Point p, double os_scale) {
+        final Point temp = map.mapToDrawing(p, os_scale);
         final double scale = upperLeftBoard == null ? 1.0 : upperLeftBoard.getMagnification() * ((HexGrid)upperLeftBoard.getGrid()).getHexSize()/ASLBoard.DEFAULT_HEX_HEIGHT;
         if (upperLeftBoard != null) {
             temp.x = (int)Math.round((double)temp.x * scale);
             temp.y = (int)Math.round((double)temp.y * scale);
         }
-        temp.translate((int) ((double)map.getEdgeBuffer().width * map.getZoom()), (int) ((double)map.getEdgeBuffer().height * map.getZoom()));
+        temp.translate(
+          (int) (map.getEdgeBuffer().width * map.getZoom() * os_scale),
+          (int) (map.getEdgeBuffer().height * map.getZoom() * os_scale)
+        );
 
         return temp;
     }
