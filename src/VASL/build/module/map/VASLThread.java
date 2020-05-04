@@ -456,7 +456,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
      */
     private void setTargetFromMouseDraggedEvent(Point eventPoint) {
         try {
-            final Point p = map.mapCoordinates(eventPoint);
+            final Point p = map.componentToMap(eventPoint);
             p.translate(-map.getEdgeBuffer().width, -map.getEdgeBuffer().height);
             if (p == null || !LOSMap.onMap(p.x, p.y)) return;
             target = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
@@ -473,7 +473,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
      */
     private void setTargetFromRemoteEvent(Point eventPoint) {
 
-         final Point p = mapMouseToMapCoordinates(eventPoint);
+        final Point p = mapMouseToMapCoordinates(eventPoint);
         if (p == null || !LOSMap.onMap(p.x, p.y)) return;
         target = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
         useAuxTargetLOSPoint = useAuxLOSPoint(target, p.x, p.y);
@@ -489,114 +489,81 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
     }
 
     @Override
-	public void draw(Graphics g, VASSAL.build.module.Map m) {
+    public void draw(Graphics g, VASSAL.build.module.Map m) {
 
-        if (!LOSPrefActive() || legacyMode) {
+        if (!LOSPrefActive() || legacyMode || !visible) {
             super.draw(g, m);
+            return;
         }
-        else if (visible) {
 
-            lastAnchor = map.componentCoordinates(anchor);
-            lastArrow = map.componentCoordinates(arrow);
+        lastAnchor = map.componentCoordinates(anchor);
+        lastArrow = map.componentCoordinates(arrow);
 
-            if (source != null && target != null) {
-                // source LOS point
-                Point sourceLOSPoint;
-                if (useAuxSourceLOSPoint) {
-                    sourceLOSPoint = new Point(source.getAuxLOSPoint());
+        if (source != null && target != null) {
+            // source LOS point
+            Point sourceLOSPoint;
+            if (useAuxSourceLOSPoint) {
+                sourceLOSPoint = new Point(source.getAuxLOSPoint());
+            }
+            else {
+                sourceLOSPoint = new Point(source.getLOSPoint());
+            }
+            // preserve point on map for overlay checking
+            Point sourcestart = sourceLOSPoint;
+            sourceLOSPoint = mapPointToScreen(sourceLOSPoint);
+
+            // target LOS point
+            Point targetLOSPoint;
+            if (useAuxTargetLOSPoint) {
+                targetLOSPoint = new Point(target.getAuxLOSPoint());
+            }
+            else {
+                targetLOSPoint = new Point(target.getLOSPoint());
+            }
+            // preserve point on map for overlay checking
+            Point targetend = targetLOSPoint;
+            targetLOSPoint = mapPointToScreen(targetLOSPoint);
+
+            // call overlay check function
+            // set the LOS line from source to target - based on map not screen coordinates
+            boolean losOnOverlay = false;
+            // test if LOS line cross an overlay
+            Line2D losline = new Line2D.Double(sourcestart.getLocation(), targetend.getLocation());
+            if(!checkifLOScrossesOverlay(losline)) {
+                try {
+                    doLOS();
+                } catch(Exception e) {
+
                 }
-                else {
-                    sourceLOSPoint = new Point(source.getLOSPoint());
-                }
-                // preserve point on map for overlay checking
-                Point sourcestart=sourceLOSPoint;
-                sourceLOSPoint = mapPointToScreen(sourceLOSPoint);
+            } else {
+                losOnOverlay =true;
+            }
 
-                // target LOS point
-                Point targetLOSPoint;
-                if (useAuxTargetLOSPoint) {
-                    targetLOSPoint = new Point(target.getAuxLOSPoint());
-                }
-                else {
-                    targetLOSPoint = new Point(target.getLOSPoint());
-                }
-                // preserve point on map for overlay checking
-                Point targetend=targetLOSPoint;
-                targetLOSPoint = mapPointToScreen(targetLOSPoint);
-
-                // call overlay check function
-                // set the LOS line from source to target - based on map not screen coordinates
-                boolean losOnOverlay = false;
-                // test if LOS line cross an overlay
-                Line2D losline= new Line2D.Double(sourcestart.getLocation(), targetend.getLocation());
-                if(!checkifLOScrossesOverlay(losline)) {
-                    try {
-                        doLOS();
-                    } catch(Exception e) {
-
-                    }
-                } else {
-                    losOnOverlay =true;
-                }
-
-                // transform the blocked-at point
-                Point b = null;
+            // transform the blocked-at point
+            Point b = null;
+            if (result.isBlocked()) {
+                b = new Point(result.getBlockedAtPoint());
+                b = mapPointToScreen(b);
+            }
+            // transform the hindrance point
+            Point h = null;
+            if (result.hasHindrance()) {
+                h = new Point(result.firstHindranceAt());
+                h = mapPointToScreen(h);
+            }
+            // draw the LOS thread
+            if (losOnOverlay) {
+                // if crosses overlay draw straight line in default color
+                g.setColor(LOSColor);
+                g.drawLine(
+                        sourceLOSPoint.x,
+                        sourceLOSPoint.y,
+                        targetLOSPoint.x,
+                        targetLOSPoint.y);
+            }
+            else {
                 if (result.isBlocked()) {
-                    b = new Point(result.getBlockedAtPoint());
-                    b = mapPointToScreen(b);
-                }
-                // transform the hindrance point
-                Point h = null;
-                if (result.hasHindrance()) {
-                    h = new Point(result.firstHindranceAt());
-                    h = mapPointToScreen(h);
-                }
-                // draw the LOS thread
-                if (losOnOverlay) {
-                    // if crosses overlay draw straight line in default color
-                    g.setColor(LOSColor);
-                    g.drawLine(
-                            sourceLOSPoint.x,
-                            sourceLOSPoint.y,
-                            targetLOSPoint.x,
-                            targetLOSPoint.y);
-                }
-                else {
-                    if (result.isBlocked()) {
-                        if (result.hasHindrance()) {
-                            g.setColor(LOSColor);
-                            g.drawLine(
-                                    sourceLOSPoint.x,
-                                    sourceLOSPoint.y,
-                                    h.x,
-                                    h.y);
-                            g.setColor(hindranceColor);
-                            g.drawLine(
-                                    h.x,
-                                    h.y,
-                                    b.x,
-                                    b.y);
-                            g.setColor(blockedColor);
-                            g.drawLine(
-                                    b.x,
-                                    b.y,
-                                    targetLOSPoint.x,
-                                    targetLOSPoint.y);
-                        } else {
-                            g.setColor(LOSColor);
-                            g.drawLine(
-                                    sourceLOSPoint.x,
-                                    sourceLOSPoint.y,
-                                    b.x,
-                                    b.y);
-                            g.setColor(blockedColor);
-                            g.drawLine(
-                                    b.x,
-                                    b.y,
-                                    targetLOSPoint.x,
-                                    targetLOSPoint.y);
-                        }
-                    } else if (result.hasHindrance()) {
+                    if (result.hasHindrance()) {
                         g.setColor(LOSColor);
                         g.drawLine(
                                 sourceLOSPoint.x,
@@ -607,6 +574,12 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                         g.drawLine(
                                 h.x,
                                 h.y,
+                                b.x,
+                                b.y);
+                        g.setColor(blockedColor);
+                        g.drawLine(
+                                b.x,
+                                b.y,
                                 targetLOSPoint.x,
                                 targetLOSPoint.y);
                     } else {
@@ -614,18 +587,122 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                         g.drawLine(
                                 sourceLOSPoint.x,
                                 sourceLOSPoint.y,
+                                b.x,
+                                b.y);
+                        g.setColor(blockedColor);
+                        g.drawLine(
+                                b.x,
+                                b.y,
                                 targetLOSPoint.x,
                                 targetLOSPoint.y);
                     }
+                } else if (result.hasHindrance()) {
+                    g.setColor(LOSColor);
+                    g.drawLine(
+                            sourceLOSPoint.x,
+                            sourceLOSPoint.y,
+                            h.x,
+                            h.y);
+                    g.setColor(hindranceColor);
+                    g.drawLine(
+                            h.x,
+                            h.y,
+                            targetLOSPoint.x,
+                            targetLOSPoint.y);
+                } else {
+                    g.setColor(LOSColor);
+                    g.drawLine(
+                            sourceLOSPoint.x,
+                            sourceLOSPoint.y,
+                            targetLOSPoint.x,
+                            targetLOSPoint.y);
                 }
-                // use the draw range property to turn all text on/off
-                if (drawRange) {
-                    // determine if the text should be above or below the location
-                    final boolean shiftSourceText = sourceLOSPoint.y > targetLOSPoint.y;
-                    final int shift = g.getFontMetrics().getHeight();
+            }
+            // use the draw range property to turn all text on/off
+            if (drawRange) {
+                // determine if the text should be above or below the location
+                final boolean shiftSourceText = sourceLOSPoint.y > targetLOSPoint.y;
+                final int shift = g.getFontMetrics().getHeight();
 
-                    // draw the source elevation
-                    switch (source.getBaseHeight() + source.getHex().getBaseHeight()) {
+                // draw the source elevation
+                switch (source.getBaseHeight() + source.getHex().getBaseHeight()) {
+                    case -1:
+                    case -2:
+                        g.setColor(Color.red);
+                        break;
+                    case 0:
+                        g.setColor(Color.gray);
+                        break;
+                    case 1:
+                        g.setColor(Color.darkGray);
+                        break;
+                    case 2:
+                        g.setColor(Color.black);
+                        break;
+                    default:
+                        g.setColor(Color.white);
+                }
+                g.setFont(RANGE_FONT);
+
+                // inform user that LOS checking disabled due to overlay in LOS - show overlay boundaries and show text message
+                if (losOnOverlay) {
+
+                    Color oldcolor = g.getColor();
+                    g.setColor(Color.red);
+                    double ovrZoom = map.getZoom();
+
+                    if (showovrboundaries != null) {
+
+                        Point drawboundaries = new Point(showovrboundaries.x, showovrboundaries.y);
+                        drawboundaries= mapPointToScreen(drawboundaries);
+                        // need to adjust width and height of overlay boundary display rectangle according to level of zoom; x,y are already handled
+                        int ovrwidth = (int)(showovrboundaries.width * ovrZoom);
+                        int ovrheight = (int)(showovrboundaries.height * ovrZoom);
+                        g.drawRect(drawboundaries.x, drawboundaries.y, ovrwidth, ovrheight);
+                    }
+                    else if (draggableOverlay != null) {
+
+                        int overlayWidth  = (int)(draggableOverlay.boundingBox().width * ovrZoom);
+                        int overlayHeight = (int)(draggableOverlay.boundingBox().height * ovrZoom);
+                        Point overlayCenter = new Point ((int)(draggableOverlay.getPosition().x * ovrZoom), (int) (draggableOverlay.getPosition().y * ovrZoom));
+
+                        g.drawRect(
+                                overlayCenter.x - overlayWidth/2,
+                                overlayCenter.y - overlayHeight/2,
+                                overlayWidth,
+                                overlayHeight);
+                    }
+
+                    g.setColor(oldcolor);
+                    lastRangeRect.add(drawText(g, targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), targetLOSPoint.y + targetLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
+                            "LOS Check Disabled - Overlay nearby. Range: " + Map.range(source.getHex(), target.getHex(), LOSMap.getMapConfiguration())));
+
+                } else {
+                    // code added by DR to handle rooftop levels
+                    double leveladj = 0;
+                    String sourcelevelString = "";
+                    String targetlevelString = "";
+
+                    if ((int)Math.round(sourcelevel) > (int)sourcelevel) {  //need to show decimal place
+                        sourcelevelString = "Level " + sourcelevel;
+                    }
+                    else {  // hide decimal place
+                        sourcelevelString = "Level " + (int)sourcelevel;
+                    }
+                    if (isVerbose()) {
+                        lastRangeRect = drawText(g,
+                                sourceLOSPoint.x - 20,
+                                sourceLOSPoint.y - sourceLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) - (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
+                                source.getName() + "  (" + sourcelevelString + ")");
+                    } else if (source.getBaseHeight() != 0) {
+                        lastRangeRect = drawText(g,
+                                sourceLOSPoint.x - 20,
+                                sourceLOSPoint.y - sourceLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) -  (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
+                                sourcelevelString );
+                    }
+
+                    // draw the target elevation
+                    switch (target.getBaseHeight() + target.getHex().getBaseHeight()) {
                         case -1:
                         case -2:
                             g.setColor(Color.red);
@@ -642,121 +719,38 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                         default:
                             g.setColor(Color.white);
                     }
-                    g.setFont(RANGE_FONT);
 
-                    // inform user that LOS checking disabled due to overlay in LOS - show overlay boundaries and show text message
-                    if (losOnOverlay) {
-
-                        Color oldcolor = g.getColor();
-                        g.setColor(Color.red);
-                        double ovrZoom = map.getZoom();
-
-                        if(showovrboundaries != null) {
-
-                            Point drawboundaries=new Point (showovrboundaries.x, showovrboundaries.y);
-                            drawboundaries= mapPointToScreen(drawboundaries);
-                            // need to adjust width and height of overlay boundary display rectangle according to level of zoom; x,y are already handled
-                            int ovrwidth = (int)(showovrboundaries.width * ovrZoom);
-                            int ovrheight = (int)(showovrboundaries.height * ovrZoom);
-                            g.drawRect(drawboundaries.x, drawboundaries.y, ovrwidth, ovrheight);
-                        }
-
-
-                        else if(draggableOverlay != null) {
-
-                            int overlayWidth  = (int)(draggableOverlay.boundingBox().width * ovrZoom);
-                            int overlayHeight = (int)(draggableOverlay.boundingBox().height * ovrZoom);
-                            Point overlayCenter = new Point ((int)(draggableOverlay.getPosition().x * ovrZoom), (int) (draggableOverlay.getPosition().y * ovrZoom));
-
-                            g.drawRect(
-                                    overlayCenter.x - overlayWidth/2,
-                                    overlayCenter.y - overlayHeight/2,
-                                    overlayWidth,
-                                    overlayHeight);
-                        }
-
-                        g.setColor(oldcolor);
-                        lastRangeRect.add(drawText(g, targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), targetLOSPoint.y + targetLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
-                                "LOS Check Disabled - Overlay nearby. Range: " + Map.range(source.getHex(), target.getHex(), LOSMap.getMapConfiguration())));
-
-                    } else {
-                        // code added by DR to handle rooftop levels
-                        double leveladj=0;
-                        String sourcelevelString="";
-                        String targetlevelString="";
-
-                        if ((int)Math.round(sourcelevel) > (int)sourcelevel) {  //need to show decimal place
-                            sourcelevelString="Level " + sourcelevel;
-                        }
-                        else {  // hide decimal place
-                            sourcelevelString="Level " + (int)sourcelevel;
-                        }
-                        if (isVerbose()) {
-                            lastRangeRect = drawText(g,
-                                    sourceLOSPoint.x - 20,
-                                    sourceLOSPoint.y - sourceLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) - (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
-                                    source.getName() + "  (" + sourcelevelString + ")");
-                        } else if (source.getBaseHeight() != 0) {
-                            lastRangeRect = drawText(g,
-                                    sourceLOSPoint.x - 20,
-                                    sourceLOSPoint.y - sourceLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) -  (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
-                                    sourcelevelString );
-                        }
-
-                        // draw the target elevation
-                        switch (target.getBaseHeight() + target.getHex().getBaseHeight()) {
-                            case -1:
-                            case -2:
-                                g.setColor(Color.red);
-                                break;
-                            case 0:
-                                g.setColor(Color.gray);
-                                break;
-                            case 1:
-                                g.setColor(Color.darkGray);
-                                break;
-                            case 2:
-                                g.setColor(Color.black);
-                                break;
-                            default:
-                                g.setColor(Color.white);
-                        }
-
-                        if ((int)Math.round(targetlevel) > (int)targetlevel) {  //need to show decimal place
-                            targetlevelString="Level " + targetlevel;
-                        }
-                        else {  // hide decimal place
-                            targetlevelString="Level " + (int)targetlevel;
-                        }
-                        if (isVerbose()) {
-                            lastRangeRect.add(drawText(g,
-                                    targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), //- 20,
-                                    targetLOSPoint.y + targetLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
-                                    target.getName() + "  (" + targetlevelString + ")"));
-                        } else if (target.getBaseHeight() != 0) {
-                            lastRangeRect.add(drawText(g,
-                                    targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), //- 20,
-                                    targetLOSPoint.y + targetLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
-                                    targetlevelString ));
-                        }
-                        // draw the verbose text
-                        g.setColor(Color.black);
-                        if (shiftSourceText) {
-                            //lastRangeRect.add(drawText(g, targetLOSPoint.x - 20, targetLOSPoint.y - shift, resultsString));
-                            lastRangeRect.add(drawText(g, targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), targetLOSPoint.y + targetLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) - shift, resultsString));
-                        }
-                        else {
-                            //lastRangeRect.add(drawText(g, targetLOSPoint.x - 20, targetLOSPoint.y + shift * 2 - 2, resultsString));
-                            lastRangeRect.add(drawText(g, targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), targetLOSPoint.y + targetLOSLabelYoffset(sourceLOSPoint, targetLOSPoint)+ shift * 2 - 2, resultsString));
-                        }
-
+                    if ((int)Math.round(targetlevel) > (int)targetlevel) {  //need to show decimal place
+                        targetlevelString="Level " + targetlevel;
+                    }
+                    else {  // hide decimal place
+                        targetlevelString="Level " + (int)targetlevel;
+                    }
+                    if (isVerbose()) {
+                        lastRangeRect.add(drawText(g,
+                                targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), //- 20,
+                                targetLOSPoint.y + targetLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
+                                target.getName() + "  (" + targetlevelString + ")"));
+                    } else if (target.getBaseHeight() != 0) {
+                        lastRangeRect.add(drawText(g,
+                                targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), //- 20,
+                                targetLOSPoint.y + targetLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
+                                targetlevelString ));
+                    }
+                    // draw the verbose text
+                    g.setColor(Color.black);
+                    if (shiftSourceText) {
+                        //lastRangeRect.add(drawText(g, targetLOSPoint.x - 20, targetLOSPoint.y - shift, resultsString));
+                        lastRangeRect.add(drawText(g, targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), targetLOSPoint.y + targetLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) - shift, resultsString));
+                    }
+                    else {
+                        //lastRangeRect.add(drawText(g, targetLOSPoint.x - 20, targetLOSPoint.y + shift * 2 - 2, resultsString));
+                        lastRangeRect.add(drawText(g, targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), targetLOSPoint.y + targetLOSLabelYoffset(sourceLOSPoint, targetLOSPoint)+ shift * 2 - 2, resultsString));
                     }
 
                 }
+
             }
-        }
-        else {
-            super.draw(g, m);
         }
     }
 
@@ -891,11 +885,11 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
 
     private Point mapPointToScreen(Point p) {
 
-        final Point temp = map.componentCoordinates(new Point(p));
+        final Point temp = map.mapToComponent(p);
         final double scale = upperLeftBoard == null ? 1.0 : upperLeftBoard.getMagnification() * ((HexGrid)upperLeftBoard.getGrid()).getHexSize()/ASLBoard.DEFAULT_HEX_HEIGHT;
         if (upperLeftBoard != null) {
-            temp.x = (int)Math.round((double)temp.x *scale);
-            temp.y = (int)Math.round((double)temp.y *scale);
+            temp.x = (int)Math.round((double)temp.x * scale);
+            temp.y = (int)Math.round((double)temp.y * scale);
         }
         temp.translate((int) ((double)map.getEdgeBuffer().width * map.getZoom()), (int) ((double)map.getEdgeBuffer().height * map.getZoom()));
 
@@ -1154,6 +1148,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         }
         return 0; // should never get here
     }
+
     private int sourceLOSLabelYoffset(Point sourceLOSpoint, Point targetLOSpoint) {
         if (sourceLOSpoint.getY() == targetLOSpoint.getY()) {
             // LOS is horizontal; push label above thread
@@ -1179,6 +1174,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         }
         return 0; // should never get here
     }
+
     @Override
     public String encode(Command var1) {
         if(var1 instanceof LOS_Thread.LOSCommand) {
@@ -1233,5 +1229,3 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         }
     }
 }
-
-
