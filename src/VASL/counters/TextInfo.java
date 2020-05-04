@@ -117,9 +117,13 @@ public class TextInfo extends Decorator implements EditablePiece {
     piece.draw(g, x, y, obs, zoom);
     if (showInfo) {
       if (infoSize == null) {
-        g.setFont(font);
+        final Graphics2D g2d = (Graphics2D) g;
+        final double os_scale = g2d.getDeviceConfiguration().getDefaultTransform().getScaleX();
+        final Font scaled_font = font.deriveFont(((float)(font.getSize() * os_scale)));
+
+        g.setFont(scaled_font);
         infoSize = getInfoSize(info, g.getFontMetrics());
-        infoImage = createInfoImage(obs);
+        infoImage = createInfoImage(obs, scaled_font);
       }
       g.drawImage(infoImage, x + (int) (zoom * getInfoOffset().x),
                   y + (int) (zoom * getInfoOffset().y),
@@ -150,11 +154,12 @@ public class TextInfo extends Decorator implements EditablePiece {
     return new Dimension(wid, hgt);
   }
 
-  protected Image createInfoImage(Component obs) {
+  protected Image createInfoImage(Component obs, Font scaled_font) {
     Image im = obs.createImage(infoSize.width, infoSize.height);
     Graphics g = im.getGraphics();
-    g.setFont(font);
+    g.setFont(scaled_font);
     writeInfo(g, 0, infoSize.height / 2);
+    g.dispose();
     return im;
   }
 
