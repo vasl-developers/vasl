@@ -124,9 +124,7 @@ public class VASLGameInterface {
     private void updatePiece(GamePiece piece) {
 
         // determine what hex and location the piece is in
-        Point p = gameMap.mapCoordinates(new Point(piece.getPosition()));
-        p.x *= gameMap.getZoom();
-        p.y *= gameMap.getZoom();
+        Point p = piece.getPosition();
         p.translate(-gameMap.getEdgeBuffer().width, -gameMap.getEdgeBuffer().height);
 
         if (!LOSMap.onMap(p.x, p.y)) return;
@@ -352,9 +350,7 @@ public class VASLGameInterface {
     public Location getLocation(GamePiece piece) {
         // this works with double blind viewer only as it requires a unit GamePiece to exist and assumes that hex locations have not been created
         // determine what hex and location the piece is in
-        Point p = gameMap.mapCoordinates(new Point(piece.getPosition()));
-        p.x *= gameMap.getZoom();
-        p.y *= gameMap.getZoom();
+        Point p = piece.getPosition();
         p.translate(-gameMap.getEdgeBuffer().width, -gameMap.getEdgeBuffer().height);
 
         if (gameMap == null || gameMap.getVASLMap() == null || !gameMap.getVASLMap().onMap(p.x, p.y)) {
