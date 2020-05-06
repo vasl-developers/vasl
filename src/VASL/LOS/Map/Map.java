@@ -1849,12 +1849,12 @@ public class Map  {
         // We can ignore the current hex if we're in source/target and LOS is from center location
         // (non-center location implies bypass and LOS may be blocked)
         // if ((!status.currentHex.equals(status.sourceHex) && !status.currentHex.equals(status.targetHex)) ||
-        if (((!status.currentHex.equals(status.sourceHex) && (status.range != status.rangeToTarget)) && (!status.currentHex.equals(status.targetHex) && (status.range != status.rangeToSource))) ||
+        if (((!status.currentHex.equals(status.sourceHex) && (status.range != status.rangeToTarget || (status.range == status.rangeToTarget && !status.source.isCenterLocation())))
+                && (!status.currentHex.equals(status.targetHex) && (status.range != status.rangeToSource || (status.range == status.rangeToSource && !status.target.isCenterLocation()))) ||
                 (status.currentHex.equals(status.sourceHex) && !status.currentTerrain.isOpen() && !status.currentTerrain.isHexsideTerrain() && !status.source.isCenterLocation()) ||
                 (status.currentHex.equals(status.targetHex) && !status.currentTerrain.isOpen() && !status.currentTerrain.isHexsideTerrain() && !status.target.isCenterLocation()) ||
                 // DR added this Jan 2017 to correct error in bypass check when LOS is along the hexside in the targethex
-                ((status.range == status.rangeToSource && (status.LOSis60Degree || status.LOSisHorizontal)) & !status.currentTerrain.isOpen() && !status.currentTerrain.isHexsideTerrain() && !status.target.isCenterLocation())
-                ) {
+                ((status.range == status.rangeToSource && (status.LOSis60Degree || status.LOSisHorizontal)) & !status.currentTerrain.isOpen() && !status.currentTerrain.isHexsideTerrain() && !status.target.isCenterLocation()))) {
 
             // ignore inherent terrain that "spills" into adjacent hex
             if(status.currentTerrain.isInherentTerrain() && !status.currentHex.getCenterLocation().getTerrain().equals(status.currentTerrain)) {
