@@ -2295,6 +2295,7 @@
         <LOSSSRule name="HedgesToOG" type="terrainMap" fromValue="Hedge" toValue="Open Ground" />
         <LOSSSRule name="NoHedges" type="terrainMap" fromValue="Hedge" toValue="Open Ground" />
         <LOSSSRule name="WallsToOG" type="terrainMap" fromValue="Wall" toValue="Open Ground" />
+		<LOSSSRule name="HedgesOnly" type="terrainMap" fromValue="Wall" toValue="Hedge" />
         <LOSSSRule name="NoWalls" type="terrainMap" fromValue="Wall" toValue="Open Ground" />
         <LOSSSRule name="PlowedFields" type="terrainMap" fromValue="Grain" toValue="Plowed Field" />
         <LOSSSRule name="RiverToValley" type="terrainMap" fromValue="River" toValue="Open Ground" />
