@@ -8,8 +8,6 @@ DOCDIR:=doc
 DISTDIR:=dist
 
 VNUM:=6.6.0
-SVNVERSION:=$(shell git svn log -1 --oneline | grep -oP '^r\K\d+')
-#VERSION:=$(VNUM)-svn$(SVNVERSION)
 VERSION:=$(VNUM)-beta1
 
 CLASSPATH:=$(CLASSDIR):$(shell echo $(LIBDIR)/*.jar | tr ' ' ':'):$(shell echo $(LIBDIRND)/*.jar | tr ' ' ':')
