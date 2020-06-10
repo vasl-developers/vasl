@@ -8,7 +8,7 @@ DOCDIR:=doc
 DISTDIR:=dist
 
 VNUM:=6.6.0
-VERSION:=$(VNUM)-beta1
+VERSION:=$(VNUM)-test-$(shell git rev-parse --short HEAD)
 
 CLASSPATH:=$(CLASSDIR):$(shell echo $(LIBDIR)/*.jar | tr ' ' ':'):$(shell echo $(LIBDIRND)/*.jar | tr ' ' ':')
 JAVAPATH:=/usr/bin
