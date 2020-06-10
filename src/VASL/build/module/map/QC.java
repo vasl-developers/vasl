@@ -860,13 +860,17 @@ public class QC implements Buildable, GameComponent
 "		<qcentry slot=\"1589\"/>\n" +
 "		<qcentry slot=\"1939\"/>\n" +
 "		<qcentry slot=\"2122\"/>\n" +
+"		<qcentry slot=\"3b5:4188\"/>\n" +
+"		<qcentry slot=\"11430\"/>\n" +
 "		<qcentry slot=\"2353\"/>\n" +
 "		<qcentry slot=\"2831\"/>\n" +
 "		<qcentry slot=\"3192\"/>\n" +
 "		<qcentry slot=\"3380\"/>\n" +
 "		<qcentry slot=\"3573\"/>\n" +
-"		<qcentry slot=\"3634\"/>\n" +
+"		<qcentry slot=\"11487\"/>\n" +
 "		<qcentry slot=\"3916\"/>\n" +
+"		<qcentry slot=\"11542\"/>\n" +
+"		<qcentry slot=\"3b5:7863\"/>\n" +
 "	</qcsubmenu>\n" +
 "	<qcsubmenu text=\"AFV Bad Things\">\n" +
 "		<qcentry slot=\"41\"/>\n" +
