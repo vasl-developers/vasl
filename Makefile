@@ -16,7 +16,7 @@ CLASSPATH:=$(CLASSDIR):$(shell echo $(LIBDIR)/*.jar | tr ' ' ':'):$(shell echo $
 JAVAPATH:=/usr/bin
 
 JC:=$(JAVAPATH)/javac
-JCFLAGS:=-d $(CLASSDIR) -source 9 -target 9 -Xlint -classpath $(CLASSPATH) -sourcepath $(SRCDIR) -Xmaxwarns 500
+JCFLAGS:=-d $(CLASSDIR) -source 11 -target 11 -Xlint -classpath $(CLASSPATH) -sourcepath $(SRCDIR) -Xmaxwarns 500
 
 JAR:=$(JAVAPATH)/jar
 
