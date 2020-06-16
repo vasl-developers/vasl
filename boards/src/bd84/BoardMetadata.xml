@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<!--
+    This file contains the board metadata specific to a VASL board archive.
+    Create one file per VASL board and place it in the archive.
+-->
+
+<!-- 
+    Board-level metadata
+	name - the name of the board (as it will appear in board selector drop-down - not yet supported)
+	version - the board version
+	versionDate - the date the last version was created
+	author - the caring soul who created the board
+    boardImage - the name of the VASL image file in the board archive; the name is case sensitive
+    hasHills - TRUE/FALSE if the board contains base elevations above ground level
+                if not we can assume the ground level under the terrain is zero, which
+                makes the VASL LOS image translation faster and more accurate
+    height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
+    width - width of the board in hexes.
+	others - TBD e.g. alternate hex grain, etc. 
+
+	2/8/15 - fixed overlay SSR rules adding rule sets
+	3/11/15 - fixed "no woods roads" SSR rule
+	v6.2 Feb 2017 (TR)
+	v6.3 Mar 2018 update version for lightwoods transform
+	v6.4 Jul 2019 added missing K2/L1 cliff and NoCliffs overlay (BK)
+-->
+<boardMetadata name="84" version="1.0" versionDate="Jun 2020" author="TR" boardImageFileName="bd84.gif" hasHills="TRUE" width="33" height="10">
+
+    <!--
+        The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
+        determine the proper building type when creating the LOS information and assumes buildings are single-hex stone or 
+        wooden buildings. Use these elements to override the building type. 
+        
+        See the terrainType elements for a complete list of building names
+        <buildingType hexName="O4" buildingTypeName="Stone Building, 2 Level" />
+
+	-->
+    <buildingTypes>
+       <buildingType hexName="P9" buildingTypeName="Wooden Building, 1 Level" />
+	   <buildingType hexName="Q9" buildingTypeName="Wooden Building, 1 Level" />
+       <buildingType hexName="S10" buildingTypeName="Wooden Building, 1 Level" />
+       <buildingType hexName="T9" buildingTypeName="Wooden Building, 1 Level" />
+       <buildingType hexName="U10" buildingTypeName="Wooden Building, 1 Level" />
+       <buildingType hexName="U8" buildingTypeName="Wooden Building, 1 Level" />
+       <buildingType hexName="V5" buildingTypeName="Wooden Building, 1 Level" />
+       <buildingType hexName="V7" buildingTypeName="Wooden Building, 1 Level" />
+       <buildingType hexName="V8" buildingTypeName="Wooden Building, 1 Level" />
+       <buildingType hexName="W7" buildingTypeName="Wooden Building, 1 Level" />
+       <buildingType hexName="X8" buildingTypeName="Wooden Building, 1 Level" />
+	</buildingTypes>
+	
+	<overlaySSRules>
+	    <!--
+			Scenario-specific underlay rules. 
+			name - the VASL SSR name
+			image - the image name
+			color - the VASL color name
+			
+			Example:
+			<underlaySSRule name="WallToCactus" image="CactusPattern.gif">
+				<color name="WallBrown" />
+				<color name="WallGrey1" />
+				<color name="WallGrey2" />
+			</underlaySSRule>			
+		-->
+		
+		<underlaySSRule name="WallsOnly" image="WallPattern.gif">
+			<color name="HedgeGreen" />
+		</underlaySSRule>
+		<underlaySSRule name="WallToCactus" image="CactusPattern.gif">
+			<color name="WallBrown" />
+			<color name="WallGrey1" />
+			<color name="WallGrey2" />
+		</underlaySSRule>
+		<underlaySSRule name="HedgeToCactus" image="CactusPattern.gif">
+			<color name="HedgeGreen" />
+		</underlaySSRule>
+				
+	    <!--
+			Scenario-specific overlay rules. 
+			name - the VASL SSR name
+			image - the image name
+			x - x coordinate of overly upper left
+			y - y coordinate of overlay upper left
+		-->
+		<overlaySSRule name="DenseJungle" image="bd84_DenseJungle.gif" x="0" y="0"/>
+		<overlaySSRule name="Bamboo" image="bd84_Bamboo.gif" x="0" y="0"/>
+		<overlaySSRule name="WallsToBocage" image="bd84_WallsToBocage.gif" x="971" y="577" />
+		<overlaySSRule name="HedgesToBocage" image="bd84_HedgesToBocage.gif" x="0" y="0" />
+		<overlaySSRule name="HedgesToOG" image="bd84_HedgesToOpenGround.gif" x="0" y="0" />
+		<overlaySSRule name="OrchardsToShellholes" image="bd84_Orch2Shell.gif" x="0" y="0" />
+		<overlaySSRule name="OrchardsToCrags" image="bd84_Orch2Crag.gif" x="0" y="0" />
+		<overlaySSRule name="PalmTrees" image="bd84_PalmTrees.gif" x="0" y="0" />
+		<overlaySSRule name="BSO_84_NoPaths" image="bd84_BSO_NoPaths.gif" x="0" y="0" />
+		<overlaySSRule name="LightWoods" image="bd84_LightWoods.gif" x="0" y="0" />
+		<overlaySSRule name="NoRoads" image="bd84_NoRoads.gif" x="0" y="0"/>
+	</overlaySSRules>
+	
+	<colors>
+		<!--
+			The VASL board colors. Used for color-specific SSR transformations. Use this element to override the shared color pallet. 
+			name - the VASL color name
+			red, green, blue - the RBG value of the color in the image
+			terrain - the LOS terrain type
+			elevation - the base elevation of the terrain
+			
+			Example:
+			<colorSSR name="NoWhiteHexIDs">
+				<colorMap fromColor="WhiteHexNumbers" toColor="Black"/>
+				<colorMap fromColor="WinterBlackHexNumbers" toColor="Black"/>
+			</colorSSR>
+		-->
+
+	</colors>
+	
+	<colorSSRules>
+		<!--
+			The board color scenario-specific rules. Use this element to override the shared SSRs.	
+			
+			Example:
+			<colorSSR name="NoWhiteHexIDs">
+				<colorMap fromColor="WhiteHexNumbers" toColor="Black"/>
+				<colorMap fromColor="WinterBlackHexNumbers" toColor="Black"/>
+			</colorSSR>			
+		-->
+
+	</colorSSRules>
+	
+</boardMetadata>
