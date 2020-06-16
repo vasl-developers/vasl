@@ -1,0 +1,8 @@
+<SSRControls>
+ <Option name="Board 84 Special Overlays">
+   <Checkbox name="">
+	 <entry name="84: No Paths (Replace with Woods)" rule="BSO_84_NoPaths" text="bd 84 no Paths"/>
+   </Checkbox>
+  </Option>
+</SSRControls>
+  
