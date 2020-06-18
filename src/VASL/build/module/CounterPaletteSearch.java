@@ -115,7 +115,7 @@ public class CounterPaletteSearch extends AbstractBuildable implements GameCompo
         boolean match = false;
         // look for match between search term and name of counters
         for(Countertype c: counterlist.values()){
-            if(searchterm.equalsIgnoreCase(c.getName())){
+            if (c.getName().toLowerCase().contains(searchterm.toLowerCase())) {
                 // if match show location of counter in search result text box
                 showsearchresult(c);
                 match = true;
