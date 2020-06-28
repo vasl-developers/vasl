@@ -111,6 +111,7 @@
 		<boarddata name="81" version="6.1" versionDate="Aug 2008" description="" />
 		<boarddata name="82" version="6.1" versionDate="Aug 2008" description="" />
 		<boarddata name="83" version="6.1" versionDate="Aug 2008" description="" />
+		<boarddata name="84" version="6.0" versionDate="Jun 2020" description="" />
 		<boarddata name="1a" version="6.1" versionDate="Aug 2008" description="" />
 		<boarddata name="1b" version="6.1" versionDate="Aug 2008" description="" />
 		<boarddata name="2a" version="6.4" versionDate="Aug 2008" description="" />
@@ -234,7 +235,7 @@
 		<!--# NG = 1.0 duplicate -->
 		<boarddata name="RB" version="1.3" versionDate="Dec 2019" description="" />
 		<boarddata name="RBv2" version="2.4" versionDate="Aug 2008" description="" />
-		<boarddata name="RBv3" version="0.04" versionDate="Dec 2019" description="" />		
+		<boarddata name="RBv3" version="0.05" versionDate="Dec 2019" description="" />		
 		<boarddata name="RO" version="0.09" versionDate="Dec 2019" description="" />
 		<boarddata name="KR" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="GT" version="1.0" versionDate="Aug 2008" description="" />
