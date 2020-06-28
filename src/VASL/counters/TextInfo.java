@@ -20,6 +20,7 @@ package VASL.counters;
 
 import VASSAL.command.Command;
 import VASSAL.counters.*;
+import VASSAL.tools.swing.SwingUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -122,8 +123,8 @@ public class TextInfo extends Decorator implements EditablePiece {
         final Font scaled_font = font.deriveFont(((float)(font.getSize() * os_scale)));
 
         g.setFont(scaled_font);
-        infoSize = getInfoSize(info, g.getFontMetrics());
-        infoImage = createInfoImage(obs, scaled_font);
+        infoSize = getInfoSize(info, g.getFontMetrics(), os_scale);
+        infoImage = createInfoImage(obs, scaled_font, os_scale);
       }
       g.drawImage(infoImage, x + (int) (zoom * getInfoOffset().x),
                   y + (int) (zoom * getInfoOffset().y),
@@ -134,7 +135,7 @@ public class TextInfo extends Decorator implements EditablePiece {
 
   /** Returns the size of the box into which the text info will be drawn
    */
-  protected Dimension getInfoSize(String s, FontMetrics fm) {
+  protected Dimension getInfoSize(String s, FontMetrics fm, double os_scale) {
     int wid = 0;
     StringTokenizer st = new StringTokenizer(s, "^,", true);
     while (st.hasMoreTokens()) {
@@ -149,16 +150,17 @@ public class TextInfo extends Decorator implements EditablePiece {
           wid += fm.stringWidth(token);
       }
     }
-    wid += 10;
+    wid += 10 * os_scale;
     int hgt = fm.getAscent() * 2;
     return new Dimension(wid, hgt);
   }
 
-  protected Image createInfoImage(Component obs, Font scaled_font) {
+  protected Image createInfoImage(Component obs, Font scaled_font, double os_scale) {
     Image im = obs.createImage(infoSize.width, infoSize.height);
     Graphics g = im.getGraphics();
+    ((Graphics2D) g).addRenderingHints(SwingUtils.FONT_HINTS);
     g.setFont(scaled_font);
-    writeInfo(g, 0, infoSize.height / 2);
+    writeInfo(g, 0, infoSize.height / 2, os_scale);
     g.dispose();
     return im;
   }
@@ -171,7 +173,7 @@ public class TextInfo extends Decorator implements EditablePiece {
    * 'R' is circled (radioless)
    * '^' indicates the beginning/end of a superscript
    */
-  protected void writeInfo(Graphics g, int x, int y) {
+  protected void writeInfo(Graphics g, int x, int y, double os_scale) {
     FontMetrics fm = g.getFontMetrics();
 
     g.setColor(Color.white);
@@ -181,8 +183,8 @@ public class TextInfo extends Decorator implements EditablePiece {
 
     StringTokenizer st = new StringTokenizer(info, "^,", true);
 
-    x += 7;
-    y += infoSize.height / 2 - 6;
+    x += 7 * os_scale;
+    y += infoSize.height / 2 - 6 * os_scale;
     boolean superScript = false;
     while (st.hasMoreTokens()) {
       String s = st.nextToken();
@@ -194,9 +196,9 @@ public class TextInfo extends Decorator implements EditablePiece {
           break;
         case 'R':
           if (s.length() == 1) {
-            g.drawOval(x - 3, y - fm.getAscent(),
-                       fm.getAscent() + 2,
-                       fm.getAscent() + 2);
+            g.drawOval((int) (x - 3 * os_scale), y - fm.getAscent(),
+                       (int) (fm.getAscent() + 2 * os_scale),
+                       (int) (fm.getAscent() + 2 * os_scale));
           }
           break;
         case ',':
