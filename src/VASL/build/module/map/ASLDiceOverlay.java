@@ -659,7 +659,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
 
                     if (m_objClock == null)
                     {
-                        m_objClock = new Timer (1000, this);
+                        m_objClock = new Timer(1000, this);
                         m_objClock.start();
                     }
                     else
