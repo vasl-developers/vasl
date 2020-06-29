@@ -281,6 +281,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
             m_lMaxAge = lMaxAge;
         }
     }
+
     private ArrayList<NeedRepaintEvent> needrepaint_listeners = new ArrayList<NeedRepaintEvent>();
     private ArrayList<DiceRollHandler> mar_DRH = new ArrayList<DiceRollHandler>();
     private Timer m_objClock = null;
@@ -297,17 +298,14 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
         final Prefs l_objModulePrefs = GameModule.getGameModule().getPrefs();
 
         // **************************************************************************************
-        FontConfigurer l_objCaptionFontConfigurer = null;
-        FontConfigurer l_objCaptionFontConfigurer_Exist = (FontConfigurer)l_objModulePrefs.getOption(DR_PANEL_CAPTION_FONT);
+        FontConfigurer l_objCaptionFontConfigurer = (FontConfigurer)l_objModulePrefs.getOption(DR_PANEL_CAPTION_FONT);
 
-        if (l_objCaptionFontConfigurer_Exist == null)
+        if (l_objCaptionFontConfigurer == null)
         {
             l_objCaptionFontConfigurer = new FontConfigurer(DR_PANEL_CAPTION_FONT, "DR panel caption font: ", 
                                                 new Font("SansSerif", Font.PLAIN, 12), new int[]{9, 10, 11, 12, 15, 18, 21, 24, 28, 32}); //$NON-NLS-1$ //$NON-NLS-2$
             l_objModulePrefs.addOption(PREFERENCE_TAB, l_objCaptionFontConfigurer); //$NON-NLS-1$
         }
-        else
-            l_objCaptionFontConfigurer = l_objCaptionFontConfigurer_Exist;
 
         l_objCaptionFontConfigurer.addPropertyChangeListener(new PropertyChangeListener() 
         {
@@ -323,16 +321,13 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
         l_objCaptionFontConfigurer.fireUpdate();    
 
         // **************************************************************************************
-        ColorConfigurer l_objDRPanelCaptionFontColor = null;
-        ColorConfigurer l_objDRPanelCaptionFontColor_Exist = (ColorConfigurer)l_objModulePrefs.getOption(DR_PANEL_CAPTION_FONT_COLOR);
+        ColorConfigurer l_objDRPanelCaptionFontColor = (ColorConfigurer)l_objModulePrefs.getOption(DR_PANEL_CAPTION_FONT_COLOR);
 
-        if (l_objDRPanelCaptionFontColor_Exist == null)
+        if (l_objDRPanelCaptionFontColor == null)
         {
             l_objDRPanelCaptionFontColor = new ColorConfigurer(DR_PANEL_CAPTION_FONT_COLOR, "DR panel caption font color: ", m_clrDRPanelCaptionFontColor); //$NON-NLS-1$
             l_objModulePrefs.addOption(PREFERENCE_TAB, l_objDRPanelCaptionFontColor); //$NON-NLS-1$
         }
-        else
-            l_objDRPanelCaptionFontColor = l_objDRPanelCaptionFontColor_Exist;
 
         l_objDRPanelCaptionFontColor.addPropertyChangeListener(new PropertyChangeListener() 
         {
@@ -348,17 +343,14 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
         l_objDRPanelCaptionFontColor.fireUpdate();
 
         // **************************************************************************************
-        FontConfigurer l_objDRCategoryFontConfigurer = null;
-        FontConfigurer l_objDRCategoryFontConfigurer_Exist = (FontConfigurer)l_objModulePrefs.getOption(DR_CATEGORY_FONT);
+        FontConfigurer l_objDRCategoryFontConfigurer = (FontConfigurer)l_objModulePrefs.getOption(DR_CATEGORY_FONT);
 
-        if (l_objDRCategoryFontConfigurer_Exist == null)
+        if (l_objDRCategoryFontConfigurer == null)
         {
             l_objDRCategoryFontConfigurer = new FontConfigurer(DR_CATEGORY_FONT, "DR category font: ",
                                                 new Font("SansSerif", Font.PLAIN, 12), new int[]{9, 10, 11, 12, 15, 18, 21, 24, 28, 32}); //$NON-NLS-1$ //$NON-NLS-2$; //$NON-NLS-1$ //$NON-NLS-2$
             l_objModulePrefs.addOption(PREFERENCE_TAB, l_objDRCategoryFontConfigurer); //$NON-NLS-1$
         }
-        else
-            l_objDRCategoryFontConfigurer = l_objDRCategoryFontConfigurer_Exist;
 
         l_objDRCategoryFontConfigurer.addPropertyChangeListener(new PropertyChangeListener() 
         {
@@ -372,16 +364,13 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
         l_objDRCategoryFontConfigurer.fireUpdate();    
 
         // **************************************************************************************
-        ColorConfigurer l_objDRCategoryFontColor = null;
-        ColorConfigurer l_objDRCategoryFontColor_Exist = (ColorConfigurer)l_objModulePrefs.getOption(DR_CATEGORY_FONT_COLOR);
+        ColorConfigurer l_objDRCategoryFontColor = (ColorConfigurer)l_objModulePrefs.getOption(DR_CATEGORY_FONT_COLOR);
 
-        if (l_objDRCategoryFontColor_Exist == null)
+        if (l_objDRCategoryFontColor == null)
         {
             l_objDRCategoryFontColor = new ColorConfigurer(DR_CATEGORY_FONT_COLOR, "DR category font color: ", m_clrDRCategoryFontColor); //$NON-NLS-1$
             l_objModulePrefs.addOption(PREFERENCE_TAB, l_objDRCategoryFontColor); //$NON-NLS-1$
         }
-        else
-            l_objDRCategoryFontColor = l_objDRCategoryFontColor_Exist;
 
         l_objDRCategoryFontColor.addPropertyChangeListener(new PropertyChangeListener() 
         {
@@ -395,16 +384,13 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
         l_objDRCategoryFontColor.fireUpdate();
 
         // **************************************************************************************
-        ColorConfigurer l_objFriendlyDRPanelColor = null;
-        ColorConfigurer l_objFriendlyDRPanelColor_Exist = (ColorConfigurer)l_objModulePrefs.getOption(FRIENDLY_DR_PANEL_COLOR);
+        ColorConfigurer l_objFriendlyDRPanelColor = (ColorConfigurer)l_objModulePrefs.getOption(FRIENDLY_DR_PANEL_COLOR);
 
-        if (l_objFriendlyDRPanelColor_Exist == null)
+        if (l_objFriendlyDRPanelColor == null)
         {
             l_objFriendlyDRPanelColor = new ColorConfigurer(FRIENDLY_DR_PANEL_COLOR, "Player's DR panel background color:  ", m_clrFriendlyDRPanel); //$NON-NLS-1$
             l_objModulePrefs.addOption(PREFERENCE_TAB, l_objFriendlyDRPanelColor); //$NON-NLS-1$
         }
-        else
-            l_objFriendlyDRPanelColor = l_objFriendlyDRPanelColor_Exist;
 
         l_objFriendlyDRPanelColor.addPropertyChangeListener(new PropertyChangeListener() 
         {
@@ -419,16 +405,13 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
         l_objFriendlyDRPanelColor.fireUpdate();
 
         // **************************************************************************************
-        ColorConfigurer l_objFriendlyDRCaptionColor = null;
-        ColorConfigurer l_objFriendlyDRCaptionColor_Exist = (ColorConfigurer)l_objModulePrefs.getOption(FRIENDLY_DR_CAPTION_COLOR);
+        ColorConfigurer l_objFriendlyDRCaptionColor = (ColorConfigurer)l_objModulePrefs.getOption(FRIENDLY_DR_CAPTION_COLOR);
 
-        if (l_objFriendlyDRCaptionColor_Exist == null)
+        if (l_objFriendlyDRCaptionColor == null)
         {
             l_objFriendlyDRCaptionColor = new ColorConfigurer(FRIENDLY_DR_CAPTION_COLOR, "Player's DR panel caption color:  ", m_clrFriendlyDRCaption); //$NON-NLS-1$
             l_objModulePrefs.addOption(PREFERENCE_TAB, l_objFriendlyDRCaptionColor); //$NON-NLS-1$
         }
-        else
-            l_objFriendlyDRCaptionColor = l_objFriendlyDRCaptionColor_Exist;
 
         l_objFriendlyDRCaptionColor.addPropertyChangeListener(new PropertyChangeListener() 
         {
@@ -443,16 +426,13 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
         l_objFriendlyDRCaptionColor.fireUpdate();
 
         // **************************************************************************************
-        ColorConfigurer l_objEnemyDRPanelColor = null;
-        ColorConfigurer l_objEnemyDRPanelColor_Exist = (ColorConfigurer)l_objModulePrefs.getOption(ENEMY_DR_PANEL_COLOR);
+        ColorConfigurer l_objEnemyDRPanelColor = (ColorConfigurer)l_objModulePrefs.getOption(ENEMY_DR_PANEL_COLOR);
 
-        if (l_objEnemyDRPanelColor_Exist == null)
+        if (l_objEnemyDRPanelColor == null)
         {
             l_objEnemyDRPanelColor = new ColorConfigurer(ENEMY_DR_PANEL_COLOR, "Opponent's DR panel background color:  ", m_clrEnemyDRPanel); //$NON-NLS-1$
             l_objModulePrefs.addOption(PREFERENCE_TAB, l_objEnemyDRPanelColor); //$NON-NLS-1$
         }
-        else
-            l_objEnemyDRPanelColor = l_objEnemyDRPanelColor_Exist;
 
         l_objEnemyDRPanelColor.addPropertyChangeListener(new PropertyChangeListener() 
         {
@@ -467,16 +447,13 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
         l_objEnemyDRPanelColor.fireUpdate();
 
         // **************************************************************************************
-        ColorConfigurer l_objEnemyDRCaptionColor = null;
-        ColorConfigurer l_objEnemyDRCaptionColor_Exist = (ColorConfigurer)l_objModulePrefs.getOption(ENEMY_DR_CAPTION_COLOR);
+        ColorConfigurer l_objEnemyDRCaptionColor = (ColorConfigurer)l_objModulePrefs.getOption(ENEMY_DR_CAPTION_COLOR);
 
-        if (l_objEnemyDRCaptionColor_Exist == null)
+        if (l_objEnemyDRCaptionColor == null)
         {
             l_objEnemyDRCaptionColor = new ColorConfigurer(ENEMY_DR_CAPTION_COLOR, "Opponent's DR panel caption color:  ", m_clrEnemyDRCaption); //$NON-NLS-1$
             l_objModulePrefs.addOption(PREFERENCE_TAB, l_objEnemyDRCaptionColor); //$NON-NLS-1$
         }
-        else
-            l_objEnemyDRCaptionColor = l_objEnemyDRCaptionColor_Exist;
 
         l_objEnemyDRCaptionColor.addPropertyChangeListener(new PropertyChangeListener() 
         {
@@ -491,16 +468,13 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
         l_objEnemyDRCaptionColor.fireUpdate();
 
         // **************************************************************************************
-        ColorConfigurer l_objColoredDiceColor = null;
-        ColorConfigurer l_objColoredDiceColor_Exist = (ColorConfigurer)l_objModulePrefs.getOption(COLORED_DICE_COLOR_OVER_MAP);
+        ColorConfigurer l_objColoredDiceColor = (ColorConfigurer)l_objModulePrefs.getOption(COLORED_DICE_COLOR_OVER_MAP);
 
-        if (l_objColoredDiceColor_Exist == null)
+        if (l_objColoredDiceColor == null)
         {
             l_objColoredDiceColor = new ColorConfigurer(COLORED_DICE_COLOR_OVER_MAP, "Colored die color:  ", Color.YELLOW); //$NON-NLS-1$
             l_objModulePrefs.addOption(PREFERENCE_TAB, l_objColoredDiceColor); //$NON-NLS-1$
         }
-        else
-            l_objColoredDiceColor = l_objColoredDiceColor_Exist;
 
         l_objColoredDiceColor.addPropertyChangeListener(new PropertyChangeListener() 
         {
@@ -515,16 +489,13 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
         l_objColoredDiceColor.fireUpdate();
 
         // **************************************************************************************
-        ColorConfigurer l_objColoredDieColor = null;
-        ColorConfigurer l_objColoredDieColor_Exist = (ColorConfigurer)l_objModulePrefs.getOption(SINGLE_DIE_COLOR_OVER_MAP);
+        ColorConfigurer l_objColoredDieColor = (ColorConfigurer)l_objModulePrefs.getOption(SINGLE_DIE_COLOR_OVER_MAP);
 
-        if (l_objColoredDieColor_Exist == null)
+        if (l_objColoredDieColor == null)
         {
             l_objColoredDieColor = new ColorConfigurer(SINGLE_DIE_COLOR_OVER_MAP, "Single die color:  ", Color.RED); //$NON-NLS-1$
             l_objModulePrefs.addOption(PREFERENCE_TAB, l_objColoredDieColor); //$NON-NLS-1$
         }
-        else
-            l_objColoredDieColor = l_objColoredDieColor_Exist;
 
         l_objColoredDieColor.addPropertyChangeListener(new PropertyChangeListener() 
         {
@@ -539,16 +510,13 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
         l_objColoredDieColor.fireUpdate();
         
         // **************************************************************************************
-        LongConfigurer l_objDRSecondsLifeNum = null;
-        LongConfigurer l_objDRSecondsLifeNum_Exist = (LongConfigurer)l_objModulePrefs.getOption(DR_SECONDS_LIFE);
+        LongConfigurer l_objDRSecondsLifeNum = (LongConfigurer)l_objModulePrefs.getOption(DR_SECONDS_LIFE);
 
-        if (l_objDRSecondsLifeNum_Exist == null)
+        if (l_objDRSecondsLifeNum == null)
         {
             l_objDRSecondsLifeNum = new LongConfigurer(DR_SECONDS_LIFE, "DR persistence on the screen (seconds):  ", 10L); //$NON-NLS-1$
             l_objModulePrefs.addOption(PREFERENCE_TAB, l_objDRSecondsLifeNum); //$NON-NLS-1$
         }
-        else
-            l_objDRSecondsLifeNum = l_objDRSecondsLifeNum_Exist;
         
         l_objDRSecondsLifeNum.addPropertyChangeListener(new PropertyChangeListener() 
         {
