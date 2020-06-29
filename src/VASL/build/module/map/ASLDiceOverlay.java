@@ -701,17 +701,11 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
     {
         boolean l_bRepaint = false;
 
-        for (Iterator<DiceRollHandler> it = mar_DRH.iterator(); it.hasNext(); )
+        for (DiceRollHandler l_objDRH : mar_DRH)
         {
-            DiceRollHandler l_objDRH = it.next();
-
-            if (l_objDRH.IsAlive())
+            l_objDRH.setClock(m_lClock);
+            if (!l_objDRH.IsAlive())
             {
-                l_objDRH.setClock(m_lClock);
-            }
-            else
-            {
-                l_objDRH.setClock(m_lClock);
                 l_objDRH.Alive();
                 l_bRepaint = true;
             }
@@ -725,10 +719,8 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
     {
         boolean l_bRepaint = false;
 
-        for (Iterator<DiceRollHandler> it = mar_DRH.iterator(); it.hasNext(); )
+        for (DiceRollHandler l_objDRH : mar_DRH)
         {
-            DiceRollHandler l_objDRH = it.next();
-
             if (l_objDRH.IsAlive())
             {
                 if (m_lClock - l_objDRH.getClock() >= m_lMaxAge)
