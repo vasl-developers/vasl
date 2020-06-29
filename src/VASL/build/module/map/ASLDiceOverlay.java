@@ -70,53 +70,47 @@ class DiceRollHandler
     private int m_iSecondDice;
     private boolean m_bAxisSAN;
     private boolean m_bAlliedSAN;
-    private boolean m_bBothSAN;
-    
+
     public DiceRollHandler(long lCount, long lClock, String strCategory, String strNickName, String strSAN, int iFirstDice, int iSecondDice)
     {
         m_lCount = lCount;
         m_lClock = lClock;
         m_bAlive = true;
-        
+
         if (strNickName.compareToIgnoreCase(DiceRollQueueHandler.GetFriendlyPlayerNick()) == 0)
             m_bFriendly = true;
         else
             m_bFriendly = false;
-        
+
         m_strCategory = strCategory;
         m_strNickName = strNickName;
         m_iFirstDice = iFirstDice;
         m_iSecondDice = iSecondDice;
-        
+
         if (strSAN == null || strSAN.isEmpty())
         {
             m_bAxisSAN = false;
             m_bAlliedSAN = false;
-            m_bBothSAN = false;
         }
         else if (strSAN.compareToIgnoreCase("Axis SAN") == 0)
         {
             m_bAxisSAN = true;
             m_bAlliedSAN = false;
-            m_bBothSAN = false;
         }
         else if (strSAN.compareToIgnoreCase("Allied SAN") == 0)
         {
             m_bAxisSAN = false;
             m_bAlliedSAN = true;
-            m_bBothSAN = false;
         }
         else if (strSAN.compareToIgnoreCase("Axis/Allied SAN") == 0)
         {
-            m_bAxisSAN = false;
-            m_bAlliedSAN = false;
-            m_bBothSAN = true;
+            m_bAxisSAN = true;
+            m_bAlliedSAN = true;
         }
         else
         {
             m_bAxisSAN = false;
             m_bAlliedSAN = false;
-            m_bBothSAN = false;
         }
     }
 
@@ -133,12 +127,12 @@ class DiceRollHandler
     public void setClock(long lClock) {
         m_lClock = lClock;
     }
-    
+
     public void Dead()
     {
         m_bAlive = false;
     }
-    
+
     public void Alive()
     {
         m_bAlive = true;
@@ -195,21 +189,21 @@ class DiceRollHandler
      * @return the m_bAxisSAN
      */
     public boolean isAxisSAN() {
-        return m_bAxisSAN;
+        return m_bAxisSAN && !m_bAlliedSAN;
     }
 
     /**
      * @return the m_bAlliedSAN
      */
     public boolean isAlliedSAN() {
-        return m_bAlliedSAN;
+        return m_bAlliedSAN && !m_bAxisSAN;
     }
 
     /**
      * @return the m_bBothSAN
      */
     public boolean isBothSAN() {
-        return m_bBothSAN;
+        return m_bAlliedSAN && m_bAxisSAN;
     }
 }
 
@@ -232,7 +226,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
     private static final String AXISSAN = "chatter/AXSAN.png";
     private static final String ALLIEDSAN = "chatter/ALSAN.png";
     private static final String PREFERENCE_TAB = "Dice over the map";
-    
+
     private Font m_objDRPanelCaptionFont = null;
     private Color m_clrDRPanelCaptionFontColor = Color.black;
     private Font m_objDRCategoryFont = null;
@@ -251,16 +245,16 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
     private BufferedImage m_objEnemyDRPanel = null;
     private BufferedImage m_objAxisSAN = null;
     private BufferedImage m_objAlliedSAN = null;
-    
+
     private int m_iCaptionWidth = 0;
     private int m_iCaptionHeight = 0;
-    
+
     private final int mc_iMaxNumEntries = 8;
     private long m_lMaxAge = 10;
     private long m_lClock = 0;
     private long m_lCount = 0;
     private boolean m_bKeepAlive = false;
-    
+
     /**
      * @return the mc_DefaultAge
      */
@@ -271,7 +265,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
     /**
      * @param aMc_DefaultAge the mc_DefaultAge to set
      */
-    public void setMaxAge(long lMaxAge) 
+    public void setMaxAge(long lMaxAge)
     {
         if (lMaxAge > 0)
         {
@@ -286,15 +280,15 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
     private ArrayList<DiceRollHandler> mar_DRH = new ArrayList<DiceRollHandler>();
     private Timer m_objClock = null;
     private boolean m_bRegisteredForDiceEvents = false;
-    
-    public DiceRollQueueHandler() 
+
+    public DiceRollQueueHandler()
     {
-    }   
-    
+    }
+
     public void SetupPreferences()
     {
         RebuildWhiteDiceFaces();
-            
+
         final Prefs l_objModulePrefs = GameModule.getGameModule().getPrefs();
 
         // **************************************************************************************
@@ -302,23 +296,19 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
 
         if (l_objCaptionFontConfigurer == null)
         {
-            l_objCaptionFontConfigurer = new FontConfigurer(DR_PANEL_CAPTION_FONT, "DR panel caption font: ", 
+            l_objCaptionFontConfigurer = new FontConfigurer(DR_PANEL_CAPTION_FONT, "DR panel caption font: ",
                                                 new Font("SansSerif", Font.PLAIN, 12), new int[]{9, 10, 11, 12, 15, 18, 21, 24, 28, 32}); //$NON-NLS-1$ //$NON-NLS-2$
             l_objModulePrefs.addOption(PREFERENCE_TAB, l_objCaptionFontConfigurer); //$NON-NLS-1$
         }
 
-        l_objCaptionFontConfigurer.addPropertyChangeListener(new PropertyChangeListener() 
-        {
-            public void propertyChange(PropertyChangeEvent evt) 
-            {
-                m_objDRPanelCaptionFont = (Font) evt.getNewValue();
-                RebuildFriendlyPanel();
-                RebuildEnemyPanel();
-                FireNeedRepaint();
-            }
+        l_objCaptionFontConfigurer.addPropertyChangeListener(e -> {
+            m_objDRPanelCaptionFont = (Font) e.getNewValue();
+            RebuildFriendlyPanel();
+            RebuildEnemyPanel();
+            FireNeedRepaint();
         });
 
-        l_objCaptionFontConfigurer.fireUpdate();    
+        l_objCaptionFontConfigurer.fireUpdate();
 
         // **************************************************************************************
         ColorConfigurer l_objDRPanelCaptionFontColor = (ColorConfigurer)l_objModulePrefs.getOption(DR_PANEL_CAPTION_FONT_COLOR);
@@ -329,15 +319,11 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
             l_objModulePrefs.addOption(PREFERENCE_TAB, l_objDRPanelCaptionFontColor); //$NON-NLS-1$
         }
 
-        l_objDRPanelCaptionFontColor.addPropertyChangeListener(new PropertyChangeListener() 
-        {
-            public void propertyChange(PropertyChangeEvent e) 
-            {
-                m_clrDRPanelCaptionFontColor = (Color) e.getNewValue();
-                RebuildFriendlyPanel();
-                RebuildEnemyPanel();
-                FireNeedRepaint();
-            }
+        l_objDRPanelCaptionFontColor.addPropertyChangeListener(e -> {
+            m_clrDRPanelCaptionFontColor = (Color) e.getNewValue();
+            RebuildFriendlyPanel();
+            RebuildEnemyPanel();
+            FireNeedRepaint();
         });
 
         l_objDRPanelCaptionFontColor.fireUpdate();
@@ -352,16 +338,12 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
             l_objModulePrefs.addOption(PREFERENCE_TAB, l_objDRCategoryFontConfigurer); //$NON-NLS-1$
         }
 
-        l_objDRCategoryFontConfigurer.addPropertyChangeListener(new PropertyChangeListener() 
-        {
-            public void propertyChange(PropertyChangeEvent evt) 
-            {
-                m_objDRCategoryFont = (Font) evt.getNewValue();
-                FireNeedRepaint();
-            }
+        l_objDRCategoryFontConfigurer.addPropertyChangeListener(e -> {
+            m_objDRCategoryFont = (Font) e.getNewValue();
+            FireNeedRepaint();
         });
 
-        l_objDRCategoryFontConfigurer.fireUpdate();    
+        l_objDRCategoryFontConfigurer.fireUpdate();
 
         // **************************************************************************************
         ColorConfigurer l_objDRCategoryFontColor = (ColorConfigurer)l_objModulePrefs.getOption(DR_CATEGORY_FONT_COLOR);
@@ -372,13 +354,9 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
             l_objModulePrefs.addOption(PREFERENCE_TAB, l_objDRCategoryFontColor); //$NON-NLS-1$
         }
 
-        l_objDRCategoryFontColor.addPropertyChangeListener(new PropertyChangeListener() 
-        {
-            public void propertyChange(PropertyChangeEvent e) 
-            {
-                m_clrDRCategoryFontColor = (Color) e.getNewValue();
-                FireNeedRepaint();
-            }
+        l_objDRCategoryFontColor.addPropertyChangeListener(e -> {
+            m_clrDRCategoryFontColor = (Color) e.getNewValue();
+            FireNeedRepaint();
         });
 
         l_objDRCategoryFontColor.fireUpdate();
@@ -392,14 +370,10 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
             l_objModulePrefs.addOption(PREFERENCE_TAB, l_objFriendlyDRPanelColor); //$NON-NLS-1$
         }
 
-        l_objFriendlyDRPanelColor.addPropertyChangeListener(new PropertyChangeListener() 
-        {
-            public void propertyChange(PropertyChangeEvent e) 
-            {
-                m_clrFriendlyDRPanel = (Color) e.getNewValue();
-                RebuildFriendlyPanel();
-                FireNeedRepaint();
-            }
+        l_objFriendlyDRPanelColor.addPropertyChangeListener(e -> {
+            m_clrFriendlyDRPanel = (Color) e.getNewValue();
+            RebuildFriendlyPanel();
+            FireNeedRepaint();
         });
 
         l_objFriendlyDRPanelColor.fireUpdate();
@@ -413,14 +387,10 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
             l_objModulePrefs.addOption(PREFERENCE_TAB, l_objFriendlyDRCaptionColor); //$NON-NLS-1$
         }
 
-        l_objFriendlyDRCaptionColor.addPropertyChangeListener(new PropertyChangeListener() 
-        {
-            public void propertyChange(PropertyChangeEvent e) 
-            {
-                m_clrFriendlyDRCaption = (Color) e.getNewValue();
-                RebuildFriendlyPanel();
-                FireNeedRepaint();
-            }
+        l_objFriendlyDRCaptionColor.addPropertyChangeListener(e -> {
+            m_clrFriendlyDRCaption = (Color) e.getNewValue();
+            RebuildFriendlyPanel();
+            FireNeedRepaint();
         });
 
         l_objFriendlyDRCaptionColor.fireUpdate();
@@ -434,14 +404,10 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
             l_objModulePrefs.addOption(PREFERENCE_TAB, l_objEnemyDRPanelColor); //$NON-NLS-1$
         }
 
-        l_objEnemyDRPanelColor.addPropertyChangeListener(new PropertyChangeListener() 
-        {
-            public void propertyChange(PropertyChangeEvent e) 
-            {
-                m_clrEnemyDRPanel = (Color) e.getNewValue();
-                RebuildEnemyPanel();
-                FireNeedRepaint();
-            }
+        l_objEnemyDRPanelColor.addPropertyChangeListener(e -> {
+            m_clrEnemyDRPanel = (Color) e.getNewValue();
+            RebuildEnemyPanel();
+            FireNeedRepaint();
         });
 
         l_objEnemyDRPanelColor.fireUpdate();
@@ -455,14 +421,10 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
             l_objModulePrefs.addOption(PREFERENCE_TAB, l_objEnemyDRCaptionColor); //$NON-NLS-1$
         }
 
-        l_objEnemyDRCaptionColor.addPropertyChangeListener(new PropertyChangeListener() 
-        {
-            public void propertyChange(PropertyChangeEvent e) 
-            {
-                m_clrEnemyDRCaption = (Color) e.getNewValue();
-                RebuildEnemyPanel();
-                FireNeedRepaint();
-            }
+        l_objEnemyDRCaptionColor.addPropertyChangeListener(e -> {
+            m_clrEnemyDRCaption = (Color) e.getNewValue();
+            RebuildEnemyPanel();
+            FireNeedRepaint();
         });
 
         l_objEnemyDRCaptionColor.fireUpdate();
@@ -476,14 +438,10 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
             l_objModulePrefs.addOption(PREFERENCE_TAB, l_objColoredDiceColor); //$NON-NLS-1$
         }
 
-        l_objColoredDiceColor.addPropertyChangeListener(new PropertyChangeListener() 
-        {
-            public void propertyChange(PropertyChangeEvent e) 
-            {
-                m_clrColoredDiceColor = (Color) e.getNewValue();
-                RebuildColoredDiceFaces();
-                FireNeedRepaint();
-            }
+        l_objColoredDiceColor.addPropertyChangeListener(e -> {
+            m_clrColoredDiceColor = (Color) e.getNewValue();
+            RebuildColoredDiceFaces();
+            FireNeedRepaint();
         });
 
         l_objColoredDiceColor.fireUpdate();
@@ -497,18 +455,14 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
             l_objModulePrefs.addOption(PREFERENCE_TAB, l_objColoredDieColor); //$NON-NLS-1$
         }
 
-        l_objColoredDieColor.addPropertyChangeListener(new PropertyChangeListener() 
-        {
-            public void propertyChange(PropertyChangeEvent e) 
-            {
-                m_clrSingleDieColor = (Color) e.getNewValue();
-                RebuildSingleDieFaces();
-                FireNeedRepaint();
-            }
+        l_objColoredDieColor.addPropertyChangeListener(e -> {
+            m_clrSingleDieColor = (Color) e.getNewValue();
+            RebuildSingleDieFaces();
+            FireNeedRepaint();
         });
 
         l_objColoredDieColor.fireUpdate();
-        
+
         // **************************************************************************************
         LongConfigurer l_objDRSecondsLifeNum = (LongConfigurer)l_objModulePrefs.getOption(DR_SECONDS_LIFE);
 
@@ -517,26 +471,22 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
             l_objDRSecondsLifeNum = new LongConfigurer(DR_SECONDS_LIFE, "DR persistence on the screen (seconds):  ", 10L); //$NON-NLS-1$
             l_objModulePrefs.addOption(PREFERENCE_TAB, l_objDRSecondsLifeNum); //$NON-NLS-1$
         }
-        
-        l_objDRSecondsLifeNum.addPropertyChangeListener(new PropertyChangeListener() 
-        {
-            public void propertyChange(PropertyChangeEvent e) 
-            {
-                setMaxAge((Long) e.getNewValue());
-            }
+
+        l_objDRSecondsLifeNum.addPropertyChangeListener(e -> {
+            setMaxAge((Long) e.getNewValue());
         });
 
         l_objDRSecondsLifeNum.fireUpdate();
     }
-    
+
     public static String GetFriendlyPlayerNick()
     {
         String l_strReturn = GlobalOptions.getInstance().getPlayerId();
         l_strReturn = (l_strReturn.length() == 0 ? "(" + getAnonymousUserName() + ")" : l_strReturn);
-        
+
         return l_strReturn;
     }
-    
+
     private void DrawCaption(Graphics2D objGraph, String strCaption)
     {
         objGraph.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -553,12 +503,12 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
         int msgY = m_iCaptionHeight / 2 + l_objFM.getHeight() / 2;
 
         objGraph.setColor(m_clrDRPanelCaptionFontColor);
-        
-        objGraph.clipRect(3, 3, m_iCaptionWidth - 3, m_iCaptionHeight);  
+
+        objGraph.clipRect(3, 3, m_iCaptionWidth - 3, m_iCaptionHeight);
         objGraph.drawString(strCaption, 10, msgY);
         objGraph.setClip(null);
     }
-    
+
     private void DrawCategory(Graphics2D objGraph, String strCaption, Rectangle objRect)
     {
         objGraph.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -573,18 +523,18 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
         // getWidth() and getHeight() returns the width and height of this component
         int msgX = objRect.x + objRect.width / 2 - l_objFM.stringWidth(strCaption) / 2;
         int msgY = objRect.y + (objRect.height / 2) + (l_objFM.getAscent()/ 2);
-        
+
         objGraph.setColor(m_clrDRCategoryFontColor);
-        
-        objGraph.clipRect(objRect.x, objRect.y, objRect.width, objRect.height);  
+
+        objGraph.clipRect(objRect.x, objRect.y, objRect.width, objRect.height);
         objGraph.drawString(strCaption, msgX, msgY);
         objGraph.setClip(null);
     }
-    
-    private void RebuildFriendlyPanel() 
+
+    private void RebuildFriendlyPanel()
     {
         BufferedImage l_objImage = null;
-        
+
         try
         {
             // background
@@ -592,30 +542,30 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
 
             // caption
             l_objImage = ColorChanger.changeColor(Op.load(CAPTION_FILE_NAME).getImage(null), Color.red, m_clrFriendlyDRCaption);
-            
+
             if (m_iCaptionWidth == 0)
                 m_iCaptionWidth = l_objImage.getWidth();
             if (m_iCaptionHeight == 0)
                 m_iCaptionHeight = l_objImage.getHeight();
 
             Graphics2D l_objGraph = m_objFriendlyDRPanel.createGraphics();
-        
+
             if (l_objGraph != null)
             {
                 l_objGraph.drawImage(l_objImage, 4, 4, null);
                 l_objGraph.dispose();
             }
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             ex.printStackTrace();
         }
     }
-    
-    private void RebuildEnemyPanel() 
+
+    private void RebuildEnemyPanel()
     {
         BufferedImage l_objImage = null;
-        
+
         try
         {
             // background
@@ -628,9 +578,9 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
                 m_iCaptionWidth = l_objImage.getWidth();
             if (m_iCaptionHeight == 0)
                 m_iCaptionHeight = l_objImage.getHeight();
-            
+
             Graphics2D l_objGraph = m_objEnemyDRPanel.createGraphics();
-        
+
             if (l_objGraph != null)
             {
                 l_objGraph.drawImage(l_objImage, 4, 4, null);
@@ -638,30 +588,30 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
                 l_objGraph.dispose();
             }
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             ex.printStackTrace();
         }
     }
-    
-    private void RebuildWhiteDiceFaces() 
+
+    private void RebuildWhiteDiceFaces()
     {
         try
         {
             m_objAxisSAN = Op.load(AXISSAN).getImage(null);
             m_objAlliedSAN = Op.load(ALLIEDSAN).getImage(null);
 
-            
+
             for (int l_i = 0; l_i < 6; l_i++)
                 mar_objWhiteDieImage[l_i] = Op.load(String.format(DICE_FILE_NAME_FORMAT, String.valueOf(l_i + 1))).getImage(null);
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             ex.printStackTrace();
         }
     }
-    
-    private void RebuildColoredDiceFaces() 
+
+    private void RebuildColoredDiceFaces()
     {
         BufferedImage l_objImage = null;
 
@@ -673,16 +623,16 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
                 mar_objColoredDieImage[l_i] = ColorChanger.changeColor(l_objImage, Color.white, m_clrColoredDiceColor);
             }
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             ex.printStackTrace();
         }
     }
-    
-    private void RebuildSingleDieFaces() 
+
+    private void RebuildSingleDieFaces()
     {
         BufferedImage l_objImage = null;
-        
+
         try
         {
             for (int l_i = 0; l_i < 6; l_i++)
@@ -691,22 +641,22 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
                 mar_objSingleDieImage[l_i] = ColorChanger.changeColor(l_objImage, Color.white, m_clrSingleDieColor);
             }
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             ex.printStackTrace();
         }
     }
-    
+
     public boolean RegisterForDiceEvents(boolean bAdd)
     {
         if ((!m_bRegisteredForDiceEvents) && (bAdd))
         {
-            if (GameModule.getGameModule().getChatter() instanceof ASLChatter) 
+            if (GameModule.getGameModule().getChatter() instanceof ASLChatter)
             {
-                if (bAdd) 
+                if (bAdd)
                 {
                     ((ASLChatter) (GameModule.getGameModule().getChatter())).addListener(this);
-                    
+
                     if (m_objClock == null)
                     {
                         m_objClock = new Timer (1000, this);
@@ -718,7 +668,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
                         m_objClock.setInitialDelay(1000);
                         m_objClock.setDelay(1000);
                         m_objClock.restart();
-                    }                    
+                    }
                 }
                 else
                 {
@@ -727,34 +677,34 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
                     if (m_objClock != null)
                     {
                         m_objClock.stop();
-                        m_objClock = null;                      
+                        m_objClock = null;
                     }
                 }
 
                 m_bRegisteredForDiceEvents = bAdd;
-                
+
                 return true;
             }
         }
-        
+
         return false;
     }
-    
+
     public void KillAll()
     {
         m_lClock += m_lMaxAge;
-        
+
         ClockTick();
     }
-    
+
     synchronized public void ShowLastDR()
     {
         boolean l_bRepaint = false;
-        
+
         for (Iterator<DiceRollHandler> it = mar_DRH.iterator(); it.hasNext(); )
         {
             DiceRollHandler l_objDRH = it.next();
-            
+
             if (l_objDRH.IsAlive())
             {
                 l_objDRH.setClock(m_lClock);
@@ -762,23 +712,23 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
             else
             {
                 l_objDRH.setClock(m_lClock);
-                l_objDRH.Alive();                
+                l_objDRH.Alive();
                 l_bRepaint = true;
             }
         }
-    
+
         if (l_bRepaint)
             FireNeedRepaint();
     }
-    
+
     synchronized public void ClockTick()
     {
         boolean l_bRepaint = false;
-        
+
         for (Iterator<DiceRollHandler> it = mar_DRH.iterator(); it.hasNext(); )
         {
             DiceRollHandler l_objDRH = it.next();
-            
+
             if (l_objDRH.IsAlive())
             {
                 if ((m_lClock - l_objDRH.getClock()) >= m_lMaxAge)
@@ -790,10 +740,10 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
             else
                 break;
         }
-    
+
         if (!m_bKeepAlive)
             m_lClock++;
-        
+
         if (l_bRepaint)
             FireNeedRepaint();
     }
@@ -801,28 +751,28 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
     synchronized public void PushDR(String strCategory, String strUser, String strSAN, int iFirstDice, int iSecondDice)
     {
         mar_DRH.add(0, new DiceRollHandler(++m_lCount, m_lClock, strCategory, strUser, strSAN, iFirstDice, iSecondDice));
-        
+
         if (mar_DRH.size() > getMaxNumEntries())
             mar_DRH.subList(getMaxNumEntries(), mar_DRH.size()).clear();
-        
+
         FireNeedRepaint();
     }
 
-    synchronized public void draw(Graphics g, Map map, ToolBarPosition enToolbarPosition) 
+    synchronized public void draw(Graphics g, Map map, ToolBarPosition enToolbarPosition)
     {
         final Rectangle r = map.getView().getVisibleRect();
         Graphics2D gg = (Graphics2D) g;
-        
+
         for (int l_i = 0; l_i < mar_DRH.size(); l_i++)
         {
             DiceRollHandler l_objDRH = mar_DRH.get(l_i);
-            
+
             if (l_objDRH.IsAlive())
             {
                 Point l_objPoint = new Point(r.x + (enToolbarPosition == ToolBarPosition.TP_EAST ? r.width - 190 : 10), r.y + r.height - 100 - 100 * l_i);
-                
+
                 gg.drawImage(GetDRImage(l_objDRH), l_objPoint.x, l_objPoint.y, null);
-                
+
                 if (l_objDRH.isAxisSAN())
                 {
                     gg.drawImage(m_objAxisSAN, l_objPoint.x + 133, l_objPoint.y - 15, null);
@@ -835,15 +785,15 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
                 {
                     gg.drawImage(m_objAxisSAN, l_objPoint.x + 90, l_objPoint.y - 15, null);
                     gg.drawImage(m_objAlliedSAN, l_objPoint.x + 133, l_objPoint.y - 15, null);
-                }                
-            }          
+                }
+            }
         }
     }
-    
+
     BufferedImage GetDRImage(DiceRollHandler objDRH)
     {
         BufferedImage l_objBackGroundImg;
-        
+
         if (objDRH.isFriendly())
         {
             l_objBackGroundImg = deepCopy(m_objFriendlyDRPanel);
@@ -855,10 +805,10 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
                 if (m_objDRPanelCaptionFont != null)
                 {
                     String l_strCaption = objDRH.getCount() + ". " + GetFriendlyPlayerNick();
-                    
+
                     DrawCaption(l_objGraph, l_strCaption);
                 }
-                
+
                 if (objDRH.getSecondDice() != -1)
                 {
                     l_objGraph.drawImage(mar_objWhiteDieImage[objDRH.getSecondDice() - 1], 129, 33, null);
@@ -867,28 +817,28 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
                 }
                 else
                     l_objGraph.drawImage(mar_objSingleDieImage[objDRH.getFirstDice() - 1], 105, 33, null);
-                
+
                 if ((objDRH.getCategory() != null) && (!objDRH.getCategory().isEmpty()))
                     DrawCategory(l_objGraph, objDRH.getCategory(), new Rectangle(10, 33, 66, 43));
-                
-                l_objGraph.dispose();             
+
+                l_objGraph.dispose();
             }
         }
         else
         {
             l_objBackGroundImg = deepCopy(m_objEnemyDRPanel);
-        
+
             Graphics2D l_objGraph = l_objBackGroundImg.createGraphics();
-        
+
             if (l_objGraph != null)
             {
                 if (m_objDRPanelCaptionFont != null)
                 {
                     String l_strCaption = objDRH.getCount() + ". " + objDRH.getNickName();
-                    
+
                     DrawCaption(l_objGraph, l_strCaption);
                 }
-                
+
                 if (objDRH.getSecondDice() != -1)
                 {
                     l_objGraph.drawImage(mar_objWhiteDieImage[objDRH.getSecondDice() - 1], 129, 33, null);
@@ -897,24 +847,24 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
                 }
                 else
                     l_objGraph.drawImage(mar_objSingleDieImage[objDRH.getFirstDice() - 1], 105, 33, null);
-                
+
                 if ((objDRH.getCategory() != null) && (!objDRH.getCategory().isEmpty()))
                     DrawCategory(l_objGraph, objDRH.getCategory(), new Rectangle(10, 33, 66, 43));
-                
-                l_objGraph.dispose();             
+
+                l_objGraph.dispose();
             }
         }
-        
+
         return l_objBackGroundImg;
     }
-    
-    static BufferedImage deepCopy(BufferedImage objInputImage) 
+
+    static BufferedImage deepCopy(BufferedImage objInputImage)
     {
         return new BufferedImage(objInputImage.getColorModel(), objInputImage.copyData(null), objInputImage.getColorModel().isAlphaPremultiplied(), null);
     }
-    
+
     @Override
-    public void actionPerformed(ActionEvent e) 
+    public void actionPerformed(ActionEvent e)
     {
         ClockTick();
     }
@@ -922,19 +872,19 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
     public void DiceRoll(String strCategory, String strUser, String strSAN, int iFirstDice, int iSecondDice) {
         PushDR(strCategory, strUser, strSAN, iFirstDice, iSecondDice);
     }
-    
+
     public void addRepaintListener(NeedRepaintEvent toAdd) {
         needrepaint_listeners.add(toAdd);
     }
-  
+
     public void removeRepaintListener(NeedRepaintEvent toRemove) {
         needrepaint_listeners.remove(toRemove);
     }
-    
+
     private void FireNeedRepaint() {
         for (NeedRepaintEvent objListener : needrepaint_listeners)
             objListener.NeedRepaint();
-    }      
+    }
 
     /**
      * @return the mc_iMaxNumEntries
@@ -972,8 +922,8 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
     private ToolBarPosition m_enToolbarPosition = ToolBarPosition.TP_EAST;
     private boolean m_bToolbarActive = false;
     private final String DICEOVERLAYTOOLBARPOS = "DiceOverlayToolbarPos";
-    private final String DICEOVERLAYTOOLBARACTIVE = "DiceOverlayToolbarActive";    
-      
+    private final String DICEOVERLAYTOOLBARACTIVE = "DiceOverlayToolbarActive";
+
     // this component is not configurable
     @Override
     public Class<?>[] getAttributeTypes() {return new Class<?>[] {};}
@@ -994,21 +944,21 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
     public void addTo(Buildable parent) {
 
         if (GameModule.getGameModule().getPrefs().getOption(DICEOVERLAYTOOLBARPOS) == null)
-            GameModule.getGameModule().getPrefs().addOption(null, new StringConfigurer(DICEOVERLAYTOOLBARPOS, null));            
-        
-        
+            GameModule.getGameModule().getPrefs().addOption(null, new StringConfigurer(DICEOVERLAYTOOLBARPOS, null));
+
+
         if (GameModule.getGameModule().getPrefs().getOption(DICEOVERLAYTOOLBARACTIVE) == null)
             GameModule.getGameModule().getPrefs().addOption(null, new StringConfigurer(DICEOVERLAYTOOLBARACTIVE, null));
-        
+
         readToolbarPos();
         readToolbarActive();
-        
+
         // add this component to the game and register a mouse listener
-        if (parent instanceof ASLMap) 
+        if (parent instanceof ASLMap)
         {
             m_objASLMap = (ASLMap) parent;
             m_objASLMap.addDrawComponent(this);
-            
+
             m_objASLMap.getPopupMenu().addSeparator();
             JMenuItem l_Toggletoolbar = new JMenuItem("Dice-over-the-map toolbar");
             l_Toggletoolbar.setBackground(new Color(255,255,255));
@@ -1017,71 +967,71 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
 
             // button toolbar activation
             JCheckBoxMenuItem l_objToolbarVisibleChange = new JCheckBoxMenuItem("Toolbar activation (on/off)");
-            
+
             l_objToolbarVisibleChange.setSelected(m_bToolbarActive);
 
-            l_objToolbarVisibleChange.addActionListener(new ActionListener() 
+            l_objToolbarVisibleChange.addActionListener(new ActionListener()
             {
-                public void actionPerformed(ActionEvent evt) 
+                public void actionPerformed(ActionEvent evt)
                 {
                     m_bToolbarActive = !m_bToolbarActive;
-                    
+
                     CreateToolbar();
-                    
+
                     saveToolbarActive();
                 }
             });
-            
-            m_objASLMap.getPopupMenu().add(l_objToolbarVisibleChange);            
-        
+
+            m_objASLMap.getPopupMenu().add(l_objToolbarVisibleChange);
+
             m_objDRQH = new DiceRollQueueHandler();
             m_objDRQH.addRepaintListener(this);
-            
-            m_objDRQH.SetupPreferences();   
+
+            m_objDRQH.SetupPreferences();
         }
-        
-        GameModule.getGameModule().getGameState().addGameComponent(this);        
+
+        GameModule.getGameModule().getGameState().addGameComponent(this);
     }
 
-    public void readToolbarPos() 
+    public void readToolbarPos()
     {
         String l_strPref = (String)GameModule.getGameModule().getPrefs().getValue(DICEOVERLAYTOOLBARPOS);
-        
+
         if (l_strPref == null) l_strPref = "EAST";
-        
+
         if (l_strPref.compareToIgnoreCase("EAST") == 0)
         {
             m_enToolbarPosition = ToolBarPosition.TP_EAST;
-        }        
+        }
         else if (l_strPref.compareToIgnoreCase("WEST") == 0)
         {
             m_enToolbarPosition = ToolBarPosition.TP_WEST;
-        }      
+        }
     }	
-    
-    public void readToolbarActive() 
+
+    public void readToolbarActive()
     {
         String l_strPref = (String)GameModule.getGameModule().getPrefs().getValue(DICEOVERLAYTOOLBARACTIVE);
-        
+
         if (l_strPref == null) l_strPref = "NO";
-        
+
         if (l_strPref.compareToIgnoreCase("YES") == 0)
         {
             m_bToolbarActive = true;
-        }        
+        }
         else if (l_strPref.compareToIgnoreCase("NO") == 0)
         {
             m_bToolbarActive = false;
-        }      
+        }
     }	
-    
-    public void saveToolbarPos() 
+
+    public void saveToolbarPos()
     {
         if (m_enToolbarPosition == ToolBarPosition.TP_EAST)
             GameModule.getGameModule().getPrefs().setValue(DICEOVERLAYTOOLBARPOS, "EAST");
         else if (m_enToolbarPosition == ToolBarPosition.TP_WEST)
             GameModule.getGameModule().getPrefs().setValue(DICEOVERLAYTOOLBARPOS, "WEST");
-        
+
         try
         {
             GameModule.getGameModule().getPrefs().save();
@@ -1091,14 +1041,14 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
             ex.printStackTrace();
         }
     }
-    
-    public void saveToolbarActive() 
+
+    public void saveToolbarActive()
     {
         if (m_bToolbarActive)
             GameModule.getGameModule().getPrefs().setValue(DICEOVERLAYTOOLBARACTIVE, "YES");
-        else 
+        else
             GameModule.getGameModule().getPrefs().setValue(DICEOVERLAYTOOLBARACTIVE, "NO");
-        
+
         try
         {
             GameModule.getGameModule().getPrefs().save();
@@ -1108,9 +1058,9 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
             ex.printStackTrace();
         }
     }
-    
+
     @Override
-    public void draw(Graphics g, Map map) 
+    public void draw(Graphics g, Map map)
     {
         if ((m_Toolbar != null) && (m_Toolbar.isVisible()))
             m_objDRQH.draw(g, map, m_enToolbarPosition);
@@ -1129,7 +1079,7 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
     public Class[] getAllowableConfigureComponents() {return new Class[0];}
 
     @Override
-    public void setup(boolean gameStarting) 
+    public void setup(boolean gameStarting)
     {
         if (gameStarting)
         {
@@ -1138,14 +1088,14 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
                     CreateToolbar();
                 }
             });
-            
+
             m_objDRQH.RegisterForDiceEvents(true);
         }
     }
 
     @Override
     public Command getRestoreCommand() {return null;}
-    
+
     public void CreateToolbar()
     {
         if (m_Toolbar == null)
@@ -1153,7 +1103,7 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
             final int iW = 32;
             int l_iRow = 0;
             JButton l_objBtn;
-            
+
             m_Toolbar = new JToolBar(SwingConstants.VERTICAL);
             m_Toolbar.setVisible(false);
             m_Toolbar.setFloatable(false);
@@ -1170,10 +1120,10 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
 		
             Component l_objVertGlue = Box.createVerticalGlue();
             AddButton(l_objPanel, l_objVertGlue, l_iRow++, 2);
-            
+
             JToggleButton l_objTBtn = CreateKeepAliveButton("chatter/PINUP.png", "chatter/PINDOWN.png", "", "Keep DRs on the screen");
             AddButton(l_objPanel, l_objTBtn, l_iRow++, 20);
-            
+
             l_objBtn = CreateActionButton("chatter/CLEAR.png", "", "Clear the screen from DRs", new ActionListener() {public void actionPerformed(ActionEvent e) {m_objDRQH.KillAll();} });
             AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
 
@@ -1182,22 +1132,22 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
 
             l_objBtn = CreateDiceButton("DRs.gif", "", "DR", KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), true, ASLDiceBot.OTHER_CATEGORY);
             AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
-                
+
             l_objBtn = CreateDiceButton("", "IFT", "IFT attack DR", KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_MASK + InputEvent.SHIFT_MASK), true, "IFT");
             AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
-            
+
             l_objBtn = CreateDiceButton("", "TH", "To Hit DR", KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.CTRL_MASK + InputEvent.SHIFT_MASK), true, "TH");
             AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
-                
+
             l_objBtn = CreateDiceButton("", "TK", "To Kill DR", KeyStroke.getKeyStroke(KeyEvent.VK_K, InputEvent.CTRL_MASK + InputEvent.SHIFT_MASK), true, "TK");
             AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
-            
+
             l_objBtn = CreateDiceButton("", "MC", "Morale Check DR", KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_MASK + InputEvent.SHIFT_MASK), true, "MC");
             AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
-            
+
             l_objBtn = CreateDiceButton("", "R", "Rally DR", KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK + InputEvent.SHIFT_MASK), true, "Rally");
             AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
-            
+
             l_objBtn = CreateDiceButton("", "CC", "Close Combat DR", KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK + InputEvent.SHIFT_MASK), true, "CC");
             AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
 
@@ -1212,78 +1162,78 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
 
             l_objBtn = CreateDiceButton("", "RS", "Random Selection dr", KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK + InputEvent.SHIFT_MASK), false, "RS");
             AddButton(l_objPanel, l_objBtn, l_iRow++, 20);
-            
+
             l_objBtn = CreateActionButton("chatter/ARROW.png", "", "Move the toolbar to the other side", new ActionListener() {public void actionPerformed(ActionEvent e) {ToolbarMove();}});
             AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
-    
+
             try
             {
                 if (m_enToolbarPosition == ToolBarPosition.TP_EAST)
-                    SwingUtilities.getWindowAncestor(m_objASLMap.getLayeredPane()).add(m_Toolbar, BorderLayout.EAST);                
+                    SwingUtilities.getWindowAncestor(m_objASLMap.getLayeredPane()).add(m_Toolbar, BorderLayout.EAST);
                 else if (m_enToolbarPosition == ToolBarPosition.TP_WEST)
-                    SwingUtilities.getWindowAncestor(m_objASLMap.getLayeredPane()).add(m_Toolbar, BorderLayout.WEST);                
+                    SwingUtilities.getWindowAncestor(m_objASLMap.getLayeredPane()).add(m_Toolbar, BorderLayout.WEST);
             }
             catch (Exception ex)
             {
                 ex.printStackTrace();
             }
         }
-        
+
         m_Toolbar.setVisible(m_bToolbarActive);
-        
+
         m_objASLMap.getView().revalidate();
         m_Toolbar.revalidate();
     }
-    
+
     private void ToolbarMove()
     {
         if (m_enToolbarPosition == ToolBarPosition.TP_EAST)
         {
             m_enToolbarPosition = ToolBarPosition.TP_WEST;
-            
+
             SwingUtilities.getWindowAncestor(m_objASLMap.getLayeredPane()).getLayout().removeLayoutComponent(m_Toolbar);
             SwingUtilities.getWindowAncestor(m_objASLMap.getLayeredPane()).add(m_Toolbar, BorderLayout.WEST);
         }
         else
         {
             m_enToolbarPosition = ToolBarPosition.TP_EAST;
-            
+
             SwingUtilities.getWindowAncestor(m_objASLMap.getLayeredPane()).getLayout().removeLayoutComponent(m_Toolbar);
             SwingUtilities.getWindowAncestor(m_objASLMap.getLayeredPane()).add(m_Toolbar, BorderLayout.EAST);
         }
-        
+
         saveToolbarPos();
-        
+
         m_objASLMap.getView().revalidate();
         m_Toolbar.revalidate();
-        
+
         NeedRepaint();
     }
-    
+
     private void AddButton(JPanel objPanel, Component objComp, int iRow, int iGap)
     {
         GridBagConstraints l_objGBL_Btn;
-        
+
         l_objGBL_Btn = new GridBagConstraints();
         l_objGBL_Btn.fill = GridBagConstraints.BOTH;
         l_objGBL_Btn.insets = new Insets(0, 0, iGap, 0);
         l_objGBL_Btn.gridx = 0;
         l_objGBL_Btn.gridy = iRow;
-        
+
         objPanel.add(objComp, l_objGBL_Btn);
     }
-    
-    private JToggleButton CreateKeepAliveButton(String strImageOff, String strImageOn, String strCaption, String strTooltip) 
+
+    private JToggleButton CreateKeepAliveButton(String strImageOff, String strImageOn, String strCaption, String strTooltip)
     {
         JToggleButton l_btn = new JToggleButton(strCaption);
-        
-        l_btn.setMargin(new Insets(0, 0, 0, 0));       
+
+        l_btn.setMargin(new Insets(0, 0, 0, 0));
         l_btn.setMaximumSize(new Dimension(32, 32));
         l_btn.setMinimumSize(new Dimension(10, 10));
         l_btn.setPreferredSize(new Dimension(32, 32));
         l_btn.setFocusable(false);
         l_btn.setRolloverEnabled(false);
-        
+
         try
         {
             if (!strImageOff.isEmpty())
@@ -1295,10 +1245,10 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
         catch (Exception ex)
         {
         }
-        
+
         ItemListener l_objIL = new ItemListener()
         {
-            public void itemStateChanged(ItemEvent e) 
+            public void itemStateChanged(ItemEvent e)
             {
                 if(e.getStateChange() == ItemEvent.SELECTED)
                 {
@@ -1307,29 +1257,29 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
                 else
                 {
                     m_objDRQH.setKeepAlive(false);
-                } 
+                }
             }
         };
-            
+
         l_btn.addItemListener(l_objIL);
         AddHotKeyToTooltip(l_btn, null, strTooltip);
         l_btn.setFocusable(false);
-       
+
         return l_btn;
 
     }
-    
-    private JButton CreateActionButton(String strImage, String strCaption, String strTooltip, ActionListener objList) 
+
+    private JButton CreateActionButton(String strImage, String strCaption, String strTooltip, ActionListener objList)
     {
         JButton l_btn = new JButton(strCaption);
-        
-        l_btn.setMargin(new Insets(0, 0, 0, 0));       
+
+        l_btn.setMargin(new Insets(0, 0, 0, 0));
         l_btn.setMaximumSize(new Dimension(32, 32));
         l_btn.setMinimumSize(new Dimension(10, 10));
         l_btn.setPreferredSize(new Dimension(32, 32));
         l_btn.setFocusable(false);
         l_btn.setRolloverEnabled(false);
-        
+
         try
         {
             if (!strImage.isEmpty())
@@ -1338,25 +1288,25 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
         catch (Exception ex)
         {
         }
-        
+
         l_btn.addActionListener(objList);
         AddHotKeyToTooltip(l_btn, null, strTooltip);
         l_btn.setFocusable(false);
-       
+
         return l_btn;
     }
-    
-    private JButton CreateDiceButton(String strImage, String strCaption, String strTooltip, KeyStroke keyStroke, final boolean bDice, final String strCat) 
+
+    private JButton CreateDiceButton(String strImage, String strCaption, String strTooltip, KeyStroke keyStroke, final boolean bDice, final String strCat)
     {
         JButton l_btn = new JButton(strCaption);
-        
-        l_btn.setMargin(new Insets(0, 0, 0, 0));       
+
+        l_btn.setMargin(new Insets(0, 0, 0, 0));
         l_btn.setMaximumSize(new Dimension(32, 32));
         l_btn.setMinimumSize(new Dimension(10, 10));
         l_btn.setPreferredSize(new Dimension(32, 32));
         l_btn.setFocusable(false);
         l_btn.setRolloverEnabled(false);
-        
+
         try
         {
             if (!strImage.isEmpty())
@@ -1365,7 +1315,7 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
         catch (Exception ex)
         {
         }
-        
+
         ActionListener l_objAL = new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
@@ -1387,15 +1337,15 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
                 }
             }
         };
-        
+
         l_btn.addActionListener(l_objAL);
         AddHotKeyToTooltip(l_btn, keyStroke, strTooltip);
         l_btn.setFocusable(false);
-       
+
         return l_btn;
     }
-    
-    private void AddHotKeyToTooltip(JComponent objButton, KeyStroke keyStroke, String strTooltipText) 
+
+    private void AddHotKeyToTooltip(JComponent objButton, KeyStroke keyStroke, String strTooltipText)
     {
         if (keyStroke != null)
             objButton.setToolTipText(strTooltipText + " [" + HotKeyConfigurer.getString(keyStroke) + "]");
@@ -1403,14 +1353,14 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
             objButton.setToolTipText(strTooltipText);
     }
 
-    public void NeedRepaint() 
+    public void NeedRepaint()
     {
         if (m_objASLMap != null)
             m_objASLMap.repaint();
     }
 }
 
-class ColorChanger 
+class ColorChanger
 {
     public static final int ALPHA = 0;
     public static final int RED = 1;
