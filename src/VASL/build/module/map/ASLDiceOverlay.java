@@ -731,7 +731,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
 
             if (l_objDRH.IsAlive())
             {
-                if ((m_lClock - l_objDRH.getClock()) >= m_lMaxAge)
+                if (m_lClock - l_objDRH.getClock() >= m_lMaxAge)
                 {
                     l_objDRH.Dead();
                     l_bRepaint = true;
@@ -818,7 +818,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
                 else
                     l_objGraph.drawImage(mar_objSingleDieImage[objDRH.getFirstDice() - 1], 105, 33, null);
 
-                if ((objDRH.getCategory() != null) && (!objDRH.getCategory().isEmpty()))
+                if (objDRH.getCategory() != null && !objDRH.getCategory().isEmpty())
                     DrawCategory(l_objGraph, objDRH.getCategory(), new Rectangle(10, 33, 66, 43));
 
                 l_objGraph.dispose();
@@ -848,7 +848,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
                 else
                     l_objGraph.drawImage(mar_objSingleDieImage[objDRH.getFirstDice() - 1], 105, 33, null);
 
-                if ((objDRH.getCategory() != null) && (!objDRH.getCategory().isEmpty()))
+                if (objDRH.getCategory() != null && !objDRH.getCategory().isEmpty())
                     DrawCategory(l_objGraph, objDRH.getCategory(), new Rectangle(10, 33, 66, 43));
 
                 l_objGraph.dispose();
@@ -970,16 +970,10 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
 
             l_objToolbarVisibleChange.setSelected(m_bToolbarActive);
 
-            l_objToolbarVisibleChange.addActionListener(new ActionListener()
-            {
-                public void actionPerformed(ActionEvent evt)
-                {
-                    m_bToolbarActive = !m_bToolbarActive;
-
-                    CreateToolbar();
-
-                    saveToolbarActive();
-                }
+            l_objToolbarVisibleChange.addActionListener(e -> {
+                m_bToolbarActive = !m_bToolbarActive;
+                CreateToolbar();
+                saveToolbarActive();
             });
 
             m_objASLMap.getPopupMenu().add(l_objToolbarVisibleChange);
@@ -1062,7 +1056,7 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
     @Override
     public void draw(Graphics g, Map map)
     {
-        if ((m_Toolbar != null) && (m_Toolbar.isVisible()))
+        if (m_Toolbar != null && m_Toolbar.isVisible())
             m_objDRQH.draw(g, map, m_enToolbarPosition);
     }
 
@@ -1083,12 +1077,7 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
     {
         if (gameStarting)
         {
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    CreateToolbar();
-                }
-            });
-
+            SwingUtilities.invokeLater(() -> CreateToolbar());
             m_objDRQH.RegisterForDiceEvents(true);
         }
     }
@@ -1124,10 +1113,10 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
             JToggleButton l_objTBtn = CreateKeepAliveButton("chatter/PINUP.png", "chatter/PINDOWN.png", "", "Keep DRs on the screen");
             AddButton(l_objPanel, l_objTBtn, l_iRow++, 20);
 
-            l_objBtn = CreateActionButton("chatter/CLEAR.png", "", "Clear the screen from DRs", new ActionListener() {public void actionPerformed(ActionEvent e) {m_objDRQH.KillAll();} });
+            l_objBtn = CreateActionButton("chatter/CLEAR.png", "", "Clear the screen from DRs", e -> m_objDRQH.KillAll());
             AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
 
-            l_objBtn = CreateActionButton("chatter/REWIND.png", "", String.format("Show last %s DRs", m_objDRQH.getMaxNumEntries()), new ActionListener() {public void actionPerformed(ActionEvent e) {m_objDRQH.ShowLastDR();} });
+            l_objBtn = CreateActionButton("chatter/REWIND.png", "", String.format("Show last %s DRs", m_objDRQH.getMaxNumEntries()), e -> m_objDRQH.ShowLastDR());
             AddButton(l_objPanel, l_objBtn, l_iRow++, 20);
 
             l_objBtn = CreateDiceButton("DRs.gif", "", "DR", KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), true, ASLDiceBot.OTHER_CATEGORY);
@@ -1163,7 +1152,7 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
             l_objBtn = CreateDiceButton("", "RS", "Random Selection dr", KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK + InputEvent.SHIFT_MASK), false, "RS");
             AddButton(l_objPanel, l_objBtn, l_iRow++, 20);
 
-            l_objBtn = CreateActionButton("chatter/ARROW.png", "", "Move the toolbar to the other side", new ActionListener() {public void actionPerformed(ActionEvent e) {ToolbarMove();}});
+            l_objBtn = CreateActionButton("chatter/ARROW.png", "", "Move the toolbar to the other side", e -> ToolbarMove());
             AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
 
             try
@@ -1246,22 +1235,9 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
         {
         }
 
-        ItemListener l_objIL = new ItemListener()
-        {
-            public void itemStateChanged(ItemEvent e)
-            {
-                if(e.getStateChange() == ItemEvent.SELECTED)
-                {
-                    m_objDRQH.setKeepAlive(true);
-                }
-                else
-                {
-                    m_objDRQH.setKeepAlive(false);
-                }
-            }
-        };
-
-        l_btn.addItemListener(l_objIL);
+        l_btn.addItemListener(e -> {
+            m_objDRQH.setKeepAlive(e.getStateChange() == ItemEvent.SELECTED);
+        });
         AddHotKeyToTooltip(l_btn, null, strTooltip);
         l_btn.setFocusable(false);
 
@@ -1316,29 +1292,22 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
         {
         }
 
-        ActionListener l_objAL = new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                try
-                {
-                    ASLDiceBot l_objDice = GameModule.getGameModule().getComponentsOf(ASLDiceBot.class).iterator().next();
+        l_btn.addActionListener(e -> {
+            try {
+                ASLDiceBot l_objDice = GameModule.getGameModule().getComponentsOf(ASLDiceBot.class).iterator().next();
 
-                    if (l_objDice != null)
-                    {
-                        if (bDice)
-                            l_objDice.DR(strCat);
-                        else
-                            l_objDice.dr(strCat);
-                    }
-                }
-                catch (Exception ex)
+                if (l_objDice != null)
                 {
+                    if (bDice)
+                        l_objDice.DR(strCat);
+                    else
+                        l_objDice.dr(strCat);
                 }
             }
-        };
-
-        l_btn.addActionListener(l_objAL);
+            catch (Exception ex)
+            {
+            }
+        });
         AddHotKeyToTooltip(l_btn, keyStroke, strTooltip);
         l_btn.setFocusable(false);
 
@@ -1347,10 +1316,11 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
 
     private void AddHotKeyToTooltip(JComponent objButton, KeyStroke keyStroke, String strTooltipText)
     {
-        if (keyStroke != null)
-            objButton.setToolTipText(strTooltipText + " [" + HotKeyConfigurer.getString(keyStroke) + "]");
-        else
-            objButton.setToolTipText(strTooltipText);
+        String txt = strTooltipText;
+        if (keyStroke != null) {
+            txt += " [" + HotKeyConfigurer.getString(keyStroke) + "]";
+        }
+        objButton.setToolTipText(txt);
     }
 
     public void NeedRepaint()
