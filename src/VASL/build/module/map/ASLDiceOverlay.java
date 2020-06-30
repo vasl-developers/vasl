@@ -901,11 +901,13 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
             m_objASLMap = (ASLMap) parent;
             m_objASLMap.addDrawComponent(this);
 
-            m_objASLMap.getPopupMenu().addSeparator();
+            final JPopupMenu pm = m_objASLMap.getPopupMenu();
+
+            pm.addSeparator();
             JMenuItem l_Toggletoolbar = new JMenuItem("Dice-over-the-map toolbar");
             l_Toggletoolbar.setBackground(new Color(255,255,255));
-            m_objASLMap.getPopupMenu().add(l_Toggletoolbar);
-            m_objASLMap.getPopupMenu().addSeparator();
+            pm.add(l_Toggletoolbar);
+            pm.addSeparator();
 
             // button toolbar activation
             JCheckBoxMenuItem l_objToolbarVisibleChange = new JCheckBoxMenuItem("Toolbar activation (on/off)");
@@ -918,7 +920,7 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
                 saveToolbarActive();
             });
 
-            m_objASLMap.getPopupMenu().add(l_objToolbarVisibleChange);
+            pm.add(l_objToolbarVisibleChange);
 
             m_objDRQH = new DiceRollQueueHandler();
             m_objDRQH.addRepaintListener(this);
