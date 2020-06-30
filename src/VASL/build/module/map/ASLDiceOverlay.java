@@ -31,6 +31,7 @@ import VASSAL.build.module.map.Drawable;
 import VASSAL.command.Command;
 import VASSAL.configure.HotKeyConfigurer;
 import VASSAL.tools.imageop.Op;
+import VASSAL.tools.swing.SwingUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -489,9 +490,6 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
 
     private void DrawCaption(Graphics2D g, String strCaption)
     {
-        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setFont(m_objDRPanelCaptionFont);
 
         // Get font metrics for the current font
@@ -511,9 +509,6 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
 
     private void DrawCategory(Graphics2D g, String strCaption, Rectangle objRect)
     {
-        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setFont(m_objDRCategoryFont);
 
         // Get font metrics for the current font
@@ -774,9 +769,14 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
 
     BufferedImage GetDRImage(DiceRollHandler objDRH)
     {
-        BufferedImage l_objBackGroundImg = deepCopy(objDRH.isFriendly() ? m_objFriendlyDRPanel : m_objEnemyDRPanel);
+        final BufferedImage l_objBackGroundImg = deepCopy(objDRH.isFriendly() ? m_objFriendlyDRPanel : m_objEnemyDRPanel);
 
-        Graphics2D g = l_objBackGroundImg.createGraphics();
+        final Graphics2D g = l_objBackGroundImg.createGraphics();
+        g.addRenderingHints(SwingUtils.FONT_HINTS);
+        g.setRenderingHint(RenderingHints.KEY_RENDERING,
+                           RenderingHints.VALUE_RENDER_QUALITY);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                           RenderingHints.VALUE_ANTIALIAS_ON);
 
         if (m_objDRPanelCaptionFont != null) {
             DrawCaption(g, objDRH.getCount() + ". " + (objDRH.isFriendly() ? GetFriendlyPlayerNick() : objDRH.getNickName()));
