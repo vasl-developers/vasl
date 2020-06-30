@@ -505,9 +505,10 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
 
         g.setColor(m_clrDRPanelCaptionFontColor);
 
+        final Shape old_clip = g.getClip();
         g.clipRect(3, 3, m_iCaptionWidth - 3, m_iCaptionHeight);
         g.drawString(strCaption, 10, msgY);
-        g.setClip(null);
+        g.setClip(old_clip);
     }
 
     private void DrawCategory(Graphics2D g, String strCaption, Rectangle objRect)
@@ -524,9 +525,10 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
 
         g.setColor(m_clrDRCategoryFontColor);
 
+        final Shape old_clip = g.getClip();
         g.clipRect(objRect.x, objRect.y, objRect.width, objRect.height);
         g.drawString(strCaption, msgX, msgY);
-        g.setClip(null);
+        g.setClip(old_clip);
     }
 
     private void RebuildFriendlyPanel()
@@ -738,6 +740,50 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
         FireNeedRepaint();
     }
 
+    private void drawDRPanel(Graphics2D g, Rectangle r, ToolBarPosition enToolbarPosition, DiceRollHandler drh, int i) {
+        Point l_objPoint = new Point(r.x + (enToolbarPosition == ToolBarPosition.TP_EAST ? r.width - 190 : 10), r.y + r.height - 100 - 100 * i);
+
+        g.translate(l_objPoint.x, l_objPoint.y);
+
+        // draw the background
+        g.drawImage(drh.isFriendly() ? m_objFriendlyDRPanel : m_objEnemyDRPanel, 0, 0, null);
+
+        // draw the caption
+        if (m_objDRPanelCaptionFont != null) {
+             DrawCaption(g, drh.getCount() + ". " + (drh.isFriendly() ? GetFriendlyPlayerNick() : drh.getNickName()));
+        }
+
+        // draw the dice
+        if (drh.getSecondDie() != -1)
+        {
+            g.drawImage(mar_objWhiteDieImage[drh.getSecondDie() - 1], 129, 33, null);
+            g.drawImage(mar_objColoredDieImage[drh.getFirstDie() - 1], 82, 33, null);
+        }
+        else {
+            g.drawImage(mar_objSingleDieImage[drh.getFirstDie() - 1], 105, 33, null);
+        }
+
+        if (drh.getCategory() != null && !drh.getCategory().isEmpty()) {
+            DrawCategory(g, drh.getCategory(), new Rectangle(10, 33, 66, 43));
+        }
+
+        g.translate(-l_objPoint.x, -l_objPoint.y);
+
+        if (drh.isAxisSAN())
+        {
+            g.drawImage(m_objAxisSAN, l_objPoint.x + 133, l_objPoint.y - 15, null);
+        }
+        else if (drh.isAlliedSAN())
+        {
+            g.drawImage(m_objAlliedSAN, l_objPoint.x + 133, l_objPoint.y - 15, null);
+        }
+        else if (drh.isBothSAN())
+        {
+            g.drawImage(m_objAxisSAN, l_objPoint.x + 90, l_objPoint.y - 15, null);
+            g.drawImage(m_objAlliedSAN, l_objPoint.x + 133, l_objPoint.y - 15, null);
+        }
+    }
+
     synchronized public void draw(Graphics2D g, Map map, ToolBarPosition enToolbarPosition)
     {
         final double os_scale = g.getDeviceConfiguration().getDefaultTransform().getScaleX();
@@ -748,74 +794,16 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
 
         final Rectangle r = map.getView().getVisibleRect();
 
-
         for (int l_i = 0; l_i < mar_DRH.size(); l_i++)
         {
             DiceRollHandler l_objDRH = mar_DRH.get(l_i);
-
             if (l_objDRH.IsAlive())
             {
-                Point l_objPoint = new Point(r.x + (enToolbarPosition == ToolBarPosition.TP_EAST ? r.width - 190 : 10), r.y + r.height - 100 - 100 * l_i);
-
-                g.drawImage(GetDRImage(l_objDRH), l_objPoint.x, l_objPoint.y, null);
-
-                if (l_objDRH.isAxisSAN())
-                {
-                    g.drawImage(m_objAxisSAN, l_objPoint.x + 133, l_objPoint.y - 15, null);
-                }
-                else if (l_objDRH.isAlliedSAN())
-                {
-                    g.drawImage(m_objAlliedSAN, l_objPoint.x + 133, l_objPoint.y - 15, null);
-                }
-                else if (l_objDRH.isBothSAN())
-                {
-                    g.drawImage(m_objAxisSAN, l_objPoint.x + 90, l_objPoint.y - 15, null);
-                    g.drawImage(m_objAlliedSAN, l_objPoint.x + 133, l_objPoint.y - 15, null);
-                }
+                drawDRPanel(g, r, enToolbarPosition, l_objDRH, l_i);
             }
         }
 
         g.setTransform(orig_t);
-    }
-
-    BufferedImage GetDRImage(DiceRollHandler objDRH)
-    {
-        final BufferedImage l_objBackGroundImg = deepCopy(
-          objDRH.isFriendly() ? m_objFriendlyDRPanel : m_objEnemyDRPanel
-        );
-
-        final Graphics2D g = l_objBackGroundImg.createGraphics();
-        g.addRenderingHints(SwingUtils.FONT_HINTS);
-        g.setRenderingHint(RenderingHints.KEY_RENDERING,
-                           RenderingHints.VALUE_RENDER_QUALITY);
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                           RenderingHints.VALUE_ANTIALIAS_ON);
-
-        if (m_objDRPanelCaptionFont != null) {
-            DrawCaption(g, objDRH.getCount() + ". " + (objDRH.isFriendly() ? GetFriendlyPlayerNick() : objDRH.getNickName()));
-        }
-
-        if (objDRH.getSecondDie() != -1)
-        {
-            g.drawImage(mar_objWhiteDieImage[objDRH.getSecondDie() - 1], 129, 33, null);
-            g.drawImage(mar_objColoredDieImage[objDRH.getFirstDie() - 1], 82, 33, null);
-        }
-        else {
-            g.drawImage(mar_objSingleDieImage[objDRH.getFirstDie() - 1], 105, 33, null);
-        }
-
-        if (objDRH.getCategory() != null && !objDRH.getCategory().isEmpty()) {
-            DrawCategory(g, objDRH.getCategory(), new Rectangle(10, 33, 66, 43));
-        }
-
-        g.dispose();
-
-        return l_objBackGroundImg;
-    }
-
-    static BufferedImage deepCopy(BufferedImage objInputImage)
-    {
-        return new BufferedImage(objInputImage.getColorModel(), objInputImage.copyData(null), objInputImage.getColorModel().isAlphaPremultiplied(), null);
     }
 
     @Override
