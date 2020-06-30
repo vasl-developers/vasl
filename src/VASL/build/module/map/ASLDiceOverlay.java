@@ -549,12 +549,8 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
                 m_iCaptionHeight = l_objImage.getHeight();
 
             Graphics2D l_objGraph = m_objFriendlyDRPanel.createGraphics();
-
-            if (l_objGraph != null)
-            {
-                l_objGraph.drawImage(l_objImage, 4, 4, null);
-                l_objGraph.dispose();
-            }
+            l_objGraph.drawImage(l_objImage, 4, 4, null);
+            l_objGraph.dispose();
         }
         catch (Exception ex)
         {
@@ -580,13 +576,8 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
                 m_iCaptionHeight = l_objImage.getHeight();
 
             Graphics2D l_objGraph = m_objEnemyDRPanel.createGraphics();
-
-            if (l_objGraph != null)
-            {
-                l_objGraph.drawImage(l_objImage, 4, 4, null);
-
-                l_objGraph.dispose();
-            }
+            l_objGraph.drawImage(l_objImage, 4, 4, null);
+            l_objGraph.dispose();
         }
         catch (Exception ex)
         {
@@ -693,7 +684,6 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
     public void KillAll()
     {
         m_lClock += m_lMaxAge;
-
         ClockTick();
     }
 
@@ -1107,10 +1097,7 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
 
             try
             {
-                if (m_enToolbarPosition == ToolBarPosition.TP_EAST)
-                    SwingUtilities.getWindowAncestor(m_objASLMap.getLayeredPane()).add(m_Toolbar, BorderLayout.EAST);
-                else if (m_enToolbarPosition == ToolBarPosition.TP_WEST)
-                    SwingUtilities.getWindowAncestor(m_objASLMap.getLayeredPane()).add(m_Toolbar, BorderLayout.WEST);
+                SwingUtilities.getWindowAncestor(m_objASLMap.getLayeredPane()).add(m_Toolbar, m_enToolbarPosition == ToolBarPosition.TP_EAST ? BorderLayout.EAST: BorderLayout.WEST);
             }
             catch (Exception ex)
             {
@@ -1184,7 +1171,6 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
         l_btn.setFocusable(false);
 
         return l_btn;
-
     }
 
     private JButton CreateActionButton(String strImage, String strCaption, String strTooltip, ActionListener objList)
