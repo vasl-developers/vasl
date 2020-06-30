@@ -66,12 +66,12 @@ class DiceRollHandler
     private boolean m_bFriendly;
     private String m_strCategory;
     private String m_strNickName;
-    private int m_iFirstDice;
-    private int m_iSecondDice;
+    private int m_iFirstDie;
+    private int m_iSecondDie;
     private boolean m_bAxisSAN;
     private boolean m_bAlliedSAN;
 
-    public DiceRollHandler(long lCount, long lClock, String strCategory, String strNickName, String strSAN, int iFirstDice, int iSecondDice)
+    public DiceRollHandler(long lCount, long lClock, String strCategory, String strNickName, String strSAN, int iFirstDie, int iSecondDie)
     {
         m_lCount = lCount;
         m_lClock = lClock;
@@ -84,8 +84,8 @@ class DiceRollHandler
 
         m_strCategory = strCategory;
         m_strNickName = strNickName;
-        m_iFirstDice = iFirstDice;
-        m_iSecondDice = iSecondDice;
+        m_iFirstDie = iFirstDie;
+        m_iSecondDie = iSecondDie;
 
         if (strSAN == null || strSAN.isEmpty())
         {
@@ -165,17 +165,17 @@ class DiceRollHandler
     }
 
     /**
-     * @return the m_iFirstDice
+     * @return the m_iFirstDie
      */
-    public int getFirstDice() {
-        return m_iFirstDice;
+    public int getFirstDie() {
+        return m_iFirstDie;
     }
 
     /**
-     * @return the m_iSecondDice
+     * @return the m_iSecondDie
      */
-    public int getSecondDice() {
-        return m_iSecondDice;
+    public int getSecondDie() {
+        return m_iSecondDie;
     }
 
     /**
@@ -730,9 +730,9 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
             FireNeedRepaint();
     }
 
-    synchronized public void PushDR(String strCategory, String strUser, String strSAN, int iFirstDice, int iSecondDice)
+    synchronized public void PushDR(String strCategory, String strUser, String strSAN, int iFirstDie, int iSecondDie)
     {
-        mar_DRH.add(0, new DiceRollHandler(++m_lCount, m_lClock, strCategory, strUser, strSAN, iFirstDice, iSecondDice));
+        mar_DRH.add(0, new DiceRollHandler(++m_lCount, m_lClock, strCategory, strUser, strSAN, iFirstDie, iSecondDie));
 
         if (mar_DRH.size() > getMaxNumEntries())
             mar_DRH.subList(getMaxNumEntries(), mar_DRH.size()).clear();
@@ -775,27 +775,27 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
     BufferedImage GetDRImage(DiceRollHandler objDRH)
     {
         BufferedImage l_objBackGroundImg = deepCopy(objDRH.isFriendly() ? m_objFriendlyDRPanel : m_objEnemyDRPanel);
-        Graphics2D l_objGraph = l_objBackGroundImg.createGraphics();
 
-        if (m_objDRPanelCaptionFont != null)
-        {
-            String l_strCaption = objDRH.getCount() + ". " + (objDRH.isFriendly() ? GetFriendlyPlayerNick() : objDRH.getNickName());
-            DrawCaption(l_objGraph, l_strCaption);
+        Graphics2D gg = l_objBackGroundImg.createGraphics();
+
+        if (m_objDRPanelCaptionFont != null) {
+            DrawCaption(gg, objDRH.getCount() + ". " + (objDRH.isFriendly() ? GetFriendlyPlayerNick() : objDRH.getNickName()));
         }
 
-        if (objDRH.getSecondDice() != -1)
+        if (objDRH.getSecondDie() != -1)
         {
-            l_objGraph.drawImage(mar_objWhiteDieImage[objDRH.getSecondDice() - 1], 129, 33, null);
-
-            l_objGraph.drawImage(mar_objColoredDieImage[objDRH.getFirstDice() - 1], 82, 33, null);
+            gg.drawImage(mar_objWhiteDieImage[objDRH.getSecondDie() - 1], 129, 33, null);
+            gg.drawImage(mar_objColoredDieImage[objDRH.getFirstDie() - 1], 82, 33, null);
         }
-        else
-            l_objGraph.drawImage(mar_objSingleDieImage[objDRH.getFirstDice() - 1], 105, 33, null);
+        else {
+            gg.drawImage(mar_objSingleDieImage[objDRH.getFirstDie() - 1], 105, 33, null);
+        }
 
-        if (objDRH.getCategory() != null && !objDRH.getCategory().isEmpty())
-            DrawCategory(l_objGraph, objDRH.getCategory(), new Rectangle(10, 33, 66, 43));
+        if (objDRH.getCategory() != null && !objDRH.getCategory().isEmpty()) {
+            DrawCategory(gg, objDRH.getCategory(), new Rectangle(10, 33, 66, 43));
+        }
 
-        l_objGraph.dispose();
+        gg.dispose();
 
         return l_objBackGroundImg;
     }
@@ -811,8 +811,8 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
         ClockTick();
     }
 
-    public void DiceRoll(String strCategory, String strUser, String strSAN, int iFirstDice, int iSecondDice) {
-        PushDR(strCategory, strUser, strSAN, iFirstDice, iSecondDice);
+    public void DiceRoll(String strCategory, String strUser, String strSAN, int iFirstDie, int iSecondDie) {
+        PushDR(strCategory, strUser, strSAN, iFirstDie, iSecondDie);
     }
 
     public void addRepaintListener(NeedRepaintEvent toAdd) {
