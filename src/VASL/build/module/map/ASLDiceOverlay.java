@@ -774,30 +774,12 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
 
     BufferedImage GetDRImage(DiceRollHandler objDRH)
     {
-        BufferedImage l_objBackGroundImg;
-        String l_strCaption = null;
- 
-        if (objDRH.isFriendly())
-        {
-            l_objBackGroundImg = deepCopy(m_objFriendlyDRPanel);
-
-            if (m_objDRPanelCaptionFont != null)
-            {
-                l_strCaption = objDRH.getCount() + ". " + GetFriendlyPlayerNick();
-            }
-        }
-        else {
-            l_objBackGroundImg = deepCopy(m_objEnemyDRPanel);
-
-            if (m_objDRPanelCaptionFont != null)
-            {
-                l_strCaption = objDRH.getCount() + ". " + objDRH.getNickName();
-            }
-        }
-
+        BufferedImage l_objBackGroundImg = deepCopy(objDRH.isFriendly() ? m_objFriendlyDRPanel : m_objEnemyDRPanel);
         Graphics2D l_objGraph = l_objBackGroundImg.createGraphics();
+
         if (m_objDRPanelCaptionFont != null)
         {
+            String l_strCaption = objDRH.getCount() + ". " + (objDRH.isFriendly() ? GetFriendlyPlayerNick() : objDRH.getNickName());
             DrawCaption(l_objGraph, l_strCaption);
         }
 
