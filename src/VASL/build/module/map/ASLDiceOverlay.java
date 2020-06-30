@@ -738,7 +738,6 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
     synchronized public void draw(Graphics g, Map map, ToolBarPosition enToolbarPosition)
     {
         final Rectangle r = map.getView().getVisibleRect();
-        Graphics2D gg = (Graphics2D) g;
 
         for (int l_i = 0; l_i < mar_DRH.size(); l_i++)
         {
@@ -748,20 +747,20 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
             {
                 Point l_objPoint = new Point(r.x + (enToolbarPosition == ToolBarPosition.TP_EAST ? r.width - 190 : 10), r.y + r.height - 100 - 100 * l_i);
 
-                gg.drawImage(GetDRImage(l_objDRH), l_objPoint.x, l_objPoint.y, null);
+                g.drawImage(GetDRImage(l_objDRH), l_objPoint.x, l_objPoint.y, null);
 
                 if (l_objDRH.isAxisSAN())
                 {
-                    gg.drawImage(m_objAxisSAN, l_objPoint.x + 133, l_objPoint.y - 15, null);
+                    g.drawImage(m_objAxisSAN, l_objPoint.x + 133, l_objPoint.y - 15, null);
                 }
                 else if (l_objDRH.isAlliedSAN())
                 {
-                    gg.drawImage(m_objAlliedSAN, l_objPoint.x + 133, l_objPoint.y - 15, null);
+                    g.drawImage(m_objAlliedSAN, l_objPoint.x + 133, l_objPoint.y - 15, null);
                 }
                 else if (l_objDRH.isBothSAN())
                 {
-                    gg.drawImage(m_objAxisSAN, l_objPoint.x + 90, l_objPoint.y - 15, null);
-                    gg.drawImage(m_objAlliedSAN, l_objPoint.x + 133, l_objPoint.y - 15, null);
+                    g.drawImage(m_objAxisSAN, l_objPoint.x + 90, l_objPoint.y - 15, null);
+                    g.drawImage(m_objAlliedSAN, l_objPoint.x + 133, l_objPoint.y - 15, null);
                 }
             }
         }
@@ -769,7 +768,9 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
 
     BufferedImage GetDRImage(DiceRollHandler objDRH)
     {
-        final BufferedImage l_objBackGroundImg = deepCopy(objDRH.isFriendly() ? m_objFriendlyDRPanel : m_objEnemyDRPanel);
+        final BufferedImage l_objBackGroundImg = deepCopy(
+          objDRH.isFriendly() ? m_objFriendlyDRPanel : m_objEnemyDRPanel
+        );
 
         final Graphics2D g = l_objBackGroundImg.createGraphics();
         g.addRenderingHints(SwingUtils.FONT_HINTS);
