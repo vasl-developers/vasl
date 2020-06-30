@@ -27,6 +27,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
+import java.awt.geom.AffineTransform;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -737,9 +738,16 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
         FireNeedRepaint();
     }
 
-    synchronized public void draw(Graphics g, Map map, ToolBarPosition enToolbarPosition)
+    synchronized public void draw(Graphics2D g, Map map, ToolBarPosition enToolbarPosition)
     {
+        final double os_scale = g.getDeviceConfiguration().getDefaultTransform().getScaleX();
+        final AffineTransform orig_t = g.getTransform();
+        final AffineTransform new_t = new AffineTransform(orig_t);
+        new_t.scale(os_scale, os_scale);
+        g.setTransform(new_t);
+
         final Rectangle r = map.getView().getVisibleRect();
+
 
         for (int l_i = 0; l_i < mar_DRH.size(); l_i++)
         {
@@ -766,6 +774,8 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
                 }
             }
         }
+
+        g.setTransform(orig_t);
     }
 
     BufferedImage GetDRImage(DiceRollHandler objDRH)
@@ -984,7 +994,7 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
     public void draw(Graphics g, Map map)
     {
         if (m_Toolbar != null && m_Toolbar.isVisible())
-            m_objDRQH.draw(g, map, m_enToolbarPosition);
+            m_objDRQH.draw((Graphics2D) g, map, m_enToolbarPosition);
     }
 
     @Override
