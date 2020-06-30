@@ -1123,16 +1123,19 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
         objPanel.add(objComp, l_objGBL_Btn);
     }
 
+    private void SetupButtonCommon(AbstractButton b) {
+        b.setMargin(new Insets(0, 0, 0, 0));
+        b.setMaximumSize(new Dimension(32, 32));
+        b.setMinimumSize(new Dimension(10, 10));
+        b.setPreferredSize(new Dimension(32, 32));
+        b.setFocusable(false);
+        b.setRolloverEnabled(false);
+    }
+
     private JToggleButton CreateKeepAliveButton(String strImageOff, String strImageOn, String strCaption, String strTooltip)
     {
         JToggleButton l_btn = new JToggleButton(strCaption);
-
-        l_btn.setMargin(new Insets(0, 0, 0, 0));
-        l_btn.setMaximumSize(new Dimension(32, 32));
-        l_btn.setMinimumSize(new Dimension(10, 10));
-        l_btn.setPreferredSize(new Dimension(32, 32));
-        l_btn.setFocusable(false);
-        l_btn.setRolloverEnabled(false);
+        SetupButtonCommon(l_btn);
 
         try
         {
@@ -1150,7 +1153,6 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
             m_objDRQH.setKeepAlive(e.getStateChange() == ItemEvent.SELECTED);
         });
         AddHotKeyToTooltip(l_btn, null, strTooltip);
-        l_btn.setFocusable(false);
 
         return l_btn;
     }
@@ -1158,13 +1160,7 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
     private JButton CreateActionButton(String strImage, String strCaption, String strTooltip, ActionListener objList)
     {
         JButton l_btn = new JButton(strCaption);
-
-        l_btn.setMargin(new Insets(0, 0, 0, 0));
-        l_btn.setMaximumSize(new Dimension(32, 32));
-        l_btn.setMinimumSize(new Dimension(10, 10));
-        l_btn.setPreferredSize(new Dimension(32, 32));
-        l_btn.setFocusable(false);
-        l_btn.setRolloverEnabled(false);
+        SetupButtonCommon(l_btn);
 
         try
         {
@@ -1177,7 +1173,6 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
 
         l_btn.addActionListener(objList);
         AddHotKeyToTooltip(l_btn, null, strTooltip);
-        l_btn.setFocusable(false);
 
         return l_btn;
     }
@@ -1185,13 +1180,7 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
     private JButton CreateDiceButton(String strImage, String strCaption, String strTooltip, KeyStroke keyStroke, final boolean bDice, final String strCat)
     {
         JButton l_btn = new JButton(strCaption);
-
-        l_btn.setMargin(new Insets(0, 0, 0, 0));
-        l_btn.setMaximumSize(new Dimension(32, 32));
-        l_btn.setMinimumSize(new Dimension(10, 10));
-        l_btn.setPreferredSize(new Dimension(32, 32));
-        l_btn.setFocusable(false);
-        l_btn.setRolloverEnabled(false);
+        SetupButtonCommon(l_btn);
 
         try
         {
@@ -1219,7 +1208,6 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
             }
         });
         AddHotKeyToTooltip(l_btn, keyStroke, strTooltip);
-        l_btn.setFocusable(false);
 
         return l_btn;
     }
