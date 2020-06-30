@@ -18,35 +18,12 @@
  */
 package VASL.build.module.map;
 
-import VASL.build.module.ASLChatter;
-import VASL.build.module.ASLDiceBot;
-import VASL.build.module.ASLMap;
-import VASSAL.build.AbstractConfigurable;
-import VASSAL.build.Buildable;
-import VASSAL.build.GameModule;
-import VASSAL.build.module.GameComponent;
-import VASSAL.build.module.Map;
-import VASSAL.build.module.documentation.HelpFile;
-import VASSAL.build.module.map.Drawable;
-import VASSAL.command.Command;
-import VASSAL.configure.HotKeyConfigurer;
-import VASSAL.tools.imageop.Op;
-import VASSAL.tools.swing.SwingUtils;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import VASL.build.module.ASLChatter.ChatterListener;
-import static VASSAL.build.module.Chatter.getAnonymousUserName;
-import VASSAL.build.module.GlobalOptions;
-import VASSAL.configure.ColorConfigurer;
-import VASSAL.configure.FontConfigurer;
-import VASSAL.configure.LongConfigurer;
-import VASSAL.configure.StringConfigurer;
-import VASSAL.preferences.Prefs;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
@@ -54,6 +31,31 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import VASL.build.module.ASLChatter;
+import VASL.build.module.ASLChatter.ChatterListener;
+import VASL.build.module.ASLDiceBot;
+import VASL.build.module.ASLMap;
+
+import VASSAL.build.AbstractConfigurable;
+import VASSAL.build.Buildable;
+import VASSAL.build.GameModule;
+import VASSAL.build.module.GameComponent;
+import VASSAL.build.module.GlobalOptions;
+import VASSAL.build.module.Map;
+import VASSAL.build.module.documentation.HelpFile;
+import VASSAL.build.module.map.Drawable;
+import VASSAL.command.Command;
+import VASSAL.configure.ColorConfigurer;
+import VASSAL.configure.FontConfigurer;
+import VASSAL.configure.HotKeyConfigurer;
+import VASSAL.configure.LongConfigurer;
+import VASSAL.configure.StringConfigurer;
+import VASSAL.preferences.Prefs;
+import VASSAL.tools.imageop.Op;
+import VASSAL.tools.swing.SwingUtils;
+
+import static VASSAL.build.module.Chatter.getAnonymousUserName;
 
 interface NeedRepaintEvent {
     public void NeedRepaint();
