@@ -487,48 +487,48 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
         return l_strReturn;
     }
 
-    private void DrawCaption(Graphics2D objGraph, String strCaption)
+    private void DrawCaption(Graphics2D g, String strCaption)
     {
-        objGraph.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        objGraph.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        objGraph.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        objGraph.setFont(m_objDRPanelCaptionFont);
+        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setFont(m_objDRPanelCaptionFont);
 
         // Get font metrics for the current font
-        FontMetrics l_objFM = objGraph.getFontMetrics();
+        FontMetrics l_objFM = g.getFontMetrics();
 
         // Get the position of the leftmost character in the baseline
         // getWidth() and getHeight() returns the width and height of this component
         //int msgX = m_iCaptionWidth / 2 - l_objFM.stringWidth(strNickName) / 2;
         int msgY = m_iCaptionHeight / 2 + l_objFM.getHeight() / 2;
 
-        objGraph.setColor(m_clrDRPanelCaptionFontColor);
+        g.setColor(m_clrDRPanelCaptionFontColor);
 
-        objGraph.clipRect(3, 3, m_iCaptionWidth - 3, m_iCaptionHeight);
-        objGraph.drawString(strCaption, 10, msgY);
-        objGraph.setClip(null);
+        g.clipRect(3, 3, m_iCaptionWidth - 3, m_iCaptionHeight);
+        g.drawString(strCaption, 10, msgY);
+        g.setClip(null);
     }
 
-    private void DrawCategory(Graphics2D objGraph, String strCaption, Rectangle objRect)
+    private void DrawCategory(Graphics2D g, String strCaption, Rectangle objRect)
     {
-        objGraph.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        objGraph.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        objGraph.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        objGraph.setFont(m_objDRCategoryFont);
+        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setFont(m_objDRCategoryFont);
 
         // Get font metrics for the current font
-        FontMetrics l_objFM = objGraph.getFontMetrics();
+        FontMetrics l_objFM = g.getFontMetrics();
 
         // Get the position of the leftmost character in the baseline
         // getWidth() and getHeight() returns the width and height of this component
         int msgX = objRect.x + objRect.width / 2 - l_objFM.stringWidth(strCaption) / 2;
         int msgY = objRect.y + (objRect.height / 2) + (l_objFM.getAscent()/ 2);
 
-        objGraph.setColor(m_clrDRCategoryFontColor);
+        g.setColor(m_clrDRCategoryFontColor);
 
-        objGraph.clipRect(objRect.x, objRect.y, objRect.width, objRect.height);
-        objGraph.drawString(strCaption, msgX, msgY);
-        objGraph.setClip(null);
+        g.clipRect(objRect.x, objRect.y, objRect.width, objRect.height);
+        g.drawString(strCaption, msgX, msgY);
+        g.setClip(null);
     }
 
     private void RebuildFriendlyPanel()
@@ -548,9 +548,9 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
             if (m_iCaptionHeight == 0)
                 m_iCaptionHeight = l_objImage.getHeight();
 
-            Graphics2D l_objGraph = m_objFriendlyDRPanel.createGraphics();
-            l_objGraph.drawImage(l_objImage, 4, 4, null);
-            l_objGraph.dispose();
+            Graphics2D g = m_objFriendlyDRPanel.createGraphics();
+            g.drawImage(l_objImage, 4, 4, null);
+            g.dispose();
         }
         catch (Exception ex)
         {
@@ -575,9 +575,9 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
             if (m_iCaptionHeight == 0)
                 m_iCaptionHeight = l_objImage.getHeight();
 
-            Graphics2D l_objGraph = m_objEnemyDRPanel.createGraphics();
-            l_objGraph.drawImage(l_objImage, 4, 4, null);
-            l_objGraph.dispose();
+            Graphics2D g = m_objEnemyDRPanel.createGraphics();
+            g.drawImage(l_objImage, 4, 4, null);
+            g.dispose();
         }
         catch (Exception ex)
         {
@@ -776,26 +776,26 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
     {
         BufferedImage l_objBackGroundImg = deepCopy(objDRH.isFriendly() ? m_objFriendlyDRPanel : m_objEnemyDRPanel);
 
-        Graphics2D gg = l_objBackGroundImg.createGraphics();
+        Graphics2D g = l_objBackGroundImg.createGraphics();
 
         if (m_objDRPanelCaptionFont != null) {
-            DrawCaption(gg, objDRH.getCount() + ". " + (objDRH.isFriendly() ? GetFriendlyPlayerNick() : objDRH.getNickName()));
+            DrawCaption(g, objDRH.getCount() + ". " + (objDRH.isFriendly() ? GetFriendlyPlayerNick() : objDRH.getNickName()));
         }
 
         if (objDRH.getSecondDie() != -1)
         {
-            gg.drawImage(mar_objWhiteDieImage[objDRH.getSecondDie() - 1], 129, 33, null);
-            gg.drawImage(mar_objColoredDieImage[objDRH.getFirstDie() - 1], 82, 33, null);
+            g.drawImage(mar_objWhiteDieImage[objDRH.getSecondDie() - 1], 129, 33, null);
+            g.drawImage(mar_objColoredDieImage[objDRH.getFirstDie() - 1], 82, 33, null);
         }
         else {
-            gg.drawImage(mar_objSingleDieImage[objDRH.getFirstDie() - 1], 105, 33, null);
+            g.drawImage(mar_objSingleDieImage[objDRH.getFirstDie() - 1], 105, 33, null);
         }
 
         if (objDRH.getCategory() != null && !objDRH.getCategory().isEmpty()) {
-            DrawCategory(gg, objDRH.getCategory(), new Rectangle(10, 33, 66, 43));
+            DrawCategory(g, objDRH.getCategory(), new Rectangle(10, 33, 66, 43));
         }
 
-        gg.dispose();
+        g.dispose();
 
         return l_objBackGroundImg;
     }
