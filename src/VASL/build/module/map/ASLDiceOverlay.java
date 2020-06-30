@@ -960,43 +960,23 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
     public void readToolbarPos()
     {
         String l_strPref = (String)GameModule.getGameModule().getPrefs().getValue(DICEOVERLAYTOOLBARPOS);
-
         if (l_strPref == null) l_strPref = "EAST";
 
-        if (l_strPref.compareToIgnoreCase("EAST") == 0)
-        {
-            m_enToolbarPosition = ToolBarPosition.TP_EAST;
-        }
-        else if (l_strPref.compareToIgnoreCase("WEST") == 0)
-        {
-            m_enToolbarPosition = ToolBarPosition.TP_WEST;
-        }
+        m_enToolbarPosition = l_strPref.compareToIgnoreCase("EAST") == 0 ? ToolBarPosition.TP_EAST : ToolBarPosition.TP_WEST;
     }	
 
     public void readToolbarActive()
     {
         String l_strPref = (String)GameModule.getGameModule().getPrefs().getValue(DICEOVERLAYTOOLBARACTIVE);
-
         if (l_strPref == null) l_strPref = "NO";
 
-        if (l_strPref.compareToIgnoreCase("YES") == 0)
-        {
-            m_bToolbarActive = true;
-        }
-        else if (l_strPref.compareToIgnoreCase("NO") == 0)
-        {
-            m_bToolbarActive = false;
-        }
+        m_bToolbarActive = l_strPref.compareToIgnoreCase("YES") == 0;
     }	
 
     public void saveToolbarPos()
     {
         final Prefs prefs = GameModule.getGameModule().getPrefs();
-
-        if (m_enToolbarPosition == ToolBarPosition.TP_EAST)
-            prefs.setValue(DICEOVERLAYTOOLBARPOS, "EAST");
-        else if (m_enToolbarPosition == ToolBarPosition.TP_WEST)
-            prefs.setValue(DICEOVERLAYTOOLBARPOS, "WEST");
+        prefs.setValue(DICEOVERLAYTOOLBARPOS, m_enToolbarPosition == ToolBarPosition.TP_EAST ? "EAST" : "WEST");
 
         try
         {
@@ -1146,20 +1126,12 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
 
     private void ToolbarMove()
     {
-        if (m_enToolbarPosition == ToolBarPosition.TP_EAST)
-        {
-            m_enToolbarPosition = ToolBarPosition.TP_WEST;
+        final ToolBarPosition oldpos = m_enToolbarPosition;
+        m_enToolbarPosition = oldpos == ToolBarPosition.TP_EAST ? ToolBarPosition.TP_WEST : ToolBarPosition.TP_EAST;
 
-            SwingUtilities.getWindowAncestor(m_objASLMap.getLayeredPane()).getLayout().removeLayoutComponent(m_Toolbar);
-            SwingUtilities.getWindowAncestor(m_objASLMap.getLayeredPane()).add(m_Toolbar, BorderLayout.WEST);
-        }
-        else
-        {
-            m_enToolbarPosition = ToolBarPosition.TP_EAST;
-
-            SwingUtilities.getWindowAncestor(m_objASLMap.getLayeredPane()).getLayout().removeLayoutComponent(m_Toolbar);
-            SwingUtilities.getWindowAncestor(m_objASLMap.getLayeredPane()).add(m_Toolbar, BorderLayout.EAST);
-        }
+        final Window w = SwingUtilities.getWindowAncestor(m_objASLMap.getLayeredPane());
+        w.getLayout().removeLayoutComponent(m_Toolbar);
+        w.add(m_Toolbar, oldpos == ToolBarPosition.TP_EAST ? BorderLayout.WEST : BorderLayout.EAST);
 
         saveToolbarPos();
 
