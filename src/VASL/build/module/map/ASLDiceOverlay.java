@@ -649,7 +649,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
 
     public boolean RegisterForDiceEvents(boolean bAdd)
     {
-        if ((!m_bRegisteredForDiceEvents) && (bAdd))
+        if (!m_bRegisteredForDiceEvents && bAdd)
         {
             if (GameModule.getGameModule().getChatter() instanceof ASLChatter)
             {
@@ -785,67 +785,45 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
     BufferedImage GetDRImage(DiceRollHandler objDRH)
     {
         BufferedImage l_objBackGroundImg;
-
+        String l_strCaption = null;
+ 
         if (objDRH.isFriendly())
         {
             l_objBackGroundImg = deepCopy(m_objFriendlyDRPanel);
 
-            Graphics2D l_objGraph = l_objBackGroundImg.createGraphics();
-
-            if (l_objGraph != null)
+            if (m_objDRPanelCaptionFont != null)
             {
-                if (m_objDRPanelCaptionFont != null)
-                {
-                    String l_strCaption = objDRH.getCount() + ". " + GetFriendlyPlayerNick();
-
-                    DrawCaption(l_objGraph, l_strCaption);
-                }
-
-                if (objDRH.getSecondDice() != -1)
-                {
-                    l_objGraph.drawImage(mar_objWhiteDieImage[objDRH.getSecondDice() - 1], 129, 33, null);
-
-                    l_objGraph.drawImage(mar_objColoredDieImage[objDRH.getFirstDice() - 1], 82, 33, null);
-                }
-                else
-                    l_objGraph.drawImage(mar_objSingleDieImage[objDRH.getFirstDice() - 1], 105, 33, null);
-
-                if (objDRH.getCategory() != null && !objDRH.getCategory().isEmpty())
-                    DrawCategory(l_objGraph, objDRH.getCategory(), new Rectangle(10, 33, 66, 43));
-
-                l_objGraph.dispose();
+                l_strCaption = objDRH.getCount() + ". " + GetFriendlyPlayerNick();
             }
         }
-        else
-        {
+        else {
             l_objBackGroundImg = deepCopy(m_objEnemyDRPanel);
 
-            Graphics2D l_objGraph = l_objBackGroundImg.createGraphics();
-
-            if (l_objGraph != null)
+            if (m_objDRPanelCaptionFont != null)
             {
-                if (m_objDRPanelCaptionFont != null)
-                {
-                    String l_strCaption = objDRH.getCount() + ". " + objDRH.getNickName();
-
-                    DrawCaption(l_objGraph, l_strCaption);
-                }
-
-                if (objDRH.getSecondDice() != -1)
-                {
-                    l_objGraph.drawImage(mar_objWhiteDieImage[objDRH.getSecondDice() - 1], 129, 33, null);
-
-                    l_objGraph.drawImage(mar_objColoredDieImage[objDRH.getFirstDice() - 1], 82, 33, null);
-                }
-                else
-                    l_objGraph.drawImage(mar_objSingleDieImage[objDRH.getFirstDice() - 1], 105, 33, null);
-
-                if (objDRH.getCategory() != null && !objDRH.getCategory().isEmpty())
-                    DrawCategory(l_objGraph, objDRH.getCategory(), new Rectangle(10, 33, 66, 43));
-
-                l_objGraph.dispose();
+                l_strCaption = objDRH.getCount() + ". " + objDRH.getNickName();
             }
         }
+
+        Graphics2D l_objGraph = l_objBackGroundImg.createGraphics();
+        if (m_objDRPanelCaptionFont != null)
+        {
+            DrawCaption(l_objGraph, l_strCaption);
+        }
+
+        if (objDRH.getSecondDice() != -1)
+        {
+            l_objGraph.drawImage(mar_objWhiteDieImage[objDRH.getSecondDice() - 1], 129, 33, null);
+
+            l_objGraph.drawImage(mar_objColoredDieImage[objDRH.getFirstDice() - 1], 82, 33, null);
+        }
+        else
+            l_objGraph.drawImage(mar_objSingleDieImage[objDRH.getFirstDice() - 1], 105, 33, null);
+
+        if (objDRH.getCategory() != null && !objDRH.getCategory().isEmpty())
+            DrawCategory(l_objGraph, objDRH.getCategory(), new Rectangle(10, 33, 66, 43));
+
+        l_objGraph.dispose();
 
         return l_objBackGroundImg;
     }
@@ -918,7 +896,7 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
 
     // this component is not configurable
     @Override
-    public Class<?>[] getAttributeTypes() {return new Class<?>[] {};}
+    public Class<?>[] getAttributeTypes() {return new Class<?>[0];}
 
     @Override
     public String[] getAttributeNames() {return new String[0];}
@@ -934,13 +912,13 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
 
     @Override
     public void addTo(Buildable parent) {
+        final Prefs prefs = GameModule.getGameModule().getPrefs();
 
-        if (GameModule.getGameModule().getPrefs().getOption(DICEOVERLAYTOOLBARPOS) == null)
-            GameModule.getGameModule().getPrefs().addOption(null, new StringConfigurer(DICEOVERLAYTOOLBARPOS, null));
+        if (prefs.getOption(DICEOVERLAYTOOLBARPOS) == null)
+            prefs.addOption(null, new StringConfigurer(DICEOVERLAYTOOLBARPOS, null));
 
-
-        if (GameModule.getGameModule().getPrefs().getOption(DICEOVERLAYTOOLBARACTIVE) == null)
-            GameModule.getGameModule().getPrefs().addOption(null, new StringConfigurer(DICEOVERLAYTOOLBARACTIVE, null));
+        if (prefs.getOption(DICEOVERLAYTOOLBARACTIVE) == null)
+            prefs.addOption(null, new StringConfigurer(DICEOVERLAYTOOLBARACTIVE, null));
 
         readToolbarPos();
         readToolbarActive();
@@ -1013,14 +991,16 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
 
     public void saveToolbarPos()
     {
+        final Prefs prefs = GameModule.getGameModule().getPrefs();
+
         if (m_enToolbarPosition == ToolBarPosition.TP_EAST)
-            GameModule.getGameModule().getPrefs().setValue(DICEOVERLAYTOOLBARPOS, "EAST");
+            prefs.setValue(DICEOVERLAYTOOLBARPOS, "EAST");
         else if (m_enToolbarPosition == ToolBarPosition.TP_WEST)
-            GameModule.getGameModule().getPrefs().setValue(DICEOVERLAYTOOLBARPOS, "WEST");
+            prefs.setValue(DICEOVERLAYTOOLBARPOS, "WEST");
 
         try
         {
-            GameModule.getGameModule().getPrefs().save();
+            prefs.save();
         }
         catch (Exception ex)
         {
@@ -1030,14 +1010,12 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
 
     public void saveToolbarActive()
     {
-        if (m_bToolbarActive)
-            GameModule.getGameModule().getPrefs().setValue(DICEOVERLAYTOOLBARACTIVE, "YES");
-        else
-            GameModule.getGameModule().getPrefs().setValue(DICEOVERLAYTOOLBARACTIVE, "NO");
+        final Prefs prefs = GameModule.getGameModule().getPrefs();
+        prefs.setValue(DICEOVERLAYTOOLBARACTIVE, m_bToolbarActive ? "YES" : "NO");
 
         try
         {
-            GameModule.getGameModule().getPrefs().save();
+            prefs.save();
         }
         catch (Exception ex)
         {
@@ -1114,34 +1092,34 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
             l_objBtn = CreateDiceButton("DRs.gif", "", "DR", KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), true, ASLDiceBot.OTHER_CATEGORY);
             AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
 
-            l_objBtn = CreateDiceButton("", "IFT", "IFT attack DR", KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_MASK + InputEvent.SHIFT_MASK), true, "IFT");
+            l_objBtn = CreateDiceButton("", "IFT", "IFT attack DR", KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), true, "IFT");
             AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
 
-            l_objBtn = CreateDiceButton("", "TH", "To Hit DR", KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.CTRL_MASK + InputEvent.SHIFT_MASK), true, "TH");
+            l_objBtn = CreateDiceButton("", "TH", "To Hit DR", KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), true, "TH");
             AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
 
-            l_objBtn = CreateDiceButton("", "TK", "To Kill DR", KeyStroke.getKeyStroke(KeyEvent.VK_K, InputEvent.CTRL_MASK + InputEvent.SHIFT_MASK), true, "TK");
+            l_objBtn = CreateDiceButton("", "TK", "To Kill DR", KeyStroke.getKeyStroke(KeyEvent.VK_K, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), true, "TK");
             AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
 
-            l_objBtn = CreateDiceButton("", "MC", "Morale Check DR", KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_MASK + InputEvent.SHIFT_MASK), true, "MC");
+            l_objBtn = CreateDiceButton("", "MC", "Morale Check DR", KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), true, "MC");
             AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
 
-            l_objBtn = CreateDiceButton("", "R", "Rally DR", KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK + InputEvent.SHIFT_MASK), true, "Rally");
+            l_objBtn = CreateDiceButton("", "R", "Rally DR", KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), true, "Rally");
             AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
 
-            l_objBtn = CreateDiceButton("", "CC", "Close Combat DR", KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK + InputEvent.SHIFT_MASK), true, "CC");
+            l_objBtn = CreateDiceButton("", "CC", "Close Combat DR", KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), true, "CC");
             AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
 
-            l_objBtn = CreateDiceButton("", "TC", "Task Check DR", KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_MASK + InputEvent.SHIFT_MASK), true, "TC");
+            l_objBtn = CreateDiceButton("", "TC", "Task Check DR", KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), true, "TC");
             AddButton(l_objPanel, l_objBtn, l_iRow++, 10);
 
             l_objBtn = CreateDiceButton("dr.gif", "", "dr", KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), false, ASLDiceBot.OTHER_CATEGORY);
             AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
 
-            l_objBtn = CreateDiceButton("", "SA", "Sniper Activation dr", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK + InputEvent.SHIFT_MASK), false, "SA");
+            l_objBtn = CreateDiceButton("", "SA", "Sniper Activation dr", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), false, "SA");
             AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
 
-            l_objBtn = CreateDiceButton("", "RS", "Random Selection dr", KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK + InputEvent.SHIFT_MASK), false, "RS");
+            l_objBtn = CreateDiceButton("", "RS", "Random Selection dr", KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), false, "RS");
             AddButton(l_objPanel, l_objBtn, l_iRow++, 20);
 
             l_objBtn = CreateActionButton("chatter/ARROW.png", "", "Move the toolbar to the other side", e -> ToolbarMove());
