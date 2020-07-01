@@ -126,10 +126,14 @@ public class TextInfo extends Decorator implements EditablePiece {
         infoSize = getInfoSize(info, g.getFontMetrics(), os_scale);
         infoImage = createInfoImage(obs, scaled_font, os_scale);
       }
-      g.drawImage(infoImage, x + (int) (zoom * getInfoOffset().x),
-                  y + (int) (zoom * getInfoOffset().y),
-                  (int) (zoom * infoSize.width),
-                  (int) (zoom * infoSize.height), obs);
+
+      g.drawImage(
+        infoImage,
+        x + (int) (zoom * getInfoOffset().x),
+        y + (int) (zoom * getInfoOffset().y),
+        (int) (zoom * infoSize.width),
+        (int) (zoom * infoSize.height), obs
+      );
     }
   }
 
@@ -181,6 +185,8 @@ public class TextInfo extends Decorator implements EditablePiece {
     g.setColor(Color.black);
     g.drawRect(x, y - infoSize.height / 2, infoSize.width - 1, infoSize.height - 1);
 
+    final int ascent = fm.getAscent();
+
     StringTokenizer st = new StringTokenizer(info, "^,", true);
 
     x += 7 * os_scale;
@@ -189,6 +195,7 @@ public class TextInfo extends Decorator implements EditablePiece {
     while (st.hasMoreTokens()) {
       String s = st.nextToken();
       g.setColor(Color.black);
+
       switch (s.charAt(0)) {
         case 'r':
           s = s.substring(1);
@@ -196,9 +203,12 @@ public class TextInfo extends Decorator implements EditablePiece {
           break;
         case 'R':
           if (s.length() == 1) {
-            g.drawOval((int) (x - 3 * os_scale), y - fm.getAscent(),
-                       (int) (fm.getAscent() + 2 * os_scale),
-                       (int) (fm.getAscent() + 2 * os_scale));
+            g.drawOval(
+              (int) (x - 3 * os_scale),
+              y - ascent,
+              (int) (ascent + 2 * os_scale),
+              (int) (ascent + 2 * os_scale)
+            );
           }
           break;
         case ',':
@@ -207,9 +217,10 @@ public class TextInfo extends Decorator implements EditablePiece {
         case '^':
           s = "";
           superScript = !superScript;
-          y += superScript ? -fm.getAscent() / 2 : fm.getAscent() / 2;
+          y += (superScript ? -ascent : ascent) / 2;
           break;
       }
+
       g.drawString(s, x, y);
       x += fm.stringWidth(s);
     }
