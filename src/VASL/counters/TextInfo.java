@@ -98,16 +98,19 @@ public class TextInfo extends Decorator implements EditablePiece {
       return r;
     }
     else {
-      Rectangle infoRec = new Rectangle
-          (getInfoOffset().x, getInfoOffset().y,
-           infoSize.width, infoSize.height);
+      Rectangle infoRec = new Rectangle(
+        getInfoOffset().x, getInfoOffset().y,
+        infoSize.width, infoSize.height
+      );
       return r.union(infoRec);
     }
   }
 
   private Point getInfoOffset() {
-    return new Point(piece.getShape().getBounds().width / 2 + 6,
-                     -infoSize.height / 2);
+    return new Point(
+      piece.getShape().getBounds().width / 2 + 6,
+      -infoSize.height / 2
+    );
   }
 
   public String getName() {
