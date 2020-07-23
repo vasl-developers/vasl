@@ -32,19 +32,21 @@ import java.awt.event.MouseEvent;
 public class ASLKeyBufferer extends KeyBufferer {
     
   @Override
-  protected PieceVisitorDispatcher createDragSelector(boolean selecting, boolean altDown) 
+  protected PieceVisitorDispatcher createDragSelector(boolean selecting, boolean altDown, Rectangle mapsel)
   {
-    return new PieceVisitorDispatcher(new ASLKBDeckVisitor(selecting, altDown));
+    return new PieceVisitorDispatcher(new ASLKBDeckVisitor(selecting, altDown, mapsel));
   }
 
   public class ASLKBDeckVisitor implements DeckVisitor 
   {
     boolean selecting = false;
     boolean altDown = false;
+    Rectangle mapsel;
 
-    public ASLKBDeckVisitor(boolean b, boolean c) {
+    public ASLKBDeckVisitor(boolean b, boolean c, Rectangle ms) {
       selecting = b;
       altDown = c;
+      mapsel = ms;
     }
 
     public Object visitDeck(Deck d) {
@@ -57,7 +59,7 @@ public class ASLKeyBufferer extends KeyBufferer {
           Point[] pos = new Point[s.getPieceCount()];
           map.getStackMetrics().getContents(s, pos, null, null, s.getPosition().x, s.getPosition().y);
           for (int i = 0; i < pos.length; ++i) {
-            if (selection.contains(pos[i]) && !Boolean.TRUE.equals(s.getPieceAt(i).getProperty(Properties.INVISIBLE_TO_ME))) {
+            if (mapsel.contains(pos[i]) && !Boolean.TRUE.equals(s.getPieceAt(i).getProperty(Properties.INVISIBLE_TO_ME))) {
               if (selecting) {
                 KeyBuffer.getBuffer().add(s.getPieceAt(i));
               }
@@ -67,7 +69,7 @@ public class ASLKeyBufferer extends KeyBufferer {
             }
           }
         }
-        else if (selection.contains(s.getPosition())) {
+        else if (mapsel.contains(s.getPosition())) {
           for (int i = 0, n = s.getPieceCount(); i < n; ++i) {
             if (!Boolean.TRUE.equals(s.getPieceAt(i).getProperty(Properties.INVISIBLE_TO_ME))) 
                 if (selecting) {
@@ -85,7 +87,7 @@ public class ASLKeyBufferer extends KeyBufferer {
     // Handle non-stacked units, including Does Not Stack units
     // Does Not Stack units deselect normally once selected
     public Object visitDefault(GamePiece p) {
-      if (selection.contains(p.getPosition()) && !Boolean.TRUE.equals(p.getProperty(Properties.INVISIBLE_TO_ME))) {
+      if (mapsel.contains(p.getPosition()) && !Boolean.TRUE.equals(p.getProperty(Properties.INVISIBLE_TO_ME))) {
         if (selecting) {
           final EventFilter filter = (EventFilter) p.getProperty(Properties.SELECT_EVENT_FILTER);
           final boolean altSelect = (altDown && filter instanceof Immobilized.UseAlt);
@@ -100,8 +102,8 @@ public class ASLKeyBufferer extends KeyBufferer {
       return null;
     }
   }
-  
-    public void mousePressed(MouseEvent e) {
+
+  public void mousePressed(MouseEvent e) {
     if (e.isConsumed()) {
       return;
     }
@@ -164,7 +166,7 @@ public class ASLKeyBufferer extends KeyBufferer {
       if (!e.isShiftDown() && !e.isControlDown()) { // No deselect if shift key down
         KeyBuffer.getBuffer().clear();
       }
-      anchor = map.componentCoordinates(e.getPoint());
+      anchor = map.mapToComponent(e.getPoint());
       selection = new Rectangle(anchor.x, anchor.y, 0, 0);
       if (map.getHighlighter() instanceof ColoredBorder) {
         ColoredBorder b = (ColoredBorder) map.getHighlighter();

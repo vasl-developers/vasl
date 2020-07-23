@@ -428,70 +428,67 @@ public class ASLMap extends Map {
     private void logException(Throwable error) {
         logger.info("", error);
     }
-    
-    public BufferedImage getImgMapIcon(Point pt, double width) 
-    {
-      // map rectangle
-      Rectangle rectDraw = null;
-      BufferedImage img = new BufferedImage((int)width, (int)width, BufferedImage.TYPE_INT_ARGB);
-      final Graphics2D gg = img.createGraphics();
-      double dMagnification = 0.0;
-      
-        for (Board b : boards) 
-        {
-            if (rectDraw == null)
-            {
-                dMagnification = b.getMagnification();
-                rectDraw = new Rectangle();
-                
-                rectDraw.x = (int)((pt.x - (int)((width / 2.0) * dMagnification)) / dMagnification);
-                rectDraw.y = (int)((pt.y - (int)((width / 2.0) * dMagnification)) / dMagnification);
-                rectDraw.width = (int)(width * dMagnification);
-                rectDraw.height = (int)(width * dMagnification);
 
-                gg.translate(-rectDraw.x, -rectDraw.y);      
+    public BufferedImage getImgMapIcon(Point pt, double size, double os_scale) {
+        BufferedImage img = new BufferedImage((int)size, (int)size, BufferedImage.TYPE_INT_ARGB);
+        final Graphics2D g2d = img.createGraphics();
+
+        double dzoom = 0.0;
+        Rectangle rect = null;
+
+        for (Board b: getBoards()) {
+            if (rect == null) {
+                final double mag = b.getMagnification();
+                dzoom = os_scale / mag;
+
+                rect = new Rectangle(
+                  (int)((pt.x * os_scale - size/2) / mag),
+                  (int)((pt.y * os_scale - size/2) / mag),
+                  (int)(size / mag),
+                  (int)(size / mag)
+                );
+
+                g2d.translate(-rect.x, -rect.y);
             }
-      
-            b.drawRegion(gg, getLocation(b, 1.0 / dMagnification), rectDraw, 1.0 / dMagnification, null);
+
+            b.drawRegion(g2d, getLocation(b, dzoom), rect, dzoom, null);
         }
-        
-        drawPiecesNonStackableInRegion(gg, rectDraw, dMagnification, 1.0 / dMagnification);
-                
-        gg.dispose();
-        
+
+        drawPiecesNonStackableInRegion(g2d, rect, dzoom);
+
+        g2d.dispose();
         return img;
-    }   
-    
-  public void drawPiecesNonStackableInRegion(Graphics g, Rectangle visibleRect, double dMagnification, double dZoom) 
+    }
+
+  protected void drawPiecesNonStackableInRegion(Graphics g, Rectangle visibleRect, double dZoom)
   {
       Graphics2D g2d = (Graphics2D) g;
       Composite oldComposite = g2d.getComposite();
-      
       g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pieceOpacity));
       
       GamePiece[] stack = pieces.getPieces();
       
       for (int i = 0; i < stack.length; ++i) 
       {
-        Point pt = componentCoordinates(stack[i].getPosition());
+        Point pt = stack[i].getPosition();
         
         if (stack[i].getClass() != Stack.class) 
         {
           if (Boolean.TRUE.equals(stack[i].getProperty(Properties.NO_STACK))) 
-              stack[i].draw(g, (int)(pt.x / (getZoom() * dMagnification)), (int)(pt.y / (getZoom() * dMagnification)), null, dZoom);
+              stack[i].draw(g, (int)(pt.x * dZoom), (int)(pt.y * dZoom), null, dZoom);
         }
       }
       
       g2d.setComposite(oldComposite);
-    }    
+  }    
   
-    public void setShowMapLevel(ShowMapLevel showMapLevel) {
-       m_showMapLevel = showMapLevel;
+  public void setShowMapLevel(ShowMapLevel showMapLevel) {
+      m_showMapLevel = showMapLevel;
   }
     
     @Override
   public boolean isPiecesVisible() {
-    return (pieceOpacity != 0);
+    return pieceOpacity != 0;
   }   
   
     @Override
@@ -501,36 +498,39 @@ public class ASLMap extends Map {
 
     Graphics2D g2d = (Graphics2D) g;
     Composite oldComposite = g2d.getComposite();
-    GamePiece[] stack = pieces.getPieces();
-
     g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pieceOpacity));
+
+    final double os_scale = g2d.getDeviceConfiguration().getDefaultTransform().getScaleX();
+    final double dzoom = getZoom() * os_scale;
+
+    GamePiece[] stack = pieces.getPieces();
 
     for (int i = 0; i < stack.length; ++i)
     {
-        Point pt = componentCoordinates(stack[i].getPosition());
+        Point pt = mapToDrawing(stack[i].getPosition(), os_scale);
 
         if (stack[i].getClass() == Stack.class)
         {
             if (m_showMapLevel == ShowMapLevel.ShowAll)
-                getStackMetrics().draw((Stack) stack[i], pt, g, this, getZoom(), visibleRect);
+                getStackMetrics().draw((Stack) stack[i], pt, g, this, dzoom, visibleRect);
         }
         else
         {
             if (m_showMapLevel == ShowMapLevel.ShowAll  || (stack[i].getProperty("overlay") != null && m_showMapLevel == ShowMapLevel.ShowMapOnly)) // always show overlays
             {
-                stack[i].draw(g, pt.x, pt.y, c, getZoom());
+                stack[i].draw(g, pt.x, pt.y, c, dzoom);
 
                 if (Boolean.TRUE.equals(stack[i].getProperty(Properties.SELECTED)))
-                    highlighter.draw(stack[i], g, pt.x, pt.y, c, getZoom());
+                    highlighter.draw(stack[i], g, pt.x, pt.y, c, dzoom);
             }
             else if (m_showMapLevel == ShowMapLevel.ShowMapAndOverlay)
             {
                 if (Boolean.TRUE.equals(stack[i].getProperty(Properties.NO_STACK)))
                 {
-                    stack[i].draw(g, pt.x, pt.y, c, getZoom());
+                    stack[i].draw(g, pt.x, pt.y, c, dzoom);
 
                     if (Boolean.TRUE.equals(stack[i].getProperty(Properties.SELECTED)))
-                        highlighter.draw(stack[i], g, pt.x, pt.y, c, getZoom());
+                        highlighter.draw(stack[i], g, pt.x, pt.y, c, dzoom);
                 }
             }
         }
@@ -550,20 +550,23 @@ public class ASLMap extends Map {
 
     Graphics2D g2d = (Graphics2D) g;
     Composite oldComposite = g2d.getComposite();
-    GamePiece[] stack = pieces.getPieces();
-
     g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pieceOpacity));
+
+    final double os_scale = g2d.getDeviceConfiguration().getDefaultTransform().getScaleX();
+    final double dzoom = getZoom() * os_scale;
+
+    GamePiece[] stack = pieces.getPieces();
 
     for (int i = 0; i < stack.length; ++i)
     {
         if (m_showMapLevel == ShowMapLevel.ShowAll || (stack[i].getProperty("overlay") != null && m_showMapLevel == ShowMapLevel.ShowMapOnly)) // always show overlays
         {
-            Point pt = componentCoordinates(stack[i].getPosition());
+            Point pt = mapToDrawing(stack[i].getPosition(), os_scale);
 
-            stack[i].draw(g, pt.x + xOffset, pt.y + yOffset, theMap, getZoom());
+            stack[i].draw(g, pt.x + xOffset, pt.y + yOffset, theMap, dzoom);
 
             if (Boolean.TRUE.equals(stack[i].getProperty(Properties.SELECTED)))
-                highlighter.draw(stack[i], g, pt.x - xOffset, pt.y - yOffset, theMap, getZoom());
+                highlighter.draw(stack[i], g, pt.x - xOffset, pt.y - yOffset, theMap, dzoom);
         }
         else if (m_showMapLevel == ShowMapLevel.ShowMapAndOverlay)
         {
@@ -571,12 +574,12 @@ public class ASLMap extends Map {
             {
                 if (Boolean.TRUE.equals(stack[i].getProperty(Properties.NO_STACK)))
                 {
-                    Point pt = componentCoordinates(stack[i].getPosition());
+                    Point pt = mapToDrawing(stack[i].getPosition(), os_scale);
 
-                    stack[i].draw(g, pt.x + xOffset, pt.y + yOffset, theMap, getZoom());
+                    stack[i].draw(g, pt.x + xOffset, pt.y + yOffset, theMap, dzoom);
 
                     if (Boolean.TRUE.equals(stack[i].getProperty(Properties.SELECTED)))
-                        highlighter.draw(stack[i], g, pt.x - xOffset, pt.y - yOffset, theMap, getZoom());
+                        highlighter.draw(stack[i], g, pt.x - xOffset, pt.y - yOffset, theMap, dzoom);
                 }
             }
         }

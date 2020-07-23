@@ -96,6 +96,7 @@ public class Underlay extends SSROverlay {
       for (int y = 0; y < boundaries.height; y += h)
         g2.drawImage(underlayImage, x, y, null);
     g2.drawImage(base, -pos.x, -pos.y, null);
+    g2.dispose();
     new HolePunch(new int[]{0}).transform(replacement);
     return replacement;
   }

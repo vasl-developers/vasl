@@ -611,10 +611,10 @@ public class QCConfig implements DropTargetListener
     
     private void FreeAllNodes(DefaultMutableTreeNode objNode)
     {
-        Enumeration<QCConfigurationEntry> l_objChildrenEnum = objNode.children();
+        Enumeration<TreeNode> l_objChildrenEnum = objNode.children();
 
         while(l_objChildrenEnum.hasMoreElements())
-            FreeAllNodes(l_objChildrenEnum.nextElement());        
+            FreeAllNodes((QCConfigurationEntry) l_objChildrenEnum.nextElement());        
         
         objNode.removeAllChildren();
     }    

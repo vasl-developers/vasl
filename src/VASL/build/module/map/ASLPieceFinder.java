@@ -105,22 +105,22 @@ public class ASLPieceFinder extends AbstractConfigurable implements CommandEncod
 
     @Override
     public void draw(Graphics g, Map map) {
-
-        if (active && clickPoint != null) {
-
-            int l_iCircleSize = (int)(map.getZoom() * DEFAULT_HEX_HEIGHT * 2);
-
-            // translate the piece center for current zoom
-            Point p = new Point(clickPoint);
-            p.x *= map.getZoom();
-            p.y *= map.getZoom();
-
-            // draw a circle around the selected point
-            Graphics2D gg = (Graphics2D) g;
-            g.setColor(Color.RED);
-            gg.setStroke(new BasicStroke(3));
-            gg.drawOval(p.x - l_iCircleSize/2, p.y - l_iCircleSize/2, l_iCircleSize, l_iCircleSize);
+        if (!active || clickPoint == null) {
+          return;
         }
+
+        final Graphics2D g2d = (Graphics2D) g;
+        final double os_scale = g2d.getDeviceConfiguration().getDefaultTransform().getScaleX();
+
+        final int diameter = (int)(map.getZoom() * os_scale * DEFAULT_HEX_HEIGHT * 2);
+
+        // translate the piece center for current zoom
+        final Point p = map.mapToDrawing(clickPoint, os_scale);
+
+        // draw a circle around the selected point
+        g2d.setColor(Color.RED);
+        g2d.setStroke(new BasicStroke((float)(3 * os_scale)));
+        g2d.drawOval(p.x - diameter/2, p.y - diameter/2, diameter, diameter);
     }
 
     @Override

@@ -4,6 +4,7 @@ import VASSAL.build.AbstractConfigurable;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.GameComponent;
+import VASSAL.build.module.GameState;
 import VASSAL.build.module.Map;
 import VASSAL.build.module.documentation.HelpFile;
 import VASSAL.build.module.map.Drawable;
@@ -156,23 +157,26 @@ public class PieceLinker extends AbstractConfigurable implements KeyListener, Co
         }
     }
 
-    @Override
     /**
      * Draw a line between the two linked pieces
      */
+    @Override
     public void draw(Graphics g, Map map) {
-
         if (visible && !links.isEmpty()) {
 
             g.setColor(threadColor);
 
-            Graphics2D graph2D = (Graphics2D) g;
+            Graphics2D g2d = (Graphics2D) g;
 
-            Stroke oldStroke = graph2D.getStroke();
-            graph2D.setStroke(new BasicStroke(threadWidth));
+            Stroke oldStroke = g2d.getStroke();
+            g2d.setStroke(new BasicStroke(threadWidth));
+
+            final double os_scale = g2d.getDeviceConfiguration().getDefaultTransform().getScaleX();
+
+            final GameState gs = GameModule.getGameModule().getGameState();
 
             for (String fromPieceID : links.keySet()) {
-                GamePiece fromPiece = GameModule.getGameModule().getGameState().getPieceForId(fromPieceID);
+                GamePiece fromPiece = gs.getPieceForId(fromPieceID);
                 if (fromPiece != null &&
                         isSelected(fromPiece) &&
                         (fromPiece.getProperty(Properties.INVISIBLE_TO_ME) == null || Boolean.FALSE.equals(fromPiece.getProperty(Properties.INVISIBLE_TO_ME))) &&
@@ -180,21 +184,20 @@ public class PieceLinker extends AbstractConfigurable implements KeyListener, Co
 
                     ArrayList<String> toPieceIDs = links.get(fromPieceID);
                     for (String s : toPieceIDs) {
-                        GamePiece toPiece = GameModule.getGameModule().getGameState().getPieceForId(s);
+                        GamePiece toPiece = gs.getPieceForId(s);
                         if (toPiece != null &&
                                 (toPiece.getProperty(Properties.INVISIBLE_TO_ME) == null || Boolean.FALSE.equals(toPiece.getProperty(Properties.INVISIBLE_TO_ME))) &&
                                 (toPiece.getProperty(Properties.OBSCURED_TO_ME) == null || Boolean.FALSE.equals(toPiece.getProperty(Properties.OBSCURED_TO_ME)))) {
-                            Point p1 = map.componentCoordinates(fromPiece.getPosition());
-                            Point p2 = map.componentCoordinates(toPiece.getPosition());
-                            graph2D.drawLine(p1.x, p1.y, p2.x, p2.y);
+                            Point p1 = map.mapToDrawing(fromPiece.getPosition(), os_scale);
+                            Point p2 = map.mapToDrawing(toPiece.getPosition(), os_scale);
+                            g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
                         }
                     }
                 }
             }
-            graph2D.setStroke(oldStroke);
+            g2d.setStroke(oldStroke);
         }
     }
-
 
     @Override
     public boolean drawAboveCounters() {

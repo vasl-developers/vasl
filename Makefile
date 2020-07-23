@@ -7,16 +7,14 @@ TMPDIR:=tmp
 DOCDIR:=doc
 DISTDIR:=dist
 
-VNUM:=5.10.0
-SVNVERSION:=$(shell git svn log -1 --oneline | grep -oP '^r\K\d+')
-#VERSION:=$(VNUM)-svn$(SVNVERSION)
-VERSION:=$(VNUM)-beta1
+VNUM:=6.6.0
+VERSION:=$(VNUM)-test-$(shell git rev-parse --short HEAD)
 
 CLASSPATH:=$(CLASSDIR):$(shell echo $(LIBDIR)/*.jar | tr ' ' ':'):$(shell echo $(LIBDIRND)/*.jar | tr ' ' ':')
 JAVAPATH:=/usr/bin
 
 JC:=$(JAVAPATH)/javac
-JCFLAGS:=-d $(CLASSDIR) -source 5 -target 5 -Xlint -classpath $(CLASSPATH) -sourcepath $(SRCDIR)
+JCFLAGS:=-d $(CLASSDIR) -source 11 -target 11 -Xlint -classpath $(CLASSPATH) -sourcepath $(SRCDIR) -Xmaxwarns 500
 
 JAR:=$(JAVAPATH)/jar
 
@@ -38,6 +36,7 @@ $(TMPDIR)/VASL-$(VERSION).vmod: $(TMPDIR)
 	mkdir -p $(TMPDIR)/vmod
 	cp -a dist/* $(TMPDIR)/vmod
 	cp -a classes/VASL $(TMPDIR)/vmod
+	pushd $(TMPDIR)/vmod && unzip ../../$(LIBDIR)/jdom-2.0.5.jar && popd
 	perl -pi -e 's/(<VASSAL.launch.BasicModule.*version=")[^"]*(".*)/$${1}$(VERSION)$${2}/' $(TMPDIR)/vmod/buildFile
 	perl -pi -e 's/(<version>).*?(<\/version>)/$${1}$(VERSION)$${2}/' $(TMPDIR)/vmod/moduledata
 	cd $(TMPDIR)/vmod && zip -9rv ../VASL-$(VERSION).vmod *

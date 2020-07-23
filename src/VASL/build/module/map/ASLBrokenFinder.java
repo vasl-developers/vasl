@@ -88,29 +88,29 @@ public class ASLBrokenFinder extends AbstractConfigurable implements GameCompone
 
     @Override
     public void draw(Graphics g, Map map) {
-
         if (m_bVisible) 
         {
             LoadBrokenPiecesPosition();
             
             if (mar_objPointList.size() > 0)
             {
-                int l_iCircleSize = (int)(m_objMap.getZoom() * DEFAULT_HEX_HEIGHT);
+                final Graphics2D g2d = (Graphics2D) g;
+                final double os_scale = g2d.getDeviceConfiguration().getDefaultTransform().getScaleX();
+
+                final int diam = (int)(os_scale * map.getZoom() * DEFAULT_HEX_HEIGHT);
+
                 g.setColor(Color.RED);
-
-                Graphics2D l_objGraph2D = (Graphics2D) g;
                 
-                Stroke l_objOldStroke = l_objGraph2D.getStroke();
-                l_objGraph2D.setStroke(new BasicStroke(4));
+                Stroke l_objOldStroke = g2d.getStroke();
+                g2d.setStroke(new BasicStroke(4));
 
-                for (int l_i = 0; l_i < mar_objPointList.size(); l_i++)
+                for (Point p: mar_objPointList)
                 {
-                    Point l_objPoint = m_objMap.componentCoordinates(mar_objPointList.get(l_i));
-
-                    l_objGraph2D.drawOval(l_objPoint.x - l_iCircleSize/2, l_objPoint.y - l_iCircleSize/2, l_iCircleSize, l_iCircleSize);
+                    final Point dp = map.mapToDrawing(p, os_scale);
+                    g2d.drawOval(dp.x - diam/2, dp.y - diam/2, diam, diam);
                 }
                 
-                l_objGraph2D.setStroke(l_objOldStroke);
+                g2d.setStroke(l_objOldStroke);
             }
         }
     }
