@@ -6,6 +6,10 @@
 
 package VASL.build.module.map;
 
+import java.awt.event.MouseEvent;
+import java.awt.Point;
+import java.awt.Rectangle;
+
 import VASSAL.build.GameModule;
 import VASSAL.build.module.Map;
 import VASSAL.build.module.map.KeyBufferer;
@@ -20,9 +24,7 @@ import VASSAL.counters.PieceFinder;
 import VASSAL.counters.PieceVisitorDispatcher;
 import VASSAL.counters.Properties;
 import VASSAL.counters.Stack;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
+import VASSAL.tools.swing.SwingUtils;
 
 /**
  *
@@ -118,15 +120,19 @@ public class ASLKeyBufferer extends KeyBufferer {
     if (p != null && !ignoreEvent) {
       boolean movingStacksPickupUnits = ((Boolean) GameModule.getGameModule().getPrefs().getValue(Map.MOVING_STACKS_PICKUP_UNITS)).booleanValue();
       if (!KeyBuffer.getBuffer().contains(p)) {
-        if (!e.isShiftDown() && !e.isControlDown()) {
+        if ( !e.isShiftDown() && !SwingUtils.isSelectionToggle(e)) {
           KeyBuffer.getBuffer().clear();
         }
         // RFE 1629255 - If the top piece of an unexpanded stack is left-clicked
         // while not selected, then select all of the pieces in the stack
         // RFE 1659481 - Control clicking only deselects
-        if (!e.isControlDown()) {
-          if (movingStacksPickupUnits || p.getParent() == null || p.getParent().isExpanded() || e.isMetaDown()
-              || Boolean.TRUE.equals(p.getProperty(Properties.SELECTED))) {
+        if (!SwingUtils.isSelectionToggle(e)) {  //BR// Maintains the Ctrl-"only"-deselects bad behavior we just extirpated from VASSAL, but I'm in "first, do no harm" mode here.
+          if (movingStacksPickupUnits ||
+              p.getParent() == null ||
+              p.getParent().isExpanded() ||
+              SwingUtils.isContextMouseButtonDown(e) || //BR// Make sure right-click on stack only grabs top member of stack
+              SwingUtils.isSelectionToggle(e) ||        //BR// In case they get rid of outer isSelectionToggle() check later (they should), this part will work right.
+              Boolean.TRUE.equals(p.getProperty(Properties.SELECTED))) {
                 if (!Boolean.TRUE.equals(p.getProperty(Properties.INVISIBLE_TO_ME)))
                     KeyBuffer.getBuffer().add(p);
           }
@@ -142,7 +148,7 @@ public class ASLKeyBufferer extends KeyBufferer {
       }
       else {
         // RFE 1659481 Ctrl-click deselects clicked units
-        if (e.isControlDown() && Boolean.TRUE.equals(p.getProperty(Properties.SELECTED))) {
+        if (SwingUtils.isSelectionToggle(e) && Boolean.TRUE.equals(p.getProperty(Properties.SELECTED))) {
           Stack s = p.getParent();
           if (s == null) {
             KeyBuffer.getBuffer().remove(p);
@@ -163,7 +169,7 @@ public class ASLKeyBufferer extends KeyBufferer {
       }
     }
     else {
-      if (!e.isShiftDown() && !e.isControlDown()) { // No deselect if shift key down
+      if (!e.isShiftDown() && SwingUtils.isSelectionToggle(e)) { // No deselect if shift key down
         KeyBuffer.getBuffer().clear();
       }
       anchor = map.mapToComponent(e.getPoint());
