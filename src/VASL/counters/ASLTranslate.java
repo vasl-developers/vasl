@@ -33,6 +33,8 @@ import VASSAL.counters.Properties;
 import VASSAL.counters.Stack;
 import VASSAL.counters.Translate;
 
+import static VASSAL.build.GameModule.getGameModule;
+
 /**
  * Modifies the {@link Translate} base class by not moving counters with the {@link ASLProperties#LOCATION} trait
  */
@@ -90,17 +92,20 @@ public class ASLTranslate extends Translate {
 
   @Override
   protected void translate(Point p) {
-    Board b = getMap().findBoard(p);
-    if (b != null && ((HexGrid) b.getGrid()).getHexSize() != ASLBoard.DEFAULT_HEX_HEIGHT) {
-      int x = p.x;
-      int y = p.y;
-      super.translate(p);
-      double scale = ((HexGrid) b.getGrid()).getHexSize() / ASLBoard.DEFAULT_HEX_HEIGHT;
-      p.x = x + (int) Math.round(scale * (p.x - x));
-      p.y = y + (int) Math.round(scale * (p.y - y));
-    }
-    else {
-      super.translate(p);
-    }
+      Board b = getMap().findBoard(p);
+      if (getMap().getMapName().equals("Casualties")){  // need to disable one hex moves by CTRL-numberpad because there is no grid in Casbin; VASSAL error results
+          getGameModule().getChatter().send("Key Combos cannot move units in the Casualties Bin. Drag and Drop instead!");
+      } else {
+          if (b != null && ((HexGrid) b.getGrid()).getHexSize() != ASLBoard.DEFAULT_HEX_HEIGHT) {
+              int x = p.x;
+              int y = p.y;
+              super.translate(p);
+              double scale = ((HexGrid) b.getGrid()).getHexSize() / ASLBoard.DEFAULT_HEX_HEIGHT;
+              p.x = x + (int) Math.round(scale * (p.x - x));
+              p.y = y + (int) Math.round(scale * (p.y - y));
+          } else {
+              super.translate(p);
+          }
+      }
   } 
 }
