@@ -28,6 +28,7 @@ import VASSAL.build.module.documentation.HelpFile;
 import VASSAL.build.module.map.Drawable;
 import VASSAL.command.Command;
 import VASSAL.command.CommandEncoder;
+import VASSAL.tools.swing.SwingUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -195,8 +196,7 @@ public class ASLPieceFinder extends AbstractConfigurable implements CommandEncod
      * Initiate the command with the mouse press
      */
     public void mousePressed(MouseEvent e) {
-
-        if(e.isControlDown()){
+        if (SwingUtils.isSelectionToggle(e)){ //BR// Vassal 3.3 mouse interface adjustment
             clickPoint = new Point(e.getX(), e.getY());
             GameModule mod = GameModule.getGameModule();
             Command c = new FindPieceCommand(this);

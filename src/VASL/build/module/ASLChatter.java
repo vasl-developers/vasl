@@ -1738,17 +1738,6 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
     }
 
-    /**
-     * Determines the color with which to draw a given line of text
-     *
-     * @return the Color to draw
-     */
-    @Override
-    protected Color getColor(Element elem)
-    {
-        return Color.black;
-    }
-
   public static void main(String[] args)
   {
     ASLChatter chat = new ASLChatter();

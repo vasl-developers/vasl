@@ -62,6 +62,7 @@ import VASSAL.counters.Properties;
 import VASSAL.counters.Stack;
 // added as part of fixing remote event problem DR
 import VASSAL.tools.SequenceEncoder;
+import VASSAL.tools.swing.SwingUtils;
 
 import java.util.LinkedList;
 import java.awt.image.BufferedImage;
@@ -324,7 +325,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         }
 
         // if Ctrl click, use upper-most non-rooftop location
-        if (e.isControlDown()) {
+        if (SwingUtils.isSelectionToggle(e)) { //BR// Vassal 3.3 mouse interface adjustment
             while (source.getUpLocation() != null && !source.getUpLocation().getName().contains("Rooftop")) {
                 source = source.getUpLocation();
             }
