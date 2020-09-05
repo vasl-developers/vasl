@@ -483,7 +483,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             objButton.setToolTipText(strTooltipText + " [" + HotKeyConfigurer.getString(objListener.getKeyStroke()) + "]");
     }
 
-    private String formatChat(String text)
+    @Override
+    protected String formatChat(String text)
     {
         final String id = GlobalOptions.getInstance().getPlayerId();
 
