@@ -350,12 +350,14 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
      * @param eventPoint the point in mouse pressed coordinates
      */
     private void setSourceFromMousePressedEvent(Point eventPoint) {
-
-        final Point p = mapMouseToMapCoordinates(eventPoint);
-        if (p == null || !LOSMap.onMap(p.x, p.y)) {return;}
         try {
-            source = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
-            useAuxSourceLOSPoint = useAuxLOSPoint(source, p.x, p.y);
+            final Point p = mapMouseToMapCoordinates(eventPoint);
+            if (p == null || !LOSMap.onMap(p.x, p.y)) {
+                source = null;
+            } else {
+                source = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
+                useAuxSourceLOSPoint = useAuxLOSPoint(source, p.x, p.y);
+            }
         }
         catch (Exception e) {
             return;
@@ -400,6 +402,8 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                 super.reportFormat.setProperty("ToLocation", super.lastLocation);
                 if (LOSMap == null) {
                     super.reportFormat.setProperty("Range", super.lastRange);
+                } else if(source == null ) {
+                    return;
                 } else {
                     super.reportFormat.setProperty("Range", String.valueOf(Map.range(source.getHex(), target.getHex(), LOSMap.getMapConfiguration()))); //super.lastRange);
                 }
