@@ -384,3 +384,4 @@ HT = 1.1
 Rileys = 1.6
 RM = 1.0
 KBR = 1.0
+Eagles = 1.0
