@@ -28,6 +28,8 @@ import VASL.build.module.map.boardPicker.VASLBoard;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.Map;
 import VASSAL.build.module.map.boardPicker.Board;
+import VASSAL.configure.BooleanConfigurer;
+import VASSAL.configure.ColorConfigurer;
 import VASSAL.counters.GamePiece;
 import VASSAL.counters.Properties;
 import VASSAL.counters.Stack;
@@ -50,6 +52,8 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.LinkedList;
 
+import static VASSAL.build.GameModule.getGameModule;
+
 public class ASLMap extends Map {
 
     // FredKors popup menu
@@ -68,10 +72,14 @@ public class ASLMap extends Map {
     // used to log errors in the VASSAL error log
     private static final Logger logger = LoggerFactory.getLogger(ASLMap.class);
     private ShowMapLevel m_showMapLevel = ShowMapLevel.ShowAll;
+    // background color preference
+    private static final String preferenceTabName = "General";
 
   public ASLMap() {
 
+
       super();
+
       try {
           readMetadata();
       } catch (JDOMException e) {
@@ -115,6 +123,9 @@ public class ASLMap extends Map {
     // add the menu button to the toolbar
     getToolBar().add(l_Menu); 
     getToolBar().addSeparator();
+    // background color preference
+    final ColorConfigurer backgroundcolor = new ColorConfigurer("backcolor", "Set Color of space around Map (requires VASL restart)", Color.white);
+    getGameModule().getPrefs().addOption(preferenceTabName, backgroundcolor);
 }
   
   /*
@@ -210,7 +221,9 @@ public class ASLMap extends Map {
      * Builds the VASL map
      */
     protected void buildVASLMap() {
-
+        // set background color from preference
+        super.bgColor = (Color) getGameModule().getPrefs().getValue("backcolor");
+        repaint();
         legacyMode = false;
         boolean nullBoards = false; // are null boards being used?
 

@@ -19,6 +19,8 @@
 package VASL.build.module.map;
 
 import static VASL.build.module.map.boardPicker.ASLBoard.DEFAULT_HEX_HEIGHT;
+import static VASSAL.build.GameModule.getGameModule;
+
 import VASSAL.build.AbstractConfigurable;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
@@ -29,6 +31,7 @@ import VASSAL.build.module.map.Drawable;
 import VASSAL.command.Command;
 import VASSAL.command.CommandEncoder;
 import VASSAL.tools.swing.SwingUtils;
+import VASSAL.configure.BooleanConfigurer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,7 +54,7 @@ public class ASLPieceFinder extends AbstractConfigurable implements CommandEncod
     private Point clickPoint;
     private Boolean active = false;
     private Timer timer;
-
+    private static final String preferenceTabName = "General";
     // this component is not configurable
     @Override
     public Class<?>[] getAttributeTypes() {
@@ -84,18 +87,21 @@ public class ASLPieceFinder extends AbstractConfigurable implements CommandEncod
         // add this component to the game and register a mouse listener
         if (parent instanceof Map) {
             this.map = (Map) parent;
-            GameModule.getGameModule().addCommandEncoder(this);
+            getGameModule().addCommandEncoder(this);
             map.addDrawComponent(this);
             map.addLocalMouseListener(this);
             timer = new Timer (CIRCLE_DURATION, this);
-
+            final BooleanConfigurer Highlightcenter = new BooleanConfigurer("HighlightCentered", "Highlight Centered on Opponent's Map");
+            getGameModule().getPrefs().addOption(preferenceTabName, Highlightcenter);
+            final BooleanConfigurer Highlightcircle = new BooleanConfigurer("HighlightShowCircle", "Highlight Shows Red Circle on Map");
+            getGameModule().getPrefs().addOption(preferenceTabName, Highlightcircle);
         }
     }
 
     public void startAnimation(boolean isLocal) {
 
         // do not adjust the view of the player who initiated the command
-        if (!isLocal) {
+        if (!isLocal && isHighlightCentered()) {
             map.centerAt(clickPoint);
         }
 
@@ -119,9 +125,11 @@ public class ASLPieceFinder extends AbstractConfigurable implements CommandEncod
         final Point p = map.mapToDrawing(clickPoint, os_scale);
 
         // draw a circle around the selected point
-        g2d.setColor(Color.RED);
-        g2d.setStroke(new BasicStroke((float)(3 * os_scale)));
-        g2d.drawOval(p.x - diameter/2, p.y - diameter/2, diameter, diameter);
+        if (isHighlightShowCircle()) {
+            g2d.setColor(Color.RED);
+            g2d.setStroke(new BasicStroke((float) (3 * os_scale)));
+            g2d.drawOval(p.x - diameter / 2, p.y - diameter / 2, diameter, diameter);
+        }
     }
 
     @Override
@@ -198,13 +206,19 @@ public class ASLPieceFinder extends AbstractConfigurable implements CommandEncod
     public void mousePressed(MouseEvent e) {
         if (SwingUtils.isSelectionToggle(e)){ //BR// Vassal 3.3 mouse interface adjustment
             clickPoint = new Point(e.getX(), e.getY());
-            GameModule mod = GameModule.getGameModule();
+            GameModule mod = getGameModule();
             Command c = new FindPieceCommand(this);
             mod.sendAndLog(c);
             startAnimation(true);
         }
     }
 
+    private static boolean isHighlightCentered() {
+        return Boolean.TRUE.equals(getGameModule().getPrefs().getValue("HighlightCentered"));
+    }
+    private static boolean isHighlightShowCircle() {
+        return Boolean.TRUE.equals(getGameModule().getPrefs().getValue("HighlightShowCircle"));
+    }
     @Override
     public void mouseReleased(MouseEvent e) {
     }
