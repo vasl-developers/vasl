@@ -35,6 +35,7 @@ import VASSAL.counters.*;
 import VASSAL.counters.Properties;
 import VASSAL.counters.Stack;
 import VASSAL.tools.LaunchButton;
+import VASSAL.tools.image.LabelUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -369,7 +370,7 @@ public class ASLPieceMover extends PieceMover {
 
         // Apply key after move to each moved piece
         if (map.getMoveKey() != null) {
-            applyKeyAfterMove(allDraggedPieces, comm, map.getMoveKey());
+            comm.append(applyKeyAfterMove(allDraggedPieces, map.getMoveKey()));
         }
 
         tracker.repaint();

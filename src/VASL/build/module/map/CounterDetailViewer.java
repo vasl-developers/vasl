@@ -29,6 +29,7 @@ import VASSAL.counters.Deck;
 import VASSAL.counters.Decorator;
 import VASSAL.counters.GamePiece;
 import VASSAL.counters.Labeler;
+import VASSAL.tools.image.LabelUtils;
 import VASSAL.counters.Properties;
 import VASSAL.counters.Stack;
 import VASSAL.i18n.Resources;
@@ -250,7 +251,7 @@ public class CounterDetailViewer extends VASSAL.build.module.map.CounterDetailVi
         
         if (text.length() > 0) 
         {
-          drawLabel(g, new Point(x, y + 5), text, Labeler.CENTER, Labeler.TOP);
+          drawLabel(g, new Point(x, y + 5), text, LabelUtils.CENTER, LabelUtils.TOP);
         }
       }
     }
@@ -296,7 +297,7 @@ public class CounterDetailViewer extends VASSAL.build.module.map.CounterDetailVi
     }
 
     if (report.length() > 0) {
-      drawLabel(g, new Point(x, y), report, Labeler.RIGHT, Labeler.BOTTOM);
+      drawLabel(g, new Point(x, y), report, LabelUtils.RIGHT, LabelUtils.BOTTOM);
     }
   }
 }
