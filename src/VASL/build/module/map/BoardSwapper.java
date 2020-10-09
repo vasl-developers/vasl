@@ -61,7 +61,7 @@ public class BoardSwapper extends AbstractBuildable {
       public void actionPerformed(ActionEvent evt) {
         recordPiecePositions();
         final ASLBoardPicker picker = new Picker(map);
-        final JDialog d = new JDialog(GameModule.getGameModule().getFrame(),true);
+        final JDialog d = new JDialog(GameModule.getGameModule().getPlayerWindow(),true);
         d.getContentPane().setLayout(new BoxLayout(d.getContentPane(),BoxLayout.Y_AXIS));
         d.getContentPane().add(picker.getControls());
         JButton okButton = new JButton("Ok");
@@ -82,7 +82,7 @@ public class BoardSwapper extends AbstractBuildable {
         buttonBox.add(cancelButton);
         d.getContentPane().add(buttonBox);
         d.pack();
-        d.setLocationRelativeTo(GameModule.getGameModule().getFrame());
+        d.setLocationRelativeTo(GameModule.getGameModule().getPlayerWindow());
         d.setVisible(true);
         restorePiecePositions();
         map.repaint();
