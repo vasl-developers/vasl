@@ -298,6 +298,13 @@ public class ASLPieceMover extends PieceMover {
                     final Stack parent = map.getStackMetrics().createStack(dragging);
                     if (parent != null) {
                         comm = comm.append(map.placeAt(parent, p));
+
+                        //Oct 20 change to correct 6.6.0 bug caused by changes to VASSAL PieceMover class
+                        //BR// We've made a new stack, so put it on the list of merge targets, in case more pieces land here too
+                        mergeCandidates = new ArrayList<>();
+                        mergeCandidates.add(dragging);
+                        mergeCandidates.add(parent);
+                        mergeTargets.put(p, mergeCandidates);
                     }
                 }
             }
