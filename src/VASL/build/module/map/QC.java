@@ -1,17 +1,71 @@
 package VASL.build.module.map;
 
-import VASL.build.module.ASLMap;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DragGestureEvent;
+import java.awt.dnd.DragGestureListener;
+import java.awt.dnd.DragSource;
+import java.awt.dnd.DragSourceDragEvent;
+import java.awt.dnd.DragSourceDropEvent;
+import java.awt.dnd.DragSourceEvent;
+import java.awt.dnd.DragSourceListener;
+import java.awt.image.BaseMultiResolutionImage;
+import java.awt.image.BufferedImage;
+import java.awt.image.MultiResolutionImage;
+import java.io.FilenameFilter;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JMenu;
+import javax.swing.JOptionPane;
+import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeNode;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
 import VASSAL.Info;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
@@ -28,55 +82,60 @@ import VASSAL.counters.KeyBuffer;
 import VASSAL.counters.PieceCloner;
 import VASSAL.counters.Properties;
 import VASSAL.tools.image.ImageUtils;
+import VASSAL.tools.imageop.ImageOp;
 import VASSAL.tools.imageop.Op;
-import java.awt.Component;
-import java.awt.Graphics2D;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DragGestureEvent;
-import java.awt.dnd.DragGestureListener;
-import java.awt.dnd.DragSource;
-import java.awt.dnd.DragSourceDragEvent;
-import java.awt.dnd.DragSourceDropEvent;
-import java.awt.dnd.DragSourceEvent;
-import java.awt.dnd.DragSourceListener;
-import java.awt.image.BufferedImage;
-import java.io.FilenameFilter;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-import javax.swing.ImageIcon;
-import javax.swing.JMenu;
-import javax.swing.JOptionPane;
-import javax.swing.JToggleButton;
-import javax.swing.JToolBar;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreeNode;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
+import VASSAL.tools.imageop.OpMultiResolutionImage;
 
+import VASL.build.module.ASLMap;
+
+class SizedImageIcon extends ImageIcon {
+  protected final int w;
+  protected final int h;
+  private final Image img;
+
+  public SizedImageIcon(Image img, int w, int h) {
+    super(img);
+    this.w = w;
+    this.h = h;
+    this.img = img;
+  }
+
+  @Override
+  public int getIconHeight() {
+    return h;
+  }
+
+  @Override
+  public int getIconWidth() {
+    return w;
+  }
+
+  @Override
+  public void paintIcon(Component c, Graphics g, int x, int y) {
+    g.drawImage(img, x, y, w, h, c);
+  }
+}
+
+class MenuSizedImageIcon extends SizedImageIcon {
+  private final int menu_w;
+  private final int menu_h;
+  private final OpMultiResolutionImage menuOverlay;
+
+  public MenuSizedImageIcon(Image img, int w, int h) {
+    super(img, w, h);
+    final ImageOp op = Op.load("QC/mnubtn.png");
+    final Dimension d = op.getSize();
+    menu_w = d.width;
+    menu_h = d.height;
+    menuOverlay = new OpMultiResolutionImage(op);
+  }
+
+  @Override
+  public void paintIcon(Component c, Graphics g, int x, int y) {
+    super.paintIcon(c, g, x, y);
+    g.drawImage(menuOverlay, x + w - menu_w, y + h - menu_h, menu_w, menu_h, c);
+  }
+}
 class QCStartMenuItem extends JPopupMenu.Separator
 {}
 
@@ -691,7 +750,16 @@ class QCConfigurationEntry extends DefaultMutableTreeNode
     public void setText(String m_strText) {
         this.m_strText = m_strText;
     }
-    
+
+    public Image CreateButtonIcon() {
+      final GamePiece p = getPieceSlot().getPiece();
+      final ImageOp pop = Op.piece(p);
+      final Dimension d = pop.getSize();
+      final int min = Math.min(d.width, d.height);
+      return new OpMultiResolutionImage(Op.crop(pop, 0, 0, min, min));
+    } 
+
+/*
     public BufferedImage CreateButtonIcon() 
     {
         final int l_iSize = 30, l_iSizeRendering = 35;
@@ -714,7 +782,47 @@ class QCConfigurationEntry extends DefaultMutableTreeNode
         
         return l_objBI;
     }    
-    
+*/
+
+    public Image CreateButtonMenuIcon() {
+        QCConfigurationEntry l_objConfigurationEntryIcon = null;
+        
+        if (getPieceSlot() != null) {
+            l_objConfigurationEntryIcon = this;            
+        }
+        else {
+            Enumeration<TreeNode> l_objChildrenEnum = children();
+
+            while (l_objChildrenEnum.hasMoreElements()) {
+                QCConfigurationEntry l_objConfigurationEntry = (QCConfigurationEntry) l_objChildrenEnum.nextElement();
+                
+                if (l_objConfigurationEntry.getPieceSlot() != null) {
+                    l_objConfigurationEntryIcon = l_objConfigurationEntry;
+                    break;
+                }
+            }
+        }
+        
+        if (l_objConfigurationEntryIcon != null) {
+            return l_objConfigurationEntryIcon.CreateButtonIcon();
+        }
+        else {
+            final int l_iSize = 30;
+            final BufferedImage l_objBI = ImageUtils.createCompatibleTranslucentImage(l_iSize, l_iSize);
+            final Graphics2D l_objGraphics = l_objBI.createGraphics();
+
+            l_objGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            
+            l_objGraphics.setColor(Color.WHITE);
+            l_objGraphics.fillRect(0, 0, l_iSize, l_iSize);            
+            
+            l_objGraphics.dispose();
+            
+            return new BaseMultiResolutionImage(l_objBI);
+        }
+    }
+
+/*
     public BufferedImage CreateButtonMenuIcon() 
     {
         QCConfigurationEntry l_objConfigurationEntryIcon = null;
@@ -785,6 +893,7 @@ class QCConfigurationEntry extends DefaultMutableTreeNode
         
         return m_objMnuBtn;
     }
+*/
 }
 // </editor-fold>
 
@@ -1242,7 +1351,7 @@ public class QC implements Buildable, GameComponent
                     l_objQCButtonMenu.setToolTipText(objConfigurationEntry.getText());
                 else
                     l_objQCButtonMenu.setToolTipText(QCConfiguration.EmptyMenuTitle());
-                l_objQCButtonMenu.setIcon(new ImageIcon(objConfigurationEntry.CreateButtonMenuIcon()));
+                l_objQCButtonMenu.setIcon(new MenuSizedImageIcon(objConfigurationEntry.CreateButtonMenuIcon(), 30, 30));
                 l_objQCButtonMenu.setMargin(new Insets(0, 0, 0, 0));
                 
                 CreatePopupMenu(objConfigurationEntry, l_objQCButtonMenu);                
@@ -1265,7 +1374,7 @@ public class QC implements Buildable, GameComponent
                 try 
                 {
                     l_objQCButton.InitDragDrop();
-                    l_objQCButton.setIcon(new ImageIcon(objConfigurationEntry.CreateButtonIcon()));
+                    l_objQCButton.setIcon(new SizedImageIcon(objConfigurationEntry.CreateButtonIcon(), 30, 30));
                     l_objQCButton.setMargin(new Insets(0, 0, 0, 0));
                 } 
                 catch (Exception ex) 
@@ -1310,7 +1419,7 @@ public class QC implements Buildable, GameComponent
                 else
                     l_objMenu.setText(QCConfiguration.EmptyMenuTitle());
 
-                l_objMenu.setIcon(new ImageIcon(objConfigurationEntry.CreateButtonMenuIcon()));
+                l_objMenu.setIcon(new MenuSizedImageIcon(objConfigurationEntry.CreateButtonMenuIcon(), 30, 30));
             } 
             catch (Exception ex) 
             {
@@ -1338,7 +1447,7 @@ public class QC implements Buildable, GameComponent
                 try 
                 {
                     l_MenuItem.setText(objConfigurationEntry.getPieceSlot().getPiece().getName());
-                    l_MenuItem.setIcon(new ImageIcon(objConfigurationEntry.CreateButtonIcon()));
+                    l_MenuItem.setIcon(new SizedImageIcon(objConfigurationEntry.CreateButtonIcon(), 30, 30));
                     l_MenuItem.InitDragDrop();
                 } 
                 catch (Exception ex) 
