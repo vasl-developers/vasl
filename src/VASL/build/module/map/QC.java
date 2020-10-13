@@ -206,7 +206,7 @@ class QCButtonMenu extends JButton {
   public QCButtonMenu(PieceSlot objPieceSlot) {
     m_objPieceSlot = objPieceSlot;
 
-    addActionListener(e -> { 
+    addActionListener(e -> {
       if (getPopupMenu() != null && e.getSource() instanceof JButton) {
         getPopupMenu().show(
           (JButton) e.getSource(),
@@ -214,7 +214,7 @@ class QCButtonMenu extends JButton {
           ((JButton)e.getSource()).getHeight() - 5
         );
       }
-    });      
+    });
   }
 
   /**
@@ -272,7 +272,7 @@ class QCMenuItem extends JMenuItem implements DragSourceListener {
       // FredKors 18.11.2015 Move the code after the dragGestureRecognized to avoid exception
       // FredKors 29.03.2015 Fix a small annoying thing dragging a counter from a menu
       //if (m_objParentPopupMenu != null)
-      //m_objParentPopupMenu.setVisible(false);            
+      //m_objParentPopupMenu.setVisible(false);
     }
   }
 
@@ -345,13 +345,13 @@ class QCConfigurationParser extends DefaultHandler {
         m_objQCConfiguration.add(l_newEntry);
       }
     }
-  } 
+  }
 
   @Override
   public void endElement (String uri, String localName, String qName) throws SAXException {
-    if (qName.equalsIgnoreCase("qcsubmenu")) 
+    if (qName.equalsIgnoreCase("qcsubmenu"))
       m_objCurrentSubMenu = m_objCurrentSubMenu.getParent();
-  }  
+  }
 }
 
 class QCConfiguration extends DefaultMutableTreeNode {
@@ -376,7 +376,7 @@ class QCConfiguration extends DefaultMutableTreeNode {
     m_objFile = objFile;
 
     m_strDescription = "";
-  }    
+  }
 
   // copy object
   public QCConfiguration(QCConfiguration objMaster) {
@@ -389,7 +389,7 @@ class QCConfiguration extends DefaultMutableTreeNode {
     Enumeration<TreeNode> l_objChildrenEnum = objMaster.children();
 
     while (l_objChildrenEnum.hasMoreElements()) {
-      add(new QCConfigurationEntry((QCConfigurationEntry) l_objChildrenEnum.nextElement()));        
+      add(new QCConfigurationEntry((QCConfigurationEntry) l_objChildrenEnum.nextElement()));
     }
 
     File l_dirConfigs = new File(Info.getHomeDir() + System.getProperty("file.separator","\\") + "qcconfigs");
@@ -397,18 +397,18 @@ class QCConfiguration extends DefaultMutableTreeNode {
     if (!l_dirConfigs.exists()) {
       try {
         l_dirConfigs.mkdir();
-      } 
+      }
       catch(Exception e) {
-      }        
+      }
     }
     else if (!l_dirConfigs.isDirectory()) {
       try {
         l_dirConfigs.delete();
         l_dirConfigs.mkdir();
-      } 
+      }
       catch(Exception e) {
-      }        
-    }            
+      }
+    }
 
     m_objFile = new File(l_dirConfigs.getPath() + System.getProperty("file.separator","\\") + UUID.randomUUID().toString() + ".xml");
   }
@@ -423,7 +423,7 @@ class QCConfiguration extends DefaultMutableTreeNode {
     Enumeration<TreeNode> l_objChildrenEnum = objMaster.children();
 
     while (l_objChildrenEnum.hasMoreElements()) {
-      add(new QCConfigurationEntry((QCConfigurationEntry) l_objChildrenEnum.nextElement()));        
+      add(new QCConfigurationEntry((QCConfigurationEntry) l_objChildrenEnum.nextElement()));
     }
   }
 
@@ -512,7 +512,7 @@ class QCConfiguration extends DefaultMutableTreeNode {
       }
 
       return true;
-    } 
+    }
     catch (Exception e) {
     }
 
@@ -540,7 +540,7 @@ class QCConfiguration extends DefaultMutableTreeNode {
       }
 
       return true;
-    } 
+    }
     catch (Exception e) {
     }
 
@@ -554,7 +554,7 @@ class QCConfigurationEntry extends DefaultMutableTreeNode {
 
   private final QC m_objQC;
   private boolean m_bMenu;
-  private String m_strGpID, m_strText;    
+  private String m_strGpID, m_strText;
   private PieceSlot m_objPieceSlot;
 
   public QCConfigurationEntry(QC objQC) {
@@ -565,7 +565,7 @@ class QCConfigurationEntry extends DefaultMutableTreeNode {
     m_strGpID = null;
     m_strText = null;
     m_objPieceSlot = null;
-  }   
+  }
 
   public QCConfigurationEntry(QCConfigurationEntry objMaster) {
     super();
@@ -584,7 +584,7 @@ class QCConfigurationEntry extends DefaultMutableTreeNode {
     m_strGpID = objMaster.getGpID();
     m_strText = objMaster.getText();
     m_objPieceSlot = objMaster.getPieceSlot();
-  }   
+  }
 
   /**
    * @return the m_bMenu
@@ -686,10 +686,10 @@ class QCConfigurationEntry extends DefaultMutableTreeNode {
     final Dimension d = pop.getSize();
     final int min = Math.min(d.width, d.height);
     return new OpMultiResolutionImage(Op.crop(pop, 0, 0, min, min));
-  } 
+  }
 
   /*
-     public BufferedImage CreateButtonIcon() 
+     public BufferedImage CreateButtonIcon()
      {
      final int l_iSize = 30, l_iSizeRendering = 35;
      final BufferedImage l_objBI = ImageUtils.createCompatibleTranslucentImage(l_iSize, l_iSize);
@@ -710,14 +710,14 @@ class QCConfigurationEntry extends DefaultMutableTreeNode {
      l_objGraphics.dispose();
 
      return l_objBI;
-     }    
+     }
   */
 
   public Image CreateButtonMenuIcon() {
     QCConfigurationEntry l_objConfigurationEntryIcon = null;
 
     if (getPieceSlot() != null) {
-      l_objConfigurationEntryIcon = this;            
+      l_objConfigurationEntryIcon = this;
     }
     else {
       Enumeration<TreeNode> l_objChildrenEnum = children();
@@ -743,7 +743,7 @@ class QCConfigurationEntry extends DefaultMutableTreeNode {
       l_objGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
       l_objGraphics.setColor(Color.WHITE);
-      l_objGraphics.fillRect(0, 0, l_iSize, l_iSize);            
+      l_objGraphics.fillRect(0, 0, l_iSize, l_iSize);
 
       l_objGraphics.dispose();
 
@@ -752,13 +752,13 @@ class QCConfigurationEntry extends DefaultMutableTreeNode {
   }
 
   /*
-     public BufferedImage CreateButtonMenuIcon() 
+     public BufferedImage CreateButtonMenuIcon()
      {
      QCConfigurationEntry l_objConfigurationEntryIcon = null;
 
      if (getPieceSlot() != null)
      {
-     l_objConfigurationEntryIcon = this;            
+     l_objConfigurationEntryIcon = this;
      }
      else
      {
@@ -770,10 +770,10 @@ class QCConfigurationEntry extends DefaultMutableTreeNode {
 
      if (l_objConfigurationEntry.getPieceSlot() != null)
      {
-     l_objConfigurationEntryIcon = l_objConfigurationEntry;            
+     l_objConfigurationEntryIcon = l_objConfigurationEntry;
      break;
      }
-     }          
+     }
      }
 
      if (l_objConfigurationEntryIcon != null)
@@ -781,12 +781,12 @@ class QCConfigurationEntry extends DefaultMutableTreeNode {
      final BufferedImage l_objBI = l_objConfigurationEntryIcon.CreateButtonIcon();
      final Graphics2D l_objGraphics = l_objBI.createGraphics();
 
-     l_objGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);            
-     l_objGraphics.drawImage(GetMenuOverlay(), 0, 0, null);            
+     l_objGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+     l_objGraphics.drawImage(GetMenuOverlay(), 0, 0, null);
      l_objGraphics.dispose();
 
      return l_objBI;
-     }       
+     }
      else
      {
      final int l_iSize = 30;
@@ -796,7 +796,7 @@ class QCConfigurationEntry extends DefaultMutableTreeNode {
      l_objGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
      l_objGraphics.setColor(Color.WHITE);
-     l_objGraphics.fillRect(0, 0, l_iSize, l_iSize);            
+     l_objGraphics.fillRect(0, 0, l_iSize, l_iSize);
 
      l_objGraphics.drawImage(GetMenuOverlay(), 0, 0, null);
 
@@ -806,7 +806,7 @@ class QCConfigurationEntry extends DefaultMutableTreeNode {
      }
      }
 
-     private static BufferedImage GetMenuOverlay() 
+     private static BufferedImage GetMenuOverlay()
      {
      if (m_objMnuBtn == null)
      {
@@ -814,7 +814,7 @@ class QCConfigurationEntry extends DefaultMutableTreeNode {
      {
      m_objMnuBtn = Op.load("QC/mnubtn.png").getImage();
      }
-     catch (Exception ex) 
+     catch (Exception ex)
      {
      ex.printStackTrace();
      }
@@ -962,9 +962,9 @@ public class QC implements Buildable, GameComponent {
     try {
       SAXParserFactory l_objXMLParserFactory = SAXParserFactory.newInstance();
       l_objXMLParser = l_objXMLParserFactory.newSAXParser();
-    } 
+    }
     catch (Exception ex) {
-      l_objXMLParser = null;                    
+      l_objXMLParser = null;
     }
 
     if (l_objXMLParser != null) {
@@ -992,18 +992,18 @@ public class QC implements Buildable, GameComponent {
       if (!l_dirConfigs.exists()) {
         try {
           l_dirConfigs.mkdir();
-        } 
+        }
         catch(Exception e) {
-        }        
+        }
       }
       else if (!l_dirConfigs.isDirectory()) {
         try {
           l_dirConfigs.delete();
           l_dirConfigs.mkdir();
-        } 
+        }
         catch(Exception e) {
-        }        
-      }            
+        }
+      }
       else {
         // browsing configs files
         File[] lar_objConfigFiles = l_dirConfigs.listFiles(
@@ -1035,7 +1035,7 @@ public class QC implements Buildable, GameComponent {
         }
 
         Collections.sort(mar_objListQCConfigurations, new QCConfigurationComparator());
-      }      
+      }
 
       if (m_objQCWorkingConfiguration != null) {
         mar_objListQCConfigurations.add(0, m_objQCWorkingConfiguration);
@@ -1051,7 +1051,7 @@ public class QC implements Buildable, GameComponent {
     for (QCConfiguration l_objQCConfiguration : mar_objListQCConfigurations) {
       if (l_strWorkingConfigurationName.equalsIgnoreCase(l_objQCConfiguration.getName())) {
         m_objQCWorkingConfiguration = l_objQCConfiguration;
-        break;                
+        break;
       }
     }
   }	
@@ -1071,7 +1071,7 @@ public class QC implements Buildable, GameComponent {
 
   public void build(Element e) {
     if (GameModule.getGameModule().getPrefs().getOption(QCLASTCONFIGURATIONUSED) == null) {
-      GameModule.getGameModule().getPrefs().addOption(null, new StringConfigurer(QCLASTCONFIGURATIONUSED, null));            
+      GameModule.getGameModule().getPrefs().addOption(null, new StringConfigurer(QCLASTCONFIGURATIONUSED, null));
     }
 
     loadConfigurations();
@@ -1104,7 +1104,7 @@ public class QC implements Buildable, GameComponent {
     if (!m_objMap.shouldDockIntoMainWindow()) {
       if (m_objCountersWindowButton == null) {
         m_objCountersWindowButton = new JButton();
-        m_objMap.getToolBar().add(m_objCountersWindowButton);       
+        m_objMap.getToolBar().add(m_objCountersWindowButton);
       }
 
       if (m_objDraggableOverlaysWindowButton == null) {
@@ -1120,7 +1120,7 @@ public class QC implements Buildable, GameComponent {
 
     if (m_objBrokenFinderButton == null) {
       m_objBrokenFinderButton = new JToggleButton();
-      m_objMap.getToolBar().add(m_objBrokenFinderButton);       
+      m_objMap.getToolBar().add(m_objBrokenFinderButton);
     }
 
     if (sniperFinderButton == null) {
@@ -1194,8 +1194,8 @@ public class QC implements Buildable, GameComponent {
         Component l_objComponent = l_objToolBar.getComponent(l_i);
 
         if (l_bEndElementNotFound) {
-          if (l_objComponent instanceof QCEndToolBarItem) { 
-            l_bEndElementNotFound = false;                
+          if (l_objComponent instanceof QCEndToolBarItem) {
+            l_bEndElementNotFound = false;
           }
         }
         else {
@@ -1204,18 +1204,18 @@ public class QC implements Buildable, GameComponent {
             break;
           }
           else {
-            l_objToolBar.remove(l_i);               
+            l_objToolBar.remove(l_i);
           }
         }
       }
 
       Enumeration<TreeNode> l_objChildrenEnum = m_objQCWorkingConfiguration.children();
 
-      while (l_objChildrenEnum.hasMoreElements()) {                
+      while (l_objChildrenEnum.hasMoreElements()) {
         Component l_objComponent = CreateToolBarItem((QCConfigurationEntry) l_objChildrenEnum.nextElement());
 
         if (l_objComponent != null) {
-          l_objToolBar.add(l_objComponent, l_iStartPos++);                
+          l_objToolBar.add(l_objComponent, l_iStartPos++);
         }
       }
 
@@ -1240,7 +1240,7 @@ public class QC implements Buildable, GameComponent {
         l_objQCButtonMenu.setMargin(new Insets(0, 0, 0, 0));
 
         CreatePopupMenu(objConfigurationEntry, l_objQCButtonMenu);
-      } 
+      }
       catch (Exception ex) {
         ex.printStackTrace();
       }
@@ -1258,7 +1258,7 @@ public class QC implements Buildable, GameComponent {
           l_objQCButton.InitDragDrop();
           l_objQCButton.setIcon(new SizedImageIcon(objConfigurationEntry.CreateButtonIcon(), 30, 30));
           l_objQCButton.setMargin(new Insets(0, 0, 0, 0));
-        } 
+        }
         catch (Exception ex) {
           ex.printStackTrace();
         }
@@ -1267,7 +1267,7 @@ public class QC implements Buildable, GameComponent {
 
         return l_objQCButton;
       }
-    } 
+    }
 
     return null;
   }
@@ -1293,14 +1293,14 @@ public class QC implements Buildable, GameComponent {
 
       try {
         if (objConfigurationEntry.getText() != null) {
-          l_objMenu.setText(objConfigurationEntry.getText()); 
+          l_objMenu.setText(objConfigurationEntry.getText());
         }
         else {
           l_objMenu.setText(QCConfiguration.EmptyMenuTitle());
         }
 
         l_objMenu.setIcon(new MenuSizedImageIcon(objConfigurationEntry.CreateButtonMenuIcon(), 30, 30));
-      } 
+      }
       catch (Exception ex) {
         ex.printStackTrace();
       }
@@ -1325,14 +1325,14 @@ public class QC implements Buildable, GameComponent {
           l_MenuItem.setText(objConfigurationEntry.getPieceSlot().getPiece().getName());
           l_MenuItem.setIcon(new SizedImageIcon(objConfigurationEntry.CreateButtonIcon(), 30, 30));
           l_MenuItem.InitDragDrop();
-        } 
+        }
         catch (Exception ex) {
           ex.printStackTrace();
         }
 
         return l_MenuItem;
       }
-    }            
+    }
 
     return null;
   }
@@ -1348,8 +1348,8 @@ public class QC implements Buildable, GameComponent {
       Component l_objComponent = l_objPopupMenu.getComponent(l_i);
 
       if (l_bEndElementNotFound) {
-        if (l_objComponent instanceof QCEndMenuItem) { 
-          l_bEndElementNotFound = false;                
+        if (l_objComponent instanceof QCEndMenuItem) {
+          l_bEndElementNotFound = false;
         }
       }
       else {
@@ -1358,7 +1358,7 @@ public class QC implements Buildable, GameComponent {
           break;
         }
         else {
-          l_objPopupMenu.remove(l_i);               
+          l_objPopupMenu.remove(l_i);
         }
       }
     }
@@ -1437,7 +1437,7 @@ public class QC implements Buildable, GameComponent {
           saveWorkingConfiguration();
 
           ResortConfigurations();
-  
+
           RebuildPopupMenu();
           RebuildToolBar();
         }
@@ -1462,7 +1462,7 @@ public class QC implements Buildable, GameComponent {
     }
 
     try {
-      l_objRemoveConfigurationMenuItem.setIcon(new ImageIcon(Op.load("QC/delete.png").getImage(null))); 
+      l_objRemoveConfigurationMenuItem.setIcon(new ImageIcon(Op.load("QC/delete.png").getImage(null)));
     }
     catch (Exception ex) {
       ex.printStackTrace();
@@ -1470,11 +1470,11 @@ public class QC implements Buildable, GameComponent {
 
     l_objRemoveConfigurationMenuItem.addActionListener(evt -> {
       if (m_objQCWorkingConfiguration != null) {
-        int l_iSelectedOption = JOptionPane.showConfirmDialog(m_objMap.getView(), 
-            "Do you really want to delete the '" + m_objQCWorkingConfiguration.getDescription() + "' QC configuration? This is NOT undoable or reversible!", 
-            "Delete the current QC configuration", 
+        int l_iSelectedOption = JOptionPane.showConfirmDialog(m_objMap.getView(),
+            "Do you really want to delete the '" + m_objQCWorkingConfiguration.getDescription() + "' QC configuration? This is NOT undoable or reversible!",
+            "Delete the current QC configuration",
             JOptionPane.YES_NO_OPTION,
-            JOptionPane.QUESTION_MESSAGE); 
+            JOptionPane.QUESTION_MESSAGE);
 
         if (l_iSelectedOption == JOptionPane.YES_OPTION) {
           m_objQCWorkingConfiguration.DeleteXML();
@@ -1552,7 +1552,7 @@ public class QC implements Buildable, GameComponent {
     RebuildPopupMenu();
 
     if (bSaving) {
-      RebuildToolBar();            
+      RebuildToolBar();
     }
   }
 
@@ -1584,7 +1584,7 @@ public class QC implements Buildable, GameComponent {
             if (l_objB.getAction() instanceof BasicLogger.UndoAction) {
               CopyActionButton(m_objUndoButton, l_objB, true);
               break;
-            }                        
+            }
           }
         }
       }
@@ -1597,10 +1597,10 @@ public class QC implements Buildable, GameComponent {
             if (l_objB.getAction() instanceof BasicLogger.StepAction) {
               CopyActionButton(m_objStepButton, l_objB, true);
               break;
-            }                        
+            }
           }
         }
-      }           
+      }
 
       if (m_objCountersWindowButton != null && m_objCountersWindowButton.getActionListeners().length == 0) {
         for (int l_i = 0; l_i < GameModule.getGameModule().getToolBar().getComponentCount(); l_i++) {
@@ -1610,7 +1610,7 @@ public class QC implements Buildable, GameComponent {
             if (l_objB.getToolTipText().contains("VASL Counters window")) {
               CopyActionButton(m_objCountersWindowButton, l_objB, false);
               break;
-            }                        
+            }
           }
         }
       }
@@ -1623,7 +1623,7 @@ public class QC implements Buildable, GameComponent {
             if (l_objB.getToolTipText().contains("the Draggable Overlays window")) {
               CopyActionButton(m_objDraggableOverlaysWindowButton, l_objB, false);
               break;
-            }                        
+            }
           }
         }
       }
@@ -1636,7 +1636,7 @@ public class QC implements Buildable, GameComponent {
             if (l_objB.getToolTipText().contains("Deluxe Draggable Overlays")) {
               CopyActionButton(m_objDeluxeDraggableOverlaysWindowButton, l_objB, false);
               break;
-            }                        
+            }
           }
         }
       }
@@ -1648,7 +1648,7 @@ public class QC implements Buildable, GameComponent {
         catch (Exception ex) {
         }
 
-        ActionListener l_objAL = e -> { 
+        ActionListener l_objAL = e -> {
           try {
             ASLBrokenFinder l_objBrokenFinder = m_objMap.getComponentsOf(ASLBrokenFinder.class).iterator().next();
 
@@ -1672,7 +1672,7 @@ public class QC implements Buildable, GameComponent {
           e.printStackTrace();
         }
 
-        ActionListener al = e -> { 
+        ActionListener al = e -> {
           ASLSniperFinder sniperFinder = m_objMap.getComponentsOf(ASLSniperFinder.class).iterator().next();
 
           if (sniperFinder != null) {
@@ -1691,7 +1691,7 @@ public class QC implements Buildable, GameComponent {
         catch (Exception ex) {
         }
 
-        ActionListener l_objAL = e -> { 
+        ActionListener l_objAL = e -> {
           try {
             ASLCasbin l_objCasbin = m_objMap.getComponentsOf(ASLCasbin.class).iterator().next();
 
@@ -1731,7 +1731,7 @@ public class QC implements Buildable, GameComponent {
 
     if (bAction) {
       if (objSourceButton.getAction() != null) {
-        objDestButton.setAction(objSourceButton.getAction());            
+        objDestButton.setAction(objSourceButton.getAction());
       }
     }
     else {
