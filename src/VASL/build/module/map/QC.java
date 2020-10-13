@@ -395,19 +395,11 @@ class QCConfiguration extends DefaultMutableTreeNode {
     File l_dirConfigs = new File(Info.getHomeDir() + System.getProperty("file.separator","\\") + "qcconfigs");
 
     if (!l_dirConfigs.exists()) {
-      try {
-        l_dirConfigs.mkdir();
-      }
-      catch(Exception e) {
-      }
+      l_dirConfigs.mkdir();
     }
     else if (!l_dirConfigs.isDirectory()) {
-      try {
         l_dirConfigs.delete();
         l_dirConfigs.mkdir();
-      }
-      catch(Exception e) {
-      }
     }
 
     m_objFile = new File(l_dirConfigs.getPath() + System.getProperty("file.separator","\\") + UUID.randomUUID().toString() + ".xml");
@@ -534,17 +526,11 @@ class QCConfiguration extends DefaultMutableTreeNode {
   }
 
   public boolean DeleteXML() {
-    try {
-      if (m_objFile != null && m_objFile.exists()) {
-        m_objFile.delete();
-      }
-
-      return true;
-    }
-    catch (Exception e) {
+    if (m_objFile != null && m_objFile.exists()) {
+      m_objFile.delete();
     }
 
-    return false;
+    return true;
   }
 }
 
@@ -990,19 +976,11 @@ public class QC implements Buildable, GameComponent {
       // now read the custom configuration files
       // check for configs dir
       if (!l_dirConfigs.exists()) {
-        try {
-          l_dirConfigs.mkdir();
-        }
-        catch(Exception e) {
-        }
+        l_dirConfigs.mkdir();
       }
       else if (!l_dirConfigs.isDirectory()) {
-        try {
-          l_dirConfigs.delete();
-          l_dirConfigs.mkdir();
-        }
-        catch(Exception e) {
-        }
+        l_dirConfigs.delete();
+        l_dirConfigs.mkdir();
       }
       else {
         // browsing configs files
@@ -1026,11 +1004,7 @@ public class QC implements Buildable, GameComponent {
             mar_objListQCConfigurations.add(l_objQCConfiguration);
           }
           else {
-            try {
-              l_objConfigFile.delete();
-            }
-            catch (Exception ex) {
-            }
+            l_objConfigFile.delete();
           }
         }
 
@@ -1420,12 +1394,7 @@ public class QC implements Buildable, GameComponent {
       l_objCopyConfigurationMenuItem.setEnabled(false);
     }
 
-    try {
-      l_objCopyConfigurationMenuItem.setIcon(new ImageIcon(Op.load("QC/copy.png").getImage(null)));
-    }
-    catch (Exception ex) {
-      ex.printStackTrace();
-    }
+    l_objCopyConfigurationMenuItem.setIcon(new ImageIcon(Op.load("QC/copy.png").getImage()));
 
     l_objCopyConfigurationMenuItem.addActionListener(evt -> {
       if (m_objQCWorkingConfiguration != null) {
@@ -1461,12 +1430,7 @@ public class QC implements Buildable, GameComponent {
       l_objRemoveConfigurationMenuItem.setEnabled(false);
     }
 
-    try {
-      l_objRemoveConfigurationMenuItem.setIcon(new ImageIcon(Op.load("QC/delete.png").getImage(null)));
-    }
-    catch (Exception ex) {
-      ex.printStackTrace();
-    }
+    l_objRemoveConfigurationMenuItem.setIcon(new ImageIcon(Op.load("QC/delete.png").getImage()));
 
     l_objRemoveConfigurationMenuItem.addActionListener(evt -> {
       if (m_objQCWorkingConfiguration != null) {
@@ -1516,12 +1480,7 @@ public class QC implements Buildable, GameComponent {
       l_objEditConfigurationMenuItem.setEnabled(false);
     }
 
-    try {
-      l_objEditConfigurationMenuItem.setIcon(new ImageIcon(Op.load("QC/edit.png").getImage(null)));
-    }
-    catch (Exception ex) {
-      ex.printStackTrace();
-    }
+    l_objEditConfigurationMenuItem.setIcon(new ImageIcon(Op.load("QC/edit.png").getImage()));
 
     l_objEditConfigurationMenuItem.addActionListener(evt -> {
       if (m_objQCWorkingConfiguration != null) {
@@ -1642,11 +1601,7 @@ public class QC implements Buildable, GameComponent {
       }
 
       if (m_objBrokenFinderButton != null && m_objBrokenFinderButton.getActionListeners().length == 0) {
-        try {
-          m_objBrokenFinderButton.setIcon(new ImageIcon(Op.load("malf").getImage(null)));
-        }
-        catch (Exception ex) {
-        }
+        m_objBrokenFinderButton.setIcon(new ImageIcon(Op.load("malf").getImage()));
 
         ActionListener l_objAL = e -> {
           try {
@@ -1665,12 +1620,7 @@ public class QC implements Buildable, GameComponent {
       }
 
       if (sniperFinderButton != null && sniperFinderButton.getActionListeners().length == 0) {
-        try {
-          sniperFinderButton.setIcon(new ImageIcon(Op.load("sniper").getImage(null)));
-        }
-        catch (Exception e) {
-          e.printStackTrace();
-        }
+        sniperFinderButton.setIcon(new ImageIcon(Op.load("sniper").getImage()));
 
         ActionListener al = e -> {
           ASLSniperFinder sniperFinder = m_objMap.getComponentsOf(ASLSniperFinder.class).iterator().next();
@@ -1685,11 +1635,7 @@ public class QC implements Buildable, GameComponent {
       }
       // ASLCasbn
       if (m_objASLCasbinButton != null && m_objASLCasbinButton.getActionListeners().length == 0) {
-        try {
-          m_objASLCasbinButton.setIcon(new ImageIcon(Op.load("cpv").getImage(null)));
-        }
-        catch (Exception ex) {
-        }
+        m_objASLCasbinButton.setIcon(new ImageIcon(Op.load("cpv").getImage()));
 
         ActionListener l_objAL = e -> {
           try {
