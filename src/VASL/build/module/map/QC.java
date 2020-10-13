@@ -88,55 +88,6 @@ import VASSAL.tools.imageop.OpMultiResolutionImage;
 
 import VASL.build.module.ASLMap;
 
-class SizedImageIcon extends ImageIcon {
-  protected final int w;
-  protected final int h;
-  private final Image img;
-
-  public SizedImageIcon(Image img, int w, int h) {
-    super(img);
-    this.w = w;
-    this.h = h;
-    this.img = img;
-  }
-
-  @Override
-  public int getIconHeight() {
-    return h;
-  }
-
-  @Override
-  public int getIconWidth() {
-    return w;
-  }
-
-  @Override
-  public void paintIcon(Component c, Graphics g, int x, int y) {
-    g.drawImage(img, x, y, w, h, c);
-  }
-}
-
-class MenuSizedImageIcon extends SizedImageIcon {
-  private final int menu_w;
-  private final int menu_h;
-  private final OpMultiResolutionImage menuOverlay;
-
-  public MenuSizedImageIcon(Image img, int w, int h) {
-    super(img, w, h);
-    final ImageOp op = Op.load("QC/mnubtn.png");
-    final Dimension d = op.getSize();
-    menu_w = d.width;
-    menu_h = d.height;
-    menuOverlay = new OpMultiResolutionImage(op);
-  }
-
-  @Override
-  public void paintIcon(Component c, Graphics g, int x, int y) {
-    super.paintIcon(c, g, x, y);
-    g.drawImage(menuOverlay, x + w - menu_w, y + h - menu_h, menu_w, menu_h, c);
-  }
-}
-
 class QCStartMenuItem extends JPopupMenu.Separator {}
 
 class QCEndMenuItem extends JPopupMenu.Separator {}
@@ -534,7 +485,6 @@ class QCConfiguration extends DefaultMutableTreeNode {
   }
 }
 
-
 class QCConfigurationEntry extends DefaultMutableTreeNode {
   private static BufferedImage m_objMnuBtn = null;
 
@@ -674,31 +624,6 @@ class QCConfigurationEntry extends DefaultMutableTreeNode {
     return new OpMultiResolutionImage(Op.crop(pop, 0, 0, min, min));
   }
 
-  /*
-     public BufferedImage CreateButtonIcon()
-     {
-     final int l_iSize = 30, l_iSizeRendering = 35;
-     final BufferedImage l_objBI = ImageUtils.createCompatibleTranslucentImage(l_iSize, l_iSize);
-     final Graphics2D l_objGraphics = l_objBI.createGraphics();
-
-     l_objGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-     final GamePiece l_objPiece = getPieceSlot().getPiece();
-     final Rectangle r = l_objPiece.getShape().getBounds();
-     final double l_dZoom = l_iSizeRendering / (double)r.width;
-
-     r.x = (int) Math.round(r.x * l_dZoom);
-     r.y = (int) Math.round(r.y * l_dZoom);
-     r.width = l_iSize;
-     r.height = l_iSize;
-
-     l_objPiece.draw(l_objGraphics, -r.x-3, -r.y-3, null, l_dZoom);
-     l_objGraphics.dispose();
-
-     return l_objBI;
-     }
-  */
-
   public Image CreateButtonMenuIcon() {
     QCConfigurationEntry l_objConfigurationEntryIcon = null;
 
@@ -736,79 +661,6 @@ class QCConfigurationEntry extends DefaultMutableTreeNode {
       return new BaseMultiResolutionImage(l_objBI);
     }
   }
-
-  /*
-     public BufferedImage CreateButtonMenuIcon()
-     {
-     QCConfigurationEntry l_objConfigurationEntryIcon = null;
-
-     if (getPieceSlot() != null)
-     {
-     l_objConfigurationEntryIcon = this;
-     }
-     else
-     {
-     Enumeration<TreeNode> l_objChildrenEnum = children();
-
-     while(l_objChildrenEnum.hasMoreElements())
-     {
-     QCConfigurationEntry l_objConfigurationEntry = (QCConfigurationEntry) l_objChildrenEnum.nextElement();
-
-     if (l_objConfigurationEntry.getPieceSlot() != null)
-     {
-     l_objConfigurationEntryIcon = l_objConfigurationEntry;
-     break;
-     }
-     }
-     }
-
-     if (l_objConfigurationEntryIcon != null)
-     {
-     final BufferedImage l_objBI = l_objConfigurationEntryIcon.CreateButtonIcon();
-     final Graphics2D l_objGraphics = l_objBI.createGraphics();
-
-     l_objGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-     l_objGraphics.drawImage(GetMenuOverlay(), 0, 0, null);
-     l_objGraphics.dispose();
-
-     return l_objBI;
-     }
-     else
-     {
-     final int l_iSize = 30;
-     final BufferedImage l_objBI = ImageUtils.createCompatibleTranslucentImage(l_iSize, l_iSize);
-     final Graphics2D l_objGraphics = l_objBI.createGraphics();
-
-     l_objGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-     l_objGraphics.setColor(Color.WHITE);
-     l_objGraphics.fillRect(0, 0, l_iSize, l_iSize);
-
-     l_objGraphics.drawImage(GetMenuOverlay(), 0, 0, null);
-
-     l_objGraphics.dispose();
-
-     return l_objBI;
-     }
-     }
-
-     private static BufferedImage GetMenuOverlay()
-     {
-     if (m_objMnuBtn == null)
-     {
-     try
-     {
-     m_objMnuBtn = Op.load("QC/mnubtn.png").getImage();
-     }
-     catch (Exception ex)
-     {
-     ex.printStackTrace();
-     }
-     }
-
-     return m_objMnuBtn;
-     }
-  */
 }
 
 /**
@@ -1688,5 +1540,54 @@ public class QC implements Buildable, GameComponent {
 
     objDestButton.setToolTipText(objSourceButton.getToolTipText());
     objSourceButton.setVisible(false);
+  }
+
+  private static class SizedImageIcon extends ImageIcon {
+    protected final int w;
+    protected final int h;
+    private final Image img;
+
+    public SizedImageIcon(Image img, int w, int h) {
+      super(img);
+      this.w = w;
+      this.h = h;
+      this.img = img;
+    }
+
+    @Override
+    public int getIconHeight() {
+      return h;
+    }
+
+    @Override
+    public int getIconWidth() {
+      return w;
+    }
+
+    @Override
+    public void paintIcon(Component c, Graphics g, int x, int y) {
+      g.drawImage(img, x, y, w, h, c);
+    }
+  }
+
+  private static class MenuSizedImageIcon extends SizedImageIcon {
+    private final int menu_w;
+    private final int menu_h;
+    private final OpMultiResolutionImage menuOverlay;
+
+    public MenuSizedImageIcon(Image img, int w, int h) {
+      super(img, w, h);
+      final ImageOp op = Op.load("QC/mnubtn.png");
+      final Dimension d = op.getSize();
+      menu_w = d.width;
+      menu_h = d.height;
+      menuOverlay = new OpMultiResolutionImage(op);
+    }
+
+    @Override
+    public void paintIcon(Component c, Graphics g, int x, int y) {
+      super.paintIcon(c, g, x, y);
+      g.drawImage(menuOverlay, x + w - menu_w, y + h - menu_h, menu_w, menu_h, c);
+    }
   }
 }
