@@ -1014,79 +1014,109 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
     {
         if (m_Toolbar == null)
         {
-            final int iW = 32;
-            int l_iRow = 0;
-            JButton l_objBtn;
-
             m_Toolbar = new JToolBar(SwingConstants.VERTICAL);
             m_Toolbar.setVisible(false);
             m_Toolbar.setFloatable(false);
             m_Toolbar.setMargin(new Insets(0,0,0,0));
 
-            JPanel l_objPanel = new JPanel();
-            m_Toolbar.add(l_objPanel);
-            GridBagLayout l_objGBL = new GridBagLayout();
-            l_objGBL.columnWidths = new int[] {iW};
-            l_objGBL.rowHeights = new int[] {0, iW};
-            l_objGBL.columnWeights = new double[]{0.0};
-            l_objGBL.rowWeights = new double[]{1.0, 0.0, 0.0};
-            l_objPanel.setLayout(l_objGBL);
-		
+            final JPanel p = new JPanel();
+            m_Toolbar.add(p);
+
+            final int iW = 32;
+            int l_iRow = 0;
+
+            GridBagLayout layout = new GridBagLayout();
+            layout.columnWidths = new int[] {iW};
+            layout.rowHeights = new int[] {0, iW};
+            layout.columnWeights = new double[]{0.0};
+            layout.rowWeights = new double[]{1.0, 0.0, 0.0};
+            p.setLayout(layout);
+
+            java.util.List<AbstractButton> comps = new ArrayList<>();
+
+            AbstractButton c;
+
             Component l_objVertGlue = Box.createVerticalGlue();
-            AddButton(l_objPanel, l_objVertGlue, l_iRow++, 2);
+            AddButton(p, l_objVertGlue, l_iRow++, 2);
 
-            JToggleButton l_objTBtn = CreateKeepAliveButton("chatter/PINUP.png", "chatter/PINDOWN.png", "", "Keep DRs on the screen");
-            AddButton(l_objPanel, l_objTBtn, l_iRow++, 20);
+            c = CreateKeepAliveButton("chatter/PINUP.png", "chatter/PINDOWN.png", "", "Keep DRs on the screen");
+            AddButton(p, c, l_iRow++, 20);
+            comps.add(c);
 
-            l_objBtn = CreateActionButton("chatter/CLEAR.png", "", "Clear the screen from DRs", e -> m_objDRQH.KillAll());
-            AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
+            c = CreateActionButton("chatter/CLEAR.png", "", "Clear the screen from DRs", e -> m_objDRQH.KillAll());
+            AddButton(p, c, l_iRow++, 2);
+            comps.add(c);
 
-            l_objBtn = CreateActionButton("chatter/REWIND.png", "", String.format("Show last %s DRs", m_objDRQH.getMaxNumEntries()), e -> m_objDRQH.ShowLastDR());
-            AddButton(l_objPanel, l_objBtn, l_iRow++, 20);
+            c = CreateActionButton("chatter/REWIND.png", "", String.format("Show last %s DRs", m_objDRQH.getMaxNumEntries()), e -> m_objDRQH.ShowLastDR());
+            AddButton(p, c, l_iRow++, 20);
+            comps.add(c);
 
-            l_objBtn = CreateDiceButton("DRs.gif", "", "DR", KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), true, ASLDiceBot.OTHER_CATEGORY);
-            AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
+            c = CreateDiceButton("DRs.gif", "", "DR", KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), true, ASLDiceBot.OTHER_CATEGORY);
+            AddButton(p, c, l_iRow++, 2);
+            comps.add(c);
 
-            l_objBtn = CreateDiceButton("", "IFT", "IFT attack DR", KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), true, "IFT");
-            AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
+            c = CreateDiceButton("", "IFT", "IFT attack DR", KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), true, "IFT");
+            AddButton(p, c, l_iRow++, 2);
+            comps.add(c);
 
-            l_objBtn = CreateDiceButton("", "TH", "To Hit DR", KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), true, "TH");
-            AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
+            c = CreateDiceButton("", "TH", "To Hit DR", KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), true, "TH");
+            AddButton(p, c, l_iRow++, 2);
+            comps.add(c);
 
-            l_objBtn = CreateDiceButton("", "TK", "To Kill DR", KeyStroke.getKeyStroke(KeyEvent.VK_K, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), true, "TK");
-            AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
+            c = CreateDiceButton("", "TK", "To Kill DR", KeyStroke.getKeyStroke(KeyEvent.VK_K, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), true, "TK");
+            AddButton(p, c, l_iRow++, 2);
+            comps.add(c);
 
-            l_objBtn = CreateDiceButton("", "MC", "Morale Check DR", KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), true, "MC");
-            AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
+            c = CreateDiceButton("", "MC", "Morale Check DR", KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), true, "MC");
+            AddButton(p, c, l_iRow++, 2);
+            comps.add(c);
 
-            l_objBtn = CreateDiceButton("", "R", "Rally DR", KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), true, "Rally");
-            AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
+            c = CreateDiceButton("", "R", "Rally DR", KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), true, "Rally");
+            AddButton(p, c, l_iRow++, 2);
+            comps.add(c);
 
-            l_objBtn = CreateDiceButton("", "CC", "Close Combat DR", KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), true, "CC");
-            AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
+            c = CreateDiceButton("", "CC", "Close Combat DR", KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), true, "CC");
+            AddButton(p, c, l_iRow++, 2);
+            comps.add(c);
 
-            l_objBtn = CreateDiceButton("", "TC", "Task Check DR", KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), true, "TC");
-            AddButton(l_objPanel, l_objBtn, l_iRow++, 10);
+            c = CreateDiceButton("", "TC", "Task Check DR", KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), true, "TC");
+            AddButton(p, c, l_iRow++, 10);
+            comps.add(c);
 
-            l_objBtn = CreateDiceButton("dr.gif", "", "dr", KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), false, ASLDiceBot.OTHER_CATEGORY);
-            AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
+            c = CreateDiceButton("dr.gif", "", "dr", KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), false, ASLDiceBot.OTHER_CATEGORY);
+            AddButton(p, c, l_iRow++, 2);
+            comps.add(c);
 
-            l_objBtn = CreateDiceButton("", "SA", "Sniper Activation dr", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), false, "SA");
-            AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
+            c = CreateDiceButton("", "SA", "Sniper Activation dr", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), false, "SA");
+            AddButton(p, c, l_iRow++, 2);
+            comps.add(c);
 
-            l_objBtn = CreateDiceButton("", "RS", "Random Selection dr", KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), false, "RS");
-            AddButton(l_objPanel, l_objBtn, l_iRow++, 20);
+            c = CreateDiceButton("", "RS", "Random Selection dr", KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), false, "RS");
+            AddButton(p, c, l_iRow++, 20);
+            comps.add(c);
 
-            l_objBtn = CreateActionButton("chatter/ARROW.png", "", "Move the toolbar to the other side", e -> ToolbarMove());
-            AddButton(l_objPanel, l_objBtn, l_iRow++, 2);
+            c = CreateActionButton("chatter/ARROW.png", "", "Move the toolbar to the other side", e -> ToolbarMove());
+            AddButton(p, c, l_iRow++, 2);
+            comps.add(c);
 
-            try
-            {
-                SwingUtilities.getWindowAncestor(m_objASLMap.getLayeredPane()).add(m_Toolbar, m_enToolbarPosition == ToolBarPosition.TP_EAST ? BorderLayout.EAST: BorderLayout.WEST);
+            // find the minimum width for full text display on all buttons,
+            // but don't go under 32px
+            int text_w = 32;
+            for (AbstractButton b : comps) {
+              final Insets i = b.getInsets();
+              text_w = (int) Math.max(b.getFontMetrics(b.getFont()).getStringBounds(b.getText(), b.getGraphics()).getWidth() + i.left + i.right, text_w);
             }
-            catch (Exception ex)
-            {
-                ex.printStackTrace();
+
+            // set button and column width to permit full text display
+            for (AbstractButton b : comps) {
+              b.setPreferredSize(new Dimension(text_w, 32));
+              b.setMaximumSize(new Dimension(text_w, 32));
+            }
+            layout.columnWidths = new int[] {text_w};
+
+            final Window w = SwingUtilities.getWindowAncestor(m_objASLMap.getLayeredPane());
+            if (w != null) {
+                w.add(m_Toolbar, m_enToolbarPosition == ToolBarPosition.TP_EAST ? BorderLayout.EAST: BorderLayout.WEST);
             }
         }
 
@@ -1128,9 +1158,7 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
 
     private void SetupButtonCommon(AbstractButton b) {
         b.setMargin(new Insets(0, 0, 0, 0));
-        b.setMaximumSize(new Dimension(32, 32));
         b.setMinimumSize(new Dimension(10, 10));
-        b.setPreferredSize(new Dimension(32, 32));
         b.setFocusable(false);
         b.setRolloverEnabled(false);
     }
@@ -1140,16 +1168,12 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
         JToggleButton l_btn = new JToggleButton(strCaption);
         SetupButtonCommon(l_btn);
 
-        try
-        {
-            if (!strImageOff.isEmpty())
-                l_btn.setIcon(new ImageIcon(Op.load(strImageOff).getImage(null)));
-
-            if (!strImageOn.isEmpty())
-                l_btn.setSelectedIcon(new ImageIcon(Op.load(strImageOn).getImage(null)));
+        if (!strImageOff.isEmpty()) {
+            l_btn.setIcon(new ImageIcon(Op.load(strImageOff).getImage()));
         }
-        catch (Exception ex)
-        {
+
+        if (!strImageOn.isEmpty()) {
+            l_btn.setSelectedIcon(new ImageIcon(Op.load(strImageOn).getImage()));
         }
 
         l_btn.addItemListener(e -> {
@@ -1165,13 +1189,8 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
         JButton l_btn = new JButton(strCaption);
         SetupButtonCommon(l_btn);
 
-        try
-        {
-            if (!strImage.isEmpty())
-                l_btn.setIcon(new ImageIcon(Op.load(strImage).getImage(null)));
-        }
-        catch (Exception ex)
-        {
+        if (!strImage.isEmpty()) {
+            l_btn.setIcon(new ImageIcon(Op.load(strImage).getImage()));
         }
 
         l_btn.addActionListener(objList);
@@ -1185,13 +1204,8 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
         JButton l_btn = new JButton(strCaption);
         SetupButtonCommon(l_btn);
 
-        try
-        {
-            if (!strImage.isEmpty())
-                l_btn.setIcon(new ImageIcon(Op.load(strImage).getImage(null)));
-        }
-        catch (Exception ex)
-        {
+        if (!strImage.isEmpty()) {
+            l_btn.setIcon(new ImageIcon(Op.load(strImage).getImage()));
         }
 
         l_btn.addActionListener(e -> {
