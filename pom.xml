@@ -6,7 +6,7 @@
 
     <groupId>org.vasl</groupId>
     <artifactId>vasl</artifactId>
-    <version>6.6.1-beta1</version>
+    <version>6.6.1</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -120,7 +120,7 @@
                     <arguments>
                         <argument>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</argument>
                         <argument>-jar</argument>
-                        <argument>Vengine-3.4.2.jar</argument>
+                        <argument>Vengine-3.4.6.jar</argument>
                         <argument>--standalone</argument>
                         <argument>target/${project.build.finalName}.jar</argument>
                     </arguments>

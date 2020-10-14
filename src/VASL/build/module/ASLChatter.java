@@ -1486,17 +1486,17 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
 
         ColorConfigurer l_objGameMsgColor = null;
-        ColorConfigurer l_objGameMsgColor_Exist = (ColorConfigurer)l_objModulePrefs.getOption(GAME_MSG_COLOR);
+        ColorConfigurer l_objGameMsgColor_Exist = (ColorConfigurer)l_objModulePrefs.getOption(GAME_MSG1_COLOR);
 
         if (l_objGameMsgColor_Exist == null)
         {
-            l_objGameMsgColor = new ColorConfigurer(GAME_MSG_COLOR, Resources.getString("Chatter.game_messages_preference"), Color.magenta); //$NON-NLS-1$
+            l_objGameMsgColor = new ColorConfigurer(GAME_MSG1_COLOR, Resources.getString("Chatter.game_messages_preference"), Color.magenta); //$NON-NLS-1$
             l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), l_objGameMsgColor); //$NON-NLS-1$
         }
         else
             l_objGameMsgColor = l_objGameMsgColor_Exist;
 
-        m_clrGameMsg = (Color) l_objModulePrefs.getValue(GAME_MSG_COLOR);
+        m_clrGameMsg = (Color) l_objModulePrefs.getValue(GAME_MSG1_COLOR);
 
         l_objGameMsgColor.addPropertyChangeListener(new PropertyChangeListener()
         {

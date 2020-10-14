@@ -343,7 +343,7 @@ class QCConfiguration extends DefaultMutableTreeNode {
       add(new QCConfigurationEntry((QCConfigurationEntry) l_objChildrenEnum.nextElement()));
     }
 
-    File l_dirConfigs = new File(Info.getHomeDir() + System.getProperty("file.separator","\\") + "qcconfigs");
+    File l_dirConfigs = new File(Info.getConfDir() + System.getProperty("file.separator","\\") + "qcconfigs");
 
     if (!l_dirConfigs.exists()) {
       l_dirConfigs.mkdir();
@@ -795,7 +795,7 @@ public class QC implements Buildable, GameComponent {
 
   public void loadConfigurations() {
     SAXParser l_objXMLParser;
-    File l_dirConfigs = new File(Info.getHomeDir() + System.getProperty("file.separator","\\") + "qcconfigs");
+    File l_dirConfigs = new File(Info.getConfDir() + System.getProperty("file.separator","\\") + "qcconfigs");
 
     try {
       SAXParserFactory l_objXMLParserFactory = SAXParserFactory.newInstance();
