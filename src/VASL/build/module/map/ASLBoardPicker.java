@@ -257,13 +257,12 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
      * Reads the current board directory and constructs the list of available boards
      */
     public void refreshPossibleBoards() {
+        final String files[] = boardDir != null ? boardDir.list() : null;
 
-        String files[] = boardDir == null ? new String[0] : boardDir.list();
-        List<String> sorted = new ArrayList<String>();
         // all boards are added to the list whether in local directory or not
-        sorted = getallboards();
-        // if no internet connection, sorted will be 0 size so then load local boards
-        //if (sorted == null || sorted.size() == 0) {
+        final List<String> sorted = getallboards();
+
+        if (files != null) {
             for (String file : files) {
                 // TODO - remove requirement that boards start with "bd"
                 // add all boards found in local directory
@@ -278,7 +277,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                     }
                 }
             }
-        //}
+        }
 
         //
         // * Strings with leading zeros sort ahead of those without.
@@ -359,7 +358,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
     }
 
     // adds all the boards to the selection list whether present in local directory or not
-        private ArrayList<String> getallboards(){
+    private ArrayList<String> getallboards() {
         ArrayList<String> allboardslist = new ArrayList<String>();
         InputStream inputStream = null;
         try {
@@ -378,6 +377,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
         }
         return allboardslist;
     }
+
     /**
      * Parses the board metadata xml file
      * @param metadata an <code>InputStream</code> for the v5boardVersions XML file
