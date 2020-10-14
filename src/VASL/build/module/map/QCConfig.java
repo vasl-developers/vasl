@@ -18,6 +18,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.dnd.DnDConstants;
@@ -57,10 +58,10 @@ class QCTreeCellRenderer extends DefaultTreeCellRenderer {
 
     QCTreeCellRenderer() {}
 
-    public BufferedImage CreateIcon(BufferedImage objCounterIcon) 
+    public BufferedImage CreateIcon(Image objCounterIcon) 
     {
         final int l_iBorder = 3;
-        final int l_iSizeOrigin = objCounterIcon.getWidth();
+        final int l_iSizeOrigin = objCounterIcon.getWidth(null);
         final int l_iSize = l_iSizeOrigin + 2 * l_iBorder;
         final BufferedImage l_objBI = ImageUtils.createCompatibleTranslucentImage(l_iSize, l_iSize);
         final Graphics2D l_objGraphics = l_objBI.createGraphics();
