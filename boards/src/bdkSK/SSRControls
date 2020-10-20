@@ -1,0 +1,7 @@
+<SSRControls>
+ <Option name="Board kSK Special Overlays">
+   <Checkbox name="">
+	 <entry name="kSK: City Pond" rule="bdkSK_City_Pond" text="Make Y5-Y6 a Pond"/>
+   </Checkbox>
+  </Option>
+</SSRControls>
