@@ -1051,51 +1051,38 @@ public class QC implements Buildable, GameComponent {
   }
 
   private Component CreateToolBarItem(QCConfigurationEntry objConfigurationEntry) {
+    JButton b = null;
+
     if (objConfigurationEntry.isMenu()) {
       // submenu
       QCButtonMenu l_objQCButtonMenu = new QCButtonMenu(objConfigurationEntry.getPieceSlot());
 
-      try {
-        if (objConfigurationEntry.getText() != null) {
-          l_objQCButtonMenu.setToolTipText(objConfigurationEntry.getText());
-        }
-        else {
-          l_objQCButtonMenu.setToolTipText(QCConfiguration.EmptyMenuTitle());
-        }
-        l_objQCButtonMenu.setIcon(new MenuSizedImageIcon(objConfigurationEntry.CreateButtonMenuIcon(), 30, 30));
-        l_objQCButtonMenu.setMargin(new Insets(0, 0, 0, 0));
-
-        CreatePopupMenu(objConfigurationEntry, l_objQCButtonMenu);
+      String tt = objConfigurationEntry.getText();
+      if (tt == null) {
+        tt = QCConfiguration.EmptyMenuTitle();
       }
-      catch (Exception ex) {
-        ex.printStackTrace();
-      }
+      l_objQCButtonMenu.setToolTipText(tt);
 
-      l_objQCButtonMenu.setAlignmentY(0.0F);
-
-      return l_objQCButtonMenu;
+      l_objQCButtonMenu.setIcon(new MenuSizedImageIcon(objConfigurationEntry.CreateButtonMenuIcon(), 30, 30));
+      CreatePopupMenu(objConfigurationEntry, l_objQCButtonMenu);
+      b = l_objQCButtonMenu;
     }
-    else {
+    else if (objConfigurationEntry.getPieceSlot() != null) {
       // button standard
-      if (objConfigurationEntry.getPieceSlot() != null) {
-        QCButton l_objQCButton = new QCButton(objConfigurationEntry.getPieceSlot());
+      QCButton l_objQCButton = new QCButton(objConfigurationEntry.getPieceSlot());
 
-        try {
-          l_objQCButton.InitDragDrop();
-          l_objQCButton.setIcon(new SizedImageIcon(objConfigurationEntry.CreateButtonIcon(), 30, 30));
-          l_objQCButton.setMargin(new Insets(0, 0, 0, 0));
-        }
-        catch (Exception ex) {
-          ex.printStackTrace();
-        }
-
-        l_objQCButton.setAlignmentY(0.0F);
-
-        return l_objQCButton;
-      }
+      l_objQCButton.InitDragDrop();
+      l_objQCButton.setIcon(new SizedImageIcon(objConfigurationEntry.CreateButtonIcon(), 30, 30));
+      b = l_objQCButton;
     }
 
-    return null;
+    if (b != null) {
+      b.setMargin(new Insets(0, 0, 0, 0));
+      b.setMaximumSize(new Dimension(32, 32));
+      b.setAlignmentY(0.0F);
+    }
+
+    return b;
   }
 
   private void CreatePopupMenu(QCConfigurationEntry objConfigurationEntry, QCButtonMenu objQCButtonMenu) {
