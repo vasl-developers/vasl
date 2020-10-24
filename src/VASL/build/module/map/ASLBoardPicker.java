@@ -648,6 +648,9 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 throw new BoardException("Unable to find board " + baseName);
             }
             b.initializeFromArchive(f);
+            if (b.getVASLBoardArchive() == null ){
+                throw new BoardException("Unable to create board " + baseName);
+            }
         } catch (Exception eParse) {
             throw new BoardException(eParse.getMessage(), eParse);
         }

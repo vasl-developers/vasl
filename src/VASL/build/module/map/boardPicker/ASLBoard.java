@@ -129,21 +129,24 @@ public class ASLBoard extends Board {
             VASLBoardArchive = new BoardArchive(archiveFile.getName(), archiveFile.getParent(), ASLMap.getSharedBoardMetadata());
 
         } catch (IOException e) {
-
             ErrorDialog.dataError(new BadDataReport("Unable to open board file", archiveFile.getName(), e));
         }
+        try {
+            boardFile = archiveFile;
+            setCommonName(VASLBoardArchive.getBoardName());
+            imageFile = VASLBoardArchive.getBoardImageFileName();
+            version = VASLBoardArchive.getVersion();
 
-        boardFile = archiveFile;
-        setCommonName(VASLBoardArchive.getBoardName());
-        imageFile = VASLBoardArchive.getBoardImageFileName();
-        version = VASLBoardArchive.getVersion();
-
-        ((Translatable)getGrid()).setAttribute(HexGrid.X0, (int) VASLBoardArchive.getA1CenterX());
-        ((Translatable)getGrid()).setAttribute(HexGrid.Y0, (int) VASLBoardArchive.getA1CenterY());
-        ((Translatable)getGrid()).setAttribute(HexGrid.DX, VASLBoardArchive.getHexWidth());
-        ((Translatable)getGrid()).setAttribute(HexGrid.DY, VASLBoardArchive.getHexHeight());
-        ((Translatable)getGrid()).setAttribute(HexGrid.SNAP_SCALE, VASLBoardArchive.getSnapScale());
-        ((Translatable)getGrid()).setAttribute(BoardArchive.ALT_HEX_GRID_KEY, Boolean.toString(VASLBoardArchive.isAltHexGrain()));
+            ((Translatable) getGrid()).setAttribute(HexGrid.X0, (int) VASLBoardArchive.getA1CenterX());
+            ((Translatable) getGrid()).setAttribute(HexGrid.Y0, (int) VASLBoardArchive.getA1CenterY());
+            ((Translatable) getGrid()).setAttribute(HexGrid.DX, VASLBoardArchive.getHexWidth());
+            ((Translatable) getGrid()).setAttribute(HexGrid.DY, VASLBoardArchive.getHexHeight());
+            ((Translatable) getGrid()).setAttribute(HexGrid.SNAP_SCALE, VASLBoardArchive.getSnapScale());
+            ((Translatable) getGrid()).setAttribute(BoardArchive.ALT_HEX_GRID_KEY, Boolean.toString(VASLBoardArchive.isAltHexGrain()));
+        } catch (Exception e) {
+            // Fail silently
+            return ;
+        }
     }
 
     public File getFile() {
