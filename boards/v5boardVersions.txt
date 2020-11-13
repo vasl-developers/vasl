@@ -260,6 +260,7 @@ CRS = 2.2
 DTW = 1.0
 DaE = 1.1
 DfBG1 = 1.0
+Dinant = 1.0
 ER = 1.1
 FACTRY = 1.0
 FB = 6.0
