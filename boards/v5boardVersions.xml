@@ -214,6 +214,7 @@
 		<boarddata name="BFPDW9b" version="6.0" versionDate="Apr 2020" description="" />
 		<boarddata name="BF1" version="1.1" versionDate="Aug 2008" description="" />
 		<boarddata name="TRBH" version="1.0" versionDate="Aug 2008" description="" />
+		<boarddata name="OtOBFP" version="1.0" versionDate="Mar 2020" description="" />		
 	<!--#KB=2.0 not accurate -->
 		<boarddata name="TO" version="1.2" versionDate="Aug 2008" description="" />
 	<!--#SH=2.0 not accurate -->
@@ -406,8 +407,7 @@
 		<boarddata name="kholmS" version="1.1" versionDate="Aug 2008" description="" />
 		<boarddata name="kholmW" version="1.1" versionDate="Aug 2008" description="" />
 		<boarddata name="kholmWO" version="2.1" versionDate="Aug 2008" description="" />
-		<boarddata name="oto2(Legacy)" version="1.0" versionDate="Aug 2008" description="" />
-		<boarddata name="OtO2" version="2.0" versionDate="Mar 2020" description="" />		
+		<boarddata name="oto2" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="CasaBerardi" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="HS17" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="DSL" version="1.0" versionDate="Aug 2008" description="" />
