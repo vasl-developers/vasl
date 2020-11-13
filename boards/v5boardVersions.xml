@@ -249,6 +249,7 @@
 		<boarddata name="CH" version="0.93" versionDate="Aug 2008" description="" />
 		<boarddata name="ABTF" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="Rileys" version="1.5" versionDate="Aug 2008" description="" />
+		<boarddata name="Dinant" version="1.0" versionDate="Nov 2020" description="" />		
 		<!--# LG = 1.0 duplicate
 		# ER = 1.1 duplicate
 		# STN = 1.0 no such board; should be StN
