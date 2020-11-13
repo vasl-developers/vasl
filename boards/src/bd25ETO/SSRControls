@@ -1,0 +1,10 @@
+<SSRControls>
+   <Option name="Board 25ETO Special Overlays">
+     <Checkbox name="No Gully Cliffs">
+       <entry name="No Gully Cliffs" rule="BSO_25ETO_NoGullyCliffs"/>
+     </Checkbox>
+	  <Checkbox name="Hammada">
+        <entry name="Hammada" rule="Hammada"/>
+      </Checkbox>
+	  </Option>
+</SSRControls>
