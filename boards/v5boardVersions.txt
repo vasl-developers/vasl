@@ -187,6 +187,7 @@ BFPDW8b = 6.0
 BFPDW9a = 6.0
 BFPDW9b = 6.0
 BF1=1.1
+CtR = 1.0
 TRBH=1.0
 #KB=2.0 not accurate
 TO=1.2
