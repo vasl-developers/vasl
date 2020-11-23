@@ -18,7 +18,7 @@
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
 -->
-<boardMetadata name="25ETO" version="0.2" versionDate="Nov 2020" author="STC" boardImageFileName="bd25ETO.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="25ETO" version="6.0" versionDate="Nov 2020" author="STC" boardImageFileName="bd25ETO.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -30,12 +30,12 @@
 
 	-->
     <buildingTypes>
-        <buildingType hexName="B5" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="Q10" buildingTypeName="Stone Building, 1 Level" />		
-        <buildingType hexName="V2" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="W2" buildingTypeName="Stone Building, 1 Level" />	
-        <buildingType hexName="X3" buildingTypeName="Stone Building, 1 Level" />
-        <buildingType hexName="Y2" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="B5" buildingTypeName="Stone Building" />
+        <buildingType hexName="Q10" buildingTypeName="Stone Building" />		
+        <buildingType hexName="V2" buildingTypeName="Stone Building" />
+        <buildingType hexName="W2" buildingTypeName="Stone Building" />	
+        <buildingType hexName="X3" buildingTypeName="Stone Building" />
+        <buildingType hexName="Y2" buildingTypeName="Stone Building" />
 	</buildingTypes>
 	
 	<overlaySSRules>
