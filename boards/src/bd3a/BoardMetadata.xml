@@ -23,8 +23,8 @@
 -->
 <boardMetadata 
 	name="3a" 
-	version="6.3" 
-	versionDate="Mar 2018" 
+	version="6.4"
+	versionDate="Nov 2020"
 	author="TR" 
 	boardImageFileName="bd3a.gif" 
 	hasHills="TRUE" 

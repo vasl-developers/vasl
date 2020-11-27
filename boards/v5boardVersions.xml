@@ -31,7 +31,7 @@
 		<boarddata name="04" version="6.1" versionDate="Aug 2008" description="" />
 		<boarddata name="05" version="6.3" versionDate="Aug 2008" description="" />
 		<boarddata name="06" version="6.1" versionDate="Aug 2008" description="" />
-		<boarddata name="07" version="6.1" versionDate="Aug 2008" description="" />
+		<boarddata name="07" version="6.2" versionDate="Nov 2020" description="" />
 		<boarddata name="08" version="6.4" versionDate="Aug 2008" description="" />
 		<boarddata name="09" version="6.1" versionDate="Aug 2008" description="" />
 		<boarddata name="10" version="6.0" versionDate="Aug 2008" description="" />
@@ -60,15 +60,15 @@
 		<boarddata name="29" version="6.2" versionDate="Aug 2008" description="" />
 		<boarddata name="30" version="6.2" versionDate="Aug 2008" description="" />
 		<boarddata name="31" version="6.2" versionDate="Aug 2008" description="" />
-		<boarddata name="32" version="6.2" versionDate="Aug 2008" description="" />
+		<boarddata name="32" version="6.4" versionDate="Nov 2020" description="" />
 		<boarddata name="33" version="6.2" versionDate="Aug 2008" description="" />
-		<boarddata name="34" version="6.2" versionDate="Aug 2008" description="" />
+		<boarddata name="34" version="6.3" versionDate="Nov 2020" description="" />
 		<boarddata name="35" version="6.0" versionDate="Aug 2008" description="" />
 		<boarddata name="36" version="6.3" versionDate="Aug 2008" description="" />
 		<boarddata name="37" version="6.0" versionDate="Aug 2008" description="" />
 		<boarddata name="38" version="6.0" versionDate="Aug 2008" description="" />
 		<boarddata name="39" version="6.2" versionDate="Aug 2008" description="" />
-		<boarddata name="40" version="6.6" versionDate="Aug 2008" description="" />
+		<boarddata name="40" version="6.8" versionDate="Nov 2020" description="" />
 		<boarddata name="41" version="6.3" versionDate="Aug 2008" description="" />
 		<boarddata name="42" version="6.2" versionDate="Aug 2008" description="" />
 		<boarddata name="43" version="6.2" versionDate="Aug 2008" description="" />
@@ -119,16 +119,16 @@
 		<boarddata name="1b" version="6.1" versionDate="Aug 2008" description="" />
 		<boarddata name="2a" version="6.4" versionDate="Aug 2008" description="" />
 		<boarddata name="2b" version="6.4" versionDate="Aug 2008" description="" />
-		<boarddata name="3a" version="6.3" versionDate="Aug 2008" description="" />
-		<boarddata name="3b" version="6.3" versionDate="Aug 2008" description="" />
-		<boarddata name="4a" version="6.3" versionDate="Aug 2008" description="" />
-		<boarddata name="4b" version="6.5" versionDate="Aug 2008" description="" />
+		<boarddata name="3a" version="6.4" versionDate="Nov 2020" description="" />
+		<boarddata name="3b" version="6.4" versionDate="Nov 2020" description="" />
+		<boarddata name="4a" version="6.4" versionDate="Nov 2020" description="" />
+		<boarddata name="4b" version="6.6" versionDate="Nov 2020" description="" />
 		<boarddata name="5a" version="6.3" versionDate="Aug 2008" description="" />
 		<boarddata name="5b" version="6.3" versionDate="Aug 2008" description="" />
-		<boarddata name="6a" version="6.3" versionDate="Aug 2008" description="" />
-		<boarddata name="6b" version="6.3" versionDate="Aug 2008" description="" />
-		<boarddata name="7a" version="6.1" versionDate="Aug 2008" description="" />
-		<boarddata name="7b" version="6.1" versionDate="Aug 2008" description="" />
+		<boarddata name="6a" version="6.4" versionDate="Nov 2020" description="" />
+		<boarddata name="6b" version="6.4" versionDate="Nov 2020" description="" />
+		<boarddata name="7a" version="6.2" versionDate="Nov 2020" description="" />
+		<boarddata name="7b" version="6.2" versionDate="Nov 2020" description="" />
 		<boarddata name="8a" version="6.5" versionDate="Aug 2008" description="" />
 		<boarddata name="8b" version="6.5" versionDate="Aug 2008" description="" />
 		<boarddata name="9a" version="6.1" versionDate="Aug 2008" description="" />

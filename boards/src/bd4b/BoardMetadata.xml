@@ -25,8 +25,8 @@
 -->
 <boardMetadata 
 	name="4b" 
-	version="6.5" 
-	versionDate="Mar 2020" 
+	version="6.6"
+	versionDate="Nov 2020"
 	author="TR" 
 	boardImageFileName="bd4b.gif" 
 	hasHills="TRUE" 
