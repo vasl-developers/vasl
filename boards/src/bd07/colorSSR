@@ -189,6 +189,50 @@ MarshToOpenGround
   SeparatedSwampGreenL_1=Level_1
   SeparatedSwampBrownL_1=Level_1
 
+MarshToLevel0
+  StreamMarshGreenL0=Level0
+  StreamMarshBrownL0=Level0
+  StreamSwampGreenL0=Level0
+  StreamSwampBrownL0=Level0
+
+  RiverMarshGreenL0=Level0
+  RiverMarshBrownL0=Level0
+  RiverSwampGreenL0=Level0
+  RiverSwampBrownL0=Level0
+
+  SeparatedMarshGreenL0=Level0
+  SeparatedMarshBrownL0=Level0
+  SeparatedSwampGreenL0=Level0
+  SeparatedSwampBrownL0=Level0
+
+  MarshToLevel_1
+    StreamMarshGreenL_1=Level_1
+    StreamMarshBrownL_1=Level_1
+    StreamSwampGreenL_1=Level_1
+    StreamSwampBrownL_1=Level_1
+
+    RiverMarshGreenL_1=Level_1
+    RiverMarshBrownL_1=Level_1
+    RiverSwampGreenL_1=Level_1
+    RiverSwampBrownL_1=Level_1
+
+    SeparatedMarshGreenL_1=Level_1
+    SeparatedMarshBrownL_1=Level_1
+    SeparatedSwampGreenL_1=Level_1
+    SeparatedSwampBrownL_1=Level_1
+
+MarshToLevel1
+    MarshGreenL0=Level1
+    MarshBrownL0=Level1
+    MarshGreenL_1=Level1
+    MarshBrownL_1=Level1
+    SeparatedMarshGreenL0=Level1
+    SeparatedMarshBrownL0=Level1
+    SeparatedMarshGreenL1=Level1
+    SeparatedMarshBrownL1=Level1
+    SeparatedMarshGreenL_1=Level
+    SeparatedMarshBrownL_1=Level1
+
 FloodedStreams
   StreamWhite=Water
   StreamBrown=Water
