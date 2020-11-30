@@ -174,6 +174,19 @@ MarshToLevel_1
   SeparatedMarshGreenL_1=Level_1
   SeparatedMarshBrownL_1=Level_1
 
+  StreamMarshGreenL_1=Level_1
+  StreamMarshBrownL_1=Level_1
+  StreamSwampGreenL_1=Level_1
+  StreamSwampBrownL_1=Level_1
+
+  RiverMarshGreenL_1=Level_1
+  RiverMarshBrownL_1=Level_1
+  RiverSwampGreenL_1=Level_1
+  RiverSwampBrownL_1=Level_1
+
+  SeparatedSwampGreenL_1=Level_1
+  SeparatedSwampBrownL_1=Level_1
+
 MarshToLevel0
   MarshGreenL0=Level0
   MarshBrownL0=Level0
@@ -185,6 +198,18 @@ MarshToLevel0
   SeparatedMarshBrownL1=Level0
   SeparatedMarshGreenL_1=Level0
   SeparatedMarshBrownL_1=Level0
+  StreamMarshGreenL0=Level0
+  StreamMarshBrownL0=Level0
+  StreamSwampGreenL0=Level0
+  StreamSwampBrownL0=Level0
+
+  RiverMarshGreenL0=Level0
+  RiverMarshBrownL0=Level0
+  RiverSwampGreenL0=Level0
+  RiverSwampBrownL0=Level0
+
+  SeparatedSwampGreenL0=Level0
+  SeparatedSwampBrownL0=Level0
 
 MarshToLevel1
   MarshGreenL0=Level1
