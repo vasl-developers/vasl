@@ -244,7 +244,7 @@ public class ASLMap extends Map {
                 if(!"NUL".equals(b.getName()) && !"NULV".equals(b.getName())){
 
                     if(board.isLegacyBoard()) {
-                        throw new BoardException("LOS disabled - Board " + board.getName() + " does not support LOS checking");
+                        throw new BoardException("VASL LOS disabled - Board " + board.getName() + " does not support LOS checking. VASSAL los active");
                     }
 
                     mapBoundary.add(b.bounds());
@@ -252,7 +252,7 @@ public class ASLMap extends Map {
 
                     // make sure the hex geometry of all boards is the same
                     if (hexHeight != 0.0 && Math.round(board.getHexHeight()) != Math.round(hexHeight) || hexWidth != 0.0 && Math.round(board.getHexWidth()) != Math.round(hexWidth)) {
-                        throw new BoardException("Map configuration contains multiple hex sizes - disabling LOS");
+                        throw new BoardException("VASL LOS disabled: Map configuration contains multiple hex sizes. VASSAL los active");
                     }
                     hexHeight = board.getHexHeight();
                     hexWidth = board.getHexWidth();
@@ -300,6 +300,7 @@ public class ASLMap extends Map {
 
             setLegacyMode();
             logError(e.toString());
+            GameModule.getGameModule().getChatter().send(e.toString());
         }
         catch (Exception e) {
 
@@ -307,6 +308,7 @@ public class ASLMap extends Map {
             VASLBoards = null;
             logError("LOS disabled - unexpected error");
             logException(e);
+            GameModule.getGameModule().getChatter().send("LOS disabled - unexpected error: " + e.toString());
         }
 
         // add the boards to the VASL map
@@ -363,7 +365,7 @@ public class ASLMap extends Map {
                                     VASLMap.gridToHex(board.getBoardLocation().x, board.getBoardLocation().y + cropadj + (nullBoards ? 1 : 0)))) {
 
                                 // didn't work, so assume an unsupported feature
-                                throw new BoardException("Unable to insert board " + board.getName() + " into the VASL map - LOS disabled");
+                                throw new BoardException("VASL LOS Disabled: Unable to insert board " + board.getName() + " into the VASL map. VASSAL los active");
                             }
                     }
                     else {
@@ -371,18 +373,21 @@ public class ASLMap extends Map {
                             VASLMap.insertOneMap(LOSData);
                     }
                 }
+                GameModule.getGameModule().warn("VASL LOS Enabled");
             }
         }
         catch (BoardException e) {
 
             setLegacyMode();
             logError(e.toString());
+            GameModule.getGameModule().getChatter().send("VASL LOS Disabled: " + e.toString() + ". VASSAL los active");
         }
         catch (Exception e) {
 
             setLegacyMode();
             logError("LOS disabled - unexpected error");
             logException(e);
+            GameModule.getGameModule().getChatter().send("VASL LOS disabled - unexpected error: " + e.toString() + ". VASSAL los active");
         }
         finally {
             // free up memory
