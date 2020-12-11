@@ -57,6 +57,7 @@ import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.net.URL;
 import java.net.URLConnection;
@@ -213,10 +214,10 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
      */
     public void finish() {
         currentBoards = new ArrayList<Board>(getBoardsFromControls());
-
-        //set DB state on finish
-/*        DoubleBlindViewer.doubleBlindViewer.enableDB(enableDB);
-        DoubleBlindViewer.setMap((ASLMap) map);*/
+        // test for proper board configuration
+        if (slotPanel.getComponentCount() != currentBoards.size()){
+            GameModule.getGameModule().getChatter().send("Board missing. Your board configuration must match X by X row/column matrix. Use NUL or NULV boards if required");
+        }
 
     }
 
@@ -1351,13 +1352,23 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                     try {
                         // changes by DR to support Terrain SSR when using multiple boards of same name
                         if (bdName.getSelectedIndex() == 0 ) { // all boards
-                            for (int t =0; t < bdName.getItemCount()-1; ++t){
+                            for (int t =0; t < bdName.getItemCount()-1; ++t) {
                                 ASLBoardSlot slot = (ASLBoardSlot) newmatch(t);
-                                slot.setTerrain(slot.getTerrain() + '\t' + optionRules());
-                                if (slot.getBoard() != null) {
-                                    ((ASLBoard) slot.getBoard()).setTerrain(basicRules() + slot.getTerrain());
-                                    slot.repaint();
+                                // check first for missing boards
+                                if (slot == null) {
+                                    //ensure that board config requirement is respected
+                                    warn("Incorrect Board Configuration: must complete X by X rectangle - use bdNull");
+                                    return;
                                 }
+                            }
+                            // now do same loop to apply transform
+                            for (int t =0; t < bdName.getItemCount()-1; ++t) {
+                                ASLBoardSlot slot = (ASLBoardSlot) newmatch(t);
+                                    slot.setTerrain(slot.getTerrain() + '\t' + optionRules());
+                                    if (slot.getBoard() != null) {
+                                        ((ASLBoard) slot.getBoard()).setTerrain(basicRules() + slot.getTerrain());
+                                        slot.repaint();
+                                    }
                             }
                         } else { // specific board chosen
                             ASLBoardSlot slot = (ASLBoardSlot) newmatch(bdName.getSelectedIndex()-1);
