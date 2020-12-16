@@ -173,7 +173,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
 
         final GameModule g = GameModule.getGameModule();
 
-        g.getPrefs().addOption(config);
+        g.getPrefs().addOption("VASL", config);
         String storedValue = g.getPrefs().getStoredValue(BOARD_DIR);
         if (storedValue == null || !new File(storedValue).exists()) {
             File archive = new File(g.getDataArchive().getName());

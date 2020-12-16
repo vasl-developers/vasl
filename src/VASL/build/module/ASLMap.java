@@ -73,7 +73,7 @@ public class ASLMap extends Map {
     private static final Logger logger = LoggerFactory.getLogger(ASLMap.class);
     private ShowMapLevel m_showMapLevel = ShowMapLevel.ShowAll;
     // background color preference
-    private static final String preferenceTabName = "General";
+    private static final String preferenceTabName = "VASL";
 
   public ASLMap() {
 
