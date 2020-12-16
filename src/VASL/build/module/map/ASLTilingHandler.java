@@ -132,7 +132,7 @@ public class ASLTilingHandler extends VASSAL.launch.TilingHandler {
 
     final List<String> args = new ArrayList<String>();
     args.addAll(Arrays.asList(new String[] {
-      Info.javaBinPath,
+            String.valueOf(Info.getJavaBinPath()),
       "-classpath",
       System.getProperty("java.class.path"),
       "-Xmx" + maxheap + "M",

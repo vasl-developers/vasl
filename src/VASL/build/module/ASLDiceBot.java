@@ -370,7 +370,8 @@ public class ASLDiceBot extends AbstractBuildable
         if (l_objRandomOrgOption_Exist == null)
         {
             l_objRandomOrgOption = new BooleanConfigurer(RANDOM_ORG_OPTION, "Get DR/dr random numbers from random.org", Boolean.FALSE);  //$NON-NLS-1$
-            l_objModulePrefs.addOption(Resources.getString("Prefs.general_tab"), l_objRandomOrgOption); //$NON-NLS-1$
+            //l_objModulePrefs.addOption(Resources.getString("Prefs.general_tab"), l_objRandomOrgOption); //$NON-NLS-1$
+            l_objModulePrefs.addOption("VASL", l_objRandomOrgOption);
         }
         else
             l_objRandomOrgOption = l_objRandomOrgOption_Exist;

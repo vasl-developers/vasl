@@ -51,7 +51,8 @@ public class ASLStackMetrics extends StackMetrics {
     public void addTo(Buildable buildable) {
 
         Prefs gameModulePrefs = GameModule.getGameModule().getPrefs();
-        String generalTabKey = Resources.getString("Prefs.general_tab");
+        //String generalTabKey = Resources.getString("Prefs.general_tab");
+        String generalTabKey = "VASL";
         String prefKey = "DisableFullColorStacks";
 
         BooleanConfigurer configurer = (BooleanConfigurer)gameModulePrefs.getOption(prefKey);

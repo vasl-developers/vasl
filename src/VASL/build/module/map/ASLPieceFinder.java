@@ -54,7 +54,7 @@ public class ASLPieceFinder extends AbstractConfigurable implements CommandEncod
     private Point clickPoint;
     private Boolean active = false;
     private Timer timer;
-    private static final String preferenceTabName = "General";
+    private static final String preferenceTabName = "VASL";
     // this component is not configurable
     @Override
     public Class<?>[] getAttributeTypes() {
@@ -91,9 +91,9 @@ public class ASLPieceFinder extends AbstractConfigurable implements CommandEncod
             map.addDrawComponent(this);
             map.addLocalMouseListener(this);
             timer = new Timer (CIRCLE_DURATION, this);
-            final BooleanConfigurer Highlightcenter = new BooleanConfigurer("HighlightCentered", "Highlight Centered on Opponent's Map");
+            final BooleanConfigurer Highlightcenter = new BooleanConfigurer("HighlightCentered", "Opponent's Highlight Centered on Your Map", true);
             getGameModule().getPrefs().addOption(preferenceTabName, Highlightcenter);
-            final BooleanConfigurer Highlightcircle = new BooleanConfigurer("HighlightShowCircle", "Highlight Shows Red Circle on Map");
+            final BooleanConfigurer Highlightcircle = new BooleanConfigurer("HighlightShowCircle", "Highlight Shows Red Circle on Map", true);
             getGameModule().getPrefs().addOption(preferenceTabName, Highlightcircle);
         }
     }
