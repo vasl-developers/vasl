@@ -156,8 +156,8 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                     while (overlays.hasMoreElements()) {
                         Overlay o = (Overlay) overlays.nextElement();
 
-                        // ignore SSR overlays
-                        if(!o.hex1.equals("")) {
+                        // ignore terrain transformation overlays - treat BSO and SSR overlays as regular overlays; won't disable los for entire board DR Dec 2020
+                        if((!o.hex1.equals("")) || o.getName().contains("BSO") || o.getName().contains("SSO")) {
 
                             Rectangle ovrRec= o.bounds();
                             // get the image as a buffered image

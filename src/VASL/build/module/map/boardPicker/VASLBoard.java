@@ -172,7 +172,8 @@ public class VASLBoard extends ASLBoard {
                        applyRBrule(s, LOSData);
                        changed = true;
                     }else {
-                        throw new BoardException("Unsupported scenario-specific rule: " + s + ". LOS disabled");
+                        // deleting the BoardException so that BSO no longer disable los but are treated as per regular overlays
+                       //throw new BoardException("Unsupported scenario-specific rule: " + s + ". LOS disabled");
                     }
                 }
 
