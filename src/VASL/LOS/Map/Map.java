@@ -611,7 +611,7 @@ public class Map  {
                     return hexGrid[col][row];
                 }
 
-                // DR implemented new approach to handle various crop and flipg configurations
+                // DR implemented new approach to handle various crop and flip configurations
                 // simply looks at possible hexes and uses the one that contains the point
                 if (col < hexGrid.length && row-1 >=0 && row-1 < hexGrid[col].length) {
                     if(hexGrid[col][row-1].contains(x, y)) {
@@ -1642,6 +1642,7 @@ public class Map  {
         // code added by DR to enable roofless factory hexes
         Terrain previousTerrain = null;
         // are we in a new hex?
+        boolean insamehex = false;
         if (!status.tempHex.equals(status.currentHex)) {
             //store terrain in previous hex (needed when checking depression hexsides; added by DR)
             boolean newequalsprevioushex=false;
@@ -1815,6 +1816,8 @@ public class Map  {
                     }
                 }
             }
+        } else {
+            insamehex = true;
         }
 
         // check the LOS rules
@@ -1839,7 +1842,7 @@ public class Map  {
         if(checkHexSmokeRule(status, result)) {
             return true;
         }
-        if(checkVehicleHindranceRule(status, result)) {
+        if(checkVehicleHindranceRule(status, result, insamehex)) {
             return true;
         }
         if(checkOBAHindranceRule(status, result)) {
@@ -2093,13 +2096,12 @@ public class Map  {
      * @param result the LOS result
      * @return true if the LOS is blocked
      */
-    protected boolean checkVehicleHindranceRule(LOSStatus status, LOSResult result) {
+    protected boolean checkVehicleHindranceRule(LOSStatus status, LOSResult result, boolean insamehex) {
 
         // check for vehicles in source hex here
         if(status.VASLGameInterface != null) {
 
             Hex hex = status.currentHex;
-
             HashSet<Vehicle> vehicles = status.VASLGameInterface.getVehicles(hex);
             if (vehicles != null && !vehicles.isEmpty()) {
 
@@ -2122,14 +2124,15 @@ public class Map  {
                             if(v.getLocation().isCenterLocation() || v.getLocation().equals(hex.getNearestLocation(status.currentCol, status.currentRow))) {
 
 
-                                // both source and target must have an LOS to the vehicle
-                                LOSResult result1 = new LOSResult();
-                                LOSResult result2 = new LOSResult();
-                                LOS(status.source, status.useAuxSourceLOSPoint, v.getLocation(), false, result1, status.VASLGameInterface);
-                                LOS(status.target, status.useAuxTargetLOSPoint, v.getLocation(), false, result2, status.VASLGameInterface);
-                                if(!result1.isBlocked() && !result2.isBlocked())
-                                {
-                                    hindrance++;
+                                // both source and target must have an LOS to the vehicle - only need to check once per hex DR Jan 2021
+                                if(!insamehex) {
+                                    LOSResult result1 = new LOSResult();
+                                    LOSResult result2 = new LOSResult();
+                                    LOS(status.source, status.useAuxSourceLOSPoint, v.getLocation(), false, result1, status.VASLGameInterface);
+                                    LOS(status.target, status.useAuxTargetLOSPoint, v.getLocation(), false, result2, status.VASLGameInterface);
+                                    if (!result1.isBlocked() && !result2.isBlocked()) {
+                                        hindrance++;
+                                    }
                                 }
                             }
                         }
