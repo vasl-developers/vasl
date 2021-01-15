@@ -26,12 +26,12 @@ import javax.imageio.ImageIO;
 
 import VASL.LOS.Map.Map;
 import VASL.LOS.Map.Terrain;
-import VASSAL.tools.io.IOUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.NodeList;
 
-import static VASSAL.tools.io.IOUtils.closeQuietly;
+import static org.apache.commons.io.IOUtils.closeQuietly;
 
 /**
  * This class is used to read and write files in the board archive

@@ -22,7 +22,7 @@ import VASL.build.module.map.boardArchive.OverlaySSRule;
 import VASL.build.module.map.boardArchive.OverlaySSRuleImage;
 import VASSAL.tools.DataArchive;
 import VASSAL.tools.image.ImageUtils;
-import VASSAL.tools.io.IOUtils;
+import org.apache.commons.io.IOUtils;
 
 import java.awt.*;
 import java.io.File;

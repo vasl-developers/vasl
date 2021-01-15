@@ -32,7 +32,7 @@ import javax.imageio.stream.MemoryCacheImageInputStream;
 
 import VASSAL.build.GameModule;
 import VASSAL.tools.DataArchive;
-import VASSAL.tools.io.IOUtils;
+import org.apache.commons.io.IOUtils;
 
 /**
  * A special kind of SSROverlay constructed on the fly by underlaying a patterned GIF under a board GIF with certain
