@@ -8,7 +8,7 @@ import VASSAL.build.module.GameComponent;
 import VASSAL.command.Command;
 import VASSAL.tools.DataArchive;
 import VASSAL.tools.KeyStrokeListener;
-import VASSAL.tools.io.IOUtils;
+import org.apache.commons.io.IOUtils;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;

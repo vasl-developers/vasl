@@ -36,7 +36,7 @@ import VASSAL.counters.Stack;
 import VASSAL.tools.DataArchive;
 import VASSAL.tools.ErrorDialog;
 import VASSAL.tools.imageop.Op;
-import VASSAL.tools.io.IOUtils;
+import org.apache.commons.io.IOUtils;
 import org.jdom2.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

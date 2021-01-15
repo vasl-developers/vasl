@@ -33,7 +33,7 @@ import VASSAL.configure.DirectoryConfigurer;
 import VASSAL.configure.ValidationReport;
 import VASSAL.tools.ErrorDialog;
 import VASSAL.tools.ReadErrorDialog;
-import VASSAL.tools.io.IOUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;

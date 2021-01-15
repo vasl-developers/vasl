@@ -30,7 +30,7 @@ import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.command.Command;
 import VASSAL.configure.StringConfigurer;
 import VASSAL.tools.PropertiesEncoder;
-import VASSAL.tools.io.IOUtils;
+import org.apache.commons.io.IOUtils;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;

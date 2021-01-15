@@ -32,7 +32,7 @@ import VASSAL.tools.image.ImageUtils;
 import VASSAL.tools.image.tilecache.TileUtils;
 import VASSAL.tools.io.FileArchive;
 import VASSAL.tools.io.FileStore;
-import VASSAL.tools.io.IOUtils;
+import org.apache.commons.io.IOUtils;
 import VASSAL.tools.io.InputOutputStreamPump;
 import VASSAL.tools.io.InputStreamPump;
 import VASSAL.tools.io.ProcessLauncher;
@@ -50,7 +50,7 @@ public class ASLTilingHandler extends VASSAL.launch.TilingHandler {
     int mhlim,
     int pid)
   {
-    super(aname, cdir, tdim, mhlim, pid);
+    super(aname, cdir, tdim, mhlim);  //pid
   }
 
   @Override
@@ -136,7 +136,7 @@ public class ASLTilingHandler extends VASSAL.launch.TilingHandler {
       "-classpath",
       System.getProperty("java.class.path"),
       "-Xmx" + maxheap + "M",
-      "-DVASSAL.id=" + pid,
+      "-DVASSAL.id=",
       "-Duser.home=" + System.getProperty("user.home"),
       "-DVASSAL.port=" + port,
       "VASSAL.tools.image.tilecache.ZipFileImageTiler",
