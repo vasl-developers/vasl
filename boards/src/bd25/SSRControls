@@ -1,8 +1,5 @@
 <SSRControls>
    <Option name="Board 25 Special Overlays">
-    <Checkbox name="Use ETO colors">
-       <entry name="Use ETO colors" rule="DTOtoETO"/>
-     </Checkbox>
      <Checkbox name="No Gully Cliffs">
        <entry name="No Gully Cliffs" rule="BSO_25_NoGullyCliffs"/>
      </Checkbox>

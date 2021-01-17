@@ -17,8 +17,10 @@
     height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
+	
+	v6.2 fix terrain, SSO and BSO transforms (ATC)
 -->
-<boardMetadata name="25" version="6.1" versionDate="Nov 2020" author="STC" boardImageFileName="bd25.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="25" version="6.2" versionDate="Nov 2020" author="STC" boardImageFileName="bd25.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -72,27 +74,33 @@
 			x - x coordinate of overly upper left
 			y - y coordinate of overlay upper left
 		-->		
-		<overlaySSRule name="OrchardsToCrags" image="25ETO_Orch2Crag.gif" x="0" y="0" />
-		<overlaySSRule name="OrchardsToShellholes" image="25ETO_Orch2Shell.gif" x="0" y="0" />
-		<overlaySSRule name="PalmTrees" image="25ETO_PalmTrees.gif" x="0" y="0" />
-		<overlaySSRule name="WallsToBocage" image="25ETO_WallsToBocage.gif" x="0" y="0" />
-		<overlaySSRule name="HedgesToBocage" image="25ETO_HedgesToBocage.gif" x="0" y="0" />
-		<overlaySSRule name="Bamboo" image="25ETO_Bamboo.gif" x="0" y="0" />
-		<overlaySSRule name="NoRoads" image="25ETO_NoRoads.gif" x="0" y="0" />
-		<overlaySSRule name="Hammada" image="25ETO_Hammada.gif" x="0" y="0" />
-		<overlaySSRule name="CragsToOrchards" image="25ETO_Crag2Orch.gif" x="0" y="0" />
-		<overlaySSRule name="CragsToPalm" image="25ETO_Crag2Palm.gif" x="0" y="0" />
-		<overlaySSRule name="CragsToShellholes" image="25ETO_Crag2Shell.gif" x="0" y="0" />
-		<overlaySSRule name="NoBridge" image="25ETO_NoBridge.gif" x="0" y="0" />
-		<overlaySSRule name="BridgeToFord" image="25ETO_BridgeToFord.gif" x="0" y="0" />
-		<overlaySSRule name="NoCliffs" image="25ETO_NoCliffs.gif" x="0" y="0" />
-		<overlaySSRule name="NoRoads" image="25ETO_NoRoads.gif" x="0" y="0" />
-		<overlaySSRule name="HedgesToOG" image="25ETO_HedgesToOG.gif" x="0" y="0" />
-		<overlaySSRule name="WallsToOG" image="25ETO_WallsToOG.gif" x="0" y="0" />
-		
-		
-		
-		<overlaySSRule name="BSO_25ETO_NoGullyCliffs" image="BSO_25ETO_NoGullyCliffs.gif" x="0" y="0" />
+		<overlaySSRule name="OrchardsToCrags" image="25_Orch2Crag.gif" x="34" y="8" />
+		<overlaySSRule name="OrchardsToShellholes" image="25_Orch2Shell.gif" x="29" y="7" />
+		<overlaySSRule name="PalmTrees" image="25_PalmTrees.gif" x="33" y="8" />
+		<overlaySSRule name="WallsToBocage" image="25_WallsToBocage.gif" x="1155" y="60" />
+		<overlaySSRule name="HedgesToBocage" image="25_HedgesToBocage.gif" x="32" y="61" />
+		<overlaySSRule name="Bamboo" image="25_Bamboo.gif" x="20" y="1" />
+		<overlaySSRule name="NoRoads" image="25_NoRoads.gif" x="1" y="1" />
+		<overlaySSRule name="HammadaToOG" image="25_HammadaToOG.gif" x="24" y="98" />
+		<overlaySSRule name="CragsToOrchards" image="25_Crag2Orch.gif" x="93" y="43" />
+		<overlaySSRule name="CragsToPalm" image="25_Crag2Palm.gif" x="92" y="41" />
+		<overlaySSRule name="CragsToShellholes" image="25_Crag2Shell.gif" x="86" y="43" />
+		<overlaySSRule name="NoBridge" image="25_NoBridge.gif" x="917" y="41" />
+		<overlaySSRule name="BridgeToFord" image="25_BridgeToFord.gif" x="917" y="41" />
+		<overlaySSRule name="NoCliffs" image="25_NoCliffs.gif" x="238" y="28" />
+		<overlaySSRule name="HedgesToOG" image="25_HedgesToOG.gif" x="32" y="61" />
+		<overlaySSRule name="WallsToOG" image="25_NoWalls.gif" x="1155" y="60" />
+		<overlaySSRule name="SSO_25_A39" image="SSO_25_A39.gif" x="1" y="1" />
+		<overlaySSRule name="SSO_25_A23" image="SSO_25_A23.gif" x="1" y="1" />
+		<overlaySSRule name="SSO_25_81" image="SSO_25_81.gif" x="1" y="1" />
+		<overlaySSRule name="SSO_25_72" image="SSO_25_72.gif" x="1" y="74" />
+		<overlaySSRule name="SSO_25_36" image="SSO_25_36.gif" x="1" y="1" />
+		<overlaySSRule name="BSO_25_NoGullyCliffs" image="BSO_25_NoGullyCliffs.gif" x="1" y="65" />
+		<overlaySSRule name="Level1ToLevel0" image="25_Level1ToLevel0.gif" x="31" y="28" />
+		<overlaySSRule name="NoHillNums" image="25_NoHillNums.gif" x="603" y="329" />
+		<overlaySSRule name="OrchardOutOfSeason" image="25_L0OrchOOS.gif" x="146" y="8" />
+		<overlaySSRule name="SteppeTerrain" image="25_SteppeTerrain.gif" x="18" y="94" />
+		<overlaySSRule name="BrokenTerrain" image="25_BrokenTerrain.gif" x="2" y="39" />				
 	</overlaySSRules>
 	
 	<colors>
