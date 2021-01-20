@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
 
+import VASL.environment.DustLevel;
+import VASL.environment.EnvironmentUtils;
 import VASSAL.build.*;
 import VASSAL.build.module.GlobalOptions;
 import VASSAL.configure.BooleanConfigurer;
@@ -14,6 +16,7 @@ import VASSAL.configure.StringConfigurer;
 import VASSAL.i18n.Resources;
 import VASSAL.preferences.Prefs;
 import VASSAL.tools.LaunchButton;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.HttpURLConnection;
@@ -544,8 +547,15 @@ public class ASLDiceBot extends AbstractBuildable
 
     public void DR(String strCategory)
     {
+        DustLevel dustLevel = EnvironmentUtils.getCurrentDustLevel(GameModule.getGameModule());
         int l_iWhiteDie = 0;
+        int l_iDustDie = 0;
         int l_iColoredDie = GetDieRoll();
+
+        if(dustLevel.dustInEffect())
+        {
+            l_iDustDie = GetDieRoll();
+        }
 
         if (l_iColoredDie != 0)
             l_iWhiteDie = GetDieRoll();
@@ -557,18 +567,40 @@ public class ASLDiceBot extends AbstractBuildable
             map_objStats.Add_DR(TOTAL_CATEGORY, l_iColoredDie, l_iWhiteDie);
             map_objStats.Add_DR(strCategory, l_iColoredDie, l_iWhiteDie);
 
-            l_strOutput = String.format("*** (%s DR) %s,%s ***   <%s>      %s[%s   avg   %s (%s)]    (%s%s",
-                                        strCategory, 
-                                        Integer.toString(l_iColoredDie),
-                                        Integer.toString(l_iWhiteDie),
-                                        GetPlayer(),
-                                        IsSpecial(l_iColoredDie + l_iWhiteDie),
-                                        map_objStats.GetNumRolledDROnTotal(TOTAL_CATEGORY, l_iColoredDie + l_iWhiteDie),
-                                        map_objStats.GetAvgDR(strCategory),
-                                        map_objStats.GetAvgDR(TOTAL_CATEGORY),
-                                        getSerieInstanceNumber(),
-                                        (m_bUseRandomOrg ? " - by random.org)" : ")")
-                                        );
+            if( (dustLevel.dustInEffect() && l_iDustDie != 0) &&
+               (strCategory.equals(("TH")) || strCategory.equals(("IFT")) || strCategory.equals(("MC"))))
+            {
+                    l_strOutput = String.format("*** (%s DR) %s,%s,%s *** - total with %s: %s     <%s>      %s[%s   avg   %s (%s)]    (%s%s",
+                            strCategory,
+                            Integer.toString(l_iColoredDie),
+                            Integer.toString(l_iWhiteDie),
+                            Integer.toString(l_iDustDie),
+                            dustLevel.toString(),
+                            dustLevel.isLightDust()   ?
+                                    Integer.toString(l_iColoredDie + l_iWhiteDie + (l_iDustDie / 2) ) :
+                                    Integer.toString(l_iColoredDie + l_iWhiteDie + ((l_iDustDie / 2) + (l_iDustDie % 2) ) ),
+                            GetPlayer(),
+                            IsSpecial(l_iColoredDie + l_iWhiteDie),
+                            map_objStats.GetNumRolledDROnTotal(TOTAL_CATEGORY, l_iColoredDie + l_iWhiteDie),
+                            map_objStats.GetAvgDR(strCategory),
+                            map_objStats.GetAvgDR(TOTAL_CATEGORY),
+                            getSerieInstanceNumber(),
+                            (m_bUseRandomOrg ? " - by random.org)" : ")")
+                    );
+            } else {
+                l_strOutput = String.format("*** (%s DR) %s,%s ***   <%s>      %s[%s   avg   %s (%s)]    (%s%s",
+                        strCategory,
+                        Integer.toString(l_iColoredDie),
+                        Integer.toString(l_iWhiteDie),
+                        GetPlayer(),
+                        IsSpecial(l_iColoredDie + l_iWhiteDie),
+                        map_objStats.GetNumRolledDROnTotal(TOTAL_CATEGORY, l_iColoredDie + l_iWhiteDie),
+                        map_objStats.GetAvgDR(strCategory),
+                        map_objStats.GetAvgDR(TOTAL_CATEGORY),
+                        getSerieInstanceNumber(),
+                        (m_bUseRandomOrg ? " - by random.org)" : ")")
+                );
+            }
 
             // If this was a TH roll, add a reminder for hit location for stupid people
             if(strCategory.equals(("TH"))){
