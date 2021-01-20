@@ -12,8 +12,10 @@ import VASL.environment.EnvironmentUtils;
 import VASSAL.build.*;
 import VASSAL.build.module.GlobalOptions;
 import VASSAL.configure.BooleanConfigurer;
+import VASSAL.configure.StringConfigurer;
 import VASSAL.i18n.Resources;
 import VASSAL.preferences.Prefs;
+import VASSAL.tools.LaunchButton;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -371,7 +373,8 @@ public class ASLDiceBot extends AbstractBuildable
         if (l_objRandomOrgOption_Exist == null)
         {
             l_objRandomOrgOption = new BooleanConfigurer(RANDOM_ORG_OPTION, "Get DR/dr random numbers from random.org", Boolean.FALSE);  //$NON-NLS-1$
-            l_objModulePrefs.addOption(Resources.getString("Prefs.general_tab"), l_objRandomOrgOption); //$NON-NLS-1$
+            //l_objModulePrefs.addOption(Resources.getString("Prefs.general_tab"), l_objRandomOrgOption); //$NON-NLS-1$
+            l_objModulePrefs.addOption("VASL", l_objRandomOrgOption);
         }
         else
             l_objRandomOrgOption = l_objRandomOrgOption_Exist;
@@ -567,7 +570,7 @@ public class ASLDiceBot extends AbstractBuildable
             if( (dustLevel.dustInEffect() && l_iDustDie != 0) &&
                (strCategory.equals(("TH")) || strCategory.equals(("IFT")) || strCategory.equals(("MC"))))
             {
-                    l_strOutput = String.format("*** (%s DR) %s,%s,%s *** %s - total: %s     <%s>      %s[%s   avg   %s (%s)]    (%s%s",
+                    l_strOutput = String.format("*** (%s DR) %s,%s,%s *** - total with %s: %s     <%s>      %s[%s   avg   %s (%s)]    (%s%s",
                             strCategory,
                             Integer.toString(l_iColoredDie),
                             Integer.toString(l_iWhiteDie),
