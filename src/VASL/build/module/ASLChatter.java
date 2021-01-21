@@ -1548,7 +1548,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
         if (l_objBackgroundColor_Exist == null)
         {
-            l_objBackgroundColor = new ColorConfigurer(CHAT_BACKGROUND_COLOR, "Backgound color: ", Color.white); //$NON-NLS-1$
+            l_objBackgroundColor = new ColorConfigurer(CHAT_BACKGROUND_COLOR, "Background color: ", Color.white); //$NON-NLS-1$
             l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), l_objBackgroundColor); //$NON-NLS-1$
         }
         else
