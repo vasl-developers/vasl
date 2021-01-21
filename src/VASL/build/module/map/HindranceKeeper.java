@@ -134,7 +134,7 @@ public class HindranceKeeper extends AbstractBuildable implements Drawable, KeyL
   }
 
   public void keyReleased(KeyEvent e) {
-    if (!map.isPiecesVisible() && KeyStroke.getKeyStrokeForEvent(e).equals(KeyStroke.getKeyStroke(KeyEvent.VK_F10, KeyEvent.CTRL_DOWN_MASK, true))) {
+    if (!map.isPiecesVisible() && KeyStroke.getKeyStrokeForEvent(e).equals(KeyStroke.getKeyStroke(KeyEvent.VK_F10, KeyEvent.SHIFT_DOWN_MASK, true))) {
       Configurer config = GameModule.getGameModule().getPrefs().getOption(DRAW_HINDRANCES);
       config.setValue(Boolean.TRUE.equals(config.getValue()) ? Boolean.FALSE : Boolean.TRUE);
       map.getView().repaint();
