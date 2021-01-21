@@ -137,14 +137,10 @@ public class Overlay implements Cloneable {
             c = 'a';
         }
 
-        InputStream in = null;
-        try {
-            in = archive.getImageInputStream(fileName(name + c));
+        try (InputStream in = archive.getImageInputStream(fileName(name + c))){
             im = ImageIO.read(new MemoryCacheImageInputStream(in));
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            IOUtils.closeQuietly(in);
         }
 
         return im;
@@ -164,9 +160,7 @@ public class Overlay implements Cloneable {
     private void readData() throws IOException {
         origins = getDefaultOriginList(name);
 
-        InputStream in = null;
-        try {
-            in = archive.getInputStream("data");
+        try (InputStream in = archive.getInputStream("data")) {
             BufferedReader file = new BufferedReader(new InputStreamReader(in));
             String s;
             while ((s = file.readLine()) != null) {
@@ -184,8 +178,6 @@ public class Overlay implements Cloneable {
                     hex2 = st.nextToken();
                 }
             }
-        } finally {
-            IOUtils.closeQuietly(in);
         }
     }
 

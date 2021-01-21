@@ -189,15 +189,9 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
             conn.setUseCaches(false);
 
             //Properties p = new Properties();
-            InputStream input = null;
-            try {
-                input = conn.getInputStream();
+            try (InputStream input = conn.getInputStream()){
                 parseboardversionFile(input);
                 //p.load(input);
-
-            }
-            finally {
-                IOUtils.closeQuietly(input);
             }
 
             //boardVersions = p;
@@ -212,12 +206,8 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
             conn.setUseCaches(false);
 
             Properties p = new Properties();
-            InputStream input = null;
-            try {
-                input = conn.getInputStream();
+            try (InputStream input = conn.getInputStream()){
                 p.load(input);
-            } finally {
-                IOUtils.closeQuietly(input);
             }
 
             overlayVersions = p;
@@ -332,28 +322,21 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
         // Need to disable SNI to read from Github
         System.setProperty("jsse.enableSNIExtension", "false");
 
-        FileOutputStream outFile = null;
-        InputStream in = null;
         try {
 
             URL website = new URL( encodeUrl(url) );
             URLConnection conn = website.openConnection();
             conn.setUseCaches(false);
-
-            in = conn.getInputStream();
-            ReadableByteChannel rbc = Channels.newChannel(in);
-            outFile = new FileOutputStream(fileName);
-            outFile.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-
+            try (FileOutputStream outFile = new FileOutputStream(fileName);
+                InputStream in = conn.getInputStream()) {
+                ReadableByteChannel rbc = Channels.newChannel(in);
+                outFile.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+            }
             return true;
 
         } catch (IOException e) {
             // Fail silently on any error
             return false;
-        }
-        finally {
-            IOUtils.closeQuietly(outFile);
-            IOUtils.closeQuietly(in);
         }
     }
     

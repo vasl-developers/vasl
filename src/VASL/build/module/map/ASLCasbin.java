@@ -26,7 +26,7 @@ public class ASLCasbin extends AbstractConfigurable implements KeyListener, Game
     private Buildable pparent;
     private Map map;
     private static final String LINK_KEY = "LinkKey";
-    private KeyStroke linkKey = KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_MASK + InputEvent.ALT_MASK);
+    private KeyStroke linkKey = KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK + InputEvent.ALT_GRAPH_DOWN_MASK);
 
     public Class<?>[] getAttributeTypes() {
         return new Class<?>[]{NamedKeyStroke.class};

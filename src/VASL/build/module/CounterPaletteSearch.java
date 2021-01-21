@@ -53,7 +53,7 @@ public class CounterPaletteSearch extends AbstractBuildable implements GameCompo
         launch.setEnabled(false);
 
         keyListener = new KeyStrokeListener(launchAction);
-        keyListener.setKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.SHIFT_MASK + InputEvent.CTRL_MASK));
+        keyListener.setKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.SHIFT_DOWN_MASK + InputEvent.CTRL_DOWN_MASK));
 
         Search = new JTextField ("Enter Counter Name");
         Search.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -131,14 +131,9 @@ public class CounterPaletteSearch extends AbstractBuildable implements GameCompo
      * read the countersearch metadata
      */
     private void readMetadata() throws JDOMException {
-
-        InputStream inputStream = null;
-        try {
-
-            DataArchive archive = GameModule.getGameModule().getDataArchive();
-
-            // counter finder metadata
-            inputStream =  archive.getInputStream(CounterMetadataFileName);
+        DataArchive archive = GameModule.getGameModule().getDataArchive();
+        // counter finder metadata
+        try (InputStream inputStream =  archive.getInputStream(CounterMetadataFileName)){
             counterfinderMetadata = new CounterFinderMetadata();
             counterfinderMetadata.parseCounterFinderMetadataFile(inputStream);
 
@@ -152,9 +147,6 @@ public class CounterPaletteSearch extends AbstractBuildable implements GameCompo
         } catch (NullPointerException e) {
             counterfinderMetadata = null;
             throw new JDOMException("Cannot read counter finder metadata file", e);
-        }
-        finally {
-            IOUtils.closeQuietly(inputStream);
         }
         // create list of counters that can be searched for - unit, vehicle, gun, plane (most) counters are not searchable
         counterlist = counterfinderMetadata.getCounterTypes();

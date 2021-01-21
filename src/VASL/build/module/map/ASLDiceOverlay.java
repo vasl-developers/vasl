@@ -1055,31 +1055,31 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
             AddButton(p, c, l_iRow++, 2);
             comps.add(c);
 
-            c = CreateDiceButton("", "IFT", "IFT attack DR", KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), true, "IFT");
+            c = CreateDiceButton("", "IFT", "IFT attack DR", KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), true, "IFT");
             AddButton(p, c, l_iRow++, 2);
             comps.add(c);
 
-            c = CreateDiceButton("", "TH", "To Hit DR", KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), true, "TH");
+            c = CreateDiceButton("", "TH", "To Hit DR", KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), true, "TH");
             AddButton(p, c, l_iRow++, 2);
             comps.add(c);
 
-            c = CreateDiceButton("", "TK", "To Kill DR", KeyStroke.getKeyStroke(KeyEvent.VK_K, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), true, "TK");
+            c = CreateDiceButton("", "TK", "To Kill DR", KeyStroke.getKeyStroke(KeyEvent.VK_K, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), true, "TK");
             AddButton(p, c, l_iRow++, 2);
             comps.add(c);
 
-            c = CreateDiceButton("", "MC", "Morale Check DR", KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), true, "MC");
+            c = CreateDiceButton("", "MC", "Morale Check DR", KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), true, "MC");
             AddButton(p, c, l_iRow++, 2);
             comps.add(c);
 
-            c = CreateDiceButton("", "R", "Rally DR", KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), true, "Rally");
+            c = CreateDiceButton("", "R", "Rally DR", KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), true, "Rally");
             AddButton(p, c, l_iRow++, 2);
             comps.add(c);
 
-            c = CreateDiceButton("", "CC", "Close Combat DR", KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), true, "CC");
+            c = CreateDiceButton("", "CC", "Close Combat DR", KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), true, "CC");
             AddButton(p, c, l_iRow++, 2);
             comps.add(c);
 
-            c = CreateDiceButton("", "TC", "Task Check DR", KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), true, "TC");
+            c = CreateDiceButton("", "TC", "Task Check DR", KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), true, "TC");
             AddButton(p, c, l_iRow++, 10);
             comps.add(c);
 
@@ -1087,11 +1087,11 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
             AddButton(p, c, l_iRow++, 2);
             comps.add(c);
 
-            c = CreateDiceButton("", "SA", "Sniper Activation dr", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), false, "SA");
+            c = CreateDiceButton("", "SA", "Sniper Activation dr", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), false, "SA");
             AddButton(p, c, l_iRow++, 2);
             comps.add(c);
 
-            c = CreateDiceButton("", "RS", "Random Selection dr", KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK), false, "RS");
+            c = CreateDiceButton("", "RS", "Random Selection dr", KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), false, "RS");
             AddButton(p, c, l_iRow++, 20);
             comps.add(c);
 

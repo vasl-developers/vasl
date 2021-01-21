@@ -554,7 +554,7 @@ class VehicleInfo extends UnitInfo {
     CA = Integer.parseInt(st.nextToken()) - 1;
     TCA = Integer.parseInt(st.nextToken()) - 1;
     unitInfo += st.nextToken();
-    CE = new Boolean(st.nextToken()).booleanValue();
+    CE = Boolean.parseBoolean(st.nextToken());
     super.read(unitInfo);
     int index = back.indexOf(';');
     if (index >= 0) {

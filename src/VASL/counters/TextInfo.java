@@ -91,7 +91,7 @@ public class TextInfo extends Decorator implements EditablePiece {
       commands = new KeyCommand[1];
       commands[0] = new KeyCommand(
         "Show Info",
-        KeyStroke.getKeyStroke('I', InputEvent.CTRL_MASK),
+        KeyStroke.getKeyStroke('I', InputEvent.CTRL_DOWN_MASK),
         Decorator.getOutermost(this)
       );
     }
