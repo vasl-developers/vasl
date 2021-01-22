@@ -126,7 +126,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                         buildBoard(b, boardDesc);
                         v.add(b);
                     } catch (final BoardException e) {
-                        ErrorDialog.dataError(new BadDataReport("Board not found", boardDesc, e));
+                        ErrorDialog.dataWarning(new BadDataReport("Board not found", boardDesc, e));
                     }
                     command = command.substring(index + 3);
                 }
@@ -140,7 +140,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                     buildBoard(b, command);
                     v.add(b);
                 } catch (final BoardException e) {
-                    ErrorDialog.dataError(new BadDataReport("Unable to build board", command, e));
+                    ErrorDialog.dataWarning(new BadDataReport("Unable to build board", command, e));
                 }
             }
             comm = comm.append(new SetBoards(this, v));
@@ -602,7 +602,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             try {
                 buildBoard(b, "0\t0\t" + name);
             } catch (BoardException e) {
-                ErrorDialog.dataError(new BadDataReport("Unable to build board", name, e));
+                ErrorDialog.dataWarning(new BadDataReport("Unable to build board", name, e));
             }
         }
         if (enableDeluxe) {

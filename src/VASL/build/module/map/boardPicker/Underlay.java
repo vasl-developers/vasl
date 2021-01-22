@@ -24,6 +24,7 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.IOException;
 
@@ -32,6 +33,7 @@ import javax.imageio.stream.MemoryCacheImageInputStream;
 
 import VASSAL.build.GameModule;
 import VASSAL.tools.DataArchive;
+import VASSAL.tools.image.ImageUtils;
 import org.apache.commons.io.IOUtils;
 
 /**
@@ -59,6 +61,7 @@ public class Underlay extends SSROverlay {
 
   public Image loadImage() {
     Image underlayImage = null;
+    // Get the image from the module data archive...
     try(InputStream in = GameModule.getGameModule().getDataArchive().getInputStream("boardData/" + imageName)) {
       underlayImage = ImageIO.read(new MemoryCacheImageInputStream(in));
     }
@@ -66,8 +69,9 @@ public class Underlay extends SSROverlay {
     }
 
     if (underlayImage == null) {
-      try {
-        underlayImage = archive.getImage(imageName);
+      // ... or try to load it from the one passed in from the board
+      try (InputStream archiveIn = archive.getInputStream(imageName)) {
+        underlayImage = ImageIO.read(new MemoryCacheImageInputStream(archiveIn));
       }
       catch (IOException ex) {
         System.err.println("Underlay image " + imageName + " not found in " + archive.getName());
