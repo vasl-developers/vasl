@@ -33,7 +33,6 @@ import VASSAL.configure.DirectoryConfigurer;
 import VASSAL.configure.ValidationReport;
 import VASSAL.tools.ErrorDialog;
 import VASSAL.tools.ReadErrorDialog;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
@@ -57,7 +56,6 @@ import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.net.URL;
 import java.net.URLConnection;
@@ -240,16 +238,11 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
     public void initTerrainEditor() {
         if (terrain == null) {
             terrain = new TerrainEditor();
-
-            InputStream in = null;
-            try {
-                in = GameModule.getGameModule().getDataArchive().getInputStream(MODULE_SSR_CONTROL_FILE_NAME);
+            try ( InputStream in = GameModule.getGameModule().getDataArchive().getInputStream(MODULE_SSR_CONTROL_FILE_NAME)) {
                 SSRControlsFile ssrControlsFile = new SSRControlsFile(in, "game module");
                 terrain.readOptions(ssrControlsFile.getBasicNodes(), ssrControlsFile.getOptionNodes());
             } catch (IOException e) {
                 logger.warn("Error reading SSR controls file in module archive: " + e.getMessage());
-            } finally {
-                IOUtils.closeQuietly(in);
             }
         }
     }
@@ -361,20 +354,18 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
     // adds all the boards to the selection list whether present in local directory or not
     private ArrayList<String> getallboards() {
         ArrayList<String> allboardslist = new ArrayList<String>();
-        InputStream inputStream = null;
         try {
             URL base = new URL(BoardVersionChecker.getboardVersionURL());
             URLConnection conn = base.openConnection();
             conn.setUseCaches(false);
-            inputStream = conn.getInputStream();
+            try (InputStream inputStream = conn.getInputStream()) {
+                allboardslist = parseboardversionFile(inputStream);
+            }
 
-             allboardslist = parseboardversionFile(inputStream);
         } catch (IOException e){
 
         } catch (JDOMException e) {
             // throw new JDOMException("Cannot read the shared metadata file", e);
-        }finally {
-            IOUtils.closeQuietly(inputStream);
         }
         return allboardslist;
     }
@@ -437,7 +428,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
     private void tileBoard(String commonName) {
         final GameModule g = GameModule.getGameModule();
         final String hstr =
-                DigestUtils.shaHex(g.getGameName() + "_" + g.getGameVersion());
+                DigestUtils.sha1Hex(g.getGameName() + "_" + g.getGameVersion());
 
         String unReversedBoardName;
         if (commonName.startsWith("r")) {
@@ -1243,16 +1234,11 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                     for (Enumeration oEnum = b.getOverlays(); oEnum.hasMoreElements(); ) {
                         Overlay o = (Overlay) oEnum.nextElement();
                         if (!(o instanceof SSROverlay)) {
-                            InputStream in = null;
-                            try {
-
-                                in = GameModule.getGameModule().getDataArchive().getInputStream(OVERLAY_SSR_CONTROL_FILE_NAME);
+                            try (InputStream in = GameModule.getGameModule().getDataArchive().getInputStream(OVERLAY_SSR_CONTROL_FILE_NAME)) {
                                 SSRControlsFile ssrControlsFile = new SSRControlsFile(in, o.getName());
                                 readOptions(ssrControlsFile.getBasicNodes(), ssrControlsFile.getOptionNodes());
 
                             } catch (IOException ignore) {
-                            } finally {
-                                IOUtils.closeQuietly(in);
                             }
                         }
                     }
@@ -1615,9 +1601,9 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                     } else if (comp instanceof JComboBox) {
                         active.addElement(((JComboBox) comp).getSelectedItem());
                     } else if (comp instanceof JList) {
-                        Object val[] = ((JList) comp).getSelectedValues();
-                        for (int i = 0; i < val.length; ++i) {
-                            active.addElement(val[i]);
+                        List<Object> val = ((JList) comp).getSelectedValuesList();
+                        for (Object o : val ) {
+                            active.addElement(o);
                         }
                     }
                 }
@@ -1821,8 +1807,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                     if (o != null)
                         v.addElement(o);
                 } else if (source instanceof JList) {
-                    Object o[] = ((JList) source).getSelectedValues();
-                    for (int i = 0; i < o.length; ++i) {
+                    List<Object> objects = ((JList) source).getSelectedValuesList();
+                    for (Object o : objects) {
                         v.addElement(o);
                     }
                 } else {

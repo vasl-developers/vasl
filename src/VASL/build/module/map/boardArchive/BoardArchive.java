@@ -26,12 +26,9 @@ import javax.imageio.ImageIO;
 
 import VASL.LOS.Map.Map;
 import VASL.LOS.Map.Terrain;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.NodeList;
-
-import static org.apache.commons.io.IOUtils.closeQuietly;
 
 /**
  * This class is used to read and write files in the board archive
@@ -97,103 +94,68 @@ public class BoardArchive {
 
         // parse the board metadata
         metadata = new BoardMetadata(sharedBoardMetadata);
-        InputStream metadataFileStream = null;
-        InputStream dataFileStream = null;
-        InputStream overlaySSRFileStream = null;
-        InputStream colorsFileStream = null;
-        InputStream colorSSRFileStream = null;
-        InputStream SSRControlsFileStream = null;
 
         // open the archive
         ZipFile archive = new ZipFile(qualifiedBoardArchive);
+        try (archive) {
+            // read the board metadata file
+            try (InputStream metadataFileStream = getInputStreamForArchiveFile(archive, boardMetadataFileName)) {
 
-        // read the board metadata file
-        try {
-            metadataFileStream = getInputStreamForArchiveFile(archive, boardMetadataFileName);
-            metadata.parseBoardMetadataFile(metadataFileStream);
-            legacyBoard = false;
+                metadata.parseBoardMetadataFile(metadataFileStream);
+                legacyBoard = false;
 
 
-        } catch (Exception e) {
+            } catch (Exception e) {
 
-            // no metadata file so legacy archive
-            logger.info("Unable to read the board metadata in board archive " + archiveName);
-            legacyBoard = true;
+                // no metadata file so legacy archive
+                logger.info("Unable to read the board metadata in board archive " + archiveName);
+                legacyBoard = true;
 
-        }
-        finally {
-            closeQuietly(metadataFileStream);
-        }
+            }
 
-        // read the legacy data file
-        try {
-            dataFileStream = getInputStreamForArchiveFile(archive, dataFileName);
-            dataFile = new DataFile(dataFileStream);
-        }
-        catch (IOException e) {
+            // read the legacy data file
+            try (InputStream dataFileStream = getInputStreamForArchiveFile(archive, dataFileName)) {
+                dataFile = new DataFile(dataFileStream);
+            } catch (IOException e) {
 
-            // required for legacy boards
-            if(!legacyBoard) {
-                dataFile = null;
+                // required for legacy boards
+                if (!legacyBoard) {
+                    dataFile = null;
+                }
+            }
+
+            // read the legacy overlay SSR file
+            try (InputStream overlaySSRFileStream = getInputStreamForArchiveFile(archive, overlaySSRFileName)) {
+                overlaySSRFile = new OverlaySSRFile(overlaySSRFileStream, archiveName);
+            } catch (Exception ignore) {
+                // bury
+                overlaySSRFile = null;
+            }
+
+            // read the legacy colors file
+            try (InputStream colorsFileStream = getInputStreamForArchiveFile(archive, colorsFileName)) {
+                colorsFile = new ColorsFile(colorsFileStream, archiveName);
+            } catch (Exception ignore) {
+                // bury
+                colorsFile = null;
+            }
+
+            // read the legacy color SSR file
+            try (InputStream colorSSRFileStream = getInputStreamForArchiveFile(archive, colorSSRFileName)) {
+                colorSSRFile = new ColorSSRFile(colorSSRFileStream, archiveName);
+                // colorSSRFile.printAsXML();
+            } catch (Exception ignore) {
+                // bury
+                colorSSRFile = null;
+            }
+
+            // read the SSR controls file
+            try (InputStream SSRControlsFileStream = getInputStreamForArchiveFile(archive, SSRControlsFileName)) {
+                SSRControlsFile = new SSRControlsFile(SSRControlsFileStream, archiveName);
+            } catch (Exception ignore) {
+                // bury
             }
         }
-        finally {
-            closeQuietly(dataFileStream);
-        }
-
-        // read the legacy overlay SSR file
-        try {
-            overlaySSRFileStream = getInputStreamForArchiveFile(archive, overlaySSRFileName);
-            overlaySSRFile = new OverlaySSRFile(overlaySSRFileStream, archiveName);
-        } catch (Exception ignore) {
-            // bury
-            overlaySSRFile = null;
-        }
-        finally {
-            closeQuietly(overlaySSRFileStream);
-        }
-
-        // read the legacy colors file
-        try {
-            colorsFileStream = getInputStreamForArchiveFile(archive, colorsFileName);
-            colorsFile = new ColorsFile(colorsFileStream, archiveName);
-        }
-        catch (Exception ignore) {
-            // bury
-            colorsFile = null;
-        }
-        finally {
-            closeQuietly(colorsFileStream);
-        }
-
-        // read the legacy color SSR file
-        try {
-            colorSSRFileStream = getInputStreamForArchiveFile(archive, colorSSRFileName);
-            colorSSRFile = new ColorSSRFile(colorSSRFileStream, archiveName);
-            // colorSSRFile.printAsXML();
-        }
-        catch (Exception ignore) {
-            // bury
-            colorSSRFile = null;
-        }
-        finally {
-            closeQuietly(colorSSRFileStream);
-        }
-
-        // read the SSR controls file
-        try {
-            SSRControlsFileStream = getInputStreamForArchiveFile(archive, SSRControlsFileName);
-            SSRControlsFile = new SSRControlsFile(SSRControlsFileStream, archiveName);
-        }
-        catch (Exception ignore) {
-            // bury
-            SSRControlsFileStream = null;
-        }
-        finally {
-            closeQuietly(SSRControlsFileStream);
-        }
-
-        closeQuietly(archive);
     }
 
     /**
@@ -295,68 +257,59 @@ public class BoardArchive {
 
         // read the map if necessary; need to do so always in case of changes to a cropped or flipped board
          //if (map == null){
+            try (ZipFile archive = new ZipFile(qualifiedBoardArchive)) {
+                try (ObjectInputStream infile = new ObjectInputStream(
+                        new BufferedInputStream(
+                                new GZIPInputStream(
+                                        getInputStreamForArchiveFile(archive, LOSDataFileName))))) {
 
-            ObjectInputStream infile = null;
-            ZipFile archive = null;
-            try {
-                archive = new ZipFile(qualifiedBoardArchive);
-                infile =
-                        new ObjectInputStream(
-                                new BufferedInputStream(
-                                        new GZIPInputStream(
-                                                getInputStreamForArchiveFile(archive, LOSDataFileName))));
-                // read the map-level data
-                final int width = infile.readInt();
-                final int height = infile.readInt();
-                final int gridWidth = infile.readInt();
-                final int gridHeight = infile.readInt();
+                    // read the map-level data
+                    final int width = infile.readInt();
+                    final int height = infile.readInt();
+                    final int gridWidth = infile.readInt();
+                    final int gridHeight = infile.readInt();
 
-                String passgridconfig=offset;
-                if (isGEO()) {
-                    map = new Map(width, height, terrainTypes, passgridconfig, isCropping);
-                } else {
-                    //DR added code to pass hexWidth and Hexheight plus crop config and flag
-                    map = new Map(getHexWidth(), getHexHeight(), width, height, getA1CenterX(), getA1CenterY(), gridWidth, gridHeight, terrainTypes, passgridconfig, isCropping);
-                }
-
-                // read the terrain and elevations grids
-                 for (int x = 0; x < gridWidth; x++) {
-                    for (int y = 0; y < gridHeight; y++) {
-                        map.setGridElevation((int) infile.readByte(), x, y);
-                        map.setGridTerrainCode((int) infile.readByte() & (0xff), x, y);
+                    String passgridconfig = offset;
+                    if (isGEO()) {
+                        map = new Map(width, height, terrainTypes, passgridconfig, isCropping);
+                    } else {
+                        //DR added code to pass hexWidth and Hexheight plus crop config and flag
+                        map = new Map(getHexWidth(), getHexHeight(), width, height, getA1CenterX(), getA1CenterY(), gridWidth, gridHeight, terrainTypes, passgridconfig, isCropping);
                     }
-                }
 
-                // code added by DR to enbable rr embankments in RB
-                // set the rr embankments
-                map.setRBrrembankments(metadata.getRBrrembankments());
-
-                // read the hex information
-                for (int col = 0; col < map.getWidth(); col++) {
-                    for (int row = 0; row < map.getHeight() + (col % 2); row++) {
-                        final byte stairway = infile.readByte();
-                        if ((int) stairway == 1) {
-                            map.getHex(col, row).setStairway(true);
-                        } else {
-                                map.getHex(col, row).setStairway(false);
+                    // read the terrain and elevations grids
+                    for (int x = 0; x < gridWidth; x++) {
+                        for (int y = 0; y < gridHeight; y++) {
+                            map.setGridElevation((int) infile.readByte(), x, y);
+                            map.setGridTerrainCode((int) infile.readByte() & (0xff), x, y);
                         }
                     }
+
+                    // code added by DR to enbable rr embankments in RB
+                    // set the rr embankments
+                    map.setRBrrembankments(metadata.getRBrrembankments());
+
+                    // read the hex information
+                    for (int col = 0; col < map.getWidth(); col++) {
+                        for (int row = 0; row < map.getHeight() + (col % 2); row++) {
+                            final byte stairway = infile.readByte();
+                            if ((int) stairway == 1) {
+                                map.getHex(col, row).setStairway(true);
+                            } else {
+                                map.getHex(col, row).setStairway(false);
+                            }
+                        }
+                    }
+
+                    // code moved from before stairway loop by DR to enable factory quasi-levels in stairway hexes
+                    map.resetHexTerrain(gridadj);
+
+                    // set the slopes
+                    map.setSlopes(metadata.getSlopes());
                 }
-
-                // code moved from before stairway loop by DR to enable factory quasi-levels in stairway hexes
-                map.resetHexTerrain(gridadj);
-
-                // set the slopes
-                map.setSlopes(metadata.getSlopes());
-
             } catch(Exception e) {
                 logger.warn("Could not read the LOS data in board " + qualifiedBoardArchive);
                 return null;
-            }
-            finally {
-
-				org.apache.commons.io.IOUtils.closeQuietly(infile);
-                IOUtils.closeQuietly(archive);
             }
         //}
         return map;
@@ -369,16 +322,13 @@ public class BoardArchive {
     @SuppressWarnings("unused")  // want to keep write method with read for simplicity
     public void writeLOSData(Map map){
 
-        ObjectOutputStream outfile = null;
-        try {
-
-            // write the LOS data to a local temp file
-            final File tempFile = new File("VASL.temp.LOSData");
-            outfile =
-                    new ObjectOutputStream(
-                            new BufferedOutputStream(
-                                      new GZIPOutputStream(
-                                            new FileOutputStream(tempFile))));
+        // write the LOS data to a local temp file
+        final File tempFile = new File("VASL.temp.LOSData");
+        try (ObjectOutputStream outfile =
+                     new ObjectOutputStream(
+                             new BufferedOutputStream(
+                                     new GZIPOutputStream(
+                                             new FileOutputStream(tempFile))))){
 
             // write map-level information
             outfile.writeInt(map.getWidth());
@@ -419,10 +369,6 @@ public class BoardArchive {
             e.printStackTrace(System.err);
             System.exit(-1);
         }
-        finally {
-			org.apache.commons.io.IOUtils.closeQuietly(outfile);
-        }
-
     }
 
     /**
@@ -448,13 +394,9 @@ public class BoardArchive {
             final String imageFileName = metadata.getBoardImageFileName();
 
             // read the image
-            InputStream file = null;
-            ZipFile archive = null;
-            try {
-
-                // open the archive and get the file entries
-                archive = new ZipFile(qualifiedBoardArchive);
-                file = getInputStreamForArchiveFile(archive, imageFileName);
+            // open the archive and get the file entries
+            try (ZipFile archive = new ZipFile(qualifiedBoardArchive);
+                InputStream file = getInputStreamForArchiveFile(archive, imageFileName)){
                 boardImage = ImageIO.read(file);
             }
             catch (IOException e) {
@@ -462,10 +404,6 @@ public class BoardArchive {
                 logger.warn("Could not open the board image: " + imageFileName);
                 logger.warn(e.toString());
                 return null;
-            }
-            finally {
-                closeQuietly(file);
-                closeQuietly(archive);
             }
         }
         return boardImage;

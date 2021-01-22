@@ -27,6 +27,7 @@ import VASSAL.tools.SequenceEncoder;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.InputEvent;
 
 /**
  * A Concealment counter
@@ -79,7 +80,7 @@ public class Concealment extends Decorator implements EditablePiece {
   protected KeyCommand[] myGetKeyCommands() {
     if (commands == null) {
       commands = new KeyCommand[1];
-      commands[0] = new KeyCommand("Conceal", KeyStroke.getKeyStroke('C', java.awt.event.InputEvent.CTRL_MASK), Decorator.getOutermost(this));
+      commands[0] = new KeyCommand("Conceal", KeyStroke.getKeyStroke('C', InputEvent.CTRL_DOWN_MASK), Decorator.getOutermost(this));
     }
     return owner == null || owner.equals(GameModule.getUserId()) || ObscurableOptions.getInstance().isUnmaskable(owner) ? commands : new KeyCommand[0];
   }
