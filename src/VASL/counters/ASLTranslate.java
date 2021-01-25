@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import VASL.build.module.map.boardPicker.ASLBoard;
+import VASSAL.build.GameModule;
+import VASSAL.build.module.Map;
 import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.build.module.map.boardPicker.board.HexGrid;
 import VASSAL.command.Command;
@@ -33,6 +35,8 @@ import VASSAL.counters.Properties;
 import VASSAL.counters.Stack;
 import VASSAL.counters.Translate;
 
+import javax.swing.*;
+
 import static VASSAL.build.GameModule.getGameModule;
 
 /**
@@ -40,6 +44,19 @@ import static VASSAL.build.GameModule.getGameModule;
  */
 public class ASLTranslate extends Translate {
   public ASLTranslate() {
+  }
+
+  @Override
+  protected Command newTranslate(KeyStroke stroke) {
+    // The global preference should override any counter values
+    if(!((Boolean) GameModule.getGameModule().getPrefs().getValue(Map.MOVING_STACKS_PICKUP_UNITS)).booleanValue()) {
+      boolean moveStackState = moveStack;
+      moveStack = false;
+      Command c = super.newTranslate(stroke);
+      moveStack = moveStackState;
+      return c;
+    }
+    return super.newTranslate(stroke);
   }
 
   public ASLTranslate(String type, GamePiece inner) {
