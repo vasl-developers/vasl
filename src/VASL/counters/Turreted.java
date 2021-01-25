@@ -112,21 +112,6 @@ public class Turreted extends Embellishment0 implements EditablePiece {
     super.draw(g, x, y, obs, zoom);
   }
 
-  protected Image getCurrentImage() throws java.io.IOException {
-    if (flipped || value != getVehicleCA()) {
-      try {
-        return Op.load((flipped ? back : front) + value + ".gif").getImage(null);
-      }
-      catch (Exception e) {
-        e.printStackTrace();
-        return null;
-      }
-    }
-    else {
-      return null;
-    }
-  }
-
   public Rectangle getCurrentImageBounds() {
     Rectangle r;
     if (flipped || value != getVehicleCA()) {

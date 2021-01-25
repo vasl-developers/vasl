@@ -24,6 +24,7 @@ import VASSAL.build.module.map.boardPicker.board.MapGrid;
 import VASSAL.build.module.map.boardPicker.board.MapGrid.BadCoords;
 import VASSAL.tools.DataArchive;
 import VASSAL.tools.SequenceEncoder;
+import VASSAL.tools.image.ImageUtils;
 import org.apache.commons.io.IOUtils;
 
 import javax.imageio.ImageIO;
@@ -137,7 +138,7 @@ public class Overlay implements Cloneable {
             c = 'a';
         }
 
-        try (InputStream in = archive.getImageInputStream(fileName(name + c))){
+        try (InputStream in = archive.getInputStream(fileName(name + c))){
             im = ImageIO.read(new MemoryCacheImageInputStream(in));
         } catch (IOException e) {
             e.printStackTrace();
@@ -189,7 +190,10 @@ public class Overlay implements Cloneable {
         char c = getOrientation();
         boundaries.setLocation(board.getGrid().getLocation(hex1));
         boundaries.translate(-offset(c, board).x, -offset(c, board).y);
-        boundaries.setSize(archive.getImageSize(fileName(name + c)));
+        final String fn = fileName(name + c);
+        try (InputStream in = archive.getInputStream(fn)) {
+            boundaries.setSize(ImageUtils.getImageSize(fn, in));
+        }
     }
 
     private String fileName(String name) {

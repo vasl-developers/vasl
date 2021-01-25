@@ -67,7 +67,7 @@ public class SSROverlay extends Overlay {
 
   protected Image loadImage() {
     Image im = null;
-    try (InputStream in = archive.getImageInputStream(name)){
+    try (InputStream in = archive.getInputStream(name)){
       im = ImageIO.read(new MemoryCacheImageInputStream(in));
     }
     catch (IOException e) {

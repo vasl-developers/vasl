@@ -129,7 +129,7 @@ public class ASLBoard extends Board {
             VASLBoardArchive = new BoardArchive(archiveFile.getName(), archiveFile.getParent(), ASLMap.getSharedBoardMetadata());
 
         } catch (IOException e) {
-            ErrorDialog.dataError(new BadDataReport("Unable to open board file", archiveFile.getName(), e));
+            ErrorDialog.dataWarning(new BadDataReport("Unable to open board file", archiveFile.getName(), e));
         }
         try {
             boardFile = archiveFile;
