@@ -23,6 +23,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.event.InputEvent;
 
 import javax.swing.KeyStroke;
 
@@ -207,7 +208,7 @@ public class Turreted extends Embellishment0 implements EditablePiece {
       commands[c.length]
           = new KeyCommand
               ("BU",
-               KeyStroke.getKeyStroke('B', java.awt.event.InputEvent.CTRL_MASK),
+               KeyStroke.getKeyStroke('B', InputEvent.CTRL_DOWN_MASK),
                Decorator.getOutermost(this));
     }
     return commands;

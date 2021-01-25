@@ -56,15 +56,10 @@ public class ASLTilingHandler extends VASSAL.launch.TilingHandler {
   @Override
   protected Dimension getImageSize(DataArchive archive, String iname)
                                                            throws IOException {
-    InputStream in = null;
-    try {
-      in = archive.getInputStream(iname);
+    try (InputStream in = archive.getInputStream(iname)){
       final Dimension id = ImageUtils.getImageSize(iname, in);
       in.close();
       return id;
-    }
-    finally {
-      IOUtils.closeQuietly(in);
     }
   }
 
@@ -126,108 +121,93 @@ public class ASLTilingHandler extends VASSAL.launch.TilingHandler {
                                    throws CancellationException, IOException {
 
     final InetAddress lo = InetAddress.getByName(null);
-    final ServerSocket ssock = new ServerSocket(0, 0, lo);
+    try (final ServerSocket ssock = new ServerSocket(0, 0, lo)) {
+      final int port = ssock.getLocalPort();
+      final List<String> args = new ArrayList<String>();
+      args.addAll(Arrays.asList(new String[]{
+              String.valueOf(Info.getJavaBinPath()),
+              "-classpath",
+              System.getProperty("java.class.path"),
+              "-Xmx" + maxheap + "M",
+              "-DVASSAL.id=",
+              "-Duser.home=" + System.getProperty("user.home"),
+              "-DVASSAL.port=" + port,
+              "VASSAL.tools.image.tilecache.ZipFileImageTiler",
+              aname,
+              cdir.getAbsolutePath(),
+              String.valueOf(tdim.width),
+              String.valueOf(tdim.height)
+      }));
 
-    final int port = ssock.getLocalPort();
+      args.addAll(multi);
 
-    final List<String> args = new ArrayList<String>();
-    args.addAll(Arrays.asList(new String[] {
-            String.valueOf(Info.getJavaBinPath()),
-      "-classpath",
-      System.getProperty("java.class.path"),
-      "-Xmx" + maxheap + "M",
-      "-DVASSAL.id=",
-      "-Duser.home=" + System.getProperty("user.home"),
-      "-DVASSAL.port=" + port,
-      "VASSAL.tools.image.tilecache.ZipFileImageTiler",
-      aname,
-      cdir.getAbsolutePath(),
-      String.valueOf(tdim.width),
-      String.valueOf(tdim.height)
-    }));
+      // set up the process
+      final InputStreamPump outP = new InputOutputStreamPump(null, System.out);
+      final InputStreamPump errP = new InputOutputStreamPump(null, System.err);
 
-    args.addAll(multi);
+      final ProcessWrapper proc = new ProcessLauncher().launch(
+              null,
+              outP,
+              errP,
+              args.toArray(new String[args.size()])
+      );
 
-    // set up the process
-    final InputStreamPump outP = new InputOutputStreamPump(null, System.out);
-    final InputStreamPump errP = new InputOutputStreamPump(null, System.err);
+      // write the image paths to child's stdin, one per line
+      try (PrintWriter stdin = new PrintWriter(proc.stdin)) {
 
-    final ProcessWrapper proc = new ProcessLauncher().launch(
-      null,
-      outP,
-      errP,
-      args.toArray(new String[args.size()])
-    );
-
-    // write the image paths to child's stdin, one per line
-    PrintWriter stdin = null;
-    try {
-      stdin = new PrintWriter(proc.stdin);
-      for (String m : multi) {
-        stdin.println(m);
-      }
-    }
-    finally {
-      IOUtils.closeQuietly(stdin);
-    }
-
-    Socket csock = null;
-    DataInputStream in = null;
-    try {
-      csock = ssock.accept();
-      csock.shutdownOutput();
-
-      in = new DataInputStream(csock.getInputStream());
-
-      boolean done = false;
-      byte type;
-      while (!done) {
-        type = in.readByte();
-
-        switch (type) {
-        case STARTING_IMAGE:
-          in.readUTF();
-          break;
-
-        case TILE_WRITTEN:
-          break;
-
-        case TILING_FINISHED:
-          done = true;
-          break;
-
-        default:
-          throw new IllegalStateException("bad type: " + type);
+        for (String m : multi) {
+          stdin.println(m);
         }
       }
 
-      in.close();
-      csock.close();
-      ssock.close();
-    }
-    catch (IOException e) {
+      try (Socket csock = ssock.accept();
+           DataInputStream in = new DataInputStream(csock.getInputStream())) {
 
-    }
-    finally {
-      IOUtils.closeQuietly(in);
-      IOUtils.closeQuietly(csock);
-      IOUtils.closeQuietly(ssock);
-    }
+        csock.shutdownOutput();
+        boolean done = false;
+        byte type;
+        while (!done) {
+          type = in.readByte();
 
-    // wait for the tiling process to end
-    try {
-      final int retval = proc.future.get();
-      if (retval != 0) {
-        throw new IOException("return value == " + retval);
+          switch (type) {
+            case STARTING_IMAGE:
+              in.readUTF();
+              break;
+
+            case TILE_WRITTEN:
+              break;
+
+            case TILING_FINISHED:
+              done = true;
+              break;
+
+            default:
+              throw new IllegalStateException("bad type: " + type);
+          }
+        }
+
+        in.close();
+        csock.close();
+        ssock.close();
+      } catch (IOException e) {
+
       }
-    }
-    catch (ExecutionException e) {
-      // should never happen
-      throw new IllegalStateException(e);
-    }
-    catch (InterruptedException e) {
-      // should never happen
-      throw new IllegalStateException(e);
+
+      // wait for the tiling process to end
+      try {
+        final int retval = proc.future.get();
+        if (retval != 0) {
+          throw new IOException("return value == " + retval);
+        }
+      }
+      catch (ExecutionException e) {
+        // should never happen
+        throw new IllegalStateException(e);
+      }
+      catch (InterruptedException e) {
+        // should never happen
+        throw new IllegalStateException(e);
+      }
     }
   }
 }

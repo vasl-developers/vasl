@@ -72,12 +72,10 @@ public class CounterMetadataFile {
 
     public CounterMetadataFile() {
 
-        InputStream inputStream = null;
         DataArchive archive = GameModule.getGameModule().getDataArchive();
-        try {
+        try (InputStream inputStream = archive.getInputStream(counterMetadataFileName)) {
 
             // counter metadata
-            inputStream = archive.getInputStream(counterMetadataFileName);
             parseCounterMetadataFile(inputStream);
 
             // give up on any errors
@@ -90,9 +88,6 @@ public class CounterMetadataFile {
         } catch (NullPointerException e) {
             metadataElements = null;
             ErrorDialog.bug(e);
-        }
-        finally {
-            IOUtils.closeQuietly(inputStream);
         }
     }
 

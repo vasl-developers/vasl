@@ -190,13 +190,9 @@ public class ASLMap extends Map {
      */
     private void readMetadata() throws JDOMException {
 
-        InputStream inputStream = null;
-        try {
-
-            DataArchive archive = GameModule.getGameModule().getDataArchive();
-
-            // shared board metadata
-            inputStream =  archive.getInputStream(sharedBoardMetadataFileName);
+        DataArchive archive = GameModule.getGameModule().getDataArchive();
+        // shared board metadata
+        try (InputStream inputStream =  archive.getInputStream(sharedBoardMetadataFileName)) {
             sharedBoardMetadata = new SharedBoardMetadata();
             sharedBoardMetadata.parseSharedBoardMetadataFile(inputStream);
 
@@ -211,10 +207,6 @@ public class ASLMap extends Map {
             sharedBoardMetadata = null;
             throw new JDOMException("Cannot read the shared metadata file", e);
         }
-        finally {
-            IOUtils.closeQuietly(inputStream);
-        }
-
     }
 
     /**
