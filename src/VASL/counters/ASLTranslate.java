@@ -22,9 +22,12 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import VASL.build.module.ASLMap;
+import VASL.build.module.map.ASLPieceMover;
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.Map;
+import VASSAL.build.module.map.MovementReporter;
 import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.build.module.map.boardPicker.board.HexGrid;
 import VASSAL.command.Command;
@@ -49,11 +52,14 @@ public class ASLTranslate extends Translate {
   @Override
   protected Command newTranslate(KeyStroke stroke) {
     // The global preference should override any counter values
-    if(!((Boolean) GameModule.getGameModule().getPrefs().getValue(Map.MOVING_STACKS_PICKUP_UNITS)).booleanValue()) {
+    if(!(Boolean) GameModule.getGameModule().getPrefs().getValue(Map.MOVING_STACKS_PICKUP_UNITS)) {
       boolean moveStackState = moveStack;
       moveStack = false;
       Command c = super.newTranslate(stroke);
       moveStack = moveStackState;
+      MovementReporter movementReporter = new MovementReporter(c);
+      Command report = movementReporter.getReportCommand();
+      report.execute();
       return c;
     }
     return super.newTranslate(stroke);
