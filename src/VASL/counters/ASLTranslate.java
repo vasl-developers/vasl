@@ -22,8 +22,6 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import VASL.build.module.ASLMap;
-import VASL.build.module.map.ASLPieceMover;
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.Map;
@@ -32,11 +30,7 @@ import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.build.module.map.boardPicker.board.HexGrid;
 import VASSAL.command.Command;
 import VASSAL.command.NullCommand;
-import VASSAL.counters.GamePiece;
-import VASSAL.counters.KeyBuffer;
-import VASSAL.counters.Properties;
-import VASSAL.counters.Stack;
-import VASSAL.counters.Translate;
+import VASSAL.counters.*;
 
 import javax.swing.*;
 
@@ -49,22 +43,54 @@ public class ASLTranslate extends Translate {
   public ASLTranslate() {
   }
 
+  // Move only selected pieces in a stack
+  // Report stack movements together
   @Override
   protected Command newTranslate(KeyStroke stroke) {
     // The global preference should override any counter values
     if(!(Boolean) GameModule.getGameModule().getPrefs().getValue(Map.MOVING_STACKS_PICKUP_UNITS)) {
-      boolean moveStackState = moveStack;
-      moveStack = false;
-      Command c = super.newTranslate(stroke);
-      moveStack = moveStackState;
-      MovementReporter movementReporter = new MovementReporter(c);
-      Command report = movementReporter.getReportCommand();
-      report.execute();
-      return c;
+      GamePiece target = this.findTarget(stroke);
+      if (target == null) {
+        return null;
+      } else {
+        Point p = this.getPosition();
+        this.translate(p);
+        if (!Boolean.TRUE.equals(Decorator.getOutermost(this).getProperty("IgnoreGrid"))) {
+          p = this.getMap().snapTo(p);
+        }
+        Command c = new NullCommand();
+        if (target instanceof Stack) {
+          for (GamePiece gamePiece : ((Stack) target).asList()) {
+            if (Boolean.TRUE.equals(gamePiece.getProperty("Selected"))) {
+              c = c.append(movePiece(gamePiece, p));
+            }
+          }
+        } else {
+          c = super.newTranslate(stroke);
+        }
+        MovementReporter movementReporter = new MovementReporter(c);
+        Command report = movementReporter.getReportCommand();
+        report.execute();
+        return c;
+      }
     }
     return super.newTranslate(stroke);
   }
 
+  // Override to move expanded stacks
+  @Override
+  protected GamePiece findTarget(KeyStroke stroke) {
+    GamePiece outer = Decorator.getOutermost(this);
+    GamePiece target = outer;
+    if (this.moveStack && outer.getParent() != null) {
+      if (outer != outer.getParent().topPiece(GameModule.getUserId())) {
+        target = null;
+      } else {
+        target = outer.getParent();
+      }
+    }
+    return target;
+  }
   public ASLTranslate(String type, GamePiece inner) {
     super(type, inner);
   }
