@@ -393,3 +393,5 @@ Rileys = 1.6
 RM = 1.0
 KBR = 1.0
 Eagles = 1.0
+Sch = 1.0
+Voss = 1.0

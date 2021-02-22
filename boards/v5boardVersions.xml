@@ -426,6 +426,8 @@
 		<boarddata name="RM" version="1.0" versionDate="Apr 2020" description="" />		
 		<boarddata name="KBR" version="1.0" versionDate="Apr 2020" description="" />		
 		<boarddata name="Eagles" version="1.0" versionDate="Sep 2020" description="" />
+		<boarddata name="Sch" version="1.0" versionDate="Feb 2021" description="" />
+		<boarddata name="Voss" version="1.0" versionDate="Feb 2021" description="" />
 	</otherBoards>
 
 </boardsMetadata>
