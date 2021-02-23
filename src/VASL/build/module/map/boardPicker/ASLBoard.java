@@ -137,17 +137,13 @@ public class ASLBoard extends Board {
         imageFile = VASLBoardArchive.getBoardImageFileName();
         version = VASLBoardArchive.getVersion();
         if (version == null){version="0.0";}
-        try {
-            ((Translatable) getGrid()).setAttribute(HexGrid.X0, (int) VASLBoardArchive.getA1CenterX());
-            ((Translatable) getGrid()).setAttribute(HexGrid.Y0, (int) VASLBoardArchive.getA1CenterY());
-            ((Translatable) getGrid()).setAttribute(HexGrid.DX, VASLBoardArchive.getHexWidth());
-            ((Translatable) getGrid()).setAttribute(HexGrid.DY, VASLBoardArchive.getHexHeight());
-            ((Translatable) getGrid()).setAttribute(HexGrid.SNAP_SCALE, VASLBoardArchive.getSnapScale());
-            ((Translatable) getGrid()).setAttribute(BoardArchive.ALT_HEX_GRID_KEY, Boolean.toString(VASLBoardArchive.isAltHexGrain()));
-        } catch (Exception e) {
-            ErrorDialog.dataWarning(new BadDataReport("Unable to open board file", archiveFile.getName(), e));
-            return ;
-        }
+        ((Translatable) getGrid()).setAttribute(HexGrid.X0, (int) VASLBoardArchive.getA1CenterX());
+        ((Translatable) getGrid()).setAttribute(HexGrid.Y0, (int) VASLBoardArchive.getA1CenterY());
+        ((Translatable) getGrid()).setAttribute(HexGrid.DX, VASLBoardArchive.getHexWidth());
+        ((Translatable) getGrid()).setAttribute(HexGrid.DY, VASLBoardArchive.getHexHeight());
+        ((Translatable) getGrid()).setAttribute(HexGrid.SNAP_SCALE, VASLBoardArchive.getSnapScale());
+        ((Translatable) getGrid()).setAttribute(BoardArchive.ALT_HEX_GRID_KEY, Boolean.toString(VASLBoardArchive.isAltHexGrain()));
+
     }
 
     public File getFile() {
