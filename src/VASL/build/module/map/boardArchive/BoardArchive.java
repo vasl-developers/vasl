@@ -97,6 +97,7 @@ public class BoardArchive {
 
         // open the archive
         ZipFile archive = new ZipFile(qualifiedBoardArchive);
+
         try (archive) {
             // read the board metadata file
             try (InputStream metadataFileStream = getInputStreamForArchiveFile(archive, boardMetadataFileName)) {
@@ -290,13 +291,26 @@ public class BoardArchive {
                     map.setRBrrembankments(metadata.getRBrrembankments());
 
                     // read the hex information
-                    for (int col = 0; col < map.getWidth(); col++) {
-                        for (int row = 0; row < map.getHeight() + (col % 2); row++) {
-                            final byte stairway = infile.readByte();
-                            if ((int) stairway == 1) {
-                                map.getHex(col, row).setStairway(true);
-                            } else {
-                                map.getHex(col, row).setStairway(false);
+                    if(map.getMapConfiguration().equals("TopLeftHalfHeightEqualRowCount") || map.getA1CenterY()==65) {
+                        for (int col = 0; col < map.getWidth(); col++) {
+                            for (int row = 0; row < map.getHeight(); row++) { // no extra hex for boards where each col has same number of rows (eg RO)
+                                final byte stairway = infile.readByte();
+                                if ((int) stairway == 1) {
+                                    map.getHex(col, row).setStairway(true);
+                                } else {
+                                    map.getHex(col, row).setStairway(false);
+                                }
+                            }
+                        }
+                    } else {
+                        for (int col = 0; col < map.getWidth(); col++) {
+                            for (int row = 0; row < map.getHeight() + (col % 2); row++) {
+                                final byte stairway = infile.readByte();
+                                if ((int) stairway == 1) {
+                                    map.getHex(col, row).setStairway(true);
+                                } else {
+                                    map.getHex(col, row).setStairway(false);
+                                }
                             }
                         }
                     }
@@ -345,10 +359,18 @@ public class BoardArchive {
             }
 
             // write the hex information
-            for (int col = 0; col < map.getWidth(); col++) {
-                for (int row = 0; row < map.getHeight() + (col % 2); row++) {
-                    outfile.writeByte( map.getHex(col, row).hasStairway() ? 1: 0);
+            if(map.getMapConfiguration().equals("TopLeftHalfHeightEqualRowCount")){
+                for (int col = 0; col < map.getWidth(); col++) {
+                    for (int row = 0; row < map.getHeight(); row++) { // no extra hex for boards where each col has same number of rows (eg RO)
+                        outfile.writeByte( map.getHex(col, row).hasStairway() ? 1: 0);
+                    }
                 }
+            } else {
+                for (int col = 0; col < map.getWidth(); col++) {
+                    for (int row = 0; row < map.getHeight() + (col % 2); row++) {
+                        outfile.writeByte( map.getHex(col, row).hasStairway() ? 1: 0);
+                    }
+                     }
             }
 
             outfile.close();

@@ -497,8 +497,12 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
 
                 // get the board version
                 VASLBoard b = new VASLBoard();
-                b.initializeFromArchive(boardFile);
-
+                try {
+                    b.initializeFromArchive(boardFile);
+                } catch (Exception e) {
+                    // Fail silently if we can't find a version
+                    return;
+                }
                 /*// get the current board version from the game properties
                 Properties properties;
                 String availableVersion = null;
@@ -1120,6 +1124,12 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             }
             try {
                 BoardSlot b = newmatch(bdName.getSelectedIndex());
+                if (b==null){
+                    // fail silently
+                    clear();
+                    status.setText("Missing board: fix Map Config.");
+                    return;
+                }
                 status.setText(((ASLBoardSlot) (b)).addOverlay(ovrName.getText().toLowerCase(), hex1.getText().toLowerCase(), hex2.getText().toLowerCase()));
                 ovrName.setText("");
                 hex1.setText("");

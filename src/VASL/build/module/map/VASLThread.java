@@ -789,7 +789,9 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
 
                     leveladj=0;
                     if(source.getName().contains("Rooftop")) {
-                        leveladj=-0.5;
+                        if (!source.getDownLocation().getTerrain().getName().equals("Wooden Building")) {  // exception to handle Wooden Warehouses in bdRO
+                            leveladj = -0.5;
+                        }
                     }
                     if(source.getHex().isDepressionTerrain() && !source.isCenterLocation()) {
                         leveladj=+1;
@@ -808,7 +810,9 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
 
                     leveladj=0;
                     if(target.getName().contains("Rooftop")) {
-                        leveladj=-0.5;
+                        if (!target.getDownLocation().getTerrain().getName().equals("Wooden Building")) {  // exception to handle Wooden Warehouses in bdRO
+                            leveladj = -0.5;
+                        }
                     }
                     if(target.getHex().isDepressionTerrain() && !target.isCenterLocation()) {
                         leveladj=+1;
