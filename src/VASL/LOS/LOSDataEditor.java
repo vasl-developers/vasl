@@ -62,6 +62,7 @@ public class LOSDataEditor {
 
         Map m;
         String passgridconfig= boardArchive.getHexGridConfig();
+        if(passgridconfig==null){passgridconfig="Normal";}
         boolean isCropping=false;
         if (boardArchive.isGEO()) {
 
@@ -395,6 +396,10 @@ public class LOSDataEditor {
                     newTerr = map.getTerrain("Stone Factory Wall, 1.5 Level").getType();
                 } else if (terr.getName().equals("Stone Factory, 2.5 Level")) {
                     newTerr = map.getTerrain("Stone Factory Wall, 2.5 Level").getType();
+                } else if (terr.getName().equals("Roofless Stone Factory, 1.5 Level")) {
+                    newTerr = map.getTerrain("Stone Factory Wall, 1.5 Level").getType();
+                } else if (terr.getName().equals("Roofless Stone Factory, 2.5 Level")) {
+                    newTerr = map.getTerrain("Stone Factory Wall, 2.5 Level").getType();
                 }
 
                 if (map.getGridTerrain(x, y).isFactoryTerrain() &&
@@ -664,18 +669,34 @@ public class LOSDataEditor {
         }
 
         // change the hex grid
-        for (int col = 0; col < map.getWidth(); col++) {
-            for (int row = 0; row < map.getHeight() + (col % 2); row++) {
+        if(map.getMapConfiguration().equals("TopLeftHalfHeightEqualRowCount")){
+            for (int col = 0; col < map.getWidth(); col++) {
+                for (int row = 0; row < map.getHeight(); row++) { // no extra hex for boards where each col has same number of rows (eg RO)
 
-                Hex[][] hexGrid = map.getHexGrid();
+                    Hex[][] hexGrid = map.getHexGrid();
 
-                if (hexGrid[col][row].getHexBorder().intersects(s.getBounds())) {
+                    if (hexGrid[col][row].getHexBorder().intersects(s.getBounds())) {
 
-                    hexGrid[col][row].changeAllTerrain(fromTerrain, toTerrain, s);
-                    changed = true;
+                        hexGrid[col][row].changeAllTerrain(fromTerrain, toTerrain, s);
+                        changed = true;
+                    }
+                }
+            }
+        } else {
+            for (int col = 0; col < map.getWidth(); col++) {
+                for (int row = 0; row < map.getHeight() + (col % 2); row++) {
+
+                    Hex[][] hexGrid = map.getHexGrid();
+
+                    if (hexGrid[col][row].getHexBorder().intersects(s.getBounds())) {
+
+                        hexGrid[col][row].changeAllTerrain(fromTerrain, toTerrain, s);
+                        changed = true;
+                    }
                 }
             }
         }
+
         return changed;
     }
 
@@ -701,16 +722,31 @@ public class LOSDataEditor {
         }
 
         // change the base height of the hex grid
-        for (int col = 0; col < map.getWidth(); col++) {
-            for (int row = 0; row < map.getHeight() + (col % 2); row++) {
+        if(map.getMapConfiguration().equals("TopLeftHalfHeightEqualRowCount")){
+            for (int col = 0; col < map.getWidth(); col++) {
+                for (int row = 0; row < map.getHeight(); row++) { // no extra hex for boards where each col has same number of rows (eg RO)
+                    Hex[][] hexGrid = map.getHexGrid();
 
-                Hex[][] hexGrid = map.getHexGrid();
-
-                if (hexGrid[col][row].getBaseHeight() == fromElevation &&
+                    if (hexGrid[col][row].getBaseHeight() == fromElevation &&
                         hexGrid[col][row].getHexBorder().intersects(s.getBounds())) {
 
-                    hexGrid[col][row].setBaseHeight(toElevation);
-                    changed = true;
+                        hexGrid[col][row].setBaseHeight(toElevation);
+                        changed = true;
+                    }
+                }
+            }
+        } else {
+            for (int col = 0; col < map.getWidth(); col++) {
+                for (int row = 0; row < map.getHeight() + (col % 2); row++) {
+
+                    Hex[][] hexGrid = map.getHexGrid();
+
+                    if (hexGrid[col][row].getBaseHeight() == fromElevation &&
+                        hexGrid[col][row].getHexBorder().intersects(s.getBounds())) {
+
+                        hexGrid[col][row].setBaseHeight(toElevation);
+                        changed = true;
+                    }
                 }
             }
         }
@@ -731,9 +767,8 @@ public class LOSDataEditor {
     public void readLOSData() {
 
         // code added by DR to enable unlimited cropping
-        String offset="";
+        String offset=boardArchive.getHexGridConfig();
         map = boardArchive.getLOSData(offset, false);
-
         if (map == null) {
 
             // convert the image

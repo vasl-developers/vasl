@@ -275,38 +275,112 @@ public class Hex {
      * set the "on map?" flags
      */
     private void  setHexFlags() {
-
+        // reworked Jan 2020 by Doug R to reflect hex configuration possibilities
         // first column?
-        if (columnNumber == 0) {
+        if (map.getMapConfiguration() == "Normal" && map.getA1CenterY()!=65) {
+            if (columnNumber == 0) {
+                southWestOnMap = false;
+                northWestOnMap = false;
+            }
+            // last column?
+            if (columnNumber + 1 == map.getWidth()) {
+                southEastOnMap = false;
+                northEastOnMap = false;
+            }
+            // first hex in odd column?
+            if ((columnNumber % 2 == 1) && (rowNumber == 0)) {
+                northOnMap = false;
+                northEastOnMap = false;
+                northWestOnMap = false;
+            }
+            // last hex in odd column?
+            if ((columnNumber % 2 == 1) && (rowNumber == map.getHeight())) {
+                southOnMap = false;
+                southEastOnMap = false;
+                southWestOnMap = false;
+            }
+        } else if (map.getMapConfiguration() == "TopLeftHalfHeight") {
+            // first column
+            if (columnNumber == 0) {
+                southWestOnMap = false;
+                northWestOnMap = false;
+            }
 
-            southWestOnMap  = false;
-            northWestOnMap  = false;
+            // last column?
+            if (columnNumber + 1 == map.getWidth()) {
+                southEastOnMap = false;
+                northEastOnMap = false;
+            }
+            //first hex in even column (A, C, E as A = col 0)
+            if ((columnNumber % 2 == 0) && (rowNumber == 0)) {
+                northOnMap = false;
+                northEastOnMap = false;
+                northWestOnMap = false;
+            }
+            // last hex in even column?
+            if ((columnNumber % 2 == 0) && (rowNumber == map.getHeight())) {
+                southOnMap = false;
+                southEastOnMap = false;
+                southWestOnMap = false;
+            }
+        } else if (map.getMapConfiguration() == "FullHex") {
+            // no need to do first and last col tests as all east/west hexides on map due to "Full" config
+            // first hex in odd column?
+            if ((columnNumber % 2 == 1) && (rowNumber == 0)) {
+                northOnMap = false;
+                northEastOnMap = false;
+                northWestOnMap = false;
+            }
+            // last hex in odd column?
+            if ((columnNumber % 2 == 1) && (rowNumber == map.getHeight())) {
+                southOnMap = false;
+                southEastOnMap = false;
+                southWestOnMap = false;
+            }
+        } else if (map.getMapConfiguration() == "FullHexHalfHeight") {
+            // no need to do first and last col tests as all east/west hexides on map due to "Full" config
+            //first hex in even column (A, C, E as A = col 0)
+            if ((columnNumber % 2 == 0) && (rowNumber == 0)) {
+                northOnMap = false;
+                northEastOnMap = false;
+                northWestOnMap = false;
+            }
+            // last hex in even column?
+            if ((columnNumber % 2 == 0) && (rowNumber == map.getHeight())) {
+                southOnMap = false;
+                southEastOnMap = false;
+                southWestOnMap = false;
+            }
+            // above works for geo style where one col (odd or even) has all full height hexes and the other column has a top and bottom half hex
+            // need to deal with configuration where one col (odd or even) has top half height hex and bottom full height and the other column has top full height hex and bottom half height hex
+            // at present RO is the only los-enabled map board with this configuration - see below
+        } else if (map.getMapConfiguration() == "TopLeftHalfHeightEqualRowCount" || map.getA1CenterY()==65) {
+// f        // first column
+            if (columnNumber == 0) {
+                southWestOnMap = false;
+                northWestOnMap = false;
+            }
+            // last column?
+            if (columnNumber + 1 == map.getWidth()) {
+                southEastOnMap = false;
+                northEastOnMap = false;
+            }
+            //first hex in even column (A, C, E as A = col 0)
+            if ((columnNumber % 2 == 0) && (rowNumber == 0)) {
+                northOnMap = false;
+                northEastOnMap = false;
+                northWestOnMap = false;
+            }
+            // last hex in odd column?
+            if ((columnNumber % 2 == 1) && (rowNumber + 1 == map.getHeight())) {
+                southOnMap = false;
+                southEastOnMap = false;
+                southWestOnMap = false;
+            }
         }
-
-        // last column?
-        if (columnNumber + 1 == map.getWidth()) {
-
-            southEastOnMap  = false;
-            northEastOnMap  = false;
-        }
-
-        // first hex in odd column?
-        if ((columnNumber%2 == 1) &&  (rowNumber == 0)){
-
-            northOnMap  = false;
-            northEastOnMap  = false;
-            northWestOnMap  = false;
-        }
-
-        // last hex in odd column?
-        if ((columnNumber%2 == 1) &&  (rowNumber == map.getHeight())){
-
-            southOnMap  = false;
-            southEastOnMap  = false;
-            southWestOnMap  = false;
-        }
-
     }
+
+
 
 	// used to update the hexside location once the map has been fully initialized
 	public void resetHexsideLocationNames(){
@@ -531,12 +605,35 @@ public class Hex {
     public void resetTerrain(double gridadj) {
 
         // set the center location terrain
-
         Terrain centerLocationTerrain = map.getGridTerrain((int) (centerLocation.getLOSPoint().getX()+gridadj), (int) centerLocation.getLOSPoint().getY());
 
         // fix center location when building misses the center dot
         if(!centerLocationTerrain.isBuilding() && getHexsideBuildingTerrain(gridadj) != null) {
             centerLocationTerrain = getHexsideBuildingTerrain(gridadj);
+        }
+        // hack to deal with I24-I26 wooden warehouses on bdRO
+        if (!centerLocationTerrain.isBuilding()) {
+            Terrain firsttestforbuilding =null, secondtestforbuilding=null, thirdtestforbuilding=null, fourthtestforbuilding=null;
+            int firsttestx = (int) (centerLocation.getLOSPoint().getX() + gridadj + 5);
+            int secondtestx = (int) (centerLocation.getLOSPoint().getX() + gridadj - 5);
+            int firsttesty= (int) (centerLocation.getLOSPoint().getY() + 5);
+            int secondtesty = (int) (centerLocation.getLOSPoint().getY() - 5);
+                if (map.onMap(firsttestx, (int) centerLocation.getLOSPoint().getY())) {firsttestforbuilding = map.getGridTerrain(firsttestx, (int) centerLocation.getLOSPoint().getY());}
+                if (map.onMap(secondtestx, (int) centerLocation.getLOSPoint().getY())) {secondtestforbuilding = map.getGridTerrain(secondtestx, (int) centerLocation.getLOSPoint().getY());}
+                if (map.onMap((int) (centerLocation.getLOSPoint().getX() + gridadj), firsttesty)) {thirdtestforbuilding = map.getGridTerrain((int) (centerLocation.getLOSPoint().getX() + gridadj), firsttesty);}
+                if (map.onMap((int) (centerLocation.getLOSPoint().getX() + gridadj), secondtesty)) {fourthtestforbuilding = map.getGridTerrain((int) (centerLocation.getLOSPoint().getX() + gridadj), secondtesty);}
+                if(firsttestforbuilding!=null && firsttestforbuilding.isBuilding()) {
+                    centerLocationTerrain = firsttestforbuilding;
+                }
+                if (secondtestforbuilding!=null && secondtestforbuilding.isBuilding()) {
+                    centerLocationTerrain = secondtestforbuilding;
+                }
+                if (thirdtestforbuilding!=null && thirdtestforbuilding.isBuilding()) {
+                    centerLocationTerrain = thirdtestforbuilding;
+                }
+                if (fourthtestforbuilding!=null && fourthtestforbuilding.isBuilding()) {
+                    centerLocationTerrain = fourthtestforbuilding;
+                }
         }
 
         centerLocation.setTerrain(centerLocationTerrain);
@@ -621,10 +718,25 @@ public class Hex {
             // rooftops
             previousLocation = centerLocation;
             // need to ignore buildings without upper level locations - bit of a hack so we can use the building height
-            if (!"Wooden Building".equals(centerLocationTerrain.getName()) &&
+            if (  // !"Wooden Building".equals(centerLocationTerrain.getName()) &&  //take out wooden building to enable wooden warehouse roofs in RF
                     !"Stone Building".equals(centerLocationTerrain.getName()) &&
                     !centerLocationTerrain.isRoofless()) {
-                if (isMultihexBuilding()) {
+                boolean multihex = false;
+                if (isMultihexBuilding() ) {
+                    multihex = true;
+                } else {
+                    // 2nd part of bdRO hack to enable roofs on I24, I25, I26, I29 and I30
+                    if (this.getName().equals("I24") || this.getName().equals("I25") || this.getName().equals("I29")) {
+                        Point p = hexsideLocations[3].getEdgeCenterPoint();
+                        Terrain terrain = map.getGridTerrain(p.x - 5, p.y);
+                        if(terrain != null && terrain.isBuilding()) {multihex = true;}
+                    } else if (this.getName().equals("I26") || this.getName().equals("I30")) {
+                        Point p = hexsideLocations[0].getEdgeCenterPoint();
+                        Terrain terrain = map.getGridTerrain(p.x - 5, p.y);
+                        if(terrain != null && terrain.isBuilding()) {multihex = true;}
+                    }
+                }
+                if (multihex){
                     Terrain roofterrain;
                     roofterrain = map.getTerrain("Rooftop");
                     // move to top level
