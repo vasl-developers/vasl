@@ -1,0 +1,76 @@
+<SSRControls>
+   <Option name="RB Terrain Transformations">
+<Checkbox name="">
+<entry name="Ground Snow" rule="Snow" text="Ground Snow"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="O10 is gutted (GF1)" rule="GF1" text="O10 is gutted (GF1)"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="O40 is gutted (GF2)" rule="GF2" text="O40 is gutted (GF2)"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="J43 is gutted (GF3)" rule="GF3" text="J43 is gutted (GF3)"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="S43 is gutted (GF4)" rule="GF4" text="S43 is gutted (GF4)"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="P21 is gutted (GF5)" rule="GF5" text="P21 is gutted (GF5)"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="G26 is gutted (GF6)" rule="GF6" text="G26 is gutted (GF6)"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="O6 is gutted (GF7)" rule="GF7" text="O6 is gutted (GF7)"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="R17 is gutted (GF8)" rule="GF8" text="R17 is gutted (GF8)"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="L39 is gutted (GF9)" rule="GF9" text="L39 is gutted (GF9)"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="K15 is gutted (GF10)" rule="GF10" text="K15 is gutted (GF10)"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="L10 is gutted (GF11)" rule="GF11" text="L10 is gutted (GF11)"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="K27 is gutted (GF12)" rule="GF12" text="K27 is gutted (GF12)"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="R23 is gutted (GF13)" rule="GF13" text="R23 is gutted (GF13)"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="T21 is gutted (GF14)" rule="GF14" text="T21 is gutted (GF14)"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="P33 is gutted (GF15)" rule="GF15" text="P33 is gutted (GF15)"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="F16 is gutted (GF16)" rule="GF16" text="F16 is gutted (GF16)"/>
+</Checkbox>
+
+<Checkbox name="">
+<entry name="R27 is gutted (GF17)" rule="GF17" text="R27 is gutted (GF17)"/>
+</Checkbox>
+
+   </Option>
+</SSRControls>

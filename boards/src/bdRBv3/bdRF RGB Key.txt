@@ -1,0 +1,43 @@
+bdRBv3 and bdRO RGB Triplet Key
+
+Bldgs LVL 1   255/255/255
+Bldgs LVL 1.5 110/110/110
+Bldgs LVL 2.5 210/210/210
+
+Bridge 100/100/100
+
+Brush LVL 0  100/150/100
+Brush LVL -1 100/210/100
+
+Cliffs 55/55/55
+
+Elevated Road 90/70/50
+
+Factory (roofed) LVL 1.5   160/160/160
+Factory (roofless) LVL 1.5 40/255/40
+Factory (roofed) LVL 2.5   0/0/0
+Factory (roofless) LVL 2.5 150/255/150
+
+Factory/Rowhouse Walls LVL 1.5 255/0/0
+Factory Walls LVL 2.5          170/0/0
+
+Gully 20/70/20
+
+Gully Cliffs 25/25/25
+
+Hedge 0/100/0
+
+LVL 1 OG  160/100/60
+LVL 0 OG  210/160/130
+LVL –1 OG 150/170/90
+
+Pond 0/255/255
+
+Railroad 255/255/0
+
+River 0/0/255
+
+Walls 70/70/70
+
+Woods 60/100/60
+

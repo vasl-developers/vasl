@@ -1,0 +1,52 @@
+<SSRControls>
+ <Option name="RO Terrain Transformations">
+ <Checkbox name="">
+		<entry name="Ground Snow" rule="Snow" text="Ground Snow"/>
+ </Checkbox>
+ 
+ <Checkbox name="">
+<entry name="Q15 is gutted (GF18)" rule="GF18" text="Q15 is gutted (GF18)"/>
+</Checkbox>
+
+ <Checkbox name="">
+<entry name="N28 is gutted (GF19)" rule="GF19" text="N28 is gutted (GF19)"/>
+</Checkbox>
+
+ <Checkbox name="">
+<entry name="W26 is gutted (GF20)" rule="GF20" text="W26 is gutted (GF20)"/>
+</Checkbox>
+
+ <Checkbox name="">
+<entry name="V13 is gutted (GF21)" rule="GF21" text="V13 is gutted (GF21)"/>
+</Checkbox>
+
+ <Checkbox name="">
+<entry name="L28 is gutted (GF22)" rule="GF22" text="L28 is gutted (GF22)"/>
+</Checkbox>
+
+ <Checkbox name="">
+<entry name="Q28 is gutted (GF23)" rule="GF23" text="Q28 is gutted (GF23)"/>
+</Checkbox>
+
+ <Checkbox name="">
+<entry name="N23 is gutted (GF24)" rule="GF24" text="N23 is gutted (GF24)"/>
+</Checkbox>
+
+ <Checkbox name="">
+<entry name="Y33 is gutted (GF25)" rule="GF25" text="Y33 is gutted (GF25)"/>
+</Checkbox>
+
+ <Checkbox name="">
+<entry name="U34 is gutted (GF26)" rule="GF26" text="U34 is gutted (GF26)"/>
+</Checkbox>
+
+ <Checkbox name="">
+<entry name="M34 is gutted (GF27)" rule="GF27" text="M34 is gutted (GF27)"/>
+</Checkbox>
+
+ <Checkbox name="">
+<entry name="M22 is gutted (GF28)" rule="GF28" text="M22 is gutted (GF28)"/>
+</Checkbox>
+
+    </Option>
+</SSRControls>

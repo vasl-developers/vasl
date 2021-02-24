@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<!--
+    This file contains the board metadata specific to a VASL board archive.
+    Create one file per VASL board and place it in the archive.
+-->
+
+<!-- 
+    Board-level metadata
+	name - the name of the board (as it will appear in board selector drop-down - not yet supported)
+	version - the board version
+	versionDate - the date the last version was created
+	author - the caring soul who created the board
+    boardImage - the name of the VASL image file in the board archive; the name is case sensitive
+    hasHills - TRUE/FALSE if the board contains base elevations above ground level
+                if not we can assume the ground level under the terrain is zero, which
+                makes the VASL LOS image translation faster and more accurate
+    height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
+	hexHeight - the height of a hex in pixels - decimal - should be image/height
+	hexWidth - the width of a hex in pixels - decimal - center point to center point
+	A1CenterX - x location of the A1 center dot
+	A1CenterY - y location of the A1 center dot 
+	
+DRAFT 0.0X
+-->
+<boardMetadata 
+	name="RO" 
+	version="6.0" 
+	versionDate="Jan 2021" 
+	author="Allan Cannamore" 
+	boardImageFileName="bdRO.gif" 
+	hasHills="TRUE" 
+	width="36" 
+	height="49"
+	hexHeight = "64.47"
+	hexWidth = "56.25"
+	A1CenterX = "18"
+	A1CenterY = "65"
+	HexGridConfig = "TopLeftHalfHeightEqualRowCount"
+	>
+
+    <!--
+        The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
+        determine the proper building type when creating the LOS information and assumes buildings are single-hex stone or 
+        wooden buildings. Use these elements to override the building type. 
+        
+        See the terrainType elements for a complete list of building names
+	<buildingType hexName="F5" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="F6" buildingTypeName="Stone Building, 1 Level" />
+	
+
+    -->
+    <buildingTypes>
+	
+        	
+	</buildingTypes>
+	
+	<overlaySSRules>
+	    <!--
+			Scenario-specific overlay rules. 
+			name - the VASL SSR name
+			image - the image name
+			x - x coordinate of overly upper left
+			y - y coordinate of overlay upper left
+		-->
+		<overlaySSRule name="Snow" image="RO_Ground_Snow.gif" x="0" y="0" />
+		<overlaySSRule name="GF18" image="RO_Gutted_Q15.gif" x="904" y="934" />
+		<overlaySSRule name="GF19" image="RO_Gutted_N28.gif" x="732" y="1821" />
+		<overlaySSRule name="GF20" image="RO_Gutted_W26.gif" x="1187" y="1640" />
+		<overlaySSRule name="GF21" image="RO_Gutted_V13.gif" x="1180" y="868" />
+		<overlaySSRule name="GF22" image="RO_Gutted_L28.gif" x="626" y="1797" />
+		<overlaySSRule name="GF23" image="RO_Gutted_Q28.gif" x="900" y="1792" />
+		<overlaySSRule name="GF24" image="RO_Gutted_N23.gif" x="738" y="1495" />
+		<overlaySSRule name="GF25" image="RO_Gutted_Y33.gif" x="1354" y="2089" />
+		<overlaySSRule name="GF26" image="RO_Gutted_U34.gif" x="1130" y="2187" />
+		<overlaySSRule name="GF27" image="RO_Gutted_M34.gif" x="678" y="2187" />
+		<overlaySSRule name="GF28" image="RO_Gutted_M22.gif" x="687" y="1368" />
+	</overlaySSRules>
+	
+	<colors>
+		<color name="WoodenBldg1" red="255" green="100" blue="100" terrain="Wooden Building" elevation="1" />
+		<color name="WoodenBldg0" red="200" green="200" blue="200" terrain="Wooden Building" elevation="0" />
+		<color name="WoodenBldg2" red="110" green="110" blue="110" terrain="Wooden Building, 1 Level" elevation="1" />
+		<color name="StoneBldg1" red="110" green="110" blue="110" terrain="Stone Building, 1 Level" elevation="1" />
+		<color name="StoneBldg3" red="255" green="255" blue="255" terrain="Stone Building" elevation="1" />
+		<color name="StoneBldg4" red="210" green="210" blue="210" terrain="Stone Building, 2 Level" elevation="1" />
+		<color name="Level1" red="210" green="160" blue="130" terrain="Open Ground" elevation="1" />
+		<color name="Level2" red="160" green="100" blue="60" terrain="Open Ground" elevation="2" />
+		<color name="PavedRdL1" red="153" green="153" blue="153" terrain="Paved Road" elevation="1" />
+		<color name="DirtRdL1" red="222" green="206" blue="173" terrain="Dirt Road" elevation="1" />
+		<color name="Wall" red="70" green="70" blue="70" terrain="Wall" elevation="1" />
+		<color name="Hedge" red="0" green="100" blue="0" terrain="Hedge" elevation="1" />
+		<color name="Level0" red="150" green="170" blue="90" terrain="Open Ground" elevation="0" />
+		<color name="Water" red="0" green="0" blue="255" terrain="Water" elevation="0" />
+		<color name="GullyBrown1" red="20" green="70" blue="20" terrain="Gully" elevation="1" />
+		<color name="GullyBrown0" red="10" green="90" blue="10" terrain="Gully" elevation="0" />
+		<color name="StoneFactory1" red="160" green="160" blue="160" terrain="Stone Factory, 1.5 Level" elevation="1" />
+		<color name="StoneFactory2" red="0" green="0" blue="0" terrain="Stone Factory, 2.5 Level" elevation="1" />
+		<!-- <color name="BridgeBrown" red="100" green="100" blue="100" terrain="Single Hex Wooden Bridge" elevation="UNKNOWN" /> -->
+		<color name="BridgeGrey1" red="100" green="100" blue="100" terrain="Single Hex Stone Bridge" elevation="UNKNOWN" />
+		<color name="Cliff" red="55" green="55" blue="55" terrain="Cliff" elevation="UNKNOWN" />
+		<color name="GullyCliff" red="25" green="25" blue="25" terrain="Cliff" elevation="UNKNOWN" />
+		<color name="BrushL1" red="100" green="150" blue="100" terrain="Brush" elevation="1" />
+		<color name="BrushGully" red="60" green="120" blue="60" terrain="Brush" elevation="0" />
+		<color name="BrushL0" red="100" green="210" blue="100" terrain="Brush" elevation="0" />
+		<color name="StorageTank2" red="76" green="76" blue="76" terrain="Storage Tank, 2 Level" elevation="1" />
+		<color name="StoneFactoryWall1" red="255" green="0" blue="0" terrain="Interior Factory Wall, 1 Level" elevation="1" />
+		<color name="StoneFactoryWall2" red="170" green="0" blue="0" terrain="Interior Factory Wall, 2 Level" elevation="1" /> 
+		<color name="RooflessStoneFactory1" red="40" green="255" blue="40" terrain="Roofless Stone Factory, 1.5 Level" elevation="1" />
+		<color name="RooflessStoneFactory2" red="150" green="255" blue="150" terrain="Roofless Stone Factory, 2.5 Level" elevation="1" />
+		<color name="Elevated Road1" red="90" green="70" blue="50" terrain="Elevated Road" elevation="1" />
+		<color name="Elevated Road2" red="90" green="70" blue="90" terrain="Elevated Road" elevation="2" />
+		<color name="Pond" red="0" green="255" blue="255" terrain="Water" elevation="1" />
+		<color name="Woods" red="60" green="100" blue="60" terrain="Woods" elevation="1" />
+	</colors>
+	
+	<colorSSRules>
+	</colorSSRules>
+
+	<rrembankments>
+		<!--
+			List of hexes with railway embankment hexsides. Create one hex element per hex.
+			For hexsides 0 is the top hexside with 1 being clockwise from there, etc. 
+			Example hex E1 has railway embankment on the two right hand side hexsides adjacent to column F: <rrembankment hex="E1" hexsides="12" />
+		-->
+		
+		<rrembankment hex="K19" hexsides="12" />
+		<rrembankment hex="K20" hexsides="12" />
+		<rrembankment hex="K21" hexsides="12" />
+		<rrembankment hex="K22" hexsides="12" />
+		<rrembankment hex="K23" hexsides="12" />
+		<rrembankment hex="K24" hexsides="12" />
+		<rrembankment hex="K25" hexsides="12" />
+		<rrembankment hex="K26" hexsides="12" />
+		<rrembankment hex="K27" hexsides="12" />
+		<rrembankment hex="K28" hexsides="12" />
+		<rrembankment hex="K29" hexsides="12" />
+		<rrembankment hex="K30" hexsides="12" />
+		<rrembankment hex="K31" hexsides="12" />
+		<rrembankment hex="K32" hexsides="1" />
+		
+		<rrembankment hex="L18" hexsides="4" />
+		<rrembankment hex="L19" hexsides="45" />
+		<rrembankment hex="L20" hexsides="45" />
+		<rrembankment hex="L21" hexsides="45" />
+		<rrembankment hex="L22" hexsides="45" />
+		<rrembankment hex="L23" hexsides="45" />
+		<rrembankment hex="L24" hexsides="45" />
+		<rrembankment hex="L25" hexsides="45" />
+		<rrembankment hex="L26" hexsides="45" />
+		<rrembankment hex="L27" hexsides="45" />
+		<rrembankment hex="L28" hexsides="45" />
+		<rrembankment hex="L29" hexsides="45" />
+		<rrembankment hex="L30" hexsides="45" />
+		<rrembankment hex="L31" hexsides="45" />
+				
+	</rrembankments>
+	
+</boardMetadata>
