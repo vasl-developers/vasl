@@ -15,9 +15,10 @@ public enum DustLevel {
 
     private String dustLevelDescription;
 
-    private DustLevel(String s) {
+    DustLevel(String s) {
         dustLevelDescription = s;
     }
+
     public String toString() {
         return this.dustLevelDescription;
     }
