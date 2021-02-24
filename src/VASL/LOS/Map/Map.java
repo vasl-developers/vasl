@@ -2780,8 +2780,8 @@ public class Map  {
                         if (!status.currentTerrain.isInherentTerrain() || (status.currentHex.getCenterLocation().getTerrain().equals(status.currentTerrain))) {
                             // now block if LOS is not along hexside or if obstacle is not a building
                             if ((status.LOSis60Degree || status.LOSisHorizontal) && status.currentTerrain.isBuilding()) {
-                                //need one of the adjacent hexes to be roofless; if no adjacent hex (range is 2 from target) or if obstacle is outside factory wall then blind hex
-                                if (status.rangeToTarget % 2 == 0 || status.currentTerrain.isOutsideFactoryWall() ) {
+                                //need one of the adjacent hexes to be roofless; if no adjacent hex (range is 2 from target) or if obstacle is outside factory wall then blind hex; if range is 1 from target and los is to vertex then blocked
+                                if ((status.rangeToTarget % 2 == 0 || (status.rangeToTarget % 2 != 0 && !status.target.isCenterLocation())) || status.currentTerrain.isOutsideFactoryWall() ) {
                                     status.reason = "Source or Target location is in a blind hex (A6.4)";
                                     status.blocked = true;
                                     result.setBlocked(status.currentCol, status.currentRow, status.reason);
