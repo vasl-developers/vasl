@@ -29,10 +29,10 @@
 		<boarddata name="02" version="6.5" versionDate="Jan 2021" description="" />
 		<boarddata name="03" version="6.4" versionDate="Jan 2021" description="" />
 		<boarddata name="04" version="6.2" versionDate="Jan 2021" description="" />
-		<boarddata name="05" version="6.4" versionDate="Dec 2020" description="" />
-		<boarddata name="06" version="6.1" versionDate="Aug 2008" description="" />
-		<boarddata name="07" version="6.2" versionDate="Nov 2020" description="" />
-		<boarddata name="08" version="6.4" versionDate="Aug 2008" description="" />
+		<boarddata name="05" version="6.5" versionDate="Feb 2021" description="" />
+		<boarddata name="06" version="6.2" versionDate="Feb 2021" description="" />
+		<boarddata name="07" version="6.3" versionDate="Feb 2021" description="" />
+		<boarddata name="08" version="6.5" versionDate="Feb 2021" description="" />
 		<boarddata name="09" version="6.1" versionDate="Aug 2008" description="" />
 		<boarddata name="10" version="6.4" versionDate="Jan 2021" description="" />
 		<boarddata name="10z" version="6.4" versionDate="Dec 2020" description="" />
@@ -123,14 +123,14 @@
 		<boarddata name="3b" version="6.5" versionDate="Jan 2021" description="" />
 		<boarddata name="4a" version="6.5" versionDate="Jan 2021" description="" />
 		<boarddata name="4b" version="6.7" versionDate="Jan 2021" description="" />
-		<boarddata name="5a" version="6.3" versionDate="Aug 2008" description="" />
-		<boarddata name="5b" version="6.3" versionDate="Aug 2008" description="" />
+		<boarddata name="5a" version="6.4" versionDate="Feb 2021" description="" />
+		<boarddata name="5b" version="6.4" versionDate="Feb 2021" description="" />
 		<boarddata name="6a" version="6.4" versionDate="Nov 2020" description="" />
 		<boarddata name="6b" version="6.4" versionDate="Nov 2020" description="" />
-		<boarddata name="7a" version="6.2" versionDate="Nov 2020" description="" />
-		<boarddata name="7b" version="6.2" versionDate="Nov 2020" description="" />
-		<boarddata name="8a" version="6.5" versionDate="Aug 2008" description="" />
-		<boarddata name="8b" version="6.5" versionDate="Aug 2008" description="" />
+		<boarddata name="7a" version="6.3" versionDate="Feb 2021" description="" />
+		<boarddata name="7b" version="6.3" versionDate="Feb 2021" description="" />
+		<boarddata name="8a" version="6.6" versionDate="Feb 2021" description="" />
+		<boarddata name="8b" version="6.6" versionDate="Feb 2021" description="" />
 		<boarddata name="9a" version="6.1" versionDate="Aug 2008" description="" />
 		<boarddata name="9b" version="6.1" versionDate="Aug 2008" description="" />
 		<boarddata name="10a" version="6.2" versionDate="Mar 2020" description="" />
@@ -242,8 +242,8 @@
 		<!--# NG = 1.0 duplicate -->
 		<boarddata name="RB" version="1.3" versionDate="Dec 2019" description="" />
 		<boarddata name="RBv2" version="2.4" versionDate="Aug 2008" description="" />
-		<boarddata name="RBv3" version="0.05" versionDate="Dec 2019" description="" />		
-		<boarddata name="RO" version="0.09" versionDate="Dec 2019" description="" />
+		<boarddata name="RBv3" version="6.0" versionDate="Jan 2021" description="" />
+		<boarddata name="RO" version="6.0" versionDate="Jan 2021" description="" />
 		<boarddata name="KR" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="GT" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="CH" version="0.93" versionDate="Aug 2008" description="" />
