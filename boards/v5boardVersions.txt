@@ -396,3 +396,5 @@ KBR = 1.0
 Eagles = 1.0
 Sch = 1.0
 Voss = 1.0
+RBv651 = 0.05
+ROv651 = 0.09

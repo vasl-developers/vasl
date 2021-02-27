@@ -428,6 +428,8 @@
 		<boarddata name="Eagles" version="1.0" versionDate="Sep 2020" description="" />
 		<boarddata name="Sch" version="1.0" versionDate="Feb 2021" description="" />
 		<boarddata name="Voss" version="1.0" versionDate="Feb 2021" description="" />
+		<boarddata name="RBv651" version="0.05" versionDate="Feb 2021" description="" />
+		<boarddata name="ROv651" version="0.09" versionDate="Feb 2021" description="" />
 	</otherBoards>
 
 </boardsMetadata>
