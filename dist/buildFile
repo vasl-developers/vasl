@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<VASSAL.launch.BasicModule VassalVersion="3.5.0-beta2" description="Virtual Advanced Squad Leader" name="VASL" nextPieceSlotId="13707" version="6.6.2">
+<VASSAL.launch.BasicModule VassalVersion="3.5.3" description="Virtual Advanced Squad Leader" name="VASL" nextPieceSlotId="13707" version="6.6.2-beta3">
     <VASL.build.module.OBA hotkey="117,0"/>
     <VASL.build.module.ScenInfo/>
     <VASL.build.module.CounterPaletteSearch/>
@@ -646,7 +646,7 @@
                             <VASSAL.build.widget.PieceSlot entryName="Turn" gpid="13438" height="48" width="48">+/null/emb2;Activate;2;;Flip;2;;;2;;;;1;false;0;0;tables\/TmrkrUN(kfw).png,tables\/TmrkrNK(kfw).png;OUNC+,North Korean +;true;;;;false;;1;1;true;65,130;70,130;	piece;K;D;;Turn/2	null;0;0;13438;0</VASSAL.build.widget.PieceSlot>
                         </VASSAL.build.widget.PanelWidget>
                     </VASSAL.build.widget.ListWidget>
-                </VASSAL.build.widget.ListWidget>
+
                     <VASSAL.build.widget.TabWidget entryName="Custom">
                         <VASSAL.build.widget.PanelWidget entryName="Custom Markers &gt;" fixed="false" nColumns="3" scale="1.0" vert="false">
                             <VASSAL.build.widget.PieceSlot entryName="Custom Directions" gpid="13739" height="114" width="291">+/null/piece;K;D;MC\/MCDirections.png;Custom Directions/null;207;193;13739;0</VASSAL.build.widget.PieceSlot>
