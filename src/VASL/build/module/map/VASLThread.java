@@ -402,7 +402,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                 super.reportFormat.setProperty("ToLocation", super.lastLocation);
                 if (LOSMap == null) {
                     super.reportFormat.setProperty("Range", super.lastRange);
-                } else if(source == null ) {
+                } else if(source == null || target == null ) {
                     return;
                 } else {
                     super.reportFormat.setProperty("Range", String.valueOf(Map.range(source.getHex(), target.getHex(), LOSMap.getMapConfiguration()))); //super.lastRange);
