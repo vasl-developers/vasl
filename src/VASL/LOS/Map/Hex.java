@@ -355,7 +355,7 @@ public class Hex {
             // need to deal with configuration where one col (odd or even) has top half height hex and bottom full height and the other column has top full height hex and bottom half height hex
             // at present RO is the only los-enabled map board with this configuration - see below
         } else if (map.getMapConfiguration() == "TopLeftHalfHeightEqualRowCount" || map.getA1CenterY()==65) {
-// f        // first column
+            // first column
             if (columnNumber == 0) {
                 southWestOnMap = false;
                 northWestOnMap = false;
@@ -790,6 +790,8 @@ public class Hex {
                         terrain = oppositeHexsideTerrain;
                     }
                 }
+                // avoid errors during cropping
+                if(terrain == null){terrain= map.getTerrain("Open Ground");}
 
                 if(terrain.isHexsideTerrain()) {
                     hexsideTerrain[x] = terrain;
@@ -1026,7 +1028,10 @@ public class Hex {
             if (isHexsideOnMap(x)) {
 
 				final Location l = getHexsideLocation(x);
-				final Terrain t = map.getGridTerrain((int)(l.getEdgeCenterPoint().getX()+gridadj), (int)l.getEdgeCenterPoint().getY());
+				Terrain t = map.getGridTerrain((int)(l.getEdgeCenterPoint().getX()+gridadj), (int)l.getEdgeCenterPoint().getY());
+
+				// avoid errors during cropping
+                if(t == null){t = map.getTerrain("Open Ground");}
 
 				if (t.isHexsideTerrain()) {
 
