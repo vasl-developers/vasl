@@ -985,6 +985,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
 	public Command decode(String command) {
         SequenceEncoder.Decoder var2 = null;
         if(command.startsWith("LOS\tLOS_Thread1")) {
+            System.out.println("decoding " + command);
             var2 = new SequenceEncoder.Decoder(command, '\t');
             var2.nextToken();
             var2.nextToken();
@@ -1196,6 +1197,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             VASLThread.VASLLOSCommand var2 = (VASLThread.VASLLOSCommand)var1;
             SequenceEncoder var3 = new SequenceEncoder(var2.target.getId(), '\t');
             var3.append(var2.newAnchor.x).append(var2.newAnchor.y).append(var2.newArrow.x).append(var2.newArrow.y).append(var2.newPersisting).append(var2.newMirroring).append(var2.sourceLevel).append(var2.targetLevel);
+            System.out.println("encoding " + "LOS\t" + var3.getValue());
             return "LOS\t" + var3.getValue();
         } else {
             return null;
@@ -1231,6 +1233,8 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         }
 
         protected void executeCommand() {
+            System.out.println("Executing LOS command ");
+
             this.target.setEndPointsandLevels(this.newAnchor, this.newArrow, this.sourceLevel, this.targetLevel);
             this.target.setPersisting(this.newPersisting);
             this.target.setMirroring(this.newMirroring);
