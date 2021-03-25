@@ -118,6 +118,9 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
 	protected void launch() {
 
         super.launch();
+
+        VASLLOSButtonCommand vasllosbuttonCommand= new VASLLOSButtonCommand(this, false);
+        GameModule.getGameModule().sendAndLog(vasllosbuttonCommand);
         setGridSnapToVertex(true);
         initializeMap();
 
@@ -372,6 +375,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             if(!super.retainAfterRelease || super.ctrlWhenClick && super.persistence.equals("Ctrl-Click & Drag")) {
                 if(e.getWhen() != super.lastRelease) {
                     super.visible = false;
+                    super.getLaunchButton().setEnabled(true);
                     if(super.global.equals("Always") || super.global.equals("When Persisting")) {
                         if(!super.persistence.equals("Always") && (!super.ctrlWhenClick || !super.persistence.equals("Ctrl-Click & Drag"))) {
                             vasllosCommand = new VASLLOSCommand(this, this.getAnchor(), this.getArrow(), false, false, sourcelevel,   targetlevel);
@@ -384,6 +388,8 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                         }
                     }
 
+                    VASLLOSButtonCommand vasllosbuttonCommand= new VASLLOSButtonCommand(this, true);
+                    GameModule.getGameModule().sendAndLog(vasllosbuttonCommand);
                     super.map.setPieceOpacity(1.0F);
                     super.map.popMouseListener();
                     super.map.repaint();
@@ -996,6 +1002,11 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             double var7 = var2.nextDouble(0);
             double var8 = var2.nextDouble(0);
             return new VASLThread.VASLLOSCommand(this, var3, var4, var5, var6, var7, var8);
+        } else if(command.startsWith("LOS\tVASL_ThreadButton1")) {
+            var2 = new SequenceEncoder.Decoder(command, '\t');
+            var2.nextToken();
+            boolean var5 = var2.nextBoolean(false);
+            return new VASLThread.VASLLOSButtonCommand(this, var5);
         } else {
             return null;
         }
@@ -1194,14 +1205,23 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         if(var1 instanceof LOS_Thread.LOSCommand) {
             return super.encode(var1);
         } else if( var1 instanceof VASLLOSCommand) {
-            VASLThread.VASLLOSCommand var2 = (VASLThread.VASLLOSCommand)var1;
+            VASLThread.VASLLOSCommand var2 = (VASLThread.VASLLOSCommand) var1;
             SequenceEncoder var3 = new SequenceEncoder(var2.target.getId(), '\t');
             var3.append(var2.newAnchor.x).append(var2.newAnchor.y).append(var2.newArrow.x).append(var2.newArrow.y).append(var2.newPersisting).append(var2.newMirroring).append(var2.sourceLevel).append(var2.targetLevel);
+            System.out.println("encoding " + "LOS\t" + var3.getValue());
+            return "LOS\t" + var3.getValue();
+        } else if(var1 instanceof VASLLOSButtonCommand){
+            VASLThread.VASLLOSButtonCommand var2 = (VASLThread.VASLLOSButtonCommand) var1;
+            SequenceEncoder var3 = new SequenceEncoder(var2.target.getId(), '\t');
+            var3.append(var2.enableButton);
             System.out.println("encoding " + "LOS\t" + var3.getValue());
             return "LOS\t" + var3.getValue();
         } else {
             return null;
         }
+    }
+    public void setButtonState(boolean buttonstatus){
+        super.getLaunchButton().setEnabled(buttonstatus);
     }
 
     public static class VASLLOSCommand extends Command {
@@ -1243,6 +1263,24 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
 
         protected Command myUndoCommand() {
             return new VASLThread.VASLLOSCommand(this.target, this.oldAnchor, this.oldArrow, this.oldPersisting, this.oldMirroring, this.target.sourcelevel, this.target.targetlevel);
+        }
+    }
+    public static class VASLLOSButtonCommand extends Command {
+        protected VASLThread target;
+        protected boolean enableButton;
+
+        public VASLLOSButtonCommand(VASLThread vaslthread, boolean buttonstatus) {
+            this.target = vaslthread;
+            this.enableButton = buttonstatus;
+        }
+
+        protected void executeCommand() {
+            System.out.println("Executing LOS command ");
+            this.target.setButtonState(this.enableButton);
+        }
+
+        protected Command myUndoCommand() {
+            return new VASLThread.VASLLOSButtonCommand(this.target, this.enableButton);
         }
     }
 }
