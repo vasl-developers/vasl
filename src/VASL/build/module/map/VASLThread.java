@@ -1002,7 +1002,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             double var7 = var2.nextDouble(0);
             double var8 = var2.nextDouble(0);
             return new VASLThread.VASLLOSCommand(this, var3, var4, var5, var6, var7, var8);
-        } else if(command.startsWith("LOS\tVASL_ThreadButton1")) {
+        } else if(command.startsWith("VASLLOSButtonCommand\t")) {
             var2 = new SequenceEncoder.Decoder(command, '\t');
             var2.nextToken();
             boolean var5 = var2.nextBoolean(false);
