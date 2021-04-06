@@ -1,8 +1,9 @@
-Two buttons (& fkeys) control shading of the map:
+Three buttons (& fkeys) control shading of the map:
 	Night (F9)
 	LV Hindrance (F11)
+	Dust
 
-Their effects are purely visual, and don't alter the operation of the existing
+Their effects are partly visual, and don't alter the operation of the existing
 LOS mechanism. Night effects can obscure the images of the LOS-string & its msg-
 flags, but it doesn't change or alter the content of the LOS-string/msgs. One
 can toggle Night off while checking LOS, then turn it back on.
@@ -13,7 +14,7 @@ effects from areas of the map, but won't affect the LV Hindrance shading. For
 example, a Prep/Def/Gunflash/Flame marker will 'unshade' its hex. An FFE overlay
 will 'unshade' all 7 hexes of its blast area. A Blaze ctr will unshade all 19
 hexes (2-hex radius) of its 'illumination area'. Starshell and IR ctrs/overlays
-behave in a similar fashion. 
+behave in a similar fashion.
 
 The Flame ctr will automatically increase the size of its illumination
 when it is ctrl-F Flipped to a Blaze. The Trip Flare ctr will activate its
@@ -58,3 +59,44 @@ List of overlays that illuminate during Night:
     IR
     Starshell
     Naval FFE - doesn't include the 2 extra 1/2-FP hexes
+
+A text reminder will be displayed for IFT and TH rolls in the chatter window to remind the player
+that a +1 LV hindrance applies at night, with an adjusted total for the roll.
+
+LV Hindrances
+
+Each press of the LV Hindrance button cycles through a series of LV states:
+
+1. LV Shading Only is in effect.
+The map is shaded as a reminder that an LV hindrance is in effect.
+2. +1 LV (E3.1) is in effect.
+Shading is applied, and a text reminder will be displayed for IFT and TH rolls in the chatter window to remind the player
+that a +1 LV hindrance is in effect, with an adjusted total for the roll.
+3. Mist (E3.32) +0/+1/... is in effect.
+4. Rain (E3.51) +0/+1/... is in effect.
+5. Heavy Rain (E3.51) +1/+2/... is in effect.
+6. Falling Snow (3.71) +0/+1/... is in effect.
+7. Heavy Falling Snow(3.71) +1/+2/... is in effect.
+For 3-7, shading is applied, and an LV reminder will be displayed for IFT and TH rolls in the chatter window.
+
+8. No LV is in effect.
+Shading is removed.
+
+Dust
+
+Each press of the Dust button cycles through the dust levels as described in Chapter F.11 of the rulebook
+and changes VASL behaviour as follows:
+
+1. Light Dust (F11.71) is in effect.
+2. Moderate Dust (F11.72) is in effect.
+3. Heavy Dust (F11.73) is in effect.
+4. Very Heavy Dust (F11.731) is in effect.
+5. Extremely Heavy Dust (F11.732) is in effect.
+For 1-5, progressive dust shading is applied, and a third dust die is rolled for you for IFT, TH and
+MC (for interdiction) rolls, with the dust die roll added to a total (FRD or FRD as required) and displayed in the
+chatter window.
+
+6. No Dust is in effect.
+Shading is removed.
+
+The color of the dust die can be changed using the color picker in Preferences -> 'Chat Window' tab -> Third die color.

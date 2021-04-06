@@ -127,7 +127,7 @@
         <VASSAL.build.module.documentation.HelpFile fileName="LOS.txt" fileType="archive" title="LOS check"/>
         <VASSAL.build.module.documentation.HelpFile fileName="Malf.txt" fileType="archive" title="Malf/Broken units"/>
         <VASSAL.build.module.documentation.HelpFile fileName="Movement.txt" fileType="archive" title="Movement controls"/>
-        <VASSAL.build.module.documentation.HelpFile fileName="Night.txt" fileType="archive" title="Night shading"/>
+        <VASSAL.build.module.documentation.HelpFile fileName="Night.txt" fileType="archive" title="Night, LV and Dust shading"/>
         <VASSAL.build.module.documentation.HelpFile fileName="Perimeter.txt" fileType="archive" title="Perimeter"/>
         <VASSAL.build.module.documentation.HelpFile fileName="Casualties Bin.txt" fileType="archive" title="Casualties Bin"/>
         <VASSAL.build.module.documentation.HelpFile fileName="Migrate.txt" fileType="archive" title="For VASL 4.0 Users"/>
