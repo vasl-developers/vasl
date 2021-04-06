@@ -1775,37 +1775,34 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         else
             l_objColoredDieColor = l_objColoredDieColor_Exist;
 
-      l_objColoredDieColor.addPropertyChangeListener(new PropertyChangeListener()
-      {
-        public void propertyChange(PropertyChangeEvent e)
+        l_objColoredDieColor.addPropertyChangeListener(new PropertyChangeListener()
         {
-          m_clrSingleDieColor = (Color) e.getNewValue();
-          RebuildSingleDieFaces();
-        }
-      });
+          public void propertyChange(PropertyChangeEvent e)
+          {
+            m_clrSingleDieColor = (Color) e.getNewValue();
+            RebuildSingleDieFaces();
+          }
+        });
 
+        ColorConfigurer l_objThirdDieColor = null;
+        ColorConfigurer l_objThirdDieColor_Exist = (ColorConfigurer)l_objModulePrefs.getOption(THIRD_DIE_COLOR);
 
-
-      ColorConfigurer l_objThirdDieColor = null;
-      ColorConfigurer l_objThirdDieColor_Exist = (ColorConfigurer)l_objModulePrefs.getOption(THIRD_DIE_COLOR);
-
-      if (l_objThirdDieColor == null)
-      {
-        l_objThirdDieColor = new ColorConfigurer(THIRD_DIE_COLOR, "Third die color:  ", Color.GRAY); //$NON-NLS-1$
-        l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), l_objThirdDieColor); //$NON-NLS-1$
-      } else {
-        l_objThirdDieColor = l_objThirdDieColor_Exist;
-      }
-      l_objThirdDieColor.addPropertyChangeListener(new PropertyChangeListener()
-      {
-        public void propertyChange(PropertyChangeEvent e)
+        if (l_objThirdDieColor == null)
         {
-          m_clrDustColoredDiceColor = (Color) e.getNewValue();
-          RebuildColoredDiceFaces();
+          l_objThirdDieColor = new ColorConfigurer(THIRD_DIE_COLOR, "Third die color:  ", Color.GRAY); //$NON-NLS-1$
+          l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), l_objThirdDieColor); //$NON-NLS-1$
+        } else {
+          l_objThirdDieColor = l_objThirdDieColor_Exist;
         }
-      });
-      l_objThirdDieColor.fireUpdate();
-
+        l_objThirdDieColor.addPropertyChangeListener(new PropertyChangeListener()
+        {
+          public void propertyChange(PropertyChangeEvent e)
+          {
+            m_clrDustColoredDiceColor = (Color) e.getNewValue();
+            RebuildColoredDiceFaces();
+          }
+        });
+        l_objThirdDieColor.fireUpdate();
 
         StringEnumConfigurer l_objSpecialDiceRollNotificationLevel = (StringEnumConfigurer)l_objModulePrefs.getOption(NOTIFICATION_LEVEL);
 
