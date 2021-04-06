@@ -349,7 +349,7 @@ public class PieceLinker extends AbstractConfigurable implements KeyListener, Co
     public void keyPressed(KeyEvent e) {
 
         final int code = e.getKeyCode();
-        if (linkKey.equals(NamedKeyStroke.getKeyStrokeForEvent(e))) {
+        if (linkKey.equals(NamedKeyStroke.of(e))) {
 
             LinkedList<GamePiece> selectedPieces = getSelectedPieces();
             if (selectedPieces.size() == 2) {
@@ -361,7 +361,7 @@ public class PieceLinker extends AbstractConfigurable implements KeyListener, Co
                 map.repaint();
             }
             e.consume();
-        } else if (unlinkKey.equals(NamedKeyStroke.getKeyStrokeForEvent(e))) {
+        } else if (unlinkKey.equals(NamedKeyStroke.of(e))) {
             LinkedList<GamePiece> selectedPieces = getSelectedPieces();
             if (selectedPieces.size() == 2) {
                 Command c = new UnlinkPiecesCommand(this, selectedPieces.get(0).getId(), selectedPieces.get(1).getId());
