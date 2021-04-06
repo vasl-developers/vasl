@@ -31,7 +31,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import VASL.environment.DustLevel;
-import VASL.environment.EnvironmentUtils;
+import VASL.environment.Environment;
+import VASL.environment.LVLevel;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.GlobalOptions;
@@ -95,6 +96,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
   private static final String CHAT_BACKGROUND_COLOR = "chatBackgroundColor"; //$NON-NLS-1$
   private static final String COLORED_DICE_COLOR = "coloredDiceColor"; //$NON-NLS-1$
   private static final String SINGLE_DIE_COLOR = "singleDieColor"; //$NON-NLS-1$
+  private static final String THIRD_DIE_COLOR = "thirdDieColor"; //$NON-NLS-1$
   private static final String NOTIFICATION_LEVEL = "notificationLevel"; //$NON-NLS-1$
   private final static String m_strFileNameFormat = "chatter/DC%s_%s.png";
 
@@ -147,6 +149,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
   private final Icon [] mar_objColoredDCIcon = new Icon[6];
   private final Icon [] mar_objOtherColoredDCIcon = new Icon[6];
   private final Icon [] mar_objSingleDieIcon = new Icon[6];
+
+  private Environment environment = new Environment();
 
   private JTextField m_edtInputText;
   private final JScrollPane m_objScrollPane = new ScrollPane(
@@ -303,7 +307,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         l_objGridBagConstraints.fill = GridBagConstraints.BOTH;
         l_objGridBagConstraints.weightx = 0.5;
         l_objGridBagConstraints.weighty = 0.5;
-        l_objGridBagConstraints.insets = new java.awt.Insets(0, 1, 0, 1);
+        l_objGridBagConstraints.insets = new Insets(0, 1, 0, 1);
 
         l_objButtonPanel.add(m_btnStats, l_objGridBagConstraints);
         l_objButtonPanel.add(m_btnDR, l_objGridBagConstraints);
@@ -735,7 +739,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         int l_iFirstDice, l_iSecondDice;
 
         Map<DiceType, Integer> otherDice = new HashMap<>();
-        DustLevel dustLevel = EnvironmentUtils.getCurrentDustLevel(GameModule.getGameModule());
+        DustLevel dustLevel = environment.getCurrentDustLevel();
         try
         {
             String l_strRestOfMsg = strMsg.substring("*** (".length()); // Other DR) 4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)        
@@ -758,11 +762,11 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                     {
                         String [] lar_strDice = l_strDice.split(",");
 
-                        if (lar_strDice.length == 2 || (lar_strDice.length == 3 && dustLevel.dustInEffect()))
+                        if (lar_strDice.length == 2 || (lar_strDice.length == 3 && environment.dustInEffect()))
                         {
                             l_iFirstDice = Integer.parseInt(lar_strDice[0]);
                             l_iSecondDice = Integer.parseInt(lar_strDice[1]);
-                            if(dustLevel.dustInEffect() && lar_strDice.length == 3)
+                            if(environment.dustInEffect() && lar_strDice.length == 3)
                             {
                                 otherDice.put(DiceType.OTHER_DUST, Integer.parseInt(lar_strDice[2]));
                             }
@@ -1099,9 +1103,11 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     private void HandleSpecialMessagesForOtherDice(final String l_strCategory, final ArrayList<String> specialMessages,
                                                    final int l_iFirstDice, final int l_iSecondDice, final Map<DiceType, Integer> otherDice)
     {
+      int total = l_iFirstDice + l_iSecondDice;
+      int unmodifiedTotal = total;
+      final String SPACE = " ";
         // Dust
-        DustLevel dustLevel = EnvironmentUtils.getCurrentDustLevel(GameModule.getGameModule());
-        if(dustLevel.dustInEffect() && m_DRNotificationLevel == 3)
+        if(environment.dustInEffect() && m_DRNotificationLevel == 3)
         {
             switch (l_strCategory)
             {
@@ -1109,32 +1115,70 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                 case "TH":
                 case "IFT":
                 {
-                    int total = l_iFirstDice + l_iSecondDice;
-                    if (dustLevel.isLightDust())
+                    if (environment.isLightDust())
                     {
-                        total += EnvironmentUtils.getLightDust(otherDice.get(DiceType.OTHER_DUST));
+                        total += Environment.getLightDust(otherDice.get(DiceType.OTHER_DUST));
                     } else {
-                        total += EnvironmentUtils.getModerateDust(otherDice.get(DiceType.OTHER_DUST));
+                        total += Environment.getModerateDust(otherDice.get(DiceType.OTHER_DUST));
                     }
-                    specialMessages.add(dustLevel.toString() + " - Total: " + total);
+                    specialMessages.add(environment.getCurrentDustLevel().toString() + SPACE);
                     break;
                 }
                 case "MC":
                 {
-                    int total  = l_iFirstDice + l_iSecondDice;
-                    if(dustLevel.isLightDust())
+                    if(environment.isLightDust())
                     {
-                        total -= EnvironmentUtils.getLightDust(otherDice.get(DiceType.OTHER_DUST));
+                        total -= Environment.getLightDust(otherDice.get(DiceType.OTHER_DUST));
                     }
                     else
                     {
-                        total -= EnvironmentUtils.getModerateDust(otherDice.get(DiceType.OTHER_DUST));
+                        total -= Environment.getModerateDust(otherDice.get(DiceType.OTHER_DUST));
                     }
-                    specialMessages.add(dustLevel.toString() +" - if interdicted, MC is " + total);
+                    specialMessages.add(environment.getCurrentDustLevel().toString() +" - if interdicted, MC is " + total);
                     break;
                 }
             }
         }
+      // Night
+      if(environment.isNight()  && m_DRNotificationLevel == 3)
+      {
+        switch (l_strCategory)
+        {
+
+          case "TH":
+          case "IFT":
+          {
+            total += 1;
+            specialMessages.add( "+1 Night LV"  + SPACE);
+            break;
+          }
+        }
+      }
+      // LV
+      if(environment.isLV())
+      {
+        LVLevel lvLevel = environment.getCurrentLVLevel();
+        switch (l_strCategory) {
+          case "TH":
+          case "IFT":
+          {
+            switch (lvLevel)
+            {
+              case DAWN_DUSK: {
+                total += 1;
+                break;
+              }
+
+            }
+            specialMessages.add(lvLevel.toString() + SPACE);
+            break;
+          }
+        }
+      }
+
+      if( unmodifiedTotal < total) {
+        specialMessages.add("Total: " + total);
+      }
     }
 
     private void Parse3d6(String strMsg)
@@ -1731,14 +1775,37 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         else
             l_objColoredDieColor = l_objColoredDieColor_Exist;
 
-        l_objColoredDieColor.addPropertyChangeListener(new PropertyChangeListener()
+      l_objColoredDieColor.addPropertyChangeListener(new PropertyChangeListener()
+      {
+        public void propertyChange(PropertyChangeEvent e)
         {
-            public void propertyChange(PropertyChangeEvent e)
-            {
-                m_clrSingleDieColor = (Color) e.getNewValue();
-                RebuildSingleDieFaces();
-            }
-        });
+          m_clrSingleDieColor = (Color) e.getNewValue();
+          RebuildSingleDieFaces();
+        }
+      });
+
+
+
+      ColorConfigurer l_objThirdDieColor = null;
+      ColorConfigurer l_objThirdDieColor_Exist = (ColorConfigurer)l_objModulePrefs.getOption(THIRD_DIE_COLOR);
+
+      if (l_objThirdDieColor == null)
+      {
+        l_objThirdDieColor = new ColorConfigurer(THIRD_DIE_COLOR, "Third die color:  ", Color.GRAY); //$NON-NLS-1$
+        l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), l_objThirdDieColor); //$NON-NLS-1$
+      } else {
+        l_objThirdDieColor = l_objThirdDieColor_Exist;
+      }
+      l_objThirdDieColor.addPropertyChangeListener(new PropertyChangeListener()
+      {
+        public void propertyChange(PropertyChangeEvent e)
+        {
+          m_clrDustColoredDiceColor = (Color) e.getNewValue();
+          RebuildColoredDiceFaces();
+        }
+      });
+      l_objThirdDieColor.fireUpdate();
+
 
         StringEnumConfigurer l_objSpecialDiceRollNotificationLevel = (StringEnumConfigurer)l_objModulePrefs.getOption(NOTIFICATION_LEVEL);
 
