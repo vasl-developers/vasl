@@ -12,7 +12,6 @@ import VASSAL.build.module.Map;
 import VASSAL.tools.imageop.Op;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JMenuItem;
 
 /**
@@ -23,7 +22,7 @@ import javax.swing.JMenuItem;
 public class ASLTextSaver extends VASSAL.build.module.map.TextSaver
 {
     // menuitem in the popup menu
-    JMenuItem m_MenuItem = null;
+    JMenuItem m_MenuItem;
     
   public ASLTextSaver() 
   {
@@ -31,7 +30,7 @@ public class ASLTextSaver extends VASSAL.build.module.map.TextSaver
     super();
     
     // copy the properties from the jbutton
-    m_MenuItem = new JMenuItem(launch.getToolTipText());
+    m_MenuItem = new JMenuItem(getLaunchButton().getToolTipText());
     
     try
     {
@@ -42,7 +41,7 @@ public class ASLTextSaver extends VASSAL.build.module.map.TextSaver
         ex.printStackTrace();
     }
     
-    m_MenuItem.addActionListener(((JButton)launch).getListeners(ActionListener.class)[0]);
+    m_MenuItem.addActionListener(getLaunchButton().getListeners(ActionListener.class)[0]);
 }
   
   @Override
@@ -52,7 +51,7 @@ public class ASLTextSaver extends VASSAL.build.module.map.TextSaver
      // does the original addto
      super.addTo(b);
      // removes immediately the button from the toolbar
-     map.getToolBar().remove(launch);
+     map.getToolBar().remove(getLaunchButton());
       // adds the menuitem to the ASLMap popup menu
      ((ASLMap)map).getPopupMenu().add(m_MenuItem);
   }
