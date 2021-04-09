@@ -46,6 +46,12 @@ public class Environment
         return HeatHazeLevel.valueOf(value);
     }
 
+    public SunBlindnessLevel getCurrentSunBlindnessLevel()
+    {
+        String value = GameModule.getGameModule().getMutableProperty("sun_blindness").getPropertyValue();
+        return SunBlindnessLevel.valueOf(value);
+    }
+
 
     public boolean dustInEffect() {
         return getCurrentDustLevel() != DustLevel.NONE || isSpecialDust();
@@ -113,10 +119,7 @@ public class Environment
         return getCurrentHeatHazeLevel() != HeatHazeLevel.NONE;
     }
 
-
-// @todo mist, etc.
-//
-//    public boolean isSunBlindness() {
-//        return (getCurrentLVLevel() == LVLevel.EARLY_MORNING_SUN_BLINDNESS || getCurrentLVLevel() == LVLevel.LATE_AFTERNOON_SUN_BLINDNESS);
-//    }
+    public boolean isSunBlindness() {
+        return getCurrentSunBlindnessLevel() != SunBlindnessLevel.NONE;
+    }
 }

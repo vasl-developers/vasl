@@ -1178,15 +1178,47 @@ public class ASLChatter extends VASSAL.build.module.Chatter
       // Fog
       if(environment.isFog())
       {
-        FogLevel fogLevel = environment.getCurrentFogLevel();
-        specialMessages.add(fogLevel.toString() + SPACE);
+        switch (l_strCategory)
+        {
+
+          case "TH":
+          case "IFT":
+          {
+            FogLevel fogLevel = environment.getCurrentFogLevel();
+            specialMessages.add(fogLevel.toString() + SPACE);
+            break;
+          }
+        }
       }
       //Heat Haze
       if(environment.isHeatHaze())
       {
-        HeatHazeLevel heatHazeLevel = environment.getCurrentHeatHazeLevel();
-        specialMessages.add(heatHazeLevel.toString() + SPACE);
+        switch (l_strCategory)
+        {
+          case "TH":
+          case "IFT":
+          {
+            HeatHazeLevel heatHazeLevel = environment.getCurrentHeatHazeLevel();
+            specialMessages.add(heatHazeLevel.toString() + SPACE);
+            break;
+          }
+        }
       }
+      //Sun Blindness
+      if(environment.isSunBlindness())
+      {
+        switch (l_strCategory)
+        {
+          case "TH":
+          case "IFT":
+          {
+            SunBlindnessLevel sunBlindnessLevel = environment.getCurrentSunBlindnessLevel();
+            specialMessages.add(sunBlindnessLevel.toString() + SPACE);
+            break;
+          }
+        }
+      }
+
       if( unmodifiedTotal < total || environment.dustInEffect()) {
         specialMessages.add("Total: " + total);
       }

@@ -5,8 +5,6 @@ import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.map.MapShader;
 import VASSAL.build.module.properties.GlobalProperty;
-import VASSAL.configure.BooleanConfigurer;
-import VASSAL.preferences.Prefs;
 
 import static VASL.environment.HeatHazeLevel.NONE;
 
@@ -39,10 +37,10 @@ public class ASLHeatHazeMapShader extends MapShader {
         opacity = 0;
         break;
       case HEAT_HAZE:
-        opacity = 10;
+        opacity = 5;
         break;
       case INTENSE_HEAT_HAZE:
-        opacity = 20;
+        opacity = 15;
         break;
 
     }
