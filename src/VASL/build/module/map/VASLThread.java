@@ -118,6 +118,9 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
 	protected void launch() {
 
         super.launch();
+
+        VASLLOSButtonCommand vasllosbuttonCommand= new VASLLOSButtonCommand(this, false);
+        GameModule.getGameModule().sendAndLog(vasllosbuttonCommand);
         setGridSnapToVertex(true);
         initializeMap();
 
@@ -372,6 +375,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             if(!super.retainAfterRelease || super.ctrlWhenClick && super.persistence.equals("Ctrl-Click & Drag")) {
                 if(e.getWhen() != super.lastRelease) {
                     super.visible = false;
+                    super.getLaunchButton().setEnabled(true);
                     if(super.global.equals("Always") || super.global.equals("When Persisting")) {
                         if(!super.persistence.equals("Always") && (!super.ctrlWhenClick || !super.persistence.equals("Ctrl-Click & Drag"))) {
                             vasllosCommand = new VASLLOSCommand(this, this.getAnchor(), this.getArrow(), false, false, sourcelevel,   targetlevel);
@@ -384,6 +388,8 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                         }
                     }
 
+                    VASLLOSButtonCommand vasllosbuttonCommand= new VASLLOSButtonCommand(this, true);
+                    GameModule.getGameModule().sendAndLog(vasllosbuttonCommand);
                     super.map.setPieceOpacity(1.0F);
                     super.map.popMouseListener();
                     super.map.repaint();
@@ -983,18 +989,23 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
 	// force a paint when remote LOS command received
 	@Override
 	public Command decode(String command) {
-        SequenceEncoder.Decoder var2 = null;
+        SequenceEncoder.Decoder comdecode = null;
         if(command.startsWith("LOS\tLOS_Thread1")) {
-            var2 = new SequenceEncoder.Decoder(command, '\t');
-            var2.nextToken();
-            var2.nextToken();
-            Point var3 = new Point(var2.nextInt(0), var2.nextInt(0));
-            Point var4 = new Point(var2.nextInt(0), var2.nextInt(0));
-            boolean var5 = var2.nextBoolean(false);
-            boolean var6 = var2.nextBoolean(false);
-            double var7 = var2.nextDouble(0);
-            double var8 = var2.nextDouble(0);
-            return new VASLThread.VASLLOSCommand(this, var3, var4, var5, var6, var7, var8);
+            comdecode = new SequenceEncoder.Decoder(command, '\t');
+            comdecode.nextToken();
+            comdecode.nextToken();
+            Point passanchor = new Point(comdecode.nextInt(0), comdecode.nextInt(0));
+            Point passarrow = new Point(comdecode.nextInt(0), comdecode.nextInt(0));
+            boolean passpersisting = comdecode.nextBoolean(false);
+            boolean passmirroring = comdecode.nextBoolean(false);
+            double passsourcelevel = comdecode.nextDouble(0);
+            double passtargetlevel = comdecode.nextDouble(0);
+            return new VASLThread.VASLLOSCommand(this, passanchor, passarrow, passpersisting, passmirroring, passsourcelevel, passtargetlevel);
+        } else if(command.startsWith("VASLLOSButtonCommand\t")) {
+            comdecode = new SequenceEncoder.Decoder(command, '\t');
+            comdecode.nextToken();
+            boolean passbuttonstatus = comdecode.nextBoolean(false);
+            return new VASLThread.VASLLOSButtonCommand(this, passbuttonstatus);
         } else {
             return null;
         }
@@ -1193,13 +1204,24 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         if(var1 instanceof LOS_Thread.LOSCommand) {
             return super.encode(var1);
         } else if( var1 instanceof VASLLOSCommand) {
-            VASLThread.VASLLOSCommand var2 = (VASLThread.VASLLOSCommand)var1;
-            SequenceEncoder var3 = new SequenceEncoder(var2.target.getId(), '\t');
-            var3.append(var2.newAnchor.x).append(var2.newAnchor.y).append(var2.newArrow.x).append(var2.newArrow.y).append(var2.newPersisting).append(var2.newMirroring).append(var2.sourceLevel).append(var2.targetLevel);
-            return "LOS\t" + var3.getValue();
+            VASLThread.VASLLOSCommand vaslloscom = (VASLThread.VASLLOSCommand) var1;
+            SequenceEncoder comencode = new SequenceEncoder(vaslloscom.target.getId(), '\t');
+            comencode.append(vaslloscom.newAnchor.x).append(vaslloscom.newAnchor.y).append(vaslloscom.newArrow.x).append(vaslloscom.newArrow.y).append(vaslloscom.newPersisting).append(vaslloscom.newMirroring).append(vaslloscom.sourceLevel).append(vaslloscom.targetLevel);
+            System.out.println("encoding " + "LOS\t" + comencode.getValue());
+            return "LOS\t" + comencode.getValue();
+        } else if(var1 instanceof VASLLOSButtonCommand){
+            VASLThread.VASLLOSButtonCommand vaslbuttoncom = (VASLThread.VASLLOSButtonCommand) var1;
+            System.out.println("encoding " + "VASLLOSButtonCommand\t" + Boolean.toString(vaslbuttoncom.enableButton));
+            return "VASLLOSButtonCommand\t" + Boolean.toString(vaslbuttoncom.enableButton);
         } else {
             return null;
         }
+    }
+    public void setButtonState(boolean buttonstatus){
+        for (VASLThread t : this.map.getComponentsOf(VASLThread.class)) {
+            t.setup(buttonstatus);
+        }
+
     }
 
     public static class VASLLOSCommand extends Command {
@@ -1216,21 +1238,23 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         protected double sourceLevel;
         protected double targetLevel;
 
-        public VASLLOSCommand(VASLThread var1, Point var2, Point var3, boolean var4, boolean var5, double sourcelevel, double targetlevel) {
-            this.target = var1;
+        public VASLLOSCommand(VASLThread passthread, Point passanchor, Point passarrow, boolean passpersisting, boolean passmirroring, double sourcelevel, double targetlevel) {
+            this.target = passthread;
             this.oldAnchor = this.target.getAnchor();
             this.oldArrow = this.target.getArrow();
             this.oldPersisting = this.target.isPersisting();
             this.oldMirroring = this.target.isMirroring();
-            this.newAnchor = var2;
-            this.newArrow = var3;
-            this.newPersisting = var4;
-            this.newMirroring = var5;
+            this.newAnchor = passanchor;
+            this.newArrow = passarrow;
+            this.newPersisting = passpersisting;
+            this.newMirroring = passmirroring;
             this.sourceLevel=sourcelevel;
             this.targetLevel=targetlevel;
         }
 
         protected void executeCommand() {
+            System.out.println("Executing LOS command ");
+
             this.target.setEndPointsandLevels(this.newAnchor, this.newArrow, this.sourceLevel, this.targetLevel);
             this.target.setPersisting(this.newPersisting);
             this.target.setMirroring(this.newMirroring);
@@ -1239,6 +1263,24 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
 
         protected Command myUndoCommand() {
             return new VASLThread.VASLLOSCommand(this.target, this.oldAnchor, this.oldArrow, this.oldPersisting, this.oldMirroring, this.target.sourcelevel, this.target.targetlevel);
+        }
+    }
+    public static class VASLLOSButtonCommand extends Command {
+        protected VASLThread target;
+        protected boolean enableButton;
+
+        public VASLLOSButtonCommand(VASLThread vaslthread, boolean buttonstatus) {
+            this.target = vaslthread;
+            this.enableButton = buttonstatus;
+        }
+
+        protected void executeCommand() {
+            System.out.println("Executing VASLLOSButtonCommand"  + this.enableButton);
+            this.target.setButtonState(this.enableButton);
+        }
+
+        protected Command myUndoCommand() {
+            return new VASLThread.VASLLOSButtonCommand(this.target, this.enableButton);
         }
     }
 }
