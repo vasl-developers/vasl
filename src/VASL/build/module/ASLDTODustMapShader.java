@@ -48,7 +48,7 @@ public class ASLDTODustMapShader extends MapShader {
                 }
                 setShadingVisibility(setDustAndOpacity());
                 if(GameModule.getGameModule().getChatter()!= null) {
-                    GameModule.getGameModule().getChatter().send("Special dust " + (specialDust ? "activated": "deactivated"));
+                    GameModule.getGameModule().getChatter().send( (specialDust ? "Special dust is in effect" : "No Dust is in effect"));
                 }
 
             });

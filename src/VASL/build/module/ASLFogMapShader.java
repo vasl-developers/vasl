@@ -1,7 +1,6 @@
 package VASL.build.module;
 
 import VASL.environment.FogLevel;
-import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.map.MapShader;
 import VASSAL.build.module.properties.GlobalProperty;
@@ -18,10 +17,6 @@ public class ASLFogMapShader extends MapShader {
     globalFogLevel.setAttribute("initialValue", fogLevel.name());
     GameModule gm = GameModule.getGameModule();
     gm.addMutableProperty("fog_level", globalFogLevel);
-  }
-  @Override
-  public void addTo(Buildable buildable) {
-    super.addTo(buildable);
   }
 
   @Override
