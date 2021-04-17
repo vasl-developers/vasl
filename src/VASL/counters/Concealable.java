@@ -302,6 +302,16 @@ public class Concealable extends Obscurable implements EditablePiece {
       }
     }
     if (concealedToOthers == null) {
+      concealedToOthers = Op.load(nation + "/" + nation + "qmarkme.gif").getImage();
+      if (concealedToOthers == null) {
+        // Using generic qmarkme.gif image and prefs-specified colors
+        BufferedImage rev = new BufferedImage(20, 20, BufferedImage.TYPE_4BYTE_ABGR);
+        final Graphics2D g = rev.createGraphics();
+        g.drawString("?", 0, 0);
+        concealedToOthers = rev;
+        g.dispose();
+      }
+      /*
       try {
         concealedToOthers = Op.load(nation + "/" + nation + "qmarkme.gif").getImage(null);
       }
@@ -313,7 +323,10 @@ public class Concealable extends Obscurable implements EditablePiece {
         g.drawString("?", 0, 0);
         concealedToOthers = rev;
       }
+      */
+
     }
+
   }
 
   public String getName() {
