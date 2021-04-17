@@ -27,11 +27,5 @@ public enum DustLevel {
         return values()[ordinal() + 1];
     }
 
-    public boolean dustInEffect() {
-        return this != NONE;
-    }
 
-    public boolean isLightDust() {
-        return (this == LIGHT || this == HEAVY || this == VERY_HEAVY);
-    }
 }
