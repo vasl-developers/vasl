@@ -400,6 +400,8 @@ public class LOSDataEditor {
                     newTerr = map.getTerrain("Stone Factory Wall, 1.5 Level").getType();
                 } else if (terr.getName().equals("Roofless Stone Factory, 2.5 Level")) {
                     newTerr = map.getTerrain("Stone Factory Wall, 2.5 Level").getType();
+                } else if (terr.getName().equals("Wooden Factory, 1 Level")) {
+                    newTerr = map.getTerrain("Wooden Factory Wall, 1 Level").getType();
                 }
 
                 if (map.getGridTerrain(x, y).isFactoryTerrain() &&
