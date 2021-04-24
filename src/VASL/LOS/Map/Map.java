@@ -206,7 +206,7 @@ public class Map  {
             }
         }else if (this.A1CenterY==65){
             int evencol=0;
-            if(this.cropconfiguration.contains("ROadjustment")){A1CenterY=32.5;}
+            if(this.cropconfiguration.contains("ROadjustment")){A1CenterY=32.5;}  // Red October special case when cropping
             for (int col = 0; col < this.width; col++) {
                 if (this.cropconfiguration.contains("ROadjustment") && !(this.cropconfiguration.contains("EqualRows"))) {
                     evencol = col % 2 == 0 ? 0 : 1;
@@ -222,6 +222,20 @@ public class Map  {
             // reset the hex locations to map grid
             for (int col = 0; col < this.width; col++) {
                 for (int row = 0; row < this.height; row++) {
+                    hexGrid[col][row].resetHexsideLocationNames();
+                }
+            }
+        }else if (this.A1CenterY==34.0){  // Singling special case
+            for (int col = 0; col < this.width; col++) {
+                hexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
+                for (int row = 0; row < this.height + (col % 2); row++) {
+                    hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, isabboard), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                }
+            }
+
+            // reset the hex locations to map grid
+            for (int col = 0; col < this.width; col++) {
+                for (int row = 0; row < this.height + (col % 2); row++) {
                     hexGrid[col][row].resetHexsideLocationNames();
                 }
             }
@@ -526,15 +540,7 @@ public class Map  {
      * @return true if on map, otherwise false
      */
     public boolean hexOnMap(int col, int row) {
-
-        try {
-            @SuppressWarnings("unused") Hex temp = hexGrid[col][row];
-            return true;
-        }
-        catch (Exception e) {
-
-            return false;
-        }
+        return col >= 0 && col < hexGrid.length && row >= 0 && row < hexGrid[col].length;
     }
 
     /**
@@ -3081,8 +3087,8 @@ public class Map  {
                                 (status.rangeToTarget == 1 && status.targetElevation > status.sourceElevation &&
                                         status.source.getHex().getCenterLocation().getTerrain().isWaterTerrain())))) {
 
-                    // if orchard, then hindrance
-                    if ("Orchard, Out of Season".equals(status.currentTerrain.getName())) {
+                    // if orchard, then hindrance; if Tower Hindrance (Dinant Bridge ruins) then hindrance
+                    if ("Orchard, Out of Season".equals(status.currentTerrain.getName()) || "Tower Hindrance".equals(status.currentTerrain.getName())) {
 
                         if (addHindranceHex(status, result))
                             return true;

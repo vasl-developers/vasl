@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<!--
+    This file contains the board metadata specific to a VASL board archive.
+    Create one file per VASL board and place it in the archive.
+-->
+
+<!-- 
+    Board-level metadata
+	name - the name of the board (as it will appear in board selector drop-down - not yet supported)
+	version - the board version
+	versionDate - the date the last version was created
+	author - the caring soul who created the board
+    boardImage - the name of the VASL image file in the board archive; the name is case sensitive
+    hasHills - TRUE/FALSE if the board contains base elevations above ground level
+                if not we can assume the ground level under the terrain is zero, which
+                makes the VASL LOS image translation faster and more accurate
+    height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
+	hexHeight - the height of a hex in pixels - decimal - should be image/height
+	hexWidth - the width of a hex in pixels - decimal - center point to center point
+	A1CenterX - x location of the A1 center dot
+	A1CenterY - y location of the A1 center dot 
+	
+-->
+<boardMetadata 
+	name="SG"
+	version="6.0" 
+	versionDate="Apr 2021" 
+	author="Tom Repetti" 
+	boardImageFileName="bdSG.gif" 
+	hasHills="TRUE" 
+	width="31" 
+	height="18"
+	hexHeight = "64.25"
+	hexWidth = "56.25"
+	A1CenterX = "3.0"
+	A1CenterY = "34"
+	HexGridConfig = "Normal"
+	>
+
+    <!--
+        The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
+        determine the proper building type when creating the LOS information and assumes buildings are single-hex stone or 
+        wooden buildings. Use these elements to override the building type. 
+        
+        See the terrainType elements for a complete list of building names
+	<buildingType hexName="F5" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="F6" buildingTypeName="Stone Building, 1 Level" />
+	
+
+    -->
+    <buildingTypes>
+	
+        	
+	</buildingTypes>
+	
+	<overlaySSRules>
+	    <!--
+			Scenario-specific overlay rules. 
+			name - the VASL SSR name
+			image - the image name
+			x - x coordinate of overly upper left
+			y - y coordinate of overlay upper left
+		-->
+		
+	</overlaySSRules>
+	
+	<colors>
+		<color name="Wall" red="60" green="60" blue="60" terrain="Wall" elevation="1" />
+		<color name="Level0" red="130" green="110" blue="85" terrain="Open Ground" elevation="0" />
+		<color name="Level0e" red="0" green="1" blue="0" terrain="Open Ground" elevation="0" />
+		<color name="Level1" red="160" green="140" blue="85" terrain="Open Ground" elevation="1" />
+		<color name="Level1e" red="0" green="5" blue="0" terrain="Open Ground" elevation="1" />
+		<color name="StoneBldg" red="145" green="145" blue="145" terrain="Stone Building" elevation="1" />
+		<color name="StoneBldg0" red="155" green="155" blue="155" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldg1" red="95" green="95" blue="95" terrain="Stone Building, 1 Level" elevation="1" />
+		<color name="StoneBldg01" red="125" green="125" blue="125" terrain="Stone Building, 1 Level" elevation="0" />
+		<color name="StoneBldg2" red="170" green="30" blue="30" terrain="Stone Building, 2 Level" elevation="1" />
+
+
+	</colors>
+	
+	<colorSSRules>
+	</colorSSRules>
+	
+</boardMetadata>

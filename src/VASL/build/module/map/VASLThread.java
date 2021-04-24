@@ -1207,11 +1207,9 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             VASLThread.VASLLOSCommand vaslloscom = (VASLThread.VASLLOSCommand) var1;
             SequenceEncoder comencode = new SequenceEncoder(vaslloscom.target.getId(), '\t');
             comencode.append(vaslloscom.newAnchor.x).append(vaslloscom.newAnchor.y).append(vaslloscom.newArrow.x).append(vaslloscom.newArrow.y).append(vaslloscom.newPersisting).append(vaslloscom.newMirroring).append(vaslloscom.sourceLevel).append(vaslloscom.targetLevel);
-            System.out.println("encoding " + "LOS\t" + comencode.getValue());
             return "LOS\t" + comencode.getValue();
         } else if(var1 instanceof VASLLOSButtonCommand){
             VASLThread.VASLLOSButtonCommand vaslbuttoncom = (VASLThread.VASLLOSButtonCommand) var1;
-            System.out.println("encoding " + "VASLLOSButtonCommand\t" + Boolean.toString(vaslbuttoncom.enableButton));
             return "VASLLOSButtonCommand\t" + Boolean.toString(vaslbuttoncom.enableButton);
         } else {
             return null;
@@ -1253,8 +1251,6 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         }
 
         protected void executeCommand() {
-            System.out.println("Executing LOS command ");
-
             this.target.setEndPointsandLevels(this.newAnchor, this.newArrow, this.sourceLevel, this.targetLevel);
             this.target.setPersisting(this.newPersisting);
             this.target.setMirroring(this.newMirroring);
@@ -1275,7 +1271,6 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         }
 
         protected void executeCommand() {
-            System.out.println("Executing VASLLOSButtonCommand"  + this.enableButton);
             this.target.setButtonState(this.enableButton);
         }
 
