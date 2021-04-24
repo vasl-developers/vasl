@@ -17,7 +17,7 @@
         <dependency>
             <groupId>org.vassalengine</groupId>
             <artifactId>vassal-app</artifactId>
-            <version>3.5.4</version>
+            <version>3.5.5</version>
         </dependency>
 
         <!-- We do not have any tests yet, but time will tell... -->
@@ -101,7 +101,7 @@
                     <arguments>
                         <argument>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</argument>
                         <argument>-jar</argument>
-                        <argument>Vengine-3.5.4.jar</argument>
+                        <argument>Vengine-3.5.5.jar</argument>
                         <argument>--standalone</argument>
                         <argument>target/${project.build.finalName}.jar</argument>
                     </arguments>
