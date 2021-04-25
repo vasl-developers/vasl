@@ -38,10 +38,10 @@
 		<boarddata name="10z" version="6.5" versionDate="Apr 2021" description="" />
 		<boarddata name="11" version="6.2" versionDate="Apr 2021" description="" />
 		<boarddata name="12" version="6.4" versionDate="Apr 2021" description="" />
-		<boarddata name="13" version="6.2" versionDate="Aug 2008" description="" />
-		<boarddata name="14" version="6.3" versionDate="May 2020" description="" />
-		<boarddata name="15" version="6.0" versionDate="Aug 2008" description="" />
-		<boarddata name="16" version="6.2" versionDate="Aug 2008" description="" />
+		<boarddata name="13" version="6.4" versionDate="Apr 2021" description="" />
+		<boarddata name="14" version="6.4" versionDate="Apr 2021" description="" />
+		<boarddata name="15" version="6.1" versionDate="Apr 2021" description="" />
+		<boarddata name="16" version="6.3" versionDate="Apr 2021" description="" />
 		<boarddata name="17" version="6.1" versionDate="Aug 2008" description="" />
 		<boarddata name="17z" version="6.1" versionDate="Aug 2008" description="" />
 		<boarddata name="18" version="6.2" versionDate="Aug 2008" description="" />
@@ -141,8 +141,8 @@
 		<boarddata name="12b" version="6.0" versionDate="Mar 2020" description="" />
 		<boarddata name="13a" version="6.0" versionDate="Mar 2020" description="" />
 		<boarddata name="13b" version="6.0" versionDate="Mar 2020" description="" />
-		<boarddata name="15a" version="6.0" versionDate="Apr 2021" description="" />
-		<boarddata name="15b" version="6.0" versionDate="Apr 2021" description="" />
+		<boarddata name="15a" version="6.1" versionDate="Apr 2021" description="" />
+		<boarddata name="15b" version="6.1" versionDate="Apr 2021" description="" />
 		<boarddata name="a" version="6.2" versionDate="Aug 2019" description="" />
 		<boarddata name="b" version="6.1" versionDate="Aug 2019" description="" />
 		<boarddata name="c" version="6.1" versionDate="Aug 2019" description="" />
