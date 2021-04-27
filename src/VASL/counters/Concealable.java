@@ -86,39 +86,28 @@ public class Concealable extends Obscurable implements EditablePiece {
   protected void drawObscuredToMe(Graphics g, int x, int y, Component obs, double zoom) {
     loadImages(obs);
     int size = (int) (zoom * imageSize.width);
-    
-    // FredKors 08.nov.2014
-    // fix of the concealed counter 'corner effect'
-    /*
-    g.setColor(getColor(nation));
-    g.fillRect(x - size / 2, y - size / 2, size, size);
-    if (nation2 != null) {
-      g.setColor(getColor(nation2));
-      g.fillRect(x - size / 2 + size / 8, y - size / 2 + size / 8, size - size / 4, size - size / 4);
-    }
-    */
-    
-    try {
+
+    //try {
         if (conceal != null) {
             conceal.draw(g, x - size / 2, y - size / 2, zoom, obs);
         } else {
             g.drawImage(concealedToMe, x - size / 2, y - size / 2, size, size, obs);
         }
-    }
-    catch (Exception e) {
-    }
+    //}
+    //catch (Exception e) {
+    //}
   }
 
   protected void drawObscuredToOthers(Graphics g, int x, int y, Component obs, double zoom) {
     loadImages(obs);
     piece.draw(g, x, y, obs, zoom);
     int size = (int) (zoom * imageSize.width);
-    try {
+    //try {
       g.drawImage(concealedToOthers,
                   x - size / 2, y - size / 2, size, size, obs);
-    }
-    catch (Exception e) {
-    }
+    //}
+    //catch (Exception e) {
+    //}
   }
 
   public Command myKeyEvent(KeyStroke stroke) {
@@ -283,8 +272,8 @@ public class Concealable extends Obscurable implements EditablePiece {
 
   private void loadImages(Component obs) {
     if (concealedToMe == null) {
-      try {
-        concealedToMe = Op.load(imageName + ".gif").getImage(null);
+      //try {
+        concealedToMe = Op.load(imageName + ".gif").getImage();
         if (concealedToMe != null) {
           concealedToMe = null;
           conceal = new ScaledImagePainter();
@@ -292,14 +281,18 @@ public class Concealable extends Obscurable implements EditablePiece {
           imageSize = conceal.getImageSize();
         }
         else {
-          imageSize.setSize(0, 0);
+          //imageSize.setSize(0, 0);
+          concealedToMe = obs.createImage(20, 20);
+          java.awt.Graphics g = concealedToMe.getGraphics();
+          g.drawString("?", 0, 0);
+
         }
-      }
-      catch (Exception ex) {
-        concealedToMe = obs.createImage(20, 20);
-        java.awt.Graphics g = concealedToMe.getGraphics();
-        g.drawString("?", 0, 0);
-      }
+      //}
+      //catch (Exception ex) {
+        //concealedToMe = obs.createImage(20, 20);
+        //java.awt.Graphics g = concealedToMe.getGraphics();
+        //g.drawString("?", 0, 0);
+      //}
     }
     if (concealedToOthers == null) {
       concealedToOthers = Op.load(nation + "/" + nation + "qmarkme.gif").getImage();
@@ -311,20 +304,6 @@ public class Concealable extends Obscurable implements EditablePiece {
         concealedToOthers = rev;
         g.dispose();
       }
-      /*
-      try {
-        concealedToOthers = Op.load(nation + "/" + nation + "qmarkme.gif").getImage(null);
-      }
-      catch (Exception ex) {
-        // Using generic qmarkme.gif image and prefs-specified colors
-        int size = imageSize.width;
-        BufferedImage rev = new BufferedImage(size, size, BufferedImage.TYPE_4BYTE_ABGR);
-        Graphics2D g = rev.createGraphics();
-        g.drawString("?", 0, 0);
-        concealedToOthers = rev;
-      }
-      */
-
     }
 
   }
