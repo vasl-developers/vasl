@@ -30,9 +30,7 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import VASL.environment.DustLevel;
-import VASL.environment.Environment;
-import VASL.environment.LVLevel;
+import VASL.environment.*;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.GlobalOptions;
@@ -1111,31 +1109,33 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         {
             switch (l_strCategory)
             {
-
                 case "TH":
-                case "IFT":
-                {
-                    if (environment.isLightDust())
-                    {
-                        total += Environment.getLightDust(otherDice.get(DiceType.OTHER_DUST));
+                case "IFT": {
+                  if (environment.isSpecialDust()) {
+                      total += environment.getSpecialDust(otherDice.get(DiceType.OTHER_DUST));
+                  } else {
+                    if (environment.isLightDust()) {
+                      total += Environment.getLightDust(otherDice.get(DiceType.OTHER_DUST));
                     } else {
-                        total += Environment.getModerateDust(otherDice.get(DiceType.OTHER_DUST));
+                      total += Environment.getModerateDust(otherDice.get(DiceType.OTHER_DUST));
                     }
-                    specialMessages.add(environment.getCurrentDustLevel().toString() + SPACE);
-                    break;
+                  }
+                  specialMessages.add(environment.getCurrentDustLevel().toString() + SPACE);
+                  break;
                 }
-                case "MC":
-                {
-                    if(environment.isLightDust())
-                    {
-                        total -= Environment.getLightDust(otherDice.get(DiceType.OTHER_DUST));
+
+                case "MC": {
+                  if (environment.isSpecialDust()) {
+                    total -= environment.getSpecialDust(otherDice.get(DiceType.OTHER_DUST));
+                  } else {
+                    if (environment.isLightDust()) {
+                      total -= Environment.getLightDust(otherDice.get(DiceType.OTHER_DUST));
+                    } else {
+                      total -= Environment.getModerateDust(otherDice.get(DiceType.OTHER_DUST));
                     }
-                    else
-                    {
-                        total -= Environment.getModerateDust(otherDice.get(DiceType.OTHER_DUST));
-                    }
-                    specialMessages.add(environment.getCurrentDustLevel().toString() +" - if interdicted, MC is " + total);
-                    break;
+                  }
+                  specialMessages.add(environment.getCurrentDustLevel().toString() +" - if interdicted, MC is " + total);
+                  break;
                 }
             }
         }
@@ -1175,8 +1175,51 @@ public class ASLChatter extends VASSAL.build.module.Chatter
           }
         }
       }
+      // Fog
+      if(environment.isFog())
+      {
+        switch (l_strCategory)
+        {
 
-      if( unmodifiedTotal < total) {
+          case "TH":
+          case "IFT":
+          {
+            FogLevel fogLevel = environment.getCurrentFogLevel();
+            specialMessages.add(fogLevel.toString() + SPACE);
+            break;
+          }
+        }
+      }
+      //Heat Haze
+      if(environment.isHeatHaze())
+      {
+        switch (l_strCategory)
+        {
+          case "TH":
+          case "IFT":
+          {
+            HeatHazeLevel heatHazeLevel = environment.getCurrentHeatHazeLevel();
+            specialMessages.add(heatHazeLevel.toString() + SPACE);
+            break;
+          }
+        }
+      }
+      //Sun Blindness
+      if(environment.isSunBlindness())
+      {
+        switch (l_strCategory)
+        {
+          case "TH":
+          case "IFT":
+          {
+            SunBlindnessLevel sunBlindnessLevel = environment.getCurrentSunBlindnessLevel();
+            specialMessages.add(sunBlindnessLevel.toString() + SPACE);
+            break;
+          }
+        }
+      }
+
+      if( unmodifiedTotal < total || environment.dustInEffect()) {
         specialMessages.add("Total: " + total);
       }
     }

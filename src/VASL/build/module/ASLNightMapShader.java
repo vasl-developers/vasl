@@ -7,7 +7,6 @@ import VASSAL.build.module.properties.GlobalProperty;
 
 public class ASLNightMapShader extends MapShader{
   private GlobalProperty globalNightLevel = new GlobalProperty();
-  private Environment environment = new Environment();
     public ASLNightMapShader() {
       super();
       shadingVisible = false;

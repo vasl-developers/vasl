@@ -58,11 +58,6 @@ public class ASLLVMapShader extends MapShader {
         opacity = 20;
         break;
     }
-    // @todo - activate fog intensity and fog height
-//    if(lvLevel == LVLevel.FOG) {
-//
-//    }
-
 
     globalLVLevel.setAttribute("initialValue", lvLevel.name());
     buildComposite();
