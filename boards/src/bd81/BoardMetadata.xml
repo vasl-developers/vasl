@@ -20,7 +20,7 @@
 
 	
 -->
-<boardMetadata name="81" version="6.1" versionDate="Mar 2018" author="TR" boardImageFileName="bd81.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="81" version="6.2" versionDate="May 2021" author="TR" boardImageFileName="bd81.gif" hasHills="TRUE" width="33" height="10" HexGridConfig = "Normal">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
