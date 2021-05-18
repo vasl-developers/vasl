@@ -45,13 +45,14 @@
 
 <boardMetadata 
 	name="40" 
-	version="6.8" 
-	versionDate="Mar2020" 
+	version="6.9" 
+	versionDate="May 2021" 
 	author="TR" 
 	boardImageFileName="bd40.gif" 
 	hasHills="TRUE" 
 	width="33" 
 	height="10"
+	HexGridConfig = "Normal"
 	>
 
     
