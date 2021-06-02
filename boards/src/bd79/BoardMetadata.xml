@@ -21,7 +21,7 @@
 	6.1 - Fixed wooden factories
 	
 -->
-<boardMetadata name="bd79" version="6.1" versionDate="Nov 2020" author="ATC" boardImageFileName="bd79.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="bd79" version="6.2" versionDate="Jun 2021" author="ATC" boardImageFileName="bd79.gif" hasHills="FALSE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
