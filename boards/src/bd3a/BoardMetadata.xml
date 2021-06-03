@@ -23,16 +23,17 @@
 -->
 <boardMetadata 
 	name="3a" 
-	version="6.5"
-	versionDate="Jan 2021"
+	version="6.6"
+	versionDate="Jun 2021"
 	author="TR" 
 	boardImageFileName="bd3a.gif" 
 	hasHills="TRUE" 
 	width="17" 
 	height="20"
 	hexHeight = "64.5"
-	hexWidth = "56.3125">
-
+	hexWidth = "56.3125"
+	
+>
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
         determine the proper building type when creating the LOS information and assumes buildings are single-hex stone or 
