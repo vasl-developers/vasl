@@ -18,7 +18,7 @@
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
 -->
-<boardMetadata name="BFPM" version="6.0" versionDate="Nov 2011" author="TR" boardImageFileName="bdBFPM.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="BFPM" version="6.1" versionDate="Jun 2021" author="TR" boardImageFileName="bdBFPM.gif" hasHills="TRUE" width="33" height="10" >
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
