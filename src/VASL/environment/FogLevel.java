@@ -39,6 +39,49 @@ public enum FogLevel {
     return this.fogDescription;
   }
 
+  public int fogHeight() {
+    int fogHeight = 999;
+    switch (this) {
+      case LIGHT_FOGM1:
+      case MODERATE_FOGM1:
+      case HEAVY_FOGM1: {
+        fogHeight = -1;
+        break;
+      }
+      case LIGHT_FOGL0:
+      case MODERATE_FOGL0:
+      case HEAVY_FOGL0:{
+        fogHeight =  0;
+        break;
+      }
+      case LIGHT_FOGL1:
+      case MODERATE_FOGL1:
+      case HEAVY_FOGL1: {
+        fogHeight = 1;
+        break;
+      }
+      case LIGHT_FOGL2:
+      case MODERATE_FOGL2:
+      case HEAVY_FOGL2: {
+        fogHeight = 2;
+        break;
+      }
+      case LIGHT_FOGL3:
+      case MODERATE_FOGL3:
+      case HEAVY_FOGL3: {
+        fogHeight = 3;
+        break;
+      }
+      case LIGHT_FOGL4:
+      case MODERATE_FOGL4:
+      case HEAVY_FOGL4: {
+        fogHeight = 4;
+        break;
+      }
+    }
+    return fogHeight;
+  }
+
   public FogLevel next() {
     return values()[ordinal() + 1];
   }
