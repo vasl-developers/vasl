@@ -1,8 +1,6 @@
 package VASL.build.module;
 
 import VASL.environment.DustLevel;
-import VASL.environment.FogLevel;
-import VASL.environment.LVLevel;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.map.MapShader;
@@ -47,14 +45,8 @@ public class ASLDTODustMapShader extends MapShader {
                 boolean specialDust = (Boolean)listener.getNewValue();
                 if( specialDust) {
                     dustLevel = SPECIAL;
-                } else {
-                    dustLevel = NONE;
                 }
                 setShadingVisibility(setDustAndOpacity());
-                if(GameModule.getGameModule().getChatter()!= null) {
-                    GameModule.getGameModule().getChatter().send( (specialDust ? "Special dust is in effect" : "No Dust is in effect"));
-                }
-
             });
         }
         if(modulePreferences.getValue(SPECIAL_DUST_NAME) == null) {

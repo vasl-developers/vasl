@@ -1,6 +1,5 @@
 package VASL.build.module;
 
-import VASL.environment.DustLevel;
 import VASL.environment.HeatHazeLevel;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
@@ -12,7 +11,7 @@ import javax.swing.*;
 import static VASL.environment.HeatHazeLevel.NONE;
 
 public class ASLHeatHazeMapShader extends MapShader {
-  private GlobalProperty globalHeatHazeLevel = new GlobalProperty();
+  private final GlobalProperty globalHeatHazeLevel = new GlobalProperty();
   private HeatHazeLevel heatHazeLevel = NONE;
 
   public ASLHeatHazeMapShader() {

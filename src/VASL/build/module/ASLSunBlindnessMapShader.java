@@ -1,7 +1,5 @@
 package VASL.build.module;
 
-import VASL.environment.HeatHazeLevel;
-import VASL.environment.LVLevel;
 import VASL.environment.SunBlindnessLevel;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.map.MapShader;
@@ -12,7 +10,7 @@ import javax.swing.*;
 import static VASL.environment.SunBlindnessLevel.NONE;
 
 public class ASLSunBlindnessMapShader extends MapShader {
-  private GlobalProperty globalSunBlindnessLevel = new GlobalProperty();
+  private final GlobalProperty globalSunBlindnessLevel = new GlobalProperty();
   private SunBlindnessLevel sunBlindnessLevel = NONE;
   public ASLSunBlindnessMapShader() {
     super();

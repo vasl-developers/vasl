@@ -1,7 +1,6 @@
 package VASL.build.module;
 
 import VASL.LOS.Map.Hex;
-import VASL.build.module.map.boardPicker.VASLBoard;
 import VASL.environment.FogLevel;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.Map;
@@ -11,17 +10,14 @@ import VASSAL.build.module.properties.GlobalProperty;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
-import java.util.ArrayList;
 import java.util.Collection;
 
 import static VASL.environment.FogLevel.NONE;
 
 public class ASLFogMapShader extends MapShader {
-  private GlobalProperty globalFogLevel = new GlobalProperty();
+  private final GlobalProperty globalFogLevel = new GlobalProperty();
   private FogLevel fogLevel = NONE;
   public ASLFogMapShader() {
     super();
@@ -60,7 +56,7 @@ public class ASLFogMapShader extends MapShader {
       case LIGHT_FOGL2:
       case LIGHT_FOGL3:
       case LIGHT_FOGL4:
-        opacity = 20;
+        opacity = 35;
         break;
       case MODERATE_FOGM1:
       case MODERATE_FOGL0:
@@ -68,7 +64,7 @@ public class ASLFogMapShader extends MapShader {
       case MODERATE_FOGL2:
       case MODERATE_FOGL3:
       case MODERATE_FOGL4:
-        opacity = 30;
+        opacity = 40;
         break;
       case HEAVY_FOGM1:
       case HEAVY_FOGL0:
@@ -76,7 +72,7 @@ public class ASLFogMapShader extends MapShader {
       case HEAVY_FOGL2:
       case HEAVY_FOGL3:
       case HEAVY_FOGL4:
-        opacity = 40;
+        opacity = 45;
         break;
     }
 
@@ -97,16 +93,13 @@ public class ASLFogMapShader extends MapShader {
       return;
     }
     Hex[][] hexes = aslMap.getVASLMap().getHexGrid();
-    Rectangle boardsRect = new Rectangle();
-    Collection<Board> boards = aslMap.getBoards();
-    boards.forEach(board -> {boardsRect.add(board.bounds());});
-
+    Area boardArea = getBoardClip();
 
     for (Hex[] row:hexes) {
       for (Hex hex :row) {
-        Rectangle withinBoard = null;
         if( hex.getBaseHeight() <= fogLevel.fogHeight()) {
           Polygon finalHexPolygon = new Polygon(hex.getHexBorder().xpoints,  hex.getHexBorder().ypoints, hex.getHexBorder().npoints);
+
           // offset to the actual board rather than draw from 0,0 on the Map.
           for(int n = 0; n < 6; ++n) {
             finalHexPolygon.xpoints[n] += aslMap.getEdgeBuffer().width;
@@ -126,7 +119,11 @@ public class ASLFogMapShader extends MapShader {
           if (zoom != 1.0) {
             area = new Area(AffineTransform.getScaleInstance(zoom, zoom)
                 .createTransformedShape(area));
+            boardArea = new Area(AffineTransform.getScaleInstance(zoom, zoom)
+                .createTransformedShape(getBoardClip()));
+
           }
+          area.intersect(boardArea);
 
           final Composite oldComposite = g2d.getComposite();
           final Color oldColor = g2d.getColor();

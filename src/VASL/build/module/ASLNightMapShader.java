@@ -1,12 +1,11 @@
 package VASL.build.module;
 
-import VASL.environment.Environment;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.map.MapShader;
 import VASSAL.build.module.properties.GlobalProperty;
 
 public class ASLNightMapShader extends MapShader{
-  private GlobalProperty globalNightLevel = new GlobalProperty();
+  private final GlobalProperty globalNightLevel = new GlobalProperty();
     public ASLNightMapShader() {
       super();
       shadingVisible = false;
