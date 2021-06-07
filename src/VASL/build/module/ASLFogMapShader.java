@@ -9,7 +9,10 @@ import VASSAL.build.module.map.MapShader;
 import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.build.module.properties.GlobalProperty;
 
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.util.ArrayList;
@@ -20,7 +23,6 @@ import static VASL.environment.FogLevel.NONE;
 public class ASLFogMapShader extends MapShader {
   private GlobalProperty globalFogLevel = new GlobalProperty();
   private FogLevel fogLevel = NONE;
-
   public ASLFogMapShader() {
     super();
     globalFogLevel.setPropertyName("fog_level");
@@ -31,7 +33,18 @@ public class ASLFogMapShader extends MapShader {
 
   @Override
   protected void toggleShading() {
-    fogLevel = fogLevel.next();
+    Object[] possibilities = FogLevel.values();
+    FogLevel tempFogLevel = (FogLevel)JOptionPane.showInputDialog(
+        getLaunchButton().getParent(),
+        "Select Fog level and intensity:",
+        "Fog Level",
+        JOptionPane.PLAIN_MESSAGE,
+        getLaunchButton().getIcon(),
+        possibilities,
+        fogLevel.toString());
+    if(tempFogLevel != null) {
+      fogLevel = tempFogLevel;
+    }
     GameModule.getGameModule().getChatter().send(fogLevel.toString() + " is in effect.");
     this.setShadingVisibility(setFogLevelAndOpacity());
   }
@@ -47,7 +60,7 @@ public class ASLFogMapShader extends MapShader {
       case LIGHT_FOGL2:
       case LIGHT_FOGL3:
       case LIGHT_FOGL4:
-        opacity = 50;
+        opacity = 20;
         break;
       case MODERATE_FOGM1:
       case MODERATE_FOGL0:
@@ -55,7 +68,7 @@ public class ASLFogMapShader extends MapShader {
       case MODERATE_FOGL2:
       case MODERATE_FOGL3:
       case MODERATE_FOGL4:
-        opacity = 60;
+        opacity = 30;
         break;
       case HEAVY_FOGM1:
       case HEAVY_FOGL0:
@@ -63,7 +76,7 @@ public class ASLFogMapShader extends MapShader {
       case HEAVY_FOGL2:
       case HEAVY_FOGL3:
       case HEAVY_FOGL4:
-        opacity = 70;
+        opacity = 40;
         break;
     }
 
@@ -78,6 +91,11 @@ public class ASLFogMapShader extends MapShader {
     }
 
     ASLMap aslMap = (ASLMap) map;
+    // if there is no hex grid for the map, we can't shade hex by hex.
+    if(aslMap.isLegacyMode()) {
+      super.draw(g, map);
+      return;
+    }
     Hex[][] hexes = aslMap.getVASLMap().getHexGrid();
     Rectangle boardsRect = new Rectangle();
     Collection<Board> boards = aslMap.getBoards();

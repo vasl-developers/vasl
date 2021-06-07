@@ -2,7 +2,7 @@ package VASL.environment;
 
 public enum FogLevel {
   NONE ("No Fog"),
-  LIGHT_FOGM1("Light Fog (E3.311), L-1, +1"),
+  LIGHT_FOGM1("Light Fog (E3.311) L-1, +1"),
   LIGHT_FOGL0("Light Fog (E3.311) L0,+1"),
   LIGHT_FOGL1("Light Fog (E3.311) L1, +1"),
   LIGHT_FOGL2("Light Fog (E3.311) L2, +1"),

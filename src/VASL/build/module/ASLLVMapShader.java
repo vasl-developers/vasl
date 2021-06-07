@@ -1,6 +1,7 @@
 package VASL.build.module;
 
 import VASL.environment.FogIntensity;
+import VASL.environment.FogLevel;
 import VASL.environment.LVLevel;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
@@ -8,6 +9,8 @@ import VASSAL.build.module.map.MapShader;
 import VASSAL.build.module.properties.GlobalProperty;
 import VASSAL.configure.BooleanConfigurer;
 import VASSAL.preferences.Prefs;
+
+import javax.swing.*;
 
 public class ASLLVMapShader extends MapShader {
   private GlobalProperty globalLVLevel = new GlobalProperty();
@@ -44,7 +47,18 @@ public class ASLLVMapShader extends MapShader {
 
   @Override
   protected void toggleShading() {
-    lvLevel = lvLevel.next();
+    Object[] possibilities = LVLevel.values();
+    LVLevel tempLvLevel = (LVLevel) JOptionPane.showInputDialog(
+        getLaunchButton().getParent(),
+        "Select LV type:",
+        "LV Type",
+        JOptionPane.PLAIN_MESSAGE,
+        getLaunchButton().getIcon(),
+        possibilities,
+        lvLevel.toString());
+    if(tempLvLevel != null) {
+      lvLevel = tempLvLevel;
+    }
     GameModule.getGameModule().getChatter().send(lvLevel.toString() + " is in effect.");
     this.setShadingVisibility(setLVAndOpacity());
   }

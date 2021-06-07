@@ -1,10 +1,13 @@
 package VASL.build.module;
 
+import VASL.environment.DustLevel;
 import VASL.environment.HeatHazeLevel;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.map.MapShader;
 import VASSAL.build.module.properties.GlobalProperty;
+
+import javax.swing.*;
 
 import static VASL.environment.HeatHazeLevel.NONE;
 
@@ -26,7 +29,18 @@ public class ASLHeatHazeMapShader extends MapShader {
 
   @Override
   protected void toggleShading() {
-    heatHazeLevel = heatHazeLevel.next();
+    Object[] possibilities = HeatHazeLevel.values();
+    HeatHazeLevel tempHeatHazeLevel = (HeatHazeLevel) JOptionPane.showInputDialog(
+        getLaunchButton().getParent(),
+        "Select Dust Type:",
+        "Dust Type",
+        JOptionPane.PLAIN_MESSAGE,
+        getLaunchButton().getIcon(),
+        possibilities,
+        heatHazeLevel.toString());
+    if(tempHeatHazeLevel != null) {
+      heatHazeLevel = tempHeatHazeLevel;
+    }
     GameModule.getGameModule().getChatter().send(heatHazeLevel.toString() + " is in effect.");
     this.setShadingVisibility(setHeatHazeAndOpacity());
   }
@@ -44,8 +58,6 @@ public class ASLHeatHazeMapShader extends MapShader {
         break;
 
     }
-    // @todo - activate fog height
-
     globalHeatHazeLevel.setAttribute("initialValue", heatHazeLevel.name());
     buildComposite();
     return heatHazeLevel != NONE;

@@ -1,6 +1,8 @@
 package VASL.build.module;
 
 import VASL.environment.DustLevel;
+import VASL.environment.FogLevel;
+import VASL.environment.LVLevel;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.map.MapShader;
@@ -9,6 +11,8 @@ import VASSAL.configure.BooleanConfigurer;
 import VASSAL.configure.StringConfigurer;
 import VASSAL.configure.StringEnumConfigurer;
 import VASSAL.preferences.Prefs;
+
+import javax.swing.*;
 
 import static VASL.environment.DustLevel.*;
 
@@ -73,7 +77,18 @@ public class ASLDTODustMapShader extends MapShader {
 
     @Override
     protected void toggleShading() {
-        dustLevel = dustLevel.next();
+        Object[] possibilities = DustLevel.values();
+        DustLevel tempDustLevel = (DustLevel) JOptionPane.showInputDialog(
+            getLaunchButton().getParent(),
+            "Select Dust Type:",
+            "Dust Type",
+            JOptionPane.PLAIN_MESSAGE,
+            getLaunchButton().getIcon(),
+            possibilities,
+            dustLevel.toString());
+        if(tempDustLevel != null) {
+            dustLevel = tempDustLevel;
+        }
         if(GameModule.getGameModule().getChatter()!= null) {
             GameModule.getGameModule().getChatter().send(dustLevel.toString() + " is in effect.");
         }

@@ -1,10 +1,13 @@
 package VASL.build.module;
 
+import VASL.environment.HeatHazeLevel;
 import VASL.environment.LVLevel;
 import VASL.environment.SunBlindnessLevel;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.map.MapShader;
 import VASSAL.build.module.properties.GlobalProperty;
+
+import javax.swing.*;
 
 import static VASL.environment.SunBlindnessLevel.NONE;
 
@@ -22,7 +25,18 @@ public class ASLSunBlindnessMapShader extends MapShader {
 
   @Override
   protected void toggleShading() {
-    sunBlindnessLevel = sunBlindnessLevel.next();
+    Object[] possibilities = SunBlindnessLevel.values();
+    SunBlindnessLevel tempSunBlindnessLevel = (SunBlindnessLevel) JOptionPane.showInputDialog(
+        getLaunchButton().getParent(),
+        "Select Dust Type:",
+        "Dust Type",
+        JOptionPane.PLAIN_MESSAGE,
+        getLaunchButton().getIcon(),
+        possibilities,
+        sunBlindnessLevel.toString());
+    if(tempSunBlindnessLevel != null) {
+      sunBlindnessLevel = tempSunBlindnessLevel;
+    }
     GameModule.getGameModule().getChatter().send(sunBlindnessLevel.toString() + " is in effect.");
     this.setShadingVisibility(setLVAndOpacity());
   }
