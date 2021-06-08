@@ -159,18 +159,18 @@
 		<boarddata name="lSK" version="6.0" versionDate="Oct 2020" description="" />
 		<boarddata name="m" version="6.1" versionDate="Jun 2021" description="" />
 		<boarddata name="n" version="6.1" versionDate="Jun 2021" description="" />
-		<boarddata name="o" version="6.2" versionDate="Sep 2019" description="" />
-		<boarddata name="p" version="6.1" versionDate="Aug 2019" description="" />
-		<boarddata name="q" version="6.2" versionDate="Aug 2019" description="" />
-		<boarddata name="r" version="6.1" versionDate="Aug 2019" description="" />
-		<boarddata name="s" version="6.1" versionDate="Aug 2019" description="" />
-		<boarddata name="t" version="6.1" versionDate="Aug 2019" description="" />
-		<boarddata name="u" version="6.1" versionDate="Aug 2019" description="" />
-		<boarddata name="v" version="6.2" versionDate="Aug 2019" description="" />
-		<boarddata name="w" version="6.1" versionDate="Aug 2019" description="" />
-		<boarddata name="x" version="6.1" versionDate="Aug 2019" description="" />
-		<boarddata name="y" version="6.1" versionDate="Aug 2019" description="" />
-		<boarddata name="z" version="6.2" versionDate="Aug 2019" description="" />
+		<boarddata name="o" version="6.3" versionDate="Jun 2021" description="" />
+		<boarddata name="p" version="6.2" versionDate="Jun 2021" description="" />
+		<boarddata name="q" version="6.3" versionDate="Jun 2021" description="" />
+		<boarddata name="r" version="6.2" versionDate="Jun 2021" description="" />
+		<boarddata name="s" version="6.2" versionDate="Jun 2021" description="" />
+		<boarddata name="t" version="6.2" versionDate="Jun 2021" description="" />
+		<boarddata name="u" version="6.2" versionDate="Jun 2021" description="" />
+		<boarddata name="v" version="6.3" versionDate="Jun 2021" description="" />
+		<boarddata name="w" version="6.2" versionDate="Jun 2021" description="" />
+		<boarddata name="x" version="6.2" versionDate="Jun 2021" description="" />
+		<boarddata name="y" version="6.2" versionDate="Jun 2021" description="" />
+		<boarddata name="z" version="6.3" versionDate="Jun 2021" description="" />
 	</coreBoards>
 
 	<otherBoards>
