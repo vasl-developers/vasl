@@ -230,7 +230,7 @@
 		<boarddata name="NG" version=" 1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="RR" version=" 1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="BDF" version=" 1.1" versionDate="Aug 2008" description="" />
-		<boarddata name="FrFA" version=" 6.0" versionDate="Aug 2008" description="" />
+		<boarddata name="FrFA" version=" 6.1" versionDate="Jun 2021" description="" />
 		<boarddata name="HOBI" version=" 2.0" versionDate="Aug 2008" description="" />
 		<boarddata name="HOBII" version=" 2.0" versionDate="Aug 2008" description="" />
 		<boarddata name="Kreta" version=" 1.0" versionDate="Aug 2008" description="" />
@@ -295,11 +295,11 @@
 		<boarddata name="DfBG1" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="ER" version="1.1" versionDate="Aug 2008" description="" />
 		<boarddata name="FACTRY" version="1.0" versionDate="Aug 2008" description="" />
-		<boarddata name="FB" version="6.0" versionDate="Aug 2019" description="" />
-		<boarddata name="FB_NE" version="6.0" versionDate="Aug 2019" description="" />
-		<boarddata name="FB_NW" version="6.0" versionDate="Aug 2019" description="" />
-		<boarddata name="FB_SE" version="6.0" versionDate="Aug 2019" description="" />
-		<boarddata name="FB_SW" version="6.0" versionDate="Aug 2019" description="" />
+		<boarddata name="FB" version="6.1" versionDate="Jun 2021" description="" />
+		<boarddata name="FB_NE" version="6.1" versionDate="Jun 2021" description="" />
+		<boarddata name="FB_NW" version="6.1" versionDate="Jun 2021" description="" />
+		<boarddata name="FB_SE" version="6.1" versionDate="Jun 2021" description="" />
+		<boarddata name="FB_SW" version="6.1" versionDate="Jun 2021" description="" />
 		<boarddata name="FE1" version="1.1" versionDate="Aug 2008" description="" />
 		<boarddata name="FE2" version="1.1" versionDate="Aug 2008" description="" />
 		<boarddata name="FE3" version=" 1.0" versionDate="Aug 2008" description="" />
