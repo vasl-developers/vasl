@@ -92,6 +92,7 @@ public class ASLFogMapShader extends MapShader {
       super.draw(g, map);
       return;
     }
+
     Hex[][] hexes = aslMap.getVASLMap().getHexGrid();
     Area boardArea = getBoardClip();
 
@@ -110,9 +111,7 @@ public class ASLFogMapShader extends MapShader {
             return;
           }
 
-
           final Graphics2D g2d = (Graphics2D) g;
-
           final double os_scale = g2d.getDeviceConfiguration().getDefaultTransform().getScaleX();
           final double zoom = map.getZoom() * os_scale;
 
@@ -123,6 +122,7 @@ public class ASLFogMapShader extends MapShader {
                 .createTransformedShape(getBoardClip()));
 
           }
+          // remove the bits of the hex that aren't on the board
           area.intersect(boardArea);
 
           final Composite oldComposite = g2d.getComposite();
