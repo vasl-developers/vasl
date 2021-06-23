@@ -248,10 +248,10 @@
 		<boarddata name="RBv2" version="2.4" versionDate="Jun 2021" description="" />
 		<boarddata name="RBv3" version="6.1" versionDate="Jun 2021" description="" />
 		<boarddata name="RO" version="6.1" versionDate="Jun 2021" description="" />
-		<boarddata name="KR" version="1.0" versionDate="Aug 2008" description="" />
+		<boarddata name="KR" version="6.0" versionDate="Jun 2021" description="" />
 		<boarddata name="GT" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="CH" version="0.93" versionDate="Aug 2008" description="" />
-		<boarddata name="ABTF" version="1.0" versionDate="Aug 2008" description="" />
+		<boarddata name="ABTF" version="6.0" versionDate="Jun 2021" description="" />
 		<boarddata name="Rileys" version="1.5" versionDate="Aug 2008" description="" />
 		<boarddata name="Dinant" version="1.0" versionDate="Nov 2020" description="" />		
 		<!--# LG = 1.0 duplicate
