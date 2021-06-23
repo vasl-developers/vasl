@@ -1266,6 +1266,7 @@
 		<terrainType name="Wooden Rubble Level 3" typeCode="197" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="3" mapColorRed="147" mapColorGreen="95" mapColorBlue="35" LOSCategory="OTHER"  />
 		<terrainType name="Wooden Factory, 1 Level" typeCode="198" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="1.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="1" mapColorRed="173" mapColorGreen="111" mapColorBlue="7" LOSCategory="FACTORY"  />
 		<terrainType name="Wooden Factory Wall, 1 Level" typeCode="199" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="39" mapColorGreen="39" mapColorBlue="39" LOSCategory="FACTORY"  />
+		<terrainType name="PartialOrchard" typeCode="200" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.5" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="1" mapColorRed="55" mapColorGreen="163" mapColorBlue="55" LOSCategory="HEXSIDE"  />
 
 	</terrainTypes>
 

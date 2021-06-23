@@ -226,18 +226,18 @@
 	<!--#PDH=1.0 PDH not exists; PdH or PHD -->
 		<boarddata name="StN" version=" 1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="BRV" version=" 1.1" versionDate="Aug 2008" description="" />
-		<boarddata name="FC" version=" 1.1" versionDate="Aug 2008" description="" />
+		<boarddata name="FC" version="6.0" versionDate="Jun 2021" description="" />
 		<boarddata name="NG" version=" 1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="RR" version=" 1.0" versionDate="Aug 2008" description="" />
-		<boarddata name="BDF" version=" 1.1" versionDate="Aug 2008" description="" />
+		<boarddata name="BDF" version="6.0" versionDate="Jun 2021" description="" />
 		<boarddata name="FrFA" version=" 6.1" versionDate="Jun 2021" description="" />
 		<boarddata name="HOBI" version="6.0" versionDate="Jun 2021" description="" />
-		<boarddata name="HOBII" version=" 2.0" versionDate="Aug 2008" description="" />
+		<boarddata name="HOBII" version="6.0" versionDate="Jun 2021" description="" />
 		<boarddata name="Kreta" version=" 1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="OTO" version=" 1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="KOTH" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="LFT1" version="1.0" versionDate="Aug 2008" description="" />
-		<boarddata name="LFT2" version="1.1" versionDate="Apr 2019" description="" />
+		<boarddata name="LFT2" version="6.0" versionDate="Jun 2021" description="" />
 		<boarddata name="SG" version="6.0" versionDate="Apr 2021" description="" />
 		<boarddata name="VotG" version="3.1" versionDate="Aug 2008" description="" />
 		<boarddata name="SC" version="3.0" versionDate="Aug 2008" description="" />
@@ -247,7 +247,7 @@
 		<boarddata name="RB" version="1.3" versionDate="Dec 2019" description="" />
 		<boarddata name="RBv2" version="2.4" versionDate="Jun 2021" description="" />
 		<boarddata name="RBv3" version="6.1" versionDate="Jun 2021" description="" />
-		<boarddata name="RO" version="6.0" versionDate="Jan 2021" description="" />
+		<boarddata name="RO" version="6.1" versionDate="Jun 2021" description="" />
 		<boarddata name="KR" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="GT" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="CH" version="0.93" versionDate="Aug 2008" description="" />
@@ -293,7 +293,7 @@
 		<boarddata name="DTW" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="DaE" version="1.1" versionDate="Aug 2008" description="" />
 		<boarddata name="DfBG1" version="1.0" versionDate="Aug 2008" description="" />
-		<boarddata name="ER" version="1.1" versionDate="Aug 2008" description="" />
+		<boarddata name="ER" version="6.0" versionDate="Jun 2021" description="" />
 		<boarddata name="FACTRY" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="FB" version="6.1" versionDate="Jun 2021" description="" />
 		<boarddata name="FB_NE" version="6.1" versionDate="Jun 2021" description="" />
@@ -302,12 +302,12 @@
 		<boarddata name="FB_SW" version="6.1" versionDate="Jun 2021" description="" />
 		<boarddata name="FE1" version="1.1" versionDate="Aug 2008" description="" />
 		<boarddata name="FE2" version="1.1" versionDate="Aug 2008" description="" />
-		<boarddata name="FE3" version=" 1.0" versionDate="Aug 2008" description="" />
-		<boarddata name="FE4" version="1.0" versionDate="Aug 2008" description="" />
-		<boarddata name="FE5" version="1.0" versionDate="Aug 2008" description="" />
-		<boarddata name="FE6" version="1.0" versionDate="Aug 2008" description="" />
-		<boarddata name="FE8" version="1.0" versionDate="Aug 2008" description="" />
-		<boarddata name="FE9" version="1.0" versionDate="Aug 2008" description="" />
+		<boarddata name="FE3" version="6.0" versionDate="Jun 2021" description="" />
+		<boarddata name="FE4" version="6.0" versionDate="Jun 2021" description="" />
+		<boarddata name="FE5" version="6.0" versionDate="Jun 2021" description="" />
+		<boarddata name="FE6" version="6.0" versionDate="Jun 2021" description="" />
+		<boarddata name="FE8" version="6.0" versionDate="Jun 2021" description="" />
+		<boarddata name="FE9" version="6.0" versionDate="Jun 2021" description="" />
 		<boarddata name="FF01" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="FF02" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="FF03" version="1.0" versionDate="Aug 2008" description="" />
@@ -323,18 +323,18 @@
 		<boarddata name="FF13" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="FF14" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="FF15" version="1.0" versionDate="Aug 2008" description="" />
-		<boarddata name="FWAO" version="0.3" versionDate="Aug 2008" description="" />
+		<boarddata name="FWAO" version="6.0" versionDate="Jun 2021" description="" />
 		<boarddata name="Filler1" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="Filler2" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="Filler3" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="Filler4" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="Filler5" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="Filler6" version="1.0" versionDate="Aug 2008" description="" />
-		<boarddata name="GB1" version="2.0" versionDate="Aug 2008" description="" />
-		<boarddata name="GB2" version="2.0" versionDate="Aug 2008" description="" />
-		<boarddata name="GB3" version="2.0" versionDate="Aug 2008" description="" />
-		<boarddata name="GB4" version="2.0" versionDate="Aug 2008" description="" />
-		<boarddata name="GB5" version="2.0" versionDate="Aug 2008" description="" />
+		<boarddata name="GB1" version="6.0" versionDate="Jun 2021" description="" />
+		<boarddata name="GB2" version="6.0" versionDate="Jun 2021" description="" />
+		<boarddata name="GB3" version="6.0" versionDate="Jun 2021" description="" />
+		<boarddata name="GB4" version="6.0" versionDate="Jun 2021" description="" />
+		<boarddata name="GB5" version="6.0" versionDate="Jun 2021" description="" />
 		<boarddata name="GE" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="GSTK" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="HB" version="1.0" versionDate="Aug 2008" description="" />
@@ -374,7 +374,7 @@
 		<boarddata name="PHD" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="PHDv2" version="2.0" versionDate="Aug 2008" description="" />
 		<boarddata name="PdH" version="1.0" versionDate="Aug 2008" description="" />
-		<boarddata name="Pel" version="1.0" versionDate="Aug 2008" description="" />
+		<boarddata name="Pel" version="6.0" versionDate="Jun 2021" description="" />
 		<boarddata name="QuatreBras" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="RC&#x20;Novo" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="RC&#x20;Orlovo" version="1.0" versionDate="Aug 2008" description="" />
