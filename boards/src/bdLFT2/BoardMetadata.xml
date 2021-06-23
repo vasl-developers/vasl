@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!--
+    This file contains the board metadata specific to a VASL board archive.
+    Create one file per VASL board and place it in the archive.
+-->
+
+<!-- 
+    Board-level metadata
+	name - the name of the board (as it will appear in board selector drop-down - not yet supported)
+	version - the board version
+	versionDate - the date the last version was created
+	author - the caring soul who created the board
+    boardImage - the name of the VASL image file in the board archive; the name is case sensitive
+    hasHills - TRUE/FALSE if the board contains base elevations above ground level
+                if not we can assume the ground level under the terrain is zero, which
+                makes the VASL LOS image translation faster and more accurate
+    height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
+	hexHeight - the height of a hex in pixels - decimal - should be image/height
+	hexWidth - the width of a hex in pixels - decimal - center point to center point
+	A1CenterX - x location of the A1 center dot
+	A1CenterY - y location of the A1 center dot 
+	
+
+-->
+<boardMetadata 
+	name="LFT2" 
+	version="6.0" 
+	versionDate="Jun 2021" 
+	author="TR" 
+	boardImageFileName="bdLFT2.gif" 
+	hasHills="TRUE" 
+	width="33" 
+	height="10"
+	hexHeight = "64.47"
+	hexWidth = "56.25"
+	A1CenterX = "0"
+	A1CenterY = "32.5"
+	
+	>
+
+    <!--
+        The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
+        determine the proper building type when creating the LOS information and assumes buildings are single-hex stone or 
+        wooden buildings. Use these elements to override the building type. 
+        
+        See the terrainType elements for a complete list of building names
+	<buildingType hexName="F5" buildingTypeName="Stone Building, 1 Level" />
+        <buildingType hexName="F6" buildingTypeName="Stone Building, 1 Level" />
+	
+
+    -->
+    <buildingTypes>
+	
+        	
+	</buildingTypes>
+	
+	<overlaySSRules>
+	    <!--
+			Scenario-specific overlay rules. 
+			name - the VASL SSR name
+			image - the image name
+			x - x coordinate of overly upper left
+			y - y coordinate of overlay upper left
+		-->
+
+		<overlaySSRule name="OrchardsToCrags" image="LFT2_Orch2Crag.gif" x="771" y="10" />
+		<overlaySSRule name="PalmTrees" image="LFT2_PalmTrees.gif" x="771" y="10" />
+		<overlaySSRule name="OrchardsToShellholes" image="LFT2_OrchardsToShellholes.gif" x="766" y="7" />
+		<overlaySSRule name="Bamboo" image="LFT2_Bamboo.gif" x="243" y="1" />
+		<overlaySSRule name="CragsToOrchards" image="LFT2_CragsToOrchards.gif" x="934" y="360" />
+		<overlaySSRule name="CragsToPalm" image="LFT2_CragsToPalmTrees.gif" x="931" y="358" />
+		<overlaySSRule name="CragsToShellholes" image="LFT2_CragsToShellholes.gif" x="934" y="364" />
+		<overlaySSRule name="NoCliffs" image="LFT2_NoCliffs.gif" x="915" y="251" />
+		<overlaySSRule name="DenseJungle" image="LFT2_DenseJungle.gif" x="1" y="1" />
+		<overlaySSRule name="Winter" image="LFT2_WinterGully.gif" x="711" y="47" />
+		<overlaySSRule name="NoRoads" image="LFT2_NoRoads.gif" x="1" y="1" />
+		<overlaySSRule name="LightWoods" image="LFT2_LightWoods.gif" x="0" y="0" />
+
+	</overlaySSRules>
+	
+	<colors>
+		
+	</colors>
+	
+	<colorSSRules>
+	</colorSSRules>
+
+	
+	
+</boardMetadata>
