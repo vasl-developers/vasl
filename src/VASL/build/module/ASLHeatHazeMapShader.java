@@ -31,8 +31,8 @@ public class ASLHeatHazeMapShader extends MapShader {
     Object[] possibilities = HeatHazeLevel.values();
     HeatHazeLevel tempHeatHazeLevel = (HeatHazeLevel) JOptionPane.showInputDialog(
         getLaunchButton().getParent(),
-        "Select Dust Type:",
-        "Dust Type",
+        "Select Heat Haze Type:",
+        "Heat Haze Type",
         JOptionPane.PLAIN_MESSAGE,
         getLaunchButton().getIcon(),
         possibilities,

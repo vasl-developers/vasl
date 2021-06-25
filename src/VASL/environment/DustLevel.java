@@ -3,7 +3,7 @@ package VASL.environment;
 import VASL.build.module.ASLDTODustMapShader;
 import VASSAL.build.GameModule;
 
-public enum DustLevel {
+public enum     DustLevel {
     NONE ("No Dust"),
     LIGHT ("Light Dust (F11.71)"),
     MODERATE("Moderate Dust (F11.72)"),
