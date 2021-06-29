@@ -18,6 +18,7 @@ package VASL.LOS.Map;
 
 import VASL.build.module.map.boardArchive.BoardArchive;
 import VASL.build.module.map.boardArchive.RBrrembankments;
+import VASL.build.module.map.boardArchive.PartialOrchards;
 import VASL.build.module.map.boardArchive.Slopes;
 
 import VASL.LOS.VASLGameInterface;
@@ -55,6 +56,7 @@ public class Map  {
     private final static String WALL = "Wall";
     private final static String HEDGE = "Hedge";
     private final static String BOCAGE = "Bocage";
+    private final static String PARTIALORCHARD = "PartialOrchard";
     private final static String STONE_RUBBLE = "Stone Rubble";
     private final static String WOODEN_RUBBLE = "Wooden Rubble";
     private final static String GRAIN = "Grain";
@@ -93,6 +95,7 @@ public class Map  {
 
     // the hillocks
     private HashSet<Hillock> hillocks = new HashSet<Hillock>();
+
 
     /**
      * Constructs a new <code>Map</code> object using custom hex size and explicit image size.
@@ -744,6 +747,9 @@ public class Map  {
                     }
 
                 }
+                if (hexGrid[col][row].containsExtended(x, y)) {
+                    return hexGrid[col][row];
+                }
             }
             else {
                 col = (int) Math.ceil((double) z / 3.0);
@@ -761,6 +767,8 @@ public class Map  {
         catch (Exception e) {
             return null;
         }
+        // new test, since point is on map, use extended border
+
         return null;
     }
 
@@ -877,6 +885,8 @@ public class Map  {
             // step through the current row
             for (int row = 0; row < numRows; row++) {
 
+                // reset variables
+                //status.ignoreGroundLevelHex = null;
                 // code added by DR to enable Roofless factory hexes
 
                 status.currentTerrain = getGridTerrain(status.currentCol, status.currentRow);
@@ -993,6 +1003,20 @@ public class Map  {
             }
         }
 
+        // ensure partialorchard is not missed
+        Terrain checkhexside;
+        int hexside=status.tempHex.getLocationHexside(status.tempHex.getNearestLocation(status.currentCol, status.currentRow));
+            boolean[] partialorchards = new boolean[6];
+            partialorchards = status.tempHex.getPartialOrchards();
+            if(partialorchards[hexside]) {
+                checkhexside = status.tempHex.getHexsideTerrain(hexside);
+                if (checkhexside != null) {
+                    // if Terrain is Partial Orchard then check if blocks/hinders LOS
+                    if (checkhexside.isHexsideTerrain() && checkhexside.getName().contains("PartialOrchard")) {
+                        status.currentTerrain = checkhexside;
+                    }
+                }
+            }
         return applyLOSRules(status, result);
     }
 
@@ -1407,6 +1431,7 @@ public class Map  {
             }
             return false;
         }
+
         /**
          * Adjusts the hillock status variables for a new hex
          */
@@ -1530,7 +1555,7 @@ public class Map  {
         /**
          * @return the set of hexsides in the source hex touched by the LOS if source is the center location
          */
-        private int[] getExitFromCenterHexsides() {
+        public int[] getExitFromCenterHexsides() {
 
             final double slope = (double) (sourceY - targetY) / (double) (sourceX - targetX);
 
@@ -1682,9 +1707,10 @@ public class Map  {
             return true;
         }
         HashSet<Integer> hexsides;
-        // code added by  DR to enable RB rr embankments
+        // code added by  DR to enable RB rr embankments and Partial Orchards
         hexsides = status.getHexsideCrossed(status.tempHex);
         boolean RBrrembankmentsexist = false; // set flag to avoid unnecessary calls to CheckRBrrembankments()
+        boolean PartialOrchardssexist = false; // set flag to avoid unnecessary calls to CheckPartialOrchards()
         // code added by DR to enable roofless factory hexes
         Terrain previousTerrain = null;
         // are we in a new hex?
@@ -1693,6 +1719,7 @@ public class Map  {
             //store terrain in previous hex (needed when checking depression hexsides; added by DR)
             boolean newequalsprevioushex=false;
             RBrrembankmentsexist=false; // set every time new hex entered
+            PartialOrchardssexist=false;
             previousTerrain = status.currentHex.getCenterLocation().getTerrain();
             if(status.previousHex ==null) {
                 // no previous hex set in this LOS test
@@ -1849,15 +1876,18 @@ public class Map  {
             // set the hillocks status
             status.setHillockStatus();
 
-            // do RR Embankment terrain check here
+            // do RR Embankment/Partial Orchard terrain check here
             Terrain checkhexside;
             for (Integer hexside : hexsides) {
                 // get Terrain for hexside
                 checkhexside = status.currentHex.getHexsideTerrain(hexside);
                 if (checkhexside != null) {
-                    // if Terrain is RB rrembankment then set flag
+                    // if Terrain is RB rrembankment or Partial Orchard then set flag
                     if (checkhexside.isHexsideTerrain() && checkhexside.getName().contains("Rrembankment")) {
                         RBrrembankmentsexist = true;
+                        break;
+                    }else if (checkhexside.isHexsideTerrain() && checkhexside.getName().contains("PartialOrchard")){
+                        PartialOrchardssexist = true;
                         break;
                     }
                 }
@@ -1878,13 +1908,16 @@ public class Map  {
                 return true;
             }
         }
-        // code added by DR to handle RB rrembankments
-        else if (RBrrembankmentsexist) {
+        // code added by DR to handle RB rrembankments and Partial Orchards
+        else if (RBrrembankmentsexist || PartialOrchardssexist) {
             if (checkRBrrembankments(status, result, hexsides)) {
                return true;
             }
-        }
 
+        }
+        if (checkPartialOrchards(status, result, hexsides)) {
+            return true;
+        }
         if(checkHexSmokeRule(status, result)) {
             return true;
         }
@@ -2662,7 +2695,7 @@ public class Map  {
 
                 if (!ignore) {
 
-                    // check bocage
+                    // check bocage and partialorchard
                     if (BOCAGE.equals(status.currentTerrain.getName())) {
 
                         // always blocks if...
@@ -2683,6 +2716,32 @@ public class Map  {
                             status.blocked = true;
                             result.setBlocked(status.currentCol, status.currentRow, status.reason);
                             return true;
+                        }
+
+                        // otherwise check for blind hexes
+                        else if (isBlindHex(status, status.currentTerrainHgt)) {
+
+                            status.reason = "Source or Target location is in a blind hex (B9.52)";
+                            status.blocked = true;
+                            result.setBlocked(status.currentCol, status.currentRow, status.reason);
+                            return true;
+                        }
+                    } else if(PARTIALORCHARD.equals(status.currentTerrain.getName())){
+
+                        if (//higher than both source/target
+                                (status.groundLevel + status.currentTerrainHgt > status.sourceElevation &&
+                                        status.groundLevel + status.currentTerrainHgt > status.targetElevation) ||
+                                        //same height as both source/target, but 1/2 level
+                                        (status.groundLevel + status.currentTerrainHgt == status.sourceElevation &&
+                                                status.groundLevel + status.currentTerrainHgt == status.targetElevation &&
+                                                status.currentTerrain.isHalfLevelHeight()) ||
+                                        //same height as higher source/target, but other is lower
+                                        (status.groundLevel + status.currentTerrainHgt == Math.max(status.sourceElevation, status.targetElevation) &&
+                                                status.groundLevel + status.currentTerrainHgt > Math.min(status.sourceElevation, status.targetElevation)) &&
+                                                !status.slopes
+                        ) {
+
+                            return false;
                         }
 
                         // otherwise check for blind hexes
@@ -3074,32 +3133,35 @@ public class Map  {
                     status.ignoreGroundLevelHex.containsExtended(status.currentCol, status.currentRow) ) &&
                     !(status.entersTargetDepression && status.currentHex.isDepressionTerrain()) &&
                     // second test deals with terrain obstacles (woods) in depression hex (B19.21)
-                    !(status.exitsSourceDepression && status.currentHex.isDepressionTerrain()) || (status.currentHex.isDepressionTerrain() && status.currentTerrainHgt >= 1) )
+                    (!(status.exitsSourceDepression && status.currentTerrain.isDepression()) || (status.currentHex.isDepressionTerrain() && status.currentTerrainHgt >= 1) ))
                     ) {
+            //if (!(status.ignoreGroundLevelHex != null && status.ignoreGroundLevelHex.containsExtended(status.currentCol, status.currentRow)) ){
+            //    if(!(status.entersTargetDepression && status.currentHex.isDepressionTerrain())  ) {
 
-                // Need to handle special case where source unit is adjacent to a water obstacle looking
-                // at a target in the water obstacle. We can ignore the bit of open ground that extends into
-                // the first water hex.
-                if (!(status.currentHex.getCenterLocation().getTerrain().isWaterTerrain() &&
-                        status.currentTerrain.getHeight() < 1 &&
-                        ((status.rangeToSource == 1 && status.sourceElevation > status.targetElevation &&
-                                status.target.getHex().getCenterLocation().getTerrain().isWaterTerrain()) ||
-                                (status.rangeToTarget == 1 && status.targetElevation > status.sourceElevation &&
-                                        status.source.getHex().getCenterLocation().getTerrain().isWaterTerrain())))) {
+                    // Need to handle special case where source unit is adjacent to a water obstacle looking
+                    // at a target in the water obstacle. We can ignore the bit of open ground that extends into
+                    // the first water hex.
+                    if (!(status.currentHex.getCenterLocation().getTerrain().isWaterTerrain() &&
+                            status.currentTerrain.getHeight() < 1 &&
+                            ((status.rangeToSource == 1 && status.sourceElevation > status.targetElevation &&
+                                    status.target.getHex().getCenterLocation().getTerrain().isWaterTerrain()) ||
+                                    (status.rangeToTarget == 1 && status.targetElevation > status.sourceElevation &&
+                                            status.source.getHex().getCenterLocation().getTerrain().isWaterTerrain())))) {
 
-                    // if orchard, then hindrance; if Tower Hindrance (Dinant Bridge ruins) then hindrance
-                    if ("Orchard, Out of Season".equals(status.currentTerrain.getName()) || "Tower Hindrance".equals(status.currentTerrain.getName())) {
+                        // if orchard, then hindrance; if Tower Hindrance (Dinant Bridge ruins) then hindrance
+                        if ("Orchard, Out of Season".equals(status.currentTerrain.getName()) || "Tower Hindrance".equals(status.currentTerrain.getName())) {
 
-                        if (addHindranceHex(status, result))
+                            if (addHindranceHex(status, result))
+                                return true;
+
+                        } else {
+                            status.reason = "Must have a height advantage to see over this terrain (A6.2)";
+                            status.blocked = true;
+                            result.setBlocked(status.currentCol, status.currentRow, status.reason);
                             return true;
-
-                    } else {
-                        status.reason = "Must have a height advantage to see over this terrain (A6.2)";
-                        status.blocked = true;
-                        result.setBlocked(status.currentCol, status.currentRow, status.reason);
-                        return true;
+                        }
                     }
-                }
+
             }
         }
         return false;
@@ -3139,8 +3201,8 @@ public class Map  {
             return false;
         }
 
-        // ignore bocage - different rule
-        if(BOCAGE.equals(status.currentTerrain.getName())){
+        // ignore bocage and partial orchard- different rule
+        if( BOCAGE.equals(status.currentTerrain.getName()) || PARTIALORCHARD.equals(status.currentTerrain.getName())){
             return false;
         }
 
@@ -3781,12 +3843,12 @@ public class Map  {
             return false;
         }
         // always ignore if adjacent
-        if (isAdjacentHexside(h, l)) {
+        if (isAdjacentHexside(h, l) && !(locationHexsideTerrain != null && PARTIALORCHARD.equals(locationHexsideTerrain.getName())) ) {
 
             return true;
         }
-        // ignore hexspines if not bocage
-        if (isHexspine(h, l) && !(locationHexsideTerrain != null && BOCAGE.equals(locationHexsideTerrain.getName()))) {
+        // ignore hexspines if not bocage and partialorchards
+        if (isHexspine(h, l) && !(locationHexsideTerrain != null && BOCAGE.equals(locationHexsideTerrain.getName()) && PARTIALORCHARD.equals(locationHexsideTerrain.getName()))) {
 
             return true;
         }
@@ -4036,6 +4098,7 @@ public class Map  {
 
         if(isCliffHexside &&!status.LOSis60Degree && !status.LOSisHorizontal) {
             Location testlocation = status.currentHex.getNearestLocation(status.currentCol, status.currentRow);
+
             int testhexside =status.currentHex.getLocationHexside(testlocation);
             int newhexside=testhexside+3;
             if(newhexside>= 6) {newhexside=newhexside-6;}
@@ -4071,7 +4134,7 @@ public class Map  {
         }
 
         // is the obstacle a non-cliff crest line?
-        if (terrainHeight == 0 && !isCliffHexside) {
+        if (terrainHeight == 0 && (!isCliffHexside) ||(isCliffHexside && status.previousHex.equals(status.sourceHex) )) {
             int depressionadj=0;
             HashSet<Integer> sidecrossed= status.getHexsideCrossed(status.currentHex);
             Iterator<Integer> i = sidecrossed.iterator();
@@ -4775,12 +4838,12 @@ public class Map  {
         }
     }
 
-    // code added by DR to enable RB rr embankments
+    // code added by DR to enable RB rr embankments and Partial Orchards
     /**
      * Set the hexes with rr embankments
      */
     public void setRBrrembankments(RBrrembankments RBrrembankments) {
-        for(java.util.Map.Entry<String, boolean[]> hex : RBrrembankments.getAllRBrrembankments().entrySet()){
+        for(java.util.Map.Entry<String, boolean[]> hex : RBrrembankments.getAllSpecialHexsides().entrySet()){
             if(getHex(hex.getKey()) != null){
                 // trap errors to enable cropping
                 try {
@@ -4793,7 +4856,22 @@ public class Map  {
             }
         }
     }
-    // method added by DR to handle LOS across RB rrembankments
+    public void setPartialOrchards(PartialOrchards partialOrchards) {
+        for(java.util.Map.Entry<String, boolean[]> hex : partialOrchards.getAllSpecialHexsides().entrySet()){
+            if(getHex(hex.getKey()) != null){
+                // trap errors to enable cropping
+                try {
+                    getHex(hex.getKey()).setPartialOrchards(hex.getValue());
+                }
+                catch (Exception e) {
+
+                }
+
+            }
+        }
+
+    }
+    // method added by DR to handle LOS across RB rrembankments and Partial Orchards
     public boolean checkRBrrembankments (LOSStatus status,LOSResult result, HashSet<Integer> hexsides) {
         Terrain checkhexside;
         for (Integer hexside : hexsides) {
@@ -4867,7 +4945,57 @@ public class Map  {
         // no hexsides are blocking LOS
         return false;
     }
+    public boolean checkPartialOrchards (LOSStatus status,LOSResult result, HashSet<Integer> hexsides) {
+        Terrain checkhexside;
+        for (Integer hexside : hexsides) {
+            // get Terrain for hexside crossed by LOS
+            if (hexside==status.currentHex.getLocationHexside(status.currentHex.getNearestLocation(status.currentCol, status.currentRow))) {
+                boolean[] partialorchards = new boolean[6];
+                partialorchards = status.currentHex.getPartialOrchards();
+                if(partialorchards[hexside]) {
+                    checkhexside = status.currentHex.getHexsideTerrain(hexside);
+                    if (checkhexside != null) {
+                        // if Terrain is Partial Orchard then check if blocks/hinders LOS
+                        if (checkhexside.isHexsideTerrain() && checkhexside.getName().contains("PartialOrchard")) {
+                            // check if blind hex
+                            // special case for Dinant partial hexes over water
+                            int heightadj=0;
+                            //if (status.currentTerrain.getName().contains("Water")){heightadj = 1;}
+                            status.currentTerrain.setType(200);
+                            status.currentTerrain.setName("PartialOrchard");
+                            status.currentTerrain.setHeight(1);
+                            int [] ExitHexsides = status.getExitFromCenterHexsides();
+                            if (ExitHexsides[0] != -1){
+                                result.setSourceExitHexspine(ExitHexsides[0]);
+                            }
+                            if (checkHexsideTerrainRule(status, result)) {
+                                return true;
+                            }
+                            /*if (isBlindHex(status, checkhexside.getHeight()+ heightadj)) {
 
+                                status.reason = "Source or Target location is in a blind hex (B9.52)";
+                                status.blocked = true;
+                                result.setBlocked(status.currentCol, status.currentRow, status.reason);
+                                return true;
+                            }*/
+                            // add hindrance unless range is 1
+                            if (status.range > 1) {
+                                // add hindrance
+
+
+                                if (addHindranceHex(status, result)) {
+                                    return true;
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        // no hexsides are blocking LOS
+        return false;
+    }
     // method added by DR to handle LOS along/across Rowhouse and Interior Factory Walls
     public boolean checkRowhouseFactoryWall (LOSStatus status,LOSResult result) {
         // must be rowhouse wall or IFW to get here

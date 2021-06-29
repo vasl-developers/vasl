@@ -6,18 +6,18 @@ import java.util.HashMap;
  * Created by dougr_000 on 4/19/2016.
  */
 // code added by DR to handle RB rr embankments
-public class RBrrembankments {
+public class RBrrembankments implements SpecialHexsideTerrain {
     private HashMap<String, boolean[]> rbrrembankments = new HashMap<String, boolean[]>(10);
 
-    public void addRBrrembankment(String hex, boolean[] hexsides) {
+    public void addSpecialHexside(String hex, boolean[] hexsides) {
         rbrrembankments.put(hex, hexsides);
     }
 
-    public boolean[] getRBrrembankments(String hex) {
+    public boolean[] getSpecialHexside(String hex) {
         return rbrrembankments.get(hex);
     }
 
-    public boolean hasRbrrembankment(String hex, int hexside) {
+    public boolean hasSpecialHexside(String hex, int hexside) {
         try {
             return rbrrembankments.get(hex)[hexside];
         }
@@ -26,7 +26,7 @@ public class RBrrembankments {
         }
     }
 
-    public HashMap<String, boolean[]> getAllRBrrembankments(){
+    public HashMap<String, boolean[]> getAllSpecialHexsides(){
         return rbrrembankments;
     }
 }
