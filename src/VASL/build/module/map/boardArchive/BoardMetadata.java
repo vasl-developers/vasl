@@ -33,9 +33,9 @@ public class BoardMetadata extends AbstractMetadata {
 
     // set of hexes with slopes
     private Slopes slopes = new Slopes();
-    // code added by DR to handle RB rr embankments
+    // code added by DR to handle RB rr embankments and partial orchards
     private RBrrembankments rbrrembankments = new RBrrembankments();
-
+    private PartialOrchards partialOrchards = new PartialOrchards();
     // Board-level metadata
     public final static int MISSING = -999; // used to indicate the value was not in the metadata (for optional attributes)
     private String name;
@@ -85,12 +85,15 @@ public class BoardMetadata extends AbstractMetadata {
     private static final String slopeHexNameAttribute = "hex";
     private static final String slopeHexsidesAttribute = "hexsides";
 
-    // code added by DR to manage railway embankment on board RB
+    // code added by DR to manage railway embankment on board RB and partial orchards on Dinant
     private static final String rrembankmentElement = "rrembankment";
     private static final String rrembankmentsElement = "rrembankments";
     private static final String rrembankmentHexNameAttribute = "hex";
     private static final String rrembankmentHexsidesAttribute = "hexsides";
-
+    private static final String partialorchardElement = "partialorchard";
+    private static final String partialorchardsElement = "partialorchards";
+    private static final String partialorchardHexNameAttribute = "hex";
+    private static final String partialorchardHexsidesAttribute = "hexsides";
     // flags for board specific metadata
     private boolean boardSpecificColors = false;
     private boolean boardSpecificColorSSR = false;
@@ -169,9 +172,9 @@ public class BoardMetadata extends AbstractMetadata {
                 parseColorSSRules(root.getChild(colorSSRulesElement));
                 parseOverlaySSRules(root.getChild(overlaySSRulesElement));
                 parseSlopes(root.getChild(slopesElement));
-                // code added by DR to handle RB rr embankments
+                // code added by DR to handle RB rr embankments and partialOrchards
                 parseRrembankments(root.getChild(rrembankmentsElement));
-
+                parsePartialOrchards(root.getChild(partialorchardsElement));
                 // set flags indicating board-specific information
                 boardSpecificColors = root.getChild(colorSSRulesElement) != null &&
                         root.getChild(colorSSRulesElement).getChildren().size() > 0;
@@ -235,7 +238,7 @@ public class BoardMetadata extends AbstractMetadata {
         }
     }
 
-    // code added by DR to handle RB rr embankments
+    // code added by DR to handle RB rr embankments and Partial Orchards
     private void parseRrembankments(Element element) throws JDOMException {
 
         // make sure we have the right element
@@ -247,9 +250,28 @@ public class BoardMetadata extends AbstractMetadata {
                 // ignore any child elements that are not slopes
                 if(e.getName().equals(rrembankmentElement)){
 
-                    rbrrembankments.addRBrrembankment(
+                    rbrrembankments.addSpecialHexside(
                             e.getAttributeValue(rrembankmentHexNameAttribute),
                             parseRrembankmentHexsides(e.getAttributeValue(rrembankmentHexsidesAttribute))
+                    );
+                }
+            }
+        }
+    }
+    private void parsePartialOrchards(Element element) throws JDOMException {
+
+        // make sure we have the right element
+        if (element != null) {
+            assertElementName(element, partialorchardsElement);
+
+            for(Element e: element.getChildren()) {
+
+                // ignore any child elements that are not slopes
+                if(e.getName().equals(partialorchardElement)){
+
+                    partialOrchards.addSpecialHexside(
+                            e.getAttributeValue(partialorchardHexNameAttribute),
+                            parseRrembankmentHexsides(e.getAttributeValue(partialorchardHexsidesAttribute))
                     );
                 }
             }
@@ -275,7 +297,7 @@ public class BoardMetadata extends AbstractMetadata {
         }
     }
 
-    // code added by DR to handle RB rr embankments
+    // code added by DR to handle RB rr embankments and Partial Orchards
     private boolean[] parseRrembankmentHexsides (String hexsides) throws JDOMException {
         boolean[] hexsideFlags = new boolean[6];
 
@@ -287,6 +309,19 @@ public class BoardMetadata extends AbstractMetadata {
             return hexsideFlags;
         } catch (Exception e) {
             throw new JDOMException("Invalid " + rrembankmentHexsidesAttribute +" attribute in board metadata: " + hexsides);
+        }
+    }
+    private boolean[] parsePartialOrchardHexsides (String hexsides) throws JDOMException {
+        boolean[] hexsideFlags = new boolean[6];
+
+        try {
+            for (int x = 0; x < hexsides.length() && x < 6; x++) {
+                char c = hexsides.charAt(x);
+                hexsideFlags[(int) c - (int) '0'] = true;
+            }
+            return hexsideFlags;
+        } catch (Exception e) {
+            throw new JDOMException("Invalid " + partialorchardHexsidesAttribute +" attribute in board metadata: " + hexsides);
         }
     }
     /**
@@ -414,8 +449,10 @@ public class BoardMetadata extends AbstractMetadata {
      */
     public Slopes getSlopes(){ return slopes;}
 
-    // code added by DR to handle RB rr embankments
+    // code added by DR to handle RB rr embankments and Partial Orchards
     public RBrrembankments getRBrrembankments(){ return rbrrembankments;}
+
+    public PartialOrchards getPartialOrchards(){ return partialOrchards;}
 
     /**
      * @return true if board metadata contains custom colors
