@@ -101,7 +101,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
     private Color LOSColor;
     private Color hindranceColor;
     private Color blockedColor;
-
+    private double magnification;
     private void setGridSnapToVertex(boolean toVertex) {
         for (Board b : map.getBoards()) {
             HexGrid grid =
@@ -155,6 +155,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                 overlayBoundaries.clear();
                 for (Board board : theMap.getBoards()) {
                     ASLBoard b = (ASLBoard) board;
+                    magnification = b.getMagnification();
                     final Enumeration overlays = b.getOverlays();
                     while (overlays.hasMoreElements()) {
                         Overlay o = (Overlay) overlays.nextElement();
@@ -355,6 +356,12 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
     private void setSourceFromMousePressedEvent(Point eventPoint) {
         try {
             final Point p = mapMouseToMapCoordinates(eventPoint);
+            // test code for deluxe fix
+            if (magnification != 1.0) {
+                p.x = (int) Math.round(p.x / magnification);
+                p.y = (int) Math.round(p.y / magnification);
+            }
+            //
             if (p == null || !LOSMap.onMap(p.x, p.y)) {
                 source = null;
             } else {
@@ -469,6 +476,12 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         try {
             final Point p = map.componentToMap(eventPoint);
             p.translate(-map.getEdgeBuffer().width, -map.getEdgeBuffer().height);
+            // test code for deluxe fix
+            if (magnification != 1.0) {
+                p.x = (int) Math.round(p.x / magnification);
+                p.y = (int) Math.round(p.y / magnification);
+            }
+            //
             if (p == null || !LOSMap.onMap(p.x, p.y)) return;
             target = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
             useAuxTargetLOSPoint = useAuxLOSPoint(target, p.x, p.y);
@@ -485,6 +498,12 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
     private void setTargetFromRemoteEvent(Point eventPoint) {
 
         final Point p = mapMouseToMapCoordinates(eventPoint);
+        // test code for deluxe fix
+        if (magnification != 1.0) {
+            p.x = (int) Math.round(p.x / magnification);
+            p.y = (int) Math.round(p.y / magnification);
+        }
+        //
         if (p == null || !LOSMap.onMap(p.x, p.y)) return;
         target = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
         useAuxTargetLOSPoint = useAuxLOSPoint(target, p.x, p.y);
@@ -522,6 +541,12 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             else {
                 sourceLOSPoint = new Point(source.getLOSPoint());
             }
+            // test code for deluxe fix
+            if (magnification != 1.0) {
+                sourceLOSPoint.x = (int) Math.round(sourceLOSPoint.x * magnification);
+                sourceLOSPoint.y = (int) Math.round(sourceLOSPoint.y * magnification);
+            }
+            //
             // preserve point on map for overlay checking
             Point sourcestart = sourceLOSPoint;
             sourceLOSPoint = mapPointToScreen(sourceLOSPoint, os_scale);
@@ -534,6 +559,12 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             else {
                 targetLOSPoint = new Point(target.getLOSPoint());
             }
+            // test code for deluxe fix
+            if (magnification != 1.0) {
+                targetLOSPoint.x = (int) Math.round(targetLOSPoint.x * magnification);
+                targetLOSPoint.y = (int) Math.round(targetLOSPoint.y * magnification);
+            }
+            //
             // preserve point on map for overlay checking
             Point targetend = targetLOSPoint;
             targetLOSPoint = mapPointToScreen(targetLOSPoint, os_scale);
@@ -554,14 +585,20 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             }
 
             // transform the blocked-at point
-            Point b = null;
+            Point b = new Point(0,0);
             if (result.isBlocked()) {
-                b = mapPointToScreen(result.getBlockedAtPoint(), os_scale);
+                // test code for deluxe fix
+                b.x = (int) Math.round(result.getBlockedAtPoint().x * magnification);
+                b.y = (int) Math.round(result.getBlockedAtPoint().y * magnification);
+                b = mapPointToScreen(b, os_scale);
             }
             // transform the hindrance point
-            Point h = null;
+            Point h = new Point(0,0);
             if (result.hasHindrance()) {
-                h = mapPointToScreen(result.firstHindranceAt(), os_scale);
+                // test code for deluxe fix
+                h.x = (int) Math.round(result.firstHindranceAt().x * magnification);
+                h.y = (int) Math.round(result.firstHindranceAt().y * magnification);
+                h = mapPointToScreen(h, os_scale);
             }
             // draw the LOS thread
             if (losOnOverlay) {
