@@ -101,7 +101,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
     private Color LOSColor;
     private Color hindranceColor;
     private Color blockedColor;
-
+    private double magnification;
     private void setGridSnapToVertex(boolean toVertex) {
         for (Board b : map.getBoards()) {
             HexGrid grid =
@@ -155,6 +155,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                 overlayBoundaries.clear();
                 for (Board board : theMap.getBoards()) {
                     ASLBoard b = (ASLBoard) board;
+                    magnification = b.getMagnification();
                     final Enumeration overlays = b.getOverlays();
                     while (overlays.hasMoreElements()) {
                         Overlay o = (Overlay) overlays.nextElement();
@@ -355,6 +356,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
     private void setSourceFromMousePressedEvent(Point eventPoint) {
         try {
             final Point p = mapMouseToMapCoordinates(eventPoint);
+            adjustformagnification(p);
             if (p == null || !LOSMap.onMap(p.x, p.y)) {
                 source = null;
             } else {
@@ -366,7 +368,15 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             return;
         }
     }
-
+    // adjust the p.x and p.y values to reflect any magnification (such as using deluxe size hexes; not zooming)
+    private void adjustformagnification(Point adjustpoint){
+        adjustpoint.x = (int) Math.round(adjustpoint.x / magnification);
+        adjustpoint.y = (int) Math.round(adjustpoint.y / magnification);
+    }
+    private void adjustformagnification(Point adjustpoint, Point breakpoint){
+        adjustpoint.x = (int) Math.round(breakpoint.x * magnification);
+        adjustpoint.y = (int) Math.round(breakpoint.y * magnification);
+    }
     @Override
 	public void mouseReleased(MouseEvent e) {
 
@@ -469,6 +479,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         try {
             final Point p = map.componentToMap(eventPoint);
             p.translate(-map.getEdgeBuffer().width, -map.getEdgeBuffer().height);
+            adjustformagnification(p);
             if (p == null || !LOSMap.onMap(p.x, p.y)) return;
             target = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
             useAuxTargetLOSPoint = useAuxLOSPoint(target, p.x, p.y);
@@ -485,6 +496,8 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
     private void setTargetFromRemoteEvent(Point eventPoint) {
 
         final Point p = mapMouseToMapCoordinates(eventPoint);
+        adjustformagnification(p);
+        //
         if (p == null || !LOSMap.onMap(p.x, p.y)) return;
         target = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
         useAuxTargetLOSPoint = useAuxLOSPoint(target, p.x, p.y);
@@ -522,6 +535,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             else {
                 sourceLOSPoint = new Point(source.getLOSPoint());
             }
+            adjustformagnification(sourceLOSPoint, sourceLOSPoint);
             // preserve point on map for overlay checking
             Point sourcestart = sourceLOSPoint;
             sourceLOSPoint = mapPointToScreen(sourceLOSPoint, os_scale);
@@ -534,6 +548,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             else {
                 targetLOSPoint = new Point(target.getLOSPoint());
             }
+            adjustformagnification(targetLOSPoint, targetLOSPoint);
             // preserve point on map for overlay checking
             Point targetend = targetLOSPoint;
             targetLOSPoint = mapPointToScreen(targetLOSPoint, os_scale);
@@ -554,14 +569,18 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             }
 
             // transform the blocked-at point
-            Point b = null;
+            Point b = new Point(0,0);
             if (result.isBlocked()) {
-                b = mapPointToScreen(result.getBlockedAtPoint(), os_scale);
+                // adjust for magnification such as using deluxe sized hexes
+                adjustformagnification(b, result.getBlockedAtPoint());
+                b = mapPointToScreen(b, os_scale);
             }
             // transform the hindrance point
-            Point h = null;
+            Point h = new Point(0,0);
             if (result.hasHindrance()) {
-                h = mapPointToScreen(result.firstHindranceAt(), os_scale);
+                // adjust for magnification such as using deluxe sized hexes
+                adjustformagnification(h, result.firstHindranceAt());
+                h = mapPointToScreen(h, os_scale);
             }
             // draw the LOS thread
             if (losOnOverlay) {
