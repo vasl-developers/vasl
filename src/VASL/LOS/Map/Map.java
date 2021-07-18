@@ -265,7 +265,7 @@ public class Map  {
             evencol = col % 2 == 0 ? 1 : 0;
             return new Point2D.Double(
                     (A1CenterX < 0.0 ? 0.0 : A1CenterX) + hexWidth * (double) col,
-                    32.25 + hexHeight * (double) row - hexHeight/2.0 * evencol ); //(double) (col%2)
+                    hexHeight/2.0 + hexHeight * (double) row - hexHeight/2.0 * evencol ); //(double) (col%2)
         }else if (A1CenterY==65) {
 
             return new Point2D.Double(
@@ -4256,7 +4256,7 @@ public class Map  {
             this.cropconfiguration="TopLeftHalfHeight";
         }
         else if(this.cropconfiguration.contains("TopLeftHalfHeight") && hexGrid.length % 2 ==0 ) {  // top left edge is half-height; right edge is full height; need to revise grid
-            this.A1CenterY = 32.25;
+            this.A1CenterY = this.hexHeight/2;
             flipconfig="HalftoFullHeight";
             this.cropconfiguration="Normal";
         }
@@ -4269,7 +4269,7 @@ public class Map  {
                     this.cropconfiguration="FullHexHalfHeight";
                 }
                 else {  // else right edge is  full height
-                    this.A1CenterY= 32.25;
+                    this.A1CenterY= this.hexHeight/2;
                     this.A1CenterX=this.hexWidth/2;
                     this.flipconfig="HalftoFullWidth";
                     this.cropconfiguration="FullHexRightHalf";
@@ -4277,7 +4277,7 @@ public class Map  {
             }
             else  if (this.cropconfiguration.contains("RightHalf")) { // right side is not cropped; full height and half-width; need to revise grid
                 this.flipconfig = "FulltoHalfWidth";
-                this.A1CenterY=32.25;
+                this.A1CenterY=this.hexHeight/2;
                 this.A1CenterX = 0;
                 this.cropconfiguration="Normal";
                 // if right side is not cropped, left cannot be half height when flipped so this case not handled
@@ -4298,7 +4298,7 @@ public class Map  {
                     } else if (this.hexGrid[0][0].getColumnNumber() % 2 != 0) {  // left is half height and right column is full height in top row
                         flipconfig = "HalftoFullHeight";
                         this.cropconfiguration = "FullHex";
-                        this.A1CenterY=32.25;
+                        this.A1CenterY=this.hexHeight/2;
                     }
                 }
             }
