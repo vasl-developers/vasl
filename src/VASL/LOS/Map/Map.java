@@ -2853,7 +2853,7 @@ public class Map  {
                                     return true;
                                 } else { // range is odd so need to check if one of the adjacent hexes is roofless, currentHex isn't or wouldn't be here
                                     // so need to check if second hex is roofless
-                                    if (rangehex != null) {
+                                    if (status.currentHex != null) {   //rangehex
                                         status.reason = "";  //reset variables
                                         status.blocked = false;
                                         result.resetreportingonly();
@@ -2870,7 +2870,7 @@ public class Map  {
                                         if (hexsidetouched == firstsidetest) {
                                             Hex testhex = getAdjacentHex(status.currentHex, firstsidetest);
                                             if (!testhex.getCenterLocation().getTerrain().isRoofless()) {
-                                                status.reason = "Source or Target location is in a blind hex (B10.23)";
+                                                status.reason = "Source or Target location is in a blind hex (A6.4)";
                                                 status.blocked = true;
                                                 result.setBlocked(status.currentCol, status.currentRow, status.reason);
                                                 return true;
@@ -2878,7 +2878,7 @@ public class Map  {
                                         } else if (hexsidetouched == secondsidetest) {
                                             Hex testhex = getAdjacentHex(status.currentHex, secondsidetest);
                                             if (!testhex.getCenterLocation().getTerrain().isRoofless()) {
-                                                status.reason = "Source or Target location is in a blind hex (B10.23)";
+                                                status.reason = "Source or Target location is in a blind hex (A6.4)";
                                                 status.blocked = true;
                                                 result.setBlocked(status.currentCol, status.currentRow, status.reason);
                                                 return true;
@@ -2925,7 +2925,7 @@ public class Map  {
                                 if(hexsidetouched==firstsidetest){
                                     Hex testhex = getAdjacentHex(status.currentHex, firstsidetest);
                                     if (!testhex.getCenterLocation().getTerrain().isRoofless()) {
-                                        status.reason = "Source or Target location is in a blind hex (B10.23)";
+                                        status.reason = "Source or Target location is in a blind hex (A6.4)";
                                         status.blocked = true;
                                         result.setBlocked(status.currentCol, status.currentRow, status.reason);
                                         return true;
@@ -2934,7 +2934,7 @@ public class Map  {
                                 else if(hexsidetouched==secondsidetest){
                                     Hex testhex = getAdjacentHex(status.currentHex, secondsidetest);
                                     if (!testhex.getCenterLocation().getTerrain().isRoofless()) {
-                                        status.reason = "Source or Target location is in a blind hex (B10.23)";
+                                        status.reason = "Source or Target location is in a blind hex (A6.4)";
                                         status.blocked = true;
                                         result.setBlocked(status.currentCol, status.currentRow, status.reason);
                                         return true;
@@ -2948,7 +2948,10 @@ public class Map  {
                         }
                     }
                     else {
-                        status.reason = "Source or Target location is in a blind hex (B10.23)";
+                        if(status.rangeToTarget ==1 && status.targetHex.getCenterLocation().getTerrain().isRoofless() ){
+                            return false;
+                        }
+                        status.reason = "Source or Target location is in a blind hex (A6.4)";
                         status.blocked = true;
                         result.setBlocked(status.currentCol, status.currentRow, status.reason);
                         return true;
