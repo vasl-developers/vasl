@@ -26,7 +26,7 @@
 	<coreBoards>
 		<boarddata name="00" version="6.0" versionDate="Aug 2008" description="" />
 		<boarddata name="01" version="6.2" versionDate="Jan 2021" description="" />
-		<boarddata name="02" version="6.5" versionDate="Jan 2021" description="" />
+		<boarddata name="02" version="6.6" versionDate="Jul 2021" description="" />
 		<boarddata name="03" version="6.4" versionDate="Jan 2021" description="" />
 		<boarddata name="04" version="6.2" versionDate="Jan 2021" description="" />
 		<boarddata name="05" version="6.7" versionDate="May 2021" description="" />
