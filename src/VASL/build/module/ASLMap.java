@@ -403,7 +403,7 @@ public class ASLMap extends Map {
             setLegacyMode();
             logError("LOS disabled - unexpected error");
             logException(e);
-            GameModule.getGameModule().getChatter().send("VASL LOS disabled - unexpected error: " + e.toString() + ". VASSAL los active");
+            GameModule.getGameModule().getChatter().send("VASL LOS disabled: " + e.toString() + ". VASSAL los active");
         }
         finally {
             // free up memory
