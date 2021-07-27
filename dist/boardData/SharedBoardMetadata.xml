@@ -1004,6 +1004,8 @@
 		<color name="CactusGreen" red="123" green="132" blue="8" terrain="Cactus Patch" elevation="UNKNOWN" />
 		<color name="CactusBrown" red="90" green="66" blue="33" terrain="Cactus Patch" elevation="UNKNOWN" />
 		<!-- Desert colors for desert boards -->
+		<color name="BrokenGround" red="60" green="44" blue="22" terrain="Broken Ground" elevation="UNKNOWN" />
+
 		<color name="Hammada1" red="190" green="149" blue="52" terrain="Hammada" elevation="UNKNOWN" />
 		<color name="Hammada2" red="169" green="127" blue="35" terrain="Hammada" elevation="UNKNOWN" />
 		<color name="Hammada3" red="148" green="113" blue="38" terrain="Hammada" elevation="UNKNOWN" />
@@ -1537,6 +1539,7 @@
 			<colorMap fromColor="SeparatedMarshGreenL_1" toColor="Level0"/>
 			<colorMap fromColor="SeparatedMarshBrownL_1" toColor="Level0"/>
 		</colorSSR>
+
 		<colorSSR name="MarshToLevel1">
 			<colorMap fromColor="MarshGreenL0" toColor="Level1"/>
 			<colorMap fromColor="MarshBrownL0" toColor="Level1"/>
@@ -1548,6 +1551,18 @@
 			<colorMap fromColor="SeparatedMarshBrownL1" toColor="Level1"/>
 			<colorMap fromColor="SeparatedMarshGreenL_1" toColor="Level1"/>
 			<colorMap fromColor="SeparatedMarshBrownL_1" toColor="Level1"/>
+		</colorSSR>
+		<colorSSR name="Marsh_1ToLevel_1">
+			<colorMap fromColor="MarshGreenL_1" toColor="Level_1"/>
+			<colorMap fromColor="MarshBrownL_1" toColor="Level_1"/>
+			<colorMap fromColor="SeparatedMarshGreenL_1" toColor="Level_1"/>
+			<colorMap fromColor="SeparatedMarshBrownL_1" toColor="Level_1"/>
+		</colorSSR>
+		<colorSSR name="Marsh0ToLevel0">
+			<colorMap fromColor="MarshGreenL0" toColor="Level0"/>
+			<colorMap fromColor="MarshBrownL0" toColor="Level0"/>
+			<colorMap fromColor="SeparatedMarshGreenL0" toColor="Level0"/>
+			<colorMap fromColor="SeparatedMarshBrownL0" toColor="Level0"/>
 		</colorSSR>
 		<colorSSR name="GulliesToStreams">
 			<colorMap fromColor="GullyGreen2" toColor="StreamGreen2"/>
@@ -1850,46 +1865,70 @@
 			<colorMap fromColor="PaddyInterior" toColor="GrainL0"/>
 		</colorSSR>
 		<colorSSR name="DTOtoETO">
-			<colorMap fromColor="DesertL_2" toColor="Level_2"/>
-			<colorMap fromColor="DesertL_1" toColor="Level_1"/>
-			<colorMap fromColor="DesertL0" toColor="Level0"/>
-			<colorMap fromColor="DirtRdDesertL_2" toColor="DirtRdL_2"/>
-			<colorMap fromColor="DirtRdDesertL_1" toColor="DirtRdL_1"/>
-			<colorMap fromColor="DirtRdDesertL0" toColor="DirtRdL0"/>
-			<colorMap fromColor="DirtRdDesertL1" toColor="DirtRdL1"/>
-			<colorMap fromColor="DirtRdDesertL2" toColor="DirtRdL2"/>
-			<colorMap fromColor="DirtRdDesertL3" toColor="DirtRdL3"/>
-			<colorMap fromColor="DirtRdDesertL4" toColor="DirtRdL4"/>
-			<colorMap fromColor="DirtRdDesertL5" toColor="DirtRdL5"/>
-			<colorMap fromColor="DirtRdDesertL6" toColor="DirtRdL6"/>
-			<colorMap fromColor="OrchDesertL_2" toColor="OrchL_2"/>
-			<colorMap fromColor="OrchDesertL_1" toColor="OrchL_1"/>
-			<colorMap fromColor="OrchDesertL0" toColor="OrchL0"/>
-			<colorMap fromColor="OrchDesertL1" toColor="OrchL1"/>
-			<colorMap fromColor="OrchDesertL2" toColor="OrchL2"/>
-			<colorMap fromColor="OrchDesertL3" toColor="OrchL3"/>
-			<colorMap fromColor="OrchDesertL4" toColor="OrchL4"/>
-			<colorMap fromColor="OrchDesertL5" toColor="OrchL5"/>
-			<colorMap fromColor="OrchDesertL6" toColor="OrchL6"/>
-			<colorMap fromColor="BrushDesertL_2" toColor="BrushL_2"/>
-			<colorMap fromColor="BrushDesertL_1" toColor="BrushL_1"/>
-			<colorMap fromColor="BrushDesertL0" toColor="BrushL0"/>
-			<colorMap fromColor="BrushDesertL1" toColor="BrushL1"/>
-			<colorMap fromColor="BrushDesertL2" toColor="BrushL2"/>
-			<colorMap fromColor="BrushDesertL3" toColor="BrushL3"/>
-			<colorMap fromColor="BrushDesertL4" toColor="BrushL4"/>
-			<colorMap fromColor="BrushDesertL5" toColor="BrushL5"/>
-			<colorMap fromColor="BrushDesertL6" toColor="BrushL6"/>
-			<colorMap fromColor="DirtRdDesertBridge" toColor="DirtRdBridge"/>
-			<colorMap fromColor="DirtRdBridgeDesert" toColor="DirtRdBridge"/>
-			<colorMap fromColor="OrchTreesDesert" toColor="OrchTrees"/>
-			<colorMap fromColor="WadiBrown1" toColor="GullyGreen1"/>
-			<colorMap fromColor="WadiBrown2" toColor="GullyBrown2"/>
-			<colorMap fromColor="WadiBrown3" toColor="GullyBrown3"/>
-			<colorMap fromColor="WadiBlack" toColor="GullyBlack"/>
-			<colorMap fromColor="Wadi1" toColor="GullyGreen1"/>
-			<colorMap fromColor="Wadi2" toColor="GullyBrown2"/>
-			<colorMap fromColor="Wadi3" toColor="GullyBlack"/>
+			<colorMap fromColor="DTO_BrushL0" toColor="BrushL0" />
+			<colorMap fromColor="DTO_BrushL1" toColor="BrushL1" />
+			<colorMap fromColor="DTO_BrushL2" toColor="BrushL2" />
+			<colorMap fromColor="DTO_BrushL3" toColor="BrushL3" />
+			<colorMap fromColor="DTO_BrushL4" toColor="BrushL4" />
+			<colorMap fromColor="DTO_BrushL5" toColor="BrushL5" />
+			<colorMap fromColor="DTO_BrushL6" toColor="BrushL6" />
+
+			<colorMap fromColor="DTO_BldgShadowL0" toColor="BldgShadowL0" />
+
+			<colorMap fromColor="DTO_DirtRdL0" toColor="DirtRdL0" />
+			<colorMap fromColor="DTO_DirtRdL1" toColor="DirtRdL1" />
+			<colorMap fromColor="DTO_DirtRdL2" toColor="DirtRdL2" />
+			<colorMap fromColor="DTO_DirtRdL3" toColor="DirtRdL3" />
+			<colorMap fromColor="DTO_DirtRdL4" toColor="DirtRdL4" />
+			<colorMap fromColor="DTO_DirtRdL5" toColor="DirtRdL5" />
+			<colorMap fromColor="DTO_DirtRdL6" toColor="DirtRdL6" />
+			<colorMap fromColor="DTO_DirtRdBridge" toColor="DirtRdBridge" />
+
+			<colorMap fromColor="DTO_GraveyardGreen" toColor="GraveyardGreen" />
+			<colorMap fromColor="DTO_GraveyardShadow" toColor="GraveyardShadow" />
+
+			<colorMap fromColor="WadiBrown1" toColor="GullyGreen1" />
+			<colorMap fromColor="WadiBrown1" toColor="GullyGreen2" />
+			<colorMap fromColor="WadiBrown1" toColor="GullyBrown3" />
+			<colorMap fromColor="WadiBlack" toColor="GullyBlack" />
+			<colorMap fromColor="WadiCliff" toColor="GullyCliff" />
+
+			<colorMap fromColor="DTO_HedgeGreen" toColor="HedgeGreen" />
+			<colorMap fromColor="DTO_BoardNum" toColor="BoardNum" />
+
+			<colorMap fromColor="DTO_Level0_1" toColor="Level0" />
+			<colorMap fromColor="DTO_Level0_2" toColor="Level0" />
+			<colorMap fromColor="DTO_Level0_3" toColor="Level0" />
+			<colorMap fromColor="DTO_Level0_4" toColor="Level0" />
+			<colorMap fromColor="DTO_Level0_5" toColor="Level0" />
+			<colorMap fromColor="DTO_Level0_6" toColor="Level0" />
+			<colorMap fromColor="DTO_Level1" toColor="Level1" />
+			<colorMap fromColor="DTO_Level2" toColor="Level2" />
+			<colorMap fromColor="DTO_Level3" toColor="Level3" />
+			<colorMap fromColor="DTO_Level4" toColor="Level4" />
+			<colorMap fromColor="DTO_Level5" toColor="Level5" />
+			<colorMap fromColor="DTO_Level6" toColor="Level6" />
+
+			<colorMap fromColor="DTO_OrchL0" toColor="Level0" />
+			<colorMap fromColor="DTO_OrchL1" toColor="Level1" />
+			<colorMap fromColor="DTO_OrchL2" toColor="Level2" />
+			<colorMap fromColor="DTO_OrchL3" toColor="Level3" />
+			<colorMap fromColor="DTO_OrchL4" toColor="Level4" />
+			<colorMap fromColor="DTO_OrchL5" toColor="Level5" />
+			<colorMap fromColor="DTO_OrchL6" toColor="Level6" />
+			<colorMap fromColor="DTO_OrchTrees" toColor="OrchTrees" />
+
+			<colorMap fromColor="DTO_PavedRdL0" toColor="PavedRdL0" />
+			<colorMap fromColor="DTO_PavedRdL1" toColor="PavedRdL1" />
+			<colorMap fromColor="DTO_PavedRdL2" toColor="PavedRdL2" />
+			<colorMap fromColor="DTO_PavedRdL3" toColor="PavedRdL3" />
+			<colorMap fromColor="DTO_PavedRdL4" toColor="PavedRdL4" />
+			<colorMap fromColor="DTO_PavedRdL5" toColor="PavedRdL5" />
+			<colorMap fromColor="DTO_PavedRdL6" toColor="PavedRdL6" />
+			<colorMap fromColor="DTO_PavedRdBridge" toColor="PavedRdBridge" />
+
+			<colorMap fromColor="DTO_WoodsGreen" toColor="WoodsGreen" />
+
 		</colorSSR>
 		<!-- Winter must always be last -->
 		<colorSSR name="Winter">
@@ -2374,6 +2413,8 @@
         <LOSSSRule name="MarshToLevel2" type="terrainToElevationMap" fromValue="Marsh" toValue="2" />
         <LOSSSRule name="MarshToLevel3" type="terrainToElevationMap" fromValue="Marsh" toValue="3" />
         <LOSSSRule name="MarshToLevel4" type="terrainToElevationMap" fromValue="Marsh" toValue="4" />
+		<LOSSSRule name="Marsh_1ToLevel_1" type="terrainToElevationMap" fromValue="Marsh_1" toValue="-1" />
+		<LOSSSRule name="Marsh0ToLevel0" type="terrainToElevationMap" fromValue="Marsh0" toValue="0" />
         <LOSSSRule name="MarshToBrush" type="terrainMap" fromValue="Marsh" toValue="Brush" />
         <LOSSSRule name="MarshToWoods" type="terrainMap" fromValue="Marsh" toValue="Woods" />
         <LOSSSRule name="MarshToGrain" type="terrainMap" fromValue="Marsh" toValue="Grain" />
