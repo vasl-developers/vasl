@@ -4,11 +4,11 @@ This feature automates tracking of CVP during a scenario. All CVP-eligible units
 
 To Move A Unit to the Casualties Bin:
 
-Right click on the unit, select Casualties Bin and then either Allied or Axis from the submenu. This allows for maximum flexibility (think Italians or prisoners) as to which side the CVP should be allocated.
+Right click on the unit, select Casualties Bin and then either Allied or Axis from the submenu. This allows for maximum flexibility (think Italians or prisoners) as to which side the CVP should be allocated. Finally, select one of the three options. If you select one of the two options involving CR, one HS will be sent to the Casualty Bin and one will be created on the main map. If the on-map HS should be broken, that must be done manually. The CR process will change the CVP value of both HS.
 
 To Change the CVP of a unit:
 
-Right click on the unit, select Reset CVP and then enter the new CVP value. This has to be done for each unit. Changing the CVP of one Russian 447 in a scenario won’t change it for all Russian 447 in the game.
+Right click on the unit, select Reset CVP and then enter the new CVP value. This has to be done for each unit. Changing the CVP of one Russian 447 in a scenario won’t change it for all Russian 447 in the game. Units cloned from an existing unit will have the CVP value of that existing unit.
 
 If you are using DVP, you will need to do this for each vehicle in the Casualties Bin.
 
@@ -23,17 +23,9 @@ For a detailed view, click on the Casualties Bin button on the tool bar and the 
 
 All Casualties Bin actions will be saved by Save Game.
 
-To Handle Wrecks and Casualty Reduction:
+To Handle Wrecks:
 
-For Wrecks, before turning the vehicle into a wreck, clone it, send one version to the Casualties Bin and then change the other to a wreck.
-
-For Casualty Reduction, turn the squad into a hs, clone the hs, send one version to the Casualties Bin and leave the other on the main map and apply any further actions (such as breaking) to it.
-
-Version Compatibility:
-
-For both players to see and use the Casualties Bin, they will both need 6.5.
-
-Games saved with previous versions of the game can be opened with 6.5 and will work normally. In terms of the Casualties Bin, existing unit counters will not contain the Casualties Bin functionality. However, new unit counters dragged from the Counters Window will. Simply replace the existing counters with one from the Counters Window whenever a unit needs to go the Casualties Bin.
+For Wrecks, right-click the vehicle, select Send & Wreck from the To Casualties Bin sub-menu, which will automatically send the vehicle to the Casualties Bin and then add a wreck to the map.
 
 Some counters that should not have the Casualties Bin menu items may have them. This is due to the way counters are created in VASL. If you find such counters, please report them.
 
