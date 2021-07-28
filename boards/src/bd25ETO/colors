@@ -274,8 +274,8 @@ L0Winter  White
 L1Winter  222,213,188
 L2Winter  195,178,145
 L3Winter  164,144,102
-L4Winter  149,125,87
-L5Winter  230,205,194
+L4Winter  145,122,85  // new with FW boards
+L5Winter  125,105,73  // new with FW boards
 L6Winter  240,236,230
 L_1Winter 213,224,194
 L_2Winter 225,239,187
