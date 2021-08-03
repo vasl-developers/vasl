@@ -50,6 +50,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import static VASSAL.build.GameModule.getGameModule;
@@ -175,6 +176,14 @@ public class ASLMap extends Map {
     @Override
     public synchronized void setBoards(Collection<Board> c) {
 
+        Iterator it = c.iterator();
+        while (it.hasNext()) {
+            VASLBoard testboardexists = (VASLBoard) it.next();
+            if (testboardexists.getVASLBoardArchive() == null) {
+                GameModule.getGameModule().getChatter().send("Board missing. Auto-synching of boards requires board directory in board picker matches the board directory set in preferences. Close this game and start new game");
+                return;
+            }
+        }
         super.setBoards(c);
         String info = "Using board(s): ";
         for (Board board : boards) {
@@ -183,6 +192,8 @@ public class ASLMap extends Map {
         }
         GameModule.getGameModule().warn(info);
         buildVASLMap();
+
+
     }
 
     /**
