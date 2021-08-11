@@ -136,7 +136,7 @@ public class ASLBoard extends Board {
         setCommonName(VASLBoardArchive.getBoardName());
         imageFile = VASLBoardArchive.getBoardImageFileName();
         version = VASLBoardArchive.getVersion();
-        if (version == null) version = "0.0";
+        if (version == null){version="0.0";}
         ((Translatable) getGrid()).setAttribute(HexGrid.X0, (int) VASLBoardArchive.getA1CenterX());
         ((Translatable) getGrid()).setAttribute(HexGrid.Y0, (int) VASLBoardArchive.getA1CenterY());
         ((Translatable) getGrid()).setAttribute(HexGrid.DX, VASLBoardArchive.getHexWidth());
@@ -153,11 +153,19 @@ public class ASLBoard extends Board {
     public void setTerrain(String changes) throws BoardException {
         terrainChanges = changes;
         terrain = null;
-        if (changes == null) return;
-        for (int i = 0; i < overlays.size(); ++i) if (overlays.get(i) instanceof SSROverlay) overlays.remove(i--);
+        if (changes == null) {
+            return;
+        }
+        for (int i = 0; i < overlays.size(); ++i) {
+            if (overlays.get(i) instanceof SSROverlay) {
+                overlays.remove(i--);
+            }
+        }
         if (changes.length() > 0) {
             terrain = new SSRFilter(changes, boardFile, this);
-            for (SSROverlay o : terrain.getOverlays()) overlays.add(0, o);
+            for (SSROverlay o : terrain.getOverlays()) {
+                overlays.add(0, o);
+            }
         }
         resetImage();
     }
@@ -170,9 +178,7 @@ public class ASLBoard extends Board {
      * @return true if this board is legacy format (pre 6.0)
      */
     public boolean isLegacyBoard() {
-
-            return VASLBoardArchive.isLegacyBoard();
-
+        return VASLBoardArchive.isLegacyBoard();
     }
 
     protected void resetImage() {
@@ -195,7 +201,9 @@ public class ASLBoard extends Board {
             }
 
             baseImageOp = new SourceOpTiledBitmapImpl(imageFile, fa);
-        } else baseImageOp = Op.load(imageFile);
+        } else {
+            baseImageOp = Op.load(imageFile);
+        }
 
         boardImageOp = new BoardOp();
 
@@ -218,7 +226,9 @@ public class ASLBoard extends Board {
                 changed = true;
             }
         }
-        if (changed) resetImage();
+        if (changed) {
+            resetImage();
+        }
         return changed;
     }
 
@@ -240,8 +250,9 @@ public class ASLBoard extends Board {
         newCropBounds.y = coord1.length() == 0 ? 0 : (getGrid().getLocation("a" + coord1).y - (int) (dy / 2));
         newCropBounds.height = coord2.length() == 0 ? -1 : (getGrid().getLocation("a" + coord2).y + (int) (dy / 2) - newCropBounds.y);
         if (nearestFullRow) {
-            if (newCropBounds.width > 0 && Math.abs(newCropBounds.x + newCropBounds.width - uncroppedSize.width) > dx / 4)
+            if (newCropBounds.width > 0 && Math.abs(newCropBounds.x + newCropBounds.width - uncroppedSize.width) > dx / 4) {
                 newCropBounds.width += (int) (dx / 2);
+            }
             if (newCropBounds.x != 0) {
                 newCropBounds.x -= (int) (dx / 2);
                 newCropBounds.width += (int) (dx / 2);
@@ -252,8 +263,11 @@ public class ASLBoard extends Board {
     }
 
     public String locationName(Point p) {
-        if (getMap() != null && getMap().getBoardCount() > 1) return getName() + super.locationName(p);
-        else return super.locationName(p);
+        if (getMap() != null && getMap().getBoardCount() > 1) {
+            return getName() + super.locationName(p);
+        } else {
+            return super.locationName(p);
+        }
     }
 
     @Override
@@ -306,10 +320,18 @@ public class ASLBoard extends Board {
         if (cropBounds.width > 0 || cropBounds.height > 0)
             val += cropBounds.x + "\t" + cropBounds.y + "\t" + cropBounds.width + "\t" + cropBounds.height + "\t";
         val += "VER\t" + getVersion() + '\t';
-        for (Overlay o : overlays) val += o + "\t";
-        if (terrainChanges.length() > 0) val += "SSR\t" + terrainChanges;
-        if (magnification != 1.0) val += "\tZOOM\t" + magnification;
-        if (nearestFullRow) val += "\tFH\t" + nearestFullRow;
+        for (Overlay o : overlays) {
+            val += o + "\t";
+        }
+        if (terrainChanges.length() > 0) {
+            val += "SSR\t" + terrainChanges;
+        }
+        if (magnification != 1.0) {
+            val += "\tZOOM\t" + magnification;
+        }
+        if (nearestFullRow){
+            val += "\tFH\t" + nearestFullRow;
+        }
         return val;
     }
 
@@ -333,13 +355,17 @@ public class ASLBoard extends Board {
 
         @Override
         public BufferedImage eval() throws Exception {
-            if (size == null) fixSize();
+            if (size == null) {
+                fixSize();
+            }
 
             final ImageOp base = boardArchive == null
                     ? baseImageOp : new SourceOpBitmapImpl(imageFile, boardArchive);
 
             if (terrain == null && overlays.isEmpty() &&
-                    cropBounds.width < 0 && cropBounds.height < 0) return base.getImage();
+                    cropBounds.width < 0 && cropBounds.height < 0) {
+                return base.getImage();
+            }
 
             final BufferedImage im =
                     ImageUtils.createCompatibleTranslucentImage(size.width, size.height);
@@ -380,8 +406,8 @@ public class ASLBoard extends Board {
                     );
                 }
 
-                if (o.getTerrain() != getTerrain() && o.getTerrain() != null)
-                    for (SSROverlay ssrOverlay : o.getTerrain().getOverlays())
+                if (o.getTerrain() != getTerrain() && o.getTerrain() != null) {
+                    for (SSROverlay ssrOverlay : o.getTerrain().getOverlays()) {
                         if (ssrOverlay.getImage() != null) {
                             Rectangle oBounds = ssrOverlay.bounds();
                             if (o.getOrientation() == 'a') {
@@ -403,34 +429,40 @@ public class ASLBoard extends Board {
                                             null
                                     );
                                 }
-                            } else try {
-                                Point p1 = o.offset(o.getOrientation(), ASLBoard.this);
-                                Point p2 = o.offset('a', ASLBoard.this);
-                                Point p = new Point(
-                                        p1.x + p2.x - oBounds.x + o.bounds().x - visible.x,
-                                        p1.y + p2.y - oBounds.y + o.bounds().y - visible.y
-                                );
-                                g.drawImage(
-                                        ssrOverlay.getImage(),
-                                        p.x,
-                                        p.y,
-                                        p.x - oBounds.width,
-                                        p.y - oBounds.height,
-                                        0,
-                                        0,
-                                        oBounds.width,
-                                        oBounds.height,
-                                        null
-                                );
-                            } catch (BoardException e1) {
-                                e1.printStackTrace();
+                            } else {
+                                try {
+                                    Point p1 = o.offset(o.getOrientation(), ASLBoard.this);
+                                    Point p2 = o.offset('a', ASLBoard.this);
+                                    Point p = new Point(
+                                            p1.x + p2.x - oBounds.x + o.bounds().x - visible.x,
+                                            p1.y + p2.y - oBounds.y + o.bounds().y - visible.y
+                                    );
+                                    g.drawImage(
+                                            ssrOverlay.getImage(),
+                                            p.x,
+                                            p.y,
+                                            p.x - oBounds.width,
+                                            p.y - oBounds.height,
+                                            0,
+                                            0,
+                                            oBounds.width,
+                                            oBounds.height,
+                                            null
+                                    );
+                                } catch (BoardException e1) {
+                                    e1.printStackTrace();
+                                }
                             }
                         }
+                    }
+                }
             }
 
             g.dispose();
 
-            if (terrain != null) terrain.transform(im);
+            if (terrain != null) {
+                terrain.transform(im);
+            }
             return im;
         }
 
@@ -453,7 +485,9 @@ public class ASLBoard extends Board {
 
         @Override
         public boolean equals(Object obj) {
-            if (!(obj instanceof BoardOp)) return false;
+            if (!(obj instanceof BoardOp)) {
+                return false;
+            }
             final BoardOp op = (BoardOp) obj;
             return boardState.equals(op.boardState);
         }
