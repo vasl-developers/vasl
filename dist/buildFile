@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<VASSAL.build.GameModule ModuleOther1="" ModuleOther2="" VassalVersion="3.5.4" description="Virtual Advanced Squad Leader" name="VASL" nextPieceSlotId="13756" version="6.6.2">
+<VASSAL.build.GameModule ModuleOther1="" ModuleOther2="" VassalVersion="3.5.5" description="Virtual Advanced Squad Leader" name="VASL" nextPieceSlotId="13756" version="6.6.3-beta1">
     <VASL.build.module.OBA hotkey="117,0"/>
     <VASL.build.module.ScenInfo/>
     <VASL.build.module.CounterPaletteSearch/>

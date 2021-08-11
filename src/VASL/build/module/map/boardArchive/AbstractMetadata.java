@@ -36,7 +36,7 @@ public abstract class AbstractMetadata {
     protected static final String LOSSSRuleFromValueAttribute = "fromValue";
     protected static final String LOSSSRuleToValueAttribute = "toValue";
     protected static final String LOSSSRuleTypeValues[] = { // valid LOS rule types
-            "ignore", "customCode", "terrainMap", "elevationMap", "terrainToElevationMap", "elevationToTerrainMap"
+            "ignore", "customCode", "terrainMap", "elevationMap", "terrainToElevationMap", "elevationToTerrainMap", "terrainToSelectElevationMap"
     };
 
     protected static final String LOSCounterRulesElement = "LOSCounterRules";

@@ -317,6 +317,11 @@ public class VASLBoard extends ASLBoard {
                     applyElevationToTerrainMapRule(rule, LOSData);
                     changed = true;
                 }
+                else if("terrainToSelectElevationMap".equals(rule.getType())) {
+
+                    applyTerrainToSelectElevationMapRule(rule, LOSData);
+                    changed = true;
+                }
             }
 
             // transform woods to Light Jungle and buildings to huts if PTO changes
@@ -506,6 +511,36 @@ public class VASLBoard extends ASLBoard {
 
                 if(LOSData.getGridTerrain(x, y).equals(fromTerrain)){
                     LOSData.setGridElevation(toElevation, x, y);
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Open Ground").getType(), x, y);
+                }
+            }
+        }
+    }
+
+    /**
+     * Apply terrain to select elevation rule to the LOS data; where terrain exists at more than 1 level on board and want to change independently
+     * @param rule the terrain to elevation map rule
+     * @param LOSData the LOS data
+     * @throws BoardException
+     */
+    private static void applyTerrainToSelectElevationMapRule(LOSSSRule rule, Map LOSData) throws BoardException {
+
+        final Terrain fromTerrain;
+        final int toElevation;
+        try {
+            fromTerrain = LOSData.getTerrain(rule.getFromValue());
+            toElevation = Integer.parseInt(rule.getToValue());
+        }
+        catch (Exception e) {
+            throw new BoardException("Invalid from or to value in SSR terrain to elevation map " + rule.getName(), e);
+        }
+
+        // adjust the terrain and elevation
+        for(int x = 0; x < LOSData.getGridWidth(); x++) {
+            for(int y = 0; y < LOSData.getGridHeight(); y++ ) {
+
+                if(LOSData.getGridTerrain(x, y).equals(fromTerrain) && LOSData.getGridElevation(x, y) == toElevation){
+                    //LOSData.setGridElevation(toElevation, x, y);
                     LOSData.setGridTerrainCode(LOSData.getTerrain("Open Ground").getType(), x, y);
                 }
             }
