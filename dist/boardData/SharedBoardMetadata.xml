@@ -2354,6 +2354,7 @@
         -->
         <LOSSSRule name="CragsToOrchard" type="terrainMap" fromValue="Crags" toValue="Orchard" />
         <LOSSSRule name="CragsToShellholes" type="terrainMap" fromValue="Crags" toValue="Shellholes" />
+		<LOSSSRule name="OrchardsToShellholes" type="terrainMap" fromValue="Orchard" toValue="Shellholes" />
 
         <!-- simple elevation maps. Note that elevations can only be decreased -->
         <LOSSSRule name="Level6ToLevel5" type="elevationMap" fromValue="6" toValue="5" />
@@ -2413,8 +2414,8 @@
         <LOSSSRule name="MarshToLevel2" type="terrainToElevationMap" fromValue="Marsh" toValue="2" />
         <LOSSSRule name="MarshToLevel3" type="terrainToElevationMap" fromValue="Marsh" toValue="3" />
         <LOSSSRule name="MarshToLevel4" type="terrainToElevationMap" fromValue="Marsh" toValue="4" />
-		<LOSSSRule name="Marsh_1ToLevel_1" type="terrainToElevationMap" fromValue="Marsh_1" toValue="-1" />
-		<LOSSSRule name="Marsh0ToLevel0" type="terrainToElevationMap" fromValue="Marsh0" toValue="0" />
+		<LOSSSRule name="Marsh_1ToLevel_1" type="terrainToSelectElevationMap" fromValue="Marsh" toValue="-1" />
+		<LOSSSRule name="Marsh0ToLevel0" type="terrainToSelectElevationMap" fromValue="Marsh" toValue="0" />
         <LOSSSRule name="MarshToBrush" type="terrainMap" fromValue="Marsh" toValue="Brush" />
         <LOSSSRule name="MarshToWoods" type="terrainMap" fromValue="Marsh" toValue="Woods" />
         <LOSSSRule name="MarshToGrain" type="terrainMap" fromValue="Marsh" toValue="Grain" />

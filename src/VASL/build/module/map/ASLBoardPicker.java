@@ -606,7 +606,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             try {
                 buildBoard(b, "0\t0\t" + name);
             } catch (BoardException e) {
-                ErrorDialog.dataWarning(new BadDataReport("Unable to build board", name, e));
+                e = null;
+                ErrorDialog.dataWarning(new BadDataReport("Unable to find board", name, e));
             }
         }
         if (enableDeluxe) {
@@ -1886,6 +1887,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 model.addElement("Brush");
                 model.addElement("Grain");
                 model.addElement("Marsh");
+                model.addElement("Marsh -1");
+                model.addElement("Marsh 0");
                 model.addElement("Level -1");
                 model.addElement("Level 1");
                 model.addElement("Level 2");
