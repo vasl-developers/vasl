@@ -16,6 +16,7 @@
  */
 package VASL.LOS.Map;
 
+import VASL.build.module.ASLMap;
 import VASL.build.module.map.boardArchive.BoardArchive;
 import VASL.build.module.map.boardArchive.RBrrembankments;
 import VASL.build.module.map.boardArchive.PartialOrchards;
@@ -25,6 +26,7 @@ import VASL.LOS.VASLGameInterface;
 import VASL.LOS.counters.OBA;
 import VASL.LOS.counters.Smoke;
 import VASL.LOS.counters.Vehicle;
+import VASSAL.build.module.map.boardPicker.Board;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
@@ -522,6 +524,27 @@ public class Map  {
 
                     return hex;
                 }
+            }
+        }
+
+        return null;
+    }
+    // this version of the method is used by the OBA window to add an OBO location to the losdata
+    public Hex getHex(String name, ASLMap aslmap) {
+
+        for (int col = 0; col < hexGrid.length; col++) {
+            for (int row = 0; row < hexGrid[col].length; row++) {
+
+                Hex hex = getHex(col, row);
+                Point p = new Point( (int)hex.getHexCenter().x + (int)aslmap.getEdgeBuffer().getWidth(),(int) hex.getHexCenter().y + (int)aslmap.getEdgeBuffer().getHeight() );
+                Board b = aslmap.findBoard(p);
+                if (b != null) {
+                    String hexname = b.getLocalizedName() + hex.getName();
+                    if (hexname.equalsIgnoreCase(name)) {
+                        return hex;
+                    }
+                }
+
             }
         }
 

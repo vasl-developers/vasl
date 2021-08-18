@@ -40,11 +40,13 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
+import VASL.LOS.Map.Hex;
 import VASSAL.build.AbstractBuildable;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.Chatter;
 import VASSAL.build.module.GameComponent;
+import VASSAL.build.module.Map;
 import VASSAL.command.Command;
 import VASSAL.command.CommandEncoder;
 import VASSAL.command.NullCommand;
@@ -96,6 +98,7 @@ public class OBA extends AbstractBuildable
 		};
 		launch = new LaunchButton("OBA", null, HOTKEY, al);
 		launch.setEnabled(false);
+
 	}
 
 	@Override
@@ -103,6 +106,7 @@ public class OBA extends AbstractBuildable
 		GameModule.getGameModule().getToolBar().add(launch);
 		GameModule.getGameModule().getGameState().addGameComponent(this);
 		GameModule.getGameModule().addCommandEncoder(this);
+
 	}
 
 	@Override
@@ -371,6 +375,8 @@ public class OBA extends AbstractBuildable
 		private String showing = "";
 		private int nRed = 3;
 		private int nBlack = 8;
+		private String obohex = "";
+		private int obolevel = 0;
 
 		private ModuleControls controls;
 
@@ -436,6 +442,14 @@ public class OBA extends AbstractBuildable
 			label = s;
 		}
 
+		public String getObohex() {return obohex;}
+
+		public void setObohex(String s) {obohex = s;}
+
+		public int getObolevel() {return obolevel;}
+
+		public void setObolevel(int i) {obolevel=i;}
+
 
 		public ModuleControls getControls() {
 			return controls;
@@ -444,7 +458,7 @@ public class OBA extends AbstractBuildable
 
 		public String getState() {
 			final SequenceEncoder se = new SequenceEncoder(',');
-			se.append(owner).append(label).append(nRed).append(nBlack).append(showing);
+			se.append(owner).append(label).append(nRed).append(nBlack).append(showing).append(obohex).append(obolevel);
 			return se.getValue();
 		}
 
@@ -456,6 +470,8 @@ public class OBA extends AbstractBuildable
 			nRed = Integer.parseInt(st.nextToken());
 			nBlack = Integer.parseInt(st.nextToken());
 			showing = st.nextToken();
+			obohex = st.nextToken();
+			obolevel = Integer.parseInt(st.nextToken());
 
 			controls.refresh();
 		}
@@ -478,7 +494,9 @@ public class OBA extends AbstractBuildable
 		private JTextField label;
 		private Module mod;
 		private DeckView view;
-
+		private JTextField obohex;
+		private JTextField obolevel;
+		private JButton obosave;
 
 		public ModuleControls(Module m) {
 			mod = m;
@@ -520,6 +538,18 @@ public class OBA extends AbstractBuildable
 			label.addFocusListener(updateOnFocus);
 			label.setEditable(mod.getOwner().equals(GameModule.getUserId()));
 
+			obohex = new JTextField(10);
+			obohex.setMaximumSize(obohex.getPreferredSize());
+			obohex.addActionListener(updateOnAction);
+			obohex.addFocusListener(updateOnFocus);
+			obohex.setEditable(mod.getOwner().equals(GameModule.getUserId()));
+
+			obolevel = new JTextField(2);
+			obolevel.setMaximumSize(obolevel.getPreferredSize());
+			obolevel.addActionListener(updateOnAction);
+			obolevel.addFocusListener(updateOnFocus);
+			obolevel.setEditable(mod.getOwner().equals(GameModule.getUserId()));
+
 			final Box vBox = Box.createVerticalBox();
 			final Box hBox = Box.createHorizontalBox();
 			hBox.add(new JLabel("black/red:"));
@@ -528,6 +558,28 @@ public class OBA extends AbstractBuildable
 			vBox.add(hBox);
 			vBox.add(label);
 			add(vBox);
+
+			final Box voboBox = Box.createVerticalBox();
+			final Box hoboBox = Box.createHorizontalBox();
+			final Box hobo2Box = Box.createHorizontalBox();
+			hoboBox.add(new JLabel("OBO Hex:"));
+			hoboBox.add(obohex);
+			voboBox.add(hoboBox);
+			hobo2Box.add(new JLabel("OBO Level:"));
+			hobo2Box.add(obolevel);
+			voboBox.add(hobo2Box);
+			add(voboBox);
+
+			obosave = new JButton("Add OBO");
+			obosave.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent evt) {
+					final AddOffBObserver aOBO = new AddOffBObserver(obohex.getText(), Integer.parseInt(obolevel.getText()));
+					aOBO.execute();
+					GameModule.getGameModule().sendAndLog(aOBO);
+				}
+			});
+			add(obosave);
 		}
 
 
@@ -540,6 +592,8 @@ public class OBA extends AbstractBuildable
 			red.setText(Integer.toString(mod.getRed()));
 			black.setText(Integer.toString(mod.getBlack()));
 			label.setText(mod.getLabel());
+			obohex.setText(mod.getObohex());
+			obolevel.setText(Integer.toString(mod.getObolevel()));
 			view.refresh();
 		}
 
@@ -547,6 +601,9 @@ public class OBA extends AbstractBuildable
 		public void valuesUpdated() {
 			final String oldState = mod.getState();
 			mod.setLabel(label.getText());
+			mod.setObohex(obohex.getText());
+			mod.setObolevel(Integer.parseInt(obolevel.getText()));
+			if (!mod.getObohex().equals("")) {obosave.doClick();}
 			try {
 				final int r = Integer.parseInt(red.getText());
 				final int b = Integer.parseInt(black.getText());
@@ -685,6 +742,31 @@ public class OBA extends AbstractBuildable
 			return (new Dimension((boxX + 4)
 				* (mod.getRed() + mod.getBlack() + mod.getShowing().length() + 3)
 				, 2 * (boxY + 4)));
+		}
+	}
+
+	public static class AddOffBObserver extends Command {
+		private int obolevel;
+		private String obohex;
+		private VASL.LOS.Map.Map LOSMap;
+
+		public AddOffBObserver(String obohex, int obolevel) {
+			this.obolevel = obolevel;
+			this.obohex = obohex;
+			//this.newState = newState;
+		}
+
+		@Override
+		public void executeCommand() {
+			ASLMap map = GameModule.getGameModule().getComponentsOf(ASLMap.class).iterator().next();
+			LOSMap = map.getVASLMap();
+			Hex hex = LOSMap.getHex(obohex, map);
+			hex.setOBO(obolevel);
+		}
+
+		@Override
+		protected Command myUndoCommand() {
+			return null;
 		}
 	}
 }

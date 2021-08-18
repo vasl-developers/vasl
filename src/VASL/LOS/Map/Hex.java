@@ -1003,7 +1003,6 @@ public class Hex {
      */
     private void setDepressionTerrain(){
 
-        //code replaced by DR
         if (centerLocation.getTerrain().isDepression()){
             centerLocation.setDepressionTerrain(centerLocation.getTerrain());
         }
@@ -1096,13 +1095,10 @@ public class Hex {
 	public Location getHexsideLocation(int hexside){
         //test code wrapped around return line to avoid break; DR
         if (!(hexside ==-1)) {
-
-
             return hexsideLocations[hexside];
         }
         else {
-            int reggie=0;
-            return hexsideLocations[reggie];
+            return hexsideLocations[0];
         }
 
 	}
@@ -1459,12 +1455,23 @@ public class Hex {
 
     public void resetHexFlags() {setHexFlags();}
 
-    //added by DR to support cropping
-    //public void restHexPoints(int offsetadj) {
-	//    center.x=center.x-offsetadj;
-    //    center = fixMapEdgePoints(center.getX(), center.getY());
+    //added by DR to support OffBoardObservers
+    public void setOBO(int OBOlevel) {
+        Terrain terrain = map.getTerrain("OffBObserver");
+        final Location l = new Location(
+                centerLocation.getName() + " OffBObserver",
+                OBOlevel,
+                centerLocation.getLOSPoint(),
+                centerLocation.getLOSPoint(),
+                null,
+                this,
+                terrain
+        );
 
-    //}
+        centerLocation.setUpLocation(l);
+        l.setDownLocation(centerLocation);
+
+    }
 
 
 }
