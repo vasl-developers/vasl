@@ -238,6 +238,17 @@ public class OBA extends AbstractBuildable
 		return c;
 	}
 
+	public void checkforOBO(){
+		int modcount = getModuleCount();
+		for (int i = 0; i < modcount; ++i) {
+			Module mod = getModuleAt(i);
+			if (!mod.getObohex().equals("")){
+				mod.getControls().obosave.doClick();
+
+			}
+		}
+	}
+
 
 	public static class UpdateModule extends Command {
 		private String oldState;
@@ -302,6 +313,7 @@ public class OBA extends AbstractBuildable
 			this.newState = newState;
 			mod = new Module(oba);
 			mod.setState(newState);
+
 		}
 
 		@Override
@@ -385,6 +397,7 @@ public class OBA extends AbstractBuildable
 			this.oba = oba;
 			owner = GameModule.getUserId();
 			controls = new ModuleControls(this);
+
 		}
 
 
@@ -574,7 +587,7 @@ public class OBA extends AbstractBuildable
 			obosave.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent evt) {
-					final AddOffBObserver aOBO = new AddOffBObserver(obohex.getText(), Integer.parseInt(obolevel.getText()));
+					final AddOffBObserver aOBO = new AddOffBObserver(mod.obohex, mod.obolevel);
 					aOBO.execute();
 					GameModule.getGameModule().sendAndLog(aOBO);
 				}
@@ -592,7 +605,7 @@ public class OBA extends AbstractBuildable
 			red.setText(Integer.toString(mod.getRed()));
 			black.setText(Integer.toString(mod.getBlack()));
 			label.setText(mod.getLabel());
-			obohex.setText(mod.getObohex());
+			//obohex.setText(mod.getObohex());
 			obolevel.setText(Integer.toString(mod.getObolevel()));
 			view.refresh();
 		}
@@ -601,9 +614,15 @@ public class OBA extends AbstractBuildable
 		public void valuesUpdated() {
 			final String oldState = mod.getState();
 			mod.setLabel(label.getText());
-			mod.setObohex(obohex.getText());
-			mod.setObolevel(Integer.parseInt(obolevel.getText()));
-			if (!mod.getObohex().equals("")) {obosave.doClick();}
+			if (!(obohex.getText().equals(""))){
+				mod.setObohex(obohex.getText());
+			}
+			if (!(obohex.getText().equals(""))){
+				mod.setObolevel(Integer.parseInt(obolevel.getText()));
+			}
+			if (!(obohex.getText().equals(""))) {
+				obosave.doClick();
+			}
 			try {
 				final int r = Integer.parseInt(red.getText());
 				final int b = Integer.parseInt(black.getText());

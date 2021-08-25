@@ -1472,6 +1472,22 @@ public class Hex {
         l.setDownLocation(centerLocation);
 
     }
+    public void setvirtualLocation(double newlevel, Location currentLocation) {
+        Terrain terrain = map.getTerrain("Open Ground");
+        final Location l = new Location(
+                centerLocation.getName() + " Virtual Location",
+                (int) newlevel,
+                centerLocation.getLOSPoint(),
+                centerLocation.getLOSPoint(),
+                null,
+                this,
+                terrain
+        );
+
+        currentLocation.setUpLocation(l);
+        l.setDownLocation(currentLocation);
+
+    }
 
 
 }

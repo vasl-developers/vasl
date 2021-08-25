@@ -25,7 +25,9 @@ import VASL.build.module.map.boardArchive.SharedBoardMetadata;
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASL.build.module.map.boardPicker.BoardException;
 import VASL.build.module.map.boardPicker.VASLBoard;
+import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
+import VASSAL.build.module.GameComponent;
 import VASSAL.build.module.Map;
 import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.configure.BooleanConfigurer;
@@ -191,7 +193,16 @@ public class ASLMap extends Map {
         }
         GameModule.getGameModule().warn(info);
         buildVASLMap();
-
+        // Add OBObserver location
+        if (VASLMap!=null){
+            for (GameComponent gc: GameModule.getGameModule().getGameState().getGameComponents()){
+                String classname = gc.getClass().getName();
+                if (gc.getClass().getName() =="VASL.build.module.OBA" ){
+                    OBA oba = (OBA) gc;
+                    oba.checkforOBO();
+                }
+            }
+        }
 
     }
 

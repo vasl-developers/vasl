@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <VASSAL.build.GameModule ModuleOther1="" ModuleOther2="" VassalVersion="3.5.5" description="Virtual Advanced Squad Leader" name="VASL" nextPieceSlotId="13774" version="6.6.3-beta2">
-    <VASL.build.module.OBA hotkey="117,0"/>
     <VASL.build.module.ScenInfo/>
     <VASL.build.module.CounterPaletteSearch/>
     <VASSAL.build.module.GlobalOptions autoReport="Use Preferences Setting" centerOnMove="Use Preferences Setting" chatterHTMLSupport="Never" nonOwnerUnmaskable="Use Preferences Setting" playerIdFormat="$playerName$" promptString="Let opponent unconceal my units" specifyExtensionDirInPrefs="true">
@@ -29,6 +28,7 @@
         <VASL.build.module.map.VASLThread drawRange="true" global="Always" hideCounters="true" hideOpacity="0" hotkey="121,0" iconName="/images/thread.gif" label="L" persistence="Never" persistentIconName="" rangeBg="0,0,0" rangeFg="255,255,255" report="$playerId$ Checked LOS from $FromLocation$ to $ToLocation$, Range=$Range$" round="Nearest whole number" scale="0" snapEnd="false" snapStart="false" threadColor="0,0,0" threadName="LOS" tooltip="Draw LOS Thread"/>
         <VASL.build.module.map.VASLThread drawRange="true" global="Never" hideCounters="true" hideOpacity="0" hotkey="121,195" iconName="/images/thread.gif" label="l" persistence="Never" persistentIconName="" rangeBg="255,255,255" rangeFg="0,0,0" report="$playerId$ Checked LOS" round="Nearest whole number" scale="0" snapEnd="false" snapStart="false" threadColor="255,40,39" threadName="los" tooltip="Draw silent LOS"/>
         <VASSAL.build.module.map.Zoomer inButtonText="" inIconName="/images/zoomIn.gif" inTooltip="Zoom in" outButtonText="" outIconName="/images/zoomOut.gif" outTooltip="Zoom out" pickButtonText="" pickIconName="/images/zoom.png" pickTooltip="Select Zoom" zoomInKey="114,0" zoomLevels="0.19753086419753085,0.2962962962962963,0.4444444444444444,0.6666666666666666,1.0,1.5" zoomOutKey="115,0" zoomPickKey="" zoomStart="3"/>
+        <VASL.build.module.OBA hotkey="117,0"/>
         <VASL.build.module.map.MassRemover>
             <entry name=" - ">-</entry>
             <entry name="DM">DM</entry>

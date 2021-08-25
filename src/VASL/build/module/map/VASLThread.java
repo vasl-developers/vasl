@@ -804,97 +804,92 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         final int code = e.getKeyCode();
         // move up
         if (code == KeyEvent.VK_KP_UP || code == KeyEvent.VK_UP) {
-
             e.consume(); // prevents the map from scrolling when trying to move end point
             double leveladj=0;
             // move the source up
             if (e.isControlDown() && source != null) {
                 if (source.getUpLocation() != null) {
                     source = source.getUpLocation();
-
-                    leveladj=0;
-                    if(source.getName().contains("Rooftop")) {
-                        if (!source.getDownLocation().getTerrain().getName().equals("Wooden Building")) {  // exception to handle Wooden Warehouses in bdRO
-                            leveladj = -0.5;
-                        }
-                    }
-                    if(source.getHex().isDepressionTerrain() && !source.isCenterLocation()) {
-                        leveladj=+1;
-                    }
-                    sourcelevel= source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj ;
-                    doLOS();
-                    map.repaint();
                 }else {
-                    return;
+                    source.getHex().setvirtualLocation(sourcelevel + 1, source);
+                    source = source.getUpLocation();
                 }
+                leveladj=0;
+                if(source.getName().contains("Rooftop")) {
+                    if (!source.getDownLocation().getTerrain().getName().equals("Wooden Building")) {  // exception to handle Wooden Warehouses in bdRO
+                        leveladj = -0.5;
+                    }
+                }
+                if(source.getHex().isDepressionTerrain() && !source.isCenterLocation()) {
+                    leveladj=+1;
+                }
+                sourcelevel= source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj ;
+                doLOS();
+                map.repaint();
             }
             // move the target up
             else if (target != null) {
                 if (target.getUpLocation() != null) {
                     target = target.getUpLocation();
-
-                    leveladj=0;
-                    if(target.getName().contains("Rooftop")) {
-                        if (!target.getDownLocation().getTerrain().getName().equals("Wooden Building")) {  // exception to handle Wooden Warehouses in bdRO
-                            leveladj = -0.5;
-                        }
-                    }
-                    if(target.getHex().isDepressionTerrain() && !target.isCenterLocation()) {
-                        leveladj=+1;
-                    }
-                    targetlevel= target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj ;
-                    doLOS();
-                    map.repaint();
-                } else {
-                    return;
+                }else {
+                    target.getHex().setvirtualLocation(targetlevel + 1, target);
+                    target = target.getUpLocation();
                 }
-
+                leveladj=0;
+                if(target.getName().contains("Rooftop")) {
+                    if (!target.getDownLocation().getTerrain().getName().equals("Wooden Building")) {  // exception to handle Wooden Warehouses in bdRO
+                        leveladj = -0.5;
+                    }
+                }
+                if(target.getHex().isDepressionTerrain() && !target.isCenterLocation()) {
+                    leveladj=+1;
+                }
+                targetlevel= target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj ;
+                doLOS();
+                map.repaint();
             }
         }
-
         // move down
         else if (code == KeyEvent.VK_KP_DOWN || code == KeyEvent.VK_DOWN) {
-
             e.consume();
             double leveladj=0;
             // move the source down
             if (e.isControlDown() && source != null) {
                 if (source.getDownLocation() != null) {
                     source = source.getDownLocation();
-
-                    leveladj=0;
-                    if(source.getName().contains("Rooftop")) {
-                        leveladj=-0.5;
-                    }
-                    if(source.getHex().isDepressionTerrain() && !source.isCenterLocation()) {
-                        leveladj=+1;
-                    }
-                    sourcelevel= source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj ;
-                    doLOS();
-                    map.repaint();
-                } else {
-                    return;
+                }else {
+                    source.getHex().setvirtualLocation(sourcelevel - 1, source);
+                    source = source.getDownLocation();
                 }
+                leveladj=0;
+                if(source.getName().contains("Rooftop")) {
+                    leveladj=-0.5;
+                }
+                if(source.getHex().isDepressionTerrain() && !source.isCenterLocation()) {
+                    leveladj=+1;
+                }
+                sourcelevel= source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj ;
+                doLOS();
+                map.repaint();
             }
             // move the target down
             else if (target != null) {
                 if (target.getDownLocation() != null) {
                     target = target.getDownLocation();
-
-                    leveladj=0;
-                    if(target.getName().contains("Rooftop")) {
-                        leveladj=-0.5;
-                    }
-                    if(target.getHex().isDepressionTerrain() && !target.isCenterLocation()) {
-                        leveladj=+1;
-                    }
-                    targetlevel= target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj ;
-                     doLOS();
-                    map.repaint();
-
-                } else {
-                    return;
+                }else {
+                    target.getHex().setvirtualLocation(targetlevel - 1, target);
+                    target = target.getDownLocation();
                 }
+                leveladj=0;
+                if(target.getName().contains("Rooftop")) {
+                    leveladj=-0.5;
+                }
+                if(target.getHex().isDepressionTerrain() && !target.isCenterLocation()) {
+                    leveladj=+1;
+                }
+                targetlevel= target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj ;
+                doLOS();
+                map.repaint();
             }
         }
         else {
