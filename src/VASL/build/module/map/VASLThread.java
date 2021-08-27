@@ -810,8 +810,8 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             if (e.isControlDown() && source != null) {
                 if (source.getUpLocation() != null) {
                     source = source.getUpLocation();
-                }else {
-                    source.getHex().setvirtualLocation(sourcelevel + 1, source);
+                }else if (source.getBaseHeight()<10) {
+                    source.getHex().setvirtualLocation(source.getBaseHeight() + 1, source, "Up");
                     source = source.getUpLocation();
                 }
                 leveladj=0;
@@ -831,8 +831,8 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             else if (target != null) {
                 if (target.getUpLocation() != null) {
                     target = target.getUpLocation();
-                }else {
-                    target.getHex().setvirtualLocation(targetlevel + 1, target);
+                }else if (target.getBaseHeight()<10){
+                    target.getHex().setvirtualLocation( target.getBaseHeight()+1, target, "Up");
                     target = target.getUpLocation();
                 }
                 leveladj=0;
@@ -857,8 +857,8 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             if (e.isControlDown() && source != null) {
                 if (source.getDownLocation() != null) {
                     source = source.getDownLocation();
-                }else {
-                    source.getHex().setvirtualLocation(sourcelevel - 1, source);
+                }else if (source.getBaseHeight()>-3){
+                    source.getHex().setvirtualLocation(source.getBaseHeight() - 1, source, "Down");
                     source = source.getDownLocation();
                 }
                 leveladj=0;
@@ -876,8 +876,8 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             else if (target != null) {
                 if (target.getDownLocation() != null) {
                     target = target.getDownLocation();
-                }else {
-                    target.getHex().setvirtualLocation(targetlevel - 1, target);
+                }else if (target.getBaseHeight()>-3){
+                    target.getHex().setvirtualLocation(target.getBaseHeight() - 1, target, "Down");
                     target = target.getDownLocation();
                 }
                 leveladj=0;

@@ -1472,10 +1472,18 @@ public class Hex {
         l.setDownLocation(centerLocation);
 
     }
-    public void setvirtualLocation(double newlevel, Location currentLocation) {
+    public void setvirtualLocation(double newlevel, Location currentLocation, String direction) {
         Terrain terrain = map.getTerrain("Open Ground");
+        String virtuallabel;
+        if (newlevel== 10 ) {
+            virtuallabel = " Aerial LOS";
+        }else if (newlevel ==-3){
+            virtuallabel = " Bedrock!";
+        } else {
+            virtuallabel = " Virtual Location";
+        }
         final Location l = new Location(
-                centerLocation.getName() + " Virtual Location",
+                centerLocation.getName() + virtuallabel,
                 (int) newlevel,
                 centerLocation.getLOSPoint(),
                 centerLocation.getLOSPoint(),
@@ -1483,10 +1491,13 @@ public class Hex {
                 this,
                 terrain
         );
-
-        currentLocation.setUpLocation(l);
-        l.setDownLocation(currentLocation);
-
+        if (direction.equals("Up")) {
+            currentLocation.setUpLocation(l);
+            l.setDownLocation(currentLocation);
+        } else {
+            currentLocation.setDownLocation(l);
+            l.setUpLocation(currentLocation);
+        }
     }
 
 

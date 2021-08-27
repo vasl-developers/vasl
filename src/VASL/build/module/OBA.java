@@ -510,6 +510,7 @@ public class OBA extends AbstractBuildable
 		private JTextField obohex;
 		private JTextField obolevel;
 		private JButton obosave;
+		private JLabel savetext;
 
 		public ModuleControls(Module m) {
 			mod = m;
@@ -553,15 +554,19 @@ public class OBA extends AbstractBuildable
 
 			obohex = new JTextField(10);
 			obohex.setMaximumSize(obohex.getPreferredSize());
-			obohex.addActionListener(updateOnAction);
-			obohex.addFocusListener(updateOnFocus);
+			//obohex.addActionListener(updateOnAction);
+			//obohex.addFocusListener(updateOnFocus);
 			obohex.setEditable(mod.getOwner().equals(GameModule.getUserId()));
 
 			obolevel = new JTextField(2);
 			obolevel.setMaximumSize(obolevel.getPreferredSize());
-			obolevel.addActionListener(updateOnAction);
-			obolevel.addFocusListener(updateOnFocus);
+			//obolevel.addActionListener(updateOnAction);
+			//obolevel.addFocusListener(updateOnFocus);
 			obolevel.setEditable(mod.getOwner().equals(GameModule.getUserId()));
+
+			savetext = new JLabel("Saved");
+			savetext.setMaximumSize(savetext.getPreferredSize());
+			savetext.setVisible(false);
 
 			final Box vBox = Box.createVerticalBox();
 			final Box hBox = Box.createHorizontalBox();
@@ -587,12 +592,20 @@ public class OBA extends AbstractBuildable
 			obosave.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent evt) {
+					savetext.setVisible(true);
+					valuesUpdated();
 					final AddOffBObserver aOBO = new AddOffBObserver(mod.obohex, mod.obolevel);
 					aOBO.execute();
 					GameModule.getGameModule().sendAndLog(aOBO);
 				}
 			});
-			add(obosave);
+
+			final Box svBox = Box.createVerticalBox();
+			final Box shBox = Box.createHorizontalBox();
+			svBox.add(obosave);
+			svBox.add(savetext);
+			shBox.add(svBox);
+			add(shBox);
 		}
 
 
@@ -620,9 +633,9 @@ public class OBA extends AbstractBuildable
 			if (!(obohex.getText().equals(""))){
 				mod.setObolevel(Integer.parseInt(obolevel.getText()));
 			}
-			if (!(obohex.getText().equals(""))) {
-				obosave.doClick();
-			}
+			//if (!(obohex.getText().equals(""))) {
+			//	obosave.doClick();
+			//}
 			try {
 				final int r = Integer.parseInt(red.getText());
 				final int b = Integer.parseInt(black.getText());
