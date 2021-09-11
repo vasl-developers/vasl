@@ -19,10 +19,7 @@
 
 package VASL.build.module;
 
-import java.awt.Canvas;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -31,14 +28,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Random;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.WindowConstants;
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EtchedBorder;
 
 import VASL.LOS.Map.Hex;
 import VASSAL.build.AbstractBuildable;
@@ -75,6 +67,7 @@ public class OBA extends AbstractBuildable
 
 		controls = new JPanel();
 		controls.setLayout(new BoxLayout(controls, BoxLayout.Y_AXIS));
+
 		frame.getContentPane().add(controls);
 
 		final JButton b = new JButton("Add Module");
@@ -505,6 +498,8 @@ public class OBA extends AbstractBuildable
 		private JTextField red;
 		private JTextField black;
 		private JTextField label;
+		private JLabel modname;
+		private JLabel brnumbers;
 		private Module mod;
 		private DeckView view;
 		private JTextField obohex;
@@ -513,12 +508,11 @@ public class OBA extends AbstractBuildable
 		private JLabel savetext;
 
 		public ModuleControls(Module m) {
+			Border titledBorder = BorderFactory.createTitledBorder("OBA Module");
+			setBorder(titledBorder);
 			mod = m;
-
 			setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-			view = new DeckView(mod);
 
-			add(view);
 
 			final FocusAdapter updateOnFocus = new FocusAdapter() {
 				@Override
@@ -546,22 +540,26 @@ public class OBA extends AbstractBuildable
 			black.addFocusListener(updateOnFocus);
 			black.setEditable(mod.getOwner().equals(GameModule.getUserId()));
 
-			label = new JTextField(10);
+			label = new JTextField(5);
 			label.setMaximumSize(new Dimension(label.getMaximumSize().width, label.getPreferredSize().height));
 			label.addActionListener(updateOnAction);
 			label.addFocusListener(updateOnFocus);
 			label.setEditable(mod.getOwner().equals(GameModule.getUserId()));
 
-			obohex = new JTextField(10);
+			modname = new JLabel("Module Name:   ");
+			modname.setMaximumSize(modname.getPreferredSize());
+			modname.setVisible(true);
+
+			brnumbers = new JLabel("Draw Pile (B/R): ");
+			brnumbers.setMaximumSize(brnumbers.getPreferredSize());
+			brnumbers.setVisible(true);
+
+			obohex = new JTextField(5);
 			obohex.setMaximumSize(obohex.getPreferredSize());
-			//obohex.addActionListener(updateOnAction);
-			//obohex.addFocusListener(updateOnFocus);
 			obohex.setEditable(mod.getOwner().equals(GameModule.getUserId()));
 
 			obolevel = new JTextField(2);
 			obolevel.setMaximumSize(obolevel.getPreferredSize());
-			//obolevel.addActionListener(updateOnAction);
-			//obolevel.addFocusListener(updateOnFocus);
 			obolevel.setEditable(mod.getOwner().equals(GameModule.getUserId()));
 
 			savetext = new JLabel("Saved");
@@ -570,24 +568,31 @@ public class OBA extends AbstractBuildable
 
 			final Box vBox = Box.createVerticalBox();
 			final Box hBox = Box.createHorizontalBox();
-			hBox.add(new JLabel("black/red:"));
-			hBox.add(black);
-			hBox.add(red);
+			hBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+			final Box hBox2 = Box.createHorizontalBox();
+			hBox2.setAlignmentX(Component.LEFT_ALIGNMENT);
+			hBox.add(modname);
+			hBox.add(label);
 			vBox.add(hBox);
-			vBox.add(label);
+			hBox2.add(brnumbers);
+			hBox2.add(black);
+			hBox2.add(red);
+			vBox.add(hBox2);
 			add(vBox);
-
+			add(Box.createRigidArea(new Dimension(10,0)));
 			final Box voboBox = Box.createVerticalBox();
 			final Box hoboBox = Box.createHorizontalBox();
+			hoboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 			final Box hobo2Box = Box.createHorizontalBox();
-			hoboBox.add(new JLabel("OBO Hex:"));
+			hobo2Box.setAlignmentX(Component.LEFT_ALIGNMENT);
+			hoboBox.add(new JLabel("OBO Hex:   "));
 			hoboBox.add(obohex);
 			voboBox.add(hoboBox);
-			hobo2Box.add(new JLabel("OBO Level:"));
+			hobo2Box.add(new JLabel("OBO Level: "));
 			hobo2Box.add(obolevel);
 			voboBox.add(hobo2Box);
 			add(voboBox);
-
+			add(Box.createRigidArea(new Dimension(10,0)));
 			obosave = new JButton("Add OBO");
 			obosave.addActionListener(new ActionListener() {
 				@Override
@@ -602,10 +607,17 @@ public class OBA extends AbstractBuildable
 
 			final Box svBox = Box.createVerticalBox();
 			final Box shBox = Box.createHorizontalBox();
+			shBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 			svBox.add(obosave);
 			svBox.add(savetext);
 			shBox.add(svBox);
 			add(shBox);
+
+			view = new DeckView(mod);
+
+			add(view);
+			add(Box.createRigidArea(new Dimension(20,0)));
+
 		}
 
 
@@ -618,7 +630,6 @@ public class OBA extends AbstractBuildable
 			red.setText(Integer.toString(mod.getRed()));
 			black.setText(Integer.toString(mod.getBlack()));
 			label.setText(mod.getLabel());
-			//obohex.setText(mod.getObohex());
 			obolevel.setText(Integer.toString(mod.getObolevel()));
 			view.refresh();
 		}
@@ -633,9 +644,7 @@ public class OBA extends AbstractBuildable
 			if (!(obohex.getText().equals(""))){
 				mod.setObolevel(Integer.parseInt(obolevel.getText()));
 			}
-			//if (!(obohex.getText().equals(""))) {
-			//	obosave.doClick();
-			//}
+
 			try {
 				final int r = Integer.parseInt(red.getText());
 				final int b = Integer.parseInt(black.getText());
@@ -683,7 +692,9 @@ public class OBA extends AbstractBuildable
 
 		public void refresh() {
 			setSize(getPreferredSize());
+			mod.getOba().frame.pack();
 			repaint();
+
 		}
 
 		@Override
@@ -772,7 +783,7 @@ public class OBA extends AbstractBuildable
 		@Override
 		public Dimension getPreferredSize() {
 			return (new Dimension((boxX + 4)
-				* (mod.getRed() + mod.getBlack() + mod.getShowing().length() + 3)
+				* (mod.getRed() + mod.getBlack() + mod.getShowing().length() + 3) + 30
 				, 2 * (boxY + 4)));
 		}
 	}
@@ -785,7 +796,7 @@ public class OBA extends AbstractBuildable
 		public AddOffBObserver(String obohex, int obolevel) {
 			this.obolevel = obolevel;
 			this.obohex = obohex;
-			//this.newState = newState;
+
 		}
 
 		@Override
