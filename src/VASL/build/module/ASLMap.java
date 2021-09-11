@@ -25,14 +25,18 @@ import VASL.build.module.map.boardArchive.SharedBoardMetadata;
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASL.build.module.map.boardPicker.BoardException;
 import VASL.build.module.map.boardPicker.VASLBoard;
+import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
+import VASSAL.build.module.GameComponent;
 import VASSAL.build.module.Map;
 import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.configure.BooleanConfigurer;
 import VASSAL.configure.ColorConfigurer;
+import VASSAL.configure.DirectoryConfigurer;
 import VASSAL.counters.GamePiece;
 import VASSAL.counters.Properties;
 import VASSAL.counters.Stack;
+import VASSAL.launch.PlayerWindow;
 import VASSAL.tools.DataArchive;
 import VASSAL.tools.ErrorDialog;
 import VASSAL.tools.imageop.Op;
@@ -46,6 +50,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
@@ -66,7 +73,6 @@ public class ASLMap extends Map {
     private static final String sharedBoardMetadataFileName = "boardData/SharedBoardMetadata.xml"; // name of the shared board metadata file
     private static SharedBoardMetadata sharedBoardMetadata = null;
     private boolean legacyMode;                     // true if unable to create a VASL map or LOS data is missing
-
     // counter metadata
     private static CounterMetadataFile counterMetadata = null;
 
@@ -127,6 +133,8 @@ public class ASLMap extends Map {
     // background color preference
     final ColorConfigurer backgroundcolor = new ColorConfigurer("backcolor", "Set Color of space around Map (requires VASL restart)", Color.white);
     getGameModule().getPrefs().addOption(preferenceTabName, backgroundcolor);
+
+
 }
   
   /*
@@ -191,7 +199,16 @@ public class ASLMap extends Map {
         }
         GameModule.getGameModule().warn(info);
         buildVASLMap();
-
+        // Add OBObserver location
+        if (VASLMap!=null){
+            for (GameComponent gc: GameModule.getGameModule().getGameState().getGameComponents()){
+                String classname = gc.getClass().getName();
+                if (gc.getClass().getName() =="VASL.build.module.OBA" ){
+                    OBA oba = (OBA) gc;
+                    oba.checkforOBO();
+                }
+            }
+        }
 
     }
 
@@ -225,6 +242,8 @@ public class ASLMap extends Map {
     protected void buildVASLMap() {
         // set background color from preference
         super.bgColor = (Color) getGameModule().getPrefs().getValue("backcolor");
+        Boolean alwaysontop = Boolean.TRUE.equals(getGameModule().getPrefs().getValue("PWAlwaysOnTop"));
+        getGameModule().getPlayerWindow().setAlwaysOnTop(alwaysontop);
         repaint();
         legacyMode = false;
         boolean nullBoards = false; // are null boards being used?
