@@ -770,6 +770,7 @@ public class LOSDataEditor {
 
         // code added by DR to enable unlimited cropping
         String offset=boardArchive.getHexGridConfig();
+        if (offset==null){offset="Normal";}
         map = boardArchive.getLOSData(offset, false);
         if (map == null) {
 

@@ -35,21 +35,21 @@
 		<boarddata name="08" version="6.5" versionDate="Feb 2021" description="" />
 		<boarddata name="09" version="6.3" versionDate="Jul 2021" description="" />
 		<boarddata name="10" version="6.5" versionDate="Apr 2021" description="" />
-		<boarddata name="10z" version="6.5" versionDate="Apr 2021" description="" />
+		<boarddata name="10z" version="6.6" versionDate="Sep 2021" description="" />
 		<boarddata name="11" version="6.2" versionDate="Apr 2021" description="" />
-		<boarddata name="12" version="6.4" versionDate="Apr 2021" description="" />
+		<boarddata name="12" version="6.5" versionDate="Sep 2021" description="" />
 		<boarddata name="13" version="6.4" versionDate="Apr 2021" description="" />
 		<boarddata name="14" version="6.4" versionDate="Apr 2021" description="" />
 		<boarddata name="15" version="6.2" versionDate="Jul 2021" description="" />
 		<boarddata name="16" version="6.3" versionDate="Apr 2021" description="" />
 		<boarddata name="17" version="6.2" versionDate="Apr 2021" description="" />
 		<boarddata name="17z" version="6.2" versionDate="Apr 2021" description="" />
-		<boarddata name="18" version="6.3" versionDate="Apr 2021" description="" />
+		<boarddata name="18" version="6.4" versionDate="Sep 2021" description="" />
 		<boarddata name="19" version="6.3" versionDate="Apr 2021" description="" />
 		<boarddata name="20" version="6.9" versionDate="May 2021" description="" />
 		<boarddata name="21" version="6.2" versionDate="May 2021" description="" />
-		<boarddata name="22" version="6.5" versionDate="May 2021" description="" />
-		<boarddata name="23" version="6.3" versionDate="May 2021" description="" />
+		<boarddata name="22" version="6.6" versionDate="Sep 2021" description="" />
+		<boarddata name="23" version="6.4" versionDate="Sep 2021" description="" />
 		<boarddata name="24" version="6.8" versionDate="May 2021" description="" />
 		<boarddata name="25" version="6.6" versionDate="Jul 2021" description="" />
 		<boarddata name="25a" version="5.3" versionDate="May 2021" description="" />
@@ -60,22 +60,22 @@
 		<boarddata name="29" version="6.4" versionDate="May 2021" description="" />
 		<boarddata name="30" version="6.4" versionDate="May 2021" description="" />
 		<boarddata name="31" version="6.4" versionDate="May 2021" description="" />
-		<boarddata name="32" version="6.6" versionDate="May 2021" description="" />
+		<boarddata name="32" version="6.7" versionDate="Sep 2021" description="" />
 		<boarddata name="33" version="6.4" versionDate="May 2021" description="" />
 		<boarddata name="34" version="6.5" versionDate="May 2021" description="" />
 		<boarddata name="35" version="6.2" versionDate="May 2021" description="" />
-		<boarddata name="36" version="6.6" versionDate="May 2021" description="" />
+		<boarddata name="36" version="6.7" versionDate="Sep 2021" description="" />
 		<boarddata name="37" version="6.2" versionDate="May 2021" description="" />
 		<boarddata name="38" version="6.2" versionDate="May 2021" description="" />
-		<boarddata name="39" version="6.5" versionDate="Jul 2021" description="" />
-		<boarddata name="40" version="7.0" versionDate="May 2021" description="" />
-		<boarddata name="41" version="6.5" versionDate="May 2021" description="" />
+		<boarddata name="39" version="6.6" versionDate="Sep 2021" description="" />
+		<boarddata name="40" version="7.1" versionDate="Sep 2021" description="" />
+		<boarddata name="41" version="6.6" versionDate="Sep 2021" description="" />
 		<boarddata name="42" version="6.5" versionDate="May 2021" description="" />
 		<boarddata name="43" version="6.4" versionDate="May 2021" description="" />
 		<boarddata name="44" version="6.4" versionDate="May 2021" description="" />
 		<boarddata name="45" version="6.5" versionDate="May 2021" description="" />
 		<boarddata name="46" version="6.3" versionDate="May 2021" description="" />
-		<boarddata name="47" version="6.4" versionDate="May 2021" description="" />
+		<boarddata name="47" version="6.5" versionDate="Sep 2021" description="" />
 		<boarddata name="48" version="6.3" versionDate="May 2021" description="" />
 		<boarddata name="49" version="6.4" versionDate="May 2021" description="" />
 		<boarddata name="50" version="6.7" versionDate="Jul 2021" description="" />
@@ -83,7 +83,7 @@
 		<boarddata name="52" version="6.3" versionDate="May 2021" description="" />
 		<boarddata name="53" version="6.4" versionDate="May 2021" description="" />
 		<boarddata name="54" version="6.4" versionDate="May 2021" description="" />
-		<boarddata name="55" version="6.5" versionDate="May 2021" description="" />
+		<boarddata name="55" version="6.6" versionDate="Sep 2021" description="" />
 		<boarddata name="56" version="6.3" versionDate="May 2021" description="" />
 		<boarddata name="57" version="6.2" versionDate="May 2021" description="" />
 		<boarddata name="58" version="6.3" versionDate="May 2021" description="" />
@@ -104,7 +104,7 @@
 		<boarddata name="73" version="6.1" versionDate="Jun 2021" description="" />
 		<boarddata name="74" version="6.3" versionDate="Jun 2021" description="" />
 		<boarddata name="75" version="6.4" versionDate="Jun 2021" description="" />
-		<boarddata name="76" version="6.3" versionDate="Jun 2021" description="" />
+		<boarddata name="76" version="6.4" versionDate="Sep 2021" description="" />
 		<boarddata name="77" version="5.3" versionDate="Aug 2008" description="" />
 		<boarddata name="78" version="6.1" versionDate="Jun 2021" description="" />
 		<boarddata name="79" version="6.2" versionDate="Jun 2021" description="" />
@@ -117,38 +117,38 @@
 		<boarddata name="86" version="6.0" versionDate="Oct 2020" description="" />
 		<boarddata name="1a" version="6.2" versionDate="Jan 2021" description="" />
 		<boarddata name="1b" version="6.2" versionDate="Jan 2021" description="" />
-		<boarddata name="2a" version="6.5" versionDate="Jan 2021" description="" />
-		<boarddata name="2b" version="6.5" versionDate="Jan 2021" description="" />
+		<boarddata name="2a" version="6.6" versionDate="Sep 2021" description="" />
+		<boarddata name="2b" version="6.6" versionDate="Sep 2021" description="" />
 		<boarddata name="3a" version="6.6" versionDate="Jun 2021" description="" />
 		<boarddata name="3b" version="6.6" versionDate="Jun 2021" description="" />
-		<boarddata name="4a" version="6.5" versionDate="Jan 2021" description="" />
-		<boarddata name="4b" version="6.7" versionDate="Jan 2021" description="" />
-		<boarddata name="5a" version="6.4" versionDate="Feb 2021" description="" />
-		<boarddata name="5b" version="6.4" versionDate="Feb 2021" description="" />
-		<boarddata name="6a" version="6.4" versionDate="Nov 2020" description="" />
-		<boarddata name="6b" version="6.4" versionDate="Nov 2020" description="" />
+		<boarddata name="4a" version="6.6" versionDate="Sep 2021" description="" />
+		<boarddata name="4b" version="6.8" versionDate="Sep 2021" description="" />
+		<boarddata name="5a" version="6.5" versionDate="Sep 2021" description="" />
+		<boarddata name="5b" version="6.5" versionDate="Sep 2021" description="" />
+		<boarddata name="6a" version="6.6" versionDate="Sep 2021" description="" />
+		<boarddata name="6b" version="6.6" versionDate="Sep 2021" description="" />
 		<boarddata name="7a" version="6.3" versionDate="Feb 2021" description="" />
 		<boarddata name="7b" version="6.3" versionDate="Feb 2021" description="" />
-		<boarddata name="8a" version="6.6" versionDate="Feb 2021" description="" />
-		<boarddata name="8b" version="6.6" versionDate="Feb 2021" description="" />
+		<boarddata name="8a" version="6.7" versionDate="Sep 2021" description="" />
+		<boarddata name="8b" version="6.7" versionDate="Sep 2021" description="" />
 		<boarddata name="9a" version="6.2" versionDate="Apr 2021" description="" />
 		<boarddata name="9b" version="6.2" versionDate="Apr 2021" description="" />
 		<boarddata name="10a" version="6.3" versionDate="Apr 2021" description="" />
 		<boarddata name="10b" version="6.3" versionDate="Apr 2021" description="" />
 		<boarddata name="11a" version="6.2" versionDate="Mar 2020" description="" />
 		<boarddata name="11b" version="6.2" versionDate="Mar 2020" description="" />
-		<boarddata name="12a" version="6.0" versionDate="Mar 2020" description="" />
-		<boarddata name="12b" version="6.0" versionDate="Mar 2020" description="" />
+		<boarddata name="12a" version="6.1" versionDate="Sep 2021" description="" />
+		<boarddata name="12b" version="6.1" versionDate="Sep 2021" description="" />
 		<boarddata name="13a" version="6.0" versionDate="Mar 2020" description="" />
 		<boarddata name="13b" version="6.0" versionDate="Mar 2020" description="" />
 		<boarddata name="14a" version="6.0" versionDate="Jun 2021" description="" />
 		<boarddata name="14b" version="6.0" versionDate="Jun 2021" description="" />
-		<boarddata name="15a" version="6.1" versionDate="Apr 2021" description="" />
-		<boarddata name="15b" version="6.1" versionDate="Apr 2021" description="" />
+		<boarddata name="15a" version="6.2" versionDate="Sep 2021" description="" />
+		<boarddata name="15b" version="6.2" versionDate="Sep 2021" description="" />
 		<boarddata name="a" version="6.3" versionDate="Jun 2021" description="" />
 		<boarddata name="b" version="6.2" versionDate="Jun 2021" description="" />
 		<boarddata name="c" version="6.2" versionDate="Jun 2021" description="" />
-		<boarddata name="d" version="6.3" versionDate="Jun 2021" description="" />
+		<boarddata name="d" version="6.4" versionDate="Sep 2021" description="" />
 		<boarddata name="e" version="6.3" versionDate="Jun 2021" description="" />
 		<boarddata name="f" version="6.2" versionDate="Jun 2021" description="" />
 		<boarddata name="g" version="6.2" versionDate="Jun 2021" description="" />
@@ -179,12 +179,12 @@
 		<boarddata name="NUL" version="1" versionDate="Aug 2008" description="" />
 		<boarddata name="NULV" version="1" versionDate="Aug 2008" description="" />
 		<boarddata name="BFP1" version="6.2" versionDate="Jun 2021" description="" />
-		<boarddata name="BFP2" version="6.2" versionDate="Jun 2021" description="" />
+		<boarddata name="BFP2" version="6.3" versionDate="Sep 2021" description="" />
 		<boarddata name="BFPA" version="6.2" versionDate="Aug 2019" description="" />
 		<boarddata name="BFPB" version="6.2" versionDate="May 2019" description="" />
 		<boarddata name="BFPC" version="6.3" versionDate="Jun 2021" description="" />
 		<boarddata name="BFPD" version="6.2" versionDate="Jun 2021" description="" />
-		<boarddata name="BFPE" version="6.3" versionDate="Jun 2021" description="" />
+		<boarddata name="BFPE" version="6.4" versionDate="Sep 2021" description="" />
 		<boarddata name="BFPF" version="6.2" versionDate="Jun 2021" description="" />
 		<boarddata name="BFPG" version="6.2" versionDate="Jun 2021" description="" />
 		<boarddata name="BFPH" version="6.3" versionDate="Jul 2021" description="" />
@@ -194,7 +194,7 @@
 		<boarddata name="BFPL" version="6.2" versionDate="Jun 2021" description="" />
 		<boarddata name="BFPM" version="6.1" versionDate="Jun 2021" description="" />
 		<boarddata name="BFPN" version="6.2" versionDate="Jun 2021" description="" />
-		<boarddata name="BFPO" version="6.3" versionDate="Jun 2021" description="" />
+		<boarddata name="BFPO" version="6.4" versionDate="Sep 2021" description="" />
 		<boarddata name="BFPP" version="6.3" versionDate="Jun 2021" description="" />
 		<boarddata name="BFPQ" version="6.3" versionDate="Jun 2021" description="" />
 		<boarddata name="BFPR" version="6.3" versionDate="Jun 2021" description="" />
@@ -206,7 +206,7 @@
 		<boarddata name="BFPDW3b" version="6.2" versionDate="Jun 2021" description="" />
 		<boarddata name="BFPDW4a" version="6.2" versionDate="Jun 2021" description="" />
 		<boarddata name="BFPDW4b" version="6.2" versionDate="Jun 2021" description="" />
-		<boarddata name="BFPDW5a" version="6.3" versionDate="Jun 2021" description="" />
+		<boarddata name="BFPDW5a" version="6.4" versionDate="Sep 2021" description="" />
 		<boarddata name="BFPDW5b" version="6.3" versionDate="Jun 2021" description="" />
 		<boarddata name="BFPDW6a" version="6.3" versionDate="Jun 2021" description="" />
 		<boarddata name="BFPDW6b" version="6.3" versionDate="Jun 2021" description="" />
