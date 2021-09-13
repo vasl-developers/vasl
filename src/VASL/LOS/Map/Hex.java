@@ -918,13 +918,12 @@ public class Hex {
                 final Location newLocation = new Location(centerLocation);
                 newLocation.setDepressionTerrain(getDepressionTerrain(gridadj));
                 // added by DR; this is a wonky fix to deal with bridges in non-zero level terrain; not sure why its needed but it works, otherwise bridges and depressions in valleys are two levels apart and those in hills are at same level
-                int depressionadj=0;
-                if (baseHeight ==0 ){
-                    depressionadj=1;
-                }
-                else {
-                    if (baseHeight>0){
-                        depressionadj=2;
+                int depressionadj = 0;
+                if (baseHeight == 0) {
+                    depressionadj = 1;
+                } else {
+                    if (baseHeight > 0) {
+                        depressionadj = 2;
                     }
                 }
                 // DR code not used as boards do not use Elevated Road terrain; see board 13 as example
@@ -943,6 +942,23 @@ public class Hex {
                 newLocation.setTerrain(getDepressionTerrain(gridadj));
                 newLocation.setUpLocation(centerLocation);
                 centerLocation.setDownLocation(newLocation);
+            }
+            else if (centerLocation.getTerrain().isWaterTerrain()){
+                // need to add new bridge location
+                final Location newLocation = new Location(centerLocation);
+                newLocation.setDepressionTerrain(null);
+                // added by DR; this is a wonky fix to deal with bridges in non-zero level terrain; not sure why its needed but it works, otherwise bridges and depressions in valleys are two levels apart and those in hills are at same level
+                int depressionadj = 0;
+                if (baseHeight == 0) {
+                    depressionadj = 1;
+                } else {
+                    depressionadj = 2;
+                }
+                newLocation.setBaseHeight(baseHeight + depressionadj);
+                newLocation.setTerrain(getBridgeTerrain(gridadj));
+                newLocation.setDownLocation(centerLocation);
+                centerLocation.setUpLocation(newLocation);
+
             }
 
             // DR removed the following code as it did not seem to work properly
