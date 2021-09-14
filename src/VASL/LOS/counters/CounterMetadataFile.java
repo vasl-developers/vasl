@@ -47,6 +47,7 @@ public class CounterMetadataFile {
     protected static final String terrainCounterElement = "terrain";
     protected static final String wreckCounterElement = "wreck";
     protected static final String ignoreCounterElement = "ignore";
+    protected static final String bridgeCounterElement = "bridge";
 
     protected static final String buildingLevelCounterElement = "buildingLevel";
     protected static final String roofCounterElement = "roof";
@@ -157,6 +158,11 @@ public class CounterMetadataFile {
             }
             else if(e.getName().equals(ignoreCounterElement)) {
                 counterMetadata = new CounterMetadata(name, CounterMetadata.CounterType.IGNORE);
+            }
+            else if(e.getName().equals(bridgeCounterElement)) {
+                counterMetadata = new CounterMetadata(name, CounterMetadata.CounterType.BRIDGE);
+                counterMetadata.setHindrance(e.getAttribute(counterHindranceAttribute).getIntValue());
+                counterMetadata.setPosition(e.getAttributeValue(counterPositionAttribute));
             }
             else if(e.getName().equals(buildingLevelCounterElement)) {
                 counterMetadata = new CounterMetadata(name, CounterMetadata.CounterType.BUILDING_LEVEL);
