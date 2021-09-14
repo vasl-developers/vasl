@@ -77,6 +77,11 @@
     <buildingLevel name="Strongpoint Level 2" level="2" position="above" />
     <buildingLevel name="Strongpoint Level 3" level="3"  position="above" />
 
+    <bridge name="Heavy Bridge: 1-4" hindrance="1" position="above" />
+    <bridge name="Bridge: 1-4" hindrance="1" position="above" />
+    <bridge name="Wood Pier 1-4" hindrance="1" position="above" />
+    <bridge name="Stone Pier 1-4" hindrance="1" position="above" />
+
     <entrenchment name="1S Foxhole" position="below" />
     <entrenchment name="2S Foxhole"  position="below" />
     <entrenchment name="3S Foxhole" position="below" />

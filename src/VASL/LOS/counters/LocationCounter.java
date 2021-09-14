@@ -33,7 +33,7 @@ public class LocationCounter extends Counter {
     private LocationCounterType type;
 
     // types of location counters
-    public static enum LocationCounterType {BUILDING_LEVEL, CREST, ROOF, ENTRENCHMENT, CLIMB}
+    public static enum LocationCounterType {BUILDING_LEVEL, CREST, ROOF, ENTRENCHMENT, CLIMB, BRIDGE}
 
     public LocationCounter (CounterMetadata counter, LocationCounterType type) {
 

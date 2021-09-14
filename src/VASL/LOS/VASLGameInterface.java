@@ -164,6 +164,18 @@ public class VASLGameInterface {
                         // now create a "location" in the hex
                         createLocationinHexForEntrenchments(h);
                         break;
+                    case BRIDGE:
+                        // we assume there is only one terrain-type counter in a hex
+                        terrainList.put(h, LOSMap.getTerrain(counter.getTerrain()));
+                        // now create a "location" in the hex
+                        createLocationinHexForBridges(h);
+                        break;
+                    case CREST:
+                        // we assume there is only one terrain-type counter in a hex
+                        terrainList.put(h, LOSMap.getTerrain(counter.getTerrain()));
+                        // now create a "location" in the hex
+                        createLocationinHexForCrest(h);
+                        break;
                     case SMOKE:
                         Smoke smoke = new Smoke(counter.getName(), h.getNearestLocation(p.x, p.y), counter.getHeight(), counter.getHindrance());
                         addCounter(smokeList, smoke, h);
@@ -223,6 +235,11 @@ public class VASLGameInterface {
 
                     case CREST:
                         lc = new LocationCounter(c, LocationCounter.LocationCounterType.CREST);
+                        locationCounterList.put(lc.getName(), lc);
+                        break;
+
+                    case BRIDGE:
+                        lc = new LocationCounter(c, LocationCounter.LocationCounterType.BRIDGE);
                         locationCounterList.put(lc.getName(), lc);
                         break;
 
@@ -530,5 +547,43 @@ public class VASLGameInterface {
         newLocation.setTerrain(LOSMap.getTerrain("Foxholes")); // use foxholes as all fortifications have the same LOS rules
         // location 'below' center location is the entrenchment
         location.setDownLocation((newLocation));
+    }
+    private void createLocationinHexForBridges(Hex h) {
+        Location location = h.getCenterLocation();
+        // create new location
+        Location newLocation = new Location(location);
+        // added by DR; this is a wonky fix to deal with bridges in non-zero level terrain; not sure why its needed but it works, otherwise bridges and depressions in valleys are two levels apart and those in hills are at same level
+        int depressionadj = 0;
+        if (h.getBaseHeight() == 0) {
+            depressionadj = 1;
+        } else {
+            depressionadj = 2;
+        }
+        newLocation.setBaseHeight(h.getBaseHeight() + depressionadj);
+        // location "above" entrenchment is the center location
+        newLocation.setDownLocation(location);
+        // set terrain of new location
+        newLocation.setTerrain(LOSMap.getTerrain("Stone Bridge")); // use foxholes as all fortifications have the same LOS rules
+        // location 'below' center location is the entrenchment
+        location.setUpLocation((newLocation));
+    }
+    private void createLocationinHexForCrest(Hex h) {
+        Location location = h.getCenterLocation();
+        // create new location
+        Location newLocation = new Location(location);
+        // added by DR; this is a wonky fix to deal with bridges in non-zero level terrain; not sure why its needed but it works, otherwise bridges and depressions in valleys are two levels apart and those in hills are at same level
+        int depressionadj = 0;
+        if (h.getBaseHeight() == 0) {
+            depressionadj = 1;
+        } else {
+            depressionadj = 2;
+        }
+        newLocation.setBaseHeight(h.getBaseHeight() + depressionadj);
+        // location "above" entrenchment is the center location
+        newLocation.setDownLocation(location);
+        // set terrain of new location
+        newLocation.setTerrain(LOSMap.getTerrain("Crest")); // use foxholes as all fortifications have the same LOS rules
+        // location 'below' center location is the entrenchment
+        location.setUpLocation((newLocation));
     }
 }
