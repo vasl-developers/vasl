@@ -3063,6 +3063,7 @@ public class Map  {
 
         if ( (status.groundLevel + status.currentTerrainHgt + obstacleadj== Math.max(status.sourceElevation + sourceadj, status.targetElevation + targetadj)) &&
                 (status.groundLevel + status.currentTerrainHgt+obstacleadj > Math.min(status.sourceElevation+ sourceadj, status.targetElevation + targetadj))) {
+
             // add a B10.2 EXC test; ignore same level terrain in lower level adj hex and vice versa
             if (status.rangeToSource==1 && (status.currentTerrainHgt+ obstacleadj==0 && status.sourceElevation> status.currentHex.getBaseHeight()) &&
                     status.sourceHex.getHexCenter().distance(status.currentCol, status.currentRow)  < status.sourceHex.getHexCenter().distance(status.currentHex.getHexCenter().getX(), status.currentHex.getHexCenter().getY())) {
