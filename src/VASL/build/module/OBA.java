@@ -585,7 +585,7 @@ public class OBA extends AbstractBuildable
 			hoboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 			final Box hobo2Box = Box.createHorizontalBox();
 			hobo2Box.setAlignmentX(Component.LEFT_ALIGNMENT);
-			hoboBox.add(new JLabel("OBO Hex:   "));
+			hoboBox.add(new JLabel("OBO Bd/Hex:   "));
 			hoboBox.add(obohex);
 			voboBox.add(hoboBox);
 			hobo2Box.add(new JLabel("OBO Level: "));
