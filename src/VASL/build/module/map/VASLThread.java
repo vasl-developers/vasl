@@ -160,7 +160,8 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                     while (overlays.hasMoreElements()) {
                         Overlay o = (Overlay) overlays.nextElement();
 
-                        // ignore terrain transformation overlays - treat BSO and SSR overlays as regular overlays; won't disable los for entire board DR Dec 2020
+                        // ignore terrain transformation overlays which cover most/all of the board
+                        // treat BSO and SSR overlays as regular overlays; won't disable los for entire board DR Dec 2020
                         if((!o.hex1.equals("")) || o.getName().contains("BSO") || o.getName().contains("SSO")) {
 
                             Rectangle ovrRec= o.bounds();
@@ -213,7 +214,11 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                             //Now adjust for multiple rows and columns
                             ovrMinbounds.x = ovrMinbounds.x + b.bounds().x - 400;
                             ovrMinbounds.y = ovrMinbounds.y + b.bounds().y - 400;
-                            overlayBoundaries.add(ovrMinbounds);
+                            if(o.getFile().getName().equalsIgnoreCase("ovrH") || o.getFile().getName().equalsIgnoreCase("ovrD")
+                                    || o.getFile().getName().equalsIgnoreCase("ovrW") || o.getFile().getName().equalsIgnoreCase("ovrSD")) {
+                            } else {
+                                overlayBoundaries.add(ovrMinbounds);
+                            }
                         }
                     }
                 }
@@ -1115,6 +1120,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         try {
             // this is for standard overlays
             for (Rectangle ovrRec : overlayBoundaries) {
+
                 if (losline.intersects(ovrRec.x, ovrRec.y, ovrRec.width, ovrRec.height)) {
                     showovrboundaries=ovrRec;
                     draggableOverlay = null;
@@ -1144,6 +1150,8 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         }
 
         return false;
+
+
     }
 
     // these two methods are used to push the LOS check text label away from the los thread so that the thread can be viewed clearly

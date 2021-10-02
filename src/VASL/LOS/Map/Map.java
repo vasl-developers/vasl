@@ -2670,7 +2670,7 @@ public class Map  {
 
             // target elevation must > source if in entrenchment
             // up down arrows will allow LOS source/target to be set to an entrenchment 'location'
-            if (status.source.getTerrain().isEntrenchmentTerrain()) {
+            if (status.source.getTerrain().isEntrenchmentTerrain() && !status.currentTerrain.getName().equals("Dune, Crest Low"))  {
 
                 if (status.range > 1 && status.targetElevation <= status.sourceElevation) {
 
@@ -2679,8 +2679,9 @@ public class Map  {
                     result.setBlocked(status.currentCol, status.currentRow, status.reason);
                     return true;
                 }
+
             }
-            else if (status.target.getTerrain().isEntrenchmentTerrain()) {
+            else if (status.target.getTerrain().isEntrenchmentTerrain() && !status.currentTerrain.getName().equals("Dune, Crest Low")) {
 
                 if (status.range > 1 && status.targetElevation >= status.sourceElevation) {
 
@@ -3228,8 +3229,9 @@ public class Map  {
             return false;
         }
 
-        // ignore bocage and partial orchard- different rule
-        if( BOCAGE.equals(status.currentTerrain.getName()) || PARTIALORCHARD.equals(status.currentTerrain.getName())){
+        // ignore bocage, hillock and partial orchard- different rules
+        if( BOCAGE.equals(status.currentTerrain.getName()) || PARTIALORCHARD.equals(status.currentTerrain.getName())
+                || HILLOCK.equals(status.currentTerrain.getName())){
             return false;
         }
 
@@ -3281,14 +3283,19 @@ public class Map  {
 
             // both units on a hillock - always clear
             if(status.startsOnHillock && status.endsOnHillock) {
-
+                // unless crosses a Hillock Summit
+                if (status.currentTerrain.getName().equals("Hillock Summit") && (range(status.sourceHex, status.currentHex, getMapConfiguration()) != 1 && range(status.targetHex, status.currentHex, getMapConfiguration())!=1)){
+                    return blockByHillock(status, result);
+                }
                 return false;
-
             }
 
             // one unit on a hillock
             else if(status.startsOnHillock || status.endsOnHillock) {
-
+                // blocked if crosses hillock summit
+                if (status.currentTerrain.getName().equals("Hillock Summit")){
+                    return blockByHillock(status, result);
+                }
                 // check intervening hillocks
                 if(status.startsOnHillock && status.crossedHillocks.size()
                         - (status.targetAdjacentHillock != null ? 1 : 0) // ignore hillock adjacent to target
@@ -3368,6 +3375,11 @@ public class Map  {
             else if((status.sourceAdjacentHillock != null && status.sourceAdjacentHillock.contains(status.currentHex) && !status.source.getTerrain().isEntrenchmentTerrain()) ||
                     (status.targetAdjacentHillock != null && status.targetAdjacentHillock.contains(status.currentHex) && !status.target.getTerrain().isEntrenchmentTerrain())) {
                 return false;
+            }
+
+            // neither is on hillock, los passes through summit, blocked
+            else if (status.currentTerrain.getName().equals("Hillock Summit")){
+               return blockByHillock(status, result);
             }
 
             //check other 1/2 level terrain
@@ -3747,6 +3759,43 @@ public class Map  {
                 }
             }
         }
+
+        // Dier special case
+        if (status.source.getTerrain().isEntrenchmentTerrain() && !status.currentHex.getCenterLocation().getTerrain().getName().equals("Dier") &&
+                (status.sourceElevation== status.targetElevation)){
+            boolean nonlip = true;
+            for (int x =0; x < 6; x++) {
+                if (status.sourceHex.getHexsideLocation(x).getTerrain().getName().equals("Dier Lip")) {
+                    nonlip = false;
+                    break;
+                }
+            }
+            if (nonlip && status.previousHex.getCenterLocation().getTerrain().getName().equals("Dier")){
+
+                status.blocked = true;
+                status.reason = "Unit in entrenchment cannot see/be seen over Dier Lip (F4.4)";
+                result.setBlocked(status.currentCol, status.currentRow, status.reason);
+                return true;
+            }
+        }
+        else if (status.target.getTerrain().isEntrenchmentTerrain()&& status.currentHex.getCenterLocation().getTerrain().getName().equals("Dier") &&
+                (status.sourceElevation== status.targetElevation)){
+            boolean nonlip = true;
+            for (int x =0; x < 6; x++) {
+                if (status.targetHex.getHexsideLocation(x).getTerrain().getName().equals("Dier Lip")) {
+                    nonlip = false;
+                    break;
+                }
+            }
+            if (nonlip && !status.previousHex.getCenterLocation().getTerrain().getName().equals("Dier")){
+
+                status.blocked = true;
+                status.reason = "Unit in entrenchment cannot see/be seen over Dier Lip (F4.4)";
+                result.setBlocked(status.currentCol, status.currentRow, status.reason);
+                return true;
+            }
+        }
+
         if(status.sourceHex.isDepressionTerrain() && !status.source.isCenterLocation()) {
             sourceadj=+1;
         }
