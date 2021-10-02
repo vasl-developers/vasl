@@ -1098,6 +1098,7 @@
 		<color name="DTO_DuneLow4" red="218" green="178" blue="139" terrain="Sand Dune, Low" elevation="UNKNOWN" />
 		<!-- Desert colors for desert overlays -->
 		<color name="Hillock1" red="114" green="83" blue="42" terrain="Hillock Summit" elevation="UNKNOWN" />
+		<color name="Dier" red="252" green="223" blue="89" terrain="Dier" elevation="UNKNOWN" />
 	</colors>
 
 	<terrainTypes>
