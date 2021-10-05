@@ -294,7 +294,7 @@ public class CounterDetailViewer extends VASSAL.build.module.map.CounterDetailVi
       String locationName = (String) topPiece.getLocalizedProperty(BasicPiece.LOCATION_NAME);
       emptyHexReportFormat.setProperty(BasicPiece.LOCATION_NAME, locationName.equals(offboard) ? "" : locationName);
       report = summaryReportFormat.getLocalizedText(new SumProperties(displayablePieces));
-      report += " Level " + getBaseLevel(report);
+      report += " Base Level " + getBaseLevel(report);
       x -= borderWidth * os_scale;
     }
 
