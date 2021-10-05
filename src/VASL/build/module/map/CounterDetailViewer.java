@@ -16,6 +16,7 @@
  */
 package VASL.build.module.map;
 
+import VASL.LOS.Map.Map;
 import VASL.build.module.ASLMap;
 import static VASL.build.module.map.boardPicker.ASLBoard.DEFAULT_HEX_HEIGHT;
 import java.awt.Rectangle;
@@ -293,11 +294,18 @@ public class CounterDetailViewer extends VASSAL.build.module.map.CounterDetailVi
       String locationName = (String) topPiece.getLocalizedProperty(BasicPiece.LOCATION_NAME);
       emptyHexReportFormat.setProperty(BasicPiece.LOCATION_NAME, locationName.equals(offboard) ? "" : locationName);
       report = summaryReportFormat.getLocalizedText(new SumProperties(displayablePieces));
+      report += " Base Level " + getBaseLevel(report);
       x -= borderWidth * os_scale;
     }
 
     if (report.length() > 0) {
       drawLabel(g, new Point(x, y), report, LabelUtils.RIGHT, LabelUtils.BOTTOM);
     }
+  }
+  private String getBaseLevel(String hexname){
+      VASL.build.module.ASLMap aslmap = (ASLMap) map;
+      VASL.LOS.Map.Map vaslmap = aslmap.getVASLMap();
+      String baselevel = Integer.toString(vaslmap.getHex(hexname).getBaseHeight());
+      return baselevel;
   }
 }
