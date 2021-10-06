@@ -804,7 +804,9 @@ public class OBA extends AbstractBuildable
 			ASLMap map = GameModule.getGameModule().getComponentsOf(ASLMap.class).iterator().next();
 			LOSMap = map.getVASLMap();
 			Hex hex = LOSMap.getHex(obohex, map);
-			hex.setOBO(obolevel);
+			if (hex != null) {
+				hex.setOBO(obolevel);
+			}
 		}
 
 		@Override
