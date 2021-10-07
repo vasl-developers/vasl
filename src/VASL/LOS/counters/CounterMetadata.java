@@ -42,7 +42,7 @@ public class CounterMetadata {
     private String position;
     private int coverArch;
 
-    public static enum CounterType {SMOKE, WRECK, OBA, TERRAIN, IGNORE, BUILDING_LEVEL, CREST, ROOF, ENTRENCHMENT, CLIMB}
+    public static enum CounterType {SMOKE, WRECK, OBA, TERRAIN, IGNORE, BUILDING_LEVEL, CREST, ROOF, ENTRENCHMENT, CLIMB, BRIDGE}
 
     public CounterMetadata(String name, CounterType type) {
         this.name = name;

@@ -23,7 +23,7 @@
 	v6.2 Aug 2019 added LightWoods (BK)
 
 -->
-<boardMetadata name="BFPI" version="6.2" versionDate="Aug 2019" author="TR" boardImageFileName="bdBFPI.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="BFPI" version="6.4" versionDate="Jul 2021" author="TR" boardImageFileName="bdBFPI.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily

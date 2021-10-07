@@ -114,28 +114,31 @@ public class Hex {
         vertexPoints[3] = fixMapEdgePoints(hexside / 2.0 + x, verticalOffset + y);
         vertexPoints[4] = fixMapEdgePoints(-hexside / 2.0 + x, verticalOffset + y);
         vertexPoints[5] = fixMapEdgePoints(-hexside + x, y);
+
+        int extborder=1;
+        if (hexWidth > 168 && hexHeight > 194) {extborder =2;}
         for (int i = 0; i < 6; i++) {
 
             // create the hex borders - extended being one pixel larger
             hexBorder.addPoint((int) Math.round(vertexPoints[i].x), (int) Math.round(vertexPoints[i].y));
             switch (i) {
                 case 0:
-                    extendedHexBorder.addPoint((int) vertexPoints[i].x - 1, (int) vertexPoints[i].y - 1);
+                    extendedHexBorder.addPoint((int) vertexPoints[i].x - extborder, (int) vertexPoints[i].y - extborder);
                     break;
                 case 1:
-                    extendedHexBorder.addPoint((int) vertexPoints[i].x - 1, (int) vertexPoints[i].y + 1);
+                    extendedHexBorder.addPoint((int) vertexPoints[i].x + extborder, (int) vertexPoints[i].y - extborder);
                     break;
                 case 2:
-                    extendedHexBorder.addPoint((int) vertexPoints[i].x + 1, (int) vertexPoints[i].y);
+                    extendedHexBorder.addPoint((int) vertexPoints[i].x + extborder, (int) vertexPoints[i].y);
                     break;
                 case 3:
-                    extendedHexBorder.addPoint((int) vertexPoints[i].x + 1, (int) vertexPoints[i].y + 1);
+                    extendedHexBorder.addPoint((int) vertexPoints[i].x + extborder, (int) vertexPoints[i].y + extborder);
                     break;
                 case 4:
-                    extendedHexBorder.addPoint((int) vertexPoints[i].x - 1, (int) vertexPoints[i].y + 1);
+                    extendedHexBorder.addPoint((int) vertexPoints[i].x - extborder, (int) vertexPoints[i].y + extborder);
                     break;
                 case 5:
-                    extendedHexBorder.addPoint((int) vertexPoints[i].x - 1, (int) vertexPoints[i].y);
+                    extendedHexBorder.addPoint((int) vertexPoints[i].x - extborder, (int) vertexPoints[i].y);
                     break;
             }
 
@@ -473,10 +476,11 @@ public class Hex {
         this.slopes = slopes;
     }
 
-    // code added by DR to enable RB rr embankments
+    // code added by DR to enable RB rr embankments and Partial Orchards
     private boolean[] rbrrembankments = new boolean[6]; // flags for hexsides having RB rr embankments - all false by default
+    private boolean[] partialorchards = new boolean[6]; // flags for hexsides having RB rr embankments - all false by default
     /**
-     * Set the hexside rrembankment flags
+     * Set the hexside rrembankment and Partial Orchard flags
      * [0] is the top hexside and the others are clockwise from there
      */
     public void setRBrrembankments(boolean[] rbrrembankments) {
@@ -487,7 +491,14 @@ public class Hex {
         }
         this.rbrrembankments = rbrrembankments;
     }
+    public void setPartialOrchards(boolean[] partialorchards) {
 
+        // must be an array of 6 flags;
+        if(partialorchards.length != 6) {
+            return;
+        }
+        this.partialorchards = partialorchards;
+    }
     /**
      * @param hexside the hexside - 0 is the top hexside and the others are clockwise from there
      * @return true if hexside has slope
@@ -774,9 +785,13 @@ public class Hex {
                         (int) (getHexsideLocation(x).getEdgeCenterPoint().getX()+gridadj),
                         (int) getHexsideLocation(x).getEdgeCenterPoint().getY());
 
-                // code added by DR to add RB rr embankment info to Hex
+                // code added by DR to add RB rr embankment and partial orchard info to Hex
                 if (rbrrembankments[x]){
                     terrain = map.getTerrain("Rrembankment");
+                    hexsideTerrain[x]=terrain;
+                }
+                if (partialorchards[x]){
+                    terrain = map.getTerrain("PartialOrchard");
                     hexsideTerrain[x]=terrain;
                 }
                 // if no hexside terrain use opposite location hexside terrain
@@ -903,13 +918,12 @@ public class Hex {
                 final Location newLocation = new Location(centerLocation);
                 newLocation.setDepressionTerrain(getDepressionTerrain(gridadj));
                 // added by DR; this is a wonky fix to deal with bridges in non-zero level terrain; not sure why its needed but it works, otherwise bridges and depressions in valleys are two levels apart and those in hills are at same level
-                int depressionadj=0;
-                if (baseHeight ==0 ){
-                    depressionadj=1;
-                }
-                else {
-                    if (baseHeight>0){
-                        depressionadj=2;
+                int depressionadj = 0;
+                if (baseHeight == 0) {
+                    depressionadj = 1;
+                } else {
+                    if (baseHeight > 0) {
+                        depressionadj = 2;
                     }
                 }
                 // DR code not used as boards do not use Elevated Road terrain; see board 13 as example
@@ -928,6 +942,23 @@ public class Hex {
                 newLocation.setTerrain(getDepressionTerrain(gridadj));
                 newLocation.setUpLocation(centerLocation);
                 centerLocation.setDownLocation(newLocation);
+            }
+            else if (centerLocation.getTerrain().isWaterTerrain()){
+                // need to add new bridge location
+                final Location newLocation = new Location(centerLocation);
+                newLocation.setDepressionTerrain(null);
+                // added by DR; this is a wonky fix to deal with bridges in non-zero level terrain; not sure why its needed but it works, otherwise bridges and depressions in valleys are two levels apart and those in hills are at same level
+                int depressionadj = 0;
+                if (baseHeight == 0) {
+                    depressionadj = 1;
+                } else {
+                    depressionadj = 2;
+                }
+                newLocation.setBaseHeight(baseHeight + depressionadj);
+                newLocation.setTerrain(getBridgeTerrain(gridadj));
+                newLocation.setDownLocation(centerLocation);
+                centerLocation.setUpLocation(newLocation);
+
             }
 
             // DR removed the following code as it did not seem to work properly
@@ -988,7 +1019,6 @@ public class Hex {
      */
     private void setDepressionTerrain(){
 
-        //code replaced by DR
         if (centerLocation.getTerrain().isDepression()){
             centerLocation.setDepressionTerrain(centerLocation.getTerrain());
         }
@@ -1081,13 +1111,10 @@ public class Hex {
 	public Location getHexsideLocation(int hexside){
         //test code wrapped around return line to avoid break; DR
         if (!(hexside ==-1)) {
-
-
             return hexsideLocations[hexside];
         }
         else {
-            int reggie=0;
-            return hexsideLocations[reggie];
+            return hexsideLocations[0];
         }
 
 	}
@@ -1417,16 +1444,21 @@ public class Hex {
         //stairways and slopes
         stairway = h.hasStairway();
         slopes = h.getSlopes();
-        // code added by DR April 2016 to enable RB rr embankments
+        // code added by DR April 2016 to enable RB rr embankments and partial orchards
         rbrrembankments=h.getRBrrembankments();
+        partialorchards = h.getPartialOrchards();
 	}
 
     private boolean[] getSlopes() {
         return slopes;
     }
-    // code added by DR to enable RB rr embankments
+    // code added by DR to enable RB rr embankments and partial orchards
     private boolean[] getRBrrembankments() {
         return rbrrembankments;
+    }
+
+    public boolean[] getPartialOrchards() {
+        return partialorchards;
     }
 
     public boolean hasStairway() {
@@ -1439,12 +1471,50 @@ public class Hex {
 
     public void resetHexFlags() {setHexFlags();}
 
-    //added by DR to support cropping
-    //public void restHexPoints(int offsetadj) {
-	//    center.x=center.x-offsetadj;
-    //    center = fixMapEdgePoints(center.getX(), center.getY());
+    //added by DR to support OffBoardObservers
+    public void setOBO(int OBOlevel) {
+        Terrain terrain = map.getTerrain("OffBObserver");
+        final Location l = new Location(
+                centerLocation.getName() + " OffBObserver",
+                OBOlevel,
+                centerLocation.getLOSPoint(),
+                centerLocation.getLOSPoint(),
+                null,
+                this,
+                terrain
+        );
 
-    //}
+        centerLocation.setUpLocation(l);
+        l.setDownLocation(centerLocation);
+
+    }
+    public void setvirtualLocation(double newlevel, Location currentLocation, String direction) {
+        Terrain terrain = map.getTerrain("Open Ground");
+        String virtuallabel;
+        if (newlevel== 10 ) {
+            virtuallabel = " Aerial LOS";
+        }else if (newlevel ==-3){
+            virtuallabel = " Bedrock!";
+        } else {
+            virtuallabel = " Virtual Location";
+        }
+        final Location l = new Location(
+                centerLocation.getName() + virtuallabel,
+                (int) newlevel,
+                centerLocation.getLOSPoint(),
+                centerLocation.getLOSPoint(),
+                null,
+                this,
+                terrain
+        );
+        if (direction.equals("Up")) {
+            currentLocation.setUpLocation(l);
+            l.setDownLocation(currentLocation);
+        } else {
+            currentLocation.setDownLocation(l);
+            l.setUpLocation(currentLocation);
+        }
+    }
 
 
 }

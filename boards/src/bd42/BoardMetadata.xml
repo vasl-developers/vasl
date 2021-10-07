@@ -20,7 +20,7 @@
 	
 	3/11/15 - fixed "no woods roads" SSR rule
 -->
-<boardMetadata name="42" version="6.3" versionDate="Dec 2020" author="TR" boardImageFileName="bd42.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="42" version="6.5" versionDate="May 2021" author="TR" boardImageFileName="bd42.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily

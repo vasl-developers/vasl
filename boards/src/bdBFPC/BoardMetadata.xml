@@ -21,7 +21,7 @@
 	3/11/15 - fixed "no woods roads" SSR rule
 	v6.2 Aug 2019 added LightWoods (BK)
 -->
-<boardMetadata name="BFPC" version="6.2" versionDate="Aug 2019" author="TR" boardImageFileName="bdBFPC.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="BFPC" version="6.3" versionDate="Jun 2021" author="TR" boardImageFileName="bdBFPC.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily

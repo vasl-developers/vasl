@@ -19,7 +19,7 @@
 	others - TBD e.g. alternate hex grain, etc. 
 	
 -->
-<boardMetadata name="73" version="6.0" versionDate="Jan 2016" author="SWH" boardImageFileName="bd73.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="73" version="6.1" versionDate="Jun 2021" author="SWH" boardImageFileName="bd73.gif" hasHills="FALSE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily

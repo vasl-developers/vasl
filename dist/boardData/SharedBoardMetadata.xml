@@ -212,6 +212,14 @@
 			<color name="OrchL5" />
 			<color name="OrchL6" />
 			<color name="OrchTrees" />
+			<color name="DTO_OrchL0" />
+			<color name="DTO_OrchL1" />
+			<color name="DTO_OrchL2" />
+			<color name="DTO_OrchL3" />
+			<color name="DTO_OrchL4" />
+			<color name="DTO_OrchL5" />
+			<color name="DTO_OrchL6" />
+			<color name="DTO_OrchTrees" />
 		</underlaySSRule>
 		<underlaySSRule name="ShellholesToCactusPatches" image="CactusPattern.gif">
 			<color name="Shellhole1" />
@@ -1004,6 +1012,8 @@
 		<color name="CactusGreen" red="123" green="132" blue="8" terrain="Cactus Patch" elevation="UNKNOWN" />
 		<color name="CactusBrown" red="90" green="66" blue="33" terrain="Cactus Patch" elevation="UNKNOWN" />
 		<!-- Desert colors for desert boards -->
+		<color name="BrokenGround" red="60" green="44" blue="22" terrain="Broken Ground" elevation="UNKNOWN" />
+
 		<color name="Hammada1" red="190" green="149" blue="52" terrain="Hammada" elevation="UNKNOWN" />
 		<color name="Hammada2" red="169" green="127" blue="35" terrain="Hammada" elevation="UNKNOWN" />
 		<color name="Hammada3" red="148" green="113" blue="38" terrain="Hammada" elevation="UNKNOWN" />
@@ -1020,10 +1030,10 @@
 		<color name="Sand1" red="230" green="192" blue="16" terrain="Sand" elevation="UNKNOWN" />
 		<color name="Track" red="102" green="78" blue="37" terrain="Open Ground" elevation="UNKNOWN" />
 		<color name="WadiBrown1" red="204" green="159" blue="52" terrain="Wadi" elevation="UNKNOWN" />
-		<color name="WadiBrown2" red="164" green="123" blue="0" terrain="Wadi" elevation="UNKNOWN" />
+		<color name="WadiBrown2" red="164" green="120" blue="0" terrain="Wadi" elevation="UNKNOWN" />
 		<color name="WadiBrown3" red="127" green="91" blue="33" terrain="Wadi" elevation="UNKNOWN" />
 		<color name="WadiBlack" red="83" green="51" blue="37" terrain="Wadi" elevation="UNKNOWN" />
-		<color name="WadiCliff" red="65" green="54" blue="28" terrain="Wadi" elevation="UNKNOWN" />
+		<color name="WadiCliff" red="65" green="54" blue="28" terrain="Cliff" elevation="UNKNOWN" />
 		<color name="DTO_BrushL0" red="161" green="161" blue="56" terrain="Brush" elevation="0" />
 		<color name="DTO_BrushL1" red="161" green="162" blue="56" terrain="Brush" elevation="1" />
 		<color name="DTO_BrushL2" red="161" green="163" blue="56" terrain="Brush" elevation="2" />
@@ -1081,8 +1091,14 @@
 		<color name="DTO_OrchTrees" red="118" green="114" blue="37" terrain="Orchard" elevation="UNKNOWN" />
 		<color name="DTO_WoodsGreen" red="119" green="119" blue="57" terrain="Woods" elevation="UNKNOWN" />
 		<color name="DTO_WoodsBlack" red="44" green="42" blue="23" terrain="Woods" elevation="UNKNOWN" />
-
-
+		<color name="DTO_DuneCrest1" red="120" green="79" blue="48" terrain="Dune, Crest Low" elevation="UNKNOWN" />
+		<color name="DTO_DuneLow1" red="252" green="132" blue="14" terrain="Sand Dune, Low" elevation="UNKNOWN" />
+		<color name="DTO_DuneLow2" red="201" green="158" blue="14" terrain="Sand Dune, Low" elevation="UNKNOWN" />
+		<color name="DTO_DuneLow3" red="232" green="188" blue="0" terrain="Sand Dune, Low" elevation="UNKNOWN" />
+		<color name="DTO_DuneLow4" red="218" green="178" blue="139" terrain="Sand Dune, Low" elevation="UNKNOWN" />
+		<!-- Desert colors for desert overlays -->
+		<color name="Hillock1" red="114" green="83" blue="42" terrain="Hillock Summit" elevation="UNKNOWN" />
+		<color name="Dier" red="252" green="223" blue="89" terrain="Dier" elevation="UNKNOWN" />
 	</colors>
 
 	<terrainTypes>
@@ -1185,12 +1201,12 @@
         <terrainType name="Scrub" typeCode="100" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="119" mapColorGreen="67" mapColorBlue="0" LOSCategory="OPEN"  />
         <terrainType name="Hammada" typeCode="101" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="59" mapColorGreen="55" mapColorBlue="19" LOSCategory="OPEN"  />
         <terrainType name="Dier" typeCode="102" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="OPEN"  />
-        <terrainType name="Dier Lip" typeCode="103" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="OPEN"  />
+        <terrainType name="Dier Lip" typeCode="103" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="HEXSIDE"  />
         <terrainType name="Wadi" typeCode="104" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="191" mapColorGreen="111" mapColorBlue="7" LOSCategory="DEPRESSION"  />
         <terrainType name="Hillock" typeCode="105" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="85" mapColorGreen="45" mapColorBlue="4" LOSCategory="OTHER"  />
-        <terrainType name="Hillock Summit" typeCode="106" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="OPEN"  />
+        <terrainType name="Hillock Summit" typeCode="106" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="114" mapColorGreen="83" mapColorBlue="42" LOSCategory="OPEN"  />  //mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="OPEN"  />
         <terrainType name="Sand" typeCode="107" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="OPEN"  />
-        <terrainType name="Sand Dune" typeCode="108" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="OTHER"  />
+        <terrainType name="Sand Dune, Low" typeCode="108" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="OTHER"  />
         <terrainType name="Dune, Crest Low" typeCode="109" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="HEXSIDE"  />
         <terrainType name="Dune, Crest High" typeCode="110" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="HEXSIDE"  />
         <terrainType name="Sangar" typeCode="111" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="250" mapColorGreen="235" mapColorBlue="130" LOSCategory="OPEN"  />
@@ -1203,7 +1219,7 @@
         <terrainType name="Olive Grove" typeCode="118" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="TRUE" split="0.5" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="1" mapColorRed="51" mapColorGreen="163" mapColorBlue="51" LOSCategory="OTHER"  />
         <terrainType name="Vineyard" typeCode="119" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="0" mapColorRed="46" mapColorGreen="131" mapColorBlue="47" LOSCategory="OTHER"  />
         <terrainType name="Broken Ground" typeCode="120" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="OPEN"  />
-		<terrainType name="Scrub" typeCode="121" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="175" mapColorGreen="188" mapColorBlue="106" LOSCategory="OPEN"  />
+		<!--<terrainType name="Scrub" typeCode="121" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="175" mapColorGreen="188" mapColorBlue="106" LOSCategory="OPEN"  /> -->
         <terrainType name="Temple" typeCode="125" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="115" mapColorGreen="115" mapColorBlue="115" LOSCategory="BUILDING"  />
         <terrainType name="Light Jungle" typeCode="126" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="2" mapColorRed="47" mapColorGreen="131" mapColorBlue="47" LOSCategory="WOODS"  />
         <terrainType name="Dense Jungle" typeCode="127" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="2" mapColorRed="47" mapColorGreen="131" mapColorBlue="47" LOSCategory="WOODS"  />
@@ -1265,6 +1281,11 @@
 		<terrainType name="Wooden Rubble Level 2" typeCode="196" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="2" mapColorRed="147" mapColorGreen="95" mapColorBlue="35" LOSCategory="OTHER"  />
 		<terrainType name="Wooden Rubble Level 3" typeCode="197" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="3" mapColorRed="147" mapColorGreen="95" mapColorBlue="35" LOSCategory="OTHER"  />
 		<terrainType name="Wooden Factory, 1 Level" typeCode="198" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="1.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="1" mapColorRed="173" mapColorGreen="111" mapColorBlue="7" LOSCategory="FACTORY"  />
+		<terrainType name="Wooden Factory Wall, 1 Level" typeCode="199" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="39" mapColorGreen="39" mapColorBlue="39" LOSCategory="FACTORY"  />
+		<terrainType name="PartialOrchard" typeCode="200" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.5" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="1" mapColorRed="55" mapColorGreen="163" mapColorBlue="55" LOSCategory="HEXSIDE"  />
+		<terrainType name="OffBObserver" typeCode="201" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="0" mapColorGreen="0" mapColorBlue="0" LOSCategory="OTHER"  />
+		<terrainType name="Crest" typeCode="202" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="0" mapColorGreen="0" mapColorBlue="001" LOSCategory="OPEN"  />
+
 	</terrainTypes>
 
 	<colorSSRules>
@@ -1534,6 +1555,7 @@
 			<colorMap fromColor="SeparatedMarshGreenL_1" toColor="Level0"/>
 			<colorMap fromColor="SeparatedMarshBrownL_1" toColor="Level0"/>
 		</colorSSR>
+
 		<colorSSR name="MarshToLevel1">
 			<colorMap fromColor="MarshGreenL0" toColor="Level1"/>
 			<colorMap fromColor="MarshBrownL0" toColor="Level1"/>
@@ -1545,6 +1567,18 @@
 			<colorMap fromColor="SeparatedMarshBrownL1" toColor="Level1"/>
 			<colorMap fromColor="SeparatedMarshGreenL_1" toColor="Level1"/>
 			<colorMap fromColor="SeparatedMarshBrownL_1" toColor="Level1"/>
+		</colorSSR>
+		<colorSSR name="Marsh_1ToLevel_1">
+			<colorMap fromColor="MarshGreenL_1" toColor="Level_1"/>
+			<colorMap fromColor="MarshBrownL_1" toColor="Level_1"/>
+			<colorMap fromColor="SeparatedMarshGreenL_1" toColor="Level_1"/>
+			<colorMap fromColor="SeparatedMarshBrownL_1" toColor="Level_1"/>
+		</colorSSR>
+		<colorSSR name="Marsh0ToLevel0">
+			<colorMap fromColor="MarshGreenL0" toColor="Level0"/>
+			<colorMap fromColor="MarshBrownL0" toColor="Level0"/>
+			<colorMap fromColor="SeparatedMarshGreenL0" toColor="Level0"/>
+			<colorMap fromColor="SeparatedMarshBrownL0" toColor="Level0"/>
 		</colorSSR>
 		<colorSSR name="GulliesToStreams">
 			<colorMap fromColor="GullyGreen2" toColor="StreamGreen2"/>
@@ -1847,46 +1881,70 @@
 			<colorMap fromColor="PaddyInterior" toColor="GrainL0"/>
 		</colorSSR>
 		<colorSSR name="DTOtoETO">
-			<colorMap fromColor="DesertL_2" toColor="Level_2"/>
-			<colorMap fromColor="DesertL_1" toColor="Level_1"/>
-			<colorMap fromColor="DesertL0" toColor="Level0"/>
-			<colorMap fromColor="DirtRdDesertL_2" toColor="DirtRdL_2"/>
-			<colorMap fromColor="DirtRdDesertL_1" toColor="DirtRdL_1"/>
-			<colorMap fromColor="DirtRdDesertL0" toColor="DirtRdL0"/>
-			<colorMap fromColor="DirtRdDesertL1" toColor="DirtRdL1"/>
-			<colorMap fromColor="DirtRdDesertL2" toColor="DirtRdL2"/>
-			<colorMap fromColor="DirtRdDesertL3" toColor="DirtRdL3"/>
-			<colorMap fromColor="DirtRdDesertL4" toColor="DirtRdL4"/>
-			<colorMap fromColor="DirtRdDesertL5" toColor="DirtRdL5"/>
-			<colorMap fromColor="DirtRdDesertL6" toColor="DirtRdL6"/>
-			<colorMap fromColor="OrchDesertL_2" toColor="OrchL_2"/>
-			<colorMap fromColor="OrchDesertL_1" toColor="OrchL_1"/>
-			<colorMap fromColor="OrchDesertL0" toColor="OrchL0"/>
-			<colorMap fromColor="OrchDesertL1" toColor="OrchL1"/>
-			<colorMap fromColor="OrchDesertL2" toColor="OrchL2"/>
-			<colorMap fromColor="OrchDesertL3" toColor="OrchL3"/>
-			<colorMap fromColor="OrchDesertL4" toColor="OrchL4"/>
-			<colorMap fromColor="OrchDesertL5" toColor="OrchL5"/>
-			<colorMap fromColor="OrchDesertL6" toColor="OrchL6"/>
-			<colorMap fromColor="BrushDesertL_2" toColor="BrushL_2"/>
-			<colorMap fromColor="BrushDesertL_1" toColor="BrushL_1"/>
-			<colorMap fromColor="BrushDesertL0" toColor="BrushL0"/>
-			<colorMap fromColor="BrushDesertL1" toColor="BrushL1"/>
-			<colorMap fromColor="BrushDesertL2" toColor="BrushL2"/>
-			<colorMap fromColor="BrushDesertL3" toColor="BrushL3"/>
-			<colorMap fromColor="BrushDesertL4" toColor="BrushL4"/>
-			<colorMap fromColor="BrushDesertL5" toColor="BrushL5"/>
-			<colorMap fromColor="BrushDesertL6" toColor="BrushL6"/>
-			<colorMap fromColor="DirtRdDesertBridge" toColor="DirtRdBridge"/>
-			<colorMap fromColor="DirtRdBridgeDesert" toColor="DirtRdBridge"/>
-			<colorMap fromColor="OrchTreesDesert" toColor="OrchTrees"/>
-			<colorMap fromColor="WadiBrown1" toColor="GullyGreen1"/>
-			<colorMap fromColor="WadiBrown2" toColor="GullyBrown2"/>
-			<colorMap fromColor="WadiBrown3" toColor="GullyBrown3"/>
-			<colorMap fromColor="WadiBlack" toColor="GullyBlack"/>
-			<colorMap fromColor="Wadi1" toColor="GullyGreen1"/>
-			<colorMap fromColor="Wadi2" toColor="GullyBrown2"/>
-			<colorMap fromColor="Wadi3" toColor="GullyBlack"/>
+			<colorMap fromColor="DTO_BrushL0" toColor="BrushL0" />
+			<colorMap fromColor="DTO_BrushL1" toColor="BrushL1" />
+			<colorMap fromColor="DTO_BrushL2" toColor="BrushL2" />
+			<colorMap fromColor="DTO_BrushL3" toColor="BrushL3" />
+			<colorMap fromColor="DTO_BrushL4" toColor="BrushL4" />
+			<colorMap fromColor="DTO_BrushL5" toColor="BrushL5" />
+			<colorMap fromColor="DTO_BrushL6" toColor="BrushL6" />
+
+			<colorMap fromColor="DTO_BldgShadowL0" toColor="BldgShadowL0" />
+
+			<colorMap fromColor="DTO_DirtRdL0" toColor="DirtRdL0" />
+			<colorMap fromColor="DTO_DirtRdL1" toColor="DirtRdL1" />
+			<colorMap fromColor="DTO_DirtRdL2" toColor="DirtRdL2" />
+			<colorMap fromColor="DTO_DirtRdL3" toColor="DirtRdL3" />
+			<colorMap fromColor="DTO_DirtRdL4" toColor="DirtRdL4" />
+			<colorMap fromColor="DTO_DirtRdL5" toColor="DirtRdL5" />
+			<colorMap fromColor="DTO_DirtRdL6" toColor="DirtRdL6" />
+			<colorMap fromColor="DTO_DirtRdBridge" toColor="DirtRdBridge" />
+
+			<colorMap fromColor="DTO_GraveyardGreen" toColor="GraveyardGreen" />
+			<colorMap fromColor="DTO_GraveyardShadow" toColor="GraveyardShadow" />
+
+			<colorMap fromColor="WadiBrown1" toColor="GullyGreen1" />
+			<colorMap fromColor="WadiBrown1" toColor="GullyGreen2" />
+			<colorMap fromColor="WadiBrown1" toColor="GullyBrown3" />
+			<colorMap fromColor="WadiBlack" toColor="GullyBlack" />
+			<colorMap fromColor="WadiCliff" toColor="GullyCliff" />
+
+			<colorMap fromColor="DTO_HedgeGreen" toColor="HedgeGreen" />
+			<colorMap fromColor="DTO_BoardNum" toColor="BoardNum" />
+
+			<colorMap fromColor="DTO_Level0_1" toColor="Level0" />
+			<colorMap fromColor="DTO_Level0_2" toColor="Level0" />
+			<colorMap fromColor="DTO_Level0_3" toColor="Level0" />
+			<colorMap fromColor="DTO_Level0_4" toColor="Level0" />
+			<colorMap fromColor="DTO_Level0_5" toColor="Level0" />
+			<colorMap fromColor="DTO_Level0_6" toColor="Level0" />
+			<colorMap fromColor="DTO_Level1" toColor="Level1" />
+			<colorMap fromColor="DTO_Level2" toColor="Level2" />
+			<colorMap fromColor="DTO_Level3" toColor="Level3" />
+			<colorMap fromColor="DTO_Level4" toColor="Level4" />
+			<colorMap fromColor="DTO_Level5" toColor="Level5" />
+			<colorMap fromColor="DTO_Level6" toColor="Level6" />
+
+			<colorMap fromColor="DTO_OrchL0" toColor="Level0" />
+			<colorMap fromColor="DTO_OrchL1" toColor="Level1" />
+			<colorMap fromColor="DTO_OrchL2" toColor="Level2" />
+			<colorMap fromColor="DTO_OrchL3" toColor="Level3" />
+			<colorMap fromColor="DTO_OrchL4" toColor="Level4" />
+			<colorMap fromColor="DTO_OrchL5" toColor="Level5" />
+			<colorMap fromColor="DTO_OrchL6" toColor="Level6" />
+			<colorMap fromColor="DTO_OrchTrees" toColor="OrchTrees" />
+
+			<colorMap fromColor="DTO_PavedRdL0" toColor="PavedRdL0" />
+			<colorMap fromColor="DTO_PavedRdL1" toColor="PavedRdL1" />
+			<colorMap fromColor="DTO_PavedRdL2" toColor="PavedRdL2" />
+			<colorMap fromColor="DTO_PavedRdL3" toColor="PavedRdL3" />
+			<colorMap fromColor="DTO_PavedRdL4" toColor="PavedRdL4" />
+			<colorMap fromColor="DTO_PavedRdL5" toColor="PavedRdL5" />
+			<colorMap fromColor="DTO_PavedRdL6" toColor="PavedRdL6" />
+			<colorMap fromColor="DTO_PavedRdBridge" toColor="PavedRdBridge" />
+
+			<colorMap fromColor="DTO_WoodsGreen" toColor="WoodsGreen" />
+
 		</colorSSR>
 		<!-- Winter must always be last -->
 		<colorSSR name="Winter">
@@ -2312,6 +2370,7 @@
         -->
         <LOSSSRule name="CragsToOrchard" type="terrainMap" fromValue="Crags" toValue="Orchard" />
         <LOSSSRule name="CragsToShellholes" type="terrainMap" fromValue="Crags" toValue="Shellholes" />
+		<LOSSSRule name="OrchardsToShellholes" type="terrainMap" fromValue="Orchard" toValue="Shellholes" />
 
         <!-- simple elevation maps. Note that elevations can only be decreased -->
         <LOSSSRule name="Level6ToLevel5" type="elevationMap" fromValue="6" toValue="5" />
@@ -2371,6 +2430,8 @@
         <LOSSSRule name="MarshToLevel2" type="terrainToElevationMap" fromValue="Marsh" toValue="2" />
         <LOSSSRule name="MarshToLevel3" type="terrainToElevationMap" fromValue="Marsh" toValue="3" />
         <LOSSSRule name="MarshToLevel4" type="terrainToElevationMap" fromValue="Marsh" toValue="4" />
+		<LOSSSRule name="Marsh_1ToLevel_1" type="terrainToSelectElevationMap" fromValue="Marsh" toValue="-1" />
+		<LOSSSRule name="Marsh0ToLevel0" type="terrainToSelectElevationMap" fromValue="Marsh" toValue="0" />
         <LOSSSRule name="MarshToBrush" type="terrainMap" fromValue="Marsh" toValue="Brush" />
         <LOSSSRule name="MarshToWoods" type="terrainMap" fromValue="Marsh" toValue="Woods" />
         <LOSSSRule name="MarshToGrain" type="terrainMap" fromValue="Marsh" toValue="Grain" />

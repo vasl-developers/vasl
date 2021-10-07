@@ -25,7 +25,7 @@
 -->
 <boardMetadata 
 	name="3b" 
-	version="6.5"
+	version="6.6"
 	versionDate="Jan 2021"
 	author="TR" 
 	boardImageFileName="bd3b.gif" 
@@ -36,6 +36,7 @@
 	hexWidth = "56.3125"
 	A1CenterX = "-901"
 	A1CenterY = "32.25"
+	
 	>
 
     <!--

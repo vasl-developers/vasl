@@ -21,7 +21,7 @@
 	2/8/15 - fixed overlay SSR rules adding rule sets
 	2/9/2020 - fixed LightWoods
 -->
-<boardMetadata name="23" version="6.2" versionDate="Feb 2020" author="TR" boardImageFileName="bd23.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="23" version="6.4" versionDate="Sep 2021" author="TR" boardImageFileName="bd23.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily

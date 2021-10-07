@@ -62,7 +62,6 @@ public class BoardArchive {
 
     // legacy board (i.e. V5) file names
     private static final String dataFileName = "data"; // name of the legacy data file
-    private static final String overlaySSRFileName = "overlaySSR"; // name of the legacy overlay SSR file
     private static final String colorsFileName = "colors"; // name of the legacy colors file
     private static final String colorSSRFileName = "colorSSR"; // name of the legacy colorSSR file
     private static final String SSRControlsFileName = "SSRControls";
@@ -70,7 +69,6 @@ public class BoardArchive {
     protected boolean legacyBoard = true;
     // for legacy files null means they do not exist
     private DataFile dataFile;
-    private OverlaySSRFile overlaySSRFile;
     private ColorsFile colorsFile;
     private ColorSSRFile colorSSRFile;
     private SSRControlsFile SSRControlsFile;
@@ -123,14 +121,6 @@ public class BoardArchive {
                 if (!legacyBoard) {
                     dataFile = null;
                 }
-            }
-
-            // read the legacy overlay SSR file
-            try (InputStream overlaySSRFileStream = getInputStreamForArchiveFile(archive, overlaySSRFileName)) {
-                overlaySSRFile = new OverlaySSRFile(overlaySSRFileStream, archiveName);
-            } catch (Exception ignore) {
-                // bury
-                overlaySSRFile = null;
             }
 
             // read the legacy colors file
@@ -206,20 +196,11 @@ public class BoardArchive {
      */
     public LinkedHashMap<String, OverlaySSRule> getOverlaySSRules() {
 
-        if(legacyBoard || !metadata.hasBoardSpecificOverlayRules()){
+        if(metadata.hasBoardSpecificOverlayRules()){
 
-            // board overlay rules replace the shared metadata overlay rules
-            LinkedHashMap<String, OverlaySSRule> overlaySSRules = new LinkedHashMap<String, OverlaySSRule>();
-            overlaySSRules.putAll(sharedBoardMetadata.getOverlaySSRules());
-            if(overlaySSRFile != null) {
-                overlaySSRules.putAll(overlaySSRFile.getOverlaySSRules());
-            }
-            return overlaySSRules;
-        }
-        else {
             return metadata.getOverlaySSRules();
         }
-
+        return null;
     }
 
     /**
@@ -227,18 +208,8 @@ public class BoardArchive {
      */
     public LinkedHashMap<String, UnderlaySSRule> getUnderlaySSRules() {
 
-        if(legacyBoard){
-
-            // board underlay rules replace the shared metadata underlay rules
-            LinkedHashMap<String, UnderlaySSRule> underlaySSRules = new LinkedHashMap<String, UnderlaySSRule>();
-            underlaySSRules.putAll(sharedBoardMetadata.getUnderlaySSRules());
-            if(overlaySSRFile != null) {
-                underlaySSRules.putAll(overlaySSRFile.getUnderlaySSRules());
-            }
-            return underlaySSRules;
-        } else {
             return metadata.getUnderlaySSRules();
-        }
+
     }
 
     /**
@@ -286,9 +257,10 @@ public class BoardArchive {
                         }
                     }
 
-                    // code added by DR to enbable rr embankments in RB
+                    // code added to enable rr embankments in RB and Partial Orchards
                     // set the rr embankments
                     map.setRBrrembankments(metadata.getRBrrembankments());
+                    map.setPartialOrchards(metadata.getPartialOrchards());
 
                     // read the hex information
                     if(map.getMapConfiguration().equals("TopLeftHalfHeightEqualRowCount") || map.getA1CenterY()==65) {
@@ -315,7 +287,7 @@ public class BoardArchive {
                         }
                     }
 
-                    // code moved from before stairway loop by DR to enable factory quasi-levels in stairway hexes
+                    // code moved from before stairway loop to enable factory quasi-levels in stairway hexes
                     map.resetHexTerrain(gridadj);
 
                     // set the slopes

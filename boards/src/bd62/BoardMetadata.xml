@@ -21,7 +21,7 @@
 	3/11/15 - fixed "no woods roads" SSR rule
 	1/31/18 - Added lightwoods transform
 -->
-<boardMetadata name="62" version="6.2" versionDate="Feb 2011" author="TR" boardImageFileName="bd62.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="62" version="6.4" versionDate="May 2021" author="TR" boardImageFileName="bd62.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily

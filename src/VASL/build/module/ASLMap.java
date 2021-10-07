@@ -19,16 +19,19 @@
 
 package VASL.build.module;
 
-import VASL.build.module.map.boardArchive.BoardArchive;
+import VASL.LOS.Map.Hex;
+import VASL.LOS.Map.Location;
+import VASL.LOS.Map.Terrain;
 import VASL.LOS.counters.CounterMetadataFile;
 import VASL.build.module.map.boardArchive.SharedBoardMetadata;
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASL.build.module.map.boardPicker.BoardException;
+import VASL.build.module.map.boardPicker.Overlay;
 import VASL.build.module.map.boardPicker.VASLBoard;
 import VASSAL.build.GameModule;
+import VASSAL.build.module.GameComponent;
 import VASSAL.build.module.Map;
 import VASSAL.build.module.map.boardPicker.Board;
-import VASSAL.configure.BooleanConfigurer;
 import VASSAL.configure.ColorConfigurer;
 import VASSAL.counters.GamePiece;
 import VASSAL.counters.Properties;
@@ -36,7 +39,6 @@ import VASSAL.counters.Stack;
 import VASSAL.tools.DataArchive;
 import VASSAL.tools.ErrorDialog;
 import VASSAL.tools.imageop.Op;
-import org.apache.commons.io.IOUtils;
 import org.jdom2.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +67,6 @@ public class ASLMap extends Map {
     private static final String sharedBoardMetadataFileName = "boardData/SharedBoardMetadata.xml"; // name of the shared board metadata file
     private static SharedBoardMetadata sharedBoardMetadata = null;
     private boolean legacyMode;                     // true if unable to create a VASL map or LOS data is missing
-
     // counter metadata
     private static CounterMetadataFile counterMetadata = null;
 
@@ -126,6 +127,8 @@ public class ASLMap extends Map {
     // background color preference
     final ColorConfigurer backgroundcolor = new ColorConfigurer("backcolor", "Set Color of space around Map (requires VASL restart)", Color.white);
     getGameModule().getPrefs().addOption(preferenceTabName, backgroundcolor);
+
+
 }
   
   /*
@@ -175,6 +178,13 @@ public class ASLMap extends Map {
     @Override
     public synchronized void setBoards(Collection<Board> c) {
 
+        for (Board boardc: c) {
+            VASLBoard testboardexists = (VASLBoard) boardc;
+            if (testboardexists.getVASLBoardArchive() == null) {
+                GameModule.getGameModule().getChatter().send("Board missing. Auto-synching of boards requires board directory in board picker matches the board directory set in preferences. Close this game and start new game");
+                return;
+            }
+        }
         super.setBoards(c);
         String info = "Using board(s): ";
         for (Board board : boards) {
@@ -183,6 +193,17 @@ public class ASLMap extends Map {
         }
         GameModule.getGameModule().warn(info);
         buildVASLMap();
+        // Add OBObserver location
+        if (VASLMap!=null){
+            for (GameComponent gc: GameModule.getGameModule().getGameState().getGameComponents()){
+                String classname = gc.getClass().getName();
+                if (gc.getClass().getName() =="VASL.build.module.OBA" ){
+                    OBA oba = (OBA) gc;
+                    oba.checkforOBO();
+                }
+            }
+        }
+
     }
 
     /**
@@ -215,6 +236,8 @@ public class ASLMap extends Map {
     protected void buildVASLMap() {
         // set background color from preference
         super.bgColor = (Color) getGameModule().getPrefs().getValue("backcolor");
+        Boolean alwaysontop = Boolean.TRUE.equals(getGameModule().getPrefs().getValue("PWAlwaysOnTop"));
+        getGameModule().getPlayerWindow().setAlwaysOnTop(alwaysontop);
         repaint();
         legacyMode = false;
         boolean nullBoards = false; // are null boards being used?
@@ -357,10 +380,10 @@ public class ASLMap extends Map {
                     if(board.isReversed()){
                         LOSData.flip();
                     }
-
+                    //new code for adding overlays to LOS
+                    LOSData = adjustLOSForOverlays(board, LOSData);
                     // add the board LOS data to the map
                     // .insertMap is designed to work with only geo board thus need to test for non-geo boards (in this situation geo boards inclues AP boards and deluxe boards)
-                    // DR added code to handle maps of one board such as HASL maps
                     if ((board.getWidth()==33 && board.getHeight()==10) || (board.getWidth()==17 && board.getHeight()==20) || (board.getWidth() == 15 && board.getHeight() ==5)) {
                         //line below is not a good fix; make sure it works in all situations or change
                             int cropadj=1;  // ensures that cropping a board by row works properly DR (rows such as A7 have uneven total height which results in incorrect choice from gridToHex)
@@ -403,7 +426,7 @@ public class ASLMap extends Map {
             setLegacyMode();
             logError("LOS disabled - unexpected error");
             logException(e);
-            GameModule.getGameModule().getChatter().send("VASL LOS disabled - unexpected error: " + e.toString() + ". VASSAL los active");
+            GameModule.getGameModule().getChatter().send("VASL LOS disabled: " + e.toString() + ". VASSAL los active");
         }
         finally {
             // free up memory
@@ -411,6 +434,192 @@ public class ASLMap extends Map {
         }
     }
 
+    private VASL.LOS.Map.Map adjustLOSForOverlays(VASLBoard board, VASL.LOS.Map.Map losdata){
+        VASL.LOS.Map.Map newlosdata = losdata;
+        final Enumeration overlays = board.getOverlays();
+        while (overlays.hasMoreElements()) {
+            Overlay o = (Overlay) overlays.nextElement();
+            if(o.getName().equals("")){break;} // prevents error when using underlays (which are added as overlays)
+            Rectangle ovrRec = o.bounds();
+            // get the image as a buffered image
+            Image i = o.getImage();
+            BufferedImage bi = new BufferedImage(i.getWidth(null), i.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+            Graphics2D bGr = bi.createGraphics();
+            bGr.drawImage(i, 0, 0, null);
+            bGr.dispose();
+            if (o.getFile().getName().equalsIgnoreCase("ovrH")) {
+                setHillockTerrain(board, newlosdata, bi, ovrRec);
+            } else if (o.getFile().getName().equalsIgnoreCase("ovrD")) {
+                setDierTerrain(board, newlosdata, bi, ovrRec);
+                setDierLip(newlosdata);
+            } else if (o.getFile().getName().equalsIgnoreCase("ovrSD")) {
+                setSandDuneTerrain(board, newlosdata, bi, ovrRec);
+            } else if (o.getFile().getName().equalsIgnoreCase("ovrW")) {
+                setWadiTerrain(board, newlosdata, bi, ovrRec);
+            }
+        }
+
+       return newlosdata;
+
+    }
+
+    private void setHillockTerrain(VASLBoard board, VASL.LOS.Map.Map newlosdata, BufferedImage bi, Rectangle ovrRec){
+        for (int x = 0; x < bi.getWidth(); x++) {
+            for (int y = 0; y < bi.getHeight(); y++) {
+                if (newlosdata.onMap(x + ovrRec.x, y + ovrRec.y)) {
+                    int c = bi.getRGB(x, y);
+                    if ((c >> 24) != 0x00) { // not a transparent pixel
+                        String terraintouse = "Hillock";
+                        Terrain terr;
+                        //Retrieving the R G B values
+                        Color color = getRGBColor(c);
+                        Color testcolor = new Color(114, 83, 42); //have to use method as several colors have same RGB values
+                        if (color.equals(testcolor)) {
+                            terraintouse = "Hillock Summit";
+                        }
+                        newlosdata.setGridTerrainCode(newlosdata.getTerrain(terraintouse).getType(), x + ovrRec.x, y + ovrRec.y);
+                        if (!(newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().getTerrain().getName().equals("Hillock Summit"))) {
+                            newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().setTerrain(newlosdata.getTerrain(terraintouse));
+                        } else {
+                            newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().setBaseHeight(1);
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+    private void setDierTerrain(VASLBoard board, VASL.LOS.Map.Map newlosdata, BufferedImage bi, Rectangle ovrRec){
+        for (int x = 0; x < bi.getWidth(); x++) {
+            for (int y = 0; y < bi.getHeight(); y++) {
+                if (newlosdata.onMap(x + ovrRec.x, y + ovrRec.y)) {
+                    int c = bi.getRGB(x, y);
+                    if ((c >> 24) != 0x00) { // not a transparent pixel
+                        String terraintouse = "Dier";
+                        Terrain terr;
+                        //Retrieving the R G B values
+                        Color color = getRGBColor(c);
+                        int terrint = board.getVASLBoardArchive().getTerrainForColor(color);
+                        if (terrint >= 0){
+                            terr = newlosdata.getTerrain(terrint);
+                            if (terr.getName().contains("Scrub")) {
+                                terraintouse = "Scrub";
+                            } else if (terr.getName().equals("Dier")){
+                                terraintouse = "Dier";
+                            }
+                        }
+                        newlosdata.setGridTerrainCode(newlosdata.getTerrain(terraintouse).getType(), x + ovrRec.x, y + ovrRec.y);
+                        if (!(newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().getTerrain().getName().equals("Scrub"))) {
+                            newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().setTerrain(newlosdata.getTerrain(terraintouse));
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+    private void setDierLip(VASL.LOS.Map.Map newlosdata){
+        // step through each hex and reset the terrain.
+        if(newlosdata.getMapConfiguration().equals("TopLeftHalfHeightEqualRowCount") || newlosdata.getA1CenterY()==65){
+            for (int x = 0; x < newlosdata.getWidth(); x++) {
+                for (int y = 0; y < newlosdata.getHeight(); y++) { // no extra hex for boards where each col has same number of rows (eg RO)
+                    if(newlosdata.getHex(x, y).getCenterLocation().getTerrain().getName().equals("Dier")){
+                        for (int a =0; a <6; a++) {
+                            Hex testhex = newlosdata.getAdjacentHex(newlosdata.getHex(x, y), a);
+                            if ((testhex==null) || !(testhex.getCenterLocation().getTerrain().getName().equals("Dier"))) {
+                                newlosdata.getHex(x, y).setHexsideTerrain(a, newlosdata.getTerrain("Dier Lip"));
+                                newlosdata.getHex(x,y).setHexsideLocationTerrain(a, newlosdata.getTerrain("Dier Lip"));
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            for (int x = 0; x < newlosdata.getWidth(); x++) {
+                for (int y = 0; y < newlosdata.getHeight() + (x % 2); y++) { // add 1 hex if odd
+                    if(newlosdata.getHex(x, y).getCenterLocation().getTerrain().getName().equals("Dier")){
+                        for (int a =0; a <6; a++) {
+                            Hex testhex = newlosdata.getAdjacentHex(newlosdata.getHex(x, y), a);
+                            if ((testhex==null) || !(testhex.getCenterLocation().getTerrain().getName().equals("Dier"))) {
+                                newlosdata.getHex(x, y).setHexsideTerrain(a, newlosdata.getTerrain("Dier Lip"));
+                                newlosdata.getHex(x,y).setHexsideLocationTerrain(a, newlosdata.getTerrain("Dier Lip"));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void setSandDuneTerrain(VASLBoard board, VASL.LOS.Map.Map newlosdata, BufferedImage bi, Rectangle ovrRec){
+        for (int x = 0; x < bi.getWidth(); x++) {
+            for (int y = 0; y < bi.getHeight(); y++) {
+                if (newlosdata.onMap(x + ovrRec.x, y + ovrRec.y)) {
+                    int c = bi.getRGB(x, y);
+                    if ((c >> 24) != 0x00) { // not a transparent pixel
+                        String terraintouse = "Sand Dune, Low";
+                        Terrain terr;
+                        //Retrieving the R G B values
+                        Color color = getRGBColor(c);
+                        int terrint = board.getVASLBoardArchive().getTerrainForColor(color);
+                        if (terrint >= 0){
+                            terr = newlosdata.getTerrain(terrint);
+                            if (terr.getName().equals("Dune, Crest Low")){
+                                terraintouse = "Dune, Crest Low";
+                            } else if (terr.getName().contains("Scrub")) {
+                                terraintouse = "Scrub";
+                            }
+                        }
+                        newlosdata.setGridTerrainCode(newlosdata.getTerrain(terraintouse).getType(), x + ovrRec.x, y + ovrRec.y);
+                        if (terraintouse.equals("Dune, Crest Low")){
+                            setDuneCrest(newlosdata, x, y, ovrRec);
+                        }
+                        newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().setTerrain(newlosdata.getTerrain("Sand Dune, Low"));
+                    }
+                }
+            }
+        }
+
+    }
+    private void setDuneCrest(VASL.LOS.Map.Map newlosdata, int x, int y, Rectangle ovrRec){
+        // reset the terrain
+        Hex dunehex = newlosdata.gridToHex(x+ovrRec.x, y+ovrRec.y);
+        Location dunecrestloc = dunehex.getNearestLocation(x+ovrRec.x, y+ovrRec.y);
+        int hexside = dunehex.getLocationHexside(dunecrestloc);
+        if (hexside != -1) {
+            dunehex.setHexsideTerrain(hexside, newlosdata.getTerrain("Dune, Crest Low"));
+            dunehex.setHexsideLocationTerrain(hexside, newlosdata.getTerrain("Dune, Crest Low"));
+        }
+    }
+    private void setWadiTerrain(VASLBoard board, VASL.LOS.Map.Map newlosdata, BufferedImage bi, Rectangle ovrRec){
+        for (int x = 0; x < bi.getWidth(); x++) {
+            for (int y = 0; y < bi.getHeight(); y++) {
+                if (newlosdata.onMap(x + ovrRec.x, y + ovrRec.y)) {
+                    int c = bi.getRGB(x, y);
+                    if ((c >> 24) != 0x00) { // not a transparent pixel
+                        String terraintouse = "Open Ground";
+                        Terrain terr;
+                        //Retrieving the R G B values
+                        Color color = getRGBColor(c);
+                        int terrint = board.getVASLBoardArchive().getTerrainForColor(color);
+                        if (terrint >=0) {
+                            terr = newlosdata.getTerrain(terrint);
+                            if (terr.getName().equals("Wadi")) {
+                                terraintouse = "Wadi";
+                            } else if (terr.getName().equals("Cliff")){
+                                terraintouse = "Cliff";
+                            }
+                        }
+                        newlosdata.setGridTerrainCode(newlosdata.getTerrain(terraintouse).getType(), x + ovrRec.x, y + ovrRec.y);
+                        newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().setTerrain(newlosdata.getTerrain("Wadi"));
+                        newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().setBaseHeight(-1);
+                        // need to set depression and cliff hexsides, but how?
+                    }
+                }
+            }
+        }
+
+    }
     /**
      * Sets status of LOS engine to legacy mode
      */
@@ -621,7 +830,12 @@ public class ASLMap extends Map {
 
     g2d.setComposite(oldComposite);
   }
-
+    private Color getRGBColor(int c){
+        int red = (c & 0x00ff0000) >> 16;
+        int green = (c & 0x0000ff00) >> 8;
+        int blue = c & 0x000000ff;
+        return new Color(red, green, blue);
+    }
   
   public enum ShowMapLevel
   {

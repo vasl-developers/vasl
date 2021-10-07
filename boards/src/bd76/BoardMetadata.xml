@@ -18,7 +18,7 @@
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
 -->
-<boardMetadata name="76" version="6.2" versionDate="Nov 2020" author="BK" boardImageFileName="bd76.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="76" version="6.4" versionDate="Sep 2021" author="BK" boardImageFileName="bd76.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily

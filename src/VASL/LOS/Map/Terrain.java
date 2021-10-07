@@ -26,7 +26,7 @@ public class Terrain {
     /**
      * The LOS categories
      */
-    public static enum LOSCategories {
+    public enum LOSCategories {
         HEXSIDE,
         BUILDING,
         MARKETPLACE,

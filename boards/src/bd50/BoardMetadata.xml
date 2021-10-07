@@ -24,7 +24,7 @@
 	v6.3 Mar 2018 update version for lightwoods transform
 	v6.4 Jul 2019 added missing K2/L1 cliff and NoCliffs overlay (BK)
 -->
-<boardMetadata name="50" version="6.4" versionDate="Jul 2019" author="TR" boardImageFileName="bd50.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="50" version="6.7" versionDate="Jul 2021" author="TR" boardImageFileName="bd50.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily

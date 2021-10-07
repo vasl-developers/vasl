@@ -20,13 +20,12 @@
 	A1CenterX - x location of the A1 center dot
 	A1CenterY - y location of the A1 center dot 
 	
-v2.3 add LOS(DER)
-v2.4 fix terrain transformations May 2018 (ATC)
+	3/11/15 - fixed "no woods roads" SSR rule
 -->
 <boardMetadata 
 	name="RBv2" 
 	version="2.4" 
-	versionDate="Aug 2017" 
+	versionDate="Jun 2021" 
 	author="Allan Cannamore" 
 	boardImageFileName="bdRBv2.gif" 
 	hasHills="TRUE" 
@@ -62,31 +61,224 @@ v2.4 fix terrain transformations May 2018 (ATC)
 			x - x coordinate of overly upper left
 			y - y coordinate of overlay upper left
 		-->
-		<overlaySSRule name="Chemist" image="RB_Chemist_Shop.gif" x="1503" y="1314" />
-		<overlaySSRule name="Snow" image="RB_Ground_Snow.gif" x="0" y="0" />
-		<overlaySSRule name="F16" image="RB_Gutted_f16.gif" x="285" y="1007" />
-		<overlaySSRule name="G26" image="RB_Gutted_g26.gif" x="341" y="1619" />
-		<overlaySSRule name="J13" image="RB_Gutted_j13.gif" x="515" y="606" />
-		<overlaySSRule name="J16" image="RB_Gutted_j16.gif" x="512" y="884" />
-		<overlaySSRule name="J43" image="RB_Gutted_j43.gif" x="510" y="2762" />
-		<overlaySSRule name="K27" image="RB_Gutted_k27.gif" x="567" y="1673" />
-		<overlaySSRule name="L39" image="RB_Gutted_l39.gif" x="623" y="2500" />
-		<overlaySSRule name="O6" image="RB_Gutted_o6.gif" x="794" y="342" />
-		<overlaySSRule name="O10" image="RB_Gutted_o10.gif" x="796" y="608" />
-		<overlaySSRule name="O40" image="RB_Gutted_o40.gif" x="791" y="2526" />
-		<overlaySSRule name="P21" image="RB_Gutted_p21.gif" x="845" y="1349" />
-		<overlaySSRule name="P33" image="RB_Gutted_p33.gif" x="846" y="2081" />
-		<overlaySSRule name="R17" image="RB_Gutted_r17.gif" x="970" y="1052" />
-		<overlaySSRule name="R23" image="RB_Gutted_r23.gif" x="959" y="1434" />
-		<overlaySSRule name="R27" image="RB_Gutted_r27.gif" x="959" y="1732" />
-		<overlaySSRule name="S43" image="RB_Gutted_s43.gif" x="1015" y="2715" />
-		<overlaySSRule name="T21" image="RB_Gutted_t21.gif" x="1069" y="1347" />
+		<underlaySSRule name="WallsOnly" image="WallPattern.gif">
+			<color name="HedgeGreen" />
+		</underlaySSRule>
+		<underlaySSRule name="WallToCactus" image="CactusPattern.gif">
+			<color name="WallBrown" />
+			<color name="WallGrey1" />
+			<color name="WallGrey2" />
+		</underlaySSRule>
+		<underlaySSRule name="HedgeToCactus" image="CactusPattern.gif">
+			<color name="HedgeGreen" />
+		</underlaySSRule>
+		<overlaySSRule name="BSO_6b_NoZ13Island" image="BSO_6b_NoZ13Island.gif" x="462" y="797" />
+		<overlaySSRule name="BSO_6b_NoU12Island" image="BSO_6b_NoU12Island.gif" x="67" y="702" />
+		<overlaySSRule name="BSO_6b_NoCC4Island" image="BSO_6b_NoCC4Island.gif" x="517" y="184" />
+		<overlaySSRule name="BSO_6b_GG20SideIsWater" image="BSO_6b_GG20SideIsWater.gif" x="1" y="379" />
+		<overlaySSRule name="BSO_6b_Q1SideIsWater" image="BSO_6b_Q1SideIsWater.gif" x="1" y="1" />
+		<overlaySSRule name="BSO_6b_Y11-BB12Bridge" image="BSO_6b_Y11-BB12Bridge.gif" x="415" y="650" />
+		<overlaySSRule name="PalmTrees" image="6b_PalmTrees.gif" x="32" y="400" />
+		<overlaySSRule name="OrchardsToShellholes" image="6b_Orch2Shell.gif" x="27" y="396" />
+		<overlaySSRule name="OrchardsToCrags" image="6b_Orch2Crag.gif" x="34" y="400" />
+		<overlaySSRule name="Bamboo" image="6b_Bamboo.gif" x="22" y="96" />
+		<overlaySSRule name="LightWoods" image="6b_LightWoods.gif" x="1" y="1" />
+		<overlaySSRule name="DenseJungle" image="6b_DenseJungle.gif" x="1" y="1" />
+		<overlaySSRule name="NoCliffs" image="6b_NoCliffs.gif" x="239" y="481" />
+		<overlaySSRule name="NoHillNums" image="6b_NoHillNum.gif" x="148" y="374" />
+		<overlaySSRule name="HedgesToBocage" image="6b_HedgesToBocage.gif" x="706" y="447" />
+		<overlaySSRule name="CragsToOrchards" image="6b_CragsToOrchards.gif" x="256" y="494" />
+		<overlaySSRule name="CragsToShellholes" image="6b_CragsToShellholes.gif" x="259" y="494" />
+		<overlaySSRule name="CragsToPalm" image="6b_CragsToPalm.gif" x="258" y="494" />
+		<overlaySSRule name="BridgeToFord" image="6b_BridgeToFord.gif" x="357" y="101" />
+		<overlaySSRule name="NoBridge" image="6b_NoBridge.gif" x="357" y="101" />
+		<overlaySSRule name="RoadsToPaths" image="6b_RoadsToPaths.gif" x="45" y="1" />
+		<overlaySSRule name="NoWoodsRoads" image="6b_NoWoodsRoad.gif" x="45" y="1" />
+		<overlaySSRule name="BrushToOpenGround" image="6b_BrushToOG.gif" x="713" y="1087" />
+		<overlaySSRule name="NoRoads" image="6b_NoRoads.gif" x="1" y="1" />
 	</overlaySSRules>
 	
 	<colors>
+		<!--
+			<color name="StoneStairwell" red="249" green="251" blue="248" terrain="Stone Building, 2 Level" elevation="UNKNOWN" />
+		-->
+
+		
+		<color name="WoodenBldg1" red="94" green="65" blue="32" terrain="Wooden Building" elevation="0" />
+		<color name="WoodenBldg2" red="71" green="49" blue="24" terrain="Wooden Building, 1 Level" elevation="0" />
+		<color name="StoneBldg1" red="0" green="0" blue="255" terrain="Stone Building, 1 Level" elevation="0" />
+		<color name="StoneBldg2" red="127" green="0" blue="127" terrain="Stone Building, 1 Level" elevation="0" />
+		<color name="StoneBldg3" red="0" green="255" blue="255" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldg4" red="127" green="0" blue="0" terrain="Stone Building, 2 Level" elevation="0" />
+		<color name="Level1" red="219" green="179" blue="143" terrain="Open Ground" elevation="1" />
+		<color name="PavedRdL1" red="153" green="153" blue="153" terrain="Paved Road" elevation="1" />
+		<color name="DirtRdL1" red="222" green="206" blue="173" terrain="Dirt Road" elevation="1" />
+		<color name="Wall" red="102" green="102" blue="102" terrain="Wall" elevation="0" />
+		<color name="Hedge" red="0" green="127" blue="0" terrain="Hedge" elevation="0" />
+		<color name="Level0" red="131" green="170" blue="112" terrain="Open Ground" elevation="0" />
+		<color name="Water" red="151" green="198" blue="222" terrain="Water" elevation="0" />
+		<color name="GullyBrown1" red="76" green="47" blue="19" terrain="Gully" elevation="1" />
+		<color name="StoneFactory1" red="255" green="0" blue="0" terrain="Stone Factory, 1.5 Level" elevation="0" />
+		<color name="StoneFactory2" red="255" green="0" blue="255" terrain="Stone Factory, 2.5 Level" elevation="0" />
+		<color name="BridgeBrown" red="116" green="99" blue="87" terrain="Single Hex Wooden Bridge" elevation="UNKNOWN" />
+		<color name="BridgeGrey1" red="127" green="127" blue="127" terrain="Single Hex Stone Bridge" elevation="UNKNOWN" />
+		<color name="Cliff" red="51" green="51" blue="51" terrain="Cliff" elevation="UNKNOWN" />
+		<color name="GullyCliff" red="39" green="24" blue="12" terrain="Cliff" elevation="UNKNOWN" />
+		<color name="BrushL1" red="60" green="75" blue="60" terrain="Brush" elevation="1" />
+		<color name="BrushGully" red="60" green="120" blue="60" terrain="Brush" elevation="1" />
+		<color name="BrushL0" red="60" green="100" blue="60" terrain="Brush" elevation="0" />
+		<color name="StorageTank2" red="76" green="76" blue="76" terrain="Storage Tank, 2 Level" elevation="0" />
+		<color name="StoneFactoryWall1" red="225" green="225" blue="225" terrain="Interior Factory Wall, 1 Level" elevation="0" />
+		<color name="StoneFactoryWall2" red="25" green="25" blue="25" terrain="Interior Factory Wall, 2 Level" elevation="0" />
+		<color name="RooflessStoneFactory1" red="0" green="105" blue="100" terrain="Roofless Stone Factory, 1.5 Level" elevation="0" />
+		<color name="RooflessStoneFactory2" red="0" green="0" blue="100" terrain="Roofless Stone Factory, 2.5 Level" elevation="0" />
 	</colors>
 	
 	<colorSSRules>
+		<!--
+			The board color scenario-specific rules. Use this element to override the shared SSRs.		
+		-->
 	</colorSSRules>
-	
+	<rrembankments>
+		<!--
+			List of hexes with railway embankment hexsides. Create one hex element per hex.
+			For hexsides 0 is the top hexside with 1 being clockwise from there, etc. 
+			Example hex E1 has railway embankment on the two right hand side hexsides adjacent to column F: <rrembankment hex="E1" hexsides="12" />
+		-->
+		<rrembankment hex="E1" hexsides="12" />
+		<rrembankment hex="E2" hexsides="123" />
+		<rrembankment hex="E3" hexsides="01245" />
+		<rrembankment hex="E4" hexsides="1245" />
+		<rrembankment hex="E5" hexsides="1245" />
+		<rrembankment hex="E6" hexsides="1245" />
+		<rrembankment hex="E7" hexsides="1245" />
+		<rrembankment hex="E8" hexsides="1245" />
+		<rrembankment hex="E9" hexsides="1245" />
+		<rrembankment hex="E10" hexsides="1245" />
+		<rrembankment hex="E11" hexsides="1245" />
+		<rrembankment hex="E12" hexsides="1245" />
+		<rrembankment hex="E13" hexsides="1245" />
+		<rrembankment hex="E14" hexsides="1245" />
+		<rrembankment hex="E15" hexsides="1245" />
+		<rrembankment hex="E16" hexsides="1245" />
+		<rrembankment hex="E17" hexsides="1245" />
+		<rrembankment hex="E18" hexsides="1245" />
+		<rrembankment hex="E19" hexsides="1245" />
+		<rrembankment hex="E20" hexsides="1245" />
+		<rrembankment hex="E21" hexsides="1245" />
+		<rrembankment hex="E22" hexsides="1245" />
+		<rrembankment hex="E23" hexsides="1245" />
+		<rrembankment hex="E24" hexsides="1245" />
+		<rrembankment hex="E25" hexsides="1245" />
+		<rrembankment hex="E26" hexsides="1245" />
+		<rrembankment hex="E27" hexsides="1245" />
+		<rrembankment hex="E28" hexsides="1245" />
+		<rrembankment hex="E29" hexsides="1245" />
+		<rrembankment hex="E30" hexsides="1245" />
+		<rrembankment hex="E31" hexsides="1245" />
+		<rrembankment hex="E32" hexsides="1245" />
+		<rrembankment hex="E33" hexsides="1245" />
+		<rrembankment hex="E34" hexsides="1245" />
+		<rrembankment hex="E35" hexsides="1245" />
+		<rrembankment hex="E36" hexsides="1245" />
+		<rrembankment hex="E37" hexsides="1245" />
+		<rrembankment hex="E38" hexsides="1245" />
+		<rrembankment hex="E39" hexsides="1245" />
+		<rrembankment hex="E40" hexsides="12345" />
+		<rrembankment hex="E41" hexsides="045" />
+		<rrembankment hex="E42" hexsides="5" />
+
+		<rrembankment hex="A44" hexsides="05" />
+		<rrembankment hex="B43" hexsides="05" />
+		<rrembankment hex="C43" hexsides="05" />
+		<rrembankment hex="D42" hexsides="05" />
+
+		<rrembankment hex="F0" hexsides="4" />		
+		<rrembankment hex="F1" hexsides="45" />
+		<rrembankment hex="F2" hexsides="45" />
+		<rrembankment hex="F3" hexsides="45" />
+		<rrembankment hex="F4" hexsides="45" />
+		<rrembankment hex="F5" hexsides="45" />
+		<rrembankment hex="F6" hexsides="45" />
+		<rrembankment hex="F7" hexsides="45" />
+		<rrembankment hex="F8" hexsides="45" />
+		<rrembankment hex="F9" hexsides="45" />
+		<rrembankment hex="F10" hexsides="45" />
+		<rrembankment hex="F11" hexsides="45" />
+		<rrembankment hex="F12" hexsides="45" />
+		<rrembankment hex="F13" hexsides="45" />
+		<rrembankment hex="F14" hexsides="45" />
+		<rrembankment hex="F15" hexsides="45" />
+		<rrembankment hex="F16" hexsides="45" />
+		<rrembankment hex="F17" hexsides="45" />
+		<rrembankment hex="F18" hexsides="45" />
+		<rrembankment hex="F19" hexsides="45" />
+		<rrembankment hex="F20" hexsides="45" />
+		<rrembankment hex="F21" hexsides="45" />
+		<rrembankment hex="F22" hexsides="45" />
+		<rrembankment hex="F23" hexsides="45" />
+		<rrembankment hex="F24" hexsides="45" />
+		<rrembankment hex="F25" hexsides="45" />
+		<rrembankment hex="F26" hexsides="45" />
+		<rrembankment hex="F27" hexsides="45" />
+		<rrembankment hex="F28" hexsides="45" />
+		<rrembankment hex="F29" hexsides="45" />
+		<rrembankment hex="F30" hexsides="45" />
+		<rrembankment hex="F31" hexsides="45" />
+		<rrembankment hex="F32" hexsides="45" />
+		<rrembankment hex="F33" hexsides="45" />
+		<rrembankment hex="F34" hexsides="45" />
+		<rrembankment hex="F35" hexsides="45" />
+		<rrembankment hex="F36" hexsides="45" />
+		<rrembankment hex="F37" hexsides="45" />
+		<rrembankment hex="F38" hexsides="45" />
+		<rrembankment hex="F39" hexsides="45" />
+		<rrembankment hex="F40" hexsides="5" />
+		
+		<rrembankment hex="D2" hexsides="2" />
+		<rrembankment hex="D3" hexsides="12" />
+		<rrembankment hex="D4" hexsides="12" />
+		<rrembankment hex="D5" hexsides="12" />
+		<rrembankment hex="D6" hexsides="12" />
+		<rrembankment hex="D7" hexsides="12" />
+		<rrembankment hex="D8" hexsides="12" />
+		<rrembankment hex="D9" hexsides="12" />
+		<rrembankment hex="D10" hexsides="12" />
+		<rrembankment hex="D11" hexsides="12" />
+		<rrembankment hex="D12" hexsides="12" />
+		<rrembankment hex="D13" hexsides="12" />
+		<rrembankment hex="D14" hexsides="12" />
+		<rrembankment hex="D15" hexsides="12" />
+		<rrembankment hex="D16" hexsides="12" />
+		<rrembankment hex="D17" hexsides="12" />
+		<rrembankment hex="D18" hexsides="12" />
+		<rrembankment hex="D19" hexsides="12" />
+		<rrembankment hex="D20" hexsides="12" />
+		<rrembankment hex="D21" hexsides="12" />
+		<rrembankment hex="D22" hexsides="12" />
+		<rrembankment hex="D23" hexsides="12" />
+		<rrembankment hex="D24" hexsides="12" />
+		<rrembankment hex="D25" hexsides="12" />
+		<rrembankment hex="D26" hexsides="12" />
+		<rrembankment hex="D27" hexsides="12" />
+		<rrembankment hex="D28" hexsides="12" />
+		<rrembankment hex="D29" hexsides="12" />
+		<rrembankment hex="D30" hexsides="12" />
+		<rrembankment hex="D31" hexsides="12" />
+		<rrembankment hex="D32" hexsides="12" />
+		<rrembankment hex="D33" hexsides="12" />
+		<rrembankment hex="D34" hexsides="12" />
+		<rrembankment hex="D35" hexsides="12" />
+		<rrembankment hex="D36" hexsides="12" />
+		<rrembankment hex="D37" hexsides="12" />
+		<rrembankment hex="D38" hexsides="12" />
+		<rrembankment hex="D39" hexsides="12" />
+		<rrembankment hex="D40" hexsides="12" />
+		<rrembankment hex="D41" hexsides="123" />
+		
+		<rrembankment hex="A43" hexsides="23" />
+		<rrembankment hex="B42" hexsides="23" />
+		<rrembankment hex="C42" hexsides="23" />
+		
+	</rrembankments>
 </boardMetadata>

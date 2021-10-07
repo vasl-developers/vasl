@@ -1,0 +1,507 @@
+// Feb 2018 TR
+//
+// 25Feb18 - Added RogueKorea colors, changed L4 and L5 Winter colors 
+//
+// 25Jul09 - Added BrushCrest[Hill/Dale][Mud/Winter]
+//         - Added GrainCrestMud
+//         - 
+//
+// - May 2008 version plus:
+// + added BldgShadowL2,3
+// + changed WallBrownWinter
+
+// Bocage
+BocageGreen 62,90,47
+BocageBrown 176,145,70 //   for hill bocage: 149,113,33
+
+
+// Bridges
+BridgeBrown  153,99,43
+BridgeGrey1  159,157,157
+BridgeGrey2  93,91,91
+
+
+// Brush
+BrushL_2  123,165,83
+BrushL_1  123,165,84
+BrushL0  123,165,85
+BrushL1  123,165,86
+BrushL2  123,165,87
+BrushL3  123,165,88
+BrushL4  123,165,89
+BrushL5  123,165,90
+BrushL6  123,165,91
+
+BrushBlackL_2 68,62,27
+BrushBlackL_1 68,63,27
+BrushBlackL0 68,64,27
+BrushBlackL1 68,65,27
+BrushBlackL2 68,66,27
+BrushBlackL3 68,67,27
+BrushBlackL4 68,68,27
+BrushBlackL5 68,69,27
+BrushBlackL6 68,70,27
+
+BrushWinter 196,207,187
+
+BrushCrestL_1 142,173,91
+BrushCrestL0 142,173,92
+BrushCrestL1 129,151,71
+BrushCrestL2 129,151,72
+BrushCrestL3 129,151,73
+BrushCrestL4 129,151,74
+BrushCrestL5 129,151,75
+BrushCrestL6 129,151,76
+
+BrushCrestHillWinter 179,191,168
+BrushCrestDaleWinter 218,230,210
+BrushCrestHillMud 130,119,60
+BrushCrestDaleMud 158,145,74
+
+//Building Shadows
+BldgShadowL_1 101,123,63
+BldgShadowL0 143,151,103
+BldgShadowL1 149,125,59
+BldgShadowL2 127,95,27
+BldgShadowL3 96,71,16
+BldgShadowL4 77,51,11
+
+BldgShadowL_1Winter 183,195,161
+BldgShadowL0Winter 206,206,206
+BldgShadowL1Winter 186,179,158
+BldgShadowL2Winter 168,152,120
+BldgShadowL3Winter 141,126,93
+BldgShadowL4Winter
+
+BldgShadowL_1Mud 98,91,48
+BldgShadowL0Mud 148,141,92
+BldgShadowL1Mud 138,119,66
+BldgShadowL2Mud 114,90,38
+BldgShadowL3Mud 100,76,24
+BldgShadowL4Mud
+
+
+// Cliffs
+Cliff  35,20,10
+GullyCliff 36,20,10
+WinterCliff  101,83,71
+
+
+// Crags
+CragGrey  184,184,176
+CragBlack  68,68,67
+
+
+// Dirt Roads
+DirtRdL_2  220,205,121
+DirtRdL_1  220,205,122
+DirtRdL0  220,205,123
+DirtRdL1  220,205,124
+DirtRdL2  220,205,125
+DirtRdL3  220,205,126
+DirtRdL4  220,205,127
+DirtRdL5  220,205,128
+DirtRdL6  220,205,129
+DirtRdBridge 220,206,123
+DirtRdWinter 235,231,205
+
+
+// Grain
+GrainL_2  255,240,109
+GrainL_1  255,240,110
+GrainL0  255,240,111
+GrainL1  255,240,112
+GrainL2  255,240,113
+GrainL3  255,240,114
+GrainL4  255,240,115
+GrainL5  255,240,116
+GrainL6  255,240,117
+
+FurrowsL_2  255,239,109
+FurrowsL_1  255,239,110
+FurrowsL0  255,239,111
+FurrowsL1  255,239,112
+FurrowsL2  255,239,113
+FurrowsL3  255,239,114
+FurrowsL4  255,239,115
+FurrowsL5  255,239,116
+FurrowsL6  255,239,117
+
+GrainCrestL_1 235,216,98
+GrainCrestL0 235,216,99
+GrainCrestL1 235,216,100
+GrainCrestL2 235,216,101
+GrainCrestL3 235,216,102
+GrainCrestL4 235,216,103
+GrainCrestL5 235,216,104
+GrainCrestL6 235,216,105
+
+GrainCrestMud 215,208,99
+PlowedFields  208,177,104
+Furrows 135,89,9
+
+
+// Graveyard
+GraveyardWhite1  204,215,171
+GraveyardWhite2  164,164,132
+GraveyardGreen   38,82,40
+GraveyardShadow  53,62,15
+GraveyardGreenWinter 190,202,190
+
+
+// Gullies
+GullyGreen1  117,124,56
+GullyGreen2  70,86,35
+GullyGreen3  35,60,20
+GullyBrown1  156,120,51
+GullyBrown2  136,95,33
+GullyBrown3  93,56,22
+GullyBlack   40,19,10
+
+
+// Hedge
+HedgeGreen 62,91,47
+HedgeGreenWinter 160,174,154
+
+// Korean Rogue Hills
+KoreaLevel1 200,154,85
+KoreaLevel2 185,125,85
+KoreaLevel3 159,103,80
+KoreaLevel4 134,85,65
+KoreaLevel5 109,70,55
+  
+
+// Lumberyards
+Lumberyard1  166,115,55
+Lumberyard2  135,94,46
+Lumberyard3  105,73,36
+Lumberyard4  75,52,26
+Lumberyard5  45,31,16
+
+
+// Marsh
+MarshGreenL_2   68,98,39
+MarshGreenL_1   68,98,40
+MarshGreenL0    68,98,41
+MarshGreenL1    68,98,42
+
+MarshBrownL_2   49,0,22
+MarshBrownL_1   50,0,22
+MarshBrownL0    51,0,22
+MarshBrownL1    52,0,22
+
+SeparatedMarshGreenL_2   67,98,39
+SeparatedMarshGreenL_1   67,98,40
+SeparatedMarshGreenL0    67,98,41
+SeparatedMarshGreenL1    67,98,42
+
+SeparatedMarshBrownL_2   49,0,21
+SeparatedMarshBrownL_1   50,0,21
+SeparatedMarshBrownL0    51,0,21
+SeparatedMarshBrownL1    52,0,21
+
+SwampGreenL_2   69,98,39
+SwampGreenL_1   69,98,40
+SwampGreenL0    69,98,41
+SwampGreenL1    69,98,42
+
+SwampBrownL_2   49,1,22
+SwampBrownL_1   50,1,22
+SwampBrownL0    51,1,22
+SwampBrownL1    52,1,22
+
+MudflatL0    127,91,41
+MudflatL_1   127,90,41
+
+
+// Miscellaneous
+Black    0,0,0
+WhiteHexNumbers 251,252,253
+ManHoles 0,1,0
+BoardNum 255,255,11
+HillNum  255,255,10
+BarbedWire 59,50,43
+Unknown 255,0,0
+White    255,255,255
+DuttyWhiteHexDots 255,254,253
+SnowHexDots 168,182,203
+VineyardGreen 84,100,45
+Slope   121,89,57
+
+
+// Open Ground
+Level_2  88,110,50
+Level_1  119,146,74
+Level0   175,188,106
+Level1   176,147,70
+Level2   147,111,31
+Level3   118,80,0
+Level4   94,57,0
+Level5   74,45,0
+Level6   56,34,0
+
+L0Winter  White
+L1Winter  222,213,188
+L2Winter  195,178,145
+L3Winter  164,144,102
+L4Winter  145,122,85  // new with FW boards
+L5Winter  125,105,73  // new with FW boards
+L6Winter  240,236,230
+L_1Winter 213,224,194
+L_2Winter 225,239,187
+
+
+// Orchards
+OrchL_2  85,100,46
+OrchL_1  83,98,45
+OrchL0  83,98,46
+OrchL1  83,98,47
+OrchL2  83,98,48
+OrchL3  83,98,49
+OrchL4  83,98,50
+OrchL5  83,98,51
+OrchL6  83,98,52
+OrchTrees  82,98,46
+OliveGroveGreen 171,222,104
+
+
+// Paths
+PathBrown1  143,125,52
+PathBrown2  116,100,50
+PathBrown3  64,50,13
+
+
+// Paved Roads
+PavedRdL_2  192,192,205
+PavedRdL_1  192,192,206
+PavedRdL0  192,192,207
+PavedRdL1  192,192,208
+PavedRdL2  192,192,209
+PavedRdL3  192,192,210
+PavedRdL4  192,192,211
+PavedRdL5  192,192,212
+PavedRdL6  192,192,213
+PavedRdWinter 222,222,222
+PavedRdBridge 192,193,207
+
+
+// Railroads
+Rails1 120,122,126
+Rails2 60,60,60
+RailTies 110,69,48
+RailBed1 201,197,197
+RailBed2 144,142,142
+RailBed3 107,105,105
+
+
+// Rice Paddies
+RicePaddy 103,75,39
+PaddyInterior 174,168,78
+
+
+// Shellholes
+Shellhole1 177,136,57
+Shellhole2 97,68,27
+Shellhole3 48,23,8
+
+
+// Stone Building
+StoneBldg1  25,25,25
+StoneBldg2  40,40,40
+StoneBldg3  55,55,55
+StoneBldg4  70,70,70
+StoneBldg5  85,85,85
+StoneBldg6  100,100,100
+StoneBldg7  115,115,115
+StoneBldg8  130,130,130
+StoneBldg9  145,145,145
+StoneBldg10  160,160,160
+StoneBldg11  175,175,175
+StoneBldg12  190,190,190
+StoneBldg13  205,205,205
+StoneBldg14  220,220,220
+StoneBldg15  235,235,235
+StoneStairwell 251,254,255
+StoneRowhouseBar  1,1,0
+
+StoneBldg1Winter  90,90,90
+StoneBldg2Winter  107,107,107
+StoneBldg3Winter  115,115,116
+StoneBldg4Winter  123,123,123
+StoneBldg5Winter  132,132,132
+StoneBldg6Winter  148,148,148
+StoneBldg7Winter  156,156,156
+StoneBldg8Winter  165,165,165
+StoneBldg9Winter  181,181,181
+StoneBldg10Winter  189,189,189
+StoneBldg11Winter  198,198,198
+StoneBldg12Winter  214,214,214
+StoneBldg13Winter  222,222,221
+StoneBldg14Winter  231,231,231
+StoneBldg15Winter  247,247,247
+StoneRowhouseBarWinter 71,70,70
+
+
+// Streams
+StreamBrown   98,61,19
+StreamGreen1  117,124,55
+StreamGreen2  70,85,35
+StreamGreen3  35,59,20
+StreamWhite   213,230,230
+StreamWater   131,190,240
+DryStream1 182,159,88
+DryStream2 147,105,25
+WinterDepression 233,233,225
+
+
+// Sunken Road
+SunkRoad1 146,110,30
+SunkRoad2 94,57,23
+
+
+// Walls
+WallBrown  152,99,44
+WallGrey1  158,157,157
+WallGrey2  92,91,92
+WallBrownWinter 177,150,121
+
+
+// Water
+Water        135,190,220
+WaterWhite   214,230,230
+Ice          200,230,230
+PondWater    135,190,221
+PondWhite    215,230,230
+
+
+// Wooden Building
+WoodBldg1  15,10,5
+WoodBldg2  30,21,10
+WoodBldg3  45,31,15
+WoodBldg4  60,42,20
+WoodBldg5  75,52,25
+WoodBldg6  90,62,30
+WoodBldg7  105,73,35
+WoodBldg8  120,83,40
+WoodBldg9  135,94,45
+WoodBldg10  150,104,50
+WoodBldg11  166,115,54
+WoodBldg12  181,125,59
+WoodBldg13  194,135,66
+WoodBldg14  199,145,81
+WoodBldg15  204,154,96
+WoodStairwell 250,254,255
+WoodRowhouseBar  2,1,0
+
+WoodBldg1Winter  123,90,66
+WoodBldg2Winter  132,107,74
+WoodBldg3Winter  140,107,74
+WoodBldg4Winter  148,115,82
+WoodBldg5Winter  156,123,90
+WoodBldg6Winter  165,132,90
+WoodBldg7Winter  165,140,99
+WoodBldg8Winter  173,148,107
+WoodBldg9Winter  181,148,115
+WoodBldg10Winter  181,156,123
+WoodBldg11Winter  189,165,132
+WoodBldg12Winter  189,173,140
+WoodBldg13Winter  198,173,148
+WoodBldg14Winter  206,181,165
+WoodBldg15Winter  206,189,165
+WoodRowhouseBarWinter 72,70,70
+
+
+// Woods
+WoodsGreen  85,95,45
+WoodsBlack  44,42,22
+
+WoodsGreenWinter  166,171,145
+WoodsBlackWinter  94,90,75
+
+
+// Mud
+MudOrchard  65,90,48
+MudBrush      138,149,89
+MudBrushCrest 142,130,66
+
+MudStreamGreen1  130,123,78
+MudStreamGreen2  101,94,45
+MudStreamGreen3  81,74,31
+MudStreamBrown   80,61,38
+MudWaterWhite  170,175,147
+MudWater       152,186,169
+
+MudLevel_2    107,100,53
+MudLevel_1    127,119,63
+MudLevel0      170,160,95
+MudLevel1      154,131,70
+MudLevel2      135,106,45
+MudLevel3      118,87,23
+MudLevel4      91,64,10
+MudLevel5      74,50,10
+MudLevel6      56,38,5
+
+MudPavedRoad  177,177,177
+MudDirtRoad   164,147,82
+
+MudGrain    230,230,127
+MudGrainCrest 185,174,99
+MudFurrows  100,69,14
+MudPlowedFields 163,139,81
+MudPaddyWall 153,126,21
+
+MudBoardNum 90,77,42
+MudHillNum 195,196,38
+
+MudShellhole1 146,117,62
+MudGullyBrown1 120,100,60
+MudGullyBrown2 108,78,40
+
+MudMarshGreen 74,84,42
+
+// Desert
+DesertL_2      187,168,133
+DesertL_1      220,194,147
+DesertL0      251,223,147
+DirtRdDesertL_2      245,210,108
+DirtRdDesertL_1      247,210,108
+DirtRdDesertL0      248,210,108
+DirtRdDesertL1      249,210,108
+DirtRdDesertL2      250,210,108
+DirtRdDesertL3      251,210,108
+DirtRdDesertL4      252,210,108
+DirtRdDesertL5      253,210,108
+DirtRdDesertL6      254,210,108
+OrchDesertL_2      105,120,0
+OrchDesertL_1      107,120,0
+OrchDesertL0      108,120,0
+OrchDesertL1      109,120,0
+OrchDesertL2      110,120,0
+OrchDesertL3      111,120,0
+OrchDesertL4      112,120,0
+OrchDesertL5      113,120,0
+OrchDesertL6      114,120,0
+BrushDesertL_2      177,179,47
+BrushDesertL_1      178,179,47
+BrushDesertL0      179,179,47
+BrushDesertL1      180,179,47
+BrushDesertL2      181,179,47
+BrushDesertL3      182,179,47
+BrushDesertL4      183,179,47
+BrushDesertL5      184,179,47
+BrushDesertL6      185,179,47
+DirtRdBridgeDesert      246,210,108
+OrchTreesDesert      106,120,0
+DierBase      250,213,134
+Sand1      238,194,98
+Sand2      222,163,120
+Wadi1      231,167,0
+Wadi2      191,111,7
+Wadi3      129,83,39
+Hammada1      59,55,18
+Hammada2      210,210,210
+Scrub1      119,70,0
+Scrub2      102,109,45
+CactusTan      222,189,99
+CactusGreen      123,132,8
+CactusBrown      90,66,33

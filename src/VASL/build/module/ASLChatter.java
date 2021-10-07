@@ -79,6 +79,8 @@ import javax.swing.text.StyledDocument;
 import javax.swing.text.TabSet;
 import javax.swing.text.TabStop;
 
+import static VASSAL.build.GameModule.getGameModule;
+
 /**
  * The chat window component.  Displays text messages and
  * accepts i.  Also acts as a {@link CommandEncoder},
@@ -104,6 +106,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
   private final static int DR_NOTIFY_SNIPERS = 1;
   private final static int DR_NOTIFY_STARTER_KIT = 2;
   private final static int DR_NOTIFY_ALL = 3;
+
+  private static final String preferenceTabName = "VASL"; // alwaysontop preference
 
   private enum DiceType
   {
@@ -1846,6 +1850,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         });
 
         l_objColoredDieColor.fireUpdate();
+        final BooleanConfigurer AlwaysOnTop = new BooleanConfigurer("PWAlwaysOnTop", "Player Window (menus, toolbar, chat) is always on top in uncombined application mode (requires a VASSAL restart)", false);
+        getGameModule().getPrefs().addOption(preferenceTabName, AlwaysOnTop);
     }
 
     @Override
