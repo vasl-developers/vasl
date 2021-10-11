@@ -343,7 +343,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         if(source.getName().contains("Rooftop")) {
             leveladj=-0.5;
         }
-        if(source.getHex().isDepressionTerrain() && !source.isCenterLocation()) {
+        if(source.getHex().isDepressionTerrain() && !source.getLOSPoint().equals(source.getHex().getHexCenter())) {
             leveladj=+1;
         }
         sourcelevel= source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj ;
@@ -466,7 +466,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             if(target.getName().contains("Rooftop")) {
                 leveladj=-0.5;
             }
-            if(target.getHex().isDepressionTerrain() && !target.isCenterLocation()) {
+            if(target.getHex().isDepressionTerrain() && !target.getLOSPoint().equals(target.getHex().getHexCenter())){
                 leveladj=+1;
             }
             targetlevel= target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj ;
@@ -825,7 +825,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                         leveladj = -0.5;
                     }
                 }
-                if(source.getHex().isDepressionTerrain() && !source.isCenterLocation()) {
+                if(source.getHex().isDepressionTerrain() && !source.getLOSPoint().equals(source.getHex().getHexCenter())) {
                     leveladj=+1;
                 }
                 sourcelevel= source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj ;
@@ -846,7 +846,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                         leveladj = -0.5;
                     }
                 }
-                if(target.getHex().isDepressionTerrain() && !target.isCenterLocation()) {
+                if(target.getHex().isDepressionTerrain() && !target.getLOSPoint().equals(target.getHex().getHexCenter())) {
                     leveladj=+1;
                 }
                 targetlevel= target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj ;
@@ -870,7 +870,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                 if(source.getName().contains("Rooftop")) {
                     leveladj=-0.5;
                 }
-                if(source.getHex().isDepressionTerrain() && !source.isCenterLocation()) {
+                if(source.getHex().isDepressionTerrain() && !source.getLOSPoint().equals(source.getHex().getHexCenter())) {
                     leveladj=+1;
                 }
                 sourcelevel= source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj ;
@@ -889,7 +889,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                 if(target.getName().contains("Rooftop")) {
                     leveladj=-0.5;
                 }
-                if(target.getHex().isDepressionTerrain() && !target.isCenterLocation()) {
+                if(target.getHex().isDepressionTerrain() && !target.getLOSPoint().equals(target.getHex().getHexCenter())) {
                     leveladj=+1;
                 }
                 targetlevel= target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj ;
@@ -1061,7 +1061,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                 if (source.getName().contains("Rooftop")) {
                     leveladj = -0.5;
                 }
-                if (source.getHex().isDepressionTerrain() && !source.isCenterLocation()) {
+                if (source.getHex().isDepressionTerrain() && !source.getLOSPoint().equals(source.getHex().getHexCenter())) {
                     leveladj = +1;
                 }
                 sourcelevel = source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj;
@@ -1076,7 +1076,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                 if (source.getName().contains("Rooftop")) {
                     leveladj = -0.5;
                 }
-                if (source.getHex().isDepressionTerrain() && !source.isCenterLocation()) {
+                if (source.getHex().isDepressionTerrain() && !source.getLOSPoint().equals(source.getHex().getHexCenter())) {
                     leveladj = +1;
                 }
                 sourcelevel = source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj;
@@ -1091,7 +1091,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                 if (target.getName().contains("Rooftop")) {
                     leveladj = -0.5;
                 }
-                if (target.getHex().isDepressionTerrain() && !target.isCenterLocation()) {
+                if (target.getHex().isDepressionTerrain() && !target.getLOSPoint().equals(target.getHex().getHexCenter())) {
                     leveladj = +1;
                 }
                 targetlevel = target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj;
@@ -1106,7 +1106,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                 if (target.getName().contains("Rooftop")) {
                     leveladj = -0.5;
                 }
-                if (target.getHex().isDepressionTerrain() && !target.isCenterLocation()) {
+                if (target.getHex().isDepressionTerrain() && !target.getLOSPoint().equals(target.getHex().getHexCenter())) {
                     leveladj = +1;
                 }
                 targetlevel = target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj;

@@ -908,8 +908,9 @@ public class Hex {
                 // need to add new bridge location
                 final Location newLocation = new Location(centerLocation);
                 newLocation.setDepressionTerrain(null);
-                //newLocation.setBaseHeight(baseHeight + 1);
                 newLocation.setTerrain(getBridgeTerrain(gridadj));
+                // elevated road check
+                newLocation.setBaseHeight(getBridgeLocationHeight());
                 newLocation.setDownLocation(centerLocation);
                 centerLocation.setUpLocation(newLocation);
             }
@@ -926,18 +927,7 @@ public class Hex {
                         depressionadj = 2;
                     }
                 }
-                // DR code not used as boards do not use Elevated Road terrain; see board 13 as example
-                // leaves bug unfixed, depressions below Elevated roads will be one level below instead of two
-                //for (int x = 0; x < 6; x++) {
-                //    // get the adjacent hex for this hexside
-                //    Hex h2 = map.getAdjacentHex(this, x);
-                //    if (h2 != null) {
-                //        // elevated road?
-                //        if (h2.getCenterLocation().getTerrain().getName().contains("Elevated Road")) {
-                //            depressionadj=depressionadj-1;
-                //        }
-                //    }
-                //}
+
                 newLocation.setBaseHeight(baseHeight - depressionadj);
                 newLocation.setTerrain(getDepressionTerrain(gridadj));
                 newLocation.setUpLocation(centerLocation);
@@ -1130,6 +1120,17 @@ public class Hex {
 		baseHeight = hgt;
 	}
 
+    public int getBridgeLocationHeight(){
+        for (double x=centerLocation.getLOSPoint().getX()-5; x<centerLocation.getLOSPoint().getX()+5; x++ ){
+            for (double y=centerLocation.getLOSPoint().getY()-5; y<centerLocation.getLOSPoint().getY()+5; y++ ){
+                int bridgeelevation = map.getGridElevation((int) x, (int) y);
+                if (bridgeelevation > centerLocation.getHex().getBaseHeight()){
+                    return bridgeelevation - centerLocation.getHex().getBaseHeight();
+                }
+            }
+        }
+        return centerLocation.getBaseHeight();
+    }
 	// geometric methods
 	public boolean  contains(int x, int y)			{
         return hexBorder.getBounds().contains(x,y) && hexBorder.contains(x, y);}
