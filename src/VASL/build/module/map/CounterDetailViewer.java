@@ -305,7 +305,10 @@ public class CounterDetailViewer extends VASSAL.build.module.map.CounterDetailVi
   private String getBaseLevel(String hexname){
       VASL.build.module.ASLMap aslmap = (ASLMap) map;
       VASL.LOS.Map.Map vaslmap = aslmap.getVASLMap();
-      String baselevel = Integer.toString(vaslmap.getHex(hexname).getBaseHeight());
+      String baselevel = "";
+      if (hexname != null) {
+          baselevel = Integer.toString(vaslmap.getHex(hexname).getBaseHeight());
+      }
       return baselevel;
   }
 }
