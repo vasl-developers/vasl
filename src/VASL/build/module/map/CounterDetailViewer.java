@@ -16,6 +16,7 @@
  */
 package VASL.build.module.map;
 
+import VASL.LOS.Map.Hex;
 import VASL.LOS.Map.Map;
 import VASL.build.module.ASLMap;
 import static VASL.build.module.map.boardPicker.ASLBoard.DEFAULT_HEX_HEIGHT;
@@ -294,7 +295,7 @@ public class CounterDetailViewer extends VASSAL.build.module.map.CounterDetailVi
       String locationName = (String) topPiece.getLocalizedProperty(BasicPiece.LOCATION_NAME);
       emptyHexReportFormat.setProperty(BasicPiece.LOCATION_NAME, locationName.equals(offboard) ? "" : locationName);
       report = summaryReportFormat.getLocalizedText(new SumProperties(displayablePieces));
-      report += " Base Level " + getBaseLevel(report);
+      report += " Base Level " + getBaseLevel(topPiece.getPosition());
       x -= borderWidth * os_scale;
     }
 
@@ -302,12 +303,15 @@ public class CounterDetailViewer extends VASSAL.build.module.map.CounterDetailVi
       drawLabel(g, new Point(x, y), report, LabelUtils.RIGHT, LabelUtils.BOTTOM);
     }
   }
-  private String getBaseLevel(String hexname){
+  private String getBaseLevel(Point counterposition){
       VASL.build.module.ASLMap aslmap = (ASLMap) map;
       VASL.LOS.Map.Map vaslmap = aslmap.getVASLMap();
       String baselevel = "";
-      if (hexname != null) {
-          baselevel = Integer.toString(vaslmap.getHex(hexname).getBaseHeight());
+      if(vaslmap != null) {
+          Hex checkhex = vaslmap.gridToHex((int) counterposition.getX(), (int) counterposition.getY());
+          if (checkhex != null) {
+              baselevel = Integer.toString(checkhex.getBaseHeight());
+          }
       }
       return baselevel;
   }
