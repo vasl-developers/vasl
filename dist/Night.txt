@@ -1,7 +1,10 @@
-Three buttons (& fkeys) control shading of the map:
+Six buttons (& fkeys) control shading of the map:
 	Night (F9)
 	LV Hindrance (F11)
 	Dust
+	Heat Haze
+	Sun Blindness
+	Fog
 
 Their effects are partly visual, and don't alter the operation of the existing
 LOS mechanism. Night effects can obscure the images of the LOS-string & its msg-
@@ -65,38 +68,91 @@ that a +1 LV hindrance applies at night, with an adjusted total for the roll.
 
 LV Hindrances
 
-Each press of the LV Hindrance button cycles through a series of LV states:
+The LV Hindrance button presents a dialog box, allowing the selection of the following LV hindrance options:
 
-1. LV Shading Only is in effect.
+1. No LV (Default) Shading is removed.
+2. LV Shading Only is in effect.
 The map is shaded as a reminder that an LV hindrance is in effect.
-2. +1 LV (E3.1) is in effect.
+3. +1 LV (E3.1) is in effect.
 Shading is applied, and a text reminder will be displayed for IFT and TH rolls in the chatter window to remind the player
 that a +1 LV hindrance is in effect, with an adjusted total for the roll.
-3. Mist (E3.32) +0/+1/... is in effect.
-4. Rain (E3.51) +0/+1/... is in effect.
-5. Heavy Rain (E3.51) +1/+2/... is in effect.
-6. Falling Snow (3.71) +0/+1/... is in effect.
-7. Heavy Falling Snow(3.71) +1/+2/... is in effect.
+4. Mist (E3.32) +0/+1/... is in effect.
+5. Rain (E3.51) +0/+1/... is in effect.
+6. Heavy Rain (E3.51) +1/+2/... is in effect.
+7. Falling Snow (3.71) +0/+1/... is in effect.
+8. Heavy Falling Snow(3.71) +1/+2/... is in effect.
 For 3-7, shading is applied, and an LV reminder will be displayed for IFT and TH rolls in the chatter window.
 
-8. No LV is in effect.
-Shading is removed.
 
 Dust
 
-Each press of the Dust button cycles through the dust levels as described in Chapter F.11 of the rulebook
+The Dust button presents a dialog box, allowing the selection of various dust levels as described in Chapter F.11 of the rulebook
 and changes VASL behaviour as follows:
 
-1. Light Dust (F11.71) is in effect.
-2. Moderate Dust (F11.72) is in effect.
-3. Heavy Dust (F11.73) is in effect.
-4. Very Heavy Dust (F11.731) is in effect.
-5. Extremely Heavy Dust (F11.732) is in effect.
-For 1-5, progressive dust shading is applied, and a third dust die is rolled for you for IFT, TH and
+1. No Dust (Default) Shading is removed.
+2. Light Dust (F11.71) is in effect.
+3. Moderate Dust (F11.72) is in effect.
+4. Heavy Dust (F11.73) is in effect.
+5. Very Heavy Dust (F11.731) is in effect.
+6. Extremely Heavy Dust (F11.732) is in effect.
+7. Special Dust is in effect. Special dust allows the user to create a specific dust die to conform with SSRs, using the parameters
+they define on the File -> Preferences -> 'Environment' tab.
+
+For 2-6, progressive dust shading is applied, and a third dust die is rolled for you for IFT, TH and
 MC (for interdiction) rolls, with the dust die roll added to a total (FRD or FRD as required) and displayed in the
 chatter window.
 
-6. No Dust is in effect.
-Shading is removed.
-
 The color of the dust die can be changed using the color picker in Preferences -> 'Chat Window' tab -> Third die color.
+
+
+Heat Haze
+
+The Heat Haze button presents a dialog box, allowing the selection of Heat Haze levels as follows:
+
+1. No Heat Haze (Default) Shading is turned off
+2. Heat Haze (F11.62)
+3. Intense Heat Haze (F11.621)
+
+These options will shade the board, and display a reminder for IFT and TH rolls in the chatter window.
+
+
+Sun Blindness
+
+The Sun Blindness button presents a dialog box, allowing the selection of Sun Blindness levels as follows:
+
+1. No Sun Blindness (Default) Shading is turned off
+2. Early Morning Sun Blindness (F11.611) +2 => E
+3. Late Afternoon Sun Blindness (F11.612) +2 => W
+
+These options will shade the board, and display a reminder for IFT and TH rolls in the chatter window.
+
+
+Fog Level
+
+The Fog Level button presents a dialog box, allowing the selection of Fog Level levels as follows:
+
+1.  No Fog (Default) Shading is turned off
+2.  Light Fog (E3.311) L-1, +1
+3.  Light Fog (E3.311) L0,+1
+4.  Light Fog (E3.311) L1, +1
+5.  Light Fog (E3.311) L2, +1
+6.  Light Fog (E3.311) L3, +1
+7.  Light Fog (E3.311) L4, +1
+
+8.  Moderate Fog (E3.311) L-1, +2
+9.  Moderate Fog (E3.311) L0, +2
+10. Moderate Fog (E3.311) L1, +2
+11. Moderate Fog (E3.311) L2, +2
+12. Moderate Fog (E3.311) L3, +2
+13. Moderate Fog (E3.311) L4, +2
+
+These options will shade those levels of the board that are in fog, leaving those above the fog unshaded. This
+functionality only works on VASL boards which have LOS implemented - other boards will just display the shading on the
+whole board. In addition, a reminder for IFT and TH rolls will be displayed in the chatter window.
+
+  HEAVY_FOGM1("Heavy Fog (E3.31) L-1, +3"),
+  HEAVY_FOGL0("Heavy Fog (E3.31) L0, +3"),
+  HEAVY_FOGL1("Heavy Fog (E3.31) L1, +3"),
+  HEAVY_FOGL2("Heavy Fog (E3.31) L2, +3"),
+  HEAVY_FOGL3("Heavy Fog (E3.31) L3, +3"),
+  HEAVY_FOGL4("Heavy Fog (E3.31) L4, +3")
