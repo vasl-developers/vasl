@@ -476,9 +476,13 @@ public class OBA extends AbstractBuildable
 			nRed = Integer.parseInt(st.nextToken());
 			nBlack = Integer.parseInt(st.nextToken());
 			showing = st.nextToken();
-			obohex = st.nextToken();
-			obolevel = Integer.parseInt(st.nextToken());
-
+			if (st.hasMoreTokens()) {
+				obohex = st.nextToken();
+				obolevel = Integer.parseInt(st.nextToken());
+			} else {
+				obohex="";
+				obolevel=0;
+			}
 			controls.refresh();
 		}
 
