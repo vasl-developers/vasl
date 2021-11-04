@@ -179,21 +179,22 @@ public class SSRFilter extends RGBImageFilter {
         }
 
         // load the overlay SSR
-        for(Map.Entry<String, OverlaySSRule> entry: boardArchive.getOverlaySSRules().entrySet()) {
+        if (boardArchive.getOverlaySSRules()!=null) {
+            for (Map.Entry<String, OverlaySSRule> entry : boardArchive.getOverlaySSRules().entrySet()) {
 
-            try {
-                if(rules.contains(entry.getKey())) {
+                try {
+                    if (rules.contains(entry.getKey())) {
 
-                    OverlaySSRule rule = boardArchive.getOverlaySSRules().get(entry.getKey());
-                    for(Map.Entry<String, OverlaySSRuleImage> image: rule.getImages().entrySet()) {
+                        OverlaySSRule rule = boardArchive.getOverlaySSRules().get(entry.getKey());
+                        for (Map.Entry<String, OverlaySSRuleImage> image : rule.getImages().entrySet()) {
 
-                        overlays.add(new SSROverlay(image.getValue(), archiveFile));
+                            overlays.add(new SSROverlay(image.getValue(), archiveFile));
+                        }
+                        rules.remove(entry.getKey());
                     }
-                    rules.remove(entry.getKey());
+                } catch (IllegalArgumentException e) {
+                    logger.warn("Invalid Overlay SSR: " + entry.getKey() + " - " + e.getMessage());
                 }
-            }
-            catch (IllegalArgumentException e) {
-                logger.warn("Invalid Overlay SSR: " + entry.getKey() + " - " + e.getMessage());
             }
         }
 
