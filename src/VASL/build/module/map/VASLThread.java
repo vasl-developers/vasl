@@ -212,8 +212,8 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                                 ovrMinbounds.y -= ovrMinbounds.height;
                             }
                             //Now adjust for multiple rows and columns
-                            ovrMinbounds.x = ovrMinbounds.x + b.bounds().x - 400;
-                            ovrMinbounds.y = ovrMinbounds.y + b.bounds().y - 400;
+                            ovrMinbounds.x = ovrMinbounds.x + b.bounds().x - theMap.getEdgeBuffer().width;
+                            ovrMinbounds.y = ovrMinbounds.y + b.bounds().y - theMap.getEdgeBuffer().height;
                             if(o.getFile().getName().equalsIgnoreCase("ovrH") || o.getFile().getName().equalsIgnoreCase("ovrD")
                                     || o.getFile().getName().equalsIgnoreCase("ovrW") || o.getFile().getName().equalsIgnoreCase("ovrSD")) {
                             } else {
