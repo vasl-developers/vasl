@@ -1369,10 +1369,16 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                             }
                         } else { // specific board chosen
                             ASLBoardSlot slot = (ASLBoardSlot) newmatch(bdName.getSelectedIndex()-1);
-                            slot.setTerrain(slot.getTerrain() + '\t' + optionRules());
-                            if (slot.getBoard() != null) {
-                                ((ASLBoard) slot.getBoard()).setTerrain(basicRules() + slot.getTerrain());
-                                slot.repaint();
+                            if (slot==null){
+                                //ensure that board config requirement is respected
+                                warn("Incorrect Board Configuration: must complete X by X rectangle - use bdNull");
+                                return;
+                            } else {
+                                slot.setTerrain(slot.getTerrain() + '\t' + optionRules());
+                                if (slot.getBoard() != null) {
+                                    ((ASLBoard) slot.getBoard()).setTerrain(basicRules() + slot.getTerrain());
+                                    slot.repaint();
+                                }
                             }
                         }
                         if (opText.length() > 0) {
