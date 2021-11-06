@@ -77,6 +77,9 @@ public class DataFile {
     public String getDX() { return attributes.get(HexGrid.DX);}
     public String getDY() { return attributes.get(HexGrid.DY);}
     public String getSnapScale() {return attributes.get(HexGrid.SNAP_SCALE);}
-    public String getVersion() {return  attributes.get(VERSION_KEY);}
+    public String getVersion() {
+        if (this.dataFile==null){return DEFAULT_VERSION;}
+        return  attributes.get(VERSION_KEY);
+    }
     public String getAltHexGrid() {return attributes.get(BoardArchive.ALT_HEX_GRID_KEY);}
 }
