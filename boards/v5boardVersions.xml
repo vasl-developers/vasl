@@ -435,6 +435,9 @@
 		<boarddata name="RBv651" version="0.05" versionDate="Feb 2021" description="" />
 		<boarddata name="ROv651" version="0.09" versionDate="Feb 2021" description="" />
 		<boarddata name="StW" version="1.0" versionDate="Mar 2021" description="" />
+		<boarddata name="NP1" version="1.0" versionDate="Mar 2020" description="" />
+		<boarddata name="NP2" version="1.0" versionDate="Mar 2020" description="" />
+		<boarddata name="NP3d" version="1.0" versionDate="Mar 2020" description="" />
 	</otherBoards>
 
 </boardsMetadata>
