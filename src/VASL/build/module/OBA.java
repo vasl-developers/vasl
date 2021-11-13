@@ -616,7 +616,9 @@ public class OBA extends AbstractBuildable
 			svBox.add(savetext);
 			shBox.add(svBox);
 			add(shBox);
-
+			ASLMap map = GameModule.getGameModule().getComponentsOf(ASLMap.class).iterator().next();
+			VASL.LOS.Map.Map LOSMap = map.getVASLMap();
+			if(LOSMap==null){obosave.setEnabled(false);}
 			view = new DeckView(mod);
 
 			add(view);
