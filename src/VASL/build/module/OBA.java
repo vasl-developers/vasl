@@ -267,8 +267,10 @@ public class OBA extends AbstractBuildable
 		@Override
 		public void executeCommand() {
 			final Module mod = oba.getModuleAt(index);
-			oldState = mod.getState();
-			mod.setState(newState);
+			if (mod != null) {
+				oldState = mod.getState();
+				mod.setState(newState);
+			}
 		}
 
 		@Override
