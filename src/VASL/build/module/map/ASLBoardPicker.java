@@ -56,6 +56,8 @@ import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.net.URL;
 import java.net.URLConnection;
@@ -448,7 +450,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
 
         final ASLTilingHandler th = new ASLTilingHandler(
                 fpath.getAbsolutePath(),
-                new File(Info.getConfDir(), "tiles/" + hstr),
+                new File(getCacheDir(), "tiles/" + hstr),
                 new Dimension(256, 256),
                 1024,
                 42
@@ -458,6 +460,18 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             th.sliceTiles();
         } catch (IOException e) {
             ReadErrorDialog.error(e, fpath);
+        }
+    }
+
+    // TODO: Remove this after a release based on Vassal 3.6, and replace
+    // the call to it with Info.getCacheDir().
+    private File getCacheDir() {
+        try {
+          final Method m = Info.class.getDeclaredMethod("getCacheDir");
+          return (File) m.invoke(null);
+        }
+        catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+          return Info.getConfDir();
         }
     }
 
