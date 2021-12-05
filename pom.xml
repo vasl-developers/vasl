@@ -38,7 +38,7 @@
     <repositories>
         <repository>
             <id>vassal</id>
-            <url>http://www.vassalengine.org/maven</url>
+            <url>https://vassalengine.org/maven</url>
         </repository>
     </repositories>
 
