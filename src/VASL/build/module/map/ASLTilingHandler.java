@@ -47,10 +47,9 @@ public class ASLTilingHandler extends VASSAL.launch.TilingHandler {
     String aname,
     File cdir,
     Dimension tdim,
-    int mhlim,
-    int pid)
+    int mhlim)
   {
-    super(aname, cdir, tdim, mhlim);  //pid
+    super(aname, cdir, tdim, mhlim);
   }
 
   @Override
@@ -74,10 +73,12 @@ public class ASLTilingHandler extends VASSAL.launch.TilingHandler {
     // png code - June 2019 allows board image files to be in either png or gif format
     BoardArchive VASLBoardArchive = new BoardArchive(fa.getName(), "", ASLMap.getSharedBoardMetadata());
     String imagename;
-    if (VASLBoardArchive.isLegacyBoard()){
+    if (VASLBoardArchive.isLegacyBoard()) {
       imagename = fa.getFile().getName() + ".gif";
-    } else
+    }
+    else {
       imagename = VASLBoardArchive.getBoardImageFileName();
+    }
     final String iname = imagename;
     //
     int maxpix = 0; // number of pixels in the largest image
@@ -113,7 +114,7 @@ public class ASLTilingHandler extends VASSAL.launch.TilingHandler {
       }
     }
 
-    return new Pair<Integer,Integer>(tcount, maxpix);
+    return new Pair<>(tcount, maxpix);
   }
 
   @Override
