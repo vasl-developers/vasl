@@ -463,17 +463,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
         }
     }
 
-    // TODO: Remove this after a release based on Vassal 3.6, and replace
-    // the call to it with Info.getCacheDir().
-    private File getCacheDir() {
-        try {
-          final Method m = Info.class.getDeclaredMethod("getCacheDir");
-          return (File) m.invoke(null);
-        }
-        catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-          return Info.getConfDir();
-        }
-    }
+
 
     /**
      * Ensures the given board exists and is up to date. If not it fetches it from the repository
