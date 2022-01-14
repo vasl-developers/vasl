@@ -53,16 +53,6 @@ public class ASLTilingHandler extends VASSAL.launch.TilingHandler {
   }
 
   @Override
-  protected Dimension getImageSize(DataArchive archive, String iname)
-                                                           throws IOException {
-    try (InputStream in = archive.getInputStream(iname)){
-      final Dimension id = ImageUtils.getImageSize(iname, in);
-      in.close();
-      return id;
-    }
-  }
-
-  @Override
   protected Pair<Integer,Integer> findImages(
     DataArchive archive,
     FileStore tcache,

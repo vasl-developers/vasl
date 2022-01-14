@@ -452,8 +452,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 fpath.getAbsolutePath(),
                 new File(Info.getCacheDir(), "tiles/" + hstr),
                 new Dimension(256, 256),
-                1024,
-                42
+                1024
         );
 
         try {
