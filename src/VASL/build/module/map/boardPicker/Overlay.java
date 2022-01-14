@@ -109,7 +109,7 @@ public class Overlay implements Cloneable {
         }
 
         try {
-            hasOwnParameters = archive.contains("overlaySSR");
+            hasOwnParameters = archive.contains("BoardMetadata.xml");
         } catch (IOException ignore) {
         }
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<VASSAL.build.GameModule ModuleOther1="" ModuleOther2="" VassalVersion="3.5.8" description="Virtual Advanced Squad Leader" name="VASL" nextPieceSlotId="13774" version="6.6.4-beta1">
+<VASSAL.build.GameModule ModuleOther1="" ModuleOther2="" VassalVersion="3.6.3" description="Virtual Advanced Squad Leader" name="VASL" nextPieceSlotId="13774" version="6.6.4-beta3">
     <VASL.build.module.ScenInfo/>
     <VASL.build.module.CounterPaletteSearch/>
     <VASSAL.build.module.GlobalOptions autoReport="Use Preferences Setting" centerOnMove="Use Preferences Setting" chatterHTMLSupport="Never" nonOwnerUnmaskable="Use Preferences Setting" playerIdFormat="$playerName$" promptString="Let opponent unconceal my units" specifyExtensionDirInPrefs="true">
@@ -114,7 +114,6 @@
         <VASL.build.module.map.CounterDetailViewer bgColor="239,239,239" borderWidth="8" centerAll="false" centerText="false" combineCounterSummary="false" counterReportFormat="" delay="500" description="" display="from all layers" emptyHexReportForma="$LocationName$" enableHTML="false" extraTextPadding="0" fgColor="0,0,0" fontSize="11" graphicsZoom="1.0" hotkey="32,130" layerList="" minDisplayPieces="1" propertyFilter="" showDeck="false" showDeckDepth="1" showMoveSelectde="false" showNoStack="false" showNonMovable="false" showOverlap="false" showgraph="true" showgraphsingle="false" showtext="true" showtextsingle="false" stretchWidthSummary="false" summaryReportFormat="$LocationName$" unrotatePieces="false" version="2" verticalOffset="0" verticalTopText="5" zoomlevel="1.0"/>
         <VASSAL.build.module.properties.GlobalProperties/>
         <VASSAL.build.module.map.SelectionHighlighters/>
-        <VASL.build.module.map.MapCenterer/>
         <VASL.build.module.map.ASLPieceMover hotkey="119,0"/>
         <VASL.build.module.map.ASLDiceOverlay/>
         <VASL.build.module.map.QC/>

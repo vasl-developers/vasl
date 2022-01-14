@@ -450,7 +450,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
 
         final ASLTilingHandler th = new ASLTilingHandler(
                 fpath.getAbsolutePath(),
-                new File(getCacheDir(), "tiles/" + hstr),
+                new File(Info.getCacheDir(), "tiles/" + hstr),
                 new Dimension(256, 256),
                 1024,
                 42

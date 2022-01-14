@@ -137,7 +137,10 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         else {
             legacyMode = false;
             LOSMap = theMap.getVASLMap();
-
+            if (LOSMap ==null){
+                legacyMode=true;
+                return;
+            }
             // initialize LOS
             result = new LOSResult();
             VASLGameInterface = new VASLGameInterface(theMap, LOSMap);
