@@ -42,7 +42,7 @@ public class CounterMetadata {
     private String position;
     private int coverArch;
 
-    public static enum CounterType {SMOKE, WRECK, OBA, TERRAIN, IGNORE, BUILDING_LEVEL, CREST, ROOF, ENTRENCHMENT, CLIMB, BRIDGE}
+    public static enum CounterType {SMOKE, WRECK, OBA, TERRAIN, IGNORE, BUILDING_LEVEL, CREST, ROOF, ENTRENCHMENT, CLIMB, BRIDGE, HEXSIDE}
 
     public CounterMetadata(String name, CounterType type) {
         this.name = name;
@@ -127,8 +127,8 @@ public class CounterMetadata {
      * @return the piece covered arch
      */
     public int getCoverArch() {
-        return coverArch;
-    }
+        return coverArch -1;
+    }  //counters use 1-6, code uses 0-5
 
     /**
      * Set the piece covered arch

@@ -48,6 +48,7 @@ public class CounterMetadataFile {
     protected static final String wreckCounterElement = "wreck";
     protected static final String ignoreCounterElement = "ignore";
     protected static final String bridgeCounterElement = "bridge";
+    protected static final String hexsideCounterElement = "hexside";
 
     protected static final String buildingLevelCounterElement = "buildingLevel";
     protected static final String roofCounterElement = "roof";
@@ -146,6 +147,12 @@ public class CounterMetadataFile {
             else if(e.getName().equals(terrainCounterElement)) {
                 counterMetadata = new CounterMetadata(name, CounterMetadata.CounterType.TERRAIN);
                 counterMetadata.setTerrain(e.getAttributeValue(counterTerrainAttribute));
+
+            }
+            else if(e.getName().equals(hexsideCounterElement)) {
+                counterMetadata = new CounterMetadata(name, CounterMetadata.CounterType.HEXSIDE);
+                counterMetadata.setTerrain(e.getAttributeValue(counterTerrainAttribute));
+                counterMetadata.setCoverArch(e.getAttribute(counterCoveredArchAttribute).getIntValue());
 
             }
             else if(e.getName().equals(OBACounterElement)) {

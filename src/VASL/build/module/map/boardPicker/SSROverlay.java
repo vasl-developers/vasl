@@ -18,17 +18,14 @@
  */
 package VASL.build.module.map.boardPicker;
 
-import VASL.build.module.map.boardArchive.OverlaySSRule;
 import VASL.build.module.map.boardArchive.OverlaySSRuleImage;
 import VASSAL.tools.DataArchive;
 import VASSAL.tools.image.ImageUtils;
-import org.apache.commons.io.IOUtils;
 
 import java.awt.*;
 import java.io.File;
 import java.io.InputStream;
 import java.io.IOException;
-import java.util.StringTokenizer;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.MemoryCacheImageInputStream;

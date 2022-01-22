@@ -67,6 +67,7 @@ public class VASLGameInterface {
     protected HashMap<Hex, HashSet<OBA>> OBAList;
     protected HashMap<Hex, HashSet<Wreck>> wreckList;
     protected HashMap<Hex, HashSet<Vehicle>> vehicleList;
+    protected HashMap<Hex, CounterMetadata> hexsideList;
 
     // this is a list of all location counters - not those currently on the board
     protected static HashMap<String, LocationCounter> locationCounterList = null;
@@ -98,6 +99,7 @@ public class VASLGameInterface {
         // reset the counter lists
         smokeList = new HashMap<Hex, HashSet<Smoke>>();
         terrainList = new HashMap<Hex, Terrain>();
+        hexsideList = new HashMap<Hex, CounterMetadata>();
         OBAList = new HashMap<Hex, HashSet<OBA>>();
         wreckList = new HashMap<Hex, HashSet<Wreck>>();
         vehicleList = new HashMap<Hex, HashSet<Vehicle>>();
@@ -157,6 +159,10 @@ public class VASLGameInterface {
                     case TERRAIN:
                         // we assume there is only one terrain-type counter in a hex
                         terrainList.put(h, LOSMap.getTerrain(counter.getTerrain()));
+                        break;
+                    case HEXSIDE:
+                        hexsideList.put(h, counter);
+
                         break;
                     case ENTRENCHMENT:
                         // we assume there is only one terrain-type counter in a hex
@@ -314,6 +320,13 @@ public class VASLGameInterface {
         return null;
     }
 
+    public CounterMetadata getHexside(Hex hex) {
+
+        if(hexsideList != null) {
+            return hexsideList.get(hex);
+        }
+        return null;
+    }
     /**
      * Get the OBA in the given hex
      * @param hex the hex
@@ -343,6 +356,7 @@ public class VASLGameInterface {
         }
         return emptyOBAList;
     }
+
 
     /**
      * Get the wrecks in the given hex
