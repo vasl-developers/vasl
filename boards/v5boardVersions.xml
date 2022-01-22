@@ -438,6 +438,7 @@
 		<boarddata name="NP1" version="1.0" versionDate="Mar 2020" description="" />
 		<boarddata name="NP2" version="1.0" versionDate="Mar 2020" description="" />
 		<boarddata name="NP3d" version="1.0" versionDate="Mar 2020" description="" />
+		<boarddata name="FLP" version="1.0" versionDate="Jan 2022" description="" />
 	</otherBoards>
 
 </boardsMetadata>
