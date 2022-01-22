@@ -39,6 +39,12 @@
     <terrain name="Wood Rubble Level 2" terrain="Wooden Rubble Level 2"/>
     <terrain name="Wood Rubble Level 3" terrain="Wooden Rubble Level 3"/>
     <terrain name="Wood Rubble" terrain="Wooden Rubble"/>
+    <hexside name="Drift: 1 ca1" terrain="Hedge" ca="1"/>
+    <hexside name="Drift: 2 ca2" terrain="Hedge" ca="2"/>
+    <hexside name="Drift: 3 ca3" terrain="Hedge" ca="3"/>
+    <hexside name="Drift: 4 ca4" terrain="Hedge" ca="4"/>
+    <hexside name="Drift: 5 ca5" terrain="Hedge" ca="5"/>
+    <hexside name="Drift: 6 ca6" terrain="Hedge" ca="6"/>
 
     <wreck name="Wreck"/>
     <wreck name="Burnt Out Wreck"/>

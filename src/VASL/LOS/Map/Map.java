@@ -16,6 +16,7 @@
  */
 package VASL.LOS.Map;
 
+import VASL.LOS.counters.CounterMetadata;
 import VASL.build.module.ASLMap;
 import VASL.build.module.map.boardArchive.BoardArchive;
 import VASL.build.module.map.boardArchive.RBrrembankments;
@@ -1732,6 +1733,7 @@ public class Map  {
         HashSet<Integer> hexsides;
         // code added by  DR to enable RB rr embankments and Partial Orchards
         hexsides = status.getHexsideCrossed(status.tempHex);
+
         boolean RBrrembankmentsexist = false; // set flag to avoid unnecessary calls to CheckRBrrembankments()
         boolean PartialOrchardssexist = false; // set flag to avoid unnecessary calls to CheckPartialOrchards()
         // code added by DR to enable roofless factory hexes
@@ -1914,11 +1916,31 @@ public class Map  {
                         break;
                     }
                 }
+
+
             }
         } else {
             insamehex = true;
         }
-
+        // check for hexside counter terrain (ie drifts, roadblocks, etc)
+        for (Integer hexside : hexsides) {
+            if (status.VASLGameInterface.getHexside(status.currentHex) != null) {
+                CounterMetadata counter = status.VASLGameInterface.getHexside((status.currentHex));
+                if (hexside == counter.getCoverArch()) {
+                    status.currentTerrain = getTerrain(counter.getTerrain());
+                } else {
+                    if (status.LOSis60Degree || status.LOSisHorizontal) {
+                        if (status.sourceExitHexsides[0] == counter.getCoverArch() ||
+                                status.sourceExitHexsides[1] == counter.getCoverArch() ||
+                                status.targetEnterHexsides[0] == counter.getCoverArch() ||
+                                status.targetEnterHexsides[1] == counter.getCoverArch() ||
+                                status.currentHex.getLocationHexside(status.currentHex.getNearestLocation(status.currentRow, status.currentCol)) == counter.getCoverArch()) {
+                            status.currentTerrain = getTerrain(counter.getTerrain());
+                        }
+                    }
+                }
+            }
+        }
         // check the LOS rules
         if (checkDepressionRule(status, result)) {
             return true;
@@ -2714,8 +2736,8 @@ public class Map  {
 
                 // should we ignore the hexside terrain?
                 boolean ignore =
-                        isIgnorableHexsideTerrain(status.sourceHex, status.currentHex.getNearestLocation(status.currentCol, status.currentRow), status.result.getSourceExitHexspine()) ||
-                                isIgnorableHexsideTerrain(status.targetHex, status.currentHex.getNearestLocation(status.currentCol, status.currentRow), status.result.getTargetEnterHexspine());
+                            isIgnorableHexsideTerrain(status.sourceHex, status.currentHex.getNearestLocation(status.currentCol, status.currentRow), status.result.getSourceExitHexspine(), status) ||
+                                    isIgnorableHexsideTerrain(status.targetHex, status.currentHex.getNearestLocation(status.currentCol, status.currentRow), status.result.getTargetEnterHexspine(), status);
 
                 if (!ignore) {
 
@@ -3905,13 +3927,44 @@ public class Map  {
      * @param  l the hexside location
      * @param  LOSHexspine hexspine the LOS enters/leaves hex h. -1 if LOS not on hexspine.
      */
-    public boolean isIgnorableHexsideTerrain(Hex h, Location l, int LOSHexspine) {
+    public boolean isIgnorableHexsideTerrain(Hex h, Location l, int LOSHexspine, LOSStatus status) {
 
         // some useful variables
         Hex locationHex = l.getHex();
         int locationHexside = locationHex.getLocationHexside(l);
         if (locationHexside ==-1) {return true;} // ignore if location is not a hexside
         Terrain locationHexsideTerrain = locationHex.getHexsideTerrain(locationHexside);
+
+        // if using hexside counter terrain, override hex/location terrain
+        if (status.VASLGameInterface != null && status.VASLGameInterface.getHexside(status.currentHex) !=null){
+            CounterMetadata counter = status.VASLGameInterface.getHexside((status.currentHex));
+            if (locationHexside == counter.getCoverArch()) {
+                locationHexsideTerrain= getTerrain(counter.getTerrain());
+                // always ignore if adjacent
+                if (isAdjacentHexside(h, l)){
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                if (status.LOSis60Degree || status.LOSisHorizontal){
+                    if (status.sourceExitHexsides[0] == counter.getCoverArch() ||
+                            status.sourceExitHexsides[1] == counter.getCoverArch() ||
+                            status.targetEnterHexsides[0] == counter.getCoverArch()||
+                            status.targetEnterHexsides[1] == counter.getCoverArch()) {
+                        // always ignore if adjacent/same hex
+                        if (getAdjacentHex(status.currentHex, counter.getCoverArch()).equals(status.sourceHex) ||
+                                getAdjacentHex(status.currentHex, counter.getCoverArch()).equals(status.targetHex) ||
+                                status.currentHex.equals(status.sourceHex) ||
+                                status.currentHex.equals(status.targetHex))  {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
 
         // too far away?
         if (range(h, locationHex, getMapConfiguration()) > 2) {
@@ -4993,8 +5046,8 @@ public class Map  {
                             // should we ignore the hexside terrain?
                             if (!status.currentHex.equals(status.sourceHex)) {
                                 boolean ignore =
-                                        isIgnorableHexsideTerrain(status.sourceHex, status.currentHex.getNearestLocation(status.currentCol, status.currentRow), status.result.getSourceExitHexspine()) ||
-                                                isIgnorableHexsideTerrain(status.targetHex, status.currentHex.getNearestLocation(status.currentCol, status.currentRow), status.result.getTargetEnterHexspine());
+                                        isIgnorableHexsideTerrain(status.sourceHex, status.currentHex.getNearestLocation(status.currentCol, status.currentRow), status.result.getSourceExitHexspine(), status) ||
+                                                isIgnorableHexsideTerrain(status.targetHex, status.currentHex.getNearestLocation(status.currentCol, status.currentRow), status.result.getTargetEnterHexspine(), status);
 
                                 if (!ignore) {
 
