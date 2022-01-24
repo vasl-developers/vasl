@@ -2495,60 +2495,66 @@
         
         <terrainCounter name="Stone Rubble" terrain="Stone Rubble"/>
         <terrainCounter name="Wood Rubble" terrain="Wooden Rubble"/>
+		<terrainCounter name="Drift: 1 ca1" terrain="Hedge"/>
+		<terrainCounter name="Drift: 2 ca2" terrain="Hedge"/>
+		<terrainCounter name="Drift: 3 ca3" terrain="Hedge"/>
+		<terrainCounter name="Drift: 4 ca4" terrain="Hedge"/>
+		<terrainCounter name="Drift: 5 ca5" terrain="Hedge"/>
+		<terrainCounter name="Drift: 6 ca6" terrain="Hedge"/>
 
-        <wreckCounter name="Wreck"/>
-        <wreckCounter name="Burnt Out Wreck"/>
+		<wreckCounter name="Wreck"/>
+                <wreckCounter name="Burnt Out Wreck"/>
 
-        <OBACounter name="Red OBA FFE:1"/>
-        <OBACounter name="Red OBA FFE:2"/>
-        <OBACounter name="Red OBA FFE:C"/>
-        <OBACounter name="Blue OBA FFE:1"/>
-        <OBACounter name="Blue OBA FFE:2"/>
-        <OBACounter name="Blue OBA FFE:C"/>
-        <OBACounter name="Green OBA FFE:1"/>
-        <OBACounter name="Green OBA FFE:2"/>
-        <OBACounter name="Green OBA FFE:C"/>
-        <OBACounter name="RU OBA FFE:1"/>
-        <OBACounter name="RU OBA FFE:2"/>
-        <OBACounter name="RU OBA FFE:C"/>
-        <OBACounter name="AM OBA FFE:1"/>
-        <OBACounter name="AM OBA FFE:2"/>
-        <OBACounter name="AM OBA FFE:C"/>
-        <OBACounter name="BR OBA FFE:1"/>
-        <OBACounter name="BR OBA FFE:2"/>
-        <OBACounter name="BR OBA FFE:C"/>
-        <OBACounter name="FR OBA FFE:1"/>
-        <OBACounter name="FR OBA FFE:2"/>
-        <OBACounter name="FR OBA FFE:C"/>
-        <OBACounter name="CH OBA FFE:1"/>
-        <OBACounter name="CH OBA FFE:2"/>
-        <OBACounter name="CH OBA FFE:C"/>
-        <OBACounter name="AL OBA FFE:1"/>
-        <OBACounter name="AL OBA FFE:2"/>
-        <OBACounter name="AL OBA FFE:C"/>
-        <OBACounter name="GE OBA FFE:1"/>
-        <OBACounter name="GE OBA FFE:2"/>
-        <OBACounter name="GE OBA FFE:C"/>
-        <OBACounter name="SS OBA FFE:1"/>
-        <OBACounter name="SS OBA FFE:2"/>
-        <OBACounter name="SS OBA FFE:C"/>
-        <OBACounter name="JA OBA FFE:1"/>
-        <OBACounter name="JA OBA FFE:2"/>
-        <OBACounter name="JA OBA FFE:C"/>
-        <OBACounter name="IT OBA FFE:1"/>
-        <OBACounter name="IT OBA FFE:2"/>
-        <OBACounter name="IT OBA FFE:C"/>
-        <OBACounter name="FI OBA FFE:1"/>
-        <OBACounter name="FI OBA FFE:2"/>
-        <OBACounter name="FI OBA FFE:C"/>
-        <OBACounter name="AX OBA FFE:1"/>
-        <OBACounter name="AX OBA FFE:2"/>
-        <OBACounter name="AX OBA FFE:C"/>
-        <OBACounter name="HU OBA FFE:1"/>
-        <OBACounter name="HU OBA FFE:2"/>
-        <OBACounter name="HU OBA FFE:C"/>
+                <OBACounter name="Red OBA FFE:1"/>
+                <OBACounter name="Red OBA FFE:2"/>
+                <OBACounter name="Red OBA FFE:C"/>
+                <OBACounter name="Blue OBA FFE:1"/>
+                <OBACounter name="Blue OBA FFE:2"/>
+                <OBACounter name="Blue OBA FFE:C"/>
+                <OBACounter name="Green OBA FFE:1"/>
+                <OBACounter name="Green OBA FFE:2"/>
+                <OBACounter name="Green OBA FFE:C"/>
+                <OBACounter name="RU OBA FFE:1"/>
+                <OBACounter name="RU OBA FFE:2"/>
+                <OBACounter name="RU OBA FFE:C"/>
+                <OBACounter name="AM OBA FFE:1"/>
+                <OBACounter name="AM OBA FFE:2"/>
+                <OBACounter name="AM OBA FFE:C"/>
+                <OBACounter name="BR OBA FFE:1"/>
+                <OBACounter name="BR OBA FFE:2"/>
+                <OBACounter name="BR OBA FFE:C"/>
+                <OBACounter name="FR OBA FFE:1"/>
+                <OBACounter name="FR OBA FFE:2"/>
+                <OBACounter name="FR OBA FFE:C"/>
+                <OBACounter name="CH OBA FFE:1"/>
+                <OBACounter name="CH OBA FFE:2"/>
+                <OBACounter name="CH OBA FFE:C"/>
+                <OBACounter name="AL OBA FFE:1"/>
+                <OBACounter name="AL OBA FFE:2"/>
+                <OBACounter name="AL OBA FFE:C"/>
+                <OBACounter name="GE OBA FFE:1"/>
+                <OBACounter name="GE OBA FFE:2"/>
+                <OBACounter name="GE OBA FFE:C"/>
+                <OBACounter name="SS OBA FFE:1"/>
+                <OBACounter name="SS OBA FFE:2"/>
+                <OBACounter name="SS OBA FFE:C"/>
+                <OBACounter name="JA OBA FFE:1"/>
+                <OBACounter name="JA OBA FFE:2"/>
+                <OBACounter name="JA OBA FFE:C"/>
+                <OBACounter name="IT OBA FFE:1"/>
+                <OBACounter name="IT OBA FFE:2"/>
+                <OBACounter name="IT OBA FFE:C"/>
+                <OBACounter name="FI OBA FFE:1"/>
+                <OBACounter name="FI OBA FFE:2"/>
+                <OBACounter name="FI OBA FFE:C"/>
+                <OBACounter name="AX OBA FFE:1"/>
+                <OBACounter name="AX OBA FFE:2"/>
+                <OBACounter name="AX OBA FFE:C"/>
+                <OBACounter name="HU OBA FFE:1"/>
+                <OBACounter name="HU OBA FFE:2"/>
+                <OBACounter name="HU OBA FFE:C"/>
 
-        <!-- These counters should be ignored as they will create false LOS conditions (e.g. treated as hindrances) -->
+                <!-- These counters should be ignored as they will create false LOS conditions (e.g. treated as hindrances) -->
         <ignoreCounter name="Barricade" />
         <ignoreCounter name="Breached Barricade" />
         <ignoreCounter name="Roadblock" />
