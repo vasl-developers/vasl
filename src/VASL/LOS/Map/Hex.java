@@ -1454,7 +1454,7 @@ public class Hex {
         return slopes;
     }
     // code added by DR to enable RB rr embankments and partial orchards
-    private boolean[] getRBrrembankments() {
+    public boolean[] getRBrrembankments() {
         return rbrrembankments;
     }
 
