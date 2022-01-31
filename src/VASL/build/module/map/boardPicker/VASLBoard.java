@@ -352,10 +352,14 @@ public class VASLBoard extends ASLBoard {
                 // Add some woods to center of forest-road hexes to block LOS
                 Hex hex = losDataEditor.getMap().getHex(col, row);
                 if(isForestRoadHex(hex)) {
-
+                    // added to handle bug when cropping to full hex on left side; may need to be applied elsewhere if similar bugs found when calling setGridTerrain
+                    int xadj =0;
+                    if (LOSData.getMapConfiguration().contains("FullHex")){
+                        xadj -= LOSData.getA1CenterX();
+                    }
                     losDataEditor.setGridTerrain(
                             new Ellipse2D.Double(
-                                    hex.getCenterLocation().getLOSPoint().x - LOSData.getHexHeight()/3,
+                                    hex.getCenterLocation().getLOSPoint().x + xadj - LOSData.getHexHeight()/3,
                                     hex.getCenterLocation().getLOSPoint().y - LOSData.getHexHeight()/3,
                                     LOSData.getHexHeight()*2/3,
                                     LOSData.getHexHeight()*2/3),
