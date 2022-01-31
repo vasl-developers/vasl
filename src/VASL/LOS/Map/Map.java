@@ -103,6 +103,8 @@ public class Map  {
     /**
      * Constructs a new <code>Map</code> object using custom hex size and explicit image size.
      * A standard geomorphic map board is 10 x 33 hexes.
+     * @param hexWidth the of a hex in pixels
+     * @param hexHeight the height of a hex in pixels
      * @param width the width of the map in hexes
      * @param height the height of the map in hexes
      * @param A1CenterX x-offset of the A1 hex center dot
@@ -110,15 +112,15 @@ public class Map  {
      * @param imageWidth width of the board image in pixels
      * @param imageHeight height of the board image in pixels
      * @param terrainNameMap mapping of terrain names to terrain objects
+     * @param passgridconfig the configuration of the hexgrid after cropping and flipping
+     * @param isCropping is the map board cropped
      */
 
-    //DR new constructor - hexWidth and hexHeight now passed in as parameters
-    public Map(double hexWidth, double hexHeight, int width, int height, double A1CenterX, double A1CenterY, int imageWidth, int imageHeight, HashMap<String, Terrain> terrainNameMap, String passgridconfig, boolean isCropping){
+     public Map(double hexWidth, double hexHeight, int width, int height, double A1CenterX, double A1CenterY, int imageWidth, int imageHeight, HashMap<String, Terrain> terrainNameMap, String passgridconfig, boolean isCropping){
         this.width = width;
         this.height = height;
 
         //Set the hex geometry
-        //DR set hexHeight, hexWidth values using parameters
         this.hexHeight=hexHeight;
         this.hexWidth=hexWidth;
         double checkforabboards=(A1CenterX == BoardArchive.missingValue() ? BoardArchive.GEO_A1_Center.x : A1CenterX);
@@ -126,29 +128,29 @@ public class Map  {
 
 
         // use passgridconfig to handle cropping
-        if(passgridconfig.contains("Normal")) {
+        if(passgridconfig.contains("Normal")) {  // no cropping
             this.A1CenterX = (A1CenterX == BoardArchive.missingValue() ? BoardArchive.GEO_A1_Center.x : A1CenterX);
             this.A1CenterY = (A1CenterY == BoardArchive.missingValue() ? BoardArchive.GEO_A1_Center.y : A1CenterY);
-            //if (this.A1CenterY==65 && isCropping){A1CenterY=32.25;}
         }
-        else if(passgridconfig.contains("TopLeftHalfHeight")) {
+        else if(passgridconfig.contains("TopLeftHalfHeight")) { // hex in A1 position is half height meaning odd-numbered row (B, D, F, etc)
             this.A1CenterX = (A1CenterX == BoardArchive.missingValue() ? BoardArchive.GEO_A1_Center.x : A1CenterX);
         }
-        else if(passgridconfig.equals("FullHex") || passgridconfig.equals("FullHexOffset")) {
+        else if(passgridconfig.equals("FullHex") || passgridconfig.equals("FullHexOffset")) {  // first col is full width and A1 position is full height
             this.A1CenterX=this.hexWidth/2;
             this.A1CenterY= 32.25;
         }
-        else if(passgridconfig.contains("FullHexHalfHeight")) {
+        else if(passgridconfig.contains("FullHexHalfHeight")) {  // first col is full width and A1 position is half height
             this.A1CenterX=this.hexWidth/2;
         }
-        else if(passgridconfig.contains("FullHexLeftHalf")) {   // left board edge is not cropped and so is half width
+        else if(passgridconfig.contains("FullHexLeftHalf")) {   // left board edge is not cropped and so is half width; right edge col is full width
             this.A1CenterX=0;
         }
-        else if(passgridconfig.contains("FullHexRightHalf")) {   // right board edge is not cropped and so is half width
+        else if(passgridconfig.contains("FullHexRightHalf")) {   // right board edge is not cropped and so is half width; left edge col is full width
             this.A1CenterX=this.hexWidth/2;
         }
 
-        if (passgridconfig.contains("HalfHeight") && isCropping && !passgridconfig.contains("TopLeftHalfHeightEqualRowCount")) {
+        if (passgridconfig.contains("HalfHeight") && isCropping && !passgridconfig.contains("TopLeftHalfHeightEqualRowCount")) { // hex in A1 position is half height meaning odd-numbered row (B, D, F, etc)
+            // EqualRowCount handles boards with same hex count in each row of hex grid (geo boards follow 10-11-10-11 pattern due to half hexes)
             this.A1CenterY=0;
         } else {
             this.A1CenterY = (A1CenterY == BoardArchive.missingValue() ? BoardArchive.GEO_A1_Center.y : A1CenterY);
@@ -158,7 +160,6 @@ public class Map  {
             //this.A1CenterX= this.A1CenterX +
         }
 
-        // added by DR to support cropping
         this.cropconfiguration =passgridconfig;
 
         // initialize
