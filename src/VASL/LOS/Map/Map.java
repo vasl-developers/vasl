@@ -2448,6 +2448,7 @@ public class Map  {
      * @return true if the LOS is blocked
      */
     private boolean isRooftopLOSBlocked(Hex passcurrentHex, Terrain passcurrentTerrain, int passcurrentTerrainHgt, LOSStatus status, LOSResult result, int rooftopadj) {
+        if(passcurrentTerrain.getName().contains("Rubble")){ return false;} // Rubble eliminates rooftop
         if ((status.source.getTerrain().isRooftop() && !status.target.getTerrain().isRooftop()) &&  //LOS is from rooftop down
                 (!passcurrentHex.getCenterLocation().getTerrain().isRoofless() && (!passcurrentHex.equals(status.targetHex) || (passcurrentHex.equals(status.targetHex) && status.range==1)))) {
             //each hex (except source and target) along LOS must be roofless; if not LOS blocked
