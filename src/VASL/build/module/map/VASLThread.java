@@ -42,7 +42,6 @@ import VASL.LOS.Map.Map;
 import VASL.build.module.ASLMap;
 import VASL.LOS.VASLGameInterface;
 import VASL.build.module.map.boardPicker.ASLBoard;
-import VASL.counters.ASLProperties;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.GameComponent;
@@ -56,10 +55,7 @@ import VASSAL.configure.ColorConfigurer;
 import static VASSAL.build.GameModule.getGameModule;
 // Needed to enable LOS checking on boards with overlays
 import VASL.build.module.map.boardPicker.Overlay;
-import VASSAL.counters.GamePiece;
-import VASSAL.counters.PieceIterator;
-import VASSAL.counters.Properties;
-import VASSAL.counters.Stack;
+import VASSAL.counters.*;
 // added as part of fixing remote event problem DR
 import VASSAL.tools.SequenceEncoder;
 import VASSAL.tools.swing.SwingUtils;
@@ -164,9 +160,12 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                         Overlay o = (Overlay) overlays.nextElement();
 
                         // ignore terrain transformation overlays which cover most/all of the board
-                        // treat BSO and SSR overlays as regular overlays; won't disable los for entire board DR Dec 2020
-                        if((!o.hex1.equals("")) || o.getName().contains("BSO") || o.getName().contains("SSO")) {
+                        // treat BSO and SSR overlays as regular overlays; won't disable los for entire board
+                        // ignore overlays where los checking is enabled; this will require a long list of 'contains' checks until all overlays are handled
+                        if(o.hex1.equals("") || o.getName().contains("og") || o.getName().contains("b") || o.getName().contains("p") ||
+                                o.getName().contains("m") || o.getName().contains("wd") || o.getName().contains("BSO") || o.getName().contains("SSO")) {
 
+                        } else {
                             Rectangle ovrRec= o.bounds();
                             // get the image as a buffered image
                             Image i = o.getImage();
@@ -566,7 +565,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             boolean losOnOverlay = false;
             // test if LOS line cross an overlay
             Line2D losline = new Line2D.Double(sourcestart.getLocation(), targetend.getLocation());
-            if(!checkifLOScrossesOverlay(losline)) {
+            if(!checkifLOScrossesNoLOSOverlay(losline)) {
                 try {
                     doLOS();
                 } catch(Exception e) {
@@ -1117,8 +1116,8 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         }
     }
 
-    // check if LOS crosses an overlay; if so, set overlay boundaries to be shown
-    private boolean checkifLOScrossesOverlay(Line2D losline) {
+    // check if LOS crosses an overlay that does not support los checking; if so, set overlay boundaries to be shown
+    private boolean checkifLOScrossesNoLOSOverlay(Line2D losline) {
 
         try {
             // this is for standard overlays
@@ -1133,6 +1132,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
 
             // this is for the new draggable overlays
             for (GamePiece p : draggableOverlays) {
+
                 int overlayWidth  = p.boundingBox().width;
                 int overlayHeight = p.boundingBox().height;
                 Point overlayCenter = new Point (p.getPosition().x, p.getPosition().y);
