@@ -55,6 +55,8 @@ import java.util.Enumeration;
 import java.util.LinkedList;
 
 import static VASSAL.build.GameModule.getGameModule;
+import static VASSAL.tools.image.tilecache.ZipFileImageTilerState.STARTING_IMAGE;
+import static VASSAL.tools.image.tilecache.ZipFileImageTilerState.TILE_WRITTEN;
 
 public class ASLMap extends Map {
 
@@ -456,7 +458,15 @@ public class ASLMap extends Map {
                 setSandDuneTerrain(board, newlosdata, bi, ovrRec);
             } else if (o.getFile().getName().equalsIgnoreCase("ovrW")) {
                 setWadiTerrain(board, newlosdata, bi, ovrRec);
+            //} else if (o.getFile().getName().equalsIgnoreCase("ovrOG")) {
+            //    setOGTerrain(board, newlosdata, bi, ovrRec);
+            } else {
+                String terraintype = getoverlayterraintype(o);
+                if(!terraintype.equals("")) {
+                    setOverlayTerrain(board, newlosdata, bi, ovrRec, terraintype);
+                }
             }
+
         }
 
        return newlosdata;
@@ -617,6 +627,61 @@ public class ASLMap extends Map {
                     }
                 }
             }
+        }
+
+    }
+
+    // this is the generic method for single terrain overlays
+    private void setOverlayTerrain(VASLBoard board, VASL.LOS.Map.Map newlosdata, BufferedImage bi, Rectangle ovrRec, String terraintype){
+        for (int x = 0; x < bi.getWidth(); x++) {
+            for (int y = 0; y < bi.getHeight(); y++) {
+                if (newlosdata.onMap(x + ovrRec.x, y + ovrRec.y)) {
+                    int c = bi.getRGB(x, y);
+                    if ((c >> 24) != 0x00) { // not a transparent pixel
+                        String terraintouse = "Open Ground";
+                        Terrain terr;
+                        //Retrieving the R G B values
+                        Color color = getRGBColor(c);
+                        int terrint = board.getVASLBoardArchive().getTerrainForColor(color);
+                        if (terrint >=0) {
+                            terr = newlosdata.getTerrain(terrint);
+                            if (terr.getName().equals(terraintype)) {
+                                terraintouse = terraintype;
+                            }
+                        }
+                        newlosdata.setGridTerrainCode(newlosdata.getTerrain(terraintouse).getType(), x + ovrRec.x, y + ovrRec.y);
+                        if(newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getNearestLocation(x+ovrRec.x, y+ovrRec.y).isCenterLocation()) {
+                            newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().setTerrain(newlosdata.getTerrain(terraintouse));
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+    // if overlayname returns "" from this method then los checking won't work with the overlay
+    private String getoverlayterraintype(Overlay o){
+        String overlayname = o.getName();
+        if (overlayname.contains("b")){
+            return "Brush";
+        }
+        else if (overlayname.contains("og")){
+            return "Open Ground";
+        }
+        else if (overlayname.contains("m")){
+            return "Marsh";
+        }
+        else if (overlayname.contains("g")){
+            return "Grain";
+        }
+        else if (overlayname.contains("p")){
+            return "Water";
+        }
+        else if (overlayname.contains("wd")){
+            return "Woods";
+        }
+        else {
+            return "";
         }
 
     }
