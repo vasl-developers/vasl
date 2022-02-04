@@ -59,11 +59,14 @@ import VASSAL.counters.*;
 // added as part of fixing remote event problem DR
 import VASSAL.tools.SequenceEncoder;
 import VASSAL.tools.swing.SwingUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.LinkedList;
 import java.awt.image.BufferedImage;
 import java.awt.Image;
 import java.awt.Graphics2D;
+import java.util.Locale;
+import java.util.SortedSet;
 
 public class VASLThread extends LOS_Thread implements KeyListener, GameComponent {
 
@@ -162,8 +165,10 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                         // ignore terrain transformation overlays which cover most/all of the board
                         // treat BSO and SSR overlays as regular overlays; won't disable los for entire board
                         // ignore overlays where los checking is enabled; this will require a long list of 'contains' checks until all overlays are handled
-                        if(o.hex1.equals("") || o.getName().contains("og") || o.getName().contains("b") || o.getName().contains("p") ||
-                                o.getName().contains("m") || o.getName().contains("wd") || o.getName().contains("BSO") || o.getName().contains("SSO")) {
+                        String finalfilename = StringUtils.substringAfter(o.archiveName(), "ovr").toLowerCase();
+                        if(o.hex1.equals("") || finalfilename.equals("og") || finalfilename.equals("b") || finalfilename.equals("p") ||
+                                finalfilename.equals("m") || finalfilename.equals("wd") || finalfilename.equals("g") ||
+                                o.getName().contains("BSO") || o.getName().contains("SSO")) {
 
                         } else {
                             Rectangle ovrRec= o.bounds();
@@ -1132,6 +1137,17 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
 
             // this is for the new draggable overlays
             for (GamePiece p : draggableOverlays) {
+                //while (p instanceof Decorator) {
+                //    p = ((Decorator)p).getInner(); // Traverse inwards toward BasicPiece
+                //}
+                //if (p instanceof BasicPiece) { // Make sure we didn't start with a Stack or Deck (or null)
+                //    final BasicPiece bp = (BasicPiece) p;
+                //    SortedSet<String> imageNames = bp.getAllImageNames();
+
+                    //BufferedImage bi = new BufferedImage(i.getWidth(), i.getHeight(),
+                    //        BufferedImage.TYPE_INT_ARGB);
+
+                //}
 
                 int overlayWidth  = p.boundingBox().width;
                 int overlayHeight = p.boundingBox().height;
