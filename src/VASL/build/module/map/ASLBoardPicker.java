@@ -573,7 +573,94 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             }
         }
     }
+    /**
+     * Ensures the given overlay exists and is up to date. If not it fetches it from the repository
+     * @param ovrName the overlay file name
+     */
+    private void updateOverlay(String ovrName) {
 
+        // if the boardDir doesn't exist, bail early
+        if (boardDir != null) {
+            String ovrfilename = Overlay.archiveName(ovrName + "a");
+            final File ovrFile = new File(boardDir, "overlays/" + ovrfilename);
+
+            // try to grab the overlay from repository if missing
+            if (!ovrFile.exists()) {
+
+                // try to fetch the missing overlay
+                GameModule.getGameModule().warn("Overlay " + ovrfilename + " is missing. Downloading...");
+                if (!BoardVersionChecker.updateOverlayFile(ovrfilename)) {
+                    GameModule.getGameModule().warn("Overlay download failed");
+                } else {
+                    GameModule.getGameModule().warn("Overlay download succeeded");
+                }
+
+            } else {
+
+                // Update the overlay if it's out of date
+
+                // get the overlay version
+                String availableVersion = null;
+                try {
+                    availableVersion = BoardVersionChecker.getlatestOverlayVersionnumberfromwebrepository(ovrfilename);
+                } catch (Exception e) {
+                    // Fail silently if we can't find a version
+                    return;
+                }
+                double serverVersion;
+                double localVersion;
+                boolean doUpdate;
+
+                if (availableVersion == null) {
+                    serverVersion = -1;
+                } else {
+                    try {
+                        serverVersion = Double.parseDouble(availableVersion);
+                    } catch (NumberFormatException nfe) {
+                        serverVersion = -1;
+                    }
+                }
+
+                String currentVersion=null;
+                try {
+                    Overlay ovrfile = new Overlay(ovrName + "\t0" + "\t0", new File(getBoardDir(), "overlays"));
+                    currentVersion = ovrfile.getVersion();
+                } catch (Exception e){
+
+                }
+
+                if (currentVersion == null) {
+                    localVersion = -1;
+                } else {
+                    try {
+                        localVersion = Double.parseDouble(currentVersion);
+                    } catch (NumberFormatException nfe) {
+                        localVersion = 0;
+                    }
+                }
+
+                if (localVersion == 0) {
+                    // local overlay is of an indeterminate state, update the overlay if the server version is good
+                    doUpdate = (serverVersion > -1);
+                } else {
+                    // update the overlay if the server version greater than local version
+                    doUpdate = (serverVersion > localVersion);
+                }
+
+                if (doUpdate) {
+
+                    // try to update overlay if out of date
+                    GameModule.getGameModule().warn("Overlay " + ovrfilename + " is out of date. Updating...");
+                    if (!BoardVersionChecker.updateOverlayFile(ovrfilename)) {
+                        GameModule.getGameModule().warn("Overlay download failed");
+                    } else {
+                        GameModule.getGameModule().warn("Overlay download succeeded");
+                    }
+
+                }
+            }
+        }
+    }
     public void addBoard(String name) {
         final ASLBoard b = new VASLBoard();
         b.setCommonName(name);
@@ -1134,6 +1221,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                     status.setText("Missing board: fix Map Config.");
                     return;
                 }
+                updateOverlay(ovrName.getText().toLowerCase());
                 status.setText(((ASLBoardSlot) (b)).addOverlay(ovrName.getText().toLowerCase(), hex1.getText().toLowerCase(), hex2.getText().toLowerCase()));
                 ovrName.setText("");
                 hex1.setText("");

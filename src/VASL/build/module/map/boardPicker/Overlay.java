@@ -38,7 +38,8 @@ import java.util.StringTokenizer;
  * Overlays of all types and sizes
  */
 public class Overlay implements Cloneable {
-    protected String name = "", version = "0";
+    private String version = "0";
+    protected String name = "";
     protected Image image;
     protected File overlayFile;
     public String hex1 = "", hex2 = "";
@@ -49,7 +50,7 @@ public class Overlay implements Cloneable {
     protected ASLBoard board;
     protected DataArchive archive;
 
-    protected Overlay() {
+    public Overlay() {
     }
 
     public String getVersion() {
@@ -66,22 +67,8 @@ public class Overlay implements Cloneable {
         this.board = board;
         overlayFile = new File(overlayDir, archiveName());
 
-        // try to fetch the overlay file if missing
-/*
-        if(!overlayFile.exists()) {
-            GameModule.getGameModule().warn("Overlay " + name + " is missing. Downloading...");
-            if(!BoardVersionChecker.updateOverlayFile(name)) {
-                GameModule.getGameModule().warn("Overlay download failed");
-            }
-            else {
-                GameModule.getGameModule().warn("Overlay download succeeded");
-            }
-        }
-*/
-
         archive = new DataArchive(overlayFile.getPath(), "");
         readData();
-
 
         try {
             setBounds();
@@ -90,7 +77,20 @@ public class Overlay implements Cloneable {
         }
         check();
     }
+    public Overlay(String ovr, File overlayDir) throws IOException, BoardException {
+        StringTokenizer st = new StringTokenizer(ovr, "\t");
+        if (st.countTokens() >= 3) {
+            name = st.nextToken();
+            hex1 = st.nextToken();
+            hex2 = st.nextToken();
+        }
 
+        overlayFile = new File(overlayDir, archiveName());
+
+        archive = new DataArchive(overlayFile.getPath(), "");
+        readData();
+
+    }
     public SSRFilter getTerrain() {
         SSRFilter terrain = board.getTerrain();
         if (terrain == null) {

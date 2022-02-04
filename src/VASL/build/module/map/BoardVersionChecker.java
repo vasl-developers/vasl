@@ -20,6 +20,7 @@ package VASL.build.module.map;
 
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASL.build.module.map.boardPicker.Overlay;
+import VASL.counters.Concealable;
 import VASSAL.build.AbstractBuildable;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
@@ -53,15 +54,17 @@ import java.util.*;
 public class BoardVersionChecker extends AbstractBuildable implements GameComponent, PropertyChangeListener {
 
     private static String boardVersionURL;
+    private static Properties overlayVersions;
     private String overlayVersionURL;
     private String boardPageURL;
     private static String boardRepositoryURL;
+    private static String overlayRepositoryURL;
 
     public static String BOARD_VERSION_PROPERTY_KEY = "boardVersions";
 
     private Map map;
     // private Properties boardVersions;
-    private Properties overlayVersions;
+    //private Properties overlayVersions;
 
     private static final String BOARD_VERSION_URL = "boardVersionURL";
     private static final String OVERLAY_VERSION_URL = "overlayVersionURL";
@@ -69,6 +72,7 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
     private static final String BOARD_VERSIONS = BOARD_VERSION_PROPERTY_KEY;
     private static final String OVERLAY_VERSIONS = "overlayVersions";
     private static final String BOARD_REPOSITORY_URL = "boardRepositoryURL";
+    private static final String OVERLAY_REPOSITORY_URL = "overlayRepositoryURL";
     // for use with v5boardVersions.xml
     private static final String boardsFileElement = "boardsMetadata";
     private static final String coreboardElement = "coreBoards";
@@ -97,6 +101,8 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
             return boardPageURL;
         } else if (BOARD_REPOSITORY_URL.equals(key)) {
             return boardRepositoryURL;
+        } else if (OVERLAY_VERSION_URL.equals(key)) {
+            return overlayRepositoryURL;
         }
         return null;
     }
@@ -110,6 +116,8 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
             boardPageURL = (String) value;
         } else if (BOARD_REPOSITORY_URL.equals(key)) {
             boardRepositoryURL = (String) value;
+        } else if (OVERLAY_REPOSITORY_URL.equals(key)){
+            overlayRepositoryURL = (String) value;
         }
     }
     public static String getboardVersionURL(){
@@ -302,9 +310,8 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
                 GameModule.getGameModule().getPrefs().getStoredValue(ASLBoardPicker.BOARD_DIR) +
                         System.getProperty("file.separator", "\\") +
                         "overlays" +
-                        System.getProperty("file.separator", "\\") +
-                        "ovr" + overlayName;
-        String url = boardRepositoryURL + "/bd" + overlayName;
+                        System.getProperty("file.separator", "\\") + overlayName;
+        String url = overlayRepositoryURL + "/" + overlayName;
 
         return getRepositoryFile(url, qualifiedOverlayName);
     }
@@ -355,6 +362,9 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
         }
     }
 
+    public static String getlatestOverlayVersionnumberfromwebrepository(String ovrName){
+        return overlayVersions.getProperty(ovrName);
+    }
     // new method to get latest version number from xml file instead of .txt
     public static String getlatestVersionnumberfromwebrepository(String unReversedBoardName){
         BoardVersions findversion = boardversions.get(unReversedBoardName);
