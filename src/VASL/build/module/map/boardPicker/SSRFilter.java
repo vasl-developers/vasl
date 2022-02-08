@@ -47,7 +47,7 @@ public class SSRFilter extends RGBImageFilter {
     private File archiveFile;
     private DataArchive archive;
     private ASLBoard board;
-
+    private String filetypetest;
     private BoardArchive boardArchive;
     private Map<Integer, Integer> mappings;
     private List<SSROverlay> overlays;
@@ -64,9 +64,15 @@ public class SSRFilter extends RGBImageFilter {
             if (!archive.contains("data")) {
                 throw new FileNotFoundException("data");
             }
-
-            boardArchive = new BoardArchive(archiveFile.getName(), archiveFile.getParent(), ASLMap.getSharedBoardMetadata());
-
+            //Need to properly apply terrain transforms
+            filetypetest = archiveFile.getName().startsWith("bd")  ? "bd" : "ovr";
+            // using bd is a bit of a hack - find a better way to do this
+            if (filetypetest.equals("bd"))
+            {
+                boardArchive = new BoardArchive(archiveFile.getName(), archiveFile.getParent(), ASLMap.getSharedBoardMetadata());
+            } else {
+                boardArchive = board.VASLBoardArchive;
+            }
         } catch (IOException ex) {
             throw new BoardException("Board does not support terrain alterations");
         }
@@ -113,7 +119,7 @@ public class SSRFilter extends RGBImageFilter {
     /**
      * Load all color/SSR rules for the board
      */
-    private void loadRules() {
+    private void loadRules() throws BoardException {
 
         Map<String, Integer> colorValues = new HashMap<String, Integer>();
         mappings = new HashMap<Integer, Integer>();
@@ -179,24 +185,7 @@ public class SSRFilter extends RGBImageFilter {
         }
 
         // load the overlay SSR
-        if (boardArchive.getOverlaySSRules()!=null) {
-            for (Map.Entry<String, OverlaySSRule> entry : boardArchive.getOverlaySSRules().entrySet()) {
-
-                try {
-                    if (rules.contains(entry.getKey())) {
-
-                        OverlaySSRule rule = boardArchive.getOverlaySSRules().get(entry.getKey());
-                        for (Map.Entry<String, OverlaySSRuleImage> image : rule.getImages().entrySet()) {
-
-                            overlays.add(new SSROverlay(image.getValue(), archiveFile));
-                        }
-                        rules.remove(entry.getKey());
-                    }
-                } catch (IllegalArgumentException e) {
-                    logger.warn("Invalid Overlay SSR: " + entry.getKey() + " - " + e.getMessage());
-                }
-            }
-        }
+        loadoverlaySSR(rules);
 
         // load the underlay SSR
         for(Map.Entry<String, UnderlaySSRule> entry: boardArchive.getUnderlaySSRules().entrySet()) {
@@ -214,7 +203,7 @@ public class SSRFilter extends RGBImageFilter {
                         colors[current] = colorValues.get(color);
                         current++;
                     }
-                     overlays.add(new Underlay(rule.getImageName(), colors, archive, board));
+                    overlays.add(new Underlay(rule.getImageName(), colors, archive, board));
                     rules.remove(entry.getKey());
                 }
             }
@@ -223,7 +212,54 @@ public class SSRFilter extends RGBImageFilter {
             }
         }
     }
+private void loadoverlaySSR(Vector<String> rules) throws BoardException {
+    if (filetypetest.equals("bd")) {
+        if (boardArchive.getOverlaySSRules() != null) {
+            for (Map.Entry<String, OverlaySSRule> entry : boardArchive.getOverlaySSRules().entrySet()) {
 
+                try {
+                    if (rules.contains(entry.getKey())) {
+
+                        OverlaySSRule rule = boardArchive.getOverlaySSRules().get(entry.getKey());
+                        for (Map.Entry<String, OverlaySSRuleImage> image : rule.getImages().entrySet()) {
+
+                            overlays.add(new SSROverlay(image.getValue(), archiveFile));
+                        }
+                        rules.remove(entry.getKey());
+                    }
+                } catch (IllegalArgumentException e) {
+                    logger.warn("Invalid Overlay SSR: " + entry.getKey() + " - " + e.getMessage());
+                }
+            }
+        }
+    } else {
+        BoardArchive ovrArchive;
+        try {
+            ovrArchive = new BoardArchive(archiveFile.getName(), archiveFile.getParent(), ASLMap.getSharedBoardMetadata());
+        } catch (IOException ex) {
+            throw new BoardException("Board does not support terrain alterations");
+        }
+
+        if(ovrArchive != null && ovrArchive.getOverlaySSRules() != null) {
+            for (Map.Entry<String, OverlaySSRule> entry : ovrArchive.getOverlaySSRules().entrySet()) {
+
+                try {
+                    if (rules.contains(entry.getKey())) {
+
+                        OverlaySSRule rule = ovrArchive.getOverlaySSRules().get(entry.getKey());
+                        for (Map.Entry<String, OverlaySSRuleImage> image : rule.getImages().entrySet()) {
+
+                            overlays.add(new SSROverlay(image.getValue(), archiveFile));
+                        }
+                        rules.remove(entry.getKey());
+                    }
+                } catch (IllegalArgumentException e) {
+                    logger.warn("Invalid Overlay SSR: " + entry.getKey() + " - " + e.getMessage());
+                }
+            }
+        }
+    }
+}
     public void transform(BufferedImage image) {
         if (!mappings.isEmpty()) {
             final int h = image.getHeight();
