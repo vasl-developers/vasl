@@ -486,51 +486,51 @@ public class LOSDataEditor {
                  y++) {
 
                 if (s.contains(x, y)) {
+                    if (map.onMap(x , y)) {
+                        // only apply rowhouse/factory walls to buildings
+                        if (terr.isRowhouseFactoryWall()) {
 
-                    // only apply rowhouse/factory walls to buildings
-                    if (terr.isRowhouseFactoryWall()) {
+                            Terrain currentTerrain = map.getGridTerrain(x, y);
 
-                        Terrain currentTerrain = map.getGridTerrain(x, y);
-
-                        //map rowhouse height to current building height
-                        if (currentTerrain.getName().equals("Stone Building") || currentTerrain.getName().equals("Wooden Building")) {
-                            map.setGridTerrainCode(map.getTerrain("Rowhouse Wall").getType(), x, y);
-                        } else if (currentTerrain.getName().equals("Stone Building, 1 Level") ||
-                                currentTerrain.getName().equals("Wooden Building, 1 Level") ||
-                                currentTerrain.getName().equals("Stone Factory, 1.5 Level") ||
-                                currentTerrain.getName().equals("Wooden Factory, 1.5 Level")) {
-                            map.setGridTerrainCode(map.getTerrain("Rowhouse Wall, 1 Level").getType(), x, y);
-                        } else if (currentTerrain.getName().equals("Stone Building, 2 Level") ||
-                                currentTerrain.getName().equals("Wooden Building, 2 Level") ||
-                                currentTerrain.getName().equals("Stone Factory, 2.5 Level") ||
-                                currentTerrain.getName().equals("Wooden Factory, 2.5 Level")) {
-                            map.setGridTerrainCode(map.getTerrain("Rowhouse Wall, 2 Level").getType(), x, y);
-                        } else if (currentTerrain.getName().equals("Stone Building, 3 Level") || currentTerrain.getName().equals("Wooden Building, 3 Level")) {
-                            map.setGridTerrainCode(map.getTerrain("Rowhouse Wall, 3 Level").getType(), x, y);
-                        } else if (currentTerrain.getName().equals("Stone Building, 4 Level") || currentTerrain.getName().equals("Wooden Building, 4 Level")) {
-                            map.setGridTerrainCode(map.getTerrain("Rowhouse Wall, 4 Level").getType(), x, y);
+                            //map rowhouse height to current building height
+                            if (currentTerrain.getName().equals("Stone Building") || currentTerrain.getName().equals("Wooden Building")) {
+                                map.setGridTerrainCode(map.getTerrain("Rowhouse Wall").getType(), x, y);
+                            } else if (currentTerrain.getName().equals("Stone Building, 1 Level") ||
+                                    currentTerrain.getName().equals("Wooden Building, 1 Level") ||
+                                    currentTerrain.getName().equals("Stone Factory, 1.5 Level") ||
+                                    currentTerrain.getName().equals("Wooden Factory, 1.5 Level")) {
+                                map.setGridTerrainCode(map.getTerrain("Rowhouse Wall, 1 Level").getType(), x, y);
+                            } else if (currentTerrain.getName().equals("Stone Building, 2 Level") ||
+                                    currentTerrain.getName().equals("Wooden Building, 2 Level") ||
+                                    currentTerrain.getName().equals("Stone Factory, 2.5 Level") ||
+                                    currentTerrain.getName().equals("Wooden Factory, 2.5 Level")) {
+                                map.setGridTerrainCode(map.getTerrain("Rowhouse Wall, 2 Level").getType(), x, y);
+                            } else if (currentTerrain.getName().equals("Stone Building, 3 Level") || currentTerrain.getName().equals("Wooden Building, 3 Level")) {
+                                map.setGridTerrainCode(map.getTerrain("Rowhouse Wall, 3 Level").getType(), x, y);
+                            } else if (currentTerrain.getName().equals("Stone Building, 4 Level") || currentTerrain.getName().equals("Wooden Building, 4 Level")) {
+                                map.setGridTerrainCode(map.getTerrain("Rowhouse Wall, 4 Level").getType(), x, y);
+                            }
+                            // code changed by DR to implement Interior Factory walls
+                            else if (terr.getName().equals("Stone Factory, 1.5 Level")) {
+                                map.setGridTerrainCode(map.getTerrain("Stone Factory Wall, 1.5 Level").getType(), x, y);
+                            } else if (terr.getName().equals("Wooden Factory, 1.5 Level")) {
+                                map.setGridTerrainCode(map.getTerrain("Wooden Factory Wall, 1.5 Level").getType(), x, y);
+                            } else if (terr.getName().equals("Stone Factory, 2.5 Level")) {
+                                map.setGridTerrainCode(map.getTerrain("Stone Factory Wall, 2.5 Level").getType(), x, y);
+                            } else if (terr.getName().equals("Wooden Factory, 2.5 Level")) {
+                                map.setGridTerrainCode(map.getTerrain("Wooden Factory Wall, 2.5 Level").getType(), x, y);
+                            }
                         }
-                        // code changed by DR to implement Interior Factory walls
-                        else if(terr.getName().equals("Stone Factory, 1.5 Level")) {
-                            map.setGridTerrainCode(map.getTerrain("Stone Factory Wall, 1.5 Level").getType(), x, y);
-                        } else if (terr.getName().equals("Wooden Factory, 1.5 Level")){
-                            map.setGridTerrainCode(map.getTerrain("Wooden Factory Wall, 1.5 Level").getType(), x, y);
-                        }
-                        else if(terr.getName().equals("Stone Factory, 2.5 Level")) {
-                            map.setGridTerrainCode(map.getTerrain("Stone Factory Wall, 2.5 Level").getType(), x, y);
-                        } else if(terr.getName().equals("Wooden Factory, 2.5 Level")){
-                            map.setGridTerrainCode(map.getTerrain("Wooden Factory Wall, 2.5 Level").getType(), x, y);
-                        }
-                    }
 
-                    // special rule for Heavy Jungle - don't replace water
-                    else if ("Dense Jungle".equals(terr.getName())) {
+                        // special rule for Heavy Jungle - don't replace water
+                        else if ("Dense Jungle".equals(terr.getName())) {
 
-                        if (!(map.getGridTerrain(x, y).getLOSCategory() == Terrain.LOSCategories.WATER)) {
+                            if (!(map.getGridTerrain(x, y).getLOSCategory() == Terrain.LOSCategories.WATER)) {
+                                map.setGridTerrainCode(terrType, x, y);
+                            }
+                        } else {
                             map.setGridTerrainCode(terrType, x, y);
                         }
-                    } else {
-                        map.setGridTerrainCode(terrType, x, y);
                     }
                 }
             }

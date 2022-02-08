@@ -165,66 +165,67 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                         // ignore terrain transformation overlays which cover most/all of the board
                         // treat BSO and SSR overlays as regular overlays; won't disable los for entire board
                         // ignore overlays where los checking is enabled; this will require a long list of 'contains' checks until all overlays are handled
-                        String finalfilename = StringUtils.substringAfter(o.archiveName(), "ovr").toLowerCase();
-                        if(o.hex1.equals("") || finalfilename.equals("og") || finalfilename.equals("b") || finalfilename.equals("p") ||
-                                finalfilename.equals("m") || finalfilename.equals("wd") || finalfilename.equals("g") ||
-                                o.getName().contains("BSO") || o.getName().contains("SSO")) {
+                        if (!o.getName().equals("")){
+                            String finalfilename = StringUtils.substringAfter(o.archiveName(), "ovr").toLowerCase();
+                            if (o.hex1.equals("") || finalfilename.equals("og") || finalfilename.equals("b") || finalfilename.equals("p") ||
+                                    finalfilename.equals("m") || finalfilename.equals("wd") || finalfilename.equals("g") || finalfilename.equals("o") ||
+                                    finalfilename.equals("dx") || o.getName().contains("BSO") || o.getName().contains("SSO")) {
 
-                        } else {
-                            Rectangle ovrRec= o.bounds();
-                            // get the image as a buffered image
-                            Image i = o.getImage();
-                            BufferedImage bi = new BufferedImage(i.getWidth(null), i.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-                            Graphics2D bGr = bi.createGraphics();
-                            bGr.drawImage(i, 0, 0, null);
-                            bGr.dispose();
+                            } else {
+                                Rectangle ovrRec = o.bounds();
+                                // get the image as a buffered image
+                                Image i = o.getImage();
+                                BufferedImage bi = new BufferedImage(i.getWidth(null), i.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+                                Graphics2D bGr = bi.createGraphics();
+                                bGr.drawImage(i, 0, 0, null);
+                                bGr.dispose();
 
-                            boolean firstPixel = true;
-                            int minx = 0;
-                            int miny = 0;
-                            int maxx = 0;
-                            int maxy = 0;
-                            for(int x = 0; x < bi.getWidth(); x++){
-                                for(int y = 0; y < bi.getHeight(); y++){
+                                boolean firstPixel = true;
+                                int minx = 0;
+                                int miny = 0;
+                                int maxx = 0;
+                                int maxy = 0;
+                                for (int x = 0; x < bi.getWidth(); x++) {
+                                    for (int y = 0; y < bi.getHeight(); y++) {
 
-                                    int c = bi.getRGB(x, y);
-                                    if( (c>>24) != 0x00 ) { // not a transparent pixel
-                                        if (firstPixel){
-                                            minx = x;
-                                            maxx = x;
-                                            miny = y;
-                                            maxy = y;
-                                            firstPixel = false;
-                                        }
-                                        else {
-                                            minx = Math.min(minx,x);
-                                            maxx = Math.max(maxx,x);
-                                            miny = Math.min(miny, y);
-                                            maxy = Math.max(maxy,y);
+                                        int c = bi.getRGB(x, y);
+                                        if ((c >> 24) != 0x00) { // not a transparent pixel
+                                            if (firstPixel) {
+                                                minx = x;
+                                                maxx = x;
+                                                miny = y;
+                                                maxy = y;
+                                                firstPixel = false;
+                                            } else {
+                                                minx = Math.min(minx, x);
+                                                maxx = Math.max(maxx, x);
+                                                miny = Math.min(miny, y);
+                                                maxy = Math.max(maxy, y);
+                                            }
                                         }
                                     }
                                 }
-                            }
-                            //Set the boundaries rectangle
-                            Rectangle ovrMinbounds= new Rectangle(ovrRec.x+minx, ovrRec.y+miny, maxx - minx, maxy - miny);
-                            // Need to adjust y value when board cropped by coordinates
-                            Rectangle CropAdjust = b.getCropBounds();
-                            ovrMinbounds.y -= CropAdjust.y;
-                            //Now check if need to flip
-                            if (b.isReversed()) {
-                                // flip moves x,y point to bottom right, subtracting width and height resets it to top left
-                                ovrMinbounds.x = b.bounds().width - ovrMinbounds.x - 1;
-                                ovrMinbounds.y = b.bounds().height - ovrMinbounds.y - 1;
-                                ovrMinbounds.x -= ovrMinbounds.width;
-                                ovrMinbounds.y -= ovrMinbounds.height;
-                            }
-                            //Now adjust for multiple rows and columns
-                            ovrMinbounds.x = ovrMinbounds.x + b.bounds().x - theMap.getEdgeBuffer().width;
-                            ovrMinbounds.y = ovrMinbounds.y + b.bounds().y - theMap.getEdgeBuffer().height;
-                            if(o.getFile().getName().equalsIgnoreCase("ovrH") || o.getFile().getName().equalsIgnoreCase("ovrD")
-                                    || o.getFile().getName().equalsIgnoreCase("ovrW") || o.getFile().getName().equalsIgnoreCase("ovrSD")) {
-                            } else {
-                                overlayBoundaries.add(ovrMinbounds);
+                                //Set the boundaries rectangle
+                                Rectangle ovrMinbounds = new Rectangle(ovrRec.x + minx, ovrRec.y + miny, maxx - minx, maxy - miny);
+                                // Need to adjust y value when board cropped by coordinates
+                                Rectangle CropAdjust = b.getCropBounds();
+                                ovrMinbounds.y -= CropAdjust.y;
+                                //Now check if need to flip
+                                if (b.isReversed()) {
+                                    // flip moves x,y point to bottom right, subtracting width and height resets it to top left
+                                    ovrMinbounds.x = b.bounds().width - ovrMinbounds.x - 1;
+                                    ovrMinbounds.y = b.bounds().height - ovrMinbounds.y - 1;
+                                    ovrMinbounds.x -= ovrMinbounds.width;
+                                    ovrMinbounds.y -= ovrMinbounds.height;
+                                }
+                                //Now adjust for multiple rows and columns
+                                ovrMinbounds.x = ovrMinbounds.x + b.bounds().x - theMap.getEdgeBuffer().width;
+                                ovrMinbounds.y = ovrMinbounds.y + b.bounds().y - theMap.getEdgeBuffer().height;
+                                if (o.getFile().getName().equalsIgnoreCase("ovrH") || o.getFile().getName().equalsIgnoreCase("ovrD")
+                                        || o.getFile().getName().equalsIgnoreCase("ovrW") || o.getFile().getName().equalsIgnoreCase("ovrSD")) {
+                                } else {
+                                    overlayBoundaries.add(ovrMinbounds);
+                                }
                             }
                         }
                     }

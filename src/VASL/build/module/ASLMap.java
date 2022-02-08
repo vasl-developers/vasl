@@ -19,6 +19,7 @@
 
 package VASL.build.module;
 
+import VASL.LOS.LOSDataEditor;
 import VASL.LOS.Map.Hex;
 import VASL.LOS.Map.Location;
 import VASL.LOS.Map.Terrain;
@@ -633,31 +634,35 @@ public class ASLMap extends Map {
 
     // this is the generic method for single terrain overlays
     private void setOverlayTerrain(VASLBoard board, VASL.LOS.Map.Map newlosdata, BufferedImage bi, Rectangle ovrRec, String terraintype){
-        for (int x = 0; x < bi.getWidth(); x++) {
-            for (int y = 0; y < bi.getHeight(); y++) {
-                if (newlosdata.onMap(x + ovrRec.x, y + ovrRec.y)) {
-                    int c = bi.getRGB(x, y);
-                    if ((c >> 24) != 0x00) { // not a transparent pixel
-                        String terraintouse = "Open Ground";
-                        Terrain terr;
-                        //Retrieving the R G B values
-                        Color color = getRGBColor(c);
-                        int terrint = board.getVASLBoardArchive().getTerrainForColor(color);
-                        if (terrint >=0) {
-                            terr = newlosdata.getTerrain(terrint);
-                            if (terr.getName().equals(terraintype)) {
-                                terraintouse = terraintype;
+        // first test for inherent terrain and send to separate method; use this method for non-inherent only
+        if (isInherenttype(terraintype)) {
+            setOverlayInherentTerrain(board, newlosdata, bi, ovrRec, terraintype);
+        } else {
+            for (int x = 0; x < bi.getWidth(); x++) {
+                for (int y = 0; y < bi.getHeight(); y++) {
+                    if (newlosdata.onMap(x + ovrRec.x, y + ovrRec.y)) {
+                        int c = bi.getRGB(x, y);
+                        if ((c >> 24) != 0x00) { // not a transparent pixel
+                            String terraintouse = "Open Ground";
+                            Terrain terr;
+                            //Retrieving the R G B values
+                            Color color = getRGBColor(c);
+                            int terrint = board.getVASLBoardArchive().getTerrainForColor(color);
+                            if (terrint >= 0) {
+                                terr = newlosdata.getTerrain(terrint);
+                                if (terr.getName().equals(terraintype)) {
+                                    terraintouse = terraintype;
+                                }
                             }
-                        }
-                        newlosdata.setGridTerrainCode(newlosdata.getTerrain(terraintouse).getType(), x + ovrRec.x, y + ovrRec.y);
-                        if(newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getNearestLocation(x+ovrRec.x, y+ovrRec.y).isCenterLocation()) {
-                            newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().setTerrain(newlosdata.getTerrain(terraintouse));
+                            newlosdata.setGridTerrainCode(newlosdata.getTerrain(terraintouse).getType(), x + ovrRec.x, y + ovrRec.y);
+                            if (newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getNearestLocation(x + ovrRec.x, y + ovrRec.y).isCenterLocation()) {
+                                newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().setTerrain(newlosdata.getTerrain(terraintouse));
+                            }
                         }
                     }
                 }
             }
         }
-
     }
     // if overlayname returns "" from this method then los checking won't work with the overlay
     private String getoverlayterraintype(Overlay o){
@@ -665,7 +670,7 @@ public class ASLMap extends Map {
         if (overlayname.contains("b")){
             return "Brush";
         }
-        else if (overlayname.contains("og")){
+        else if (overlayname.contains("og") || overlayname.equals("dx1") || overlayname.equals("dx5")){
             return "Open Ground";
         }
         else if (overlayname.contains("m")){
@@ -677,13 +682,63 @@ public class ASLMap extends Map {
         else if (overlayname.contains("p")){
             return "Water";
         }
-        else if (overlayname.contains("wd")){
+        else if (overlayname.contains("o") || overlayname.equals("dx3") || overlayname.equals("dx7")){
+            return "Orchard";
+        }
+        else if (overlayname.contains("wd") || overlayname.equals("dx2") || overlayname.equals("dx4")){
             return "Woods";
         }
         else {
             return "";
         }
 
+    }
+
+    private boolean isInherenttype(String terraintype){
+        return terraintype.equals("Orchard");
+    }
+    private void setOverlayInherentTerrain(VASLBoard board, VASL.LOS.Map.Map newlosdata, BufferedImage bi, Rectangle ovrRec, String terraintype){
+        Hex temphex = null; Hex newhex;
+        Hex previoushex = null;
+        for (int x = 0; x < bi.getWidth(); x++) {
+            for (int y = 0; y < bi.getHeight(); y++) {
+                if (newlosdata.onMap(x + ovrRec.x, y + ovrRec.y)) {
+                    Hex hextouse = newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y);
+                    if (!hextouse.equals(previoushex)){
+                        int c = bi.getRGB(x, y);
+                        if ((c >> 24) != 0x00) { // not a transparent pixel
+                            String terraintouse = "Open Ground";
+                            Terrain terr = null;
+                            //Retrieving the R G B values
+                            Color color = getRGBColor(c);
+                            int terrint = board.getVASLBoardArchive().getTerrainForColor(color);
+                            if (terrint >= 0) {
+                                terr = newlosdata.getTerrain(terrint);
+                                if (terr.getName().equals(terraintype)) {
+                                    terraintouse = terraintype;
+                                }
+                            }
+
+                            if (!terraintouse.equals("Open Ground") && terr != null) {  // terrain is inherent terrain
+
+                                hextouse.getCenterLocation().setTerrain(newlosdata.getTerrain(terraintouse));
+                                hextouse.setoverlayborder();
+                                LOSDataEditor loseditor = new LOSDataEditor(newlosdata);
+                                loseditor.setGridTerrain(hextouse.getoverlayborder(), terr);
+                                for (int z = 0; z < 6; z++) {
+                                    hextouse.setHexsideTerrain(z, newlosdata.getTerrain("Open Ground"));
+                                    Hex adjhex = newlosdata.getAdjacentHex(hextouse, z);
+                                    if (adjhex!=null) {
+                                        adjhex.setHexsideTerrain(Hex.getOppositeHexside(z), newlosdata.getTerrain("Open Ground"));
+                                    }
+                                }
+                                previoushex = hextouse;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     /**
      * Sets status of LOS engine to legacy mode

@@ -51,7 +51,7 @@ public class Hex {
 	private	Point2D.Double   center;
 	private	Polygon hexBorder 		= new Polygon(); // the hex border
 	private	Polygon extendedHexBorder	= new Polygon(); // one pixel larger than the hex border
-
+    private	Polygon hexOverlayBorder	= new Polygon(); // one pixel larger than the hex border
 	// location variables (center and each hexside)
     // the point for each hexside location will be the midpoint of the hexside offset one pixel toward the center of the hex
 	private	Location[] hexsideLocations = new Location[6];
@@ -65,6 +65,10 @@ public class Hex {
     //TODO: bridge object no longer used
 	private	Bridge	bridge;
     private	boolean stairway;
+
+    private double hexWidth;
+    private double hexHeight;
+    private Point2D.Double centerDot;
 
     /**
      * Create a new hex
@@ -85,15 +89,19 @@ public class Hex {
 		rowNumber	= row;
 		this.map	= map;
         this.name = name;
+
+		this.hexWidth=hexWidth;
+        this.hexHeight=hexHeight;
+        this.centerDot = centerDot;
         center = fixMapEdgePoints(centerDot.getX(), centerDot.getY());
-		initHexNew(centerDot, hexHeight, hexWidth, terrain);
+        initHexNew(terrain);
 
 	}
 
 	/**
 	 * Initialized the hex using custom geometry
 	 */
-	private void initHexNew(Point2D.Double centerDot, double hexHeight, double hexWidth, Terrain terr){
+	private void initHexNew(Terrain terr){
 
         final double x = centerDot.getX();
 		final double y = centerDot.getY();
@@ -1516,7 +1524,61 @@ public class Hex {
             l.setUpLocation(currentLocation);
         }
     }
+    // this method should only be used when extending the hex border to handle hexside terrain covered by an overlay
+    // in many cases trace amounts of wall/hedges are outside the overlay but must be reset to OG
+    public void setoverlayborder (){
+        int ovrborder = 10;
+        if (hexWidth > 168 && hexHeight > 194) {
+            ovrborder =20;
+        }
 
+        // the length of the a hexside equals the distance from the center point to the vertexes
+        // final double hexside = hexHeight/(2.0*cos(Math.toRadians(30.0)));
+        final double hexside = hexWidth*2.0/3.0;
+        final double verticalOffset = hexHeight/2.0;
+        final double x = centerDot.getX();
+        final double y = centerDot.getY();
+
+        // [0] is the left-most vertex on the top hexside and the other points are clockwise from there
+        Point2D.Double[] vertexPoints = new Point2D.Double[6];
+        vertexPoints[0] = fixMapEdgePoints(-hexside / 2.0 + x, -verticalOffset + y);
+        vertexPoints[1] = fixMapEdgePoints(hexside / 2.0 + x, -verticalOffset + y);
+        vertexPoints[2] = fixMapEdgePoints(hexside + x, y);
+        vertexPoints[3] = fixMapEdgePoints(hexside / 2.0 + x, verticalOffset + y);
+        vertexPoints[4] = fixMapEdgePoints(-hexside / 2.0 + x, verticalOffset + y);
+        vertexPoints[5] = fixMapEdgePoints(-hexside + x, y);
+        for (int i = 0; i < 6; i++) {
+
+            // create the hex borders - overlay being 5 or 10 pixels larger
+
+            switch (i) {
+                case 0:
+                    hexOverlayBorder.addPoint((int) vertexPoints[i].x - ovrborder, (int) vertexPoints[i].y - ovrborder);
+                    break;
+                case 1:
+                    hexOverlayBorder.addPoint((int) vertexPoints[i].x + ovrborder, (int) vertexPoints[i].y - ovrborder);
+                    break;
+                case 2:
+                    hexOverlayBorder.addPoint((int) vertexPoints[i].x + ovrborder, (int) vertexPoints[i].y);
+                    break;
+                case 3:
+                    hexOverlayBorder.addPoint((int) vertexPoints[i].x + ovrborder, (int) vertexPoints[i].y + ovrborder);
+                    break;
+                case 4:
+                    hexOverlayBorder.addPoint((int) vertexPoints[i].x - ovrborder, (int) vertexPoints[i].y + ovrborder);
+                    break;
+                case 5:
+                    hexOverlayBorder.addPoint((int) vertexPoints[i].x - ovrborder, (int) vertexPoints[i].y);
+                    break;
+            }
+
+        }
+
+
+    }
+    public Polygon getoverlayborder(){
+        return hexOverlayBorder;
+    }
 
 }
 
