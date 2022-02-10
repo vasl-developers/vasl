@@ -68,13 +68,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
-import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyleContext;
-import javax.swing.text.StyledDocument;
-import javax.swing.text.TabSet;
-import javax.swing.text.TabStop;
+import javax.swing.text.*;
 
 import static VASSAL.build.GameModule.getGameModule;
 
@@ -135,9 +129,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
   private JButton m_btnSA;
   private JButton m_btnRS;
 
-  private JTextPane m_objChatPanel;
-  private StyledDocument m_objDocument;
-  private StyleContext m_objStyleContext;
+  //private JTextPane m_objChatPanel;
+  //private StyledDocument m_objDocument;
+  //private StyleContext m_objStyleContext;
 
   private Font m_objChatterFont;
 
@@ -161,14 +155,14 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
     public void RemoveActionForKeyStroke(KeyStroke aKeyStroke)
     {
-        ActionMap am = m_objChatPanel.getActionMap();
+        ActionMap am = conversationPane.getActionMap();
 
         if (am == null) {
             return;
         }
 
         for (int counter = 0; counter < 3; counter++) {
-            InputMap inputMap = m_objChatPanel.getInputMap(counter);
+            InputMap inputMap = conversationPane.getInputMap(counter);
 
             if (inputMap != null) {
                 Object actionBinding = inputMap.get(aKeyStroke);
@@ -187,24 +181,6 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     public ASLChatter() {
         super();
 
-        // remove chatter components
-        if (input != null)
-            remove(input);
-
-        if (scroll != null)
-        {
-            scroll.setViewportView(null);
-            remove(scroll);
-        }
-
-        // free chatter components
-        if (conversation != null)
-            conversation = null;
-        if (input != null)
-            input = null;
-        if (scroll != null)
-            scroll = null;
-
         m_clrBackground = Color.white;
         m_clrGameMsg = Color.magenta;
         m_clrSystemMsg = new Color(160, 160, 160);
@@ -214,14 +190,10 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         m_clrDustColoredDiceColor = Color.magenta;
         m_clrSingleDieColor = Color.RED;
 
-        // create new components
-        m_objStyleContext = new StyleContext();
-        m_objDocument = new DefaultStyledDocument(m_objStyleContext);
+        Style l_objDefaultStyle = style.getStyle(StyleContext.DEFAULT_STYLE);
 
-        Style l_objDefaultStyle = m_objStyleContext.getStyle(StyleContext.DEFAULT_STYLE);
-
-        m_objMainStyle = m_objStyleContext.addStyle("MainStyle", l_objDefaultStyle);
-        m_objIconStyle = m_objStyleContext.addStyle("IconStyle", l_objDefaultStyle);
+        m_objMainStyle = style.addStyle("MainStyle", l_objDefaultStyle);
+        m_objIconStyle = style.addStyle("IconStyle", l_objDefaultStyle);
 
         try
         {
@@ -241,10 +213,10 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             ex.printStackTrace();
         }
 
-        m_objChatPanel = new JTextPane(m_objDocument);
-        m_objChatPanel.setEditable(false);
+        
+        conversationPane.setEditable(false);
 
-        m_objChatPanel.addKeyListener(new KeyListener()
+        conversationPane.addKeyListener(new KeyListener()
         {
             public void keyTyped(KeyEvent e) {
                 if (!e.isConsumed()) {
@@ -269,7 +241,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         RemoveActionForKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK));
         RemoveActionForKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0));
 
-        m_objChatPanel.addComponentListener(new ComponentAdapter()
+        conversationPane.addComponentListener(new ComponentAdapter()
         {
             public void componentResized(ComponentEvent e)
             {
@@ -289,11 +261,6 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         m_btndr = CreateChatterDiceButton("dr.gif", "dr", "dr", KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), false, ASLDiceBot.OTHER_CATEGORY);
         m_btnSA = CreateChatterDiceButton("", "SA", "Sniper Activation dr", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), false, "SA");
         m_btnRS = CreateChatterDiceButton("", "RS", "Random Selection dr", KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), false, "RS");
-// For the future?        
-//        JButton l_btnThinking = CreateInfoButton("Thinking", "I'm thinking", "I'm thinking", KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_MASK + InputEvent.SHIFT_MASK));
-//        JButton l_btnHold = CreateInfoButton("Wait", "Wait, please", "Wait, please", KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_MASK + InputEvent.SHIFT_MASK));
-//        JButton l_btnContinue = CreateInfoButton("Continue", "Continue, please", "Continue, please", KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK + InputEvent.SHIFT_MASK));
-//        JButton l_btnOk  = CreateInfoButton("Ok", "Ok", "Ok", KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK + InputEvent.SHIFT_MASK));
 
         JPanel l_objPanelContainer = new JPanel();
         l_objPanelContainer.setLayout(new BoxLayout(l_objPanelContainer, BoxLayout.LINE_AXIS));
@@ -322,12 +289,6 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         l_objButtonPanel.add(m_btndr, l_objGridBagConstraints);
         l_objButtonPanel.add(m_btnSA, l_objGridBagConstraints);
         l_objButtonPanel.add(m_btnRS, l_objGridBagConstraints);
-// For the future?
-//        l_objButtonPanel.add(l_btnThinking);
-//        l_objButtonPanel.add(l_btnHold);
-//        l_objButtonPanel.add(l_btnContinue);
-//        l_objButtonPanel.add(l_btnOk);
-
 
         m_edtInputText = new JTextField(60);
         m_edtInputText.setFocusTraversalKeysEnabled(false);
@@ -343,7 +304,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         m_edtInputText.setMaximumSize(new Dimension(m_edtInputText.getMaximumSize().width,
         m_edtInputText.getPreferredSize().height));
 
-        m_objScrollPane.setViewportView(m_objChatPanel);
+        m_objScrollPane.setViewportView(conversationPane);
 
         l_objPanelContainer.add(l_objButtonPanel);
 
@@ -364,6 +325,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                     .addGap(0, 0, 0)
                     .addComponent(m_edtInputText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         );
+
     }
 
     private void SetButtonsFonts(Font objFont)
@@ -382,29 +344,6 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         m_btnRS.setFont(objFont);
     }
 
-// For the future?
-//    private JButton CreateInfoButton(String strCaption, String strTooltip, final String strMsg, KeyStroke objKeyStroke) 
-//    {
-//        JButton l_btn = new JButton(strCaption);
-//        
-//        l_btn.setPreferredSize(new Dimension(90, 25));
-//        l_btn.setMargin(new Insets(l_btn.getMargin().top, 0, l_btn.getMargin().bottom, 0));
-//        
-//        ActionListener l_objAL = new ActionListener()
-//        {
-//            public void actionPerformed(ActionEvent e)
-//            {
-//                send(formatChat(strMsg));
-//            }
-//        };
-//        l_btn.addActionListener(l_objAL);
-//        KeyStrokeListener l_objListener = new KeyStrokeListener(l_objAL);
-//        l_objListener.setKeyStroke(objKeyStroke);
-//        AddHotKeyToTooltip(l_btn, l_objListener, strTooltip);
-//        l_btn.setFocusable(false);
-//        GameModule.getGameModule().addKeyStrokeListener(l_objListener);
-//        return l_btn;
-//    }
 
     private JButton CreateStatsDiceButton(String strImage, String strCaption, String strTooltip, KeyStroke keyStroke)
     {
@@ -549,10 +488,10 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                         l_objLabel.setAlignmentY(0.7f);
 
                         StyleConstants.setComponent(m_objIconStyle, l_objLabel);
-                        m_objDocument.insertString(m_objDocument.getLength(), "\n", m_objMainStyle);
-                        m_objDocument.insertString(m_objDocument.getLength(), "\n", m_objMainStyle);
-                        m_objDocument.insertString(m_objDocument.getLength(), "Ignored", m_objIconStyle);
-                        m_objDocument.insertString(m_objDocument.getLength(), "\n", m_objMainStyle);
+                        doc.insertString(doc.getLength(), "\n", m_objMainStyle);
+                        doc.insertString(doc.getLength(), "\n", m_objMainStyle);
+                        doc.insertString(doc.getLength(), "Ignored", m_objIconStyle);
+                        doc.insertString(doc.getLength(), "\n", m_objMainStyle);
                     }
                     catch (Exception ex)
                     {
@@ -597,13 +536,15 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         {
             ex.printStackTrace();
         }
+
+
     }
 
     private void ParseDefaultMsg(String strMsg) {
         try
         {
             StyleConstants.setForeground(m_objMainStyle, Color.black);
-            m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
+            doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
         }
         catch (Exception ex)
         {
@@ -615,7 +556,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         try
         {
             StyleConstants.setForeground(m_objMainStyle, m_clrGameMsg);
-            m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
+            doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
         }
         catch (Exception ex)
         {
@@ -627,7 +568,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         try
         {
             StyleConstants.setForeground(m_objMainStyle, m_clrSystemMsg);
-            m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
+            doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
         }
         catch (Exception ex)
         {
@@ -648,14 +589,14 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
             if ((!lar_strParts[1].isEmpty()) && (!lar_strParts[2].isEmpty()))
             {
-                m_objDocument.insertString(m_objDocument.getLength(), "\n" + lar_strParts[0], m_objMainStyle);
+                doc.insertString(doc.getLength(), "\n" + lar_strParts[0], m_objMainStyle);
                 StyleConstants.setBold(m_objMainStyle, true);
-                m_objDocument.insertString(m_objDocument.getLength(), lar_strParts[1], m_objMainStyle);
+                doc.insertString(doc.getLength(), lar_strParts[1], m_objMainStyle);
                 StyleConstants.setBold(m_objMainStyle, false);
-                m_objDocument.insertString(m_objDocument.getLength(), lar_strParts[2], m_objMainStyle);
+                doc.insertString(doc.getLength(), lar_strParts[2], m_objMainStyle);
             }
             else
-                m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
+                doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
         }
         catch (Exception ex)
         {
@@ -690,7 +631,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                         {
                             l_strUser = lar_strParts[1];
 
-                            m_objDocument.insertString(m_objDocument.getLength(), "\n*** dr = ", m_objMainStyle);
+                            doc.insertString(doc.getLength(), "\n*** dr = ", m_objMainStyle);
                             if (m_bUseDiceImages)
                             {
                                 PaintIcon(l_iDice, DiceType.COLORED,true, "");
@@ -698,34 +639,34 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                             else
                             {
                                 StyleConstants.setBold(m_objMainStyle, true);
-                                m_objDocument.insertString(m_objDocument.getLength(), l_strDice, m_objMainStyle);
+                                doc.insertString(doc.getLength(), l_strDice, m_objMainStyle);
                                 StyleConstants.setBold(m_objMainStyle, false);
                             }
-                            m_objDocument.insertString(m_objDocument.getLength(), lar_strParts[0], m_objMainStyle);
+                            doc.insertString(doc.getLength(), lar_strParts[0], m_objMainStyle);
                             StyleConstants.setBold(m_objMainStyle, true);
-                            m_objDocument.insertString(m_objDocument.getLength(), l_strUser, m_objMainStyle); // user
+                            doc.insertString(doc.getLength(), l_strUser, m_objMainStyle); // user
                             StyleConstants.setBold(m_objMainStyle, false);
-                            m_objDocument.insertString(m_objDocument.getLength(), lar_strParts[2], m_objMainStyle);
+                            doc.insertString(doc.getLength(), lar_strParts[2], m_objMainStyle);
 
                             FireDiceRoll("", l_strUser, "", l_iDice, -1);
                         }
                         else
                         {
-                            m_objDocument.insertString(m_objDocument.getLength(), "\n*** dr = ", m_objMainStyle);
+                            doc.insertString(doc.getLength(), "\n*** dr = ", m_objMainStyle);
                             PaintIcon(l_iDice, DiceType.COLORED,true, "");
-                            m_objDocument.insertString(m_objDocument.getLength(), l_strLast, m_objMainStyle);
+                            doc.insertString(doc.getLength(), l_strLast, m_objMainStyle);
 
                             FireDiceRoll("", "?", "", l_iDice, -1);
                         }
                     }
                     else
-                        m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
+                        doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
                 }
                 else
-                    m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
+                    doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
             }
             else
-                m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
+                doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
         }
         catch (Exception ex)
         {
@@ -943,7 +884,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     StyleConstants.setForeground(m_objMainStyle, Color.BLACK);
                                     StyleConstants.setBold(m_objMainStyle, true);
 
-                                    m_objDocument.insertString(m_objDocument.getLength(), "\n" + BEFORE_CATEGORY + l_strCategory + "\t", m_objMainStyle);
+                                    doc.insertString(doc.getLength(), "\n" + BEFORE_CATEGORY + l_strCategory + "\t", m_objMainStyle);
 
                                     StyleConstants.setForeground(m_objMainStyle, m_clrGameMsg);
                                     StyleConstants.setBold(m_objMainStyle, false);
@@ -951,57 +892,57 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     if (m_bUseDiceImages)
                                     {
                                         PaintIcon(l_iFirstDice, DiceType.COLORED,false, (m_bShowDiceStats ? "" : l_strRestOfMsg));
-                                        m_objDocument.insertString(m_objDocument.getLength(), " ", m_objMainStyle);
+                                        doc.insertString(doc.getLength(), " ", m_objMainStyle);
                                         PaintIcon(l_iSecondDice, DiceType.WHITE,false, (m_bShowDiceStats ? "" : l_strRestOfMsg));
                                         //Add any other dice required
                                         for ( Map.Entry<DiceType, Integer> entry : otherDice.entrySet())
                                         {
-                                            m_objDocument.insertString(m_objDocument.getLength(), " ", m_objMainStyle);
+                                            doc.insertString(doc.getLength(), " ", m_objMainStyle);
                                             PaintIcon(entry.getValue(), entry.getKey() ,false, (m_bShowDiceStats ? "" : l_strRestOfMsg));
                                         }
                                     }
                                     else
                                     {
                                         StyleConstants.setBold(m_objMainStyle, true);
-                                        m_objDocument.insertString(m_objDocument.getLength(), l_strDice, m_objMainStyle);
+                                        doc.insertString(doc.getLength(), l_strDice, m_objMainStyle);
                                         StyleConstants.setBold(m_objMainStyle, false);
                                     }
-                                    m_objDocument.insertString(m_objDocument.getLength(), "  ...  ", m_objMainStyle);
+                                    doc.insertString(doc.getLength(), "  ...  ", m_objMainStyle);
 
                                     StyleConstants.setBold(m_objMainStyle, true);
-                                    m_objDocument.insertString(m_objDocument.getLength(), l_strUser, m_objMainStyle);
+                                    doc.insertString(doc.getLength(), l_strUser, m_objMainStyle);
 
                                     StyleConstants.setBold(m_objMainStyle, false);
-                                    m_objDocument.insertString(m_objDocument.getLength(), "   ", m_objMainStyle);
+                                    doc.insertString(doc.getLength(), "   ", m_objMainStyle);
 
                                     StyleConstants.setBold(m_objMainStyle, true);
                                     StyleConstants.setUnderline(m_objMainStyle, true);
-                                    m_objDocument.insertString(m_objDocument.getLength(), l_strSpecialMessages, m_objMainStyle);
+                                    doc.insertString(doc.getLength(), l_strSpecialMessages, m_objMainStyle);
 
                                     StyleConstants.setBold(m_objMainStyle, false);
                                     StyleConstants.setUnderline(m_objMainStyle, false);
 
                                     if (m_bShowDiceStats)
-                                        m_objDocument.insertString(m_objDocument.getLength(), l_strRestOfMsg, m_objMainStyle);
+                                        doc.insertString(doc.getLength(), l_strRestOfMsg, m_objMainStyle);
                                     else
-                                        m_objDocument.insertString(m_objDocument.getLength(), " ", m_objMainStyle);
+                                        doc.insertString(doc.getLength(), " ", m_objMainStyle);
 
                                     FireDiceRoll(l_strCategory, l_strUser, l_strSAN, l_iFirstDice, l_iSecondDice);
                                 }
                                 else
-                                    m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
+                                    doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
                             }
                             else
-                                m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
+                                doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
                         }
                         else
-                            m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
+                            doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
                     }
                     else
-                        m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
+                        doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
                 }
                 else
-                    m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
+                    doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
             }
             else // *** (Other dr) 3 ***   <FredKors>      [1 / 1   avg   3,00 (3,00)]    (01.84)
             {
@@ -1037,7 +978,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     StyleConstants.setForeground(m_objMainStyle, Color.BLACK);
                                     StyleConstants.setBold(m_objMainStyle, true);
 
-                                    m_objDocument.insertString(m_objDocument.getLength(), "\n" + BEFORE_CATEGORY + l_strCategory + "\t", m_objMainStyle);
+                                    doc.insertString(doc.getLength(), "\n" + BEFORE_CATEGORY + l_strCategory + "\t", m_objMainStyle);
 
                                     StyleConstants.setForeground(m_objMainStyle, m_clrGameMsg);
                                     StyleConstants.setBold(m_objMainStyle, false);
@@ -1049,20 +990,20 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     else
                                     {
                                         StyleConstants.setBold(m_objMainStyle, true);
-                                        m_objDocument.insertString(m_objDocument.getLength(), l_strDice, m_objMainStyle);
+                                        doc.insertString(doc.getLength(), l_strDice, m_objMainStyle);
                                         StyleConstants.setBold(m_objMainStyle, false);
                                     }
-                                    m_objDocument.insertString(m_objDocument.getLength(), "  ...  ", m_objMainStyle);
+                                    doc.insertString(doc.getLength(), "  ...  ", m_objMainStyle);
 
                                     StyleConstants.setBold(m_objMainStyle, true);
-                                    m_objDocument.insertString(m_objDocument.getLength(), l_strUser, m_objMainStyle);
+                                    doc.insertString(doc.getLength(), l_strUser, m_objMainStyle);
 
                                     StyleConstants.setBold(m_objMainStyle, false);
 
                                     if (m_bShowDiceStats)
-                                        m_objDocument.insertString(m_objDocument.getLength(), "   " + l_strRestOfMsg, m_objMainStyle);
+                                        doc.insertString(doc.getLength(), "   " + l_strRestOfMsg, m_objMainStyle);
                                     else
-                                        m_objDocument.insertString(m_objDocument.getLength(), " ", m_objMainStyle);
+                                        doc.insertString(doc.getLength(), " ", m_objMainStyle);
 
                                     // added by DR 2018 to add chatter text on Sniper Activation dr
                                     if (l_strCategory.equals("SA")) {
@@ -1070,29 +1011,29 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                         String sniperstring="";
                                         if (l_iDice == 1) {
                                             sniperstring ="Eliminates SMC, Dummy stack, Sniper; Stuns & Recalls CE crew; breaks MMC & Inherent crew of certain vehicles; immobilizes unarmored vehicle (A14.3)" ;
-                                            m_objDocument.insertString(m_objDocument.getLength(), "   " + sniperstring, m_objMainStyle);
+                                            doc.insertString(doc.getLength(), "   " + sniperstring, m_objMainStyle);
                                         } else if (l_iDice == 2) {
                                             sniperstring ="Eliminates Dummy stack; Wounds SMC; Stuns CE crew; pins MMC, Inherent crew of certain vehicles, Sniper (A14.3)" ;
-                                            m_objDocument.insertString(m_objDocument.getLength(), "   " + sniperstring, m_objMainStyle);
+                                            doc.insertString(doc.getLength(), "   " + sniperstring, m_objMainStyle);
                                         }
                                         StyleConstants.setBold(m_objMainStyle, false);
                                     }
                                     FireDiceRoll(l_strCategory, l_strUser, "", l_iDice, -1);
                                 }
                                 else
-                                    m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
+                                    doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
                             }
                             else
-                                m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
+                                doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
                         }
                         else
-                            m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
+                            doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
                     }
                     else
-                        m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
+                        doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
                 }
                 else
-                    m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
+                    doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
             }
         }
         catch (Exception ex)
@@ -1265,55 +1206,55 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                             {
                                 l_strUser = lar_strParts[1];
 
-                                m_objDocument.insertString(m_objDocument.getLength(), "\n*** 3d6 = ", m_objMainStyle);
+                                doc.insertString(doc.getLength(), "\n*** 3d6 = ", m_objMainStyle);
                                 if (m_bUseDiceImages)
                                 {
                                     PaintIcon(l_iFirstDice, DiceType.COLORED,false, "");
-                                    m_objDocument.insertString(m_objDocument.getLength(), " ", m_objMainStyle);
+                                    doc.insertString(doc.getLength(), " ", m_objMainStyle);
                                     PaintIcon(l_iSecondDice, DiceType.WHITE,false, "");
-                                    m_objDocument.insertString(m_objDocument.getLength(), " ", m_objMainStyle);
+                                    doc.insertString(doc.getLength(), " ", m_objMainStyle);
                                     PaintIcon(l_iThirdDice,DiceType.COLORED, true, "");
                                 }
                                 else
                                 {
                                     StyleConstants.setBold(m_objMainStyle, true);
-                                    m_objDocument.insertString(m_objDocument.getLength(), l_strDice, m_objMainStyle);
+                                    doc.insertString(doc.getLength(), l_strDice, m_objMainStyle);
                                     StyleConstants.setBold(m_objMainStyle, false);
                                 }
-                                m_objDocument.insertString(m_objDocument.getLength(), lar_strParts[0], m_objMainStyle);
+                                doc.insertString(doc.getLength(), lar_strParts[0], m_objMainStyle);
                                 StyleConstants.setBold(m_objMainStyle, true);
-                                m_objDocument.insertString(m_objDocument.getLength(), lar_strParts[1], m_objMainStyle);
+                                doc.insertString(doc.getLength(), lar_strParts[1], m_objMainStyle);
                                 StyleConstants.setBold(m_objMainStyle, false);
-                                m_objDocument.insertString(m_objDocument.getLength(), lar_strParts[2], m_objMainStyle);
+                                doc.insertString(doc.getLength(), lar_strParts[2], m_objMainStyle);
 
                                 FireDiceRoll("", l_strUser, "", l_iFirstDice, l_iSecondDice);
                                 FireDiceRoll("", l_strUser, "", l_iThirdDice, -1);
                             }
                             else
                             {
-                                m_objDocument.insertString(m_objDocument.getLength(), "\n*** 3d6 = ", m_objMainStyle);
+                                doc.insertString(doc.getLength(), "\n*** 3d6 = ", m_objMainStyle);
                                 PaintIcon(l_iFirstDice, DiceType.COLORED,false, "");
-                                m_objDocument.insertString(m_objDocument.getLength(), " ", m_objMainStyle);
+                                doc.insertString(doc.getLength(), " ", m_objMainStyle);
                                 PaintIcon(l_iSecondDice, DiceType.WHITE,false, "");
-                                m_objDocument.insertString(m_objDocument.getLength(), " ", m_objMainStyle);
+                                doc.insertString(doc.getLength(), " ", m_objMainStyle);
                                 PaintIcon(l_iThirdDice, DiceType.COLORED,true, "");
-                                m_objDocument.insertString(m_objDocument.getLength(), l_strLast, m_objMainStyle);
+                                doc.insertString(doc.getLength(), l_strLast, m_objMainStyle);
 
                                 FireDiceRoll("", "?", "", l_iFirstDice, l_iSecondDice);
                                 FireDiceRoll("", "?", "", l_iThirdDice, -1);
                             }
                         }
                         else
-                            m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
+                            doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
                     }
                     else
-                        m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
+                        doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
                 }
                 else
-                    m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
+                    doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
             }
             else
-                m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
+                doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
         }
         catch (Exception ex)
         {
@@ -1358,24 +1299,24 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                             {
                                 l_strUser = lar_strParts[1];
 
-                                m_objDocument.insertString(m_objDocument.getLength(), "\n*** DR = ", m_objMainStyle);
+                                doc.insertString(doc.getLength(), "\n*** DR = ", m_objMainStyle);
                                 if (m_bUseDiceImages)
                                 {
                                     PaintIcon(l_iFirstDice, DiceType.COLORED,false, "");
-                                    m_objDocument.insertString(m_objDocument.getLength(), " ", m_objMainStyle);
+                                    doc.insertString(doc.getLength(), " ", m_objMainStyle);
                                     PaintIcon(l_iSecondDice, DiceType.WHITE,false, "");
                                 }
                                 else
                                 {
                                     StyleConstants.setBold(m_objMainStyle, true);
-                                    m_objDocument.insertString(m_objDocument.getLength(), l_strDice, m_objMainStyle);
+                                    doc.insertString(doc.getLength(), l_strDice, m_objMainStyle);
                                     StyleConstants.setBold(m_objMainStyle, false);
                                 }
-                                m_objDocument.insertString(m_objDocument.getLength(), lar_strParts[0], m_objMainStyle);
+                                doc.insertString(doc.getLength(), lar_strParts[0], m_objMainStyle);
                                 StyleConstants.setBold(m_objMainStyle, true);
-                                m_objDocument.insertString(m_objDocument.getLength(), lar_strParts[1], m_objMainStyle);
+                                doc.insertString(doc.getLength(), lar_strParts[1], m_objMainStyle);
                                 StyleConstants.setBold(m_objMainStyle, false);
-                                m_objDocument.insertString(m_objDocument.getLength(), lar_strParts[2], m_objMainStyle);
+                                doc.insertString(doc.getLength(), lar_strParts[2], m_objMainStyle);
 
                                 if (lar_strParts[2].contains("Axis SAN"))
                                 {
@@ -1394,11 +1335,11 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                             }
                             else
                             {
-                                m_objDocument.insertString(m_objDocument.getLength(), "\n*** DR = ", m_objMainStyle);
+                                doc.insertString(doc.getLength(), "\n*** DR = ", m_objMainStyle);
                                 PaintIcon(l_iFirstDice, DiceType.COLORED, false, "");
-                                m_objDocument.insertString(m_objDocument.getLength(), " ", m_objMainStyle);
+                                doc.insertString(doc.getLength(), " ", m_objMainStyle);
                                 PaintIcon(l_iSecondDice, DiceType.WHITE, false, "");
-                                m_objDocument.insertString(m_objDocument.getLength(), l_strLast, m_objMainStyle);
+                                doc.insertString(doc.getLength(), l_strLast, m_objMainStyle);
 
                                 if (l_strLast.contains("Axis SAN"))
                                 {
@@ -1417,16 +1358,16 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                             }
                         }
                         else
-                            m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
+                            doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
                     }
                     else
-                        m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
+                        doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
                 }
                 else
-                    m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
+                    doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
             }
             else
-                m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
+                doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
         }
         catch (Exception ex)
         {
@@ -1453,7 +1394,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                 l_objLabel.setToolTipText(strTooltip.trim());
 
             StyleConstants.setComponent(m_objIconStyle, l_objLabel);
-            m_objDocument.insertString(m_objDocument.getLength(), "Ignored", m_objIconStyle);
+            doc.insertString(doc.getLength(), "Ignored", m_objIconStyle);
         }
         catch (Exception ex)
         {
@@ -1465,31 +1406,33 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     {
         send(" ");
 
-        StyleConstants.setAlignment(m_objMainStyle, StyleConstants.ALIGN_LEFT);
-        StyleConstants.setFontFamily(m_objMainStyle, m_objChatterFont.getFamily());
-        StyleConstants.setFontSize(m_objMainStyle, m_objChatterFont.getSize());
-        StyleConstants.setSpaceAbove(m_objMainStyle, 2);
-        StyleConstants.setSpaceBelow(m_objMainStyle, 2);
+        SimpleAttributeSet attribs = new SimpleAttributeSet();
+
+        StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_LEFT);
+        StyleConstants.setFontFamily(attribs, m_objChatterFont.getFamily());
+        StyleConstants.setFontSize(attribs, m_objChatterFont.getSize());
+        StyleConstants.setSpaceAbove(attribs, 2);
+        StyleConstants.setSpaceBelow(attribs, 2);
 
         send("- Chatter font changed");
         send(" ");
 
-        FontMetrics l_objFM = m_objChatPanel.getFontMetrics(m_objChatterFont);
+        FontMetrics l_objFM = conversationPane.getFontMetrics(m_objChatterFont);
 
-        float l_f = (float)l_objFM.stringWidth(BEFORE_CATEGORY + ASLDiceBot.OTHER_CATEGORY + "XXX");
-        TabStop[] lar_objTabs = new TabStop[10]; // this sucks
+        //float l_f = (float)l_objFM.stringWidth(BEFORE_CATEGORY + ASLDiceBot.OTHER_CATEGORY + "XXX");
+        //TabStop[] lar_objTabs = new TabStop[10]; // this sucks
 
-        for(int l_i = 0; l_i < lar_objTabs.length; l_i++)
-        {
-             lar_objTabs[l_i] = new TabStop(l_f * (l_i + 1), TabStop.ALIGN_LEFT, TabStop.LEAD_NONE);
-        }
+        //for(int l_i = 0; l_i < lar_objTabs.length; l_i++)
+        //{
+        //     lar_objTabs[l_i] = new TabStop(l_f * (l_i + 1), TabStop.ALIGN_LEFT, TabStop.LEAD_NONE);
+        //}
 
-        TabSet l_objTabset = new TabSet(lar_objTabs);
+        //TabSet l_objTabset = new TabSet(lar_objTabs);
 
-        StyleConstants.setTabSet(m_objMainStyle, new TabSet(new TabStop[0]));
-        StyleConstants.setTabSet(m_objMainStyle, l_objTabset);
+        //StyleConstants.setTabSet(attribs, new TabSet(new TabStop[0]));
+        //StyleConstants.setTabSet(attribs, l_objTabset);
 
-        m_objChatPanel.setParagraphAttributes(m_objMainStyle, true);
+        //conversationPane.setParagraphAttributes(attribs, true);
     }
 
     @Override
@@ -1651,7 +1594,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             public void propertyChange(PropertyChangeEvent e)
             {
                 m_clrBackground = (Color) e.getNewValue();
-                m_objChatPanel.setBackground(m_clrBackground);
+                conversationPane.setBackground(m_clrBackground);
             }
         });
 
@@ -1934,14 +1877,14 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
     }
 
-  public static void main(String[] args)
+  /*public static void main(String[] args)
   {
     ASLChatter chat = new ASLChatter();
     JFrame f = new JFrame();
     f.add(chat);
     f.pack();
     f.setVisible(true);
-  }
+  }*/
 
   private void FireDiceRoll(String strCategory, String strUser, String strSAN, int iFirstDice, int iSecondDice) {
         for (ChatterListener objListener : chatter_listeners)
