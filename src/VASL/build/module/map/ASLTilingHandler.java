@@ -108,6 +108,6 @@ public class ASLTilingHandler extends VASSAL.launch.TilingHandler {
       @Override
       public void handleFailure() {
       }
-    }
+    };
   }
 }
