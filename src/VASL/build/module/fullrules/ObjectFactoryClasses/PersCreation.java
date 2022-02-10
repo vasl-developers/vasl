@@ -658,7 +658,7 @@ public class PersCreation {
             case 1102:
                 switch (FiringUnit.getbaseunit().getNationality()) {
                     case Germans:
-
+                        return new German149Firec(PassIsCX, PassIsPinned, PassHasMG, PassUsingInherentFP, PassUsingfirstMG, PassUsingsecondMG, FiringUnit);
                     case Russians:
                         //return new Russian149Firec(PassIsCX, PassIsPinned, PassHasMG, PassUsingInherentFP, PassUsingfirstMG, PassUsingsecondMG, FiringUnit);
                 }
