@@ -49,6 +49,7 @@ import java.awt.Insets;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -296,7 +297,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         {
             public void actionPerformed(ActionEvent e)
             {
-                send(formatChat(e.getActionCommand()));
+                send(formatChat(e.getActionCommand()), e.getActionCommand()); //BR// This overload is the preferred routine to call now
                 m_edtInputText.setText(""); //$NON-NLS-1$
             }
         });
@@ -442,6 +443,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             objButton.setToolTipText(strTooltipText + " [" + HotKeyConfigurer.getString(objListener.getKeyStroke()) + "]");
     }
 
+    /*
     @Override
     protected String formatChat(String text)
     {
@@ -449,19 +451,26 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
         return "<" + (id.length() == 0 ? "(" + getAnonymousUserName() + ")" : id) + "> - " + text; //$NON-NLS-1$ //$NON-NLS-2$
     }
+    */
 
+    /*
     @Override
     public JTextField getInputField()
     {
         return m_edtInputText;
     }
+    */
 
     String [] FindUser (String strVal)
     {
         String [] lar_strRetValue = new String[] {strVal,"",""};
 
-        int l_iUserStart = strVal.indexOf("<");
-        int l_iUserEnd = strVal.indexOf(">");
+        //BR// I'm not sure this is exactly right, but I know "<" literals in your string will cause HTML to go crazy
+        int l_iUserStart = strVal.indexOf("&lt;");
+        int l_iUserEnd = strVal.indexOf("&gt;");
+
+        //int l_iUserStart = strVal.indexOf("<");
+        //int l_iUserEnd = strVal.indexOf(">");
 
         if ((l_iUserStart != -1) && (l_iUserEnd != -1))
         {
@@ -484,6 +493,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                 {
                     try
                     {
+                        //BR// This table is already HTML so let's just insert it into the normal editor kit?
+                        kit.insertHTML(doc, doc.getLength(), strMsg, 0, 0, null);
+                        /*
                         JLabel l_objLabel = new JLabel(strMsg);
                         l_objLabel.setAlignmentY(0.7f);
 
@@ -492,6 +504,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                         doc.insertString(doc.getLength(), "\n", m_objMainStyle);
                         doc.insertString(doc.getLength(), "Ignored", m_objIconStyle);
                         doc.insertString(doc.getLength(), "\n", m_objMainStyle);
+                        */
                     }
                     catch (Exception ex)
                     {
@@ -500,20 +513,34 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                 }
                 else if (strMsg.startsWith("*** DR = "))
                 {
-                    ParseOldDR(strMsg);
+                    //BR// I think this may be legacy anyway? but you could comment super.show() out and fix the other one if needed
+                    super.show(strMsg);
+                    //ParseOldDR(strMsg);
                 }
                 else if (strMsg.startsWith("*** dr = "))
                 {
-                    ParseOlddr(strMsg);
+                    //BR// I think this may be legacy anyway? but you could comment super.show() out and fix the other one if needed
+                    super.show(strMsg);
+                    //ParseOlddr(strMsg);
                 }
                 else if (strMsg.startsWith("*** 3d6 = "))
                 {
-                    Parse3d6(strMsg);
+                    //BR// I think this may be legacy anyway? but you could comment super.show() out and fix the other one if needed
+                    super.show(strMsg);
+                    //Parse3d6(strMsg);
                 }
                 else if (strMsg.startsWith("*** ("))
                 {
+                    //BR// I think this may be legacy anyway? But you could comment super.show() out and fix the other one if needed
                     ParseNewDiceRoll(strMsg);
                 }
+                else {
+                  //BR// Use the Vassal parser for everything that isn't one of our super-special-VASL things
+                  //BR// That way all the HTML/QuickColors stuff will work right
+                  super.show(strMsg);
+                }
+
+                /*
                 else if (strMsg.startsWith("<"))
                 {
                     ParseUserMsg(strMsg);
@@ -530,14 +557,13 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                 {
                     ParseDefaultMsg(strMsg);
                 }
+                */
             }
         }
         catch (Exception ex)
         {
             ex.printStackTrace();
         }
-
-
     }
 
     private void ParseDefaultMsg(String strMsg) {
@@ -682,6 +708,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
         Map<DiceType, Integer> otherDice = new HashMap<>();
         DustLevel dustLevel = environment.getCurrentDustLevel();
+
+        StringBuilder string = new StringBuilder("<html>");
+
         try
         {
             String l_strRestOfMsg = strMsg.substring("*** (".length()); // Other DR) 4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)        
@@ -884,7 +913,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     StyleConstants.setForeground(m_objMainStyle, Color.BLACK);
                                     StyleConstants.setBold(m_objMainStyle, true);
 
-                                    doc.insertString(doc.getLength(), "\n" + BEFORE_CATEGORY + l_strCategory + "\t", m_objMainStyle);
+                                    //doc.insertString(doc.getLength(), "\n" + BEFORE_CATEGORY + l_strCategory + "\t", m_objMainStyle);
+                                    string.append("\n" + BEFORE_CATEGORY + l_strCategory + "\t");
 
                                     StyleConstants.setForeground(m_objMainStyle, m_clrGameMsg);
                                     StyleConstants.setBold(m_objMainStyle, false);
@@ -892,57 +922,72 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     if (m_bUseDiceImages)
                                     {
                                         PaintIcon(l_iFirstDice, DiceType.COLORED,false, (m_bShowDiceStats ? "" : l_strRestOfMsg));
-                                        doc.insertString(doc.getLength(), " ", m_objMainStyle);
+                                        //doc.insertString(doc.getLength(), " ", m_objMainStyle);
+                                        string.append(' ');
+
                                         PaintIcon(l_iSecondDice, DiceType.WHITE,false, (m_bShowDiceStats ? "" : l_strRestOfMsg));
                                         //Add any other dice required
                                         for ( Map.Entry<DiceType, Integer> entry : otherDice.entrySet())
                                         {
-                                            doc.insertString(doc.getLength(), " ", m_objMainStyle);
+                                            string.append(' ');
+                                            //doc.insertString(doc.getLength(), " ", m_objMainStyle);
                                             PaintIcon(entry.getValue(), entry.getKey() ,false, (m_bShowDiceStats ? "" : l_strRestOfMsg));
                                         }
                                     }
                                     else
                                     {
                                         StyleConstants.setBold(m_objMainStyle, true);
-                                        doc.insertString(doc.getLength(), l_strDice, m_objMainStyle);
+                                        string.append(l_strDice);
+                                        //doc.insertString(doc.getLength(), l_strDice, m_objMainStyle);
                                         StyleConstants.setBold(m_objMainStyle, false);
                                     }
-                                    doc.insertString(doc.getLength(), "  ...  ", m_objMainStyle);
+                                    string.append("  ...  ");
+                                    //doc.insertString(doc.getLength(), "  ...  ", m_objMainStyle);
 
                                     StyleConstants.setBold(m_objMainStyle, true);
-                                    doc.insertString(doc.getLength(), l_strUser, m_objMainStyle);
+                                    string.append(l_strUser);
+                                    //doc.insertString(doc.getLength(), l_strUser, m_objMainStyle);
 
                                     StyleConstants.setBold(m_objMainStyle, false);
-                                    doc.insertString(doc.getLength(), "   ", m_objMainStyle);
+                                    string.append("   ");
+                                    //doc.insertString(doc.getLength(), "   ", m_objMainStyle);
 
                                     StyleConstants.setBold(m_objMainStyle, true);
                                     StyleConstants.setUnderline(m_objMainStyle, true);
-                                    doc.insertString(doc.getLength(), l_strSpecialMessages, m_objMainStyle);
+                                    string.append(l_strSpecialMessages);
+                                    //doc.insertString(doc.getLength(), l_strSpecialMessages, m_objMainStyle);
 
                                     StyleConstants.setBold(m_objMainStyle, false);
                                     StyleConstants.setUnderline(m_objMainStyle, false);
 
                                     if (m_bShowDiceStats)
-                                        doc.insertString(doc.getLength(), l_strRestOfMsg, m_objMainStyle);
+                                        string.append(l_strRestOfMsg);
+                                        //doc.insertString(doc.getLength(), l_strRestOfMsg, m_objMainStyle);
                                     else
-                                        doc.insertString(doc.getLength(), " ", m_objMainStyle);
+                                        string.append(" ");
+                                        //doc.insertString(doc.getLength(), " ", m_objMainStyle);
 
                                     FireDiceRoll(l_strCategory, l_strUser, l_strSAN, l_iFirstDice, l_iSecondDice);
                                 }
                                 else
-                                    doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
+                                    string.append("\n" + strMsg);
+                                    //doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
                             }
                             else
-                                doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
+                                string.append("\n" + strMsg);
+                                //doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
                         }
                         else
-                            doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
+                          string.append("\n" + strMsg);
+                          //doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
                     }
                     else
-                        doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
+                      string.append("\n" + strMsg);
+                      //doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
                 }
                 else
-                    doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
+                  string.append("\n" + strMsg);
+                  //doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
             }
             else // *** (Other dr) 3 ***   <FredKors>      [1 / 1   avg   3,00 (3,00)]    (01.84)
             {
@@ -978,7 +1023,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     StyleConstants.setForeground(m_objMainStyle, Color.BLACK);
                                     StyleConstants.setBold(m_objMainStyle, true);
 
-                                    doc.insertString(doc.getLength(), "\n" + BEFORE_CATEGORY + l_strCategory + "\t", m_objMainStyle);
+                                    string.append("\n" + BEFORE_CATEGORY + l_strCategory + "\t");
+                                    //doc.insertString(doc.getLength(), "\n" + BEFORE_CATEGORY + l_strCategory + "\t", m_objMainStyle);
 
                                     StyleConstants.setForeground(m_objMainStyle, m_clrGameMsg);
                                     StyleConstants.setBold(m_objMainStyle, false);
@@ -990,20 +1036,26 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     else
                                     {
                                         StyleConstants.setBold(m_objMainStyle, true);
-                                        doc.insertString(doc.getLength(), l_strDice, m_objMainStyle);
+                                        string.append(l_strDice);
+
+                                        //doc.insertString(doc.getLength(), l_strDice, m_objMainStyle);
                                         StyleConstants.setBold(m_objMainStyle, false);
                                     }
-                                    doc.insertString(doc.getLength(), "  ...  ", m_objMainStyle);
+                                    string.append("  ...  ");
+                                    //doc.insertString(doc.getLength(), "  ...  ", m_objMainStyle);
 
                                     StyleConstants.setBold(m_objMainStyle, true);
-                                    doc.insertString(doc.getLength(), l_strUser, m_objMainStyle);
+                                    string.append(l_strUser);
+                                    //doc.insertString(doc.getLength(), l_strUser, m_objMainStyle);
 
                                     StyleConstants.setBold(m_objMainStyle, false);
 
                                     if (m_bShowDiceStats)
-                                        doc.insertString(doc.getLength(), "   " + l_strRestOfMsg, m_objMainStyle);
+                                        string.append("   " + l_strRestOfMsg);
+                                        //doc.insertString(doc.getLength(), "   " + l_strRestOfMsg, m_objMainStyle);
                                     else
-                                        doc.insertString(doc.getLength(), " ", m_objMainStyle);
+                                        string.append(" ");
+                                        //doc.insertString(doc.getLength(), " ", m_objMainStyle);
 
                                     // added by DR 2018 to add chatter text on Sniper Activation dr
                                     if (l_strCategory.equals("SA")) {
@@ -1011,30 +1063,44 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                         String sniperstring="";
                                         if (l_iDice == 1) {
                                             sniperstring ="Eliminates SMC, Dummy stack, Sniper; Stuns & Recalls CE crew; breaks MMC & Inherent crew of certain vehicles; immobilizes unarmored vehicle (A14.3)" ;
-                                            doc.insertString(doc.getLength(), "   " + sniperstring, m_objMainStyle);
+                                            string.append("   " + sniperstring);
+                                            //doc.insertString(doc.getLength(), "   " + sniperstring, m_objMainStyle);
                                         } else if (l_iDice == 2) {
                                             sniperstring ="Eliminates Dummy stack; Wounds SMC; Stuns CE crew; pins MMC, Inherent crew of certain vehicles, Sniper (A14.3)" ;
-                                            doc.insertString(doc.getLength(), "   " + sniperstring, m_objMainStyle);
+                                            string.append("   " + sniperstring);
+                                            //doc.insertString(doc.getLength(), "   " + sniperstring, m_objMainStyle);
                                         }
                                         StyleConstants.setBold(m_objMainStyle, false);
                                     }
                                     FireDiceRoll(l_strCategory, l_strUser, "", l_iDice, -1);
                                 }
                                 else
-                                    doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
+                                    string.append("\n" + strMsg);
+                                    //doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
                             }
                             else
-                                doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
+                                string.append("\n" + strMsg);
+                                //doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
                         }
                         else
-                            doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
+                            string.append("\n" + strMsg);
+                            //doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
                     }
                     else
-                        doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
+                        string.append("\n" + strMsg);
+                        //doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
                 }
                 else
-                    doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
+                    string.append("\n" + strMsg);
+                    //doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
             }
+
+            string.append("</html>");
+
+            //BR// I wonder if those /n being inserted up there should all be <br> ?
+
+            //BR// Now insert our combined HTML string into the kit/doc
+            kit.insertHTML(doc, doc.getLength(), string.toString(), 0, 0, null);
         }
         catch (Exception ex)
         {
@@ -1375,8 +1441,18 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
     }
 
-    private void PaintIcon(int l_iDice, DiceType diceType, boolean bSingle, String strTooltip)
+    private void PaintIcon(int l_iDice, DiceType diceType, boolean bSingle, String strTooltip) throws BadLocationException, IOException
     {
+        //BR// Will need to insert an <img= > tag here. Example:
+        //BR// <img src="d6-1-grey.png" width="14" height="14">
+        //BR// Any image you have in your "images" subdirectory can be referenced by filename in the tag, and you can change the height/width if you need to.
+        //BR// I do see your code also *recolors* these on the fly as well -- that may require fancier footwork than I'm aware of how to do, or more likely put images of dice in the colors you want to support individually into the module
+
+        //BR// For now I just put in this placeholder string insertion
+        String temp = "<html>" +  l_iDice + " (" + diceType.toString() + ") " + (bSingle ? "(Single)" : "(NotSingle)") + " " + strTooltip + "\n" + "</html>";
+        kit.insertHTML(doc, doc.getLength(), temp, 0, 0, null);
+
+        /*
         JLabel l_objLabel = null;
         try
         {
@@ -1400,12 +1476,11 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         {
             ex.printStackTrace();
         }
+        */
     }
 
     private void RebuildStyles()
     {
-        send(" ");
-
         SimpleAttributeSet attribs = new SimpleAttributeSet();
 
         StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_LEFT);
@@ -1414,8 +1489,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         StyleConstants.setSpaceAbove(attribs, 2);
         StyleConstants.setSpaceBelow(attribs, 2);
 
+        send("- ");
         send("- Chatter font changed");
-        send(" ");
+        send("- ");
 
         FontMetrics l_objFM = conversationPane.getFontMetrics(m_objChatterFont);
 
@@ -1454,6 +1530,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
 
         m_objChatterFont = f;
+
+        super.setFont(f); //BR// Tell VASSAL about the font and let it make its stylesheet and stuff
     }
 
     @Override
@@ -1511,6 +1589,11 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     @Override
     public void addTo(Buildable b)
     {
+        //BR// Let the VASSAL chatter attempt to initialize itself (so its stylesheets have some hope of being right)
+        //BR// This probably duplicates a couple objects (or makes and then destroys some), but it gets us off the ground
+        //BR// with the HTML & "Quick Colors" stylings working right
+        super.addTo(b);
+
         GameModule l_objGameModule = (GameModule) b;
 
         if (l_objGameModule.getChatter() != null)
@@ -1552,6 +1635,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             }
         });
 
+        makeStyleSheet((Font)l_objChatFontConfigurer.getValue());
         l_objChatFontConfigurer.fireUpdate();
 
         FontConfigurer l_objButtonsFontConfigurer = null;
