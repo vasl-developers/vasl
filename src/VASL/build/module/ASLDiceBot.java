@@ -314,7 +314,7 @@ public class ASLDiceBot extends AbstractBuildable
 " .tbl tr.total {border:2px solid #black; background:#CCFFFF;}" +
 " .tbl td.up {border-top:2px solid black; padding:5px; font-weight: bold; text-align: right;}" +
 "</style>" +
-"<table class=\"tbl\"><thead><tr><th colspan=\"3\">%s</th></tr><tr><th>Category</th><th>drs</th><th>Avg</th></tr></thead><tbody>%s</tbody></table</html>";
+"<table class=\"tbl\"><thead><tr><th colspan=\"3\">%s</th></tr><tr><th>Category</th><th>drs</th><th>Avg</th></tr></thead><tbody>%s</tbody></table></html>";
 
     public static final String m_strHTMLDouble =
 
@@ -325,7 +325,7 @@ public class ASLDiceBot extends AbstractBuildable
 " .tbl tr.total {border-top:2px solid black; background:#CCFFFF;}" +
 " .tbl td.up {border-top:2px solid black; padding:5px; font-weight: bold; text-align: right;}" +
 "</style>" +
-"<table class=\"tbl\"><thead><tr><th colspan=\"5\">%s</th></tr><tr><th>Category</th><th>DRs</th><th>Avg 1st</th><th>Avg 2nd</th><th>Avg</th></tr></thead><tbody>%s</tbody></table</html>";
+"<table class=\"tbl\"><thead><tr><th colspan=\"5\">%s</th></tr><tr><th>Category</th><th>DRs</th><th>Avg 1st</th><th>Avg 2nd</th><th>Avg</th></tr></thead><tbody>%s</tbody></table></html>";
 
     private final int m_MaxInstancesPerSeries = 99;
     private int m_iCurrentSeries = 0, m_iInstancesInCurrentSeries = m_MaxInstancesPerSeries;
@@ -603,11 +603,11 @@ public class ASLDiceBot extends AbstractBuildable
             // If this was a TH roll, add a reminder for hit location for stupid people
             if(strCategory.equals(("TH"))){
                 if(l_iColoredDie < l_iWhiteDie){
-                    l_strOutput += " <Turret>";
+                    l_strOutput += " &lt;Turret&gt;";
                 }
                 else
                 {
-                    l_strOutput += "<Hull>";
+                    l_strOutput += "&lt;Hull&gt;";
                 }
             }
 

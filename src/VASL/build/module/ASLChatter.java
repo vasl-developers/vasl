@@ -465,12 +465,11 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     {
         String [] lar_strRetValue = new String[] {strVal,"",""};
 
-        //BR// I'm not sure this is exactly right, but I know "<" literals in your string will cause HTML to go crazy
+        //BR// I can't find where the "<" literals are getting in here, but I know that "<" literals in a string will cause HTML to go crazy
+        strVal = strVal.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+
         int l_iUserStart = strVal.indexOf("&lt;");
         int l_iUserEnd = strVal.indexOf("&gt;");
-
-        //int l_iUserStart = strVal.indexOf("<");
-        //int l_iUserEnd = strVal.indexOf(">");
 
         if ((l_iUserStart != -1) && (l_iUserEnd != -1))
         {
@@ -1101,6 +1100,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
             //BR// Now insert our combined HTML string into the kit/doc
             kit.insertHTML(doc, doc.getLength(), string.toString(), 0, 0, null);
+
+            //System.out.println(string.toString());
+
         }
         catch (Exception ex)
         {
