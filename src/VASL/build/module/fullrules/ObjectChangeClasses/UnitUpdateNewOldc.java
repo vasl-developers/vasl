@@ -54,10 +54,10 @@ public class UnitUpdateNewOldc {
     // THIS DOES NOT SEEM RIGHT; FIX WHEN HANDLE MOVEMENT
     /*if (OldUnit.getMovingunit() != null) {
 
-        int PassID = OldUnit.getbaseunit().getUnit_ID();
+        int PassID = OldUnit.getbaseunit().getSW_ID();
         UseObjectFactory.CreateMovingUnit(OldUnit.getbaseunit().getUnittype(), PassID, Scencolls.SelMoveUnits);
         for (PersUniti selunit: Scencolls.SelMoveUnits) {
-            if (selunit.getbaseunit().getUnit_ID() == PassID)  Select
+            if (selunit.getbaseunit().getSW_ID() == PassID)  Select
         selunit).First
         With NewUnit.MovingPersUnit
                 .AssaultMove = OldUnit.MovingPersUnit.AssaultMove

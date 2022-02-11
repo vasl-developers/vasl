@@ -30,7 +30,7 @@ public class UnitBreaksc implements StatusChangei {
         Identifier UC 205
 
                     Preconditions()
-        1.	Unbroken MMC Target is alive and fails a MC  if by >= its ELR, replacement happens in UnitReplaces
+        1.	Unbroken MMC Target is alive and fails a MC by <= its ELR
 
                     Basic Course
         1.	Use case begins when a Target fails a MC [several possible causes: UC102-TargetCRMCResult; UC103-TargetMCResult]
@@ -58,8 +58,17 @@ public class UnitBreaksc implements StatusChangei {
         TargParent.getbaseunit().setPinned(false);
         TargParent.getbaseunit().setCombatStatus(Constantvalues.CombatStatus.None);
         TargParent.getbaseunit().setMovementStatus(Constantvalues.MovementStatus.NotMoving);
-        TargParent.getTargetunit().setCombatResultsString(TargParent.getTargetunit().getCombatResultsString() + " breaks; is DM");
         TargParent.getTargetunit().UpdateTargetStatus(TargParent);
+        TargParent.getTargetunit().setCombatResultsString(TargParent.getTargetunit().getCombatResultsString() + " breaks; is DM");
+
+        /*// flip counter and add DM
+        CommonFunctionsC ToDO = new CommonFunctionsC(TargParent.getbaseunit().getScenario());
+        GamePiece ToBreak = ToDO.GetGamePieceFromID(TargParent.getbaseunit().getSW_ID());
+        if (ToBreak != null) {
+            ToBreak.keyEvent(KeyStroke.getKeyStroke('F', java.awt.event.InputEvent.CTRL_MASK));
+            // Need to push counter action to other computer
+        }*/
+
         // HoB
         if (TargParent.getTargetunit().getHoBFlag()) {   // rolled a 2
             Constantvalues.PersUnitResult HobChange = TargParent.getTargetunit().HOBMC();
@@ -74,16 +83,16 @@ public class UnitBreaksc implements StatusChangei {
             }
             TargParent.getbaseunit().setOrderStatus(TargParent.getTargetunit().getOrderStatus());
             // update Target and Firing lists with new units
-            if (RunStatusChange.getNewTargs() != null) {myNewTargs = RunStatusChange.getNewTargs();}
+            if (RunStatusChange.GetNewTargs != null) {myNewTargs = RunStatusChange.GetNewTargs;}
         }
         return true;
     }
 
 
-    public LinkedList<PersUniti> getNewTargs () {
+    public LinkedList<PersUniti> GetNewTargs () {
         return myNewTargs;
     }
-    public LinkedList<PersUniti> getNewFirings () {
+    public LinkedList<PersUniti> GetNewFirings () {
         // no code required; no new unit
         return null;
     }

@@ -512,8 +512,8 @@ public class IFTC implements IIFTC {
             for (PersUniti TestFiringUnit : TestList) {
                 if (TestFiringUnit.getbaseunit().getUnit_ID() == Unititem.getbaseunit().getUnit_ID() &&
                         Constantvalues.Typetype.Personnel == TestFiringUnit.getbaseunit().getTypeType_ID()) {
-                    return false;  // already added
-                }
+                    return false;
+                } // already added
                 int UnitDistance = scen.getGameMap().range(scen.getGameMap().getHex(TestFiringUnit.getbaseunit().getHexName()), NewTarget, scen.getGameMap().getMapConfiguration());
                 if (UnitDistance == 1 && TestFiringUnit.getbaseunit().getLevelinHex() - Unititem.getbaseunit().getLevelinHex() == 0) {
                     GroupAddOk = true;
@@ -1056,15 +1056,13 @@ public class IFTC implements IIFTC {
         // temporary while debugging
         if (ValidSolutions.size() > 0) { // selecting one of possible solutions already checked
             for (GamePiece SelUnit : SelectedUnits) {
-                if (SelUnit.getProperty("TextLabel").toString() != null) {
-                    ObjIDlink = Integer.parseInt(SelUnit.getProperty("TextLabel").toString());
-                    for (PersUniti findunit : Scencolls.Unitcol) {
-                        if (findunit.getbaseunit().getUnit_ID() == ObjIDlink) {
-                            if (findunit.getbaseunit().getNationality() == getTargetSide()) {
-                                WhichOne = Constantvalues.CombatStatus.None;
-                            } else {
-                                WhichOne = Constantvalues.CombatStatus.Firing;
-                            }
+                ObjIDlink = Integer.parseInt(SelUnit.getProperty("TextLabel").toString());
+                for(PersUniti findunit: Scencolls.Unitcol){
+                    if(findunit.getbaseunit().getUnit_ID() == ObjIDlink) {
+                        if (findunit.getbaseunit().getNationality() == getTargetSide()) {
+                            WhichOne = Constantvalues.CombatStatus.None;
+                        } else {
+                            WhichOne = Constantvalues.CombatStatus.Firing;
                         }
                     }
                 }
@@ -1074,21 +1072,17 @@ public class IFTC implements IIFTC {
         // no solution yet in place, so add units and test for solution
         // if selected determine if unit or ? and use nationality to determine if Target or Firer
         for (GamePiece SelUnit : SelectedUnits) {
-            if (SelUnit.getProperty("TextLabel").toString() != null && SelUnit.getProperty("TextLabel").toString() != "") {
-                ObjIDlink = Integer.parseInt(SelUnit.getProperty("TextLabel").toString());
-                for (PersUniti findunit : Scencolls.Unitcol) {
-                    if (findunit.getbaseunit().getUnit_ID() == ObjIDlink) {
-                        if (findunit.getbaseunit().getNationality() == getTargetSide()) {
-                            WhichOne = Constantvalues.CombatStatus.None;
-                        } else {
-                            WhichOne = Constantvalues.CombatStatus.Firing;
-                        }
-                        Addunit = findunit;
-                        break;
+            ObjIDlink = Integer.parseInt(SelUnit.getProperty("TextLabel").toString());
+            for (PersUniti findunit : Scencolls.Unitcol) {
+                if (findunit.getbaseunit().getUnit_ID() == ObjIDlink) {
+                    if (findunit.getbaseunit().getNationality() == getTargetSide()) {
+                        WhichOne = Constantvalues.CombatStatus.None;
+                    } else {
+                        WhichOne = Constantvalues.CombatStatus.Firing;
                     }
+                    Addunit = findunit;
+                    break;
                 }
-            } else {
-                continue;
             }
             // add unit or ? to Target or Firer (? not added to firer)
             if (WhichOne == Constantvalues.CombatStatus.None && Addunit != null) {  // TargetUniut
@@ -1141,7 +1135,7 @@ public class IFTC implements IIFTC {
         Dim Firingloc As Integer = Firerloc
         Dim FiringPos As Integer = Firerpos
         Dim Getlocs = New Terrainvalues.GetALocationFromMapTable(Game.Scenario.LocationCol)
-        Dim BaseHexloc As MapDataClassLibrary.GameLocation = Getlocs.RetrieveLocationfromHex(Firinghex, Firingloc)
+        Dim BaseHexloc As MapDataClassLibrary.GameLocation = Getlocs.RetrieveLocationfromMaptable(Firinghex, Firingloc)
         Dim OKHexloc As MapDataClassLibrary.GameLocation:
         Dim Addtrue As Boolean = false
         Dim StillIn = New List(Of Objectvalues.PersUniti)
@@ -1156,7 +1150,7 @@ public class IFTC implements IIFTC {
         Addtrue = true
         Else
         Dim TestHexloc As MapDataClassLibrary.
-        GameLocation = Getlocs.RetrieveLocationfromHex(StillFiring.BasePersUnit.Hexnum, StillFiring.BasePersUnit.hexlocation)
+        GameLocation = Getlocs.RetrieveLocationfromMaptable(StillFiring.BasePersUnit.Hexnum, StillFiring.BasePersUnit.hexlocation)
         Dim ADJTest As New CombatTerrainvalues.HexBesideC(BaseHexloc, TestHexloc, FiringPos)
         if ADJTest.AreLocationsADJACENT Then
         StillIn.Add(StillFiring)
@@ -1165,9 +1159,9 @@ public class IFTC implements IIFTC {
         End if
         Else
         For Each StillOK As Objectvalues.PersUniti In StillIn
-                OKHexloc = Getlocs.RetrieveLocationfromHex(StillOK.BasePersUnit.Hexnum, StillOK.BasePersUnit.hexlocation)
+                OKHexloc = Getlocs.RetrieveLocationfromMaptable(StillOK.BasePersUnit.Hexnum, StillOK.BasePersUnit.hexlocation)
         Dim TestHexloc As MapDataClassLibrary.
-        GameLocation = Getlocs.RetrieveLocationfromHex(StillFiring.BasePersUnit.Hexnum, StillFiring.BasePersUnit.hexlocation)
+        GameLocation = Getlocs.RetrieveLocationfromMaptable(StillFiring.BasePersUnit.Hexnum, StillFiring.BasePersUnit.hexlocation)
         Dim ADJTest As New
         CombatTerrainvalues.HexBesideC(OKHexloc, TestHexloc, StillOK.BasePersUnit.hexPosition)
         if ADJTest.AreLocationsADJACENT Then
@@ -1419,7 +1413,10 @@ public class IFTC implements IIFTC {
             myNeedToResumeResolution = true;
             return;
         }*/
-
+// test code
+        for (PersUniti eachTarget: TargGroup){
+            GameModule.getGameModule().getChatter().send(eachTarget.getTargetunit().getCombatResultsString());
+        }
         // Update Target Group
         for (PersUniti TargUnit: TargGroup) {
             if (TargUnit.getbaseunit().getOrderStatus() == Constantvalues.OrderStatus.NotInPlay) {
@@ -1432,15 +1429,13 @@ public class IFTC implements IIFTC {
         for (PersUniti AddNewUnit: CombatRes.getNewTargets()) {
             if (AddNewUnit.getbaseunit().getOrderStatus() == Constantvalues.OrderStatus.Prisoner) {
                 // NEED A DIFFERERNT IMPLEMENTATION
-
+                /*Dim OH As VisibleOccupiedhexes
+                OH = CType(Game.Scenario.HexesWithCounter(AddNewUnit.BasePersUnit.Hexnum), VisibleOccupiedhexes)
+                OH.GetAllSpritesInHex()
+                OH.RedoDisplayOrder()*/
             }
             TargGroup.add(AddNewUnit);
         }
-        // test code
-        for (PersUniti eachTarget: TargGroup){
-            GameModule.getGameModule().getChatter().send(eachTarget.getTargetunit().getCombatResultsString());
-        }
-
         RemoveList.clear();
         // Update Fire Group
         for (PersUniti FireUnit: FireGroup) {
@@ -1454,10 +1449,10 @@ public class IFTC implements IIFTC {
         for (PersUniti AddNewUnit: CombatRes.getNewFirings()) {
             FireGroup.add(AddNewUnit);
         }
-        // need to manage firing counters here: changes due to revealing, breaking, reducing, prep fire, etc
+        // need to manage firing and target sprites here: changes due to revealing, breaking, reducing, prep fire, etc
         Constantvalues.CombatStatus NewCombatStatus = GetCombatStatus();
         for (PersUniti firer: FireGroup) {
-            firer.getFiringunit().UpdateCombatStatus(firer, NewCombatStatus, IFTRes.getROFdr());
+            firer.getFiringunit().UpdateCombatStatus(NewCombatStatus, IFTRes.getROFdr());
         }
 
         if (CombatRes.NeedToResume()) {
@@ -1478,7 +1473,7 @@ public class IFTC implements IIFTC {
         // 'need to manage firing and target sprites here: changes due to revealing, breaking, reducing, prep fire, etc
         Constantvalues.CombatStatus NewCombatStatus = GetCombatStatus();
         for (PersUniti firer: FireGroup) {
-            firer.getFiringunit().UpdateCombatStatus(firer, NewCombatStatus, IFTRes.getROFdr());
+            firer.getFiringunit().UpdateCombatStatus(NewCombatStatus, IFTRes.getROFdr());
         }
         // best way is to recreate all sprites in the hex based on final status at this point
         // NEED A NEW WAY TO IMPLEMENT
@@ -1543,7 +1538,7 @@ public class IFTC implements IIFTC {
         // need to manage firing and target sprites here: changes due to revealing, breaking, reducing, prep fire, etc
         Constantvalues.CombatStatus NewCombatStatus = GetCombatStatus();
         for (PersUniti firer: FireGroup) {
-            firer.getFiringunit().UpdateCombatStatus(firer, NewCombatStatus, IFTRes.getROFdr());
+            firer.getFiringunit().UpdateCombatStatus(NewCombatStatus, IFTRes.getROFdr());
         }
         // best way is to recreate all sprites in the hex based on final status at this point
         /*For Each Firehex As Integer In FirerHexes

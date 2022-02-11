@@ -81,7 +81,6 @@ public class IFTResultC implements IFTResulti {
         // FP recalc is handled here
 
         // fp is already rounded down by IFTC.CalcFPandDRM routine
-
         // cowering
         int DoubleDrop = 0;
         if (DR.getWhite() == DR.getColored()) {
@@ -91,10 +90,10 @@ public class IFTResultC implements IFTResulti {
                     int newAttackedbyFP = ApplyCowering(TargetUnit.getTargetunit().getAttackedbyFP(), DoubleDrop);
                     TargetUnit.getTargetunit().setAttackedbyFP(newAttackedbyFP);
                     cowerstring += TargetUnit.getbaseunit().getUnitName() + " is now attacked by " + Integer.toString(newAttackedbyFP) + " FP; ";
-                }
+            }
                 GameModule.getGameModule().getChatter().send(cowerstring);
                 // need to add routine to determine which units get FinalFire
-            }
+        }
         }
         return FireGroup;
     }
@@ -133,7 +132,7 @@ public class IFTResultC implements IFTResulti {
             }
             FDR = DR.getColored() + DR.getWhite() + SameTarget.get(0).getTargetunit().getAttackedbydrm();
             //test code
-            FDR=10;
+            //FDR=7;
             if (FDR > 15) {
                 IFTTableResult = Constantvalues.IFTResult.NR;
             } else {
@@ -164,10 +163,12 @@ public class IFTResultC implements IFTResulti {
         for (PersUniti Targtest: TargGroup) {
             FDR = DR.getColored() + DR.getWhite() + Targtest.getTargetunit().getAttackedbydrm();
             // report combat result
-            String MSG =  " IFT FDR = " + Integer.toString(FDR) + ", ";
+            //FDR=9;
+            String MSG =  "FDR = " + Integer.toString(FDR) + ", ";
             CombatUtil CombatInfo = new CombatUtil();
             MSG += "result is " + CombatInfo.IFTResultstring(Targtest.getTargetunit().getIFTResult()) + ": ";
             Targtest.getTargetunit().setCombatResultsString(MSG);
+            //GameModule.getGameModule().getChatter().send(MSG);
         }
 
         // ROF
@@ -352,7 +353,7 @@ public class IFTResultC implements IFTResulti {
                             }
                         }
                         for (PersUniti RevealUnit : Revealedlist) {
-                            VisibilityChangei UnittoChange = new RevealUnitC(RevealUnit);
+                            VisibilityChangei UnittoChange = new RevealUnitC(RevealUnit.getbaseunit().getUnit_ID());
                             int RevealID = CheckItem.getbaseunit().getCon_ID();
                             // must be set before Unit is revealed && Con_ID set to 0
                             if (UnittoChange.TakeAction()) { // this will add sprite

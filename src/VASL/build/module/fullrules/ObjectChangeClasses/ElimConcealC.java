@@ -21,7 +21,7 @@ public class   ElimConcealC implements VisibilityChangei {
         PersUniti ConToRemoveUnit=null;
         /*if (Linqdata.RemoveConFromCol(pConToRemove)) { // (CInt(MovUnitCon.Con_ID)) Then   TEMP while debugging REMOVE
             for (PersUniti ConToGo : Scencolls.Unitcol) {
-                if (ConToGo.getbaseunit().getUnit_ID() == pConToRemove &&
+                if (ConToGo.getbaseunit().getSW_ID() == pConToRemove &&
                         ConToGo.getbaseunit().getTypeType_ID() == Constantvalues.Typetype.Concealment) {
                     ConToRemoveUnit = ConToGo;
                     break;
