@@ -530,7 +530,6 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                 }
                 else if (strMsg.startsWith("*** ("))
                 {
-                    //BR// I think this may be legacy anyway? But you could comment super.show() out and fix the other one if needed
                     ParseNewDiceRoll(strMsg);
                 }
                 else {
