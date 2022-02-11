@@ -115,3 +115,5 @@ clear, hindered, or blocked. When you check the Verbose LOS mode box, LOS checki
 • range from the source hex to the target hex
 • number of hindrances, if any
 • reason for LOS being blocked
+• number of hindrances, if any
+• reason for LOS being blocked
