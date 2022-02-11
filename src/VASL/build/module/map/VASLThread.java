@@ -60,7 +60,6 @@ import VASSAL.counters.PieceIterator;
 import VASSAL.counters.Stack;
 // added as part of fixing remote event problem DR
 import VASSAL.tools.SequenceEncoder;
-import VASSAL.tools.UniqueIdManager;
 
 import java.util.LinkedList;
 import java.awt.image.BufferedImage;
@@ -120,11 +119,45 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
 	protected void launch() {
 
         super.launch();
+        //hideHIP();
         setGridSnapToVertex(true);
         initializeMap();
 
     }
+    /*protected void hideHIP(){
 
+        ASLMap.ShowMapLevel showMapLevel = ASLMap.ShowMapLevel.ShowMapAndOverlay;
+        ((ASLMap)map).setShowMapLevel(showMapLevel);
+        *//*GamePiece[] allPieces = map.getAllPieces();
+        for (GamePiece p : allPieces) {
+            if (p instanceof Stack) {
+                for (PieceIterator pi = new PieceIterator(((Stack) p).getPiecesIterator()); pi.hasMoreElements(); ) {
+                    GamePiece p2 = pi.nextPiece();
+                    if (isMyPiece(p2)) {
+                        String hiddenBy = (String) p2.getProperty(Properties.HIDDEN_BY);
+                        if(hiddenBy != null) {
+                            // hide the piece
+                            //p2.setProperty(ASLProperties.HINDRANCE, "true");
+                            map.repaint();
+                        }
+
+                    }
+                }
+            } else {
+
+
+            }
+        }*//*
+    }
+    *//**
+     * @param piece the piece
+     * @return true if I own the piece
+     *//*
+    private boolean isMyPiece(GamePiece piece) {
+        String PLAYER_NAME = "RealName";
+        String myPlayerName = (String) getGameModule().getPrefs().getValue(PLAYER_NAME);
+        return  piece.getProperty("Owner") != null && piece.getProperty("Owner").equals(myPlayerName);
+    }*/
     private void initializeMap(){
 
         // make sure we have a map otherwise disable LOS
@@ -675,7 +708,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                         }
 
                         g.setColor(oldcolor);
-                        lastRangeRect.add(drawText(g,targetLOSPoint.x - 20, targetLOSPoint.y + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
+                        lastRangeRect.add(drawText(g, targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), targetLOSPoint.y + targetLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
                                 "LOS Check Disabled - Overlay nearby. Range: " + LOSMap.range(source.getHex(), target.getHex(), LOSMap.getMapConfiguration())));
 
                     } else {
@@ -693,12 +726,12 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                         if (isVerbose()) {
                             lastRangeRect = drawText(g,
                                     sourceLOSPoint.x - 20,
-                                    sourceLOSPoint.y + (shiftSourceText ? shift : 0) - g.getFontMetrics().getDescent(),
+                                    sourceLOSPoint.y - sourceLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) - (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
                                     source.getName() + "  (" + sourcelevelString + ")");
                         } else if (source.getBaseHeight() != 0) {
                             lastRangeRect = drawText(g,
                                     sourceLOSPoint.x - 20,
-                                    sourceLOSPoint.y + (shiftSourceText ? shift : 0) - g.getFontMetrics().getDescent(),
+                                    sourceLOSPoint.y - sourceLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) -  (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
                                     sourcelevelString );
                         }
 
@@ -729,22 +762,24 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                         }
                         if (isVerbose()) {
                             lastRangeRect.add(drawText(g,
-                                    targetLOSPoint.x - 20,
-                                    targetLOSPoint.y + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
+                                    targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), //- 20,
+                                    targetLOSPoint.y + targetLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
                                     target.getName() + "  (" + targetlevelString + ")"));
                         } else if (target.getBaseHeight() != 0) {
                             lastRangeRect.add(drawText(g,
-                                    targetLOSPoint.x - 20,
-                                    targetLOSPoint.y + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
+                                    targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), //- 20,
+                                    targetLOSPoint.y + targetLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
                                     targetlevelString ));
                         }
                         // draw the verbose text
                         g.setColor(Color.black);
                         if (shiftSourceText) {
-                            lastRangeRect.add(drawText(g, targetLOSPoint.x - 20, targetLOSPoint.y - shift, resultsString));
+                            //lastRangeRect.add(drawText(g, targetLOSPoint.x - 20, targetLOSPoint.y - shift, resultsString));
+                            lastRangeRect.add(drawText(g, targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), targetLOSPoint.y + targetLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) - shift, resultsString));
                         }
                         else {
-                            lastRangeRect.add(drawText(g, targetLOSPoint.x - 20, targetLOSPoint.y + shift * 2 - 2, resultsString));
+                            //lastRangeRect.add(drawText(g, targetLOSPoint.x - 20, targetLOSPoint.y + shift * 2 - 2, resultsString));
+                            lastRangeRect.add(drawText(g, targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), targetLOSPoint.y + targetLOSLabelYoffset(sourceLOSPoint, targetLOSPoint)+ shift * 2 - 2, resultsString));
                         }
 
                     }
@@ -919,7 +954,9 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
 
         // paint the background
         final int border = 1;
+
         g.setColor(Color.black);
+
         final Rectangle region = new Rectangle(
                 x - border,
                 y - border - g.getFontMetrics().getHeight() + g.getFontMetrics().getDescent(),
@@ -1008,49 +1045,59 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
     }
     protected void setSourceandTargetLevels(double newsourceLevel, double newtargetLevel) {
         double leveladj;
-        while (newsourceLevel > sourcelevel) {
-            source = source.getUpLocation();
-            leveladj = 0;
-            if (source.getName().contains("Rooftop")) {
-                leveladj = -0.5;
+        if (source != null && target != null) {
+            while (newsourceLevel > sourcelevel) {
+                if (source.getUpLocation() != null) {
+                    source = source.getUpLocation();
+                }
+                leveladj = 0;
+                if (source.getName().contains("Rooftop")) {
+                    leveladj = -0.5;
+                }
+                if (source.getHex().isDepressionTerrain() && !source.isCenterLocation()) {
+                    leveladj = +1;
+                }
+                sourcelevel = source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj;
             }
-            if (source.getHex().isDepressionTerrain() && !source.isCenterLocation()) {
-                leveladj = +1;
+            while (newsourceLevel < sourcelevel) {
+                if (source.getDownLocation() != null) {
+                    source = source.getDownLocation();
+                }
+                leveladj = 0;
+                if (source.getName().contains("Rooftop")) {
+                    leveladj = -0.5;
+                }
+                if (source.getHex().isDepressionTerrain() && !source.isCenterLocation()) {
+                    leveladj = +1;
+                }
+                sourcelevel = source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj;
             }
-            sourcelevel = source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj;
-        }
-        while (newsourceLevel < sourcelevel) {
-            source = source.getDownLocation();
-            leveladj=0;
-            if(source.getName().contains("Rooftop")) {
-                leveladj=-0.5;
+            while (newtargetLevel > targetlevel) {
+                if (target.getUpLocation() != null) {
+                    target = target.getUpLocation();
+                }
+                leveladj = 0;
+                if (target.getName().contains("Rooftop")) {
+                    leveladj = -0.5;
+                }
+                if (target.getHex().isDepressionTerrain() && !target.isCenterLocation()) {
+                    leveladj = +1;
+                }
+                targetlevel = target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj;
             }
-            if(source.getHex().isDepressionTerrain() && !source.isCenterLocation()) {
-                leveladj=+1;
+            while (newtargetLevel < targetlevel) {
+                if (target.getDownLocation() != null) {
+                    target = target.getDownLocation();
+                }
+                leveladj = 0;
+                if (target.getName().contains("Rooftop")) {
+                    leveladj = -0.5;
+                }
+                if (target.getHex().isDepressionTerrain() && !target.isCenterLocation()) {
+                    leveladj = +1;
+                }
+                targetlevel = target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj;
             }
-            sourcelevel= source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj ;
-        }
-        while (newtargetLevel > targetlevel) {
-            target = target.getUpLocation();
-            leveladj = 0;
-            if (target.getName().contains("Rooftop")) {
-                leveladj = -0.5;
-            }
-            if (target.getHex().isDepressionTerrain() && !target.isCenterLocation()) {
-                leveladj = +1;
-            }
-            targetlevel = target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj;
-        }
-        while (newtargetLevel < targetlevel) {
-            target = target.getDownLocation();
-            leveladj=0;
-            if(target.getName().contains("Rooftop")) {
-                leveladj=-0.5;
-            }
-            if(target.getHex().isDepressionTerrain() && !target.isCenterLocation()) {
-                leveladj=+1;
-            }
-            targetlevel= target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj ;
         }
     }
 
@@ -1091,6 +1138,71 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         return false;
     }
 
+    // these two methods are used to push the LOS check text label away from the los thread so that the thread can be viewed clearly
+    private int targetLOSLabelXoffset(Point sourceLOSpoint, Point targetLOSpoint) {
+        if (sourceLOSpoint.getX() == targetLOSpoint.getX()) {
+            // LOS is vertical; no need to adjust x, use standard offset
+            return -10;
+        } else if (sourceLOSpoint.getX() > targetLOSpoint.getX()) {
+            // start point is to the right of end point, push label to the right
+            return 10;
+        } else if (sourceLOSpoint.getX() < targetLOSpoint.getX()) {
+            // start point is to the left of end point, push label to the right
+            return 10;
+        }
+        return 0; // should never get here
+    }
+
+    private int targetLOSLabelYoffset(Point sourceLOSpoint, Point targetLOSpoint) {
+        if (sourceLOSpoint.getY() == targetLOSpoint.getY()) {
+            // LOS is horizontal; push label above thread
+            return -40;
+        } else if (sourceLOSpoint.getX() == targetLOSpoint.getX() && sourceLOSpoint.getY() > targetLOSpoint.getY() ) {
+            // LOS is vertical; start is below end; push label above thread
+            return -20;
+        } else if (sourceLOSpoint.getX() == targetLOSpoint.getX() && sourceLOSpoint.getY() < targetLOSpoint.getY() ) {
+            // LOS is vertical; start is above end; push label below thread
+            return 20;
+        } else if (sourceLOSpoint.getY() > targetLOSpoint.getY() && sourceLOSpoint.getX() > targetLOSpoint.getX()) {
+            // start point is below end point and start is right of end, push label above thread
+            return -30;
+        } else if (sourceLOSpoint.getY() > targetLOSpoint.getY() && sourceLOSpoint.getX() < targetLOSpoint.getX()) {
+            // start point is below end point and start is left of end, push label up
+            return -10;
+        } else if (sourceLOSpoint.getY() < targetLOSpoint.getY() && sourceLOSpoint.getX() > targetLOSpoint.getX()) {
+            // start point is above end point and start is right of end, push label below thread
+            return 10;
+        } else if (sourceLOSpoint.getY() < targetLOSpoint.getY() && sourceLOSpoint.getX() < targetLOSpoint.getX()) {
+            // start point is above end point and start is left of end, push label up
+            return -10;
+        }
+        return 0; // should never get here
+    }
+    private int sourceLOSLabelYoffset(Point sourceLOSpoint, Point targetLOSpoint) {
+        if (sourceLOSpoint.getY() == targetLOSpoint.getY()) {
+            // LOS is horizontal; push label above thread
+            return -40;
+        } else if (sourceLOSpoint.getX() == targetLOSpoint.getX() && sourceLOSpoint.getY() > targetLOSpoint.getY() ) {
+            // LOS is vertical; start is below end; push label below thread
+            return -20;
+        } else if (sourceLOSpoint.getX() == targetLOSpoint.getX() && sourceLOSpoint.getY() < targetLOSpoint.getY() ) {
+            // LOS is vertical; start is above end; push label above thread
+            return -10;
+        } else if (sourceLOSpoint.getY() > targetLOSpoint.getY() && sourceLOSpoint.getX() > targetLOSpoint.getX()) {
+            // start point is below end point and start is right of end, push label above thread
+            return -20;
+        } else if (sourceLOSpoint.getY() > targetLOSpoint.getY() && sourceLOSpoint.getX() < targetLOSpoint.getX()) {
+            // start point is below end point and start is left of end, push label up
+            return -20;
+        } else if (sourceLOSpoint.getY() < targetLOSpoint.getY() && sourceLOSpoint.getX() > targetLOSpoint.getX()) {
+            // start point is above end point and start is right of end, push label below thread
+            return -10;
+        } else if (sourceLOSpoint.getY() < targetLOSpoint.getY() && sourceLOSpoint.getX() < targetLOSpoint.getX()) {
+            // start point is above end point and start is left of end, push label up
+            return -10;
+        }
+        return 0; // should never get here
+    }
     @Override
     public String encode(Command var1) {
         if(var1 instanceof LOS_Thread.LOSCommand) {

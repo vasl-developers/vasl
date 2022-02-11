@@ -1760,6 +1760,8 @@ public class Map  {
                 else {
                     followsdepression=false;  // LOS is along hexside; cannot follow depression
                 }
+
+
             }
             if (status.entersTargetDepression && !newequalsprevioushex) {
                 Location testlocation=status.currentHex.getNearestLocation(status.currentCol, status.currentRow);
@@ -1851,7 +1853,7 @@ public class Map  {
         // code added by DR to handle RB rrembankments
         else if (RBrrembankmentsexist) {
             if (checkRBrrembankments(status, result, hexsides)) {
-                return true;
+               return true;
             }
         }
 
@@ -2938,6 +2940,7 @@ public class Map  {
         if(status.sourceHex.isDepressionTerrain() && !status.source.isCenterLocation()) {
             sourceadj=+1;
         }
+
         if(status.targetHex.isDepressionTerrain() && !status.target.isCenterLocation()) {
             targetadj=+1;
         }

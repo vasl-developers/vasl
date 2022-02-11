@@ -782,8 +782,29 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                                 l_strRestOfMsg = l_strRestOfMsg.substring("Allied SAN".length());
                                             } else if (l_strRestOfMsg.startsWith("Axis/Allied SAN"))
                                             {
-                                                l_strSAN = "Axis/Allied SAN";                                                specialMessages.add("Axis/Allied SAN");
+                                                l_strSAN = "Axis/Allied SAN";
+                                                specialMessages.add("Axis/Allied SAN");
                                                 l_strRestOfMsg = l_strRestOfMsg.substring("Axis/Allied SAN".length());
+                                            }
+                                        }
+
+                                        if (l_strCategory.equals("TC"))
+                                        {
+                                            if (l_strRestOfMsg.startsWith("Axis Booby Trap"))
+                                            {
+                                                l_strSAN = "Axis Booby Trap";
+                                                specialMessages.add("Axis Booby Trap");
+                                                l_strRestOfMsg = l_strRestOfMsg.substring("Axis Booby Trap".length());
+                                            } else if (l_strRestOfMsg.startsWith("Allied Booby Trap"))
+                                            {
+                                                l_strSAN = "Allied Booby Trap";
+                                                specialMessages.add("Allied Booby Trap");
+                                                l_strRestOfMsg = l_strRestOfMsg.substring("Allied Booby Trap".length());
+                                            } else if (l_strRestOfMsg.startsWith("Axis/Allied Booby Trap"))
+                                            {
+                                                l_strSAN = "Axis/Allied Booby Trap";
+                                                specialMessages.add("Axis/Allied Booby Trap");
+                                                l_strRestOfMsg = l_strRestOfMsg.substring("Axis/Allied Booby Trap".length());
                                             }
                                         }
                                     }
@@ -867,7 +888,10 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                             // Full ASL only
                                             if (l_iFirstDice == 1 && l_iSecondDice == 1 && m_DRNotificationLevel == 3)
                                             {
-                                                specialMessages.add("Field Promotion (A18.12), Unlikely Kill (A11.501)");
+                                                specialMessages.add("Infiltration (A11.22), Field Promotion (A18.12), Unlikely Kill (A11.501)");
+                                            } else if (l_iFirstDice == 6 && l_iSecondDice == 6 && m_DRNotificationLevel == 3)
+                                            {
+                                                specialMessages.add("Infiltration (A11.22)");
                                             }
                                         }
                                     }
@@ -1001,6 +1025,19 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     else
                                         m_objDocument.insertString(m_objDocument.getLength(), " ", m_objMainStyle);
 
+                                    // added by DR 2018 to add chatter text on Sniper Activation dr
+                                    if (l_strCategory.equals("SA")) {
+                                        StyleConstants.setBold(m_objMainStyle, true);
+                                        String sniperstring="";
+                                        if (l_iDice == 1) {
+                                            sniperstring ="Eliminates SMC, Dummy stack, Sniper; Stuns & Recalls CE crew; breaks MMC & Inherent crew of certain vehicles; immobilizes unarmored vehicle (A14.3)" ;
+                                            m_objDocument.insertString(m_objDocument.getLength(), "   " + sniperstring, m_objMainStyle);
+                                        } else if (l_iDice == 2) {
+                                            sniperstring ="Eliminates Dummy stack; Wounds SMC; Stuns CE crew; pins MMC, Inherent crew of certain vehicles, Sniper (A14.3)" ;
+                                            m_objDocument.insertString(m_objDocument.getLength(), "   " + sniperstring, m_objMainStyle);
+                                        }
+                                        StyleConstants.setBold(m_objMainStyle, false);
+                                    }
                                     FireDiceRoll(l_strCategory, l_strUser, "", l_iDice, -1);
                                 }
                                 else

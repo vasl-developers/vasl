@@ -236,6 +236,7 @@ public class ASLCommandEncoder extends VASSAL.build.module.BasicCommandEncoder i
     }
     p.setProperty(Properties.OBSCURED_BY, info.obscuredBy);
     p = new MarkMoved(MarkMoved.ID + (large ? "moved58" : "moved"), p);
+    p.setProperty("TextLabel", "ABC");
     return hideable(p, info);
   }
 
