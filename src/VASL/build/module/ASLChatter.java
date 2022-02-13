@@ -64,6 +64,7 @@ import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
 import javax.swing.text.*;
 import javax.swing.text.html.HTML;
+import javax.swing.text.html.Option;
 
 import static VASSAL.build.GameModule.getGameModule;
 
@@ -451,8 +452,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     }
     */
 
-    String [] FindUser (String strVal)
-    {
+    String [] FindUser (String strVal) {
+        //DR// fixed start and end of substrings to handle &lt; and &gt;
         String [] lar_strRetValue = new String[] {strVal,"",""};
 
         //BR// I can't find where the "<" literals are getting in here, but I know that "<" literals in a string will cause HTML to go crazy
@@ -463,9 +464,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
         if ((l_iUserStart != -1) && (l_iUserEnd != -1))
         {
-            lar_strRetValue[0] = strVal.substring(0, l_iUserStart + 1);
-            lar_strRetValue[1] = strVal.substring(l_iUserStart + 1, l_iUserEnd);
-            lar_strRetValue[2] = strVal.substring(l_iUserEnd);
+            lar_strRetValue[0] = strVal.substring(0, l_iUserStart + 4);
+            lar_strRetValue[1] = strVal.substring(l_iUserStart + 4, l_iUserEnd);
+            lar_strRetValue[2] = strVal.substring(l_iUserEnd+4);
         }
 
         return lar_strRetValue;
@@ -697,7 +698,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         Map<DiceType, Integer> otherDice = new HashMap<>();
         DustLevel dustLevel = environment.getCurrentDustLevel();
 
-        StringBuilder string = new StringBuilder("<html>");
+        StringBuilder string = new StringBuilder(""); //"<html>");
 
         try
         {
@@ -897,12 +898,52 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                             l_strSpecialMessages += ", ";
                                         }
                                     }
+/*
+<html>
+  <head>
+    <style type="text/css">
+                                        p {
+                                    font-size:14px;
+                                    color:#538b01;
+                                    font-weight:bold;
+                                    font-style:italic;
+                                }
+      .date {
+                                    color: #ff0000;
+                                }
+      .season {
+                                    color: #0000a0;
+                                }
+    </style>
+  </head>
+  <body>
+    <p>
+                                        Enter the competition by
+                                        <span class="date">January 30, 2011</span>
+                                        and you could win up to $$$$ — including amazing
+      <span class="season">summer</span>
+                                        trips!
+                                        </p>
+  </body>
+</html>
+*/
 
-                                    StyleConstants.setForeground(m_objMainStyle, Color.BLACK);
-                                    StyleConstants.setBold(m_objMainStyle, true);
-
+                                    //StyleConstants.setForeground(m_objMainStyle, Color.BLACK);
+                                    //StyleConstants.setBold(m_objMainStyle, true);
+                                    //StyleConstants.setBold(m_objMainStyle, true);
                                     //doc.insertString(doc.getLength(), "\n" + BEFORE_CATEGORY + l_strCategory + "\t", m_objMainStyle);
-                                    string.append("\n" + BEFORE_CATEGORY + l_strCategory + "\t");
+
+                                    //option 1 - preferred but does not work
+                                    //super.addStyle("aslchatterfont", m_objChatterFont, m_clrGameMsg, "bold",m_objChatterFont.getSize());
+                                    //String classname = "\"aslchatterfont\"";
+                                    //string.append("\n" + BEFORE_CATEGORY +  l_strCategory+"\t");
+                                    //kit.insertHTML(this.doc, this.doc.getLength(), "<div class=" + classname + ">" + string.toString() + "</div>", 0, 0, (HTML.Tag)null);
+                                    // option 2 - works
+                                    string.append("\n" + BEFORE_CATEGORY +  "<strong>" + l_strCategory+ "</strong>"+ "\t");
+
+
+                                    //string.append("\n" + BEFORE_CATEGORY + "<div class=\"aslchatterfont\">"+ l_strCategory+"</div>" + "\t");
+
 
                                     StyleConstants.setForeground(m_objMainStyle, m_clrGameMsg);
                                     StyleConstants.setBold(m_objMainStyle, false);
@@ -1083,7 +1124,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                     //doc.insertString(doc.getLength(), "\n" + strMsg, m_objMainStyle);
             }
 
-            string.append("</html>");
+            //string.append("</html>");
 
             //BR// I wonder if those /n being inserted up there should all be <br> ?
 
@@ -1465,7 +1506,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
                 }
                 //DR// testimage is a BufferedImage and apparently cannot be sent to an html doc; the line below does not work and in fact produces and vassal error
-                kit.insertHTML(doc, doc.getLength(), "<img src="+testimage+"\" >" , 0, 0, HTML.Tag.IMG);
+                //kit.insertHTML(doc, doc.getLength(), "<img src="+testimage+"\" >" , 0, 0, HTML.Tag.IMG);
+                //kit.insertHTML(doc, doc.getLength(), String.valueOf(testimage), 0, 0, null);
             }
             //l_objLabel.setAlignmentY(0.7f);
 
@@ -1484,13 +1526,24 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
     private void RebuildStyles()
     {
-        SimpleAttributeSet attribs = new SimpleAttributeSet();
-
-        StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_LEFT);
-        StyleConstants.setFontFamily(attribs, m_objChatterFont.getFamily());
-        StyleConstants.setFontSize(attribs, m_objChatterFont.getSize());
-        StyleConstants.setSpaceAbove(attribs, 2);
-        StyleConstants.setSpaceBelow(attribs, 2);
+        /*HTMLEditorKit htmlkit = new HTMLEditorKit();
+        StyleSheet css = htmlkit.getStyleSheet();
+        if (css.getStyleSheets() == null) {
+            StyleSheet css2 = new StyleSheet();
+            Font f = jLabel1.getFont();
+            css2.addRule(new StringBuffer("body { font-size: ").append(f.getSize()) // NOI18N
+                    .append("; font-family: ").append(f.getName()).append("; }").toString()); // NOI18N
+            css2.addStyleSheet(css);
+            htmlkit.setStyleSheet(css2);
+        }
+*/      //super.addStyle("aslchatterfont", m_objChatterFont, m_clrSystemMsg, "",m_objChatterFont.getSize());
+        //SimpleAttributeSet attribs = new SimpleAttributeSet();
+        //super.getChatStyle("aslchatterfont");
+        //StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_LEFT);
+        //StyleConstants.setFontFamily(attribs, m_objChatterFont.getFamily());
+        //StyleConstants.setFontSize(attribs, m_objChatterFont.getSize());
+        //StyleConstants.setSpaceAbove(attribs, 2);
+        //StyleConstants.setSpaceBelow(attribs, 2);
 
         send("- ");
         send("- Chatter font changed");
