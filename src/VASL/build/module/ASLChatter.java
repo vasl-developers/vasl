@@ -934,12 +934,24 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     //doc.insertString(doc.getLength(), "\n" + BEFORE_CATEGORY + l_strCategory + "\t", m_objMainStyle);
 
                                     //option 1 - preferred but does not work
-                                    //super.addStyle("aslchatterfont", m_objChatterFont, m_clrGameMsg, "bold",m_objChatterFont.getSize());
-                                    //String classname = "\"aslchatterfont\"";
-                                    //string.append("\n" + BEFORE_CATEGORY +  l_strCategory+"\t");
-                                    //kit.insertHTML(this.doc, this.doc.getLength(), "<div class=" + classname + ">" + string.toString() + "</div>", 0, 0, (HTML.Tag)null);
+
+                                    //BR// Style name for addStyle needs to start with a "." but then all later reference must NOT have it.
+                                    //BR// Hopefully you'd just add a bunch of styles *once* at chatter initialization and then refer to them
+                                    //BR// in here rather than adding the style(s) over and over. But for "hack and test" purposes at least this works.
+                                    super.addStyle(".test", m_objChatterFont, m_clrGameMsg, "bold", m_objChatterFont.getSize());
+
+                                    //BR// So no . here.  You can change from test back to whatever longer name you had, I just made it short while I was trying to figure out what was going on.
+                                    String classname = "\"test\"";
+
+                                    //BR// Probably ideally you'd actually just reference your styles in a span tag like this appended to the single string for the whole line
+                                    string.append("<span class=\"test\">" + "\nTESTING TESTING" + BEFORE_CATEGORY +  l_strCategory+"\t</span>");
+
+                                    //BR// Yes you can probably also do it like the below line (if you uncomment it), but the <div> might cause problems like extra unwanted linefeeds or whatever?
+                                    //kit.insertHTML(this.doc, this.doc.getLength(), "<div class=" + classname + ">" + "Also Testing" + string.toString() + "</div>", 0, 0, (HTML.Tag)null);
+
+
                                     // option 2 - works
-                                    string.append("\n" + BEFORE_CATEGORY +  "<strong>" + l_strCategory+ "</strong>"+ "\t");
+                                    //string.append("\n" + BEFORE_CATEGORY +  "<strong>" + l_strCategory+ "</strong>"+ "\t");
 
 
                                     //string.append("\n" + BEFORE_CATEGORY + "<div class=\"aslchatterfont\">"+ l_strCategory+"</div>" + "\t");
