@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.vasl</groupId>
-    <artifactId>vasl</artifactId>
-    <version>6.4.3</version>
+    <artifactId>vasldougreg</artifactId>
+    <version>1.1</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -14,11 +14,17 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.vassalengine</groupId>
+            <artifactId>vassal-app</artifactId>
+            <version>3.6.4</version>
+        </dependency>
+
         <!-- We do not have any tests yet, but time will tell... -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
+            <version>4.13.1</version>
             <scope>test</scope>
         </dependency>
         <!-- Add dependencies that are not part of VASSAL here -->
@@ -29,6 +35,12 @@
         </dependency>
     </dependencies>
 
+    <repositories>
+        <repository>
+            <id>vassal</id>
+            <url>https://vassalengine.org/maven</url>
+        </repository>
+    </repositories>
 
     <build>
         <sourceDirectory>src</sourceDirectory>
@@ -54,11 +66,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>3.3</version>
                 <configuration>
                     <verbose>true</verbose>
-                    <source>1.5</source>
-                    <target>1.5</target>
+                    <source>11</source>
+                    <target>11</target>
+                    <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>
             <plugin>
@@ -79,25 +92,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>com.googlecode.addjars-maven-plugin</groupId>
-                <artifactId>addjars-maven-plugin</artifactId>
-                <version>1.0.5</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>add-jars</goal>
-                        </goals>
-                        <configuration>
-                            <resources>
-                                <resource>
-                                    <directory>${basedir}/lib</directory>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.2.1</version>
@@ -107,7 +101,7 @@
                     <arguments>
                         <argument>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</argument>
                         <argument>-jar</argument>
-                        <argument>lib/Vengine-3.2.17.jar</argument>
+                        <argument>Vengine-3.6.4.jar</argument>
                         <argument>--standalone</argument>
                         <argument>target/${project.build.finalName}.jar</argument>
                     </arguments>

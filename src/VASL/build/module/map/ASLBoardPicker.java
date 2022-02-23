@@ -33,7 +33,7 @@ import VASSAL.configure.DirectoryConfigurer;
 import VASSAL.configure.ValidationReport;
 import VASSAL.tools.ErrorDialog;
 import VASSAL.tools.ReadErrorDialog;
-import VASSAL.tools.io.IOUtils;
+
 import org.apache.commons.codec.digest.DigestUtils;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
@@ -127,7 +127,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                         buildBoard(b, boardDesc);
                         v.add(b);
                     } catch (final BoardException e) {
-                        ErrorDialog.dataError(new BadDataReport("Board not found", boardDesc, e));
+                        ErrorDialog.dataWarning(new BadDataReport("Board not found", boardDesc, e));
                     }
                     command = command.substring(index + 3);
                 }
@@ -141,7 +141,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                     buildBoard(b, command);
                     v.add(b);
                 } catch (final BoardException e) {
-                    ErrorDialog.dataError(new BadDataReport("Unable to build board", command, e));
+                    ErrorDialog.dataWarning(new BadDataReport("Unable to build board", command, e));
                 }
             }
             comm = comm.append(new SetBoards(this, v));
@@ -247,9 +247,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 terrain.readOptions(ssrControlsFile.getBasicNodes(), ssrControlsFile.getOptionNodes());
             } catch (IOException e) {
                 logger.warn("Error reading SSR controls file in module archive: " + e.getMessage());
-            } finally {
-                IOUtils.closeQuietly(in);
             }
+
         }
     }
 
@@ -373,8 +372,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
 
         } catch (JDOMException e) {
             // throw new JDOMException("Cannot read the shared metadata file", e);
-        }finally {
-            IOUtils.closeQuietly(inputStream);
+
         }
         return allboardslist;
     }
@@ -456,7 +454,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
 
         final ASLTilingHandler th = new ASLTilingHandler(
                 fpath.getAbsolutePath(),
-                new File(Info.getConfDir(), "tiles/" + hstr),
+                new File(Info.getCacheDir(), "tiles/" + hstr),
                 new Dimension(256, 256),
                 1024,
                 42
@@ -610,7 +608,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             try {
                 buildBoard(b, "0\t0\t" + name);
             } catch (BoardException e) {
-                ErrorDialog.dataError(new BadDataReport("Unable to build board", name, e));
+                ErrorDialog.dataWarning(new BadDataReport("Unable to find board", name, e));
             }
         }
         if (enableDeluxe) {
@@ -1236,8 +1234,6 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                                 readOptions(ssrControlsFile.getBasicNodes(), ssrControlsFile.getOptionNodes());
 
                             } catch (IOException ignore) {
-                            } finally {
-                                IOUtils.closeQuietly(in);
                             }
                         }
                     }

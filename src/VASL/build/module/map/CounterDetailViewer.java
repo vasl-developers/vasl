@@ -32,6 +32,8 @@ import VASSAL.counters.Labeler;
 import VASSAL.counters.Properties;
 import VASSAL.counters.Stack;
 import VASSAL.i18n.Resources;
+import VASSAL.tools.image.LabelUtils;
+
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -237,7 +239,7 @@ public class CounterDetailViewer extends VASSAL.build.module.map.CounterDetailVi
             int x = bounds.x + ar_Pieces_Pos[i].x - (int) (pieceBounds.x * graphicsZoomLevel);
             int y = bounds.y + ar_Pieces_Pos[i].y + (int)Math.round(pieceBounds.height * graphicsZoomLevel) + 5;
             
-            drawLabel(g, new Point(x, y), text, Labeler.CENTER, Labeler.TOP);
+            drawLabel(g, new Point(x, y), text, LabelUtils.CENTER, LabelUtils.TOP);
           }
         }
       }
@@ -281,7 +283,7 @@ public class CounterDetailViewer extends VASSAL.build.module.map.CounterDetailVi
     }
 
     if (report.length() > 0) {
-      drawLabel(g, new Point(x, y), report, Labeler.RIGHT, Labeler.BOTTOM);
+      drawLabel(g, new Point(x, y), report, LabelUtils.RIGHT, LabelUtils.BOTTOM);
     }
   }
 }

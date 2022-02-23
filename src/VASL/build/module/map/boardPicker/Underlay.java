@@ -30,8 +30,10 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.imageio.stream.MemoryCacheImageInputStream;
 
+import VASSAL.build.BadDataReport;
 import VASSAL.build.GameModule;
 import VASSAL.tools.DataArchive;
+import VASSAL.tools.ErrorDialog;
 import VASSAL.tools.io.IOUtils;
 
 /**
@@ -59,25 +61,13 @@ public class Underlay extends SSROverlay {
 
   public Image loadImage() {
     Image underlayImage = null;
-    InputStream in = null;
-    try {
-      in = GameModule.getGameModule().getDataArchive().getInputStream("boardData/" + imageName);
+    // Get the image from boardData
+    try (InputStream in = GameModule.getGameModule().getDataArchive().getInputStream("boardData/" + imageName)) {
       underlayImage = ImageIO.read(new MemoryCacheImageInputStream(in));
-    }
-    catch (IOException ex) {
-    }
-    finally {
-      IOUtils.closeQuietly(in);
-    }
-
-    if (underlayImage == null) {
-      try {
-        underlayImage = archive.getImage(imageName);
-      }
-      catch (IOException ex) {
-        System.err.println("Underlay image " + imageName + " not found in " + archive.getName());
-        return new BufferedImage(1, 1, BufferedImage.TYPE_4BYTE_ABGR);
-      }
+    } catch (IOException ex) {
+      final String errorMessage = "Underlay image " + imageName + " not found in " + GameModule.getGameModule().getDataArchive().getName();
+      ErrorDialog.dataWarning(new BadDataReport(errorMessage, "DataArchive::loadImage", ex));
+      return new BufferedImage(1, 1, BufferedImage.TYPE_4BYTE_ABGR);
     }
     Point pos = new Point(0, 0);
     pos = board.getCropBounds().getLocation();

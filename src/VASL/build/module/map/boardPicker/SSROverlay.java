@@ -69,7 +69,7 @@ public class SSROverlay extends Overlay {
     Image im = null;
     InputStream in = null;
     try {
-      in = archive.getImageInputStream(name);
+      in = archive.getInputStream(name);
       im = ImageIO.read(new MemoryCacheImageInputStream(in));
     }
     catch (IOException e) {

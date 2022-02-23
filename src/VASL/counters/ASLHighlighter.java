@@ -27,6 +27,7 @@ import VASSAL.counters.Labeler;
 
 import java.awt.*;
 
+import VASSAL.tools.image.LabelUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.Document;
 
@@ -49,8 +50,8 @@ public class ASLHighlighter extends ColoredBorder implements Buildable {
         r = p.getParent().bottomPiece().getShape().getBounds();
       }
       y += (int) (zoom * (r.y + r.height + 6));
-      Labeler.drawLabel(g, p.getMap().locationName(p.getPosition()),
-                        x, y, f, Labeler.CENTER, Labeler.TOP,
+      LabelUtils.drawLabel(g, p.getMap().locationName(p.getPosition()),
+                        x, y, f, LabelUtils.CENTER, LabelUtils.TOP,
                         Color.black, Color.white, Color.black);
     }
   }

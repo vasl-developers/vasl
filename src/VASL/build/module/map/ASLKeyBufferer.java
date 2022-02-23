@@ -32,19 +32,21 @@ import java.awt.event.MouseEvent;
 public class ASLKeyBufferer extends KeyBufferer {
     
   @Override
-  protected PieceVisitorDispatcher createDragSelector(boolean selecting, boolean altDown) 
+  protected PieceVisitorDispatcher createDragSelector(boolean selecting, boolean altDown, Rectangle mapsel)
   {
-    return new PieceVisitorDispatcher(new ASLKBDeckVisitor(selecting, altDown));
+    return new PieceVisitorDispatcher(new ASLKBDeckVisitor(selecting, altDown, mapsel));
   }
 
-  public class ASLKBDeckVisitor implements DeckVisitor 
+  public class ASLKBDeckVisitor implements DeckVisitor
   {
     boolean selecting = false;
     boolean altDown = false;
+    Rectangle mapsel;
 
-    public ASLKBDeckVisitor(boolean b, boolean c) {
+    public ASLKBDeckVisitor(boolean b, boolean c, Rectangle ms) {
       selecting = b;
       altDown = c;
+      mapsel = ms;
     }
 
     public Object visitDeck(Deck d) {

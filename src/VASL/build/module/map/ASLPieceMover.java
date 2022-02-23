@@ -375,8 +375,9 @@ public class ASLPieceMover extends PieceMover {
 
             // Apply key after move to each moved piece
             if (map.getMoveKey() != null) {
-                applyKeyAfterMove(allDraggedPieces, comm, map.getMoveKey());
+                comm.append(applyKeyAfterMove(allDraggedPieces, map.getMoveKey()));
             }
+
 
             tracker.repaint();
             return comm;

@@ -103,3 +103,21 @@ Click on the File menu. Click on Preferences. Select the General tab.
 Select/Unselect the "Disable full color stacks" option.
 
 Note that you must restart VASL for your choice to take effect.
+Counter Linking
+As of version 6.4.0, you can link two counters together and display a line showing the link.
+Great for Guns and acquisition counters or firer-target pairs.
+
+To link: select any two counters, CTRL-ALT-L. Linkline will show. Click elsewhere and
+Linkline will disappear. Reclick one of the counters and Linkline will reappear.
+
+To end link: select both counters, CTRL-ALT-U.
+
+Stack Colors
+As of 6.4.1, VASL contains a preference that allows players to choose whether counters underneath
+a stack show as white or as colored.
+
+To set the preference:
+Click on the File menu. Click on Preferences. Select the General tab.
+Select/Unselect the "Disable full color stacks" option.
+
+Note that you must restart VASL for your choice to take effect.

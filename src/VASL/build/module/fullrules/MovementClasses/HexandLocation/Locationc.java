@@ -11,8 +11,6 @@ import VASL.build.module.fullrules.Constantvalues;
 import VASL.build.module.fullrules.DataClasses.ScenarioTerrain;
 import VASL.build.module.fullrules.Game.ScenarioC;
 import VASL.build.module.fullrules.UtilityClasses.ConversionC;
-import com.sun.scenario.effect.impl.state.LinearConvolveKernel;
-
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
