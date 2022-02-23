@@ -353,7 +353,7 @@ public class IFTResultC implements IFTResulti {
                             }
                         }
                         for (PersUniti RevealUnit : Revealedlist) {
-                            VisibilityChangei UnittoChange = new RevealUnitC(RevealUnit.getbaseunit().getUnit_ID());
+                            VisibilityChangei UnittoChange = new RevealUnitC(RevealUnit);
                             int RevealID = CheckItem.getbaseunit().getCon_ID();
                             // must be set before Unit is revealed && Con_ID set to 0
                             if (UnittoChange.TakeAction()) { // this will add sprite

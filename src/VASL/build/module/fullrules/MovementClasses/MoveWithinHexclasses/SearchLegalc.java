@@ -9,7 +9,6 @@ import VASL.build.module.fullrules.ObjectClasses.ScenarioCollectionsc;
 import VASL.build.module.fullrules.ObjectFactoryClasses.PersCreation;
 import VASL.build.module.fullrules.ObjectFactoryClasses.SWCreation;
 import VASL.build.module.fullrules.UtilityClasses.DiceC;
-import com.sun.corba.se.impl.orbutil.closure.Constant;
 
 public class SearchLegalc implements LegalMovei {
     private Hex hexclickedvalue;

@@ -11,11 +11,7 @@ import VASL.build.module.fullrules.ObjectClasses.AltHexGTerrain;
 import VASL.build.module.fullrules.ObjectClasses.CombatTerrain;
 import VASL.build.module.fullrules.ObjectClasses.PersUniti;
 import VASL.build.module.fullrules.UtilityClasses.CommonFunctionsC;
-import com.sun.org.apache.bcel.internal.generic.Select;
-
 import java.util.LinkedList;
-
-
 
 /* derived from VB.LOSClassLibrary.ThreadManagerC
 * Does not run parallel threads

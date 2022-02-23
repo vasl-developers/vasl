@@ -1452,7 +1452,7 @@ public class IFTC implements IIFTC {
         // need to manage firing and target sprites here: changes due to revealing, breaking, reducing, prep fire, etc
         Constantvalues.CombatStatus NewCombatStatus = GetCombatStatus();
         for (PersUniti firer: FireGroup) {
-            firer.getFiringunit().UpdateCombatStatus(NewCombatStatus, IFTRes.getROFdr());
+            firer.getFiringunit().UpdateCombatStatus(firer, NewCombatStatus, IFTRes.getROFdr());
         }
 
         if (CombatRes.NeedToResume()) {
@@ -1473,7 +1473,7 @@ public class IFTC implements IIFTC {
         // 'need to manage firing and target sprites here: changes due to revealing, breaking, reducing, prep fire, etc
         Constantvalues.CombatStatus NewCombatStatus = GetCombatStatus();
         for (PersUniti firer: FireGroup) {
-            firer.getFiringunit().UpdateCombatStatus(NewCombatStatus, IFTRes.getROFdr());
+            firer.getFiringunit().UpdateCombatStatus(firer, NewCombatStatus, IFTRes.getROFdr());
         }
         // best way is to recreate all sprites in the hex based on final status at this point
         // NEED A NEW WAY TO IMPLEMENT
@@ -1538,7 +1538,7 @@ public class IFTC implements IIFTC {
         // need to manage firing and target sprites here: changes due to revealing, breaking, reducing, prep fire, etc
         Constantvalues.CombatStatus NewCombatStatus = GetCombatStatus();
         for (PersUniti firer: FireGroup) {
-            firer.getFiringunit().UpdateCombatStatus(NewCombatStatus, IFTRes.getROFdr());
+            firer.getFiringunit().UpdateCombatStatus(firer, NewCombatStatus, IFTRes.getROFdr());
         }
         // best way is to recreate all sprites in the hex based on final status at this point
         /*For Each Firehex As Integer In FirerHexes
