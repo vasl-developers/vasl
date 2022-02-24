@@ -21,7 +21,7 @@
 -->
 <boardMetadata 
 	name="88" 
-	version="1.0" 
+	version="6.0"
 	versionDate="Feb 2022" 
 	author="TR" 
 	boardImageFileName="bd88.gif" 
@@ -29,7 +29,7 @@
 	width="33" 
 	height="10"
 	hexHeight = "64.5"
-	hexWidth = "56.3125">
+	hexWidth = "56.25">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
