@@ -1,0 +1,7 @@
+<SSRControls>
+ <Option name="Board 88 Special overlays">
+    <Checkbox name="">
+         <entry name="No Gully Cliffs" rule="BSO_bd88_NoGullyCliffs" text="bd 88 no gully cliffs"/>
+ </Checkbox>
+    </Option>
+</SSRControls>
