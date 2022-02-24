@@ -21,7 +21,7 @@
 -->
 <boardMetadata 
 	name="87" 
-	version="1.0" 
+	version="6.0"
 	versionDate="Jan 2022" 
 	author="TR" 
 	boardImageFileName="bd87.gif" 
@@ -29,7 +29,7 @@
 	width="33" 
 	height="10"
 	hexHeight = "64.5"
-	hexWidth = "56.3125">
+	hexWidth = "56.25">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -39,39 +39,39 @@
         See the terrainType elements for a complete list of building names
     -->
     <buildingTypes>
-        <buildingType hexName="C6" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="F2" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="K2" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="P1" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="P3" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="T2" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="T3" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="T4" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="U1" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="U6" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="V3" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="V4" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="V6" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="W1" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="W3" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="W4" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="W5" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="X2" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="X3" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="X6" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="Y2" buildingTypeName="Wooden Building, 1.5 Level" />
-        <buildingType hexName="Y3" buildingTypeName="Wooden Building, 1.5 Level" />
-        <buildingType hexName="Y5" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="Y6" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="Y7" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="Z4" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="Z6" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="AA1" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="AA4" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="AA5" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="AA6" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="BB3" buildingTypeName="Wooden Building, 1 Level" />
-        <buildingType hexName="CC2" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="C6" buildingTypeName="Wooden Building" />
+        <buildingType hexName="F2" buildingTypeName="Wooden Building" />
+        <buildingType hexName="K2" buildingTypeName="Wooden Building" />
+        <buildingType hexName="P1" buildingTypeName="Wooden Building" />
+        <buildingType hexName="P3" buildingTypeName="Wooden Building" />
+        <buildingType hexName="T2" buildingTypeName="Wooden Building" />
+        <buildingType hexName="T3" buildingTypeName="Wooden Building" />
+        <buildingType hexName="T4" buildingTypeName="Wooden Building" />
+        <buildingType hexName="U1" buildingTypeName="Wooden Building" />
+        <buildingType hexName="U6" buildingTypeName="Wooden Building" />
+        <buildingType hexName="V3" buildingTypeName="Wooden Building" />
+        <buildingType hexName="V4" buildingTypeName="Wooden Building" />
+        <buildingType hexName="V6" buildingTypeName="Wooden Building" />
+        <buildingType hexName="W1" buildingTypeName="Wooden Building" />
+        <buildingType hexName="W3" buildingTypeName="Wooden Building" />
+        <buildingType hexName="W4" buildingTypeName="Wooden Building" />
+        <buildingType hexName="W5" buildingTypeName="Wooden Building" />
+        <buildingType hexName="X2" buildingTypeName="Wooden Building" />
+        <buildingType hexName="X3" buildingTypeName="Wooden Building" />
+        <buildingType hexName="X6" buildingTypeName="Wooden Building" />
+        <buildingType hexName="Y2" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="Y3" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="Y5" buildingTypeName="Wooden Building" />
+        <buildingType hexName="Y6" buildingTypeName="Wooden Building" />
+        <buildingType hexName="Y7" buildingTypeName="Wooden Building" />
+        <buildingType hexName="Z4" buildingTypeName="Wooden Building" />
+        <buildingType hexName="Z6" buildingTypeName="Wooden Building" />
+        <buildingType hexName="AA1" buildingTypeName="Wooden Building" />
+        <buildingType hexName="AA4" buildingTypeName="Wooden Building" />
+        <buildingType hexName="AA5" buildingTypeName="Wooden Building" />
+        <buildingType hexName="AA6" buildingTypeName="Wooden Building" />
+        <buildingType hexName="BB3" buildingTypeName="Wooden Building" />
+        <buildingType hexName="CC2" buildingTypeName="Wooden Building" />
 	</buildingTypes>
 	
 	<overlaySSRules>
