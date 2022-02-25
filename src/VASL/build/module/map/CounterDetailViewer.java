@@ -249,7 +249,7 @@ public class CounterDetailViewer extends VASSAL.build.module.map.CounterDetailVi
 
       if (isTextUnderCounters()) 
       {
-        String text = counterReportFormat.getLocalizedText(piece);
+        String text = counterReportFormat.getLocalizedText(piece, this, "");
         
         if (text.length() > 0) 
         {
@@ -287,14 +287,14 @@ public class CounterDetailViewer extends VASSAL.build.module.map.CounterDetailVi
       Zone z = map.findZone(snapPt);
       String zone = (z == null) ? "" : z.getLocalizedName();
       emptyHexReportFormat.setProperty(BasicPiece.CURRENT_ZONE, zone);
-      report = emptyHexReportFormat.getLocalizedText();
+      report = emptyHexReportFormat.getLocalizedText(this, "");
       x -= g.getFontMetrics().stringWidth(report) / 2;
     }
     else {
       GamePiece topPiece = displayablePieces.get(0);
       String locationName = (String) topPiece.getLocalizedProperty(BasicPiece.LOCATION_NAME);
       emptyHexReportFormat.setProperty(BasicPiece.LOCATION_NAME, locationName.equals(offboard) ? "" : locationName);
-      report = summaryReportFormat.getLocalizedText(new SumProperties(displayablePieces));
+      report = summaryReportFormat.getLocalizedText(new SumProperties(displayablePieces), this,  "");
       report += " Base Level " + getBaseLevel(topPiece.getPosition());
       x -= borderWidth * os_scale;
     }

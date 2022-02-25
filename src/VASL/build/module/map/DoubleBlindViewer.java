@@ -402,7 +402,7 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
             return String.valueOf(report);
         }
         else  if(REPORT_FORMAT.equals(key)) {
-            return reportFormat.getText();
+           return "";  //reportFormat.getText();
         }
         else {
             return launchButton.getAttributeValueString(key);

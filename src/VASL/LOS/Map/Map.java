@@ -1128,7 +1128,7 @@ public class Map  {
         public Location target;
         public boolean useAuxTargetLOSPoint;
         public LOSResult result;
-        public VASL.LOS.VASLGameInterface VASLGameInterface;
+        public VASL.LOS.VASLGameInterface vaslGameInterface;
 
         // location variables
         public int sourceX;
@@ -1213,14 +1213,14 @@ public class Map  {
 
         public double slope;
 
-        private LOSStatus(Location source, boolean useAuxSourceLOSPoint, Location target, boolean useAuxTargetLOSPoint, LOSResult result, VASLGameInterface VASLGameInterface) {
+        private LOSStatus(Location source, boolean useAuxSourceLOSPoint, Location target, boolean useAuxTargetLOSPoint, LOSResult result, VASLGameInterface vaslgameinterface) {
 
             this.source = source;
             this.useAuxSourceLOSPoint = useAuxSourceLOSPoint;
             this.target = target;
             this.useAuxTargetLOSPoint = useAuxTargetLOSPoint;
             this.result = result;
-            this.VASLGameInterface = VASLGameInterface;
+            this.vaslGameInterface = vaslgameinterface;
 
             // start and end points
             sourceX = useAuxSourceLOSPoint ? (int) source.getAuxLOSPoint().getX() : (int) source.getLOSPoint().getX();
@@ -1725,8 +1725,8 @@ public class Map  {
     protected boolean applyLOSRules(LOSStatus status, LOSResult result) {
 
         // if there's a terrain counter in the hex use that terrain instead
-        if(status.VASLGameInterface != null && status.VASLGameInterface.getTerrain(status.tempHex) != null) {
-            status.currentTerrain = status.VASLGameInterface.getTerrain(status.tempHex);
+        if(status.vaslGameInterface != null && status.vaslGameInterface.getTerrain(status.tempHex) != null) {
+            status.currentTerrain = status.vaslGameInterface.getTerrain(status.tempHex);
         }
         try {
             status.currentTerrainHgt = status.currentTerrain.getHeight();
@@ -1928,8 +1928,8 @@ public class Map  {
         }
         // check for hexside counter terrain (ie drifts, roadblocks, etc)
         for (Integer hexside : hexsides) {
-            if (status.VASLGameInterface.getHexside(status.currentHex) != null) {
-                CounterMetadata counter = status.VASLGameInterface.getHexside((status.currentHex));
+            if (status.vaslGameInterface.getHexside(status.currentHex) != null) {
+                CounterMetadata counter = status.vaslGameInterface.getHexside((status.currentHex));
                 if (hexside == counter.getCoverArch()) {
                     status.currentTerrain = getTerrain(counter.getTerrain());
                 } else {
@@ -1991,7 +1991,7 @@ public class Map  {
             if(status.currentTerrain.isInherentTerrain() && !status.currentHex.getCenterLocation().getTerrain().equals(status.currentTerrain)) {
 
                 // ignore this check when terrain counter is present
-                if(status.VASLGameInterface == null  || (status.VASLGameInterface != null && status.VASLGameInterface.getTerrain(status.currentHex) == null)){
+                if(status.vaslGameInterface == null  || (status.vaslGameInterface != null && status.vaslGameInterface.getTerrain(status.currentHex) == null)){
                     return false;
                 }
             }
@@ -2088,9 +2088,9 @@ public class Map  {
     protected boolean checkSameHexSmokeRule(LOSStatus status, LOSResult result) {
 
         if (status.source.getHex().equals(status.target.getHex())) {
-            if(status.VASLGameInterface != null) {
+            if(status.vaslGameInterface != null) {
 
-                HashSet<Smoke> hexSmoke = status.VASLGameInterface.getSmoke(status.source.getHex());
+                HashSet<Smoke> hexSmoke = status.vaslGameInterface.getSmoke(status.source.getHex());
                 if (hexSmoke != null && !hexSmoke.isEmpty()) {
 
                     int hindrance = 0;
@@ -2137,11 +2137,11 @@ public class Map  {
     protected boolean checkHexSmokeRule(LOSStatus status, LOSResult result) {
 
         // check for smoke in source hex here
-        if(status.VASLGameInterface != null) {
+        if(status.vaslGameInterface != null) {
 
             Hex hex = status.currentHex;
 
-            HashSet<Smoke> hexSmoke = status.VASLGameInterface.getSmoke(hex);
+            HashSet<Smoke> hexSmoke = status.vaslGameInterface.getSmoke(hex);
             if (hexSmoke != null && !hexSmoke.isEmpty()) {
 
                 int hindrance = 0;
@@ -2190,7 +2190,7 @@ public class Map  {
                     }
                     // check if blaze is wreck blaze; if so reduce Hindrance to 2
                     if (s.getName().equals("Blaze")) {
-                        if (status.VASLGameInterface.getVehicles(hex) != null && !status.VASLGameInterface.getVehicles(hex).isEmpty() ){
+                        if (status.vaslGameInterface.getVehicles(hex) != null && !status.vaslGameInterface.getVehicles(hex).isEmpty() ){
                             hindrance = 2;
                         }
                     }
@@ -2227,10 +2227,10 @@ public class Map  {
     protected boolean checkVehicleHindranceRule(LOSStatus status, LOSResult result, boolean insamehex) {
 
         // check for vehicles in source hex here
-        if(status.VASLGameInterface != null) {
+        if(status.vaslGameInterface != null) {
 
             Hex hex = status.currentHex;
-            HashSet<Vehicle> vehicles = status.VASLGameInterface.getVehicles(hex);
+            HashSet<Vehicle> vehicles = status.vaslGameInterface.getVehicles(hex);
             if (vehicles != null && !vehicles.isEmpty()) {
 
                 int hindrance = 0;
@@ -2256,8 +2256,8 @@ public class Map  {
                                 if(!insamehex) {
                                     LOSResult result1 = new LOSResult();
                                     LOSResult result2 = new LOSResult();
-                                    LOS(status.source, status.useAuxSourceLOSPoint, v.getLocation(), false, result1, status.VASLGameInterface);
-                                    LOS(status.target, status.useAuxTargetLOSPoint, v.getLocation(), false, result2, status.VASLGameInterface);
+                                    LOS(status.source, status.useAuxSourceLOSPoint, v.getLocation(), false, result1, status.vaslGameInterface);
+                                    LOS(status.target, status.useAuxTargetLOSPoint, v.getLocation(), false, result2, status.vaslGameInterface);
                                     if (!result1.isBlocked() && !result2.isBlocked()) {
                                         hindrance++;
                                     }
@@ -2267,7 +2267,7 @@ public class Map  {
                     }
                     // check if blaze exists and if so cancel veh hindrance
                     if (hindrance > 0){
-                        HashSet<Smoke> hexSmoke = status.VASLGameInterface.getSmoke(hex);
+                        HashSet<Smoke> hexSmoke = status.vaslGameInterface.getSmoke(hex);
                         if (hexSmoke != null && !hexSmoke.isEmpty()) {
                             for (Smoke s: hexSmoke) {
                                 if (s.getName().equals("Blaze")){
@@ -2298,9 +2298,9 @@ public class Map  {
     protected boolean checkOBAHindranceRule(LOSStatus status, LOSResult result) {
 
         // check for OBA in current hex
-        if(status.VASLGameInterface != null) {
+        if(status.vaslGameInterface != null) {
 
-            HashSet<OBA> obaList = status.VASLGameInterface.getOBA();
+            HashSet<OBA> obaList = status.vaslGameInterface.getOBA();
             if (obaList != null && !obaList.isEmpty()) {
 
                 for (OBA oba: obaList) {
@@ -3951,8 +3951,8 @@ public class Map  {
         Terrain locationHexsideTerrain = locationHex.getHexsideTerrain(locationHexside);
 
         // if using hexside counter terrain, override hex/location terrain
-        if (status.VASLGameInterface != null && status.VASLGameInterface.getHexside(status.currentHex) !=null){
-            CounterMetadata counter = status.VASLGameInterface.getHexside((status.currentHex));
+        if (status.vaslGameInterface != null && status.vaslGameInterface.getHexside(status.currentHex) !=null){
+            CounterMetadata counter = status.vaslGameInterface.getHexside((status.currentHex));
             if (locationHexside == counter.getCoverArch()) {
                 locationHexsideTerrain= getTerrain(counter.getTerrain());
                 // always ignore if adjacent
