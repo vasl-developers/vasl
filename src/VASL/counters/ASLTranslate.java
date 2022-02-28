@@ -71,6 +71,8 @@ public class ASLTranslate extends Translate {
         MovementReporter movementReporter = new MovementReporter(c);
         Command report = movementReporter.getReportCommand();
         report.execute();
+        c.append(report);
+        GameModule.getGameModule().sendAndLog(c);
         return c;
       }
     }
