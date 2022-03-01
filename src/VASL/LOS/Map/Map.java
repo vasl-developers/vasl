@@ -3986,6 +3986,11 @@ public class Map  {
 
             return false;
         }
+        // always ignore if in source or target hex
+        if (status.currentHex.equals(status.targetHex) || status.currentHex.equals(status.sourceHex)){
+            return true;
+        }
+
         // always ignore if adjacent
         if (isAdjacentHexside(h, l) && (locationHexsideTerrain != null && !(PARTIALORCHARD.equals(locationHexsideTerrain.getName()))) ) {
 
@@ -4925,8 +4930,11 @@ public class Map  {
         int localHexHeight = (int) Math.round((double)localGridHeight / hexHeight);
 
         if (!(upperLeftHex.getColumnNumber() %2 ==0) && A1CenterY !=65) {passgridconfig="TopLeftHalfHeight";}
-        if ((upperLeftHex.getColumnNumber() % 2 == 0 && upperLeftHex.getRowNumber()!= 0) || (upperLeftHex.getColumnNumber() % 2 != 0 && upperLeftHex.getRowNumber()== 0)){passgridconfig= passgridconfig + "ROadjustment";}
-        if(upperLeftHex.getColumnNumber() % 2 != 0){passgridconfig = passgridconfig + "EqualRows";}
+        //if ((upperLeftHex.getColumnNumber() % 2 == 0 && upperLeftHex.getRowNumber()!= 0) || (upperLeftHex.getColumnNumber() % 2 != 0 && upperLeftHex.getRowNumber()== 0)){passgridconfig= passgridconfig + "ROadjustment";}
+        if (cropconfig.contains("ROadjustment")) {
+            passgridconfig += "ROadjustment";
+        }
+        if(upperLeftHex.getColumnNumber() % 2 != 0){passgridconfig += "EqualRows";}
         if (cropconfig.contains("FullHex")) {
             if(passgridconfig=="Normal") {
                 passgridconfig=cropconfig;

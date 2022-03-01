@@ -101,10 +101,13 @@ public class VASLBoard extends ASLBoard {
                 bounds.height = getUncroppedSize().height;
             }
             String cropconfig="";
+            if (this.getName().equals("RO")) {
+                cropconfig = "ROadjustment";
+            }
             if(this.nearestFullRow) {
-                cropconfig="FullHex";
-                if (this.getCropBounds().getX() == 0) {cropconfig = "FullHexLeftHalf";}
-                if (this.getCropBounds().getMaxX() == this.getUncroppedSize().getWidth()) {cropconfig = "FullHexRightHalf";}
+                cropconfig+="FullHex";
+                if (this.getCropBounds().getX() == 0) {cropconfig += "LeftHalf";}
+                if (this.getCropBounds().getMaxX() == this.getUncroppedSize().getWidth()) {cropconfig += "RightHalf";}
             }
             return losData.crop(new Point(bounds.x , bounds.y), new Point(bounds.x  + bounds.width, bounds.y + bounds.height), offset, cropconfig);
         }
