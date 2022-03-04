@@ -8500,7 +8500,7 @@
             </VASSAL.build.widget.ListWidget>
         </VASSAL.build.widget.ListWidget>
         <VASSAL.build.widget.ListWidget divider="-1" entryName="cc" height="0" scale="1.0" width="0">
-            <VASSAL.build.widget.PieceSlot entryName="?" gpid="11644" height="64" width="75">+/null/prototype;Unit	prototype;concxmark\	concealment;Yankees98;ch\\	piece;K;D;cc\/ccqmark.gif;?/	\	\\	null;0;0;11644;0</VASSAL.build.widget.PieceSlot>
+            <VASSAL.build.widget.PieceSlot entryName="?" gpid="11644" height="64" width="75">+/null/prototype;Unit	prototype;concxmark\	concealment;Yankees98;cc\\	piece;K;D;cc\/ccqmark.gif;?/	\	\\	null;0;0;11644;0</VASSAL.build.widget.PieceSlot>
             <VASSAL.build.widget.PieceSlot entryName="L?" gpid="11645" height="64" width="75">+/null/rotate;6;88,130;90,130;CA cw;CA ccw;;;;;;;;true	prototype;Unit58\	moved;moved58\\	concealment;Yankees98;ch\\\	piece;K;D;cc\/ccqmark58.png;L?/0	\	false\\	\\\	null;0;0;11645;0</VASSAL.build.widget.PieceSlot>
             <VASSAL.build.widget.ListWidget divider="-1" entryName="WRK" height="0" scale="1.0" width="0">
                 <VASSAL.build.widget.PieceSlot entryName="Dozer Wreck" gpid="11646" height="64" width="75">+/null/info;no CS	prototype;chWRK\	piece;K;D;sh\/DozerUb;Dozer Wreck/	\	null;0;0;11646;0</VASSAL.build.widget.PieceSlot>
