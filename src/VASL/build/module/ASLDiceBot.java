@@ -298,6 +298,7 @@ class DiceStats extends HashMap<String, CategoryDiceStats>
 public class ASLDiceBot extends AbstractBuildable
 {
     private static final String RANDOM_ORG_OPTION = "randomorgoption"; //$NON-NLS-1$
+    private static final String SHOW_EXTRA_DICE_STATS = "showExtraDiceStats"; //$NON-NLS-1$
     private static final String TOTAL_CATEGORY = "Total";
     public static final String OTHER_CATEGORY = "Other";
     public static final String BUTTON_TEXT = "text"; //$NON-NLS-1$
@@ -305,27 +306,50 @@ public class ASLDiceBot extends AbstractBuildable
     public static final String NAME = "name"; //$NON-NLS-1$
     public static final String ICON = "icon"; //$NON-NLS-1$
     public static final String HOTKEY = "hotkey"; //$NON-NLS-1$
-    public static final String m_strHTMLSingle =
 
-"<html><style>" +
-" .tbl { border:0px solid #C0C0C0; border-collapse:collapse; border-spacing:0px; padding:0px; background:#CCFFCC;}" +
-" .tbl th { border:1px solid #C0C0C0; padding:5px; background:#FFFF66;}" +
-" .tbl td {border:1px solid #C0C0C0; padding:5px; text-align: right;}" +
-" .tbl tr.total {border:2px solid #black; background:#CCFFFF;}" +
-" .tbl td.up {border-top:2px solid black; padding:5px; font-weight: bold; text-align: right;}" +
-"</style>" +
-"<table class=\"tbl\"><thead><tr><th colspan=\"3\">%s</th></tr><tr><th>Category</th><th>drs</th><th>Avg</th></tr></thead><tbody>%s</tbody></table</html>";
+    public static final String m_strHTMLSingle_Default =
 
-    public static final String m_strHTMLDouble =
+            "<html><style>" +
+                    " .tbl { border:0px solid #C0C0C0; border-collapse:collapse; border-spacing:0px; padding:0px; background:#CCFFCC;}" +
+                    " .tbl th { border:1px solid #C0C0C0; padding:5px; background:#FFFF66;}" +
+                    " .tbl td {border:1px solid #C0C0C0; padding:5px; text-align: right;}" +
+                    " .tbl tr.total {border:2px solid #black; background:#CCFFFF;}" +
+                    " .tbl td.up {border-top:2px solid black; padding:5px; font-weight: bold; text-align: right;}" +
+                    "</style>" +
+                    "<table class=\"tbl\"><thead><tr><th colspan=\"3\">%s</th></tr><tr><th>Category</th><th>drs</th><th>Avg</th></tr></thead><tbody>%s</tbody></table</html>";
 
-"<html><style>" +
-" .tbl { border:0px solid #C0C0C0; border-collapse:collapse; border-spacing:0px; padding:0px; background:#CCFFCC;}" +
-" .tbl th { border:1px solid #C0C0C0; padding:5px; background:#FFFF66;}" +
-" .tbl td {border:1px solid #C0C0C0; padding:5px; text-align: right;}" +
-" .tbl tr.total {border-top:2px solid black; background:#CCFFFF;}" +
-" .tbl td.up {border-top:2px solid black; padding:5px; font-weight: bold; text-align: right;}" +
-"</style>" +
-"<table class=\"tbl\"><thead><tr><th colspan=\"5\">%s</th></tr><tr><th>Category</th><th>DRs</th><th>Avg 1st</th><th>Avg 2nd</th><th>Avg</th></tr></thead><tbody>%s</tbody></table</html>";
+    public static final String m_strHTMLDouble_Default =
+
+            "<html><style>" +
+                    " .tbl { border:0px solid #C0C0C0; border-collapse:collapse; border-spacing:0px; padding:0px; background:#CCFFCC;}" +
+                    " .tbl th { border:1px solid #C0C0C0; padding:5px; background:#FFFF66;}" +
+                    " .tbl td {border:1px solid #C0C0C0; padding:5px; text-align: right;}" +
+                    " .tbl tr.total {border-top:2px solid black; background:#CCFFFF;}" +
+                    " .tbl td.up {border-top:2px solid black; padding:5px; font-weight: bold; text-align: right;}" +
+                    "</style>" +
+                    "<table class=\"tbl\"><thead><tr><th colspan=\"5\">%s</th></tr><tr><th>Category</th><th>DRs</th><th>Avg 1st</th><th>Avg 2nd</th><th>Avg</th></tr></thead><tbody>%s</tbody></table</html>";
+
+    public static final String m_strHTMLSingle_Extra =
+
+            "<html><style>" +
+                    " .tbl { border:0px solid #C0C0C0; border-collapse:collapse; border-spacing:0px; padding:0px; background:#CCFFCC;}" +
+                    " .tbl th { border:1px solid #C0C0C0; padding:5px; background:#FFFF66;}" +
+                    " .tbl td {border:1px solid #C0C0C0; padding:5px; text-align: right;}" +
+                    " .tbl tr.total {border:2px solid #black; background:#CCFFFF;}" +
+                    " .tbl td.up {border-top:2px solid black; padding:5px; font-weight: bold; text-align: right;}" +
+                    "</style>" +
+                    "<table class=\"tbl\"><thead><tr><th colspan=\"9\">%s</th></tr><tr><th>Category</th><th>drs</th><th>Avg</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr></thead><tbody>%s</tbody></table</html>";
+
+    public static final String m_strHTMLDouble_Extra =
+
+            "<html><style>" +
+                    " .tbl { border:0px solid #C0C0C0; border-collapse:collapse; border-spacing:0px; padding:0px; background:#CCFFCC;}" +
+                    " .tbl th { border:1px solid #C0C0C0; padding:5px; background:#FFFF66;}" +
+                    " .tbl td {border:1px solid #C0C0C0; padding:5px; text-align: right;}" +
+                    " .tbl tr.total {border-top:2px solid black; background:#CCFFFF;}" +
+                    " .tbl td.up {border-top:2px solid black; padding:5px; font-weight: bold; text-align: right;}" +
+                    "</style>" +
+                    "<table class=\"tbl\"><thead><tr><th colspan=\"16\">%s</th></tr><tr><th>Category</th><th>DRs</th><th>Avg 1st</th><th>Avg 2nd</th><th>Avg</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th></tr></thead><tbody>%s</tbody></table</html>";
 
     private final int m_MaxInstancesPerSeries = 99;
     private int m_iCurrentSeries = 0, m_iInstancesInCurrentSeries = m_MaxInstancesPerSeries;
@@ -335,6 +359,7 @@ public class ASLDiceBot extends AbstractBuildable
     private final InstanceNumber[] mar_objInstanceNumber = new InstanceNumber[m_MaxInstancesPerSeries];
     private final ArrayList<Integer> mar_iDereferencingIndex = new ArrayList<Integer>();
     private boolean m_bUseRandomOrg = false;
+    private boolean m_bShowExtraDiceStats = false;
     private final DiceStats map_objStats = new DiceStats();
     private Environment environment = new Environment();
 
@@ -365,7 +390,6 @@ public class ASLDiceBot extends AbstractBuildable
     public void addTo(Buildable parent) {
         final Prefs l_objModulePrefs = ((GameModule) parent).getPrefs();
         BooleanConfigurer l_objRandomOrgOption = null;
-
         BooleanConfigurer l_objRandomOrgOption_Exist = (BooleanConfigurer)l_objModulePrefs.getOption(RANDOM_ORG_OPTION);
 
         if (l_objRandomOrgOption_Exist == null)
@@ -385,6 +409,28 @@ public class ASLDiceBot extends AbstractBuildable
             {
                 m_bUseRandomOrg = (Boolean) e.getNewValue();
                 ReadRolls();
+            }
+        });
+
+        BooleanConfigurer l_objShowExtraDiceStatsOption = null;
+        BooleanConfigurer l_objShowExtraDiceStatsOption_Exist = (BooleanConfigurer)l_objModulePrefs.getOption(SHOW_EXTRA_DICE_STATS);
+
+        if (l_objShowExtraDiceStatsOption_Exist == null)
+        {
+            l_objShowExtraDiceStatsOption = new BooleanConfigurer(SHOW_EXTRA_DICE_STATS, "Show detailed dice stats", Boolean.FALSE);  //$NON-NLS-1$
+            //l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), l_objShowExtraDiceStatsOption); //$NON-NLS-1$
+            l_objModulePrefs.addOption("VASL", l_objShowExtraDiceStatsOption);
+        }
+        else
+            l_objShowExtraDiceStatsOption = l_objShowExtraDiceStatsOption_Exist;
+
+        m_bShowExtraDiceStats = (Boolean) (l_objModulePrefs.getValue(SHOW_EXTRA_DICE_STATS));
+
+        l_objShowExtraDiceStatsOption.addPropertyChangeListener(new PropertyChangeListener()
+        {
+            public void propertyChange(PropertyChangeEvent e)
+            {
+                m_bShowExtraDiceStats = (Boolean) e.getNewValue();
             }
         });
     }
@@ -676,13 +722,33 @@ public class ASLDiceBot extends AbstractBuildable
             {
                 double l_dAvg1 = o1.GetNumericAvg();
                 double l_dAvg2 = o2.GetNumericAvg();
+                String[] strCatOrder = new String[]{"SA", "RS", "Rally", "IFT", "MC", "TC", "CC", "TH", "TK", "Other", "Total"};
+                String l_Cat1 = o1.getCategory();
+                String l_Cat2 = o2.getCategory();
+                int i_Cat1 = 0;
+                int i_Cat2 = 0;
 
-                if (l_dAvg1 > l_dAvg2)
-                    return 1;
-                else if (l_dAvg1 < l_dAvg2)
-                    return -1;
-                else
-                    return 0;
+                if (m_bShowExtraDiceStats) {
+                    for (int i = 0; i < 11; i++) {
+                        if (l_Cat1.equals(strCatOrder[i]))
+                            i_Cat1 = i;
+                        if (l_Cat2.equals(strCatOrder[i]))
+                            i_Cat2 = i;
+                    }
+                    if (i_Cat1 > i_Cat2)
+                        return 1;
+                    else if (i_Cat1 < i_Cat2)
+                        return -1;
+                    else
+                        return 0;
+                } else {
+                    if (l_dAvg1 > l_dAvg2)
+                        return 1;
+                    else if (l_dAvg1 < l_dAvg2)
+                        return -1;
+                    else
+                        return 0;
+                }
             }
         });
 
@@ -694,26 +760,57 @@ public class ASLDiceBot extends AbstractBuildable
             if (l_objCat_dr.getCategory().compareToIgnoreCase(TOTAL_CATEGORY) == 0)
                 continue;
 
-            l_objStringBuilder.append(String.format("<tr><td>%s</td><td>%s</td><td>%s</td></tr>",
-                                                l_objCat_dr.getCategory(),
-                                                l_objCat_dr.getTotNumRolls(),
-                                                l_objCat_dr.GetAvg())
-                                        );
+            if (m_bShowExtraDiceStats) {
+                l_objStringBuilder.append(String.format("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",
+                        l_objCat_dr.getCategory(),
+                        l_objCat_dr.getTotNumRolls(),
+                        l_objCat_dr.GetAvg(),
+                        l_objCat_dr.getDetailNumColoredRolls(1),
+                        l_objCat_dr.getDetailNumColoredRolls(2),
+                        l_objCat_dr.getDetailNumColoredRolls(3),
+                        l_objCat_dr.getDetailNumColoredRolls(4),
+                        l_objCat_dr.getDetailNumColoredRolls(5),
+                        l_objCat_dr.getDetailNumColoredRolls(6))
+                );
+            } else {
+                l_objStringBuilder.append(String.format("<tr><td>%s</td><td>%s</td><td>%s</td></tr>",
+                        l_objCat_dr.getCategory(),
+                        l_objCat_dr.getTotNumRolls(),
+                        l_objCat_dr.GetAvg())
+                );
+            }
         }
 
         CategoryDiceStats l_objCat_dr = map_objStats.get("D1_" + TOTAL_CATEGORY);
 
         if (l_objCat_dr != null)
         {
-            l_objStringBuilder.append(String.format("<tr class=\"total\"><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td></tr>",
-                                                l_objCat_dr.getCategory(),
-                                                l_objCat_dr.getTotNumRolls(),
-                                                l_objCat_dr.GetAvg())
-                                            );
+            if (m_bShowExtraDiceStats) {
+                l_objStringBuilder.append(String.format("<tr class=\"total\"><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td></tr>",
+                        l_objCat_dr.getCategory(),
+                        l_objCat_dr.getTotNumRolls(),
+                        l_objCat_dr.GetAvg(),
+                        l_objCat_dr.getDetailNumColoredRolls(1),
+                        l_objCat_dr.getDetailNumColoredRolls(2),
+                        l_objCat_dr.getDetailNumColoredRolls(3),
+                        l_objCat_dr.getDetailNumColoredRolls(4),
+                        l_objCat_dr.getDetailNumColoredRolls(5),
+                        l_objCat_dr.getDetailNumColoredRolls(6))
+                );
+            } else {
+                l_objStringBuilder.append(String.format("<tr class=\"total\"><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td></tr>",
+                        l_objCat_dr.getCategory(),
+                        l_objCat_dr.getTotNumRolls(),
+                        l_objCat_dr.GetAvg())
+                );
+            }
         }
 
-        OutputString(String.format(m_strHTMLSingle, GetPlayer() + "'s drs today", l_objStringBuilder.toString()));
-
+        if (m_bShowExtraDiceStats) {
+            OutputString(String.format(m_strHTMLSingle_Extra, GetPlayer() + "'s drs today", l_objStringBuilder.toString()));
+        } else {
+            OutputString(String.format(m_strHTMLSingle_Default, GetPlayer() + "'s drs today", l_objStringBuilder.toString()));
+        }
 
         l_objStringBuilder = new StringBuilder();
 
@@ -733,14 +830,36 @@ public class ASLDiceBot extends AbstractBuildable
             else if (l_dAvg > 7.25)
                 l_strBgColor = "bgcolor=#FE686D";
 
-            l_objStringBuilder.append(String.format("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td %s>%s</td></tr>",
-                                                l_objCat_DR.getCategory(),
-                                                l_objCat_DR.getTotNumRolls(),
-                                                l_objCat_DR.GetAvgColored(),
-                                                l_objCat_DR.GetAvgWhite(),
-                                                l_strBgColor,
-                                                l_objCat_DR.GetAvg())
-                                        );
+            if (m_bShowExtraDiceStats) {
+                l_objStringBuilder.append(String.format("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td %s>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",
+                        l_objCat_DR.getCategory(),
+                        l_objCat_DR.getTotNumRolls(),
+                        l_objCat_DR.GetAvgColored(),
+                        l_objCat_DR.GetAvgWhite(),
+                        l_strBgColor,
+                        l_objCat_DR.GetAvg(),
+                        l_objCat_DR.getDetailNumRolls(2),
+                        l_objCat_DR.getDetailNumRolls(3),
+                        l_objCat_DR.getDetailNumRolls(4),
+                        l_objCat_DR.getDetailNumRolls(5),
+                        l_objCat_DR.getDetailNumRolls(6),
+                        l_objCat_DR.getDetailNumRolls(7),
+                        l_objCat_DR.getDetailNumRolls(8),
+                        l_objCat_DR.getDetailNumRolls(9),
+                        l_objCat_DR.getDetailNumRolls(10),
+                        l_objCat_DR.getDetailNumRolls(11),
+                        l_objCat_DR.getDetailNumRolls(12))
+                );
+            } else {
+                l_objStringBuilder.append(String.format("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td %s>%s</td></tr>",
+                        l_objCat_DR.getCategory(),
+                        l_objCat_DR.getTotNumRolls(),
+                        l_objCat_DR.GetAvgColored(),
+                        l_objCat_DR.GetAvgWhite(),
+                        l_strBgColor,
+                        l_objCat_DR.GetAvg())
+                );
+            }
         }
 
         CategoryDiceStats l_objCat_DR = map_objStats.get("D2_" + TOTAL_CATEGORY);
@@ -755,17 +874,43 @@ public class ASLDiceBot extends AbstractBuildable
             else if (l_dAvg > 7.25)
                 l_strBgColor = "bgcolor=#FE686D";
 
-            l_objStringBuilder.append(String.format("<tr class=\"total\"><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\" %s>%s</td></tr>",
-                                                l_objCat_DR.getCategory(),
-                                                l_objCat_DR.getTotNumRolls(),
-                                                l_objCat_DR.GetAvgColored(),
-                                                l_objCat_DR.GetAvgWhite(),
-                                                l_strBgColor,
-                                                l_objCat_DR.GetAvg())
-                                            );
+            if (m_bShowExtraDiceStats) {
+                l_objStringBuilder.append(String.format("<tr class=\"total\"><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\" %s>%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td></tr>",
+                        l_objCat_DR.getCategory(),
+                        l_objCat_DR.getTotNumRolls(),
+                        l_objCat_DR.GetAvgColored(),
+                        l_objCat_DR.GetAvgWhite(),
+                        l_strBgColor,
+                        l_objCat_DR.GetAvg(),
+                        l_objCat_DR.getDetailNumRolls(2),
+                        l_objCat_DR.getDetailNumRolls(3),
+                        l_objCat_DR.getDetailNumRolls(4),
+                        l_objCat_DR.getDetailNumRolls(5),
+                        l_objCat_DR.getDetailNumRolls(6),
+                        l_objCat_DR.getDetailNumRolls(7),
+                        l_objCat_DR.getDetailNumRolls(8),
+                        l_objCat_DR.getDetailNumRolls(9),
+                        l_objCat_DR.getDetailNumRolls(10),
+                        l_objCat_DR.getDetailNumRolls(11),
+                        l_objCat_DR.getDetailNumRolls(12))
+                );
+            } else {
+                l_objStringBuilder.append(String.format("<tr class=\"total\"><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\" %s>%s</td></tr>",
+                        l_objCat_DR.getCategory(),
+                        l_objCat_DR.getTotNumRolls(),
+                        l_objCat_DR.GetAvgColored(),
+                        l_objCat_DR.GetAvgWhite(),
+                        l_strBgColor,
+                        l_objCat_DR.GetAvg())
+                );
+            }
         }
 
-        OutputString(String.format(m_strHTMLDouble, GetPlayer() + "'s DRs today", l_objStringBuilder.toString()));
+        if (m_bShowExtraDiceStats) {
+            OutputString(String.format(m_strHTMLDouble_Extra, GetPlayer() + "'s DRs today", l_objStringBuilder.toString()));
+        } else {
+            OutputString(String.format(m_strHTMLDouble_Default, GetPlayer() + "'s DRs today", l_objStringBuilder.toString()));
+        }
     }
 }
 
