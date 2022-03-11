@@ -24,16 +24,16 @@
 <boardsMetadata>
 
 	<coreBoards>
-		<boarddata name="00" version="6.0" versionDate="Aug 2008" description="" />
-		<boarddata name="01" version="6.2" versionDate="Jan 2021" description="" />
-		<boarddata name="02" version="6.6" versionDate="Jul 2021" description="" />
-		<boarddata name="03" version="6.4" versionDate="Jan 2021" description="" />
-		<boarddata name="04" version="6.2" versionDate="Jan 2021" description="" />
-		<boarddata name="05" version="6.7" versionDate="May 2021" description="" />
+		<boarddata name="00" version="6.1" versionDate="Mar 2022" description="" />
+		<boarddata name="01" version="6.3" versionDate="Mar 2022" description="" />
+		<boarddata name="02" version="6.7" versionDate="Mar 2022" description="" />
+		<boarddata name="03" version="6.5" versionDate="Mar 2022" description="" />
+		<boarddata name="04" version="6.3" versionDate="Mar 2022" description="" />
+		<boarddata name="05" version="6.8" versionDate="Mar 2022" description="" />
 		<boarddata name="06" version="6.2" versionDate="Feb 2021" description="" />
-		<boarddata name="07" version="6.3" versionDate="Feb 2021" description="" />
-		<boarddata name="08" version="6.5" versionDate="Feb 2021" description="" />
-		<boarddata name="09" version="6.3" versionDate="Jul 2021" description="" />
+		<boarddata name="07" version="6.4" versionDate="Mar 2022" description="" />
+		<boarddata name="08" version="6.6" versionDate="Mar 2022" description="" />
+		<boarddata name="09" version="6.4" versionDate="Mar 2022" description="" />
 		<boarddata name="10" version="6.5" versionDate="Apr 2021" description="" />
 		<boarddata name="10z" version="6.6" versionDate="Sep 2021" description="" />
 		<boarddata name="11" version="6.2" versionDate="Apr 2021" description="" />
@@ -117,24 +117,24 @@
 		<boarddata name="86" version="6.0" versionDate="Oct 2020" description="" />
 		<boarddata name="87" version="6.0" versionDate="Feb 2022" description="" />
 		<boarddata name="88" version="6.0" versionDate="Feb 2022" description="" />
-		<boarddata name="1a" version="6.2" versionDate="Jan 2021" description="" />
-		<boarddata name="1b" version="6.2" versionDate="Jan 2021" description="" />
-		<boarddata name="2a" version="6.6" versionDate="Sep 2021" description="" />
-		<boarddata name="2b" version="6.6" versionDate="Sep 2021" description="" />
-		<boarddata name="3a" version="6.7" versionDate="Oct 2021" description="" />
-		<boarddata name="3b" version="6.7" versionDate="Oct 2021" description="" />
-		<boarddata name="4a" version="6.6" versionDate="Sep 2021" description="" />
-		<boarddata name="4b" version="6.8" versionDate="Sep 2021" description="" />
-		<boarddata name="5a" version="6.5" versionDate="Sep 2021" description="" />
-		<boarddata name="5b" version="6.5" versionDate="Sep 2021" description="" />
-		<boarddata name="6a" version="6.6" versionDate="Sep 2021" description="" />
-		<boarddata name="6b" version="6.6" versionDate="Sep 2021" description="" />
-		<boarddata name="7a" version="6.3" versionDate="Feb 2021" description="" />
-		<boarddata name="7b" version="6.3" versionDate="Feb 2021" description="" />
-		<boarddata name="8a" version="6.7" versionDate="Sep 2021" description="" />
-		<boarddata name="8b" version="6.7" versionDate="Sep 2021" description="" />
-		<boarddata name="9a" version="6.2" versionDate="Apr 2021" description="" />
-		<boarddata name="9b" version="6.2" versionDate="Apr 2021" description="" />
+		<boarddata name="1a" version="6.3" versionDate="Mar 2022" description="" />
+		<boarddata name="1b" version="6.3" versionDate="Mar 2022" description="" />
+		<boarddata name="2a" version="6.7" versionDate="Mar 2022" description="" />
+		<boarddata name="2b" version="6.7" versionDate="Mar 2022" description="" />
+		<boarddata name="3a" version="6.8" versionDate="Mar 2022" description="" />
+		<boarddata name="3b" version="6.8" versionDate="Mar 2022" description="" />
+		<boarddata name="4a" version="6.7" versionDate="Mar 2022" description="" />
+		<boarddata name="4b" version="6.9" versionDate="Mar 2022" description="" />
+		<boarddata name="5a" version="6.6" versionDate="Mar 2022" description="" />
+		<boarddata name="5b" version="6.6" versionDate="Mar 2022" description="" />
+		<boarddata name="6a" version="6.7" versionDate="Mar 2022" description="" />
+		<boarddata name="6b" version="6.7" versionDate="Mar 2022" description="" />
+		<boarddata name="7a" version="6.4" versionDate="Mar 2022" description="" />
+		<boarddata name="7b" version="6.4" versionDate="Mar 2022" description="" />
+		<boarddata name="8a" version="6.8" versionDate="Mar 2022" description="" />
+		<boarddata name="8b" version="6.8" versionDate="Mar 2022" description="" />
+		<boarddata name="9a" version="6.3" versionDate="Mar 2022" description="" />
+		<boarddata name="9b" version="6.3" versionDate="Mar 2022" description="" />
 		<boarddata name="10a" version="6.3" versionDate="Apr 2021" description="" />
 		<boarddata name="10b" version="6.3" versionDate="Apr 2021" description="" />
 		<boarddata name="11a" version="6.2" versionDate="Mar 2020" description="" />
