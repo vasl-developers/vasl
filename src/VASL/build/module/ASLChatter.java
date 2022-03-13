@@ -136,6 +136,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
   private JButton m_btnRS;
 
   private JTextPane m_objChatPanel;
+  private GroupLayout m_objGroupLayout;
+  private JPanel l_objButtonPanel;
   private StyledDocument m_objDocument;
   private StyleContext m_objStyleContext;
 
@@ -299,10 +301,10 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         l_objPanelContainer.setLayout(new BoxLayout(l_objPanelContainer, BoxLayout.LINE_AXIS));
         l_objPanelContainer.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        JPanel l_objButtonPanel = new JPanel();
+        l_objButtonPanel = new JPanel();
         l_objButtonPanel.setLayout(new GridBagLayout());
         l_objButtonPanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 2, 1));
-        l_objButtonPanel.setMaximumSize(new Dimension(800, 800));
+        l_objButtonPanel.setMaximumSize(new Dimension(1000, 1000));
 
         GridBagConstraints l_objGridBagConstraints = new GridBagConstraints();
         l_objGridBagConstraints.fill = GridBagConstraints.BOTH;
@@ -347,17 +349,17 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
         l_objPanelContainer.add(l_objButtonPanel);
 
-        GroupLayout l_objGroupLayout = new GroupLayout(this);
-        setLayout(l_objGroupLayout);
-        l_objGroupLayout.setHorizontalGroup(
-            l_objGroupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        m_objGroupLayout = new GroupLayout(this);
+        setLayout(m_objGroupLayout);
+        m_objGroupLayout.setHorizontalGroup(
+            m_objGroupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addComponent(m_objScrollPane)
             .addComponent(l_objPanelContainer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(m_edtInputText)
         );
-        l_objGroupLayout.setVerticalGroup(
-            l_objGroupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(l_objGroupLayout.createSequentialGroup()
+        m_objGroupLayout.setVerticalGroup(
+            m_objGroupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(m_objGroupLayout.createSequentialGroup()
                     .addComponent(m_objScrollPane, GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
                     .addGap(0, 0, 0)
                     .addComponent(l_objPanelContainer, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -365,7 +367,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                     .addComponent(m_edtInputText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         );
     }
-
+    public JPanel getButtonPanel() {
+        return l_objButtonPanel;
+    }
     private void SetButtonsFonts(Font objFont)
     {
         m_btnStats.setFont(objFont);
@@ -383,28 +387,28 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     }
 
 // For the future?
-//    private JButton CreateInfoButton(String strCaption, String strTooltip, final String strMsg, KeyStroke objKeyStroke) 
-//    {
-//        JButton l_btn = new JButton(strCaption);
-//        
-//        l_btn.setPreferredSize(new Dimension(90, 25));
-//        l_btn.setMargin(new Insets(l_btn.getMargin().top, 0, l_btn.getMargin().bottom, 0));
-//        
-//        ActionListener l_objAL = new ActionListener()
-//        {
-//            public void actionPerformed(ActionEvent e)
-//            {
-//                send(formatChat(strMsg));
-//            }
-//        };
-//        l_btn.addActionListener(l_objAL);
-//        KeyStrokeListener l_objListener = new KeyStrokeListener(l_objAL);
-//        l_objListener.setKeyStroke(objKeyStroke);
-//        AddHotKeyToTooltip(l_btn, l_objListener, strTooltip);
-//        l_btn.setFocusable(false);
-//        GameModule.getGameModule().addKeyStrokeListener(l_objListener);
-//        return l_btn;
-//    }
+    private JButton CreateInfoButton(String strCaption, String strTooltip, final String strMsg, KeyStroke objKeyStroke)
+    {
+        JButton l_btn = new JButton(strCaption);
+
+        l_btn.setPreferredSize(new Dimension(90, 25));
+       l_btn.setMargin(new Insets(l_btn.getMargin().top, 0, l_btn.getMargin().bottom, 0));
+
+        ActionListener l_objAL = new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                send(formatChat(strMsg));
+            }
+        };
+        l_btn.addActionListener(l_objAL);
+        KeyStrokeListener l_objListener = new KeyStrokeListener(l_objAL);
+        l_objListener.setKeyStroke(objKeyStroke);
+        AddHotKeyToTooltip(l_btn, l_objListener, strTooltip);
+        l_btn.setFocusable(false);
+        GameModule.getGameModule().addKeyStrokeListener(l_objListener);
+        return l_btn;
+    }
 
     private JButton CreateStatsDiceButton(String strImage, String strCaption, String strTooltip, KeyStroke keyStroke)
     {
@@ -449,7 +453,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         return l_btn;
     }
 
-    private JButton CreateChatterDiceButton(String strImage, String strCaption, String strTooltip, KeyStroke keyStroke, final boolean bDice, final String strCat)
+    public JButton CreateChatterDiceButton(String strImage, String strCaption, String strTooltip, KeyStroke keyStroke, final boolean bDice, final String strCat)
     {
         JButton l_btn = new JButton(strCaption);
 
