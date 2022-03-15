@@ -32,7 +32,10 @@ import java.beans.PropertyChangeListener;
 import VASL.environment.*;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
+import VASSAL.build.module.ExtensionsManager;
+import VASSAL.build.module.GameComponent;
 import VASSAL.build.module.GlobalOptions;
+import VASSAL.build.module.ModuleExtension;
 import VASSAL.command.CommandEncoder;
 import VASSAL.configure.*;
 import VASSAL.i18n.Resources;
@@ -51,6 +54,7 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import javax.swing.Action;
 import javax.swing.ActionMap;
@@ -931,8 +935,25 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                         }
                                     }
 
-
-
+                                    // check if SASL Dice button clicked and if so ask for special message string - SASL Dice buttons are created via extension
+                                    if(m_DRNotificationLevel == 3 && l_strCategory.equals("EP")){
+                                        if (l_iFirstDice == l_iSecondDice) {
+                                            switch (l_iFirstDice) {
+                                                case 1:
+                                                    specialMessages.add("Green and Conscript Units Panic");
+                                                    break;
+                                                case 2:
+                                                    specialMessages.add("2nd Line, Partisan, Green, and Conscript Units Panic");
+                                                    break;
+                                                case 3: case 4:
+                                                    specialMessages.add("1st Line, 2nd Line, Partisan, Green, and Conscript Units Panic");
+                                                    break;
+                                                case 5: case 6:
+                                                    specialMessages.add("Any Unit Panics");
+                                                    break;
+                                            }
+                                        }
+                                    }
                                     // Construct Special Message string
                                     String l_strSpecialMessages = "";
                                     for (int i = 0; i < specialMessages.size(); ++i)
@@ -1963,5 +1984,19 @@ public class ASLChatter extends VASSAL.build.module.Chatter
   public interface ChatterListener {
         public void DiceRoll(String strCategory, String strUser, String strSAN, int iFirstDice, int iSecondDice);
   }
+  private boolean SASLDiceexist(){
+        for (Iterator<GameComponent> e = GameModule.getGameModule().getGameState().getGameComponents().iterator();
+           e.hasNext();) {
+          Object o = e.next();
+          if (o instanceof ModuleExtension) {
+              if (((ModuleExtension) o).getDescription() =="SASLDice"){
+                  return true;
+              }
+          }
+        }
+
+        return false;
+  }
+
 }
 
