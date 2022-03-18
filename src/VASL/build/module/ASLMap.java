@@ -279,6 +279,11 @@ public class ASLMap extends Map {
                     nullBoards = true;
                 }
             }
+            // this is a hack to fix problem with board geometry. Standard geo hexes cannot have a width greater than 56.25 or they will exceed the board size of 1800 pixels
+            // even if they are 56.3125 in size
+            // need to edit BoardMetaData.xml to change hexHeight to 56.25
+            if (hexWidth == 56.3125){hexWidth = 56.25;}
+
 
             // remove the edge buffer from the map boundary size
             mapBoundary.width -= edgeBuffer.width;
@@ -475,24 +480,51 @@ public class ASLMap extends Map {
     }
 
     private void setHillockTerrain(VASLBoard board, VASL.LOS.Map.Map newlosdata, BufferedImage bi, Rectangle ovrRec){
-        for (int x = 0; x < bi.getWidth(); x++) {
-            for (int y = 0; y < bi.getHeight(); y++) {
-                if (newlosdata.onMap(x + ovrRec.x, y + ovrRec.y)) {
-                    int c = bi.getRGB(x, y);
-                    if ((c >> 24) != 0x00) { // not a transparent pixel
-                        String terraintouse = "Hillock";
-                        Terrain terr;
-                        //Retrieving the R G B values
-                        Color color = getRGBColor(c);
-                        Color testcolor = new Color(114, 83, 42); //have to use method as several colors have same RGB values
-                        if (color.equals(testcolor)) {
-                            terraintouse = "Hillock Summit";
+        if (board.isReversed()){
+            // flip the overlay grid
+            for (int x = 0; x < bi.getWidth(); x++) {
+                for (int y = 0; y < bi.getHeight(); y++) {
+                    if (newlosdata.onMap(newlosdata.getGridWidth() - ovrRec.x  -x -1, newlosdata.getGridHeight() - ovrRec.y -y -1)) {
+                        int c = bi.getRGB(x, y);
+                        if ((c >> 24) != 0x00) { // not a transparent pixel
+                            String terraintouse = "Hillock";
+                            Terrain terr;
+                            //Retrieving the R G B values
+                            Color color = getRGBColor(c);
+                            Color testcolor = new Color(114, 83, 42); //have to use method as several colors have same RGB values
+                            if (color.equals(testcolor)) {
+                                terraintouse = "Hillock Summit";
+                            }
+                            newlosdata.setGridTerrainCode(newlosdata.getTerrain(terraintouse).getType(), newlosdata.getGridWidth() - ovrRec.x  -x -1, newlosdata.getGridHeight() - ovrRec.y -y -1);
+                            if (!(newlosdata.gridToHex(newlosdata.getGridWidth() - ovrRec.x  -x -1, newlosdata.getGridHeight() - ovrRec.y -y -1).getCenterLocation().getTerrain().getName().equals("Hillock Summit"))) {
+                                newlosdata.gridToHex(newlosdata.getGridWidth() - ovrRec.x  -x -1, newlosdata.getGridHeight() - ovrRec.y -y -1).getCenterLocation().setTerrain(newlosdata.getTerrain(terraintouse));
+                            } else {
+                                newlosdata.gridToHex(newlosdata.getGridWidth() - ovrRec.x  -x -1, newlosdata.getGridHeight() - ovrRec.y -y -1).getCenterLocation().setBaseHeight(1);
+                            }
                         }
-                        newlosdata.setGridTerrainCode(newlosdata.getTerrain(terraintouse).getType(), x + ovrRec.x, y + ovrRec.y);
-                        if (!(newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().getTerrain().getName().equals("Hillock Summit"))) {
-                            newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().setTerrain(newlosdata.getTerrain(terraintouse));
-                        } else {
-                            newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().setBaseHeight(1);
+                    }
+                }
+            }
+        } else {
+            for (int x = 0; x < bi.getWidth(); x++) {
+                for (int y = 0; y < bi.getHeight(); y++) {
+                    if (newlosdata.onMap(x + ovrRec.x, y + ovrRec.y)) {
+                        int c = bi.getRGB(x, y);
+                        if ((c >> 24) != 0x00) { // not a transparent pixel
+                            String terraintouse = "Hillock";
+                            Terrain terr;
+                            //Retrieving the R G B values
+                            Color color = getRGBColor(c);
+                            Color testcolor = new Color(114, 83, 42); //have to use method as several colors have same RGB values
+                            if (color.equals(testcolor)) {
+                                terraintouse = "Hillock Summit";
+                            }
+                            newlosdata.setGridTerrainCode(newlosdata.getTerrain(terraintouse).getType(), x + ovrRec.x, y + ovrRec.y);
+                            if (!(newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().getTerrain().getName().equals("Hillock Summit"))) {
+                                newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().setTerrain(newlosdata.getTerrain(terraintouse));
+                            } else {
+                                newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().setBaseHeight(1);
+                            }
                         }
                     }
                 }
@@ -501,27 +533,58 @@ public class ASLMap extends Map {
 
     }
     private void setDierTerrain(VASLBoard board, VASL.LOS.Map.Map newlosdata, BufferedImage bi, Rectangle ovrRec){
-        for (int x = 0; x < bi.getWidth(); x++) {
-            for (int y = 0; y < bi.getHeight(); y++) {
-                if (newlosdata.onMap(x + ovrRec.x, y + ovrRec.y)) {
-                    int c = bi.getRGB(x, y);
-                    if ((c >> 24) != 0x00) { // not a transparent pixel
-                        String terraintouse = "Dier";
-                        Terrain terr;
-                        //Retrieving the R G B values
-                        Color color = getRGBColor(c);
-                        int terrint = board.getVASLBoardArchive().getTerrainForColor(color);
-                        if (terrint >= 0){
-                            terr = newlosdata.getTerrain(terrint);
-                            if (terr.getName().contains("Scrub")) {
-                                terraintouse = "Scrub";
-                            } else if (terr.getName().equals("Dier")){
-                                terraintouse = "Dier";
+        if (board.isReversed()){
+            // flip the overlay grid
+            for (int x = 0; x < bi.getWidth(); x++) {
+                for (int y = 0; y < bi.getHeight(); y++) {
+                    if (newlosdata.onMap(newlosdata.getGridWidth() - ovrRec.x  -x -1, newlosdata.getGridHeight() - ovrRec.y -y -1)) {
+                        int c = bi.getRGB(x, y);
+                        if ((c >> 24) != 0x00) { // not a transparent pixel
+                            String terraintouse = "Dier";
+                            Terrain terr;
+                            //Retrieving the R G B values
+                            Color color = getRGBColor(c);
+                            int terrint = board.getVASLBoardArchive().getTerrainForColor(color);
+                            if (terrint >= 0) {
+                                terr = newlosdata.getTerrain(terrint);
+                                if (terr.getName().contains("Scrub")) {
+                                    terraintouse = "Scrub";
+                                } else if (terr.getName().equals("Dier")) {
+                                    terraintouse = "Dier";
+                                }
+                            }
+                            newlosdata.setGridTerrainCode(newlosdata.getTerrain(terraintouse).getType(), newlosdata.getGridWidth() - ovrRec.x  -x -1, newlosdata.getGridHeight() - ovrRec.y -y -1);
+                            if (!(newlosdata.gridToHex(newlosdata.getGridWidth() - ovrRec.x  -x -1, newlosdata.getGridHeight() - ovrRec.y -y -1).getCenterLocation().getTerrain().getName().equals("Scrub"))) {
+                                newlosdata.gridToHex(newlosdata.getGridWidth() - ovrRec.x  -x -1, newlosdata.getGridHeight() - ovrRec.y -y -1).getCenterLocation().setTerrain(newlosdata.getTerrain(terraintouse));
                             }
                         }
-                        newlosdata.setGridTerrainCode(newlosdata.getTerrain(terraintouse).getType(), x + ovrRec.x, y + ovrRec.y);
-                        if (!(newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().getTerrain().getName().equals("Scrub"))) {
-                            newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().setTerrain(newlosdata.getTerrain(terraintouse));
+                    }
+                }
+            }
+        } else {
+
+            for (int x = 0; x < bi.getWidth(); x++) {
+                for (int y = 0; y < bi.getHeight(); y++) {
+                    if (newlosdata.onMap(x + ovrRec.x, y + ovrRec.y)) {
+                        int c = bi.getRGB(x, y);
+                        if ((c >> 24) != 0x00) { // not a transparent pixel
+                            String terraintouse = "Dier";
+                            Terrain terr;
+                            //Retrieving the R G B values
+                            Color color = getRGBColor(c);
+                            int terrint = board.getVASLBoardArchive().getTerrainForColor(color);
+                            if (terrint >= 0) {
+                                terr = newlosdata.getTerrain(terrint);
+                                if (terr.getName().contains("Scrub")) {
+                                    terraintouse = "Scrub";
+                                } else if (terr.getName().equals("Dier")) {
+                                    terraintouse = "Dier";
+                                }
+                            }
+                            newlosdata.setGridTerrainCode(newlosdata.getTerrain(terraintouse).getType(), x + ovrRec.x, y + ovrRec.y);
+                            if (!(newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().getTerrain().getName().equals("Scrub"))) {
+                                newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().setTerrain(newlosdata.getTerrain(terraintouse));
+                            }
                         }
                     }
                 }
@@ -563,39 +626,79 @@ public class ASLMap extends Map {
     }
 
     private void setSandDuneTerrain(VASLBoard board, VASL.LOS.Map.Map newlosdata, BufferedImage bi, Rectangle ovrRec){
-        for (int x = 0; x < bi.getWidth(); x++) {
-            for (int y = 0; y < bi.getHeight(); y++) {
-                if (newlosdata.onMap(x + ovrRec.x, y + ovrRec.y)) {
-                    int c = bi.getRGB(x, y);
-                    if ((c >> 24) != 0x00) { // not a transparent pixel
-                        String terraintouse = "Sand Dune, Low";
-                        Terrain terr;
-                        //Retrieving the R G B values
-                        Color color = getRGBColor(c);
-                        int terrint = board.getVASLBoardArchive().getTerrainForColor(color);
-                        if (terrint >= 0){
-                            terr = newlosdata.getTerrain(terrint);
-                            if (terr.getName().equals("Dune, Crest Low")){
-                                terraintouse = "Dune, Crest Low";
-                            } else if (terr.getName().contains("Scrub")) {
-                                terraintouse = "Scrub";
+        if (board.isReversed()){
+            // flip the overlay grid
+            for (int x = 0; x < bi.getWidth(); x++) {
+                for (int y = 0; y < bi.getHeight(); y++) {
+                    if (newlosdata.onMap(newlosdata.getGridWidth() - ovrRec.x  -x -1, newlosdata.getGridHeight() - ovrRec.y -y -1)) {
+                        int c = bi.getRGB(x, y);
+                        if ((c >> 24) != 0x00) { // not a transparent pixel
+                            String terraintouse = "Sand Dune, Low";
+                            Terrain terr;
+                            //Retrieving the R G B values
+                            Color color = getRGBColor(c);
+                            int terrint = board.getVASLBoardArchive().getTerrainForColor(color);
+                            if (terrint >= 0) {
+                                terr = newlosdata.getTerrain(terrint);
+                                if (terr.getName().equals("Dune, Crest Low")) {
+                                    terraintouse = "Dune, Crest Low";
+                                } else if (terr.getName().contains("Scrub")) {
+                                    terraintouse = "Scrub";
+                                }
                             }
+                            newlosdata.setGridTerrainCode(newlosdata.getTerrain(terraintouse).getType(), newlosdata.getGridWidth() - ovrRec.x  -x -1, newlosdata.getGridHeight() - ovrRec.y -y -1);
+                            if (terraintouse.equals("Dune, Crest Low")) {
+                                setDuneCrest(newlosdata,newlosdata.getGridWidth() - -x -1, newlosdata.getGridHeight() -y -1, ovrRec, true);
+                            }
+                            newlosdata.gridToHex(newlosdata.getGridWidth() - ovrRec.x  -x -1, newlosdata.getGridHeight() - ovrRec.y -y -1).getCenterLocation().setTerrain(newlosdata.getTerrain("Sand Dune, Low"));
+
                         }
-                        newlosdata.setGridTerrainCode(newlosdata.getTerrain(terraintouse).getType(), x + ovrRec.x, y + ovrRec.y);
-                        if (terraintouse.equals("Dune, Crest Low")){
-                            setDuneCrest(newlosdata, x, y, ovrRec);
+                    }
+                }
+            }
+        } else {
+            for (int x = 0; x < bi.getWidth(); x++) {
+                for (int y = 0; y < bi.getHeight(); y++) {
+                    if (newlosdata.onMap(x + ovrRec.x, y + ovrRec.y)) {
+                        int c = bi.getRGB(x, y);
+                        if ((c >> 24) != 0x00) { // not a transparent pixel
+                            String terraintouse = "Sand Dune, Low";
+                            Terrain terr;
+                            //Retrieving the R G B values
+                            Color color = getRGBColor(c);
+                            int terrint = board.getVASLBoardArchive().getTerrainForColor(color);
+                            if (terrint >= 0) {
+                                terr = newlosdata.getTerrain(terrint);
+                                if (terr.getName().equals("Dune, Crest Low")) {
+                                    terraintouse = "Dune, Crest Low";
+                                } else if (terr.getName().contains("Scrub")) {
+                                    terraintouse = "Scrub";
+                                }
+                            }
+                            newlosdata.setGridTerrainCode(newlosdata.getTerrain(terraintouse).getType(), x + ovrRec.x, y + ovrRec.y);
+                            if (terraintouse.equals("Dune, Crest Low")) {
+                                setDuneCrest(newlosdata, x, y, ovrRec, false);
+                            }
+                            newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().setTerrain(newlosdata.getTerrain("Sand Dune, Low"));
                         }
-                        newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().setTerrain(newlosdata.getTerrain("Sand Dune, Low"));
                     }
                 }
             }
         }
 
     }
-    private void setDuneCrest(VASL.LOS.Map.Map newlosdata, int x, int y, Rectangle ovrRec){
+    private void setDuneCrest(VASL.LOS.Map.Map newlosdata, int x, int y, Rectangle ovrRec, boolean isreversed){
         // reset the terrain
-        Hex dunehex = newlosdata.gridToHex(x+ovrRec.x, y+ovrRec.y);
-        Location dunecrestloc = dunehex.getNearestLocation(x+ovrRec.x, y+ovrRec.y);
+        Hex dunehex;
+        Location dunecrestloc;
+        if(isreversed){
+            dunehex = newlosdata.gridToHex(x - ovrRec.x, y - ovrRec.y);
+            dunecrestloc = dunehex.getNearestLocation(x - ovrRec.x, y - ovrRec.y);
+        } else {
+            dunehex = newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y);
+            dunecrestloc = dunehex.getNearestLocation(x + ovrRec.x, y + ovrRec.y);
+
+        }
         int hexside = dunehex.getLocationHexside(dunecrestloc);
         if (hexside != -1) {
             dunehex.setHexsideTerrain(hexside, newlosdata.getTerrain("Dune, Crest Low"));
@@ -603,28 +706,58 @@ public class ASLMap extends Map {
         }
     }
     private void setWadiTerrain(VASLBoard board, VASL.LOS.Map.Map newlosdata, BufferedImage bi, Rectangle ovrRec){
-        for (int x = 0; x < bi.getWidth(); x++) {
-            for (int y = 0; y < bi.getHeight(); y++) {
-                if (newlosdata.onMap(x + ovrRec.x, y + ovrRec.y)) {
-                    int c = bi.getRGB(x, y);
-                    if ((c >> 24) != 0x00) { // not a transparent pixel
-                        String terraintouse = "Open Ground";
-                        Terrain terr;
-                        //Retrieving the R G B values
-                        Color color = getRGBColor(c);
-                        int terrint = board.getVASLBoardArchive().getTerrainForColor(color);
-                        if (terrint >=0) {
-                            terr = newlosdata.getTerrain(terrint);
-                            if (terr.getName().equals("Wadi")) {
-                                terraintouse = "Wadi";
-                            } else if (terr.getName().equals("Cliff")){
-                                terraintouse = "Cliff";
+        if (board.isReversed()){
+            // flip the overlay grid
+            for (int x = 0; x < bi.getWidth(); x++) {
+                for (int y = 0; y < bi.getHeight(); y++) {
+                    if (newlosdata.onMap(newlosdata.getGridWidth() - ovrRec.x  -x -1, newlosdata.getGridHeight() - ovrRec.y -y -1)) {
+                        int c = bi.getRGB(x, y);
+                        if ((c >> 24) != 0x00) { // not a transparent pixel
+                            String terraintouse = "Open Ground";
+                            Terrain terr;
+                            //Retrieving the R G B values
+                            Color color = getRGBColor(c);
+                            int terrint = board.getVASLBoardArchive().getTerrainForColor(color);
+                            if (terrint >= 0) {
+                                terr = newlosdata.getTerrain(terrint);
+                                if (terr.getName().equals("Wadi")) {
+                                    terraintouse = "Wadi";
+                                } else if (terr.getName().equals("Cliff")) {
+                                    terraintouse = "Cliff";
+                                }
                             }
+                            newlosdata.setGridTerrainCode(newlosdata.getTerrain(terraintouse).getType(), newlosdata.getGridWidth() - ovrRec.x  -x -1, newlosdata.getGridHeight() - ovrRec.y -y -1);
+                            newlosdata.gridToHex(newlosdata.getGridWidth() - ovrRec.x  -x -1, newlosdata.getGridHeight() - ovrRec.y -y -1).getCenterLocation().setTerrain(newlosdata.getTerrain("Wadi"));
+                            newlosdata.gridToHex(newlosdata.getGridWidth() - ovrRec.x  -x -1, newlosdata.getGridHeight() - ovrRec.y -y -1).getCenterLocation().setBaseHeight(-1);
                         }
-                        newlosdata.setGridTerrainCode(newlosdata.getTerrain(terraintouse).getType(), x + ovrRec.x, y + ovrRec.y);
-                        newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().setTerrain(newlosdata.getTerrain("Wadi"));
-                        newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().setBaseHeight(-1);
-                        // need to set depression and cliff hexsides, but how?
+                    }
+                }
+            }
+        } else {
+
+            for (int x = 0; x < bi.getWidth(); x++) {
+                for (int y = 0; y < bi.getHeight(); y++) {
+                    if (newlosdata.onMap(x + ovrRec.x, y + ovrRec.y)) {
+                        int c = bi.getRGB(x, y);
+                        if ((c >> 24) != 0x00) { // not a transparent pixel
+                            String terraintouse = "Open Ground";
+                            Terrain terr;
+                            //Retrieving the R G B values
+                            Color color = getRGBColor(c);
+                            int terrint = board.getVASLBoardArchive().getTerrainForColor(color);
+                            if (terrint >= 0) {
+                                terr = newlosdata.getTerrain(terrint);
+                                if (terr.getName().equals("Wadi")) {
+                                    terraintouse = "Wadi";
+                                } else if (terr.getName().equals("Cliff")) {
+                                    terraintouse = "Cliff";
+                                }
+                            }
+                            newlosdata.setGridTerrainCode(newlosdata.getTerrain(terraintouse).getType(), x + ovrRec.x, y + ovrRec.y);
+                            newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().setTerrain(newlosdata.getTerrain("Wadi"));
+                            newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().setBaseHeight(-1);
+                            // need to set depression and cliff hexsides, but how?
+                        }
                     }
                 }
             }
@@ -638,25 +771,54 @@ public class ASLMap extends Map {
         if (isInherenttype(terraintype)) {
             setOverlayInherentTerrain(board, newlosdata, bi, ovrRec, terraintype);
         } else {
-            for (int x = 0; x < bi.getWidth(); x++) {
-                for (int y = 0; y < bi.getHeight(); y++) {
-                    if (newlosdata.onMap(x + ovrRec.x, y + ovrRec.y)) {
-                        int c = bi.getRGB(x, y);
-                        if ((c >> 24) != 0x00) { // not a transparent pixel
-                            String terraintouse = "Open Ground";
-                            Terrain terr;
-                            //Retrieving the R G B values
-                            Color color = getRGBColor(c);
-                            int terrint = board.getVASLBoardArchive().getTerrainForColor(color);
-                            if (terrint >= 0) {
-                                terr = newlosdata.getTerrain(terrint);
-                                if (terr.getName().equals(terraintype)) {
-                                    terraintouse = terraintype;
+            if (board.isReversed()){
+                // flip the overlay grid
+                for (int x = 0; x < bi.getWidth(); x++) {
+                    for (int y = 0; y < bi.getHeight(); y++) {
+                        if (newlosdata.onMap(newlosdata.getGridWidth() - ovrRec.x  -x -1, newlosdata.getGridHeight() - ovrRec.y -y -1)) {
+                            int c = bi.getRGB(x, y);
+                            if ((c >> 24) != 0x00) { // not a transparent pixel
+                                String terraintouse = "Open Ground";
+                                Terrain terr;
+                                //Retrieving the R G B values
+                                Color color = getRGBColor(c);
+                                int terrint = board.getVASLBoardArchive().getTerrainForColor(color);
+                                if (terrint >= 0) {
+                                    terr = newlosdata.getTerrain(terrint);
+                                    if (terr.getName().equals(terraintype)) {
+                                        terraintouse = terraintype;
+                                    }
+                                }
+                                newlosdata.setGridTerrainCode(newlosdata.getTerrain(terraintouse).getType(), newlosdata.getGridWidth() - ovrRec.x  -x -1, newlosdata.getGridHeight() - ovrRec.y -y -1);
+                                if (newlosdata.gridToHex(newlosdata.getGridWidth() - ovrRec.x  -x -1, newlosdata.getGridHeight() - ovrRec.y -y -1).getNearestLocation(newlosdata.getGridWidth() - ovrRec.x  -y -1, newlosdata.getGridHeight() - ovrRec.y -x -1).isCenterLocation()) {
+                                    newlosdata.gridToHex(newlosdata.getGridWidth() - ovrRec.x  -x -1, newlosdata.getGridHeight() - ovrRec.y -y -1).getCenterLocation().setTerrain(newlosdata.getTerrain(terraintouse));
                                 }
                             }
-                            newlosdata.setGridTerrainCode(newlosdata.getTerrain(terraintouse).getType(), x + ovrRec.x, y + ovrRec.y);
-                            if (newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getNearestLocation(x + ovrRec.x, y + ovrRec.y).isCenterLocation()) {
-                                newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().setTerrain(newlosdata.getTerrain(terraintouse));
+                        }
+                    }
+                }
+            } else {
+                for (int x = 0; x < bi.getWidth(); x++) {
+                    for (int y = 0; y < bi.getHeight(); y++) {
+                        if (newlosdata.onMap(x + ovrRec.x, y + ovrRec.y)) {
+                            int c = bi.getRGB(x, y);
+                            if ((c >> 24) != 0x00) { // not a transparent pixel
+                                String terraintouse = "Open Ground";
+                                Terrain terr;
+                                //Retrieving the R G B values
+                                Color color = getRGBColor(c);
+                                int terrint = board.getVASLBoardArchive().getTerrainForColor(color);
+                                if (terrint >= 0) {
+                                    terr = newlosdata.getTerrain(terrint);
+                                    if (terr.getName().equals(terraintype)) {
+                                        terraintouse = terraintype;
+                                    }
+                                }
+
+                                newlosdata.setGridTerrainCode(newlosdata.getTerrain(terraintouse).getType(), x + ovrRec.x, y + ovrRec.y);
+                                if (newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getNearestLocation(x + ovrRec.x, y + ovrRec.y).isCenterLocation()) {
+                                    newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().setTerrain(newlosdata.getTerrain(terraintouse));
+                                }
                             }
                         }
                     }
@@ -700,39 +862,87 @@ public class ASLMap extends Map {
     private void setOverlayInherentTerrain(VASLBoard board, VASL.LOS.Map.Map newlosdata, BufferedImage bi, Rectangle ovrRec, String terraintype){
         Hex temphex = null; Hex newhex;
         Hex previoushex = null;
-        for (int x = 0; x < bi.getWidth(); x++) {
-            for (int y = 0; y < bi.getHeight(); y++) {
-                if (newlosdata.onMap(x + ovrRec.x, y + ovrRec.y)) {
-                    Hex hextouse = newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y);
-                    if (!hextouse.equals(previoushex)){
-                        int c = bi.getRGB(x, y);
-                        if ((c >> 24) != 0x00) { // not a transparent pixel
-                            String terraintouse = "Open Ground";
-                            Terrain terr = null;
-                            //Retrieving the R G B values
-                            Color color = getRGBColor(c);
-                            int terrint = board.getVASLBoardArchive().getTerrainForColor(color);
-                            if (terrint >= 0) {
-                                terr = newlosdata.getTerrain(terrint);
-                                if (terr.getName().equals(terraintype)) {
-                                    terraintouse = terraintype;
+
+        if (board.isReversed()){
+            // flip the overlay grid
+            for (int x = 0; x < bi.getWidth(); x++) {
+                for (int y = 0; y < bi.getHeight(); y++) {
+                    if (newlosdata.onMap(newlosdata.getGridWidth() - ovrRec.x  -x -1, newlosdata.getGridHeight() - ovrRec.y -y -1)) {
+                        Hex hextouse = newlosdata.gridToHex(newlosdata.getGridWidth() - ovrRec.x -x -1, newlosdata.getGridHeight() - ovrRec.y -y -1);
+                        if (!hextouse.equals(previoushex)) {
+                            int c = bi.getRGB(x, y);
+                            if ((c >> 24) != 0x00) { // not a transparent pixel
+                                String terraintouse = "Open Ground";
+                                Terrain terr = null;
+                                //Retrieving the R G B values
+                                Color color = getRGBColor(c);
+                                int terrint = board.getVASLBoardArchive().getTerrainForColor(color);
+                                if (terrint >= 0) {
+                                    terr = newlosdata.getTerrain(terrint);
+                                    if (terr.getName().equals(terraintype)) {
+                                        terraintouse = terraintype;
+                                    }
+                                }
+                                if (!terraintouse.equals("Open Ground") && terr != null) {  // terrain is inherent terrain
+
+                                    hextouse.getCenterLocation().setTerrain(newlosdata.getTerrain(terraintouse));
+                                    hextouse.setoverlayborder();
+                                    LOSDataEditor loseditor = new LOSDataEditor(newlosdata);
+                                    loseditor.setGridTerrain(hextouse.getoverlayborder(), terr);
+                                    for (int z = 0; z < 6; z++) {
+                                        hextouse.setHexsideTerrain(z, newlosdata.getTerrain("Open Ground"));
+                                        Hex adjhex = newlosdata.getAdjacentHex(hextouse, z);
+                                        if (adjhex != null) {
+                                            adjhex.setHexsideTerrain(Hex.getOppositeHexside(z), newlosdata.getTerrain("Open Ground"));
+                                        }
+                                    }
+                                    previoushex = hextouse;
                                 }
                             }
 
-                            if (!terraintouse.equals("Open Ground") && terr != null) {  // terrain is inherent terrain
-
-                                hextouse.getCenterLocation().setTerrain(newlosdata.getTerrain(terraintouse));
-                                hextouse.setoverlayborder();
-                                LOSDataEditor loseditor = new LOSDataEditor(newlosdata);
-                                loseditor.setGridTerrain(hextouse.getoverlayborder(), terr);
-                                for (int z = 0; z < 6; z++) {
-                                    hextouse.setHexsideTerrain(z, newlosdata.getTerrain("Open Ground"));
-                                    Hex adjhex = newlosdata.getAdjacentHex(hextouse, z);
-                                    if (adjhex!=null) {
-                                        adjhex.setHexsideTerrain(Hex.getOppositeHexside(z), newlosdata.getTerrain("Open Ground"));
+                            //newlosdata.setGridTerrainCode(newlosdata.getTerrain(terraintouse).getType(), newlosdata.getGridWidth() - ovrRec.x  -x -1, newlosdata.getGridHeight() - ovrRec.y -y -1);
+                            //if (newlosdata.gridToHex(newlosdata.getGridWidth() - ovrRec.x  -x -1, newlosdata.getGridHeight() - ovrRec.y -y -1).getNearestLocation(newlosdata.getGridWidth() - ovrRec.x  -y -1, newlosdata.getGridHeight() - ovrRec.y -x -1).isCenterLocation()) {
+                            //    newlosdata.gridToHex(newlosdata.getGridWidth() - ovrRec.x  -x -1, newlosdata.getGridHeight() - ovrRec.y -y -1).getCenterLocation().setTerrain(newlosdata.getTerrain(terraintouse));
+                            //}
+                        }
+                    }
+                }
+            }
+        } else {
+            for (int x = 0; x < bi.getWidth(); x++) {
+                for (int y = 0; y < bi.getHeight(); y++) {
+                    if (newlosdata.onMap(x + ovrRec.x, y + ovrRec.y)) {
+                        Hex hextouse = newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y);
+                        if (!hextouse.equals(previoushex)) {
+                            int c = bi.getRGB(x, y);
+                            if ((c >> 24) != 0x00) { // not a transparent pixel
+                                String terraintouse = "Open Ground";
+                                Terrain terr = null;
+                                //Retrieving the R G B values
+                                Color color = getRGBColor(c);
+                                int terrint = board.getVASLBoardArchive().getTerrainForColor(color);
+                                if (terrint >= 0) {
+                                    terr = newlosdata.getTerrain(terrint);
+                                    if (terr.getName().equals(terraintype)) {
+                                        terraintouse = terraintype;
                                     }
                                 }
-                                previoushex = hextouse;
+
+                                if (!terraintouse.equals("Open Ground") && terr != null) {  // terrain is inherent terrain
+
+                                    hextouse.getCenterLocation().setTerrain(newlosdata.getTerrain(terraintouse));
+                                    hextouse.setoverlayborder();
+                                    LOSDataEditor loseditor = new LOSDataEditor(newlosdata);
+                                    loseditor.setGridTerrain(hextouse.getoverlayborder(), terr);
+                                    for (int z = 0; z < 6; z++) {
+                                        hextouse.setHexsideTerrain(z, newlosdata.getTerrain("Open Ground"));
+                                        Hex adjhex = newlosdata.getAdjacentHex(hextouse, z);
+                                        if (adjhex != null) {
+                                            adjhex.setHexsideTerrain(Hex.getOppositeHexside(z), newlosdata.getTerrain("Open Ground"));
+                                        }
+                                    }
+                                    previoushex = hextouse;
+                                }
                             }
                         }
                     }
