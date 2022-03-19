@@ -1984,7 +1984,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
   public interface ChatterListener {
         public void DiceRoll(String strCategory, String strUser, String strSAN, int iFirstDice, int iSecondDice);
   }
-  private boolean SASLDiceexist(){
+  /*private boolean SASLDiceexist(){
         for (Iterator<GameComponent> e = GameModule.getGameModule().getGameState().getGameComponents().iterator();
            e.hasNext();) {
           Object o = e.next();
@@ -1996,7 +1996,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
 
         return false;
-  }
+  }*/
 
 }
 
