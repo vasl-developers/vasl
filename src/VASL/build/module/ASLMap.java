@@ -727,8 +727,10 @@ public class ASLMap extends Map {
                                 }
                             }
                             newlosdata.setGridTerrainCode(newlosdata.getTerrain(terraintouse).getType(), newlosdata.getGridWidth() - ovrRec.x  -x -1, newlosdata.getGridHeight() - ovrRec.y -y -1);
-                            newlosdata.gridToHex(newlosdata.getGridWidth() - ovrRec.x  -x -1, newlosdata.getGridHeight() - ovrRec.y -y -1).getCenterLocation().setTerrain(newlosdata.getTerrain("Wadi"));
-                            newlosdata.gridToHex(newlosdata.getGridWidth() - ovrRec.x  -x -1, newlosdata.getGridHeight() - ovrRec.y -y -1).getCenterLocation().setBaseHeight(-1);
+                            if (terraintouse == "Wadi") {
+                                newlosdata.gridToHex(newlosdata.getGridWidth() - ovrRec.x - x - 1, newlosdata.getGridHeight() - ovrRec.y - y - 1).getCenterLocation().setTerrain(newlosdata.getTerrain("Wadi"));
+                                newlosdata.gridToHex(newlosdata.getGridWidth() - ovrRec.x - x - 1, newlosdata.getGridHeight() - ovrRec.y - y - 1).getCenterLocation().setBaseHeight(-1);
+                            }
                         }
                     }
                 }
@@ -754,9 +756,11 @@ public class ASLMap extends Map {
                                 }
                             }
                             newlosdata.setGridTerrainCode(newlosdata.getTerrain(terraintouse).getType(), x + ovrRec.x, y + ovrRec.y);
-                            newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().setTerrain(newlosdata.getTerrain("Wadi"));
-                            newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().setBaseHeight(-1);
-                            // need to set depression and cliff hexsides, but how?
+                            if (terraintouse == "Wadi") {
+                                newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().setTerrain(newlosdata.getTerrain("Wadi"));
+                                newlosdata.gridToHex(x + ovrRec.x, y + ovrRec.y).getCenterLocation().setBaseHeight(-1);
+                                // need to set depression and cliff hexsides, but how?
+                            }
                         }
                     }
                 }
