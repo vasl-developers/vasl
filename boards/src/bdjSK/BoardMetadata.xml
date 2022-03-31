@@ -1,0 +1,227 @@
+<?xml version="1.0"?>
+<!--
+    This file contains the board metadata specific to a VASL board archive.
+    Create one file per VASL board and place it in the archive.
+-->
+
+<!-- 
+    Board-level metadata
+	name - the name of the board (as it will appear in board selector drop-down - not yet supported)
+	version - the board version
+	versionDate - the date the last version was created
+	author - the caring soul who created the board
+    boardImage - the name of the VASL image file in the board archive; the name is case sensitive
+    hasHills - TRUE if the board contains base elevations above ground level
+                if not we can assume the ground level under the terrain is zero, which
+                makes the VASL LOS image translation faster and more accurate
+    height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
+    width - width of the board in hexes.
+	others - TBD e.g. alternate hex grain, etc. 
+	
+-->
+<boardMetadata 
+	name="jSK" 
+	version="6.0" 
+	versionDate="Feb 2022" 
+	author="TR" 
+	boardImageFileName="bdjSK.gif" 
+	hasHills="FALSE" 
+	width="33" 
+	height="10"
+	hexHeight = "64.5"
+	hexWidth = "56.25">
+
+    <!--
+        The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
+        determine the proper building type when creating the LOS information and assumes buildings are single-hex stone or 
+        wooden buildings. Use these elements to override the building type. 
+        
+        See the terrainType elements for a complete list of building names
+    -->
+    <buildingTypes>	
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="C1"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="C2"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="C3"/>
+<buildingType buildingTypeName="Wooden Building" hexName="C4"/>
+
+<buildingType buildingTypeName="Wooden Building, 1 Level" hexName="B6"/>
+<buildingType buildingTypeName="Wooden Building, 1 Level" hexName="C6"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="C7"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="C8"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="D8"/>
+<buildingType buildingTypeName="Wooden Building" hexName="F9"/>
+
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="E1"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="E2"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="E3"/>
+<buildingType buildingTypeName="Stone Building" hexName="F2"/>
+
+<buildingType buildingTypeName="Wooden Building" hexName="E5"/>
+<buildingType buildingTypeName="Wooden Building" hexName="F4"/>
+<buildingType buildingTypeName="Wooden Building" hexName="H4"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="E6"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="E7"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="F6"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="F7"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="G7"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="I5"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="J5"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="K6"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="K7"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="L6"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="M7"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="L7"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="I7"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="I8"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="I9"/>
+<buildingType buildingTypeName="Wooden Building" hexName="J8"/>
+<buildingType buildingTypeName="Wooden Building" hexName="K8"/>
+
+<buildingType buildingTypeName="Stone Building" hexName="J1"/>
+<buildingType buildingTypeName="Stone Building" hexName="K4"/>
+<buildingType buildingTypeName="Stone Building" hexName="M2"/>
+<buildingType buildingTypeName="Stone Building" hexName="N1"/>
+<buildingType buildingTypeName="Stone Building" hexName="O1"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="L2"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="M3"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="L3"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="L4"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="M4"/>
+
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="L9"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="M9"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="M10"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="N8"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="N9"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="O8"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="O9"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="P8"/>
+
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="O3"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="P2"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="R2"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="R3"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="S3"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="S4"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="R4"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="Q5"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="P4"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="P5"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="P6"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="O5"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="O6"/>
+<buildingType buildingTypeName="Stone Building" hexName="Q2"/>
+
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="T1"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="U1"/>
+
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="V3"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="W3"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="W4"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="X2"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="X3"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="X4"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="Y4"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="Z3"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="AA4"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="AA5"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="BB4"/>
+<buildingType buildingTypeName="Stone Building" hexName="U4"/>
+
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="S6"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="T6"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="U6"/>
+<buildingType buildingTypeName="Wooden Building" hexName="W7"/>
+
+<buildingType buildingTypeName="Stone Building" hexName="R8"/>
+<buildingType buildingTypeName="Stone Building" hexName="T9"/>
+<buildingType buildingTypeName="Stone Building" hexName="U9"/>
+
+<buildingType buildingTypeName="Wooden Building, 1 Level" hexName="Z8"/>
+<buildingType buildingTypeName="Wooden Building, 1 Level" hexName="Z9"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="AA9"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="BB9"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="CC9"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="DD8"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="EE9"/>
+<buildingType buildingTypeName="Wooden Building" hexName="FF9"/>
+
+<buildingType buildingTypeName="Wooden Building" hexName="BB6"/>
+<buildingType buildingTypeName="Wooden Building" hexName="BB7"/>
+<buildingType buildingTypeName="Wooden Building" hexName="CC6"/>
+<buildingType buildingTypeName="Wooden Building" hexName="CC7"/>
+<buildingType buildingTypeName="Wooden Building" hexName="DD5"/>
+<buildingType buildingTypeName="Wooden Building" hexName="DD6"/>
+<buildingType buildingTypeName="Wooden Building" hexName="EE6"/>
+<buildingType buildingTypeName="Wooden Building" hexName="EE7"/>
+<buildingType buildingTypeName="Wooden Building" hexName="FF6"/>
+<buildingType buildingTypeName="Wooden Building" hexName="FF7"/>
+<buildingType buildingTypeName="Stone Building" hexName="AA7"/>
+
+<buildingType buildingTypeName="Stone Building" hexName="EE1"/>
+<buildingType buildingTypeName="Stone Building" hexName="FF1"/>
+<buildingType buildingTypeName="Stone Building" hexName="FF4"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="FF2"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="FF3"/>
+
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="AA1"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="AA2"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="BB2"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="CC3"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="DD3"/>
+<buildingType buildingTypeName="Wooden Building" hexName="CC1"/>
+<buildingType buildingTypeName="Wooden Building" hexName="CC2"/>
+<buildingType buildingTypeName="Stone Building" hexName="DD2"/>
+
+	</buildingTypes>
+	
+	<overlaySSRules>
+	    <!--
+			Scenario-specific overlay rules. 
+			name - the VASL SSR name
+			image - the image name
+			x - x coordinate of overly upper left
+			y - y coordinate of overlay upper left
+		-->
+		<underlaySSRule name="WallsOnly" image="WallPattern.gif">
+			<color name="HedgeGreen" />
+		</underlaySSRule>
+		<underlaySSRule name="WallToCactus" image="CactusPattern.gif">
+			<color name="WallBrown" />
+			<color name="WallGrey1" />
+			<color name="WallGrey2" />
+		</underlaySSRule>
+		<underlaySSRule name="HedgeToCactus" image="CactusPattern.gif">
+			<color name="HedgeGreen" />
+		</underlaySSRule>
+
+<overlaySSRule name="LightWoods" image="bdjSK_LightWoods.gif" x="0" y="0" />
+<overlaySSRule name="DenseJungle" image="bdjSK_DenseJungle.gif" x="0" y="0" />
+<overlaySSRule name="Bamboo" image="bdjSK_Bamboo.gif" x="857" y="127" />
+<overlaySSRule name="PalmTrees" image="bdjSK_PalmTrees.gif" x="0" y="0" />
+<overlaySSRule name="OrchardsToCrags" image="bdjSK_Orch2Crag.gif" x="0" y="0" />
+<overlaySSRule name="OrchardsToShellholes" image="bdjSK_Orch2Shell.gif" x="0" y="0" />
+<overlaySSRule name="HedgesToBocage" image="bdjSK_HedgeToBocage.gif" x="0" y="0" />
+<overlaySSRule name="NoWoodsRoads" image="bdjSK_NoWoodsRoads.gif" x="1197" y="523" />
+<overlaySSRule name="RoadsToPaths" image="bdjSK_WoodsRoadsToPaths.gif" x="1197" y="523" />
+<overlaySSRule name="NoRoads" image="bdjSK_NoRoads.gif" x="0" y="0" />
+	</overlaySSRules>
+	
+	<colors>
+		<!--
+			The VASL board colors. Used for color-specific SSR transformations. Use this element to override the shared color pallet. 
+			name - the VASL color name
+			red, green, blue - the RBG value of the color in the image
+			terrain - the LOS terrain type
+			elevation - the base elevation of the terrain
+			
+		-->
+	</colors>
+	
+	<colorSSRules>
+		<!--
+			The board color scenario-specific rules. Use this element to override the shared SSRs.		
+		-->
+	</colorSSRules>
+	
+</boardMetadata>
