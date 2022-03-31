@@ -156,7 +156,9 @@
 		<boarddata name="g" version="6.2" versionDate="Jun 2021" description="" />
 		<boarddata name="h" version="6.3" versionDate="Jun 2021" description="" />
 		<boarddata name="i" version="6.2" versionDate="Jun 2021" description="" />
+		<boarddata name="iSK" version="6.0" versionDate="Feb 2022" description="" />
 		<boarddata name="j" version="6.2" versionDate="Jun 2021" description="" />
+		<boarddata name="jSK" version="6.0" versionDate="Feb 2022" description="" />
 		<boarddata name="k" version="6.2" versionDate="Jun 2021" description="" />
 		<boarddata name="kSK" version="6.2" versionDate="Jun 2021" description="" />
 		<boarddata name="l" version="6.2" versionDate="Jun 2021" description="" />
@@ -255,7 +257,7 @@
 		<boarddata name="CH" version="0.93" versionDate="Aug 2008" description="" />
 		<boarddata name="ABTF" version="6.0" versionDate="Jun 2021" description="" />
 		<boarddata name="Rileys" version="1.5" versionDate="Aug 2008" description="" />
-		<boarddata name="Dinant" version="6.0" versionDate="Mar 2022" description="" />
+		<boarddata name="Dinant" version="6.1" versionDate="Mar 2022" description="" />
 		<!--# LG = 1.0 duplicate
 		# ER = 1.1 duplicate
 		# STN = 1.0 no such board; should be StN
