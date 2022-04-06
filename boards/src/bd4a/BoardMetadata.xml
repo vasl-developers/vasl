@@ -22,15 +22,15 @@
 -->
 <boardMetadata 
 	name="4a" 
-	version="6.7"
-	versionDate="Mar 2022"
+	version="6.8"
+	versionDate="Apr 2022"
 	author="TR" 
 	boardImageFileName="bd4a.gif" 
 	hasHills="TRUE" 
 	width="17" 
 	height="20"
 	hexHeight = "64.5"
-	hexWidth = "56.3125">
+	hexWidth = "56.25">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -52,9 +52,15 @@
         <buildingType hexName="G12" buildingTypeName="Stone Building, 1 Level" />
         <buildingType hexName="H10" buildingTypeName="Stone Building, 1 Level" />
         <buildingType hexName="H11" buildingTypeName="Stone Building, 1 Level" />
-		
+	<buildingType hexName="J9" buildingTypeName="Wooden Building, 2 Level" />	
         <buildingType hexName="J11" buildingTypeName="Wooden Building, 1 Level" />
         <buildingType hexName="K12" buildingTypeName="Wooden Building, 1 Level" />
+
+	<buildingType hexName="L14" buildingTypeName="Stone Building, 1 Level" />
+	<buildingType hexName="M13" buildingTypeName="Stone Building, 1 Level" />
+	<buildingType hexName="M15" buildingTypeName="Stone Building, 1 Level" />
+	<buildingType hexName="N13" buildingTypeName="Stone Building, 1 Level" />
+
 	</buildingTypes>
 	
 	<overlaySSRules>
