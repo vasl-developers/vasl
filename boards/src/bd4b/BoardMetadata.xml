@@ -25,7 +25,7 @@
 -->
 <boardMetadata 
 	name="4b" 
-	version="6.9"
+	version="7.0"
 	versionDate="Mar 2022"
 	author="TR" 
 	boardImageFileName="bd4b.gif" 
@@ -58,9 +58,14 @@
         <buildingType hexName="W12" buildingTypeName="Stone Building, 1 Level" />
         <buildingType hexName="X10" buildingTypeName="Stone Building, 1 Level" />
         <buildingType hexName="X11" buildingTypeName="Stone Building, 1 Level" />
-		
+	<buildingType hexName="Z9" buildingTypeName="Wooden Building, 2 Level" />	
         <buildingType hexName="Z11" buildingTypeName="Wooden Building, 1 Level" />
         <buildingType hexName="AA12" buildingTypeName="Wooden Building, 1 Level" />
+
+	<buildingType hexName="BB14" buildingTypeName="Stone Building, 1 Level" />
+	<buildingType hexName="CC13" buildingTypeName="Stone Building, 1 Level" />
+	<buildingType hexName="CC15" buildingTypeName="Stone Building, 1 Level" />
+	<buildingType hexName="DD13" buildingTypeName="Stone Building, 1 Level" />
 		
 	</buildingTypes>
 	
