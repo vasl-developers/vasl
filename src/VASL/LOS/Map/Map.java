@@ -2720,7 +2720,7 @@ public class Map  {
             }
             // code added by DR to handle cellars
             else if (status.source.getTerrain().isCellar()) {
-                if ((status.target.getTerrain().isCellar()) | (status.range !=1 && status.rangeToSource == 1 && status.targetElevation + targetadj <= status.sourceElevation+sourceadj)) {
+                if (status.range !=1 && status.rangeToSource != 1 && status.targetElevation + targetadj <= status.sourceElevation+sourceadj) {
 
                     status.blocked = true;
                     status.reason = "Unit in cellar cannot see over hexside terrain to non-adjacent target (O6.3)";
@@ -2729,7 +2729,7 @@ public class Map  {
                 }
             }
             else if (status.target.getTerrain().isCellar()) {
-                if (status.range != 1 && status.rangeToTarget == 1 && status.targetElevation+targetadj >= status.sourceElevation + sourceadj) {
+                if (status.range != 1 && status.rangeToTarget != 1 && status.targetElevation+targetadj >= status.sourceElevation + sourceadj) {
 
                     status.blocked = true;
                     status.reason = "Unit in cellar cannot be seen over hexside terrain by non-adjacent target (O6.3)";
