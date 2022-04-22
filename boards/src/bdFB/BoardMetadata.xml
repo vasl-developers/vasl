@@ -24,8 +24,8 @@ v6.0 conversion (DR) August 2019
 -->
 <boardMetadata 
 	name="FB" 
-	version="6.1" 
-	versionDate="Jun 2021" 
+	version="6.2" 
+	versionDate="Apr 2022" 
 	author="unknown" 
 	boardImageFileName="bdFB.gif" 
 	hasHills="TRUE" 
