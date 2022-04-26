@@ -24,8 +24,8 @@ DRAFT 0.0X
 -->
 <boardMetadata 
 	name="RO" 
-	version="6.0" 
-	versionDate="Jan 2021" 
+	version="6.2" 
+	versionDate="Apr 2022" 
 	author="Allan Cannamore" 
 	boardImageFileName="bdRO.gif" 
 	hasHills="TRUE" 
