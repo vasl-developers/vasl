@@ -80,6 +80,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
   private static final String NOTIFICATION_LEVEL = "notificationLevel"; //$NON-NLS-1$
   private final static String m_strFileNameFormat = "chatter/DC%s_%s.png";
   private static final String preferenceTabName = "VASL"; // alwaysontop preference
+  protected static final String DICE_CHAT_COLOR = "HTMLDiceChatColor";
 
   private enum DiceType
   {
@@ -135,13 +136,6 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         super();
 
         m_clrBackground = Color.white;
-        gameMsg = Color.BLACK;
-        gameMsg2 = Color.BLACK;
-        gameMsg3 = Color.BLACK;
-        gameMsg4 = Color.BLACK;
-        gameMsg5 = Color.BLACK;
-        myChat = Color.GREEN;
-        otherChat = Color.black;
         m_clrColoredDiceColor = Color.YELLOW;
         m_clrDustColoredDiceColor = Color.magenta;
         m_clrSingleDieColor = Color.RED;
@@ -261,6 +255,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                     .addGap(0, 0, 0)
                     .addComponent(m_edtInputText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         );
+        makeASLStyleSheet(myFont);
     }
     public JPanel getButtonPanel() {
         return l_objButtonPanel;
@@ -381,6 +376,27 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     private void AddHotKeyToTooltip(JButton objButton, KeyStrokeListener objListener, String strTooltipText) {
         if (objListener.getKeyStroke() != null)
             objButton.setToolTipText(strTooltipText + " [" + HotKeyConfigurer.getString(objListener.getKeyStroke()) + "]");
+    }
+    protected void makeASLStyleSheet(Font f) {
+        if (this.style != null) {
+            if (f == null) {
+                if (this.myFont == null) {
+                    f = new Font("SansSerif", 0, 12);
+                    this.myFont = f;
+                } else {
+                    f = this.myFont;
+                }
+            }
+
+            this.addStyle(".msgcategory", f, Color.black, "bold", 0);
+            this.addStyle(".msguser", f, gameMsg, "bold", 0);
+            //this.addStyle(".msg3", f, this.gameMsg3, "", 0);
+            //this.addStyle(".msg4", f, this.gameMsg4, "", 0);
+            //this.addStyle(".msg5", f, this.gameMsg5, "", 0);
+            //this.addStyle(".mychat", f, this.myChat, "bold", 0);
+            //this.addStyle(".other ", f, this.otherChat, "bold", 0);
+            //this.addStyle(".sys", f, this.systemMsg, "", 0);
+        }
     }
 
     @Override
@@ -1289,7 +1305,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         if (msgpartUser==null){msgpartUser="";}
         if (msgpartSpecial==null){msgpartSpecial="";}
         if (msgpartRest==null){msgpartRest="";}
-        return msgpartCategory + " " + msgpartCdice + " " + msgpartWdice + " " + msgpartUser + " " + msgpartSpecial + " " + msgpartRest;
+        String catstyle = "msgcategory";
+        String userstyle = "msguser";
+        return "*~<span class=" + catstyle + ">" + msgpartCategory + "</span>"  + " " + msgpartCdice + " " + msgpartWdice + " " + "<span class=" + userstyle + ">" + msgpartUser + "</span>" + " " + msgpartSpecial + " " + msgpartRest;
     }
    /**
    * Expects to be added to a GameModule.  Adds itself to the
@@ -1436,6 +1454,25 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         {
             public void propertyChange(PropertyChangeEvent e) {
                 otherChat = (Color) e.getNewValue();
+                makeStyleSheet((Font)null);
+            }
+        });
+        // dice chat pref
+        ColorConfigurer l_objDiceChatColor = null;
+        ColorConfigurer l_objDiceChatColor_Exist = (ColorConfigurer)l_objModulePrefs.getOption(DICE_CHAT_COLOR);
+        if (l_objDiceChatColor_Exist == null)
+        {
+            l_objDiceChatColor = new ColorConfigurer(DICE_CHAT_COLOR, "Dice Results font color: ", Color.black); //$NON-NLS-1$
+            l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), l_objDiceChatColor); //$NON-NLS-1$
+        } else {
+            l_objDiceChatColor = l_objDiceChatColor_Exist;
+        }
+        gameMsg5 = (Color) l_objModulePrefs.getValue(DICE_CHAT_COLOR);
+        makeStyleSheet((Font)null);
+        l_objDiceChatColor.addPropertyChangeListener(new PropertyChangeListener()
+        {
+            public void propertyChange(PropertyChangeEvent e) {
+                gameMsg5 = (Color) e.getNewValue();
                 makeStyleSheet((Font)null);
             }
         });
