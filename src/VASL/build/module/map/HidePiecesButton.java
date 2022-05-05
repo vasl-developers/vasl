@@ -192,9 +192,9 @@ public class HidePiecesButton extends JPanel implements MouseListener,
       Resources.getString(Resources.BUTTON_TEXT),
       Resources.getString(Resources.TOOLTIP_TEXT),
       Resources.getString(Resources.HOTKEY_LABEL),
-      Resources.getString("Icon when pieces and draggable overlays are showing:"), //$NON-NLS-1$
-      Resources.getString("Icon when only draggable overlays are showing:"), //$NON-NLS-1$
-      Resources.getString("Icon when only map is showing:"), //$NON-NLS-1$
+      "Icon when pieces and draggable overlays are showing:", //$NON-NLS-1$
+      "Icon when only draggable overlays are showing:", //$NON-NLS-1$
+      "Icon when only map is showing:" //$NON-NLS-1$
     };
   }
 
@@ -268,7 +268,7 @@ public class HidePiecesButton extends JPanel implements MouseListener,
   }
 
   public static String getConfigureTypeName() {
-    return Resources.getString("Change Show Map Mode Button"); //$NON-NLS-1$
+    return "Change Show Map Mode Button"; //$NON-NLS-1$
   }
 
   public String getConfigureName() {
