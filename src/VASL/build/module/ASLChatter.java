@@ -35,6 +35,7 @@ import VASSAL.command.CommandEncoder;
 import VASSAL.configure.*;
 import VASSAL.i18n.Resources;
 import VASSAL.preferences.Prefs;
+import VASSAL.tools.ErrorDialog;
 import VASSAL.tools.KeyStrokeListener;
 import VASSAL.tools.KeyStrokeSource;
 import VASSAL.tools.imageop.Op;
@@ -44,6 +45,8 @@ import java.awt.Insets;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -57,6 +60,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.html.HTML;
+
 import static VASSAL.build.GameModule.getGameModule;
 
 /**
@@ -86,7 +92,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
   {
       WHITE,
       COLORED,
-      OTHER_DUST
+      OTHER_DUST,
+      BOTH,
+      SINGLE
   }
 
   private Color m_clrBackground;
@@ -129,6 +137,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
   String msgpartRest;
   String msgpartSpecial;
   String msgpartSAN;
+  String msgpartDiceImage;
+
 
 
 
@@ -136,7 +146,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         super();
 
         m_clrBackground = Color.white;
-        m_clrColoredDiceColor = Color.YELLOW;
+        m_clrColoredDiceColor = Color.RED;
         m_clrDustColoredDiceColor = Color.magenta;
         m_clrSingleDieColor = Color.RED;
 
@@ -255,7 +265,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                     .addGap(0, 0, 0)
                     .addComponent(m_edtInputText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         );
-        makeASLStyleSheet(myFont);
+
     }
     public JPanel getButtonPanel() {
         return l_objButtonPanel;
@@ -390,7 +400,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
             this.addStyle(".msgcategory", f, Color.black, "bold", 0);
             this.addStyle(".msguser", f, gameMsg, "bold", 0);
-            //this.addStyle(".msg3", f, this.gameMsg3, "", 0);
+            this.addStyle(".msgspecial", f, gameMsg, "bold", 0);
             //this.addStyle(".msg4", f, this.gameMsg4, "", 0);
             //this.addStyle(".msg5", f, this.gameMsg5, "", 0);
             //this.addStyle(".mychat", f, this.myChat, "bold", 0);
@@ -459,6 +469,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                 {
                     ParseNewDiceRoll(strMsg);
                     strMsg = makeMessageString();
+
                 }
                 else if (strMsg.startsWith("<"))
                 {
@@ -484,8 +495,16 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         {
             ex.printStackTrace();
         }
-
-        super.show(strMsg);
+        if (msgpartDiceImage==null || msgpartDiceImage=="") {
+            super.show(strMsg);
+        } else {
+            try {
+                String styletouse = "msguser";
+            kit.insertHTML(doc, doc.getLength(), "\n<div class=" + styletouse + ">" + msgpartDiceImage + "</div>", 0, 0, HTML.Tag.IMG);
+            } catch (IOException | BadLocationException e) {
+                ErrorDialog.bug(e);
+            }
+        }
     }
 
     private void ParseDefaultMsg(String strMsg) {
@@ -797,7 +816,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                         msgpartCdice = Integer.toString(l_iFirstDice);
                                         msgpartWdice= Integer.toString(l_iSecondDice);
 
-                                        PaintIcon(l_iFirstDice, DiceType.COLORED,false, (m_bShowDiceStats ? "" : l_strRestOfMsg));
+                                        //PaintIcon(l_iFirstDice, DiceType.COLORED,false, (m_bShowDiceStats ? "" : l_strRestOfMsg));
                                         //m_objDocument.insertString(m_objDocument.getLength(), " ", m_objMainStyle);
                                         PaintIcon(l_iSecondDice, DiceType.WHITE,false, (m_bShowDiceStats ? "" : l_strRestOfMsg));
                                         //Add any other dice required
@@ -1192,23 +1211,38 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
     }
 
-    private void PaintIcon(int l_iDice, DiceType diceType, boolean bSingle, String strTooltip)
-    {
-        JLabel l_objLabel = null;
-        try
-        {
-            if(diceType == DiceType.OTHER_DUST)
-            {
-                l_objLabel = new JLabel(mar_objOtherColoredDCIcon[l_iDice - 1]);
+    private void PaintIcon(int l_iDice, DiceType diceType, boolean bSingle, String strTooltip)     {
+        //JLabel l_objLabel = null;
+        try {
+            if(diceType == DiceType.OTHER_DUST) {
+               // l_objLabel = new JLabel(mar_objOtherColoredDCIcon[l_iDice - 1]);
+            } else {
+                //l_objLabel = new JLabel((bSingle ? mar_objSingleDieIcon[l_iDice - 1] : (diceType == DiceType.COLORED ? mar_objColoredDCIcon[l_iDice - 1] : mar_objWhiteDCIcon[l_iDice - 1])));
+                String newfile =null;
+                if (diceType == DiceType.COLORED) {
+                    //newfile = getcoloreddicefile(l_iDice);
+                } else if (diceType == DiceType.OTHER_DUST) {
+                    //newfile = getotherdicefile(l_iDice);
+                } else if (diceType == DiceType.SINGLE) {
+                    //newfile = getsingledicefile(l_iDice);
+                } else {
+                    newfile = getwhitedicefile(l_iDice);
+                }
+                //newfile = "chatter\\" + newfile;
+                String preTag="<PRE>filename is : "+newfile+"</PRE>";
+                msgpartDiceImage="<img  alt=\"alt text\" src=\"\\dist\\images\\chatter\\DC2_W.png\">";
+                // String imageTag="\n<div class=\"MyDiv\"><img  alt=\"alt text\" src=\""+newfile+"\"> </div>";
+                //style="display:inline-block; vertical-align:middle;"
+                //if(catstring!=null) {
+                    //sendtochatwindow(catstring, Color.BLACK, 1);
+                //}
+                //catstring.append(imageTag +" &nbsp"+"&nbsp");
+                //kit.insertHTML(doc, doc.getLength(),imageTag, 0, 0, HTML.Tag.IMG);
             }
-            else
-            {
-                l_objLabel = new JLabel((bSingle ? mar_objSingleDieIcon[l_iDice - 1] : (diceType == DiceType.COLORED ? mar_objColoredDCIcon[l_iDice - 1] : mar_objWhiteDCIcon[l_iDice - 1])));
-            }
-            l_objLabel.setAlignmentY(0.7f);
+            //l_objLabel.setAlignmentY(0.7f);
 
-            if (!strTooltip.isEmpty())
-                l_objLabel.setToolTipText(strTooltip.trim());
+            //if (!strTooltip.isEmpty())
+            //    l_objLabel.setToolTipText(strTooltip.trim());
 
            // StyleConstants.setComponent(m_objIconStyle, l_objLabel);
            // m_objDocument.insertString(m_objDocument.getLength(), "Ignored", m_objIconStyle);
@@ -1269,7 +1303,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             {
                 l_objImage = Op.load(String.format(m_strFileNameFormat, String.valueOf(l_i + 1), "W")).getImage(null);
                 mar_objColoredDCIcon[l_i] = new ImageIcon(ColorChanger.changeColor(l_objImage, Color.white, m_clrColoredDiceColor));
-                mar_objOtherColoredDCIcon[l_i] = new ImageIcon(ColorChanger.changeColor(l_objImage, Color.white, m_clrDustColoredDiceColor));
+                //mar_objOtherColoredDCIcon[l_i] = new ImageIcon(ColorChanger.changeColor(l_objImage, Color.white, m_clrDustColoredDiceColor));
             }
         }
         catch (Exception ex)
@@ -1295,7 +1329,24 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             ex.printStackTrace();
         }
     }
-
+    private String getwhitedicefile(int dieval){
+        switch (dieval){
+            case 1:
+                return "DC1_W.png";
+            case 2:
+                return "DC2_W.png";
+            case 3:
+                return "DC3_W.png";
+            case 4:
+                return "DC4_W.png";
+            case 5:
+                return "DC5_W.png";
+            case 6:
+                return "DC6_W.png";
+            default:
+                return null;
+        }
+    }
     private String makeMessageString(){
         // need to add html formatting
 
@@ -1305,9 +1356,12 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         if (msgpartUser==null){msgpartUser="";}
         if (msgpartSpecial==null){msgpartSpecial="";}
         if (msgpartRest==null){msgpartRest="";}
+
         String catstyle = "msgcategory";
         String userstyle = "msguser";
-        return "*~<span class=" + catstyle + ">" + msgpartCategory + "</span>"  + " " + msgpartCdice + " " + msgpartWdice + " " + "<span class=" + userstyle + ">" + msgpartUser + "</span>" + " " + msgpartSpecial + " " + msgpartRest;
+        String specialstyle = "msgspecial";  //text-decoration: underline";  //<p style="text-decoration: underline;">This text will be underlined.</p>
+        return "*~<span class=" + userstyle + ">" + msgpartDiceImage + "</span>";
+        //return "*~<span class=" + catstyle + ">" + msgpartCategory + "</span>"  + " " + msgpartCdice + " " + msgpartWdice + " " + "<span class=" + userstyle + ">" + msgpartUser + "</span>" + " " + "<u>" + "<span class=" + specialstyle + ">" + msgpartSpecial + "</span>" + "</u>" + " " + msgpartRest;
     }
    /**
    * Expects to be added to a GameModule.  Adds itself to the
@@ -1328,6 +1382,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         l_objGameModule.getPlayerWindow().addChatter(this);
         l_objGameModule.getControlPanel().add(this, BorderLayout.CENTER);
         final Prefs l_objModulePrefs = l_objGameModule.getPrefs();
+
         // font pref
         FontConfigurer l_objChatFontConfigurer = null;
         FontConfigurer l_objChatFontConfigurer_Exist = (FontConfigurer)l_objModulePrefs.getOption("ChatFont");
@@ -1341,6 +1396,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         {
             public void propertyChange(PropertyChangeEvent evt) {
                 setFont((Font) evt.getNewValue());
+                makeStyleSheet((Font) evt.getNewValue());
                 send(" ");
                 send("- Chatter font changed");
                 send(" ");
@@ -1384,24 +1440,16 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         });
         l_objBackgroundColor.fireUpdate();
         // game message color pref
-        ColorConfigurer l_objGameMsgColor = null;
-        ColorConfigurer l_objGameMsgColor_Exist = (ColorConfigurer)l_objModulePrefs.getOption(GAME_MSG1_COLOR);
-        if (l_objGameMsgColor_Exist == null)
-        {
-            l_objGameMsgColor = new ColorConfigurer(GAME_MSG1_COLOR, "Game Messages: ", Color.magenta); //$NON-NLS-1$
-            l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), l_objGameMsgColor); //$NON-NLS-1$
-        } else {
-            l_objGameMsgColor = l_objGameMsgColor_Exist;
-        }
-        gameMsg = (Color) l_objModulePrefs.getValue(GAME_MSG1_COLOR);
-        makeStyleSheet((Font)null);
-        l_objGameMsgColor.addPropertyChangeListener(new PropertyChangeListener()
-        {
-            public void propertyChange(PropertyChangeEvent e) {
-                gameMsg = (Color) e.getNewValue();
-                makeStyleSheet((Font)null);
-            }
+        Prefs globalPrefs = Prefs.getGlobalPrefs();
+        ColorConfigurer gameMsgColor = new ColorConfigurer("HTMLgameMessage1Color", Resources.getString("Chatter.game_messages_preference"), Color.black);
+        gameMsgColor.addPropertyChangeListener((e) -> {
+            gameMsg = (Color)e.getNewValue();
+            makeStyleSheet((Font)null);
+            makeASLStyleSheet((Font)null);
         });
+        globalPrefs.addOption(Resources.getString("Chatter.chat_window"), gameMsgColor);
+        gameMsg = (Color)globalPrefs.getValue("HTMLgameMessage1Color");
+
         // sys messages pref
         ColorConfigurer l_objSystemMsgColor = null;
         ColorConfigurer l_objSystemMsgColor_Exist = (ColorConfigurer)l_objModulePrefs.getOption(SYS_MSG_COLOR);
