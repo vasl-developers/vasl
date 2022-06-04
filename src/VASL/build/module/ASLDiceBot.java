@@ -307,49 +307,15 @@ public class ASLDiceBot extends AbstractBuildable
     public static final String ICON = "icon"; //$NON-NLS-1$
     public static final String HOTKEY = "hotkey"; //$NON-NLS-1$
 
-    public static final String m_strHTMLSingle_Default =
-
-            "<html><style>" +
-                    " .tbl { border:0px solid #C0C0C0; border-collapse:collapse; border-spacing:0px; padding:0px; background:#CCFFCC;}" +
-                    " .tbl th { border:1px solid #C0C0C0; padding:5px; background:#FFFF66;}" +
-                    " .tbl td {border:1px solid #C0C0C0; padding:5px; text-align: right;}" +
-                    " .tbl tr.total {border:2px solid #black; background:#CCFFFF;}" +
-                    " .tbl td.up {border-top:2px solid black; padding:5px; font-weight: bold; text-align: right;}" +
-                    "</style>" +
-                    "<table class=\"tbl\"><thead><tr><th colspan=\"3\">%s</th></tr><tr><th>Category</th><th>drs</th><th>Avg</th></tr></thead><tbody>%s</tbody></table</html>";
-
-    public static final String m_strHTMLDouble_Default =
-
-            "<html><style>" +
-                    " .tbl { border:0px solid #C0C0C0; border-collapse:collapse; border-spacing:0px; padding:0px; background:#CCFFCC;}" +
-                    " .tbl th { border:1px solid #C0C0C0; padding:5px; background:#FFFF66;}" +
-                    " .tbl td {border:1px solid #C0C0C0; padding:5px; text-align: right;}" +
-                    " .tbl tr.total {border-top:2px solid black; background:#CCFFFF;}" +
-                    " .tbl td.up {border-top:2px solid black; padding:5px; font-weight: bold; text-align: right;}" +
-                    "</style>" +
-                    "<table class=\"tbl\"><thead><tr><th colspan=\"5\">%s</th></tr><tr><th>Category</th><th>DRs</th><th>Avg 1st</th><th>Avg 2nd</th><th>Avg</th></tr></thead><tbody>%s</tbody></table</html>";
+    public static final String m_strHTMLSingle =
+            "<table class=\"tbl\"><thead><tr><th colspan=\"3\">%s</th></tr><tr><th>Category</th><th>drs</th><th>Avg</th></tr></thead><tbody>%s</tbody></table></html>";
+    public static final String m_strHTMLDouble =
+            "<table class=\"tbl\"><thead><tr><th colspan=\"5\">%s</th></tr><tr><th>Category</th><th>DRs</th><th>Avg 1st</th><th>Avg 2nd</th><th>Avg</th></tr></thead><tbody>%s</tbody></table></html>";
 
     public static final String m_strHTMLSingle_Extra =
-
-            "<html><style>" +
-                    " .tbl { border:0px solid #C0C0C0; border-collapse:collapse; border-spacing:0px; padding:0px; background:#CCFFCC;}" +
-                    " .tbl th { border:1px solid #C0C0C0; padding:5px; background:#FFFF66;}" +
-                    " .tbl td {border:1px solid #C0C0C0; padding:5px; text-align: right;}" +
-                    " .tbl tr.total {border:2px solid #black; background:#CCFFFF;}" +
-                    " .tbl td.up {border-top:2px solid black; padding:5px; font-weight: bold; text-align: right;}" +
-                    "</style>" +
-                    "<table class=\"tbl\"><thead><tr><th colspan=\"9\">%s</th></tr><tr><th>Category</th><th>drs</th><th>Avg</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr></thead><tbody>%s</tbody></table</html>";
-
+            "<table class=\"tbl\"><thead><tr><th colspan=\"9\">%s</th></tr><tr><th>Category</th><th>drs</th><th>Avg</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr></thead><tbody>%s</tbody></table></html>";
     public static final String m_strHTMLDouble_Extra =
-
-            "<html><style>" +
-                    " .tbl { border:0px solid #C0C0C0; border-collapse:collapse; border-spacing:0px; padding:0px; background:#CCFFCC;}" +
-                    " .tbl th { border:1px solid #C0C0C0; padding:5px; background:#FFFF66;}" +
-                    " .tbl td {border:1px solid #C0C0C0; padding:5px; text-align: right;}" +
-                    " .tbl tr.total {border-top:2px solid black; background:#CCFFFF;}" +
-                    " .tbl td.up {border-top:2px solid black; padding:5px; font-weight: bold; text-align: right;}" +
-                    "</style>" +
-                    "<table class=\"tbl\"><thead><tr><th colspan=\"16\">%s</th></tr><tr><th>Category</th><th>DRs</th><th>Avg 1st</th><th>Avg 2nd</th><th>Avg</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th></tr></thead><tbody>%s</tbody></table</html>";
+            "<table class=\"tbl\"><thead><tr><th colspan=\"16\">%s</th></tr><tr><th>Category</th><th>DRs</th><th>Avg 1st</th><th>Avg 2nd</th><th>Avg</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th></tr></thead><tbody>%s</tbody></table></html>";
 
     private final int m_MaxInstancesPerSeries = 99;
     private int m_iCurrentSeries = 0, m_iInstancesInCurrentSeries = m_MaxInstancesPerSeries;
@@ -649,11 +615,11 @@ public class ASLDiceBot extends AbstractBuildable
             // If this was a TH roll, add a reminder for hit location for stupid people
             if(strCategory.equals(("TH"))){
                 if(l_iColoredDie < l_iWhiteDie){
-                    l_strOutput += " <Turret>";
+                    l_strOutput += " &lt;Turret&gt;";
                 }
                 else
                 {
-                    l_strOutput += "<Hull>";
+                    l_strOutput += "&lt;Hull&gt;";
                 }
             }
 
@@ -807,9 +773,9 @@ public class ASLDiceBot extends AbstractBuildable
         }
 
         if (m_bShowExtraDiceStats) {
-            OutputString(String.format(m_strHTMLSingle_Extra, GetPlayer() + "'s drs today", l_objStringBuilder.toString()));
+            OutputString(String.format("!!" + m_strHTMLSingle_Extra, GetPlayer() + "'s drs today", l_objStringBuilder.toString()));
         } else {
-            OutputString(String.format(m_strHTMLSingle_Default, GetPlayer() + "'s drs today", l_objStringBuilder.toString()));
+            OutputString(String.format("!!" + m_strHTMLSingle, GetPlayer() + "'s drs today", l_objStringBuilder.toString()));
         }
 
         l_objStringBuilder = new StringBuilder();
@@ -907,9 +873,9 @@ public class ASLDiceBot extends AbstractBuildable
         }
 
         if (m_bShowExtraDiceStats) {
-            OutputString(String.format(m_strHTMLDouble_Extra, GetPlayer() + "'s DRs today", l_objStringBuilder.toString()));
+            OutputString(String.format("!!" + m_strHTMLDouble_Extra, GetPlayer() + "'s DRs today", l_objStringBuilder.toString()));
         } else {
-            OutputString(String.format(m_strHTMLDouble_Default, GetPlayer() + "'s DRs today", l_objStringBuilder.toString()));
+            OutputString(String.format("!!" + m_strHTMLDouble,  GetPlayer() + "'s DRs today",    l_objStringBuilder.toString()));
         }
     }
 }
