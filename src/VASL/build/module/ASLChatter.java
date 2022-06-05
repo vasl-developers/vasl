@@ -95,7 +95,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
   private Color m_clrBackground;
   private String m_clrColoredDiceColor;
   private Color m_clrDustColoredDiceColor;
-  private Color m_clrSingleDieColor;
+  private String m_clrSingleDieColor;
   private JButton m_btnStats;
   private JButton m_btnDR;
   private JButton m_btnIFT;
@@ -140,7 +140,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
         m_clrBackground = Color.white;
         m_clrDustColoredDiceColor = Color.magenta;
-        m_clrSingleDieColor = Color.RED;
+        //m_clrSingleDieColor = Color.RED;
         conversationPane.addKeyListener(new KeyListener()
         {
             public void keyTyped(KeyEvent e) {
@@ -405,7 +405,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         if ((l_iUserStart != -1) && (l_iUserEnd != -1)) {
             lar_strRetValue[0] = strVal.substring(0, l_iUserStart + 1);
             lar_strRetValue[1] = strVal.substring(l_iUserStart + 1, l_iUserEnd);
-            lar_strRetValue[2] = strVal.substring(l_iUserEnd);
+            lar_strRetValue[2] = strVal.substring(l_iUserEnd+1);
         }
 
         return lar_strRetValue;
@@ -503,9 +503,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             String[] lar_strParts = FindUser(strMsg);
 
             if ((!lar_strParts[1].isEmpty()) && (!lar_strParts[2].isEmpty()))  {
-                msgpartCategory = ""; msgpartCdice=""; msgpartWdice=""; msgpartSAN="";msgpartRest="";
-                msgpartUser = lar_strParts[0] + " " + lar_strParts[1];
-                msgpartSpecial = lar_strParts[2];
+                msgpartCategory = ""; msgpartCdice=""; msgpartWdice=""; msgpartSAN="";msgpartRest=""; msgpartDiceImage="";
+                msgpartUser = lar_strParts[1];
+                msgpartRest = lar_strParts[2];
             }
         }
         catch (Exception ex) {
@@ -824,7 +824,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     {
                                         msgpartCdice = (l_strDice);
 
-                                        PaintIcon(l_iDice, DiceType.COLORED,true);
+                                        PaintIcon(l_iDice, DiceType.SINGLE,true);
                                     }
                                     else
                                     {
@@ -1080,7 +1080,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                 } else if (diceType == DiceType.OTHER_DUST) {
                     //newfile = getotherdicefile(l_iDice);
                 } else if (diceType == DiceType.SINGLE) {
-                    //newfile = getsingledicefile(l_iDice);
+                    dicefile = getsingleDiefile(l_iDice);
                 } else {   // DiceType.WHITE
                     dicefile = getwhitedicefile(l_iDice);
                 }
@@ -1117,22 +1117,37 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
         return null;  //TODO NEED TO HANDLE
     }
-
-    private void RebuildSingleDieFaces()
+    private String getsingleDiefile(int singledieroll)
     {
-        BufferedImage l_objImage = null;
-
-        try
-        {
-            for (int l_i = 0; l_i < 6; l_i++)
-            {
-                l_objImage = Op.load(String.format(m_strFileNameFormat, String.valueOf(l_i + 1), "W")).getImage(null);
-                mar_objSingleDieIcon[l_i] = new ImageIcon(ColorChanger.changeColor(l_objImage, Color.white, m_clrSingleDieColor));
-            }
+        try {
+            String dicecolor = getsingleDiecolor();
+            return String.format(m_strFileNameFormat, String.valueOf(singledieroll), dicecolor);
         }
         catch (Exception ex)
         {
             ex.printStackTrace();
+        }
+        return null;  //TODO NEED TO HANDLE
+    }
+        private String getsingleDiecolor(){
+        if (m_clrSingleDieColor.equals("Black")) {
+            return "B";
+        } else if (m_clrSingleDieColor.equals("Blue")){
+            return "DB";
+        } else if (m_clrSingleDieColor.equals("Red")){
+                return "R";
+        } else if (m_clrSingleDieColor.equals("Green")){
+            return "G";
+        } else if (m_clrSingleDieColor.equals("Yellow")){
+            return "Y";
+        } else if (m_clrSingleDieColor.equals("Cyan")){
+            return "C";
+        } else if (m_clrSingleDieColor.equals("Orange")) {
+            return "O";
+        } else if (m_clrSingleDieColor.equals("Purple")){
+            return "P";
+        } else {
+            return "B";
         }
     }
     private String getcoloredDicecolor(){
@@ -1141,7 +1156,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         } else if (m_clrColoredDiceColor.equals("Blue")){
             return "DB";
         } else if (m_clrColoredDiceColor.equals("Red")){
-                return "R";
+            return "R";
         } else if (m_clrColoredDiceColor.equals("Green")){
             return "G";
         } else if (m_clrColoredDiceColor.equals("Yellow")){
@@ -1244,6 +1259,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             public void propertyChange(PropertyChangeEvent evt) {
                 setFont((Font) evt.getNewValue());
                 makeStyleSheet((Font) evt.getNewValue());
+                makeASLStyleSheet((Font) evt.getNewValue());
                 send(" ");
                 send("- Chatter font changed");
                 send(" ");
@@ -1424,10 +1440,10 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
 
         // single die pref
-        ColorConfigurer l_objColoredDieColor = null;
-        ColorConfigurer l_objColoredDieColor_Exist = (ColorConfigurer)l_objModulePrefs.getOption(SINGLE_DIE_COLOR);
+        StringEnumConfigurer l_objColoredDieColor = null;
+        StringEnumConfigurer l_objColoredDieColor_Exist = (StringEnumConfigurer)l_objModulePrefs.getOption(SINGLE_DIE_COLOR);
         if (l_objColoredDieColor_Exist == null) {
-            l_objColoredDieColor = new ColorConfigurer(SINGLE_DIE_COLOR, "Single die color:  ", Color.RED); //$NON-NLS-1$
+            l_objColoredDieColor = new StringEnumConfigurer(SINGLE_DIE_COLOR, "Single die color:  ", new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange"} );
             l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), l_objColoredDieColor); //$NON-NLS-1$
         } else {
             l_objColoredDieColor = l_objColoredDieColor_Exist;
@@ -1435,10 +1451,12 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         l_objColoredDieColor.addPropertyChangeListener(new PropertyChangeListener()
         {
           public void propertyChange(PropertyChangeEvent e) {
-            m_clrSingleDieColor = (Color) e.getNewValue();
-            RebuildSingleDieFaces();
+            m_clrSingleDieColor = (String) e.getNewValue();
+            //RebuildSingleDieFaces();
           }
         });
+        m_clrSingleDieColor = l_objModulePrefs.getStoredValue("singleDieColor");
+
         // third die pref
         ColorConfigurer l_objThirdDieColor = null;
         ColorConfigurer l_objThirdDieColor_Exist = (ColorConfigurer)l_objModulePrefs.getOption(THIRD_DIE_COLOR);
