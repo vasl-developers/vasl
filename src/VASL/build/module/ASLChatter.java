@@ -95,6 +95,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
   private Color m_clrBackground;
   private String m_clrColoredDiceColor;
   private Color m_clrDustColoredDiceColor;
+  private Color myASLChat;
   private String m_clrSingleDieColor;
   private JButton m_btnStats;
   private JButton m_btnDR;
@@ -372,7 +373,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             }
 
             this.addStyle(".msgcategory", f, Color.black, "bold", 0);
-            this.addStyle(".msguser", f, gameMsg, "bold", 0);
+            this.addStyle(".msguser", f, gameMsg4, "bold", 0);
             this.addStyle(".msgspecial", f, gameMsg, "bold", 0);
 
             style.addRule(
@@ -503,7 +504,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             String[] lar_strParts = FindUser(strMsg);
 
             if ((!lar_strParts[1].isEmpty()) && (!lar_strParts[2].isEmpty()))  {
-                msgpartCategory = ""; msgpartCdice=""; msgpartWdice=""; msgpartSAN="";msgpartRest=""; msgpartDiceImage="";
+                msgpartCategory = ""; msgpartCdice=""; msgpartWdice=""; msgpartSAN="";msgpartRest=""; msgpartDiceImage="";msgpartSpecial="";
                 msgpartUser = lar_strParts[1];
                 msgpartRest = lar_strParts[2];
             }
@@ -823,7 +824,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     if (m_bUseDiceImages)
                                     {
                                         msgpartCdice = (l_strDice);
-
+                                        msgpartWdice="-1";
                                         PaintIcon(l_iDice, DiceType.SINGLE,true);
                                     }
                                     else
@@ -1335,17 +1336,17 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         ColorConfigurer l_objMyChatColor = null;
         ColorConfigurer l_objMyChatColor_Exist = (ColorConfigurer)l_objModulePrefs.getOption(MY_CHAT_COLOR);
         if (l_objMyChatColor_Exist == null) {
-            l_objMyChatColor = new ColorConfigurer(MY_CHAT_COLOR, Resources.getString("Chatter.my_text_preference"), Color.gray); //$NON-NLS-1$
+            l_objMyChatColor = new ColorConfigurer(MY_CHAT_COLOR, "My Name and Text Messages" , Color.gray); //$NON-NLS-1$
             l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), l_objMyChatColor); //$NON-NLS-1$
         } else {
             l_objMyChatColor = l_objMyChatColor_Exist;
         }
-        myChat = (Color) l_objModulePrefs.getValue(MY_CHAT_COLOR);
+        gameMsg4 = (Color) l_objModulePrefs.getValue(MY_CHAT_COLOR);
         makeStyleSheet((Font)null);
         l_objMyChatColor.addPropertyChangeListener(new PropertyChangeListener()
         {
             public void propertyChange(PropertyChangeEvent e) {
-                myChat = (Color) e.getNewValue();
+                gameMsg4 = (Color) e.getNewValue();
                 makeStyleSheet((Font)null);
             }
         });
