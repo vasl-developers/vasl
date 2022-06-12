@@ -47,11 +47,8 @@ import VASSAL.build.module.Map;
 import VASSAL.build.module.documentation.HelpFile;
 import VASSAL.build.module.map.Drawable;
 import VASSAL.command.Command;
-import VASSAL.configure.ColorConfigurer;
-import VASSAL.configure.FontConfigurer;
-import VASSAL.configure.HotKeyConfigurer;
-import VASSAL.configure.LongConfigurer;
-import VASSAL.configure.StringConfigurer;
+import VASSAL.configure.*;
+import VASSAL.i18n.Resources;
 import VASSAL.preferences.Prefs;
 import VASSAL.tools.imageop.Op;
 import VASSAL.tools.swing.SwingUtils;
@@ -235,8 +232,8 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
     private Color m_clrDRPanelCaptionFontColor = Color.black;
     private Font m_objDRCategoryFont = null;
     private Color m_clrDRCategoryFontColor = Color.black;
-    private Color m_clrColoredDiceColor = Color.yellow;
-    private Color m_clrSingleDieColor = Color.red;
+    private String m_clrColoredDiceColor = "Black";
+    private String m_clrSingleDieColor = "Red";
     private Color m_clrFriendlyDRPanel = new Color(235, 244, 251);
     private Color m_clrFriendlyDRCaption = new Color(173, 210, 241);
     private Color m_clrEnemyDRPanel = new Color(253, 239, 230);
@@ -434,38 +431,40 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
         l_objEnemyDRCaptionColor.fireUpdate();
 
         // **************************************************************************************
-        ColorConfigurer l_objColoredDiceColor = (ColorConfigurer)l_objModulePrefs.getOption(COLORED_DICE_COLOR_OVER_MAP);
+        StringEnumConfigurer l_objColoredDiceColor = (StringEnumConfigurer)l_objModulePrefs.getOption(COLORED_DICE_COLOR_OVER_MAP);
 
         if (l_objColoredDiceColor == null)
         {
-            l_objColoredDiceColor = new ColorConfigurer(COLORED_DICE_COLOR_OVER_MAP, "Colored die color:  ", Color.YELLOW); //$NON-NLS-1$
+            l_objColoredDiceColor = new StringEnumConfigurer(COLORED_DICE_COLOR_OVER_MAP, "Colored die color:  ", new String[] {"Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange"} );
             l_objModulePrefs.addOption(PREFERENCE_TAB, l_objColoredDiceColor); //$NON-NLS-1$
         }
 
         l_objColoredDiceColor.addPropertyChangeListener(e -> {
-            m_clrColoredDiceColor = (Color) e.getNewValue();
+            m_clrColoredDiceColor = (String) e.getNewValue();
             RebuildColoredDiceFaces();
             FireNeedRepaint();
         });
 
         l_objColoredDiceColor.fireUpdate();
+        //m_clrColoredDiceColor = l_objModulePrefs.getStoredValue("coloredDiceColor");
 
         // **************************************************************************************
-        ColorConfigurer l_objColoredDieColor = (ColorConfigurer)l_objModulePrefs.getOption(SINGLE_DIE_COLOR_OVER_MAP);
+        StringEnumConfigurer l_objColoredDieColor = (StringEnumConfigurer)l_objModulePrefs.getOption(SINGLE_DIE_COLOR_OVER_MAP);
 
         if (l_objColoredDieColor == null)
         {
-            l_objColoredDieColor = new ColorConfigurer(SINGLE_DIE_COLOR_OVER_MAP, "Single die color:  ", Color.RED); //$NON-NLS-1$
+            l_objColoredDieColor = new StringEnumConfigurer(SINGLE_DIE_COLOR_OVER_MAP, "Single die color:  ", new String[] {"Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange"} );
             l_objModulePrefs.addOption(PREFERENCE_TAB, l_objColoredDieColor); //$NON-NLS-1$
         }
 
         l_objColoredDieColor.addPropertyChangeListener(e -> {
-            m_clrSingleDieColor = (Color) e.getNewValue();
+            m_clrSingleDieColor = (String) e.getNewValue();
             RebuildSingleDieFaces();
             FireNeedRepaint();
         });
 
         l_objColoredDieColor.fireUpdate();
+        //m_clrSingleDieColor = l_objModulePrefs.getStoredValue("singleDieColor");
 
         // **************************************************************************************
         LongConfigurer l_objDRSecondsLifeNum = (LongConfigurer)l_objModulePrefs.getOption(DR_SECONDS_LIFE);
@@ -601,7 +600,25 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
             ex.printStackTrace();
         }
     }
-
+    private Color getDieColor(String colorname){
+    if  (colorname.equals("Blue")){
+        return Color.BLUE;
+    } else if (colorname.equals("Red")){
+        return Color.RED;
+    } else if (colorname.equals("Green")){
+        return Color.GREEN;
+    } else if (colorname.equals("Yellow")){
+        return Color.YELLOW;
+    } else if (colorname.equals("Cyan")){
+        return Color.CYAN;
+    } else if (colorname.equals("Orange")) {
+        return Color.ORANGE;
+    } else if (colorname.equals("Purple")){
+        return Color.MAGENTA;
+    } else {
+        return Color.RED;
+    }
+}
     private void RebuildColoredDiceFaces()
     {
         BufferedImage l_objImage = null;
@@ -611,7 +628,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
             for (int l_i = 0; l_i < 6; l_i++)
             {
                 l_objImage = Op.load(String.format(DICE_FILE_NAME_FORMAT, String.valueOf(l_i + 1))).getImage(null);
-                mar_objColoredDieImage[l_i] = ColorChanger.changeColor(l_objImage, Color.white, m_clrColoredDiceColor);
+                mar_objColoredDieImage[l_i] = ColorChanger.changeColor(l_objImage, Color.white, getDieColor(m_clrColoredDiceColor));
             }
         }
         catch (Exception ex)
@@ -629,7 +646,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
             for (int l_i = 0; l_i < 6; l_i++)
             {
                 l_objImage = Op.load(String.format(DICE_FILE_NAME_FORMAT, String.valueOf(l_i + 1))).getImage(null);
-                mar_objSingleDieImage[l_i] = ColorChanger.changeColor(l_objImage, Color.white, m_clrSingleDieColor);
+                mar_objSingleDieImage[l_i] = ColorChanger.changeColor(l_objImage, Color.white, getDieColor(m_clrSingleDieColor));
             }
         }
         catch (Exception ex)
@@ -732,6 +749,16 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
 
     synchronized public void PushDR(String strCategory, String strUser, String strSAN, int iFirstDie, int iSecondDie)
     {
+        // add hit location info
+        if(strCategory.trim().equals("TH")){
+            if (iFirstDie < iSecondDie)
+            {
+                strCategory += " (T)";
+            } else
+            {
+                strCategory += " (H)";
+            }
+    }
         mar_DRH.add(0, new DiceRollHandler(++m_lCount, m_lClock, strCategory, strUser, strSAN, iFirstDie, iSecondDie));
 
         if (mar_DRH.size() > getMaxNumEntries())
