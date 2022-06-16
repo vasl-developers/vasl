@@ -44,9 +44,7 @@ import java.awt.Insets;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
@@ -94,7 +92,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
   private Color m_clrBackground;
   private String m_clrColoredDiceColor;
-  private Color m_clrDustColoredDiceColor;
+  private String m_clrDustColoredDiceColor;
   private Color myASLChat;
   private String m_clrSingleDieColor;
   private JButton m_btnStats;
@@ -140,7 +138,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         super();
 
         m_clrBackground = Color.white;
-        m_clrDustColoredDiceColor = Color.magenta;
+        //m_clrDustColoredDiceColor = Color.magenta;
         //m_clrSingleDieColor = Color.RED;
         conversationPane.addKeyListener(new KeyListener()
         {
@@ -760,13 +758,14 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                         msgpartCdice = Integer.toString(l_iFirstDice);
                                         msgpartWdice= Integer.toString(l_iSecondDice);
                                     }
-                                    msgpartUser = "  ...  " + l_strUser;
+                                    msgpartUser = l_strUser;
                                     msgpartSpecial = l_strSpecialMessages;
 
                                     if (m_bShowDiceStats) {
                                         msgpartRest = l_strRestOfMsg;
                                     }
                                     FireDiceRoll();
+                                    msgpartUser = "  ...  " + msgpartUser;
                                 }
                                 else {
 
@@ -1434,11 +1433,19 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         coloredDiceColor.addPropertyChangeListener(new PropertyChangeListener()
         {
             public void propertyChange(PropertyChangeEvent e) {
+
                 m_clrColoredDiceColor = (String) e.getNewValue();
+                if (m_clrColoredDiceColor==null){
+                    m_clrColoredDiceColor = "Red";
+                }
             }
         });
         m_clrColoredDiceColor = l_objModulePrefs.getStoredValue("coloredDiceColor");
-
+        final Set<String> COLORARRAY = new HashSet<String>(Arrays.asList(
+                new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange"}));
+        if (!COLORARRAY.contains(m_clrColoredDiceColor)){
+            m_clrColoredDiceColor = "Red";
+        }
 
         // single die pref
         StringEnumConfigurer l_objColoredDieColor = null;
@@ -1453,16 +1460,20 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         {
           public void propertyChange(PropertyChangeEvent e) {
             m_clrSingleDieColor = (String) e.getNewValue();
-            //RebuildSingleDieFaces();
+            if (m_clrSingleDieColor==null){
+                  m_clrSingleDieColor = "Red";
+            }
           }
         });
         m_clrSingleDieColor = l_objModulePrefs.getStoredValue("singleDieColor");
-
+        if (!COLORARRAY.contains(m_clrSingleDieColor)){
+            m_clrSingleDieColor = "Red";
+        }
         // third die pref
-        ColorConfigurer l_objThirdDieColor = null;
-        ColorConfigurer l_objThirdDieColor_Exist = (ColorConfigurer)l_objModulePrefs.getOption(THIRD_DIE_COLOR);
+        StringEnumConfigurer l_objThirdDieColor = null;
+        StringEnumConfigurer l_objThirdDieColor_Exist = (StringEnumConfigurer)l_objModulePrefs.getOption(THIRD_DIE_COLOR);
         if (l_objThirdDieColor == null) {
-          l_objThirdDieColor = new ColorConfigurer(THIRD_DIE_COLOR, "Third die color:  ", Color.GRAY); //$NON-NLS-1$
+          l_objThirdDieColor = new StringEnumConfigurer(THIRD_DIE_COLOR, "Third die color:  ", new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange"} );
           l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), l_objThirdDieColor); //$NON-NLS-1$
         } else {
           l_objThirdDieColor = l_objThirdDieColor_Exist;
@@ -1470,11 +1481,18 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         l_objThirdDieColor.addPropertyChangeListener(new PropertyChangeListener()
         {
           public void propertyChange(PropertyChangeEvent e) {
-            m_clrDustColoredDiceColor = (Color) e.getNewValue();
-            //getcoloredDicefile();
+            m_clrDustColoredDiceColor = (String) e.getNewValue();
+              if (m_clrDustColoredDiceColor==null){
+                  m_clrDustColoredDiceColor = "Red";
+              }
           }
         });
+        m_clrDustColoredDiceColor = l_objModulePrefs.getStoredValue("thirdDieColor");
+        if (!COLORARRAY.contains(m_clrDustColoredDiceColor)){
+            m_clrDustColoredDiceColor = "Red";
+        }
         l_objThirdDieColor.fireUpdate();
+
         // rule set pref
         StringEnumConfigurer l_objSpecialDiceRollNotificationLevel = (StringEnumConfigurer)l_objModulePrefs.getOption(NOTIFICATION_LEVEL);
         final String[] l_DROptions = {

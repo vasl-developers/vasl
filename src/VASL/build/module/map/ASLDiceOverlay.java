@@ -19,6 +19,7 @@
 package VASL.build.module.map;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,8 +31,7 @@ import java.awt.image.BufferedImage;
 import java.awt.geom.AffineTransform;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 
 import VASL.build.module.ASLChatter;
 import VASL.build.module.ASLChatter.ChatterListener;
@@ -232,7 +232,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
     private Color m_clrDRPanelCaptionFontColor = Color.black;
     private Font m_objDRCategoryFont = null;
     private Color m_clrDRCategoryFontColor = Color.black;
-    private String m_clrColoredDiceColor = "Black";
+    private String m_clrColoredDiceColor = "Red";
     private String m_clrSingleDieColor = "Red";
     private Color m_clrFriendlyDRPanel = new Color(235, 244, 251);
     private Color m_clrFriendlyDRCaption = new Color(173, 210, 241);
@@ -302,11 +302,14 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
             l_objModulePrefs.addOption(PREFERENCE_TAB, l_objCaptionFontConfigurer); //$NON-NLS-1$
         }
 
-        l_objCaptionFontConfigurer.addPropertyChangeListener(e -> {
-            m_objDRPanelCaptionFont = (Font) e.getNewValue();
-            RebuildFriendlyPanel();
-            RebuildEnemyPanel();
-            FireNeedRepaint();
+        l_objCaptionFontConfigurer.addPropertyChangeListener(new PropertyChangeListener()
+        {
+            public void propertyChange(PropertyChangeEvent evt) {
+                m_objDRPanelCaptionFont = (Font) evt.getNewValue();
+                RebuildFriendlyPanel();
+                RebuildEnemyPanel();
+                FireNeedRepaint();
+            }
         });
 
         l_objCaptionFontConfigurer.fireUpdate();
@@ -341,6 +344,8 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
 
         l_objDRCategoryFontConfigurer.addPropertyChangeListener(e -> {
             m_objDRCategoryFont = (Font) e.getNewValue();
+            RebuildFriendlyPanel();
+            RebuildEnemyPanel();
             FireNeedRepaint();
         });
 
@@ -357,6 +362,8 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
 
         l_objDRCategoryFontColor.addPropertyChangeListener(e -> {
             m_clrDRCategoryFontColor = (Color) e.getNewValue();
+            RebuildFriendlyPanel();
+            RebuildEnemyPanel();
             FireNeedRepaint();
         });
 
@@ -441,10 +448,17 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
 
         l_objColoredDiceColor.addPropertyChangeListener(e -> {
             m_clrColoredDiceColor = (String) e.getNewValue();
+            if (m_clrColoredDiceColor==null){
+                m_clrColoredDiceColor="Red";
+            }
             RebuildColoredDiceFaces();
             FireNeedRepaint();
         });
-
+        final Set<String> COLORARRAY = new HashSet<String>(Arrays.asList(
+                new String[] {"Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange"}));
+        if (!COLORARRAY.contains(m_clrColoredDiceColor)){
+            m_clrColoredDiceColor = "Red";
+        }
         l_objColoredDiceColor.fireUpdate();
         //m_clrColoredDiceColor = l_objModulePrefs.getStoredValue("coloredDiceColor");
 
@@ -542,9 +556,9 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
             // caption
             l_objImage = ColorChanger.changeColor(Op.load(CAPTION_FILE_NAME).getImage(null), Color.red, m_clrFriendlyDRCaption);
 
-            if (m_iCaptionWidth == 0)
+            //if (m_iCaptionWidth == 0)
                 m_iCaptionWidth = l_objImage.getWidth();
-            if (m_iCaptionHeight == 0)
+            //if (m_iCaptionHeight == 0)
                 m_iCaptionHeight = l_objImage.getHeight();
 
             Graphics2D g = m_objFriendlyDRPanel.createGraphics();
