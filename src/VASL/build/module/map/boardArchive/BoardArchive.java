@@ -70,7 +70,6 @@ public class BoardArchive {
     // for legacy files null means they do not exist
     private DataFile dataFile;
     private ColorsFile colorsFile;
-    private ColorSSRFile colorSSRFile;
     private SSRControlsFile SSRControlsFile;
 
     /**
@@ -131,15 +130,6 @@ public class BoardArchive {
                 colorsFile = null;
             }
 
-            // read the legacy color SSR file
-            try (InputStream colorSSRFileStream = getInputStreamForArchiveFile(archive, colorSSRFileName)) {
-                colorSSRFile = new ColorSSRFile(colorSSRFileStream, archiveName);
-                // colorSSRFile.printAsXML();
-            } catch (Exception ignore) {
-                // bury
-                colorSSRFile = null;
-            }
-
             // read the SSR controls file
             try (InputStream SSRControlsFileStream = getInputStreamForArchiveFile(archive, SSRControlsFileName)) {
                 SSRControlsFile = new SSRControlsFile(SSRControlsFileStream, archiveName);
@@ -174,21 +164,10 @@ public class BoardArchive {
      * @return the set of color SSR rules
      */
     public LinkedHashMap<String, ColorSSRule> getColorSSRules() {
-
-        // get color SSR from legacy file if they exist and none in metadata
-        if(legacyBoard || !metadata.hasBoardSpecificColorSSR()){
-
-            // board color SSR replace the shared metadata color SSR
+            // ONLY use sharedBoardMetadata.xml in VASL as source
             LinkedHashMap<String, ColorSSRule> colorSSRules = new LinkedHashMap<String, ColorSSRule>();
             colorSSRules.putAll(sharedBoardMetadata.getColorSSRules());
-            if(colorSSRFile != null) {
-                colorSSRules.putAll(colorSSRFile.getColorSSRules());
-            }
             return colorSSRules;
-        }
-        else {
-            return metadata.getColorSSRules();
-        }
     }
 
     /**
