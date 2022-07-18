@@ -35,8 +35,8 @@ public class ColorsFile {
     private LinkedHashMap<String, BoardColor> colors = new LinkedHashMap<String, BoardColor>();
 
     public ColorsFile(InputStream overlaysFile, String archiveName) throws IOException{
-
-        final String COMMENT_CHARS = "//";
+        // commented out Mar 22 as part of board cleanup - removing OverlaySSRFile and ColorsSSRFile
+        /*final String COMMENT_CHARS = "//";
         Logger logger = LoggerFactory.getLogger(OverlaySSRFile.class);
 
         Scanner scanner = new Scanner(overlaysFile).useDelimiter("\n");
@@ -91,7 +91,7 @@ public class ColorsFile {
 
         // clean up
         scanner.close();
-        overlaysFile.close();
+        overlaysFile.close();*/
     }
 
     public LinkedHashMap<String, BoardColor> getColors(){ return colors;}
