@@ -97,6 +97,9 @@ public class ASLCommandEncoder extends VASSAL.build.module.BasicCommandEncoder i
     else if (type.startsWith(PlaceDM.ID)) {
       return new PlaceDM(type, inner);
     }
+    else if (type.startsWith(PlaceACQ.ID)) {
+      return new PlaceACQ(type, inner);
+    }
     else if (type.startsWith(Translate.ID)) {
       return new ASLTranslate(type,inner);
     }
