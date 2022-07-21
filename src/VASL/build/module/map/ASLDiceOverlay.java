@@ -458,7 +458,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
                 new String[] {"Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange"}));
         if (!COLORARRAY.contains(m_clrColoredDiceColor)){
             m_clrColoredDiceColor = "Red";
-        }
+            }
         l_objColoredDiceColor.fireUpdate();
         //m_clrColoredDiceColor = l_objModulePrefs.getStoredValue("coloredDiceColor");
 
