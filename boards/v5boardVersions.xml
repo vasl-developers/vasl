@@ -448,7 +448,7 @@
 		<boarddata name="FLP" version="1.0" versionDate="Jan 2022" description="" />
 		<boarddata name="ON" version="1.0" versionDate="Jan 2021" description="" />
 		<boarddata name="OtOBFP" version="1.0" versionDate="Mar 2020" description="" />
-		<boarddata name="SaF" version="6.1" versionDate="Jul 2022" description="" />
+		<boarddata name="SaF" version="6.2" versionDate="Jul 2022" description="" />
 	</otherBoards>
 
 </boardsMetadata>
