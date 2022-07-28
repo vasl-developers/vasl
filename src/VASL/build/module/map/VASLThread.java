@@ -206,10 +206,12 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                                     }
                                 }
                                 //Set the boundaries rectangle
+
                                 Rectangle ovrMinbounds = new Rectangle(ovrRec.x + minx, ovrRec.y + miny, maxx - minx, maxy - miny);
                                 // Need to adjust y value when board cropped by coordinates
                                 Rectangle CropAdjust = b.getCropBounds();
                                 ovrMinbounds.y -= CropAdjust.y;
+                                ovrMinbounds.x -= CropAdjust.x;
                                 //Now check if need to flip
                                 if (b.isReversed()) {
                                     // flip moves x,y point to bottom right, subtracting width and height resets it to top left
