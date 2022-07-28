@@ -2176,9 +2176,9 @@ public class Map  {
                     else {
                         // source and target level must be within the smoke elevation
                         if (status.source.getAbsoluteHeight() >= s.getLocation().getAbsoluteHeight() &&
-                                status.source.getAbsoluteHeight() < s.getLocation().getAbsoluteHeight() + s.getHeight() &&
+                                status.source.getAbsoluteHeight() <= s.getLocation().getAbsoluteHeight() + s.getHeight() &&
                                 status.target.getAbsoluteHeight() >= s.getLocation().getAbsoluteHeight() &&
-                                status.target.getAbsoluteHeight() < s.getLocation().getAbsoluteHeight() + s.getHeight()){
+                                status.target.getAbsoluteHeight() <= s.getLocation().getAbsoluteHeight() + s.getHeight()){
 
                             hindrance += s.getHindrance();
                         }
