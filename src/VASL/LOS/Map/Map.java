@@ -4530,10 +4530,11 @@ public class Map  {
         // make sure column start/end halfhexes align - added by DR
 
         if((upperLeft.getColumnNumber()>0 || upperLeft.getRowNumber() >0) &&   // inserting a board in second or greater column
-                ((this.cropconfiguration.contains("Normal") && upperLeft.getColumnNumber() % 2 == 0 && !map.cropconfiguration.contains("Normal")) ||  // previous board has full-height "Normal" config in final col; new board must match
-                (this.cropconfiguration.contains("Normal") && upperLeft.getColumnNumber() % 2 != 0 && !map.cropconfiguration.contains("TopLeftHalfHeight")) ||       // previous board has half-height "TopLeftHalfHeight" config in final col; new board must match
-                (this.cropconfiguration.contains("TopLeftHalfHeight") && upperLeft.getColumnNumber() % 2 ==0  && !map.cropconfiguration.contains("TopLeftHalfHeight")) ||  // previous board has half-height "TopLeftHalfHeight" config in final col; new board must match
-                (this.cropconfiguration.contains("TopLeftHalfHeight") && upperLeft.getColumnNumber() % 2 !=0  && !map.cropconfiguration.contains("Normal"))  ) ) {  // previous board has full-height "Normal" config in final col; new board must match
+                ((this.cropconfiguration.contains("Normal") && upperLeft.getColumnNumber() % 2 == 0 && map.cropconfiguration.contains("HalfHeight"))  ||  // previous board has full-height "Normal" config in final col/row; new board must match
+                (this.cropconfiguration.contains("Normal") && upperLeft.getColumnNumber() % 2 != 0 && !map.cropconfiguration.contains("HalfHeight")) ||   // previous board has full-height "Normal" config in final col/row; new board must match
+                (this.cropconfiguration.contains("TopLeftHalfHeight") && upperLeft.getColumnNumber() % 2 ==0  && !map.cropconfiguration.contains("HalfHeight")) ||  // previous board has half-height "TopLeftHalfHeight" config in final col/row; new board must match
+                (this.cropconfiguration.contains("TopLeftHalfHeight") && upperLeft.getColumnNumber() % 2 !=0  && map.cropconfiguration.contains("HalfHeight"))      // previous board has half-height "TopLeftHalfHeight" config in final col/row; new board must match
+                ) ) {  // previous board has full-height "Normal" config in final col; new board must match
 
             return false;
         }
