@@ -24,7 +24,7 @@
 	v6.4 Mar 2018 update version for lightwoods transform (ATC)
 
 -->
-<boardMetadata name="08" version="6.6" versionDate="Mar 2022" author="TR" boardImageFileName="bd08.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="08" version="6.7" versionDate="Aug 2022" author="TR" boardImageFileName="bd08.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -117,27 +117,27 @@
 			y - y coordinate of overlay upper left
 		-->		
 
-		<overlaySSRule name="SSO_J36" image="8_SSO_J36.gif" x="431" y="172" />
-		<overlaySSRule name="SSO_J39" image="8_SSO_J39.gif" x="36" y="28" />
-		<overlaySSRule name="SSO_SP132" image="8_SSO_SP132.gif" x="410" y="200" />
-		<overlaySSRule name="SSO_FE149" image="8_SSO_FE149.gif" x="88" y="325" />
+		<overlaySSRule name="SSO_J36" image="08_SSO_J36.gif" x="431" y="172" />
+		<overlaySSRule name="SSO_J39" image="08_SSO_J39.gif" x="36" y="28" />
+		<overlaySSRule name="SSO_SP132" image="08_SSO_SP132.gif" x="410" y="200" />
+		<overlaySSRule name="SSO_FE149" image="08_SSO_FE149.gif" x="88" y="325" />
 		<overlaySSRule name="BSO_08_BSOCW" image="BSO_08_BSOCW.gif" x="76" y="1" />
-		<overlaySSRule name="8_BSO_NoIsland" image="8_NoIsland.gif" x="1570" y="262" />
-		<overlaySSRule name="8_BSO_1SideWater" image="8_Hexrow1SideToWater.gif" x="1" y="1" />
-		<overlaySSRule name="8_BSO_10SideWater" image="8_Hexrow10SideToWater.gif" x="1" y="214" />
-		<overlaySSRule name="DenseJungle" image="8_DenseJungle.gif" x="191" y="1" />
-		<overlaySSRule name="NoWoodsRoads" image="8_NoWoodsRoads.gif" x="535" y="26" />
-		<overlaySSRule name="RoadsToPaths" image="8_WoodsRoadToPath.gif" x="531" y="26" />
-		<overlaySSRule name="NoWalls" image="8_NoWalls.gif" x="14" y="1" />
-		<overlaySSRule name="WallsToOG" image="8_NoWalls.gif" x="14" y="1" />
-		<overlaySSRule name="WallsToBocage" image="8_Walls2Bocage.gif" x="14" y="1" />
-		<overlaySSRule name="HedgesToBocage" image="8_Hedges2Bocage.gif" x="373" y="92" />
-		<overlaySSRule name="NoCliffs" image="8_NoCliffs.gif" x="14" y="214" />
-		<overlaySSRule name="OrchardsToShellholes" image="8_Orch2Shell.gif" x="142" y="1" />
-		<overlaySSRule name="OrchardsToCrags" image="8_Orch2Crag.gif" x="148" y="6" />
-		<overlaySSRule name="PalmTrees" image="8_Orch2Palm.gif" x="146" y="1" />
-		<overlaySSRule name="NoRoads" image="8_NoRoads.gif" x="87" y="1" />
-		<overlaySSRule name="LightWoods" image="8_LightWoods.gif" x="0" y="0" />
+		<overlaySSRule name="8_BSO_NoIsland" image="08_NoIsland.gif" x="1570" y="262" />
+		<overlaySSRule name="8_BSO_1SideWater" image="08_Hexrow1SideToWater.gif" x="1" y="1" />
+		<overlaySSRule name="8_BSO_10SideWater" image="08_Hexrow10SideToWater.gif" x="1" y="214" />
+		<overlaySSRule name="DenseJungle" image="08_DenseJungle.gif" x="191" y="1" />
+		<overlaySSRule name="NoWoodsRoads" image="08_NoWoodsRoads.gif" x="535" y="26" />
+		<overlaySSRule name="RoadsToPaths" image="08_WoodsRoadToPath.gif" x="531" y="26" />
+		<overlaySSRule name="NoWalls" image="08_NoWalls.gif" x="14" y="1" />
+		<overlaySSRule name="WallsToOG" image="08_NoWalls.gif" x="14" y="1" />
+		<overlaySSRule name="WallsToBocage" image="08_Walls2Bocage.gif" x="14" y="1" />
+		<overlaySSRule name="HedgesToBocage" image="08_Hedges2Bocage.gif" x="373" y="92" />
+		<overlaySSRule name="NoCliffs" image="08_NoCliffs.gif" x="14" y="214" />
+		<overlaySSRule name="OrchardsToShellholes" image="08_Orch2Shell.gif" x="142" y="1" />
+		<overlaySSRule name="OrchardsToCrags" image="08_Orch2Crag.gif" x="148" y="6" />
+		<overlaySSRule name="PalmTrees" image="08_Orch2Palm.gif" x="146" y="1" />
+		<overlaySSRule name="NoRoads" image="08_NoRoads.gif" x="87" y="1" />
+		<overlaySSRule name="LightWoods" image="08_LightWoods.gif" x="0" y="0" />
 		
 	</overlaySSRules>
 	

@@ -18,7 +18,7 @@
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
 -->
-<boardMetadata name="06" version="6.2" versionDate="Feb 2021" author="TR" boardImageFileName="bd06.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="06" version="6.3" versionDate="Aug 2022" author="TR" boardImageFileName="bd06.gif" hasHills="FALSE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -79,19 +79,19 @@
 			y - y coordinate of overlay upper left
 		-->		
 
-		<overlaySSRule name="BSO_6_OnlyChateauIsStone" image="BSO_6_OnlyChateauIsStone.gif" x="493" y="208" />
-		<overlaySSRule name="SSO_6_A27" image="SSO_6_A27.gif" x="562" y="63" />
-		<overlaySSRule name="SSO_6_A64" image="SSO_6_A64.gif" x="545" y="208" />
-		<overlaySSRule name="SSO_6_U" image="SSO_6_U.gif" x="545" y="208" />
-		<overlaySSRule name="SSO_6_ASLUG2pt1" image="SSO_6_ASLUG2pt1.gif" x="1" y="1" />
-		<overlaySSRule name="DenseJungle" image="6_DenseJungle.gif" x="1" y="1" />
-		<overlaySSRule name="LightWoods" image="6_LightWoods.gif" x="1" y="1" />
-		<overlaySSRule name="OrchardsToCrags" image="6_Orch2Crag.gif" x="146" y="208" />
-		<overlaySSRule name="OrchardsToShellholes" image="6_Orch2Shell.gif" x="140" y="203" />
-		<overlaySSRule name="PalmTrees" image="6_PalmTrees.gif" x="146" y="205" />
-		<overlaySSRule name="WallsToBocage" image="6_Walls2Bocage.gif" x="125" y="1" />
-		<overlaySSRule name="HedgesToBocage" image="6_Hedges2Bocage.gif" x="203" y="26" />
-		<overlaySSRule name="NoRoads" image="6_NoRoads.gif" x="1" y="1" />
+		<overlaySSRule name="BSO_6_OnlyChateauIsStone" image="BSO_06_OnlyChateauIsStone.gif" x="493" y="208" />
+		<overlaySSRule name="SSO_6_A27" image="SSO_06_A27.gif" x="562" y="63" />
+		<overlaySSRule name="SSO_6_A64" image="SSO_06_A64.gif" x="545" y="208" />
+		<overlaySSRule name="SSO_6_U" image="SSO_06_U.gif" x="545" y="208" />
+		<overlaySSRule name="SSO_6_ASLUG2pt1" image="SSO_06_ASLUG2pt1.gif" x="1" y="1" />
+		<overlaySSRule name="DenseJungle" image="06_DenseJungle.gif" x="1" y="1" />
+		<overlaySSRule name="LightWoods" image="06_LightWoods.gif" x="1" y="1" />
+		<overlaySSRule name="OrchardsToCrags" image="06_Orch2Crag.gif" x="146" y="208" />
+		<overlaySSRule name="OrchardsToShellholes" image="06_Orch2Shell.gif" x="140" y="203" />
+		<overlaySSRule name="PalmTrees" image="06_PalmTrees.gif" x="146" y="205" />
+		<overlaySSRule name="WallsToBocage" image="06_Walls2Bocage.gif" x="125" y="1" />
+		<overlaySSRule name="HedgesToBocage" image="06_Hedges2Bocage.gif" x="203" y="26" />
+		<overlaySSRule name="NoRoads" image="06_NoRoads.gif" x="1" y="1" />
 	</overlaySSRules>
 	
 	<colors>
