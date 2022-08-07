@@ -21,7 +21,7 @@
 	Nov 2013 v6.0 Original issue (TR)
 	Mar 2018 v6.1 Added lightwoods transform(ATC) 
 -->
-<boardMetadata name="04" version="6.3" versionDate="Mar 2022" author="TR" boardImageFileName="bd04.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="04" version="6.4" versionDate="Aug 2022" author="TR" boardImageFileName="bd04.gif" hasHills="FALSE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -71,17 +71,17 @@
 			y - y coordinate of overlay upper left
 		-->		
 
-		<overlaySSRule name="DenseJungle" image="4_DenseJungle.gif" x="1" y="1" />
-		<overlaySSRule name="WallsToBocage" image="4_Walls2Bocage.gif" x="465" y="1" />
-		<overlaySSRule name="HedgesToBocage" image="4_Hedges2Bocage.gif" x="855" y="1" />
-		<overlaySSRule name="ShellholesToOrchards" image="4_Shellhole2Orch.gif" x="980" y="139" />
-		<overlaySSRule name="ShellholesToPalmTrees" image="4_Shellhole2PalmTrees.gif" x="969" y="125" />
-		<overlaySSRule name="SSO_A74" image="4_SSO_A74.gif" x="892" y="1" />
-		<overlaySSRule name="SSO_O" image="4_SSO_O.png" x="0" y="484" />
-		<overlaySSRule name="SSO_32" image="4_SSO_32.gif" x="115" y="20" />
-		<overlaySSRule name="SSO_A23" image="4_SSO_A23.gif" x="1" y="1" />
-		<overlaySSRule name="NoRoads" image="4_NoRoads.gif" x="1" y="1" />
-		<overlaySSRule name="LightWoods" image="4_LightWoods.gif" x="0" y="0" />
+		<overlaySSRule name="DenseJungle" image="04_DenseJungle.gif" x="1" y="1" />
+		<overlaySSRule name="WallsToBocage" image="04_Walls2Bocage.gif" x="465" y="1" />
+		<overlaySSRule name="HedgesToBocage" image="04_Hedges2Bocage.gif" x="855" y="1" />
+		<overlaySSRule name="ShellholesToOrchards" image="04_Shellhole2Orch.gif" x="980" y="139" />
+		<overlaySSRule name="ShellholesToPalmTrees" image="04_Shellhole2PalmTrees.gif" x="969" y="125" />
+		<overlaySSRule name="SSO_A74" image="04_SSO_A74.gif" x="892" y="1" />
+		<overlaySSRule name="SSO_O" image="04_SSO_O.png" x="0" y="484" />
+		<overlaySSRule name="SSO_32" image="04_SSO_32.gif" x="115" y="20" />
+		<overlaySSRule name="SSO_A23" image="04_SSO_A23.gif" x="1" y="1" />
+		<overlaySSRule name="NoRoads" image="04_NoRoads.gif" x="1" y="1" />
+		<overlaySSRule name="LightWoods" image="04_LightWoods.gif" x="0" y="0" />
 
 	</overlaySSRules>
 	
