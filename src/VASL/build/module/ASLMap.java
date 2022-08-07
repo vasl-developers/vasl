@@ -406,7 +406,7 @@ public class ASLMap extends Map {
                     else {
                             // add board LOS data for non-standard size board
                         //line below is not a good fix; make sure it works in all situations or change
-                        int cropadj=1;  // ensures that cropping a board by row works properly DR (rows such as A7 have uneven total height which results in incorrect choice from gridToHex)
+                        int cropadj=1;  // ensures that cropping a board by row number works properly DR (rows such as A7 have uneven total height which results in incorrect choice from gridToHex)
                         if (VASLBoards.size()==1){
                             VASLMap.insertOneMap(LOSData);
                         } else {
@@ -448,6 +448,7 @@ public class ASLMap extends Map {
         while (overlays.hasMoreElements()) {
             Overlay o = (Overlay) overlays.nextElement();
             if(o.getName().equals("")){break;} // prevents error when using underlays (which are added as overlays)
+            if(o.getName().contains(board.getName())){break;} // prevents error when using BSO which are handled elsewhere
             Rectangle ovrRec = o.bounds();
             // get the image as a buffered image
             Image i = o.getImage();
