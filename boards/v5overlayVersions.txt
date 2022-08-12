@@ -5,7 +5,7 @@
 ovr1 = 2.3
 ovr2 = 2.3
 ovr3 = 2.1
-ovr4 = 1.5
+ovr4 = 1.6
 ovr5 = 3.3
 ovr6 = 4.2
 ovr7 = 1.1
