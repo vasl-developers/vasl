@@ -18,20 +18,22 @@
  */
 package VASL.build.module.map.boardPicker;
 
-import VASL.build.module.map.BoardVersionChecker;
-import VASSAL.build.GameModule;
+import VASL.LOS.Map.Map;
+import VASL.build.module.map.boardArchive.BoardColor;
+import VASL.build.module.map.boardArchive.ColorSSRule;
 import VASSAL.build.module.map.boardPicker.board.MapGrid;
 import VASSAL.build.module.map.boardPicker.board.MapGrid.BadCoords;
 import VASSAL.tools.DataArchive;
 import VASSAL.tools.SequenceEncoder;
 import VASSAL.tools.image.ImageUtils;
-import org.apache.commons.io.IOUtils;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.MemoryCacheImageInputStream;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.StringTokenizer;
 
 /**
@@ -44,6 +46,7 @@ public class Overlay implements Cloneable {
     protected File overlayFile;
     public String hex1 = "", hex2 = "";
     private String origins;
+    java.util.Map<Integer, Integer> mappings;
     protected Rectangle boundaries = new Rectangle();
     // boundaries are in local coordinates of the parent board
     // i.e., not accounting for cropping and reversal
@@ -69,7 +72,7 @@ public class Overlay implements Cloneable {
 
         archive = new DataArchive(overlayFile.getPath(), "");
         readData();
-
+        transform();
         try {
             setBounds();
         } catch (BadCoords e) {
@@ -89,7 +92,7 @@ public class Overlay implements Cloneable {
 
         archive = new DataArchive(overlayFile.getPath(), "");
         readData();
-
+        transform();
     }
     public SSRFilter getTerrain() {
         SSRFilter terrain = board.getTerrain();
@@ -145,6 +148,9 @@ public class Overlay implements Cloneable {
         }
 
         return im;
+    }
+    public void setImage(BufferedImage bi){
+        image = (Image) bi;
     }
 
     public String getName() {
@@ -501,5 +507,106 @@ public class Overlay implements Cloneable {
 
     public DataArchive getDataArchive() {
         return archive;
+    }
+    public void transform(){
+        Map losmap;
+        try {
+            losmap= board.getVASLBoardArchive().getLOSData("Normal", false);
+        } catch (Exception e) {
+            return;
+        }
+        Integer hex1elevation = losmap.getHex(hex1).getBaseHeight();
+        if (hex1elevation != 0){
+            Image i = getImage();
+            // get the image as a buffered image
+            BufferedImage bi = new BufferedImage(i.getWidth(null), i.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+            Rectangle ovrRec = bounds();
+            Graphics2D bGr = bi.createGraphics();
+            bGr.drawImage(i, 0, 0, null);
+            bGr.dispose();
+            String addnewelev = (hex1elevation == -1 ? "_1" : Integer.toString(hex1elevation));
+            String elevationtransform = "Level0ToLevel"+addnewelev;
+            dotransform(elevationtransform, bi);
+            setImage(bi);
+        }
+
+    }
+    private int colorToInt(Color color) {
+        return (color.getRed() << 16) + (color.getGreen() << 8) + color.getBlue();
+    }
+    public void dotransform(String elevationtransform, BufferedImage bi){
+        // load the color mappings
+        java.util.Map<String, Integer> colorValues = new HashMap<String, Integer>();
+        mappings = new HashMap<Integer, Integer>();
+        for (BoardColor boardColor : board.getVASLBoardArchive().getBoardColors().values()) {
+            colorValues.put(boardColor.getVASLColorName(), colorToInt(boardColor.getColor()));
+        }
+
+
+        for (java.util.Map.Entry<String, ColorSSRule> entry : board.getVASLBoardArchive().getColorSSRules().entrySet()) {
+
+            String ruleName = entry.getKey();
+
+            if (elevationtransform.equals(ruleName)) {
+
+                ColorSSRule colorSSRule = board.getVASLBoardArchive().getColorSSRules().get(ruleName);
+
+                for (java.util.Map.Entry<String, String> entry1 : colorSSRule.getColorMaps().entrySet()) {
+
+                    int fromColor = 0;
+                    int toColor = 0;
+                    try {
+                        fromColor = colorValues.get(entry1.getKey());
+                        toColor = colorValues.get(entry1.getValue());
+
+                        if (fromColor >= 0 && toColor >= 0 && fromColor != toColor) {
+
+                            if (!mappings.containsKey(fromColor)) {
+                                mappings.put(fromColor, toColor);
+                            }
+
+                            // Also apply this mapping to previous mappings
+                            if (mappings.containsValue(fromColor)) {
+
+                                for (java.util.Map.Entry<Integer, Integer> e : mappings.entrySet()) {
+                                    if (e.getValue() == fromColor)
+                                        e.setValue(toColor);
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        if (colorValues.get(entry1.getKey()) == null){
+                            //logger.warn("Board " + board.getName() + " missing color entry in color SSR mapping: " + entry1.getKey());
+                        }
+                        if (colorValues.get(entry1.getValue()) == null){
+                            //logger.warn("Board " + board.getName() + " missing color entry in color SSR mapping: " + entry1.getValue());
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!mappings.isEmpty()) {
+            final int h = bi.getHeight();
+            final int[] row = new int[bi.getWidth()];
+            for (int y = 0; y < h; ++y) {
+                bi.getRGB(0, y, row.length, 1, row, 0, row.length);
+                for (int x = 0; x < row.length; ++x) {
+                    row[x] = filterRGB(x, y, row[x]);
+                }
+                bi.setRGB(0, y, row.length, 1, row, 0, row.length);
+            }
+        }
+    }
+    public int filterRGB(int x, int y, int rgb) {
+        return ((0xff000000 & rgb) | mapColor(rgb & 0xffffff));
+    }
+    private int mapColor(int rgb) {
+        int rval = rgb;
+        Integer mappedValue = mappings.get(rgb);
+        if (mappedValue != null) {
+            rval = mappedValue;
+        }
+        return rval;
     }
 }
