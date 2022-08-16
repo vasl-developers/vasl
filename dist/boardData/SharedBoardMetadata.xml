@@ -1804,6 +1804,24 @@
 		<colorSSR name="Level1ToLevel_1">
 			<colorMap fromColor="Level1" toColor="Level_1"/>
 		</colorSSR>
+		<colorSSR name="Level0ToLevel1">
+			<colorMap fromColor="Level0" toColor="Level1"/>
+		</colorSSR>
+		<colorSSR name="Level0ToLevel2">
+			<colorMap fromColor="Level0" toColor="Level2"/>
+		</colorSSR>
+		<colorSSR name="Level0ToLevel3">
+			<colorMap fromColor="Level0" toColor="Level3"/>
+		</colorSSR>
+		<colorSSR name="Level0ToLevel4">
+			<colorMap fromColor="Level0" toColor="Level4"/>
+		</colorSSR>
+		<colorSSR name="Level0ToLevel5">
+			<colorMap fromColor="Level0" toColor="Level5"/>
+		</colorSSR>
+		<colorSSR name="Level0ToLevel_1">
+			<colorMap fromColor="Level0" toColor="Level_1"/>
+		</colorSSR>
 		<colorSSR name="Level_1ToLevel0">
 			<colorMap fromColor="Level_1" toColor="Level0"/>
 		</colorSSR>
