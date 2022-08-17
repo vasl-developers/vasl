@@ -515,6 +515,7 @@ public class Overlay implements Cloneable {
         } catch (Exception e) {
             return;
         }
+        if (losmap==null){return;}
         Integer hex1elevation = losmap.getHex(hex1).getBaseHeight();
         if (hex1elevation != 0){
             Image i = getImage();
