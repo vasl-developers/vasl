@@ -308,7 +308,15 @@ Changes:
                <activate sourceProperty="PTO dense jungle"/>
 	    </Target>   
        </entry>
-     </Checkbox>
+      </Checkbox>
+      <Checkbox name="Multiple Wood Buildings are Huts">
+         <entry name="Multiple Wood Buildings are Huts" rule="MultipleWoodtoHuts" text="Huts">
+            <Target sourceName="Terrain">
+               <activate sourceProperty="PTO light jungle"/>
+               <activate sourceProperty="PTO dense jungle"/>
+      	    </Target>
+         </entry>
+      </Checkbox>
    </Option>
   <Option name="DTO Transformations">  
       <Checkbox name="DTO Broken Terrain">

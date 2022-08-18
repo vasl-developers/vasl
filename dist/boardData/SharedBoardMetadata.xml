@@ -1285,7 +1285,7 @@
 		<terrainType name="PartialOrchard" typeCode="200" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.5" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="1" mapColorRed="55" mapColorGreen="163" mapColorBlue="55" LOSCategory="HEXSIDE"  />
 		<terrainType name="OffBObserver" typeCode="201" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="0" mapColorGreen="0" mapColorBlue="0" LOSCategory="OTHER"  />
 		<terrainType name="Crest" typeCode="202" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="0" mapColorGreen="0" mapColorBlue="001" LOSCategory="OPEN"  />
-
+		<terrainType name="MultipleWooden" typeCode="203" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="164" mapColorGreen="116" mapColorBlue="64" LOSCategory="BUILDING"  />
 	</terrainTypes>
 
 	<colorSSRules>
@@ -2490,6 +2490,8 @@
 		<LOSSSRule name="StoneToGutted4" type="terrainMap" fromValue="Stone Building, Level 4" toValue="Gutted Stone Building, Level 4" />
 		<LOSSSRule name="StoneToGuttedFactory1.5" type="terrainMap" fromValue="Stone Factory, Level 1.5" toValue="Gutted Stone Factory, Level 1.5" />
 		<LOSSSRule name="StoneToGuttedFactory2.5" type="terrainMap" fromValue="Stone Factory, Level 2.5" toValue="Gutted Stone Factory, Level 2.5" />
+		<!-- custom mapping to convert Multiple Wooden Buildings to Huts -->
+		<LOSSSRule name="MultipleWoodtoHuts" type="terrainMap" fromValue="MultipleWooden" toValue="Huts" />
     </LOSSSRules>
 
     <LOSCounterRules>
