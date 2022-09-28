@@ -66,7 +66,6 @@ import static VASSAL.build.GameModule.getGameModule;
 public class ASLChatter extends VASSAL.build.module.Chatter
 {
   private ArrayList<ChatterListener> chatter_listeners = new ArrayList<ChatterListener>();
-
   public static final String BEFORE_CATEGORY = "   ";
   private static final String CHAT_FONT = "ChatFont";
   private static final String BUTTON_FONT = "ButtonFont";
