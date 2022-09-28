@@ -827,6 +827,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                         PaintIcon(l_iDice, DiceType.SINGLE,true);
                                     }
                                     else
+                                        msgpartCdice = l_strDice;
+                                        msgpartWdice="-1";
                                     {
 
                                     }
@@ -1130,7 +1132,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         return null;  //TODO NEED TO HANDLE
     }
         private String getsingleDiecolor(){
-        if (m_clrSingleDieColor.equals("Black")) {
+        if (m_clrSingleDieColor==null){
+            return "B";
+        } else if (m_clrSingleDieColor.equals("Black")) {
             return "B";
         } else if (m_clrSingleDieColor.equals("Blue")){
             return "DB";
@@ -1151,7 +1155,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
     }
     private String getcoloredDicecolor(){
-        if (m_clrColoredDiceColor.equals("Black")) {
+        if (m_clrColoredDiceColor==null){
+            return "B";
+        } else if (m_clrColoredDiceColor.equals("Black")) {
             return "B";
         } else if (m_clrColoredDiceColor.equals("Blue")){
             return "DB";
@@ -1209,6 +1215,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
         if (msgpartRest == null) {
             msgpartRest = "";
+        }
+        if (msgpartWdice== "-1"){
+            msgpartWdice="";
         }
 
         String catstyle = "msgcategory";
