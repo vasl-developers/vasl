@@ -615,7 +615,9 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
         }
     }
     private Color getDieColor(String colorname){
-    if  (colorname.equals("Blue")){
+    if  (colorname==null) {
+        return Color.RED;
+    } else if (colorname.equals("Blue")) {
         return Color.BLUE;
     } else if (colorname.equals("Red")){
         return Color.RED;

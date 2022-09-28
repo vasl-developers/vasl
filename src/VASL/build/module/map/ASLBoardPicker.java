@@ -218,7 +218,6 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
         if (slotPanel.getComponentCount() != currentBoards.size()){
             GameModule.getGameModule().getChatter().send("Board missing. Your board configuration must match X by X row/column matrix. Use NUL or NULV boards if required");
         }
-
     }
 
     public void setGlobalMapScale() {
