@@ -16,7 +16,6 @@ package VASL.build.module.map;/*
  */
 
 import VASL.build.module.ASLMap;
-import VASSAL.Info;
 import VASSAL.build.*;
 import VASSAL.build.module.*;
 import VASSAL.build.module.documentation.HelpFile;
@@ -28,9 +27,7 @@ import VASSAL.command.CommandEncoder;
 import VASSAL.command.NullCommand;
 import VASSAL.counters.GamePiece;
 import VASSAL.counters.Stack;
-import VASSAL.i18n.Resources;
 import VASSAL.tools.WarningDialog;
-import VASSAL.tools.version.VersionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -191,7 +188,7 @@ public class SavedGameConverter extends AbstractConfigurable implements CommandE
                 saveModuleVersion = saveData.getModuleVersion();
                 // For Module Version and just report in chat.
                 if (!saveModuleVersion.equals(moduleVersion)) {
-                    // show confirmation dialog
+                    /*// show confirmation dialog
                     int dialogResult = JOptionPane.showConfirmDialog (
                             null,
                             "Are you sure you want to update this game to latest VASL version?",
@@ -200,7 +197,8 @@ public class SavedGameConverter extends AbstractConfigurable implements CommandE
 
                     if(dialogResult == JOptionPane.YES_OPTION) {
                         doupdate();
-                    }
+                    }*/
+                    doupdate();
                 } else {
                     JOptionPane.showMessageDialog(null, "No update possible; game was saved with current version or higher",
                             "Updating Game . . . ", JOptionPane.WARNING_MESSAGE);
@@ -214,20 +212,20 @@ public class SavedGameConverter extends AbstractConfigurable implements CommandE
      */
     public void doupdate() {
         final GameModule theModule = GameModule.getGameModule();
-        ASLGameRefresher gamerefresh = new ASLGameRefresher(theModule);
+        ASLGameUpdater gamerefresh = new ASLGameUpdater(theModule);
         gamerefresh.start();
 
 
         final Command command = new NullCommand();
         final Chatter chatter = theModule.getChatter();
-        final Command msg = new Chatter.DisplayText(chatter, "----------");
-        msg.append(new Chatter.DisplayText(chatter, "The game has been updated"));
+        final Command msg = new Chatter.DisplayText(chatter, "The game has been updated");
+        //msg.append(new Chatter.DisplayText(chatter, "The game has been updated"));
         //msg.append(new Chatter.DisplayText(chatter, updatedCount + " counters were moved"));
 
         //if (notFoundCount > 0) {
         //    msg.append(new Chatter.DisplayText(chatter, notFoundCount + " counters were not found"));
         //}
-        msg.append(new Chatter.DisplayText(chatter, "----------"));
+        //msg.append(new Chatter.DisplayText(chatter, "----------"));
         msg.execute();
         command.append(msg);
     }

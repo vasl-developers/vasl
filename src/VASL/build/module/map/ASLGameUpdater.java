@@ -3,67 +3,53 @@ package VASL.build.module.map;
 import VASSAL.build.*;
 import VASSAL.build.module.*;
 import VASSAL.build.module.Map;
-import VASSAL.build.module.documentation.HelpFile;
 import VASSAL.build.module.map.DrawPile;
 import VASSAL.build.module.map.SetupStack;
 import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.build.widget.PieceSlot;
 import VASSAL.command.*;
-import VASSAL.configure.ConfigurerLayout;
 import VASSAL.counters.*;
 import VASSAL.counters.Properties;
 import VASSAL.counters.Stack;
 import VASSAL.i18n.Resources;
-import VASSAL.tools.BrowserSupport;
-import VASSAL.tools.ErrorDialog;
-import VASSAL.tools.swing.FlowLabel;
-import VASSAL.tools.swing.SwingUtils;
-import net.miginfocom.swing.MigLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.File;
-import java.net.MalformedURLException;
 import java.util.*;
 import java.util.List;
 
 /**
- * GameRefresher Replace all counters in the same game with the current version
+ * Replace all counters in the same game with the current version
  * of the counters defined in the module
  * <p>
  * Note: Counters that are Hidden or Obscured to us cannot be updated.
  */
-public final class ASLGameRefresher implements CommandEncoder, GameComponent {
+public final class ASLGameUpdater implements CommandEncoder, GameComponent {
 
-    private static final Logger logger = LoggerFactory.getLogger(ASLGameRefresher.class);
+    private static final Logger logger = LoggerFactory.getLogger(ASLGameUpdater.class);
 
     private static final char DELIMITER = '\t'; //$NON-NLS-1$
     public static final String COMMAND_PREFIX = "DECKREPOS" + DELIMITER; //$NON-NLS-1$
 
-    private Action refreshAction;
+    private Action updateAction;
     private final GpIdSupport gpIdSupport;
     private ASLGpIdChecker gpIdChecker;
-    private ASLGameRefresher.RefreshDialog dialog;
     private int updatedCount;
     private int notFoundCount;
     private int noStackCount;
     private int noMapCount;
-
     private final GameModule theModule;
     private final Set<String> options = new HashSet<>();
+    private boolean hasAlreadyRun = false;
 
     public List<DrawPile> getModuleDrawPiles() {
         return theModule.getAllDescendantComponentsOf(DrawPile.class);
     }
 
-    public ASLGameRefresher(GpIdSupport gpIdSupport) {
+    public ASLGameUpdater(GpIdSupport gpIdSupport) {
         this.gpIdSupport = gpIdSupport;
         theModule = GameModule.getGameModule();
     }
@@ -79,7 +65,7 @@ public final class ASLGameRefresher implements CommandEncoder, GameComponent {
     }
 
     public void addTo(AbstractConfigurable parent) {
-        refreshAction = new AbstractAction(Resources.getString("GameRefresher.refresh_counters")) { //$NON-NLS-1$
+        updateAction = new AbstractAction(Resources.getString("GameRefresher.refresh_counters")) { //$NON-NLS-1$
             private static final long serialVersionUID = 1L;
 
             @Override
@@ -97,11 +83,11 @@ public final class ASLGameRefresher implements CommandEncoder, GameComponent {
         };
         GameModule.getGameModule().getGameState().addGameComponent(this);
         GameModule.getGameModule().addCommandEncoder(this);
-        refreshAction.setEnabled(false);
+        updateAction.setEnabled(false);
     }
 
-    public Action getRefreshAction() {
-        return refreshAction;
+    public Action getUpdateAction() {
+        return updateAction;
     }
 
     public boolean isTestMode() {
@@ -113,13 +99,22 @@ public final class ASLGameRefresher implements CommandEncoder, GameComponent {
     }
 
     public void start() {
-        dialog = new ASLGameRefresher.RefreshDialog(this);
-        dialog.setVisible(true);
-        dialog = null;
+        if (hasAlreadyRun) {
+            return;
+        }
+        hasAlreadyRun = true;
+        final GameModule g = GameModule.getGameModule();
+        Command command = new NullCommand();
+        final String player = GlobalOptions.getInstance().getPlayerId();
+        final Command msg = new Chatter.DisplayText(g.getChatter(), Resources.getString("GameRefresher.run_refresh_counters_v2", player, g.getGameVersion()));
+        msg.execute();
+        command = command.append(msg);
+        execute(command);
+        // Send the update to other clients (only done in Player mode)
+        g.sendAndLog(command);
     }
 
     public void log(String message) {
-        // ex for dialog msg dialog.addMessage(Resources.getString("GameRefresher.counters_refreshed_test", updatedCount));
         // Log to chatter
         GameModule.getGameModule().warn(message);
         logger.info(message);
@@ -136,9 +131,9 @@ public final class ASLGameRefresher implements CommandEncoder, GameComponent {
      *
      * @return
      */
-    public List<ASLGameRefresher.ASLRefresher> getRefreshables() {
-        final List<ASLGameRefresher.ASLRefresher> refreshables = new ArrayList<>();
-        final List<ASLGameRefresher.MatRefresher> loadedMats = new ArrayList<>();
+    public List<ASLUpdater> getRefreshables() {
+        final List<ASLUpdater> refreshables = new ArrayList<>();
+        final List<MatUpdater> loadedMats = new ArrayList<>();
         int totalCount = 0;
         int notOwnedCount = 0;
         int notVisibleCount = 0;
@@ -153,7 +148,7 @@ public final class ASLGameRefresher implements CommandEncoder, GameComponent {
                 if (piece instanceof Deck) {
                     final Deck deck = (Deck) piece;
                     totalCount += deck.getPieceCount();
-                    refreshables.add(new ASLGameRefresher.DeckRefresher(deck));
+                    refreshables.add(new DeckUpdater(deck));
                 }
 
                 // A standard Stack
@@ -174,7 +169,7 @@ public final class ASLGameRefresher implements CommandEncoder, GameComponent {
                         }
                     }
                     if (((Stack) piece).getMap() != null) {
-                        refreshables.add(new ASLGameRefresher.StackRefresher((Stack) piece));
+                        refreshables.add(new StackUpdater((Stack) piece));
                     }
                 }
 
@@ -189,12 +184,12 @@ public final class ASLGameRefresher implements CommandEncoder, GameComponent {
 
                         // Mats with loaded cargo need to be handled separately
                         if (p.getProperty(Mat.MAT_ID) != null && !"0".equals(p.getProperty(Mat.MAT_NUM_CARGO))) {
-                            final ASLGameRefresher.MatRefresher mr = new ASLGameRefresher.MatRefresher(p);
+                            final MatUpdater mr = new MatUpdater(p);
                             refreshables.add(mr);
                             loadedMats.add(mr);
                         }
                         else {
-                            refreshables.add(new ASLGameRefresher.PieceRefresher(p, true));
+                            refreshables.add(new PieceUpdater(p, true));
                         }
                     }
                     else {
@@ -205,25 +200,18 @@ public final class ASLGameRefresher implements CommandEncoder, GameComponent {
                             notOwnedCount++;
                         }
                         // Add as non-refreshable
-                        refreshables.add(new ASLGameRefresher.PieceRefresher(p, false));
+                        refreshables.add(new PieceUpdater(p, false));
                     }
                 }
             }
 
             // If there are any loaded Mats, then find the Stacks of their cargo in the general Refeshables list,
             // remove them and add them to the MatRefresher.
-            for (final ASLGameRefresher.MatRefresher mr : loadedMats) {
+            for (final MatUpdater mr : loadedMats) {
                 mr.grabMyCargo(refreshables);
             }
 
         }
-
-        log(Resources.getString("GameRefresher.get_all_pieces"));
-        log(Resources.getString("GameRefresher.counters_total", totalCount));
-        log(Resources.getString("GameRefresher.counters_kept", totalCount - notOwnedCount - notVisibleCount));
-        log(Resources.getString("GameRefresher.counters_not_owned", notOwnedCount));
-        log(Resources.getString("GameRefresher.counters_not_visible", notVisibleCount));
-        log("-"); //$NON-NLS-1$
 
         return refreshables;
     }
@@ -236,21 +224,20 @@ public final class ASLGameRefresher implements CommandEncoder, GameComponent {
 
 
     /**
-     * This method is used by PredefinedSetup.refresh() to update a PredefinedSetup in a GameModule
      * The default execute() method calls: GameModule.getGameModule().getGameState().getAllPieces()
      * to set the pieces list, this method provides an alternative way to specify which pieces should be refreshed.
      *
      * @throws IllegalBuildException - if we get a gpIdChecker error
      */
-    public void execute(Set<String> options, Command command) throws IllegalBuildException {
+    public void execute(Command command) throws IllegalBuildException {
         final List<Deck> decks = new ArrayList<>();
-
+        options.clear();
+        options.add("UseName"); //$NON-NLS-1$
+        options.add("DeleteNoMap"); //$NON-NLS-1$
         if (command == null) {
             command = new NullCommand();
         }
-        if (!options.isEmpty()) {
-            this.options.addAll(options);
-        }
+
         notFoundCount = 0;
         updatedCount = 0;
         noMapCount = 0;
@@ -284,26 +271,21 @@ public final class ASLGameRefresher implements CommandEncoder, GameComponent {
         /*
          * 2. Build a list in visual order of all stacks, decks, mats and other pieces that need refreshing
          */
-        final List<ASLGameRefresher.ASLRefresher> refreshables = getRefreshables();
+        final List<ASLUpdater> refreshables = getRefreshables();
 
         /*
-         * And refresh them. Keep a list of the Decks in case we need to update their attributes
+         * 3. And refresh them. Keep a list of the Decks in case we need to update their attributes
          */
-        for (final ASLGameRefresher.ASLRefresher refresher : refreshables) {
+        for (final ASLUpdater refresher : refreshables) {
             refresher.refresh(command);
-            if (refresher instanceof ASLGameRefresher.DeckRefresher) {
-                decks.add(((ASLGameRefresher.DeckRefresher) refresher).getDeck());
+            if (refresher instanceof DeckUpdater) {
+                decks.add(((DeckUpdater) refresher).getDeck());
             }
         }
 
-        log(Resources.getString("GameRefresher.run_refresh_counters_v3", theModule.getGameVersion()));
-        log(Resources.getString("GameRefresher.counters_refreshed", updatedCount));
-        log(Resources.getString("GameRefresher.counters_not_found", notFoundCount));
-        log(Resources.getString("GameRefresher.counters_no_map", noMapCount));
-        log("----------"); //$NON-NLS-1$
-        log(Resources.getString("GameRefresher.counters_no_stack", noStackCount));
-        log("----------"); //$NON-NLS-1$
-
+        if(notFoundCount>0){log(Resources.getString("GameRefresher.counters_not_found", notFoundCount));}
+        if(noMapCount>0){log(Resources.getString("GameRefresher.counters_no_map", noMapCount));}
+        if(noStackCount>0){log(Resources.getString("GameRefresher.counters_no_stack", noStackCount));}
 
         /*
          * 4/ Refresh properties of decks in the game
@@ -326,9 +308,7 @@ public final class ASLGameRefresher implements CommandEncoder, GameComponent {
                 int deletable = 0;
                 int addable = 0;
 
-                log("----------");
                 log(Resources.getString("GameRefresher.refreshing_decks"));
-                log("----------");
                 for (final Map map : Map.getMapList()) {
                     for (final GamePiece pieceOrStack : map.getPieces()) {
                         if (pieceOrStack instanceof Deck) {
@@ -471,7 +451,6 @@ public final class ASLGameRefresher implements CommandEncoder, GameComponent {
                     }
                 }
 
-                log("----------"); //$NON-NLS-1$
                 log(Resources.getString("GameRefresher.refreshable_decks", refreshable));
                 log(Resources.getString(options.contains("DeleteOldDecks") ? "GameRefresher.deletable_decks" : "GameRefresher.deletable_decks_2", deletable)); //NON-NLS
                 log(Resources.getString(options.contains("AddNewDecks") ? "GameRefresher.addable_decks" : "GameRefresher.addable_decks_2", addable)); //NON-NLS
@@ -489,217 +468,12 @@ public final class ASLGameRefresher implements CommandEncoder, GameComponent {
      */
     @Override
     public void setup(boolean gameStarting) {
-        refreshAction.setEnabled(gameStarting);
+        updateAction.setEnabled(gameStarting);
     }
 
-    static class RefreshDialog extends JDialog {
-        private static final long serialVersionUID = 1L;
-        private final ASLGameRefresher refresher;
-        private JTextArea results;
-        private JCheckBox nameCheck;
-        private JCheckBox testModeOn;
-        private JCheckBox labelerNameCheck;
-        private JCheckBox layerNameCheck;
-        private JCheckBox deletePieceNoMap;
-        private JCheckBox refreshDecks;
-        private JCheckBox deleteOldDecks;
-        private JCheckBox addNewDecks;
-        private final Set<String> options = new HashSet<>();
-        JButton runButton;
-
-        RefreshDialog(ASLGameRefresher refresher) {
-            super(GameModule.getGameModule().getPlayerWindow());
-            this.refresher = refresher;
-            setTitle(Resources.getString("GameRefresher.refresh_counters"));
-            setModal(true);
-            initComponents();
-        }
-
-        protected void initComponents() {
-            setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-            addWindowListener(new WindowAdapter() {
-                @Override
-                public void windowClosing(WindowEvent we) {
-                    exit();
-                }
-            });
-            setLayout(new MigLayout("wrap 1", "[fill]")); //NON-NLS
 
 
-            final JPanel panel = new JPanel(new MigLayout("hidemode 3,wrap 1" + "," + ConfigurerLayout.STANDARD_GAPY, "[fill]")); // NON-NLS
-            panel.setBorder(BorderFactory.createEtchedBorder());
-
-            final FlowLabel header = new FlowLabel(Resources.getString("GameRefresher.header"));
-            panel.add(header);
-
-            final JPanel buttonPanel = new JPanel(new MigLayout("ins 0", "push[]rel[]rel[]push")); // NON-NLS
-
-
-            runButton = new JButton(Resources.getString("General.run"));
-            runButton.addActionListener(e -> run());
-
-            final JButton exitButton = new JButton(Resources.getString("General.cancel"));
-            exitButton.addActionListener(e -> exit());
-
-            // Default actions on Enter/ESC
-            //SwingUtils.setDefaultButtons(getRootPane(), runButton, exitButton);
-
-            final JButton helpButton = new JButton(Resources.getString("General.help"));
-            helpButton.addActionListener(e -> help());
-
-            buttonPanel.add(runButton, "tag ok,sg 1"); // NON-NLS
-            buttonPanel.add(exitButton, "tag cancel,sg 1"); // NON-NLS
-            buttonPanel.add(helpButton, "tag help,sg 1"); // NON-NLS
-
-            nameCheck = new JCheckBox(Resources.getString("GameRefresher.use_basic_name"));
-            panel.add(nameCheck);
-            labelerNameCheck = new JCheckBox(Resources.getString("GameRefresher.use_labeler_descr"));
-            panel.add(labelerNameCheck);
-            layerNameCheck = new JCheckBox(Resources.getString("GameRefresher.use_layer_descr"));
-            panel.add(layerNameCheck);
-            testModeOn = new JCheckBox(Resources.getString("GameRefresher.test_mode"));
-            panel.add(testModeOn);
-            deletePieceNoMap = new JCheckBox(Resources.getString("GameRefresher.delete_piece_no_map"));
-            deletePieceNoMap.setSelected(true);
-            panel.add(deletePieceNoMap);
-
-            refreshDecks = new JCheckBox(Resources.getString("GameRefresher.refresh_decks"));
-            refreshDecks.setSelected(false);
-            refreshDecks.addChangeListener(new ChangeListener() {
-                @Override
-                public void stateChanged(ChangeEvent e) {
-                    deleteOldDecks.setVisible(refreshDecks.isSelected());
-                    addNewDecks.setVisible(refreshDecks.isSelected());
-                }
-            });
-            panel.add(refreshDecks);
-
-            deleteOldDecks = new JCheckBox(Resources.getString("GameRefresher.delete_old_decks"));
-            deleteOldDecks.setSelected(false);
-            panel.add(deleteOldDecks);
-
-            addNewDecks = new JCheckBox(Resources.getString("GameRefresher.add_new_decks"));
-            addNewDecks.setSelected(false);
-            panel.add(addNewDecks);
-
-            if (refresher.isGameActive()) {
-                refreshDecks.setSelected(false);
-                refreshDecks.setEnabled(false);
-                deleteOldDecks.setEnabled(false);
-                addNewDecks.setEnabled(false);
-
-                final FlowLabel nope = new FlowLabel(Resources.getString("GameRefresher.but_game_is_active"));
-                panel.add(nope);
-            }
-
-            panel.add(buttonPanel, "grow"); // NON-NLS
-
-            add(panel, "grow"); // NON-NLS
-
-            SwingUtils.repack(this);
-
-            deleteOldDecks.setVisible(refreshDecks.isSelected());
-            addNewDecks.setVisible(refreshDecks.isSelected());
-        }
-
-        protected void setOptions() {
-            options.clear();
-            if (nameCheck.isSelected()) {
-                options.add("UseName"); //$NON-NLS-1$
-            }
-            if (labelerNameCheck.isSelected()) {
-                options.add("UseLabelerName"); //$NON-NLS-1$
-            }
-            if (layerNameCheck.isSelected()) {
-                options.add("UseLayerName"); //$NON-NLS-1$
-            }
-            if (testModeOn.isSelected()) {
-                options.add("TestMode"); //$NON-NLS-1$
-            }
-            if (deletePieceNoMap.isSelected()) {
-                options.add("DeleteNoMap"); //$NON-NLS-1$
-            }
-            if (refreshDecks.isSelected()) {
-                options.add("RefreshDecks"); //NON-NLS
-                if (deleteOldDecks.isSelected()) {
-                    options.add("DeleteOldDecks"); //NON-NLS
-                }
-                if (addNewDecks.isSelected()) {
-                    options.add("AddNewDecks"); //NON-NLS
-                }
-            }
-        }
-
-        protected void exit() {
-            setVisible(false);
-        }
-
-/*
-    protected void test() {
-      setOptions();
-      options.add("TestMode");
-      refresher.log(Resources.getString("GameRefresher.refresh_counters_test_mode"));
-      refresher.execute(options, null);
-    }
-*/
-
-        private boolean hasAlreadyRun = false;
-
-        protected void run() {
-            if (hasAlreadyRun) {
-                return;
-            }
-            hasAlreadyRun = true;
-            final GameModule g = GameModule.getGameModule();
-            Command command = new NullCommand();
-            final String player = GlobalOptions.getInstance().getPlayerId();
-            setOptions();
-            if (refresher.isTestMode()) {
-                refresher.log(Resources.getString("GameRefresher.refresh_counters_test_mode"));
-            }
-            else {
-                // Test refresh does not need to be in the log.
-                final Command msg = new Chatter.DisplayText(g.getChatter(), Resources.getString("GameRefresher.run_refresh_counters_v2", player, g.getGameVersion()));
-                msg.execute();
-                command = command.append(msg);
-//FIXME list options in chatter for opponents to see
-
-            }
-            refresher.execute(options, command);
-
-            // Send the update to other clients (only done in Player mode)
-            g.sendAndLog(command);
-
-            if (options.contains("RefreshDecks") && !refresher.isGameActive()) {
-                final BasicLogger log = GameModule.getGameModule().getBasicLogger();
-                if (log != null) {
-                    log.blockUndo(1);
-                }
-            }
-
-            exit();
-        }
-
-        protected void help() {
-            File dir = VASSAL.build.module.Documentation.getDocumentationBaseDir();
-            dir = new File(dir, "ReferenceManual"); //$NON-NLS-1$
-            final File theFile = new File(dir, "GameRefresher.html"); //$NON-NLS-1$
-            HelpFile h = null;
-            try {
-                h = new HelpFile(null, theFile, "#top"); //$NON-NLS-1$
-            }
-            catch (MalformedURLException e) {
-                ErrorDialog.bug(e);
-            }
-            BrowserSupport.openURL(h.getContents().toString());
-        }
-
-        public void addMessage(String mess) {
-            results.setText(results.getText() + "\n" + mess); //NON-NLS
-        }
-    }
-
-    private interface ASLRefresher {
+    private interface ASLUpdater {
         void refresh(Command command);
         List<GamePiece> getPieces();
         List<GamePiece> getRefreshedPieces();
@@ -708,19 +482,19 @@ public final class ASLGameRefresher implements CommandEncoder, GameComponent {
     /**
      * Class to hold and refresh a Mat and it's cargo
      */
-    private class MatRefresher extends MatHolder implements ASLGameRefresher.ASLRefresher {
+    private class MatUpdater extends MatHolder implements ASLUpdater {
 
-        private final List<ASLGameRefresher.ASLRefresher> loadedCargo = new ArrayList<>();
+        private final List<ASLUpdater> loadedCargo = new ArrayList<>();
 
-        public MatRefresher(GamePiece piece) {
+        public MatUpdater(GamePiece piece) {
             super(piece);
         }
 
-        private boolean refresher_for_cargo(ASLGameRefresher.ASLRefresher refresher) {
-            final GamePiece p = refresher instanceof ASLGameRefresher.PieceRefresher ?
-                    ((ASLGameRefresher.PieceRefresher) refresher).getPiece() :
-                    (refresher instanceof ASLGameRefresher.StackRefresher ?
-                            ((ASLGameRefresher.StackRefresher) refresher).getStack().getPieceAt(0) : null);
+        private boolean refresher_for_cargo(ASLUpdater refresher) {
+            final GamePiece p = refresher instanceof PieceUpdater ?
+                    ((PieceUpdater) refresher).getPiece() :
+                    (refresher instanceof StackUpdater ?
+                            ((StackUpdater) refresher).getStack().getPieceAt(0) : null);
 
             return p != null && getMat().hasCargo(p);
         }
@@ -730,7 +504,7 @@ public final class ASLGameRefresher implements CommandEncoder, GameComponent {
          * that are loaded onto this Mat. Remove the Refreshable from the supplied List and record it here
          * @param refreshables List of refreshables
          */
-        public void grabMyCargo(List<ASLRefresher> refreshables) {
+        public void grabMyCargo(List<ASLUpdater> refreshables) {
             refreshables.removeIf(refresher -> {
                 if (refresher_for_cargo(refresher)) {
                     loadedCargo.add(refresher);
@@ -764,17 +538,17 @@ public final class ASLGameRefresher implements CommandEncoder, GameComponent {
             command = command.append(getMat().makeRemoveAllCargoCommand());
 
             // Refresh the Mat piece
-            final ASLGameRefresher.PieceRefresher pr = new ASLGameRefresher.PieceRefresher(getMatPiece(), true);
+            final PieceUpdater pr = new PieceUpdater(getMatPiece(), true);
             pr.refresh(command);
             final GamePiece newMatPiece = pr.getRefreshedPieces().get(0);
 
             // Now refresh each cargo stack or piece
-            for (final ASLGameRefresher.ASLRefresher r : loadedCargo) {
+            for (final ASLUpdater r : loadedCargo) {
                 r.refresh(command);
             }
 
             // And add the cargo back onto the mat
-            for (final ASLGameRefresher.ASLRefresher r : loadedCargo) {
+            for (final ASLUpdater r : loadedCargo) {
                 for (final GamePiece refreshedCargo : r.getRefreshedPieces()) {
                     command = command.append(((Mat) Decorator.getDecorator(newMatPiece, Mat.class)).makeAddCargoCommand(refreshedCargo));
                 }
@@ -785,11 +559,11 @@ public final class ASLGameRefresher implements CommandEncoder, GameComponent {
     /**
      * Class to refresh a Deck of GamePieces
      */
-    private class DeckRefresher implements ASLGameRefresher.ASLRefresher {
+    private class DeckUpdater implements ASLUpdater {
         private final Deck deck;
         private final List<GamePiece> refreshedPieces = new ArrayList<>();
 
-        public DeckRefresher(Deck deck) {
+        public DeckUpdater(Deck deck) {
             this.deck = deck;
         }
 
@@ -875,11 +649,11 @@ public final class ASLGameRefresher implements CommandEncoder, GameComponent {
     /**
      * Class to refresh a Stack of GamePieces
      */
-    private class StackRefresher implements ASLGameRefresher.ASLRefresher {
+    private class StackUpdater implements ASLUpdater {
         private final Stack stack;
         private final List<GamePiece> refreshedPieces = new ArrayList<>();
 
-        public StackRefresher(Stack stack) {
+        public StackUpdater(Stack stack) {
             this.stack = stack;
         }
 
@@ -972,12 +746,12 @@ public final class ASLGameRefresher implements CommandEncoder, GameComponent {
      * Class to refresh an individual non-stacking piece.
      * If the piece is not refreshable, do not attempt to refresh it.
      */
-    private class PieceRefresher implements ASLGameRefresher.ASLRefresher {
+    private class PieceUpdater implements ASLUpdater {
         private final GamePiece piece;
         private GamePiece refreshedPiece;
         private final boolean refreshable; // Is this piece refreshable by this player?
 
-        public PieceRefresher(GamePiece piece, boolean refreshable) {
+        public PieceUpdater(GamePiece piece, boolean refreshable) {
             this.piece = piece;
             this.refreshable = refreshable;
         }
