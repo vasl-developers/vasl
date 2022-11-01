@@ -172,7 +172,7 @@
 		<boarddata name="p" version="6.3" versionDate="Apr 2022" description="" />
 		<boarddata name="q" version="6.4" versionDate="Apr 2022" description="" />
 		<boarddata name="r" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="s" version="6.3" versionDate="Apr 2022" description="" />
+		<boarddata name="s" version="6.4" versionDate="Apr 2022" description="" />
 		<boarddata name="t" version="6.3" versionDate="Apr 2022" description="" />
 		<boarddata name="u" version="6.3" versionDate="Apr 2022" description="" />
 		<boarddata name="v" version="6.4" versionDate="Apr 2022" description="" />
@@ -450,6 +450,7 @@
 		<boarddata name="OtOBFP" version="1.0" versionDate="Mar 2020" description="" />
 		<boarddata name="SaF" version="6.2" versionDate="Jul 2022" description="" />
 		<boarddata name="SaFL" version="6.4" versionDate="Sep 2022" description="" />
+		<boarddata name="BG1" version="1.0" versionDate="Oct 2022" description="" />
 	</otherBoards>
 
 </boardsMetadata>
