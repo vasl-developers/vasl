@@ -17,6 +17,7 @@ public class ASLNightMapShader extends MapShader{
 
   @Override
   protected void toggleShading() {
+    this.boardClip=null;
     super.toggleShading();
     GameModule.getGameModule().getChatter().send("Night is " + (shadingVisible ? "" : "not ") + "in effect." );
     globalNightLevel.setAttribute("initialValue", String.valueOf(shadingVisible));

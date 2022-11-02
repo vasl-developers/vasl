@@ -94,6 +94,7 @@ public class ASLFogMapShader extends MapShader {
     }
 
     Hex[][] hexes = aslMap.getVASLMap().getHexGrid();
+    this.boardClip=null;
     Area boardArea = getBoardClip();
 
     for (Hex[] row:hexes) {

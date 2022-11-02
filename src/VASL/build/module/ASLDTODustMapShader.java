@@ -89,7 +89,7 @@ public class ASLDTODustMapShader extends MapShader {
         } else {
             useSpecialDustSetting.setValue(false);
         }
-
+        this.boardClip=null;
         this.setShadingVisibility(setDustAndOpacity());
     }
 

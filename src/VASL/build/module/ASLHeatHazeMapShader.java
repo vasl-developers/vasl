@@ -41,6 +41,7 @@ public class ASLHeatHazeMapShader extends MapShader {
       heatHazeLevel = tempHeatHazeLevel;
     }
     GameModule.getGameModule().getChatter().send(heatHazeLevel.toString() + " is in effect.");
+    this.boardClip=null;
     this.setShadingVisibility(setHeatHazeAndOpacity());
   }
 
