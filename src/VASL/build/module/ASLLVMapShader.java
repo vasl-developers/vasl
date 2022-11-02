@@ -39,6 +39,7 @@ public class ASLLVMapShader extends MapShader {
       lvLevel = tempLvLevel;
     }
     GameModule.getGameModule().getChatter().send(lvLevel.toString() + " is in effect.");
+    this.boardClip=null;
     this.setShadingVisibility(setLVAndOpacity());
   }
 

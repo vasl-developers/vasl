@@ -36,6 +36,7 @@ public class ASLSunBlindnessMapShader extends MapShader {
       sunBlindnessLevel = tempSunBlindnessLevel;
     }
     GameModule.getGameModule().getChatter().send(sunBlindnessLevel.toString() + " is in effect.");
+    this.boardClip=null;
     this.setShadingVisibility(setLVAndOpacity());
   }
 
