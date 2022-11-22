@@ -1072,24 +1072,20 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     private void PaintIcon(int l_iDice, DiceType diceType, boolean bSingle)     {
 
         try {
-            if(diceType == DiceType.OTHER_DUST) {
-
+            String dicefile = null;
+            if (diceType == DiceType.COLORED) {
+                dicefile = getcoloredDicefile(l_iDice);
+            } else if (diceType == DiceType.OTHER_DUST) {
+                dicefile = getThirdDiefile(l_iDice);
+            } else if (diceType == DiceType.SINGLE) {
+                dicefile = getsingleDiefile(l_iDice);
+            } else {   // DiceType.WHITE
+                dicefile = getwhitedicefile(l_iDice);
+            }
+            if (msgpartDiceImage==null) {
+                msgpartDiceImage = "<img  alt=\"alt text\" src=\"" + dicefile + "\">";
             } else {
-                String dicefile = null;
-                if (diceType == DiceType.COLORED) {
-                    dicefile = getcoloredDicefile(l_iDice);
-                } else if (diceType == DiceType.OTHER_DUST) {
-                    //newfile = getotherdicefile(l_iDice);
-                } else if (diceType == DiceType.SINGLE) {
-                    dicefile = getsingleDiefile(l_iDice);
-                } else {   // DiceType.WHITE
-                    dicefile = getwhitedicefile(l_iDice);
-                }
-                if (msgpartDiceImage==null) {
-                    msgpartDiceImage = "<img  alt=\"alt text\" src=\"" + dicefile + "\">";
-                } else {
-                    msgpartDiceImage = msgpartDiceImage + "&nbsp <img  alt=\"alt text\" src=\"" + dicefile + "\"> &nbsp";
-                }
+                msgpartDiceImage = msgpartDiceImage + "&nbsp <img  alt=\"alt text\" src=\"" + dicefile + "\"> &nbsp";
             }
         }
         catch (Exception ex) {
@@ -1129,6 +1125,18 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             ex.printStackTrace();
         }
         return null;  //TODO NEED TO HANDLE
+    }
+    private String getThirdDiefile(int dieRoll)
+    {
+      try {
+        String dicecolor = getThirdDiecolor();
+        return String.format(m_strFileNameFormat, String.valueOf(dieRoll), dicecolor);
+      }
+      catch (Exception ex)
+      {
+        ex.printStackTrace();
+      }
+      return null;  //TODO NEED TO HANDLE
     }
         private String getsingleDiecolor(){
         if (m_clrSingleDieColor==null){
@@ -1176,6 +1184,29 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             return "B";
         }
     }
+  private String getThirdDiecolor(){
+    if (m_clrDustColoredDiceColor==null){
+      return "O";
+    } else if (m_clrDustColoredDiceColor.equals("Black")) {
+      return "B";
+    } else if (m_clrDustColoredDiceColor.equals("Blue")){
+      return "DB";
+    } else if (m_clrDustColoredDiceColor.equals("Red")){
+      return "R";
+    } else if (m_clrDustColoredDiceColor.equals("Green")){
+      return "G";
+    } else if (m_clrDustColoredDiceColor.equals("Yellow")){
+      return "Y";
+    } else if (m_clrDustColoredDiceColor.equals("Cyan")){
+      return "C";
+    } else if (m_clrDustColoredDiceColor.equals("Orange")) {
+      return "O";
+    } else if (m_clrDustColoredDiceColor.equals("Purple")){
+      return "P";
+    } else {
+      return "B";
+    }
+  }
     private String getwhitedicefile(int dieval){
         switch (dieval){
             case 1:
