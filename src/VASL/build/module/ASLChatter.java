@@ -27,6 +27,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
+import VASL.build.module.dice.ASLDiceFactory;
+import VASL.build.module.dice.ASLDie;
+import VASL.build.module.dice.DieColor;
 import VASL.environment.*;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
@@ -80,7 +84,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
   private static final String preferenceTabName = "VASL"; // alwaysontop preference
   protected static final String DICE_CHAT_COLOR = "HTMLDiceChatColor";
 
-  private enum DiceType
+  public enum DiceType
   {
       WHITE,
       COLORED,
@@ -116,6 +120,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
   private final Icon [] mar_objSingleDieIcon = new Icon[6];
 
   private Environment environment = new Environment();
+  private ASLDiceFactory diceFactory = new ASLDiceFactory();
 
   private JTextField m_edtInputText;
     private int m_DRNotificationLevel;
@@ -1072,16 +1077,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     private void PaintIcon(int l_iDice, DiceType diceType, boolean bSingle)     {
 
         try {
-            String dicefile = null;
-            if (diceType == DiceType.COLORED) {
-                dicefile = getcoloredDicefile(l_iDice);
-            } else if (diceType == DiceType.OTHER_DUST) {
-                dicefile = getThirdDiefile(l_iDice);
-            } else if (diceType == DiceType.SINGLE) {
-                dicefile = getsingleDiefile(l_iDice);
-            } else {   // DiceType.WHITE
-                dicefile = getwhitedicefile(l_iDice);
-            }
+            ASLDie die = diceFactory.getASLDie(diceType);
+            String dicefile = die.getDieHTMLFragment(l_iDice);
             if (msgpartDiceImage==null) {
                 msgpartDiceImage = "<img  alt=\"alt text\" src=\"" + dicefile + "\">";
             } else {
@@ -1102,129 +1099,6 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         return doc.createElement(getClass().getName());
     }
 
-    private String getcoloredDicefile(int colordieroll)
-    {
-        try {
-            String dicecolor = getcoloredDicecolor();
-            return String.format(m_strFileNameFormat, String.valueOf(colordieroll), dicecolor);
-        }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
-        }
-        return null;  //TODO NEED TO HANDLE
-    }
-    private String getsingleDiefile(int singledieroll)
-    {
-        try {
-            String dicecolor = getsingleDiecolor();
-            return String.format(m_strFileNameFormat, String.valueOf(singledieroll), dicecolor);
-        }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
-        }
-        return null;  //TODO NEED TO HANDLE
-    }
-    private String getThirdDiefile(int dieRoll)
-    {
-      try {
-        String dicecolor = getThirdDiecolor();
-        return String.format(m_strFileNameFormat, String.valueOf(dieRoll), dicecolor);
-      }
-      catch (Exception ex)
-      {
-        ex.printStackTrace();
-      }
-      return null;  //TODO NEED TO HANDLE
-    }
-        private String getsingleDiecolor(){
-        if (m_clrSingleDieColor==null){
-            return "B";
-        } else if (m_clrSingleDieColor.equals("Black")) {
-            return "B";
-        } else if (m_clrSingleDieColor.equals("Blue")){
-            return "DB";
-        } else if (m_clrSingleDieColor.equals("Red")){
-                return "R";
-        } else if (m_clrSingleDieColor.equals("Green")){
-            return "G";
-        } else if (m_clrSingleDieColor.equals("Yellow")){
-            return "Y";
-        } else if (m_clrSingleDieColor.equals("Cyan")){
-            return "C";
-        } else if (m_clrSingleDieColor.equals("Orange")) {
-            return "O";
-        } else if (m_clrSingleDieColor.equals("Purple")){
-            return "P";
-        } else {
-            return "B";
-        }
-    }
-    private String getcoloredDicecolor(){
-        if (m_clrColoredDiceColor==null){
-            return "B";
-        } else if (m_clrColoredDiceColor.equals("Black")) {
-            return "B";
-        } else if (m_clrColoredDiceColor.equals("Blue")){
-            return "DB";
-        } else if (m_clrColoredDiceColor.equals("Red")){
-            return "R";
-        } else if (m_clrColoredDiceColor.equals("Green")){
-            return "G";
-        } else if (m_clrColoredDiceColor.equals("Yellow")){
-            return "Y";
-        } else if (m_clrColoredDiceColor.equals("Cyan")){
-            return "C";
-        } else if (m_clrColoredDiceColor.equals("Orange")) {
-            return "O";
-        } else if (m_clrColoredDiceColor.equals("Purple")){
-            return "P";
-        } else {
-            return "B";
-        }
-    }
-  private String getThirdDiecolor(){
-    if (m_clrDustColoredDiceColor==null){
-      return "O";
-    } else if (m_clrDustColoredDiceColor.equals("Black")) {
-      return "B";
-    } else if (m_clrDustColoredDiceColor.equals("Blue")){
-      return "DB";
-    } else if (m_clrDustColoredDiceColor.equals("Red")){
-      return "R";
-    } else if (m_clrDustColoredDiceColor.equals("Green")){
-      return "G";
-    } else if (m_clrDustColoredDiceColor.equals("Yellow")){
-      return "Y";
-    } else if (m_clrDustColoredDiceColor.equals("Cyan")){
-      return "C";
-    } else if (m_clrDustColoredDiceColor.equals("Orange")) {
-      return "O";
-    } else if (m_clrDustColoredDiceColor.equals("Purple")){
-      return "P";
-    } else {
-      return "B";
-    }
-  }
-    private String getwhitedicefile(int dieval){
-        switch (dieval){
-            case 1:
-                return "DC1_W.png";
-            case 2:
-                return "DC2_W.png";
-            case 3:
-                return "DC3_W.png";
-            case 4:
-                return "DC4_W.png";
-            case 5:
-                return "DC5_W.png";
-            case 6:
-                return "DC6_W.png";
-            default:
-                return null;
-        }
-    }
     private String makeMessageString() {
         // need to add html formatting
 
@@ -1460,6 +1334,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                 m_bShowDiceStats = (Boolean) e.getNewValue();
             }
         });
+
         // coloured die pref
         StringEnumConfigurer coloredDiceColor = null;
         StringEnumConfigurer coloredDiceColor_Exist = (StringEnumConfigurer) l_objModulePrefs.getOption(COLORED_DICE_COLOR);
@@ -1472,19 +1347,15 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         coloredDiceColor.addPropertyChangeListener(new PropertyChangeListener()
         {
             public void propertyChange(PropertyChangeEvent e) {
-
-                m_clrColoredDiceColor = (String) e.getNewValue();
-                if (m_clrColoredDiceColor==null){
-                    m_clrColoredDiceColor = "Red";
-                }
+              m_clrColoredDiceColor = (String) e.getNewValue();
+              if (m_clrColoredDiceColor!=null) {
+                diceFactory.setDieColor(DiceType.COLORED, DieColor.getEnum(m_clrColoredDiceColor));
+              }
             }
         });
         m_clrColoredDiceColor = l_objModulePrefs.getStoredValue("coloredDiceColor");
-        final Set<String> COLORARRAY = new HashSet<String>(Arrays.asList(
-                new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange"}));
-        if (!COLORARRAY.contains(m_clrColoredDiceColor)){
-            m_clrColoredDiceColor = "Red";
-        }
+        if(m_clrColoredDiceColor != null)
+          diceFactory.setDieColor(DiceType.COLORED,DieColor.getEnum(m_clrColoredDiceColor));
 
         // single die pref
         StringEnumConfigurer l_objColoredDieColor = null;
@@ -1499,15 +1370,15 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         {
           public void propertyChange(PropertyChangeEvent e) {
             m_clrSingleDieColor = (String) e.getNewValue();
-            if (m_clrSingleDieColor==null){
-                  m_clrSingleDieColor = "Red";
+            if (m_clrSingleDieColor!=null) {
+              diceFactory.setDieColor(DiceType.SINGLE, DieColor.getEnum(m_clrSingleDieColor));
             }
           }
         });
         m_clrSingleDieColor = l_objModulePrefs.getStoredValue("singleDieColor");
-        if (!COLORARRAY.contains(m_clrSingleDieColor)){
-            m_clrSingleDieColor = "Red";
-        }
+        if(m_clrSingleDieColor != null)
+          diceFactory.setDieColor(DiceType.SINGLE,DieColor.getEnum(m_clrSingleDieColor));
+
         // third die pref
         StringEnumConfigurer l_objThirdDieColor = null;
         StringEnumConfigurer l_objThirdDieColor_Exist = (StringEnumConfigurer)l_objModulePrefs.getOption(THIRD_DIE_COLOR);
@@ -1521,15 +1392,14 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         {
           public void propertyChange(PropertyChangeEvent e) {
             m_clrDustColoredDiceColor = (String) e.getNewValue();
-              if (m_clrDustColoredDiceColor==null){
-                  m_clrDustColoredDiceColor = "Red";
-              }
+            if (m_clrDustColoredDiceColor!=null) {
+              diceFactory.setDieColor(DiceType.OTHER_DUST, DieColor.getEnum(m_clrDustColoredDiceColor));
+            }
           }
         });
         m_clrDustColoredDiceColor = l_objModulePrefs.getStoredValue("thirdDieColor");
-        if (!COLORARRAY.contains(m_clrDustColoredDiceColor)){
-            m_clrDustColoredDiceColor = "Red";
-        }
+        if(m_clrDustColoredDiceColor != null)
+          diceFactory.setDieColor(DiceType.SINGLE,DieColor.getEnum(m_clrDustColoredDiceColor));
         l_objThirdDieColor.fireUpdate();
 
         // rule set pref
@@ -1627,7 +1497,5 @@ public class ASLChatter extends VASSAL.build.module.Chatter
   public interface ChatterListener {
         public void DiceRoll(String strCategory, String strUser, String strSAN, int iFirstDice, int iSecondDice);
   }
-
-
 }
 
