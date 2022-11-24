@@ -73,12 +73,22 @@
             <entry name="Def Fire">Gunflash</entry>
             <entry name="Def Fire">Purple Trip Flare</entry>
             <entry name="Def Fire">Starshell Attempt (DF)</entry>
-            <entry name="Pin / TI">In Command</entry>
-            <entry name="Pin / TI">Move</entry>
-            <entry name="Pin / TI">Panic</entry>
-            <entry name="Pin / TI">Pin</entry>
-            <entry name="Pin / TI">T/I</entry>
-            <entry name="Pin / TI">TI</entry>
+            <entry name="Pin / TI / HW / Banzai">In Command</entry>
+            <entry name="Pin / TI / HW / Banzai">Move</entry>
+            <entry name="Pin / TI / HW / Banzai">Panic</entry>
+            <entry name="Pin / TI / HW / Banzai">Pin</entry>
+            <entry name="Pin / TI / HW / Banzai">T/I</entry>
+            <entry name="Pin / TI / HW / Banzai">TI</entry>
+
+            <entry name="Pin / TI / HW / Banzai">Human Wave Melee</entry>
+            <entry name="Pin / TI / HW / Banzai">Human Wave</entry>
+            <entry name="Pin / TI / HW / Banzai">HW Dir</entry>
+            <entry name="Pin / TI / HW / Banzai">Bayonet</entry>
+            <entry name="Pin / TI / HW / Banzai">Bayonet Charge</entry>
+            <entry name="Pin / TI / HW / Banzai">Bayonet Charge info</entry>
+            <entry name="Pin / TI / HW / Banzai">HW Range</entry>
+            <entry name="Pin / TI / HW / Banzai">Banzai Lax</entry>
+
             <entry name="Starshell / IR">IR</entry>
             <entry name="Starshell / IR">Blue IR</entry>
             <entry name="Starshell / IR">Green IR</entry>
