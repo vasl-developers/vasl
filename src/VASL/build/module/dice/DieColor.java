@@ -39,9 +39,13 @@ public enum DieColor {
       this.color = color;
     }
   public static DieColor getEnum(String value) {
-    for(DieColor d : values())
-      if(d.getColor().equalsIgnoreCase(value)) return d;
-    throw new IllegalArgumentException();
+    for (DieColor d : values()) {
+      if (d.getColor().equalsIgnoreCase(value)) {
+        return d;
+      }
+    }
+    // non enum value stored - return white.
+    return WHITE;
   }
 }
 
