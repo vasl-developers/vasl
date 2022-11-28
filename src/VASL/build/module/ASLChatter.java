@@ -838,7 +838,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     {
 
                                     }
-                                    msgpartUser = "  ...  " + l_strUser;
+                                    msgpartUser = l_strUser;
                                     // added by DR 2018 to add chatter text on Sniper Activation dr
                                     if (l_strCategory.equals("SA")) {
                                         String sniperstring="";
@@ -881,6 +881,10 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     private void HandleSpecialMessagesForOtherDice(final String l_strCategory, final ArrayList<String> specialMessages,
                                                    final int l_iFirstDice, final int l_iSecondDice, final Map<DiceType, Integer> otherDice)
     {
+      if(otherDice.isEmpty()) {
+        specialMessages.add(" *no third die* ");
+        return;
+      }
       int total = l_iFirstDice + l_iSecondDice;
       int unmodifiedTotal = total;
       final String SPACE = " ";
