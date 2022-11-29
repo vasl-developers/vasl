@@ -793,6 +793,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             }
             else // *** (Other dr) 3 ***   <FredKors>      [1 / 1   avg   3,00 (3,00)]    (01.84)
             {
+                //reset SAN message to latest state for dice over map
+                msgpartSAN = l_strSAN;
                 l_iPos = l_strRestOfMsg.indexOf(" dr) ");
 
                 if (l_iPos != -1) {
