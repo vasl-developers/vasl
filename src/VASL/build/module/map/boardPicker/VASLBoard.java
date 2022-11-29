@@ -488,7 +488,12 @@ public class VASLBoard extends ASLBoard {
 
                 if(LOSData.getGridElevation(x, y) == fromElevation){
                     LOSData.setGridElevation(0, x, y);
-                    LOSData.setGridTerrainCode(toTerrain.getType(), x, y);
+                    // this is a hack to fix a specific transform problem on Board 3
+                    // if the problem occurs on other boards then it would be worth generalizing
+                    // have not done so now due to risk of unintended consequences
+                    if (!LOSData.getGridTerrain(x, y).isLOSObstacle()) {
+                        LOSData.setGridTerrainCode(toTerrain.getType(), x, y);
+                    }
                 }
             }
         }
