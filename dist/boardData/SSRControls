@@ -322,21 +322,21 @@ Changes:
       <Checkbox name="DTO Broken Terrain">
 		<entry name="DTO Broken Terrain" rule="BrokenTerrain" text="DTO Broken Terrain">
 		   <Target sourceName="Terrain">
-               <activate sourceProperty="DTO terrain"/>
+               <!-- <activate sourceProperty="DTO terrain"/> -->
 	       </Target>   
         </entry>
       </Checkbox>
       <Checkbox name="DTO Steppe Terrain">
 			<entry name="DTO Steppe Terrain" rule="SteppeTerrain" text="DTO Steppe Terrain">
 		   <Target sourceName="Terrain">
-               <activate sourceProperty="DTO terrain"/>
+               <!-- <activate sourceProperty="DTO terrain"/> -->
 	       </Target>   
         </entry>
 		</Checkbox>
 	<Checkbox name="Use Desert Colors for ETO boards">
          <entry name="Use Desert Colors for ETO boards" rule="ETOtoDTO" text="Desert colors">
             <Target sourceName="Terrain">
-               <activate sourceProperty="DTO terrain"/>
+               <!-- <activate sourceProperty="DTO terrain"/> -->
             </Target>
 			</entry>
       </Checkbox>
