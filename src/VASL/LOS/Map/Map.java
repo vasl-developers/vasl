@@ -1724,9 +1724,12 @@ public class Map  {
      */
     protected boolean applyLOSRules(LOSStatus status, LOSResult result) {
 
-        // if there's a terrain counter in the hex use that terrain instead
-        if(status.vaslGameInterface != null && status.vaslGameInterface.getTerrain(status.tempHex) != null) {
-            status.currentTerrain = status.vaslGameInterface.getTerrain(status.tempHex);
+        // if there's a terrain counter in the hex use that terrain instead unless entrenchment
+        if(status.vaslGameInterface != null && status.vaslGameInterface.getTerrain(status.tempHex) != null &&
+                status.tempHex != status.sourceHex && status.tempHex != status.targetHex) {
+            if (!status.vaslGameInterface.getTerrain(status.tempHex).isEntrenchmentTerrain()) {
+                status.currentTerrain = status.vaslGameInterface.getTerrain(status.tempHex);
+            }
         }
         try {
             status.currentTerrainHgt = status.currentTerrain.getHeight();
