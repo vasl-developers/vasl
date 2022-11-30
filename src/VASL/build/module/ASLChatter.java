@@ -881,15 +881,11 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     private void HandleSpecialMessagesForOtherDice(final String l_strCategory, final ArrayList<String> specialMessages,
                                                    final int l_iFirstDice, final int l_iSecondDice, final Map<DiceType, Integer> otherDice)
     {
-      if(otherDice.isEmpty()) {
-        specialMessages.add(" *no third die* ");
-        return;
-      }
       int total = l_iFirstDice + l_iSecondDice;
       int unmodifiedTotal = total;
       final String SPACE = " ";
       // Dust
-      if(environment.dustInEffect() && m_DRNotificationLevel == 3)
+      if(environment.dustInEffect() && m_DRNotificationLevel == 3 && !otherDice.isEmpty())
       {
         switch (l_strCategory)
         {
