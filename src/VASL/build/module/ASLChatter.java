@@ -372,7 +372,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             }
 
             this.addStyle(".msgcategory", f, Color.black, "bold", 0);
-            this.addStyle(".msguser", f, gameMsg4, "bold", 0);
+            this.addStyle(".msguser", f, myChat, "bold", 0);
             this.addStyle(".msgspecial", f, gameMsg, "bold", 0);
 
             style.addRule(
@@ -458,56 +458,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         {
             ex.printStackTrace();
         }
-      if (SwingUtilities.isEventDispatchThread()) {
-        this.doShow(strMsg);
-      } else {
-        String finalStrMsg = strMsg;
-        SwingUtilities.invokeLater(() -> {
-          doShow(finalStrMsg);
-        });
-      }
+        super.show(strMsg);
     }
-
-  private void doShow(String s) {
-    s = s.trim();
-    String style;
-    boolean html_allowed;
-    if (!s.isEmpty()) {
-      if (s.startsWith("*")) {
-        html_allowed = QuickColors.getQuickColor(s, "*") >= 0 || GlobalOptions.getInstance().chatterHTMLSupport();
-        style = QuickColors.getQuickColorHTMLStyle(s, "*");
-        s = QuickColors.stripQuickColorTag(s, "*");
-      } else if (s.startsWith("-")) {
-        html_allowed = true;
-        style = QuickColors.getQuickColor(s, "-") >= 0 ? QuickColors.getQuickColorHTMLStyle(s, "-") : "sys";
-        s = QuickColors.stripQuickColorTag(s, "-");
-      } else {
-        style = this.getChatStyle(s);
-        html_allowed = false;
-      }
-    } else {
-      style = "msg";
-      html_allowed = false;
-    }
-
-    if (!html_allowed) {
-      s = s.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-    }
-
-    String keystring = Resources.getString("PlayerRoster.observer");
-    String replace = keystring.replace("<", "&lt;").replace(">", "&gt;");
-    if (!replace.equals(keystring)) {
-      s = s.replace(keystring, replace);
-    }
-
-    try {
-      this.kit.insertHTML(this.doc, this.doc.getLength(), "\n<div class=" + style + ">" + s + "</div>", 0, 0, (HTML.Tag)null);
-    } catch (IOException | BadLocationException var7) {
-      ErrorDialog.bug(var7);
-    }
-
-    this.conversationPane.repaint();
-  }
 
     private void ParseDefaultMsg(String strMsg) {
         try
@@ -1306,13 +1258,13 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         } else {
             l_objMyChatColor = l_objMyChatColor_Exist;
         }
-        gameMsg4 = (Color) l_objModulePrefs.getValue(MY_CHAT_COLOR);
-        makeStyleSheet((Font)null);
+        myChat = (Color) l_objModulePrefs.getValue(MY_CHAT_COLOR);
+        makeStyleSheet(null);
         l_objMyChatColor.addPropertyChangeListener(new PropertyChangeListener()
         {
             public void propertyChange(PropertyChangeEvent e) {
-                gameMsg4 = (Color) e.getNewValue();
-                makeStyleSheet((Font)null);
+                myChat = (Color) e.getNewValue();
+                makeStyleSheet(null);
             }
         });
         // other chat preference
