@@ -1022,9 +1022,21 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         String userstyle = getUserStyle();
         String specialstyle = "msgspecial";  //text-decoration: underline";  //<p style="text-decoration: underline;">This text will be underlined.</p>
         if (m_bUseDiceImages) {
-            return "*~<span class=" + userstyle + ">" + msgpartDiceImage + "</span>" + "<span class=" + catstyle + ">" + msgpartCategory + "</span>"  + "<span class=" + userstyle + ">" + USER_SPACING_PADDING + msgpartUser + "</span>" + " " + "<u>" + "<span class=" + specialstyle + ">" + msgpartSpecial + "</span>" + "</u>" + " " + msgpartRest;
+            return "*~<span class=" + userstyle + ">" + msgpartDiceImage + "</span>"
+                + "<span class=" + catstyle + ">" + msgpartCategory + "</span>"
+                + "<span class=" + userstyle + ">" + USER_SPACING_PADDING + msgpartUser+ "</span>"
+                + " " + "<u>"
+                + "<span class=" + specialstyle + ">" + msgpartSpecial + "</span>"
+                + "</u>" + " "
+                + "<span class=" + userstyle + ">" + msgpartRest + "</span>";
         } else {
-            return "*~<span class=" + catstyle + ">" + msgpartCategory + "</span>"  + " " + msgpartCdice + " " + msgpartWdice + " " + "<span class=" + userstyle + ">" + USER_SPACING_PADDING + msgpartUser + "</span>" + " " + "<u>" + "<span class=" + specialstyle + ">" + msgpartSpecial + "</span>" + "</u>" + " " + msgpartRest;
+            return "*~<span class=" + catstyle + ">" + msgpartCategory + "</span>"
+                + " " + msgpartCdice + " " + msgpartWdice + " "
+                + "<span class=" + userstyle + ">" + USER_SPACING_PADDING + msgpartUser + "</span>"
+                + " " + "<u>"
+                + "<span class=" + specialstyle + ">" + msgpartSpecial + "</span>"
+                + "</u>" + " "
+                + "<span class=" + msgpartRest + "</span>";
         }
     }
     protected String getUserStyle() {
