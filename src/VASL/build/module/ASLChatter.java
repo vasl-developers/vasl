@@ -39,8 +39,10 @@ import VASSAL.command.CommandEncoder;
 import VASSAL.configure.*;
 import VASSAL.i18n.Resources;
 import VASSAL.preferences.Prefs;
+import VASSAL.tools.ErrorDialog;
 import VASSAL.tools.KeyStrokeListener;
 import VASSAL.tools.KeyStrokeSource;
+import VASSAL.tools.QuickColors;
 import VASSAL.tools.imageop.Op;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -48,17 +50,11 @@ import java.awt.Insets;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.*;
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.GroupLayout;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
+import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.html.HTML;
 
 import static VASSAL.build.GameModule.getGameModule;
 
@@ -81,6 +77,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
   private static final String THIRD_DIE_COLOR = "thirdDieColor"; //$NON-NLS-1$
   private static final String NOTIFICATION_LEVEL = "notificationLevel"; //$NON-NLS-1$
   private final static String m_strFileNameFormat = "DC%s_%s.png";
+  private final static String USER_SPACING_PADDING =  "  ...  ";
   private static final String preferenceTabName = "VASL"; // alwaysontop preference
   protected static final String DICE_CHAT_COLOR = "HTMLDiceChatColor";
 
@@ -461,8 +458,56 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         {
             ex.printStackTrace();
         }
-        super.show(strMsg);
+      if (SwingUtilities.isEventDispatchThread()) {
+        this.doShow(strMsg);
+      } else {
+        String finalStrMsg = strMsg;
+        SwingUtilities.invokeLater(() -> {
+          doShow(finalStrMsg);
+        });
+      }
     }
+
+  private void doShow(String s) {
+    s = s.trim();
+    String style;
+    boolean html_allowed;
+    if (!s.isEmpty()) {
+      if (s.startsWith("*")) {
+        html_allowed = QuickColors.getQuickColor(s, "*") >= 0 || GlobalOptions.getInstance().chatterHTMLSupport();
+        style = QuickColors.getQuickColorHTMLStyle(s, "*");
+        s = QuickColors.stripQuickColorTag(s, "*");
+      } else if (s.startsWith("-")) {
+        html_allowed = true;
+        style = QuickColors.getQuickColor(s, "-") >= 0 ? QuickColors.getQuickColorHTMLStyle(s, "-") : "sys";
+        s = QuickColors.stripQuickColorTag(s, "-");
+      } else {
+        style = this.getChatStyle(s);
+        html_allowed = false;
+      }
+    } else {
+      style = "msg";
+      html_allowed = false;
+    }
+
+    if (!html_allowed) {
+      s = s.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+    }
+
+    String keystring = Resources.getString("PlayerRoster.observer");
+    String replace = keystring.replace("<", "&lt;").replace(">", "&gt;");
+    if (!replace.equals(keystring)) {
+      s = s.replace(keystring, replace);
+    }
+
+    try {
+      this.kit.insertHTML(this.doc, this.doc.getLength(), "\n<div class=" + style + ">" + s + "</div>", 0, 0, (HTML.Tag)null);
+    } catch (IOException | BadLocationException var7) {
+      ErrorDialog.bug(var7);
+    }
+
+    this.conversationPane.repaint();
+  }
 
     private void ParseDefaultMsg(String strMsg) {
         try
@@ -769,7 +814,6 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                         msgpartRest = l_strRestOfMsg;
                                     }
                                     FireDiceRoll();
-                                    msgpartUser = "  ...  " + msgpartUser;
                                 }
                                 else {
 
@@ -1127,13 +1171,20 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
 
         String catstyle = "msgcategory";
-        String userstyle = "msguser";
+        String userstyle = getUserStyle();
         String specialstyle = "msgspecial";  //text-decoration: underline";  //<p style="text-decoration: underline;">This text will be underlined.</p>
         if (m_bUseDiceImages) {
-            return "*~<span class=" + userstyle + ">" + msgpartDiceImage + "</span>" + "<span class=" + catstyle + ">" + msgpartCategory + "</span>"  + "<span class=" + userstyle + ">" + msgpartUser + "</span>" + " " + "<u>" + "<span class=" + specialstyle + ">" + msgpartSpecial + "</span>" + "</u>" + " " + msgpartRest;
+            return "*~<span class=" + userstyle + ">" + msgpartDiceImage + "</span>" + "<span class=" + catstyle + ">" + msgpartCategory + "</span>"  + "<span class=" + userstyle + ">" + USER_SPACING_PADDING + msgpartUser + "</span>" + " " + "<u>" + "<span class=" + specialstyle + ">" + msgpartSpecial + "</span>" + "</u>" + " " + msgpartRest;
         } else {
-            return "*~<span class=" + catstyle + ">" + msgpartCategory + "</span>"  + " " + msgpartCdice + " " + msgpartWdice + " " + "<span class=" + userstyle + ">" + msgpartUser + "</span>" + " " + "<u>" + "<span class=" + specialstyle + ">" + msgpartSpecial + "</span>" + "</u>" + " " + msgpartRest;
+            return "*~<span class=" + catstyle + ">" + msgpartCategory + "</span>"  + " " + msgpartCdice + " " + msgpartWdice + " " + "<span class=" + userstyle + ">" + USER_SPACING_PADDING + msgpartUser + "</span>" + " " + "<u>" + "<span class=" + specialstyle + ">" + msgpartSpecial + "</span>" + "</u>" + " " + msgpartRest;
         }
+    }
+    protected String getUserStyle() {
+      final String me = GlobalOptions.getInstance().getPlayerId();
+      if(msgpartUser.equals(me)) {
+        return "mychat";
+      }
+      return "other";
     }
     private String makeTableString(String strMsg){
         strMsg= strMsg.substring(2);  // strip out "!!"
