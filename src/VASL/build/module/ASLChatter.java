@@ -18,16 +18,6 @@
  */
 package VASL.build.module;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
 import VASL.build.module.dice.ASLDiceFactory;
 import VASL.build.module.dice.ASLDie;
 import VASL.build.module.dice.DieColor;
@@ -42,23 +32,16 @@ import VASSAL.preferences.Prefs;
 import VASSAL.tools.KeyStrokeListener;
 import VASSAL.tools.KeyStrokeSource;
 import VASSAL.tools.imageop.Op;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.image.BufferedImage;
-import java.util.*;
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.GroupLayout;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static VASSAL.build.GameModule.getGameModule;
 
@@ -69,7 +52,7 @@ import static VASSAL.build.GameModule.getGameModule;
  */
 public class ASLChatter extends VASSAL.build.module.Chatter
 {
-  private ArrayList<ChatterListener> chatter_listeners = new ArrayList<ChatterListener>();
+  private final ArrayList<ChatterListener> chatter_listeners = new ArrayList<>();
   public static final String BEFORE_CATEGORY = "   ";
   private static final String CHAT_FONT = "ChatFont";
   private static final String BUTTON_FONT = "ButtonFont";
@@ -80,7 +63,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
   private static final String SINGLE_DIE_COLOR = "singleDieColor"; //$NON-NLS-1$
   private static final String THIRD_DIE_COLOR = "thirdDieColor"; //$NON-NLS-1$
   private static final String NOTIFICATION_LEVEL = "notificationLevel"; //$NON-NLS-1$
-  private final static String m_strFileNameFormat = "DC%s_%s.png";
+  private final static String USER_SPACING_PADDING =  "  ...  ";
   private static final String preferenceTabName = "VASL"; // alwaysontop preference
   protected static final String DICE_CHAT_COLOR = "HTMLDiceChatColor";
 
@@ -96,33 +79,27 @@ public class ASLChatter extends VASSAL.build.module.Chatter
   private Color m_clrBackground;
   private String m_clrColoredDiceColor;
   private String m_clrDustColoredDiceColor;
-  private Color myASLChat;
   private String m_clrSingleDieColor;
-  private JButton m_btnStats;
-  private JButton m_btnDR;
-  private JButton m_btnIFT;
-  private JButton m_btnTH;
-  private JButton m_btnTK;
-  private JButton m_btnMC;
-  private JButton m_btnRally;
-  private JButton m_btnCC;
-  private JButton m_btnTC;
-  private JButton m_btndr;
-  private JButton m_btnSA;
-  private JButton m_btnRS;
-    private GroupLayout m_objGroupLayout;
-  private JPanel l_objButtonPanel;
+  private final JButton m_btnStats;
+  private final JButton m_btnDR;
+  private final JButton m_btnIFT;
+  private final JButton m_btnTH;
+  private final JButton m_btnTK;
+  private final JButton m_btnMC;
+  private final JButton m_btnRally;
+  private final JButton m_btnCC;
+  private final JButton m_btnTC;
+  private final JButton m_btndr;
+  private final JButton m_btnSA;
+  private final JButton m_btnRS;
+  private final JPanel l_objButtonPanel;
   private boolean m_bUseDiceImages;
   private boolean m_bShowDiceStats;
-  private final Icon [] mar_objWhiteDCIcon = new Icon[6];
-  private final Icon [] mar_objColoredDCIcon = new Icon[6];
-  private final Icon [] mar_objOtherColoredDCIcon = new Icon[6];
-  private final Icon [] mar_objSingleDieIcon = new Icon[6];
 
-  private Environment environment = new Environment();
-  private ASLDiceFactory diceFactory = new ASLDiceFactory();
+  private final Environment environment = new Environment();
+  private final ASLDiceFactory diceFactory = new ASLDiceFactory();
 
-  private JTextField m_edtInputText;
+  private final JTextField m_edtInputText;
     private int m_DRNotificationLevel;
 
   // create message part objects; each will be styled differently and added to chat window
@@ -142,8 +119,6 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         super();
 
         m_clrBackground = Color.white;
-        //m_clrDustColoredDiceColor = Color.magenta;
-        //m_clrSingleDieColor = Color.RED;
         conversationPane.addKeyListener(new KeyListener()
         {
             public void keyTyped(KeyEvent e) {
@@ -166,7 +141,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
         );
 
-        m_btnStats = CreateStatsDiceButton("stat.png", "", "Dice rolls stats", KeyStroke.getKeyStroke(KeyEvent.VK_F3, InputEvent.CTRL_DOWN_MASK));
+        m_btnStats = CreateStatsDiceButton(KeyStroke.getKeyStroke(KeyEvent.VK_F3, InputEvent.CTRL_DOWN_MASK));
         m_btnDR = CreateChatterDiceButton("DRs.gif", "DR", "DR", KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), true, ASLDiceBot.OTHER_CATEGORY);
         m_btnIFT = CreateChatterDiceButton("", "IFT", "IFT attack DR", KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), true, "IFT");
         m_btnTH = CreateChatterDiceButton("", "TH", "To Hit DR", KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), true, "TH");
@@ -209,13 +184,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
         m_edtInputText = new JTextField(60);
         m_edtInputText.setFocusTraversalKeysEnabled(false);
-        m_edtInputText.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                send(formatChat(e.getActionCommand()));
-                m_edtInputText.setText(""); //$NON-NLS-1$
-            }
+        m_edtInputText.addActionListener(e -> {
+            send(formatChat(e.getActionCommand()));
+            m_edtInputText.setText(""); //$NON-NLS-1$
         });
 
         m_edtInputText.setMaximumSize(new Dimension(m_edtInputText.getMaximumSize().width,
@@ -225,7 +196,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
         l_objPanelContainer.add(l_objButtonPanel);
 
-        m_objGroupLayout = new GroupLayout(this);
+        GroupLayout m_objGroupLayout = new GroupLayout(this);
         setLayout(m_objGroupLayout);
         m_objGroupLayout.setHorizontalGroup(
             m_objGroupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -244,6 +215,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         );
 
     }
+    // Is this still used?
+    @Deprecated
     public JPanel getButtonPanel() {  //used by SASLDice extension
         return l_objButtonPanel;
     }
@@ -263,19 +236,15 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         m_btnRS.setFont(objFont);
     }
 
+    //Is this still used?
+    @Deprecated
     private JButton CreateInfoButton(String strCaption, String strTooltip, final String strMsg, KeyStroke objKeyStroke) {  // used by SASLDice extension
        JButton l_btn = new JButton(strCaption);
 
        l_btn.setPreferredSize(new Dimension(90, 25));
        l_btn.setMargin(new Insets(l_btn.getMargin().top, 0, l_btn.getMargin().bottom, 0));
 
-        ActionListener l_objAL = new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                send(formatChat(strMsg));
-            }
-        };
+        ActionListener l_objAL = e -> send(formatChat(strMsg));
         l_btn.addActionListener(l_objAL);
         KeyStrokeListener l_objListener = new KeyStrokeListener(l_objAL);
         l_objListener.setKeyStroke(objKeyStroke);
@@ -285,35 +254,31 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         return l_btn;
     }
 
-    private JButton CreateStatsDiceButton(String strImage, String strCaption, String strTooltip, KeyStroke keyStroke) {
-        JButton l_btn = new JButton(strCaption);
+    private JButton CreateStatsDiceButton(KeyStroke keyStroke) {
+        JButton l_btn = new JButton("");
         l_btn.setMinimumSize(new Dimension(5, 30));
         l_btn.setMargin(new Insets(0, 0, 0, -1));
 
         try {
-            if (!strImage.isEmpty()) {
-                l_btn.setIcon(new ImageIcon(Op.load(strImage).getImage(null)));
-            }
-        } catch (Exception ex) {
+          l_btn.setIcon(new ImageIcon(Op.load("stat.png").getImage(null)));
+        } catch (Exception ignored) {
 
         }
-        ActionListener l_objAL = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    ASLDiceBot l_objDice = GameModule.getGameModule().getComponentsOf(ASLDiceBot.class).iterator().next();
-                    if (l_objDice != null) {
-                        l_objDice.statsToday();
-                    }
-                } catch (Exception ex) {
-
+        ActionListener l_objAL = e -> {
+            try {
+                ASLDiceBot l_objDice = GameModule.getGameModule().getComponentsOf(ASLDiceBot.class).iterator().next();
+                if (l_objDice != null) {
+                    l_objDice.statsToday();
                 }
+            } catch (Exception ignored) {
+
             }
         };
 
         l_btn.addActionListener(l_objAL);
         KeyStrokeListener l_Listener = new KeyStrokeListener(l_objAL);
         l_Listener.setKeyStroke(keyStroke);
-        AddHotKeyToTooltip(l_btn, l_Listener, strTooltip);
+        AddHotKeyToTooltip(l_btn, l_Listener, "Dice rolls stats");
         l_btn.setFocusable(false);
         GameModule.getGameModule().addKeyStrokeListener(l_Listener);
 
@@ -329,23 +294,21 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             if (!strImage.isEmpty()) {
                 l_btn.setIcon(new ImageIcon(Op.load(strImage).getImage(null)));
             }
-        } catch (Exception ex) {
+        } catch (Exception ignored) {
 
         }
-        ActionListener l_objAL = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    ASLDiceBot l_objDice = GameModule.getGameModule().getComponentsOf(ASLDiceBot.class).iterator().next();
-                    if (l_objDice != null) {
-                        if (bDice) {
-                            l_objDice.DR(strCat);
-                        } else {
-                            l_objDice.dr(strCat);
-                        }
+        ActionListener l_objAL = e -> {
+            try {
+                ASLDiceBot l_objDice = GameModule.getGameModule().getComponentsOf(ASLDiceBot.class).iterator().next();
+                if (l_objDice != null) {
+                    if (bDice) {
+                        l_objDice.DR(strCat);
+                    } else {
+                        l_objDice.dr(strCat);
                     }
-                } catch (Exception ex) {
-
                 }
+            } catch (Exception ignored) {
+
             }
         };
 
@@ -367,7 +330,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         if (this.style != null) {
             if (f == null) {
                 if (this.myFont == null) {
-                    f = new Font("SansSerif", 0, 12);
+                    f = new Font("SansSerif", Font.PLAIN, 12);
                     this.myFont = f;
                 } else {
                     f = this.myFont;
@@ -375,7 +338,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             }
 
             this.addStyle(".msgcategory", f, Color.black, "bold", 0);
-            this.addStyle(".msguser", f, gameMsg4, "bold", 0);
+            this.addStyle(".msguser", f, myChat, "bold", 0);
             this.addStyle(".msgspecial", f, gameMsg, "bold", 0);
 
             style.addRule(
@@ -450,11 +413,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                 {
                     ParseMoveMsg(strMsg);
                 }
-                else
-                {
+                else {
                     ParseDefaultMsg(strMsg);
                 }
-
             }
         }
         catch (Exception ex)
@@ -464,6 +425,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         super.show(strMsg);
     }
 
+    // is this still used?
+    @Deprecated
     private void ParseDefaultMsg(String strMsg) {
         try
         {
@@ -475,7 +438,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             ex.printStackTrace();
         }
     }
-
+    // is this still used?
+    @Deprecated
     private void ParseMoveMsg(String strMsg) {
         try
         {
@@ -506,7 +470,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             String[] lar_strParts = FindUser(strMsg);
 
             if ((!lar_strParts[1].isEmpty()) && (!lar_strParts[2].isEmpty()))  {
-                msgpartCategory = ""; msgpartCdice=""; msgpartWdice=""; msgpartSAN="";msgpartRest=""; msgpartDiceImage="";msgpartSpecial="";
+                msgpartCategory = ""; msgpartCdice=""; msgpartWdice=""; msgpartSAN="";
+                msgpartDiceImage="";msgpartSpecial="";
                 msgpartUser = lar_strParts[1];
                 msgpartRest = lar_strParts[2];
             }
@@ -521,11 +486,10 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     private void ParseNewDiceRoll(String strMsg)
     {
         // *** (Other DR) 4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
-        String l_strCategory = "", l_strDice = "", l_strUser = "", l_strSAN = "";
+        String l_strCategory, l_strDice, l_strUser, l_strSAN = "";
         int l_iFirstDice, l_iSecondDice;
         msgpartCategory=null; msgpartUser=null; msgpartCdice=null; msgpartWdice=null; msgpartSpecial=null; msgpartRest=null; msgpartDiceImage=null;
         Map<DiceType, Integer> otherDice = new HashMap<>();
-        DustLevel dustLevel = environment.getCurrentDustLevel();
         try
         {
             String l_strRestOfMsg = strMsg.substring("*** (".length()); // Other DR) 4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)        
@@ -564,7 +528,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                             {
                                 String[] lar_strParts = FindUser(l_strRestOfMsg);
 
-                                ArrayList<String> specialMessages = new ArrayList<String>();
+                                ArrayList<String> specialMessages = new ArrayList<>();
 
                                 if ((!lar_strParts[1].isEmpty()) && (!lar_strParts[2].isEmpty()))
                                 {
@@ -625,92 +589,79 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     if(m_DRNotificationLevel >= 2)
                                     {
                                         // For TH rolls only, show possible hit location, Unlikely hit and multiple hit
-                                        if (l_strCategory.equals("TH"))
-                                        {
-                                            if (l_iFirstDice == l_iSecondDice)
-                                            {
-                                                // Starter Kit + Full ASL
-                                                if (l_iFirstDice == 1)
-                                                {
-                                                    specialMessages.add("Unlikely Hit (C3.6)");
-                                                }
-                                                // Full ASL only
-                                                if (m_DRNotificationLevel == 3)
-                                                {
-                                                    specialMessages.add("Multiple Hits 15..40mm (C3.8)");
-                                                }
+                                      switch (l_strCategory) {
+                                        case "TH":
+                                          if (l_iFirstDice == l_iSecondDice) {
+                                            // Starter Kit + Full ASL
+                                            if (l_iFirstDice == 1) {
+                                              specialMessages.add("Unlikely Hit (C3.6)");
                                             }
-                                            if (l_iFirstDice < l_iSecondDice)
-                                            {
-                                                specialMessages.add("Turret");
-                                            } else
-                                            {
-                                                specialMessages.add("Hull");
-                                            }
-                                            HandleSpecialMessagesForOtherDice(l_strCategory, specialMessages, l_iFirstDice,l_iSecondDice, otherDice);
-
-                                        } else if (l_strCategory.equals("TK"))
-                                        {
-                                            if (l_iFirstDice == l_iSecondDice)
-                                            {
-                                                if (l_iFirstDice == 6)
-                                                {
-                                                    specialMessages.add("Dud (C7.35)");
-                                                }
-                                            }
-                                        } else if (l_strCategory.equals("MC"))
-                                        {
                                             // Full ASL only
-                                            if (l_iFirstDice == 1 && l_iSecondDice == 1 && m_DRNotificationLevel == 3)
-                                            {
-                                                specialMessages.add("Heat of Battle (A15.1)");
+                                            if (m_DRNotificationLevel == 3) {
+                                              specialMessages.add("Multiple Hits 15..40mm (C3.8)");
                                             }
-                                            // Starter Kit & Full ASL
-                                            else if (l_iFirstDice == 6 && l_iSecondDice == 6)
-                                            {
-                                                specialMessages.add("Casualty MC (A10.31)");
-                                            }
-                                            HandleSpecialMessagesForOtherDice(l_strCategory, specialMessages, l_iFirstDice,l_iSecondDice, otherDice);
-                                        } else if (l_strCategory.equals("TC"))
-                                        {
+                                          }
+                                          if (l_iFirstDice < l_iSecondDice) {
+                                            specialMessages.add("Turret");
+                                          } else {
+                                            specialMessages.add("Hull");
+                                          }
+                                          HandleSpecialMessagesForOtherDice(l_strCategory, specialMessages, l_iFirstDice, l_iSecondDice, otherDice);
 
-                                        } else if (l_strCategory.equals("Rally"))
-                                        {
+                                          break;
+                                        case "TK":
+                                          if (l_iFirstDice == l_iSecondDice) {
+                                            if (l_iFirstDice == 6) {
+                                              specialMessages.add("Dud (C7.35)");
+                                            }
+                                          }
+                                          break;
+                                        case "MC":
+                                          // Full ASL only
+                                          if (l_iFirstDice == 1 && l_iSecondDice == 1 && m_DRNotificationLevel == 3) {
+                                            specialMessages.add("Heat of Battle (A15.1)");
+                                          }
+                                          // Starter Kit & Full ASL
+                                          else if (l_iFirstDice == 6 && l_iSecondDice == 6) {
+                                            specialMessages.add("Casualty MC (A10.31)");
+                                          }
+                                          HandleSpecialMessagesForOtherDice(l_strCategory, specialMessages, l_iFirstDice, l_iSecondDice, otherDice);
+                                          break;
+                                        case "TC":
+
+                                          break;
+                                        case "Rally":
+                                          // Full ASL only
+                                          if (l_iFirstDice == 1 && l_iSecondDice == 1 && m_DRNotificationLevel == 3) {
+                                            specialMessages.add("Heat of Battle (A15.1) or Field Promotion (A18.11)");
+                                          }
+                                          // Starter Kit + Full ASL
+                                          else if (l_iFirstDice == 6 && l_iSecondDice == 6) {
+                                            specialMessages.add("Fate -> Casualty Reduction (A10.64)");
+                                          }
+
+                                          break;
+                                        case "IFT":
+                                          // check for cowering
+                                          if (l_iFirstDice == l_iSecondDice) {
                                             // Full ASL only
-                                            if (l_iFirstDice == 1 && l_iSecondDice == 1 && m_DRNotificationLevel == 3)
-                                            {
-                                                specialMessages.add("Heat of Battle (A15.1) or Field Promotion (A18.11)");
+                                            if (l_iFirstDice == 1 && m_DRNotificationLevel == 3) {
+                                              specialMessages.add("Unlikely Kill vs * (A7.309)");
                                             }
                                             // Starter Kit + Full ASL
-                                            else if (l_iFirstDice == 6 && l_iSecondDice == 6)
-                                            {
-                                                specialMessages.add("Fate -> Casualty Reduction (A10.64)");
-                                            }
-
-                                        } else if (l_strCategory.equals("IFT"))
-                                        {
-                                            // check for cowering
-                                            if (l_iFirstDice == l_iSecondDice)
-                                            {
-                                                // Full ASL only
-                                                if (l_iFirstDice == 1 && m_DRNotificationLevel == 3)
-                                                {
-                                                    specialMessages.add("Unlikely Kill vs * (A7.309)");
-                                                }
-                                                // Starter Kit + Full ASL
-                                                specialMessages.add("Cower if MMC w/o LDR");
-                                            }
-                                            HandleSpecialMessagesForOtherDice(l_strCategory, specialMessages, l_iFirstDice,l_iSecondDice, otherDice);                                        } else if (l_strCategory.equals("CC"))
-                                        {
-                                            // Full ASL only
-                                            if (l_iFirstDice == 1 && l_iSecondDice == 1 && m_DRNotificationLevel == 3)
-                                            {
-                                                specialMessages.add("Infiltration (A11.22), Field Promotion (A18.12), Unlikely Kill (A11.501)");
-                                            } else if (l_iFirstDice == 6 && l_iSecondDice == 6 && m_DRNotificationLevel == 3)
-                                            {
-                                                specialMessages.add("Infiltration (A11.22)");
-                                            }
-                                        }
+                                            specialMessages.add("Cower if MMC w/o LDR");
+                                          }
+                                          HandleSpecialMessagesForOtherDice(l_strCategory, specialMessages, l_iFirstDice, l_iSecondDice, otherDice);
+                                          break;
+                                        case "CC":
+                                          // Full ASL only
+                                          if (l_iFirstDice == 1 && l_iSecondDice == 1 && m_DRNotificationLevel == 3) {
+                                            specialMessages.add("Infiltration (A11.22), Field Promotion (A18.12), Unlikely Kill (A11.501)");
+                                          } else if (l_iFirstDice == 6 && l_iSecondDice == 6 && m_DRNotificationLevel == 3) {
+                                            specialMessages.add("Infiltration (A11.22)");
+                                          }
+                                          break;
+                                      }
                                     }
 
                                     // check if SASL Dice button clicked and if so ask for special message string - SASL Dice buttons are created via extension
@@ -733,13 +684,13 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                         }
                                     }
                                     // Construct Special Message string
-                                    String l_strSpecialMessages = "";
+                                    StringBuilder l_strSpecialMessages = new StringBuilder();
                                     for (int i = 0; i < specialMessages.size(); ++i)
                                     {
-                                        l_strSpecialMessages += specialMessages.get(i);
+                                        l_strSpecialMessages.append(specialMessages.get(i));
                                         if (i < specialMessages.size() - 1)
                                         {
-                                            l_strSpecialMessages += ", ";
+                                            l_strSpecialMessages.append(", ");
                                         }
                                     }
                                     msgpartCategory = BEFORE_CATEGORY + l_strCategory;
@@ -749,12 +700,12 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                         msgpartCdice = Integer.toString(l_iFirstDice);
                                         msgpartWdice= Integer.toString(l_iSecondDice);
 
-                                        PaintIcon(l_iFirstDice, DiceType.COLORED,true);
-                                        PaintIcon(l_iSecondDice, DiceType.WHITE,true);
+                                        PaintIcon(l_iFirstDice, DiceType.COLORED);
+                                        PaintIcon(l_iSecondDice, DiceType.WHITE);
                                         //Add any other dice required
                                         for ( Map.Entry<DiceType, Integer> entry : otherDice.entrySet())
                                         {
-                                            PaintIcon(entry.getValue(), entry.getKey() ,true);
+                                            PaintIcon(entry.getValue(), entry.getKey());
                                         }
                                     }
                                     else
@@ -763,37 +714,21 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                         msgpartWdice= Integer.toString(l_iSecondDice);
                                     }
                                     msgpartUser = l_strUser;
-                                    msgpartSpecial = l_strSpecialMessages;
+                                    msgpartSpecial = l_strSpecialMessages.toString();
 
                                     if (m_bShowDiceStats) {
                                         msgpartRest = l_strRestOfMsg;
                                     }
                                     FireDiceRoll();
-                                    msgpartUser = "  ...  " + msgpartUser;
-                                }
-                                else {
-
                                 }
                             }
-                            else {
-
-                            }
-                        }
-                        else {
-
                         }
                     }
-                    else {
-
-                    }
-                }
-                else {
-
                 }
             }
             else // *** (Other dr) 3 ***   <FredKors>      [1 / 1   avg   3,00 (3,00)]    (01.84)
             {
-                //reset SAN message to latest state for dice over map
+                //reset SAN message to the latest state for dice over map
                 msgpartSAN = l_strSAN;
                 l_iPos = l_strRestOfMsg.indexOf(" dr) ");
 
@@ -820,17 +755,14 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                 if ((!lar_strParts[1].isEmpty()) && (!lar_strParts[2].isEmpty()))
                                 {
                                     l_strUser = lar_strParts[1];
-                                    l_strRestOfMsg = lar_strParts[2]; // >      [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)        
 
-                                    l_strRestOfMsg = l_strRestOfMsg.replace(">", " ").trim();
-
-                                    msgpartCategory = BEFORE_CATEGORY + l_strCategory;
+                                  msgpartCategory = BEFORE_CATEGORY + l_strCategory;
 
                                     if (m_bUseDiceImages)
                                     {
                                         msgpartCdice = (l_strDice);
                                         msgpartWdice="-1";
-                                        PaintIcon(l_iDice, DiceType.SINGLE,true);
+                                        PaintIcon(l_iDice, DiceType.SINGLE);
                                     }
                                     else
                                         msgpartCdice = l_strDice;
@@ -851,25 +783,10 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     }
                                     FireDiceRoll();
                                 }
-                                else {
-
-                                }
-                            }
-                            else{
-
                             }
                         }
-                        else {
-
-                            }
                     }
-                    else {
-
-                        }
                 }
-                else {
-
-                    }
             }
         }
         catch (Exception ex)
@@ -950,7 +867,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
               }
 
             }
-            specialMessages.add(lvLevel.toString() + SPACE);
+            specialMessages.add(lvLevel + SPACE);
             break;
           }
         }
@@ -1004,15 +921,16 @@ public class ASLChatter extends VASSAL.build.module.Chatter
       }
     }
 
+    // is this still used?
+    @Deprecated
     private void Parse3d6(String strMsg)
     {
         try
         {// *** 3d6 = 5,4,6 *** <FredKors>
             String l_strRestOfMsg = strMsg.substring("*** 3d6 = ".length());
             int l_iPos = l_strRestOfMsg.indexOf(" ***");
-            String l_strUser = "";
 
-            if (l_iPos != -1)
+          if (l_iPos != -1)
             {
                 String l_strLast = l_strRestOfMsg.substring(l_iPos);
                 String l_strDice = l_strRestOfMsg.substring(0, l_iPos);
@@ -1038,36 +956,10 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
                             if ((!lar_strParts[1].isEmpty()) && (!lar_strParts[2].isEmpty()))
                             {
-                                l_strUser = lar_strParts[1];
-                                if (m_bUseDiceImages)
-                                {
-
-                                }
-                                else
-                                {
-
-                                }
-
-                            }
-                            else
-                            {
-
                             }
                         }
-                        else {
-
-                        }
-                    }
-                    else {
-
                     }
                 }
-                else {
-
-                }
-            }
-            else {
-
             }
         }
         catch (Exception ex)
@@ -1076,7 +968,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
     }
 
-    private void PaintIcon(int l_iDice, DiceType diceType, boolean bSingle)     {
+    private void PaintIcon(int l_iDice, DiceType diceType)     {
 
         try {
             ASLDie die = diceFactory.getASLDie(diceType);
@@ -1122,18 +1014,37 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         if (msgpartRest == null) {
             msgpartRest = "";
         }
-        if (msgpartWdice== "-1"){
+        if (msgpartWdice.equals("-1")){
             msgpartWdice="";
         }
 
         String catstyle = "msgcategory";
-        String userstyle = "msguser";
+        String userstyle = getUserStyle();
         String specialstyle = "msgspecial";  //text-decoration: underline";  //<p style="text-decoration: underline;">This text will be underlined.</p>
         if (m_bUseDiceImages) {
-            return "*~<span class=" + userstyle + ">" + msgpartDiceImage + "</span>" + "<span class=" + catstyle + ">" + msgpartCategory + "</span>"  + "<span class=" + userstyle + ">" + msgpartUser + "</span>" + " " + "<u>" + "<span class=" + specialstyle + ">" + msgpartSpecial + "</span>" + "</u>" + " " + msgpartRest;
+            return "*~<span class=" + userstyle + ">" + msgpartDiceImage + "</span>"
+                + "<span class=" + catstyle + ">" + msgpartCategory + "</span>"
+                + "<span class=" + userstyle + ">" + USER_SPACING_PADDING + msgpartUser+ "</span>"
+                + " " + "<u>"
+                + "<span class=" + specialstyle + ">" + msgpartSpecial + "</span>"
+                + "</u>" + " "
+                + "<span class=" + userstyle + ">" + msgpartRest + "</span>";
         } else {
-            return "*~<span class=" + catstyle + ">" + msgpartCategory + "</span>"  + " " + msgpartCdice + " " + msgpartWdice + " " + "<span class=" + userstyle + ">" + msgpartUser + "</span>" + " " + "<u>" + "<span class=" + specialstyle + ">" + msgpartSpecial + "</span>" + "</u>" + " " + msgpartRest;
+            return "*~<span class=" + catstyle + ">" + msgpartCategory + "</span>"
+                + " " + msgpartCdice + " " + msgpartWdice + " "
+                + "<span class=" + userstyle + ">" + USER_SPACING_PADDING + msgpartUser + "</span>"
+                + " " + "<u>"
+                + "<span class=" + specialstyle + ">" + msgpartSpecial + "</span>"
+                + "</u>" + " "
+                + "<span class=" + msgpartRest + "</span>";
         }
+    }
+    protected String getUserStyle() {
+      final String me = GlobalOptions.getInstance().getPlayerId();
+      if(msgpartUser.equals(me)) {
+        return "mychat";
+      }
+      return "other";
     }
     private String makeTableString(String strMsg){
         strMsg= strMsg.substring(2);  // strip out "!!"
@@ -1161,7 +1072,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         final Prefs l_objModulePrefs = l_objGameModule.getPrefs();
 
         // font pref
-        FontConfigurer l_objChatFontConfigurer = null;
+        FontConfigurer l_objChatFontConfigurer;
         FontConfigurer l_objChatFontConfigurer_Exist = (FontConfigurer)l_objModulePrefs.getOption("ChatFont");
         if (l_objChatFontConfigurer_Exist == null) {
             l_objChatFontConfigurer = new FontConfigurer(CHAT_FONT, Resources.getString("Chatter.chat_font_preference")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -1169,20 +1080,17 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         } else {
             l_objChatFontConfigurer = l_objChatFontConfigurer_Exist;
         }
-        l_objChatFontConfigurer.addPropertyChangeListener(new PropertyChangeListener()
-        {
-            public void propertyChange(PropertyChangeEvent evt) {
-                setFont((Font) evt.getNewValue());
-                makeStyleSheet((Font) evt.getNewValue());
-                makeASLStyleSheet((Font) evt.getNewValue());
-                send(" ");
-                send("- Chatter font changed");
-                send(" ");
-            }
+        l_objChatFontConfigurer.addPropertyChangeListener(evt -> {
+            setFont((Font) evt.getNewValue());
+            makeStyleSheet((Font) evt.getNewValue());
+            makeASLStyleSheet((Font) evt.getNewValue());
+            send(" ");
+            send("- Chatter font changed");
+            send(" ");
         });
         l_objChatFontConfigurer.fireUpdate();
         // buttons font pref
-        FontConfigurer l_objButtonsFontConfigurer = null;
+        FontConfigurer l_objButtonsFontConfigurer;
         FontConfigurer l_objButtonsFontConfigurer_Exist = (FontConfigurer)l_objModulePrefs.getOption("ButtonFont");
         if (l_objButtonsFontConfigurer_Exist == null)
         {
@@ -1191,15 +1099,10 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         } else {
             l_objButtonsFontConfigurer = l_objButtonsFontConfigurer_Exist;
         }
-        l_objButtonsFontConfigurer.addPropertyChangeListener(new PropertyChangeListener()
-        {
-            public void propertyChange(PropertyChangeEvent evt) {
-                SetButtonsFonts((Font) evt.getNewValue());
-            }
-        });
+        l_objButtonsFontConfigurer.addPropertyChangeListener(evt -> SetButtonsFonts((Font) evt.getNewValue()));
         l_objButtonsFontConfigurer.fireUpdate();
         //background colour pref
-        ColorConfigurer l_objBackgroundColor = null;
+        ColorConfigurer l_objBackgroundColor;
         ColorConfigurer l_objBackgroundColor_Exist = (ColorConfigurer)l_objModulePrefs.getOption(CHAT_BACKGROUND_COLOR);
         if (l_objBackgroundColor_Exist == null)
         {
@@ -1209,12 +1112,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             l_objBackgroundColor = l_objBackgroundColor_Exist;
         }
         m_clrBackground = (Color) l_objModulePrefs.getValue(CHAT_BACKGROUND_COLOR);
-        l_objBackgroundColor.addPropertyChangeListener(new PropertyChangeListener()
-        {
-            public void propertyChange(PropertyChangeEvent e) {
-                m_clrBackground = (Color) e.getNewValue();
-                conversationPane.setBackground(m_clrBackground);
-            }
+        l_objBackgroundColor.addPropertyChangeListener(e -> {
+            m_clrBackground = (Color) e.getNewValue();
+            conversationPane.setBackground(m_clrBackground);
         });
         l_objBackgroundColor.fireUpdate();
         // game message color pref
@@ -1222,14 +1122,14 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         ColorConfigurer gameMsgColor = new ColorConfigurer("HTMLgameMessage1Color", Resources.getString("Chatter.game_messages_preference"), Color.black);
         gameMsgColor.addPropertyChangeListener((e) -> {
             gameMsg = (Color)e.getNewValue();
-            makeStyleSheet((Font)null);
-            makeASLStyleSheet((Font)null);
+            makeStyleSheet(null);
+            makeASLStyleSheet(null);
         });
         globalPrefs.addOption(Resources.getString("Chatter.chat_window"), gameMsgColor);
         gameMsg = (Color)globalPrefs.getValue("HTMLgameMessage1Color");
 
         // sys messages pref
-        ColorConfigurer l_objSystemMsgColor = null;
+        ColorConfigurer l_objSystemMsgColor;
         ColorConfigurer l_objSystemMsgColor_Exist = (ColorConfigurer)l_objModulePrefs.getOption(SYS_MSG_COLOR);
         if (l_objSystemMsgColor_Exist == null) {
             l_objSystemMsgColor = new ColorConfigurer(SYS_MSG_COLOR, Resources.getString("Chatter.system_message_preference"), new Color(160, 160, 160)); //$NON-NLS-1$
@@ -1238,16 +1138,13 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             l_objSystemMsgColor = l_objSystemMsgColor_Exist;
         }
         systemMsg = (Color) l_objModulePrefs.getValue(SYS_MSG_COLOR);
-        makeStyleSheet((Font)null);
-        l_objSystemMsgColor.addPropertyChangeListener(new PropertyChangeListener()
-        {
-            public void propertyChange(PropertyChangeEvent e) {
-                systemMsg = (Color) e.getNewValue();
-                makeStyleSheet((Font)null);
-            }
+        makeStyleSheet(null);
+        l_objSystemMsgColor.addPropertyChangeListener(e -> {
+            systemMsg = (Color) e.getNewValue();
+            makeStyleSheet(null);
         });
         // myChat preference
-        ColorConfigurer l_objMyChatColor = null;
+        ColorConfigurer l_objMyChatColor;
         ColorConfigurer l_objMyChatColor_Exist = (ColorConfigurer)l_objModulePrefs.getOption(MY_CHAT_COLOR);
         if (l_objMyChatColor_Exist == null) {
             l_objMyChatColor = new ColorConfigurer(MY_CHAT_COLOR, "My Name and Text Messages" , Color.gray); //$NON-NLS-1$
@@ -1255,17 +1152,14 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         } else {
             l_objMyChatColor = l_objMyChatColor_Exist;
         }
-        gameMsg4 = (Color) l_objModulePrefs.getValue(MY_CHAT_COLOR);
-        makeStyleSheet((Font)null);
-        l_objMyChatColor.addPropertyChangeListener(new PropertyChangeListener()
-        {
-            public void propertyChange(PropertyChangeEvent e) {
-                gameMsg4 = (Color) e.getNewValue();
-                makeStyleSheet((Font)null);
-            }
+        myChat = (Color) l_objModulePrefs.getValue(MY_CHAT_COLOR);
+        makeStyleSheet(null);
+        l_objMyChatColor.addPropertyChangeListener(e -> {
+            myChat = (Color) e.getNewValue();
+            makeStyleSheet(null);
         });
         // other chat preference
-        ColorConfigurer l_objOtherChatColor = null;
+        ColorConfigurer l_objOtherChatColor;
         ColorConfigurer l_objOtherChatColor_Exist = (ColorConfigurer)l_objModulePrefs.getOption(OTHER_CHAT_COLOR);
         if (l_objOtherChatColor_Exist == null)
         {
@@ -1275,16 +1169,13 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             l_objOtherChatColor = l_objOtherChatColor_Exist;
         }
         otherChat = (Color) l_objModulePrefs.getValue(OTHER_CHAT_COLOR);
-        makeStyleSheet((Font)null);
-        l_objOtherChatColor.addPropertyChangeListener(new PropertyChangeListener()
-        {
-            public void propertyChange(PropertyChangeEvent e) {
-                otherChat = (Color) e.getNewValue();
-                makeStyleSheet((Font)null);
-            }
+        makeStyleSheet(null);
+        l_objOtherChatColor.addPropertyChangeListener(e -> {
+            otherChat = (Color) e.getNewValue();
+            makeStyleSheet(null);
         });
         // dice chat pref
-        ColorConfigurer l_objDiceChatColor = null;
+        ColorConfigurer l_objDiceChatColor;
         ColorConfigurer l_objDiceChatColor_Exist = (ColorConfigurer)l_objModulePrefs.getOption(DICE_CHAT_COLOR);
         if (l_objDiceChatColor_Exist == null)
         {
@@ -1294,16 +1185,13 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             l_objDiceChatColor = l_objDiceChatColor_Exist;
         }
         gameMsg5 = (Color) l_objModulePrefs.getValue(DICE_CHAT_COLOR);
-        makeStyleSheet((Font)null);
-        l_objDiceChatColor.addPropertyChangeListener(new PropertyChangeListener()
-        {
-            public void propertyChange(PropertyChangeEvent e) {
-                gameMsg5 = (Color) e.getNewValue();
-                makeStyleSheet((Font)null);
-            }
+        makeStyleSheet(null);
+        l_objDiceChatColor.addPropertyChangeListener(e -> {
+            gameMsg5 = (Color) e.getNewValue();
+            makeStyleSheet(null);
         });
         // dice images pref
-        BooleanConfigurer l_objUseDiceImagesOption = null;
+        BooleanConfigurer l_objUseDiceImagesOption;
         BooleanConfigurer l_objUseDiceImagesOption_Exist = (BooleanConfigurer)l_objModulePrefs.getOption(USE_DICE_IMAGES);
         if (l_objUseDiceImagesOption_Exist == null)
         {
@@ -1313,14 +1201,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             l_objUseDiceImagesOption = l_objUseDiceImagesOption_Exist;
         }
         m_bUseDiceImages = (Boolean) (l_objModulePrefs.getValue(USE_DICE_IMAGES));
-        l_objUseDiceImagesOption.addPropertyChangeListener(new PropertyChangeListener()
-        {
-            public void propertyChange(PropertyChangeEvent e) {
-                m_bUseDiceImages = (Boolean) e.getNewValue();
-            }
-        });
+        l_objUseDiceImagesOption.addPropertyChangeListener(e -> m_bUseDiceImages = (Boolean) e.getNewValue());
         // dice stats pref
-        BooleanConfigurer l_objShowDiceStatsOption = null;
+        BooleanConfigurer l_objShowDiceStatsOption;
         BooleanConfigurer l_objShowDiceStatsOption_Exist = (BooleanConfigurer)l_objModulePrefs.getOption(SHOW_DICE_STATS);
         if (l_objShowDiceStatsOption_Exist == null)
         {
@@ -1330,15 +1213,10 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             l_objShowDiceStatsOption = l_objShowDiceStatsOption_Exist;
         }
         m_bShowDiceStats = (Boolean) (l_objModulePrefs.getValue(SHOW_DICE_STATS));
-        l_objShowDiceStatsOption.addPropertyChangeListener(new PropertyChangeListener()
-        {
-            public void propertyChange(PropertyChangeEvent e) {
-                m_bShowDiceStats = (Boolean) e.getNewValue();
-            }
-        });
+        l_objShowDiceStatsOption.addPropertyChangeListener(e -> m_bShowDiceStats = (Boolean) e.getNewValue());
 
         // coloured die pref
-        StringEnumConfigurer coloredDiceColor = null;
+        StringEnumConfigurer coloredDiceColor;
         StringEnumConfigurer coloredDiceColor_Exist = (StringEnumConfigurer) l_objModulePrefs.getOption(COLORED_DICE_COLOR);
         if (coloredDiceColor_Exist==null){
             coloredDiceColor = new StringEnumConfigurer(COLORED_DICE_COLOR, "Colored Die Color:", new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange"} );
@@ -1346,21 +1224,18 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         } else {
             coloredDiceColor = coloredDiceColor_Exist;
         }
-        coloredDiceColor.addPropertyChangeListener(new PropertyChangeListener()
-        {
-            public void propertyChange(PropertyChangeEvent e) {
-              m_clrColoredDiceColor = (String) e.getNewValue();
-              if (m_clrColoredDiceColor!=null) {
-                diceFactory.setDieColor(DiceType.COLORED, DieColor.getEnum(m_clrColoredDiceColor));
-              }
-            }
+        coloredDiceColor.addPropertyChangeListener(e -> {
+          m_clrColoredDiceColor = (String) e.getNewValue();
+          if (m_clrColoredDiceColor!=null) {
+            diceFactory.setDieColor(DiceType.COLORED, DieColor.getEnum(m_clrColoredDiceColor));
+          }
         });
         m_clrColoredDiceColor = l_objModulePrefs.getStoredValue("coloredDiceColor");
         if(m_clrColoredDiceColor != null)
           diceFactory.setDieColor(DiceType.COLORED,DieColor.getEnum(m_clrColoredDiceColor));
 
         // single die pref
-        StringEnumConfigurer l_objColoredDieColor = null;
+        StringEnumConfigurer l_objColoredDieColor;
         StringEnumConfigurer l_objColoredDieColor_Exist = (StringEnumConfigurer)l_objModulePrefs.getOption(SINGLE_DIE_COLOR);
         if (l_objColoredDieColor_Exist == null) {
             l_objColoredDieColor = new StringEnumConfigurer(SINGLE_DIE_COLOR, "Single die color:  ", new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange"} );
@@ -1368,13 +1243,10 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         } else {
             l_objColoredDieColor = l_objColoredDieColor_Exist;
         }
-        l_objColoredDieColor.addPropertyChangeListener(new PropertyChangeListener()
-        {
-          public void propertyChange(PropertyChangeEvent e) {
-            m_clrSingleDieColor = (String) e.getNewValue();
-            if (m_clrSingleDieColor!=null) {
-              diceFactory.setDieColor(DiceType.SINGLE, DieColor.getEnum(m_clrSingleDieColor));
-            }
+        l_objColoredDieColor.addPropertyChangeListener(e -> {
+          m_clrSingleDieColor = (String) e.getNewValue();
+          if (m_clrSingleDieColor!=null) {
+            diceFactory.setDieColor(DiceType.SINGLE, DieColor.getEnum(m_clrSingleDieColor));
           }
         });
         m_clrSingleDieColor = l_objModulePrefs.getStoredValue("singleDieColor");
@@ -1382,21 +1254,13 @@ public class ASLChatter extends VASSAL.build.module.Chatter
           diceFactory.setDieColor(DiceType.SINGLE,DieColor.getEnum(m_clrSingleDieColor));
 
         // third die pref
-        StringEnumConfigurer l_objThirdDieColor = null;
-        StringEnumConfigurer l_objThirdDieColor_Exist = (StringEnumConfigurer)l_objModulePrefs.getOption(THIRD_DIE_COLOR);
-        if (l_objThirdDieColor == null) {
-          l_objThirdDieColor = new StringEnumConfigurer(THIRD_DIE_COLOR, "Third die color:  ", new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange"} );
-          l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), l_objThirdDieColor); //$NON-NLS-1$
-        } else {
-          l_objThirdDieColor = l_objThirdDieColor_Exist;
-        }
-        l_objThirdDieColor.addPropertyChangeListener(new PropertyChangeListener()
-        {
-          public void propertyChange(PropertyChangeEvent e) {
-            m_clrDustColoredDiceColor = (String) e.getNewValue();
-            if (m_clrDustColoredDiceColor!=null) {
-              diceFactory.setDieColor(DiceType.OTHER_DUST, DieColor.getEnum(m_clrDustColoredDiceColor));
-            }
+        StringEnumConfigurer l_objThirdDieColor;
+        l_objThirdDieColor = new StringEnumConfigurer(THIRD_DIE_COLOR, "Third die color:  ", new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange"} );
+        l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), l_objThirdDieColor); //$NON-NLS-1$
+        l_objThirdDieColor.addPropertyChangeListener(e -> {
+          m_clrDustColoredDiceColor = (String) e.getNewValue();
+          if (m_clrDustColoredDiceColor!=null) {
+            diceFactory.setDieColor(DiceType.OTHER_DUST, DieColor.getEnum(m_clrDustColoredDiceColor));
           }
         });
         m_clrDustColoredDiceColor = l_objModulePrefs.getStoredValue("thirdDieColor");
@@ -1426,16 +1290,14 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
         // just for access from inside the event handler
         final StringEnumConfigurer __cfg = l_objSpecialDiceRollNotificationLevel;
-        l_objSpecialDiceRollNotificationLevel.addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent e) {
-                for(int i = 0; i < l_DROptions.length; ++i){
-                    if(l_DROptions[i].equals(__cfg.getValueString())) {
-                        m_DRNotificationLevel = i;
-                        return;
-                    }
+        l_objSpecialDiceRollNotificationLevel.addPropertyChangeListener(e -> {
+            for(int i = 0; i < l_DROptions.length; ++i){
+                if(l_DROptions[i].equals(__cfg.getValueString())) {
+                    m_DRNotificationLevel = i;
+                    return;
                 }
-                m_DRNotificationLevel = 3;
             }
+            m_DRNotificationLevel = 3;
         });
         // Player Window pref
         l_objColoredDieColor.fireUpdate();
@@ -1497,7 +1359,6 @@ public class ASLChatter extends VASSAL.build.module.Chatter
   }
 
   public interface ChatterListener {
-        public void DiceRoll(String strCategory, String strUser, String strSAN, int iFirstDice, int iSecondDice);
+        void DiceRoll(String strCategory, String strUser, String strSAN, int iFirstDice, int iSecondDice);
   }
 }
-
