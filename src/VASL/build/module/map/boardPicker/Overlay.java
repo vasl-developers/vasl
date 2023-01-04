@@ -510,13 +510,15 @@ public class Overlay implements Cloneable {
     }
     public void transform(){
         Map losmap;
+        Integer hex1elevation;
         try {
             losmap= board.getVASLBoardArchive().getLOSData("Normal", false);
+            if (losmap==null){return;}
+            hex1elevation = losmap.getHex(hex1).getBaseHeight();
         } catch (Exception e) {
             return;
         }
-        if (losmap==null){return;}
-        Integer hex1elevation = losmap.getHex(hex1).getBaseHeight();
+
         if (hex1elevation != 0){
             Image i = getImage();
             // get the image as a buffered image
