@@ -1219,7 +1219,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         StringEnumConfigurer coloredDiceColor;
         StringEnumConfigurer coloredDiceColor_Exist = (StringEnumConfigurer) l_objModulePrefs.getOption(COLORED_DICE_COLOR);
         if (coloredDiceColor_Exist==null){
-            coloredDiceColor = new StringEnumConfigurer(COLORED_DICE_COLOR, "Colored Die Color:", new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange"} );
+            coloredDiceColor = new StringEnumConfigurer(COLORED_DICE_COLOR, "Colored Die Color:", new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange", "AlliedM", "AxisM", "American", "British", "Finnish", "French", "German", "Italian", "Japanese", "Russian", "Swedish"} );
             l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), coloredDiceColor);
         } else {
             coloredDiceColor = coloredDiceColor_Exist;
@@ -1238,7 +1238,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         StringEnumConfigurer l_objColoredDieColor;
         StringEnumConfigurer l_objColoredDieColor_Exist = (StringEnumConfigurer)l_objModulePrefs.getOption(SINGLE_DIE_COLOR);
         if (l_objColoredDieColor_Exist == null) {
-            l_objColoredDieColor = new StringEnumConfigurer(SINGLE_DIE_COLOR, "Single die color:  ", new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange"} );
+            l_objColoredDieColor = new StringEnumConfigurer(SINGLE_DIE_COLOR, "Single die color:  ", new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange", "AlliedM", "AxisM", "American", "British", "Finnish", "French", "German", "Italian", "Japanese", "Russian", "Swedish"} );
             l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), l_objColoredDieColor); //$NON-NLS-1$
         } else {
             l_objColoredDieColor = l_objColoredDieColor_Exist;
@@ -1255,7 +1255,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
         // third die pref
         StringEnumConfigurer l_objThirdDieColor;
-        l_objThirdDieColor = new StringEnumConfigurer(THIRD_DIE_COLOR, "Third die color:  ", new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange"} );
+        l_objThirdDieColor = new StringEnumConfigurer(THIRD_DIE_COLOR, "Third die color:  ", new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange", "AlliedM", "AxisM", "American", "British", "Finnish", "French", "German", "Italian", "Japanese", "Russian", "Swedish"} );
         l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), l_objThirdDieColor); //$NON-NLS-1$
         l_objThirdDieColor.addPropertyChangeListener(e -> {
           m_clrDustColoredDiceColor = (String) e.getNewValue();

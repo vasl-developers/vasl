@@ -15,7 +15,7 @@ public enum DieColor {
       public String toString(){return "R";}
     },
     GREEN("Green"){
-      public String toString(){return "G";}
+      public String toString(){return "DG";}
     },
     YELLOW("Yellow"){
       public String toString(){return "Y";}
@@ -28,6 +28,39 @@ public enum DieColor {
     },
     PURPLE("Purple"){
       public String toString(){return "P";}
+    },
+    SWEDISH("Swedish"){
+        public String toString(){return "SV";}
+    },
+    RUSSIAN("Russian"){
+        public String toString(){return "RU";}
+    },
+    JAPANESE("Japanese"){
+        public String toString(){return "JA";}
+    },
+    ITALIAN("Italian"){
+        public String toString(){return "IT";}
+    },
+    GERMAN("German"){
+        public String toString(){return "GE";}
+    },
+    FRENCH("French"){
+        public String toString(){return "FR";}
+    },
+    FINNISH("Finnish"){
+        public String toString(){return "FI";}
+    },
+    BRITISH("British"){
+        public String toString(){return "BR";}
+    },
+    AMERICAN("American"){
+        public String toString(){return "AM";}
+    },
+    AXISM("AxisM"){
+        public String toString(){return "AX";}
+    },
+    ALLIEDM("AlliedM"){
+        public String toString(){return "AL";}
     };
     private String color;
 
