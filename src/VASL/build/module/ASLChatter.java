@@ -29,16 +29,22 @@ import VASSAL.command.CommandEncoder;
 import VASSAL.configure.*;
 import VASSAL.i18n.Resources;
 import VASSAL.preferences.Prefs;
+import VASSAL.tools.ErrorDialog;
 import VASSAL.tools.KeyStrokeListener;
 import VASSAL.tools.KeyStrokeSource;
+import VASSAL.tools.QuickColors;
 import VASSAL.tools.imageop.Op;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.html.HTML;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -422,9 +428,94 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         {
             ex.printStackTrace();
         }
-        super.show(strMsg);
+        if (SwingUtilities.isEventDispatchThread()) {
+            this.doShow(strMsg);
+        } else {
+            String finalStrMsg = strMsg;
+            SwingUtilities.invokeLater(() -> {
+                this.doShow(finalStrMsg);
+            });
+        }
     }
 
+    //temporary - to fix VASSAL issues parsing messages pertaining to concealed counters
+    private void doShow(String s) {
+        s = s.trim();
+        String style;
+        boolean html_allowed;
+        if (!s.isEmpty()) {
+            if (s.startsWith("*")) {
+                html_allowed = QuickColors.getQuickColor(s, "*") >= 0 || GlobalOptions.getInstance().chatterHTMLSupport();
+                style = getQuickColorHTMLStyleLocal(s, "*");
+                s = stripQuickColorTagLocal(s, "*");
+            } else if (s.startsWith("-")) {
+                html_allowed = true;
+                style = QuickColors.getQuickColor(s, "-") >= 0 ? QuickColors.getQuickColorHTMLStyle(s, "-") : "sys";
+                s = QuickColors.stripQuickColorTag(s, "-");
+            } else {
+                style = this.getChatStyle(s);
+                html_allowed = false;
+            }
+        } else {
+            style = "msg";
+            html_allowed = false;
+        }
+
+        if (!html_allowed) {
+            s = s.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+        }
+
+        String keystring = Resources.getString("PlayerRoster.observer");
+        String replace = keystring.replace("<", "&lt;").replace(">", "&gt;");
+        if (!replace.equals(keystring)) {
+            s = s.replace(keystring, replace);
+        }
+
+        try {
+            this.kit.insertHTML(this.doc, this.doc.getLength(), "\n<div class=" + style + ">" + s + "</div>", 0, 0, (HTML.Tag)null);
+        } catch (IOException | BadLocationException var7) {
+            ErrorDialog.bug(var7);
+        }
+
+        this.conversationPane.repaint();
+    }
+
+    public static String stripQuickColorTagLocal(String s, String prefix) {
+        final String[] QUICK_COLOR_REGEX = new String[]{"\\|", "!", "~", "`"};
+        int quickIndex = getQuickColorLocal(s, prefix);
+        return quickIndex < 0 ? s : s.replaceFirst(QUICK_COLOR_REGEX[quickIndex], "");
+    }
+    public static int getQuickColorLocal(String s, String prefix) {
+        if (!StringUtils.isEmpty(s) && !s.isBlank()) {
+            if (StringUtils.isEmpty(prefix)) {
+                return getQuickColorLocal(s);
+            } else if (!s.startsWith(prefix)) {
+                return -1;
+            } else {
+                String s2 = s.substring(prefix.length()).trim();
+                return s2.isEmpty() ? -1 : getQuickColorLocal(s2.charAt(0));
+            }
+        } else {
+            return -1;
+        }
+    }
+    public static int getQuickColorLocal(String s) {
+        if (StringUtils.isEmpty(s)) {
+            return -1;
+        } else {
+            String s2 = s.trim();
+            return s2.isEmpty() ? -1 : getQuickColorLocal(s2.charAt(0));
+        }
+    }
+    public static int getQuickColorLocal(char c) {
+        return "|!~`".indexOf(c);
+    }
+
+    public static String getQuickColorHTMLStyleLocal(String s, String prefix) {
+        int quickIndex = getQuickColorLocal(s, prefix);
+        Object var10000 = quickIndex <= 0 ? "" : quickIndex + 1;
+        return "msg" + var10000;
+    }
     // is this still used?
     @Deprecated
     private void ParseDefaultMsg(String strMsg) {
