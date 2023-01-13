@@ -450,7 +450,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                 s = stripQuickColorTagLocal(s, "*");
             } else if (s.startsWith("-")) {
                 html_allowed = true;
-                style = QuickColors.getQuickColor(s, "-") >= 0 ? QuickColors.getQuickColorHTMLStyle(s, "-") : "sys";
+                //dirty quick fix for system messages not displaying with correct fonts, colors
+                style = "sys";
                 s = QuickColors.stripQuickColorTag(s, "-");
             } else {
                 style = this.getChatStyle(s);
