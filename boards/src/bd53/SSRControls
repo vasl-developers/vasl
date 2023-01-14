@@ -1,0 +1,7 @@
+<SSRControls>
+ <Option name="Board 53 Special overlays">
+ <Checkbox name="">
+         <entry name="HazMo10: Fresh Grist" rule="SSO_HazMo10" text="scenario HazMo10 overlay"/>
+ </Checkbox>
+   </Option>
+</SSRControls>
