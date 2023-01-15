@@ -25,12 +25,12 @@
 
 	<coreBoards>
 		<boarddata name="00" version="6.1" versionDate="Mar 2022" description="" />
-		<boarddata name="01" version="6.3" versionDate="Aug 2022" description="" />
+		<boarddata name="01" version="6.5" versionDate="Jan 2023" description="" />
 		<boarddata name="02" version="6.9" versionDate="Aug 2022" description="" />
 		<boarddata name="03" version="6.6" versionDate="Aug 2022" description="" />
 		<boarddata name="04" version="6.4" versionDate="Aug 2022" description="" />
 		<boarddata name="05" version="6.9" versionDate="Aug 2022" description="" />
-		<boarddata name="06" version="6.3" versionDate="Aug 2022" description="" />
+		<boarddata name="06" version="6.4" versionDate="Jan 2023" description="" />
 		<boarddata name="07" version="6.4" versionDate="Mar 2022" description="" />
 		<boarddata name="08" version="6.7" versionDate="Aug 2022" description="" />
 		<boarddata name="09" version="6.5" versionDate="Aug 2022" description="" />
@@ -42,14 +42,14 @@
 		<boarddata name="14" version="6.6" versionDate="Mar 2022" description="" />
 		<boarddata name="15" version="6.3" versionDate="Mar 2022" description="" />
 		<boarddata name="16" version="6.4" versionDate="Mar 2022" description="" />
-		<boarddata name="17" version="6.3" versionDate="Mar 2022" description="" />
+		<boarddata name="17" version="6.4" versionDate="Jan 2023" description="" />
 		<boarddata name="17z" version="6.4" versionDate="Mar 2022" description="" />
 		<boarddata name="18" version="6.5" versionDate="Mar 2022" description="" />
 		<boarddata name="19" version="6.4" versionDate="Mar 2022" description="" />
-		<boarddata name="20" version="7.0" versionDate="Mar 2022" description="" />
+		<boarddata name="20" version="7.1" versionDate="Jan 2023" description="" />
 		<boarddata name="21" version="6.3" versionDate="Mar 2022" description="" />
 		<boarddata name="22" version="6.8" versionDate="Apr 2022" description="" />
-		<boarddata name="23" version="6.5" versionDate="Mar 2022" description="" />
+		<boarddata name="23" version="6.6" versionDate="Jan 2023" description="" />
 		<boarddata name="24" version="6.9" versionDate="Mar 2022" description="" />
 		<boarddata name="25" version="6.7" versionDate="Mar 2022" description="" />
 		<boarddata name="25a" version="5.3" versionDate="May 2021" description="" />
@@ -60,9 +60,9 @@
 		<boarddata name="29" version="6.5" versionDate="Mar 2022" description="" />
 		<boarddata name="30" version="6.5" versionDate="Mar 2022" description="" />
 		<boarddata name="31" version="6.5" versionDate="Mar 2022" description="" />
-		<boarddata name="32" version="6.8" versionDate="Mar 2022" description="" />
+		<boarddata name="32" version="6.9" versionDate="Jan 2023" description="" />
 		<boarddata name="33" version="6.5" versionDate="Mar 2022" description="" />
-		<boarddata name="34" version="6.6" versionDate="Mar 2022" description="" />
+		<boarddata name="34" version="6.7" versionDate="Jan 2023" description="" />
 		<boarddata name="35" version="6.3" versionDate="Mar 2022" description="" />
 		<boarddata name="36" version="6.8" versionDate="Mar 2022" description="" />
 		<boarddata name="37" version="6.3" versionDate="Apr 2022" description="" />
@@ -179,7 +179,7 @@
 		<boarddata name="w" version="6.3" versionDate="Apr 2022" description="" />
 		<boarddata name="x" version="6.3" versionDate="Apr 2022" description="" />
 		<boarddata name="y" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="z" version="6.4" versionDate="Apr 2022" description="" />
+		<boarddata name="z" version="6.5" versionDate="Jan 2023" description="" />
 	</coreBoards>
 
 	<otherBoards>
