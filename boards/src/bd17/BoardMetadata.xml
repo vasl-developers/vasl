@@ -19,8 +19,9 @@
 	others - TBD e.g. alternate hex grain, etc. 
 	
 	3/11/15 - fixed "no woods roads" SSR rule
+	12/19/22 - added SSO_17_137 - TJ
 -->
-<boardMetadata name="17" version="6.3" versionDate="Mar 2022" author="TR" boardImageFileName="bd17.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="17" version="6.4" versionDate="Jan 2023" author="TR" boardImageFileName="bd17.gif" hasHills="FALSE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -85,6 +86,7 @@
 		<overlaySSRule name="RoadsToPaths" image="17_RoadsToPaths.gif" x="421" y="1" />
 		<overlaySSRule name="NoRoads" image="17_NoRoads.gif" x="1" y="1" />
 		<overlaySSRule name="SSO_17_59" image="SSO_17_59.gif" x="1" y="1" />
+		<overlaySSRule name="SSO_17_137" image="SSO_17_137.gif" x="189" y="158" />
 		<overlaySSRule name="SSO_17_ASLUG17" image="SSO_17_ASLUG17.gif" x="595" y="14" />
 		<overlaySSRule name="SSO_17_BB2" image="SSO_17_BB2.gif" x="893" y="1" />
 		<overlaySSRule name="SSO_17_CH8" image="SSO_17_CH8.gif" x="703" y="427" />

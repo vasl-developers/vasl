@@ -3,6 +3,9 @@
  <Checkbox name="">
          <entry name="Only bldg 6M5 is Stone" rule="BSO_6_OnlyChateauIsStone" text="Only 6M5 is Stone"/>
  </Checkbox>
+ <Checkbox name="">
+         <entry name="137 - Italian Brothers" rule="SSO_6_137" text="Scenario 137 SSO"/>
+ </Checkbox>
   <Checkbox name="">
          <entry name="A27 - King's Castle" rule="SSO_6_A27" text="Scenario A27 SSO"/>
  </Checkbox>

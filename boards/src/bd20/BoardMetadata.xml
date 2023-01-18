@@ -21,8 +21,10 @@
 	2/8/15 - fixed overlay SSR rules adding rule sets
 	v6.5 Feb 2017 (TR)
 	v6.6 Mar 2018 update version for lightwoods transform (ATC)
+	12/10/22 - added SSO_20_3 - TJ
+	12/16/22 - added SSO_20_4 - TJ
 -->
-<boardMetadata name="20" version="7.0" versionDate="Mar 2022" author="TR" boardImageFileName="bd20.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="20" version="7.1" versionDate="Jan 2023" author="TR" boardImageFileName="bd20.gif" hasHills="FALSE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -190,6 +192,9 @@
 			x - x coordinate of overly upper left
 			y - y coordinate of overlay upper left
 		-->
+		
+		<overlaySSRule name="SSO_20_3" image="SSO_20_3.gif" x="25" y="1" />
+		<overlaySSRule name="SSO_20_4" image="SSO_20_4.gif" x="21" y="2" />
 		<overlaySSRule name="DenseJungle" image="20_DenseJungle.gif" x="1" y="1" />
 		<overlaySSRuleSet name="BridgeToFord">
 			<overlaySSRuleImage image="20_Bridge2Ford_T8.gif" x="1042" y="479" />

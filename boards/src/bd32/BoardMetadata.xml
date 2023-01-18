@@ -17,8 +17,10 @@
     height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
+	
+	11/30/22 - fixed SSRcontrols file - TJ
 -->
-<boardMetadata name="32" version="6.8" versionDate="Mar 2022" author="TR" boardImageFileName="bd32.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="32" version="6.9" versionDate="Jan 2023" author="TR" boardImageFileName="bd32.gif" hasHills="FALSE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily

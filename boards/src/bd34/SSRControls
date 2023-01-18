@@ -1,0 +1,7 @@
+<SSRControls>
+   <Option name="Board 34 Special Overlays">
+       <Checkbox name="">
+         <entry name="G16 - Alligator Creek" rule="SSO_34_G16" text="Scenario G16 SSO"/>
+       </Checkbox>
+  </Option>
+  </SSRControls>
