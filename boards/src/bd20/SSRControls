@@ -1,0 +1,10 @@
+<SSRControls>
+   <Option name="Board 20 Special Overlays">
+       <Checkbox name="">
+         <entry name="Scenario 3 - The Czerniakow Bridgehead" rule="SSO_20_3" text="Scenario 3 SSO"/>
+       </Checkbox>
+       <Checkbox name="">
+         <entry name="Scenario 4 - The Commissar's House" rule="SSO_20_4" text="Scenario 4 SSO"/>
+       </Checkbox>
+  </Option>
+  </SSRControls>

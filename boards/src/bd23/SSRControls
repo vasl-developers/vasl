@@ -10,6 +10,9 @@
          <entry name="Hexrow 10 side is water" rule="23_BSO_10SideWater" text="bd 23 row 10 side to water"/>
  </Checkbox>
  <Checkbox name="">
+         <entry name="3: The Czerniakow Bridgehead" rule="SSO_23_3" text="Scenario 3 SSO"/>
+ </Checkbox>
+ <Checkbox name="">
          <entry name="22: Kurhaus Clash" rule="SSO_22" text="scenario 22 overlay"/>
  </Checkbox>
     </Option>

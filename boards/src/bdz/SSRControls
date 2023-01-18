@@ -1,0 +1,7 @@
+<SSRControls>
+   <Option name="Board z Special Overlays">
+       <Checkbox name="">
+         <entry name="Scenario S63 - Nothing Left To Lose" rule="SSO_z_S63" text="Scenario S63 SSO"/>
+       </Checkbox>
+  </Option>
+  </SSRControls>
