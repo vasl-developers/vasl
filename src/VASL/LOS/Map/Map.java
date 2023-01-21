@@ -4132,6 +4132,7 @@ public class Map  {
                 // handle special cases where terrain hindrance is not 1
                 // if LOS along hexspine, check for higher hindrance
                 if((status.LOSis60Degree || status.LOSisHorizontal) && (status.rangeToSource % 2 != 0)) { // only need to check both hexes when range from source is odd
+
                     // roofless factory debris
                     if (status.currentTerrain.isRoofless()) {hindrancevalue = 2;
                     }
@@ -4147,17 +4148,17 @@ public class Map  {
                     int hexsidetouched=status.currentHex.getLocationHexside(status.currentHex.getNearestLocation(status.currentCol, status.currentRow));
                     if(hexsidetouched==firstsidetest){
                         Hex testhex = getAdjacentHex(status.currentHex, firstsidetest);
-                        if (testhex.getCenterLocation().getTerrain().isRoofless()) {
+                        if (testhex.getCenterLocation().getTerrain().isRoofless() || status.currentTerrain.getName().contains("Light Woods")) {
                             hindrancevalue=2;
                         }
                     }
                     else if(hexsidetouched==secondsidetest){
                         Hex testhex = getAdjacentHex(status.currentHex, secondsidetest);
-                        if (testhex.getCenterLocation().getTerrain().isRoofless()) {
+                        if (testhex.getCenterLocation().getTerrain().isRoofless() || status.currentTerrain.getName().contains("Light Woods")) {
                             hindrancevalue=2;
                         }
-                    }
 
+                    }
                 }
                 else if(status.currentTerrain.getName().contains("Light Woods")){
                     hindrancevalue = 2;
