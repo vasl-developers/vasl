@@ -578,8 +578,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
      */
     private void updateOverlay(String ovrName) {
 
-        // if the boardDir doesn't exist, bail early
-        if (boardDir != null) {
+        // if the boardDir doesn't exist or the overlay name is blank, bail early
+        if (boardDir != null && !ovrName.equals("")) {
             String ovrfilename = Overlay.archiveName(ovrName + "a");
             final File ovrFile = new File(boardDir, "overlays/" + ovrfilename);
 
@@ -2001,6 +2001,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 model.addElement("Level -1");
                 model.addElement("Level 0");
                 model.addElement("Level 1");
+                //model.addElement("Water");
                 to.setMaximumSize(new Dimension(to.getMaximumSize().width, to.getPreferredSize().height));
                 panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
                 panel.add(new JLabel("All"));
