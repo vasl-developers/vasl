@@ -1366,6 +1366,9 @@
 			<colorMap fromColor="WoodStairwell" toColor="WoodBldg6"/>
 			<colorMap fromColor="StoneStairwell" toColor="StoneBldg6"/>
 		</colorSSR>
+		<colorSSR name="AllBuildingsLevel1">
+			<colorMap fromColor="WoodBldg1" toColor="WoodBldg1"/>  // just need one transform to make it work
+		</colorSSR>
 		<colorSSR name="RowhouseBarsToBuildings">
 			<colorMap fromColor="StoneRowhouseBar" toColor="StoneBldg8"/>
 			<colorMap fromColor="WoodRowhouseBar" toColor="WoodBldg8"/>
@@ -1542,6 +1545,18 @@
 			<colorMap fromColor="SeparatedMarshBrownL1" toColor="Level_1"/>
 			<colorMap fromColor="SeparatedMarshGreenL_1" toColor="Level_1"/>
 			<colorMap fromColor="SeparatedMarshBrownL_1" toColor="Level_1"/>
+		</colorSSR>
+		<colorSSR name="MarshToWater">
+			<colorMap fromColor="MarshGreenL0" toColor="Water"/>
+			<colorMap fromColor="MarshBrownL0" toColor="Water"/>
+			<colorMap fromColor="MarshGreenL_1" toColor="Water"/>
+			<colorMap fromColor="MarshBrownL_1" toColor="Water"/>
+			<colorMap fromColor="SeparatedMarshGreenL0" toColor="Water"/>
+			<colorMap fromColor="SeparatedMarshBrownL0" toColor="Water"/>
+			<colorMap fromColor="SeparatedMarshGreenL1" toColor="Water"/>
+			<colorMap fromColor="SeparatedMarshBrownL1" toColor="Water"/>
+			<colorMap fromColor="SeparatedMarshGreenL_1" toColor="Water"/>
+			<colorMap fromColor="SeparatedMarshBrownL_1" toColor="Water"/>
 		</colorSSR>
 		<colorSSR name="MarshToLevel0">
 			<colorMap fromColor="MarshGreenL0" toColor="Level0"/>
@@ -2359,7 +2374,7 @@
         <LOSSSRule name="Bamboo" type="customCode" fromValue="" toValue="" />
         <LOSSSRule name="RoadsToPaths" type="customCode" fromValue="" toValue="" />
         <LOSSSRule name="NoWoodsRoads" type="customCode" fromValue="" toValue="" />
-
+		<LOSSSRule name="AllBuildingsLevel1" type="customCode" fromValue="" toValue="" />
         <!-- simple terrain mappings -->
         <LOSSSRule name="BrushToOpenGround" type="terrainMap" fromValue="Brush" toValue="Open Ground" />
         <LOSSSRule name="SwampToMarsh" type="terrainMap" fromValue="Swamp" toValue="Marsh" />
@@ -2453,6 +2468,7 @@
         <LOSSSRule name="MarshToBrush" type="terrainMap" fromValue="Marsh" toValue="Brush" />
         <LOSSSRule name="MarshToWoods" type="terrainMap" fromValue="Marsh" toValue="Woods" />
         <LOSSSRule name="MarshToGrain" type="terrainMap" fromValue="Marsh" toValue="Grain" />
+		<LOSSSRule name="MarshToWater" type="terrainMap" fromValue="Marsh" toValue="Water" />
 
         <LOSSSRule name="Level_1ToWoods" type="elevationToTerrainMap" fromValue="-1" toValue="Woods" />
         <LOSSSRule name="Level0ToWoods" type="elevationToTerrainMap" fromValue="0" toValue="Woods" />
