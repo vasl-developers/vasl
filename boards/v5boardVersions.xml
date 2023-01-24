@@ -179,7 +179,7 @@
 		<boarddata name="w" version="6.3" versionDate="Apr 2022" description="" />
 		<boarddata name="x" version="6.3" versionDate="Apr 2022" description="" />
 		<boarddata name="y" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="z" version="6.5" versionDate="Jan 2023" description="" />
+		<boarddata name="z" version="6.6" versionDate="Jan 2023" description="" />
 	</coreBoards>
 
 	<otherBoards>
