@@ -1320,10 +1320,10 @@ public class Map  {
             double sourceadj=0;
             double targetadj=0;
 
-            if(source.getTerrain().isRooftop() ) {
+            if(source.getTerrain().isRooftop() && source.getBaseHeight() !=1) {
                 sourceadj=-1;
             }
-            if(target.getTerrain().isRooftop() ) {
+            if(target.getTerrain().isRooftop() && target.getBaseHeight() !=1) {
                 targetadj=-1;
             }
             exitsSourceDepression =
@@ -1789,10 +1789,10 @@ public class Map  {
             double sourceadj=0;
             double targetadj=0;
 
-            if(status.source.getTerrain().isRooftop() ) {
+            if(status.source.getTerrain().isRooftop() && status.source.getBaseHeight() !=1) {
                 sourceadj=-0.5;
             }
-            if(status.target.getTerrain().isRooftop() ) {
+            if(status.target.getTerrain().isRooftop() && status.target.getBaseHeight() !=1) {
                 targetadj = -0.5;
             }
             boolean followsdepression = true;
@@ -2371,11 +2371,11 @@ public class Map  {
         int rooftopadj=0;
         int rangetest=0;
         Hex rangehex=null;
-        if(status.source.getTerrain().isRooftop()) {
+        if(status.source.getTerrain().isRooftop() && status.source.getBaseHeight() !=1) {
             rooftopadj=-1;
             rangehex=status.sourceHex;
         }
-        if (status.target.getTerrain().isRooftop() ) {
+        if (status.target.getTerrain().isRooftop()&& status.target.getBaseHeight() !=1) {
             rooftopadj=-1;
             rangehex=status.targetHex;
         }
@@ -2491,10 +2491,10 @@ public class Map  {
         double sourceadj=0;
         double targetadj=0;
 
-        if(status.source.getTerrain().isRooftop() ) {
+        if(status.source.getTerrain().isRooftop() && status.source.getBaseHeight() !=1) {
             sourceadj=-0.5;
         }
-        if(status.target.getTerrain().isRooftop() ) {
+        if(status.target.getTerrain().isRooftop() && status.target.getBaseHeight() !=1) {
             targetadj=-0.5;
         }
         boolean test1 = false;
@@ -2849,11 +2849,11 @@ public class Map  {
         if(status.target.getTerrain().isCellar()) {
             targetadj=+1;
         }
-        if(status.source.getTerrain().isRooftop()) {
+        if(status.source.getTerrain().isRooftop() && status.source.getBaseHeight() !=1) {
             sourceadj=-0.5;
             rangehex=status.sourceHex;
         }
-        if(status.target.getTerrain().isRooftop()) {
+        if(status.target.getTerrain().isRooftop() && status.target.getBaseHeight() !=1) {
             targetadj=-0.5;
             rangehex=status.targetHex;
         }
@@ -3071,12 +3071,12 @@ public class Map  {
         double obstacleadj=0;
         int rooftopadj=0;
         Hex rangehex=null;
-        if(status.source.getTerrain().isRooftop() ) {
+        if(status.source.getTerrain().isRooftop() && status.source.getBaseHeight() !=1) {  // hack to handle SK (all buildings single story
             sourceadj=-0.5;
             rooftopadj=1;
             rangehex=status.sourceHex;
         }
-        if(status.target.getTerrain().isRooftop() ) {
+        if(status.target.getTerrain().isRooftop() && status.target.getBaseHeight() !=1) {  // hack to handle SK (all buildings single story) {
             targetadj=-0.5;
             rooftopadj=1;
             rangehex=status.targetHex;
@@ -3246,10 +3246,10 @@ public class Map  {
         double sourceadj=0;
         double targetadj=0;
         double obstacleadj=0;
-        if(status.source.getTerrain().isRooftop()) {
+        if(status.source.getTerrain().isRooftop() && status.source.getBaseHeight() !=1) {
             sourceadj=-0.5;
         }
-        if(status.target.getTerrain().isRooftop()) {
+        if(status.target.getTerrain().isRooftop() && status.target.getBaseHeight() !=1) {
             targetadj=-0.5;
         }
         if(status.currentTerrain.isHalfLevelHeight() && !status.currentTerrain.isHexsideTerrain()) {
@@ -3650,10 +3650,10 @@ public class Map  {
         // code added by DR to deal with rooftop 1/2 level
         double sourceadj=0;
         double targetadj=0;
-        if(status.source.getTerrain().isRooftop() && !(status.target.getTerrain().isRooftop())) {
+        if(status.source.getTerrain().isRooftop() && status.source.getBaseHeight() !=1 && !(status.target.getTerrain().isRooftop())) {
             sourceadj=-0.5;
         }
-        if(status.target.getTerrain().isRooftop() && !(status.source.getTerrain().isRooftop())) {
+        if(status.target.getTerrain().isRooftop() && status.target.getBaseHeight() !=1 && !(status.source.getTerrain().isRooftop())) {
             targetadj=-0.5;
         }
 
@@ -3772,10 +3772,10 @@ public class Map  {
         if(status.target.getTerrain().isCellar()) {
             targetadj=+1;
         }
-        if(status.source.getTerrain().isRooftop()) {
+        if(status.source.getTerrain().isRooftop() && status.source.getBaseHeight() !=1) {
             sourceadj=-0.5;
         }
-        if(status.target.getTerrain().isRooftop()) {
+        if(status.target.getTerrain().isRooftop() && status.target.getBaseHeight() !=1) {
             targetadj=-0.5;
         }
         if (status.currentTerrain.isBridge()) {
@@ -4198,11 +4198,11 @@ public class Map  {
         double sourceadj=0;
         double targetadj=0;
         boolean sourceortargetishalfheight=false;
-        if(status.source.getTerrain().isRooftop()) {
+        if(status.source.getTerrain().isRooftop() && status.source.getBaseHeight() !=1) {
             sourceadj=-0.5;  // could be 0.5 but would that cause other problems?
             sourceortargetishalfheight=true;
         }
-        if(status.target.getTerrain().isRooftop()) {
+        if(status.target.getTerrain().isRooftop() && status.target.getBaseHeight() !=1) {
             targetadj=-0.5;   // could be 0.5 but would that cause other problems? yes with obstacle height.
             sourceortargetishalfheight=true;
         }
@@ -5177,10 +5177,10 @@ public class Map  {
         // must be rowhouse wall or IFW to get here
         double sourceadj=0;
         double targetadj=0;
-        if (status.source.getTerrain().isRooftop()) {
+        if (status.source.getTerrain().isRooftop() && status.source.getBaseHeight() !=1) {
             sourceadj = -1;
         }
-        if (status.target.getTerrain().isRooftop()) {
+        if (status.target.getTerrain().isRooftop() && status.target.getBaseHeight() !=1) {
             targetadj=-1;
         }
         if (status.currentTerrain.getName().contains("Interior Factory Wall") && (result.isLOSis60Degree() | result.isLOSisHorizontal()) ) {

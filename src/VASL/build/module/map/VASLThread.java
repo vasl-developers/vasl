@@ -350,7 +350,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             }
         }
         double leveladj=0;
-        if(source.getName().contains("Rooftop")) {
+        if(source.getName().contains("Rooftop") && source.getTerrain().getHeight() !=1) {
             leveladj=-0.5;
         }
         if(source.getHex().isDepressionTerrain() && !source.getLOSPoint().equals(source.getHex().getHexCenter())) {
@@ -473,7 +473,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                 }
             }
             double leveladj=0;
-            if(target.getName().contains("Rooftop")) {
+            if(target.getName().contains("Rooftop") && target.getTerrain().getHeight() !=1) {
                 leveladj=-0.5;
             }
             if(target.getHex().isDepressionTerrain() && !target.getLOSPoint().equals(target.getHex().getHexCenter())){
@@ -830,10 +830,10 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                     source = source.getUpLocation();
                 }
                 leveladj=0;
-                if(source.getName().contains("Rooftop")) {
-                    if (!source.getDownLocation().getTerrain().getName().equals("Wooden Building")) {  // exception to handle Wooden Warehouses in bdRO
+                if(source.getName().contains("Rooftop") && source.getBaseHeight() !=1) {
+                    //if (!source.getDownLocation().getTerrain().getName().equals("Wooden Building") || source.getBaseHeight() !=1 ) {  // exception to handle Wooden Warehouses in bdRO
                         leveladj = -0.5;
-                    }
+                    //}
                 }
                 if(source.getHex().isDepressionTerrain() && !source.getLOSPoint().equals(source.getHex().getHexCenter())) {
                     leveladj=+1;
@@ -851,10 +851,10 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                     target = target.getUpLocation();
                 }
                 leveladj=0;
-                if(target.getName().contains("Rooftop")) {
-                    if (!target.getDownLocation().getTerrain().getName().equals("Wooden Building")) {  // exception to handle Wooden Warehouses in bdRO
+                if(target.getName().contains("Rooftop") &&  target.getBaseHeight() !=1){
+                    //if (!target.getDownLocation().getTerrain().getName().equals("Wooden Building") || target.getBaseHeight() !=1) {  // exception to handle Wooden Warehouses in bdRO
                         leveladj = -0.5;
-                    }
+                    //}
                 }
                 if(target.getHex().isDepressionTerrain() && !target.getLOSPoint().equals(target.getHex().getHexCenter())) {
                     leveladj=+1;
@@ -877,7 +877,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                     source = source.getDownLocation();
                 }
                 leveladj=0;
-                if(source.getName().contains("Rooftop")) {
+                if(source.getName().contains("Rooftop") && source.getBaseHeight() !=1) {
                     leveladj=-0.5;
                 }
                 if(source.getHex().isDepressionTerrain() && !source.getLOSPoint().equals(source.getHex().getHexCenter())) {
@@ -896,7 +896,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                     target = target.getDownLocation();
                 }
                 leveladj=0;
-                if(target.getName().contains("Rooftop")) {
+                if(target.getName().contains("Rooftop") && target.getBaseHeight() !=1) {
                     leveladj=-0.5;
                 }
                 if(target.getHex().isDepressionTerrain() && !target.getLOSPoint().equals(target.getHex().getHexCenter())) {
@@ -1068,7 +1068,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                     break;
                 }
                 leveladj = 0;
-                if (source.getName().contains("Rooftop")) {
+                if (source.getName().contains("Rooftop") && source.getTerrain().getHeight() !=1) {
                     leveladj = -0.5;
                 }
                 if (source.getHex().isDepressionTerrain() && !source.getLOSPoint().equals(source.getHex().getHexCenter())) {
@@ -1083,7 +1083,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                     break;
                 }
                 leveladj = 0;
-                if (source.getName().contains("Rooftop")) {
+                if (source.getName().contains("Rooftop") && source.getTerrain().getHeight() !=1) {
                     leveladj = -0.5;
                 }
                 if (source.getHex().isDepressionTerrain() && !source.getLOSPoint().equals(source.getHex().getHexCenter())) {
@@ -1098,7 +1098,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                     break;
                 }
                 leveladj = 0;
-                if (target.getName().contains("Rooftop")) {
+                if (target.getName().contains("Rooftop") && target.getTerrain().getHeight() !=1) {
                     leveladj = -0.5;
                 }
                 if (target.getHex().isDepressionTerrain() && !target.getLOSPoint().equals(target.getHex().getHexCenter())) {
@@ -1113,7 +1113,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                     break;
                 }
                 leveladj = 0;
-                if (target.getName().contains("Rooftop")) {
+                if (target.getName().contains("Rooftop") && target.getTerrain().getHeight() !=1) {
                     leveladj = -0.5;
                 }
                 if (target.getHex().isDepressionTerrain() && !target.getLOSPoint().equals(target.getHex().getHexCenter())) {

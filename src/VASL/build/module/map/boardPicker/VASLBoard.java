@@ -196,7 +196,11 @@ public class VASLBoard extends ASLBoard {
                 // these are rules that have to be handled in the code
                 else if ("customCode".equals(rule.getType())) {
 
-                    if ("NoStairwells".equals(s)) {
+                    if ("AllBuildingsLevel1".equals(s)) {
+                        setAllBuildingstoSingleStory(LOSData);
+                        changed=true;
+
+                    } else if ("NoStairwells".equals(s)) {
 
                         final Hex[][] hexGrid = LOSData.getHexGrid();
                         for (int x = 0; x < hexGrid.length; x++) {
@@ -215,6 +219,7 @@ public class VASLBoard extends ASLBoard {
                         changeGridTerrain(LOSData.getTerrain("Rowhouse Wall, 3 Level"), LOSData.getTerrain("Stone Building, 3 Level"), LOSData);
                         changeGridTerrain(LOSData.getTerrain("Rowhouse Wall, 4 Level"), LOSData.getTerrain("Stone Building, 4 Level"), LOSData);
                         changed = true;
+
                     } else if ("RowhouseBarsToOpenGround".equals(s)) {
 
                         changeGridTerrain(LOSData.getTerrain("Rowhouse Wall"), LOSData.getTerrain("Open Ground"), LOSData);
@@ -632,7 +637,48 @@ public class VASLBoard extends ASLBoard {
 
         }
     }
+    private void setAllBuildingstoSingleStory(Map LOSData){
+        // need to change terraintype, remove cellar and upper levels, for all building types and all interior and exterior building wall types
+        // change terraintype
+        changeGridTerrainforAllBuildings(LOSData);
+        // remove levels
+        Hex[][] hexGrid = LOSData.getHexGrid();
+        Location upcheck, downcheck,  nextcheck=null;
+        for (int x = 0; x < hexGrid.length; x++) {
+            for (int y = 0; y < hexGrid[x].length; y++) {
+                Location loctocheck = LOSData.getHex(x, y).getCenterLocation();
+                if (loctocheck.getUpLocation() != null && loctocheck.getTerrain().isBuildingTerrain()) {
+                    upcheck = loctocheck;
+                    do {
+                        if (nextcheck !=null){
+                            upcheck=nextcheck;
+                        } else {
+                            upcheck = upcheck.getUpLocation();
+                        }
+                        if (upcheck.getTerrain().isRooftop()) {
+                            upcheck.setBaseHeight(1);
+                            nextcheck=null;
+                            upcheck.setDownLocation(loctocheck);
+                            loctocheck.setUpLocation(upcheck);
+                            break;
+                        } else {
+                            nextcheck = upcheck.getUpLocation();
+                            upcheck.setDownLocation(null);
+                            upcheck.setUpLocation(null);
+                            loctocheck.setUpLocation(null);
+                        }
+                    }    while (nextcheck != null) ;
+                }
+                if (loctocheck.getDownLocation() !=null){
+                   downcheck = loctocheck.getDownLocation();
+                   downcheck.setUpLocation(null);
+                   downcheck.setDownLocation(null);
+                   loctocheck.setDownLocation((null));
+                }
+            }
+        }
 
+    }
     /**
      * Converts all single-story houses with multiple buildings to huts
      * @param LOSData the LOS data
@@ -724,6 +770,115 @@ public class VASLBoard extends ASLBoard {
 
                 if(LOSData.getGridTerrain(x, y).equals(fromTerrain)){
                     LOSData.setGridTerrainCode(toTerrain.getType(), x, y);
+                }
+            }
+        }
+    }
+    private static void changeGridTerrainforAllBuildings(Map LOSData){
+
+        for(int x = 0; x < LOSData.getGridWidth(); x++) {
+            for(int y = 0; y < LOSData.getGridHeight(); y++ ) {
+
+                if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Stone Building, 1 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Stone Building").getType(), x, y);
+                    LOSData.gridToHex(x, y).getCenterLocation().setTerrain(LOSData.getTerrain("Stone Building"));
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Stone Building, 2 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Stone Building").getType(), x, y);
+                    LOSData.gridToHex(x, y).getCenterLocation().setTerrain(LOSData.getTerrain("Stone Building"));
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Stone Building, 3 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Stone Building").getType(), x, y);
+                    LOSData.gridToHex(x, y).getCenterLocation().setTerrain(LOSData.getTerrain("Stone Building"));
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Stone Building, 4 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Stone Building").getType(), x, y);
+                    LOSData.gridToHex(x, y).getCenterLocation().setTerrain(LOSData.getTerrain("Stone Building"));
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Stone Factory, 1.5 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Wooden Factory, 1 Level").getType(), x, y);
+                    LOSData.gridToHex(x, y).getCenterLocation().setTerrain(LOSData.getTerrain("Wooden Factory, 1 Level"));
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Stone Factory, 2.5 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Wooden Factory, 1 Level").getType(), x, y);
+                    LOSData.gridToHex(x, y).getCenterLocation().setTerrain(LOSData.getTerrain("Wooden Factory, 1 Level"));
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Stone Factory Wall, 1.5 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Wooden Factory Wall, 1 Level").getType(), x, y);
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Stone Factory Wall, 2.5 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Wooden Factory Wall, 1 Level").getType(), x, y);
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Stone Marketplace"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Stone Building").getType(), x, y);
+                    LOSData.gridToHex(x, y).getCenterLocation().setTerrain(LOSData.getTerrain("Stone Building"));
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Rowhouse Wall, 1 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Rowhouse Wall").getType(), x, y);
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Rowhouse Wall, 2 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Rowhouse Wall").getType(), x, y);
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Rowhouse Wall, 3 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Rowhouse Wall").getType(), x, y);
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Rowhouse Wall, 4 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Rowhouse Wall").getType(), x, y);
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain(" Roofless Stone Factory, 1.5 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Wooden Factory, 1 Level").getType(), x, y);
+                    LOSData.gridToHex(x, y).getCenterLocation().setTerrain(LOSData.getTerrain("Wooden Factory, 1 Level"));
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain(" Roofless Stone Factory, 2.5 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Wooden Factory, 1 Level").getType(), x, y);
+                    LOSData.gridToHex(x, y).getCenterLocation().setTerrain(LOSData.getTerrain("Wooden Factory, 1 Level"));
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Interior Factory Wall, 1.5 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Wooden Factory Wall, 1 Level").getType(), x, y);
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Interior Factory Wall, 2.5 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Wooden Factory Wall, 1 Level").getType(), x, y);
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Gutted Stone Factory, 1.5 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Wooden Factory, 1 Level").getType(), x, y);
+                    LOSData.gridToHex(x, y).getCenterLocation().setTerrain(LOSData.getTerrain("Wooden Factory, 1 Level"));
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Gutted Factory Wall, 2.5 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Wooden Factory, 1 Level").getType(), x, y);
+                    LOSData.gridToHex(x, y).getCenterLocation().setTerrain(LOSData.getTerrain("Wooden Factory, 1 Level"));
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Gutted Stone Building, 1 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Gutted Stone Building").getType(), x, y);
+                    LOSData.gridToHex(x, y).getCenterLocation().setTerrain(LOSData.getTerrain("Gutted Stone Building"));
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Gutted Stone Building, 2 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Gutted Stone Building").getType(), x, y);
+                    LOSData.gridToHex(x, y).getCenterLocation().setTerrain(LOSData.getTerrain("Gutted Stone Building"));
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Gutted Stone Building, 3 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Gutted Stone Building").getType(), x, y);
+                    LOSData.gridToHex(x, y).getCenterLocation().setTerrain(LOSData.getTerrain("Gutted Stone Building"));
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Gutted Stone Building, 4 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Gutted Stone Building").getType(), x, y);
+                    LOSData.gridToHex(x, y).getCenterLocation().setTerrain(LOSData.getTerrain("Gutted Stone Building"));
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Wooden Building, 1 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Wooden Building").getType(), x, y);
+                    LOSData.gridToHex(x, y).getCenterLocation().setTerrain(LOSData.getTerrain("Wooden Building"));
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Wooden Building, 2 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Wooden Building").getType(), x, y);
+                    LOSData.gridToHex(x, y).getCenterLocation().setTerrain(LOSData.getTerrain("Wooden Building"));
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Wooden Building, 3 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Wooden Building").getType(), x, y);
+                    LOSData.gridToHex(x, y).getCenterLocation().setTerrain(LOSData.getTerrain("Wooden Building"));
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Wooden Building, 4 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Wooden Building").getType(), x, y);
+                    LOSData.gridToHex(x, y).getCenterLocation().setTerrain(LOSData.getTerrain("Wooden Building"));
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Wooden Factory, 1.5 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Wooden Factory, 1 Level").getType(), x, y);
+                    LOSData.gridToHex(x, y).getCenterLocation().setTerrain(LOSData.getTerrain("Wooden Factory, 1 Level"));
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Wooden Factory, 2.5 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Wooden Factory, 1 Level").getType(), x, y);
+                    LOSData.gridToHex(x, y).getCenterLocation().setTerrain(LOSData.getTerrain("Wooden Factory, 1 Level"));
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Wooden Factory Wall, 1.5 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Wooden Factory Wall, 1 Level").getType(), x, y);
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Wooden Factory Wall, 2.5 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Wooden Factory Wall, 1 Level").getType(), x, y);
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Wooden Marketplace"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Wooden Building").getType(), x, y);
+                    LOSData.gridToHex(x, y).getCenterLocation().setTerrain(LOSData.getTerrain("Wooden Building"));
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Tower, 2 Level Hindrance"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Tower Hindrance").getType(), x, y);
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Tower, 3 Level Hindrance"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Tower Hindrance").getType(), x, y);
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Tower, 2 Level Obstacle"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Tower Obstacle").getType(), x, y);
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Tower, 3 Level Obstacle"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Tower Obstacle").getType(), x, y);
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("Storage Tank, 2 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Storage Tank").getType(), x, y);
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("BFP Tower, 1 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Tower Obstacle").getType(), x, y);
+                } else if(LOSData.getGridTerrain(x, y).equals(LOSData.getTerrain("BFP Tower, 2 Level"))){
+                    LOSData.setGridTerrainCode(LOSData.getTerrain("Tower Obstacle").getType(), x, y);
                 }
             }
         }
