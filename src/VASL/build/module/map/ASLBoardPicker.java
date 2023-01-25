@@ -2001,6 +2001,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 model.addElement("Level -1");
                 model.addElement("Level 0");
                 model.addElement("Level 1");
+                model.addElement("Water");
                 //model.addElement("Water");
                 to.setMaximumSize(new Dimension(to.getMaximumSize().width, to.getPreferredSize().height));
                 panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
