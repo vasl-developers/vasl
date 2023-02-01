@@ -21,7 +21,7 @@
 	v6.1 Feb 2017 (TR)
 	v6.2 Mar 2018 update version for lightwoods transform (ATC)
 -->
-<boardMetadata name="53" version="6.6" versionDate="Jan 2023" author="TR" boardImageFileName="bd53.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="53" version="6.7" versionDate="Jan 2023" author="TR" boardImageFileName="bd53.gif" hasHills="FALSE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -98,6 +98,7 @@
 		<overlaySSRule name="WallsToBocage" image="53_WallsToBocage.gif" x="577" y="94" />
 		<overlaySSRule name="NoRoads" image="53_NoRoads.gif" x="1" y="1" />
 		<overlaySSRule name="LightWoods" image="53_LightWoods.gif" x="0" y="0" />
+		<overlaySSRule name="SSO_HazMo10" image="SSO_53_HazMo10.gif" x="0" y="0" />
 	</overlaySSRules>
 	
 	<colors>
