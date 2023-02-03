@@ -21,7 +21,7 @@
 	Updates:
 	Apr 2019 ATC: add road to enter U1 bldg making it a factory; add transformations.
 -->
-<boardMetadata name="BFPB" version="6.3" versionDate="Apr 2022" author="TR" boardImageFileName="bdBFPB.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="BFPB" version="6.4" versionDate="Jan 2023" author="TR" boardImageFileName="bdBFPB.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily

@@ -106,16 +106,16 @@
 		<boarddata name="75" version="6.5" versionDate="Apr 2022" description="" />
 		<boarddata name="76" version="6.5" versionDate="Apr 2022" description="" />
 		<boarddata name="77" version="5.3" versionDate="Aug 2008" description="" />
-		<boarddata name="78" version="6.2" versionDate="Apr 2022" description="" />
-		<boarddata name="79" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="80" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="81" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="82" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="83" version="6.3" versionDate="Apr 2022" description="" />
+		<boarddata name="78" version="6.3" versionDate="Jan 2023" description="" />
+		<boarddata name="79" version="6.4" versionDate="Jan 2023" description="" />
+		<boarddata name="80" version="6.4" versionDate="Jan 2023" description="" />
+		<boarddata name="81" version="6.4" versionDate="Jan 2023" description="" />
+		<boarddata name="82" version="6.4" versionDate="Jan 2023" description="" />
+		<boarddata name="83" version="6.4" versionDate="Jan 2023" description="" />
 		<boarddata name="84" version="6.1" versionDate="Dec 2020" description="" />
 		<boarddata name="85" version="6.2" versionDate="Mar 2022" description="" />
 		<boarddata name="86" version="6.0" versionDate="Oct 2020" description="" />
-		<boarddata name="87" version="6.0" versionDate="Feb 2022" description="" />
+		<boarddata name="87" version="6.1" versionDate="Jan 2023" description="" />
 		<boarddata name="88" version="6.0" versionDate="Feb 2022" description="" />
 		<boarddata name="1a" version="6.4" versionDate="Jan 2023" description="" />
 		<boarddata name="1b" version="6.4" versionDate="Jan 2023" description="" />
@@ -160,65 +160,65 @@
 		<boarddata name="j" version="6.3" versionDate="Apr 2022" description="" />
 		<boarddata name="jSK" version="6.0" versionDate="Feb 2022" description="" />
 		<boarddata name="k" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="kSK" version="6.3" versionDate="Apr 2022" description="" />
+		<boarddata name="kSK" version="6.4" versionDate="Jan 2023" description="" />
 		<boarddata name="l" version="6.3" versionDate="Apr 2022" description="" />
 		<boarddata name="lSK" version="6.0" versionDate="Oct 2020" description="" />
-		<boarddata name="m" version="6.2" versionDate="Apr 2022" description="" />
+		<boarddata name="m" version="6.3" versionDate="Jan 2023" description="" />
 		<boarddata name="mdx" version="6.0" versionDate="Jun 2022" description="" />
-		<boarddata name="n" version="6.2" versionDate="Apr 2022" description="" />
+		<boarddata name="n" version="6.3" versionDate="Jan 2023" description="" />
 		<boarddata name="ndx" version="6.0" versionDate="Jun 2022" description="" />
-		<boarddata name="o" version="6.4" versionDate="Apr 2022" description="" />
+		<boarddata name="o" version="6.5" versionDate="Jan 2023" description="" />
 		<boarddata name="odx" version="6.1" versionDate="Nov 2022" description="" />
-		<boarddata name="p" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="q" version="6.4" versionDate="Apr 2022" description="" />
-		<boarddata name="r" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="s" version="6.4" versionDate="Apr 2022" description="" />
-		<boarddata name="t" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="u" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="v" version="6.4" versionDate="Apr 2022" description="" />
-		<boarddata name="w" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="x" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="y" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="z" version="6.6" versionDate="Jan 2023" description="" />
+		<boarddata name="p" version="6.4" versionDate="Jan 2023" description="" />
+		<boarddata name="q" version="6.5" versionDate="Jan 2023" description="" />
+		<boarddata name="r" version="6.4" versionDate="Jan 2023" description="" />
+		<boarddata name="s" version="6.5" versionDate="Jan 2023" description="" />
+		<boarddata name="t" version="6.4" versionDate="Jan 2023" description="" />
+		<boarddata name="u" version="6.4" versionDate="Jan 2023" description="" />
+		<boarddata name="v" version="6.5" versionDate="Jan 2023" description="" />
+		<boarddata name="w" version="6.4" versionDate="Jan 2023" description="" />
+		<boarddata name="x" version="6.4" versionDate="Jan 2023" description="" />
+		<boarddata name="y" version="6.4" versionDate="Jan 2023" description="" />
+		<boarddata name="z" version="6.7" versionDate="Jan 2023" description="" />
 	</coreBoards>
 
 	<otherBoards>
 		<boarddata name="NUL" version="1" versionDate="Aug 2008" description="" />
 		<boarddata name="NULV" version="1" versionDate="Aug 2008" description="" />
-		<boarddata name="BFP1" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="BFP2" version="6.4" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPA" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPB" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPC" version="6.4" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPD" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPE" version="6.5" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPF" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPG" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPH" version="6.4" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPI" version="6.5" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPJ" version="6.5" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPK" version="6.5" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPL" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPM" version="6.2" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPN" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPO" version="6.5" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPP" version="6.4" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPQ" version="6.4" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPR" version="6.4" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPDW1a" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPDW1b" version="6.4" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPDW2a" version="6.2" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPDW2b" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPDW3a" version="6.4" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPDW3b" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPDW4a" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPDW4b" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPDW5a" version="6.5" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPDW5b" version="6.4" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPDW6a" version="6.4" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPDW6b" version="6.4" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPDW7a" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="BFPDW7b" version="6.3" versionDate="Apr 2022" description="" />
+		<boarddata name="BFP1" version="6.4" versionDate="Jan 2023" description="" />
+		<boarddata name="BFP2" version="6.5" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPA" version="6.4" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPB" version="6.4" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPC" version="6.5" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPD" version="6.4" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPE" version="6.6" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPF" version="6.4" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPG" version="6.4" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPH" version="6.5" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPI" version="6.6" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPJ" version="6.6" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPK" version="6.6" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPL" version="6.4" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPM" version="6.3" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPN" version="6.4" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPO" version="6.6" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPP" version="6.5" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPQ" version="6.5" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPR" version="6.5" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPDW1a" version="6.4" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPDW1b" version="6.5" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPDW2a" version="6.3" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPDW2b" version="6.4" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPDW3a" version="6.5" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPDW3b" version="6.4" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPDW4a" version="6.4" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPDW4b" version="6.4" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPDW5a" version="6.6" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPDW5b" version="6.5" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPDW6a" version="6.5" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPDW6b" version="6.5" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPDW7a" version="6.4" versionDate="Jan 2023" description="" />
+		<boarddata name="BFPDW7b" version="6.4" versionDate="Jan 2023" description="" />
 		<boarddata name="BFPDW8a" version="6.0" versionDate="Apr 2020" description="" />
 		<boarddata name="BFPDW8b" version="6.0" versionDate="Apr 2020" description="" />
 		<boarddata name="BFPDW9a" version="6.0" versionDate="Apr 2020" description="" />
@@ -303,10 +303,10 @@
 		<boarddata name="ER" version="6.0" versionDate="Jun 2021" description="" />
 		<boarddata name="FACTRY" version="1.0" versionDate="Aug 2008" description="" />
 		<boarddata name="FB" version="6.2" versionDate="Apr 2022" description="" />
-		<boarddata name="FB_NE" version="6.2" versionDate="Apr 2022" description="" />
-		<boarddata name="FB_NW" version="6.2" versionDate="Apr 2022" description="" />
-		<boarddata name="FB_SE" version="6.2" versionDate="Apr 2022" description="" />
-		<boarddata name="FB_SW" version="6.2" versionDate="Apr 2022" description="" />
+		<boarddata name="FB_NE" version="6.3" versionDate="Jan 2023" description="" />
+		<boarddata name="FB_NW" version="6.3" versionDate="Jan 2023" description="" />
+		<boarddata name="FB_SE" version="6.3" versionDate="Jan 2023" description="" />
+		<boarddata name="FB_SW" version="6.3" versionDate="Jan 2023" description="" />
 		<boarddata name="FE1" version="1.1" versionDate="Aug 2008" description="" />
 		<boarddata name="FE2" version="1.1" versionDate="Aug 2008" description="" />
 		<boarddata name="FE3" version="6.0" versionDate="Jun 2021" description="" />

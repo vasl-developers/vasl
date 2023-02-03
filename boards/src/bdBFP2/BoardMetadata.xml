@@ -21,8 +21,8 @@
 -->
 <boardMetadata 
 	name="BFP2" 
-	version="6.4" 
-	versionDate="Apr 2022" 
+	version="6.5" 
+	versionDate="Jan 2023" 
 	author="ATC" 
 	boardImageFileName="bdBFP2.gif" 
 	hasHills="TRUE" 
