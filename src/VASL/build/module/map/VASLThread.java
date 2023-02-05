@@ -117,7 +117,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
 	protected void launch() {
 
         super.launch();
-
+        this.getLaunchButton().setEnabled(false);  //grey out button when thread active so users MUST clear by clicking on map
         VASLLOSButtonCommand vasllosbuttonCommand= new VASLLOSButtonCommand(this, false);
         GameModule.getGameModule().sendAndLog(vasllosbuttonCommand);
         setGridSnapToVertex(true);
