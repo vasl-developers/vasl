@@ -83,6 +83,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
     private SetupControls setupControls;
     private boolean enableDeluxe;
     private boolean enableDB = false;
+    private boolean preservelevels;
 
     // implement using xml file for board versions
     private static final String boardsFileElement = "boardsMetadata";
@@ -576,7 +577,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
      * Ensures the given overlay exists and is up to date. If not it fetches it from the repository
      * @param ovrName the overlay file name
      */
-    private void updateOverlay(String ovrName) {
+    private void updateOverlay(String ovrName, boolean preservelevels) {
 
         // if the boardDir doesn't exist or the overlay name is blank, bail early
         if (boardDir != null && !ovrName.equals("")) {
@@ -622,7 +623,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
 
                 String currentVersion=null;
                 try {
-                    Overlay ovrfile = new Overlay(ovrName + "\t0" + "\t0", new File(getBoardDir(), "overlays"));
+                    Overlay ovrfile = new Overlay(ovrName + "\t0" + "\t0" +"\t" + String.valueOf(preservelevels), new File(getBoardDir(), "overlays"));
                     currentVersion = ovrfile.getVersion();
                 } catch (Exception e){
 
@@ -1125,6 +1126,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
     protected class Overlayer extends JDialog implements ActionListener {
 
         private JTextField hex1, hex2, ovrName;
+        private JCheckBox preslevels;
         private JLabel status;
 
         private JComboBox<String> bdName;
@@ -1187,6 +1189,12 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             vBox.add(hex2);
             box.add(vBox);
             getContentPane().add(box);
+
+            box = Box.createHorizontalBox();
+            preslevels = new JCheckBox("Preserve Board Elevation");
+            box.add(preslevels);
+            getContentPane().add(box);
+
             box = Box.createHorizontalBox();
             JButton b = new JButton("Add");
             b.addActionListener(this);
@@ -1212,6 +1220,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 setVisible(false);
                 return;
             }
+            preservelevels=preslevels.isSelected();
             try {
                 BoardSlot b = newmatch(bdName.getSelectedIndex());
                 if (b==null){
@@ -1220,8 +1229,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                     status.setText("Missing board: fix Map Config.");
                     return;
                 }
-                updateOverlay(ovrName.getText().toLowerCase());
-                status.setText(((ASLBoardSlot) (b)).addOverlay(ovrName.getText().toLowerCase(), hex1.getText().toLowerCase(), hex2.getText().toLowerCase()));
+                updateOverlay(ovrName.getText().toLowerCase(), preservelevels);
+                status.setText(((ASLBoardSlot) (b)).addOverlay(ovrName.getText().toLowerCase(), hex1.getText().toLowerCase(), hex2.getText().toLowerCase(), preservelevels ));
                 ovrName.setText("");
                 hex1.setText("");
                 hex2.setText("");
