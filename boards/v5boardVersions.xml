@@ -147,21 +147,21 @@
 		<boarddata name="14b" version="6.0" versionDate="Jun 2021" description="" />
 		<boarddata name="15a" version="6.2" versionDate="Sep 2021" description="" />
 		<boarddata name="15b" version="6.2" versionDate="Sep 2021" description="" />
-		<boarddata name="a" version="6.4" versionDate="Apr 2022" description="" />
-		<boarddata name="b" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="c" version="6.3" versionDate="Apr 2022" description="" />
-		<boarddata name="d" version="6.5" versionDate="Apr 2022" description="" />
+		<boarddata name="a" version="6.5" versionDate="Jan 2023" description="" />
+		<boarddata name="b" version="6.4" versionDate="Jan 2023" description="" />
+		<boarddata name="c" version="6.4" versionDate="Jan 2023" description="" />
+		<boarddata name="d" version="6.6" versionDate="Jan 2023" description="" />
 		<boarddata name="e" version="6.4" versionDate="Apr 2022" description="" />
 		<boarddata name="f" version="6.3" versionDate="Apr 2022" description="" />
 		<boarddata name="g" version="6.3" versionDate="Apr 2022" description="" />
 		<boarddata name="h" version="6.4" versionDate="Apr 2022" description="" />
-		<boarddata name="i" version="6.3" versionDate="Apr 2022" description="" />
+		<boarddata name="i" version="6.4" versionDate="Jan 2023" description="" />
 		<boarddata name="iSK" version="6.0" versionDate="Feb 2022" description="" />
-		<boarddata name="j" version="6.3" versionDate="Apr 2022" description="" />
+		<boarddata name="j" version="6.4" versionDate="Jan 2023" description="" />
 		<boarddata name="jSK" version="6.0" versionDate="Feb 2022" description="" />
-		<boarddata name="k" version="6.3" versionDate="Apr 2022" description="" />
+		<boarddata name="k" version="6.4" versionDate="Jan 2023" description="" />
 		<boarddata name="kSK" version="6.4" versionDate="Jan 2023" description="" />
-		<boarddata name="l" version="6.3" versionDate="Apr 2022" description="" />
+		<boarddata name="l" version="6.4" versionDate="Jan 2023" description="" />
 		<boarddata name="lSK" version="6.0" versionDate="Oct 2020" description="" />
 		<boarddata name="m" version="6.3" versionDate="Jan 2023" description="" />
 		<boarddata name="mdx" version="6.0" versionDate="Jun 2022" description="" />
