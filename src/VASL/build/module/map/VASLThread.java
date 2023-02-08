@@ -512,8 +512,8 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
 
         final Point p = mapMouseToMapCoordinates(eventPoint);
         adjustformagnification(p);
-        //
-        if (p == null || !LOSMap.onMap(p.x, p.y)) return;
+        if (LOSMap == null) {return;} // error handling
+        if (p == null || !LOSMap.onMap(p.x, p.y)) {return;} // error handling
         target = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
         useAuxTargetLOSPoint = useAuxLOSPoint(target, p.x, p.y);
 
