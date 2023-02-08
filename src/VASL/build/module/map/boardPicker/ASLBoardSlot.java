@@ -33,7 +33,7 @@ import java.io.IOException;
 
 public class ASLBoardSlot extends BoardSlot {
   private String terrain = "";
-
+  private boolean preservelevels;
   public ASLBoardSlot(ASLBoardPicker bp) {
     super(bp);
     reverseCheckBox.addItemListener(new ItemListener() {
@@ -58,8 +58,9 @@ public class ASLBoardSlot extends BoardSlot {
     return terrain;
   }
 
-  public String addOverlay(String ovr, String hex1, String hex2) {
+  public String addOverlay(String ovr, String hex1, String hex2, boolean preservelevels){
     String msg = "";
+    this.preservelevels= preservelevels;
     try {
       if (hex1.equals("") && hex2.equals("")) {
         getASLBoard().removeOverlay(ovr);
@@ -72,8 +73,8 @@ public class ASLBoardSlot extends BoardSlot {
           hex1 = hex2;
         Overlay o;
         try {
-          o = new Overlay(ovr + "\t" + hex1 + "\t" + hex2, getASLBoard(),new File(((ASLBoardPicker) picker)
-              .getBoardDir(), "overlays"));
+          o = new Overlay(ovr + "\t" + hex1 + "\t" + hex2 + "\t" + String.valueOf(this.preservelevels), getASLBoard(),new File(((ASLBoardPicker) picker)
+                  .getBoardDir(), "overlays"));
           getASLBoard().addOverlay(o);
           checkOverlap(o);
           msg = "Added Overlay " + o.getName() + " (ver " + o.getVersion() + ")";
@@ -190,8 +191,8 @@ public class ASLBoardSlot extends BoardSlot {
       // should report a reference to the 'other' map and not to the getASLBoard()
       //o = new Overlay(o.getName() + "\t" + hex1 + "\t" + hex2, getASLBoard(),new File(((ASLBoardPicker) picker)
       //    .getBoardDir(), "overlays"));
-      o = new Overlay(o.getName() + "\t" + hex1 + "\t" + hex2, otherBoard, new File(((ASLBoardPicker) picker)
-          .getBoardDir(), "overlays"));
+      o = new Overlay(o.getName() + "\t" + hex1 + "\t" + hex2 + String.valueOf(this.preservelevels), otherBoard, new File(((ASLBoardPicker) picker)
+              .getBoardDir(), "overlays"));
       otherBoard.addOverlay(o);
     }
     catch (MapGrid.BadCoords ex) {

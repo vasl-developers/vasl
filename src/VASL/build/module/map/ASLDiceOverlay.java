@@ -38,6 +38,8 @@ import VASL.build.module.ASLChatter.ChatterListener;
 import VASL.build.module.ASLDiceBot;
 import VASL.build.module.ASLMap;
 
+import VASL.build.module.dice.ASLDiceFactory;
+import VASL.build.module.dice.DieColor;
 import VASSAL.build.AbstractConfigurable;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
@@ -53,6 +55,7 @@ import VASSAL.preferences.Prefs;
 import VASSAL.tools.imageop.Op;
 import VASSAL.tools.swing.SwingUtils;
 
+import static VASL.build.module.dice.ASLDie.m_strFileNameFormat;
 import static VASSAL.build.module.Chatter.getAnonymousUserName;
 
 interface NeedRepaintEvent {
@@ -255,6 +258,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
     private long m_lClock = 0;
     private long m_lCount = 0;
     private boolean m_bKeepAlive = false;
+    private final ASLDiceFactory diceFactory = new ASLDiceFactory();
 
     /**
      * @return the mc_DefaultAge
@@ -442,7 +446,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
 
         if (l_objColoredDiceColor == null)
         {
-            l_objColoredDiceColor = new StringEnumConfigurer(COLORED_DICE_COLOR_OVER_MAP, "Colored die color:  ", new String[] {"Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange"} );
+            l_objColoredDiceColor = new StringEnumConfigurer(COLORED_DICE_COLOR_OVER_MAP, "Colored die color:  ", new String[] {"Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange", "AlliedM", "AxisM", "American", "British", "Finnish", "French", "German", "Italian", "Japanese", "Russian", "Swedish"} );
             l_objModulePrefs.addOption(PREFERENCE_TAB, l_objColoredDiceColor); //$NON-NLS-1$
         }
 
@@ -451,11 +455,11 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
             if (m_clrColoredDiceColor==null){
                 m_clrColoredDiceColor="Red";
             }
-            RebuildColoredDiceFaces();
+            RebuildColoredDiceFaces(DieColor.getEnum(m_clrColoredDiceColor));
             FireNeedRepaint();
         });
         final Set<String> COLORARRAY = new HashSet<String>(Arrays.asList(
-                new String[] {"Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange"}));
+                new String[] {"Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange", "AlliedM", "AxisM", "American", "British", "Finnish", "French", "German", "Italian", "Japanese", "Russian", "Swedish"}));
         if (!COLORARRAY.contains(m_clrColoredDiceColor)){
             m_clrColoredDiceColor = "Red";
             }
@@ -467,13 +471,13 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
 
         if (l_objColoredDieColor == null)
         {
-            l_objColoredDieColor = new StringEnumConfigurer(SINGLE_DIE_COLOR_OVER_MAP, "Single die color:  ", new String[] {"Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange"} );
+            l_objColoredDieColor = new StringEnumConfigurer(SINGLE_DIE_COLOR_OVER_MAP, "Single die color:  ", new String[] {"Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange", "AlliedM", "AxisM", "American", "British", "Finnish", "French", "German", "Italian", "Japanese", "Russian", "Swedish"} );
             l_objModulePrefs.addOption(PREFERENCE_TAB, l_objColoredDieColor); //$NON-NLS-1$
         }
 
         l_objColoredDieColor.addPropertyChangeListener(e -> {
             m_clrSingleDieColor = (String) e.getNewValue();
-            RebuildSingleDieFaces();
+            RebuildSingleDieFaces(DieColor.getEnum(m_clrSingleDieColor));
             FireNeedRepaint();
         });
 
@@ -605,15 +609,16 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
             m_objAxisSAN = Op.load(AXISSAN).getImage(null);
             m_objAlliedSAN = Op.load(ALLIEDSAN).getImage(null);
 
-
+            DieColor color = DieColor.WHITE;
             for (int l_i = 0; l_i < 6; l_i++)
-                mar_objWhiteDieImage[l_i] = Op.load(String.format(DICE_FILE_NAME_FORMAT, String.valueOf(l_i + 1))).getImage(null);
+                mar_objWhiteDieImage[l_i] = Op.load(String.format(m_strFileNameFormat, String.valueOf(l_i + 1), color)).getImage(null);
         }
         catch (Exception ex)
         {
             ex.printStackTrace();
         }
     }
+    @Deprecated
     private Color getDieColor(String colorname){
     if  (colorname==null) {
         return Color.RED;
@@ -635,7 +640,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
         return Color.RED;
     }
 }
-    private void RebuildColoredDiceFaces()
+    private void RebuildColoredDiceFaces(DieColor color)
     {
         BufferedImage l_objImage = null;
 
@@ -643,8 +648,10 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
         {
             for (int l_i = 0; l_i < 6; l_i++)
             {
-                l_objImage = Op.load(String.format(DICE_FILE_NAME_FORMAT, String.valueOf(l_i + 1))).getImage(null);
-                mar_objColoredDieImage[l_i] = ColorChanger.changeColor(l_objImage, Color.white, getDieColor(m_clrColoredDiceColor));
+                l_objImage = Op.load(String.format(m_strFileNameFormat, String.valueOf(l_i + 1), color)).getImage(null);
+                //l_objImage = Op.load(String.format(DICE_FILE_NAME_FORMAT, String.valueOf(l_i + 1))).getImage(null);
+                //mar_objColoredDieImage[l_i] = ColorChanger.changeColor(l_objImage, Color.white, getDieColor(m_clrColoredDiceColor));
+                mar_objColoredDieImage[l_i] = l_objImage;
             }
         }
         catch (Exception ex)
@@ -653,7 +660,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
         }
     }
 
-    private void RebuildSingleDieFaces()
+    private void RebuildSingleDieFaces(DieColor color)
     {
         BufferedImage l_objImage = null;
 
@@ -661,8 +668,8 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener
         {
             for (int l_i = 0; l_i < 6; l_i++)
             {
-                l_objImage = Op.load(String.format(DICE_FILE_NAME_FORMAT, String.valueOf(l_i + 1))).getImage(null);
-                mar_objSingleDieImage[l_i] = ColorChanger.changeColor(l_objImage, Color.white, getDieColor(m_clrSingleDieColor));
+                l_objImage = Op.load(String.format(m_strFileNameFormat, String.valueOf(l_i + 1), color)).getImage(null);
+                mar_objSingleDieImage[l_i] = l_objImage;
             }
         }
         catch (Exception ex)

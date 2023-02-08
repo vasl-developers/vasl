@@ -6,14 +6,16 @@
        <Checkbox name="">
          <entry name="Scenario A88 - Surprise Encounter" rule="SSO_32_A88" text="Bd32 Scen A88 SSO"/>
        </Checkbox>
-	   <entry name="Scenario G16 - Alligator Creek" rule="SSO_32_G16" text="Bd32 Scen G16 SSO"/>
+       <Checkbox name="">
+         <entry name="Scenario G16 - Alligator Creek" rule="SSO_32_G16" text="Bd32 Scen G16 SSO"/>
        </Checkbox>
-	   </Checkbox>
-	   <entry name="Scenario J42 - Grebbe End" rule="SSO_32_J42" text="Bd32 Scen J42 SSO"/>
+       <Checkbox name="">
+	 <entry name="Scenario J42 - Grebbe End" rule="SSO_32_J42" text="Bd32 Scen J42 SSO"/>
        </Checkbox>
-	   <Checkbox name="">
+       <Checkbox name="">
          <entry name="Scenario ASLUG 2.1 - Chateau Cherry" rule="SSO_32_ASLUG2pt1" text="Bd32 Scen ASLUG2.1 SSO"/>
        </Checkbox>
+       <Checkbox name="">
 	   <entry name="Scenario ESG30 - Mindanao Mop Up" rule="SSO_32_ESG30" text="Bd32 Scen ESG30 SSO"/>
        </Checkbox>
   </Option>

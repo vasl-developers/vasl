@@ -21,7 +21,7 @@
 	v6.0 Nov 2103 (TR)
 	v6.1 Mar 2018 update version for lightwoods transform (ATC)
 -->
-<boardMetadata name="14" version="6.6" versionDate="Mar 2022" author="TR" boardImageFileName="bd14.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="14" version="6.7" versionDate="Jan 2023" author="TR" boardImageFileName="bd14.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily

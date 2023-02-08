@@ -737,25 +737,12 @@ public class Hex {
             // rooftops
             previousLocation = centerLocation;
             // need to ignore buildings without upper level locations - bit of a hack so we can use the building height
-            if (  // !"Wooden Building".equals(centerLocationTerrain.getName()) &&  //take out wooden building to enable wooden warehouse roofs in RF
-                    !"Stone Building".equals(centerLocationTerrain.getName()) &&
-                    !centerLocationTerrain.isRoofless()) {
-                boolean multihex = false;
+            if (!"Wooden Building".equals(centerLocationTerrain.getName())  &&
+                !"Stone Building".equals(centerLocationTerrain.getName()) &&
+                !centerLocationTerrain.isRoofless()) {
+
                 if (isMultihexBuilding() ) {
-                    multihex = true;
-                } else {
-                    // 2nd part of bdRO hack to enable roofs on I24, I25, I26, I29 and I30
-                    if (this.getName().equals("I24") || this.getName().equals("I25") || this.getName().equals("I29")) {
-                        Point p = hexsideLocations[3].getEdgeCenterPoint();
-                        Terrain terrain = map.getGridTerrain(p.x - 5, p.y);
-                        if(terrain != null && terrain.isBuilding()) {multihex = true;}
-                    } else if (this.getName().equals("I26") || this.getName().equals("I30")) {
-                        Point p = hexsideLocations[0].getEdgeCenterPoint();
-                        Terrain terrain = map.getGridTerrain(p.x - 5, p.y);
-                        if(terrain != null && terrain.isBuilding()) {multihex = true;}
-                    }
-                }
-                if (multihex){
+
                     Terrain roofterrain;
                     roofterrain = map.getTerrain("Rooftop");
                     // move to top level
@@ -782,6 +769,7 @@ public class Hex {
                     previousLocation = l;
                 }
             }
+            fixspecialcasesAddRooftops( ); // handles RO wooden warehouses and SK transform (all buildings are single story)
         }
 
         // set the hexside location terrain
@@ -1580,5 +1568,55 @@ public class Hex {
         return hexOverlayBorder;
     }
 
+    private void fixspecialcasesAddRooftops(){
+        // use this routine to fix special cases with rooftops
+        // 1. RO Wooden warehouses
+        // 2. Wooden Building hexes when Sk (all buildings are single story applied).
+        Terrain centerLocationTerrain = getCenterLocation().getTerrain();
+        boolean multihex = false;
+        // 1. RO Wooden warehouses
+        if ("Wooden Building".equals(centerLocationTerrain.getName()) &&
+            (this.getName().equals("I21") ||
+            this.getName().equals("I22") ||
+            this.getName().equals("I23") ||
+            this.getName().equals("I24") ||
+            this.getName().equals("I25") ||
+            this.getName().equals("I26") ||
+            this.getName().equals("I29") ||
+            this.getName().equals("I30") ||
+            this.getName().equals("J21") ||
+            this.getName().equals("J22") ||
+            this.getName().equals("J23") ||
+            this.getName().equals("J24") ||
+            this.getName().equals("J25") ||
+            this.getName().equals("J26")
+                    )) {
+                // 2nd part of bdRO hack to enable roofs on I24, I25, I26, I29 and I30
+                if (this.getName().equals("I24") || this.getName().equals("I25") || this.getName().equals("I29")) {
+                    Point p = hexsideLocations[3].getEdgeCenterPoint();
+                    Terrain terrain = map.getGridTerrain(p.x - 5, p.y);
+
+                } else if (this.getName().equals("I26") || this.getName().equals("I30")) {
+                    Point p = hexsideLocations[0].getEdgeCenterPoint();
+                    Terrain terrain = map.getGridTerrain(p.x - 5, p.y);
+
+                }
+                // 1. & 2. Wooden Building hexes when Sk (all buildings are single story applied).
+                Terrain roofterrain;
+                roofterrain = map.getTerrain("Rooftop");
+                final Location l = new Location(
+                        centerLocation.getName() + " Rooftop ",
+                        1,
+                        centerLocation.getLOSPoint(),
+                        centerLocation.getLOSPoint(),
+                        null,
+                        this,
+                        roofterrain
+                );
+
+                centerLocation.setUpLocation(l);
+                l.setDownLocation(centerLocation);
+        }
+    }
 }
 

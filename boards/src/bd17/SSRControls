@@ -3,6 +3,9 @@
 	   <Checkbox name="">
          <entry name="Scenario 59 - Smertniki" rule="SSO_17_59" text="Bd17 Scen 59 SSO"/>
        </Checkbox>
+           <Checkbox name="">
+         <entry name="Scenario 137 - Italian Brothers" rule="SSO_17_137" text="Scenario 137 SSO"/>
+       </Checkbox>
 	   <Checkbox name="">
          <entry name="Scenario ASLUG17 - Escape at Dawn" rule="SSO_17_ASLUG17" text="Bd17 Scen ASLUG17 SSO"/>
        </Checkbox>

@@ -106,7 +106,7 @@ public class SavedGameConverter extends AbstractConfigurable implements CommandE
 
             // On-going game converter
             JMenuItem nextmenuItem = new JMenuItem("Update game...");
-
+            nextmenuItem.setEnabled(false);
             nextmenuItem.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent evt) {
 

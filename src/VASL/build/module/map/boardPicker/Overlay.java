@@ -46,6 +46,7 @@ public class Overlay implements Cloneable {
     protected File overlayFile;
     public String hex1 = "", hex2 = "";
     private String origins;
+    public boolean preserveelevation= false;
     java.util.Map<Integer, Integer> mappings;
     protected Rectangle boundaries = new Rectangle();
     // boundaries are in local coordinates of the parent board
@@ -66,13 +67,16 @@ public class Overlay implements Cloneable {
             name = st.nextToken();
             hex1 = st.nextToken();
             hex2 = st.nextToken();
+            if (st.hasMoreTokens()) {
+                preserveelevation= Boolean.parseBoolean(st.nextToken());
+            }
         }
         this.board = board;
         overlayFile = new File(overlayDir, archiveName());
 
         archive = new DataArchive(overlayFile.getPath(), "");
         readData();
-        transform();
+        transform(preserveelevation);
         try {
             setBounds();
         } catch (BadCoords e) {
@@ -86,13 +90,16 @@ public class Overlay implements Cloneable {
             name = st.nextToken();
             hex1 = st.nextToken();
             hex2 = st.nextToken();
+            if (st.hasMoreTokens()) {
+                preserveelevation=Boolean.parseBoolean(st.nextToken());
+            }
         }
 
         overlayFile = new File(overlayDir, archiveName());
 
         archive = new DataArchive(overlayFile.getPath(), "");
         readData();
-        transform();
+        transform(preserveelevation);
     }
     public SSRFilter getTerrain() {
         SSRFilter terrain = board.getTerrain();
@@ -508,15 +515,18 @@ public class Overlay implements Cloneable {
     public DataArchive getDataArchive() {
         return archive;
     }
-    public void transform(){
+    public void transform(boolean preserveelevation){
+        if(!preserveelevation){return;}
         Map losmap;
+        Integer hex1elevation;
         try {
             losmap= board.getVASLBoardArchive().getLOSData("Normal", false);
+            if (losmap==null){return;}
+            hex1elevation = losmap.getHex(hex1).getBaseHeight();
         } catch (Exception e) {
             return;
         }
-        if (losmap==null){return;}
-        Integer hex1elevation = losmap.getHex(hex1).getBaseHeight();
+
         if (hex1elevation != 0){
             Image i = getImage();
             // get the image as a buffered image

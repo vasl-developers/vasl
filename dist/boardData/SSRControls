@@ -127,6 +127,9 @@ Changes:
       <Checkbox name="No Stairwells" >
          <entry name="No Stairwells" rule="NoStairwells" text="no stairwells"/>
       </Checkbox>
+      <Checkbox name="All Buildings are Level 1 (SK)" >
+               <entry name="All Buildings Level1" rule="AllBuildingsLevel1" text="all buildings are level 1 (SK)"/>
+      </Checkbox>
       <Menu name="Rowhouse Bars">
          <entry name="Normal"/>
          <entry name="Become Wood/Stone brown/grey" rule="RowhouseBarsToBuildings" text="no buildings are rowhouses"/>
@@ -322,21 +325,21 @@ Changes:
       <Checkbox name="DTO Broken Terrain">
 		<entry name="DTO Broken Terrain" rule="BrokenTerrain" text="DTO Broken Terrain">
 		   <Target sourceName="Terrain">
-               <activate sourceProperty="DTO terrain"/>
+               <!-- <activate sourceProperty="DTO terrain"/> -->
 	       </Target>   
         </entry>
       </Checkbox>
       <Checkbox name="DTO Steppe Terrain">
 			<entry name="DTO Steppe Terrain" rule="SteppeTerrain" text="DTO Steppe Terrain">
 		   <Target sourceName="Terrain">
-               <activate sourceProperty="DTO terrain"/>
+               <!-- <activate sourceProperty="DTO terrain"/> -->
 	       </Target>   
         </entry>
 		</Checkbox>
 	<Checkbox name="Use Desert Colors for ETO boards">
          <entry name="Use Desert Colors for ETO boards" rule="ETOtoDTO" text="Desert colors">
             <Target sourceName="Terrain">
-               <activate sourceProperty="DTO terrain"/>
+               <!-- <activate sourceProperty="DTO terrain"/> -->
             </Target>
 			</entry>
       </Checkbox>

@@ -150,9 +150,10 @@ public class BoardArchive {
             // board colors replace the shared metadata colors
             LinkedHashMap<String, BoardColor> boardColors = new LinkedHashMap<String, BoardColor>(sharedBoardMetadata.getBoardColors().size());
             boardColors.putAll(sharedBoardMetadata.getBoardColors());
-            if(colorsFile != null) {
-                boardColors.putAll(colorsFile.getColors());
-            }
+            //test code - don't add or change colors from board colors file
+            //if(colorsFile != null) {
+            //    boardColors.putAll(colorsFile.getColors());
+            //}
             return boardColors;
         }
         else {

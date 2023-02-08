@@ -1,6 +1,9 @@
 <SSRControls>
  <Option name="Board 1 Special overlays">
  <Checkbox name="">
+         <entry name="4: The Commissar's House" rule="SSO_1_4" text="scenario 4 SSO"/>
+ </Checkbox>
+ <Checkbox name="">
          <entry name="32: Subterranean Quarry" rule="SSO_32" text="scenario 32 overlay"/>
  </Checkbox>
  <Checkbox name="">

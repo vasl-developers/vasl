@@ -473,6 +473,7 @@ public class ASLDiceBot extends AbstractBuildable
             for (int l_i = 0; l_i < m_iMAXNUM; l_i++)
             {
                 mar_iRandomNumbers[l_i] = (int)((l_RND.nextFloat() * 6) + 1);
+                mar_iRandomNumbers[l_i] = l_RND.nextInt(6) + 1;
                 mar_iDereferencingIndex.add(l_i);
             }
 

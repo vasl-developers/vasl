@@ -22,7 +22,7 @@
 	6.2 - Added Light Woods Aug 2019 BKemp
 	
 -->
-<boardMetadata name="BFPA" version="6.3" versionDate="Apr 2022" author="TR" boardImageFileName="bdBFPA.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="BFPA" version="6.4" versionDate="Jan 2023" author="TR" boardImageFileName="bdBFPA.gif" hasHills="FALSE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
