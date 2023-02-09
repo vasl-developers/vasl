@@ -28,9 +28,35 @@ import VASSAL.configure.TextConfigurer;
 import VASSAL.tools.KeyStrokeListener;
 import VASSAL.tools.SequenceEncoder;
 
+import java.awt.Dimension;
+import java.awt.BorderLayout;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+import javafx.scene.control.Label;
+//import javafx.scene.paint.Color;
+import javax.swing.JFrame;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import javafx.scene.Group;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+
 import java.util.Hashtable;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
@@ -154,17 +180,88 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
       }
     });
     p.add(saveButton);
-    frame.getContentPane().add(p);
-    frame.addWindowListener(new WindowAdapter() {
-      public void windowClosing(WindowEvent e) {
-        save();
-        frame.setVisible(false);
+    /*JFXPanel jfxPanel = new JFXPanel() {
+      @Override
+      public Dimension getPreferredSize() {
+        return new Dimension(320, 240);
+      }
+    };
+    initJFXPanel(jfxPanel);
+    frame.add(jfxPanel);*/
+
+    //JFrame frame = new JFrame("FX");
+
+    SwingUtilities.invokeLater(new Runnable() {
+      @Override
+      public void run() {
+        initAndShowGUI(frame);
       }
     });
 
-    frame.pack();
-  }
 
+
+
+    //frame.getContentPane().add(p);
+    //frame.addWindowListener(new WindowAdapter() {
+    //  public void windowClosing(WindowEvent e) {
+    //    save();
+   //     frame.setVisible(false);
+    //  }
+    //});
+
+    frame.pack();
+
+  }
+  private static void initAndShowGUI(JFrame frame){
+    final JFXPanel fxPanel = new JFXPanel();
+    frame.add(fxPanel);
+    frame.setVisible(true);
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+
+        try {
+          initJFXPanel(fxPanel);
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+      }
+    });
+  }
+  private static void initJFXPanel(JFXPanel jfxPanel) throws IOException {
+    Platform.runLater(() -> {
+      Label label = new Label(System.getProperty("os.name") + " v" + System.getProperty("os.version") + "; Java v" + System.getProperty("java.version"));
+      Stage stage = new Stage();
+      //root.getChildren().add(label);
+      //Scene scene = new Scene(label);
+      //stage.setScene(scene);
+      //stage.show();
+      //jfxPanel.setScene(scene);
+      //creating the image object
+      InputStream stream = null;
+      try {
+        stream = new FileInputStream("C:\\users\\dougr_000\\ideaprojects\\GameUpdater\\dist\\images\\DRs.gif");
+      } catch (FileNotFoundException e) {
+        throw new RuntimeException(e);
+      }
+      Image image = new Image(stream);
+      //Creating the image view
+      ImageView imageView = new ImageView();
+      //Setting image to the image view
+      imageView.setImage(image);
+      //Setting the image view parameters
+      imageView.setX(10);
+      imageView.setY(10);
+      imageView.setFitWidth(575);
+      imageView.setPreserveRatio(true);
+      //Setting the Scene object
+      Group root = new Group(imageView);
+      Scene scene = new Scene(root, 595, 370);
+      stage.setTitle("Displaying Image");
+      stage.setScene(scene);
+      stage.show();
+    });
+  }
   private void save() {
     privateNotes.put(GameModule.getUserId(), myPrivate.getValue());
     GameModule.getGameModule().sendAndLog(new SetInfo(getState(), this));
