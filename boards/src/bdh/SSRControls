@@ -1,0 +1,7 @@
+<SSRControls>
+ <Option name="Board h Special overlays">
+    <Checkbox name="">
+         <entry name="HS30 The Good Shepherd" rule="SSO_bdh_HS30" text="bdh mods for HS30"/>
+ </Checkbox>
+    </Option>
+</SSRControls>
