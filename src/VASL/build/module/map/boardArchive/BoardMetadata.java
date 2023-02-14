@@ -177,7 +177,7 @@ public class BoardMetadata extends AbstractMetadata {
                 parsePartialOrchards(root.getChild(partialorchardsElement));
                 // set flags indicating board-specific information
                 // test code - don't get colors from bdXX files; only use colors from SharedBoardMetaData.xml
-                boardSpecificColors= false; // root.getChild(colorSSRulesElement) != null && root.getChild(colorSSRulesElement).getChildren().size() > 0;
+                boardSpecificColors= root.getChild(colorSSRulesElement) != null && root.getChild(colorSSRulesElement).getChildren().size() > 0;
                 boardSpecificColorSSR = root.getChild(colorSSRulesElement) != null &&
                         root.getChild(colorSSRulesElement).getChildren().size() >0;
                 boardSpecificOverlayRules = root.getChild(overlaySSRulesElement) != null &&
