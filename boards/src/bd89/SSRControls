@@ -1,0 +1,16 @@
+<SSRControls>
+ <Option name="Board 89 Special overlays">
+    <Checkbox name="">
+         <entry name="Remove Shellholes" rule="BSO_bd89_NoShellholes" text="bd89 remove shellholes"/>
+ </Checkbox>
+     <Checkbox name="">
+         <entry name="Shellholes To Palm Trees" rule="BSO_bd89_ShellholesToPalmTrees" text="bd89 shellholes to palm trees"/>
+ </Checkbox>
+      <Checkbox name="">
+         <entry name="Shellholes To Orchards" rule="BSO_bd89_ShellholesToOrchards" text="bd89 shellholes to orchards"/>
+ </Checkbox>
+       <Checkbox name="">
+         <entry name="Shellholes To Crags" rule="BSO_bd89_ShellholesToCrags" text="bd89 shellholes to crags"/>
+ </Checkbox>
+    </Option>
+</SSRControls>
