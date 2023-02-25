@@ -1,0 +1,11 @@
+<SSRControls>
+ <Option name="Board 77 Special overlays">
+    <Checkbox name="">
+         <entry name="Marsh to Open Ground" rule="BSO_bd77_MarshToOpenGround" text="bd77 Marsh to OG"/>
+ </Checkbox>
+     <Checkbox name="">
+         <entry name="R3 Pond is Open Ground" rule="BSO_bd77_R3PondToOpenGround" text="bd77 Pond to OG"/>
+ </Checkbox>
+    </Option>
+</SSRControls>
+
