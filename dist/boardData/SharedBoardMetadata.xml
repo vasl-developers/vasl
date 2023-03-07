@@ -1096,6 +1096,41 @@
 		<color name="DTO_DuneLow2" red="201" green="158" blue="14" terrain="Sand Dune, Low" elevation="UNKNOWN" />
 		<color name="DTO_DuneLow3" red="232" green="188" blue="0" terrain="Sand Dune, Low" elevation="UNKNOWN" />
 		<color name="DTO_DuneLow4" red="218" green="178" blue="139" terrain="Sand Dune, Low" elevation="UNKNOWN" />
+		<color name="DTO_StoneBldg1" red="10" green="13" blue="12" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="DTO_StoneBldg2" red="49" green="52" blue="52" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="DTO_StoneBldg3" red="63" green="65" blue="65" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="DTO_StoneBldg4" red="75" green="79" blue="83" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="DTO_StoneBldg5" red="98" green="100" blue="102" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="DTO_StoneBldg6" red="92" green="104" blue="115" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="DTO_StoneBldg7" red="120" green="124" blue="128" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="DTO_StoneBldg8" red="110" green="129" blue="145" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="DTO_StoneBldg9" red="129" green="146" blue="162" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="DTO_StoneBldg10" red="143" green="147" blue="153" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="DTO_StoneBldg11" red="152" green="167" blue="182" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="DTO_StoneBldg12" red="164" green="168" blue="175" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="DTO_StoneBldg13" red="179" green="185" blue="195" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="DTO_StoneBldg14" red="183" green="186" blue="189" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="DTO_StoneBldg15" red="204" green="207" blue="211" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="DTO_StoneRowhouseBar" red="4" green="4" blue="4" terrain="Rowhouse Wall, 1 Level" elevation="UNKNOWN" />
+		<color name="DTO_StoneStairwell" red="251" green="251" blue="251" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="DTO_WoodBldg1" red="34" green="32" blue="28" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="DTO_WoodBldg2" red="63" green="65" blue="65" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="DTO_WoodBldg3" red="80" green="77" blue="67" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="DTO_WoodBldg4" red="102" green="91" blue="69" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="DTO_WoodBldg5" red="117" green="98" blue="61" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="DTO_WoodBldg6" red="136" green="118" blue="80" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="DTO_WoodBldg7" red="155" green="127" blue="71" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="DTO_WoodBldg8" red="162" green="127" blue="62" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="DTO_WoodBldg9" red="166" green="129" blue="58" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="DTO_WoodBldg10" red="174" green="142" blue="78" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="DTO_WoodBldg11" red="168" green="148" blue="106" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="DTO_WoodBldg12" red="189" green="158" blue="96" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="DTO_WoodBldg13" red="194" green="158" blue="84" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="DTO_WoodBldg14" red="209" green="180" blue="120" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="DTO_WoodBldg15" red="228" green="208" blue="152" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="DTO_WoodRowhouseBar" red="4" green="3" blue="4" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="DTO_WoodStairwell" red="250" green="251" blue="250" terrain="Rowhouse Wall, 1 Level" elevation="UNKNOWN" />
+
 		<!-- Desert colors for desert overlays -->
 		<color name="Hillock1" red="114" green="83" blue="42" terrain="Hillock Summit" elevation="UNKNOWN" />
 		<color name="Dier" red="252" green="223" blue="89" terrain="Dier" elevation="UNKNOWN" />
@@ -1286,6 +1321,8 @@
 		<terrainType name="OffBObserver" typeCode="201" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="0" mapColorGreen="0" mapColorBlue="0" LOSCategory="OTHER"  />
 		<terrainType name="Crest" typeCode="202" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="0" mapColorGreen="0" mapColorBlue="001" LOSCategory="OPEN"  />
 		<terrainType name="MultipleWooden" typeCode="203" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="164" mapColorGreen="116" mapColorBlue="64" LOSCategory="BUILDING"  />
+		<terrainType name="Monument" typeCode="204" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="0" mapColorRed="10" mapColorGreen="127" mapColorBlue="138" LOSCategory="OTHER"  />
+
 	</terrainTypes>
 
 	<colorSSRules>
@@ -1365,9 +1402,6 @@
 		<colorSSR name="NoStairwells">
 			<colorMap fromColor="WoodStairwell" toColor="WoodBldg6"/>
 			<colorMap fromColor="StoneStairwell" toColor="StoneBldg6"/>
-		</colorSSR>
-		<colorSSR name="AllBuildingsLevel1">
-			<colorMap fromColor="WoodBldg1" toColor="WoodBldg1"/>  // just need one transform to make it work
 		</colorSSR>
 		<colorSSR name="RowhouseBarsToBuildings">
 			<colorMap fromColor="StoneRowhouseBar" toColor="StoneBldg8"/>
@@ -1533,126 +1567,30 @@
 			<colorMap fromColor="SeparatedSwampBrownL0" toColor="Level0"/>
 			<colorMap fromColor="SeparatedSwampGreenL_1" toColor="Level_1"/>
 			<colorMap fromColor="SeparatedSwampBrownL_1" toColor="Level_1"/>
-			<colorMap fromColor="MarshBrownL_2" toColor="Level_2"/>
-			<colorMap fromColor="MarshBrownL1" toColor="Level1"/>
-			<colorMap fromColor="MarshGreenL_2" toColor="Level_2"/>
-			<colorMap fromColor="MarshGreenL1" toColor="Level1"/>
-			<colorMap fromColor="SeparatedMarshGreenL_2" toColor="Level_2"/>
-			<colorMap fromColor="SeparatedMarshBrownL_2" toColor="Level_2"/>
 		</colorSSR>
 		<colorSSR name="MarshToLevel_1">
 			<colorMap fromColor="MarshGreenL0" toColor="Level_1"/>
 			<colorMap fromColor="MarshBrownL0" toColor="Level_1"/>
 			<colorMap fromColor="MarshGreenL_1" toColor="Level_1"/>
 			<colorMap fromColor="MarshBrownL_1" toColor="Level_1"/>
-			<colorMap fromColor="StreamMarshGreenL0" toColor="Level_1"/>
-			<colorMap fromColor="StreamMarshBrownL0" toColor="Level_1"/>
-			<colorMap fromColor="StreamMarshGreenL_1" toColor="Level_1"/>
-			<colorMap fromColor="StreamMarshBrownL_1" toColor="Level_1"/>
-			<colorMap fromColor="StreamSwampGreenL0" toColor="Level_1"/>
-			<colorMap fromColor="StreamSwampBrownL0" toColor="Level_1"/>
-			<colorMap fromColor="StreamSwampGreenL_1" toColor="Level_1"/>
-			<colorMap fromColor="StreamSwampBrownL_1" toColor="Level_1"/>
-			<colorMap fromColor="RiverMarshGreenL0" toColor="Level_1"/>
-			<colorMap fromColor="RiverMarshBrownL0" toColor="Level_1"/>
-			<colorMap fromColor="RiverMarshGreenL_1" toColor="Level_1"/>
-			<colorMap fromColor="RiverMarshBrownL_1" toColor="Level_1"/>
-			<colorMap fromColor="RiverSwampGreenL0" toColor="Level_1"/>
-			<colorMap fromColor="RiverSwampBrownL0" toColor="Level_1"/>
-			<colorMap fromColor="RiverSwampGreenL_1" toColor="Level_1"/>
-			<colorMap fromColor="RiverSwampBrownL_1" toColor="Level_1"/>
 			<colorMap fromColor="SeparatedMarshGreenL0" toColor="Level_1"/>
 			<colorMap fromColor="SeparatedMarshBrownL0" toColor="Level_1"/>
 			<colorMap fromColor="SeparatedMarshGreenL1" toColor="Level_1"/>
 			<colorMap fromColor="SeparatedMarshBrownL1" toColor="Level_1"/>
 			<colorMap fromColor="SeparatedMarshGreenL_1" toColor="Level_1"/>
 			<colorMap fromColor="SeparatedMarshBrownL_1" toColor="Level_1"/>
-			<colorMap fromColor="SeparatedSwampGreenL0" toColor="Level_1"/>
-			<colorMap fromColor="SeparatedSwampBrownL0" toColor="Level_1"/>
-			<colorMap fromColor="SeparatedSwampGreenL_1" toColor="Level_1"/>
-			<colorMap fromColor="SeparatedSwampBrownL_1" toColor="Level_1"/>
-			<colorMap fromColor="MarshBrownL_2" toColor="Level_1"/>
-			<colorMap fromColor="MarshBrownL1" toColor="Level_1"/>
-			<colorMap fromColor="MarshGreenL_2" toColor="Level_1"/>
-			<colorMap fromColor="MarshGreenL1" toColor="Level_1"/>
-			<colorMap fromColor="SeparatedMarshGreenL_2" toColor="Level_1"/>
-			<colorMap fromColor="SeparatedMarshBrownL_2" toColor="Level_1"/>
-		</colorSSR>
-		<colorSSR name="MarshToWater">
-			<colorMap fromColor="MarshGreenL0" toColor="Water"/>
-			<colorMap fromColor="MarshBrownL0" toColor="Water"/>
-			<colorMap fromColor="MarshGreenL_1" toColor="Water"/>
-			<colorMap fromColor="MarshBrownL_1" toColor="Water"/>
-			<colorMap fromColor="StreamMarshGreenL0" toColor="Water"/>
-			<colorMap fromColor="StreamMarshBrownL0" toColor="Water"/>
-			<colorMap fromColor="StreamMarshGreenL_1" toColor="Water"/>
-			<colorMap fromColor="StreamMarshBrownL_1" toColor="Water"/>
-			<colorMap fromColor="StreamSwampGreenL0" toColor="Water"/>
-			<colorMap fromColor="StreamSwampBrownL0" toColor="Water"/>
-			<colorMap fromColor="StreamSwampGreenL_1" toColor="Water"/>
-			<colorMap fromColor="StreamSwampBrownL_1" toColor="Water"/>
-			<colorMap fromColor="RiverMarshGreenL0" toColor="Water"/>
-			<colorMap fromColor="RiverMarshBrownL0" toColor="Water"/>
-			<colorMap fromColor="RiverMarshGreenL_1" toColor="Water"/>
-			<colorMap fromColor="RiverMarshBrownL_1" toColor="Water"/>
-			<colorMap fromColor="RiverSwampGreenL0" toColor="Water"/>
-			<colorMap fromColor="RiverSwampBrownL0" toColor="Water"/>
-			<colorMap fromColor="RiverSwampGreenL_1" toColor="Water"/>
-			<colorMap fromColor="RiverSwampBrownL_1" toColor="Water"/>
-			<colorMap fromColor="SeparatedMarshGreenL0" toColor="Water"/>
-			<colorMap fromColor="SeparatedMarshBrownL0" toColor="Water"/>
-			<colorMap fromColor="SeparatedMarshGreenL1" toColor="Water"/>
-			<colorMap fromColor="SeparatedMarshBrownL1" toColor="Water"/>
-			<colorMap fromColor="SeparatedMarshGreenL_1" toColor="Water"/>
-			<colorMap fromColor="SeparatedMarshBrownL_1" toColor="Water"/>
-			<colorMap fromColor="SeparatedSwampGreenL0" toColor="Water"/>
-			<colorMap fromColor="SeparatedSwampBrownL0" toColor="Water"/>
-			<colorMap fromColor="SeparatedSwampGreenL_1" toColor="Water"/>
-			<colorMap fromColor="SeparatedSwampBrownL_1" toColor="Water"/>
-			<colorMap fromColor="MarshBrownL_2" toColor="Water"/>
-			<colorMap fromColor="MarshBrownL1" toColor="Water"/>
-			<colorMap fromColor="MarshGreenL_2" toColor="Water"/>
-			<colorMap fromColor="MarshGreenL1" toColor="Water"/>
-			<colorMap fromColor="SeparatedMarshGreenL_2" toColor="Water"/>
-			<colorMap fromColor="SeparatedMarshBrownL_2" toColor="Water"/>
 		</colorSSR>
 		<colorSSR name="MarshToLevel0">
 			<colorMap fromColor="MarshGreenL0" toColor="Level0"/>
 			<colorMap fromColor="MarshBrownL0" toColor="Level0"/>
 			<colorMap fromColor="MarshGreenL_1" toColor="Level0"/>
 			<colorMap fromColor="MarshBrownL_1" toColor="Level0"/>
-			<colorMap fromColor="StreamMarshGreenL0" toColor="Level0"/>
-			<colorMap fromColor="StreamMarshBrownL0" toColor="Level0"/>
-			<colorMap fromColor="StreamMarshGreenL_1" toColor="Level0"/>
-			<colorMap fromColor="StreamMarshBrownL_1" toColor="Level0"/>
-			<colorMap fromColor="StreamSwampGreenL0" toColor="Level0"/>
-			<colorMap fromColor="StreamSwampBrownL0" toColor="Level0"/>
-			<colorMap fromColor="StreamSwampGreenL_1" toColor="Level0"/>
-			<colorMap fromColor="StreamSwampBrownL_1" toColor="Level0"/>
-			<colorMap fromColor="RiverMarshGreenL0" toColor="Level0"/>
-			<colorMap fromColor="RiverMarshBrownL0" toColor="Level0"/>
-			<colorMap fromColor="RiverMarshGreenL_1" toColor="Level0"/>
-			<colorMap fromColor="RiverMarshBrownL_1" toColor="Level0"/>
-			<colorMap fromColor="RiverSwampGreenL0" toColor="Level0"/>
-			<colorMap fromColor="RiverSwampBrownL0" toColor="Level0"/>
-			<colorMap fromColor="RiverSwampGreenL_1" toColor="Level0"/>
-			<colorMap fromColor="RiverSwampBrownL_1" toColor="Level0"/>
 			<colorMap fromColor="SeparatedMarshGreenL0" toColor="Level0"/>
 			<colorMap fromColor="SeparatedMarshBrownL0" toColor="Level0"/>
 			<colorMap fromColor="SeparatedMarshGreenL1" toColor="Level0"/>
 			<colorMap fromColor="SeparatedMarshBrownL1" toColor="Level0"/>
 			<colorMap fromColor="SeparatedMarshGreenL_1" toColor="Level0"/>
 			<colorMap fromColor="SeparatedMarshBrownL_1" toColor="Level0"/>
-			<colorMap fromColor="SeparatedSwampGreenL0" toColor="Level0"/>
-			<colorMap fromColor="SeparatedSwampBrownL0" toColor="Level0"/>
-			<colorMap fromColor="SeparatedSwampGreenL_1" toColor="Level0"/>
-			<colorMap fromColor="SeparatedSwampBrownL_1" toColor="Level0"/>
-			<colorMap fromColor="MarshBrownL_2" toColor="Level0"/>
-			<colorMap fromColor="MarshBrownL1" toColor="Level0"/>
-			<colorMap fromColor="MarshGreenL_2" toColor="Level0"/>
-			<colorMap fromColor="MarshGreenL1" toColor="Level0"/>
-			<colorMap fromColor="SeparatedMarshGreenL_2" toColor="Level0"/>
-			<colorMap fromColor="SeparatedMarshBrownL_2" toColor="Level0"/>
 		</colorSSR>
 
 		<colorSSR name="MarshToLevel1">
@@ -1660,102 +1598,24 @@
 			<colorMap fromColor="MarshBrownL0" toColor="Level1"/>
 			<colorMap fromColor="MarshGreenL_1" toColor="Level1"/>
 			<colorMap fromColor="MarshBrownL_1" toColor="Level1"/>
-			<colorMap fromColor="StreamMarshGreenL0" toColor="Level1"/>
-			<colorMap fromColor="StreamMarshBrownL0" toColor="Level1"/>
-			<colorMap fromColor="StreamMarshGreenL_1" toColor="Level1"/>
-			<colorMap fromColor="StreamMarshBrownL_1" toColor="Level1"/>
-			<colorMap fromColor="StreamSwampGreenL0" toColor="Level1"/>
-			<colorMap fromColor="StreamSwampBrownL0" toColor="Level1"/>
-			<colorMap fromColor="StreamSwampGreenL_1" toColor="Level1"/>
-			<colorMap fromColor="StreamSwampBrownL_1" toColor="Level1"/>
-			<colorMap fromColor="RiverMarshGreenL0" toColor="Level1"/>
-			<colorMap fromColor="RiverMarshBrownL0" toColor="Level1"/>
-			<colorMap fromColor="RiverMarshGreenL_1" toColor="Level1"/>
-			<colorMap fromColor="RiverMarshBrownL_1" toColor="Level1"/>
-			<colorMap fromColor="RiverSwampGreenL0" toColor="Level1"/>
-			<colorMap fromColor="RiverSwampBrownL0" toColor="Level1"/>
-			<colorMap fromColor="RiverSwampGreenL_1" toColor="Level1"/>
-			<colorMap fromColor="RiverSwampBrownL_1" toColor="Level1"/>
 			<colorMap fromColor="SeparatedMarshGreenL0" toColor="Level1"/>
 			<colorMap fromColor="SeparatedMarshBrownL0" toColor="Level1"/>
 			<colorMap fromColor="SeparatedMarshGreenL1" toColor="Level1"/>
 			<colorMap fromColor="SeparatedMarshBrownL1" toColor="Level1"/>
 			<colorMap fromColor="SeparatedMarshGreenL_1" toColor="Level1"/>
 			<colorMap fromColor="SeparatedMarshBrownL_1" toColor="Level1"/>
-			<colorMap fromColor="SeparatedSwampGreenL0" toColor="Level1"/>
-			<colorMap fromColor="SeparatedSwampBrownL0" toColor="Level1"/>
-			<colorMap fromColor="SeparatedSwampGreenL_1" toColor="Level1"/>
-			<colorMap fromColor="SeparatedSwampBrownL_1" toColor="Level1"/>
-			<colorMap fromColor="MarshBrownL_2" toColor="Level1"/>
-			<colorMap fromColor="MarshBrownL1" toColor="Level1"/>
-			<colorMap fromColor="MarshGreenL_2" toColor="Level1"/>
-			<colorMap fromColor="MarshGreenL1" toColor="Level1"/>
-			<colorMap fromColor="SeparatedMarshGreenL_2" toColor="Level1"/>
-			<colorMap fromColor="SeparatedMarshBrownL_2" toColor="Level1"/>
 		</colorSSR>
 		<colorSSR name="Marsh_1ToLevel_1">
 			<colorMap fromColor="MarshGreenL_1" toColor="Level_1"/>
 			<colorMap fromColor="MarshBrownL_1" toColor="Level_1"/>
-			<colorMap fromColor="StreamMarshGreenL_1" toColor="Level_1"/>
-			<colorMap fromColor="StreamMarshBrownL_1" toColor="Level_1"/>
-			<colorMap fromColor="StreamSwampGreenL_1" toColor="Level_1"/>
-			<colorMap fromColor="StreamSwampBrownL_1" toColor="Level_1"/>
-			<colorMap fromColor="RiverMarshGreenL_1" toColor="Level_1"/>
-			<colorMap fromColor="RiverMarshBrownL_1" toColor="Level_1"/>
-			<colorMap fromColor="RiverSwampGreenL_1" toColor="Level_1"/>
-			<colorMap fromColor="RiverSwampBrownL_1" toColor="Level_1"/>
 			<colorMap fromColor="SeparatedMarshGreenL_1" toColor="Level_1"/>
 			<colorMap fromColor="SeparatedMarshBrownL_1" toColor="Level_1"/>
-			<colorMap fromColor="SeparatedSwampGreenL_1" toColor="Level_1"/>
-			<colorMap fromColor="SeparatedSwampBrownL_1" toColor="Level_1"/>
 		</colorSSR>
 		<colorSSR name="Marsh0ToLevel0">
 			<colorMap fromColor="MarshGreenL0" toColor="Level0"/>
 			<colorMap fromColor="MarshBrownL0" toColor="Level0"/>
-			<colorMap fromColor="StreamMarshGreenL0" toColor="Level0"/>
-			<colorMap fromColor="StreamMarshBrownL0" toColor="Level0"/>
-			<colorMap fromColor="StreamSwampGreenL0" toColor="Level0"/>
-			<colorMap fromColor="StreamSwampBrownL0" toColor="Level0"/>
-			<colorMap fromColor="RiverMarshGreenL0" toColor="Level0"/>
-			<colorMap fromColor="RiverMarshBrownL0" toColor="Level0"/>
-			<colorMap fromColor="RiverSwampGreenL0" toColor="Level0"/>
-			<colorMap fromColor="RiverSwampBrownL0" toColor="Level0"/>
 			<colorMap fromColor="SeparatedMarshGreenL0" toColor="Level0"/>
 			<colorMap fromColor="SeparatedMarshBrownL0" toColor="Level0"/>
-			<colorMap fromColor="SeparatedSwampGreenL0" toColor="Level0"/>
-			<colorMap fromColor="SeparatedSwampBrownL0" toColor="Level0"/>
-		</colorSSR>
-		<colorSSR name="Marsh0ToLevel1">
-			<colorMap fromColor="MarshGreenL0" toColor="Level1"/>
-			<colorMap fromColor="MarshBrownL0" toColor="Level1"/>
-			<colorMap fromColor="StreamMarshGreenL0" toColor="Level1"/>
-			<colorMap fromColor="StreamMarshBrownL0" toColor="Level1"/>
-			<colorMap fromColor="StreamSwampGreenL0" toColor="Level1"/>
-			<colorMap fromColor="StreamSwampBrownL0" toColor="Level1"/>
-			<colorMap fromColor="RiverMarshGreenL0" toColor="Level1"/>
-			<colorMap fromColor="RiverMarshBrownL0" toColor="Level1"/>
-			<colorMap fromColor="RiverSwampGreenL0" toColor="Level1"/>
-			<colorMap fromColor="RiverSwampBrownL0" toColor="Level1"/>
-			<colorMap fromColor="SeparatedMarshGreenL0" toColor="Level1"/>
-			<colorMap fromColor="SeparatedMarshBrownL0" toColor="Level1"/>
-			<colorMap fromColor="SeparatedSwampGreenL0" toColor="Level1"/>
-			<colorMap fromColor="SeparatedSwampBrownL0" toColor="Level1"/>
-		</colorSSR>
-		<colorSSR name="Marsh0ToLevel_1">
-			<colorMap fromColor="MarshGreenL0" toColor="Level_1"/>
-			<colorMap fromColor="MarshBrownL0" toColor="Level_1"/>
-			<colorMap fromColor="StreamMarshGreenL0" toColor="Level_1"/>
-			<colorMap fromColor="StreamMarshBrownL0" toColor="Level_1"/>
-			<colorMap fromColor="StreamSwampGreenL0" toColor="Level_1"/>
-			<colorMap fromColor="StreamSwampBrownL0" toColor="Level_1"/>
-			<colorMap fromColor="RiverMarshGreenL0" toColor="Level_1"/>
-			<colorMap fromColor="RiverMarshBrownL0" toColor="Level_1"/>
-			<colorMap fromColor="RiverSwampGreenL0" toColor="Level_1"/>
-			<colorMap fromColor="RiverSwampBrownL0" toColor="Level_1"/>
-			<colorMap fromColor="SeparatedMarshGreenL0" toColor="Level_1"/>
-			<colorMap fromColor="SeparatedMarshBrownL0" toColor="Level_1"/>
-			<colorMap fromColor="SeparatedSwampGreenL0" toColor="Level_1"/>
-			<colorMap fromColor="SeparatedSwampBrownL0" toColor="Level_1"/>
 		</colorSSR>
 		<colorSSR name="GulliesToStreams">
 			<colorMap fromColor="GullyGreen2" toColor="StreamGreen2"/>
@@ -2536,12 +2396,11 @@
         <LOSSSRule name="Bamboo" type="customCode" fromValue="" toValue="" />
         <LOSSSRule name="RoadsToPaths" type="customCode" fromValue="" toValue="" />
         <LOSSSRule name="NoWoodsRoads" type="customCode" fromValue="" toValue="" />
-		<LOSSSRule name="AllBuildingsLevel1" type="customCode" fromValue="" toValue="" />
+
         <!-- simple terrain mappings -->
         <LOSSSRule name="BrushToOpenGround" type="terrainMap" fromValue="Brush" toValue="Open Ground" />
         <LOSSSRule name="SwampToMarsh" type="terrainMap" fromValue="Swamp" toValue="Marsh" />
         <LOSSSRule name="MarshToOpenGround" type="terrainMap" fromValue="Marsh" toValue="Open Ground" />
-		<LOSSSRule name="MarshToWater" type="terrainMap" fromValue="Marsh" toValue="Water" />
         <LOSSSRule name="FloodedStreams" type="terrainMap" fromValue="Shallow Stream" toValue="Flooded Stream" />
         <LOSSSRule name="DryStreams" type="terrainMap" fromValue="Shallow Stream" toValue="Dry Stream" />
         <LOSSSRule name="OrchardOutOfSeason" type="terrainMap" fromValue="Orchard" toValue="Orchard, Out of Season" />
@@ -2631,9 +2490,6 @@
         <LOSSSRule name="MarshToBrush" type="terrainMap" fromValue="Marsh" toValue="Brush" />
         <LOSSSRule name="MarshToWoods" type="terrainMap" fromValue="Marsh" toValue="Woods" />
         <LOSSSRule name="MarshToGrain" type="terrainMap" fromValue="Marsh" toValue="Grain" />
-		<LOSSSRule name="MarshToWater" type="terrainToElevationMap" fromValue="Marsh" toValue="-1" />
-		<LOSSSRule name="Marsh0ToLevel1" type="terrainToElevationMap" fromValue="Marsh" toValue="1" />
-		<LOSSSRule name="Marsh0ToLevel_1" type="terrainToElevationMap" fromValue="Marsh" toValue="-1" />
 
         <LOSSSRule name="Level_1ToWoods" type="elevationToTerrainMap" fromValue="-1" toValue="Woods" />
         <LOSSSRule name="Level0ToWoods" type="elevationToTerrainMap" fromValue="0" toValue="Woods" />
