@@ -271,6 +271,9 @@
 		<boarddata name="ABTF" version="6.0" versionDate="Jun 2021" description="" />
 		<boarddata name="Rileys" version="1.5" versionDate="Aug 2008" description="" />
 		<boarddata name="Dinant" version="6.1" versionDate="Mar 2022" description="" />
+		<boarddata name="FA" version="1.0" versionDate="Mar 2023" description="" />
+		<boarddata name="SA" version="1.0" versionDate="Mar 2023" description="" />
+		<boarddata name="NE" version="1.0" versionDate="Mar 2023" description="" />
 		<!--# LG = 1.0 duplicate
 		# ER = 1.1 duplicate
 		# STN = 1.0 no such board; should be StN
