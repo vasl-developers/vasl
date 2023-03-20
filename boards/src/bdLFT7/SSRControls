@@ -1,0 +1,16 @@
+<SSRControls>
+   <Option name="Board LFT 7 Special Transformations">
+   <Checkbox>
+       <entry name="Mandatory LFT AD Arid/Desert Terrain Changes" rule="RoadsToTracks,BridgeToFord,LFT_AridPlazas"/>
+     </Checkbox>
+	 <Checkbox>
+       <entry name="FT275 - Trust Us" rule="SSO_FT275"/>
+     </Checkbox>	 
+	 <Checkbox>
+       <entry name="FT276 - Genghis Khan Lives!" rule="SSO_FT276"/>
+     </Checkbox>
+	  <Checkbox>
+       <entry name="FT293 - Wild Men From Texas" rule="SSO_FT293"/>
+     </Checkbox>
+     </Option>
+</SSRControls>

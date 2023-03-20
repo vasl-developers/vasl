@@ -1,0 +1,13 @@
+<SSRControls>
+   <Option name="Board LFT 4 Special Transformations">
+	<Checkbox>
+       <entry name="Mandatory LFT AD Arid/Desert Terrain Changes" rule="RoadsToTracks,LightWoods"/>
+     </Checkbox>
+	 	 <Checkbox>
+       <entry name="FT288 - Fondouk Express" rule="LightWoods"/>
+     </Checkbox>
+	 <Checkbox>
+       <entry name="FT289 - Haka at Takrouna" rule="SSO_FT289"/>
+     </Checkbox>
+     </Option>
+</SSRControls>

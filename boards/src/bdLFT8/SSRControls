@@ -1,0 +1,25 @@
+<SSRControls>
+   <Option name="Board LFT 8 Special Transformations">
+   <Checkbox>
+       <entry name="Mandatory LFT AD Arid/Desert Terrain Changes" rule="RoadsToTracks,BridgeToFord"/>
+     </Checkbox>
+	 <Checkbox>
+       <entry name="FT276 - Genghis Khan Lives!" rule="SSO_FT276"/>
+     </Checkbox>
+	 <Checkbox>
+       <entry name="FT280 - Salvation At The Temple" rule="SSO_FT280"/>
+     </Checkbox>	 
+	 <Checkbox>
+       <entry name="FT283 - Roud to Merdjayoun" rule="SSO_FT283"/>
+     </Checkbox>	 
+	  <Checkbox>
+       <entry name="FT284 - Vichy Strikes Back" rule="SSO_FT284"/>
+     </Checkbox>
+	 <Checkbox>
+       <entry name="FT289 - Haka at Takrouna" rule="SSO_FT289"/>
+     </Checkbox>		 
+	 <Checkbox>
+       <entry name="FT292 - Engineer Hill" rule="SSO_FT292"/>
+     </Checkbox>	 
+     </Option>
+</SSRControls>

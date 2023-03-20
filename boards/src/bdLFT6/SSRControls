@@ -1,0 +1,28 @@
+<SSRControls>
+   <Option name="Board LFT 6 Special Transformations">
+   <Checkbox>
+       <entry name="Mandatory LFT AD Arid/Desert Terrain Changes" rule="RoadsToTracks,BridgeToFord,LightWoods"/>
+     </Checkbox>
+	 <Checkbox>
+       <entry name="FT276 - Genghis Khan Lives!" rule="SSO_FT276"/>
+     </Checkbox>
+	 	 <Checkbox>
+       <entry name="FT280 - Salvation At The Temple" rule="SSO_FT280"/>
+     </Checkbox>
+	 <Checkbox>
+       <entry name="FT281 - Pink Hill" rule="SSO_FT281"/>
+     </Checkbox>
+	 	 <Checkbox>
+       <entry name="FT283 - Road to Merdjayoun" rule="SSO_FT283"/>
+     </Checkbox>
+	 	 <Checkbox>
+       <entry name="FT284 - Vichy Strikes Back" rule="SSO_FT284"/>
+     </Checkbox>
+	 	 <Checkbox>
+       <entry name="FT289 - Haka at Takrouna" rule="SSO_FT289"/>
+     </Checkbox>
+	  <Checkbox>
+       <entry name="FT290 - Picking Olives" rule="SSO_FT290"/>
+     </Checkbox>
+     </Option>
+</SSRControls>
