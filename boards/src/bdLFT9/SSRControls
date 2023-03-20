@@ -1,0 +1,25 @@
+<SSRControls>
+   <Option name="Board LFT 9 Special Transformations">
+   <Checkbox>
+       <entry name="Mandatory LFT AD Arid/Desert Terrain Changes" rule="RoadsToTracks,LFT_AridPlazas,BSO_LFT9_AllStone"/>
+     </Checkbox>
+	 <Checkbox>
+       <entry name="FT279 - The Russians Are Coming" rule="BSO_LFT9_LFT_Arid"/>
+     </Checkbox>
+	 <Checkbox>
+       <entry name="FT281 - Pink Hill" rule="SSO_FT281"/>
+     </Checkbox>	  
+	  <Checkbox>
+       <entry name="FT284 - Vichy Strikes Back" rule="SSO_FT284"/>
+     </Checkbox>
+	 <Checkbox>
+       <entry name="FT285 - The Arab Legion" rule="SSO_FT285"/>
+     </Checkbox>		 
+	 <Checkbox>
+       <entry name="FT286 - Back To Fight" rule="SSO_FT286"/>
+     </Checkbox>	
+	 <Checkbox>
+       <entry name="FT288 - Fondouk Express" rule="LFT_AridPlazas,BSO_LFT9_AllStone"/>
+     </Checkbox>	 
+     </Option>
+</SSRControls>

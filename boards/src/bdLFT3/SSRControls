@@ -1,0 +1,16 @@
+<SSRControls>
+   <Option name="Board LFT 3 Special Transformations">
+	<Checkbox>
+       <entry name="Mandatory LFT AD Arid/Desert Terrain Changes" rule="RoadsToTracks,LightWoods"/>
+     </Checkbox>
+	 <Checkbox>
+       <entry name="FT290 - Picking Olives" rule="SSO_FT290"/>
+     </Checkbox>
+	 <Checkbox>
+       <entry name="FT292 - Engineer Hill" rule="SSO_FT292"/>
+     </Checkbox>	 
+	 <Checkbox>
+       <entry name="FT293 - Wild Men From Texas" rule="SSO_FT293"/>
+     </Checkbox>	
+     </Option>
+</SSRControls>
