@@ -657,120 +657,8 @@ public class Hex {
 
         centerLocation.setTerrain(centerLocationTerrain);
 
-        boolean oldStairway = false;
-
-        // add building locations
-        if (centerLocationTerrain.isBuilding()) {
-
-            // keep stairway if resetting a multi-level building
-            oldStairway = stairway &&
-                    !"Stone Building, 1 Level".equals(centerLocation.getTerrain().getName()) &&
-                    !"Wooden Building, 1 Level".equals(centerLocation.getTerrain().getName());
-
-            // special case for marketplace
-            if (centerLocationTerrain.getLOSCategory() == Terrain.LOSCategories.MARKETPLACE) {
-                centerLocation.setTerrain(map.getTerrain("Open Ground"));
-            }
-
-            // add upper level building locations
-            Location previousLocation = centerLocation;
-            for (int level = 1; level <= centerLocationTerrain.getHeight(); level++) {
-
-                // need to ignore buildings without upper level locations - bit of a hack so we can use the building height
-                if (!"Wooden Building".equals(centerLocationTerrain.getName()) &&
-                        !"Stone Building".equals(centerLocationTerrain.getName())) {
-
-                    // code added by DR to prevent quasi-levels in Factory hexes without stairways
-                    if ((centerLocationTerrain.getLOSCategory() == Terrain.LOSCategories.FACTORY) &&
-                            !(stairway)) {
-                    } else {
-                        final Location l = new Location(
-                                centerLocation.getName() + " Level " + level,
-                                level,
-                                centerLocation.getLOSPoint(),
-                                centerLocation.getLOSPoint(),
-                                null,
-                                this,
-                                centerLocationTerrain
-                        );
-
-                        previousLocation.setUpLocation(l);
-                        l.setDownLocation(previousLocation);
-                        previousLocation = l;
-                    }
-                }
-            }
-
-            // set inherent stairway
-            stairway =
-                    "Stone Building, 1 Level".equals(centerLocation.getTerrain().getName()) ||
-                            "Wooden Building, 1 Level".equals(centerLocation.getTerrain().getName()) ||
-                            oldStairway;
-
-            // add cellars and rooftops to buildings. will add them to multihex non-factories) DR
-            // need to ignore buildings without upper level locations - bit of a hack so we can use the building height
-
-            // cellars
-            previousLocation = centerLocation;
-            if (!"Wooden Building".equals(centerLocationTerrain.getName()) &&
-                    !"Stone Building".equals(centerLocationTerrain.getName()) &&
-                    !(centerLocationTerrain.getLOSCategory() == Terrain.LOSCategories.FACTORY)) {
-                if (isMultihexBuilding()) {
-                    Terrain cellarterrain;
-                    cellarterrain = map.getTerrain("Cellar");
-                    final Location l = new Location(
-                            centerLocation.getName() + " Cellar ",
-                            -1,
-                            centerLocation.getLOSPoint(),
-                            centerLocation.getLOSPoint(),
-                            null,
-                            this,
-                            cellarterrain
-                    );
-
-                    previousLocation.setDownLocation(l);
-                    l.setUpLocation(previousLocation);
-                    previousLocation = l;
-                }
-            }
-
-            // rooftops
-            previousLocation = centerLocation;
-            // need to ignore buildings without upper level locations - bit of a hack so we can use the building height
-            if (!"Wooden Building".equals(centerLocationTerrain.getName())  &&
-                !"Stone Building".equals(centerLocationTerrain.getName()) &&
-                !centerLocationTerrain.isRoofless()) {
-
-                if (isMultihexBuilding() ) {
-
-                    Terrain roofterrain;
-                    roofterrain = map.getTerrain("Rooftop");
-                    // move to top level
-                    int level = 0;
-                    while (previousLocation.getUpLocation() != null) {
-                        previousLocation = previousLocation.getUpLocation();
-                        level = level + 1;
-                    }
-                    if (centerLocationTerrain.getLOSCategory() == Terrain.LOSCategories.FACTORY) {
-                        level = centerLocationTerrain.getHeight();
-                    }
-                    final Location l = new Location(
-                            centerLocation.getName() + " Rooftop ",
-                            level + 1,
-                            centerLocation.getLOSPoint(),
-                            centerLocation.getLOSPoint(),
-                            null,
-                            this,
-                            roofterrain
-                    );
-
-                    previousLocation.setUpLocation(l);
-                    l.setDownLocation(previousLocation);
-                    previousLocation = l;
-                }
-            }
-            fixspecialcasesAddRooftops( ); // handles RO wooden warehouses and SK transform (all buildings are single story)
-        }
+        // add building level locations -multihex is always false here because not tested yet
+        addbuildinglevels(centerLocationTerrain, false);
 
         // set the hexside location terrain
         for (int x = 0; x < 6; x++) {
@@ -983,6 +871,121 @@ public class Hex {
         return null;
     }
 
+    public void addbuildinglevels(Terrain centerLocationTerrain, boolean multihex){
+
+        // add building locations
+        boolean oldStairway = false;
+        if (centerLocationTerrain.isBuilding()) {
+
+            // keep stairway if resetting a multi-level building
+            oldStairway = stairway &&
+                    !"Stone Building, 1 Level".equals(centerLocation.getTerrain().getName()) &&
+                    !"Wooden Building, 1 Level".equals(centerLocation.getTerrain().getName());
+
+            // special case for marketplace
+            if (centerLocationTerrain.getLOSCategory() == Terrain.LOSCategories.MARKETPLACE) {
+                centerLocation.setTerrain(map.getTerrain("Open Ground"));
+            }
+            // add upper level building locations
+            Location previousLocation = centerLocation;
+            for (int level = 1; level <= centerLocationTerrain.getHeight(); level++) {
+
+                // need to ignore buildings without upper level locations - bit of a hack so we can use the building height
+                if (multihex== true || (multihex==false && !"Wooden Building".equals(centerLocationTerrain.getName()) &&
+                        !"Stone Building".equals(centerLocationTerrain.getName()))) {
+
+                    // code added by DR to prevent quasi-levels in Factory hexes without stairways
+                    if ((centerLocationTerrain.getLOSCategory() == Terrain.LOSCategories.FACTORY) &&
+                            !(stairway)) {
+                    } else {
+                        final Location l = new Location(
+                                centerLocation.getName() + " Level " + level,
+                                level,
+                                centerLocation.getLOSPoint(),
+                                centerLocation.getLOSPoint(),
+                                null,
+                                this,
+                                centerLocationTerrain
+                        );
+
+                        previousLocation.setUpLocation(l);
+                        l.setDownLocation(previousLocation);
+                        previousLocation = l;
+                    }
+                }
+            }
+
+            // set inherent stairway
+            stairway =
+                    "Stone Building, 1 Level".equals(centerLocation.getTerrain().getName()) ||
+                            "Wooden Building, 1 Level".equals(centerLocation.getTerrain().getName()) ||
+                            oldStairway;
+
+            // add cellars and rooftops to buildings. will add them to multihex non-factories) DR
+            // need to ignore buildings without upper level locations - bit of a hack so we can use the building height
+
+            // cellars
+            previousLocation = centerLocation;
+            if (!"Wooden Building".equals(centerLocationTerrain.getName()) &&
+                    !"Stone Building".equals(centerLocationTerrain.getName()) &&
+                    !(centerLocationTerrain.getLOSCategory() == Terrain.LOSCategories.FACTORY)) {
+                if (multihex || isMultihexBuilding()) {
+                    Terrain cellarterrain;
+                    cellarterrain = map.getTerrain("Cellar");
+                    final Location l = new Location(
+                            centerLocation.getName() + " Cellar ",
+                            -1,
+                            centerLocation.getLOSPoint(),
+                            centerLocation.getLOSPoint(),
+                            null,
+                            this,
+                            cellarterrain
+                    );
+
+                    previousLocation.setDownLocation(l);
+                    l.setUpLocation(previousLocation);
+                    previousLocation = l;
+                }
+            }
+
+            // rooftops
+            previousLocation = centerLocation;
+            // need to ignore buildings without upper level locations - bit of a hack so we can use the building height
+            if (!"Wooden Building".equals(centerLocationTerrain.getName()) &&
+                    !"Stone Building".equals(centerLocationTerrain.getName()) &&
+                    !centerLocationTerrain.isRoofless()) {
+
+                if (multihex || isMultihexBuilding()) {
+
+                    Terrain roofterrain;
+                    roofterrain = map.getTerrain("Rooftop");
+                    // move to top level
+                    int level = 0;
+                    while (previousLocation.getUpLocation() != null) {
+                        previousLocation = previousLocation.getUpLocation();
+                        level = level + 1;
+                    }
+                    if (centerLocationTerrain.getLOSCategory() == Terrain.LOSCategories.FACTORY) {
+                        level = centerLocationTerrain.getHeight();
+                    }
+                    final Location l = new Location(
+                            centerLocation.getName() + " Rooftop ",
+                            level + 1,
+                            centerLocation.getLOSPoint(),
+                            centerLocation.getLOSPoint(),
+                            null,
+                            this,
+                            roofterrain
+                    );
+
+                    previousLocation.setUpLocation(l);
+                    l.setDownLocation(previousLocation);
+                    previousLocation = l;
+                }
+            }
+            fixspecialcasesAddRooftops(); // handles RO wooden warehouses and SK transform (all buildings are single story)
+        }
+    }
     private Terrain getDepressionTerrain(double gridadj){
 
         final Rectangle rectangle = getHexBorder().getBounds();

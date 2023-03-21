@@ -852,6 +852,8 @@
 		<color name="StoneBldg13" red="205" green="205" blue="205" terrain="Stone Building" elevation="UNKNOWN" />
 		<color name="StoneBldg14" red="220" green="220" blue="220" terrain="Stone Building" elevation="UNKNOWN" />
 		<color name="StoneBldg15" red="235" green="235" blue="235" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg16" red="135" green="135" blue="135" terrain="Stone Building, 1 Level" elevation="UNKNOWN" />
+		<color name="StoneBldg17" red="126" green="126" blue="126" terrain="Stone Building, 2 Level" elevation="UNKNOWN" />
 		<color name="StoneStairwell" red="251" green="254" blue="255" terrain="Stone Building" elevation="UNKNOWN" />
 		<color name="StoneRowhouseBar" red="1" green="1" blue="0" terrain="Rowhouse Wall, 1 Level" elevation="UNKNOWN" />
 		<color name="StoneBldg1Winter" red="90" green="90" blue="90" terrain="Stone Building" elevation="UNKNOWN" />
@@ -910,6 +912,7 @@
 		<color name="WoodBldg13" red="194" green="135" blue="66" terrain="Wooden Building" elevation="UNKNOWN" />
 		<color name="WoodBldg14" red="199" green="145" blue="81" terrain="Wooden Building" elevation="UNKNOWN" />
 		<color name="WoodBldg15" red="204" green="154" blue="96" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg16" red="80" green="62" blue="30" terrain="Wooden Building, 1 Level" elevation="UNKNOWN" />
 		<color name="WoodStairwell" red="250" green="254" blue="255" terrain="Wooden Building" elevation="UNKNOWN" />
 		<color name="WoodRowhouseBar" red="2" green="1" blue="0" terrain="Rowhouse Wall, 1 Level" elevation="UNKNOWN" />
 		<color name="WoodBldg1Winter" red="123" green="90" blue="66" terrain="Wooden Building" elevation="UNKNOWN" />
