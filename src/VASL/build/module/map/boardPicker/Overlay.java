@@ -46,7 +46,7 @@ public class Overlay implements Cloneable {
     protected File overlayFile;
     public String hex1 = "", hex2 = "";
     private String origins;
-    public boolean preserveelevation= false;
+    private boolean preserveelevation= false;
     java.util.Map<Integer, Integer> mappings;
     protected Rectangle boundaries = new Rectangle();
     // boundaries are in local coordinates of the parent board
@@ -75,6 +75,7 @@ public class Overlay implements Cloneable {
         overlayFile = new File(overlayDir, archiveName());
 
         archive = new DataArchive(overlayFile.getPath(), "");
+
         readData();
         transform(preserveelevation);
         try {
@@ -140,7 +141,9 @@ public class Overlay implements Cloneable {
         }
         return image;
     }
-
+    public boolean getpreserveelevation(){
+        return preserveelevation;
+    }
     protected Image loadImage() {
         Image im = null;
         char c = getOrientation();

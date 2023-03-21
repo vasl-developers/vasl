@@ -762,6 +762,10 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
 
         while (bd.contains("OVR")) {
             bd = bd.substring(bd.indexOf("OVR") + 4);
+            StringTokenizer st = new StringTokenizer(bd, "\t");
+            String ovrname = st.nextToken();
+            // adding overlay auto-syncing
+            updateOverlay(ovrname.toLowerCase(), preservelevels);
             try {
                 b.addOverlay(new Overlay(bd, b, new File(getBoardDir(), "overlays")));
             } catch (IOException e) {
@@ -1229,6 +1233,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                     status.setText("Missing board: fix Map Config.");
                     return;
                 }
+                // adding auto-syncing for overlays
                 updateOverlay(ovrName.getText().toLowerCase(), preservelevels);
                 status.setText(((ASLBoardSlot) (b)).addOverlay(ovrName.getText().toLowerCase(), hex1.getText().toLowerCase(), hex2.getText().toLowerCase(), preservelevels ));
                 ovrName.setText("");
