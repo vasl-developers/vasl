@@ -1329,7 +1329,7 @@ public class Map  {
             exitsSourceDepression =
                     source.isDepressionTerrain() &&
                             (((targetElevation+ targetadj) - (sourceElevation+sourceadj) > 0 &&       //source is below target; elev diff is <= range; need to check when
-                                    (targetElevation+ targetadj) - (sourceElevation+sourceadj) <= range) ||   //evel diff = range due to depression cliffs
+                                    (targetElevation+ targetadj) - (sourceElevation+sourceadj) <= range && range!=1) ||   //evel diff = range due to depression cliffs (except when adjacent)
                                     ((LOSis60Degree || LOSisHorizontal) && exitsDepressionTerrainHexside() ) ||       //LOS along hexside; one exit hexside is a depression
                                     (targetElevation+targetadj == sourceElevation+sourceadj) ||                       //source is same elevation as target
                                     (sourceElevation+ sourceadj > targetElevation+targetadj));                        //source is above target
@@ -1338,7 +1338,7 @@ public class Map  {
             entersTargetDepression =
                     target.isDepressionTerrain() &&
                             (((sourceElevation+ sourceadj) - (targetElevation+targetadj) > 0 &&       //target is below source; elev diff is <= range; need to check when
-                                    (sourceElevation+sourceadj) - (targetElevation+targetadj) <= range) ||    //evel diff = range due to depression cliffs
+                                    (sourceElevation+sourceadj) - (targetElevation+targetadj) <= range && range!=1) ||    //evel diff = range due to depression cliffs (except when adjacent)
                                     ((LOSis60Degree || LOSisHorizontal) && entersDepressionTerrainHexside()) ||       //LOS along hexside; one entry hexside is a depression
                                     (targetElevation+targetadj == sourceElevation+sourceadj) ||                       //target is same elevation as source
                                     (targetElevation+targetadj > sourceElevation+sourceadj));                         //target is above source
