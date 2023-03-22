@@ -89,7 +89,7 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
     private static LinkedHashMap<String, BoardVersions> boardversions = new LinkedHashMap<String, BoardVersions>(500);
 
     public String[] getAttributeNames() {
-        return new String[]{BOARD_VERSION_URL, OVERLAY_VERSION_URL, BOARD_PAGE_URL, BOARD_REPOSITORY_URL};
+        return new String[]{BOARD_VERSION_URL, OVERLAY_VERSION_URL, BOARD_PAGE_URL, BOARD_REPOSITORY_URL, OVERLAY_REPOSITORY_URL};
     }
 
     public String getAttributeValueString(String key) {
@@ -101,7 +101,7 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
             return boardPageURL;
         } else if (BOARD_REPOSITORY_URL.equals(key)) {
             return boardRepositoryURL;
-        } else if (OVERLAY_VERSION_URL.equals(key)) {
+        } else if (OVERLAY_REPOSITORY_URL.equals(key)) {
             return overlayRepositoryURL;
         }
         return null;
