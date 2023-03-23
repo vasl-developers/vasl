@@ -89,7 +89,7 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
     private static LinkedHashMap<String, BoardVersions> boardversions = new LinkedHashMap<String, BoardVersions>(500);
 
     public String[] getAttributeNames() {
-        return new String[]{BOARD_VERSION_URL, OVERLAY_VERSION_URL, BOARD_PAGE_URL, BOARD_REPOSITORY_URL, OVERLAY_REPOSITORY_URL};
+        return new String[]{BOARD_VERSION_URL, OVERLAY_VERSION_URL, BOARD_PAGE_URL, BOARD_REPOSITORY_URL};
     }
 
     public String getAttributeValueString(String key) {
@@ -101,9 +101,11 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
             return boardPageURL;
         } else if (BOARD_REPOSITORY_URL.equals(key)) {
             return boardRepositoryURL;
-        } else if (OVERLAY_REPOSITORY_URL.equals(key)) {
+        } else if (OVERLAY_VERSION_URL.equals(key)) {
             return overlayRepositoryURL;
         }
+
+
         return null;
     }
 
@@ -335,7 +337,7 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
             URLConnection conn = website.openConnection();
             conn.setUseCaches(false);
             try (FileOutputStream outFile = new FileOutputStream(fileName);
-                InputStream in = conn.getInputStream()) {
+                 InputStream in = conn.getInputStream()) {
                 ReadableByteChannel rbc = Channels.newChannel(in);
                 outFile.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
             }
@@ -346,12 +348,12 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
             return false;
         }
     }
-    
+
     // do not use on an already-encoded URL. It will double-encode it.
     private static String encodeUrl( String unencodedURL ) {
         try {
             URL url = new URL(unencodedURL);
-            URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef()); 
+            URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
             return uri.toURL().toString();
         }
         catch( java.net.URISyntaxException ex ) {
