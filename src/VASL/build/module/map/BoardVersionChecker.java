@@ -18,25 +18,23 @@
  */
 package VASL.build.module.map;
 
-import VASL.build.module.map.boardPicker.ASLBoard;
-import VASL.build.module.map.boardPicker.Overlay;
-import VASL.counters.Concealable;
+
 import VASSAL.build.AbstractBuildable;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.GameComponent;
 import VASSAL.build.module.Map;
 import VASSAL.build.module.ServerConnection;
-import VASSAL.build.module.map.boardPicker.Board;
+
 import VASSAL.command.Command;
 import VASSAL.configure.StringConfigurer;
 import VASSAL.tools.PropertiesEncoder;
-import org.apache.commons.io.IOUtils;
+
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
-import javax.swing.*;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.*;
