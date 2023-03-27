@@ -75,21 +75,28 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
     private static final String OVERLAY_REPOSITORY_URL = "overlayRepositoryURL";
     // for use with v5boardVersions.xml
     private static final String boardsFileElement = "boardsMetadata";
+    private static final String overlaysFileElement = "overlaysMetadata";
     private static final String coreboardElement = "coreBoards";
     private static final String boarddataType = "boarddata";
+    private static final String overlaydataType = "overlaydata";
     private static final String coreboardNameAttr = "name";
     private static final String coreboardversionAttr = "version";
     private static final String coreboardversiondateAttr = "versionDate";
     private static final String coreboarddescAttr = "description";
+    private static final String overlayNameAttr = "name";
+    private static final String overlayversionAttr = "version";
+    private static final String overlayversiondateAttr = "versionDate";
+    private static final String overlaydescAttr = "description";
     private static final String otherboardElement = "otherBoards";
     private static final String otherboardNameAttr = "name";
     private static final String otherboardversionAttr = "version";
     private static final String otherboardversiondateAttr = "versionDate";
     private static final String otherboarddescAttr = "description";
     private static LinkedHashMap<String, BoardVersions> boardversions = new LinkedHashMap<String, BoardVersions>(500);
+    private static LinkedHashMap<String, OverlayVersions> overlayversions = new LinkedHashMap<String, OverlayVersions>(500);
 
     public String[] getAttributeNames() {
-        return new String[]{BOARD_VERSION_URL, OVERLAY_VERSION_URL, BOARD_PAGE_URL, BOARD_REPOSITORY_URL};
+        return new String[]{BOARD_VERSION_URL, OVERLAY_VERSION_URL, BOARD_PAGE_URL, BOARD_REPOSITORY_URL, OVERLAY_REPOSITORY_URL};
     }
 
     public String getAttributeValueString(String key) {
@@ -101,7 +108,7 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
             return boardPageURL;
         } else if (BOARD_REPOSITORY_URL.equals(key)) {
             return boardRepositoryURL;
-        } else if (OVERLAY_VERSION_URL.equals(key)) {
+        } else if (OVERLAY_REPOSITORY_URL.equals(key)) {
             return overlayRepositoryURL;
         }
 
@@ -113,7 +120,7 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
         if (BOARD_VERSION_URL.equals(key)) {
             boardVersionURL = (String) value;
         } else if (OVERLAY_VERSION_URL.equals(key)) {
-            overlayVersionURL = (String) value;
+            overlayVersionURL =  (String) value;
         } else if (BOARD_PAGE_URL.equals(key)) {
             boardPageURL = (String) value;
         } else if (BOARD_REPOSITORY_URL.equals(key)) {
@@ -136,14 +143,6 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
         //TODO property change listener not firing - force update
         readVersionFiles();
 
-        /*Properties p = readVersionList((String) GameModule.getGameModule().getPrefs().getValue(BOARD_VERSIONS));
-        if (p != null) {
-            boardVersions = p;
-        }*/
-        Properties p = readVersionList((String) GameModule.getGameModule().getPrefs().getValue(OVERLAY_VERSIONS));
-        if (p != null) {
-            overlayVersions = p;
-        }
     }
 
     public Command getRestoreCommand() {
@@ -152,30 +151,6 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
 
     public void setup(boolean gameStarting) {
 
-        if (gameStarting) {
-
-            /*if (boardversions != null) {
-                String info = "Using board(s): ";
-                for (Board board : map.getBoards()) {
-                    ASLBoard b = (ASLBoard) board;
-                    info += b.getName() + "(v" + b.getVersion() + ") ";
-                }
-                GameModule.getGameModule().warn(info);
-            }*/
-        }
-    }
-
-    private Properties readVersionList(String s) {
-        Properties p = null;
-        if (s != null
-                && s.length() > 0) {
-            try {
-                p = new PropertiesEncoder(s).getProperties();
-            } catch (IOException e) {
-                // Fail silently if we can't contact the server
-            }
-        }
-        return p;
     }
 
     public void propertyChange(PropertyChangeEvent evt)  {
@@ -191,21 +166,17 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
     private void readVersionFiles()  {
 
         // Need to disable SNI to read from Github
-        System.setProperty("jsse.enableSNIExtension", "false");
+        //System.setProperty("jsse.enableSNIExtension", "false");
 
         try {
             URL base = new URL(boardVersionURL);
             URLConnection conn = base.openConnection();
             conn.setUseCaches(false);
 
-            //Properties p = new Properties();
             try (InputStream input = conn.getInputStream()){
                 parseboardversionFile(input);
-                //p.load(input);
             }
 
-            //boardVersions = p;
-            //GameModule.getGameModule().getPrefs().getOption(BOARD_VERSIONS).setValue(new PropertiesEncoder(p).getStringValue());
         } catch (IOException e) {
             // Fail silently if we can't contact the server
         }
@@ -215,13 +186,10 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
             URLConnection conn = base.openConnection();
             conn.setUseCaches(false);
 
-            Properties p = new Properties();
             try (InputStream input = conn.getInputStream()){
-                p.load(input);
+                parseoverlayversionFile(input);
             }
 
-            overlayVersions = p;
-            GameModule.getGameModule().getPrefs().getOption(OVERLAY_VERSIONS).setValue(new PropertiesEncoder(p).getStringValue());
         } catch (IOException e) {
             // Fail silently if we can't contact the server
         }
@@ -229,7 +197,6 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
 
     private void parseboardversionFile(InputStream metadata) {
 
-        ArrayList<String> addtoboardlist = new ArrayList<String>();
         SAXBuilder parser = new SAXBuilder();
 
         try {
@@ -253,7 +220,7 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
                                 bdversion.setversiondate(f.getAttribute(coreboardversiondateAttr).getValue());
                                 bdversion.setdescription(f.getAttribute(coreboarddescAttr).getValue());
 
-                                // add the terrain type to the terrain list
+                                // add the board and version to the version list
                                 boardversions.put(bdversion.getName(), bdversion);
                             }
                         }
@@ -268,7 +235,7 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
                                 bdversion.setversiondate(f.getAttribute(otherboardversiondateAttr).getValue());
                                 bdversion.setdescription(f.getAttribute(otherboarddescAttr).getValue());
 
-                                // add the terrain type to the terrain list
+                                // add the board and version to the version list
                                 boardversions.put(bdversion.getName(), bdversion);
                             }
                         }
@@ -283,7 +250,40 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
         }
 
     }
+    private void parseoverlayversionFile(InputStream metadata) {
 
+        SAXBuilder parser = new SAXBuilder();
+
+        try {
+            // the root element will be the overlaysMetadata element
+            Document doc = parser.build(metadata);
+            org.jdom2.Element root = doc.getRootElement();
+
+            // read the shared metadata
+            if(root.getName().equals(overlaysFileElement)) {
+
+                for(org.jdom2.Element e: root.getChildren()) {
+                    if(e.getName().equals(overlaydataType)) {
+                            // read the overlay attributes
+                            OverlayVersions ovrversion = new OverlayVersions();
+                            ovrversion.setName(e.getAttribute(overlayNameAttr).getValue());
+                            ovrversion.setboardversion(e.getAttribute(overlayversionAttr).getValue());
+                            ovrversion.setversiondate(e.getAttribute(overlayversiondateAttr).getValue());
+                            ovrversion.setdescription(e.getAttribute(overlaydescAttr).getValue());
+
+                            // add the overlay and version to the list
+                            overlayversions.put(ovrversion.getName(), ovrversion);
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace(System.err);
+        } catch (JDOMException e) {
+
+        }
+
+    }
     /**
      * Copies a board from the GitHub board repository to the board directory
      * @param boardName the board name (sans bd)
@@ -307,7 +307,6 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
      * @return true if the overlay was successfully copied, otherwise false
      */
     public static boolean updateOverlayFile(String overlayName) {
-
         String qualifiedOverlayName =
                 GameModule.getGameModule().getPrefs().getStoredValue(ASLBoardPicker.BOARD_DIR) +
                         System.getProperty("file.separator", "\\") +
@@ -363,11 +362,13 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
             return unencodedURL;
         }
     }
-
-    public static String getlatestOverlayVersionnumberfromwebrepository(String ovrName){
-        return overlayVersions.getProperty(ovrName);
-    }
     // new method to get latest version number from xml file instead of .txt
+    public static String getlatestOverlayVersionnumberfromwebrepository(String ovrName){
+        if (ovrName.contains("ovr")){ ovrName = ovrName.substring(3);}
+        OverlayVersions findversion =  overlayversions.get(ovrName);
+        return findversion.getoverlayversion();
+    }
+
     public static String getlatestVersionnumberfromwebrepository(String unReversedBoardName){
         BoardVersions findversion = boardversions.get(unReversedBoardName);
         return findversion.getboardversion();
@@ -384,6 +385,21 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
         public void setName(String value ) {boardname = value;}
         public String getboardversion() {return boardversion;}
         public void setboardversion(String value){boardversion = value;}
+        public String getversiondate(){return versiondate;}
+        public void setversiondate(String value){versiondate = value;}
+        public String getdescription(){return description;}
+        public void setdescription(String value){description = value;}
+    }
+    public class OverlayVersions{
+        private String overlayname;
+        private String overlayversion;
+        private String versiondate;
+        private String description;
+
+        public String getName(){return overlayname;}
+        public void setName(String value ) {overlayname = value;}
+        public String getoverlayversion() {return overlayversion;}
+        public void setboardversion(String value){overlayversion = value;}
         public String getversiondate(){return versiondate;}
         public void setversiondate(String value){versiondate = value;}
         public String getdescription(){return description;}

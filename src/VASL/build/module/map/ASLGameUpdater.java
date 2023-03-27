@@ -12,6 +12,7 @@ import VASSAL.counters.*;
 import VASSAL.counters.Properties;
 import VASSAL.counters.Stack;
 import VASSAL.i18n.Resources;
+import VASSAL.tools.version.VersionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -262,9 +263,9 @@ public final class ASLGameUpdater implements CommandEncoder, GameComponent {
                 // If a module created before gpIDChecker was setup is run on a vassal version with gmIDChecker
                 // is run in the player, errors might still be present.
                 // Inform user that he must upgrade the module to the latest vassal version before running Refresh
-                gpIdChecker = null;
-                log(Resources.getString("GameRefresher.gpid_error_message"));
-                return;
+                //gpIdChecker = null;
+               //log(Resources.getString("GameRefresher.gpid_error_message"));
+                //return;
             }
         }
 
@@ -456,6 +457,9 @@ public final class ASLGameUpdater implements CommandEncoder, GameComponent {
                 log(Resources.getString(options.contains("AddNewDecks") ? "GameRefresher.addable_decks" : "GameRefresher.addable_decks_2", addable)); //NON-NLS
             }
         }
+        // update extensions
+        ASLUpdater extupdate = new ExtensionUpdater();
+        extupdate.refresh(command);
     }
 
     @Override
@@ -693,13 +697,13 @@ public final class ASLGameUpdater implements CommandEncoder, GameComponent {
                 return;
             }
 
-            // Take a copy of the pieces in the Deck
+            // Take a copy of the pieces in the stack
             final List<GamePiece> pieces = stack.asList();
 
-            // Remove all the pieces from the Deck  and create a set of fresh, updated pieces
+            // Remove all the pieces from the stack and create a set of fresh, updated pieces
             for (final GamePiece piece : pieces) {
 
-                // Remove the existing piece from the Deck, the Map and the GameState
+                // Remove the existing piece from the stack, the Map and the GameState
                 final Command remove = new RemovePiece(piece);
                 remove.execute();
                 command = command.append(remove);
@@ -723,7 +727,7 @@ public final class ASLGameUpdater implements CommandEncoder, GameComponent {
                     newPiece = piece;
                 }
 
-                // Keep a list of the new pieces to add back into the Deck
+                // Keep a list of the new pieces to add back into the stack
                 refreshedPieces.add(newPiece);
 
                 // Add the new pieces back into the GameState
@@ -832,6 +836,96 @@ public final class ASLGameUpdater implements CommandEncoder, GameComponent {
 
             map.getPieceCollection().moveToFront(refreshedPiece);
 
+        }
+    }
+    private class ExtensionUpdater implements ASLUpdater {
+
+        //private final List<ASLUpdater> updatedExt = new ArrayList<>();
+
+
+        public ExtensionUpdater() {
+            super();
+        }
+
+
+        @Override
+        public List<GamePiece> getPieces() {
+            return null;
+        }
+
+        @Override
+        public List<GamePiece> getRefreshedPieces() {
+            return null;
+        }
+
+        /**
+         * Refresh this Extension
+         *
+         * @param command
+         */
+        @Override
+        public void refresh(Command command) {
+            boolean containsExtension = false;
+            Iterator extit = GameModule.getGameModule().getComponentsOf(ModuleExtension.class).iterator();
+
+            while(extit.hasNext()) {
+                ModuleExtension ext = (ModuleExtension)extit.next();
+
+                String availableVersion = null;
+                try {
+                    availableVersion = ExtensionVersionChecker.getlatestVersionnumberfromwebrepository(ext.getName());
+                } catch (Exception e) {
+                    // Fail silently if we can't find a version
+                    GameModule.getGameModule().warn(this.getVersionErrorMsg(ext.getName()));
+                }
+                double serverVersion;
+                double localVersion;
+                boolean doUpdate;
+
+                if (availableVersion == null) {
+                    serverVersion = -1;
+                } else {
+                    try {
+                        serverVersion = Double.parseDouble(availableVersion);
+                    } catch (NumberFormatException nfe) {
+                        serverVersion = -1;
+                    }
+                }
+
+                if (ext.getVersion() == null) {
+                    localVersion = -1;
+                } else {
+                    try {
+                        localVersion = Double.parseDouble(ext.getVersion());
+                    } catch (NumberFormatException nfe) {
+                        localVersion = 0;
+                    }
+                }
+
+                if (localVersion == 0) {
+                    // local extension is of an indeterminate state, update the extension if the server version is good
+                    doUpdate = (serverVersion > -1);
+                } else {
+                    // update the extension if the server version greater than local version
+                    doUpdate = (serverVersion > localVersion);
+                }
+
+                if (doUpdate) {
+
+                    // try to update extension if out of date
+                    GameModule.getGameModule().warn("Board " + ext.getName() + " is out of date. Updating...");
+                    if (!ExtensionVersionChecker.updateextension(ext.getName())) {
+                        GameModule.getGameModule().warn("Update failed");
+                    } else {
+                        GameModule.getGameModule().warn("Update succeeded");
+                    }
+
+                }
+            }
+        }
+        protected String getVersionErrorMsg(String v) {
+            //return Resources.getString("ModuleExtension.wrong_extension_version", new Object[]{this.version, this.name, v});
+            return "No version data available so could not determine if update required for " + v;
         }
     }
 }
