@@ -1,17 +1,23 @@
 package VASL.build.module.map;
 
+import VASL.build.module.ASLMap;
 import VASSAL.build.*;
 import VASSAL.build.module.*;
 import VASSAL.build.module.Map;
+import VASSAL.build.module.documentation.HelpFile;
 import VASSAL.build.module.map.DrawPile;
 import VASSAL.build.module.map.SetupStack;
 import VASSAL.build.module.map.boardPicker.Board;
+import VASSAL.build.module.metadata.AbstractMetaData;
+import VASSAL.build.module.metadata.MetaDataFactory;
+import VASSAL.build.module.metadata.SaveMetaData;
 import VASSAL.build.widget.PieceSlot;
 import VASSAL.command.*;
 import VASSAL.counters.*;
 import VASSAL.counters.Properties;
 import VASSAL.counters.Stack;
 import VASSAL.i18n.Resources;
+import VASSAL.tools.WarningDialog;
 import VASSAL.tools.version.VersionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +25,8 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.*;
 import java.util.List;
 
@@ -28,7 +36,7 @@ import java.util.List;
  * <p>
  * Note: Counters that are Hidden or Obscured to us cannot be updated.
  */
-public final class ASLGameUpdater implements CommandEncoder, GameComponent {
+public class ASLGameUpdater extends AbstractConfigurable implements CommandEncoder, GameComponent {
 
     private static final Logger logger = LoggerFactory.getLogger(ASLGameUpdater.class);
 
@@ -36,13 +44,13 @@ public final class ASLGameUpdater implements CommandEncoder, GameComponent {
     public static final String COMMAND_PREFIX = "DECKREPOS" + DELIMITER; //$NON-NLS-1$
 
     private Action updateAction;
-    private final GpIdSupport gpIdSupport;
+    private GpIdSupport gpIdSupport;
     private ASLGpIdChecker gpIdChecker;
     private int updatedCount;
     private int notFoundCount;
     private int noStackCount;
     private int noMapCount;
-    private final GameModule theModule;
+    private GameModule theModule;
     private final Set<String> options = new HashSet<>();
     private boolean hasAlreadyRun = false;
 
@@ -50,10 +58,10 @@ public final class ASLGameUpdater implements CommandEncoder, GameComponent {
         return theModule.getAllDescendantComponentsOf(DrawPile.class);
     }
 
-    public ASLGameUpdater(GpIdSupport gpIdSupport) {
+    /*public ASLGameUpdater(GpIdSupport gpIdSupport) {
         this.gpIdSupport = gpIdSupport;
         theModule = GameModule.getGameModule();
-    }
+    }*/
 
     @Override
     public String encode(final Command c) {
@@ -65,7 +73,29 @@ public final class ASLGameUpdater implements CommandEncoder, GameComponent {
         return null;
     }
 
-    public void addTo(AbstractConfigurable parent) {
+    public void addTo(Buildable parent) {
+        theModule = GameModule.getGameModule();
+        if (parent instanceof ASLMap) {
+
+            GameModule.getGameModule().addCommandEncoder(this);
+
+            ASLMap map = (ASLMap) parent;
+
+            // On-going game converter
+            JMenuItem nextmenuItem = new JMenuItem("Update game...");
+            nextmenuItem.setEnabled(true);
+            nextmenuItem.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent evt) {
+
+                    askToUpdate();
+                }
+            });
+            map.getPopupMenu().add(nextmenuItem);
+
+
+        }
+
+       //TODO Do I need this? Is it ever used?
         updateAction = new AbstractAction(Resources.getString("GameRefresher.refresh_counters")) { //$NON-NLS-1$
             private static final long serialVersionUID = 1L;
 
@@ -101,7 +131,7 @@ public final class ASLGameUpdater implements CommandEncoder, GameComponent {
 
     public void start() {
         if (hasAlreadyRun) {
-            return;
+            //return;
         }
         hasAlreadyRun = true;
         final GameModule g = GameModule.getGameModule();
@@ -233,7 +263,7 @@ public final class ASLGameUpdater implements CommandEncoder, GameComponent {
     public void execute(Command command) throws IllegalBuildException {
         final List<Deck> decks = new ArrayList<>();
         options.clear();
-        options.add("UseName"); //$NON-NLS-1$
+        //options.add("UseName"); //$NON-NLS-1$
         options.add("DeleteNoMap"); //$NON-NLS-1$
         if (command == null) {
             command = new NullCommand();
@@ -263,8 +293,9 @@ public final class ASLGameUpdater implements CommandEncoder, GameComponent {
                 // If a module created before gpIDChecker was setup is run on a vassal version with gmIDChecker
                 // is run in the player, errors might still be present.
                 // Inform user that he must upgrade the module to the latest vassal version before running Refresh
-                //gpIdChecker = null;
-               //log(Resources.getString("GameRefresher.gpid_error_message"));
+                //gpIdChecker.fixErrors();
+               log(Resources.getString("GameRefresher.gpid_error_message"));
+               //TODO re-instate this at the end of development
                 //return;
             }
         }
@@ -284,7 +315,10 @@ public final class ASLGameUpdater implements CommandEncoder, GameComponent {
             }
         }
 
-        if(notFoundCount>0){log(Resources.getString("GameRefresher.counters_not_found", notFoundCount));}
+        if(notFoundCount>0){
+
+            log(Resources.getString("GameRefresher.counters_not_found", notFoundCount));
+        }
         if(noMapCount>0){log(Resources.getString("GameRefresher.counters_no_map", noMapCount));}
         if(noStackCount>0){log(Resources.getString("GameRefresher.counters_no_stack", noStackCount));}
 
@@ -460,8 +494,64 @@ public final class ASLGameUpdater implements CommandEncoder, GameComponent {
         // update extensions
         ASLUpdater extupdate = new ExtensionUpdater();
         extupdate.refresh(command);
+        // update LOS checking
+        boolean legacyMode = false;
+        for (final Map map : Map.getMapList()) {
+            if (map.getMapName().equals("Main Map")) {
+                final ASLMap theMap = (ASLMap) map;
+                if (theMap == null || theMap.isLegacyMode()) {
+                    legacyMode = true;
+                } else {
+                    legacyMode = false;
+                    VASL.LOS.Map.Map LOSMap = theMap.getVASLMap();
+                    if (LOSMap == null) {
+                        legacyMode = true;
+                        return;
+                    }
+                }
+                if (legacyMode) {
+                    int dialogResult = JOptionPane.showConfirmDialog(null, "LOS Checking Disabled. To restore, re-select boards for the game. Proceed?",
+                            "Updating LOS Checking . . . ", JOptionPane.YES_NO_OPTION);
+                    if (dialogResult == JOptionPane.YES_OPTION) {
+                        dolosrestore(theMap);
+                    }
+                }
+            }
+        }
     }
 
+    public void dolosrestore(ASLMap map){
+        BoardSwapper bs = map.getComponentsOf(BoardSwapper.class).get(0);
+
+
+        bs.recordPiecePositions();
+        final ASLBoardPicker picker = new BoardSwapper.Picker(map);
+        final JDialog d = new JDialog(GameModule.getGameModule().getPlayerWindow(),true);
+        d.getContentPane().setLayout(new BoxLayout(d.getContentPane(),BoxLayout.Y_AXIS));
+        d.getContentPane().add(picker.getControls());
+        JButton okButton = new JButton("Ok");
+        okButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                d.setVisible(false);
+                picker.finish();
+            }
+        });
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                d.setVisible(false);
+            }
+        });
+        Box buttonBox = Box.createHorizontalBox();
+        buttonBox.add(okButton);
+        buttonBox.add(cancelButton);
+        d.getContentPane().add(buttonBox);
+        d.pack();
+        d.setLocationRelativeTo(GameModule.getGameModule().getPlayerWindow());
+        d.setVisible(true);
+        bs.restorePiecePositions();
+        map.repaint();
+    }
     @Override
     public Command getRestoreCommand() {
         return null;
@@ -475,7 +565,106 @@ public final class ASLGameUpdater implements CommandEncoder, GameComponent {
         updateAction.setEnabled(gameStarting);
     }
 
+    @Override
+    public String[] getAttributeDescriptions() {
+        return new String[0];
+    }
 
+    @Override
+    public Class<?>[] getAttributeTypes() {
+        return new Class[0];
+    }
+
+    @Override
+    public String[] getAttributeNames() {
+        return new String[0];
+    }
+
+    @Override
+    public void setAttribute(String s, Object o) {
+
+    }
+
+    @Override
+    public String getAttributeValueString(String s) {
+        return null;
+    }
+
+    @Override
+    public void removeFrom(Buildable buildable) {
+
+    }
+
+    @Override
+    public HelpFile getHelpFile() {
+        return null;
+    }
+
+    @Override
+    public Class[] getAllowableConfigureComponents() {
+        return new Class[0];
+    }
+
+
+
+    /**
+     * Checks for saveGame version older than current module version
+     * Displays the confirmation dialog if true and initiates the conversion if the user "yes"
+     * Displays no conversion message if false and exits
+     */
+    public void askToUpdate() {
+        final String moduleVersion = GameModule.getGameModule().getGameVersion();
+        String filename = GameModule.getGameModule().getGameFile();
+        String filepath = GameModule.getGameModule().getGameState().getSavedGameDirectoryPreference().getValueString();
+        File file = new File(filepath+"\\"+filename);
+        if(file.getName()!="") {
+            final AbstractMetaData metaData = MetaDataFactory.buildMetaData(file);
+            if (!(metaData instanceof SaveMetaData)) {
+                WarningDialog.show("GameState.invalid_save_file", file.getPath()); //NON-NLS
+                return;
+            }
+            // Check if saveGame version matches the module version
+            final SaveMetaData saveData = (SaveMetaData) metaData;
+            String saveModuleVersion = "?";
+            final GameModule g = GameModule.getGameModule();
+            // Was the Module Data that created the save stored in the save? (Vassal 3.0+)
+            if (saveData.getModuleData() != null) {
+                saveModuleVersion = saveData.getModuleVersion();
+                // For Module Version and just report in chat.
+                if (!saveModuleVersion.equals(moduleVersion)) {
+                    int dialogResult = JOptionPane.showConfirmDialog(null, "Make sure all necessary extensions are installed and Chat Window shows no error messages. Proceed?",
+                            "Updating Game . . . ", JOptionPane.YES_NO_OPTION);
+                    if(dialogResult == JOptionPane.YES_OPTION) {
+                        doupdate();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "No update possible; game was saved with current version or higher",
+                            "Updating Game . . . ", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+
+        }
+    }
+    /**
+     * Execute the update
+     */
+    public void doupdate() {
+        start();
+
+
+        final Command command = new NullCommand();
+        final Chatter chatter = theModule.getChatter();
+        final Command msg = new Chatter.DisplayText(chatter, "The game has been updated");
+
+        msg.append(new Chatter.DisplayText(chatter, updatedCount + " counters were updated"));
+
+        if (notFoundCount > 0) {
+            msg.append(new Chatter.DisplayText(chatter, notFoundCount + " counters were not found"));
+        }
+
+        msg.execute();
+        command.append(msg);
+    }
 
     private interface ASLUpdater {
         void refresh(Command command);
@@ -593,7 +782,8 @@ public final class ASLGameUpdater implements CommandEncoder, GameComponent {
                     // Create a new, updated piece
                     if (gpIdChecker.createUpdatedPiece(piece) == null) {
                         notFoundCount++;
-                        log(Resources.getString("GameRefresher.refresh_error_nomatch_pieceslot", piece.getName(), piece.getId()));
+                        GameModule.getGameModule().warn(Resources.getString("GameRefresher.refresh_error_nomatch_pieceslot", piece.getName(), piece.getId()))  ;
+                        //log(Resources.getString("GameRefresher.refresh_error_nomatch_pieceslot", piece.getName(), piece.getId()));
                     }
                     else {
                         updatedCount++;
@@ -622,7 +812,8 @@ public final class ASLGameUpdater implements CommandEncoder, GameComponent {
                 GamePiece newPiece = gpIdChecker.createUpdatedPiece(piece);
                 if (newPiece == null) {
                     notFoundCount++;
-                    log(Resources.getString("GameRefresher.refresh_error_nomatch_pieceslot", piece.getName(), piece.getId()));
+                    GameModule.getGameModule().warn(Resources.getString("GameRefresher.refresh_error_nomatch_pieceslot", piece.getName(), piece.getId()))  ;
+                    //log(Resources.getString("GameRefresher.refresh_error_nomatch_pieceslot", piece.getName(), piece.getId()));
                     // Could not create a new piece for some reason, use the old piece
                     newPiece = piece;
                 }
@@ -715,7 +906,9 @@ public final class ASLGameUpdater implements CommandEncoder, GameComponent {
                     newPiece = gpIdChecker.createUpdatedPiece(piece);
                     if (newPiece == null) {
                         notFoundCount++;
-                        log(Resources.getString("GameRefresher.refresh_error_nomatch_pieceslot", piece.getName(), piece.getId()));
+                        GameModule.getGameModule().warn(Resources.getString("GameRefresher.refresh_error_nomatch_pieceslot", piece.getName(), piece.getId()))  ;
+
+                        //log(Resources.getString("GameRefresher.refresh_error_nomatch_pieceslot", piece.getName(), piece.getId()));
                         // Could not create a new piece for some reason, use the old piece
                         newPiece = piece;
                     }
@@ -813,7 +1006,9 @@ public final class ASLGameUpdater implements CommandEncoder, GameComponent {
                     refreshedPiece = gpIdChecker.createUpdatedPiece(piece);
                     if (refreshedPiece == null) {
                         notFoundCount++;
-                        log(Resources.getString("GameRefresher.refresh_error_nomatch_pieceslot", piece.getName(), piece.getId()));
+                        GameModule.getGameModule().warn(Resources.getString("GameRefresher.refresh_error_nomatch_pieceslot", piece.getName(), piece.getId()))  ;
+
+                        //log(Resources.getString("GameRefresher.refresh_error_nomatch_pieceslot", piece.getName(), piece.getId()));
                         // Could not create a new piece for some reason, use the old piece
                         refreshedPiece = piece;
                     }
@@ -869,13 +1064,14 @@ public final class ASLGameUpdater implements CommandEncoder, GameComponent {
             Iterator extit = GameModule.getGameModule().getComponentsOf(ModuleExtension.class).iterator();
 
             while(extit.hasNext()) {
-                ModuleExtension ext = (ModuleExtension)extit.next();
+                ModuleExtension ext = (ModuleExtension) extit.next();
 
                 String availableVersion = null;
                 try {
                     availableVersion = ExtensionVersionChecker.getlatestVersionnumberfromwebrepository(ext.getName());
                 } catch (Exception e) {
                     // Fail silently if we can't find a version
+                    //TODO fix this
                     GameModule.getGameModule().warn(this.getVersionErrorMsg(ext.getName()));
                 }
                 double serverVersion;
@@ -911,16 +1107,20 @@ public final class ASLGameUpdater implements CommandEncoder, GameComponent {
                 }
 
                 if (doUpdate) {
-
-                    // try to update extension if out of date
-                    GameModule.getGameModule().warn("Board " + ext.getName() + " is out of date. Updating...");
-                    if (!ExtensionVersionChecker.updateextension(ext.getName())) {
-                        GameModule.getGameModule().warn("Update failed");
-                    } else {
-                        GameModule.getGameModule().warn("Update succeeded");
+                    //if update available, ask if user wants to update
+                    int dialogResult = JOptionPane.showConfirmDialog(null, "An update is available for Extension " + ext.getName() + ". Proceed?",
+                            "Updating Extensions . . . ", JOptionPane.YES_NO_OPTION);
+                    if (dialogResult == JOptionPane.YES_OPTION) {
+                        // try to update extension if out of date
+                        GameModule.getGameModule().warn("Extension " + ext.getName() + " is out of date. Updating...");
+                        if (!ExtensionVersionChecker.updateextension(ext.getName())) {
+                            GameModule.getGameModule().warn("Update failed");
+                        } else {
+                            GameModule.getGameModule().warn("Update succeeded");
+                        }
                     }
-
                 }
+
             }
         }
         protected String getVersionErrorMsg(String v) {

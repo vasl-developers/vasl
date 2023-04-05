@@ -166,7 +166,7 @@ public class BoardSwapper extends AbstractBuildable {
   public void setAttribute(String attName, Object value) {
   }
 
-  private static class Picker extends ASLBoardPicker {
+  protected static class Picker extends ASLBoardPicker {
     public Picker(Map m) {
       this.map = m;
       allowMultiple = true;

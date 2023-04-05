@@ -103,19 +103,6 @@ public class SavedGameConverter extends AbstractConfigurable implements CommandE
             });
 
             map.getPopupMenu().add(menuItem);
-
-            // On-going game converter
-            JMenuItem nextmenuItem = new JMenuItem("Update game...");
-            nextmenuItem.setEnabled(false);
-            nextmenuItem.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent evt) {
-
-                    askToUpdate();
-                }
-            });
-            map.getPopupMenu().add(nextmenuItem);
-
-
         }
     }
 
@@ -163,72 +150,7 @@ public class SavedGameConverter extends AbstractConfigurable implements CommandE
             execute();
         }
     }
-    /**
-     * Checks for saveGame version older than current module version
-     * Displays the confirmation dialog if true and initiates the conversion if the user "yes"
-     * Displays no conversion message if false and exits
-     */
-    public void askToUpdate() {
-        final String moduleVersion = GameModule.getGameModule().getGameVersion();
-        String filename = GameModule.getGameModule().getGameFile();
-        String filepath = GameModule.getGameModule().getGameState().getSavedGameDirectoryPreference().getValueString();
-        File file = new File(filepath+"\\"+filename);
-        if(file.getName()!="") {
-            final AbstractMetaData metaData = MetaDataFactory.buildMetaData(file);
-            if (!(metaData instanceof SaveMetaData)) {
-                WarningDialog.show("GameState.invalid_save_file", file.getPath()); //NON-NLS
-                return;
-            }
-            // Check if saveGame version matches the module version
-            final SaveMetaData saveData = (SaveMetaData) metaData;
-            String saveModuleVersion = "?";
-            final GameModule g = GameModule.getGameModule();
-            // Was the Module Data that created the save stored in the save? (Vassal 3.0+)
-            if (saveData.getModuleData() != null) {
-                saveModuleVersion = saveData.getModuleVersion();
-                // For Module Version and just report in chat.
-                if (!saveModuleVersion.equals(moduleVersion)) {
-                    /*// show confirmation dialog
-                    int dialogResult = JOptionPane.showConfirmDialog (
-                            null,
-                            "Are you sure you want to update this game to latest VASL version?",
-                            "Warning",
-                            JOptionPane.YES_NO_OPTION);
 
-                    if(dialogResult == JOptionPane.YES_OPTION) {
-                        doupdate();
-                    }*/
-                    doupdate();
-                } else {
-                    JOptionPane.showMessageDialog(null, "No update possible; game was saved with current version or higher",
-                            "Updating Game . . . ", JOptionPane.WARNING_MESSAGE);
-                }
-            }
-
-        }
-    }
-    /**
-     * Execute the update
-     */
-    public void doupdate() {
-        final GameModule theModule = GameModule.getGameModule();
-        ASLGameUpdater gamerefresh = new ASLGameUpdater(theModule);
-        gamerefresh.start();
-
-
-        final Command command = new NullCommand();
-        final Chatter chatter = theModule.getChatter();
-        final Command msg = new Chatter.DisplayText(chatter, "The game has been updated");
-        //msg.append(new Chatter.DisplayText(chatter, "The game has been updated"));
-        //msg.append(new Chatter.DisplayText(chatter, updatedCount + " counters were moved"));
-
-        //if (notFoundCount > 0) {
-        //    msg.append(new Chatter.DisplayText(chatter, notFoundCount + " counters were not found"));
-        //}
-        //msg.append(new Chatter.DisplayText(chatter, "----------"));
-        msg.execute();
-        command.append(msg);
-    }
     /**
      * Execute the conversion
      */

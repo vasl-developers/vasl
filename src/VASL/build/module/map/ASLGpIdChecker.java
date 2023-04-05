@@ -157,7 +157,10 @@ public class ASLGpIdChecker {
         }
         else {
             if (goodSlots.get(id) != null) {      // duplicate gpid?
-                errorSlots.add(element);
+                // if duplicate id, do nothing, use whichever one added first
+                // testing shows that these are always the same counter
+                //TODO come back and fix this
+                //errorSlots.add(element);
             }
             try {
                 if (extensionsLoaded) {

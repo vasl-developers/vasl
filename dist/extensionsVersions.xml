@@ -22,160 +22,26 @@
 -->
 <extensionsMetadata>
 		<extensiondata name="SASLDice" version="1.0" versionDate="Feb 2023" description="Adds SASL Dicerollers to Chat" />
-		<extensiondata name="01" version="6.7" versionDate="Jan 2023" description="" />
-		<extensiondata name="02" version="7.0" versionDate="Jan 2023" description="" />
-		<extensiondata name="03" version="6.7" versionDate="Jan 2023" description="" />
-		<extensiondata name="04" version="6.5" versionDate="Jan 2023" description="" />
-		<extensiondata name="05" version="7.0" versionDate="Jan 2023" description="" />
-		<extensiondata name="06" version="6.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="07" version="6.5" versionDate="Jan 2023" description="" />
-		<extensiondata name="08" version="6.8" versionDate="Jan 2023" description="" />
-		<extensiondata name="09" version="6.6" versionDate="Jan 2023" description="" />
-		<extensiondata name="10" version="6.7" versionDate="Jan 2023" description="" />
-		<extensiondata name="10z" version="6.9" versionDate="Jan 2023" description="" />
-		<extensiondata name="11" version="6.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="12" version="6.7" versionDate="Jan 2023" description="" />
-		<extensiondata name="13" version="6.8" versionDate="Jan 2023" description="" />
-		<extensiondata name="14" version="6.7" versionDate="Jan 2023" description="" />
-		<extensiondata name="15" version="6.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="16" version="6.5" versionDate="Jan 2023" description="" />
-		<extensiondata name="17" version="6.5" versionDate="Jan 2023" description="" />
-		<extensiondata name="17z" version="6.5" versionDate="Jan 2023" description="" />
-		<extensiondata name="18" version="6.6" versionDate="Jan 2023" description="" />
-		<extensiondata name="19" version="6.5" versionDate="Jan 2023" description="" />
-		<extensiondata name="20" version="7.2" versionDate="Jan 2023" description="" />
-		<extensiondata name="21" version="6.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="22" version="6.9" versionDate="Jan 2023" description="" />
-		<extensiondata name="23" version="6.7" versionDate="Jan 2023" description="" />
-		<extensiondata name="24" version="7.0" versionDate="Jan 2023" description="" />
-		<extensiondata name="25" version="6.8" versionDate="Jan 2023" description="" />
-		<extensiondata name="25a" version="5.3" versionDate="May 2021" description="" />
-		<extensiondata name="25ETO" version="6.7" versionDate="Jan 2023" description="" />
-		<extensiondata name="26" version="6.6" versionDate="Jan 2023" description="" />
-		<extensiondata name="27" version="6.6" versionDate="Jan 2023" description="" />
-		<extensiondata name="28" version="6.6" versionDate="Jan 2023" description="" />
-		<extensiondata name="29" version="6.6" versionDate="Jan 2023" description="" />
-		<extensiondata name="30" version="6.6" versionDate="Jan 2023" description="" />
-		<extensiondata name="31" version="6.6" versionDate="Jan 2023" description="" />
-		<extensiondata name="32" version="7.0" versionDate="Jan 2023" description="" />
-		<extensiondata name="33" version="6.6" versionDate="Jan 2023" description="" />
-		<extensiondata name="34" version="6.8" versionDate="Jan 2023" description="" />
-		<extensiondata name="35" version="6.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="36" version="6.9" versionDate="Jan 2023" description="" />
-		<extensiondata name="37" version="6.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="38" version="6.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="39" version="6.8" versionDate="Jan 2023" description="" />
-		<extensiondata name="40" version="7.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="41" version="6.8" versionDate="Jan 2023" description="" />
-		<extensiondata name="42" version="6.7" versionDate="Jan 2023" description="" />
-		<extensiondata name="43" version="6.6" versionDate="Jan 2023" description="" />
-		<extensiondata name="44" version="6.6" versionDate="Jan 2023" description="" />
-		<extensiondata name="45" version="6.7" versionDate="Jan 2023" description="" />
-		<extensiondata name="46" version="6.5" versionDate="Jan 2023" description="" />
-		<extensiondata name="47" version="6.9" versionDate="Aug 2022" description="" />
-		<extensiondata name="48" version="6.4" versionDate="Apr 2022" description="" />
-		<extensiondata name="49" version="6.5" versionDate="Apr 2022" description="" />
-		<extensiondata name="50" version="6.8" versionDate="Apr 2022" description="" />
-		<extensiondata name="51" version="6.5" versionDate="Apr 2022" description="" />
-		<extensiondata name="52" version="6.4" versionDate="Apr 2022" description="" />
-		<extensiondata name="53" version="6.7" versionDate="Jan 2023" description="" />
-		<extensiondata name="54" version="6.5" versionDate="Apr 2022" description="" />
-		<extensiondata name="55" version="6.7" versionDate="Apr 2022" description="" />
-		<extensiondata name="56" version="6.4" versionDate="Apr 2022" description="" />
-		<extensiondata name="57" version="6.3" versionDate="Apr 2022" description="" />
-		<extensiondata name="58" version="6.4" versionDate="Apr 2022" description="" />
-		<extensiondata name="59" version="6.5" versionDate="Apr 2022" description="" />
-		<extensiondata name="60" version="6.5" versionDate="Apr 2022" description="" />
-		<extensiondata name="61" version="6.5" versionDate="Apr 2022" description="" />
-		<extensiondata name="62" version="6.5" versionDate="Apr 2022" description="" />
-		<extensiondata name="63" version="6.3" versionDate="Apr 2022" description="" />
-		<extensiondata name="64" version="6.3" versionDate="Apr 2022" description="" />
-		<extensiondata name="65" version="6.3" versionDate="Apr 2022" description="" />
-		<extensiondata name="66" version="6.3" versionDate="Apr 2022" description="" />
-		<extensiondata name="67" version="6.3" versionDate="Apr 2022" description="" />
-		<extensiondata name="68" version="6.2" versionDate="Apr 2022" description="" />
-		<extensiondata name="69" version="6.3" versionDate="Apr 2022" description="" />
-		<extensiondata name="70" version="6.3" versionDate="Apr 2022" description="" />
-		<extensiondata name="71" version="6.3" versionDate="Apr 2022" description="" />
-		<extensiondata name="72" version="6.5" versionDate="Apr 2022" description="" />
-		<extensiondata name="73" version="6.2" versionDate="Apr 2022" description="" />
-		<extensiondata name="74" version="6.4" versionDate="Apr 2022" description="" />
-		<extensiondata name="75" version="6.5" versionDate="Apr 2022" description="" />
-		<extensiondata name="76" version="6.5" versionDate="Apr 2022" description="" />
-		<extensiondata name="77" version="5.3" versionDate="Aug 2008" description="" />
-		<extensiondata name="78" version="6.3" versionDate="Jan 2023" description="" />
-		<extensiondata name="79" version="6.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="80" version="6.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="81" version="6.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="82" version="6.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="83" version="6.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="84" version="6.1" versionDate="Dec 2020" description="" />
-		<extensiondata name="85" version="6.2" versionDate="Mar 2022" description="" />
-		<extensiondata name="86" version="6.0" versionDate="Oct 2020" description="" />
-		<extensiondata name="87" version="6.1" versionDate="Jan 2023" description="" />
-		<extensiondata name="88" version="6.0" versionDate="Feb 2022" description="" />
-		<extensiondata name="1a" version="6.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="1b" version="6.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="2a" version="6.8" versionDate="Jan 2023" description="" />
-		<extensiondata name="2b" version="6.8" versionDate="Jan 2023" description="" />
-		<extensiondata name="3a" version="6.9" versionDate="Jan 2023" description="" />
-		<extensiondata name="3b" version="6.9" versionDate="Jan 2023" description="" />
-		<extensiondata name="4a" version="6.9" versionDate="Jan 2023" description="" />
-		<extensiondata name="4b" version="7.1" versionDate="Jan 2023" description="" />
-		<extensiondata name="5a" version="6.7" versionDate="Jan 2023" description="" />
-		<extensiondata name="5b" version="6.7" versionDate="Jan 2023" description="" />
-		<extensiondata name="6a" version="6.8" versionDate="Jan 2023" description="" />
-		<extensiondata name="6b" version="6.8" versionDate="Jan 2023" description="" />
-		<extensiondata name="7a" version="6.5" versionDate="Jan 2023" description="" />
-		<extensiondata name="7b" version="6.5" versionDate="Jan 2023" description="" />
-		<extensiondata name="8a" version="6.9" versionDate="Jan 2023" description="" />
-		<extensiondata name="8b" version="6.9" versionDate="Jan 2023" description="" />
-		<extensiondata name="9a" version="6.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="9b" version="6.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="10a" version="6.3" versionDate="Apr 2021" description="" />
-		<extensiondata name="10b" version="6.3" versionDate="Apr 2021" description="" />
-		<extensiondata name="11a" version="6.2" versionDate="Mar 2020" description="" />
-		<extensiondata name="11b" version="6.2" versionDate="Mar 2020" description="" />
-		<extensiondata name="12a" version="6.1" versionDate="Sep 2021" description="" />
-		<extensiondata name="12b" version="6.1" versionDate="Sep 2021" description="" />
-		<extensiondata name="13a" version="6.0" versionDate="Mar 2020" description="" />
-		<extensiondata name="13b" version="6.0" versionDate="Mar 2020" description="" />
-		<extensiondata name="14a" version="6.0" versionDate="Jun 2021" description="" />
-		<extensiondata name="14b" version="6.0" versionDate="Jun 2021" description="" />
-		<extensiondata name="15a" version="6.2" versionDate="Sep 2021" description="" />
-		<extensiondata name="15b" version="6.2" versionDate="Sep 2021" description="" />
-		<extensiondata name="a" version="6.5" versionDate="Jan 2023" description="" />
-		<extensiondata name="b" version="6.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="c" version="6.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="d" version="6.6" versionDate="Jan 2023" description="" />
-		<extensiondata name="e" version="6.4" versionDate="Apr 2022" description="" />
-		<extensiondata name="f" version="6.3" versionDate="Apr 2022" description="" />
-		<extensiondata name="g" version="6.3" versionDate="Apr 2022" description="" />
-		<extensiondata name="h" version="6.5" versionDate="Feb 2023" description="" />
-		<extensiondata name="i" version="6.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="iSK" version="6.0" versionDate="Feb 2022" description="" />
-		<extensiondata name="j" version="6.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="jSK" version="6.0" versionDate="Feb 2022" description="" />
-		<extensiondata name="k" version="6.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="kSK" version="6.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="l" version="6.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="lSK" version="6.0" versionDate="Oct 2020" description="" />
-		<extensiondata name="m" version="6.3" versionDate="Jan 2023" description="" />
-		<extensiondata name="mdx" version="6.0" versionDate="Jun 2022" description="" />
-		<extensiondata name="n" version="6.3" versionDate="Jan 2023" description="" />
-		<extensiondata name="ndx" version="6.0" versionDate="Jun 2022" description="" />
-		<extensiondata name="o" version="6.5" versionDate="Jan 2023" description="" />
-		<extensiondata name="odx" version="6.1" versionDate="Nov 2022" description="" />
-		<extensiondata name="p" version="6.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="q" version="6.5" versionDate="Jan 2023" description="" />
-		<extensiondata name="r" version="6.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="s" version="6.5" versionDate="Jan 2023" description="" />
-		<extensiondata name="t" version="6.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="u" version="6.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="v" version="6.5" versionDate="Jan 2023" description="" />
-		<extensiondata name="w" version="6.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="x" version="6.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="y" version="6.4" versionDate="Jan 2023" description="" />
-		<extensiondata name="z" version="6.7" versionDate="Jan 2023" description="" />
-		
+		<extensiondata name="BFP" version="5.01.1" versionDate="Mar 2022" description="BFP Counters for All BFP Modules" />
+		<extensiondata name="Festung Budapest" version="1.2" versionDate="" description="FB Counters" />
+		<extensiondata name="HoB Special Forces" version="2.2" versionDate="Jan 2023" description="British and German HOB Counters" />
+		<extensiondata name="Inor" version="1.0" versionDate="" description="Counters for LFT's Green Hell of Inor" />
+		<extensiondata name="Hollow Legions" version="1.0" versionDate="Sep 2022" description="Counters for Hollow Legions" />
+		<extensiondata name="LCP Anzio 44" version="1.0" versionDate="" description="Counters for LCP's Anzio 44" />
+		<extensiondata name="Nationality Smoke" version="1.0" versionDate="Aug 2022" description="Smoke Counters with Nationality Colors" />
+		<extensiondata name="VASL Overlays" version="2.12" versionDate="Feb 2023" description="Drag And Drop Overlays" />
+		<extensiondata name="Chit Generator" version="2.0" versionDate="" description="Generates a Hexrow Identifier" />
+		<extensiondata name="Cloaking Display" version="1.0" versionDate="" description="Creates a Tray for storing Counters" />
+		<extensiondata name="OBA Flowchart" version="1.1" versionDate="Feb 2022" description="Step-by-Step OBA Flowchart" />
+		<extensiondata name="Neal's VASL Charts" version="1.71" versionDate="Dec 2022" description="VASL Charts created by Neal Ullen" />
+		<extensiondata name="Secret DR" version="1.0" versionDate="" description="Secret DR" />
+		<extensiondata name="Terrain Chart" version="1.2.1" versionDate="" description="Terrain Charts" />
+		<extensiondata name="Tray" version="1.0" versionDate="" description="Counter Tray" />
+		<extensiondata name="PTO Terrain Chart" version="1.0" versionDate="" description="PTO Terrain Chart" />
+		<extensiondata name="Hideable Control Markers" version="1.9" versionDate="" description="Hideable Control and Perimeter Markers" />
+		<extensiondata name="Scenario Aid Card" version="2.0" versionDate="" description="Scenario Aid Card" />
+		<extensiondata name="SASL Campaign Roster" version="2.0" versionDate="Apr 2022" description="SASL Campaign Roster" />
+		<extensiondata name="SASL Dice" version="1.0" versionDate="Apr 2022" description="SASL Dice Buttons" />
+		<extensiondata name="SK References" version="1.4" versionDate="Sep 2022" description="SK Charts and Player Aids" />
+
 </extensionsMetadata>
