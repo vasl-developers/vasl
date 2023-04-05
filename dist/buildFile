@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<VASSAL.build.GameModule ModuleOther1="" ModuleOther2="" VassalVersion="3.6.14" description="Virtual Advanced Squad Leader" name="VASL" nextPieceSlotId="14229" version="6.6.6">
+<VASSAL.build.GameModule ModuleOther1="" ModuleOther2="" VassalVersion="3.6.14" description="Virtual Advanced Squad Leader" name="VASL" nextPieceSlotId="14229" version="6.6.7-beta1">
     <VASL.build.module.ScenInfo/>
     <VASL.build.module.CounterPaletteSearch/>
     <VASSAL.build.module.GlobalOptions autoReport="Use Preferences Setting" centerOnMove="Use Preferences Setting" chatterHTMLSupport="Always" hotKeysOnClosedWindows="Never" inventoryForAll="Always" nonOwnerUnmaskable="Use Preferences Setting" playerIdFormat="$playerName$" promptString="Let opponent unconceal my units" sendToLocationMoveTrails="Never" specifyExtensionDirInPrefs="true" storeLeadingZeroIntegersAsStrings="false">
@@ -15,6 +15,7 @@
     </VASSAL.build.module.GlobalOptions>
     <VASL.build.module.ASLMap allowMultiple="true" backgroundcolor="204,255,255" buttonName="Map" changeFormat="$message$" color="0,0,0" createFormat="$pieceName$ created in $location$ *" edgeHeight="400" edgeWidth="400" hideKey="" hotkey="" icon="/images/map.gif" launch="false" mapName="Main Map" markMoved="Use Preferences Setting" markUnmovedHotkey="" markUnmovedIcon="mov.gif" markUnmovedReport="" markUnmovedText="" markUnmovedTooltip="mark all units unmoved" moveKey="77,650" moveToFormat="$pieceName$ moves $previousLocation$ -&gt; $location$ *" moveWithinFormat="$pieceName$ moves $previousLocation$ -&gt; $location$ *" showKey="" thickness="3">
         <VASL.build.module.map.BoardVersionChecker boardPageURL="http://vasl.info/boards.htm" boardRepositoryURL="https://raw.githubusercontent.com/vasl-developers/vasl/develop/boards/bdFiles" boardVersionURL="https://raw.githubusercontent.com/vasl-developers/vasl/develop/boards/v5boardVersions.xml" overlayVersionURL="https://raw.githubusercontent.com/vasl-developers/vasl/develop/boards/v5overlayVersions.xml" overlayRepositoryURL = "https://raw.githubusercontent.com/vasl-developers/vasl/develop/boards/bdFiles/overlays"/>
+        <VASL.build.module.map.ExtensionVersionChecker extensionsRepositoryURL="https://raw.githubusercontent.com/vasl-developers/vasl/develop/extensions" extensionsVersionURL="https://raw.githubusercontent.com/vasl-developers/vasl/develop/dist/extensionsVersions.xml" />
         <VASL.build.module.map.ASLBoardPicker/>
         <VASL.build.module.map.ASLGlobalMap buttonText="" color="0,0,0" hotkey="79,195" icon="overview.gif" scale="0.19444444" tooltip="Show/Hide overview window"/>
         <VASL.build.module.map.HindranceKeeper/>
@@ -128,8 +129,8 @@
         <VASL.build.module.map.ASLPieceMover hotkey="119,0"/>
         <VASL.build.module.map.ASLDiceOverlay/>
         <VASL.build.module.map.QC/>
-        <VASL.build.module.map.SavedGameConverter SavedGameConverter="SavedGameConverter"/>
         <VASL.build.module.map.ASLCasbin/>
+        <VASL.build.module.map.ASLGameUpdater/>
         <VASSAL.build.module.map.Flare circleColor="255,0,0" circleScale="true" circleSize="100" flareKey="keyAlt" flareName="Map Flare" flarePulses="6" flarePulsesPerSec="3" reportFormat=""/>
     </VASL.build.module.ASLMap>
     <VASSAL.build.module.NotesWindow buttonText="" hotkey="" icon="notesV.gif" tooltip="Notes"/>
