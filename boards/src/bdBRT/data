@@ -1,0 +1,6 @@
+version 1.1
+
+x0 20
+y0 20
+
+expanded edges by 20 pixels to allow edge buffer
