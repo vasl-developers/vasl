@@ -22,8 +22,8 @@
 -->
 <boardMetadata 
 	name="mdx" 
-	version="6.0" 
-	versionDate="June 2022" 
+	version="6.2" 
+	versionDate="April 2023" 
 	author="TR" 
 	boardImageFileName="bdmdx.gif" 
 	hasHills="FALSE" 
@@ -76,13 +76,13 @@
 			y - y coordinate of overlay upper left
 		-->		
 
-		<overlaySSRule name="DenseJungle" image="bddxm_DenseJungle.gif" x="0" y="0" />
-		<overlaySSRule name="LightWoods" image="bddxm_LightWoods.gif" x="0" y="0" />
-		<overlaySSRule name="Bamboo" image="bddxm_Bamboo.gif" x="0" y="0" />
-		<overlaySSRule name="PalmTrees" image="bddxm_PalmTrees.gif" x="0" y="0" />
-		<overlaySSRule name="OrchardsToShellholes" image="bddxm_Orch2Shell.gif" x="0" y="0" />
-		<overlaySSRule name="OrchardsToCrags" image="bddxm_Orch2Crag.gif" x="0" y="0" />	
-		<overlaySSRule name="NoRoads" image="bddxm_NoRoads.gif" x="0" y="0" />
+		<overlaySSRule name="DenseJungle" image="bdmdx_DenseJungle.gif" x="0" y="0" />
+		<overlaySSRule name="LightWoods" image="bdmdx_LightWoods.gif" x="0" y="0" />
+		<overlaySSRule name="Bamboo" image="bdmdx_Bamboo.gif" x="0" y="0" />
+		<overlaySSRule name="PalmTrees" image="bdmdx_PalmTrees.gif" x="0" y="0" />
+		<overlaySSRule name="OrchardsToShellholes" image="bdmdx_Orch2Shell.gif" x="0" y="0" />
+		<overlaySSRule name="OrchardsToCrags" image="bdmdx_Orch2Crag.gif" x="0" y="0" />	
+		<overlaySSRule name="NoRoads" image="bdmdx_NoRoads.gif" x="0" y="0" />
 		
 	</overlaySSRules>
 	
