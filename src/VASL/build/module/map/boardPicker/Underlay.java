@@ -109,24 +109,30 @@ public class Underlay extends SSROverlay {
 
       //Point pos = new Point(0, 0);
       //pos = board.getCropBounds().getLocation();
-      boundaries.setSize(overlay.bounds().getSize());
-      Image ovrBase = overlay.getImage();
-      boundaries.setLocation(0,0);
-      BufferedImage base = new BufferedImage(ovrBase.getWidth(null), ovrBase.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-      base.getGraphics().drawImage(ovrBase, 0, 0, null);
-      new HolePunch(transparentList, 0).transform(base);
-      BufferedImage replacement = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(
-              boundaries.width, boundaries.height, Transparency.BITMASK);
-      Graphics2D g2 = replacement.createGraphics();
-      int w = underlayImage.getWidth(null);
-      int h = underlayImage.getHeight(null);
-      for (int x = 0; x < boundaries.width; x += w)
-        for (int y = 0; y < boundaries.height; y += h)
-          g2.drawImage(underlayImage, x, y, null);
-      g2.drawImage(base, 0, 0, null);
-      g2.dispose();
-      new HolePunch(new int[]{0}).transform(replacement);
-      return replacement;
+      if (overlay != null) {
+        boundaries.setSize(overlay.bounds().getSize());
+        Image ovrBase = overlay.getImage();
+        boundaries.setLocation(0, 0);
+        BufferedImage base = new BufferedImage(ovrBase.getWidth(null), ovrBase.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+        base.getGraphics().drawImage(ovrBase, 0, 0, null);
+        new HolePunch(transparentList, 0).transform(base);
+        BufferedImage replacement = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(
+                boundaries.width, boundaries.height, Transparency.BITMASK);
+        Graphics2D g2 = replacement.createGraphics();
+        int w = underlayImage.getWidth(null);
+        int h = underlayImage.getHeight(null);
+        for (int x = 0; x < boundaries.width; x += w)
+          for (int y = 0; y < boundaries.height; y += h)
+            g2.drawImage(underlayImage, x, y, null);
+        g2.drawImage(base, 0, 0, null);
+        g2.dispose();
+        new HolePunch(new int[]{0}).transform(replacement);
+        return replacement;
+      } else { // trap error causing crash - issue #1406
+        final String errorMessage = "Overlay not set";
+        ErrorDialog.dataWarning(new BadDataReport(errorMessage, "DataArchive::loadImage"));
+        return new BufferedImage(1, 1, BufferedImage.TYPE_4BYTE_ABGR);
+      }
     }
   }
 
@@ -143,9 +149,14 @@ public class Underlay extends SSROverlay {
         if(!o.getName().equals("")){
           boundaries.setSize(o.bounds().getSize());
           boundaries.setLocation(0, 0);
-          if ((("ovr" + o.getName()).toLowerCase()).equals((this.archive.getArchive().getFile().getName()).toLowerCase())) {
+          String ovrname = o.getFile().getName().toLowerCase();
+          String filenametest = this.archive.getArchive().getFile().getName().toLowerCase();
+          if (ovrname.equals(filenametest)){
             overlay = o;
           }
+          //if ((("ovr" + o.getName()).toLowerCase()).equals((this.archive.getArchive().getFile().getName()).toLowerCase())) {
+          //  overlay = o;
+          //}
         }
       }
     }
