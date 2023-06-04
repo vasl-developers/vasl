@@ -5,6 +5,7 @@ import VASSAL.build.GpIdSupport;
 import VASSAL.build.module.Chatter;
 import VASSAL.build.module.PrototypeDefinition;
 import VASSAL.build.widget.PieceSlot;
+import VASSAL.command.Command;
 import VASSAL.counters.BasicPiece;
 import VASSAL.counters.Decorator;
 import VASSAL.counters.Embellishment;
@@ -15,6 +16,8 @@ import VASSAL.counters.PieceCloner;
 import VASSAL.counters.PlaceMarker;
 import VASSAL.counters.Properties;
 import VASSAL.i18n.Resources;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,6 +41,7 @@ public class ASLGpIdChecker {
     final List<ASLGpIdChecker.SlotElement> errorSlots = new ArrayList<>();
     private Chatter chatter;
     private final Set<String> refresherOptions = new HashSet<>();
+    private static final Logger logger = LoggerFactory.getLogger(ASLGameUpdater.class);
 
     public ASLGpIdChecker() {
         this((GpIdSupport) null);
@@ -187,6 +191,11 @@ public class ASLGpIdChecker {
     public boolean hasErrors() {
         return !errorSlots.isEmpty();
     }
+    public void log(String message) {
+        // Log to chatter
+        GameModule.getGameModule().warn(message);
+        logger.info(message);
+    }
 
     private void chat(String text) {
         if (chatter == null) {
@@ -225,7 +234,7 @@ public class ASLGpIdChecker {
         final String gpid = (String) oldPiece.getProperty(Properties.PIECE_ID);
         GamePiece newPiece;
         if (Decorator.getInnermost(oldPiece).getName()=="User-Labeled"){
-            boolean reg = true;
+            return oldPiece;
         } else {
             // Find a slot with a matching gpid
             if (gpid != null && !gpid.isEmpty()) {
@@ -251,6 +260,7 @@ public class ASLGpIdChecker {
                 }
             }
         }
+        log(Resources.getString("GameRefresher.refresh_error_nomatch_pieceslot", "", oldPiece.getName()));
         return oldPiece;
     }
 
