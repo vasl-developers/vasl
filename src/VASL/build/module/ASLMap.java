@@ -58,8 +58,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import static VASSAL.build.GameModule.getGameModule;
-import static VASSAL.tools.image.tilecache.ZipFileImageTilerState.STARTING_IMAGE;
-import static VASSAL.tools.image.tilecache.ZipFileImageTilerState.TILE_WRITTEN;
 import static java.lang.Math.cos;
 
 public class ASLMap extends Map {
@@ -450,8 +448,9 @@ public class ASLMap extends Map {
         final Enumeration overlays = board.getOverlays();
         while (overlays.hasMoreElements()) {
             Overlay o = (Overlay) overlays.nextElement();
-            if(o.getName().equals("")){break;} // prevents error when using underlays (which are added as overlays)
-            if(o.getName().contains(board.getName())){break;} // prevents error when using BSO which are handled elsewhere
+            if(o.getName().equals("")){continue;} // prevents error when using underlays (which are added as overlays)
+            if(o.getName().contains(board.getName()) && (!o.getName().contains("BSO_LFT3") && !o.getName().contains("SSO"))){continue;} // prevents error when using BSO which are handled elsewhere
+            // BSO_LFT3 may be a special case; treat it as so for now; if find others then need to develop a proper solution
             Rectangle ovrRec = o.bounds();
             // get the image as a buffered image
             Image i = o.getImage();
@@ -784,60 +783,159 @@ public class ASLMap extends Map {
                     for (int y = 0; y < bi.getHeight(); y++) {
                         int cropheight = board.getCropBounds().getHeight() == -1 ? (int) board.getUncroppedSize().getHeight() : (int)board.getCropBounds().getHeight();
                         int cropwidth = board.getCropBounds().getWidth() ==-1 ? (int) board.getUncroppedSize().getWidth() : (int) board.getCropBounds().getWidth() ;
-
                         ovrx = cropwidth - ovrRec.x  -x -1 + (int) board.getCropBounds().getX();
                         ovry = cropheight - ovrRec.y -y -1 + (int) board.getCropBounds().getY();
-                        if (newlosdata.onMap(ovrx, ovry )) {
-
+                        if (newlosdata.onMap(ovrx, ovry ) && newlosdata.gridToHex(ovrx, ovry) !=null) {
                             int c = bi.getRGB(x, y);
+                            Terrain terr= null; int elevint=0;
                             if ((c >> 24) != 0x00) { // not a transparent pixel
-                                Terrain terr= null; int elevint=0;
-                                if ((c >> 24) != 0x00) { // not a transparent pixel
-                                    terr = getTerrainfromColor(board, c, newlosdata);
-                                    elevint = getElevationfromColor(board, c);
-                                    //add Hex to collections of inherent hexes and building hexes on the overlay
-                                    addHextoInhandBldgMaps(terr, newlosdata, ovrx, ovry, inhHexes, bdgHexes);
-                                    //set terrain type for center location or hexside location (if hexside terrain)
-                                    setterraintype (newlosdata, ovrx, ovry, terr);
-                                    //set elevation level for point and hex
-                                    if (!preserveelevation) {
-                                        // turn this into a method if can do so with reversed board
-                                        // set evelation for point
-                                        newlosdata.setGridElevation(elevint, ovrx, ovry );
-                                        int testx =0; int testy =0;
-                                        //adjust point values to match hexgrid data
-                                        if ((int)board.getCropBounds().getX() ==0 && (int)board.getCropBounds().getWidth() != -1) {
-                                            testx = ((int) board.getUncroppedSize().getWidth()) - ((int) board.getCropBounds().getWidth() - ovrx);
-                                        } else{
-                                            testx = ovrx;
-                                        }
-                                        if ((int)board.getCropBounds().getY() ==0 && (int)board.getCropBounds().getHeight()!=-1) {
-                                            testy = (int) board.getUncroppedSize().getHeight() - ((int) board.getCropBounds().getHeight() - ovry);
-                                        } else {
-                                            testy = ovry;
-                                        }
-                                        //test if pixel is hex center
-                                        if (testx  == (int)(newlosdata.gridToHex(ovrx, ovry).getCenterLocation().getLOSPoint()).getX() &&
-                                               testy == (int)(newlosdata.gridToHex(ovrx, ovry).getCenterLocation().getLOSPoint()).getY()) {
-                                            // if white center dot on overlay aligns with hex center, won't set elevation properly so need to look for nearby terrain type
-                                            // bit of a hack but should work - try it until we get a bug
-                                            int j =x; int k = y;
-                                            Color color = getRGBColor(c);
-                                            while (color.equals(Color.white)) {
-                                                j+=1;
-                                                k+=1;
-                                                c = bi.getRGB(j, k);
-                                                color = getRGBColor(c);
-                                                int terrint = board.getVASLBoardArchive().getTerrainForColor(color);
-                                                elevint = board.getVASLBoardArchive().getElevationForColor(color);
-                                                if (elevint == -99){elevint=0;}
-                                                if (terrint >= 0) {
-                                                    terr = newlosdata.getTerrain(terrint);
-                                                }
+                                //Retrieving the R G B values
+                                Color color = getRGBColor(c);
+                                terr = getTerrainfromColor(board,  color, newlosdata);
+                                int bumpx =0; int bumpy=0;
+                                while(terr==null){
+                                    color = getnearestcolor(newlosdata, bi, ovrx + bumpx, ovry+ bumpy, x, y);
+                                    if (color.equals(Color.white)){
+                                        terr = newlosdata.getTerrain(board.getVASLBoardArchive().getTerrainForVASLColor("L0Winter"));
+                                    } else {
+                                        terr = getTerrainfromColor(board, color, newlosdata);
+                                        if (terr ==null){bumpx+=1;bumpy+=1;}
+                                    }
+                                }
+                                elevint = getElevationfromColor(board, color);
+                                //add Hex to collections of inherent hexes and building hexes on the overlay
+                                addHextoInhandBldgMaps(terr, newlosdata, ovrx, ovry, inhHexes, bdgHexes);
+                                //set terrain type for center location or hexside location (if hexside terrain)
+                                setterraintype (newlosdata, ovrx, ovry, terr);
+                                //set elevation level for point and hex
+                                if (!preserveelevation) {
+                                    // turn this into a method if can do so with reversed board
+                                    //set elevation for point
+                                    newlosdata.setGridElevation(elevint, ovrx, ovry );
+                                    int testx =0; int testy =0;
+                                    //adjust point values to match hexgrid data
+                                    if ((int)board.getCropBounds().getX() ==0 && (int)board.getCropBounds().getWidth() != -1) {
+                                        testx = ((int) board.getUncroppedSize().getWidth()) - ((int) board.getCropBounds().getWidth() - ovrx);
+                                    } else {
+                                        testx = ovrx;
+                                    }
+                                    if ((int)board.getCropBounds().getY() ==0 && (int)board.getCropBounds().getHeight()!=-1) {
+                                        testy = (int) board.getUncroppedSize().getHeight() - ((int) board.getCropBounds().getHeight() - ovry);
+                                    } else {
+                                        testy = ovry;
+                                    }
+                                    //test if pixel is hex center
+                                    if (testx  == (int)(newlosdata.gridToHex(ovrx, ovry).getCenterLocation().getLOSPoint()).getX() &&
+                                        testy == (int)(newlosdata.gridToHex(ovrx, ovry).getCenterLocation().getLOSPoint()).getY()) {
+                                        // if white center dot on overlay aligns with hex center, won't set elevation properly so need to look for nearby terrain type
+                                        // bit of a hack but should work - try it until we get a bug
+                                        color = getRGBColor(c);
+                                        //int j =0; int k = 0;
+                                        if (color.equals(Color.white) || color.equals(Color.black)){ // && j<=(x+6)) {
+                                        //j += 2;        //k += 2;
+                                            color = getnearestcolor(newlosdata, bi, ovrx, ovry, x, y);
+                                            //int terrint = board.getVASLBoardArchive().getTerrainForColor(color);
+                                            if ((color.equals(Color.white))){
+                                               elevint =0;
+                                            } else {
+                                               elevint = board.getVASLBoardArchive().getElevationForColor(color);
                                             }
-                                            // this sets base elevation for the hex - crest line & depression hexes can contain multiple elevations
+                                        }
+                                    }
+                                    // this sets base elevation for the hex - crest line & depression hexes can contain multiple elevations
+                                    newlosdata.gridToHex(ovrx, ovry).setBaseHeight(elevint);
+                                }
+                            } else {
+                                // transparent pixel - check if center dot
+                                //adjust point values to match hexgrid data
+                                int testx =0; int testy =0;
+                                if ((int)board.getCropBounds().getX() ==0 && (int)board.getCropBounds().getWidth() != -1) {
+                                    testx = ((int) board.getUncroppedSize().getWidth()) - ((int) board.getCropBounds().getWidth() - ovrx);
+                                } else{
+                                    testx = ovrx;
+                                }
+                                if ((int)board.getCropBounds().getY() ==0 && (int)board.getCropBounds().getHeight()!=-1) {
+                                    testy = (int) board.getUncroppedSize().getHeight() - ((int) board.getCropBounds().getHeight() - ovry);
+                                } else {
+                                    testy = ovry;
+                                }
+                                //test if pixel is hex center
+                                if (ovrx + (int) board.getCropBounds().getX() == (int)(newlosdata.gridToHex(ovrx, ovry ).getHexCenter()).getX() &&
+                                        ovry + (int) board.getCropBounds().getY()  == (int)(newlosdata.gridToHex(ovrx , ovry).getHexCenter()).getY()) {
+                                    // if center dot on overlay is transparent and aligns with hex center, won't set elevation properly so need to look for nearby terrain type
+                                    // bit of a hack but should work - try it until we get a bug
+                                    // the bug is with overlays where the border is transparent so test
+                                    // (1) if pixel is on the overlay edge and (2) if so are pixels 2 away also transparent
+                                    // in those conditions, skip actions
+                                    if (!pixelontransparentoverlayborder(newlosdata, bi, ovrx, ovry, x, y)) {
+
+                                        //test if pixel is hex center
+                                        //if (testx  == (int)(newlosdata.gridToHex(ovrx, ovry).getCenterLocation().getLOSPoint()).getX() &&
+                                        //        testy == (int)(newlosdata.gridToHex(ovrx, ovry).getCenterLocation().getLOSPoint()).getY()) {
+
+                                        int j = 0;
+                                        int k = 0;
+                                        elevint = -99;
+
+                                        while ((c >> 24) == 0x00 && j <= 6) {
+                                            j += 2;
+                                            k += 2;
+                                            if (newlosdata.onMap(x + j, y + k)) {
+                                                c = bi.getRGB(x + j, y + k);
+                                            } else if (newlosdata.onMap(x + j, y - k)) {
+                                                c = bi.getRGB(x + j, y - k);
+                                            } else if (newlosdata.onMap(x - j, y + k)) {
+                                                c = bi.getRGB(x - j, y + k);
+                                            } else if (newlosdata.onMap(x - j, y - k)) {
+                                                c = bi.getRGB(x - j, y - k);
+                                            } else {
+                                                break;
+                                            }
+                                            Color color = getRGBColor(c);
+                                            //int terrint = board.getVASLBoardArchive().getTerrainForColor(color);
+                                            if ((color.equals(Color.white))) {
+                                                elevint = 0;
+                                            } else {
+                                                elevint = board.getVASLBoardArchive().getElevationForColor(color);
+                                            }
+                                            //if (terrint >= 0) {
+                                            //    terr = newlosdata.getTerrain(terrint);
+                                            //}
+                                        }
+                                        // this sets base elevation for the hex - crest line & depression hexes can contain multiple elevations
+                                        if (elevint != -99) {
                                             newlosdata.gridToHex(ovrx, ovry).setBaseHeight(elevint);
                                         }
+
+                                        /*while ((c >> 24) == 0x00 && j <= (x + 6)) {
+                                            j += 2;
+                                            k += 2;
+                                            if (newlosdata.onMap(x + j, y + k)) {
+                                                c = bi.getRGB(x + j, y + k);
+                                            } else if (newlosdata.onMap(x + j, y - k)) {
+                                                c = bi.getRGB(x + j, y - k);
+                                            } else if (newlosdata.onMap(x - j, y + k)) {
+                                                c = bi.getRGB(x - j, y + k);
+                                            } else if (newlosdata.onMap(x - j, y - k)) {
+                                                c = bi.getRGB(x - j, y - k);
+                                            } else {
+                                                break;
+                                            }
+                                            Color color = getRGBColor(c);
+                                            //int terrint = board.getVASLBoardArchive().getTerrainForColor(color);
+                                            if ((color.equals(Color.white))) {
+                                                elevint = 0;
+                                            } else {
+                                                elevint = board.getVASLBoardArchive().getElevationForColor(color);
+                                            }
+                                            //if (terrint >= 0) {
+                                            //    terr = newlosdata.getTerrain(terrint);
+                                            //}
+                                        }
+                                        // this sets base elevation for the hex - crest line & depression hexes can contain multiple elevations
+                                        if (elevint != -99) {
+                                            newlosdata.gridToHex(ovrx, ovry).setBaseHeight(elevint);
+                                        }*/
                                     }
                                 }
                             }
@@ -855,8 +953,20 @@ public class ASLMap extends Map {
                             int c = bi.getRGB(x, y);
                             Terrain terr= null; int elevint=0;
                             if ((c >> 24) != 0x00) { // not a transparent pixel
-                                terr = getTerrainfromColor(board,  c, newlosdata);
-                                elevint = getElevationfromColor(board, c);
+                                //Retrieving the R G B values
+                                Color color = getRGBColor(c);
+                                terr = getTerrainfromColor(board,  color, newlosdata);
+                                int bumpx =0; int bumpy=0;
+                                while(terr==null){
+                                    color = getnearestcolor(newlosdata, bi, ovrx + bumpx, ovry+ bumpy, x, y);
+                                    if (color.equals(Color.white)){
+                                        terr = newlosdata.getTerrain(board.getVASLBoardArchive().getTerrainForVASLColor("L0Winter"));
+                                    } else {
+                                        terr = getTerrainfromColor(board, color, newlosdata);
+                                        if (terr ==null){bumpx+=1;bumpy+=1;}
+                                    }
+                                }
+                                elevint = getElevationfromColor(board, color);
                                 //add Hex to collections of inherent hexes and building hexes on the overlay
                                 addHextoInhandBldgMaps(terr, newlosdata, ovrx, ovry, inhHexes, bdgHexes);
                                 //set terrain type for center location or hexside location (if hexside terrain)
@@ -871,24 +981,75 @@ public class ASLMap extends Map {
                                     ovry + (int) board.getCropBounds().getY()  == (int)(newlosdata.gridToHex(ovrx , ovry).getHexCenter()).getY()) {
                                         // if white center dot on overlay aligns with hex center, won't set elevation properly so need to look for nearby terrain type
                                         // bit of a hack but should work - try it until we get a bug
-                                        int j =x; int k = y;
-                                        Color color = getRGBColor(c);
-                                        while (color.equals(Color.white)) {
-                                            j+=1;
-                                            k+=1;
-                                            c = bi.getRGB(j, k);
-                                            color = getRGBColor(c);
-                                            int terrint = board.getVASLBoardArchive().getTerrainForColor(color);
-                                            elevint = board.getVASLBoardArchive().getElevationForColor(color);
-                                            if (elevint == -99){elevint=0;}
-                                            if (terrint >= 0) {
-                                                terr = newlosdata.getTerrain(terrint);
+                                        color = getRGBColor(c);
+                                        //int j =0; int k = 0;
+                                        if (color.equals(Color.white) || color.equals(Color.black)){ // && j<=(x+6)) {
+                                            //j += 2;
+                                            //k += 2;
+                                            color = getnearestcolor(newlosdata, bi, ovrx, ovry, x, y);
+                                            //int terrint = board.getVASLBoardArchive().getTerrainForColor(color);
+                                            if ((color.equals(Color.white))){
+                                                elevint =0;
+                                            } else {
+                                                elevint = board.getVASLBoardArchive().getElevationForColor(color);
                                             }
+                                            //if (terrint >= 0) {
+                                            //    terr = newlosdata.getTerrain(terrint);
+                                            //}
                                         }
                                         // this sets base elevation for the hex - crest line & depression hexes can contain multiple elevations
-                                        newlosdata.gridToHex(ovrx, ovry).setBaseHeight(elevint);
+                                        // hack for LFT3; change if applies to other boards
+                                        if (!board.getVASLBoardArchive().getVASLColorName(color).contains("SnowHexDots2")) {
+                                            newlosdata.gridToHex(ovrx, ovry).setBaseHeight(elevint);
+                                        }
+
                                     }
                                 }
+                            } else { // transparent pixel
+                                //test if pixel is hex center
+                                if (ovrx + (int) board.getCropBounds().getX() == (int)(newlosdata.gridToHex(ovrx, ovry ).getHexCenter()).getX() &&
+                                        ovry + (int) board.getCropBounds().getY()  == (int)(newlosdata.gridToHex(ovrx , ovry).getHexCenter()).getY()) {
+                                    // if center dot on overlay is transparent and aligns with hex center, won't set elevation properly so need to look for nearby terrain type
+                                    // bit of a hack but should work - try it until we get a bug
+                                    // the bug is with overlays where the border is transparent so test
+                                    // (1) if pixel is on the overlay edge and (2) if so are pixels 2 away also transparent
+                                    // in those conditions, skip actions
+                                    if (!pixelontransparentoverlayborder(newlosdata, bi, ovrx, ovry, x, y)) {
+                                        int j = 0;
+                                        int k = 0;
+                                        elevint = -99;
+                                        while ((c >> 24) == 0x00 && j <= 6) {
+                                            j += 2;
+                                            k += 2;
+                                            if (newlosdata.onMap(x + j, y + k)) {
+                                                c = bi.getRGB(x + j, y + k);
+                                            } else if (newlosdata.onMap(x + j, y - k)) {
+                                                c = bi.getRGB(x + j, y - k);
+                                            } else if (newlosdata.onMap(x - j, y + k)) {
+                                                c = bi.getRGB(x - j, y + k);
+                                            } else if (newlosdata.onMap(x - j, y - k)) {
+                                                c = bi.getRGB(x - j, y - k);
+                                            } else {
+                                                break;
+                                            }
+                                            Color color = getRGBColor(c);
+                                            //int terrint = board.getVASLBoardArchive().getTerrainForColor(color);
+                                            if ((color.equals(Color.white))) {
+                                                elevint = 0;
+                                            } else {
+                                                elevint = board.getVASLBoardArchive().getElevationForColor(color);
+                                            }
+                                            //if (terrint >= 0) {
+                                            //    terr = newlosdata.getTerrain(terrint);
+                                            //}
+                                        }
+                                        // this sets base elevation for the hex - crest line & depression hexes can contain multiple elevations
+                                        if (elevint != -99) {
+                                            newlosdata.gridToHex(ovrx, ovry).setBaseHeight(elevint);
+                                        }
+                                    }
+                                }
+
                             }
                         }
                     }
@@ -899,24 +1060,30 @@ public class ASLMap extends Map {
         }
     }
 
-    private void addinhterraintolos(HashMap<Hex, Terrain> inhHexes, VASL.LOS.Map.Map newlosdata, ASLBoard board){
-        for(Hex inhTerrHex : inhHexes.keySet()) {
-            Integer terrType = inhHexes.get(inhTerrHex).getType();
-            Rectangle s = inhTerrHex.getHexBorder().getBounds();
-            for (int i =(int)s.getX(); i < s.getX() + s.getWidth(); i++) {
-                for (int j = (int)s.getY(); j < s.getY() + s.getHeight(); j++) {
-                    if (inhTerrHex.contains( i, j)) {
-                        if(board.isReversed()){
-                            int cropheight = board.getCropBounds().getHeight() == -1 ? (int) board.getUncroppedSize().getHeight() : (int)board.getCropBounds().getHeight();
-                            int cropwidth = board.getCropBounds().getWidth() ==-1 ? (int) board.getUncroppedSize().getWidth() : (int) board.getCropBounds().getWidth() ;
-                            newlosdata.setGridTerrainCode(terrType,  cropwidth -i, cropheight -j);
-                        } else {
-                            newlosdata.setGridTerrainCode(terrType, i - (int) board.getCropBounds().getX(), j - (int) board.getCropBounds().getY());
+    private void addinhterraintolos(HashMap<Hex, Terrain> inhHexes, VASL.LOS.Map.Map newlosdata, ASLBoard board) {
+        try {
+            for (Hex inhTerrHex : inhHexes.keySet()) {
+                Integer terrType = inhHexes.get(inhTerrHex).getType();
+                Rectangle s = inhTerrHex.getHexBorder().getBounds();
+                for (int i = (int) s.getX(); i < s.getX() + s.getWidth(); i++) {
+                    for (int j = (int) s.getY(); j < s.getY() + s.getHeight(); j++) {
+                        if(newlosdata.onMap(i, j)) {
+                            if (inhTerrHex.contains(i, j)) {
+                                if (board.isReversed()) {
+                                    int cropheight = board.getCropBounds().getHeight() == -1 ? (int) board.getUncroppedSize().getHeight() : (int) board.getCropBounds().getHeight();
+                                    int cropwidth = board.getCropBounds().getWidth() == -1 ? (int) board.getUncroppedSize().getWidth() : (int) board.getCropBounds().getWidth();
+                                    newlosdata.setGridTerrainCode(terrType, cropwidth - i, cropheight - j);
+                                } else {
+                                    newlosdata.setGridTerrainCode(terrType, i - (int) board.getCropBounds().getX(), j - (int) board.getCropBounds().getY());
+                                }
+                            }
                         }
                     }
                 }
+                inhTerrHex.getCenterLocation().setTerrain(newlosdata.getTerrain(terrType));
             }
-            inhTerrHex.getCenterLocation().setTerrain(newlosdata.getTerrain(terrType));
+        }catch (Exception e) {
+            boolean reg =true;
         }
     }
     private void addbldglevelstolos(HashMap<Hex, Terrain> bdgHexes, VASL.LOS.Map.Map newlosdata, Rectangle ovrRec, BufferedImage bi, VASLBoard board){
@@ -984,21 +1151,81 @@ public class ASLMap extends Map {
             }
         }
     }
-    private Terrain getTerrainfromColor(VASLBoard board, int c, VASL.LOS.Map.Map newlosdata){
-        //Retrieving the R G B values
-        Color color = getRGBColor(c);
+    private Terrain getTerrainfromColor(VASLBoard board, Color color, VASL.LOS.Map.Map newlosdata){
         int terrint = board.getVASLBoardArchive().getTerrainForColor(color);
         if (terrint >= 0) {
             return newlosdata.getTerrain(terrint);
         }
-        return newlosdata.getTerrain("Open Ground");
+        return null; //newlosdata.getTerrain("Open Ground");
     }
-    private Integer getElevationfromColor(VASLBoard board, int c){
-        //Retrieving the R G B values
-        Color color = getRGBColor(c);
+    private Integer getElevationfromColor(VASLBoard board, Color color){
         int elevint = board.getVASLBoardArchive().getElevationForColor(color);
         if (elevint == -99){elevint=0;}
         return elevint;
+    }
+    private Color getnearestcolor(VASL.LOS.Map.Map newlosdata, BufferedImage bi, int ovrx, int ovry, int x, int y){
+        int c = 0; int a=2;
+        Color color = Color.BLACK;
+        while (color.equals(Color.BLACK)) {
+            if (newlosdata.onMap(ovrx + a, ovry + a)) {
+                c = bi.getRGB(x + (a - 1), y + a);
+                if ((c >> 24) == 0x00) { // a transparent pixel
+                    if (newlosdata.onMap(ovrx + a, ovry - a)) {
+                        c = bi.getRGB(x + (a - 1), y - a);
+                        if ((c >> 24) == 0x00) { // a transparent pixel
+                            if (newlosdata.onMap(ovrx - a, ovry + a)) {
+                                c = bi.getRGB(x - (a - 1), y + a);
+                                if ((c >> 24) == 0x00) { // a transparent pixel
+                                    if (newlosdata.onMap(ovrx - a, ovry - a)) {
+                                        c = bi.getRGB(x - (a - 1), y - a);
+                                        if ((c >> 24) == 0x00) { // a transparent pixel
+                                            return null;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            color = getRGBColor(c);
+            a+=1;
+        }
+        return color;
+    }
+    private Boolean pixelontransparentoverlayborder(VASL.LOS.Map.Map newlosdata, BufferedImage bi, int ovrx, int ovry, int x, int y){
+        int c = 0;
+        int b = 0;
+        int a = 3;
+        if (x==0 || x== bi.getWidth()-1) {
+            if (newlosdata.onMap(ovrx, ovry + a)) {
+                c = bi.getRGB(x, y + a);
+                if ((c >> 24) != 0x00) { // not a transparent pixel
+                    return false;
+                }
+            }
+            if (newlosdata.onMap(ovrx, ovry - a)) {
+                b = bi.getRGB(x, y - a);
+                if ((c >> 24) != 0x00) { // not a transparent pixel
+                    return false;
+                }
+            }
+        } else if (y==0 || y == bi.getHeight()-1){
+            if (newlosdata.onMap(ovrx + a, ovry)) {
+                c = bi.getRGB(x + a, y);
+                if ((c >> 24) != 0x00) { // not a transparent pixel
+                    return false;
+                }
+            }
+            if (newlosdata.onMap(ovrx -a, ovry)) {
+                b = bi.getRGB(x-a, y);
+                if ((c >> 24) != 0x00) { // not a transparent pixel
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
     //add Hex to collections of inherent hexes and building hexes on the overlay
     private void addHextoInhandBldgMaps(Terrain terr, VASL.LOS.Map.Map newlosdata, double ovrx, double ovry, HashMap<VASL.LOS.Map.Hex, VASL.LOS.Map.Terrain>  inhHexes, HashMap<VASL.LOS.Map.Hex, VASL.LOS.Map.Terrain> bdgHexes) {
@@ -1006,7 +1233,12 @@ public class ASLMap extends Map {
         if (terr != null) {
             if (terr.isInherentTerrain()) {
                 if (!inhHexes.containsKey(newlosdata.gridToHex((int) ovrx, (int) ovry))) {
-                    inhHexes.put(newlosdata.gridToHex((int) ovrx, (int) ovry), terr);
+                    //hack - ensure that the pixel is not close to a hexside as VASL geometry can put it in an adjacent hex
+                    Point hexcenter =newlosdata.gridToHex((int) ovrx, (int) ovry).getHexCenter();
+                    Double d=  Math.sqrt(((Math.pow(hexcenter.x - ovrx, 2) + (Math.pow(hexcenter.y - ovry, 2)))));
+                    if (d <25) {
+                        inhHexes.put(newlosdata.gridToHex((int) ovrx, (int) ovry), terr);
+                    }
                 }
             } else if (terr.isBuilding()) {
                 if (!terr.getName().equals("Stone Building") && !terr.getName().equals("Wooden Building") && !terr.getName().contains("Rowhouse Wall")) {

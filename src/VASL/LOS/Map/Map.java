@@ -3024,7 +3024,7 @@ public class Map  {
                 // see if ground level alone creates blind hex
                 else if ((status.currentTerrain.isCliff()) ||(status.groundLevel > Math.min(status.sourceElevation + sourceadj, status.targetElevation + targetadj) &&
                         status.groundLevel  < Math.max(status.sourceElevation + sourceadj, status.targetElevation + targetadj) &&
-                        isBlindHex(status, 0, nearestHexsideIsCliff(status.currentCol, status.currentRow, status, result), cliffHexsideTerrainHeightadjustment))) {
+                        isBlindHex(status, 0, false, 0))){ //nearestHexsideIsCliff(status.currentCol, status.currentRow, status, result), cliffHexsideTerrainHeightadjustment))) {
 
                     status.reason = "Source or Target location is in a blind hex (B10.23)";
                     status.blocked = true;
@@ -3045,7 +3045,7 @@ public class Map  {
                         }
                     }
                     // code added by DR to handle LOS over roofless factory; no hindrance from higher elevation
-                    else if (status.currentTerrain.getLOSCategory() == Terrain.LOSCategories.FACTORY)
+                    else if (status.currentTerrain.getLOSCategory() == Terrain.LOSCategories.FACTORY || status.currentTerrain.getLOSCategory() == Terrain.LOSCategories.OPEN)
                         return false;
                     else {
                         // add hindrance

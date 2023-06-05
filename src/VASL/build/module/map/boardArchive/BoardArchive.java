@@ -498,7 +498,12 @@ public class BoardArchive {
         }
         return getElevationForVASLColor(metadata.getVASLColorName(color));
     }
-
+    public String getVASLColorName(Color color){
+        if (metadata.getVASLColorName(color) == null) {
+            return "";
+        }
+        return metadata.getVASLColorName(color);
+    }
     /**
      * Gets the terrain for the given color
      * @param color the board color
