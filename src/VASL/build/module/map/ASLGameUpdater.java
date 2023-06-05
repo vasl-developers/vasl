@@ -1078,6 +1078,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
         @Override
         public void refresh(Command command) {
             boolean containsExtension = false;
+            boolean noupdateneeded = true;
             Iterator extit = GameModule.getGameModule().getComponentsOf(ModuleExtension.class).iterator();
 
             while(extit.hasNext()) {
@@ -1125,6 +1126,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
 
                 if (doUpdate) {
                     //if update available, ask if user wants to update
+                    noupdateneeded=false;
                     int dialogResult = JOptionPane.showConfirmDialog(null, "An update is available for Extension " + ext.getName() + ". Proceed?",
                             "Updating Extensions . . . ", JOptionPane.YES_NO_OPTION);
                     if (dialogResult == JOptionPane.YES_OPTION) {
@@ -1137,7 +1139,8 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
                         }
                     }
                 }
-
+            }
+            if (noupdateneeded) {log("No updates required");
             }
         }
         protected String getVersionErrorMsg(String v) {
