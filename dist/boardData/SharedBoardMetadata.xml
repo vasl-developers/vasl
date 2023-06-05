@@ -772,6 +772,7 @@
 		<color name="White" red="255" green="255" blue="255" terrain="UNKNOWN" elevation="UNKNOWN" />
 		<color name="DuttyWhiteHexDots" red="255" green="254" blue="253" terrain="UNKNOWN" elevation="UNKNOWN" />
 		<color name="SnowHexDots" red="168" green="182" blue="203" terrain="UNKNOWN" elevation="UNKNOWN" />
+		<color name="SnowHexDots2" red="175" green="184" blue="160" terrain="UNKNOWN" elevation="UNKNOWN" />
 		<color name="VineyardGreen" red="84" green="100" blue="45" terrain="Vineyard" elevation="UNKNOWN" />
 		<color name="Slope" red="121" green="89" blue="57" terrain="UNKNOWN" elevation="UNKNOWN" />
 		<!-- Open Ground  -->
@@ -1011,6 +1012,21 @@
 		<color name="Hammada2" red="210" green="210" blue="210" terrain="Hammada" elevation="UNKNOWN" />
 		<color name="Scrub1" red="119" green="70" blue="0" terrain="Scrub" elevation="UNKNOWN" />
 		<color name="Scrub2" red="102" green="109" blue="45" terrain="Scrub" elevation="UNKNOWN" />
+		<color name="Scrub3" red="152" green="155" blue="115" terrain="Scrub" elevation="UNKNOWN" />
+		<color name="Scrub3L_1" red="152" green="155" blue="114" terrain="Scrub" elevation="-1" />
+		<color name="Scrub4" red="164" green="142" blue="104" terrain="Scrub" elevation="UNKNOWN" />
+		<color name="Scrub4L_1" red="164" green="142" blue="103" terrain="Scrub" elevation="-1" />
+		<color name="Scrub5" red="172" green="153" blue="118" terrain="Scrub" elevation="UNKNOWN" />
+		<color name="Scrub5L_1" red="172" green="153" blue="117" terrain="Scrub" elevation="-1" />
+		<color name="Scrub6" red="142" green="142" blue="102" terrain="Scrub" elevation="UNKNOWN" />
+		<color name="Scrub6L_1" red="142" green="142" blue="103" terrain="Scrub" elevation="-1" />
+		<color name="Scrub7" red="173" green="171" blue="165" terrain="Scrub" elevation="UNKNOWN" />
+		<color name="Scrub7L_1" red="173" green="171" blue="164" terrain="Scrub" elevation="-1" />
+		<color name="Scrub8" red="164" green="159" blue="112" terrain="Scrub" elevation="UNKNOWN" />
+		<color name="Scrub8L_1" red="164" green="159" blue="111" terrain="Scrub" elevation="-1" />
+		<color name="Scrub9" red="162" green="155" blue="128" terrain="Scrub" elevation="UNKNOWN" />
+		<color name="Scrub10" red="145" green="142" blue="133" terrain="Scrub" elevation="UNKNOWN" />
+		<color name="Scrub10L_10" red="145" green="142" blue="132" terrain="Scrub" elevation="-1" />
 		<color name="CactusTan" red="222" green="189" blue="99" terrain="Cactus Patch" elevation="UNKNOWN" />
 		<color name="CactusGreen" red="123" green="132" blue="8" terrain="Cactus Patch" elevation="UNKNOWN" />
 		<color name="CactusBrown" red="90" green="66" blue="33" terrain="Cactus Patch" elevation="UNKNOWN" />
@@ -1134,9 +1150,13 @@
 		<color name="DTO_WoodRowhouseBar" red="4" green="3" blue="4" terrain="Wooden Building" elevation="UNKNOWN" />
 		<color name="DTO_WoodStairwell" red="250" green="251" blue="250" terrain="Rowhouse Wall, 1 Level" elevation="UNKNOWN" />
 
-		<!-- Desert colors for desert overlays -->
+		<!-- Desert colors for desert overlays, including AD terrain -->
 		<color name="Hillock1" red="114" green="83" blue="42" terrain="Hillock Summit" elevation="UNKNOWN" />
 		<color name="Dier" red="252" green="223" blue="89" terrain="Dier" elevation="UNKNOWN" />
+		<color name="Cactus Patch" red="230" green="192" blue="82" terrain="Cactus Patch" elevation="0" />
+		<color name="Cactus Patch1" red="194" green="165" blue="68" terrain="Cactus Patch" elevation="0" />
+		<color name="Cactus Patch2" red="137" green="83" blue="35" terrain="Cactus Patch" elevation="0" />
+		<color name="Cactus Patch2" red="149" green="171" blue="61" terrain="Cactus Patch" elevation="0" />
 	</colors>
 
 	<terrainTypes>
@@ -2712,6 +2732,9 @@
 		<LOSSSRule name="StoneToGuttedFactory2.5" type="terrainMap" fromValue="Stone Factory, Level 2.5" toValue="Gutted Stone Factory, Level 2.5" />
 		<!-- custom mapping to convert Multiple Wooden Buildings to Huts -->
 		<LOSSSRule name="MultipleWoodtoHuts" type="terrainMap" fromValue="MultipleWooden" toValue="Huts" />
+		<!-- custom mapping to handle LFT AD transforms-->
+		<LOSSSRule name="OrchardsToDensePalm" type="terrainMap" fromValue="Orchard" toValue="Dense Jungle" />
+
     </LOSSSRules>
 
     <LOSCounterRules>
