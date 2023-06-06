@@ -4265,6 +4265,10 @@ public class Map  {
             if (rangeToTarget==1 && sourceElevation > terrainHeight && testlocation.getTerrain().isCliff() && finishhex.getHexCenter().distance(status.currentCol, status.currentRow) > finishhex.getHexCenter().distance(status.currentHex.getHexCenter().getX(), status.currentHex.getHexCenter().getY())) {
                 return false;
             }
+            // final test; if both source and elevation are above cliff then no blind hex possible
+            if (rangeToSource==1 || rangeToTarget==1){
+                if (sourceElevation > status.currentHex.getBaseHeight() && targetElevation > status.currentHex.getBaseHeight()) {return false;}
+            }
 
         } else if(status.LOSis60Degree || status.LOSisHorizontal) {
             // -99 is default value when no ajustment required; adjustment reflects lower terrain whey LOS along cliff hexside
