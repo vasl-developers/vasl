@@ -3090,6 +3090,9 @@ public class Map  {
         if(status.target.getTerrain().isCellar()) {
             targetadj=+1;
         }
+        // test for Hindrance later; this ensures that plateau effect is tested properly
+        if ("Orchard, Out of Season".equals(status.currentTerrain.getName())) { obstacleadj=-1.0;}
+
         // enables LOS from/to verticies in depression hexes where unit is at higher level than base elevation of the hex
         if(status.sourceHex.isDepressionTerrain() && !status.source.isCenterLocation()) {
             sourceadj=+1;
@@ -3216,12 +3219,11 @@ public class Map  {
                                     (status.rangeToTarget == 1 && status.targetElevation > status.sourceElevation &&
                                             status.source.getHex().getCenterLocation().getTerrain().isWaterTerrain())))) {
 
-                        // if orchard, then hindrance; if Tower Hindrance (Dinant Bridge ruins) then hindrance
-                        if ("Orchard, Out of Season".equals(status.currentTerrain.getName()) || "Tower Hindrance".equals(status.currentTerrain.getName())) {
-
-                            if (addHindranceHex(status, result))
+                        // if Tower Hindrance (Dinant Bridge ruins) then hindrance
+                        if ("Tower Hindrance".equals(status.currentTerrain.getName())) {
+                            if (addHindranceHex(status, result)) {
                                 return true;
-
+                            }
                         } else {
                             status.reason = "Must have a height advantage to see over this terrain (A6.2)";
                             status.blocked = true;
@@ -3230,6 +3232,13 @@ public class Map  {
                         }
                     }
 
+            }
+        } else {
+            if ("Orchard, Out of Season".equals(status.currentTerrain.getName()) && (status.groundLevel + status.currentTerrainHgt == Math.max(status.sourceElevation + sourceadj, status.targetElevation + targetadj)) &&
+                    (status.groundLevel + status.currentTerrainHgt > Math.min(status.sourceElevation+ sourceadj, status.targetElevation + targetadj))){
+                if (addHindranceHex(status, result)) {
+                    return true;
+                }
             }
         }
         return false;
