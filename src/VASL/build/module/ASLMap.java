@@ -1167,7 +1167,22 @@ public class ASLMap extends Map {
         int c = 0; int a=2;
         Color color = Color.BLACK;
         while (color.equals(Color.BLACK)) {
-            if (newlosdata.onMap(ovrx + a, ovry + a)) {
+            // point must be (a) on map (b) on overlay (c) not transparent
+            if ((newlosdata.onMap(ovrx + a, ovry + a)) && (pointIsOnOverlay(bi, x+(a-1), y+a) && (!((bi.getRGB(x+(a-1), y+a) >> 24) == 0X00)))) {
+                c = bi.getRGB(x + (a - 1), y + a);
+            } else if ((newlosdata.onMap(ovrx + a, ovry - a)) && (pointIsOnOverlay(bi, x+(a-1), y-a) && (!((bi.getRGB(x+(a-1), y-a) >> 24) == 0X00)))) {
+                c = bi.getRGB(x + (a - 1), y - a);
+            } else if ((newlosdata.onMap(ovrx - a, ovry + a)) && (pointIsOnOverlay(bi, x-(a-1), y+a) && (!((bi.getRGB(x-(a-1), y+a) >> 24) == 0X00)))) {
+                c = bi.getRGB(x - (a - 1), y + a);
+            } else if ((newlosdata.onMap(ovrx - a, ovry - a)) && (pointIsOnOverlay(bi, x-(a-1), y-a) && (!((bi.getRGB(x-(a-1), y-a) >> 24) == 0X00)))) {
+                c = bi.getRGB(x - (a - 1), y - a);
+            } else {
+                return null;
+            }
+
+
+
+            /*if (newlosdata.onMap(ovrx + a, ovry + a) && (x+(a-1)<bi.getWidth() && y+a <bi.getHeight())) {
                 c = bi.getRGB(x + (a - 1), y + a);
                 if ((c >> 24) == 0x00) { // a transparent pixel
                     if (newlosdata.onMap(ovrx + a, ovry - a)) {
@@ -1187,7 +1202,8 @@ public class ASLMap extends Map {
                         }
                     }
                 }
-            }
+            }*/
+
             color = getRGBColor(c);
             a+=1;
         }
@@ -1226,6 +1242,13 @@ public class ASLMap extends Map {
         }
 
         return true;
+    }
+    private boolean pointIsOnOverlay(BufferedImage bi, int usex, int usey){
+        if (usex >= 0 && usex < bi.getWidth() && usey >= 0 && usey < bi.getHeight()){
+            return true;
+        }else {
+            return false;
+        }
     }
     //add Hex to collections of inherent hexes and building hexes on the overlay
     private void addHextoInhandBldgMaps(Terrain terr, VASL.LOS.Map.Map newlosdata, double ovrx, double ovry, HashMap<VASL.LOS.Map.Hex, VASL.LOS.Map.Terrain>  inhHexes, HashMap<VASL.LOS.Map.Hex, VASL.LOS.Map.Terrain> bdgHexes) {
