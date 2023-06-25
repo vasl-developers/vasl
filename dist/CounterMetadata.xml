@@ -39,12 +39,184 @@
     <terrain name="Wood Rubble Level 2" terrain="Wooden Rubble Level 2"/>
     <terrain name="Wood Rubble Level 3" terrain="Wooden Rubble Level 3"/>
     <terrain name="Wood Rubble" terrain="Wooden Rubble"/>
+
+    <terrain name="PFZ open ground" terrain="Open Ground"/>
+    <terrain name="PFZ vineyard" terrain="Vineyard"/>
+    //Dinant counters
+    <terrain name="Orchard out of Season" terrain="Orchard, Out of Season"/>
+    <terrain name="Burnt out Woods" terrain="Orchard, Out of Season"/>
+    //Draggable overlay counters
+    <terrain name="no Lv Orchard" terrain="Orchard"/>
+    <terrain name="Lv -2 Orchard" terrain="Orchard" level="-2"/>
+    <terrain name="Lv -1 Orchard" terrain="Orchard" level="-1"/>
+    <terrain name="Lv 0 Orchard" terrain="Orchard" level="0"/>
+    <terrain name="Lv 1 Orchard" terrain="Orchard" level="1"/>
+    <terrain name="Lv 2 Orchard" terrain="Orchard" level="2"/>
+    <terrain name="Lv 3 Orchard" terrain="Orchard" level="3"/>
+    <terrain name="Lv 4 Orchard" terrain="Orchard" level="4"/>
+    <terrain name="Lv 5 Orchard" terrain="Orchard" level="5"/>
+    <terrain name="Lv 6 Orchard" terrain="Orchard" level="6"/>
+    <terrain name="no Lv OoS Orchard" terrain="Orchard, Out of Season"/>
+    <terrain name="Lv -2 OoS Orchard" terrain="Orchard, Out of Season" level="-2"/>
+    <terrain name="Lv -1 OoS Orchard" terrain="Orchard, Out of Season" level="-1"/>
+    <terrain name="Lv 0 OoS Orchard" terrain="Orchard, Out of Season" level="0"/>
+    <terrain name="Lv 1 OoS Orchard" terrain="Orchard, Out of Season" level="1"/>
+    <terrain name="Lv 2 OoS Orchard" terrain="Orchard, Out of Season" level="2"/>
+    <terrain name="Lv 3 OoS Orchard" terrain="Orchard, Out of Season" level="3"/>
+    <terrain name="Lv 4 OoS Orchard" terrain="Orchard, Out of Season" level="4"/>
+    <terrain name="Lv 5 OoS Orchard" terrain="Orchard, Out of Season" level="5"/>
+    <terrain name="Lv 6 OoS Orchard" terrain="Orchard, Out of Season" level="6"/>
+    <terrain name="no Lv Palm Trees" terrain="Palm Trees"/>
+    <terrain name="Lv -2 Palm Trees" terrain="Palm Trees" level="-2"/>
+    <terrain name="Lv -1 Palm Trees" terrain="Palm Trees" level="-1"/>
+    <terrain name="Lv 0 Palm Trees" terrain="Palm Trees" level="0"/>
+    <terrain name="Lv 1 Palm Trees" terrain="Palm Trees" level="1"/>
+    <terrain name="Lv 2 Palm Trees" terrain="Palm Trees" level="2"/>
+    <terrain name="Lv 3 Palm Trees" terrain="Palm Trees" level="3"/>
+    <terrain name="Lv 4 Palm Trees" terrain="Palm Trees" level="4"/>
+    <terrain name="Lv 5 Palm Trees" terrain="Palm Trees" level="5"/>
+    <terrain name="Lv 6 Palm Trees" terrain="Palm Trees" level="6"/>
+    <terrain name="no Lv Vineyard" terrain="Vineyard"/>
+    <terrain name="Lv -2 Vineyard" terrain="Vineyard" level="-2"/>
+    <terrain name="Lv -1 Vineyard" terrain="Vineyard" level="-1"/>
+    <terrain name="Lv 0 Vineyard" terrain="Vineyard" level="0"/>
+    <terrain name="Lv 1 Vineyard" terrain="Vineyard" level="1"/>
+    <terrain name="Lv 2 Vineyard" terrain="Vineyard" level="2"/>
+    <terrain name="Lv 3 Vineyard" terrain="Vineyard" level="3"/>
+    <terrain name="Lv 4 Vineyard" terrain="Vineyard" level="4"/>
+    <terrain name="Lv 5 Vineyard" terrain="Vineyard" level="5"/>
+    <terrain name="Lv 6 Vineyard" terrain="Vineyard" level="6"/>
+    <terrain name="no Lv Crags" terrain="Crags"/>
+    <terrain name="Lv -2 Crags" terrain="Crags" level="-2"/>
+    <terrain name="Lv -1 Crags" terrain="Crags" level="-1"/>
+    <terrain name="Lv 0 Crags" terrain="Crags" level="0"/>
+    <terrain name="Lv 1 Crags" terrain="Crags" level="1"/>
+    <terrain name="Lv 2 Crags" terrain="Crags" level="2"/>
+    <terrain name="Lv 3 Crags" terrain="Crags" level="3"/>
+    <terrain name="Lv 4 Crags" terrain="Crags" level="4"/>
+    <terrain name="Lv 5 Crags" terrain="Crags" level="5"/>
+    <terrain name="Lv 6 Crags" terrain="Crags" level="6"/>
+    <terrain name="no Lv orchard" terrain="Orchard"/>
+    <terrain name="Lv -2 orchard" terrain="Orchard" level="-2"/>
+    <terrain name="Lv -1 orchard" terrain="Orchard" level="-1"/>
+    <terrain name="Lv 0 orchard" terrain="Orchard" level="0"/>
+    <terrain name="Lv 1 orchard" terrain="Orchard" level="1"/>
+    <terrain name="Lv 2 orchard" terrain="Orchard" level="2"/>
+    <terrain name="Lv 3 orchard" terrain="Orchard" level="3"/>
+    <terrain name="Lv 4 orchard" terrain="Orchard" level="4"/>
+    <terrain name="Lv 5 orchard" terrain="Orchard" level="5"/>
+    <terrain name="Lv 6 orchard" terrain="Orchard" level="6"/>
+    <terrain name="no Lv oos orchard" terrain="Orchard, Out of Season"/>
+    <terrain name="Lv -2 oos orchard" terrain="Orchard, Out of Season" level="-2"/>
+    <terrain name="Lv -1 oos orchard" terrain="Orchard, Out of Season" level="-1"/>
+    <terrain name="Lv 0 oos orchard" terrain="Orchard, Out of Season" level="0"/>
+    <terrain name="Lv 1 oos orchard" terrain="Orchard, Out of Season" level="1"/>
+    <terrain name="Lv 2 oos orchard" terrain="Orchard, Out of Season" level="2"/>
+    <terrain name="Lv 3 oos orchard" terrain="Orchard, Out of Season" level="3"/>
+    <terrain name="Lv 4 oos orchard" terrain="Orchard, Out of Season" level="4"/>
+    <terrain name="Lv 5 oos orchard" terrain="Orchard, Out of Season" level="5"/>
+    <terrain name="Lv 6 oos orchard" terrain="Orchard, Out of Season" level="6"/>
+    <terrain name="no Lv palm trees" terrain="Palm Trees"/>
+    <terrain name="Lv -2 palm trees" terrain="Palm Trees" level="-2"/>
+    <terrain name="Lv -1 palm trees" terrain="Palm Trees" level="-1"/>
+    <terrain name="Lv 0 palm trees" terrain="Palm Trees" level="0"/>
+    <terrain name="Lv 1 palm trees" terrain="Palm Trees" level="1"/>
+    <terrain name="Lv 2 palm trees" terrain="Palm Trees" level="2"/>
+    <terrain name="Lv 3 palm trees" terrain="Palm Trees" level="3"/>
+    <terrain name="Lv 4 palm trees" terrain="Palm Trees" level="4"/>
+    <terrain name="Lv 5 palm trees" terrain="Palm Trees" level="5"/>
+    <terrain name="Lv 6 palm trees" terrain="Palm Trees" level="6"/>
+    <terrain name="no Lv vineyard" terrain="Vineyard"/>
+    <terrain name="Lv -2 vineyard" terrain="Vineyard" level="-2"/>
+    <terrain name="Lv -1 vineyard" terrain="Vineyard" level="-1"/>
+    <terrain name="Lv 0 vineyard" terrain="Vineyard" level="0"/>
+    <terrain name="Lv 1 vineyard" terrain="Vineyard" level="1"/>
+    <terrain name="Lv 2 vineyard" terrain="Vineyard" level="2"/>
+    <terrain name="Lv 3 vineyard" terrain="Vineyard" level="3"/>
+    <terrain name="Lv 4 vineyard" terrain="Vineyard" level="4"/>
+    <terrain name="Lv 5 vineyard" terrain="Vineyard" level="5"/>
+    <terrain name="Lv 6 vineyard" terrain="Vineyard" level="6"/>
+    <terrain name="no Lv crags" terrain="Crags"/>
+    <terrain name="Lv -2 crags" terrain="Crags" level="-2"/>
+    <terrain name="Lv -1 crags" terrain="Crags" level="-1"/>
+    <terrain name="Lv 0 crags" terrain="Crags" level="0"/>
+    <terrain name="Lv 1 crags" terrain="Crags" level="1"/>
+    <terrain name="Lv 2 crags" terrain="Crags" level="2"/>
+    <terrain name="Lv 3 crags" terrain="Crags" level="3"/>
+    <terrain name="Lv 4 crags" terrain="Crags" level="4"/>
+    <terrain name="Lv 5 crags" terrain="Crags" level="5"/>
+    <terrain name="Lv 6 crags" terrain="Crags" level="6"/>
+    <terrain name="no Lv OG" terrain="Open Ground"/>
+    <terrain name="Lv -2 OG" terrain="Open Ground" level="-2"/>
+    <terrain name="Lv -1 OG" terrain="Open Ground" level="-1"/>
+    <terrain name="Lv 0 OG" terrain="Open Ground" level="0"/>
+    <terrain name="Lv 1 OG" terrain="Open Ground" level="1"/>
+    <terrain name="Lv 2 OG" terrain="Open Ground" level="2"/>
+    <terrain name="Lv 3 OG" terrain="Open Ground" level="3"/>
+    <terrain name="Lv 4 OG" terrain="Open Ground" level="4"/>
+    <terrain name="Lv 5 OG" terrain="Open Ground" level="5"/>
+    <terrain name="Lv 6 OG" terrain="Open Ground" level="6"/>
+    <terrain name="no Lv og" terrain="Open Ground"/>
+    <terrain name="Lv -2 og" terrain="Open Ground" level="-2"/>
+    <terrain name="Lv -1 og" terrain="Open Ground" level="-1"/>
+    <terrain name="Lv 0 og" terrain="Open Ground" level="0"/>
+    <terrain name="Lv 1 og" terrain="Open Ground" level="1"/>
+    <terrain name="Lv 2 og" terrain="Open Ground" level="2"/>
+    <terrain name="Lv 3 og" terrain="Open Ground" level="3"/>
+    <terrain name="Lv 4 og" terrain="Open Ground" level="4"/>
+    <terrain name="Lv 5 og" terrain="Open Ground" level="5"/>
+    <terrain name="Lv 6 og" terrain="Open Ground" level="6"/>
+    <terrain name="no Lv OG DTO" terrain="Open Ground"/>
+    <terrain name="Lv -2 OG DTO" terrain="Open Ground" level="-2"/>
+    <terrain name="Lv -1 OG DTO" terrain="Open Ground" level="-1"/>
+    <terrain name="Lv 0 OG DTO" terrain="Open Ground" level="0"/>
+    <terrain name="Lv 1 OG DTO" terrain="Open Ground" level="1"/>
+    <terrain name="Lv 2 OG DTO" terrain="Open Ground" level="2"/>
+    <terrain name="Lv 3 OG DTO" terrain="Open Ground" level="3"/>
+    <terrain name="Lv 4 OG DTO" terrain="Open Ground" level="4"/>
+    <terrain name="Lv 5 OG DTO" terrain="Open Ground" level="5"/>
+    <terrain name="Lv 6 OG DTO" terrain="Open Ground" level="6"/>
+    <terrain name="no Lv og dto" terrain="Open Ground"/>
+    <terrain name="Lv -2 og dto" terrain="Open Ground" level="-2"/>
+    <terrain name="Lv -1 og dto" terrain="Open Ground" level="-1"/>
+    <terrain name="Lv 0 og dto" terrain="Open Ground" level="0"/>
+    <terrain name="Lv 1 og dto" terrain="Open Ground" level="1"/>
+    <terrain name="Lv 2 og dto" terrain="Open Ground" level="2"/>
+    <terrain name="Lv 3 og dto" terrain="Open Ground" level="3"/>
+    <terrain name="Lv 4 og dto" terrain="Open Ground" level="4"/>
+    <terrain name="Lv 5 og dto" terrain="Open Ground" level="5"/>
+    <terrain name="Lv 6 og dto" terrain="Open Ground" level="6"/>
+    <terrain name="no Lv OG Snow" terrain="Open Ground"/>
+    <terrain name="Lv -2 OG Snow" terrain="Open Ground" level="-2"/>
+    <terrain name="Lv -1 OG Snow" terrain="Open Ground" level="-1"/>
+    <terrain name="Lv 0 OG Snow" terrain="Open Ground" level="0"/>
+    <terrain name="Lv 1 OG Snow" terrain="Open Ground" level="1"/>
+    <terrain name="Lv 2 OG Snow" terrain="Open Ground" level="2"/>
+    <terrain name="Lv 3 OG Snow" terrain="Open Ground" level="3"/>
+    <terrain name="Lv 4 OG Snow" terrain="Open Ground" level="4"/>
+    <terrain name="Lv 5 OG Snow" terrain="Open Ground" level="5"/>
+    <terrain name="Lv 6 OG Snow" terrain="Open Ground" level="6"/>
+    <terrain name="no Lv og snow" terrain="Open Ground"/>
+    <terrain name="Lv -2 og snow" terrain="Open Ground" level="-2"/>
+    <terrain name="Lv -1 og snow" terrain="Open Ground" level="-1"/>
+    <terrain name="Lv 0 og snow" terrain="Open Ground" level="0"/>
+    <terrain name="Lv 1 og snow" terrain="Open Ground" level="1"/>
+    <terrain name="Lv 2 og snow" terrain="Open Ground" level="2"/>
+    <terrain name="Lv 3 og snow" terrain="Open Ground" level="3"/>
+    <terrain name="Lv 4 og snow" terrain="Open Ground" level="4"/>
+    <terrain name="Lv 5 og snow" terrain="Open Ground" level="5"/>
+    <terrain name="Lv 6 og snow" terrain="Open Ground" level="6"/>
+    <terrain name="Prepared Fire Zone - Open" terrain="Open Ground"/>
+    <terrain name="Prepared Fire Zone - Vineyard" terrain="Vineyard"/>
     <hexside name="Drift: 1 ca1" terrain="Hedge" ca="1"/>
     <hexside name="Drift: 2 ca2" terrain="Hedge" ca="2"/>
     <hexside name="Drift: 3 ca3" terrain="Hedge" ca="3"/>
     <hexside name="Drift: 4 ca4" terrain="Hedge" ca="4"/>
     <hexside name="Drift: 5 ca5" terrain="Hedge" ca="5"/>
     <hexside name="Drift: 6 ca6" terrain="Hedge" ca="6"/>
+
+    <terrain name="Stone Rubble RB" terrain="Stone Rubble"/>
+    <terrain name="Wood Rubble RB" terrain="Wooden Rubble"/>
 
     <wreck name="Wreck"/>
     <wreck name="Burnt Out Wreck"/>

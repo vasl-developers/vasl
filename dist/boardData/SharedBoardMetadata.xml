@@ -2764,9 +2764,11 @@
 		<terrainCounter name="Drift: 4 ca4" terrain="Hedge"/>
 		<terrainCounter name="Drift: 5 ca5" terrain="Hedge"/>
 		<terrainCounter name="Drift: 6 ca6" terrain="Hedge"/>
+		<terrainCounter name="PFZ open ground" terrain="Open Ground"/>
+		<terrainCounter name="PFZ vineyard" terrain="Vineyard"/>
 
 		<wreckCounter name="Wreck"/>
-                <wreckCounter name="Burnt Out Wreck"/>
+        <wreckCounter name="Burnt Out Wreck"/>
 
                 <OBACounter name="Red OBA FFE:1"/>
                 <OBACounter name="Red OBA FFE:2"/>
