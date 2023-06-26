@@ -65,8 +65,6 @@ import java.util.LinkedList;
 import java.awt.image.BufferedImage;
 import java.awt.Image;
 import java.awt.Graphics2D;
-import java.util.Locale;
-import java.util.SortedSet;
 
 public class VASLThread extends LOS_Thread implements KeyListener, GameComponent {
 
@@ -165,12 +163,13 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                         // ignore terrain transformation overlays which cover most/all of the board
                         // treat BSO and SSR overlays as regular overlays; won't disable los for entire board
                         // ignore overlays where los checking is enabled; this will require a long list of 'contains' checks until all overlays are handled
+                        // when adding items here also add to ASLMap.getoverlayterraintype
                         if (!o.getName().equals("")){
                             String finalfilename = StringUtils.substringAfter(o.archiveName(), "ovr").toLowerCase();
                             if (o.hex1.equals("") || finalfilename.equals("og") || finalfilename.equals("b") || finalfilename.equals("p") ||
                                     finalfilename.equals("m") || finalfilename.equals("wd") || finalfilename.equals("g") || finalfilename.equals("o") ||
                                     finalfilename.equals("hi") || finalfilename.equals("x") || finalfilename.equals("hd") || finalfilename.equals("ow") ||
-                                    finalfilename.equals("sh") ||
+                                    finalfilename.equals("sh") || finalfilename.equals("st") ||
                                     finalfilename.equals("dx") || o.getName().contains("BSO") || o.getName().contains("SSO")) {
                                 boolean reg = true;
                             } else {

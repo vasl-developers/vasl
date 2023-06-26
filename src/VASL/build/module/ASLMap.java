@@ -803,6 +803,9 @@ public class ASLMap extends Map {
                                     }
                                 }
                                 elevint = getElevationfromColor(board, color);
+                                if (terr.isDepression()){
+                                    elevint = newlosdata.getGridElevation(ovrx, ovry) -1;
+                                }
                                 //add Hex to collections of inherent hexes and building hexes on the overlay
                                 addHextoInhandBldgMaps(terr, newlosdata, ovrx, ovry, inhHexes, bdgHexes);
                                 //set terrain type for center location or hexside location (if hexside terrain)
@@ -967,6 +970,9 @@ public class ASLMap extends Map {
                                     }
                                 }
                                 elevint = getElevationfromColor(board, color);
+                                if (terr.isDepression()){
+                                    elevint = newlosdata.getGridElevation(ovrx, ovry) -1;
+                                }
                                 //add Hex to collections of inherent hexes and building hexes on the overlay
                                 addHextoInhandBldgMaps(terr, newlosdata, ovrx, ovry, inhHexes, bdgHexes);
                                 //set terrain type for center location or hexside location (if hexside terrain)
@@ -1274,6 +1280,7 @@ public class ASLMap extends Map {
     }
 
     // if overlayname returns "" from this method then los checking won't work with the overlay
+    // when adding items here also add them to VASLThread.initializeMap
     private String getoverlayterraintype(Overlay o){
         String overlayname = o.getName();
         if (overlayname.contains("b")){
@@ -1311,6 +1318,9 @@ public class ASLMap extends Map {
         }
         else if (overlayname.contains("hi")) {
             return "Hill";
+        }
+        else if (overlayname.contains("st")) {
+            return "Stream";
         }
         else {
             return "";
