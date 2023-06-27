@@ -789,11 +789,11 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                     g.setColor(Color.black);
                     if (shiftSourceText) {
                         //lastRangeRect.add(drawText(g, targetLOSPoint.x - 20, targetLOSPoint.y - shift, resultsString));
-                        lastRangeRect.add(drawText(g, targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), targetLOSPoint.y + targetLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) - shift, resultsString));
+                        lastRangeRect.add(drawText(g, targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), targetLOSPoint.y + targetLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) - (int)(shift * os_scale), resultsString));
                     }
                     else {
                         //lastRangeRect.add(drawText(g, targetLOSPoint.x - 20, targetLOSPoint.y + shift * 2 - 2, resultsString));
-                        lastRangeRect.add(drawText(g, targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), targetLOSPoint.y + targetLOSLabelYoffset(sourceLOSPoint, targetLOSPoint)+ shift * 2 - 2, resultsString));
+                        lastRangeRect.add(drawText(g, targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), targetLOSPoint.y + targetLOSLabelYoffset(sourceLOSPoint, targetLOSPoint)+ (int)((shift * 2 - 2) * os_scale), resultsString));
                     }
 
                 }
