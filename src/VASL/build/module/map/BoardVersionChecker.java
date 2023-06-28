@@ -21,6 +21,7 @@ package VASL.build.module.map;
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASL.build.module.map.boardPicker.Overlay;
 import VASL.counters.Concealable;
+import VASSAL.Info;
 import VASSAL.build.AbstractBuildable;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
@@ -45,7 +46,12 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
+
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 /**
  * Copyright (c) 2003 by Rodney Kinney.  All rights reserved.
@@ -295,10 +301,33 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
                 GameModule.getGameModule().getPrefs().getStoredValue(ASLBoardPicker.BOARD_DIR) +
                         System.getProperty("file.separator", "\\") +
                         "bd" + boardName;
+        String testBoardName =
+                GameModule.getGameModule().getPrefs().getStoredValue(ASLBoardPicker.BOARD_DIR) +
+                        System.getProperty("file.separator", "\\") +
+                        "bdtest";
         String url = boardRepositoryURL + "/bd" + boardName;
-
-        return getRepositoryFile(url, qualifiedBoardName);
-
+        //return getRepositoryFile(url, qualifiedBoardName);  // previous code
+        // code changes to improve auto-sync workflow -if bdtest is valid, copy over existing boardname file; whether valid or not, delete temp file bdtest
+        final Path testpath =  Paths.get(testBoardName);
+        if(Boolean.TRUE.equals(getRepositoryFile(url, testBoardName))){
+            final Path qualifiedpath = Paths.get(qualifiedBoardName);
+            try {
+                Files.copy(testpath, qualifiedpath, REPLACE_EXISTING);
+                Files.delete(testpath);
+            }  catch (IOException e) {
+                // Fail silently on any error
+                return false;
+            }
+            return true;
+        } else {
+            try {
+                Files.delete(testpath);
+            }  catch (IOException e) {
+                GameModule.getGameModule().warn("bdtest deletion failed; remove manually");
+                return false;
+            }
+            return false;
+        }
     }
 
     /**
@@ -315,6 +344,7 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
         String url = overlayRepositoryURL + "/" + overlayName;
 
         return getRepositoryFile(url, qualifiedOverlayName);
+
     }
 
     /**
@@ -336,9 +366,10 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
             URLConnection conn = website.openConnection();
             conn.setUseCaches(false);
             try (FileOutputStream outFile = new FileOutputStream(fileName);
-                 InputStream in = conn.getInputStream()) {
+                InputStream in = conn.getInputStream()) {
                 ReadableByteChannel rbc = Channels.newChannel(in);
                 outFile.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+                if (outFile.getChannel().size()==0){return false;}  // new test
             }
             return true;
 
