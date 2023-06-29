@@ -24,7 +24,7 @@
 <boardsMetadata>
 
 	<coreBoards>
-		<boarddata name="00" version="6.2" versionDate="Jan 2023" description="" />
+		<boarddata name="00" version="6.3" versionDate="Jun 2023" description="" />
 		<boarddata name="01" version="6.7" versionDate="Jan 2023" description="" />
 		<boarddata name="02" version="7.0" versionDate="Jan 2023" description="" />
 		<boarddata name="03" version="6.7" versionDate="Jan 2023" description="" />
