@@ -18,26 +18,23 @@
  */
 package VASL.build.module.map;
 
-import VASL.build.module.map.boardPicker.ASLBoard;
-import VASL.build.module.map.boardPicker.Overlay;
-import VASL.counters.Concealable;
-import VASSAL.Info;
+
 import VASSAL.build.AbstractBuildable;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.GameComponent;
 import VASSAL.build.module.Map;
 import VASSAL.build.module.ServerConnection;
-import VASSAL.build.module.map.boardPicker.Board;
+
 import VASSAL.command.Command;
 import VASSAL.configure.StringConfigurer;
-import VASSAL.tools.PropertiesEncoder;
-import org.apache.commons.io.IOUtils;
+
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.*;
@@ -100,6 +97,8 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
     private static final String otherboarddescAttr = "description";
     private static LinkedHashMap<String, BoardVersions> boardversions = new LinkedHashMap<String, BoardVersions>(500);
     private static LinkedHashMap<String, OverlayVersions> overlayversions = new LinkedHashMap<String, OverlayVersions>(500);
+    private static final Logger logger =
+            LoggerFactory.getLogger(ASLBoardPicker.class);
 
     public String[] getAttributeNames() {
         return new String[]{BOARD_VERSION_URL, OVERLAY_VERSION_URL, BOARD_PAGE_URL, BOARD_REPOSITORY_URL, OVERLAY_REPOSITORY_URL};
@@ -157,6 +156,9 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
 
     public void setup(boolean gameStarting) {
 
+    }
+    private static void logException(Throwable error) {
+        logger.info("", error);
     }
 
     public void propertyChange(PropertyChangeEvent evt)  {
@@ -312,10 +314,9 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
         if(Boolean.TRUE.equals(getRepositoryFile(url, testBoardName))){
             final Path qualifiedpath = Paths.get(qualifiedBoardName);
             try {
-                Files.copy(testpath, qualifiedpath, REPLACE_EXISTING);
-                Files.delete(testpath);
+                Files.move(testpath, qualifiedpath, REPLACE_EXISTING);
             }  catch (IOException e) {
-                // Fail silently on any error
+                logException(e);
                 return false;
             }
             return true;
@@ -323,6 +324,7 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
             try {
                 Files.delete(testpath);
             }  catch (IOException e) {
+                logException(e);
                 GameModule.getGameModule().warn("bdtest deletion failed; remove manually");
                 return false;
             }
@@ -369,7 +371,9 @@ public class BoardVersionChecker extends AbstractBuildable implements GameCompon
                 InputStream in = conn.getInputStream()) {
                 ReadableByteChannel rbc = Channels.newChannel(in);
                 outFile.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-                if (outFile.getChannel().size()==0){return false;}  // new test
+                //if (outFile.getChannel().size()==0){return false;}  // new test
+                final Path filepath =  Paths.get(fileName);
+                if (Files.size(filepath)==0){return false;}
             }
             return true;
 
