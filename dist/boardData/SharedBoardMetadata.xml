@@ -1053,6 +1053,7 @@
 		<color name="WadiBrown3" red="127" green="91" blue="33" terrain="Wadi" elevation="UNKNOWN" />
 		<color name="WadiBlack" red="83" green="51" blue="37" terrain="Wadi" elevation="UNKNOWN" />
 		<color name="WadiCliff" red="65" green="54" blue="28" terrain="Cliff" elevation="UNKNOWN" />
+		<color name="DTO_BrushL_1" red="161" green="160" blue="56" terrain="Brush" elevation="0" />
 		<color name="DTO_BrushL0" red="161" green="161" blue="56" terrain="Brush" elevation="0" />
 		<color name="DTO_BrushL1" red="161" green="162" blue="56" terrain="Brush" elevation="1" />
 		<color name="DTO_BrushL2" red="161" green="163" blue="56" terrain="Brush" elevation="2" />
@@ -1156,7 +1157,9 @@
 		<color name="Cactus Patch" red="230" green="192" blue="82" terrain="Cactus Patch" elevation="0" />
 		<color name="Cactus Patch1" red="194" green="165" blue="68" terrain="Cactus Patch" elevation="0" />
 		<color name="Cactus Patch2" red="137" green="83" blue="35" terrain="Cactus Patch" elevation="0" />
-		<color name="Cactus Patch2" red="149" green="171" blue="61" terrain="Cactus Patch" elevation="0" />
+		<color name="Cactus Patch3" red="149" green="171" blue="61" terrain="Cactus Patch" elevation="0" />
+		<color name="AD_Debris" red="117" green="98" blue="61" terrain="Debris" elevation="0" />
+		<color name="AD_Stone Rubble" red="100" green="100" blue="100" terrain="Stone Rubble" elevation="0" />
 	</colors>
 
 	<terrainTypes>
