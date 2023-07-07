@@ -434,7 +434,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
 
         String unReversedBoardName;
         if (commonName.startsWith("r")) {
-            if (commonName.equalsIgnoreCase("r")) {
+            if (commonName.equalsIgnoreCase("r") || commonName.equalsIgnoreCase("rdx")) {
                 // board r or R, this is ok
                 unReversedBoardName = commonName;
             } else {
@@ -475,7 +475,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
 
             // normalize the base name by stripping r from reversed board
             String unReversedBoardName = baseName;
-            if (baseName.startsWith("r") && !baseName.equalsIgnoreCase("r")) {
+            if (baseName.startsWith("r") && (!baseName.equalsIgnoreCase("r") && !baseName.equalsIgnoreCase("rdx"))) {
                 // board rX, this is really X; r or R are ok
                 // Red Barricades (RB) and Ruweisat Ridge (RR) should not have gotten here
                 unReversedBoardName = baseName.substring(1);
@@ -714,7 +714,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             String baseName = st2.nextToken();
             String unReversedBoardName;
             if (baseName.startsWith("r")) {
-                if (baseName.equalsIgnoreCase("r")) {
+                if (baseName.equalsIgnoreCase("r") || baseName.equalsIgnoreCase("rdx")) {
                     // board r or R, this is ok
                     unReversedBoardName = baseName;
                     b.setReversed(false);
