@@ -641,7 +641,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
         final String moduleVersion = GameModule.getGameModule().getGameVersion();
         String filename = GameModule.getGameModule().getGameFile();
         String filepath = GameModule.getGameModule().getGameState().getSavedGameDirectoryPreference().getValueString();
-        File file = new File(filepath+"\\"+filename);
+        File file = new File(filepath+File.separator+filename);
         if(file.getName()!="") {
             final AbstractMetaData metaData = MetaDataFactory.buildMetaData(file);
             if (!(metaData instanceof SaveMetaData)) {

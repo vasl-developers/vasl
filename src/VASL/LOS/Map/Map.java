@@ -376,10 +376,10 @@ public class Map  {
     public Terrain getGridTerrain(int row, int col) {
 
         if (onMap(row, col)) {
-            int gridtest = terrainGrid[row][col];
-            Terrain gridtest2 = terrainList[gridtest];
-            return gridtest2;
-            //return terrainList[(int) terrainGrid[row][col]];
+            //int gridtest = terrainGrid[row][col];
+            //Terrain gridtest2 = terrainList[gridtest];
+            //return gridtest2;
+            return terrainList[(int) terrainGrid[row][col]];
         }
         return null;
     }
@@ -1147,6 +1147,7 @@ public class Map  {
         public String reason = "";
 
         public Terrain currentTerrain = null;
+        public boolean currentTerrainfromCounter=false;
         public int currentTerrainHgt = 0;
         public int groundLevel = -9999;
 
@@ -1729,6 +1730,7 @@ public class Map  {
                 status.tempHex != status.sourceHex && status.tempHex != status.targetHex) {
             if (!status.vaslGameInterface.getTerrain(status.tempHex).isEntrenchmentTerrain()) {
                 status.currentTerrain = status.vaslGameInterface.getTerrain(status.tempHex);
+                status.currentTerrainfromCounter = true;
             }
         }
         try {
@@ -2906,7 +2908,7 @@ public class Map  {
                     // handle special cases; if obstacle is roofless (and not outside factory wall ) then not blocked
                     if(!status.currentHex.getCenterLocation().getTerrain().isRoofless() || (status.currentTerrain.isOutsideFactoryWall())) {
                         //  another special case, ignore inherent terrain that is not the same as center location
-                        if (!status.currentTerrain.isInherentTerrain() || (status.currentHex.getCenterLocation().getTerrain().equals(status.currentTerrain))) {
+                        if (!status.currentTerrain.isInherentTerrain() || (status.currentHex.getCenterLocation().getTerrain().equals(status.currentTerrain)) || (status.currentTerrainfromCounter)) {
                             // now block if LOS is not along hexside or if obstacle is not a building
                             if ((status.LOSis60Degree || status.LOSisHorizontal) && status.currentTerrain.isBuilding()) {
                                 //need one of the adjacent hexes to be roofless; if no adjacent hex (range is 2 from target) or if obstacle is outside factory wall then blind hex; if range is 1 from target and los is to vertex then blocked
