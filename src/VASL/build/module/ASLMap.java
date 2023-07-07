@@ -449,7 +449,7 @@ public class ASLMap extends Map {
         while (overlays.hasMoreElements()) {
             Overlay o = (Overlay) overlays.nextElement();
             if(o.getName().equals("")){continue;} // prevents error when using underlays (which are added as overlays)
-            if(o.getName().contains(board.getName()) && (!o.getName().contains("BSO_LFT3") && !o.getName().contains("SSO"))){continue;} // prevents error when using BSO which are handled elsewhere
+            if(o.getName().contains("BSO") && (!o.getName().contains("BSO_LFT3"))){continue;} // prevents error when using BSO which are handled elsewhere
             // BSO_LFT3 may be a special case; treat it as so for now; if find others then need to develop a proper solution
             Rectangle ovrRec = o.bounds();
             // get the image as a buffered image
@@ -1228,10 +1228,11 @@ public class ASLMap extends Map {
             }
             if (newlosdata.onMap(ovrx, ovry - a)) {
                 b = bi.getRGB(x, y - a);
-                if ((c >> 24) != 0x00) { // not a transparent pixel
+                if ((b >> 24) != 0x00) { // not a transparent pixel
                     return false;
                 }
             }
+            return true; //transparent pixel
         } else if (y==0 || y == bi.getHeight()-1){
             if (newlosdata.onMap(ovrx + a, ovry)) {
                 c = bi.getRGB(x + a, y);
@@ -1241,20 +1242,16 @@ public class ASLMap extends Map {
             }
             if (newlosdata.onMap(ovrx -a, ovry)) {
                 b = bi.getRGB(x-a, y);
-                if ((c >> 24) != 0x00) { // not a transparent pixel
+                if ((b >> 24) != 0x00) { // not a transparent pixel
                     return false;
                 }
             }
+            return true; //transparent pixel
         }
-
-        return true;
+        return false;  // not on border
     }
     private boolean pointIsOnOverlay(BufferedImage bi, int usex, int usey){
-        if (usex >= 0 && usex < bi.getWidth() && usey >= 0 && usey < bi.getHeight()){
-            return true;
-        }else {
-            return false;
-        }
+        return usex >= 0 && usex < bi.getWidth() && usey >= 0 && usey < bi.getHeight();
     }
     //add Hex to collections of inherent hexes and building hexes on the overlay
     private void addHextoInhandBldgMaps(Terrain terr, VASL.LOS.Map.Map newlosdata, double ovrx, double ovry, HashMap<VASL.LOS.Map.Hex, VASL.LOS.Map.Terrain>  inhHexes, HashMap<VASL.LOS.Map.Hex, VASL.LOS.Map.Terrain> bdgHexes) {
