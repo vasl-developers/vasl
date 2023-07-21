@@ -893,10 +893,13 @@
 		<color name="WallBrownWinter" red="177" green="150" blue="121" terrain="Wall" elevation="UNKNOWN" />
 		<!-- Water  -->
 		<color name="Water" red="135" green="190" blue="220" terrain="Water" elevation="-1" />
+		<color name="Water1" red="171" green="231" blue="255" terrain="Water" elevation="-1" />
+		<color name="Surf" red="253" green="255" blue="255" terrain="Water" elevation="-1" />
 		<color name="WaterWhite" red="214" green="230" blue="230" terrain="Water" elevation="-1" />
 		<color name="Ice" red="200" green="230" blue="230" terrain="Water" elevation="-1" />
 		<color name="PondWater" red="135" green="190" blue="221" terrain="Water" elevation="-1" />
 		<color name="PondWhite" red="215" green="230" blue="230" terrain="Water" elevation="-1" />
+
 		<!-- Wooden Building  -->
 		<color name="WoodBldg1" red="15" green="10" blue="5" terrain="Wooden Building" elevation="UNKNOWN" />
 		<color name="WoodBldg2" red="30" green="21" blue="10" terrain="Wooden Building" elevation="UNKNOWN" />
@@ -1020,6 +1023,7 @@
 		<color name="Scrub5L_1" red="172" green="153" blue="117" terrain="Scrub" elevation="-1" />
 		<color name="Scrub6" red="142" green="142" blue="102" terrain="Scrub" elevation="UNKNOWN" />
 		<color name="Scrub6L_1" red="142" green="142" blue="103" terrain="Scrub" elevation="-1" />
+		<color name="Scrub6L_1" red="142" green="142" blue="104" terrain="Scrub" elevation="-1" />
 		<color name="Scrub7" red="173" green="171" blue="165" terrain="Scrub" elevation="UNKNOWN" />
 		<color name="Scrub7L_1" red="173" green="171" blue="164" terrain="Scrub" elevation="-1" />
 		<color name="Scrub8" red="164" green="159" blue="112" terrain="Scrub" elevation="UNKNOWN" />
@@ -1038,6 +1042,11 @@
 		<color name="Hammada3" red="148" green="113" blue="38" terrain="Hammada" elevation="UNKNOWN" />
 		<color name="Hammada4" red="123" green="92" blue="27" terrain="Hammada" elevation="UNKNOWN" />
 		<color name="Hammada5" red="108" green="75" blue="16" terrain="Hammada" elevation="UNKNOWN" />
+		<color name="Hammada1Winter" red="136" green="139" blue="135" terrain="Hammada" elevation="UNKNOWN" />
+		<color name="Hammada2Winter" red="108" green="112" blue="106" terrain="Hammada" elevation="UNKNOWN" />
+		<color name="Hammada3Winter" red="170" green="171" blue="169" terrain="Hammada" elevation="UNKNOWN" />
+		<color name="Hammada4Winter" red="200" green="201" blue="199" terrain="Hammada" elevation="UNKNOWN" />
+		<color name="Hammada5Winter" red="80" green="83" blue="77" terrain="Hammada" elevation="UNKNOWN" />
 		<color name="Scrub_1" red="189" green="165" blue="51" terrain="Scrub" elevation="UNKNOWN" />
 		<color name="Scrub_2" red="168" green="141" blue="34" terrain="Scrub" elevation="UNKNOWN" />
 		<color name="Scrub_3" red="148" green="126" blue="37" terrain="Scrub" elevation="UNKNOWN" />
@@ -1079,6 +1088,9 @@
 		<color name="DTO_DirtRdL4" red="229" green="201" blue="130" terrain="Dirt Road" elevation="4" />
 		<color name="DTO_DirtRdL5" red="229" green="201" blue="131" terrain="Dirt Road" elevation="5" />
 		<color name="DTO_DirtRdL6" red="229" green="201" blue="132" terrain="Dirt Road" elevation="6" />
+		<color name="DTO_DirtRdL0Winter1" red="235" green="231" blue="205" terrain="Dirt Road" elevation="0" />
+		<color name="DTO_DirtRdL0Winter2" red="233" green="230" blue="204" terrain="Dirt Road" elevation="0" />
+		<color name="DTO_DirtRdL_1Winter" red="228" green="228" blue="202" terrain="Dirt Road" elevation="-1" />
 		<color name="DTO_DirtRdBridge" red="229" green="200" blue="126" terrain="Dirt Road" elevation="UNKNOWN" />
 		<color name="DTO_GraveyardGreen" red="130" green="128" blue="58" terrain="Graveyard" elevation="UNKNOWN" />
 		<color name="DTO_GraveyardShadow" red="102" green="98" blue="40" terrain="Graveyard" elevation="UNKNOWN" />
@@ -1091,6 +1103,12 @@
 		<color name="DTO_PavedRdL5" red="193" green="198" blue="193" terrain="Paved Road" elevation="5" />
 		<color name="DTO_PavedRdL6" red="193" green="199" blue="193" terrain="Paved Road" elevation="6" />
 		<color name="DTO_PavedRdBridge" red="193" green="193" blue="192" terrain="Paved Road" elevation="UNKNOWN" />
+		<color name="DTO_Level_1_1" red="204" green="174" blue="32" terrain="Open Ground" elevation="-1" />
+		<color name="DTO_Level_1_2" red="183" green="151" blue="25" terrain="Open Ground" elevation="-1" />
+		<color name="DTO_Level_1_3" red="183" green="151" blue="41" terrain="Open Ground" elevation="-1" />
+		<color name="DTO_Level_1_4" red="190" green="154" blue="10" terrain="Open Ground" elevation="-1" />
+		<color name="DTO_Level_1_5" red="166" green="133" blue="20" terrain="Open Ground" elevation="-1" />
+		<color name="DTO_Level_1_6" red="201" green="171" blue="65" terrain="Open Ground" elevation="-1" />
 		<color name="DTO_Level0_1" red="233" green="197" blue="40" terrain="Open Ground" elevation="0" />
 		<color name="DTO_Level0_2" red="232" green="188" blue="0" terrain="Open Ground" elevation="0" />
 		<color name="DTO_Level0_3" red="222" green="181" blue="19" terrain="Open Ground" elevation="0" />
@@ -1101,6 +1119,7 @@
 		<color name="DTO_Level2" red="169" green="131" blue="49" terrain="Open Ground" elevation="2" />
 		<color name="DTO_Level3" red="145" green="107" blue="27" terrain="Open Ground" elevation="3" />
 		<color name="DTO_Level4" red="114" green="83" blue="42" terrain="Open Ground" elevation="4" />
+		<color name="DTO_OrchL_1" red="118" green="113" blue="36" terrain="Orchard" elevation="-1" />
 		<color name="DTO_OrchL0" red="118" green="114" blue="36" terrain="Orchard" elevation="0" />
 		<color name="DTO_OrchL1" red="118" green="115" blue="36" terrain="Orchard" elevation="1" />
 		<color name="DTO_OrchL2" red="118" green="116" blue="36" terrain="Orchard" elevation="2" />
@@ -1160,6 +1179,13 @@
 		<color name="Cactus Patch3" red="149" green="171" blue="61" terrain="Cactus Patch" elevation="0" />
 		<color name="AD_Debris" red="117" green="98" blue="61" terrain="Debris" elevation="0" />
 		<color name="AD_Stone Rubble" red="100" green="100" blue="100" terrain="Stone Rubble" elevation="0" />
+		<color name="DTO_Shellhole1" red="177" green="135" blue="57" terrain="Shellholes" elevation="-1" />
+		<color name="DTO_Shellhole2" red="97" green="67" blue="27" terrain="Shellholes" elevation="-1" />
+		<color name="DTO_Shellhole3" red="48" green="22" blue="8" terrain="Shellholes" elevation="-1" />
+		<color name="AD_CragGreyWinter" red="200" green="200" blue="194" terrain="Crags" elevation="UNKNOWN" />
+		<color name="AD_CragBlackWinter" red="113" green="113" blue="111" terrain="Crags" elevation="UNKNOWN" />
+		<color name="AD_WinterBlackHexNumbers" red="64" green="64" blue="64" terrain="UNKNOWN" elevation="UNKNOWN" />
+		<color name="AD_Level_1Winter" red="212" green="224" blue="194" terrain="Open Ground" elevation="-1" />
 	</colors>
 
 	<terrainTypes>

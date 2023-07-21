@@ -40,8 +40,8 @@
 		<extensiondata name="Tray" version="1.0" versionDate="" description="Counter Tray" />
 		<extensiondata name="PTO Terrain Chart" version="1.0" versionDate="" description="PTO Terrain Chart" />
 		<extensiondata name="Hideable Control Markers" version="1.9" versionDate="" description="Hideable Control and Perimeter Markers" />
-		<extensiondata name="Scenario Aid Card" version="2.0" versionDate="" description="Scenario Aid Card" />
-		<extensiondata name="SASL Campaign Roster" version="2.0" versionDate="Apr 2022" description="SASL Campaign Roster" />
+		<extensiondata name="Scenario Aid Card" version="2.1" versionDate="Jul 2023" description="Scenario Aid Card" />
+		<extensiondata name="SASL Campaign Roster" version="2.1" versionDate="Jul 2023" description="SASL Campaign Roster" />
 		<extensiondata name="SK References" version="1.4" versionDate="Sep 2022" description="SK Charts and Player Aids" />
 
 </extensionsMetadata>

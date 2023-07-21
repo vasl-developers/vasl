@@ -62,7 +62,8 @@ public class TextInfo extends Decorator implements EditablePiece {
 
   public TextInfo(String type, GamePiece p) {
     setInner(p);
-    info = type.substring(type.indexOf(';') + 1);
+    info =  type.substring(type.indexOf(';') + 1);
+
     infoSize = null;
     zoomedInfoSize = null;
     lastZoom = 0.0;
