@@ -44,7 +44,9 @@ public class ASLGpIdChecker {
     private static final Logger logger = LoggerFactory.getLogger(ASLGameUpdater.class);
 
     public ASLGpIdChecker() {
-        this((GpIdSupport) null);
+        gpIdSupport = GameModule.getGameModule().getGpIdSupport();
+        maxId = -1;
+        //this((GpIdSupport) null);
     }
 
     public ASLGpIdChecker(GpIdSupport gpIdSupport) {
@@ -210,16 +212,24 @@ public class ASLGpIdChecker {
      *  - Update the next GpId in the module if necessary
      *  - Generate new GpId's for slots with errors.
      */
-    public void fixErrors() {
+    public boolean fixErrors() {
         if (maxId >= gpIdSupport.getNextGpId()) {
             chat(Resources.getString("GpIdChecker.next_gpid_updated", gpIdSupport.getNextGpId(), (maxId + 1)));
             gpIdSupport.setNextGpId(maxId + 1);
         }
         for (final ASLGpIdChecker.SlotElement slotElement : errorSlots) {
             final String before = slotElement.getGpId();
-            slotElement.updateGpId();
-            chat(Resources.getString("GpIdChecker.piece_gpid_updated", slotElement.toString(), before, slotElement.getGpId()));
+            if (before.equals("")) {
+                chat(slotElement.slot.getName() + " has no GpId; and cannot be updated; update source (VASL or extension) and try again");
+            } else {
+                chat(Resources.getString("GpIdChecker.piece_gpid_updated", slotElement.toString(), before, slotElement.getGpId()));
+                slotElement.updateGpId();
+            }
         }
+        for (final ASLGpIdChecker.SlotElement slotElement : errorSlots) {
+            if(slotElement.getGpId().equals("")){return false;}  //gpID error not fixed
+        }
+        return true;
     }
 
     /**

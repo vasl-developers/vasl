@@ -27,6 +27,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
@@ -118,7 +119,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
         return options.contains("DeleteNoMap"); //$NON-NLS-1$
     }
 
-    public void start() {
+    public boolean start() {
         if (hasAlreadyRun) {
             //return;
         }
@@ -127,10 +128,11 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
         Command command = new NullCommand();
         final String player = GlobalOptions.getInstance().getPlayerId();
         final Command msg = new Chatter.DisplayText(g.getChatter(), "Boards and traditional Ovelays are automatically updated to latest versions when game is opened");
-        msg.append(new Chatter.DisplayText(g.getChatter(), Resources.getString("GameRefresher.run_refresh_counters_v2", player, g.getGameVersion())));
+        //msg.append(new Chatter.DisplayText(g.getChatter(), Resources.getString("GameRefresher.run_refresh_counters_v2", player, g.getGameVersion())));
+        msg.append(new Chatter.DisplayText(g.getChatter(), player + " is updating counters with " + g.getGameVersion()));
         msg.execute();
         command = command.append(msg);
-        execute(command);
+        return execute(command);
     }
    public void log(String message) {
         // Log to chatter
@@ -256,7 +258,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
      *
      * @throws IllegalBuildException - if we get a gpIdChecker error
      */
-    public void execute(Command command) throws IllegalBuildException {
+    public boolean execute(Command command) throws IllegalBuildException {
         final List<Deck> decks = new ArrayList<>();
         options.clear();
         final Chatter chatter = theModule.getChatter();
@@ -289,11 +291,11 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
                 // If a module created before gpIDChecker was setup is run on a vassal version with gmIDChecker
                 // is run in the player, errors might still be present.
                 // Inform user that he must upgrade the module to the latest vassal version before running Refresh
-                gpIdChecker.fixErrors();
-
-                Command msg = new Chatter.DisplayText(chatter,"GameRefresher.gpid_error_message");
-                msg.execute();
-                return;
+                if(!gpIdChecker.fixErrors()) {
+                    Command msg = new Chatter.DisplayText(chatter, "Not all gpID errors fixed");
+                    msg.execute();
+                    return false;
+                }
             }
         }
 
@@ -511,7 +513,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
                     VASL.LOS.Map.Map LOSMap = theMap.getVASLMap();
                     if (LOSMap == null) {
                         legacyMode = true;
-                        return;
+                        break;
                     }
                 }
                 if (legacyMode) {
@@ -523,6 +525,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
                 }
             }
         }
+        return true;
     }
 
     public void dolosrestore(ASLMap themap){
@@ -674,13 +677,16 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
      * Execute the update
      */
     public void doupdate() {
-        start();
-
-
-        final Command command = new NullCommand();
         final Chatter chatter = theModule.getChatter();
-        final Command msg = new Chatter.DisplayText(chatter, "The game has been updated");
-        msg.execute();
+        final Command startmsg = new Chatter.DisplayText(chatter, "Updating game . . . ");
+        startmsg.execute();
+        final Command endmsg;
+        if (start()){
+            endmsg = new Chatter.DisplayText(chatter, "The game has been updated");
+        } else {
+            endmsg = new Chatter.DisplayText(chatter, "Update failed and terminated");
+        }
+        endmsg.execute();
     }
 
     private interface ASLUpdater {
@@ -1078,7 +1084,8 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
         @Override
         public void refresh(Command command) {
             boolean containsExtension = false;
-            boolean noupdateneeded = true;
+
+            LinkedList<String> updateList= new LinkedList<String>();
             Iterator extit = GameModule.getGameModule().getComponentsOf(ModuleExtension.class).iterator();
 
             while(extit.hasNext()) {
@@ -1126,21 +1133,32 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
 
                 if (doUpdate) {
                     //if update available, ask if user wants to update
-                    noupdateneeded=false;
-                    int dialogResult = JOptionPane.showConfirmDialog(null, "An update is available for Extension " + ext.getName() + ". Proceed?",
+                    updateList.add(ext.getName());
+                    //try {
+                        //GameModule.getGameModule().remove(ext);
+                        //ext.getDataArchive().close();
+                    //}  catch (IOException e) {
+                    //    boolean reg = true;
+                    //}
+                }
+            }
+            if(updateList.isEmpty()){
+                log("No updates required");
+            } else {
+                for (Object extname: updateList) {
+                    String extName = (String) extname;
+                    int dialogResult = JOptionPane.showConfirmDialog(null, "An update is available for Extension " + extName + ". Proceed?",
                             "Updating Extensions . . . ", JOptionPane.YES_NO_OPTION);
                     if (dialogResult == JOptionPane.YES_OPTION) {
                         // try to update extension if out of date
-                        GameModule.getGameModule().warn("Extension " + ext.getName() + " is out of date. Updating...");
-                        if (!ExtensionVersionChecker.updateextension(ext.getName())) {
+                        GameModule.getGameModule().warn("Extension " + extName + " is out of date. Updating...");
+                        if (!ExtensionVersionChecker.updateextension(extName)) {
                             GameModule.getGameModule().warn("Update failed");
                         } else {
                             GameModule.getGameModule().warn("Update succeeded");
                         }
                     }
                 }
-            }
-            if (noupdateneeded) {log("No updates required");
             }
         }
         protected String getVersionErrorMsg(String v) {
