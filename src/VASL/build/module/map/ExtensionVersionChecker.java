@@ -2,10 +2,9 @@ package VASL.build.module.map;
 import VASSAL.build.AbstractBuildable;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
-import VASSAL.build.module.GameComponent;
-import VASSAL.build.module.Map;
-import VASSAL.build.module.ServerConnection;
+import VASSAL.build.module.*;
 
+import VASSAL.build.module.Map;
 import VASSAL.command.Command;
 import VASSAL.configure.StringConfigurer;
 import VASSAL.tools.PropertiesEncoder;
@@ -13,6 +12,8 @@ import VASSAL.tools.PropertiesEncoder;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 import java.beans.PropertyChangeEvent;
@@ -23,7 +24,12 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
+
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class ExtensionVersionChecker extends AbstractBuildable implements GameComponent, PropertyChangeListener {
     private static String extensionsVersionURL;
@@ -33,7 +39,7 @@ public class ExtensionVersionChecker extends AbstractBuildable implements GameCo
     //private String extensionPageURL;
     private static String extensionsRepositoryURL;
 
-
+    private String localextension_dir;
     public static String EXTENSIONS_VERSION_PROPERTY_KEY = "extensionsVersions";
 
     private Map map;
@@ -41,7 +47,7 @@ public class ExtensionVersionChecker extends AbstractBuildable implements GameCo
 
     //private static final String EXTENSION_PAGE_URL = "extensionPageURL";
     private static final String EXTENSIONS_VERSIONS = EXTENSIONS_VERSION_PROPERTY_KEY;
-    private static final String EXTENSIONS_REPOSITORY_URL = "extensionRepositoryURL";
+    private static final String EXTENSIONS_REPOSITORY_URL = "extensionsRepositoryURL";
 
     private static final String extensionsFileElement = "extensionsMetadata";
 
@@ -51,7 +57,7 @@ public class ExtensionVersionChecker extends AbstractBuildable implements GameCo
     private static final String extensionversiondateAttr = "versionDate";
     private static final String extensiondescAttr = "description";
     private static LinkedHashMap<String, ExtensionVersionChecker.ExtensionVersions> extensionsversions = new LinkedHashMap<String, ExtensionVersionChecker.ExtensionVersions>(500);
-
+    private static final Logger logger = LoggerFactory.getLogger(ASLBoardPicker.class);
     public String[] getAttributeNames() {
         return new String[]{EXTENSIONS_VERSION_URL, EXTENSIONS_REPOSITORY_URL};
     }
@@ -85,10 +91,8 @@ public class ExtensionVersionChecker extends AbstractBuildable implements GameCo
         //TODO property change listener not firing - force update
         readVersionFiles();
 
-        /*Properties p = readVersionList((String) GameModule.getGameModule().getPrefs().getValue(EXTENSIONS_VERSIONS));
-        if (p != null) {
-            extensionsversions = p;
-        }*/
+        //localextension_dir= GameModule.getGameModule().getPrefs().getStoredValue("extensionDIR");
+        //boolean reg =true;
     }
 
     public Command getRestoreCommand() {
@@ -113,6 +117,10 @@ public class ExtensionVersionChecker extends AbstractBuildable implements GameCo
             }
         }
         return p;
+    }
+
+    private static void logException(Throwable error) {
+        logger.info("", error);
     }
 
     public void propertyChange(PropertyChangeEvent evt)  {
@@ -195,12 +203,45 @@ public class ExtensionVersionChecker extends AbstractBuildable implements GameCo
     public static boolean updateextension(String extensionName) {
 
         String qualifiedExtensionName =
-                GameModule.getGameModule().getPrefs().getStoredValue(ASLBoardPicker.BOARD_DIR) +
-                        System.getProperty("file.separator", "\\") + extensionName;
-        String url = extensionsRepositoryURL + "/" + extensionName;
+                GameModule.getGameModule().getPrefs().getStoredValue("extensionDIR") +
+                        System.getProperty("file.separator", "\\") + extensionName +".vmdx";
+        String testExtensionName =
+                GameModule.getGameModule().getPrefs().getStoredValue("extensionDIR") +
+                        System.getProperty("file.separator", "\\") + "testextension";
+        String url = extensionsRepositoryURL + "/" + extensionName +".vmdx";
 
-        return getRepositoryFile(url, qualifiedExtensionName);
+        // code changes to improve auto-sync workflow -if testextension is valid, copy over existing extension file; whether valid or not, delete temp file testextension
+        final Path testpath =  Paths.get(testExtensionName);
+        if(Boolean.TRUE.equals(getRepositoryFile(url, testExtensionName))){
+            final Path qualifiedpath = Paths.get(qualifiedExtensionName);
+            try {
+                // need to unload older version before can replace it
+                ModuleExtension removeext = null;
+                for (final ModuleExtension ext : GameModule.getGameModule().getComponentsOf(ModuleExtension.class)) {
+                    if (ext.getName().equals(extensionName)) {
+                        removeext = ext;
+                        break;
+                    }
+                }
+                removeext.getDataArchive().close();
+                GameModule.getGameModule().remove(removeext);
+                Files.move(testpath, qualifiedpath, REPLACE_EXISTING);
 
+            }  catch (IOException e) {
+                logException(e);
+                return false;
+            }
+            return true;
+        } else {
+            try {
+                Files.delete(testpath);
+            }  catch (IOException e) {
+                logException(e);
+                GameModule.getGameModule().warn("testextension deletion failed; remove manually");
+                return false;
+            }
+            return false;
+        }
     }
 
 
@@ -215,7 +256,7 @@ public class ExtensionVersionChecker extends AbstractBuildable implements GameCo
     private static boolean getRepositoryFile(String url, String fileName)  {
 
         // Need to disable SNI to read from Github
-        //System.setProperty("jsse.enableSNIExtension", "false");
+        System.setProperty("jsse.enableSNIExtension", "false");
 
         try {
 
@@ -272,5 +313,9 @@ public class ExtensionVersionChecker extends AbstractBuildable implements GameCo
         public void setversiondate(String value){versiondate = value;}
         public String getdescription(){return description;}
         public void setdescription(String value){description = value;}
+    }
+
+    public static class ASLExtensionsLoader extends ExtensionsLoader{
+
     }
 }
