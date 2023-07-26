@@ -359,6 +359,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
     @Override
     protected String formatChat(String text) {
+
         final String id = GlobalOptions.getInstance().getPlayerId();
         return "<" + (id.length() == 0 ? "(" + getAnonymousUserName() + ")" : id) + "> - " + text; //$NON-NLS-1$ //$NON-NLS-2$
     }
