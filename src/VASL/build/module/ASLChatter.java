@@ -398,7 +398,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                 }
                 else if (strMsg.startsWith("*** 3d6 = "))
                 {
-                    Parse3d6(strMsg);
+                    //Parse3d6(strMsg);
                 }
                 else if (strMsg.startsWith("*** ("))
                 {
@@ -417,10 +417,10 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                 }
                 else if (strMsg.startsWith("*"))
                 {
-                    ParseMoveMsg(strMsg);
+                    //ParseMoveMsg(strMsg);
                 }
                 else {
-                    ParseDefaultMsg(strMsg);
+                    //ParseDefaultMsg(strMsg);
                 }
             }
         }
@@ -517,32 +517,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         Object var10000 = quickIndex <= 0 ? "" : quickIndex + 1;
         return "msg" + var10000;
     }
-    // is this still used?
-    @Deprecated
-    private void ParseDefaultMsg(String strMsg) {
-        try
-        {
-            //StyleConstants.setForeground(m_objMainStyle, Color.black);
-            //m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
-        }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
-        }
-    }
-    // is this still used?
-    @Deprecated
-    private void ParseMoveMsg(String strMsg) {
-        try
-        {
-            //StyleConstants.setForeground(m_objMainStyle, m_clrGameMsg);
-            //m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
-        }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
-        }
-    }
+
 
     private void ParseSystemMsg(String strMsg) {
         try
@@ -873,6 +848,10 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                         }
                                         msgpartSpecial = sniperstring;
                                     }
+                                    if (m_bShowDiceStats) {
+                                        msgpartRest = l_strRestOfMsg;
+                                    }
+
                                     FireDiceRoll();
                                 }
                             }
@@ -1013,52 +992,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
       }
     }
 
-    // is this still used?
-    @Deprecated
-    private void Parse3d6(String strMsg)
-    {
-        try
-        {// *** 3d6 = 5,4,6 *** <FredKors>
-            String l_strRestOfMsg = strMsg.substring("*** 3d6 = ".length());
-            int l_iPos = l_strRestOfMsg.indexOf(" ***");
 
-          if (l_iPos != -1)
-            {
-                String l_strLast = l_strRestOfMsg.substring(l_iPos);
-                String l_strDice = l_strRestOfMsg.substring(0, l_iPos);
-
-                if (l_strDice.length() == 5)
-                {
-                    String [] lar_strDice = l_strDice.split(",");
-
-                    if (lar_strDice.length == 3)
-                    {
-                        int l_iFirstDice = Integer.parseInt(lar_strDice[0]);
-                        int l_iSecondDice = Integer.parseInt(lar_strDice[1]);
-                        int l_iThirdDice = Integer.parseInt(lar_strDice[2]);
-
-                        if ((l_iFirstDice > 0)
-                            && (l_iFirstDice < 7)
-                            && (l_iSecondDice > 0)
-                            && (l_iSecondDice < 7)
-                            && (l_iThirdDice > 0)
-                            && (l_iThirdDice < 7))
-                        {
-                            String[] lar_strParts = FindUser(l_strLast);
-
-                            if ((!lar_strParts[1].isEmpty()) && (!lar_strParts[2].isEmpty()))
-                            {
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
-        }
-    }
 
     private void PaintIcon(int l_iDice, DiceType diceType)     {
 
@@ -1128,7 +1062,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                 + " " + "<u>"
                 + "<span class=" + specialstyle + ">" + msgpartSpecial + "</span>"
                 + "</u>" + " "
-                + "<span class=" + msgpartRest + "</span>";
+                + "<span class=" + userstyle + ">" + msgpartRest + "</span>";
         }
     }
     protected String getUserStyle() {
