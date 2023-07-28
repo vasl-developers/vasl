@@ -28,6 +28,8 @@
     <smoke name="2-level Blaze" hindrance="3" height="5"/>
     <smoke name="3-level Blaze" hindrance="3" height="6"/>
     <smoke name="4-level Blaze" hindrance="3" height="7"/>
+    <smoke name="Veh Dust" hindrance="2" height="2"/>
+    <smoke name="Veh Dust motion" hindrance="2" height="2"/>
 
     <terrain name="Stone Rubble" terrain="Stone Rubble"/>
     <terrain name="Stone Rubble Ground Level" terrain="Stone Rubble Ground Level"/>
