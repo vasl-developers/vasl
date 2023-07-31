@@ -976,6 +976,12 @@ public class ASLMap extends Map {
                                 //Retrieving the R G B values
                                 Color color = getRGBColor(c);
                                 terr = getTerrainfromColor(color, losonoverlays);
+                               // debug code - delete when finished adjusting code
+                               if (terr != null) {
+                                   if (!color.equals(Color.BLACK) && !terr.getName().equals("Open Ground")) {
+                                       boolean reg = true;
+                                   }
+                               }
                                 int bumpx =0; int bumpy=0;
                                 while(terr==null){
                                     color = getnearestcolor(losonoverlays, losonoverlays.overpositionx + bumpx, losonoverlays.overpositiony + bumpy);
@@ -1213,7 +1219,7 @@ public class ASLMap extends Map {
             } else if ((losonoverlays.newlosdata.onMap(newovrx - a, newovry - a)) && (pointIsOnOverlay(losonoverlays.bi, losonoverlays.currentx-(a-1), losonoverlays.currenty-a) && (!((losonoverlays.bi.getRGB(losonoverlays.currentx-(a-1), losonoverlays.currenty-a) >> 24) == 0X00)))) {
                 c = losonoverlays.bi.getRGB(losonoverlays.currentx - (a - 1), losonoverlays.currenty - a);
             } else {
-                return null;
+                c= -5260182;  // use OG as default - see if this causes LOS errors
             }
 
             color = getRGBColor(c);
@@ -1343,6 +1349,18 @@ public class ASLMap extends Map {
         else if (overlayname.contains("st")) {
             return "Stream";
         }
+        else if (overlayname.contains("sr")) {
+            return "Stone Rubble";
+        }
+        else if (overlayname.contains("wr")) {
+            return "Wooden Rubble";
+        }
+        else if (overlayname.contains("wt")) {
+            return "Water";
+        }
+        else if (overlayname.contains("v")) {
+            return "Vineyard";
+        }
         else {
             return "";
         }
@@ -1350,7 +1368,7 @@ public class ASLMap extends Map {
     }
 
     private boolean isInherenttype(String terraintype){
-        return terraintype.equals("Orchard");
+        return (terraintype.equals("Orchard") || terraintype.contains("Stone Rubble") || terraintype.contains("Wooden Rubble"));
     }
     private void setOverlayInherentTerrain(LOSonOverlays losonoverlays, String terraintype){
         Hex temphex = null; Hex newhex;

@@ -833,6 +833,9 @@
 		<!-- Rice Paddies  -->
 		<color name="RicePaddy" red="103" green="75" blue="39" terrain="Rice Paddy, Irrigated" elevation="UNKNOWN" />
 		<color name="PaddyInterior" red="174" green="168" blue="78" terrain="Rice Paddy, Irrigated" elevation="UNKNOWN" />
+		<!-- Rubble  -->
+		<color name="StoneRubble" red="115" green="115" blue="116" terrain="Stone Rubble" elevation="0" />
+		<color name="WoodRubble" red="181" green="125" blue="60" terrain="Wooden Rubble" elevation="UNKNOWN" />
 		<!-- Shellholes  -->
 		<color name="Shellhole1" red="177" green="136" blue="57" terrain="Shellholes" elevation="UNKNOWN" />
 		<color name="Shellhole2" red="97" green="68" blue="27" terrain="Shellholes" elevation="UNKNOWN" />
