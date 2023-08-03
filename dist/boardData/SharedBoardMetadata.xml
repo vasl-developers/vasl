@@ -830,6 +830,7 @@
 		<color name="RailBed1" red="201" green="197" blue="197" terrain="Railroad, Ground Level" elevation="UNKNOWN" />
 		<color name="RailBed2" red="144" green="142" blue="142" terrain="Railroad, Ground Level" elevation="UNKNOWN" />
 		<color name="RailBed3" red="107" green="105" blue="105" terrain="Railroad, Ground Level" elevation="UNKNOWN" />
+
 		<!-- Rice Paddies  -->
 		<color name="RicePaddy" red="103" green="75" blue="39" terrain="Rice Paddy, Irrigated" elevation="UNKNOWN" />
 		<color name="PaddyInterior" red="174" green="168" blue="78" terrain="Rice Paddy, Irrigated" elevation="UNKNOWN" />
@@ -938,11 +939,12 @@
 		<color name="WoodBldg14Winter" red="206" green="181" blue="165" terrain="Wooden Building" elevation="UNKNOWN" />
 		<color name="WoodBldg15Winter" red="206" green="189" blue="165" terrain="Wooden Building" elevation="UNKNOWN" />
 		<color name="WoodRowhouseBarWinter" red="72" green="70" blue="70" terrain="Rowhouse Wall, 1 Level" elevation="UNKNOWN" />
-		<!-- Woods  -->
+		<!-- Woods and Jungle  -->
 		<color name="WoodsGreen" red="85" green="95" blue="45" terrain="Woods" elevation="UNKNOWN" />
 		<color name="WoodsBlack" red="44" green="42" blue="22" terrain="Woods" elevation="UNKNOWN" />
 		<color name="WoodsGreenWinter" red="166" green="171" blue="145" terrain="Woods" elevation="UNKNOWN" />
 		<color name="WoodsBlackWinter" red="94" green="90" blue="75" terrain="Woods" elevation="UNKNOWN" />
+		<color name="DenseJungleGreen" red="85" green="95" blue="46" terrain="Dense Jungle" elevation="UNKNOWN" />
 		<!-- Mud  -->
 		<color name="MudOrchard" red="65" green="90" blue="48" terrain="Orchard" elevation="UNKNOWN" />
 		<color name="MudBrush" red="138" green="149" blue="89" terrain="Brush" elevation="UNKNOWN" />
