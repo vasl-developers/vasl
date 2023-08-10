@@ -365,7 +365,7 @@
 		<boarddata name="MC2a&#x20;Snow" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="CH!" />
 		<boarddata name="MC3" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="CH!" />
 		<boarddata name="MC4" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="CH!" />
-		<boarddata name="MC5&#x20;Snow" version="1.0" versionDate="Aug 2008" boardType="HASL" publisher="CH!" />
+		<boarddata name="MC5&#x20;Snow" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="CH!" />
 		<boarddata name="MC5A" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="CH!" />
 		<boarddata name="MC5A&#x20;Snow" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="CH!" />
 		<boarddata name="MC6" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="CH!" />
