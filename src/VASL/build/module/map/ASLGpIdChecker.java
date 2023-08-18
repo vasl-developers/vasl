@@ -220,7 +220,12 @@ public class ASLGpIdChecker {
         for (final ASLGpIdChecker.SlotElement slotElement : errorSlots) {
             final String before = slotElement.getGpId();
             if (before.equals("")) {
-                chat(slotElement.slot.getName() + " has no GpId; and cannot be updated; update source (VASL or extension) and try again");
+                if (slotElement.slot==null){
+                    // this occurs when slotElement holds a Decorater (see slotElement popup documentation;
+                    // not clear if handling needs to be addor or not; for now, just skip
+                } else {
+                    chat(slotElement.slot.getName() + " has no GpId; and cannot be updated; update source (VASL or extension) and try again");
+                }
             } else {
                 chat(Resources.getString("GpIdChecker.piece_gpid_updated", slotElement.toString(), before, slotElement.getGpId()));
                 slotElement.updateGpId();
@@ -270,7 +275,8 @@ public class ASLGpIdChecker {
                 }
             }
         }
-        log(Resources.getString("GameRefresher.refresh_error_nomatch_pieceslot", "", oldPiece.getName()));
+        chat(oldPiece.getName() + " cannot be updated; delete existing piece and replace with new piece of this type from counter palette");
+        //log(Resources.getString("GameRefresher.refresh_error_nomatch_pieceslot", "", oldPiece.getName()));
         return oldPiece;
     }
 
