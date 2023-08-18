@@ -682,7 +682,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
         startmsg.execute();
         final Command endmsg;
         if (start()){
-            endmsg = new Chatter.DisplayText(chatter, "The game has been updated");
+            endmsg = new Chatter.DisplayText(chatter, "The game has been updated; save and continue");
         } else {
             endmsg = new Chatter.DisplayText(chatter, "Update failed and terminated");
         }
