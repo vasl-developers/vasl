@@ -25,6 +25,7 @@ import VASL.counters.Concealable;
 import VASL.counters.Concealment;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
+import VASSAL.build.module.Chatter;
 import VASSAL.build.module.GlobalOptions;
 import VASSAL.build.module.Map;
 import VASSAL.build.module.map.MovementReporter;
@@ -365,14 +366,19 @@ public class ASLPieceMover extends PieceMover {
         }
 
         if (GlobalOptions.getInstance().autoReportEnabled()) {
-
-            /*
-                Here is the one line we have to change
-             */
-//            final Command report = createMovementReporter(comm).getReportCommand().append(new MovementReporter.HiddenMovementReporter(comm).getReportCommand());
-            final Command report = createMovementReporter(comm).getReportCommand();
-            report.execute();
-            comm = comm.append(report);
+            if (dragging.getName().substring(0, Math.min(dragging.getName().length(), 6)).equals("<html>")) {
+                // new code to handle Labels with html code; stop it pasting to chat
+                Command c = new NullCommand();
+                c.append(new Chatter.DisplayText(GameModule.getGameModule().getChatter(), "* " + "Label Counter moved" ));
+                c.execute();
+                comm = comm.append(c);
+            } else {
+                // Here is the one line we have to change
+                // final Command report = createMovementReporter(comm).getReportCommand().append(new MovementReporter.HiddenMovementReporter(comm).getReportCommand());
+                final Command report = createMovementReporter(comm).getReportCommand();
+                report.execute();
+                comm = comm.append(report);
+            }
         }
 
         // Apply key after move to each moved piece
