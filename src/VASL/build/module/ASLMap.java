@@ -1301,8 +1301,23 @@ public class ASLMap extends Map {
     // when adding items here also add them to VASLThread.initializeMap
     private String getoverlayterraintype(Overlay o){
         String overlayname = o.getName();
+        if (overlayname.contains("elrr")){
+            return "Elevated Railroad";
+        }
+        if (overlayname.contains("surr")){
+            return "Sunken Railroad";
+        }
+        if (overlayname.contains("rr")){
+            return "Railroad";
+        }
         if (overlayname.contains("NoRoads")){
             return "NoRoads";
+        }
+        if (overlayname.contains("rv")){
+            return "River";
+        }
+        if (overlayname.contains("sw")){
+            return "Swamp";
         }
         if (overlayname.contains("be")){
             return "Beach";

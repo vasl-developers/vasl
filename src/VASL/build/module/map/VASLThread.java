@@ -171,7 +171,8 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                                     finalfilename.equals("hi") || finalfilename.equals("x") || finalfilename.equals("hd") || finalfilename.equals("ow") ||
                                     finalfilename.equals("sh") || finalfilename.equals("st") || finalfilename.equals("be") || finalfilename.equals("oc") ||
                                     finalfilename.equals("v") || finalfilename.equals("wt") || finalfilename.equals("wr") || finalfilename.equals("sr") ||
-                                    finalfilename.equals("br") || finalfilename.equals("dj") || finalfilename.equals("elrr") ||
+                                    finalfilename.equals("br") || finalfilename.equals("dj") || finalfilename.equals("elrr") || finalfilename.equals("rv") ||
+                                    finalfilename.equals("sw") || finalfilename.equals("rr") || finalfilename.equals("surr") ||
                                     finalfilename.equals("dx") || o.getName().contains("BSO") || o.getName().contains("SSO")) {
                                 boolean reg = true;
                             } else {
