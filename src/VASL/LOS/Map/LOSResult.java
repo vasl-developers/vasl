@@ -132,7 +132,7 @@ public class LOSResult {
     private void setBlockedByHindrance(int x, int y) {
 
         // blocked if hindrances >= 6
-        if (getHindrance() >= 6) {
+        if (getHindrance() > 5) {
             setBlocked(x, y, "Hindrance total of six or more (B.10)");
         }
     }
