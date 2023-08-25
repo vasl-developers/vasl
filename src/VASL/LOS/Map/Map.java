@@ -2110,7 +2110,7 @@ public class Map  {
 
                     }
 
-                    if(hindrance >= 6) {
+                    if(hindrance > 5) {
                         result.setBlocked(status.sourceX, status.sourceY, "Hindrance total of six or more (B.10)");
                     }
                     else {
