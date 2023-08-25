@@ -418,7 +418,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                 }
                 else if (strMsg.startsWith("*"))
                 {
-                    //ParseMoveMsg(strMsg);
+                    strMsg = ParseMoveMsg(strMsg);
                 }
                 else {
                     //ParseDefaultMsg(strMsg);
@@ -549,7 +549,29 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
     }
 
+    private String ParseMoveMsg(String strMsg) {
+        // test for html tags that must be removed
+        int l_iUserStart=0 ;
+        int l_iUserEnd=0 ;
+        do {
+            try {
+                l_iUserStart = strMsg.indexOf("<");
+                l_iUserEnd = strMsg.indexOf(">");
 
+                if ((l_iUserStart != -1) && (l_iUserEnd != -1)) {
+                    String deletestring = strMsg.substring(l_iUserStart, l_iUserEnd+1);
+                    strMsg = strMsg.replace(deletestring, "");
+                    l_iUserStart=0 ; l_iUserEnd=0 ;
+                } else if ((l_iUserStart == -1) && (l_iUserEnd != -1)) {
+                    break;
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        } while ((l_iUserStart != -1) && (l_iUserEnd != -1));
+        //test
+        return strMsg;
+    }
 
     private void ParseNewDiceRoll(String strMsg)
     {
