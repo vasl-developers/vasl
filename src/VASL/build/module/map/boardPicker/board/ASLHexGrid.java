@@ -18,8 +18,12 @@
  */
 package VASL.build.module.map.boardPicker.board;
 
+import VASL.build.module.map.boardPicker.ASLBoard;
+import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.build.module.map.boardPicker.board.HexGrid;
 import VASSAL.build.module.map.boardPicker.board.MapGrid;
+import VASSAL.tools.hex.Hex;
+import VASSAL.tools.hex.OffsetCoord;
 
 import java.awt.*;
 import javax.swing.JOptionPane;
@@ -190,5 +194,26 @@ public class ASLHexGrid extends HexGrid {
       n -= 26;
     }
     return s;
+  }
+
+  @Override
+  public int range(Point p1, Point p2) {
+      // added so that boards with no los active will display correct range when using Deluxe-sized hexes
+    VASSAL.build.module.Map m = this.getContainer().getBoard().getMap();
+    Point pp1 = m.snapTo(p1);
+    Point pp2 = m.snapTo(p2);
+    for (Board board : m.getBoards()) {
+      ASLBoard b = (ASLBoard) board;
+      if (b.getMagnification() > 0) {
+        pp1.x = (int) (pp1.getX()/b.getMagnification());
+        pp1.y = (int) (pp1.getY()/b.getMagnification());
+        pp2.x = (int) (pp2.getX()/b.getMagnification());
+        pp2.y = (int) (pp2.getY()/b.getMagnification());
+        break;
+      }
+    }
+    Hex h1 = OffsetCoord.qoffsetToCube(-1, new OffsetCoord(this.getRawColumn(pp1), this.getRawRow(pp1)));
+    Hex h2 = OffsetCoord.qoffsetToCube(-1, new OffsetCoord(this.getRawColumn(pp2), this.getRawRow(pp2)));
+    return h1.distance(h2);
   }
 }
