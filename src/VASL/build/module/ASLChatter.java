@@ -983,10 +983,10 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             ASLDie die = diceFactory.getASLDie(diceType);
             String dicefile = die.getDieHTMLFragment(iDice);
             if (msgpartDiceImage == null) {
-                msgpartDiceImage = "<img  alt=\"alt text\" src=\"" + dicefile + "\">";
+                msgpartDiceImage = "<img alt=\"alt text\" src=\"" + dicefile + "\">";
             }
             else {
-                msgpartDiceImage = msgpartDiceImage + "&nbsp <img  alt=\"alt text\" src=\"" + dicefile + "\"> &nbsp";
+                msgpartDiceImage += "&nbsp <img alt=\"alt text\" src=\"" + dicefile + "\"> &nbsp";
             }
         }
         catch (Exception ex) {
