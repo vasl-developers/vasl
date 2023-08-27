@@ -1355,11 +1355,6 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     }
 
     @Override
-    public void add(Buildable b)
-    {
-    }
-
-    @Override
     public void keyCommand(KeyStroke e)
     {
         if ((e.getKeyCode() == 0 || e.getKeyCode() == KeyEvent.CHAR_UNDEFINED)
