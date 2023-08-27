@@ -986,15 +986,6 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
     }
 
-    @Override
-    public void build(org.w3c.dom.Element e) {
-    }
-
-    @Override
-    public org.w3c.dom.Element getBuildElement(org.w3c.dom.Document doc) {
-         return doc.createElement(getClass().getName());
-    }
-
     private String makeMessageString() {
         // need to add html formatting
 
