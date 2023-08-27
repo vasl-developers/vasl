@@ -779,7 +779,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
                                     if (bUseDiceImages) {
                                         msgpartCdice = Integer.toString(iFirstDice);
-                                        msgpartWdice= Integer.toString(iSecondDice);
+                                        msgpartWdice = Integer.toString(iSecondDice);
 
                                         PaintIcon(iFirstDice, DiceType.COLORED);
                                         PaintIcon(iSecondDice, DiceType.WHITE);
@@ -790,7 +790,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     }
                                     else {
                                         msgpartCdice = Integer.toString(iFirstDice);
-                                        msgpartWdice= Integer.toString(iSecondDice);
+                                        msgpartWdice = Integer.toString(iSecondDice);
                                     }
                                     msgpartUser = strUser;
                                     msgpartSpecial = strSpecialMessages.toString();
@@ -833,18 +833,18 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
                                     if (bUseDiceImages) {
                                         msgpartCdice = (strDice);
-                                        msgpartWdice="-1";
+                                        msgpartWdice = "-1";
                                         PaintIcon(iDice, DiceType.SINGLE);
                                     }
                                     else {
                                         msgpartCdice = strDice;
                                     }
-                                    msgpartWdice="-1";
+                                    msgpartWdice = "-1";
 
                                     msgpartUser = strUser;
                                     // added by DR 2018 to add chatter text on Sniper Activation dr
                                     if (strCategory.equals("SA")) {
-                                        String sniperstring="";
+                                        String sniperstring = "";
                                         if (iDice == 1) {
                                             sniperstring ="Eliminates SMC, Dummy stack, Sniper; Stuns & Recalls CE crew; breaks MMC & Inherent crew of certain vehicles; immobilizes unarmored vehicle (A14.3)" ;
                                         }
@@ -982,7 +982,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         try {
             ASLDie die = diceFactory.getASLDie(diceType);
             String dicefile = die.getDieHTMLFragment(iDice);
-            if (msgpartDiceImage==null) {
+            if (msgpartDiceImage == null) {
                 msgpartDiceImage = "<img  alt=\"alt text\" src=\"" + dicefile + "\">";
             }
             else {
@@ -1016,7 +1016,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             msgpartRest = "";
         }
         if (msgpartWdice.equals("-1")){
-            msgpartWdice="";
+            msgpartWdice = "";
         }
 
         String catstyle = "msgcategory";
@@ -1051,7 +1051,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     }
 
     private String makeTableString(String strMsg){
-        strMsg= strMsg.substring(2);  // strip out "!!"
+        strMsg = strMsg.substring(2);  // strip out "!!"
         String tablestyle = "tbl";
         return "*~<span class=" + tablestyle + ">" + strMsg + "</span>";
     }
@@ -1224,7 +1224,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         // coloured die pref
         StringEnumConfigurer coloredDiceColor;
         StringEnumConfigurer coloredDiceColor_Exist = (StringEnumConfigurer) objModulePrefs.getOption(COLORED_DICE_COLOR);
-        if (coloredDiceColor_Exist==null) {
+        if (coloredDiceColor_Exist == null) {
             coloredDiceColor = new StringEnumConfigurer(COLORED_DICE_COLOR, "Colored Die Color:", new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange", "AlliedM", "AxisM", "American", "British", "Finnish", "French", "German", "Italian", "Japanese", "Russian", "Swedish"} );
             objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), coloredDiceColor);
         }
