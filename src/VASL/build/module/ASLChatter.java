@@ -386,51 +386,49 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     }
 
     @Override
-    public void show(String strMsg) {
-        try {
-            if (strMsg.length() > 0) {
+    public void show(String s) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            doShow(s);
+        }
+        else {
+            SwingUtilities.invokeLater(() -> doShow(s));
+        }
+    }
 
-                if (strMsg.startsWith("!!")) {  // dice stats button has been clicked
-                    strMsg = makeTableString(strMsg);
+    //temporary - to fix VASSAL issues parsing messages pertaining to concealed counters
+    private void doShow(String s) {
+        try {
+            if (s.length() > 0) {
+
+                if (s.startsWith("!!")) {  // dice stats button has been clicked
+                    s = makeTableString(s);
                 }
-                else if (strMsg.startsWith("*** 3d6 = ")) {
-                    //Parse3d6(strMsg);
+                else if (s.startsWith("*** 3d6 = ")) {
+                    //Parse3d6(s);
                 }
-                else if (strMsg.startsWith("*** (")) {
-                    ParseNewDiceRoll(strMsg);
-                    strMsg = makeMessageString();
+                else if (s.startsWith("*** (")) {
+                    ParseNewDiceRoll(s);
+                    s = makeMessageString();
                 }
-                else if (strMsg.startsWith("<")) {
-                    ParseUserMsg(strMsg);
-                    strMsg = makeMessageString();
+                else if (s.startsWith("<")) {
+                    ParseUserMsg(s);
+                    s = makeMessageString();
                 }
-                else if (strMsg.startsWith("-")) {
-                    ParseSystemMsg(strMsg);
+                else if (s.startsWith("-")) {
+                    ParseSystemMsg(s);
                 }
-                else if (strMsg.startsWith("*")) {
-                    strMsg = ParseMoveMsg(strMsg);
+                else if (s.startsWith("*")) {
+                    s = ParseMoveMsg(s);
                 }
                 else {
-                    //ParseDefaultMsg(strMsg);
+                    //ParseDefaultMsg(s);
                 }
             }
         }
         catch (Exception ex) {
             ex.printStackTrace();
         }
-        if (SwingUtilities.isEventDispatchThread()) {
-            doShow(strMsg);
-        }
-        else {
-            String finalStrMsg = strMsg;
-            SwingUtilities.invokeLater(() -> {
-                doShow(finalStrMsg);
-            });
-        }
-    }
 
-    //temporary - to fix VASSAL issues parsing messages pertaining to concealed counters
-    private void doShow(String s) {
         s = s.trim();
         String style;
         boolean html_allowed;
