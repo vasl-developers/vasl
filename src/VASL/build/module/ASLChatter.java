@@ -327,7 +327,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     }
 
     private void AddHotKeyToTooltip(JButton objButton, KeyStrokeListener objListener, String strTooltipText) {
-        if (objListener.getKeyStroke() != null)
+        if (objListener.getKeyStroke() != null) {
             objButton.setToolTipText(strTooltipText + " [" + HotKeyConfigurer.getString(objListener.getKeyStroke()) + "]");
     }
 
