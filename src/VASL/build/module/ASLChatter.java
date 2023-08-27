@@ -329,23 +329,24 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     private void AddHotKeyToTooltip(JButton objButton, KeyStrokeListener objListener, String strTooltipText) {
         if (objListener.getKeyStroke() != null) {
             objButton.setToolTipText(strTooltipText + " [" + HotKeyConfigurer.getString(objListener.getKeyStroke()) + "]");
+        }
     }
 
     protected void makeASLStyleSheet(Font f) {
-        if (this.style != null) {
+        if (style != null) {
             if (f == null) {
-                if (this.myFont == null) {
+                if (myFont == null) {
                     f = new Font("SansSerif", Font.PLAIN, 12);
-                    this.myFont = f;
+                    myFont = f;
                 }
                 else {
-                    f = this.myFont;
+                    f = myFont;
                 }
             }
 
-            this.addStyle(".msgcategory", f, Color.black, "bold", 0);
-            this.addStyle(".msguser", f, myChat, "bold", 0);
-            this.addStyle(".msgspecial", f, gameMsg, "bold", 0);
+            addStyle(".msgcategory", f, Color.black, "bold", 0);
+            addStyle(".msguser", f, myChat, "bold", 0);
+            addStyle(".msgspecial", f, gameMsg, "bold", 0);
 
             style.addRule(
                     " .tbl { border:0px solid #C0C0C0; border-collapse:collapse; border-spacing:0px; padding:0px; background:#CCFFCC;}" +
@@ -418,12 +419,12 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             ex.printStackTrace();
         }
         if (SwingUtilities.isEventDispatchThread()) {
-            this.doShow(strMsg);
+            doShow(strMsg);
         }
         else {
             String finalStrMsg = strMsg;
             SwingUtilities.invokeLater(() -> {
-                this.doShow(finalStrMsg);
+                doShow(finalStrMsg);
             });
         }
     }
@@ -446,7 +447,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                 s = QuickColors.stripQuickColorTag(s, "-");
             }
             else {
-                style = this.getChatStyle(s);
+                style = getChatStyle(s);
                 html_allowed = false;
             }
         }
@@ -466,13 +467,13 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
 
         try {
-            this.kit.insertHTML(this.doc, this.doc.getLength(), "\n<div class=" + style + ">" + s + "</div>", 0, 0, (HTML.Tag)null);
+            kit.insertHTML(doc, doc.getLength(), "\n<div class=" + style + ">" + s + "</div>", 0, 0, (HTML.Tag)null);
         }
         catch (IOException | BadLocationException var7) {
             ErrorDialog.bug(var7);
         }
 
-        this.conversationPane.repaint();
+        conversationPane.repaint();
     }
 
     public static String stripQuickColorTagLocal(String s, String prefix) {
