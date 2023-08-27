@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+    This file contains GpID metadata for VASL counters, specifically those whose GpID has changed over time and can
+    no longer be matched by ASLGpIdChecker.
+
+    The data here compiles known mismatches and creates a link to the new GpID which can then be used to update the counter
+    during the VASL Game Updater process.
+
+    The data here should grow over time as more mismatches are discovered and traced to source.
+
+-->
+
+<!--
+    FromTo metadata
+	name - the name of counter being updated
+	fromid - the current GpId of the counter
+	toid - the name of the matchng counter in the current version of VASL and/or Extension
+	addeddate - the date at which the fromtomatch element was added to this file
+-->
+<FromTo>
+    <fromtomatch name="467 1sq" fromid="2364" toid="11471" addedDate="Aug 2023" />
+    <fromtomatch name="447 2sq" fromid="2365" toid="11468" addedDate="Aug 2023" />
+    <fromtomatch name="838 Esq" fromid="1.1" toid="11466" addedDate="Aug 2023" />
+</FromTo>
