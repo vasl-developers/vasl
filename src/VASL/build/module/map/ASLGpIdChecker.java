@@ -1,5 +1,6 @@
 package VASL.build.module.map;
 
+import VASL.LOS.counters.CounterMetadata;
 import VASSAL.build.GameModule;
 import VASSAL.build.GpIdSupport;
 import VASSAL.build.module.Chatter;
@@ -16,15 +17,18 @@ import VASSAL.counters.PieceCloner;
 import VASSAL.counters.PlaceMarker;
 import VASSAL.counters.Properties;
 import VASSAL.i18n.Resources;
+import VASSAL.tools.DataArchive;
+import VASSAL.tools.ErrorDialog;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 
 /**
  * Build a cross-reference of all GpId-able elements in a module or ModuleExtension,
@@ -42,16 +46,18 @@ public class ASLGpIdChecker {
     private Chatter chatter;
     private final Set<String> refresherOptions = new HashSet<>();
     private static final Logger logger = LoggerFactory.getLogger(ASLGameUpdater.class);
-
+    private HashMap<String, String> knownmatches;
     public ASLGpIdChecker() {
         gpIdSupport = GameModule.getGameModule().getGpIdSupport();
         maxId = -1;
+        fillknownmatches();
         //this((GpIdSupport) null);
     }
 
     public ASLGpIdChecker(GpIdSupport gpIdSupport) {
         this.gpIdSupport = gpIdSupport;
         maxId = -1;
+        fillknownmatches();
     }
 
     // This constructor is used by the GameRefresher to refresh a game with extensions possibly loaded
@@ -63,6 +69,7 @@ public class ASLGpIdChecker {
         if (!options.isEmpty()) {
             this.refresherOptions.addAll(options);
         }
+        fillknownmatches();
     }
 
     public boolean useLabelerName() {
@@ -258,9 +265,19 @@ public class ASLGpIdChecker {
                     newPiece = element.createPiece(oldPiece, this);
                     copyState(oldPiece, newPiece);
                     return newPiece;
+                } else {
+                    // Failed to find a slot by gpid, try by using the known crosswalks
+                    String findmatch = checkknownmatches(gpid);
+                    if (findmatch !=null) {
+                        final ASLGpIdChecker.SlotElement foundelement = goodSlots.get(findmatch);
+                        if (foundelement != null) {
+                            newPiece = foundelement.createPiece(oldPiece, this);
+                            copyState(oldPiece, newPiece);
+                            return newPiece;
+                        }
+                    }
                 }
             }
-
             // Failed to find a slot by gpid, try by matching piece name if option selected
             if (useName()) {
                 final String oldPieceName = Decorator.getInnermost(oldPiece).getName();
@@ -280,7 +297,70 @@ public class ASLGpIdChecker {
         return oldPiece;
     }
 
+    private String checkknownmatches(String gpid){
+        if(knownmatches.containsKey(gpid)){
+            return knownmatches.get(gpid);
+        } else {
+            return null;
+        }
+    }
 
+    private void fillknownmatches(){
+        knownmatches = new HashMap<>();
+        DataArchive archive = GameModule.getGameModule().getDataArchive();
+        try (InputStream inputStream = archive.getInputStream("GpIDFromTo.xml")) {
+
+            // GpId matches metadata
+            parseknownmatches(inputStream);
+
+            // give up on any errors
+        } catch (IOException e) {
+            knownmatches = null;
+            ErrorDialog.bug(e);
+        } catch (JDOMException e) {
+            knownmatches = null;
+            ErrorDialog.bug(e);
+        } catch (NullPointerException e) {
+            knownmatches = null;
+            ErrorDialog.bug(e);
+        }
+    }
+
+    public void parseknownmatches(InputStream metadata) throws JDOMException {
+
+        SAXBuilder parser = new SAXBuilder();
+
+        try {
+
+            // the root element will be the FromTo metadata element
+            Document doc = parser.build(metadata);
+            Element root = doc.getRootElement();
+
+            // read the counters
+            if(root.getName().equals("FromTo")) {
+
+                parsematchdata(root);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace(System.err);
+            throw new JDOMException("Error reading the Known GpID Matches metadata", e);
+        }
+    }
+
+    /**
+     * Parses the FromTo metadata element
+     * @param element the FromTo metadata element
+     * @throws org.jdom2.JDOMException
+     */
+    protected void parsematchdata(Element element) throws JDOMException {
+
+        for(Element e: element.getChildren()) {
+            String FromID = e.getAttributeValue("fromid");
+            String ToID = e.getAttributeValue("toid");
+            knownmatches.put(FromID, ToID);
+        }
+    }
  /* public boolean findUpdatedPiece(GamePiece oldPiece) {
     // Find a slot with a matching gpid
     final String gpid = (String) oldPiece.getProperty(Properties.PIECE_ID);
