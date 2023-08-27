@@ -376,7 +376,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         int l_iUserStart = strVal.indexOf("<");
         int l_iUserEnd = strVal.indexOf(">");
 
-        if ((l_iUserStart != -1) && (l_iUserEnd != -1)) {
+        if (l_iUserStart != -1 && l_iUserEnd != -1) {
             lar_strRetValue[0] = strVal.substring(0, l_iUserStart + 1);
             lar_strRetValue[1] = strVal.substring(l_iUserStart + 1, l_iUserEnd);
             lar_strRetValue[2] = strVal.substring(l_iUserEnd+1);
@@ -534,9 +534,13 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         try {
             String[] lar_strParts = FindUser(strMsg);
 
-            if ((!lar_strParts[1].isEmpty()) && (!lar_strParts[2].isEmpty()))  {
-                msgpartCategory = ""; msgpartCdice=""; msgpartWdice=""; msgpartSAN="";
-                msgpartDiceImage="";msgpartSpecial="";
+            if (!lar_strParts[1].isEmpty() && !lar_strParts[2].isEmpty()) {
+                msgpartCategory = "";
+                msgpartCdice = "";
+                msgpartWdice = "";
+                msgpartSAN = "";
+                msgpartDiceImage = "";
+                msgpartSpecial = "";
                 msgpartUser = lar_strParts[1];
                 msgpartRest = lar_strParts[2];
             }
@@ -548,19 +552,20 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
     private String ParseMoveMsg(String strMsg) {
         // test for html tags that must be removed
-        int l_iUserStart=0 ;
-        int l_iUserEnd=0 ;
+        int l_iUserStart = 0;
+        int l_iUserEnd = 0;
         do {
             try {
                 l_iUserStart = strMsg.indexOf("<");
                 l_iUserEnd = strMsg.indexOf(">");
 
-                if ((l_iUserStart != -1) && (l_iUserEnd != -1)) {
+                if (l_iUserStart != -1 && l_iUserEnd != -1) {
                     String deletestring = strMsg.substring(l_iUserStart, l_iUserEnd+1);
                     strMsg = strMsg.replace(deletestring, "");
-                    l_iUserStart=0 ; l_iUserEnd=0 ;
+                    l_iUserStart = 0;
+                    l_iUserEnd = 0;
                 }
-                else if ((l_iUserStart == -1) && (l_iUserEnd != -1)) {
+                else if (l_iUserStart == -1 && l_iUserEnd != -1) {
                     break;
                 }
             }
@@ -576,7 +581,13 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         // *** (Other DR) 4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
         String l_strCategory, l_strDice, l_strUser, l_strSAN = "";
         int l_iFirstDice, l_iSecondDice;
-        msgpartCategory=null; msgpartUser=null; msgpartCdice=null; msgpartWdice=null; msgpartSpecial=null; msgpartRest=null; msgpartDiceImage=null;
+        msgpartCategory = null;
+        msgpartUser = null;
+        msgpartCdice = null;
+        msgpartWdice = null;
+        msgpartSpecial = null;
+        msgpartRest = null;
+        msgpartDiceImage = null;
         Map<DiceType, Integer> otherDice = new HashMap<>();
         try {
             String l_strRestOfMsg = strMsg.substring("*** (".length()); // Other DR) 4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
@@ -603,10 +614,10 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                 otherDice.put(DiceType.OTHER_DUST, Integer.parseInt(lar_strDice[2]));
                             }
 
-                            if ((l_iFirstDice > 0)
-                                    && (l_iFirstDice < 7)
-                                    && (l_iSecondDice > 0)
-                                    && (l_iSecondDice < 7)) {
+                            if (l_iFirstDice > 0
+                                    && l_iFirstDice < 7
+                                    && l_iSecondDice > 0
+                                    && l_iSecondDice < 7) {
                                 String[] lar_strParts = FindUser(l_strRestOfMsg);
 
                                 ArrayList<String> specialMessages = new ArrayList<>();
@@ -622,7 +633,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     // First, SAN, which should not trigger for Rally, TK and CC rolls
                                     // and should happen on "Only Sniper" setting and in Full ASL mode
                                     if (m_DRNotificationLevel == 3 || m_DRNotificationLevel == 1) {
-                                        if (!l_strCategory.equals("TK") && !l_strCategory.equals("CC") && !l_strCategory.equals(("Rally"))) {
+                                        if (!l_strCategory.equals("TK") && !l_strCategory.equals("CC") && !l_strCategory.equals("Rally")) {
                                             if (l_strRestOfMsg.startsWith("Axis SAN")) {
                                                 l_strSAN = "Axis SAN";
                                                 specialMessages.add("Axis SAN");
@@ -658,7 +669,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                             }
                                         }
                                     }
-                                    msgpartSAN=l_strSAN;
+                                    msgpartSAN = l_strSAN;
                                     // ALL of these happen only in Starter Kit mode or Full ASL mode
                                     if (m_DRNotificationLevel >= 2) {
                                         // For TH rolls only, show possible hit location, Unlikely hit and multiple hit
@@ -1116,7 +1127,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         // game message color pref
         Prefs globalPrefs = Prefs.getGlobalPrefs();
         ColorConfigurer gameMsgColor = new ColorConfigurer("HTMLgameMessage1Color", Resources.getString("Chatter.game_messages_preference"), Color.black);
-        gameMsgColor.addPropertyChangeListener((e) -> {
+        gameMsgColor.addPropertyChangeListener(e -> {
             gameMsg = (Color)e.getNewValue();
             makeStyleSheet(null);
             makeASLStyleSheet(null);
