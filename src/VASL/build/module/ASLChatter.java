@@ -559,7 +559,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     private void ParseNewDiceRoll(String msg) {
         // *** (Other DR) 4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
         String category, dice, user, san = "";
-        int iFirstDice, iSecondDice;
+        int firstDice, secondDice;
         msgpartCategory = null;
         msgpartUser = null;
         msgpartCdice = null;
@@ -571,32 +571,32 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         try {
             String restOfMsg = msg.substring("*** (".length()); // Other DR) 4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
 
-            int iPos = restOfMsg.indexOf(" DR) ");
+            int pos = restOfMsg.indexOf(" DR) ");
 
-            if (iPos != -1) {
-                category = restOfMsg.substring(0, iPos);
-                restOfMsg = restOfMsg.substring(iPos + " DR) ".length()); //4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
+            if (pos != -1) {
+                category = restOfMsg.substring(0, pos);
+                restOfMsg = restOfMsg.substring(pos + " DR) ".length()); //4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
 
-                iPos = restOfMsg.indexOf(" ***");
+                pos = restOfMsg.indexOf(" ***");
 
-                if (iPos != -1) {
-                    dice = restOfMsg.substring(0, iPos);
-                    restOfMsg = restOfMsg.substring(iPos + " ***".length());//   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
+                if (pos != -1) {
+                    dice = restOfMsg.substring(0, pos);
+                    restOfMsg = restOfMsg.substring(pos + " ***".length());//   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
 
                     if (dice.length() == 3 || dice.length() == 5) {
                         String[] diceArr = dice.split(",");
 
                         if (diceArr.length == 2 || (diceArr.length == 3 && environment.dustInEffect())) {
-                            iFirstDice = Integer.parseInt(diceArr[0]);
-                            iSecondDice = Integer.parseInt(diceArr[1]);
+                            firstDice = Integer.parseInt(diceArr[0]);
+                            secondDice = Integer.parseInt(diceArr[1]);
                             if (environment.dustInEffect() && diceArr.length == 3) {
                                 otherDice.put(DiceType.OTHER_DUST, Integer.parseInt(diceArr[2]));
                             }
 
-                            if (iFirstDice > 0
-                                    && iFirstDice < 7
-                                    && iSecondDice > 0
-                                    && iSecondDice < 7) {
+                            if (firstDice > 0
+                                    && firstDice < 7
+                                    && secondDice > 0
+                                    && secondDice < 7) {
                                 String[] parts = FindUser(restOfMsg);
 
                                 ArrayList<String> specialMessages = new ArrayList<>();
@@ -654,9 +654,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                         // For TH rolls only, show possible hit location, Unlikely hit and multiple hit
                                         switch (category) {
                                         case "TH":
-                                            if (iFirstDice == iSecondDice) {
+                                            if (firstDice == secondDice) {
                                                 // Starter Kit + Full ASL
-                                                if (iFirstDice == 1) {
+                                                if (firstDice == 1) {
                                                     specialMessages.add("Unlikely Hit (C3.6)");
                                                 }
                                                 // Full ASL only
@@ -664,64 +664,64 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                                     specialMessages.add("Multiple Hits 15..40mm (C3.8)");
                                                 }
                                             }
-                                            if (iFirstDice < iSecondDice) {
+                                            if (firstDice < secondDice) {
                                                 specialMessages.add("Turret");
                                             }
                                             else {
                                                 specialMessages.add("Hull");
                                             }
-                                            HandleSpecialMessagesForOtherDice(category, specialMessages, iFirstDice, iSecondDice, otherDice);
+                                            HandleSpecialMessagesForOtherDice(category, specialMessages, firstDice, secondDice, otherDice);
 
                                             break;
                                         case "TK":
-                                            if (iFirstDice == iSecondDice) {
-                                                if (iFirstDice == 6) {
+                                            if (firstDice == secondDice) {
+                                                if (firstDice == 6) {
                                                     specialMessages.add("Dud (C7.35)");
                                                 }
                                             }
                                             break;
                                         case "MC":
                                             // Full ASL only
-                                            if (iFirstDice == 1 && iSecondDice == 1 && DRNotificationLevel == 3) {
+                                            if (firstDice == 1 && secondDice == 1 && DRNotificationLevel == 3) {
                                                 specialMessages.add("Heat of Battle (A15.1)");
                                             }
                                             // Starter Kit & Full ASL
-                                            else if (iFirstDice == 6 && iSecondDice == 6) {
+                                            else if (firstDice == 6 && secondDice == 6) {
                                                 specialMessages.add("Casualty MC (A10.31)");
                                             }
-                                            HandleSpecialMessagesForOtherDice(category, specialMessages, iFirstDice, iSecondDice, otherDice);
+                                            HandleSpecialMessagesForOtherDice(category, specialMessages, firstDice, secondDice, otherDice);
                                             break;
                                         case "TC":
 
                                             break;
                                         case "Rally":
                                             // Full ASL only
-                                            if (iFirstDice == 1 && iSecondDice == 1 && DRNotificationLevel == 3) {
+                                            if (firstDice == 1 && secondDice == 1 && DRNotificationLevel == 3) {
                                                 specialMessages.add("Heat of Battle (A15.1) or Field Promotion (A18.11)");
                                             }
                                             // Starter Kit + Full ASL
-                                            else if (iFirstDice == 6 && iSecondDice == 6) {
+                                            else if (firstDice == 6 && secondDice == 6) {
                                                 specialMessages.add("Fate -> Casualty Reduction (A10.64)");
                                             }
 
                                             break;
                                         case "IFT":
                                             // check for cowering
-                                            if (iFirstDice == iSecondDice) {
+                                            if (firstDice == secondDice) {
                                                 // Full ASL only
-                                                if (iFirstDice == 1 && DRNotificationLevel == 3) {
+                                                if (firstDice == 1 && DRNotificationLevel == 3) {
                                                     specialMessages.add("Unlikely Kill vs * (A7.309)");
                                                 }
                                                 // Starter Kit + Full ASL
                                                 specialMessages.add("Cower if MMC w/o LDR");
                                             }
-                                            HandleSpecialMessagesForOtherDice(category, specialMessages, iFirstDice, iSecondDice, otherDice);
+                                            HandleSpecialMessagesForOtherDice(category, specialMessages, firstDice, secondDice, otherDice);
                                             break;
                                         case "CC":
                                             // Full ASL only
-                                            if (iFirstDice == 1 && iSecondDice == 1 && DRNotificationLevel == 3) {
+                                            if (firstDice == 1 && secondDice == 1 && DRNotificationLevel == 3) {
                                                 specialMessages.add("Infiltration (A11.22), Field Promotion (A18.12), Unlikely Kill (A11.501)");
-                                            } else if (iFirstDice == 6 && iSecondDice == 6 && DRNotificationLevel == 3) {
+                                            } else if (firstDice == 6 && secondDice == 6 && DRNotificationLevel == 3) {
                                                 specialMessages.add("Infiltration (A11.22)");
                                             }
                                             break;
@@ -730,8 +730,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
                                     // check if SASL Dice button clicked and if so ask for special message string - SASL Dice buttons are created via extension
                                     if (DRNotificationLevel == 3 && category.equals("EP")){
-                                        if (iFirstDice == iSecondDice) {
-                                            switch (iFirstDice) {
+                                        if (firstDice == secondDice) {
+                                            switch (firstDice) {
                                             case 1:
                                                 specialMessages.add("Green and Conscript Units Panic");
                                                 break;
@@ -760,19 +760,19 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     msgpartCategory = BEFORE_CATEGORY + category;
 
                                     if (useDiceImages) {
-                                        msgpartCdice = Integer.toString(iFirstDice);
-                                        msgpartWdice = Integer.toString(iSecondDice);
+                                        msgpartCdice = Integer.toString(firstDice);
+                                        msgpartWdice = Integer.toString(secondDice);
 
-                                        PaintIcon(iFirstDice, DiceType.COLORED);
-                                        PaintIcon(iSecondDice, DiceType.WHITE);
+                                        PaintIcon(firstDice, DiceType.COLORED);
+                                        PaintIcon(secondDice, DiceType.WHITE);
                                         //Add any other dice required
                                         for (Map.Entry<DiceType, Integer> entry : otherDice.entrySet()) {
                                             PaintIcon(entry.getValue(), entry.getKey());
                                         }
                                     }
                                     else {
-                                        msgpartCdice = Integer.toString(iFirstDice);
-                                        msgpartWdice = Integer.toString(iSecondDice);
+                                        msgpartCdice = Integer.toString(firstDice);
+                                        msgpartWdice = Integer.toString(secondDice);
                                     }
                                     msgpartUser = user;
                                     msgpartSpecial = strSpecialMessages.toString();
@@ -790,22 +790,22 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             else { // *** (Other dr) 3 ***   <FredKors>      [1 / 1   avg   3,00 (3,00)]    (01.84)
                 //reset SAN message to the latest state for dice over map
                 msgpartSAN = san;
-                iPos = restOfMsg.indexOf(" dr) ");
+                pos = restOfMsg.indexOf(" dr) ");
 
-                if (iPos != -1) {
-                    category = restOfMsg.substring(0, iPos);
-                    restOfMsg = restOfMsg.substring(iPos + " dr) ".length()); //3 ***   <FredKors>      [1 / 1   avg   3,00 (3,00)]    (01.84)
+                if (pos != -1) {
+                    category = restOfMsg.substring(0, pos);
+                    restOfMsg = restOfMsg.substring(pos + " dr) ".length()); //3 ***   <FredKors>      [1 / 1   avg   3,00 (3,00)]    (01.84)
 
-                    iPos = restOfMsg.indexOf(" ***");
+                    pos = restOfMsg.indexOf(" ***");
 
-                    if (iPos != -1) {
-                        dice = restOfMsg.substring(0, iPos);
-                        restOfMsg = restOfMsg.substring(iPos + " ***".length());//   <FredKors>      [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
+                    if (pos != -1) {
+                        dice = restOfMsg.substring(0, pos);
+                        restOfMsg = restOfMsg.substring(pos + " ***".length());//   <FredKors>      [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
 
                         if (dice.length() == 1) {
-                            int iDice = Integer.parseInt(dice);
+                            int diceVal = Integer.parseInt(dice);
 
-                            if (iDice > 0 && iDice < 7) {
+                            if (diceVal > 0 && diceVal < 7) {
                                 String[] parts = FindUser(restOfMsg);
 
                                 if (!parts[1].isEmpty() && !parts[2].isEmpty()) {
@@ -814,9 +814,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     msgpartCategory = BEFORE_CATEGORY + category;
 
                                     if (useDiceImages) {
-                                        msgpartCdice = (dice);
+                                        msgpartCdice = dice;
                                         msgpartWdice = "-1";
-                                        PaintIcon(iDice, DiceType.SINGLE);
+                                        PaintIcon(diceVal, DiceType.SINGLE);
                                     }
                                     else {
                                         msgpartCdice = dice;
@@ -827,10 +827,10 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     // added by DR 2018 to add chatter text on Sniper Activation dr
                                     if (category.equals("SA")) {
                                         String sniperstring = "";
-                                        if (iDice == 1) {
+                                        if (diceVal == 1) {
                                             sniperstring ="Eliminates SMC, Dummy stack, Sniper; Stuns & Recalls CE crew; breaks MMC & Inherent crew of certain vehicles; immobilizes unarmored vehicle (A14.3)" ;
                                         }
-                                        else if (iDice == 2) {
+                                        else if (diceVal == 2) {
                                             sniperstring ="Eliminates Dummy stack; Wounds SMC; Stuns CE crew; pins MMC, Inherent crew of certain vehicles, Sniper (A14.3)" ;
                                         }
                                         msgpartSpecial = sniperstring;
@@ -853,9 +853,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     }
 
     private void HandleSpecialMessagesForOtherDice(final String category, final ArrayList<String> specialMessages,
-            final int iFirstDice, final int iSecondDice, final Map<DiceType, Integer> otherDice)
+            final int firstDice, final int secondDice, final Map<DiceType, Integer> otherDice)
     {
-        int total = iFirstDice + iSecondDice;
+        int total = firstDice + secondDice;
         int unmodifiedTotal = total;
         final String SPACE = " ";
         // Dust
@@ -960,10 +960,10 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
     }
 
-    private void PaintIcon(int iDice, DiceType diceType) {
+    private void PaintIcon(int dice, DiceType diceType) {
         try {
             ASLDie die = diceFactory.getASLDie(diceType);
-            String dicefile = die.getDieHTMLFragment(iDice);
+            String dicefile = die.getDieHTMLFragment(dice);
             if (msgpartDiceImage == null) {
                 msgpartDiceImage = "<img alt=\"alt text\" src=\"" + dicefile + "\">";
             }
@@ -1339,6 +1339,6 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     }
 
     public interface ChatterListener {
-        void DiceRoll(String category, String user, String san, int iFirstDice, int iSecondDice);
+        void DiceRoll(String category, String user, String san, int firstDice, int secondDice);
     }
 }
