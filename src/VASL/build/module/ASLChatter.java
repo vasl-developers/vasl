@@ -239,24 +239,6 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         btnRS.setFont(objFont);
     }
 
-    //Is this still used?
-    @Deprecated
-    private JButton CreateInfoButton(String strCaption, String strTooltip, final String strMsg, KeyStroke objKeyStroke) {  // used by SASLDice extension
-        JButton btn = new JButton(strCaption);
-
-        btn.setPreferredSize(new Dimension(90, 25));
-        btn.setMargin(new Insets(btn.getMargin().top, 0, btn.getMargin().bottom, 0));
-
-        ActionListener objAL = e -> send(formatChat(strMsg));
-        btn.addActionListener(objAL);
-        KeyStrokeListener objListener = new KeyStrokeListener(objAL);
-        objListener.setKeyStroke(objKeyStroke);
-        AddHotKeyToTooltip(btn, objListener, strTooltip);
-        btn.setFocusable(false);
-        GameModule.getGameModule().addKeyStrokeListener(objListener);
-        return btn;
-    }
-
     private JButton CreateStatsDiceButton(KeyStroke keyStroke) {
         JButton btn = new JButton("");
         btn.setMinimumSize(new Dimension(5, 30));
