@@ -118,7 +118,6 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     public ASLChatter() {
         super();
 
-        clrBackground = Color.white;
         conversationPane.addKeyListener(new KeyListener() {
             public void keyTyped(KeyEvent e) {
                 if (!e.isConsumed()) {
@@ -192,8 +191,6 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             edtInputText.getPreferredSize().height
         ));
 
-        scroll.setViewportView(conversationPane);
-
         panelContainer.add(buttonPannel);
 
         final GroupLayout groupLayout = new GroupLayout(this);
@@ -214,6 +211,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                     .addComponent(edtInputText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
             )
         );
+
+        clrBackground = Color.white;
     }
 
     // Is this still used?
