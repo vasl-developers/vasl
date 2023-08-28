@@ -1044,15 +1044,12 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         final Prefs modulePrefs = g.getPrefs();
 
         // font pref
-        FontConfigurer chatFontConfigurer;
-        FontConfigurer chatFontConfigurer_Exist = (FontConfigurer)modulePrefs.getOption("ChatFont");
-        if (chatFontConfigurer_Exist == null) {
+        FontConfigurer chatFontConfigurer = (FontConfigurer) modulePrefs.getOption("ChatFont");
+        if (chatFontConfigurer == null) {
             chatFontConfigurer = new FontConfigurer(CHAT_FONT, Resources.getString("Chatter.chat_font_preference")); //$NON-NLS-1$ //$NON-NLS-2$
             modulePrefs.addOption(Resources.getString("Chatter.chat_window"), chatFontConfigurer); //$NON-NLS-1$
         }
-        else {
-            chatFontConfigurer = chatFontConfigurer_Exist;
-        }
+
         chatFontConfigurer.addPropertyChangeListener(evt -> {
             setFont((Font) evt.getNewValue());
             makeStyleSheet((Font) evt.getNewValue());
@@ -1062,37 +1059,34 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             send(" ");
         });
         chatFontConfigurer.fireUpdate();
+
         // buttons font pref
-        FontConfigurer buttonsFontConfigurer;
-        FontConfigurer buttonsFontConfigurer_Exist = (FontConfigurer)modulePrefs.getOption("ButtonFont");
-        if (buttonsFontConfigurer_Exist == null) {
+        FontConfigurer buttonsFontConfigurer = (FontConfigurer) modulePrefs.getOption("ButtonFont");
+        if (buttonsFontConfigurer == null) {
             buttonsFontConfigurer = new FontConfigurer(BUTTON_FONT, "Chatter's dice buttons font: "); //$NON-NLS-1$ //$NON-NLS-2$
             modulePrefs.addOption(Resources.getString("Chatter.chat_window"), buttonsFontConfigurer); //$NON-NLS-1$
         }
-        else {
-            buttonsFontConfigurer = buttonsFontConfigurer_Exist;
-        }
+
         buttonsFontConfigurer.addPropertyChangeListener(evt -> setButtonsFonts((Font) evt.getNewValue()));
         buttonsFontConfigurer.fireUpdate();
+
         //background colour pref
-        ColorConfigurer backgroundColor;
-        ColorConfigurer backgroundColor_Exist = (ColorConfigurer)modulePrefs.getOption(CHAT_BACKGROUND_COLOR);
-        if (backgroundColor_Exist == null) {
+        ColorConfigurer backgroundColor = (ColorConfigurer) modulePrefs.getOption(CHAT_BACKGROUND_COLOR);
+        if (backgroundColor == null) {
             backgroundColor = new ColorConfigurer(CHAT_BACKGROUND_COLOR, "Background color: ", Color.white); //$NON-NLS-1$
             modulePrefs.addOption(Resources.getString("Chatter.chat_window"), backgroundColor); //$NON-NLS-1$
         }
-        else {
-            backgroundColor = backgroundColor_Exist;
-        }
+
         clrBackground = (Color) modulePrefs.getValue(CHAT_BACKGROUND_COLOR);
         backgroundColor.addPropertyChangeListener(e -> {
             clrBackground = (Color) e.getNewValue();
             conversationPane.setBackground(clrBackground);
         });
         backgroundColor.fireUpdate();
+
         // game message color pref
-        Prefs globalPrefs = Prefs.getGlobalPrefs();
-        ColorConfigurer gameMsgColor = new ColorConfigurer("HTMLgameMessage1Color", Resources.getString("Chatter.game_messages_preference"), Color.black);
+        final Prefs globalPrefs = Prefs.getGlobalPrefs();
+        final ColorConfigurer gameMsgColor = new ColorConfigurer("HTMLgameMessage1Color", Resources.getString("Chatter.game_messages_preference"), Color.black);
         gameMsgColor.addPropertyChangeListener(e -> {
             gameMsg = (Color)e.getNewValue();
             makeStyleSheet(null);
@@ -1102,53 +1096,47 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         gameMsg = (Color)globalPrefs.getValue("HTMLgameMessage1Color");
 
         // sys messages pref
-        ColorConfigurer systemMsgColor;
-        ColorConfigurer systemMsgColor_Exist = (ColorConfigurer)modulePrefs.getOption(SYS_MSG_COLOR);
-        if (systemMsgColor_Exist == null) {
+        ColorConfigurer systemMsgColor = (ColorConfigurer) modulePrefs.getOption(SYS_MSG_COLOR);
+        if (systemMsgColor == null) {
             systemMsgColor = new ColorConfigurer(SYS_MSG_COLOR, Resources.getString("Chatter.systemessage_preference"), new Color(160, 160, 160)); //$NON-NLS-1$
             modulePrefs.addOption(Resources.getString("Chatter.chat_window"), systemMsgColor); //$NON-NLS-1$
         }
-        else {
-            systemMsgColor = systemMsgColor_Exist;
-        }
+
         systemMsg = (Color) modulePrefs.getValue(SYS_MSG_COLOR);
         makeStyleSheet(null);
         systemMsgColor.addPropertyChangeListener(e -> {
             systemMsg = (Color) e.getNewValue();
             makeStyleSheet(null);
         });
+
         // myChat preference
-        ColorConfigurer myChatColor;
-        ColorConfigurer myChatColor_Exist = (ColorConfigurer)modulePrefs.getOption(MY_CHAT_COLOR);
-        if (myChatColor_Exist == null) {
+        ColorConfigurer myChatColor = (ColorConfigurer)modulePrefs.getOption(MY_CHAT_COLOR);
+        if (myChatColor == null) {
             myChatColor = new ColorConfigurer(MY_CHAT_COLOR, "My Name and Text Messages" , Color.gray); //$NON-NLS-1$
             modulePrefs.addOption(Resources.getString("Chatter.chat_window"), myChatColor); //$NON-NLS-1$
         }
-        else {
-            myChatColor = myChatColor_Exist;
-        }
+
         myChat = (Color) modulePrefs.getValue(MY_CHAT_COLOR);
         makeStyleSheet(null);
         myChatColor.addPropertyChangeListener(e -> {
             myChat = (Color) e.getNewValue();
             makeStyleSheet(null);
         });
+
         // other chat preference
-        ColorConfigurer otherChatColor;
-        ColorConfigurer otherChatColor_Exist = (ColorConfigurer)modulePrefs.getOption(OTHER_CHAT_COLOR);
-        if (otherChatColor_Exist == null) {
+        ColorConfigurer otherChatColor = (ColorConfigurer) modulePrefs.getOption(OTHER_CHAT_COLOR);
+        if (otherChatColor == null) {
             otherChatColor = new ColorConfigurer(OTHER_CHAT_COLOR, Resources.getString("Chatter.other_text_preference"), Color.black); //$NON-NLS-1$
             modulePrefs.addOption(Resources.getString("Chatter.chat_window"), otherChatColor); //$NON-NLS-1$
         }
-        else {
-            otherChatColor = otherChatColor_Exist;
-        }
+
         otherChat = (Color) modulePrefs.getValue(OTHER_CHAT_COLOR);
         makeStyleSheet(null);
         otherChatColor.addPropertyChangeListener(e -> {
             otherChat = (Color) e.getNewValue();
             makeStyleSheet(null);
         });
+
         // dice chat pref
         ColorConfigurer diceChatColor;
         ColorConfigurer diceChatColor_Exist = (ColorConfigurer)modulePrefs.getOption(DICE_CHAT_COLOR);
