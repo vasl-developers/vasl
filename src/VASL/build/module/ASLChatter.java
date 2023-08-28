@@ -1029,17 +1029,17 @@ public class ASLChatter extends VASSAL.build.module.Chatter
      * {@link CommandEncoder} */
     @Override
     public void addTo(Buildable b) {
-        final GameModule g = (GameModule) b;
-        if (g.getChatter() != null) {
+        final GameModule mod = (GameModule) b;
+        if (mod.getChatter() != null) {
             // deleted code here which removed VASSAL elements but getChatter is always null at this point
         }
 
-        g.setChatter(this);
-        g.addCommandEncoder(this);
-        g.addKeyStrokeSource(new KeyStrokeSource(this, WHEN_ANCESTOR_OF_FOCUSED_COMPONENT));
-        g.getPlayerWindow().addChatter(this);
-        g.getControlPanel().add(this, BorderLayout.CENTER);
-        final Prefs modulePrefs = g.getPrefs();
+        mod.setChatter(this);
+        mod.addCommandEncoder(this);
+        mod.addKeyStrokeSource(new KeyStrokeSource(this, WHEN_ANCESTOR_OF_FOCUSED_COMPONENT));
+        mod.getPlayerWindow().addChatter(this);
+        mod.getControlPanel().add(this, BorderLayout.CENTER);
+        final Prefs modulePrefs = mod.getPrefs();
 
         // font pref
         FontConfigurer chatFontConfigurer = (FontConfigurer) modulePrefs.getOption("ChatFont");
