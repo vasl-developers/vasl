@@ -344,16 +344,6 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
     @Override
     public void show(String s) {
-        if (SwingUtilities.isEventDispatchThread()) {
-            doShow(s);
-        }
-        else {
-            SwingUtilities.invokeLater(() -> doShow(s));
-        }
-    }
-
-    //temporary - to fix VASSAL issues parsing messages pertaining to concealed counters
-    private void doShow(String s) {
         if (!s.isEmpty()) {
             if (s.startsWith("!!")) {  // dice stats button has been clicked
                 s = makeTableString(s);
@@ -380,49 +370,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             }
         }
 
-        s = s.trim();
-        String style;
-        boolean htmallowed;
-        if (!s.isEmpty()) {
-            if (s.startsWith("*")) {
-                htmallowed = QuickColors.getQuickColor(s, "*") >= 0 || GlobalOptions.getInstance().chatterHTMLSupport();
-                style = getQuickColorHTMLStyleLocal(s, "*");
-                s = stripQuickColorTagLocal(s, "*");
-            }
-            else if (s.startsWith("-")) {
-                htmallowed = true;
-                //dirty quick fix for system messages not displaying with correct fonts, colors
-                style = "sys";
-                s = QuickColors.stripQuickColorTag(s, "-");
-            }
-            else {
-                style = getChatStyle(s);
-                htmallowed = false;
-            }
-        }
-        else {
-            style = "msg";
-            htmallowed = false;
-        }
-
-        if (!htmallowed) {
-            s = s.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-        }
-
-        final String keystring = Resources.getString("PlayerRoster.observer");
-        final String replace = keystring.replace("<", "&lt;").replace(">", "&gt;");
-        if (!replace.equals(keystring)) {
-            s = s.replace(keystring, replace);
-        }
-
-        try {
-            kit.insertHTML(doc, doc.getLength(), "\n<div class=" + style + ">" + s + "</div>", 0, 0, (HTML.Tag)null);
-        }
-        catch (IOException | BadLocationException ble) {
-            ErrorDialog.bug(ble);
-        }
-
-        conversationPane.repaint();
+        super.show(s);
     }
 
     public static String stripQuickColorTagLocal(String s, String prefix) {
