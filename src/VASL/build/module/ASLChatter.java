@@ -1136,10 +1136,32 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         showDiceStats = (Boolean) modulePrefs.getValue(SHOW_DICE_STATS);
         showDiceStatsOption.addPropertyChangeListener(e -> showDiceStats = (Boolean) e.getNewValue());
 
+        final String[] dieColors = {
+            "Black",
+            "Blue",
+            "Cyan",
+            "Purple",
+            "Red",
+            "Green",
+            "Yellow",
+            "Orange",
+            "AlliedM",
+            "AxisM",
+            "American",
+            "British",
+            "Finnish",
+            "French",
+            "German", 
+            "Italian",
+            "Japanese",
+            "Russian",
+            "Swedish"
+        };
+
         // coloured die pref
         StringEnumConfigurer coloredDiceColor = (StringEnumConfigurer) modulePrefs.getOption(COLORED_DICE_COLOR);
         if (coloredDiceColor == null) {
-            coloredDiceColor = new StringEnumConfigurer(COLORED_DICE_COLOR, "Colored Die Color:", new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange", "AlliedM", "AxisM", "American", "British", "Finnish", "French", "German", "Italian", "Japanese", "Russian", "Swedish"} );
+            coloredDiceColor = new StringEnumConfigurer(COLORED_DICE_COLOR, "Colored Die Color:", dieColors);
             modulePrefs.addOption(Resources.getString("Chatter.chat_window"), coloredDiceColor);
         }
 
@@ -1157,7 +1179,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         // single die pref
         StringEnumConfigurer coloredDieColor = (StringEnumConfigurer) modulePrefs.getOption(SINGLE_DIE_COLOR);
         if (coloredDieColor == null) {
-            coloredDieColor = new StringEnumConfigurer(SINGLE_DIE_COLOR, "Single die color:  ", new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange", "AlliedM", "AxisM", "American", "British", "Finnish", "French", "German", "Italian", "Japanese", "Russian", "Swedish"} );
+            coloredDieColor = new StringEnumConfigurer(SINGLE_DIE_COLOR, "Single die color:", dieColors);
             modulePrefs.addOption(Resources.getString("Chatter.chat_window"), coloredDieColor); //$NON-NLS-1$
         }
 
@@ -1173,7 +1195,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
 
         // third die pref
-        final StringEnumConfigurer thirdDieColor = new StringEnumConfigurer(THIRD_DIE_COLOR, "Third die color:  ", new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange", "AlliedM", "AxisM", "American", "British", "Finnish", "French", "German", "Italian", "Japanese", "Russian", "Swedish"} );
+        final StringEnumConfigurer thirdDieColor = new StringEnumConfigurer(THIRD_DIE_COLOR, "Third die color:", dieColors);
         modulePrefs.addOption(Resources.getString("Chatter.chat_window"), thirdDieColor); //$NON-NLS-1$
         thirdDieColor.addPropertyChangeListener(e -> {
             clrDustColoredDiceColor = (String) e.getNewValue();
