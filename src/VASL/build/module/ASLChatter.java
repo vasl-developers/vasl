@@ -300,29 +300,31 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     }
 
     protected void makeASLStyleSheet(Font f) {
-        if (style != null) {
-            if (f == null) {
-                if (myFont == null) {
-                    f = new Font("SansSerif", Font.PLAIN, 12);
-                    myFont = f;
-                }
-                else {
-                    f = myFont;
-                }
-            }
-
-            addStyle(".msgcategory", f, Color.black, "bold", 0);
-            addStyle(".msguser", f, myChat, "bold", 0);
-            addStyle(".msgspecial", f, gameMsg, "bold", 0);
-
-            style.addRule(
-                " .tbl { border:0px solid #C0C0C0; border-collapse:collapse; border-spacing:0px; padding:0px; background:#CCFFCC;}" +
-                " .tbl th { border:1px solid #C0C0C0; padding:5px; background:#FFFF66;}" +
-                " .tbl td {border:1px solid #C0C0C0; padding:5px; text-align: right;}" +
-                " .tbl tr.total {border:2px solid #black; background:#CCFFFF;}" +
-                " .tbl td.up {border-top:2px solid black; padding:5px; font-weight: bold; text-align: right;}"
-            );
+        if (style == null) {
+            return;
         }
+
+        if (f == null) {
+            if (myFont == null) {
+                f = new Font("SansSerif", Font.PLAIN, 12);
+                myFont = f;
+            }
+            else {
+                f = myFont;
+            }
+        }
+
+        addStyle(".msgcategory", f, Color.black, "bold", 0);
+        addStyle(".msguser", f, myChat, "bold", 0);
+        addStyle(".msgspecial", f, gameMsg, "bold", 0);
+
+        style.addRule(
+            " .tbl { border:0px solid #C0C0C0; border-collapse:collapse; border-spacing:0px; padding:0px; background:#CCFFCC;}" +
+            " .tbl th { border:1px solid #C0C0C0; padding:5px; background:#FFFF66;}" +
+            " .tbl td {border:1px solid #C0C0C0; padding:5px; text-align: right;}" +
+            " .tbl tr.total {border:2px solid #black; background:#CCFFFF;}" +
+            " .tbl td.up {border-top:2px solid black; padding:5px; font-weight: bold; text-align: right;}"
+        );
     }
 
     private String[] findUser(String val) {
