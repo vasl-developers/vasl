@@ -154,7 +154,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         btnSA = CreateChatterDiceButton("", "SA", "Sniper Activation dr", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), false, "SA");
         btnRS = CreateChatterDiceButton("", "RS", "Random Selection dr", KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), false, "RS");
 
-        JPanel panelContainer = new JPanel();
+        final JPanel panelContainer = new JPanel();
         panelContainer.setLayout(new BoxLayout(panelContainer, BoxLayout.LINE_AXIS));
         panelContainer.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
@@ -163,7 +163,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         buttonPannel.setBorder(BorderFactory.createEmptyBorder(1, 1, 2, 1));
         buttonPannel.setMaximumSize(new Dimension(1000, 1000));
 
-        GridBagConstraints gridBagConstraints = new GridBagConstraints();
+        final GridBagConstraints gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.fill = GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.5;
         gridBagConstraints.weighty = 0.5;
@@ -198,22 +198,22 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
         panelContainer.add(buttonPannel);
 
-        GroupLayout groupLayout = new GroupLayout(this);
+        final GroupLayout groupLayout = new GroupLayout(this);
         setLayout(groupLayout);
         groupLayout.setHorizontalGroup(
             groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                 .addComponent(scroll)
                 .addComponent(panelContainer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(edtInputText)
-            );
+        );
         groupLayout.setVerticalGroup(
             groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(
-            groupLayout.createSequentialGroup()
-                .addComponent(scroll, GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
-                .addGap(0, 0, 0)
-                .addComponent(panelContainer, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(edtInputText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                groupLayout.createSequentialGroup()
+                    .addComponent(scroll, GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
+                    .addGap(0, 0, 0)
+                    .addComponent(panelContainer, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, 0)
+                    .addComponent(edtInputText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
             )
         );
     }
