@@ -828,10 +828,10 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     if (category.equals("SA")) {
                                         String sniperstring = "";
                                         if (diceVal == 1) {
-                                            sniperstring ="Eliminates SMC, Dummy stack, Sniper; Stuns & Recalls CE crew; breaks MMC & Inherent crew of certain vehicles; immobilizes unarmored vehicle (A14.3)" ;
+                                            sniperstring = "Eliminates SMC, Dummy stack, Sniper; Stuns & Recalls CE crew; breaks MMC & Inherent crew of certain vehicles; immobilizes unarmored vehicle (A14.3)" ;
                                         }
                                         else if (diceVal == 2) {
-                                            sniperstring ="Eliminates Dummy stack; Wounds SMC; Stuns CE crew; pins MMC, Inherent crew of certain vehicles, Sniper (A14.3)" ;
+                                            sniperstring = "Eliminates Dummy stack; Wounds SMC; Stuns CE crew; pins MMC, Inherent crew of certain vehicles, Sniper (A14.3)" ;
                                         }
                                         msgpartSpecial = sniperstring;
                                     }
