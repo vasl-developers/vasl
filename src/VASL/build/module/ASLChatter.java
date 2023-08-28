@@ -376,36 +376,30 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
     //temporary - to fix VASSAL issues parsing messages pertaining to concealed counters
     private void doShow(String s) {
-        try {
-            if (s.length() > 0) {
-
-                if (s.startsWith("!!")) {  // dice stats button has been clicked
-                    s = makeTableString(s);
-                }
-                else if (s.startsWith("*** 3d6 = ")) {
-                    //Parse3d6(s);
-                }
-                else if (s.startsWith("*** (")) {
-                    parseNewDiceRoll(s);
-                    s = makeMessageString();
-                }
-                else if (s.startsWith("<")) {
-                    parseUserMsg(s);
-                    s = makeMessageString();
-                }
-                else if (s.startsWith("-")) {
-                    parseSystemMsg(s);
-                }
-                else if (s.startsWith("*")) {
-                    s = parseMoveMsg(s);
-                }
-                else {
-                    //ParseDefaultMsg(s);
-                }
+        if (!s.isEmpty()) {
+            if (s.startsWith("!!")) {  // dice stats button has been clicked
+                s = makeTableString(s);
             }
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
+            else if (s.startsWith("*** 3d6 = ")) {
+                //Parse3d6(s);
+            }
+            else if (s.startsWith("*** (")) {
+                parseNewDiceRoll(s);
+                s = makeMessageString();
+            }
+            else if (s.startsWith("<")) {
+                parseUserMsg(s);
+                s = makeMessageString();
+            }
+            else if (s.startsWith("-")) {
+                parseSystemMsg(s);
+            }
+            else if (s.startsWith("*")) {
+                s = parseMoveMsg(s);
+            }
+            else {
+                //ParseDefaultMsg(s);
+            }
         }
 
         s = s.trim();
