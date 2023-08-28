@@ -948,18 +948,21 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     }
 
     private void paintIcon(int dice, DiceType diceType) {
+        ASLDie die;
         try {
-            ASLDie die = diceFactory.getASLDie(diceType);
-            String dicefile = die.getDieHTMLFragment(dice);
-            if (msgpartDiceImage == null) {
-                msgpartDiceImage = "<img alt=\"alt text\" src=\"" + dicefile + "\">";
-            }
-            else {
-                msgpartDiceImage += "&nbsp <img alt=\"alt text\" src=\"" + dicefile + "\"> &nbsp";
-            }
+            die = diceFactory.getASLDie(diceType);
         }
         catch (Exception ex) {
             ex.printStackTrace();
+            return;
+        }
+
+        final String dicefile = die.getDieHTMLFragment(dice);
+        if (msgpartDiceImage == null) {
+            msgpartDiceImage = "<img alt=\"alt text\" src=\"" + dicefile + "\">";
+        }
+        else {
+            msgpartDiceImage += "&nbsp <img alt=\"alt text\" src=\"" + dicefile + "\"> &nbsp";
         }
     }
 
