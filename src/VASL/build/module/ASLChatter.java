@@ -270,9 +270,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         return btn;
     }
 
-    public JButton CreateChatterDiceButton(String strImage, String strCaption, String tooltip, KeyStroke keyStroke, final boolean bDice, final String strCat)
+    public JButton CreateChatterDiceButton(String strImage, String caption, String tooltip, KeyStroke keyStroke, final boolean bDice, final String strCat)
     {
-        JButton btn = new JButton(strCaption);
+        JButton btn = new JButton(caption);
         btn.setMinimumSize(new Dimension(5, 30));
         btn.setMargin(new Insets(0, 0, 0, -1));
         try {
@@ -558,7 +558,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
     private void ParseNewDiceRoll(String msg) {
         // *** (Other DR) 4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
-        String strCategory, strDice, strUser, strSAN = "";
+        String category, strDice, strUser, strSAN = "";
         int iFirstDice, iSecondDice;
         msgpartCategory = null;
         msgpartUser = null;
@@ -574,7 +574,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             int iPos = restOfMsg.indexOf(" DR) ");
 
             if (iPos != -1) {
-                strCategory = restOfMsg.substring(0, iPos);
+                category = restOfMsg.substring(0, iPos);
                 restOfMsg = restOfMsg.substring(iPos + " DR) ".length()); //4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
 
                 iPos = restOfMsg.indexOf(" ***");
@@ -612,7 +612,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     // First, SAN, which should not trigger for Rally, TK and CC rolls
                                     // and should happen on "Only Sniper" setting and in Full ASL mode
                                     if (DRNotificationLevel == 3 || DRNotificationLevel == 1) {
-                                        if (!strCategory.equals("TK") && !strCategory.equals("CC") && !strCategory.equals("Rally")) {
+                                        if (!category.equals("TK") && !category.equals("CC") && !category.equals("Rally")) {
                                             if (restOfMsg.startsWith("Axis SAN")) {
                                                 strSAN = "Axis SAN";
                                                 specialMessages.add("Axis SAN");
@@ -630,7 +630,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                             }
                                         }
 
-                                        if (strCategory.equals("TC")) {
+                                        if (category.equals("TC")) {
                                             if (restOfMsg.startsWith("Axis Booby Trap")) {
                                                 strSAN = "Axis Booby Trap";
                                                 specialMessages.add("Axis Booby Trap");
@@ -652,7 +652,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     // ALL of these happen only in Starter Kit mode or Full ASL mode
                                     if (DRNotificationLevel >= 2) {
                                         // For TH rolls only, show possible hit location, Unlikely hit and multiple hit
-                                        switch (strCategory) {
+                                        switch (category) {
                                         case "TH":
                                             if (iFirstDice == iSecondDice) {
                                                 // Starter Kit + Full ASL
@@ -670,7 +670,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                             else {
                                                 specialMessages.add("Hull");
                                             }
-                                            HandleSpecialMessagesForOtherDice(strCategory, specialMessages, iFirstDice, iSecondDice, otherDice);
+                                            HandleSpecialMessagesForOtherDice(category, specialMessages, iFirstDice, iSecondDice, otherDice);
 
                                             break;
                                         case "TK":
@@ -689,7 +689,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                             else if (iFirstDice == 6 && iSecondDice == 6) {
                                                 specialMessages.add("Casualty MC (A10.31)");
                                             }
-                                            HandleSpecialMessagesForOtherDice(strCategory, specialMessages, iFirstDice, iSecondDice, otherDice);
+                                            HandleSpecialMessagesForOtherDice(category, specialMessages, iFirstDice, iSecondDice, otherDice);
                                             break;
                                         case "TC":
 
@@ -715,7 +715,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                                 // Starter Kit + Full ASL
                                                 specialMessages.add("Cower if MMC w/o LDR");
                                             }
-                                            HandleSpecialMessagesForOtherDice(strCategory, specialMessages, iFirstDice, iSecondDice, otherDice);
+                                            HandleSpecialMessagesForOtherDice(category, specialMessages, iFirstDice, iSecondDice, otherDice);
                                             break;
                                         case "CC":
                                             // Full ASL only
@@ -729,7 +729,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     }
 
                                     // check if SASL Dice button clicked and if so ask for special message string - SASL Dice buttons are created via extension
-                                    if (DRNotificationLevel == 3 && strCategory.equals("EP")){
+                                    if (DRNotificationLevel == 3 && category.equals("EP")){
                                         if (iFirstDice == iSecondDice) {
                                             switch (iFirstDice) {
                                             case 1:
@@ -757,7 +757,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                             strSpecialMessages.append(", ");
                                         }
                                     }
-                                    msgpartCategory = BEFORE_CATEGORY + strCategory;
+                                    msgpartCategory = BEFORE_CATEGORY + category;
 
                                     if (useDiceImages) {
                                         msgpartCdice = Integer.toString(iFirstDice);
@@ -793,7 +793,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                 iPos = restOfMsg.indexOf(" dr) ");
 
                 if (iPos != -1) {
-                    strCategory = restOfMsg.substring(0, iPos);
+                    category = restOfMsg.substring(0, iPos);
                     restOfMsg = restOfMsg.substring(iPos + " dr) ".length()); //3 ***   <FredKors>      [1 / 1   avg   3,00 (3,00)]    (01.84)
 
                     iPos = restOfMsg.indexOf(" ***");
@@ -811,7 +811,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                 if (!parts[1].isEmpty() && !parts[2].isEmpty()) {
                                     strUser = parts[1];
 
-                                    msgpartCategory = BEFORE_CATEGORY + strCategory;
+                                    msgpartCategory = BEFORE_CATEGORY + category;
 
                                     if (useDiceImages) {
                                         msgpartCdice = (strDice);
@@ -825,7 +825,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
                                     msgpartUser = strUser;
                                     // added by DR 2018 to add chatter text on Sniper Activation dr
-                                    if (strCategory.equals("SA")) {
+                                    if (category.equals("SA")) {
                                         String sniperstring = "";
                                         if (iDice == 1) {
                                             sniperstring ="Eliminates SMC, Dummy stack, Sniper; Stuns & Recalls CE crew; breaks MMC & Inherent crew of certain vehicles; immobilizes unarmored vehicle (A14.3)" ;
@@ -852,7 +852,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
     }
 
-    private void HandleSpecialMessagesForOtherDice(final String strCategory, final ArrayList<String> specialMessages,
+    private void HandleSpecialMessagesForOtherDice(final String category, final ArrayList<String> specialMessages,
             final int iFirstDice, final int iSecondDice, final Map<DiceType, Integer> otherDice)
     {
         int total = iFirstDice + iSecondDice;
@@ -860,7 +860,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         final String SPACE = " ";
         // Dust
         if (environment.dustInEffect() && DRNotificationLevel == 3 && !otherDice.isEmpty()) {
-            switch (strCategory) {
+            switch (category) {
             case "TH":
             case "IFT":
                 if (environment.isSpecialDust()) {
@@ -895,7 +895,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
         // Night
         if (environment.isNight() && DRNotificationLevel == 3) {
-            switch (strCategory) {
+            switch (category) {
             case "TH":
             case "IFT":
                 total += 1;
@@ -906,7 +906,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         // LV
         if (environment.isLV()) {
             LVLevel lvLevel = environment.getCurrentLVLevel();
-            switch (strCategory) {
+            switch (category) {
             case "TH":
             case "IFT":
                 switch (lvLevel) {
@@ -920,7 +920,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
         // Fog
         if (environment.isFog()) {
-            switch (strCategory) {
+            switch (category) {
             case "TH":
             case "IFT":
                 {
@@ -932,7 +932,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
         //Heat Haze
         if (environment.isHeatHaze()) {
-            switch (strCategory) {
+            switch (category) {
             case "TH":
             case "IFT":
                 {
@@ -944,7 +944,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
         //Sun Blindness
         if (environment.isSunBlindness()) {
-            switch (strCategory) {
+            switch (category) {
             case "TH":
             case "IFT":
                 {
@@ -1339,6 +1339,6 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     }
 
     public interface ChatterListener {
-        void DiceRoll(String strCategory, String strUser, String strSAN, int iFirstDice, int iSecondDice);
+        void DiceRoll(String category, String strUser, String strSAN, int iFirstDice, int iSecondDice);
     }
 }
