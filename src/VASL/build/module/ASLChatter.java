@@ -97,7 +97,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     private final JButton btndr;
     private final JButton btnSA;
     private final JButton btnRS;
-    private final JPanel objButtonPanel;
+    private final JPanel buttonPannel;
     private boolean bUseDiceImages;
     private boolean bShowDiceStats;
 
@@ -154,33 +154,33 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         btnSA = CreateChatterDiceButton("", "SA", "Sniper Activation dr", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), false, "SA");
         btnRS = CreateChatterDiceButton("", "RS", "Random Selection dr", KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), false, "RS");
 
-        JPanel objPanelContainer = new JPanel();
-        objPanelContainer.setLayout(new BoxLayout(objPanelContainer, BoxLayout.LINE_AXIS));
-        objPanelContainer.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        JPanel panelContainer = new JPanel();
+        panelContainer.setLayout(new BoxLayout(panelContainer, BoxLayout.LINE_AXIS));
+        panelContainer.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        objButtonPanel = new JPanel();
-        objButtonPanel.setLayout(new GridBagLayout());
-        objButtonPanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 2, 1));
-        objButtonPanel.setMaximumSize(new Dimension(1000, 1000));
+        buttonPannel = new JPanel();
+        buttonPannel.setLayout(new GridBagLayout());
+        buttonPannel.setBorder(BorderFactory.createEmptyBorder(1, 1, 2, 1));
+        buttonPannel.setMaximumSize(new Dimension(1000, 1000));
 
-        GridBagConstraints objGridBagConstraints = new GridBagConstraints();
-        objGridBagConstraints.fill = GridBagConstraints.BOTH;
-        objGridBagConstraints.weightx = 0.5;
-        objGridBagConstraints.weighty = 0.5;
-        objGridBagConstraints.insets = new Insets(0, 1, 0, 1);
+        GridBagConstraints gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.fill = GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new Insets(0, 1, 0, 1);
 
-        objButtonPanel.add(btnStats, objGridBagConstraints);
-        objButtonPanel.add(btnDR, objGridBagConstraints);
-        objButtonPanel.add(btnIFT, objGridBagConstraints);
-        objButtonPanel.add(btnTH, objGridBagConstraints);
-        objButtonPanel.add(btnTK, objGridBagConstraints);
-        objButtonPanel.add(btnMC, objGridBagConstraints);
-        objButtonPanel.add(btnTC, objGridBagConstraints);
-        objButtonPanel.add(btnRally, objGridBagConstraints);
-        objButtonPanel.add(btnCC, objGridBagConstraints);
-        objButtonPanel.add(btndr, objGridBagConstraints);
-        objButtonPanel.add(btnSA, objGridBagConstraints);
-        objButtonPanel.add(btnRS, objGridBagConstraints);
+        buttonPannel.add(btnStats, gridBagConstraints);
+        buttonPannel.add(btnDR, gridBagConstraints);
+        buttonPannel.add(btnIFT, gridBagConstraints);
+        buttonPannel.add(btnTH, gridBagConstraints);
+        buttonPannel.add(btnTK, gridBagConstraints);
+        buttonPannel.add(btnMC, gridBagConstraints);
+        buttonPannel.add(btnTC, gridBagConstraints);
+        buttonPannel.add(btnRally, gridBagConstraints);
+        buttonPannel.add(btnCC, gridBagConstraints);
+        buttonPannel.add(btndr, gridBagConstraints);
+        buttonPannel.add(btnSA, gridBagConstraints);
+        buttonPannel.add(btnRS, gridBagConstraints);
 
         edtInputText = new JTextField(60);
         edtInputText.setFocusTraversalKeysEnabled(false);
@@ -196,22 +196,22 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
         scroll.setViewportView(conversationPane);
 
-        objPanelContainer.add(objButtonPanel);
+        panelContainer.add(buttonPannel);
 
-        GroupLayout objGroupLayout = new GroupLayout(this);
-        setLayout(objGroupLayout);
-        objGroupLayout.setHorizontalGroup(
-            objGroupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        GroupLayout groupLayout = new GroupLayout(this);
+        setLayout(groupLayout);
+        groupLayout.setHorizontalGroup(
+            groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                 .addComponent(scroll)
-                .addComponent(objPanelContainer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(panelContainer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(edtInputText)
             );
-        objGroupLayout.setVerticalGroup(
-            objGroupLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(
-            objGroupLayout.createSequentialGroup()
+        groupLayout.setVerticalGroup(
+            groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(
+            groupLayout.createSequentialGroup()
                 .addComponent(scroll, GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
-                .addComponent(objPanelContainer, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelContainer, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(edtInputText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
             )
@@ -221,22 +221,22 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     // Is this still used?
     @Deprecated
     public JPanel getButtonPanel() {  //used by SASLDice extension
-        return objButtonPanel;
+        return buttonPannel;
     }
 
-    private void SetButtonsFonts(Font objFont) {
-        btnStats.setFont(objFont);
-        btnDR.setFont(objFont);
-        btnIFT.setFont(objFont);
-        btnTH.setFont(objFont);
-        btnTK.setFont(objFont);
-        btnMC.setFont(objFont);
-        btnRally.setFont(objFont);
-        btnCC.setFont(objFont);
-        btnTC.setFont(objFont);
-        btndr.setFont(objFont);
-        btnSA.setFont(objFont);
-        btnRS.setFont(objFont);
+    private void SetButtonsFonts(Font font) {
+        btnStats.setFont(font);
+        btnDR.setFont(font);
+        btnIFT.setFont(font);
+        btnTH.setFont(font);
+        btnTK.setFont(font);
+        btnMC.setFont(font);
+        btnRally.setFont(font);
+        btnCC.setFont(font);
+        btnTC.setFont(font);
+        btndr.setFont(font);
+        btnSA.setFont(font);
+        btnRS.setFont(font);
     }
 
     private JButton CreateStatsDiceButton(KeyStroke keyStroke) {
@@ -249,19 +249,19 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
         catch (Exception ignored) {
         }
-        ActionListener objAL = e -> {
+        ActionListener al = e -> {
             try {
-                ASLDiceBot objDice = GameModule.getGameModule().getComponentsOf(ASLDiceBot.class).iterator().next();
-                if (objDice != null) {
-                    objDice.statsToday();
+                ASLDiceBot dice = GameModule.getGameModule().getComponentsOf(ASLDiceBot.class).iterator().next();
+                if (dice != null) {
+                    dice.statsToday();
                 }
             }
             catch (Exception ignored) {
             }
         };
 
-        btn.addActionListener(objAL);
-        KeyStrokeListener Listener = new KeyStrokeListener(objAL);
+        btn.addActionListener(al);
+        KeyStrokeListener Listener = new KeyStrokeListener(al);
         Listener.setKeyStroke(keyStroke);
         AddHotKeyToTooltip(btn, Listener, "Dice rolls stats");
         btn.setFocusable(false);
@@ -282,15 +282,15 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
         catch (Exception ignored) {
         }
-        ActionListener objAL = e -> {
+        ActionListener al = e -> {
             try {
-                ASLDiceBot objDice = GameModule.getGameModule().getComponentsOf(ASLDiceBot.class).iterator().next();
-                if (objDice != null) {
+                ASLDiceBot dice = GameModule.getGameModule().getComponentsOf(ASLDiceBot.class).iterator().next();
+                if (dice != null) {
                     if (bDice) {
-                        objDice.DR(strCat);
+                        dice.DR(strCat);
                     }
                     else {
-                        objDice.dr(strCat);
+                        dice.dr(strCat);
                     }
                 }
             }
@@ -298,8 +298,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             }
         };
 
-        btn.addActionListener(objAL);
-        KeyStrokeListener Listener = new KeyStrokeListener(objAL);
+        btn.addActionListener(al);
+        KeyStrokeListener Listener = new KeyStrokeListener(al);
         Listener.setKeyStroke(keyStroke);
         AddHotKeyToTooltip(btn, Listener, strTooltip);
         btn.setFocusable(false);
@@ -308,9 +308,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         return btn;
     }
 
-    private void AddHotKeyToTooltip(JButton objButton, KeyStrokeListener objListener, String strTooltipText) {
-        if (objListener.getKeyStroke() != null) {
-            objButton.setToolTipText(strTooltipText + " [" + HotKeyConfigurer.getString(objListener.getKeyStroke()) + "]");
+    private void AddHotKeyToTooltip(JButton button, KeyStrokeListener listener, String strTooltipText) {
+        if (listener.getKeyStroke() != null) {
+            button.setToolTipText(strTooltipText + " [" + HotKeyConfigurer.getString(listener.getKeyStroke()) + "]");
         }
     }
 
@@ -501,8 +501,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
     private void ParseSystemMsg(String strMsg) {
         try {
-            //StyleConstants.setForeground(objMainStyle, clrSystemMsg);
-            //objDocument.insertString(objDocument.getLength(), "\n" + strMsg, objMainStyle);
+            //StyleConstants.setForeground(mainStyle, clrSystemMsg);
+            //document.insertString(document.getLength(), "\n" + strMsg, mainStyle);
         }
         catch (Exception ex) {
             ex.printStackTrace();
@@ -1044,29 +1044,29 @@ public class ASLChatter extends VASSAL.build.module.Chatter
      * {@link CommandEncoder} */
     @Override
     public void addTo(Buildable b) {
-        GameModule objGameModule = (GameModule) b;
-        if (objGameModule.getChatter() != null) {
+        GameModule gameModule = (GameModule) b;
+        if (gameModule.getChatter() != null) {
             // deleted code here which removed VASSAL elements but getChatter is always null at this point
         }
 
-        objGameModule.setChatter(this);
-        objGameModule.addCommandEncoder(this);
-        objGameModule.addKeyStrokeSource(new KeyStrokeSource(this, WHEN_ANCESTOR_OF_FOCUSED_COMPONENT));
-        objGameModule.getPlayerWindow().addChatter(this);
-        objGameModule.getControlPanel().add(this, BorderLayout.CENTER);
-        final Prefs objModulePrefs = objGameModule.getPrefs();
+        gameModule.setChatter(this);
+        gameModule.addCommandEncoder(this);
+        gameModule.addKeyStrokeSource(new KeyStrokeSource(this, WHEN_ANCESTOR_OF_FOCUSED_COMPONENT));
+        gameModule.getPlayerWindow().addChatter(this);
+        gameModule.getControlPanel().add(this, BorderLayout.CENTER);
+        final Prefs modulePrefs = gameModule.getPrefs();
 
         // font pref
-        FontConfigurer objChatFontConfigurer;
-        FontConfigurer objChatFontConfigurer_Exist = (FontConfigurer)objModulePrefs.getOption("ChatFont");
-        if (objChatFontConfigurer_Exist == null) {
-            objChatFontConfigurer = new FontConfigurer(CHAT_FONT, Resources.getString("Chatter.chat_font_preference")); //$NON-NLS-1$ //$NON-NLS-2$
-            objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), objChatFontConfigurer); //$NON-NLS-1$
+        FontConfigurer chatFontConfigurer;
+        FontConfigurer chatFontConfigurer_Exist = (FontConfigurer)modulePrefs.getOption("ChatFont");
+        if (chatFontConfigurer_Exist == null) {
+            chatFontConfigurer = new FontConfigurer(CHAT_FONT, Resources.getString("Chatter.chat_font_preference")); //$NON-NLS-1$ //$NON-NLS-2$
+            modulePrefs.addOption(Resources.getString("Chatter.chat_window"), chatFontConfigurer); //$NON-NLS-1$
         }
         else {
-            objChatFontConfigurer = objChatFontConfigurer_Exist;
+            chatFontConfigurer = chatFontConfigurer_Exist;
         }
-        objChatFontConfigurer.addPropertyChangeListener(evt -> {
+        chatFontConfigurer.addPropertyChangeListener(evt -> {
             setFont((Font) evt.getNewValue());
             makeStyleSheet((Font) evt.getNewValue());
             makeASLStyleSheet((Font) evt.getNewValue());
@@ -1074,35 +1074,35 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             send("- Chatter font changed");
             send(" ");
         });
-        objChatFontConfigurer.fireUpdate();
+        chatFontConfigurer.fireUpdate();
         // buttons font pref
-        FontConfigurer objButtonsFontConfigurer;
-        FontConfigurer objButtonsFontConfigurer_Exist = (FontConfigurer)objModulePrefs.getOption("ButtonFont");
-        if (objButtonsFontConfigurer_Exist == null) {
-            objButtonsFontConfigurer = new FontConfigurer(BUTTON_FONT, "Chatter's dice buttons font: "); //$NON-NLS-1$ //$NON-NLS-2$
-            objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), objButtonsFontConfigurer); //$NON-NLS-1$
+        FontConfigurer buttonsFontConfigurer;
+        FontConfigurer buttonsFontConfigurer_Exist = (FontConfigurer)modulePrefs.getOption("ButtonFont");
+        if (buttonsFontConfigurer_Exist == null) {
+            buttonsFontConfigurer = new FontConfigurer(BUTTON_FONT, "Chatter's dice buttons font: "); //$NON-NLS-1$ //$NON-NLS-2$
+            modulePrefs.addOption(Resources.getString("Chatter.chat_window"), buttonsFontConfigurer); //$NON-NLS-1$
         }
         else {
-            objButtonsFontConfigurer = objButtonsFontConfigurer_Exist;
+            buttonsFontConfigurer = buttonsFontConfigurer_Exist;
         }
-        objButtonsFontConfigurer.addPropertyChangeListener(evt -> SetButtonsFonts((Font) evt.getNewValue()));
-        objButtonsFontConfigurer.fireUpdate();
+        buttonsFontConfigurer.addPropertyChangeListener(evt -> SetButtonsFonts((Font) evt.getNewValue()));
+        buttonsFontConfigurer.fireUpdate();
         //background colour pref
-        ColorConfigurer objBackgroundColor;
-        ColorConfigurer objBackgroundColor_Exist = (ColorConfigurer)objModulePrefs.getOption(CHAT_BACKGROUND_COLOR);
-        if (objBackgroundColor_Exist == null) {
-            objBackgroundColor = new ColorConfigurer(CHAT_BACKGROUND_COLOR, "Background color: ", Color.white); //$NON-NLS-1$
-            objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), objBackgroundColor); //$NON-NLS-1$
+        ColorConfigurer backgroundColor;
+        ColorConfigurer backgroundColor_Exist = (ColorConfigurer)modulePrefs.getOption(CHAT_BACKGROUND_COLOR);
+        if (backgroundColor_Exist == null) {
+            backgroundColor = new ColorConfigurer(CHAT_BACKGROUND_COLOR, "Background color: ", Color.white); //$NON-NLS-1$
+            modulePrefs.addOption(Resources.getString("Chatter.chat_window"), backgroundColor); //$NON-NLS-1$
         }
         else {
-            objBackgroundColor = objBackgroundColor_Exist;
+            backgroundColor = backgroundColor_Exist;
         }
-        clrBackground = (Color) objModulePrefs.getValue(CHAT_BACKGROUND_COLOR);
-        objBackgroundColor.addPropertyChangeListener(e -> {
+        clrBackground = (Color) modulePrefs.getValue(CHAT_BACKGROUND_COLOR);
+        backgroundColor.addPropertyChangeListener(e -> {
             clrBackground = (Color) e.getNewValue();
             conversationPane.setBackground(clrBackground);
         });
-        objBackgroundColor.fireUpdate();
+        backgroundColor.fireUpdate();
         // game message color pref
         Prefs globalPrefs = Prefs.getGlobalPrefs();
         ColorConfigurer gameMsgColor = new ColorConfigurer("HTMLgameMessage1Color", Resources.getString("Chatter.game_messages_preference"), Color.black);
@@ -1115,100 +1115,100 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         gameMsg = (Color)globalPrefs.getValue("HTMLgameMessage1Color");
 
         // sys messages pref
-        ColorConfigurer objSystemMsgColor;
-        ColorConfigurer objSystemMsgColor_Exist = (ColorConfigurer)objModulePrefs.getOption(SYS_MSG_COLOR);
-        if (objSystemMsgColor_Exist == null) {
-            objSystemMsgColor = new ColorConfigurer(SYS_MSG_COLOR, Resources.getString("Chatter.systemessage_preference"), new Color(160, 160, 160)); //$NON-NLS-1$
-            objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), objSystemMsgColor); //$NON-NLS-1$
+        ColorConfigurer systemMsgColor;
+        ColorConfigurer systemMsgColor_Exist = (ColorConfigurer)modulePrefs.getOption(SYS_MSG_COLOR);
+        if (systemMsgColor_Exist == null) {
+            systemMsgColor = new ColorConfigurer(SYS_MSG_COLOR, Resources.getString("Chatter.systemessage_preference"), new Color(160, 160, 160)); //$NON-NLS-1$
+            modulePrefs.addOption(Resources.getString("Chatter.chat_window"), systemMsgColor); //$NON-NLS-1$
         }
         else {
-            objSystemMsgColor = objSystemMsgColor_Exist;
+            systemMsgColor = systemMsgColor_Exist;
         }
-        systemMsg = (Color) objModulePrefs.getValue(SYS_MSG_COLOR);
+        systemMsg = (Color) modulePrefs.getValue(SYS_MSG_COLOR);
         makeStyleSheet(null);
-        objSystemMsgColor.addPropertyChangeListener(e -> {
+        systemMsgColor.addPropertyChangeListener(e -> {
             systemMsg = (Color) e.getNewValue();
             makeStyleSheet(null);
         });
         // myChat preference
-        ColorConfigurer objMyChatColor;
-        ColorConfigurer objMyChatColor_Exist = (ColorConfigurer)objModulePrefs.getOption(MY_CHAT_COLOR);
-        if (objMyChatColor_Exist == null) {
-            objMyChatColor = new ColorConfigurer(MY_CHAT_COLOR, "My Name and Text Messages" , Color.gray); //$NON-NLS-1$
-            objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), objMyChatColor); //$NON-NLS-1$
+        ColorConfigurer myChatColor;
+        ColorConfigurer myChatColor_Exist = (ColorConfigurer)modulePrefs.getOption(MY_CHAT_COLOR);
+        if (myChatColor_Exist == null) {
+            myChatColor = new ColorConfigurer(MY_CHAT_COLOR, "My Name and Text Messages" , Color.gray); //$NON-NLS-1$
+            modulePrefs.addOption(Resources.getString("Chatter.chat_window"), myChatColor); //$NON-NLS-1$
         }
         else {
-            objMyChatColor = objMyChatColor_Exist;
+            myChatColor = myChatColor_Exist;
         }
-        myChat = (Color) objModulePrefs.getValue(MY_CHAT_COLOR);
+        myChat = (Color) modulePrefs.getValue(MY_CHAT_COLOR);
         makeStyleSheet(null);
-        objMyChatColor.addPropertyChangeListener(e -> {
+        myChatColor.addPropertyChangeListener(e -> {
             myChat = (Color) e.getNewValue();
             makeStyleSheet(null);
         });
         // other chat preference
-        ColorConfigurer objOtherChatColor;
-        ColorConfigurer objOtherChatColor_Exist = (ColorConfigurer)objModulePrefs.getOption(OTHER_CHAT_COLOR);
-        if (objOtherChatColor_Exist == null) {
-            objOtherChatColor = new ColorConfigurer(OTHER_CHAT_COLOR, Resources.getString("Chatter.other_text_preference"), Color.black); //$NON-NLS-1$
-            objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), objOtherChatColor); //$NON-NLS-1$
+        ColorConfigurer otherChatColor;
+        ColorConfigurer otherChatColor_Exist = (ColorConfigurer)modulePrefs.getOption(OTHER_CHAT_COLOR);
+        if (otherChatColor_Exist == null) {
+            otherChatColor = new ColorConfigurer(OTHER_CHAT_COLOR, Resources.getString("Chatter.other_text_preference"), Color.black); //$NON-NLS-1$
+            modulePrefs.addOption(Resources.getString("Chatter.chat_window"), otherChatColor); //$NON-NLS-1$
         }
         else {
-            objOtherChatColor = objOtherChatColor_Exist;
+            otherChatColor = otherChatColor_Exist;
         }
-        otherChat = (Color) objModulePrefs.getValue(OTHER_CHAT_COLOR);
+        otherChat = (Color) modulePrefs.getValue(OTHER_CHAT_COLOR);
         makeStyleSheet(null);
-        objOtherChatColor.addPropertyChangeListener(e -> {
+        otherChatColor.addPropertyChangeListener(e -> {
             otherChat = (Color) e.getNewValue();
             makeStyleSheet(null);
         });
         // dice chat pref
-        ColorConfigurer objDiceChatColor;
-        ColorConfigurer objDiceChatColor_Exist = (ColorConfigurer)objModulePrefs.getOption(DICE_CHAT_COLOR);
-        if (objDiceChatColor_Exist == null) {
-            objDiceChatColor = new ColorConfigurer(DICE_CHAT_COLOR, "Dice Results font color: ", Color.black); //$NON-NLS-1$
-            objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), objDiceChatColor); //$NON-NLS-1$
+        ColorConfigurer diceChatColor;
+        ColorConfigurer diceChatColor_Exist = (ColorConfigurer)modulePrefs.getOption(DICE_CHAT_COLOR);
+        if (diceChatColor_Exist == null) {
+            diceChatColor = new ColorConfigurer(DICE_CHAT_COLOR, "Dice Results font color: ", Color.black); //$NON-NLS-1$
+            modulePrefs.addOption(Resources.getString("Chatter.chat_window"), diceChatColor); //$NON-NLS-1$
         }
         else {
-            objDiceChatColor = objDiceChatColor_Exist;
+            diceChatColor = diceChatColor_Exist;
         }
-        gameMsg5 = (Color) objModulePrefs.getValue(DICE_CHAT_COLOR);
+        gameMsg5 = (Color) modulePrefs.getValue(DICE_CHAT_COLOR);
         makeStyleSheet(null);
-        objDiceChatColor.addPropertyChangeListener(e -> {
+        diceChatColor.addPropertyChangeListener(e -> {
             gameMsg5 = (Color) e.getNewValue();
             makeStyleSheet(null);
         });
         // dice images pref
-        BooleanConfigurer objUseDiceImagesOption;
-        BooleanConfigurer objUseDiceImagesOption_Exist = (BooleanConfigurer)objModulePrefs.getOption(USE_DICE_IMAGES);
-        if (objUseDiceImagesOption_Exist == null) {
-            objUseDiceImagesOption = new BooleanConfigurer(USE_DICE_IMAGES, "Use images for dice rolls", Boolean.TRUE);  //$NON-NLS-1$
-            objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), objUseDiceImagesOption); //$NON-NLS-1$
+        BooleanConfigurer useDiceImagesOption;
+        BooleanConfigurer useDiceImagesOption_Exist = (BooleanConfigurer)modulePrefs.getOption(USE_DICE_IMAGES);
+        if (useDiceImagesOption_Exist == null) {
+            useDiceImagesOption = new BooleanConfigurer(USE_DICE_IMAGES, "Use images for dice rolls", Boolean.TRUE);  //$NON-NLS-1$
+            modulePrefs.addOption(Resources.getString("Chatter.chat_window"), useDiceImagesOption); //$NON-NLS-1$
         }
         else {
-            objUseDiceImagesOption = objUseDiceImagesOption_Exist;
+            useDiceImagesOption = useDiceImagesOption_Exist;
         }
-        bUseDiceImages = (Boolean) (objModulePrefs.getValue(USE_DICE_IMAGES));
-        objUseDiceImagesOption.addPropertyChangeListener(e -> bUseDiceImages = (Boolean) e.getNewValue());
+        bUseDiceImages = (Boolean) (modulePrefs.getValue(USE_DICE_IMAGES));
+        useDiceImagesOption.addPropertyChangeListener(e -> bUseDiceImages = (Boolean) e.getNewValue());
         // dice stats pref
-        BooleanConfigurer objShowDiceStatsOption;
-        BooleanConfigurer objShowDiceStatsOption_Exist = (BooleanConfigurer)objModulePrefs.getOption(SHOW_DICE_STATS);
-        if (objShowDiceStatsOption_Exist == null) {
-            objShowDiceStatsOption = new BooleanConfigurer(SHOW_DICE_STATS, "Show dice stats after each dice rolls", Boolean.FALSE);  //$NON-NLS-1$
-            objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), objShowDiceStatsOption); //$NON-NLS-1$
+        BooleanConfigurer showDiceStatsOption;
+        BooleanConfigurer showDiceStatsOption_Exist = (BooleanConfigurer)modulePrefs.getOption(SHOW_DICE_STATS);
+        if (showDiceStatsOption_Exist == null) {
+            showDiceStatsOption = new BooleanConfigurer(SHOW_DICE_STATS, "Show dice stats after each dice rolls", Boolean.FALSE);  //$NON-NLS-1$
+            modulePrefs.addOption(Resources.getString("Chatter.chat_window"), showDiceStatsOption); //$NON-NLS-1$
         }
         else {
-            objShowDiceStatsOption = objShowDiceStatsOption_Exist;
+            showDiceStatsOption = showDiceStatsOption_Exist;
         }
-        bShowDiceStats = (Boolean) (objModulePrefs.getValue(SHOW_DICE_STATS));
-        objShowDiceStatsOption.addPropertyChangeListener(e -> bShowDiceStats = (Boolean) e.getNewValue());
+        bShowDiceStats = (Boolean) (modulePrefs.getValue(SHOW_DICE_STATS));
+        showDiceStatsOption.addPropertyChangeListener(e -> bShowDiceStats = (Boolean) e.getNewValue());
 
         // coloured die pref
         StringEnumConfigurer coloredDiceColor;
-        StringEnumConfigurer coloredDiceColor_Exist = (StringEnumConfigurer) objModulePrefs.getOption(COLORED_DICE_COLOR);
+        StringEnumConfigurer coloredDiceColor_Exist = (StringEnumConfigurer) modulePrefs.getOption(COLORED_DICE_COLOR);
         if (coloredDiceColor_Exist == null) {
             coloredDiceColor = new StringEnumConfigurer(COLORED_DICE_COLOR, "Colored Die Color:", new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange", "AlliedM", "AxisM", "American", "British", "Finnish", "French", "German", "Italian", "Japanese", "Russian", "Swedish"} );
-            objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), coloredDiceColor);
+            modulePrefs.addOption(Resources.getString("Chatter.chat_window"), coloredDiceColor);
         }
         else {
             coloredDiceColor = coloredDiceColor_Exist;
@@ -1219,71 +1219,71 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             diceFactory.setDieColor(DiceType.COLORED, DieColor.getEnum(clrColoredDiceColor));
             }
         });
-        clrColoredDiceColor = objModulePrefs.getStoredValue("coloredDiceColor");
+        clrColoredDiceColor = modulePrefs.getStoredValue("coloredDiceColor");
         if (clrColoredDiceColor != null) {
             diceFactory.setDieColor(DiceType.COLORED,DieColor.getEnum(clrColoredDiceColor));
         }
 
         // single die pref
-        StringEnumConfigurer objColoredDieColor;
-        StringEnumConfigurer objColoredDieColor_Exist = (StringEnumConfigurer)objModulePrefs.getOption(SINGLE_DIE_COLOR);
-        if (objColoredDieColor_Exist == null) {
-            objColoredDieColor = new StringEnumConfigurer(SINGLE_DIE_COLOR, "Single die color:  ", new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange", "AlliedM", "AxisM", "American", "British", "Finnish", "French", "German", "Italian", "Japanese", "Russian", "Swedish"} );
-            objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), objColoredDieColor); //$NON-NLS-1$
+        StringEnumConfigurer coloredDieColor;
+        StringEnumConfigurer coloredDieColor_Exist = (StringEnumConfigurer)modulePrefs.getOption(SINGLE_DIE_COLOR);
+        if (coloredDieColor_Exist == null) {
+            coloredDieColor = new StringEnumConfigurer(SINGLE_DIE_COLOR, "Single die color:  ", new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange", "AlliedM", "AxisM", "American", "British", "Finnish", "French", "German", "Italian", "Japanese", "Russian", "Swedish"} );
+            modulePrefs.addOption(Resources.getString("Chatter.chat_window"), coloredDieColor); //$NON-NLS-1$
         }
         else {
-            objColoredDieColor = objColoredDieColor_Exist;
+            coloredDieColor = coloredDieColor_Exist;
         }
-        objColoredDieColor.addPropertyChangeListener(e -> {
+        coloredDieColor.addPropertyChangeListener(e -> {
             clrSingleDieColor = (String) e.getNewValue();
             if (clrSingleDieColor != null) {
                 diceFactory.setDieColor(DiceType.SINGLE, DieColor.getEnum(clrSingleDieColor));
             }
         });
-        clrSingleDieColor = objModulePrefs.getStoredValue("singleDieColor");
+        clrSingleDieColor = modulePrefs.getStoredValue("singleDieColor");
         if (clrSingleDieColor != null) {
             diceFactory.setDieColor(DiceType.SINGLE, DieColor.getEnum(clrSingleDieColor));
         }
 
         // third die pref
-        StringEnumConfigurer objThirdDieColor;
-        objThirdDieColor = new StringEnumConfigurer(THIRD_DIE_COLOR, "Third die color:  ", new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange", "AlliedM", "AxisM", "American", "British", "Finnish", "French", "German", "Italian", "Japanese", "Russian", "Swedish"} );
-        objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), objThirdDieColor); //$NON-NLS-1$
-        objThirdDieColor.addPropertyChangeListener(e -> {
+        StringEnumConfigurer thirdDieColor;
+        thirdDieColor = new StringEnumConfigurer(THIRD_DIE_COLOR, "Third die color:  ", new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange", "AlliedM", "AxisM", "American", "British", "Finnish", "French", "German", "Italian", "Japanese", "Russian", "Swedish"} );
+        modulePrefs.addOption(Resources.getString("Chatter.chat_window"), thirdDieColor); //$NON-NLS-1$
+        thirdDieColor.addPropertyChangeListener(e -> {
             clrDustColoredDiceColor = (String) e.getNewValue();
             if (clrDustColoredDiceColor != null) {
                 diceFactory.setDieColor(DiceType.OTHER_DUST, DieColor.getEnum(clrDustColoredDiceColor));
             }
         });
-        clrDustColoredDiceColor = objModulePrefs.getStoredValue("thirdDieColor");
+        clrDustColoredDiceColor = modulePrefs.getStoredValue("thirdDieColor");
         if (clrDustColoredDiceColor != null) {
             diceFactory.setDieColor(DiceType.SINGLE,DieColor.getEnum(clrDustColoredDiceColor));
         }
-        objThirdDieColor.fireUpdate();
+        thirdDieColor.fireUpdate();
 
         // rule set pref
-        StringEnumConfigurer objSpecialDiceRollNotificationLevel = (StringEnumConfigurer)objModulePrefs.getOption(NOTIFICATION_LEVEL);
+        StringEnumConfigurer specialDiceRollNotificationLevel = (StringEnumConfigurer)modulePrefs.getOption(NOTIFICATION_LEVEL);
         final String[] DROptions = {
             "None",
             "Snipers only",
             "Starter Kit",
             "Full ASL"
         };
-        if (objSpecialDiceRollNotificationLevel == null) {
-            objSpecialDiceRollNotificationLevel = new StringEnumConfigurer(NOTIFICATION_LEVEL,
+        if (specialDiceRollNotificationLevel == null) {
+            specialDiceRollNotificationLevel = new StringEnumConfigurer(NOTIFICATION_LEVEL,
                     "Notify about special DRs: ", DROptions);
-            objSpecialDiceRollNotificationLevel.setValue("Full ASL");
-            objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), objSpecialDiceRollNotificationLevel);
+            specialDiceRollNotificationLevel.setValue("Full ASL");
+            modulePrefs.addOption(Resources.getString("Chatter.chat_window"), specialDiceRollNotificationLevel);
         }
         for (int i = 0; i < DROptions.length; ++i) {
-            if (DROptions[i].equals(objSpecialDiceRollNotificationLevel.getValueString())) {
+            if (DROptions[i].equals(specialDiceRollNotificationLevel.getValueString())) {
                 DRNotificationLevel = i;
                 break;
             }
         }
         // just for access from inside the event handler
-        final StringEnumConfigurer cfg = objSpecialDiceRollNotificationLevel;
-        objSpecialDiceRollNotificationLevel.addPropertyChangeListener(e -> {
+        final StringEnumConfigurer cfg = specialDiceRollNotificationLevel;
+        specialDiceRollNotificationLevel.addPropertyChangeListener(e -> {
             for (int i = 0; i < DROptions.length; ++i) {
                 if (DROptions[i].equals(cfg.getValueString())) {
                     DRNotificationLevel = i;
@@ -1293,7 +1293,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             DRNotificationLevel = 3;
         });
         // Player Window pref
-        objColoredDieColor.fireUpdate();
+        coloredDieColor.fireUpdate();
         final BooleanConfigurer AlwaysOnTop = new BooleanConfigurer("PWAlwaysOnTop", "Player Window (menus, toolbar, chat) is always on top in uncombined application mode (requires a VASSAL restart)", false);
         getGameModule().getPrefs().addOption(preferenceTabName, AlwaysOnTop);
     }
@@ -1325,8 +1325,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     }
 
     private void FireDiceRoll() {
-        for (ChatterListener objListener : chatter_listeners) {
-            objListener.DiceRoll(msgpartCategory, msgpartUser, msgpartSAN, Integer.parseInt(msgpartCdice), Integer.parseInt(msgpartWdice));
+        for (ChatterListener listener : chatter_listeners) {
+            listener.DiceRoll(msgpartCategory, msgpartUser, msgpartSAN, Integer.parseInt(msgpartCdice), Integer.parseInt(msgpartWdice));
         }
     }
 
