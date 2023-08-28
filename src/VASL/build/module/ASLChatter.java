@@ -141,7 +141,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             }
         });
 
-        btnStats = CreateStatsDiceButton(KeyStroke.getKeyStroke(KeyEvent.VK_F3, InputEvent.CTRL_DOWN_MASK));
+        btnStats = createStatsDiceButton(KeyStroke.getKeyStroke(KeyEvent.VK_F3, InputEvent.CTRL_DOWN_MASK));
         btnDR = CreateChatterDiceButton("DRs.gif", "DR", "DR", KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), true, ASLDiceBot.OTHER_CATEGORY);
         btnIFT = CreateChatterDiceButton("", "IFT", "IFT attack DR", KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), true, "IFT");
         btnTH = CreateChatterDiceButton("", "TH", "To Hit DR", KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), true, "TH");
@@ -224,7 +224,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         return buttonPannel;
     }
 
-    private void SetButtonsFonts(Font font) {
+    private void setButtonsFonts(Font font) {
         btnStats.setFont(font);
         btnDR.setFont(font);
         btnIFT.setFont(font);
@@ -239,7 +239,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         btnRS.setFont(font);
     }
 
-    private JButton CreateStatsDiceButton(KeyStroke keyStroke) {
+    private JButton createStatsDiceButton(KeyStroke keyStroke) {
         JButton btn = new JButton("");
         btn.setMinimumSize(new Dimension(5, 30));
         btn.setMargin(new Insets(0, 0, 0, -1));
@@ -263,7 +263,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         btn.addActionListener(al);
         KeyStrokeListener Listener = new KeyStrokeListener(al);
         Listener.setKeyStroke(keyStroke);
-        AddHotKeyToTooltip(btn, Listener, "Dice rolls stats");
+        addHotKeyToTooltip(btn, Listener, "Dice rolls stats");
         btn.setFocusable(false);
         GameModule.getGameModule().addKeyStrokeListener(Listener);
 
@@ -301,14 +301,14 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         btn.addActionListener(al);
         KeyStrokeListener Listener = new KeyStrokeListener(al);
         Listener.setKeyStroke(keyStroke);
-        AddHotKeyToTooltip(btn, Listener, tooltip);
+        addHotKeyToTooltip(btn, Listener, tooltip);
         btn.setFocusable(false);
         GameModule.getGameModule().addKeyStrokeListener(Listener);
 
         return btn;
     }
 
-    private void AddHotKeyToTooltip(JButton button, KeyStrokeListener listener, String tooltipText) {
+    private void addHotKeyToTooltip(JButton button, KeyStrokeListener listener, String tooltipText) {
         if (listener.getKeyStroke() != null) {
             button.setToolTipText(tooltipText + " [" + HotKeyConfigurer.getString(listener.getKeyStroke()) + "]");
         }
@@ -388,18 +388,18 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                     //Parse3d6(s);
                 }
                 else if (s.startsWith("*** (")) {
-                    ParseNewDiceRoll(s);
+                    parseNewDiceRoll(s);
                     s = makeMessageString();
                 }
                 else if (s.startsWith("<")) {
-                    ParseUserMsg(s);
+                    parseUserMsg(s);
                     s = makeMessageString();
                 }
                 else if (s.startsWith("-")) {
-                    ParseSystemMsg(s);
+                    parseSystemMsg(s);
                 }
                 else if (s.startsWith("*")) {
-                    s = ParseMoveMsg(s);
+                    s = parseMoveMsg(s);
                 }
                 else {
                     //ParseDefaultMsg(s);
@@ -499,7 +499,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         return "msg" + var10000;
     }
 
-    private void ParseSystemMsg(String msg) {
+    private void parseSystemMsg(String msg) {
         try {
             //StyleConstants.setForeground(mainStyle, clrSystemMsg);
             //document.insertString(document.getLength(), "\n" + msg, mainStyle);
@@ -509,7 +509,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
     }
 
-    private void ParseUserMsg(String msg) {
+    private void parseUserMsg(String msg) {
         try {
             String[] parts = FindUser(msg);
 
@@ -529,7 +529,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
     }
 
-    private String ParseMoveMsg(String msg) {
+    private String parseMoveMsg(String msg) {
         // test for html tags that must be removed
         int userStart = 0;
         int userEnd = 0;
@@ -556,7 +556,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         return msg;
     }
 
-    private void ParseNewDiceRoll(String msg) {
+    private void parseNewDiceRoll(String msg) {
         // *** (Other DR) 4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
         String category, dice, user, san = "";
         int firstDice, secondDice;
@@ -670,7 +670,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                             else {
                                                 specialMessages.add("Hull");
                                             }
-                                            HandleSpecialMessagesForOtherDice(category, specialMessages, firstDice, secondDice, otherDice);
+                                            handleSpecialMessagesForOtherDice(category, specialMessages, firstDice, secondDice, otherDice);
 
                                             break;
                                         case "TK":
@@ -689,7 +689,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                             else if (firstDice == 6 && secondDice == 6) {
                                                 specialMessages.add("Casualty MC (A10.31)");
                                             }
-                                            HandleSpecialMessagesForOtherDice(category, specialMessages, firstDice, secondDice, otherDice);
+                                            handleSpecialMessagesForOtherDice(category, specialMessages, firstDice, secondDice, otherDice);
                                             break;
                                         case "TC":
 
@@ -715,7 +715,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                                 // Starter Kit + Full ASL
                                                 specialMessages.add("Cower if MMC w/o LDR");
                                             }
-                                            HandleSpecialMessagesForOtherDice(category, specialMessages, firstDice, secondDice, otherDice);
+                                            handleSpecialMessagesForOtherDice(category, specialMessages, firstDice, secondDice, otherDice);
                                             break;
                                         case "CC":
                                             // Full ASL only
@@ -763,11 +763,11 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                         msgpartCdice = Integer.toString(firstDice);
                                         msgpartWdice = Integer.toString(secondDice);
 
-                                        PaintIcon(firstDice, DiceType.COLORED);
-                                        PaintIcon(secondDice, DiceType.WHITE);
+                                        paintIcon(firstDice, DiceType.COLORED);
+                                        paintIcon(secondDice, DiceType.WHITE);
                                         //Add any other dice required
                                         for (Map.Entry<DiceType, Integer> entry : otherDice.entrySet()) {
-                                            PaintIcon(entry.getValue(), entry.getKey());
+                                            paintIcon(entry.getValue(), entry.getKey());
                                         }
                                     }
                                     else {
@@ -780,7 +780,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     if (showDiceStats) {
                                         msgpartRest = restOfMsg;
                                     }
-                                    FireDiceRoll();
+                                    fireDiceRoll();
                                 }
                             }
                         }
@@ -816,7 +816,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     if (useDiceImages) {
                                         msgpartCdice = dice;
                                         msgpartWdice = "-1";
-                                        PaintIcon(diceVal, DiceType.SINGLE);
+                                        paintIcon(diceVal, DiceType.SINGLE);
                                     }
                                     else {
                                         msgpartCdice = dice;
@@ -839,7 +839,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                         msgpartRest = restOfMsg;
                                     }
 
-                                    FireDiceRoll();
+                                    fireDiceRoll();
                                 }
                             }
                         }
@@ -852,7 +852,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
     }
 
-    private void HandleSpecialMessagesForOtherDice(final String category, final ArrayList<String> specialMessages,
+    private void handleSpecialMessagesForOtherDice(final String category, final ArrayList<String> specialMessages,
             final int firstDice, final int secondDice, final Map<DiceType, Integer> otherDice)
     {
         int total = firstDice + secondDice;
@@ -960,7 +960,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
     }
 
-    private void PaintIcon(int dice, DiceType diceType) {
+    private void paintIcon(int dice, DiceType diceType) {
         try {
             ASLDie die = diceFactory.getASLDie(diceType);
             String dicefile = die.getDieHTMLFragment(dice);
@@ -1085,7 +1085,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         else {
             buttonsFontConfigurer = buttonsFontConfigurer_Exist;
         }
-        buttonsFontConfigurer.addPropertyChangeListener(evt -> SetButtonsFonts((Font) evt.getNewValue()));
+        buttonsFontConfigurer.addPropertyChangeListener(evt -> setButtonsFonts((Font) evt.getNewValue()));
         buttonsFontConfigurer.fireUpdate();
         //background colour pref
         ColorConfigurer backgroundColor;
@@ -1324,7 +1324,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
     }
 
-    private void FireDiceRoll() {
+    private void fireDiceRoll() {
         for (ChatterListener listener : chatter_listeners) {
             listener.DiceRoll(msgpartCategory, msgpartUser, msgpartSAN, Integer.parseInt(msgpartCdice), Integer.parseInt(msgpartWdice));
         }
