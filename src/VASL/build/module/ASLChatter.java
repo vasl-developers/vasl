@@ -270,7 +270,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         return btn;
     }
 
-    public JButton CreateChatterDiceButton(String strImage, String strCaption, String strTooltip, KeyStroke keyStroke, final boolean bDice, final String strCat)
+    public JButton CreateChatterDiceButton(String strImage, String strCaption, String tooltip, KeyStroke keyStroke, final boolean bDice, final String strCat)
     {
         JButton btn = new JButton(strCaption);
         btn.setMinimumSize(new Dimension(5, 30));
@@ -301,16 +301,16 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         btn.addActionListener(al);
         KeyStrokeListener Listener = new KeyStrokeListener(al);
         Listener.setKeyStroke(keyStroke);
-        AddHotKeyToTooltip(btn, Listener, strTooltip);
+        AddHotKeyToTooltip(btn, Listener, tooltip);
         btn.setFocusable(false);
         GameModule.getGameModule().addKeyStrokeListener(Listener);
 
         return btn;
     }
 
-    private void AddHotKeyToTooltip(JButton button, KeyStrokeListener listener, String strTooltipText) {
+    private void AddHotKeyToTooltip(JButton button, KeyStrokeListener listener, String tooltipText) {
         if (listener.getKeyStroke() != null) {
-            button.setToolTipText(strTooltipText + " [" + HotKeyConfigurer.getString(listener.getKeyStroke()) + "]");
+            button.setToolTipText(tooltipText + " [" + HotKeyConfigurer.getString(listener.getKeyStroke()) + "]");
         }
     }
 
@@ -351,16 +351,16 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         return edtInputText;
     }
 
-    String[] FindUser (String strVal) {
-        String[] retValue = new String[] {strVal,"",""};
+    String[] FindUser (String val) {
+        String[] retValue = new String[] {val,"",""};
 
-        int userStart = strVal.indexOf("<");
-        int userEnd = strVal.indexOf(">");
+        int userStart = val.indexOf("<");
+        int userEnd = val.indexOf(">");
 
         if (userStart != -1 && userEnd != -1) {
-            retValue[0] = strVal.substring(0, userStart + 1);
-            retValue[1] = strVal.substring(userStart + 1, userEnd);
-            retValue[2] = strVal.substring(userEnd+1);
+            retValue[0] = val.substring(0, userStart + 1);
+            retValue[1] = val.substring(userStart + 1, userEnd);
+            retValue[2] = val.substring(userEnd+1);
         }
 
         return retValue;
@@ -511,17 +511,17 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
     private void ParseUserMsg(String msg) {
         try {
-            String[] strParts = FindUser(msg);
+            String[] parts = FindUser(msg);
 
-            if (!strParts[1].isEmpty() && !strParts[2].isEmpty()) {
+            if (!parts[1].isEmpty() && !parts[2].isEmpty()) {
                 msgpartCategory = "";
                 msgpartCdice = "";
                 msgpartWdice = "";
                 msgpartSAN = "";
                 msgpartDiceImage = "";
                 msgpartSpecial = "";
-                msgpartUser = strParts[1];
-                msgpartRest = strParts[2];
+                msgpartUser = parts[1];
+                msgpartRest = parts[2];
             }
         }
         catch (Exception ex) {
@@ -569,19 +569,19 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         msgpartDiceImage = null;
         Map<DiceType, Integer> otherDice = new HashMap<>();
         try {
-            String strRestOfMsg = msg.substring("*** (".length()); // Other DR) 4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
+            String restOfMsg = msg.substring("*** (".length()); // Other DR) 4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
 
-            int iPos = strRestOfMsg.indexOf(" DR) ");
+            int iPos = restOfMsg.indexOf(" DR) ");
 
             if (iPos != -1) {
-                strCategory = strRestOfMsg.substring(0, iPos);
-                strRestOfMsg = strRestOfMsg.substring(iPos + " DR) ".length()); //4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
+                strCategory = restOfMsg.substring(0, iPos);
+                restOfMsg = restOfMsg.substring(iPos + " DR) ".length()); //4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
 
-                iPos = strRestOfMsg.indexOf(" ***");
+                iPos = restOfMsg.indexOf(" ***");
 
                 if (iPos != -1) {
-                    strDice = strRestOfMsg.substring(0, iPos);
-                    strRestOfMsg = strRestOfMsg.substring(iPos + " ***".length());//   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
+                    strDice = restOfMsg.substring(0, iPos);
+                    restOfMsg = restOfMsg.substring(iPos + " ***".length());//   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
 
                     if (strDice.length() == 3 || strDice.length() == 5) {
                         String[] strDiceArr = strDice.split(",");
@@ -597,15 +597,15 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     && iFirstDice < 7
                                     && iSecondDice > 0
                                     && iSecondDice < 7) {
-                                String[] strParts = FindUser(strRestOfMsg);
+                                String[] parts = FindUser(restOfMsg);
 
                                 ArrayList<String> specialMessages = new ArrayList<>();
 
-                                if (!strParts[1].isEmpty() && !strParts[2].isEmpty()) {
-                                    strUser = strParts[1];
-                                    strRestOfMsg = strParts[2]; // >      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
+                                if (!parts[1].isEmpty() && !parts[2].isEmpty()) {
+                                    strUser = parts[1];
+                                    restOfMsg = parts[2]; // >      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
 
-                                    strRestOfMsg = strRestOfMsg.replace(">", " ").trim(); //Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
+                                    restOfMsg = restOfMsg.replace(">", " ").trim(); //Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
 
 
                                     // Add special event hints, if necessary
@@ -613,38 +613,38 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     // and should happen on "Only Sniper" setting and in Full ASL mode
                                     if (DRNotificationLevel == 3 || DRNotificationLevel == 1) {
                                         if (!strCategory.equals("TK") && !strCategory.equals("CC") && !strCategory.equals("Rally")) {
-                                            if (strRestOfMsg.startsWith("Axis SAN")) {
+                                            if (restOfMsg.startsWith("Axis SAN")) {
                                                 strSAN = "Axis SAN";
                                                 specialMessages.add("Axis SAN");
-                                                strRestOfMsg = strRestOfMsg.substring("Axis SAN".length());
+                                                restOfMsg = restOfMsg.substring("Axis SAN".length());
                                             }
-                                            else if (strRestOfMsg.startsWith("Allied SAN")) {
+                                            else if (restOfMsg.startsWith("Allied SAN")) {
                                                 strSAN = "Allied SAN";
                                                 specialMessages.add("Allied SAN");
-                                                strRestOfMsg = strRestOfMsg.substring("Allied SAN".length());
+                                                restOfMsg = restOfMsg.substring("Allied SAN".length());
                                             }
-                                            else if (strRestOfMsg.startsWith("Axis/Allied SAN")) {
+                                            else if (restOfMsg.startsWith("Axis/Allied SAN")) {
                                                 strSAN = "Axis/Allied SAN";
                                                 specialMessages.add("Axis/Allied SAN");
-                                                strRestOfMsg = strRestOfMsg.substring("Axis/Allied SAN".length());
+                                                restOfMsg = restOfMsg.substring("Axis/Allied SAN".length());
                                             }
                                         }
 
                                         if (strCategory.equals("TC")) {
-                                            if (strRestOfMsg.startsWith("Axis Booby Trap")) {
+                                            if (restOfMsg.startsWith("Axis Booby Trap")) {
                                                 strSAN = "Axis Booby Trap";
                                                 specialMessages.add("Axis Booby Trap");
-                                                strRestOfMsg = strRestOfMsg.substring("Axis Booby Trap".length());
+                                                restOfMsg = restOfMsg.substring("Axis Booby Trap".length());
                                             }
-                                            else if (strRestOfMsg.startsWith("Allied Booby Trap")) {
+                                            else if (restOfMsg.startsWith("Allied Booby Trap")) {
                                                 strSAN = "Allied Booby Trap";
                                                 specialMessages.add("Allied Booby Trap");
-                                                strRestOfMsg = strRestOfMsg.substring("Allied Booby Trap".length());
+                                                restOfMsg = restOfMsg.substring("Allied Booby Trap".length());
                                             }
-                                            else if (strRestOfMsg.startsWith("Axis/Allied Booby Trap")) {
+                                            else if (restOfMsg.startsWith("Axis/Allied Booby Trap")) {
                                                 strSAN = "Axis/Allied Booby Trap";
                                                 specialMessages.add("Axis/Allied Booby Trap");
-                                                strRestOfMsg = strRestOfMsg.substring("Axis/Allied Booby Trap".length());
+                                                restOfMsg = restOfMsg.substring("Axis/Allied Booby Trap".length());
                                             }
                                         }
                                     }
@@ -778,7 +778,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     msgpartSpecial = strSpecialMessages.toString();
 
                                     if (showDiceStats) {
-                                        msgpartRest = strRestOfMsg;
+                                        msgpartRest = restOfMsg;
                                     }
                                     FireDiceRoll();
                                 }
@@ -790,26 +790,26 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             else { // *** (Other dr) 3 ***   <FredKors>      [1 / 1   avg   3,00 (3,00)]    (01.84)
                 //reset SAN message to the latest state for dice over map
                 msgpartSAN = strSAN;
-                iPos = strRestOfMsg.indexOf(" dr) ");
+                iPos = restOfMsg.indexOf(" dr) ");
 
                 if (iPos != -1) {
-                    strCategory = strRestOfMsg.substring(0, iPos);
-                    strRestOfMsg = strRestOfMsg.substring(iPos + " dr) ".length()); //3 ***   <FredKors>      [1 / 1   avg   3,00 (3,00)]    (01.84)
+                    strCategory = restOfMsg.substring(0, iPos);
+                    restOfMsg = restOfMsg.substring(iPos + " dr) ".length()); //3 ***   <FredKors>      [1 / 1   avg   3,00 (3,00)]    (01.84)
 
-                    iPos = strRestOfMsg.indexOf(" ***");
+                    iPos = restOfMsg.indexOf(" ***");
 
                     if (iPos != -1) {
-                        strDice = strRestOfMsg.substring(0, iPos);
-                        strRestOfMsg = strRestOfMsg.substring(iPos + " ***".length());//   <FredKors>      [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
+                        strDice = restOfMsg.substring(0, iPos);
+                        restOfMsg = restOfMsg.substring(iPos + " ***".length());//   <FredKors>      [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
 
                         if (strDice.length() == 1) {
                             int iDice = Integer.parseInt(strDice);
 
                             if (iDice > 0 && iDice < 7) {
-                                String[] strParts = FindUser(strRestOfMsg);
+                                String[] parts = FindUser(restOfMsg);
 
-                                if (!strParts[1].isEmpty() && !strParts[2].isEmpty()) {
-                                    strUser = strParts[1];
+                                if (!parts[1].isEmpty() && !parts[2].isEmpty()) {
+                                    strUser = parts[1];
 
                                     msgpartCategory = BEFORE_CATEGORY + strCategory;
 
@@ -836,7 +836,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                         msgpartSpecial = sniperstring;
                                     }
                                     if (showDiceStats) {
-                                        msgpartRest = strRestOfMsg;
+                                        msgpartRest = restOfMsg;
                                     }
 
                                     FireDiceRoll();
