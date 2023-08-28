@@ -552,7 +552,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         msgpartSpecial = null;
         msgpartRest = null;
         msgpartDiceImage = null;
-        Map<DiceType, Integer> otherDice = new HashMap<>();
+        final Map<DiceType, Integer> otherDice = new HashMap<>();
         try {
             String restOfMsg = msg.substring("*** (".length()); // Other DR) 4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
 
@@ -744,27 +744,25 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     }
                                     msgpartCategory = BEFORE_CATEGORY + category;
 
-                                    if (useDiceImages) {
-                                        msgpartCdice = Integer.toString(firstDie);
-                                        msgpartWdice = Integer.toString(secondDie);
+                                    msgpartCdice = Integer.toString(firstDie);
+                                    msgpartWdice = Integer.toString(secondDie);
 
+                                    if (useDiceImages) {
                                         paintIcon(firstDie, DiceType.COLORED);
                                         paintIcon(secondDie, DiceType.WHITE);
                                         //Add any other dice required
-                                        for (Map.Entry<DiceType, Integer> entry : otherDice.entrySet()) {
+                                        for (final Map.Entry<DiceType, Integer> entry : otherDice.entrySet()) {
                                             paintIcon(entry.getValue(), entry.getKey());
                                         }
                                     }
-                                    else {
-                                        msgpartCdice = Integer.toString(firstDie);
-                                        msgpartWdice = Integer.toString(secondDie);
-                                    }
+
                                     msgpartUser = user;
                                     msgpartSpecial = strSpecialMessages.toString();
 
                                     if (showDiceStats) {
                                         msgpartRest = restOfMsg;
                                     }
+
                                     fireDiceRoll();
                                 }
                             }
@@ -798,15 +796,12 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
                                     msgpartCategory = BEFORE_CATEGORY + category;
 
+                                    msgpartCdice = dice;
+                                    msgpartWdice = "-1";
+
                                     if (useDiceImages) {
-                                        msgpartCdice = dice;
-                                        msgpartWdice = "-1";
                                         paintIcon(diceVal, DiceType.SINGLE);
                                     }
-                                    else {
-                                        msgpartCdice = dice;
-                                    }
-                                    msgpartWdice = "-1";
 
                                     msgpartUser = user;
                                     // added by DR 2018 to add chatter text on Sniper Activation dr
@@ -820,6 +815,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                         }
                                         msgpartSpecial = sniperstring;
                                     }
+
                                     if (showDiceStats) {
                                         msgpartRest = restOfMsg;
                                     }
