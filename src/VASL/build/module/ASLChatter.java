@@ -1250,6 +1250,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         coloredDieColor.fireUpdate();
         final BooleanConfigurer AlwaysOnTop = new BooleanConfigurer("PWAlwaysOnTop", "Player Window (menus, toolbar, chat) is always on top in uncombined application mode (requires a VASSAL restart)", false);
         GameModule.getGameModule().getPrefs().addOption(preferenceTabName, AlwaysOnTop);
+
+        makeStyleSheet(myFont);
+        makeASLStyleSheet(myFont);
     }
 
     private void fireDiceRoll() {
