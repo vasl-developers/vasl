@@ -106,14 +106,14 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     private int DRNotificationLevel;
 
     // create message part objects; each will be styled differently and added to chat window
-    String msgpartCategory;
-    String msgpartUser;
-    String msgpartWdice;
-    String msgpartCdice;
-    String msgpartRest;
-    String msgpartSpecial;
-    String msgpartSAN;
-    String msgpartDiceImage;
+    private String msgpartCategory;
+    private String msgpartUser;
+    private String msgpartWdice;
+    private String msgpartCdice;
+    private String msgpartRest;
+    private String msgpartSpecial;
+    private String msgpartSAN;
+    private String msgpartDiceImage;
 
     public ASLChatter() {
         super();
