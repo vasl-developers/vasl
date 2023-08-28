@@ -991,9 +991,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             msgpartWdice = "";
         }
 
-        String catstyle = "msgcategory";
-        String userstyle = getUserStyle();
-        String specialstyle = "msgspecial";  //text-decoration: underline";  //<p style="text-decoration: underline;">This text will be underlined.</p>
+        final String catstyle = "msgcategory";
+        final String userstyle = getUserStyle();
+        final String specialstyle = "msgspecial";  //text-decoration: underline";  //<p style="text-decoration: underline;">This text will be underlined.</p>
         if (useDiceImages) {
             return "*~<span class=" + userstyle + ">" + msgpartDiceImage + "</span>"
                 + "<span class=" + catstyle + ">" + msgpartCategory + "</span>"
@@ -1016,15 +1016,12 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
     protected String getUserStyle() {
         final String me = GlobalOptions.getInstance().getPlayerId();
-        if (msgpartUser.equals(me)) {
-            return "mychat";
-        }
-        return "other";
+        return msgpartUser.equals(me) ? "mychat" : "other";
     }
 
     private String makeTableString(String msg){
         msg = msg.substring(2);  // strip out "!!"
-        String tablestyle = "tbl";
+        final String tablestyle = "tbl";
         return "*~<span class=" + tablestyle + ">" + msg + "</span>";
     }
 
@@ -1034,17 +1031,17 @@ public class ASLChatter extends VASSAL.build.module.Chatter
      * {@link CommandEncoder} */
     @Override
     public void addTo(Buildable b) {
-        GameModule gameModule = (GameModule) b;
-        if (gameModule.getChatter() != null) {
+        final GameModule g = (GameModule) b;
+        if (g.getChatter() != null) {
             // deleted code here which removed VASSAL elements but getChatter is always null at this point
         }
 
-        gameModule.setChatter(this);
-        gameModule.addCommandEncoder(this);
-        gameModule.addKeyStrokeSource(new KeyStrokeSource(this, WHEN_ANCESTOR_OF_FOCUSED_COMPONENT));
-        gameModule.getPlayerWindow().addChatter(this);
-        gameModule.getControlPanel().add(this, BorderLayout.CENTER);
-        final Prefs modulePrefs = gameModule.getPrefs();
+        g.setChatter(this);
+        g.addCommandEncoder(this);
+        g.addKeyStrokeSource(new KeyStrokeSource(this, WHEN_ANCESTOR_OF_FOCUSED_COMPONENT));
+        g.getPlayerWindow().addChatter(this);
+        g.getControlPanel().add(this, BorderLayout.CENTER);
+        final Prefs modulePrefs = g.getPrefs();
 
         // font pref
         FontConfigurer chatFontConfigurer;
