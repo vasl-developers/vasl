@@ -247,10 +247,10 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         catch (Exception ignored) {
         }
 
-        final GameModule g = GameModule.getGameModule();
+        final GameModule mod = GameModule.getGameModule();
 
         final ActionListener al = e -> {
-            g.getComponentsOf(ASLDiceBot.class)
+            mod.getComponentsOf(ASLDiceBot.class)
                 .stream()
                 .findFirst()
                 .ifPresent(dice -> dice.statsToday());
@@ -261,7 +261,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         listener.setKeyStroke(keyStroke);
         addHotKeyToTooltip(btn, listener, "Dice rolls stats");
         btn.setFocusable(false);
-        g.addKeyStrokeListener(listener);
+        mod.addKeyStrokeListener(listener);
 
         return btn;
     }
@@ -280,10 +280,10 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         catch (Exception ignored) {
         }
 
-        final GameModule g = GameModule.getGameModule();
+        final GameModule mod = GameModule.getGameModule();
 
         final ActionListener al = e -> {
-            g.getComponentsOf(ASLDiceBot.class)
+            mod.getComponentsOf(ASLDiceBot.class)
                 .stream()
                 .findFirst()
                 .ifPresent(dice -> {
@@ -301,7 +301,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         listener.setKeyStroke(keyStroke);
         addHotKeyToTooltip(btn, listener, tooltip);
         btn.setFocusable(false);
-        g.addKeyStrokeListener(listener);
+        mod.addKeyStrokeListener(listener);
 
         return btn;
     }
