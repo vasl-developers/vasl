@@ -1263,15 +1263,17 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     @Override
     public void keyCommand(KeyStroke e) {
         if ((e.getKeyCode() == 0 || e.getKeyCode() == KeyEvent.CHAR_UNDEFINED) && !Character.isISOControl(e.getKeyChar())) {
+            if ((e.getModifiers() & (KeyEvent.ALT_DOWN_MASK | KeyEvent.CTRL_DOWN_MASK | KeyEvent.ALT_GRAPH_DOWN_MASK)) != 0) {
+                return;   // Do not report keystrokes with Ctrl/Alt on. These get through to here on Macs
+            }
             edtInputText.setText(edtInputText.getText() + e.getKeyChar());
         }
         else if (e.isOnKeyRelease()) {
             switch (e.getKeyCode()) {
             case KeyEvent.VK_ENTER:
-                if (edtInputText.getText().length() > 0) {
+                if (!edtInputText.getText().isEmpty()) {
                     send(formatChat(edtInputText.getText()));
                 }
-
                 edtInputText.setText(""); //$NON-NLS-1$
                 break;
 
