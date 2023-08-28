@@ -948,10 +948,6 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     @Override
     public void addTo(Buildable b) {
         final GameModule mod = (GameModule) b;
-        if (mod.getChatter() != null) {
-            // deleted code here which removed VASSAL elements but getChatter is always null at this point
-        }
-
         mod.setChatter(this);
         mod.addCommandEncoder(this);
         mod.addKeyStrokeSource(new KeyStrokeSource(this, WHEN_ANCESTOR_OF_FOCUSED_COMPONENT));
