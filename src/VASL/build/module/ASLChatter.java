@@ -957,21 +957,27 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         if (msgpartCategory == null) {
             msgpartCategory = "";
         }
+
         if (msgpartCdice == null) {
             msgpartCdice = "";
         }
+
         if (msgpartWdice == null) {
             msgpartWdice = "";
         }
+
         if (msgpartUser == null) {
             msgpartUser = "";
         }
+
         if (msgpartSpecial == null) {
             msgpartSpecial = "";
         }
+
         if (msgpartRest == null) {
             msgpartRest = "";
         }
+
         if (msgpartWdice.equals("-1")){
             msgpartWdice = "";
         }
