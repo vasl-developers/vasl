@@ -352,16 +352,16 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         return edtInputText;
     }
 
-    String[] FindUser (String val) {
-        String[] retValue = new String[] {val,"",""};
+    private String[] findUser(String val) {
+        final String[] retValue = new String[] {val, "", ""};
 
-        int userStart = val.indexOf("<");
-        int userEnd = val.indexOf(">");
+        final int userStart = val.indexOf("<");
+        final int userEnd = val.indexOf(">");
 
         if (userStart != -1 && userEnd != -1) {
             retValue[0] = val.substring(0, userStart + 1);
             retValue[1] = val.substring(userStart + 1, userEnd);
-            retValue[2] = val.substring(userEnd+1);
+            retValue[2] = val.substring(userEnd + 1);
         }
 
         return retValue;
@@ -440,8 +440,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             s = s.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
         }
 
-        String keystring = Resources.getString("PlayerRoster.observer");
-        String replace = keystring.replace("<", "&lt;").replace(">", "&gt;");
+        final String keystring = Resources.getString("PlayerRoster.observer");
+        final String replace = keystring.replace("<", "&lt;").replace(">", "&gt;");
         if (!replace.equals(keystring)) {
             s = s.replace(keystring, replace);
         }
@@ -449,8 +449,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         try {
             kit.insertHTML(doc, doc.getLength(), "\n<div class=" + style + ">" + s + "</div>", 0, 0, (HTML.Tag)null);
         }
-        catch (IOException | BadLocationException var7) {
-            ErrorDialog.bug(var7);
+        catch (IOException | BadLocationException ble) {
+            ErrorDialog.bug(ble);
         }
 
         conversationPane.repaint();
@@ -458,7 +458,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
     public static String stripQuickColorTagLocal(String s, String prefix) {
         final String[] QUICK_COLOR_REGEX = new String[]{"\\|", "!", "~", "`"};
-        int quickIndex = getQuickColorLocal(s, prefix);
+        final int quickIndex = getQuickColorLocal(s, prefix);
         return quickIndex < 0 ? s : s.replaceFirst(QUICK_COLOR_REGEX[quickIndex], "");
     }
 
@@ -471,7 +471,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                 return -1;
             }
             else {
-                String s2 = s.substring(prefix.length()).trim();
+                final String s2 = s.substring(prefix.length()).trim();
                 return s2.isEmpty() ? -1 : getQuickColorLocal(s2.charAt(0));
             }
         }
@@ -485,7 +485,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             return -1;
         }
         else {
-            String s2 = s.trim();
+            final String s2 = s.trim();
             return s2.isEmpty() ? -1 : getQuickColorLocal(s2.charAt(0));
         }
     }
@@ -495,8 +495,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     }
 
     public static String getQuickColorHTMLStyleLocal(String s, String prefix) {
-        int quickIndex = getQuickColorLocal(s, prefix);
-        Object var10000 = quickIndex <= 0 ? "" : quickIndex + 1;
+        final int quickIndex = getQuickColorLocal(s, prefix);
+        final Object var10000 = quickIndex <= 0 ? "" : quickIndex + 1;
         return "msg" + var10000;
     }
 
@@ -511,22 +511,17 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     }
 
     private void parseUserMsg(String msg) {
-        try {
-            String[] parts = FindUser(msg);
+        final String[] parts = findUser(msg);
 
-            if (!parts[1].isEmpty() && !parts[2].isEmpty()) {
-                msgpartCategory = "";
-                msgpartCdice = "";
-                msgpartWdice = "";
-                msgpartSAN = "";
-                msgpartDiceImage = "";
-                msgpartSpecial = "";
-                msgpartUser = parts[1];
-                msgpartRest = parts[2];
-            }
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
+        if (!parts[1].isEmpty() && !parts[2].isEmpty()) {
+            msgpartCategory = "";
+            msgpartCdice = "";
+            msgpartWdice = "";
+            msgpartSAN = "";
+            msgpartDiceImage = "";
+            msgpartSpecial = "";
+            msgpartUser = parts[1];
+            msgpartRest = parts[2];
         }
     }
 
@@ -535,22 +530,14 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         int userStart = 0;
         int userEnd = 0;
         do {
-            try {
-                userStart = msg.indexOf("<");
-                userEnd = msg.indexOf(">");
+            userStart = msg.indexOf("<");
+            userEnd = msg.indexOf(">");
 
-                if (userStart != -1 && userEnd != -1) {
-                    String deletestring = msg.substring(userStart, userEnd+1);
-                    msg = msg.replace(deletestring, "");
-                    userStart = 0;
-                    userEnd = 0;
-                }
-                else if (userStart == -1 && userEnd != -1) {
-                    break;
-                }
-            }
-            catch (Exception ex) {
-                ex.printStackTrace();
+            if (userStart != -1 && userEnd != -1) {
+                final String deletestring = msg.substring(userStart, userEnd+1);
+                msg = msg.replace(deletestring, "");
+                userStart = 0;
+                userEnd = 0;
             }
         } while (userStart != -1 && userEnd != -1);
         //test
@@ -585,7 +572,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                     restOfMsg = restOfMsg.substring(pos + " ***".length());//   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
 
                     if (dice.length() == 3 || dice.length() == 5) {
-                        String[] diceArr = dice.split(",");
+                        final String[] diceArr = dice.split(",");
 
                         if (diceArr.length == 2 || (diceArr.length == 3 && environment.dustInEffect())) {
                             firstDice = Integer.parseInt(diceArr[0]);
@@ -598,9 +585,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     && firstDice < 7
                                     && secondDice > 0
                                     && secondDice < 7) {
-                                String[] parts = FindUser(restOfMsg);
+                                final String[] parts = findUser(restOfMsg);
 
-                                ArrayList<String> specialMessages = new ArrayList<>();
+                                final ArrayList<String> specialMessages = new ArrayList<>();
 
                                 if (!parts[1].isEmpty() && !parts[2].isEmpty()) {
                                     user = parts[1];
@@ -751,7 +738,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                         }
                                     }
                                     // Construct Special Message string
-                                    StringBuilder strSpecialMessages = new StringBuilder();
+                                    final StringBuilder strSpecialMessages = new StringBuilder();
                                     for (int i = 0; i < specialMessages.size(); ++i) {
                                         strSpecialMessages.append(specialMessages.get(i));
                                         if (i < specialMessages.size() - 1) {
@@ -804,10 +791,10 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                         restOfMsg = restOfMsg.substring(pos + " ***".length());//   <FredKors>      [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
 
                         if (dice.length() == 1) {
-                            int diceVal = Integer.parseInt(dice);
+                            final int diceVal = Integer.parseInt(dice);
 
                             if (diceVal > 0 && diceVal < 7) {
-                                String[] parts = FindUser(restOfMsg);
+                                String[] parts = findUser(restOfMsg);
 
                                 if (!parts[1].isEmpty() && !parts[2].isEmpty()) {
                                     user = parts[1];
@@ -857,7 +844,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             final int firstDice, final int secondDice, final Map<DiceType, Integer> otherDice)
     {
         int total = firstDice + secondDice;
-        int unmodifiedTotal = total;
+        final int unmodifiedTotal = total;
         final String SPACE = " ";
         // Dust
         if (environment.dustInEffect() && DRNotificationLevel == 3 && !otherDice.isEmpty()) {
