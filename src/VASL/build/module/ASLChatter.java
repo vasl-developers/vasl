@@ -988,8 +988,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
     private String makeTableString(String msg){
         msg = msg.substring(2);  // strip out "!!"
-        final String tablestyle = "tbl";
-        return "*~<span class=" + tablestyle + ">" + msg + "</span>";
+        return "*~<span class=\"tbl\">" + msg + "</span>";
     }
 
     /**
