@@ -240,7 +240,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     }
 
     private JButton createStatsDiceButton(KeyStroke keyStroke) {
-        JButton btn = new JButton("");
+        final JButton btn = new JButton("");
         btn.setMinimumSize(new Dimension(5, 30));
         btn.setMargin(new Insets(0, 0, 0, -1));
 
@@ -249,32 +249,32 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
         catch (Exception ignored) {
         }
-        ActionListener al = e -> {
-            try {
-                ASLDiceBot dice = GameModule.getGameModule().getComponentsOf(ASLDiceBot.class).iterator().next();
-                if (dice != null) {
-                    dice.statsToday();
-                }
-            }
-            catch (Exception ignored) {
-            }
+
+        final GameModule g = GameModule.getGameModule();
+
+        final ActionListener al = e -> {
+            g.getComponentsOf(ASLDiceBot.class)
+                .stream()
+                .findFirst()
+                .ifPresent(dice -> dice.statsToday());
         };
 
         btn.addActionListener(al);
-        KeyStrokeListener Listener = new KeyStrokeListener(al);
-        Listener.setKeyStroke(keyStroke);
-        addHotKeyToTooltip(btn, Listener, "Dice rolls stats");
+        final KeyStrokeListener listener = new KeyStrokeListener(al);
+        listener.setKeyStroke(keyStroke);
+        addHotKeyToTooltip(btn, listener, "Dice rolls stats");
         btn.setFocusable(false);
-        GameModule.getGameModule().addKeyStrokeListener(Listener);
+        g.addKeyStrokeListener(listener);
 
         return btn;
     }
 
     public JButton CreateChatterDiceButton(String strImage, String caption, String tooltip, KeyStroke keyStroke, final boolean bDice, final String strCat)
     {
-        JButton btn = new JButton(caption);
+        final JButton btn = new JButton(caption);
         btn.setMinimumSize(new Dimension(5, 30));
         btn.setMargin(new Insets(0, 0, 0, -1));
+
         try {
             if (!strImage.isEmpty()) {
                 btn.setIcon(new ImageIcon(Op.load(strImage).getImage(null)));
@@ -282,28 +282,29 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
         catch (Exception ignored) {
         }
-        ActionListener al = e -> {
-            try {
-                ASLDiceBot dice = GameModule.getGameModule().getComponentsOf(ASLDiceBot.class).iterator().next();
-                if (dice != null) {
+
+        final GameModule g = GameModule.getGameModule();
+
+        final ActionListener al = e -> {
+            g.getComponentsOf(ASLDiceBot.class)
+                .stream()
+                .findFirst()
+                .ifPresent(dice -> {
                     if (bDice) {
                         dice.DR(strCat);
                     }
                     else {
                         dice.dr(strCat);
                     }
-                }
-            }
-            catch (Exception ignored) {
-            }
+                });
         };
 
         btn.addActionListener(al);
-        KeyStrokeListener Listener = new KeyStrokeListener(al);
-        Listener.setKeyStroke(keyStroke);
-        addHotKeyToTooltip(btn, Listener, tooltip);
+        final KeyStrokeListener listener = new KeyStrokeListener(al);
+        listener.setKeyStroke(keyStroke);
+        addHotKeyToTooltip(btn, listener, tooltip);
         btn.setFocusable(false);
-        GameModule.getGameModule().addKeyStrokeListener(Listener);
+        g.addKeyStrokeListener(listener);
 
         return btn;
     }
