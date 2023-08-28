@@ -102,7 +102,6 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     private final Environment environment = new Environment();
     private final ASLDiceFactory diceFactory = new ASLDiceFactory();
 
-    private final JTextField edtInputText;
     private int DRNotificationLevel;
 
     // create message part objects; each will be styled differently and added to chat window
@@ -179,18 +178,6 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         buttonPannel.add(btnSA, gridBagConstraints);
         buttonPannel.add(btnRS, gridBagConstraints);
 
-        edtInputText = new JTextField(60);
-        edtInputText.setFocusTraversalKeysEnabled(false);
-        edtInputText.addActionListener(e -> {
-            send(formatChat(e.getActionCommand()));
-            edtInputText.setText(""); //$NON-NLS-1$
-        });
-
-        edtInputText.setMaximumSize(new Dimension(
-            edtInputText.getMaximumSize().width,
-            edtInputText.getPreferredSize().height
-        ));
-
         panelContainer.add(buttonPannel);
 
         final GroupLayout groupLayout = new GroupLayout(this);
@@ -199,7 +186,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                 .addComponent(scroll)
                 .addComponent(panelContainer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(edtInputText)
+                .addComponent(input)
         );
         groupLayout.setVerticalGroup(
             groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(
@@ -208,7 +195,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                     .addGap(0, 0, 0)
                     .addComponent(panelContainer, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addGap(0, 0, 0)
-                    .addComponent(edtInputText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(input, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
             )
         );
 
@@ -342,11 +329,6 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     protected String formatChat(String text) {
         final String id = GlobalOptions.getInstance().getPlayerId();
         return "<" + (id.length() == 0 ? "(" + getAnonymousUserName() + ")" : id) + "> - " + text; //$NON-NLS-1$ //$NON-NLS-2$
-    }
-
-    @Override
-    public JTextField getInputField() {
-        return edtInputText;
     }
 
     private String[] findUser(String val) {
@@ -1251,34 +1233,6 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         coloredDieColor.fireUpdate();
         final BooleanConfigurer AlwaysOnTop = new BooleanConfigurer("PWAlwaysOnTop", "Player Window (menus, toolbar, chat) is always on top in uncombined application mode (requires a VASSAL restart)", false);
         GameModule.getGameModule().getPrefs().addOption(preferenceTabName, AlwaysOnTop);
-    }
-
-    @Override
-    public void keyCommand(KeyStroke e) {
-        if ((e.getKeyCode() == 0 || e.getKeyCode() == KeyEvent.CHAR_UNDEFINED) && !Character.isISOControl(e.getKeyChar())) {
-            if ((e.getModifiers() & (KeyEvent.ALT_DOWN_MASK | KeyEvent.CTRL_DOWN_MASK | KeyEvent.ALT_GRAPH_DOWN_MASK)) != 0) {
-                return;   // Do not report keystrokes with Ctrl/Alt on. These get through to here on Macs
-            }
-            edtInputText.setText(edtInputText.getText() + e.getKeyChar());
-        }
-        else if (e.isOnKeyRelease()) {
-            switch (e.getKeyCode()) {
-            case KeyEvent.VK_ENTER:
-                if (!edtInputText.getText().isEmpty()) {
-                    send(formatChat(edtInputText.getText()));
-                }
-                edtInputText.setText(""); //$NON-NLS-1$
-                break;
-
-            case KeyEvent.VK_BACK_SPACE:
-            case KeyEvent.VK_DELETE:
-                final String s = edtInputText.getText();
-                if (s.length() > 0) {
-                    edtInputText.setText(s.substring(0, s.length() - 1));
-                }
-                break;
-            }
-        }
     }
 
     private void fireDiceRoll() {
