@@ -49,8 +49,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static VASSAL.build.GameModule.getGameModule;
-
 /**
  * The chat window component.  Displays text messages and
  * accepts i.  Also acts as a {@link CommandEncoder},
@@ -1207,8 +1205,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
 
         // third die pref
-        StringEnumConfigurer thirdDieColor;
-        thirdDieColor = new StringEnumConfigurer(THIRD_DIE_COLOR, "Third die color:  ", new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange", "AlliedM", "AxisM", "American", "British", "Finnish", "French", "German", "Italian", "Japanese", "Russian", "Swedish"} );
+        final StringEnumConfigurer thirdDieColor = new StringEnumConfigurer(THIRD_DIE_COLOR, "Third die color:  ", new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange", "AlliedM", "AxisM", "American", "British", "Finnish", "French", "German", "Italian", "Japanese", "Russian", "Swedish"} );
         modulePrefs.addOption(Resources.getString("Chatter.chat_window"), thirdDieColor); //$NON-NLS-1$
         thirdDieColor.addPropertyChangeListener(e -> {
             clrDustColoredDiceColor = (String) e.getNewValue();
@@ -1223,25 +1220,28 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         thirdDieColor.fireUpdate();
 
         // rule set pref
-        StringEnumConfigurer specialDiceRollNotificationLevel = (StringEnumConfigurer)modulePrefs.getOption(NOTIFICATION_LEVEL);
         final String[] DROptions = {
             "None",
             "Snipers only",
             "Starter Kit",
             "Full ASL"
         };
+
+        StringEnumConfigurer specialDiceRollNotificationLevel = (StringEnumConfigurer) modulePrefs.getOption(NOTIFICATION_LEVEL);
         if (specialDiceRollNotificationLevel == null) {
             specialDiceRollNotificationLevel = new StringEnumConfigurer(NOTIFICATION_LEVEL,
                     "Notify about special DRs: ", DROptions);
             specialDiceRollNotificationLevel.setValue("Full ASL");
             modulePrefs.addOption(Resources.getString("Chatter.chat_window"), specialDiceRollNotificationLevel);
         }
+
         for (int i = 0; i < DROptions.length; ++i) {
             if (DROptions[i].equals(specialDiceRollNotificationLevel.getValueString())) {
                 DRNotificationLevel = i;
                 break;
             }
         }
+
         // just for access from inside the event handler
         final StringEnumConfigurer cfg = specialDiceRollNotificationLevel;
         specialDiceRollNotificationLevel.addPropertyChangeListener(e -> {
@@ -1253,10 +1253,11 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             }
             DRNotificationLevel = 3;
         });
+
         // Player Window pref
         coloredDieColor.fireUpdate();
         final BooleanConfigurer AlwaysOnTop = new BooleanConfigurer("PWAlwaysOnTop", "Player Window (menus, toolbar, chat) is always on top in uncombined application mode (requires a VASSAL restart)", false);
-        getGameModule().getPrefs().addOption(preferenceTabName, AlwaysOnTop);
+        GameModule.getGameModule().getPrefs().addOption(preferenceTabName, AlwaysOnTop);
     }
 
     @Override
@@ -1276,7 +1277,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
             case KeyEvent.VK_BACK_SPACE:
             case KeyEvent.VK_DELETE:
-                String s = edtInputText.getText();
+                final String s = edtInputText.getText();
                 if (s.length() > 0) {
                     edtInputText.setText(s.substring(0, s.length() - 1));
                 }
