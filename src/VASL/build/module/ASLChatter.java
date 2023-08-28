@@ -98,8 +98,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     private final JButton btnSA;
     private final JButton btnRS;
     private final JPanel buttonPannel;
-    private boolean bUseDiceImages;
-    private boolean bShowDiceStats;
+    private boolean useDiceImages;
+    private boolean showDiceStats;
 
     private final Environment environment = new Environment();
     private final ASLDiceFactory diceFactory = new ASLDiceFactory();
@@ -352,18 +352,18 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     }
 
     String[] FindUser (String strVal) {
-        String[] strRetValue = new String[] {strVal,"",""};
+        String[] retValue = new String[] {strVal,"",""};
 
-        int iUserStart = strVal.indexOf("<");
-        int iUserEnd = strVal.indexOf(">");
+        int userStart = strVal.indexOf("<");
+        int userEnd = strVal.indexOf(">");
 
-        if (iUserStart != -1 && iUserEnd != -1) {
-            strRetValue[0] = strVal.substring(0, iUserStart + 1);
-            strRetValue[1] = strVal.substring(iUserStart + 1, iUserEnd);
-            strRetValue[2] = strVal.substring(iUserEnd+1);
+        if (userStart != -1 && userEnd != -1) {
+            retValue[0] = strVal.substring(0, userStart + 1);
+            retValue[1] = strVal.substring(userStart + 1, userEnd);
+            retValue[2] = strVal.substring(userEnd+1);
         }
 
-        return strRetValue;
+        return retValue;
     }
 
     @Override
@@ -499,19 +499,19 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         return "msg" + var10000;
     }
 
-    private void ParseSystemMsg(String strMsg) {
+    private void ParseSystemMsg(String msg) {
         try {
             //StyleConstants.setForeground(mainStyle, clrSystemMsg);
-            //document.insertString(document.getLength(), "\n" + strMsg, mainStyle);
+            //document.insertString(document.getLength(), "\n" + msg, mainStyle);
         }
         catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    private void ParseUserMsg(String strMsg) {
+    private void ParseUserMsg(String msg) {
         try {
-            String[] strParts = FindUser(strMsg);
+            String[] strParts = FindUser(msg);
 
             if (!strParts[1].isEmpty() && !strParts[2].isEmpty()) {
                 msgpartCategory = "";
@@ -529,34 +529,34 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
     }
 
-    private String ParseMoveMsg(String strMsg) {
+    private String ParseMoveMsg(String msg) {
         // test for html tags that must be removed
-        int iUserStart = 0;
-        int iUserEnd = 0;
+        int userStart = 0;
+        int userEnd = 0;
         do {
             try {
-                iUserStart = strMsg.indexOf("<");
-                iUserEnd = strMsg.indexOf(">");
+                userStart = msg.indexOf("<");
+                userEnd = msg.indexOf(">");
 
-                if (iUserStart != -1 && iUserEnd != -1) {
-                    String deletestring = strMsg.substring(iUserStart, iUserEnd+1);
-                    strMsg = strMsg.replace(deletestring, "");
-                    iUserStart = 0;
-                    iUserEnd = 0;
+                if (userStart != -1 && userEnd != -1) {
+                    String deletestring = msg.substring(userStart, userEnd+1);
+                    msg = msg.replace(deletestring, "");
+                    userStart = 0;
+                    userEnd = 0;
                 }
-                else if (iUserStart == -1 && iUserEnd != -1) {
+                else if (userStart == -1 && userEnd != -1) {
                     break;
                 }
             }
             catch (Exception ex) {
                 ex.printStackTrace();
             }
-        } while (iUserStart != -1 && iUserEnd != -1);
+        } while (userStart != -1 && userEnd != -1);
         //test
-        return strMsg;
+        return msg;
     }
 
-    private void ParseNewDiceRoll(String strMsg) {
+    private void ParseNewDiceRoll(String msg) {
         // *** (Other DR) 4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
         String strCategory, strDice, strUser, strSAN = "";
         int iFirstDice, iSecondDice;
@@ -569,7 +569,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         msgpartDiceImage = null;
         Map<DiceType, Integer> otherDice = new HashMap<>();
         try {
-            String strRestOfMsg = strMsg.substring("*** (".length()); // Other DR) 4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
+            String strRestOfMsg = msg.substring("*** (".length()); // Other DR) 4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
 
             int iPos = strRestOfMsg.indexOf(" DR) ");
 
@@ -759,7 +759,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     }
                                     msgpartCategory = BEFORE_CATEGORY + strCategory;
 
-                                    if (bUseDiceImages) {
+                                    if (useDiceImages) {
                                         msgpartCdice = Integer.toString(iFirstDice);
                                         msgpartWdice = Integer.toString(iSecondDice);
 
@@ -777,7 +777,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     msgpartUser = strUser;
                                     msgpartSpecial = strSpecialMessages.toString();
 
-                                    if (bShowDiceStats) {
+                                    if (showDiceStats) {
                                         msgpartRest = strRestOfMsg;
                                     }
                                     FireDiceRoll();
@@ -813,7 +813,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
                                     msgpartCategory = BEFORE_CATEGORY + strCategory;
 
-                                    if (bUseDiceImages) {
+                                    if (useDiceImages) {
                                         msgpartCdice = (strDice);
                                         msgpartWdice = "-1";
                                         PaintIcon(iDice, DiceType.SINGLE);
@@ -835,7 +835,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                         }
                                         msgpartSpecial = sniperstring;
                                     }
-                                    if (bShowDiceStats) {
+                                    if (showDiceStats) {
                                         msgpartRest = strRestOfMsg;
                                     }
 
@@ -1004,7 +1004,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         String catstyle = "msgcategory";
         String userstyle = getUserStyle();
         String specialstyle = "msgspecial";  //text-decoration: underline";  //<p style="text-decoration: underline;">This text will be underlined.</p>
-        if (bUseDiceImages) {
+        if (useDiceImages) {
             return "*~<span class=" + userstyle + ">" + msgpartDiceImage + "</span>"
                 + "<span class=" + catstyle + ">" + msgpartCategory + "</span>"
                 + "<span class=" + userstyle + ">" + USER_SPACING_PADDING + msgpartUser+ "</span>"
@@ -1032,10 +1032,10 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         return "other";
     }
 
-    private String makeTableString(String strMsg){
-        strMsg = strMsg.substring(2);  // strip out "!!"
+    private String makeTableString(String msg){
+        msg = msg.substring(2);  // strip out "!!"
         String tablestyle = "tbl";
-        return "*~<span class=" + tablestyle + ">" + strMsg + "</span>";
+        return "*~<span class=" + tablestyle + ">" + msg + "</span>";
     }
 
     /**
@@ -1188,8 +1188,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         else {
             useDiceImagesOption = useDiceImagesOption_Exist;
         }
-        bUseDiceImages = (Boolean) (modulePrefs.getValue(USE_DICE_IMAGES));
-        useDiceImagesOption.addPropertyChangeListener(e -> bUseDiceImages = (Boolean) e.getNewValue());
+        useDiceImages = (Boolean) (modulePrefs.getValue(USE_DICE_IMAGES));
+        useDiceImagesOption.addPropertyChangeListener(e -> useDiceImages = (Boolean) e.getNewValue());
         // dice stats pref
         BooleanConfigurer showDiceStatsOption;
         BooleanConfigurer showDiceStatsOption_Exist = (BooleanConfigurer)modulePrefs.getOption(SHOW_DICE_STATS);
@@ -1200,8 +1200,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         else {
             showDiceStatsOption = showDiceStatsOption_Exist;
         }
-        bShowDiceStats = (Boolean) (modulePrefs.getValue(SHOW_DICE_STATS));
-        showDiceStatsOption.addPropertyChangeListener(e -> bShowDiceStats = (Boolean) e.getNewValue());
+        showDiceStats = (Boolean) (modulePrefs.getValue(SHOW_DICE_STATS));
+        showDiceStatsOption.addPropertyChangeListener(e -> showDiceStats = (Boolean) e.getNewValue());
 
         // coloured die pref
         StringEnumConfigurer coloredDiceColor;
