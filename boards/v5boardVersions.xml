@@ -27,6 +27,9 @@
 
 	<coreBoards>
 		<boarddata name="00" version="6.3" versionDate="Jun 2023" description="Empty geoboard" boardType="Geoboard" publisher="VASL" />
+		<boarddata name="00dx" version="6.5" versionDate="Aug 2023" description="Empty Deluxe geoboard" boardType="Deluxe" publisher="VASL" />
+		<boarddata name="00a" version="6.0" versionDate="Aug 2023" description="" boardType="Double-sided" publisher="VASL" />
+		<boarddata name="00b" version="6.0" versionDate="Aug 2023" description="" boardType="Double-sided" publisher="VASL" />
 		<boarddata name="01" version="6.7" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" />
 		<boarddata name="02" version="7.0" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" />
 		<boarddata name="03" version="6.7" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" />
