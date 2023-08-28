@@ -845,7 +845,6 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     {
         int total = firstDice + secondDice;
         final int unmodifiedTotal = total;
-        final String SPACE = " ";
         // Dust
         if (environment.dustInEffect() && DRNotificationLevel == 3 && !otherDice.isEmpty()) {
             switch (category) {
@@ -862,7 +861,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                         total += Environment.getModerateDust(otherDice.get(DiceType.OTHER_DUST));
                     }
                 }
-                specialMessages.add(environment.getCurrentDustLevel().toString() + SPACE);
+                specialMessages.add(environment.getCurrentDustLevel().toString() + " ");
                 break;
 
             case "MC":
@@ -887,13 +886,13 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             case "TH":
             case "IFT":
                 total += 1;
-                specialMessages.add("+1 Night LV"  + SPACE);
+                specialMessages.add("+1 Night LV ");
                 break;
             }
         }
         // LV
         if (environment.isLV()) {
-            LVLevel lvLevel = environment.getCurrentLVLevel();
+            final LVLevel lvLevel = environment.getCurrentLVLevel();
             switch (category) {
             case "TH":
             case "IFT":
@@ -902,7 +901,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                     total += 1;
                     break;
                 }
-                specialMessages.add(lvLevel + SPACE);
+                specialMessages.add(lvLevel + " ");
                 break;
             }
         }
@@ -912,8 +911,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             case "TH":
             case "IFT":
                 {
-                    FogLevel fogLevel = environment.getCurrentFogLevel();
-                    specialMessages.add(fogLevel.toString() + SPACE);
+                    final FogLevel fogLevel = environment.getCurrentFogLevel();
+                    specialMessages.add(fogLevel.toString() + " ");
                     break;
                 }
             }
@@ -924,8 +923,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             case "TH":
             case "IFT":
                 {
-                    HeatHazeLevel heatHazeLevel = environment.getCurrentHeatHazeLevel();
-                    specialMessages.add(heatHazeLevel.toString() + SPACE);
+                    final HeatHazeLevel heatHazeLevel = environment.getCurrentHeatHazeLevel();
+                    specialMessages.add(heatHazeLevel.toString() + " ");
                     break;
                 }
             }
@@ -936,8 +935,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             case "TH":
             case "IFT":
                 {
-                    SunBlindnessLevel sunBlindnessLevel = environment.getCurrentSunBlindnessLevel();
-                    specialMessages.add(sunBlindnessLevel.toString() + SPACE);
+                    final SunBlindnessLevel sunBlindnessLevel = environment.getCurrentSunBlindnessLevel();
+                    specialMessages.add(sunBlindnessLevel.toString() + " ");
                     break;
                 }
             }
