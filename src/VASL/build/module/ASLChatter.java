@@ -1151,7 +1151,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             "British",
             "Finnish",
             "French",
-            "German", 
+            "German",
             "Italian",
             "Japanese",
             "Russian",
