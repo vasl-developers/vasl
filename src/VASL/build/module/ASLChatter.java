@@ -1054,7 +1054,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         final Prefs globalPrefs = Prefs.getGlobalPrefs();
         final ColorConfigurer gameMsgColor = new ColorConfigurer("HTMLgameMessage1Color", Resources.getString("Chatter.game_messages_preference"), Color.black);
         gameMsgColor.addPropertyChangeListener(e -> {
-            gameMsg = (Color)e.getNewValue();
+            gameMsg = (Color) e.getNewValue();
             makeStyleSheet(null);
             makeASLStyleSheet(null);
         });
