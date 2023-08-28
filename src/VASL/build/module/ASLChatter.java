@@ -546,7 +546,6 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         msgpartSpecial = null;
         msgpartRest = null;
         msgpartDiceImage = null;
-        final Map<DiceType, Integer> otherDice = new HashMap<>();
         try {
             String restOfMsg = msg.substring("*** (".length()); // Other DR) 4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
 
@@ -566,6 +565,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                         final String[] diceArr = dice.split(",");
 
                         if (diceArr.length == 2 || (diceArr.length == 3 && environment.dustInEffect())) {
+                            final Map<DiceType, Integer> otherDice = new HashMap<>();
                             firstDie = Integer.parseInt(diceArr[0]);
                             secondDie = Integer.parseInt(diceArr[1]);
                             if (environment.dustInEffect() && diceArr.length == 3) {
