@@ -1093,7 +1093,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             makeASLStyleSheet(null);
         });
         globalPrefs.addOption(Resources.getString("Chatter.chat_window"), gameMsgColor);
-        gameMsg = (Color)globalPrefs.getValue("HTMLgameMessage1Color");
+        gameMsg = (Color) globalPrefs.getValue("HTMLgameMessage1Color");
 
         // sys messages pref
         ColorConfigurer systemMsgColor = (ColorConfigurer) modulePrefs.getOption(SYS_MSG_COLOR);
@@ -1138,60 +1138,49 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         });
 
         // dice chat pref
-        ColorConfigurer diceChatColor;
-        ColorConfigurer diceChatColor_Exist = (ColorConfigurer)modulePrefs.getOption(DICE_CHAT_COLOR);
-        if (diceChatColor_Exist == null) {
+        ColorConfigurer diceChatColor = (ColorConfigurer) modulePrefs.getOption(DICE_CHAT_COLOR);
+        if (diceChatColor == null) {
             diceChatColor = new ColorConfigurer(DICE_CHAT_COLOR, "Dice Results font color: ", Color.black); //$NON-NLS-1$
             modulePrefs.addOption(Resources.getString("Chatter.chat_window"), diceChatColor); //$NON-NLS-1$
         }
-        else {
-            diceChatColor = diceChatColor_Exist;
-        }
+
         gameMsg5 = (Color) modulePrefs.getValue(DICE_CHAT_COLOR);
         makeStyleSheet(null);
         diceChatColor.addPropertyChangeListener(e -> {
             gameMsg5 = (Color) e.getNewValue();
             makeStyleSheet(null);
         });
+
         // dice images pref
-        BooleanConfigurer useDiceImagesOption;
-        BooleanConfigurer useDiceImagesOption_Exist = (BooleanConfigurer)modulePrefs.getOption(USE_DICE_IMAGES);
-        if (useDiceImagesOption_Exist == null) {
+        BooleanConfigurer useDiceImagesOption = (BooleanConfigurer) modulePrefs.getOption(USE_DICE_IMAGES);
+        if (useDiceImagesOption == null) {
             useDiceImagesOption = new BooleanConfigurer(USE_DICE_IMAGES, "Use images for dice rolls", Boolean.TRUE);  //$NON-NLS-1$
             modulePrefs.addOption(Resources.getString("Chatter.chat_window"), useDiceImagesOption); //$NON-NLS-1$
         }
-        else {
-            useDiceImagesOption = useDiceImagesOption_Exist;
-        }
-        useDiceImages = (Boolean) (modulePrefs.getValue(USE_DICE_IMAGES));
+
+        useDiceImages = (Boolean) modulePrefs.getValue(USE_DICE_IMAGES);
         useDiceImagesOption.addPropertyChangeListener(e -> useDiceImages = (Boolean) e.getNewValue());
+
         // dice stats pref
-        BooleanConfigurer showDiceStatsOption;
-        BooleanConfigurer showDiceStatsOption_Exist = (BooleanConfigurer)modulePrefs.getOption(SHOW_DICE_STATS);
-        if (showDiceStatsOption_Exist == null) {
+        BooleanConfigurer showDiceStatsOption = (BooleanConfigurer) modulePrefs.getOption(SHOW_DICE_STATS);
+        if (showDiceStatsOption == null) {
             showDiceStatsOption = new BooleanConfigurer(SHOW_DICE_STATS, "Show dice stats after each dice rolls", Boolean.FALSE);  //$NON-NLS-1$
             modulePrefs.addOption(Resources.getString("Chatter.chat_window"), showDiceStatsOption); //$NON-NLS-1$
         }
-        else {
-            showDiceStatsOption = showDiceStatsOption_Exist;
-        }
-        showDiceStats = (Boolean) (modulePrefs.getValue(SHOW_DICE_STATS));
+        showDiceStats = (Boolean) modulePrefs.getValue(SHOW_DICE_STATS);
         showDiceStatsOption.addPropertyChangeListener(e -> showDiceStats = (Boolean) e.getNewValue());
 
         // coloured die pref
-        StringEnumConfigurer coloredDiceColor;
-        StringEnumConfigurer coloredDiceColor_Exist = (StringEnumConfigurer) modulePrefs.getOption(COLORED_DICE_COLOR);
-        if (coloredDiceColor_Exist == null) {
+        StringEnumConfigurer coloredDiceColor = (StringEnumConfigurer) modulePrefs.getOption(COLORED_DICE_COLOR);
+        if (coloredDiceColor == null) {
             coloredDiceColor = new StringEnumConfigurer(COLORED_DICE_COLOR, "Colored Die Color:", new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange", "AlliedM", "AxisM", "American", "British", "Finnish", "French", "German", "Italian", "Japanese", "Russian", "Swedish"} );
             modulePrefs.addOption(Resources.getString("Chatter.chat_window"), coloredDiceColor);
         }
-        else {
-            coloredDiceColor = coloredDiceColor_Exist;
-        }
+
         coloredDiceColor.addPropertyChangeListener(e -> {
             clrColoredDiceColor = (String) e.getNewValue();
             if (clrColoredDiceColor != null) {
-            diceFactory.setDieColor(DiceType.COLORED, DieColor.getEnum(clrColoredDiceColor));
+                diceFactory.setDieColor(DiceType.COLORED, DieColor.getEnum(clrColoredDiceColor));
             }
         });
         clrColoredDiceColor = modulePrefs.getStoredValue("coloredDiceColor");
@@ -1200,15 +1189,12 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
 
         // single die pref
-        StringEnumConfigurer coloredDieColor;
-        StringEnumConfigurer coloredDieColor_Exist = (StringEnumConfigurer)modulePrefs.getOption(SINGLE_DIE_COLOR);
-        if (coloredDieColor_Exist == null) {
+        StringEnumConfigurer coloredDieColor = (StringEnumConfigurer) modulePrefs.getOption(SINGLE_DIE_COLOR);
+        if (coloredDieColor == null) {
             coloredDieColor = new StringEnumConfigurer(SINGLE_DIE_COLOR, "Single die color:  ", new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange", "AlliedM", "AxisM", "American", "British", "Finnish", "French", "German", "Italian", "Japanese", "Russian", "Swedish"} );
             modulePrefs.addOption(Resources.getString("Chatter.chat_window"), coloredDieColor); //$NON-NLS-1$
         }
-        else {
-            coloredDieColor = coloredDieColor_Exist;
-        }
+
         coloredDieColor.addPropertyChangeListener(e -> {
             clrSingleDieColor = (String) e.getNewValue();
             if (clrSingleDieColor != null) {
