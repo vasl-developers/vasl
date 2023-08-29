@@ -95,7 +95,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     private final JButton btndr;
     private final JButton btnSA;
     private final JButton btnRS;
-    private final JPanel buttonPannel;
+    private final JPanel buttonPanel;
     private boolean useDiceImages;
     private boolean showDiceStats;
 
@@ -154,10 +154,10 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         panelContainer.setLayout(new BoxLayout(panelContainer, BoxLayout.LINE_AXIS));
         panelContainer.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        buttonPannel = new JPanel();
-        buttonPannel.setLayout(new GridBagLayout());
-        buttonPannel.setBorder(BorderFactory.createEmptyBorder(1, 1, 2, 1));
-        buttonPannel.setMaximumSize(new Dimension(1000, 1000));
+        buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridBagLayout());
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 2, 1));
+        buttonPanel.setMaximumSize(new Dimension(1000, 1000));
 
         final GridBagConstraints gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.fill = GridBagConstraints.BOTH;
@@ -165,20 +165,20 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         gridBagConstraints.weighty = 0.5;
         gridBagConstraints.insets = new Insets(0, 1, 0, 1);
 
-        buttonPannel.add(btnStats, gridBagConstraints);
-        buttonPannel.add(btnDR, gridBagConstraints);
-        buttonPannel.add(btnIFT, gridBagConstraints);
-        buttonPannel.add(btnTH, gridBagConstraints);
-        buttonPannel.add(btnTK, gridBagConstraints);
-        buttonPannel.add(btnMC, gridBagConstraints);
-        buttonPannel.add(btnTC, gridBagConstraints);
-        buttonPannel.add(btnRally, gridBagConstraints);
-        buttonPannel.add(btnCC, gridBagConstraints);
-        buttonPannel.add(btndr, gridBagConstraints);
-        buttonPannel.add(btnSA, gridBagConstraints);
-        buttonPannel.add(btnRS, gridBagConstraints);
+        buttonPanel.add(btnStats, gridBagConstraints);
+        buttonPanel.add(btnDR, gridBagConstraints);
+        buttonPanel.add(btnIFT, gridBagConstraints);
+        buttonPanel.add(btnTH, gridBagConstraints);
+        buttonPanel.add(btnTK, gridBagConstraints);
+        buttonPanel.add(btnMC, gridBagConstraints);
+        buttonPanel.add(btnTC, gridBagConstraints);
+        buttonPanel.add(btnRally, gridBagConstraints);
+        buttonPanel.add(btnCC, gridBagConstraints);
+        buttonPanel.add(btndr, gridBagConstraints);
+        buttonPanel.add(btnSA, gridBagConstraints);
+        buttonPanel.add(btnRS, gridBagConstraints);
 
-        panelContainer.add(buttonPannel);
+        panelContainer.add(buttonPanel);
 
         final GroupLayout groupLayout = new GroupLayout(this);
         setLayout(groupLayout);
@@ -205,7 +205,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     // Is this still used?
     @Deprecated
     public JPanel getButtonPanel() {  //used by SASLDice extension
-        return buttonPannel;
+        return buttonPanel;
     }
 
     private void setButtonsFonts(Font font) {
