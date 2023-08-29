@@ -37,7 +37,6 @@ import VASSAL.tools.imageop.Op;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.html.HTML;
 import java.awt.*;
 import java.awt.event.ActionListener;
