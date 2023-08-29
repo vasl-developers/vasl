@@ -599,7 +599,7 @@ public class ASLDiceBot extends AbstractBuildable
                             (m_bUseRandomOrg ? " - by random.org)" : ")")
                     );
             } else {
-                l_strOutput = String.format("*** (%s DR) %s,%s ***   <%s>      %s[%s   avg   %s (%s)]    (%s%s",
+                l_strOutput = String.format("*** (%s DR) %s,%s ***   <%s>      %s[%s   avg   %s (%s)]    (%s%s)",
                         strCategory,
                         Integer.toString(l_iColoredDie),
                         Integer.toString(l_iWhiteDie),
@@ -609,7 +609,7 @@ public class ASLDiceBot extends AbstractBuildable
                         map_objStats.GetAvgDR(strCategory),
                         map_objStats.GetAvgDR(TOTAL_CATEGORY),
                         getSerieInstanceNumber(),
-                        (m_bUseRandomOrg ? " - by random.org)" : ")")
+                        (m_bUseRandomOrg ? " - by random.org" : "")
                 );
             }
 
@@ -641,7 +641,7 @@ public class ASLDiceBot extends AbstractBuildable
             map_objStats.Add_dr(TOTAL_CATEGORY, l_iSingleDie);
             map_objStats.Add_dr(strCategory, l_iSingleDie);
 
-            l_strOutput = String.format("*** (%s dr) %s ***   <%s>      [%s   avg   %s (%s)]    (%s%s",
+            l_strOutput = String.format("*** (%s dr) %s ***   <%s>      [%s   avg   %s (%s)]    (%s%s)",
                                         strCategory,
                                         Integer.toString(l_iSingleDie),
                                         GetPlayer(),
@@ -649,7 +649,7 @@ public class ASLDiceBot extends AbstractBuildable
                                         map_objStats.GetAvgdr(strCategory),
                                         map_objStats.GetAvgdr(TOTAL_CATEGORY),
                                         getSerieInstanceNumber(),
-                                        (m_bUseRandomOrg ? " - by random.org)" : ")")
+                                        (m_bUseRandomOrg ? " - by random.org" : "")
                                         );
 
             OutputString(l_strOutput);
