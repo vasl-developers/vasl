@@ -869,11 +869,13 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
         final String dicefile = die.getDieHTMLFragment(dice);
         if (msgpartDiceImage == null) {
-            msgpartDiceImage = "<img alt=\"alt text\" src=\"" + dicefile + "\">";
+            msgpartDiceImage = " ";
         }
         else {
-            msgpartDiceImage += "&nbsp <img alt=\"alt text\" src=\"" + dicefile + "\"> &nbsp";
+            msgpartDiceImage += "&nbsp;";
         }
+
+        msgpartDiceImage += "<img alt=\"alt text\" src=\"" + dicefile + "\">";
     }
 
     private String makeMessageString() {
