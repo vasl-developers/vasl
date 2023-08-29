@@ -913,22 +913,22 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         final String userstyle = getUserStyle();
         final String specialstyle = "msgspecial";  //text-decoration: underline";  //<p style="text-decoration: underline;">This text will be underlined.</p>
         if (useDiceImages) {
-            return "*~<span class=" + userstyle + ">" + msgpartDiceImage + "</span>"
-                + "<span class=" + catstyle + ">" + msgpartCategory + "</span>"
-                + "<span class=" + userstyle + ">" + USER_SPACING_PADDING + msgpartUser+ "</span>"
+            return "*~<span class=\"" + userstyle + "\">" + msgpartDiceImage + "</span>"
+                + "<span class=\"" + catstyle + "\">" + msgpartCategory + "</span>"
+                + "<span class=\"" + userstyle + "\">" + USER_SPACING_PADDING + msgpartUser+ "</span>"
                 + " " + "<u>"
-                + "<span class=" + specialstyle + ">" + msgpartSpecial + "</span>"
+                + "<span class=\"" + specialstyle + "\">" + msgpartSpecial + "</span>"
                 + "</u>" + " "
-                + "<span class=" + userstyle + ">" + msgpartRest + "</span>";
+                + "<span class=\"" + userstyle + "\">" + msgpartRest + "</span>";
         }
         else {
-            return "*~<span class=" + catstyle + ">" + msgpartCategory + "</span>"
+            return "*~<span class=\"" + catstyle + "\">" + msgpartCategory + "</span>"
                 + " " + msgpartCdice + " " + msgpartWdice + " "
-                + "<span class=" + userstyle + ">" + USER_SPACING_PADDING + msgpartUser + "</span>"
+                + "<span class=\"" + userstyle + "\">" + USER_SPACING_PADDING + msgpartUser + "</span>"
                 + " " + "<u>"
-                + "<span class=" + specialstyle + ">" + msgpartSpecial + "</span>"
+                + "<span class=\"" + specialstyle + "\">" + msgpartSpecial + "</span>"
                 + "</u>" + " "
-                + "<span class=" + userstyle + ">" + msgpartRest + "</span>";
+                + "<span class=\"" + userstyle + "\">" + msgpartRest + "</span>";
         }
     }
 
