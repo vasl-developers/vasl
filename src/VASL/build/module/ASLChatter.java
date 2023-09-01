@@ -37,7 +37,6 @@ import VASSAL.tools.imageop.Op;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.html.HTML;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -49,8 +48,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static VASSAL.build.GameModule.getGameModule;
-
 /**
  * The chat window component.  Displays text messages and
  * accepts i.  Also acts as a {@link CommandEncoder},
@@ -58,75 +55,68 @@ import static VASSAL.build.GameModule.getGameModule;
  */
 public class ASLChatter extends VASSAL.build.module.Chatter
 {
-  private final ArrayList<ChatterListener> chatter_listeners = new ArrayList<>();
-  public static final String BEFORE_CATEGORY = "   ";
-  private static final String CHAT_FONT = "ChatFont";
-  private static final String BUTTON_FONT = "ButtonFont";
-  private static final String USE_DICE_IMAGES = "useDiceImages"; //$NON-NLS-1$
-  private static final String SHOW_DICE_STATS = "showDiceStats"; //$NON-NLS-1$
-  private static final String CHAT_BACKGROUND_COLOR = "chatBackgroundColor"; //$NON-NLS-1$
-  private static final String COLORED_DICE_COLOR = "coloredDiceColor"; //$NON-NLS-1$
-  private static final String SINGLE_DIE_COLOR = "singleDieColor"; //$NON-NLS-1$
-  private static final String THIRD_DIE_COLOR = "thirdDieColor"; //$NON-NLS-1$
-  private static final String NOTIFICATION_LEVEL = "notificationLevel"; //$NON-NLS-1$
-  private final static String USER_SPACING_PADDING =  "  ...  ";
-  private static final String preferenceTabName = "VASL"; // alwaysontop preference
-  protected static final String DICE_CHAT_COLOR = "HTMLDiceChatColor";
+    private final ArrayList<ChatterListener> chatter_listeners = new ArrayList<>();
+    public static final String BEFORE_CATEGORY = "   ";
+    private static final String CHAT_FONT = "ChatFont";
+    private static final String BUTTON_FONT = "ButtonFont";
+    private static final String USE_DICE_IMAGES = "useDiceImages"; //$NON-NLS-1$
+    private static final String SHOW_DICE_STATS = "showDiceStats"; //$NON-NLS-1$
+    private static final String CHAT_BACKGROUND_COLOR = "chatBackgroundColor"; //$NON-NLS-1$
+    private static final String COLORED_DICE_COLOR = "coloredDiceColor"; //$NON-NLS-1$
+    private static final String SINGLE_DIE_COLOR = "singleDieColor"; //$NON-NLS-1$
+    private static final String THIRD_DIE_COLOR = "thirdDieColor"; //$NON-NLS-1$
+    private static final String NOTIFICATION_LEVEL = "notificationLevel"; //$NON-NLS-1$
+    private final static String USER_SPACING_PADDING =  "  ...  ";
+    private static final String preferenceTabName = "VASL"; // alwaysontop preference
+    protected static final String DICE_CHAT_COLOR = "HTMLDiceChatColor";
 
-  public enum DiceType
-  {
-      WHITE,
-      COLORED,
-      OTHER_DUST,
-      BOTH,
-      SINGLE
-  }
+    public enum DiceType {
+        WHITE,
+        COLORED,
+        OTHER_DUST,
+        BOTH,
+        SINGLE
+    }
 
-  private Color m_clrBackground;
-  private String m_clrColoredDiceColor;
-  private String m_clrDustColoredDiceColor;
-  private String m_clrSingleDieColor;
-  private final JButton m_btnStats;
-  private final JButton m_btnDR;
-  private final JButton m_btnIFT;
-  private final JButton m_btnTH;
-  private final JButton m_btnTK;
-  private final JButton m_btnMC;
-  private final JButton m_btnRally;
-  private final JButton m_btnCC;
-  private final JButton m_btnTC;
-  private final JButton m_btndr;
-  private final JButton m_btnSA;
-  private final JButton m_btnRS;
-  private final JPanel l_objButtonPanel;
-  private boolean m_bUseDiceImages;
-  private boolean m_bShowDiceStats;
+    private Color clrBackground;
+    private String clrColoredDiceColor;
+    private String clrDustColoredDiceColor;
+    private String clrSingleDieColor;
+    private final JButton btnStats;
+    private final JButton btnDR;
+    private final JButton btnIFT;
+    private final JButton btnTH;
+    private final JButton btnTK;
+    private final JButton btnMC;
+    private final JButton btnRally;
+    private final JButton btnCC;
+    private final JButton btnTC;
+    private final JButton btndr;
+    private final JButton btnSA;
+    private final JButton btnRS;
+    private final JPanel buttonPanel;
+    private boolean useDiceImages;
+    private boolean showDiceStats;
 
-  private final Environment environment = new Environment();
-  private final ASLDiceFactory diceFactory = new ASLDiceFactory();
+    private final Environment environment = new Environment();
+    private final ASLDiceFactory diceFactory = new ASLDiceFactory();
 
-  private final JTextField m_edtInputText;
-    private int m_DRNotificationLevel;
+    private int DRNotificationLevel;
 
-  // create message part objects; each will be styled differently and added to chat window
-  String msgpartCategory;
-  String msgpartUser;
-  String msgpartWdice;
-  String msgpartCdice;
-  String msgpartRest;
-  String msgpartSpecial;
-  String msgpartSAN;
-  String msgpartDiceImage;
-
-
-
+    // create message part objects; each will be styled differently and added to chat window
+    private String msgpartCategory;
+    private String msgpartUser;
+    private String msgpartWdice;
+    private String msgpartCdice;
+    private String msgpartRest;
+    private String msgpartSpecial;
+    private String msgpartSAN;
+    private String msgpartDiceImage;
 
     public ASLChatter() {
         super();
 
-        m_clrBackground = Color.white;
-        conversationPane.addKeyListener(new KeyListener()
-        {
+        conversationPane.addKeyListener(new KeyListener() {
             public void keyTyped(KeyEvent e) {
                 if (!e.isConsumed()) {
                     keyCommand(KeyStroke.getKeyStrokeForEvent(e));
@@ -144,888 +134,617 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                     keyCommand(KeyStroke.getKeyStrokeForEvent(e));
                 }
             }
-        }
-        );
-
-        m_btnStats = CreateStatsDiceButton(KeyStroke.getKeyStroke(KeyEvent.VK_F3, InputEvent.CTRL_DOWN_MASK));
-        m_btnDR = CreateChatterDiceButton("DRs.gif", "DR", "DR", KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), true, ASLDiceBot.OTHER_CATEGORY);
-        m_btnIFT = CreateChatterDiceButton("", "IFT", "IFT attack DR", KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), true, "IFT");
-        m_btnTH = CreateChatterDiceButton("", "TH", "To Hit DR", KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), true, "TH");
-        m_btnTK = CreateChatterDiceButton("", "TK", "To Kill DR", KeyStroke.getKeyStroke(KeyEvent.VK_K, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), true, "TK");
-        m_btnMC = CreateChatterDiceButton("", "MC", "Morale Check DR", KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), true, "MC");
-        m_btnRally = CreateChatterDiceButton("", "Rally", "Rally DR", KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), true, "Rally");
-        m_btnCC = CreateChatterDiceButton("", "CC", "Close Combat DR", KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), true, "CC");
-        m_btnTC = CreateChatterDiceButton("", "TC", "Task Check DR", KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), true, "TC");
-        m_btndr = CreateChatterDiceButton("dr.gif", "dr", "dr", KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), false, ASLDiceBot.OTHER_CATEGORY);
-        m_btnSA = CreateChatterDiceButton("", "SA", "Sniper Activation dr", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), false, "SA");
-        m_btnRS = CreateChatterDiceButton("", "RS", "Random Selection dr", KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), false, "RS");
-
-        JPanel l_objPanelContainer = new JPanel();
-        l_objPanelContainer.setLayout(new BoxLayout(l_objPanelContainer, BoxLayout.LINE_AXIS));
-        l_objPanelContainer.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-
-        l_objButtonPanel = new JPanel();
-        l_objButtonPanel.setLayout(new GridBagLayout());
-        l_objButtonPanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 2, 1));
-        l_objButtonPanel.setMaximumSize(new Dimension(1000, 1000));
-
-        GridBagConstraints l_objGridBagConstraints = new GridBagConstraints();
-        l_objGridBagConstraints.fill = GridBagConstraints.BOTH;
-        l_objGridBagConstraints.weightx = 0.5;
-        l_objGridBagConstraints.weighty = 0.5;
-        l_objGridBagConstraints.insets = new Insets(0, 1, 0, 1);
-
-        l_objButtonPanel.add(m_btnStats, l_objGridBagConstraints);
-        l_objButtonPanel.add(m_btnDR, l_objGridBagConstraints);
-        l_objButtonPanel.add(m_btnIFT, l_objGridBagConstraints);
-        l_objButtonPanel.add(m_btnTH, l_objGridBagConstraints);
-        l_objButtonPanel.add(m_btnTK, l_objGridBagConstraints);
-        l_objButtonPanel.add(m_btnMC, l_objGridBagConstraints);
-        l_objButtonPanel.add(m_btnTC, l_objGridBagConstraints);
-        l_objButtonPanel.add(m_btnRally, l_objGridBagConstraints);
-        l_objButtonPanel.add(m_btnCC, l_objGridBagConstraints);
-        l_objButtonPanel.add(m_btndr, l_objGridBagConstraints);
-        l_objButtonPanel.add(m_btnSA, l_objGridBagConstraints);
-        l_objButtonPanel.add(m_btnRS, l_objGridBagConstraints);
-
-        m_edtInputText = new JTextField(60);
-        m_edtInputText.setFocusTraversalKeysEnabled(false);
-        m_edtInputText.addActionListener(e -> {
-            send(formatChat(e.getActionCommand()));
-            m_edtInputText.setText(""); //$NON-NLS-1$
         });
 
-        m_edtInputText.setMaximumSize(new Dimension(m_edtInputText.getMaximumSize().width,
-        m_edtInputText.getPreferredSize().height));
+        btnStats = createStatsDiceButton(KeyStroke.getKeyStroke(KeyEvent.VK_F3, InputEvent.CTRL_DOWN_MASK));
+        btnDR = CreateChatterDiceButton("DRs.gif", "DR", "DR", KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), true, ASLDiceBot.OTHER_CATEGORY);
+        btnIFT = CreateChatterDiceButton("", "IFT", "IFT attack DR", KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), true, "IFT");
+        btnTH = CreateChatterDiceButton("", "TH", "To Hit DR", KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), true, "TH");
+        btnTK = CreateChatterDiceButton("", "TK", "To Kill DR", KeyStroke.getKeyStroke(KeyEvent.VK_K, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), true, "TK");
+        btnMC = CreateChatterDiceButton("", "MC", "Morale Check DR", KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), true, "MC");
+        btnRally = CreateChatterDiceButton("", "Rally", "Rally DR", KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), true, "Rally");
+        btnCC = CreateChatterDiceButton("", "CC", "Close Combat DR", KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), true, "CC");
+        btnTC = CreateChatterDiceButton("", "TC", "Task Check DR", KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), true, "TC");
+        btndr = CreateChatterDiceButton("dr.gif", "dr", "dr", KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), false, ASLDiceBot.OTHER_CATEGORY);
+        btnSA = CreateChatterDiceButton("", "SA", "Sniper Activation dr", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), false, "SA");
+        btnRS = CreateChatterDiceButton("", "RS", "Random Selection dr", KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), false, "RS");
 
-        scroll.setViewportView(conversationPane);
+        final JPanel panelContainer = new JPanel();
+        panelContainer.setLayout(new BoxLayout(panelContainer, BoxLayout.LINE_AXIS));
+        panelContainer.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        l_objPanelContainer.add(l_objButtonPanel);
+        buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridBagLayout());
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 2, 1));
+        buttonPanel.setMaximumSize(new Dimension(1000, 1000));
 
-        GroupLayout m_objGroupLayout = new GroupLayout(this);
-        setLayout(m_objGroupLayout);
-        m_objGroupLayout.setHorizontalGroup(
-            m_objGroupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(scroll)
-            .addComponent(l_objPanelContainer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(m_edtInputText)
+        final GridBagConstraints gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.fill = GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.insets = new Insets(0, 1, 0, 1);
+
+        buttonPanel.add(btnStats, gridBagConstraints);
+        buttonPanel.add(btnDR, gridBagConstraints);
+        buttonPanel.add(btnIFT, gridBagConstraints);
+        buttonPanel.add(btnTH, gridBagConstraints);
+        buttonPanel.add(btnTK, gridBagConstraints);
+        buttonPanel.add(btnMC, gridBagConstraints);
+        buttonPanel.add(btnTC, gridBagConstraints);
+        buttonPanel.add(btnRally, gridBagConstraints);
+        buttonPanel.add(btnCC, gridBagConstraints);
+        buttonPanel.add(btndr, gridBagConstraints);
+        buttonPanel.add(btnSA, gridBagConstraints);
+        buttonPanel.add(btnRS, gridBagConstraints);
+
+        panelContainer.add(buttonPanel);
+
+        final GroupLayout groupLayout = new GroupLayout(this);
+        setLayout(groupLayout);
+        groupLayout.setHorizontalGroup(
+            groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addComponent(scroll)
+                .addComponent(panelContainer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(input)
         );
-        m_objGroupLayout.setVerticalGroup(
-            m_objGroupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(m_objGroupLayout.createSequentialGroup()
+        groupLayout.setVerticalGroup(
+            groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(
+                groupLayout.createSequentialGroup()
                     .addComponent(scroll, GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
                     .addGap(0, 0, 0)
-                    .addComponent(l_objPanelContainer, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelContainer, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addGap(0, 0, 0)
-                    .addComponent(m_edtInputText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addComponent(input, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+            )
         );
 
+        clrBackground = Color.white;
     }
+
     // Is this still used?
     @Deprecated
     public JPanel getButtonPanel() {  //used by SASLDice extension
-        return l_objButtonPanel;
-    }
-    private void SetButtonsFonts(Font objFont)
-    {
-        m_btnStats.setFont(objFont);
-        m_btnDR.setFont(objFont);
-        m_btnIFT.setFont(objFont);
-        m_btnTH.setFont(objFont);
-        m_btnTK.setFont(objFont);
-        m_btnMC.setFont(objFont);
-        m_btnRally.setFont(objFont);
-        m_btnCC.setFont(objFont);
-        m_btnTC.setFont(objFont);
-        m_btndr.setFont(objFont);
-        m_btnSA.setFont(objFont);
-        m_btnRS.setFont(objFont);
+        return buttonPanel;
     }
 
-    //Is this still used?
-    @Deprecated
-    private JButton CreateInfoButton(String strCaption, String strTooltip, final String strMsg, KeyStroke objKeyStroke) {  // used by SASLDice extension
-       JButton l_btn = new JButton(strCaption);
-
-       l_btn.setPreferredSize(new Dimension(90, 25));
-       l_btn.setMargin(new Insets(l_btn.getMargin().top, 0, l_btn.getMargin().bottom, 0));
-
-        ActionListener l_objAL = e -> send(formatChat(strMsg));
-        l_btn.addActionListener(l_objAL);
-        KeyStrokeListener l_objListener = new KeyStrokeListener(l_objAL);
-        l_objListener.setKeyStroke(objKeyStroke);
-        AddHotKeyToTooltip(l_btn, l_objListener, strTooltip);
-        l_btn.setFocusable(false);
-        GameModule.getGameModule().addKeyStrokeListener(l_objListener);
-        return l_btn;
+    private void setButtonsFonts(Font font) {
+        btnStats.setFont(font);
+        btnDR.setFont(font);
+        btnIFT.setFont(font);
+        btnTH.setFont(font);
+        btnTK.setFont(font);
+        btnMC.setFont(font);
+        btnRally.setFont(font);
+        btnCC.setFont(font);
+        btnTC.setFont(font);
+        btndr.setFont(font);
+        btnSA.setFont(font);
+        btnRS.setFont(font);
     }
 
-    private JButton CreateStatsDiceButton(KeyStroke keyStroke) {
-        JButton l_btn = new JButton("");
-        l_btn.setMinimumSize(new Dimension(5, 30));
-        l_btn.setMargin(new Insets(0, 0, 0, -1));
+    private JButton createStatsDiceButton(KeyStroke keyStroke) {
+        final JButton btn = new JButton("");
+        btn.setMinimumSize(new Dimension(5, 30));
+        btn.setMargin(new Insets(0, 0, 0, -1));
 
         try {
-          l_btn.setIcon(new ImageIcon(Op.load("stat.png").getImage(null)));
-        } catch (Exception ignored) {
-
+            btn.setIcon(new ImageIcon(Op.load("stat.png").getImage(null)));
         }
-        ActionListener l_objAL = e -> {
-            try {
-                ASLDiceBot l_objDice = GameModule.getGameModule().getComponentsOf(ASLDiceBot.class).iterator().next();
-                if (l_objDice != null) {
-                    l_objDice.statsToday();
-                }
-            } catch (Exception ignored) {
+        catch (Exception ignored) {
+        }
 
-            }
+        final GameModule mod = GameModule.getGameModule();
+
+        final ActionListener al = e -> {
+            mod.getComponentsOf(ASLDiceBot.class)
+                .stream()
+                .findFirst()
+                .ifPresent(dice -> dice.statsToday());
         };
 
-        l_btn.addActionListener(l_objAL);
-        KeyStrokeListener l_Listener = new KeyStrokeListener(l_objAL);
-        l_Listener.setKeyStroke(keyStroke);
-        AddHotKeyToTooltip(l_btn, l_Listener, "Dice rolls stats");
-        l_btn.setFocusable(false);
-        GameModule.getGameModule().addKeyStrokeListener(l_Listener);
+        btn.addActionListener(al);
+        final KeyStrokeListener listener = new KeyStrokeListener(al);
+        listener.setKeyStroke(keyStroke);
+        addHotKeyToTooltip(btn, listener, "Dice rolls stats");
+        btn.setFocusable(false);
+        mod.addKeyStrokeListener(listener);
 
-        return l_btn;
+        return btn;
     }
 
-    public JButton CreateChatterDiceButton(String strImage, String strCaption, String strTooltip, KeyStroke keyStroke, final boolean bDice, final String strCat)
+    public JButton CreateChatterDiceButton(String strImage, String caption, String tooltip, KeyStroke keyStroke, final boolean bDice, final String strCat)
     {
-        JButton l_btn = new JButton(strCaption);
-        l_btn.setMinimumSize(new Dimension(5, 30));
-        l_btn.setMargin(new Insets(0, 0, 0, -1));
+        final JButton btn = new JButton(caption);
+        btn.setMinimumSize(new Dimension(5, 30));
+        btn.setMargin(new Insets(0, 0, 0, -1));
+
         try {
             if (!strImage.isEmpty()) {
-                l_btn.setIcon(new ImageIcon(Op.load(strImage).getImage(null)));
+                btn.setIcon(new ImageIcon(Op.load(strImage).getImage(null)));
             }
-        } catch (Exception ignored) {
-
         }
-        ActionListener l_objAL = e -> {
-            try {
-                ASLDiceBot l_objDice = GameModule.getGameModule().getComponentsOf(ASLDiceBot.class).iterator().next();
-                if (l_objDice != null) {
-                    if (bDice) {
-                        l_objDice.DR(strCat);
-                    } else {
-                        l_objDice.dr(strCat);
-                    }
-                }
-            } catch (Exception ignored) {
+        catch (Exception ignored) {
+        }
 
-            }
+        final GameModule mod = GameModule.getGameModule();
+
+        final ActionListener al = e -> {
+            mod.getComponentsOf(ASLDiceBot.class)
+                .stream()
+                .findFirst()
+                .ifPresent(dice -> {
+                    if (bDice) {
+                        dice.DR(strCat);
+                    }
+                    else {
+                        dice.dr(strCat);
+                    }
+                });
         };
 
-        l_btn.addActionListener(l_objAL);
-        KeyStrokeListener l_Listener = new KeyStrokeListener(l_objAL);
-        l_Listener.setKeyStroke(keyStroke);
-        AddHotKeyToTooltip(l_btn, l_Listener, strTooltip);
-        l_btn.setFocusable(false);
-        GameModule.getGameModule().addKeyStrokeListener(l_Listener);
+        btn.addActionListener(al);
+        final KeyStrokeListener listener = new KeyStrokeListener(al);
+        listener.setKeyStroke(keyStroke);
+        addHotKeyToTooltip(btn, listener, tooltip);
+        btn.setFocusable(false);
+        mod.addKeyStrokeListener(listener);
 
-        return l_btn;
+        return btn;
     }
 
-    private void AddHotKeyToTooltip(JButton objButton, KeyStrokeListener objListener, String strTooltipText) {
-        if (objListener.getKeyStroke() != null)
-            objButton.setToolTipText(strTooltipText + " [" + HotKeyConfigurer.getString(objListener.getKeyStroke()) + "]");
+    private void addHotKeyToTooltip(JButton button, KeyStrokeListener listener, String tooltipText) {
+        if (listener.getKeyStroke() != null) {
+            button.setToolTipText(tooltipText + " [" + HotKeyConfigurer.getString(listener.getKeyStroke()) + "]");
+        }
     }
+
     protected void makeASLStyleSheet(Font f) {
-        if (this.style != null) {
-            if (f == null) {
-                if (this.myFont == null) {
-                    f = new Font("SansSerif", Font.PLAIN, 12);
-                    this.myFont = f;
-                } else {
-                    f = this.myFont;
-                }
+        if (style == null) {
+            return;
+        }
+
+        if (f == null) {
+            if (myFont == null) {
+                f = new Font("SansSerif", Font.PLAIN, 12);
+                myFont = f;
             }
-
-            this.addStyle(".msgcategory", f, Color.black, "bold", 0);
-            this.addStyle(".msguser", f, myChat, "bold", 0);
-            this.addStyle(".msgspecial", f, gameMsg, "bold", 0);
-
-            style.addRule(
-                    " .tbl { border:0px solid #C0C0C0; border-collapse:collapse; border-spacing:0px; padding:0px; background:#CCFFCC;}" +
-                            " .tbl th { border:1px solid #C0C0C0; padding:5px; background:#FFFF66;}" +
-                            " .tbl td {border:1px solid #C0C0C0; padding:5px; text-align: right;}" +
-                            " .tbl tr.total {border:2px solid #black; background:#CCFFFF;}" +
-                            " .tbl td.up {border-top:2px solid black; padding:5px; font-weight: bold; text-align: right;}");
-
-        }
-    }
-
-    @Override
-    protected String formatChat(String text) {
-
-        final String id = GlobalOptions.getInstance().getPlayerId();
-        return "<" + (id.length() == 0 ? "(" + getAnonymousUserName() + ")" : id) + "> - " + text; //$NON-NLS-1$ //$NON-NLS-2$
-    }
-
-    @Override
-    public JTextField getInputField() {
-        return m_edtInputText;
-    }
-
-    String [] FindUser (String strVal) {
-        String [] lar_strRetValue = new String[] {strVal,"",""};
-
-        int l_iUserStart = strVal.indexOf("<");
-        int l_iUserEnd = strVal.indexOf(">");
-
-        if ((l_iUserStart != -1) && (l_iUserEnd != -1)) {
-            lar_strRetValue[0] = strVal.substring(0, l_iUserStart + 1);
-            lar_strRetValue[1] = strVal.substring(l_iUserStart + 1, l_iUserEnd);
-            lar_strRetValue[2] = strVal.substring(l_iUserEnd+1);
-        }
-
-        return lar_strRetValue;
-    }
-
-    @Override
-    public void show(String strMsg)
-    {
-        try
-        {
-            if (strMsg.length() > 0)
-            {
-
-                if (strMsg.startsWith("!!"))  // dice stats button has been clicked
-                {
-                    strMsg = makeTableString(strMsg);
-
-                }
-                else if (strMsg.startsWith("*** 3d6 = "))
-                {
-                    //Parse3d6(strMsg);
-                }
-                else if (strMsg.startsWith("*** ("))
-                {
-                    ParseNewDiceRoll(strMsg);
-                    strMsg = makeMessageString();
-
-                }
-                else if (strMsg.startsWith("<"))
-                {
-                    ParseUserMsg(strMsg);
-                    strMsg = makeMessageString();
-                }
-                else if (strMsg.startsWith("-"))
-                {
-                    ParseSystemMsg(strMsg);
-                }
-                else if (strMsg.startsWith("*"))
-                {
-                    strMsg = ParseMoveMsg(strMsg);
-                }
-                else {
-                    //ParseDefaultMsg(strMsg);
-                }
+            else {
+                f = myFont;
             }
         }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
-        }
-        if (SwingUtilities.isEventDispatchThread()) {
-            this.doShow(strMsg);
-        } else {
-            String finalStrMsg = strMsg;
-            SwingUtilities.invokeLater(() -> {
-                this.doShow(finalStrMsg);
-            });
-        }
+
+        addStyle(".msgcategory", f, Color.black, "bold", 0);
+        addStyle(".msguser", f, myChat, "bold", 0);
+        addStyle(".msgspecial", f, gameMsg, "bold", 0);
+
+        style.addRule(
+            " .tbl { border:0px solid #C0C0C0; border-collapse:collapse; border-spacing:0px; padding:0px; background:#CCFFCC;}" +
+            " .tbl th { border:1px solid #C0C0C0; padding:5px; background:#FFFF66;}" +
+            " .tbl td {border:1px solid #C0C0C0; padding:5px; text-align: right;}" +
+            " .tbl tr.total {border:2px solid #black; background:#CCFFFF;}" +
+            " .tbl td.up {border-top:2px solid black; padding:5px; font-weight: bold; text-align: right;}"
+        );
     }
 
-    //temporary - to fix VASSAL issues parsing messages pertaining to concealed counters
-    private void doShow(String s) {
-        s = s.trim();
-        String style;
-        boolean html_allowed;
+    private String[] findUser(String val) {
+        final String[] retValue = new String[] {val, "", ""};
+
+        final int userStart = val.indexOf("<");
+        final int userEnd = val.indexOf(">");
+
+        if (userStart != -1 && userEnd != -1) {
+            retValue[0] = val.substring(0, userStart + 1);
+            retValue[1] = val.substring(userStart + 1, userEnd);
+            retValue[2] = val.substring(userEnd + 1);
+        }
+
+        return retValue;
+    }
+
+    @Override
+    public void show(String s) {
         if (!s.isEmpty()) {
-            if (s.startsWith("*")) {
-                html_allowed = QuickColors.getQuickColor(s, "*") >= 0 || GlobalOptions.getInstance().chatterHTMLSupport();
-                style = getQuickColorHTMLStyleLocal(s, "*");
-                s = stripQuickColorTagLocal(s, "*");
-            } else if (s.startsWith("-")) {
-                html_allowed = true;
-                //dirty quick fix for system messages not displaying with correct fonts, colors
-                style = "sys";
-                s = QuickColors.stripQuickColorTag(s, "-");
-            } else {
-                style = this.getChatStyle(s);
-                html_allowed = false;
+            if (s.startsWith("!!")) {  // dice stats button has been clicked
+                s = makeTableString(s);
             }
-        } else {
-            style = "msg";
-            html_allowed = false;
+            else if (s.startsWith("*** 3d6 = ")) {
+                //Parse3d6(s);
+            }
+            else if (s.startsWith("*** (")) {
+                parseNewDiceRoll(s);
+                s = makeMessageString();
+            }
+            else if (s.startsWith("<")) {
+                parseUserMsg(s);
+                s = makeMessageString();
+            }
+            else if (s.startsWith("-")) {
+                parseSystemMsg(s);
+            }
+            else if (s.startsWith("*")) {
+                s = parseMoveMsg(s);
+            }
+            else {
+                //ParseDefaultMsg(s);
+            }
         }
 
-        if (!html_allowed) {
-            s = s.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-        }
-
-        String keystring = Resources.getString("PlayerRoster.observer");
-        String replace = keystring.replace("<", "&lt;").replace(">", "&gt;");
-        if (!replace.equals(keystring)) {
-            s = s.replace(keystring, replace);
-        }
-
-        try {
-            this.kit.insertHTML(this.doc, this.doc.getLength(), "\n<div class=" + style + ">" + s + "</div>", 0, 0, (HTML.Tag)null);
-        } catch (IOException | BadLocationException var7) {
-            ErrorDialog.bug(var7);
-        }
-
-        this.conversationPane.repaint();
+        super.show(s);
     }
 
     public static String stripQuickColorTagLocal(String s, String prefix) {
         final String[] QUICK_COLOR_REGEX = new String[]{"\\|", "!", "~", "`"};
-        int quickIndex = getQuickColorLocal(s, prefix);
+        final int quickIndex = getQuickColorLocal(s, prefix);
         return quickIndex < 0 ? s : s.replaceFirst(QUICK_COLOR_REGEX[quickIndex], "");
     }
+
     public static int getQuickColorLocal(String s, String prefix) {
         if (!StringUtils.isEmpty(s) && !s.isBlank()) {
             if (StringUtils.isEmpty(prefix)) {
                 return getQuickColorLocal(s);
-            } else if (!s.startsWith(prefix)) {
+            }
+            else if (!s.startsWith(prefix)) {
                 return -1;
-            } else {
-                String s2 = s.substring(prefix.length()).trim();
+            }
+            else {
+                final String s2 = s.substring(prefix.length()).trim();
                 return s2.isEmpty() ? -1 : getQuickColorLocal(s2.charAt(0));
             }
-        } else {
+        }
+        else {
             return -1;
         }
     }
+
     public static int getQuickColorLocal(String s) {
         if (StringUtils.isEmpty(s)) {
             return -1;
-        } else {
-            String s2 = s.trim();
+        }
+        else {
+            final String s2 = s.trim();
             return s2.isEmpty() ? -1 : getQuickColorLocal(s2.charAt(0));
         }
     }
+
     public static int getQuickColorLocal(char c) {
         return "|!~`".indexOf(c);
     }
 
     public static String getQuickColorHTMLStyleLocal(String s, String prefix) {
-        int quickIndex = getQuickColorLocal(s, prefix);
-        Object var10000 = quickIndex <= 0 ? "" : quickIndex + 1;
+        final int quickIndex = getQuickColorLocal(s, prefix);
+        final Object var10000 = quickIndex <= 0 ? "" : quickIndex + 1;
         return "msg" + var10000;
     }
 
-
-    private void ParseSystemMsg(String strMsg) {
-        try
-        {
-            //StyleConstants.setForeground(m_objMainStyle, m_clrSystemMsg);
-            //m_objDocument.insertString(m_objDocument.getLength(), "\n" + strMsg, m_objMainStyle);
-        }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
-        }
-    }
-
-    private void ParseUserMsg(String strMsg) {
-        try
-        {
-            String[] lar_strParts = FindUser(strMsg);
-
-            if ((!lar_strParts[1].isEmpty()) && (!lar_strParts[2].isEmpty()))  {
-                msgpartCategory = ""; msgpartCdice=""; msgpartWdice=""; msgpartSAN="";
-                msgpartDiceImage="";msgpartSpecial="";
-                msgpartUser = lar_strParts[1];
-                msgpartRest = lar_strParts[2];
-            }
+    private void parseSystemMsg(String msg) {
+        try {
+            //StyleConstants.setForeground(mainStyle, clrSystemMsg);
+            //document.insertString(document.getLength(), "\n" + msg, mainStyle);
         }
         catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    private String ParseMoveMsg(String strMsg) {
-        // test for html tags that must be removed
-        int l_iUserStart=0 ;
-        int l_iUserEnd=0 ;
-        do {
-            try {
-                l_iUserStart = strMsg.indexOf("<");
-                l_iUserEnd = strMsg.indexOf(">");
+    private void parseUserMsg(String msg) {
+        final String[] parts = findUser(msg);
 
-                if ((l_iUserStart != -1) && (l_iUserEnd != -1)) {
-                    String deletestring = strMsg.substring(l_iUserStart, l_iUserEnd+1);
-                    strMsg = strMsg.replace(deletestring, "");
-                    l_iUserStart=0 ; l_iUserEnd=0 ;
-                } else if ((l_iUserStart == -1) && (l_iUserEnd != -1)) {
-                    break;
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        } while ((l_iUserStart != -1) && (l_iUserEnd != -1));
-        //test
-        return strMsg;
+        if (!parts[1].isEmpty() && !parts[2].isEmpty()) {
+            msgpartCategory = "";
+            msgpartCdice = "";
+            msgpartWdice = "";
+            msgpartSAN = "";
+            msgpartDiceImage = "";
+            msgpartSpecial = "";
+            msgpartUser = parts[1];
+            msgpartRest = parts[2];
+        }
     }
 
-    private void ParseNewDiceRoll(String strMsg)
-    {
+    private String parseMoveMsg(String msg) {
+        // test for html tags that must be removed
+        int userStart = 0;
+        int userEnd = 0;
+        do {
+            userStart = msg.indexOf("<");
+            userEnd = msg.indexOf(">");
+
+            if (userStart != -1 && userEnd != -1) {
+                final String deletestring = msg.substring(userStart, userEnd+1);
+                msg = msg.replace(deletestring, "");
+                userStart = 0;
+                userEnd = 0;
+            }
+        } while (userStart != -1 && userEnd != -1);
+        //test
+        return msg;
+    }
+
+    private void parseNewDiceRoll(String msg) {
         // *** (Other DR) 4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
-        String l_strCategory, l_strDice, l_strUser, l_strSAN = "";
-        int l_iFirstDice, l_iSecondDice;
-        msgpartCategory=null; msgpartUser=null; msgpartCdice=null; msgpartWdice=null; msgpartSpecial=null; msgpartRest=null; msgpartDiceImage=null;
-        Map<DiceType, Integer> otherDice = new HashMap<>();
-        try
-        {
-            String l_strRestOfMsg = strMsg.substring("*** (".length()); // Other DR) 4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)        
+        String category, dice, user, san = "";
+        int firstDie, secondDie;
+        msgpartCategory = null;
+        msgpartUser = null;
+        msgpartCdice = null;
+        msgpartWdice = null;
+        msgpartSpecial = null;
+        msgpartRest = null;
+        msgpartDiceImage = null;
+        try {
+            String restOfMsg = msg.substring("*** (".length()); // Other DR) 4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
 
-            int l_iPos = l_strRestOfMsg.indexOf(" DR) ");
+            int pos = restOfMsg.indexOf(" DR) ");
 
-            if (l_iPos != -1)
-            {
-                l_strCategory = l_strRestOfMsg.substring(0, l_iPos);
-                l_strRestOfMsg = l_strRestOfMsg.substring(l_iPos + " DR) ".length()); //4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)        
+            if (pos != -1) {
+                category = restOfMsg.substring(0, pos);
+                restOfMsg = restOfMsg.substring(pos + " DR) ".length()); //4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
 
-                l_iPos = l_strRestOfMsg.indexOf(" ***");
+                pos = restOfMsg.indexOf(" ***");
 
-                if (l_iPos != -1)
-                {
-                    l_strDice = l_strRestOfMsg.substring(0, l_iPos);
-                    l_strRestOfMsg = l_strRestOfMsg.substring(l_iPos + " ***".length());//   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
+                if (pos != -1) {
+                    dice = restOfMsg.substring(0, pos);
+                    restOfMsg = restOfMsg.substring(pos + " ***".length());//   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
 
-                    if (l_strDice.length() == 3 || l_strDice.length() == 5)
-                    {
-                        String [] lar_strDice = l_strDice.split(",");
+                    if (dice.length() == 3 || dice.length() == 5) {
+                        final String[] diceArr = dice.split(",");
 
-                        if (lar_strDice.length == 2 || (lar_strDice.length == 3 && environment.dustInEffect()))
-                        {
-                            l_iFirstDice = Integer.parseInt(lar_strDice[0]);
-                            l_iSecondDice = Integer.parseInt(lar_strDice[1]);
-                            if(environment.dustInEffect() && lar_strDice.length == 3)
-                            {
-                                otherDice.put(DiceType.OTHER_DUST, Integer.parseInt(lar_strDice[2]));
+                        if (diceArr.length == 2 || (diceArr.length == 3 && environment.dustInEffect())) {
+                            final Map<DiceType, Integer> otherDice = new HashMap<>();
+                            firstDie = Integer.parseInt(diceArr[0]);
+                            secondDie = Integer.parseInt(diceArr[1]);
+                            if (environment.dustInEffect() && diceArr.length == 3) {
+                                otherDice.put(DiceType.OTHER_DUST, Integer.parseInt(diceArr[2]));
                             }
 
-                            if ((l_iFirstDice > 0)
-                                && (l_iFirstDice < 7)
-                                && (l_iSecondDice > 0)
-                                && (l_iSecondDice < 7))
-                            {
-                                String[] lar_strParts = FindUser(l_strRestOfMsg);
+                            if (firstDie > 0
+                                    && firstDie < 7
+                                    && secondDie > 0
+                                    && secondDie < 7) {
+                                final String[] parts = findUser(restOfMsg);
 
-                                ArrayList<String> specialMessages = new ArrayList<>();
+                                final ArrayList<String> specialMessages = new ArrayList<>();
 
-                                if ((!lar_strParts[1].isEmpty()) && (!lar_strParts[2].isEmpty()))
-                                {
-                                    l_strUser = lar_strParts[1];
-                                    l_strRestOfMsg = lar_strParts[2]; // >      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)        
+                                if (!parts[1].isEmpty() && !parts[2].isEmpty()) {
+                                    user = parts[1];
+                                    restOfMsg = parts[2]; // >      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
 
-                                    l_strRestOfMsg = l_strRestOfMsg.replace(">", " ").trim(); //Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)        
+                                    restOfMsg = restOfMsg.replace(">", " ").trim(); //Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
 
 
                                     // Add special event hints, if necessary
                                     // First, SAN, which should not trigger for Rally, TK and CC rolls
                                     // and should happen on "Only Sniper" setting and in Full ASL mode
-                                    if(m_DRNotificationLevel == 3 || m_DRNotificationLevel == 1)
-                                    {
-                                        if ((!l_strCategory.equals("TK")) && (!l_strCategory.equals("CC"))
-                                                && (!l_strCategory.equals(("Rally"))))
-                                        {
-                                            if (l_strRestOfMsg.startsWith("Axis SAN"))
-                                            {
-                                                l_strSAN = "Axis SAN";
+                                    if (DRNotificationLevel == 3 || DRNotificationLevel == 1) {
+                                        if (!category.equals("TK") && !category.equals("CC") && !category.equals("Rally")) {
+                                            if (restOfMsg.startsWith("Axis SAN")) {
+                                                san = "Axis SAN";
                                                 specialMessages.add("Axis SAN");
-                                                l_strRestOfMsg = l_strRestOfMsg.substring("Axis SAN".length());
-                                            } else if (l_strRestOfMsg.startsWith("Allied SAN"))
-                                            {
-                                                l_strSAN = "Allied SAN";
+                                                restOfMsg = restOfMsg.substring("Axis SAN".length());
+                                            }
+                                            else if (restOfMsg.startsWith("Allied SAN")) {
+                                                san = "Allied SAN";
                                                 specialMessages.add("Allied SAN");
-                                                l_strRestOfMsg = l_strRestOfMsg.substring("Allied SAN".length());
-                                            } else if (l_strRestOfMsg.startsWith("Axis/Allied SAN"))
-                                            {
-                                                l_strSAN = "Axis/Allied SAN";
+                                                restOfMsg = restOfMsg.substring("Allied SAN".length());
+                                            }
+                                            else if (restOfMsg.startsWith("Axis/Allied SAN")) {
+                                                san = "Axis/Allied SAN";
                                                 specialMessages.add("Axis/Allied SAN");
-                                                l_strRestOfMsg = l_strRestOfMsg.substring("Axis/Allied SAN".length());
+                                                restOfMsg = restOfMsg.substring("Axis/Allied SAN".length());
                                             }
                                         }
 
-                                        if (l_strCategory.equals("TC"))
-                                        {
-                                            if (l_strRestOfMsg.startsWith("Axis Booby Trap"))
-                                            {
-                                                l_strSAN = "Axis Booby Trap";
+                                        if (category.equals("TC")) {
+                                            if (restOfMsg.startsWith("Axis Booby Trap")) {
+                                                san = "Axis Booby Trap";
                                                 specialMessages.add("Axis Booby Trap");
-                                                l_strRestOfMsg = l_strRestOfMsg.substring("Axis Booby Trap".length());
-                                            } else if (l_strRestOfMsg.startsWith("Allied Booby Trap"))
-                                            {
-                                                l_strSAN = "Allied Booby Trap";
+                                                restOfMsg = restOfMsg.substring("Axis Booby Trap".length());
+                                            }
+                                            else if (restOfMsg.startsWith("Allied Booby Trap")) {
+                                                san = "Allied Booby Trap";
                                                 specialMessages.add("Allied Booby Trap");
-                                                l_strRestOfMsg = l_strRestOfMsg.substring("Allied Booby Trap".length());
-                                            } else if (l_strRestOfMsg.startsWith("Axis/Allied Booby Trap"))
-                                            {
-                                                l_strSAN = "Axis/Allied Booby Trap";
+                                                restOfMsg = restOfMsg.substring("Allied Booby Trap".length());
+                                            }
+                                            else if (restOfMsg.startsWith("Axis/Allied Booby Trap")) {
+                                                san = "Axis/Allied Booby Trap";
                                                 specialMessages.add("Axis/Allied Booby Trap");
-                                                l_strRestOfMsg = l_strRestOfMsg.substring("Axis/Allied Booby Trap".length());
+                                                restOfMsg = restOfMsg.substring("Axis/Allied Booby Trap".length());
                                             }
                                         }
                                     }
-                                    msgpartSAN=l_strSAN;
+                                    msgpartSAN = san;
                                     // ALL of these happen only in Starter Kit mode or Full ASL mode
-                                    if(m_DRNotificationLevel >= 2)
-                                    {
+                                    if (DRNotificationLevel >= 2) {
                                         // For TH rolls only, show possible hit location, Unlikely hit and multiple hit
-                                      switch (l_strCategory) {
+                                        switch (category) {
                                         case "TH":
-                                          if (l_iFirstDice == l_iSecondDice) {
-                                            // Starter Kit + Full ASL
-                                            if (l_iFirstDice == 1) {
-                                              specialMessages.add("Unlikely Hit (C3.6)");
+                                            if (firstDie == secondDie) {
+                                                // Starter Kit + Full ASL
+                                                if (firstDie == 1) {
+                                                    specialMessages.add("Unlikely Hit (C3.6)");
+                                                }
+                                                // Full ASL only
+                                                if (DRNotificationLevel == 3) {
+                                                    specialMessages.add("Multiple Hits 15..40mm (C3.8)");
+                                                }
                                             }
-                                            // Full ASL only
-                                            if (m_DRNotificationLevel == 3) {
-                                              specialMessages.add("Multiple Hits 15..40mm (C3.8)");
+                                            if (firstDie < secondDie) {
+                                                specialMessages.add("Turret");
                                             }
-                                          }
-                                          if (l_iFirstDice < l_iSecondDice) {
-                                            specialMessages.add("Turret");
-                                          } else {
-                                            specialMessages.add("Hull");
-                                          }
-                                          HandleSpecialMessagesForOtherDice(l_strCategory, specialMessages, l_iFirstDice, l_iSecondDice, otherDice);
+                                            else {
+                                                specialMessages.add("Hull");
+                                            }
+                                            handleSpecialMessagesForOtherDice(category, specialMessages, firstDie, secondDie, otherDice);
 
-                                          break;
+                                            break;
                                         case "TK":
-                                          if (l_iFirstDice == l_iSecondDice) {
-                                            if (l_iFirstDice == 6) {
-                                              specialMessages.add("Dud (C7.35)");
+                                            if (firstDie == secondDie) {
+                                                if (firstDie == 6) {
+                                                    specialMessages.add("Dud (C7.35)");
+                                                }
                                             }
-                                          }
-                                          break;
+                                            break;
                                         case "MC":
-                                          // Full ASL only
-                                          if (l_iFirstDice == 1 && l_iSecondDice == 1 && m_DRNotificationLevel == 3) {
-                                            specialMessages.add("Heat of Battle (A15.1)");
-                                          }
-                                          // Starter Kit & Full ASL
-                                          else if (l_iFirstDice == 6 && l_iSecondDice == 6) {
-                                            specialMessages.add("Casualty MC (A10.31)");
-                                          }
-                                          HandleSpecialMessagesForOtherDice(l_strCategory, specialMessages, l_iFirstDice, l_iSecondDice, otherDice);
-                                          break;
+                                            // Full ASL only
+                                            if (firstDie == 1 && secondDie == 1 && DRNotificationLevel == 3) {
+                                                specialMessages.add("Heat of Battle (A15.1)");
+                                            }
+                                            // Starter Kit & Full ASL
+                                            else if (firstDie == 6 && secondDie == 6) {
+                                                specialMessages.add("Casualty MC (A10.31)");
+                                            }
+                                            handleSpecialMessagesForOtherDice(category, specialMessages, firstDie, secondDie, otherDice);
+                                            break;
                                         case "TC":
 
-                                          break;
+                                            break;
                                         case "Rally":
-                                          // Full ASL only
-                                          if (l_iFirstDice == 1 && l_iSecondDice == 1 && m_DRNotificationLevel == 3) {
-                                            specialMessages.add("Heat of Battle (A15.1) or Field Promotion (A18.11)");
-                                          }
-                                          // Starter Kit + Full ASL
-                                          else if (l_iFirstDice == 6 && l_iSecondDice == 6) {
-                                            specialMessages.add("Fate -> Casualty Reduction (A10.64)");
-                                          }
-
-                                          break;
-                                        case "IFT":
-                                          // check for cowering
-                                          if (l_iFirstDice == l_iSecondDice) {
                                             // Full ASL only
-                                            if (l_iFirstDice == 1 && m_DRNotificationLevel == 3) {
-                                              specialMessages.add("Unlikely Kill vs * (A7.309)");
+                                            if (firstDie == 1 && secondDie == 1 && DRNotificationLevel == 3) {
+                                                specialMessages.add("Heat of Battle (A15.1) or Field Promotion (A18.11)");
                                             }
                                             // Starter Kit + Full ASL
-                                            specialMessages.add("Cower if MMC w/o LDR");
-                                          }
-                                          HandleSpecialMessagesForOtherDice(l_strCategory, specialMessages, l_iFirstDice, l_iSecondDice, otherDice);
-                                          break;
+                                            else if (firstDie == 6 && secondDie == 6) {
+                                                specialMessages.add("Fate -> Casualty Reduction (A10.64)");
+                                            }
+
+                                            break;
+                                        case "IFT":
+                                            // check for cowering
+                                            if (firstDie == secondDie) {
+                                                // Full ASL only
+                                                if (firstDie == 1 && DRNotificationLevel == 3) {
+                                                    specialMessages.add("Unlikely Kill vs * (A7.309)");
+                                                }
+                                                // Starter Kit + Full ASL
+                                                specialMessages.add("Cower if MMC w/o LDR");
+                                            }
+                                            handleSpecialMessagesForOtherDice(category, specialMessages, firstDie, secondDie, otherDice);
+                                            break;
                                         case "CC":
-                                          // Full ASL only
-                                          if (l_iFirstDice == 1 && l_iSecondDice == 1 && m_DRNotificationLevel == 3) {
-                                            specialMessages.add("Infiltration (A11.22), Field Promotion (A18.12), Unlikely Kill (A11.501)");
-                                          } else if (l_iFirstDice == 6 && l_iSecondDice == 6 && m_DRNotificationLevel == 3) {
-                                            specialMessages.add("Infiltration (A11.22)");
-                                          }
-                                          break;
-                                      }
+                                            // Full ASL only
+                                            if (firstDie == 1 && secondDie == 1 && DRNotificationLevel == 3) {
+                                                specialMessages.add("Infiltration (A11.22), Field Promotion (A18.12), Unlikely Kill (A11.501)");
+                                            } else if (firstDie == 6 && secondDie == 6 && DRNotificationLevel == 3) {
+                                                specialMessages.add("Infiltration (A11.22)");
+                                            }
+                                            break;
+                                        }
                                     }
 
                                     // check if SASL Dice button clicked and if so ask for special message string - SASL Dice buttons are created via extension
-                                    if(m_DRNotificationLevel == 3 && l_strCategory.equals("EP")){
-                                        if (l_iFirstDice == l_iSecondDice) {
-                                            switch (l_iFirstDice) {
-                                                case 1:
-                                                    specialMessages.add("Green and Conscript Units Panic");
-                                                    break;
-                                                case 2:
-                                                    specialMessages.add("2nd Line, Partisan, Green, and Conscript Units Panic");
-                                                    break;
-                                                case 3: case 4:
-                                                    specialMessages.add("1st Line, 2nd Line, Partisan, Green, and Conscript Units Panic");
-                                                    break;
-                                                case 5: case 6:
-                                                    specialMessages.add("Any Unit Panics");
-                                                    break;
+                                    if (DRNotificationLevel == 3 && category.equals("EP")){
+                                        if (firstDie == secondDie) {
+                                            switch (firstDie) {
+                                            case 1:
+                                                specialMessages.add("Green and Conscript Units Panic");
+                                                break;
+                                            case 2:
+                                                specialMessages.add("2nd Line, Partisan, Green, and Conscript Units Panic");
+                                                break;
+                                            case 3:
+                                            case 4:
+                                                specialMessages.add("1st Line, 2nd Line, Partisan, Green, and Conscript Units Panic");
+                                                break;
+                                            case 5:
+                                            case 6:
+                                                specialMessages.add("Any Unit Panics");
+                                                break;
                                             }
                                         }
                                     }
                                     // Construct Special Message string
-                                    StringBuilder l_strSpecialMessages = new StringBuilder();
-                                    for (int i = 0; i < specialMessages.size(); ++i)
-                                    {
-                                        l_strSpecialMessages.append(specialMessages.get(i));
-                                        if (i < specialMessages.size() - 1)
-                                        {
-                                            l_strSpecialMessages.append(", ");
+                                    final StringBuilder strSpecialMessages = new StringBuilder();
+                                    for (int i = 0; i < specialMessages.size(); ++i) {
+                                        strSpecialMessages.append(specialMessages.get(i));
+                                        if (i < specialMessages.size() - 1) {
+                                            strSpecialMessages.append(", ");
                                         }
                                     }
-                                    msgpartCategory = BEFORE_CATEGORY + l_strCategory;
+                                    msgpartCategory = BEFORE_CATEGORY + category;
 
-                                    if (m_bUseDiceImages)
-                                    {
-                                        msgpartCdice = Integer.toString(l_iFirstDice);
-                                        msgpartWdice= Integer.toString(l_iSecondDice);
+                                    msgpartCdice = Integer.toString(firstDie);
+                                    msgpartWdice = Integer.toString(secondDie);
 
-                                        PaintIcon(l_iFirstDice, DiceType.COLORED);
-                                        PaintIcon(l_iSecondDice, DiceType.WHITE);
+                                    if (useDiceImages) {
+                                        paintIcon(firstDie, DiceType.COLORED);
+                                        paintIcon(secondDie, DiceType.WHITE);
                                         //Add any other dice required
-                                        for ( Map.Entry<DiceType, Integer> entry : otherDice.entrySet())
-                                        {
-                                            PaintIcon(entry.getValue(), entry.getKey());
+                                        for (final Map.Entry<DiceType, Integer> entry : otherDice.entrySet()) {
+                                            paintIcon(entry.getValue(), entry.getKey());
                                         }
                                     }
-                                    else
-                                    {
-                                        msgpartCdice = Integer.toString(l_iFirstDice);
-                                        msgpartWdice= Integer.toString(l_iSecondDice);
-                                    }
-                                    msgpartUser = l_strUser;
-                                    msgpartSpecial = l_strSpecialMessages.toString();
 
-                                    if (m_bShowDiceStats) {
-                                        msgpartRest = l_strRestOfMsg;
+                                    msgpartUser = user;
+                                    msgpartSpecial = strSpecialMessages.toString();
+
+                                    if (showDiceStats) {
+                                        msgpartRest = restOfMsg;
                                     }
-                                    FireDiceRoll();
+
+                                    fireDiceRoll();
                                 }
                             }
                         }
                     }
                 }
             }
-            else // *** (Other dr) 3 ***   <FredKors>      [1 / 1   avg   3,00 (3,00)]    (01.84)
-            {
+            else { // *** (Other dr) 3 ***   <FredKors>      [1 / 1   avg   3,00 (3,00)]    (01.84)
                 //reset SAN message to the latest state for dice over map
-                msgpartSAN = l_strSAN;
-                l_iPos = l_strRestOfMsg.indexOf(" dr) ");
+                msgpartSAN = san;
+                pos = restOfMsg.indexOf(" dr) ");
 
-                if (l_iPos != -1) {
-                    l_strCategory = l_strRestOfMsg.substring(0, l_iPos);
-                    l_strRestOfMsg = l_strRestOfMsg.substring(l_iPos + " dr) ".length()); //3 ***   <FredKors>      [1 / 1   avg   3,00 (3,00)]    (01.84)
+                if (pos != -1) {
+                    category = restOfMsg.substring(0, pos);
+                    restOfMsg = restOfMsg.substring(pos + " dr) ".length()); //3 ***   <FredKors>      [1 / 1   avg   3,00 (3,00)]    (01.84)
 
-                    l_iPos = l_strRestOfMsg.indexOf(" ***");
+                    pos = restOfMsg.indexOf(" ***");
 
-                    if (l_iPos != -1)
-                    {
-                        l_strDice = l_strRestOfMsg.substring(0, l_iPos);
-                        l_strRestOfMsg = l_strRestOfMsg.substring(l_iPos + " ***".length());//   <FredKors>      [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)        
+                    if (pos != -1) {
+                        dice = restOfMsg.substring(0, pos);
+                        restOfMsg = restOfMsg.substring(pos + " ***".length());//   <FredKors>      [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
 
-                        if (l_strDice.length() == 1)
-                        {
-                            int l_iDice = Integer.parseInt(l_strDice);
+                        if (dice.length() == 1) {
+                            final int diceVal = Integer.parseInt(dice);
 
-                            if ((l_iDice > 0)
-                                && (l_iDice < 7))
-                            {
-                                String[] lar_strParts = FindUser(l_strRestOfMsg);
+                            if (diceVal > 0 && diceVal < 7) {
+                                String[] parts = findUser(restOfMsg);
 
-                                if ((!lar_strParts[1].isEmpty()) && (!lar_strParts[2].isEmpty()))
-                                {
-                                    l_strUser = lar_strParts[1];
+                                if (!parts[1].isEmpty() && !parts[2].isEmpty()) {
+                                    user = parts[1];
 
-                                  msgpartCategory = BEFORE_CATEGORY + l_strCategory;
+                                    msgpartCategory = BEFORE_CATEGORY + category;
 
-                                    if (m_bUseDiceImages)
-                                    {
-                                        msgpartCdice = (l_strDice);
-                                        msgpartWdice="-1";
-                                        PaintIcon(l_iDice, DiceType.SINGLE);
+                                    msgpartCdice = dice;
+                                    msgpartWdice = "-1";
+
+                                    if (useDiceImages) {
+                                        paintIcon(diceVal, DiceType.SINGLE);
                                     }
-                                    else
-                                        msgpartCdice = l_strDice;
-                                        msgpartWdice="-1";
-                                    {
 
-                                    }
-                                    msgpartUser = l_strUser;
+                                    msgpartUser = user;
                                     // added by DR 2018 to add chatter text on Sniper Activation dr
-                                    if (l_strCategory.equals("SA")) {
-                                        String sniperstring="";
-                                        if (l_iDice == 1) {
-                                            sniperstring ="Eliminates SMC, Dummy stack, Sniper; Stuns & Recalls CE crew; breaks MMC & Inherent crew of certain vehicles; immobilizes unarmored vehicle (A14.3)" ;
-                                        } else if (l_iDice == 2) {
-                                            sniperstring ="Eliminates Dummy stack; Wounds SMC; Stuns CE crew; pins MMC, Inherent crew of certain vehicles, Sniper (A14.3)" ;
+                                    if (category.equals("SA")) {
+                                        String sniperstring = "";
+                                        if (diceVal == 1) {
+                                            sniperstring = "Eliminates SMC, Dummy stack, Sniper; Stuns & Recalls CE crew; breaks MMC & Inherent crew of certain vehicles; immobilizes unarmored vehicle (A14.3)" ;
+                                        }
+                                        else if (diceVal == 2) {
+                                            sniperstring = "Eliminates Dummy stack; Wounds SMC; Stuns CE crew; pins MMC, Inherent crew of certain vehicles, Sniper (A14.3)" ;
                                         }
                                         msgpartSpecial = sniperstring;
                                     }
-                                    if (m_bShowDiceStats) {
-                                        msgpartRest = l_strRestOfMsg;
+
+                                    if (showDiceStats) {
+                                        msgpartRest = restOfMsg;
                                     }
 
-                                    FireDiceRoll();
+                                    fireDiceRoll();
                                 }
                             }
                         }
                     }
                 }
-            }
-        }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
-        }
-    }
-
-    private void HandleSpecialMessagesForOtherDice(final String l_strCategory, final ArrayList<String> specialMessages,
-                                                   final int l_iFirstDice, final int l_iSecondDice, final Map<DiceType, Integer> otherDice)
-    {
-      int total = l_iFirstDice + l_iSecondDice;
-      int unmodifiedTotal = total;
-      final String SPACE = " ";
-      // Dust
-      if(environment.dustInEffect() && m_DRNotificationLevel == 3 && !otherDice.isEmpty())
-      {
-        switch (l_strCategory)
-        {
-          case "TH":
-          case "IFT": {
-            if (environment.isSpecialDust()) {
-              total += environment.getSpecialDust(otherDice.get(DiceType.OTHER_DUST));
-            } else {
-              if (environment.isLightDust()) {
-                total += Environment.getLightDust(otherDice.get(DiceType.OTHER_DUST));
-              } else {
-                total += Environment.getModerateDust(otherDice.get(DiceType.OTHER_DUST));
-              }
-            }
-            specialMessages.add(environment.getCurrentDustLevel().toString() + SPACE);
-            break;
-          }
-
-          case "MC": {
-            if (environment.isSpecialDust()) {
-              total -= environment.getSpecialDust(otherDice.get(DiceType.OTHER_DUST));
-            } else {
-              if (environment.isLightDust()) {
-                total -= Environment.getLightDust(otherDice.get(DiceType.OTHER_DUST));
-              } else {
-                total -= Environment.getModerateDust(otherDice.get(DiceType.OTHER_DUST));
-              }
-            }
-            specialMessages.add(environment.getCurrentDustLevel().toString() +" - if interdicted, MC is " + total);
-            break;
-          }
-        }
-      }
-      // Night
-      if(environment.isNight()  && m_DRNotificationLevel == 3)
-      {
-        switch (l_strCategory)
-        {
-
-          case "TH":
-          case "IFT":
-          {
-            total += 1;
-            specialMessages.add( "+1 Night LV"  + SPACE);
-            break;
-          }
-        }
-      }
-      // LV
-      if(environment.isLV())
-      {
-        LVLevel lvLevel = environment.getCurrentLVLevel();
-        switch (l_strCategory) {
-          case "TH":
-          case "IFT":
-          {
-            switch (lvLevel)
-            {
-              case DAWN_DUSK: {
-                total += 1;
-                break;
-              }
-
-            }
-            specialMessages.add(lvLevel + SPACE);
-            break;
-          }
-        }
-      }
-      // Fog
-      if(environment.isFog())
-      {
-        switch (l_strCategory)
-        {
-
-          case "TH":
-          case "IFT":
-          {
-            FogLevel fogLevel = environment.getCurrentFogLevel();
-            specialMessages.add(fogLevel.toString() + SPACE);
-            break;
-          }
-        }
-      }
-      //Heat Haze
-      if(environment.isHeatHaze())
-      {
-        switch (l_strCategory)
-        {
-          case "TH":
-          case "IFT":
-          {
-            HeatHazeLevel heatHazeLevel = environment.getCurrentHeatHazeLevel();
-            specialMessages.add(heatHazeLevel.toString() + SPACE);
-            break;
-          }
-        }
-      }
-      //Sun Blindness
-      if(environment.isSunBlindness())
-      {
-        switch (l_strCategory)
-        {
-          case "TH":
-          case "IFT":
-          {
-            SunBlindnessLevel sunBlindnessLevel = environment.getCurrentSunBlindnessLevel();
-            specialMessages.add(sunBlindnessLevel.toString() + SPACE);
-            break;
-          }
-        }
-      }
-
-      if( unmodifiedTotal < total || environment.dustInEffect()) {
-        specialMessages.add("Total: " + total);
-      }
-    }
-
-
-
-    private void PaintIcon(int l_iDice, DiceType diceType)     {
-
-        try {
-            ASLDie die = diceFactory.getASLDie(diceType);
-            String dicefile = die.getDieHTMLFragment(l_iDice);
-            if (msgpartDiceImage==null) {
-                msgpartDiceImage = "<img  alt=\"alt text\" src=\"" + dicefile + "\">";
-            } else {
-                msgpartDiceImage = msgpartDiceImage + "&nbsp <img  alt=\"alt text\" src=\"" + dicefile + "\"> &nbsp";
             }
         }
         catch (Exception ex) {
@@ -1033,13 +752,130 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
     }
 
-    @Override
-    public void build(org.w3c.dom.Element e) {
+    private void handleSpecialMessagesForOtherDice(String category, ArrayList<String> specialMessages, int firstDie, int secondDie, Map<DiceType, Integer> otherDice) {
+        int total = firstDie + secondDie;
+        final int unmodifiedTotal = total;
+        // Dust
+        if (environment.dustInEffect() && DRNotificationLevel == 3 && !otherDice.isEmpty()) {
+            switch (category) {
+            case "TH":
+            case "IFT":
+                if (environment.isSpecialDust()) {
+                    total += environment.getSpecialDust(otherDice.get(DiceType.OTHER_DUST));
+                }
+                else {
+                    if (environment.isLightDust()) {
+                        total += Environment.getLightDust(otherDice.get(DiceType.OTHER_DUST));
+                    }
+                    else {
+                        total += Environment.getModerateDust(otherDice.get(DiceType.OTHER_DUST));
+                    }
+                }
+                specialMessages.add(environment.getCurrentDustLevel().toString() + " ");
+                break;
+
+            case "MC":
+                if (environment.isSpecialDust()) {
+                    total -= environment.getSpecialDust(otherDice.get(DiceType.OTHER_DUST));
+                }
+                else {
+                    if (environment.isLightDust()) {
+                        total -= Environment.getLightDust(otherDice.get(DiceType.OTHER_DUST));
+                    }
+                    else {
+                        total -= Environment.getModerateDust(otherDice.get(DiceType.OTHER_DUST));
+                    }
+                }
+                specialMessages.add(environment.getCurrentDustLevel().toString() +" - if interdicted, MC is " + total);
+                break;
+            }
+        }
+        // Night
+        if (environment.isNight() && DRNotificationLevel == 3) {
+            switch (category) {
+            case "TH":
+            case "IFT":
+                total += 1;
+                specialMessages.add("+1 Night LV ");
+                break;
+            }
+        }
+        // LV
+        if (environment.isLV()) {
+            final LVLevel lvLevel = environment.getCurrentLVLevel();
+            switch (category) {
+            case "TH":
+            case "IFT":
+                switch (lvLevel) {
+                case DAWN_DUSK:
+                    total += 1;
+                    break;
+                }
+                specialMessages.add(lvLevel + " ");
+                break;
+            }
+        }
+        // Fog
+        if (environment.isFog()) {
+            switch (category) {
+            case "TH":
+            case "IFT":
+                {
+                    final FogLevel fogLevel = environment.getCurrentFogLevel();
+                    specialMessages.add(fogLevel.toString() + " ");
+                    break;
+                }
+            }
+        }
+        //Heat Haze
+        if (environment.isHeatHaze()) {
+            switch (category) {
+            case "TH":
+            case "IFT":
+                {
+                    final HeatHazeLevel heatHazeLevel = environment.getCurrentHeatHazeLevel();
+                    specialMessages.add(heatHazeLevel.toString() + " ");
+                    break;
+                }
+            }
+        }
+        //Sun Blindness
+        if (environment.isSunBlindness()) {
+            switch (category) {
+            case "TH":
+            case "IFT":
+                {
+                    final SunBlindnessLevel sunBlindnessLevel = environment.getCurrentSunBlindnessLevel();
+                    specialMessages.add(sunBlindnessLevel.toString() + " ");
+                    break;
+                }
+            }
+        }
+
+        if (unmodifiedTotal < total || environment.dustInEffect()) {
+            specialMessages.add("Total: " + total);
+        }
     }
 
-    @Override
-    public org.w3c.dom.Element getBuildElement(org.w3c.dom.Document doc){
-        return doc.createElement(getClass().getName());
+    private void paintIcon(int dice, DiceType diceType) {
+        ASLDie die;
+        try {
+            die = diceFactory.getASLDie(diceType);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+            return;
+        }
+
+        final String dicefile = die.getDieHTMLFragment(dice);
+        if (msgpartDiceImage == null) {
+            msgpartDiceImage = " ";
+        }
+        else {
+            msgpartDiceImage += "&nbsp;";
+        }
+
+        msgpartDiceImage += "<img alt=\"alt text\" src=\"" + dicefile + "\">";
     }
 
     private String makeMessageString() {
@@ -1048,88 +884,86 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         if (msgpartCategory == null) {
             msgpartCategory = "";
         }
+
         if (msgpartCdice == null) {
             msgpartCdice = "";
         }
+
         if (msgpartWdice == null) {
             msgpartWdice = "";
         }
+
         if (msgpartUser == null) {
             msgpartUser = "";
         }
+
         if (msgpartSpecial == null) {
             msgpartSpecial = "";
         }
+
         if (msgpartRest == null) {
             msgpartRest = "";
         }
+
         if (msgpartWdice.equals("-1")){
-            msgpartWdice="";
+            msgpartWdice = "";
         }
 
-        String catstyle = "msgcategory";
-        String userstyle = getUserStyle();
-        String specialstyle = "msgspecial";  //text-decoration: underline";  //<p style="text-decoration: underline;">This text will be underlined.</p>
-        if (m_bUseDiceImages) {
-            return "*~<span class=" + userstyle + ">" + msgpartDiceImage + "</span>"
-                + "<span class=" + catstyle + ">" + msgpartCategory + "</span>"
-                + "<span class=" + userstyle + ">" + USER_SPACING_PADDING + msgpartUser+ "</span>"
+        final String catstyle = "msgcategory";
+        final String userstyle = getUserStyle();
+        final String specialstyle = "msgspecial";  //text-decoration: underline";  //<p style="text-decoration: underline;">This text will be underlined.</p>
+        if (useDiceImages) {
+            return "*~<span class=\"" + userstyle + "\">" + msgpartDiceImage + "</span>"
+                + "<span class=\"" + catstyle + "\">" + msgpartCategory + "</span>"
+                + "<span class=\"" + userstyle + "\">" + USER_SPACING_PADDING + msgpartUser+ "</span>"
                 + " " + "<u>"
-                + "<span class=" + specialstyle + ">" + msgpartSpecial + "</span>"
+                + "<span class=\"" + specialstyle + "\">" + msgpartSpecial + "</span>"
                 + "</u>" + " "
-                + "<span class=" + userstyle + ">" + msgpartRest + "</span>";
-        } else {
-            return "*~<span class=" + catstyle + ">" + msgpartCategory + "</span>"
+                + "<span class=\"" + userstyle + "\">" + msgpartRest + "</span>";
+        }
+        else {
+            return "*~<span class=\"" + catstyle + "\">" + msgpartCategory + "</span>"
                 + " " + msgpartCdice + " " + msgpartWdice + " "
-                + "<span class=" + userstyle + ">" + USER_SPACING_PADDING + msgpartUser + "</span>"
+                + "<span class=\"" + userstyle + "\">" + USER_SPACING_PADDING + msgpartUser + "</span>"
                 + " " + "<u>"
-                + "<span class=" + specialstyle + ">" + msgpartSpecial + "</span>"
+                + "<span class=\"" + specialstyle + "\">" + msgpartSpecial + "</span>"
                 + "</u>" + " "
-                + "<span class=" + userstyle + ">" + msgpartRest + "</span>";
+                + "<span class=\"" + userstyle + "\">" + msgpartRest + "</span>";
         }
     }
-    protected String getUserStyle() {
-      final String me = GlobalOptions.getInstance().getPlayerId();
-      if(msgpartUser.equals(me)) {
-        return "mychat";
-      }
-      return "other";
-    }
-    private String makeTableString(String strMsg){
-        strMsg= strMsg.substring(2);  // strip out "!!"
-        String tablestyle = "tbl";
-        return "*~<span class=" + tablestyle + ">" + strMsg + "</span>";
-    }
-   /**
-   * Expects to be added to a GameModule.  Adds itself to the
-   * controls window and registers itself as a
-   * {@link CommandEncoder} */
-    @Override
-    public void addTo(Buildable b)
-    {
-        GameModule l_objGameModule = (GameModule) b;
-        if (l_objGameModule.getChatter() != null)
-        {
-            // deleted code here which removed VASSAL elements but getChatter is always null at this point
-        }
 
-        l_objGameModule.setChatter(this);
-        l_objGameModule.addCommandEncoder(this);
-        l_objGameModule.addKeyStrokeSource(new KeyStrokeSource(this, WHEN_ANCESTOR_OF_FOCUSED_COMPONENT));
-        l_objGameModule.getPlayerWindow().addChatter(this);
-        l_objGameModule.getControlPanel().add(this, BorderLayout.CENTER);
-        final Prefs l_objModulePrefs = l_objGameModule.getPrefs();
+    protected String getUserStyle() {
+        final String me = GlobalOptions.getInstance().getPlayerId();
+        return msgpartUser.equals(me) ? "mychat" : "other";
+    }
+
+    private String makeTableString(String msg){
+        msg = msg.substring(2);  // strip out "!!"
+        return "*~<span class=\"tbl\">" + msg + "</span>";
+    }
+
+    /**
+     * Expects to be added to a GameModule.  Adds itself to the
+     * controls window and registers itself as a
+     * {@link CommandEncoder} */
+    @Override
+    public void addTo(Buildable b) {
+        final GameModule mod = (GameModule) b;
+        mod.setChatter(this);
+        mod.addCommandEncoder(this);
+        mod.addKeyStrokeSource(new KeyStrokeSource(this, WHEN_ANCESTOR_OF_FOCUSED_COMPONENT));
+        mod.getPlayerWindow().addChatter(this);
+        mod.getControlPanel().add(this, BorderLayout.CENTER);
+        final Prefs modulePrefs = mod.getPrefs();
 
         // font pref
-        FontConfigurer l_objChatFontConfigurer;
-        FontConfigurer l_objChatFontConfigurer_Exist = (FontConfigurer)l_objModulePrefs.getOption("ChatFont");
-        if (l_objChatFontConfigurer_Exist == null) {
-            l_objChatFontConfigurer = new FontConfigurer(CHAT_FONT, Resources.getString("Chatter.chat_font_preference")); //$NON-NLS-1$ //$NON-NLS-2$
-            l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), l_objChatFontConfigurer); //$NON-NLS-1$
-        } else {
-            l_objChatFontConfigurer = l_objChatFontConfigurer_Exist;
+        FontConfigurer chatFontConfigurer = (FontConfigurer) modulePrefs.getOption("ChatFont");
+        if (chatFontConfigurer == null) {
+            chatFontConfigurer = new FontConfigurer(CHAT_FONT, Resources.getString("Chatter.chat_font_preference")); //$NON-NLS-1$ //$NON-NLS-2$
+            modulePrefs.addOption(Resources.getString("Chatter.chat_window"), chatFontConfigurer); //$NON-NLS-1$
         }
-        l_objChatFontConfigurer.addPropertyChangeListener(evt -> {
+
+        chatFontConfigurer.addPropertyChangeListener(evt -> {
             setFont((Font) evt.getNewValue());
             makeStyleSheet((Font) evt.getNewValue());
             makeASLStyleSheet((Font) evt.getNewValue());
@@ -1137,277 +971,250 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             send("- Chatter font changed");
             send(" ");
         });
-        l_objChatFontConfigurer.fireUpdate();
+        chatFontConfigurer.fireUpdate();
+
         // buttons font pref
-        FontConfigurer l_objButtonsFontConfigurer;
-        FontConfigurer l_objButtonsFontConfigurer_Exist = (FontConfigurer)l_objModulePrefs.getOption("ButtonFont");
-        if (l_objButtonsFontConfigurer_Exist == null)
-        {
-            l_objButtonsFontConfigurer = new FontConfigurer(BUTTON_FONT, "Chatter's dice buttons font: "); //$NON-NLS-1$ //$NON-NLS-2$
-            l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), l_objButtonsFontConfigurer); //$NON-NLS-1$
-        } else {
-            l_objButtonsFontConfigurer = l_objButtonsFontConfigurer_Exist;
+        FontConfigurer buttonsFontConfigurer = (FontConfigurer) modulePrefs.getOption("ButtonFont");
+        if (buttonsFontConfigurer == null) {
+            buttonsFontConfigurer = new FontConfigurer(BUTTON_FONT, "Chatter's dice buttons font: "); //$NON-NLS-1$ //$NON-NLS-2$
+            modulePrefs.addOption(Resources.getString("Chatter.chat_window"), buttonsFontConfigurer); //$NON-NLS-1$
         }
-        l_objButtonsFontConfigurer.addPropertyChangeListener(evt -> SetButtonsFonts((Font) evt.getNewValue()));
-        l_objButtonsFontConfigurer.fireUpdate();
+
+        buttonsFontConfigurer.addPropertyChangeListener(evt -> setButtonsFonts((Font) evt.getNewValue()));
+        buttonsFontConfigurer.fireUpdate();
+
         //background colour pref
-        ColorConfigurer l_objBackgroundColor;
-        ColorConfigurer l_objBackgroundColor_Exist = (ColorConfigurer)l_objModulePrefs.getOption(CHAT_BACKGROUND_COLOR);
-        if (l_objBackgroundColor_Exist == null)
-        {
-            l_objBackgroundColor = new ColorConfigurer(CHAT_BACKGROUND_COLOR, "Background color: ", Color.white); //$NON-NLS-1$
-            l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), l_objBackgroundColor); //$NON-NLS-1$
-        } else {
-            l_objBackgroundColor = l_objBackgroundColor_Exist;
+        ColorConfigurer backgroundColor = (ColorConfigurer) modulePrefs.getOption(CHAT_BACKGROUND_COLOR);
+        if (backgroundColor == null) {
+            backgroundColor = new ColorConfigurer(CHAT_BACKGROUND_COLOR, "Background color: ", Color.white); //$NON-NLS-1$
+            modulePrefs.addOption(Resources.getString("Chatter.chat_window"), backgroundColor); //$NON-NLS-1$
         }
-        m_clrBackground = (Color) l_objModulePrefs.getValue(CHAT_BACKGROUND_COLOR);
-        l_objBackgroundColor.addPropertyChangeListener(e -> {
-            m_clrBackground = (Color) e.getNewValue();
-            conversationPane.setBackground(m_clrBackground);
+
+        clrBackground = (Color) modulePrefs.getValue(CHAT_BACKGROUND_COLOR);
+        backgroundColor.addPropertyChangeListener(e -> {
+            clrBackground = (Color) e.getNewValue();
+            conversationPane.setBackground(clrBackground);
         });
-        l_objBackgroundColor.fireUpdate();
+        backgroundColor.fireUpdate();
+
         // game message color pref
-        Prefs globalPrefs = Prefs.getGlobalPrefs();
-        ColorConfigurer gameMsgColor = new ColorConfigurer("HTMLgameMessage1Color", Resources.getString("Chatter.game_messages_preference"), Color.black);
-        gameMsgColor.addPropertyChangeListener((e) -> {
-            gameMsg = (Color)e.getNewValue();
+        final Prefs globalPrefs = Prefs.getGlobalPrefs();
+        final ColorConfigurer gameMsgColor = new ColorConfigurer("HTMLgameMessage1Color", Resources.getString("Chatter.game_messages_preference"), Color.black);
+        gameMsgColor.addPropertyChangeListener(e -> {
+            gameMsg = (Color) e.getNewValue();
             makeStyleSheet(null);
             makeASLStyleSheet(null);
         });
         globalPrefs.addOption(Resources.getString("Chatter.chat_window"), gameMsgColor);
-        gameMsg = (Color)globalPrefs.getValue("HTMLgameMessage1Color");
+        gameMsg = (Color) globalPrefs.getValue("HTMLgameMessage1Color");
 
         // sys messages pref
-        ColorConfigurer l_objSystemMsgColor;
-        ColorConfigurer l_objSystemMsgColor_Exist = (ColorConfigurer)l_objModulePrefs.getOption(SYS_MSG_COLOR);
-        if (l_objSystemMsgColor_Exist == null) {
-            l_objSystemMsgColor = new ColorConfigurer(SYS_MSG_COLOR, Resources.getString("Chatter.system_message_preference"), new Color(160, 160, 160)); //$NON-NLS-1$
-            l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), l_objSystemMsgColor); //$NON-NLS-1$
-        } else {
-            l_objSystemMsgColor = l_objSystemMsgColor_Exist;
+        ColorConfigurer systemMsgColor = (ColorConfigurer) modulePrefs.getOption(SYS_MSG_COLOR);
+        if (systemMsgColor == null) {
+            systemMsgColor = new ColorConfigurer(SYS_MSG_COLOR, Resources.getString("Chatter.systemessage_preference"), new Color(160, 160, 160)); //$NON-NLS-1$
+            modulePrefs.addOption(Resources.getString("Chatter.chat_window"), systemMsgColor); //$NON-NLS-1$
         }
-        systemMsg = (Color) l_objModulePrefs.getValue(SYS_MSG_COLOR);
+
+        systemMsg = (Color) modulePrefs.getValue(SYS_MSG_COLOR);
         makeStyleSheet(null);
-        l_objSystemMsgColor.addPropertyChangeListener(e -> {
+        systemMsgColor.addPropertyChangeListener(e -> {
             systemMsg = (Color) e.getNewValue();
             makeStyleSheet(null);
         });
+
         // myChat preference
-        ColorConfigurer l_objMyChatColor;
-        ColorConfigurer l_objMyChatColor_Exist = (ColorConfigurer)l_objModulePrefs.getOption(MY_CHAT_COLOR);
-        if (l_objMyChatColor_Exist == null) {
-            l_objMyChatColor = new ColorConfigurer(MY_CHAT_COLOR, "My Name and Text Messages" , Color.gray); //$NON-NLS-1$
-            l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), l_objMyChatColor); //$NON-NLS-1$
-        } else {
-            l_objMyChatColor = l_objMyChatColor_Exist;
+        ColorConfigurer myChatColor = (ColorConfigurer)modulePrefs.getOption(MY_CHAT_COLOR);
+        if (myChatColor == null) {
+            myChatColor = new ColorConfigurer(MY_CHAT_COLOR, "My Name and Text Messages" , Color.gray); //$NON-NLS-1$
+            modulePrefs.addOption(Resources.getString("Chatter.chat_window"), myChatColor); //$NON-NLS-1$
         }
-        myChat = (Color) l_objModulePrefs.getValue(MY_CHAT_COLOR);
+
+        myChat = (Color) modulePrefs.getValue(MY_CHAT_COLOR);
         makeStyleSheet(null);
-        l_objMyChatColor.addPropertyChangeListener(e -> {
+        myChatColor.addPropertyChangeListener(e -> {
             myChat = (Color) e.getNewValue();
             makeStyleSheet(null);
         });
+
         // other chat preference
-        ColorConfigurer l_objOtherChatColor;
-        ColorConfigurer l_objOtherChatColor_Exist = (ColorConfigurer)l_objModulePrefs.getOption(OTHER_CHAT_COLOR);
-        if (l_objOtherChatColor_Exist == null)
-        {
-            l_objOtherChatColor = new ColorConfigurer(OTHER_CHAT_COLOR, Resources.getString("Chatter.other_text_preference"), Color.black); //$NON-NLS-1$
-            l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), l_objOtherChatColor); //$NON-NLS-1$
-        } else {
-            l_objOtherChatColor = l_objOtherChatColor_Exist;
+        ColorConfigurer otherChatColor = (ColorConfigurer) modulePrefs.getOption(OTHER_CHAT_COLOR);
+        if (otherChatColor == null) {
+            otherChatColor = new ColorConfigurer(OTHER_CHAT_COLOR, Resources.getString("Chatter.other_text_preference"), Color.black); //$NON-NLS-1$
+            modulePrefs.addOption(Resources.getString("Chatter.chat_window"), otherChatColor); //$NON-NLS-1$
         }
-        otherChat = (Color) l_objModulePrefs.getValue(OTHER_CHAT_COLOR);
+
+        otherChat = (Color) modulePrefs.getValue(OTHER_CHAT_COLOR);
         makeStyleSheet(null);
-        l_objOtherChatColor.addPropertyChangeListener(e -> {
+        otherChatColor.addPropertyChangeListener(e -> {
             otherChat = (Color) e.getNewValue();
             makeStyleSheet(null);
         });
+
         // dice chat pref
-        ColorConfigurer l_objDiceChatColor;
-        ColorConfigurer l_objDiceChatColor_Exist = (ColorConfigurer)l_objModulePrefs.getOption(DICE_CHAT_COLOR);
-        if (l_objDiceChatColor_Exist == null)
-        {
-            l_objDiceChatColor = new ColorConfigurer(DICE_CHAT_COLOR, "Dice Results font color: ", Color.black); //$NON-NLS-1$
-            l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), l_objDiceChatColor); //$NON-NLS-1$
-        } else {
-            l_objDiceChatColor = l_objDiceChatColor_Exist;
+        ColorConfigurer diceChatColor = (ColorConfigurer) modulePrefs.getOption(DICE_CHAT_COLOR);
+        if (diceChatColor == null) {
+            diceChatColor = new ColorConfigurer(DICE_CHAT_COLOR, "Dice Results font color: ", Color.black); //$NON-NLS-1$
+            modulePrefs.addOption(Resources.getString("Chatter.chat_window"), diceChatColor); //$NON-NLS-1$
         }
-        gameMsg5 = (Color) l_objModulePrefs.getValue(DICE_CHAT_COLOR);
+
+        gameMsg5 = (Color) modulePrefs.getValue(DICE_CHAT_COLOR);
         makeStyleSheet(null);
-        l_objDiceChatColor.addPropertyChangeListener(e -> {
+        diceChatColor.addPropertyChangeListener(e -> {
             gameMsg5 = (Color) e.getNewValue();
             makeStyleSheet(null);
         });
+
         // dice images pref
-        BooleanConfigurer l_objUseDiceImagesOption;
-        BooleanConfigurer l_objUseDiceImagesOption_Exist = (BooleanConfigurer)l_objModulePrefs.getOption(USE_DICE_IMAGES);
-        if (l_objUseDiceImagesOption_Exist == null)
-        {
-            l_objUseDiceImagesOption = new BooleanConfigurer(USE_DICE_IMAGES, "Use images for dice rolls", Boolean.TRUE);  //$NON-NLS-1$
-            l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), l_objUseDiceImagesOption); //$NON-NLS-1$
-        } else {
-            l_objUseDiceImagesOption = l_objUseDiceImagesOption_Exist;
+        BooleanConfigurer useDiceImagesOption = (BooleanConfigurer) modulePrefs.getOption(USE_DICE_IMAGES);
+        if (useDiceImagesOption == null) {
+            useDiceImagesOption = new BooleanConfigurer(USE_DICE_IMAGES, "Use images for dice rolls", Boolean.TRUE);  //$NON-NLS-1$
+            modulePrefs.addOption(Resources.getString("Chatter.chat_window"), useDiceImagesOption); //$NON-NLS-1$
         }
-        m_bUseDiceImages = (Boolean) (l_objModulePrefs.getValue(USE_DICE_IMAGES));
-        l_objUseDiceImagesOption.addPropertyChangeListener(e -> m_bUseDiceImages = (Boolean) e.getNewValue());
+
+        useDiceImages = (Boolean) modulePrefs.getValue(USE_DICE_IMAGES);
+        useDiceImagesOption.addPropertyChangeListener(e -> useDiceImages = (Boolean) e.getNewValue());
+
         // dice stats pref
-        BooleanConfigurer l_objShowDiceStatsOption;
-        BooleanConfigurer l_objShowDiceStatsOption_Exist = (BooleanConfigurer)l_objModulePrefs.getOption(SHOW_DICE_STATS);
-        if (l_objShowDiceStatsOption_Exist == null)
-        {
-            l_objShowDiceStatsOption = new BooleanConfigurer(SHOW_DICE_STATS, "Show dice stats after each dice rolls", Boolean.FALSE);  //$NON-NLS-1$
-            l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), l_objShowDiceStatsOption); //$NON-NLS-1$
-        } else {
-            l_objShowDiceStatsOption = l_objShowDiceStatsOption_Exist;
+        BooleanConfigurer showDiceStatsOption = (BooleanConfigurer) modulePrefs.getOption(SHOW_DICE_STATS);
+        if (showDiceStatsOption == null) {
+            showDiceStatsOption = new BooleanConfigurer(SHOW_DICE_STATS, "Show dice stats after each dice rolls", Boolean.FALSE);  //$NON-NLS-1$
+            modulePrefs.addOption(Resources.getString("Chatter.chat_window"), showDiceStatsOption); //$NON-NLS-1$
         }
-        m_bShowDiceStats = (Boolean) (l_objModulePrefs.getValue(SHOW_DICE_STATS));
-        l_objShowDiceStatsOption.addPropertyChangeListener(e -> m_bShowDiceStats = (Boolean) e.getNewValue());
+        showDiceStats = (Boolean) modulePrefs.getValue(SHOW_DICE_STATS);
+        showDiceStatsOption.addPropertyChangeListener(e -> showDiceStats = (Boolean) e.getNewValue());
+
+        final String[] dieColors = {
+            "Black",
+            "Blue",
+            "Cyan",
+            "Purple",
+            "Red",
+            "Green",
+            "Yellow",
+            "Orange",
+            "AlliedM",
+            "AxisM",
+            "American",
+            "British",
+            "Finnish",
+            "French",
+            "German",
+            "Italian",
+            "Japanese",
+            "Russian",
+            "Swedish"
+        };
 
         // coloured die pref
-        StringEnumConfigurer coloredDiceColor;
-        StringEnumConfigurer coloredDiceColor_Exist = (StringEnumConfigurer) l_objModulePrefs.getOption(COLORED_DICE_COLOR);
-        if (coloredDiceColor_Exist==null){
-            coloredDiceColor = new StringEnumConfigurer(COLORED_DICE_COLOR, "Colored Die Color:", new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange", "AlliedM", "AxisM", "American", "British", "Finnish", "French", "German", "Italian", "Japanese", "Russian", "Swedish"} );
-            l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), coloredDiceColor);
-        } else {
-            coloredDiceColor = coloredDiceColor_Exist;
+        StringEnumConfigurer coloredDiceColor = (StringEnumConfigurer) modulePrefs.getOption(COLORED_DICE_COLOR);
+        if (coloredDiceColor == null) {
+            coloredDiceColor = new StringEnumConfigurer(COLORED_DICE_COLOR, "Colored Die Color:", dieColors);
+            modulePrefs.addOption(Resources.getString("Chatter.chat_window"), coloredDiceColor);
         }
+
         coloredDiceColor.addPropertyChangeListener(e -> {
-          m_clrColoredDiceColor = (String) e.getNewValue();
-          if (m_clrColoredDiceColor!=null) {
-            diceFactory.setDieColor(DiceType.COLORED, DieColor.getEnum(m_clrColoredDiceColor));
-          }
+            clrColoredDiceColor = (String) e.getNewValue();
+            if (clrColoredDiceColor != null) {
+                diceFactory.setDieColor(DiceType.COLORED, DieColor.getEnum(clrColoredDiceColor));
+            }
         });
-        m_clrColoredDiceColor = l_objModulePrefs.getStoredValue("coloredDiceColor");
-        if(m_clrColoredDiceColor != null)
-          diceFactory.setDieColor(DiceType.COLORED,DieColor.getEnum(m_clrColoredDiceColor));
+        clrColoredDiceColor = modulePrefs.getStoredValue("coloredDiceColor");
+        if (clrColoredDiceColor != null) {
+            diceFactory.setDieColor(DiceType.COLORED,DieColor.getEnum(clrColoredDiceColor));
+        }
 
         // single die pref
-        StringEnumConfigurer l_objColoredDieColor;
-        StringEnumConfigurer l_objColoredDieColor_Exist = (StringEnumConfigurer)l_objModulePrefs.getOption(SINGLE_DIE_COLOR);
-        if (l_objColoredDieColor_Exist == null) {
-            l_objColoredDieColor = new StringEnumConfigurer(SINGLE_DIE_COLOR, "Single die color:  ", new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange", "AlliedM", "AxisM", "American", "British", "Finnish", "French", "German", "Italian", "Japanese", "Russian", "Swedish"} );
-            l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), l_objColoredDieColor); //$NON-NLS-1$
-        } else {
-            l_objColoredDieColor = l_objColoredDieColor_Exist;
+        StringEnumConfigurer coloredDieColor = (StringEnumConfigurer) modulePrefs.getOption(SINGLE_DIE_COLOR);
+        if (coloredDieColor == null) {
+            coloredDieColor = new StringEnumConfigurer(SINGLE_DIE_COLOR, "Single die color:", dieColors);
+            modulePrefs.addOption(Resources.getString("Chatter.chat_window"), coloredDieColor); //$NON-NLS-1$
         }
-        l_objColoredDieColor.addPropertyChangeListener(e -> {
-          m_clrSingleDieColor = (String) e.getNewValue();
-          if (m_clrSingleDieColor!=null) {
-            diceFactory.setDieColor(DiceType.SINGLE, DieColor.getEnum(m_clrSingleDieColor));
-          }
+
+        coloredDieColor.addPropertyChangeListener(e -> {
+            clrSingleDieColor = (String) e.getNewValue();
+            if (clrSingleDieColor != null) {
+                diceFactory.setDieColor(DiceType.SINGLE, DieColor.getEnum(clrSingleDieColor));
+            }
         });
-        m_clrSingleDieColor = l_objModulePrefs.getStoredValue("singleDieColor");
-        if(m_clrSingleDieColor != null)
-          diceFactory.setDieColor(DiceType.SINGLE,DieColor.getEnum(m_clrSingleDieColor));
+        clrSingleDieColor = modulePrefs.getStoredValue("singleDieColor");
+        if (clrSingleDieColor != null) {
+            diceFactory.setDieColor(DiceType.SINGLE, DieColor.getEnum(clrSingleDieColor));
+        }
 
         // third die pref
-        StringEnumConfigurer l_objThirdDieColor;
-        l_objThirdDieColor = new StringEnumConfigurer(THIRD_DIE_COLOR, "Third die color:  ", new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange", "AlliedM", "AxisM", "American", "British", "Finnish", "French", "German", "Italian", "Japanese", "Russian", "Swedish"} );
-        l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), l_objThirdDieColor); //$NON-NLS-1$
-        l_objThirdDieColor.addPropertyChangeListener(e -> {
-          m_clrDustColoredDiceColor = (String) e.getNewValue();
-          if (m_clrDustColoredDiceColor!=null) {
-            diceFactory.setDieColor(DiceType.OTHER_DUST, DieColor.getEnum(m_clrDustColoredDiceColor));
-          }
+        final StringEnumConfigurer thirdDieColor = new StringEnumConfigurer(THIRD_DIE_COLOR, "Third die color:", dieColors);
+        modulePrefs.addOption(Resources.getString("Chatter.chat_window"), thirdDieColor); //$NON-NLS-1$
+        thirdDieColor.addPropertyChangeListener(e -> {
+            clrDustColoredDiceColor = (String) e.getNewValue();
+            if (clrDustColoredDiceColor != null) {
+                diceFactory.setDieColor(DiceType.OTHER_DUST, DieColor.getEnum(clrDustColoredDiceColor));
+            }
         });
-        m_clrDustColoredDiceColor = l_objModulePrefs.getStoredValue("thirdDieColor");
-        if(m_clrDustColoredDiceColor != null)
-          diceFactory.setDieColor(DiceType.SINGLE,DieColor.getEnum(m_clrDustColoredDiceColor));
-        l_objThirdDieColor.fireUpdate();
+        clrDustColoredDiceColor = modulePrefs.getStoredValue("thirdDieColor");
+        if (clrDustColoredDiceColor != null) {
+            diceFactory.setDieColor(DiceType.SINGLE,DieColor.getEnum(clrDustColoredDiceColor));
+        }
+        thirdDieColor.fireUpdate();
 
         // rule set pref
-        StringEnumConfigurer l_objSpecialDiceRollNotificationLevel = (StringEnumConfigurer)l_objModulePrefs.getOption(NOTIFICATION_LEVEL);
-        final String[] l_DROptions = {
-                "None",
-                "Snipers only",
-                "Starter Kit",
-                "Full ASL"
+        final String[] DROptions = {
+            "None",
+            "Snipers only",
+            "Starter Kit",
+            "Full ASL"
         };
-        if(l_objSpecialDiceRollNotificationLevel == null) {
-            l_objSpecialDiceRollNotificationLevel = new StringEnumConfigurer(NOTIFICATION_LEVEL,
-                    "Notify about special DRs: ", l_DROptions);
-            l_objSpecialDiceRollNotificationLevel.setValue("Full ASL");
-            l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), l_objSpecialDiceRollNotificationLevel);
+
+        StringEnumConfigurer specialDiceRollNotificationLevel = (StringEnumConfigurer) modulePrefs.getOption(NOTIFICATION_LEVEL);
+        if (specialDiceRollNotificationLevel == null) {
+            specialDiceRollNotificationLevel = new StringEnumConfigurer(NOTIFICATION_LEVEL,
+                    "Notify about special DRs: ", DROptions);
+            specialDiceRollNotificationLevel.setValue("Full ASL");
+            modulePrefs.addOption(Resources.getString("Chatter.chat_window"), specialDiceRollNotificationLevel);
         }
-        for(int i = 0; i < l_DROptions.length; ++i) {
-            if (l_DROptions[i].equals(l_objSpecialDiceRollNotificationLevel.getValueString())) {
-                m_DRNotificationLevel = i;
+
+        for (int i = 0; i < DROptions.length; ++i) {
+            if (DROptions[i].equals(specialDiceRollNotificationLevel.getValueString())) {
+                DRNotificationLevel = i;
                 break;
             }
         }
+
         // just for access from inside the event handler
-        final StringEnumConfigurer __cfg = l_objSpecialDiceRollNotificationLevel;
-        l_objSpecialDiceRollNotificationLevel.addPropertyChangeListener(e -> {
-            for(int i = 0; i < l_DROptions.length; ++i){
-                if(l_DROptions[i].equals(__cfg.getValueString())) {
-                    m_DRNotificationLevel = i;
+        final StringEnumConfigurer cfg = specialDiceRollNotificationLevel;
+        specialDiceRollNotificationLevel.addPropertyChangeListener(e -> {
+            for (int i = 0; i < DROptions.length; ++i) {
+                if (DROptions[i].equals(cfg.getValueString())) {
+                    DRNotificationLevel = i;
                     return;
                 }
             }
-            m_DRNotificationLevel = 3;
+            DRNotificationLevel = 3;
         });
+
         // Player Window pref
-        l_objColoredDieColor.fireUpdate();
+        coloredDieColor.fireUpdate();
         final BooleanConfigurer AlwaysOnTop = new BooleanConfigurer("PWAlwaysOnTop", "Player Window (menus, toolbar, chat) is always on top in uncombined application mode (requires a VASSAL restart)", false);
-        getGameModule().getPrefs().addOption(preferenceTabName, AlwaysOnTop);
+        GameModule.getGameModule().getPrefs().addOption(preferenceTabName, AlwaysOnTop);
+
+        makeStyleSheet(myFont);
+        makeASLStyleSheet(myFont);
     }
 
-    @Override
-    public void add(Buildable b)
-    {
-    }
-
-    @Override
-    public void keyCommand(KeyStroke e)
-    {
-        if ((e.getKeyCode() == 0 || e.getKeyCode() == KeyEvent.CHAR_UNDEFINED)
-            && !Character.isISOControl(e.getKeyChar()))
-        {
-            m_edtInputText.setText(m_edtInputText.getText() + e.getKeyChar());
-        }
-        else if (e.isOnKeyRelease())
-        {
-            switch (e.getKeyCode())
-            {
-                case KeyEvent.VK_ENTER:
-                    if (m_edtInputText.getText().length() > 0)
-                    {
-                        send(formatChat(m_edtInputText.getText()));
-                    }
-
-                    m_edtInputText.setText(""); //$NON-NLS-1$
-                    break;
-
-                case KeyEvent.VK_BACK_SPACE:
-                case KeyEvent.VK_DELETE:
-                    String s = m_edtInputText.getText();
-                    if (s.length() > 0)
-                    {
-                        m_edtInputText.setText(s.substring(0, s.length() - 1));
-                    }
-                    break;
-            }
+    private void fireDiceRoll() {
+        for (ChatterListener listener : chatter_listeners) {
+            listener.DiceRoll(msgpartCategory, msgpartUser, msgpartSAN, Integer.parseInt(msgpartCdice), Integer.parseInt(msgpartWdice));
         }
     }
 
-
-
-  private void FireDiceRoll() {
-        for (ChatterListener objListener : chatter_listeners)
-            objListener.DiceRoll(msgpartCategory, msgpartUser, msgpartSAN, Integer.parseInt(msgpartCdice), Integer.parseInt(msgpartWdice));
-  }
-
-  public void addListener(ChatterListener toAdd) {
+    public void addListener(ChatterListener toAdd) {
         chatter_listeners.add(toAdd);
-  }
+    }
 
-  public void removeListener(ChatterListener toRemove) {
+    public void removeListener(ChatterListener toRemove) {
         chatter_listeners.remove(toRemove);
-  }
+    }
 
-  public interface ChatterListener {
-        void DiceRoll(String strCategory, String strUser, String strSAN, int iFirstDice, int iSecondDice);
-  }
+    public interface ChatterListener {
+        void DiceRoll(String category, String user, String san, int firstDie, int secondDie);
+    }
 }

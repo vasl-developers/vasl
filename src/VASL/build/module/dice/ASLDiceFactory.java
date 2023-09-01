@@ -19,6 +19,7 @@ public class ASLDiceFactory {
   public void setDieColor(ASLChatter.DiceType type, DieColor color) {
     colors.put(type, color);
   }
+
   public ASLDie getASLDie(final ASLChatter.DiceType type) {
     DieColor color = colors.get(type);
     switch (type) {
