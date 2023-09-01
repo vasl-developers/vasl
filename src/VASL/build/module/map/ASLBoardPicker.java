@@ -254,7 +254,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
      */
     public void refreshPossibleBoards() {
         final String files[] = boardDir != null ? boardDir.list() : null;
-
+        boolean nomatch;
         // all boards are added to the list whether in local directory or not
         final List<String> sorted = getallboards();
 
@@ -262,15 +262,27 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             for (String file : files) {
                 // TODO - remove requirement that boards start with "bd"
                 // add all boards found in local directory
+                nomatch = true;
                 if (file.startsWith("bd") && !(new File(boardDir, file)).isDirectory()) {
                     String name = file.substring(2);
-
+                    //String[] split = name.split(" ");
+                    //name = split[0];
                     if (name.contains(".")) {
                         name = null;
+                        nomatch = false;
+                    } else {
+                        for (String bdname : sorted) {
+                            String[] split = bdname.split(" ");
+                            bdname = split[0];
+                            if (name.equals(bdname)) {
+                                nomatch = false;
+                            }
+                        }
                     }
-                    if (name != null && !sorted.contains(name)) { // prevents duplicate items in list
-                        sorted.add(name);
-                    }
+                    if (nomatch){sorted.add(name);}
+                    //if (name != null && !sorted.contains(name)) { // prevents duplicate items in list
+                    //    sorted.add(name);
+                    //}
                 }
             }
         }
@@ -397,7 +409,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                         for(org.jdom2.Element f: e.getChildren()) {
                             if(f.getName().equals(boarddataType)) {
                                 // read the coreBoards attributes
-                                addtoboardlist.add(f.getAttribute(coreboardNameAttr).getValue());
+                                addtoboardlist.add(f.getAttribute(coreboardNameAttr).getValue() + "    " + f.getAttribute("boardType").getValue());
                             }
                         }
                     }
@@ -406,7 +418,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                         for(org.jdom2.Element f: e.getChildren()) {
                             if(f.getName().equals(boarddataType)) {
                                 // read the coreBoards attributes
-                                addtoboardlist.add(f.getAttribute(otherboardNameAttr).getValue());
+                                addtoboardlist.add(f.getAttribute(otherboardNameAttr).getValue() + "    " + f.getAttribute("boardType").getValue());
                             }
                         }
                     }
@@ -683,7 +695,9 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
     }
 
     public Board getBoard(String name, boolean localized) {
-
+        // extract board name from List string
+        String[] split = name.split(" ");
+        name = split[0];
         updateBoard(name);
         this.tileBoard(name);
         ASLBoard b = new VASLBoard();
