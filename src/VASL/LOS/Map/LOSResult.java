@@ -178,7 +178,9 @@ public class LOSResult {
 
         setBlockedByHindrance(x, y);
     }
-
+	public boolean checkHindranceExistsAtThisRange(int range) {
+		return vehicleHindrances.containsKey(range);
+	}
     /**
      * Add an OBA hindrance hex
      * @param oba the OBA counter

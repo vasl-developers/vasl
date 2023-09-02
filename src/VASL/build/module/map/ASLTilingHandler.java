@@ -1,8 +1,8 @@
 package VASL.build.module.map;
 
-import static VASSAL.tools.image.tilecache.ZipFileImageTilerState.STARTING_IMAGE;
-import static VASSAL.tools.image.tilecache.ZipFileImageTilerState.TILE_WRITTEN;
-import static VASSAL.tools.image.tilecache.ZipFileImageTilerState.TILING_FINISHED;
+//import static VASSAL.tools.image.tilecache.ZipFileImageTilerState.STARTING_IMAGE;
+//import static VASSAL.tools.image.tilecache.ZipFileImageTilerState.TILE_WRITTEN;
+//import static VASSAL.tools.image.tilecache.ZipFileImageTilerState.TILING_FINISHED;
 
 import java.awt.Dimension;
 import java.io.File;
@@ -23,7 +23,7 @@ public class ASLTilingHandler extends VASSAL.launch.TilingHandler {
     super(aname, cdir, tdim, mhlim);
   }
 
-  @Override
+
   protected Iterable<String> getImagePaths(DataArchive archive) throws IOException {
     final FileArchive fa = archive.getArchive();
     // png code - June 2019 allows board image files to be in either png or gif format

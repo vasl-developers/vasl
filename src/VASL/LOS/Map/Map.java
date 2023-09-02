@@ -2237,7 +2237,10 @@ public class Map  {
             Hex hex = status.currentHex;
             HashSet<Vehicle> vehicles = status.vaslGameInterface.getVehicles(hex);
             if (vehicles != null && !vehicles.isEmpty()) {
-
+                // check if a vehicle hindrance has already been added at this range; if so, exit
+                if (result.checkHindranceExistsAtThisRange(status.rangeToSource)) {
+                    return false;
+                }
                 int hindrance = 0;
                 for (Vehicle v: vehicles) {
 
