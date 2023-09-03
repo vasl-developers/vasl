@@ -26,6 +26,8 @@ import java.awt.event.InputEvent;
 
 import javax.swing.KeyStroke;
 
+import VASSAL.build.GameModule;
+import VASSAL.build.module.GlobalOptions;
 import VASSAL.command.ChangeTracker;
 import VASSAL.command.Command;
 import VASSAL.counters.Decorator;
@@ -35,9 +37,12 @@ import VASSAL.counters.KeyCommand;
 import VASSAL.counters.PieceEditor;
 import VASSAL.counters.Properties;
 import VASSAL.counters.SimplePieceEditor;
+import VASSAL.preferences.Prefs;
 import VASSAL.tools.SequenceEncoder;
 import VASSAL.tools.imageop.ImageOp;
 import VASSAL.tools.imageop.Op;
+
+import static VASSAL.build.GameModule.getGameModule;
 
 /**
  * Allows a piece to be marked as having moved
@@ -77,6 +82,7 @@ public class MarkMoved extends Decorator implements EditablePiece {
 
   public void setProperty(Object key, Object val) {
     if (Properties.MOVED.equals(key) || Properties.MAYBE_MOVED.equals(key)) {
+      final Prefs modprefs = getGameModule().getPrefs();
       setMoved(Boolean.TRUE.equals(val));
     }
     else {
@@ -123,9 +129,14 @@ public class MarkMoved extends Decorator implements EditablePiece {
 
   public Rectangle boundingBox() {
     Rectangle r = piece.boundingBox();
-    Rectangle r2 = piece.getShape().getBounds();
-    r2.width += 20;
-    return r.union(r2);
+    final Prefs damn = getGameModule().getPrefs();
+    if(GameModule.getGameModule().getPrefs().getValue("showMarkMoved").equals(true) && hasMoved) {
+      Rectangle r2 = piece.getShape().getBounds();
+      r2.width += 20;
+      return r.union(r2);
+    } else {
+      return r;
+    }
   }
 
   public String getName() {
@@ -134,6 +145,7 @@ public class MarkMoved extends Decorator implements EditablePiece {
 
   public void draw(Graphics g, int x, int y, Component obs, double zoom) {
     piece.draw(g, x, y, obs, zoom);
+    if(!GameModule.getGameModule().getPrefs().getValue("showMarkMoved").equals(true)) {return;}
     if (hasMoved) {
       Rectangle r = piece.getShape().getBounds();
       try {
