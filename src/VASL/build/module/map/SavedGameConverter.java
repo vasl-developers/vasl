@@ -86,8 +86,8 @@ public class SavedGameConverter extends AbstractConfigurable implements CommandE
 
     @Override
     public void addTo(Buildable parent) {
-
-        if (parent instanceof ASLMap) {
+        // incorporated into Game Update functionality so no need for separate menu option
+        /*if (parent instanceof ASLMap) {
 
             GameModule.getGameModule().addCommandEncoder(this);
 
@@ -103,7 +103,7 @@ public class SavedGameConverter extends AbstractConfigurable implements CommandE
             });
 
             map.getPopupMenu().add(menuItem);
-        }
+        }*/
     }
 
     @Override
@@ -134,10 +134,11 @@ public class SavedGameConverter extends AbstractConfigurable implements CommandE
         return null;
     }
 
+    // incorporated into Game Update functionality so no need for separate menu option
     /**
      * Displays the confirmation dialog and initiates the conversion if the user "yes"
      */
-    public void askToConvert() {
+   /* public void askToConvert() {
 
         // show confirmation dialog
         int dialogResult = JOptionPane.showConfirmDialog (
@@ -149,7 +150,7 @@ public class SavedGameConverter extends AbstractConfigurable implements CommandE
         if(dialogResult == JOptionPane.YES_OPTION){
             execute();
         }
-    }
+    }*/
 
     /**
      * Execute the conversion

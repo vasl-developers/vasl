@@ -28,6 +28,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.*;
 import java.util.List;
 
@@ -52,6 +54,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
     private int noStackCount;
     private int noMapCount;
     private GameModule theModule;
+    private Chatter chatter;
     private final Set<String> options = new HashSet<>();
     private boolean hasAlreadyRun = false;
 
@@ -68,7 +71,13 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
     public Command decode(final String s) {
         return null;
     }
-
+    private void chat(String text) {
+        if (chatter == null) {
+            chatter = GameModule.getGameModule().getChatter();
+        }
+        final Chatter.DisplayText mess = new Chatter.DisplayText(chatter, "- " + text); //NON-NLS
+        mess.execute();
+    }
     public void addTo(Buildable parent) {
         theModule = GameModule.getGameModule();
         if (parent instanceof ASLMap) {
@@ -119,7 +128,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
         return options.contains("DeleteNoMap"); //$NON-NLS-1$
     }
 
-    public boolean start() {
+    public boolean start(String savegameversion) throws ParseException {
         if (hasAlreadyRun) {
             //return;
         }
@@ -127,11 +136,16 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
         final GameModule g = GameModule.getGameModule();
         Command command = new NullCommand();
         final String player = GlobalOptions.getInstance().getPlayerId();
-        final Command msg = new Chatter.DisplayText(g.getChatter(), "Boards and traditional Ovelays are automatically updated to latest versions when game is opened");
-        //msg.append(new Chatter.DisplayText(g.getChatter(), Resources.getString("GameRefresher.run_refresh_counters_v2", player, g.getGameVersion())));
-        msg.append(new Chatter.DisplayText(g.getChatter(), player + " is updating counters with " + g.getGameVersion()));
+        chat("Boards and traditional Ovelays are automatically updated to latest versions when game is opened");
+        Number saveversion = NumberFormat.getInstance().parse(savegameversion);
+        if (Double.parseDouble(saveversion.toString()) < 6.2) {
+            chat("Pre-6.2 game file will be updated to fix map/counter position issues . . . ");
+            SavedGameConverter sgc = new SavedGameConverter();
+            sgc.execute();
+        }
+
+        Command msg = new Chatter.DisplayText(chatter, " Updating counter traits with " + g.getGameVersion());
         msg.execute();
-        command = command.append(msg);
         return execute(command);
     }
    public void log(String message) {
@@ -184,6 +198,10 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
                                 notVisibleCount++;
                             }
                             else {
+                                String addname = (p.getName().equals("?" ) ? "?" : p.getName());
+                                if (addname.equals("") ){addname="most likely a HIP unit";}
+                                //GameModule.getGameModule().warn("z " + p.getName() + "Piece not owned and cannot be updated, ");
+                                chat("Piece cannot be updated; delete existing piece and replace with new piece of this type from counter palette: "+ addname);
                                 notOwnedCount++;
                             }
                         }
@@ -538,6 +556,8 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
         JButton okButton = new JButton("Ok");
         okButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
+                Command endmsg = new Chatter.DisplayText(chatter,"Trying to restore LOS Checking . . . ");
+                endmsg.execute();
                 d.setVisible(false);
                 picker.finish();
                 checkRestoreResult(themap);
@@ -560,8 +580,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
         themap.repaint();
     }
     private void checkRestoreResult(ASLMap theMap){
-        final Chatter chatter = theModule.getChatter();
-        final Command msg = new Chatter.DisplayText(chatter, "Trying to restore LOS Checking . . . ");
+
         boolean legacyMode = false;
         if (theMap == null || theMap.isLegacyMode()) {
             legacyMode = true;
@@ -574,11 +593,11 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
             }
         }
         if (legacyMode) {
-            msg.append(new Chatter.DisplayText(chatter, "Failed. LOS Checking still disabled"));
+            chat( "Failed. LOS Checking still disabled");
         } else {
-            msg.append(new Chatter.DisplayText(chatter, "Success. LOS Checking now enabled"));
+            chat( "Success. LOS Checking now enabled");
         }
-        msg.execute();
+
     }
     @Override
     public Command getRestoreCommand() {
@@ -663,7 +682,8 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
                     int dialogResult = JOptionPane.showConfirmDialog(null, "Make sure all necessary extensions are installed and Chat Window shows no error messages. \n \n DO NOT ATTEMPT IF ONLINE WITH OTHER PLAYER(S). \n \n Proceed?",
                             "Updating Game . . . ", JOptionPane.YES_NO_OPTION);
                     if(dialogResult == JOptionPane.YES_OPTION) {
-                        doupdate();
+
+                        doupdate(saveModuleVersion);
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "No update possible; game was saved with current version or higher",
@@ -676,15 +696,19 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
     /**
      * Execute the update
      */
-    public void doupdate() {
+    public void doupdate(String savegameversion) {
         final Chatter chatter = theModule.getChatter();
         final Command startmsg = new Chatter.DisplayText(chatter, "Updating game . . . ");
         startmsg.execute();
-        final Command endmsg;
-        if (start()){
-            endmsg = new Chatter.DisplayText(chatter, "The game has been updated; save and continue");
-        } else {
-            endmsg = new Chatter.DisplayText(chatter, "Update failed and terminated");
+        Command endmsg;
+        try {
+            if (start(savegameversion)){
+                endmsg = new Chatter.DisplayText(chatter, "The game has been updated; save and continue");
+            } else {
+                endmsg = new Chatter.DisplayText(chatter, "Update failed and terminated");
+            }
+        } catch (ParseException e) {
+            endmsg = new Chatter.DisplayText(chatter, "Update failed due to version error; terminated");
         }
         endmsg.execute();
     }
