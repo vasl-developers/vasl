@@ -199,8 +199,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
                             }
                             else {
                                 String addname = (p.getName().equals("?" ) ? "?" : p.getName());
-                                if (addname.equals("") ){addname="most likely a HIP unit";}
-                                //GameModule.getGameModule().warn("z " + p.getName() + "Piece not owned and cannot be updated, ");
+                                if (addname.equals("") ){addname= p.getComponentTypeName();}
                                 chat("Piece cannot be updated; delete existing piece and replace with new piece of this type from counter palette: "+ addname);
                                 notOwnedCount++;
                             }
