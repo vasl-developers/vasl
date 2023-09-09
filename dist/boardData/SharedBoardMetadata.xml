@@ -840,14 +840,14 @@
 		<color name="ERoad1" red="146" green="110" blue="31" terrain="Railroad, Elevated" elevation="1" />
 		<color name="ERoad2" red="94" green="57" blue="24" terrain="Railroad, Elevated" elevation="1" />
 
-		<color name="SRails1" red="120" green="122" blue="126" terrain="Railroad, Sunken" elevation="UNKNOWN" />
-		<color name="SRails2" red="60" green="60" blue="60" terrain="Railroad, Sunken" elevation="UNKNOWN" />
-		<color name="SRailTies" red="110" green="69" blue="48" terrain="Railroad, Sunken" elevation="UNKNOWN" />
-		<color name="SRailBed1" red="201" green="197" blue="197" terrain="Railroad, Sunken" elevation="UNKNOWN" />
-		<color name="SRailBed2" red="144" green="142" blue="142" terrain="Railroad, Sunken" elevation="UNKNOWN" />
-		<color name="SRailBed3" red="107" green="105" blue="105" terrain="Railroad, Sunken" elevation="UNKNOWN" />
-		<color name="SSunkRoad1" red="146" green="110" blue="30" terrain="Railroad, Sunken" elevation="UNKNOWN" />
-		<color name="SSunkRoad2" red="94" green="57" blue="23" terrain="Railroad, Sunken" elevation="UNKNOWN" />
+		<color name="SRails1" red="120" green="122" blue="128" terrain="Railroad, Sunken" elevation="-1" />
+		<color name="SRails2" red="60" green="62" blue="60" terrain="Railroad, Sunken" elevation="-1" />
+		<color name="SRailTies" red="108" green="70" blue="52" terrain="Railroad, Sunken" elevation="-1" />
+		<color name="SRailBed1" red="204" green="198" blue="196" terrain="Railroad, Sunken" elevation="-1" />
+		<color name="SRailBed2" red="148" green="142" blue="140" terrain="Railroad, Sunken" elevation="-1" />
+		<color name="SRailBed3" red="108" green="106" blue="108" terrain="Railroad, Sunken" elevation="-1" />
+		<color name="SSunkRoad1" red="148" green="110" blue="28" terrain="Railroad, Sunken" elevation="-1" />
+		<color name="SSunkRoad2" red="92" green="58" blue="20" terrain="Railroad, Sunken" elevation="-1" />
 		<!-- Rice Paddies  -->
 		<color name="RicePaddy" red="103" green="75" blue="39" terrain="Rice Paddy, Irrigated" elevation="UNKNOWN" />
 		<color name="PaddyInterior" red="174" green="168" blue="78" terrain="Rice Paddy, Irrigated" elevation="UNKNOWN" />
