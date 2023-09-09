@@ -6,7 +6,7 @@
 
     <groupId>org.vasl</groupId>
     <artifactId>vasl</artifactId>
-    <version>6.6.7-beta3</version>
+    <version>6.6.7-beta7</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -17,7 +17,7 @@
         <dependency>
             <groupId>org.vassalengine</groupId>
             <artifactId>vassal-app</artifactId>
-            <version>3.6.19</version>
+            <version>3.7.0</version>
         </dependency>
 
         <!-- We do not have any tests yet, but time will tell... -->
@@ -100,7 +100,7 @@
                     <arguments>
                         <argument>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</argument>
                         <argument>-jar</argument>
-                        <argument>Vengine-3.6.19.jar</argument>
+                        <argument>Vengine.jar</argument>
                         <argument>--standalone</argument>
                         <argument>target/${project.build.finalName}.jar</argument>
                     </arguments>
