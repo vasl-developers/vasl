@@ -34,10 +34,14 @@ import java.util.*;
 import java.util.List;
 
 /**
- * Replace all counters in the same game with the current version
- * of the counters defined in the module
- * <p>
- * Note: Counters that are Hidden or Obscured to us cannot be updated.
+ * Updates game components to latest versions
+ * Boards and overlays are done automatically outside of this class
+ * Update game will:
+ * change pre-6.2 padding from 200 pixels to the 400 used now and will move counters to there correct location
+ * replace all counters in the game with the current version defined in the module being used
+ *      Note: Counters that are Hidden or Obscured to us cannot be updated.
+ * test for outdated extensions and ask player if they wish to update them
+ * test for los checking and ask player if they wish to restore los checking where possible
  */
 public class ASLGameUpdater extends AbstractConfigurable implements CommandEncoder, GameComponent {
 
@@ -46,8 +50,6 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
     private static final char DELIMITER = '\t'; //$NON-NLS-1$
     public static final String COMMAND_PREFIX = "DECKREPOS" + DELIMITER; //$NON-NLS-1$
 
-    private Action updateAction;
-    private GpIdSupport gpIdSupport;
     private ASLGpIdChecker gpIdChecker;
     private int updatedCount;
     private int notFoundCount;
@@ -56,7 +58,6 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
     private GameModule theModule;
     private Chatter chatter;
     private final Set<String> options = new HashSet<>();
-    private boolean hasAlreadyRun = false;
 
     public List<DrawPile> getModuleDrawPiles() {
         return theModule.getAllDescendantComponentsOf(DrawPile.class);
@@ -93,46 +94,13 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
             });
             map.getPopupMenu().add(nextmenuItem);
         }
-
-       //TODO Do I need this? Is it ever used?
-        updateAction = new AbstractAction(Resources.getString("GameRefresher.refresh_counters")) { //$NON-NLS-1$
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                final BasicLogger bl = GameModule.getGameModule().getBasicLogger();
-                if ((bl != null) && bl.isReplaying()) {
-                    final Command ac = new AlertCommand(Resources.getString("GameRefresher.game_is_replaying"));
-                    ac.execute();
-                }
-                else {
-                    new VASSAL.build.module.GameRefresher(gpIdSupport).start();
-                }
-            }
-        };
-        GameModule.getGameModule().getGameState().addGameComponent(this);
-        GameModule.getGameModule().addCommandEncoder(this);
-        updateAction.setEnabled(false);
-    }
-
-    public Action getUpdateAction() {
-        return updateAction;
     }
 
     public boolean isTestMode() {
         return options.contains("TestMode"); //$NON-NLS-1$
     }
-
-    public boolean isDeleteNoMap() {
-        return options.contains("DeleteNoMap"); //$NON-NLS-1$
-    }
-
     public boolean start(String savegameversion) throws ParseException {
-        if (hasAlreadyRun) {
-            //return;
-        }
-        hasAlreadyRun = true;
+
         final GameModule g = GameModule.getGameModule();
         Command command = new NullCommand();
         final String player = GlobalOptions.getInstance().getPlayerId();
@@ -608,7 +576,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
      */
     @Override
     public void setup(boolean gameStarting) {
-        updateAction.setEnabled(gameStarting);
+        //updateAction.setEnabled(gameStarting);
     }
 
     @Override
@@ -701,11 +669,11 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
         startmsg.execute();
         Command endmsg;
         try {
-            if (start(savegameversion)){
-                endmsg = new Chatter.DisplayText(chatter, "The game has been updated; save and continue");
-            } else {
-                endmsg = new Chatter.DisplayText(chatter, "Update failed and terminated");
-            }
+           if (start(savegameversion)) {
+                    endmsg = new Chatter.DisplayText(chatter, "The game has been updated; save and continue");
+           } else {
+                    endmsg = new Chatter.DisplayText(chatter, "Update failed and terminated");
+           }
         } catch (ParseException e) {
             endmsg = new Chatter.DisplayText(chatter, "Update failed due to version error; terminated");
         }
