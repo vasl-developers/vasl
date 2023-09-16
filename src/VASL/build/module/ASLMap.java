@@ -1233,29 +1233,41 @@ public class ASLMap extends Map {
         int a = 3;
         if (losonoverlays.currentx==0 || losonoverlays.currentx== losonoverlays.bi.getWidth()-1) {
             if (losonoverlays.newlosdata.onMap(losonoverlays.overpositionx, losonoverlays.overpositiony + a)) {
+                if (losonoverlays.currenty +a > losonoverlays.bi.getHeight()-1 ){ a = -3;}  //need to ensure testing with pixel on overlay
                 c = losonoverlays.bi.getRGB(losonoverlays.currentx, losonoverlays.currenty + a);
                 if ((c >> 24) != 0x00) { // not a transparent pixel
                     return false;
+                } else {
+                    return true;
                 }
             }
             if (losonoverlays.newlosdata.onMap(losonoverlays.overpositionx, losonoverlays.overpositiony - a)) {
+                if (losonoverlays.currenty - a < 0 ){ a = -3;}  //need to ensure testing with pixel on overlay
                 b = losonoverlays.bi.getRGB(losonoverlays.currentx, losonoverlays.currenty - a);
                 if ((b >> 24) != 0x00) { // not a transparent pixel
                     return false;
+                } else {
+                    return true;
                 }
             }
             return true; //transparent pixel
         } else if (losonoverlays.currenty==0 || losonoverlays.currenty == losonoverlays.bi.getHeight()-1){
             if (losonoverlays.newlosdata.onMap(losonoverlays.overpositionx + a, losonoverlays.overpositiony)) {
+                if (losonoverlays.currentx +a > losonoverlays.bi.getWidth()-1 ){ a = -3;}  //need to ensure testing with pixel on overlay
                 c = losonoverlays.bi.getRGB(losonoverlays.currentx + a, losonoverlays.currenty);
                 if ((c >> 24) != 0x00) { // not a transparent pixel
                     return false;
+                } else {
+                    return true;
                 }
             }
             if (losonoverlays.newlosdata.onMap(losonoverlays.overpositionx -a, losonoverlays.overpositiony)) {
+                if (losonoverlays.currentx - a < 0 ){ a = -3;}  //need to ensure testing with pixel on overlay
                 b = losonoverlays.bi.getRGB(losonoverlays.currentx-a, losonoverlays.currenty);
                 if ((b >> 24) != 0x00) { // not a transparent pixel
                     return false;
+                } else {
+                    return true;
                 }
             }
             return true; //transparent pixel
