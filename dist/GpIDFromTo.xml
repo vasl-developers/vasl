@@ -32,6 +32,8 @@
     <fromtomatch name="VC Hex L" fromid="4337" toid="6086" addedDate="Sep 2023" />
     <fromtomatch name="Prisoner HS" fromid="81" toid="6390" addedDate="Sep 2023" />
     <fromtomatch name="Skis" fromid="503" toid="7004" addedDate="Sep 2023" />
+    <fromtomatch name="DC" fromid="3694" toid="11497" addedDate="Sep 2023" />
+    <fromtomatch name="M8 AC" fromid="1002" toid="11340" addedDate="Sep 2023" />
     <!-- from BFP extension -->
     <fromtomatch name="M3A1F" fromid="adf:152" toid="adf:6366" addedDate="Sep 2023" />
     <fromtomatch name="Type 3 Ka-Chi" fromid="adf:326" toid="adf:6277" addedDate="Sep 2023" />

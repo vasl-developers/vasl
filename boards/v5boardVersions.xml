@@ -457,8 +457,7 @@
 		<boarddata name="SaFL" version="6.4" versionDate="Sep 2022" description="Sword and Fire: Manila" boardType="HASL" publisher="MMP" />
 		<boarddata name="BG1" version="1.0" versionDate="Oct 2022" description="" boardType="Geoboard" publisher="BGD" />
 		<boarddata name="DeluxeBlank" version="1.0" versionDate="Aug 2023" description="Empty deluxe geoboard" boardType="Deluxe" publisher="VASL" />
-		<boarddata name="SF" version="1.0" versionDate="Sep 2023" description="Sparrow Force" boardType="HASL" publisher="MMP" />
-
+		<boarddata name="OpV" version="1.0" versionDate="Sep 2023" description="Riley's Road - no grain" boardType="HASL" publisher="TJ" />
 	</otherBoards>
 
 </boardsMetadata>
