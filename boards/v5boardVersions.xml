@@ -244,6 +244,8 @@
 		<boarddata name="RR" version=" 1.0" versionDate="Aug 2008" description="Ruweisat Ridge" boardType="HASL" publisher="CH" />
 		<boarddata name="BDF" version="6.0" versionDate="Jun 2021" description="Baraque de Fraiture" boardType="HASL" publisher="FLP" />
 		<boarddata name="FrFA" version=" 6.1" versionDate="Jun 2021" description="" boardType="Geoboard" publisher="FrF" />
+		<boarddata name="HZ1" version=" 6.0" versionDate="Dec 2022" description="HazMo1" boardType="Geoboard" publisher="HazMo" />
+		<boarddata name="HZ2" version=" 6.0" versionDate="May 2023" description="HazMo2" boardType="Geoboard" publisher="HazMo" />
 		<boarddata name="HOBI" version="6.0" versionDate="Jun 2021" description="" boardType="Geoboard" publisher="HOB" />
 		<boarddata name="HOBII" version="6.0" versionDate="Jun 2021" description="" boardType="Geoboard" publisher="HOB" />
 		<boarddata name="Kreta" version=" 1.0" versionDate="Aug 2008" description="Operation Merkur" boardType="HASL" publisher="HOB" />
