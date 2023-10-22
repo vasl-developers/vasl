@@ -27,7 +27,7 @@
 <boardsMetadata>
 
 	<coreBoards>
-		<boarddata name="00" version="6.3" versionDate="Jun 2023" description="Empty geoboard" boardType="Geoboard" publisher="VASL" issued="2023/09/01" />
+		<boarddata name="00" version="6.3" versionDate="Jun 2023" description="Empty geoboard" boardType="Geoboard" publisher="VASL" issued="" />
 		<boarddata name="00dx" version="6.5" versionDate="Aug 2023" description="Empty Deluxe geoboard" boardType="Deluxe" publisher="VASL" issued="" />
 		<boarddata name="00a" version="6.0" versionDate="Aug 2023" description="" boardType="Double-sided" publisher="VASL" issued="" />
 		<boarddata name="00b" version="6.0" versionDate="Aug 2023" description="" boardType="Double-sided" publisher="VASL" issued="" />
@@ -246,6 +246,8 @@
 		<boarddata name="RR" version=" 1.0" versionDate="Aug 2008" description="Ruweisat Ridge" boardType="HASL" publisher="CH" issued="" />
 		<boarddata name="BDF" version="6.0" versionDate="Jun 2021" description="Baraque de Fraiture" boardType="HASL" publisher="FLP" issued="" />
 		<boarddata name="FrFA" version=" 6.1" versionDate="Jun 2021" description="" boardType="Geoboard" publisher="FrF" issued="" />
+		<boarddata name="HZ1" version=" 6.0" versionDate="Dec 2022" description="HazMo1" boardType="Geoboard" publisher="HazMo" issued="2023/10/05"/>
+		<boarddata name="HZ2" version=" 6.0" versionDate="May 2023" description="HazMo2" boardType="Geoboard" publisher="HazMo" issued="2023/10/05"/>
 		<boarddata name="HOBI" version="6.0" versionDate="Jun 2021" description="" boardType="Geoboard" publisher="HOB" issued="" />
 		<boarddata name="HOBII" version="6.0" versionDate="Jun 2021" description="" boardType="Geoboard" publisher="HOB" issued="" />
 		<boarddata name="Kreta" version=" 1.0" versionDate="Aug 2008" description="Operation Merkur" boardType="HASL" publisher="HOB" issued="" />
@@ -462,7 +464,7 @@
 		<boarddata name="BG1" version="1.0" versionDate="Oct 2022" description="" boardType="Geoboard" publisher="BGD" issued="" />
 		<boarddata name="DeluxeBlank" version="1.0" versionDate="Aug 2023" description="Empty deluxe geoboard" boardType="Deluxe" publisher="VASL" issued="" />
 		<boarddata name="OpV" version="1.0" versionDate="Sep 2023" description="Riley's Road - no grain" boardType="HASL" publisher="TJ" issued="" />
-		<boarddata name="SF" version="1.0" versionDate="Sep 2023" description="Sparrow Force" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="SF" version="1.0" versionDate="Sep 2023" description="Sparrow Force" boardType="HASL" publisher="MMP" issued="2023/09/17" />
 
 	</otherBoards>
 
