@@ -490,7 +490,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                                     dateissued = LocalDate.parse(f.getAttribute(dateofissue).getValue(), formatter);
                                     if (DAYS.between(dateissued, datenow) < 91) {
                                         // read the newBoards attributes
-                                        newboardlist.add(f.getAttribute(coreboardNameAttr).getValue() + "    " + f.getAttribute("boardType").getValue() + "  NEW");
+                                        newboardlist.add(f.getAttribute(coreboardNameAttr).getValue() + "  " + f.getAttribute("boardType").getValue() + "  NEW");
                                     }
                                 }
                             }
@@ -504,7 +504,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                                     dateissued = LocalDate.parse(f.getAttribute(dateofissue).getValue(), formatter);
                                     if (DAYS.between(dateissued, datenow) < 91) {
                                         // read the newBoards attributes
-                                        newboardlist.add(f.getAttribute(otherboardNameAttr).getValue() + "    " + f.getAttribute("boardType").getValue());
+                                        newboardlist.add(f.getAttribute(otherboardNameAttr).getValue() + "  " + f.getAttribute("boardType").getValue()  + "  NEW");
                                     }
                                 }
                             }
