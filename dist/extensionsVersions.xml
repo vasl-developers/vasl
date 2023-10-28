@@ -43,5 +43,6 @@
 		<extensiondata name="Scenario Aid Card" version="2.2" versionDate="Jul 2023" description="Scenario Aid Card" />
 		<extensiondata name="SASL Campaign Roster" version="2.1" versionDate="Jul 2023" description="SASL Campaign Roster" />
 		<extensiondata name="SK References" version="1.4" versionDate="Sep 2022" description="SK Charts and Player Aids" />
+		<extensiondata name="OBA and CVP Aids" version="1.3" versionDate="Oct 2023" description="OBA and CVP Player Aids" />
 
 </extensionsMetadata>
