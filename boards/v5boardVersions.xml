@@ -467,10 +467,10 @@
 		<boarddata name="DeluxeBlank" version="1.0" versionDate="Aug 2023" description="Empty deluxe geoboard" boardType="Deluxe" publisher="VASL" issued="" />
 		<boarddata name="OpV" version="1.0" versionDate="Sep 2023" description="Riley's Road - no grain" boardType="HASL" publisher="TJ" issued="" />
 		<boarddata name="SF" version="1.0" versionDate="Sep 2023" description="Sparrow Force" boardType="HASL" publisher="MMP" issued="2023/09/17" />
-		<boarddata name="SeoulN" version="1.00" versionDate="Dec 2019" description="Seoul N" boardType="HASL" publisher="LFT" issued="" />
-		<boarddata name="SeoulS" version="1.00" versionDate="Dec 2019" description="Seoul S" boardType="HASL" publisher="LFT" issued="" />
-		<boarddata name="SmithRidgeN" version="1.00" versionDate="Dec 2019" description="SmithRidge N" boardType="HASL" publisher="LFT" issued="" />
-		<boarddata name="SmithRidgeS" version="1.00" versionDate="Dec 2019" description="SmithRidge S" boardType="HASL" publisher="LFT" issued="" />
+		<boarddata name="SeoulN" version="6.0" versionDate="Dec 2019" description="Seoul N" boardType="HASL" publisher="LFT" issued="" />
+		<boarddata name="SeoulS" version="6.0" versionDate="Dec 2019" description="Seoul S" boardType="HASL" publisher="LFT" issued="" />
+		<boarddata name="SmithRidgeN" version="6.0" versionDate="Dec 2019" description="SmithRidge N" boardType="HASL" publisher="LFT" issued="" />
+		<boarddata name="SmithRidgeS" version="6.0" versionDate="Dec 2019" description="SmithRidge S" boardType="HASL" publisher="LFT" issued="" />
 	</otherBoards>
 
 </boardsMetadata>
