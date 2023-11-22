@@ -124,6 +124,8 @@
 		<boarddata name="88" version="6.0" versionDate="Feb 2022" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="89" version="6.0" versionDate="Feb 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="90" version="6.0" versionDate="Feb 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="91" version="6.0" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="2023/10/25" />
+		<boarddata name="92" version="6.0" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="2023/10/27" />
 		<boarddata name="1a" version="6.4" versionDate="Jan 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
 		<boarddata name="1b" version="6.4" versionDate="Jan 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
 		<boarddata name="2a" version="6.8" versionDate="Jan 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
@@ -465,7 +467,10 @@
 		<boarddata name="DeluxeBlank" version="1.0" versionDate="Aug 2023" description="Empty deluxe geoboard" boardType="Deluxe" publisher="VASL" issued="" />
 		<boarddata name="OpV" version="1.0" versionDate="Sep 2023" description="Riley's Road - no grain" boardType="HASL" publisher="TJ" issued="" />
 		<boarddata name="SF" version="1.0" versionDate="Sep 2023" description="Sparrow Force" boardType="HASL" publisher="MMP" issued="2023/09/17" />
-
+		<boarddata name="SeoulN" version="6.0" versionDate="Dec 2019" description="Seoul N" boardType="HASL" publisher="LFT" issued="" />
+		<boarddata name="SeoulS" version="6.0" versionDate="Dec 2019" description="Seoul S" boardType="HASL" publisher="LFT" issued="" />
+		<boarddata name="SmithRidgeN" version="6.0" versionDate="Dec 2019" description="SmithRidge N" boardType="HASL" publisher="LFT" issued="" />
+		<boarddata name="SmithRidgeS" version="6.0" versionDate="Dec 2019" description="SmithRidge S" boardType="HASL" publisher="LFT" issued="" />
 	</otherBoards>
 
 </boardsMetadata>
