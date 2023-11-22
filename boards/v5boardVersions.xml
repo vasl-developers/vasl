@@ -80,7 +80,7 @@
 		<boarddata name="44" version="6.6" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="45" version="6.7" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="46" version="6.6" versionDate="Apr 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="47" version="6.9" versionDate="Aug 2022" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="47" version="7.1" versionDate="Nov 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="48" version="6.4" versionDate="Apr 2022" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="49" version="6.5" versionDate="Apr 2022" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="50" version="6.8" versionDate="Apr 2022" description="" boardType="Geoboard" publisher="MMP" issued="" />
@@ -471,6 +471,9 @@
 		<boarddata name="SeoulS" version="6.0" versionDate="Dec 2019" description="Seoul S" boardType="HASL" publisher="LFT" issued="" />
 		<boarddata name="SmithRidgeN" version="6.0" versionDate="Dec 2019" description="SmithRidge N" boardType="HASL" publisher="LFT" issued="" />
 		<boarddata name="SmithRidgeS" version="6.0" versionDate="Dec 2019" description="SmithRidge S" boardType="HASL" publisher="LFT" issued="" />
+		<boarddata name="KHN" version="1.0" versionDate="Nov 2023" description="playtest" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="KHS" version="1.0" versionDate="Nov 2023" description="playtest" boardType="HASL" publisher="MMP" issued="" />
+
 	</otherBoards>
 
 </boardsMetadata>
