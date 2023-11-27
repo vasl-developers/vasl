@@ -18,7 +18,7 @@
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
 -->
-<boardMetadata name="69" version="6.4" versionDate="Jan 2023" author="BK" boardImageFileName="bd69.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="69" version="6.5" versionDate="Oct 2023" author="BK" boardImageFileName="bd69.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -30,15 +30,15 @@
 
 	-->
     <buildingTypes>
-        <buildingType hexName="G1" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="G1" buildingTypeName="MultipleWooden" />
 
-        <buildingType hexName="H1" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="H1" buildingTypeName="MultipleWooden" />
 
-        <buildingType hexName="K7" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="K7" buildingTypeName="MultipleWooden" />
 
-        <buildingType hexName="K10" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="K10" buildingTypeName="MultipleWooden" />
 
-        <buildingType hexName="M7" buildingTypeName="Wooden Building, 1 Level" />
+        <buildingType hexName="M7" buildingTypeName="MultipleWooden" />
 	</buildingTypes>
 	
 	<overlaySSRules>
