@@ -62,10 +62,17 @@ import java.math.BigInteger;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.Collator;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 public class ASLBoardPicker extends BoardPicker implements ActionListener  {
     private static final Logger logger =
@@ -98,6 +105,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
     private static final String otherboardversionAttr = "version";
     private static final String otherboardversiondateAttr = "versionDate";
     private static final String otherboarddescAttr = "description";
+
+    private static final String dateofissue = "issued";
 
     public ASLBoardPicker() {
 
@@ -257,7 +266,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
         boolean nomatch;
         // all boards are added to the list whether in local directory or not
         final List<String> sorted = getallboards();
-
+        final List<String> newboards = getnewboards();
         if (files != null) {
             for (String file : files) {
                 // TODO - remove requirement that boards start with "bd"
@@ -360,6 +369,12 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
 
         Collections.sort(sorted, comp);
         possibleBoards.clear();
+        if (!newboards.isEmpty()){
+
+            for (String nboard: newboards) {
+                addBoard(nboard);
+            }
+        }
         for (String aSorted : sorted) {
             addBoard(aSorted);
         }
@@ -382,6 +397,24 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             // throw new JDOMException("Cannot read the shared metadata file", e);
         }
         return allboardslist;
+    }
+
+    private ArrayList<String> getnewboards() {
+        ArrayList<String> newboardslist = new ArrayList<String>();
+        try {
+            URL base = new URL(BoardVersionChecker.getboardVersionURL());
+            URLConnection conn = base.openConnection();
+            conn.setUseCaches(false);
+            try (InputStream inputStream = conn.getInputStream()) {
+                newboardslist = newboardsparseboardversionFile(inputStream);
+            }
+
+        } catch (IOException e){
+
+        } catch (JDOMException e) {
+            // throw new JDOMException("Cannot read the shared metadata file", e);
+        }
+        return newboardslist;
     }
 
     /**
@@ -430,6 +463,61 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             throw new JDOMException("Error reading the v5boardVersions.xml metadata", e);
         }
         return addtoboardlist;
+    }
+
+    private ArrayList<String> newboardsparseboardversionFile(InputStream metadata) throws JDOMException {
+
+        ArrayList<String> newboardlist = new ArrayList<String>();
+        SAXBuilder parser = new SAXBuilder();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        LocalDate dateissued;
+        LocalDate datenow = LocalDate.now();
+        try {
+            // the root element will be the boardsMetadata element
+            Document doc = parser.build(metadata);
+            org.jdom2.Element root = doc.getRootElement();
+
+            // read the shared metadata
+            if(root.getName().equals(boardsFileElement)) {
+
+                for(org.jdom2.Element e: root.getChildren()) {
+
+                    //add new coreBoards
+                    if(e.getName().equals(coreboardElement)){
+                        for(org.jdom2.Element f: e.getChildren()) {
+                            if(f.getName().equals(boarddataType)) {
+                                if (!f.getAttribute(dateofissue).getValue().equals("")) {
+                                    dateissued = LocalDate.parse(f.getAttribute(dateofissue).getValue(), formatter);
+                                    if (DAYS.between(dateissued, datenow) < 91) {
+                                        // read the newBoards attributes
+                                        newboardlist.add(f.getAttribute(coreboardNameAttr).getValue() + "  " + f.getAttribute("boardType").getValue() + "  NEW");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    // add all other boards
+                    if(e.getName().equals(otherboardElement)){
+                        for(org.jdom2.Element f: e.getChildren()) {
+                            if(f.getName().equals(boarddataType)) {
+                                if (!f.getAttribute(dateofissue).getValue().equals("")) {
+                                    dateissued = LocalDate.parse(f.getAttribute(dateofissue).getValue(), formatter);
+                                    if (DAYS.between(dateissued, datenow) < 91) {
+                                        // read the newBoards attributes
+                                        newboardlist.add(f.getAttribute(otherboardNameAttr).getValue() + "  " + f.getAttribute("boardType").getValue()  + "  NEW");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace(System.err);
+            throw new JDOMException("Error reading the v5boardVersions.xml metadata", e);
+        }
+        return newboardlist ;
     }
 
     public void build(Element e) {

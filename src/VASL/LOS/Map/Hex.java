@@ -892,7 +892,9 @@ public class Hex {
 
                 // need to ignore buildings without upper level locations - bit of a hack so we can use the building height
                 if (multihex== true || (multihex==false && !"Wooden Building".equals(centerLocationTerrain.getName()) &&
-                        !"Stone Building".equals(centerLocationTerrain.getName()))) {
+                        !"Stone Building".equals(centerLocationTerrain.getName()) &&
+                        !"Huts".equals(centerLocationTerrain.getName()) &&
+                        !"MultipleWooden".equals(centerLocationTerrain.getName()))) {
 
                     // code added by DR to prevent quasi-levels in Factory hexes without stairways
                     if ((centerLocationTerrain.getLOSCategory() == Terrain.LOSCategories.FACTORY) &&

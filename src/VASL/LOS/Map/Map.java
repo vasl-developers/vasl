@@ -3225,7 +3225,7 @@ public class Map  {
                                             status.source.getHex().getCenterLocation().getTerrain().isWaterTerrain())))) {
 
                         // if Tower Hindrance (Dinant Bridge ruins) then hindrance
-                        if ("Tower Hindrance".equals(status.currentTerrain.getName())) {
+                        if ( "Huts".equals(status.currentTerrain.getName()) ||"Tower Hindrance".equals(status.currentTerrain.getName())) {
                             if (addHindranceHex(status, result)) {
                                 return true;
                             }
