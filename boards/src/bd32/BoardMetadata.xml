@@ -20,7 +20,7 @@
 	
 	11/30/22 - fixed SSRcontrols file - TJ
 -->
-<boardMetadata name="32" version="7.0" versionDate="Jan 2023" author="TR" boardImageFileName="bd32.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="32" version="7.1" versionDate="Oct 2023" author="TR" boardImageFileName="bd32.gif" hasHills="FALSE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
