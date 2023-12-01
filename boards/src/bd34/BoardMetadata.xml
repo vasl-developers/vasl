@@ -21,7 +21,7 @@
 	12/8/22 - added SSRControls file - TJ
 	12/8/22 - added SSRule "SSO_34_G16" - TJ
 -->
-<boardMetadata name="34" version="6.8" versionDate="Jan 2023" author="TR" boardImageFileName="bd34.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="34" version="6.9" versionDate="Oct 2023" author="TR" boardImageFileName="bd34.gif" hasHills="FALSE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
