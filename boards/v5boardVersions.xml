@@ -465,7 +465,7 @@
 		<boarddata name="BG1" version="1.0" versionDate="Oct 2022" description="" boardType="Geoboard" publisher="BGD" issued="" />
 		<boarddata name="DeluxeBlank" version="1.0" versionDate="Aug 2023" description="Empty deluxe geoboard" boardType="Deluxe" publisher="VASL" issued="" />
 		<boarddata name="OpV" version="1.0" versionDate="Sep 2023" description="Riley's Road - no grain" boardType="HASL" publisher="TJ" issued="" />
-		<boarddata name="SF" version="1.0" versionDate="Sep 2023" description="Sparrow Force" boardType="HASL" publisher="MMP" issued="2023/09/17" />
+		<boarddata name="SF" version="1.1" versionDate="Dec 2023" description="Sparrow Force" boardType="HASL" publisher="MMP" issued="2023/09/17" />
 
 	</otherBoards>
 
