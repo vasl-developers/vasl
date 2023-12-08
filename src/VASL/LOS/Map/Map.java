@@ -953,6 +953,12 @@ public class Map  {
 
                 // check the LOS rules for this point and return if blocked
                 if(adjacentHexes == null){
+                    // check is LOS is along a top or bottom edge of the map (not a board)
+                    if((status.currentRow ==0 || status.currentRow +1 == getGridHeight()) && status.tempHex.getExtendedHexBorder().contains(status.currentCol, status.currentRow)){
+                        if(checkLOSOnHexsideRule(result, status, status.tempHex)) {
+                            return;
+                        }
+                    }
 
                     if (applyLOSRules(status, result)) {
                         return;
@@ -1034,9 +1040,10 @@ public class Map  {
         // ensure partialorchard is not missed
         Terrain checkhexside;
         int hexside=status.tempHex.getLocationHexside(status.tempHex.getNearestLocation(status.currentCol, status.currentRow));
+        if (hexside !=-1) {  //hexside =-1 when location is hex center and not a hexside location
             boolean[] partialorchards = new boolean[6];
             partialorchards = status.tempHex.getPartialOrchards();
-            if(partialorchards[hexside]) {
+            if (partialorchards[hexside]) {
                 checkhexside = status.tempHex.getHexsideTerrain(hexside);
                 if (checkhexside != null) {
                     // if Terrain is Partial Orchard then check if blocks/hinders LOS
@@ -1045,6 +1052,7 @@ public class Map  {
                     }
                 }
             }
+        }
         return applyLOSRules(status, result);
     }
 
@@ -4162,16 +4170,19 @@ public class Map  {
                     int hexsidetouched=status.currentHex.getLocationHexside(status.currentHex.getNearestLocation(status.currentCol, status.currentRow));
                     if(hexsidetouched==firstsidetest){
                         Hex testhex = getAdjacentHex(status.currentHex, firstsidetest);
-                        if (testhex.getCenterLocation().getTerrain().isRoofless() || status.currentTerrain.getName().contains("Light Woods")) {
-                            hindrancevalue=2;
+                        if (testhex != null) {
+                            if (testhex.getCenterLocation().getTerrain().isRoofless() || status.currentTerrain.getName().contains("Light Woods")) {
+                                hindrancevalue = 2;
+                            }
                         }
                     }
                     else if(hexsidetouched==secondsidetest){
                         Hex testhex = getAdjacentHex(status.currentHex, secondsidetest);
-                        if (testhex.getCenterLocation().getTerrain().isRoofless() || status.currentTerrain.getName().contains("Light Woods")) {
-                            hindrancevalue=2;
+                        if (testhex != null) {
+                            if (testhex.getCenterLocation().getTerrain().isRoofless() || status.currentTerrain.getName().contains("Light Woods")) {
+                                hindrancevalue = 2;
+                            }
                         }
-
                     }
                 }
                 else if(status.currentTerrain.getName().contains("Light Woods")){
