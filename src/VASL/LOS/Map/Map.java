@@ -2005,7 +2005,11 @@ public class Map  {
 
                 // ignore this check when terrain counter is present
                 if(status.vaslGameInterface == null  || (status.vaslGameInterface != null && status.vaslGameInterface.getTerrain(status.currentHex) == null)){
-                    return false;
+                    // need to hack to handle inherent terrain half hexes abutting another map where the other half-hex determines centerLocation terrain (board down or to the right
+                    if (inherentspilltest(status)){
+                        return false;
+                    }
+
                 }
             }
 
@@ -3330,6 +3334,25 @@ public class Map  {
         }
         return false;
     }
+    /** handle inherent terrain half hexes abutting another map where the other half-hex determines centerLocation terrain (board down or to the right)
+     *  tests of such terrain is a "spill" from adjacent hex (true) or actually inherent (false)
+     */
+    private boolean inherentspilltest(LOSStatus status){
+      int[] pixelshiftcol = {0, 10, 10, 10, 0, -10, -10, -10};
+      int[] pixelshiftrow = {-10, -10, 0, 10, 10, 10, 0, -10};
+      for (int x=0; x<8; x++){
+          //if (onMap(status.currentCol + pixelshiftcol[x], status.currentRow + pixelshiftrow[x])) {
+              if (status.currentHex.contains(status.currentCol + pixelshiftcol[x], status.currentRow + pixelshiftrow[x])) {
+                  Terrain terraintest = getGridTerrain(status.currentCol + pixelshiftcol[x], status.currentRow + pixelshiftrow[x]);
+                  if (terraintest == status.currentTerrain) {
+                      return false;
+                  }
+              }
+          //}
+      }
+      return true;
+    }
+
 
     /**
      * Applies hillocks rules
