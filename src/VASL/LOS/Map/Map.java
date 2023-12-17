@@ -1246,8 +1246,16 @@ public class Map  {
             sourceHex = source.getHex();
             targetHex = target.getHex();
             currentHex = sourceHex;
-            sourceElevation = sourceHex.getBaseHeight() + source.getBaseHeight();
-            targetElevation = targetHex.getBaseHeight() + target.getBaseHeight();
+            // code to fix vertex los
+            int vertexadj = 0;
+            if (!source.equals(sourceHex.getCenterLocation()) && sourceHex.isDepressionTerrain()){
+                vertexadj =1;
+            }
+            sourceElevation = sourceHex.getBaseHeight() + source.getBaseHeight() + vertexadj;
+            if (!target.equals(targetHex.getCenterLocation()) && targetHex.isDepressionTerrain()){
+                vertexadj=1;
+            }
+            targetElevation = targetHex.getBaseHeight() + target.getBaseHeight() + vertexadj;
 
             range = range(sourceHex, targetHex, source.getHex().getMap().getMapConfiguration());
 
@@ -3119,8 +3127,9 @@ public class Map  {
             targetadj=+1;
         }
         // code to fix groundlevel when checking LOS to/from vertex
-        if (!(status.sourceHex.getNearestLocation(status.currentCol, status.currentRow).equals(status.sourceHex.getCenterLocation())) && !status.sourceHex.isDepressionTerrain() && status.sourceHex.equals(status.tempHex)){status.groundLevel = status.sourceHex.getBaseHeight();}
-        if (!(status.targetHex.getNearestLocation(status.currentCol, status.currentRow).equals(status.targetHex.getCenterLocation())) && !status.targetHex.isDepressionTerrain() && status.targetHex.equals(status.tempHex)){status.groundLevel = status.targetHex.getBaseHeight();}
+        // Dec 23 commented out these lines as causing bd02 issues; need to see if it creates other issues; code was added to address issue #418
+        //if (!(status.sourceHex.getNearestLocation(status.currentCol, status.currentRow).equals(status.sourceHex.getCenterLocation())) && !status.sourceHex.isDepressionTerrain() && status.sourceHex.equals(status.tempHex)){status.groundLevel = status.sourceHex.getBaseHeight();}
+        //if (!(status.targetHex.getNearestLocation(status.currentCol, status.currentRow).equals(status.targetHex.getCenterLocation())) && !status.targetHex.isDepressionTerrain() && status.targetHex.equals(status.tempHex)){status.groundLevel = status.targetHex.getBaseHeight();}
 
         if ( (status.groundLevel + status.currentTerrainHgt + obstacleadj== Math.max(status.sourceElevation + sourceadj, status.targetElevation + targetadj)) &&
                 (status.groundLevel + status.currentTerrainHgt+obstacleadj > Math.min(status.sourceElevation+ sourceadj, status.targetElevation + targetadj))) {
