@@ -3347,9 +3347,9 @@ public class Map  {
      *  tests of such terrain is a "spill" from adjacent hex (true) or actually inherent (false)
      */
     private boolean inherentspilltest(LOSStatus status){
-      int[] pixelshiftcol = {0, 10, 10, 10, 0, -10, -10, -10};
-      int[] pixelshiftrow = {-10, -10, 0, 10, 10, 10, 0, -10};
-      for (int x=0; x<8; x++){
+      int[] pixelshiftcol = {0, 10, 10, 0, -10, -10};
+      int[] pixelshiftrow = {-10, -10, 10, 10, 10, -10};
+      for (int x=0; x<6; x++){
           //if (onMap(status.currentCol + pixelshiftcol[x], status.currentRow + pixelshiftrow[x])) {
               if (status.currentHex.contains(status.currentCol + pixelshiftcol[x], status.currentRow + pixelshiftrow[x])) {
                   Terrain terraintest = getGridTerrain(status.currentCol + pixelshiftcol[x], status.currentRow + pixelshiftrow[x]);
