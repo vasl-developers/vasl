@@ -4327,7 +4327,7 @@ public class Map  {
                 if (sourceElevation > status.currentHex.getBaseHeight() && targetElevation > status.currentHex.getBaseHeight()) {return false;}
             }
 
-        } else if(status.LOSis60Degree || status.LOSisHorizontal) {
+        } else if(isCliffHexside && (status.LOSis60Degree || status.LOSisHorizontal)) {
             // -99 is default value when no ajustment required; adjustment reflects lower terrain whey LOS along cliff hexside
             if (cliffHexsideTerrainHeightadjustment !=-99) {groundLevel=cliffHexsideTerrainHeightadjustment;}
         }
