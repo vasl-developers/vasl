@@ -24,8 +24,8 @@
 -->
 <boardMetadata 
 	name="g" 
-	version="6.3" 
-	versionDate="Apr 2022" 
+	version="6.4" 
+	versionDate="Dec 2023" 
 	author="TR" 
 	boardImageFileName="bdg.gif" 
 	hasHills="FALSE" 
@@ -59,134 +59,134 @@
 		-->
 
 		<underlaySSRule name="GrainToVineyard" image="VineyardPattern.gif">
-			<color name="GrainColor01" />
-			<color name="GrainColor02" />
-			<color name="GrainColor03" />
-			<color name="GrainColor04" />
-			<color name="GrainColor05" />
-			<color name="GrainColor06" />
-			<color name="GrainColor07" />
-			<color name="GrainColor08" />
-			<color name="GrainColor09" />
-			<color name="GrainColor10" />
-			<color name="GrainColor11" />
-			<color name="GrainColor12" />
-			<color name="FurrowColor01" />
-			<color name="FurrowColor02" />
-			<color name="FurrowColor03" />
-			<color name="FurrowColor04" />
-			<color name="FurrowColor05" />
-			<color name="FurrowColor06" />
-			<color name="FurrowColor07" />
-			<color name="FurrowColor08" />
-			<color name="FurrowColor09" />
-			<color name="FurrowColor10" />
-			<color name="FurrowColor11" />
-			<color name="FurrowColor12" />
+			<color name="GrainC01" />
+			<color name="GrainC02" />
+			<color name="GrainC03" />
+			<color name="GrainC04" />
+			<color name="GrainC05" />
+			<color name="GrainC06" />
+			<color name="GrainC07" />
+			<color name="GrainC08" />
+			<color name="GrainC09" />
+			<color name="GrainC10" />
+			<color name="GrainC11" />
+			<color name="GrainC12" />
+			<color name="FurrowC01" />
+			<color name="FurrowC02" />
+			<color name="FurrowC03" />
+			<color name="FurrowC04" />
+			<color name="FurrowC05" />
+			<color name="FurrowC06" />
+			<color name="FurrowC07" />
+			<color name="FurrowC08" />
+			<color name="FurrowC09" />
+			<color name="FurrowC10" />
+			<color name="FurrowC11" />
+			<color name="FurrowC12" />
 		</underlaySSRule>
 		<underlaySSRule name="GrainToPaddy" image="PaddyPattern.gif">
-			<color name="GrainColor01" />
-			<color name="GrainColor02" />
-			<color name="GrainColor03" />
-			<color name="GrainColor04" />
-			<color name="GrainColor05" />
-			<color name="GrainColor06" />
-			<color name="GrainColor07" />
-			<color name="GrainColor08" />
-			<color name="GrainColor09" />
-			<color name="GrainColor10" />
-			<color name="GrainColor11" />
-			<color name="GrainColor12" />
-			<color name="FurrowColor01" />
-			<color name="FurrowColor02" />
-			<color name="FurrowColor03" />
-			<color name="FurrowColor04" />
-			<color name="FurrowColor05" />
-			<color name="FurrowColor06" />
-			<color name="FurrowColor07" />
-			<color name="FurrowColor08" />
-			<color name="FurrowColor09" />
-			<color name="FurrowColor10" />
-			<color name="FurrowColor11" />
-			<color name="FurrowColor12" />
+			<color name="GrainC01" />
+			<color name="GrainC02" />
+			<color name="GrainC03" />
+			<color name="GrainC04" />
+			<color name="GrainC05" />
+			<color name="GrainC06" />
+			<color name="GrainC07" />
+			<color name="GrainC08" />
+			<color name="GrainC09" />
+			<color name="GrainC10" />
+			<color name="GrainC11" />
+			<color name="GrainC12" />
+			<color name="FurrowC01" />
+			<color name="FurrowC02" />
+			<color name="FurrowC03" />
+			<color name="FurrowC04" />
+			<color name="FurrowC05" />
+			<color name="FurrowC06" />
+			<color name="FurrowC07" />
+			<color name="FurrowC08" />
+			<color name="FurrowC09" />
+			<color name="FurrowC10" />
+			<color name="FurrowC11" />
+			<color name="FurrowC12" />
 		</underlaySSRule>
 		<underlaySSRule name="GrainToBrush" image="BrushPattern.gif">
-			<color name="GrainColor01" />
-			<color name="GrainColor02" />
-			<color name="GrainColor03" />
-			<color name="GrainColor04" />
-			<color name="GrainColor05" />
-			<color name="GrainColor06" />
-			<color name="GrainColor07" />
-			<color name="GrainColor08" />
-			<color name="GrainColor09" />
-			<color name="GrainColor10" />
-			<color name="GrainColor11" />
-			<color name="GrainColor12" />
-			<color name="FurrowColor01" />
-			<color name="FurrowColor02" />
-			<color name="FurrowColor03" />
-			<color name="FurrowColor04" />
-			<color name="FurrowColor05" />
-			<color name="FurrowColor06" />
-			<color name="FurrowColor07" />
-			<color name="FurrowColor08" />
-			<color name="FurrowColor09" />
-			<color name="FurrowColor10" />
-			<color name="FurrowColor11" />
-			<color name="FurrowColor12" />
+			<color name="GrainC01" />
+			<color name="GrainC02" />
+			<color name="GrainC03" />
+			<color name="GrainC04" />
+			<color name="GrainC05" />
+			<color name="GrainC06" />
+			<color name="GrainC07" />
+			<color name="GrainC08" />
+			<color name="GrainC09" />
+			<color name="GrainC10" />
+			<color name="GrainC11" />
+			<color name="GrainC12" />
+			<color name="FurrowC01" />
+			<color name="FurrowC02" />
+			<color name="FurrowC03" />
+			<color name="FurrowC04" />
+			<color name="FurrowC05" />
+			<color name="FurrowC06" />
+			<color name="FurrowC07" />
+			<color name="FurrowC08" />
+			<color name="FurrowC09" />
+			<color name="FurrowC10" />
+			<color name="FurrowC11" />
+			<color name="FurrowC12" />
 		</underlaySSRule>
 		<underlaySSRule name="GrainToWoods" image="WoodsPattern.gif">
-			<color name="GrainColor01" />
-			<color name="GrainColor02" />
-			<color name="GrainColor03" />
-			<color name="GrainColor04" />
-			<color name="GrainColor05" />
-			<color name="GrainColor06" />
-			<color name="GrainColor07" />
-			<color name="GrainColor08" />
-			<color name="GrainColor09" />
-			<color name="GrainColor10" />
-			<color name="GrainColor11" />
-			<color name="GrainColor12" />
-			<color name="FurrowColor01" />
-			<color name="FurrowColor02" />
-			<color name="FurrowColor03" />
-			<color name="FurrowColor04" />
-			<color name="FurrowColor05" />
-			<color name="FurrowColor06" />
-			<color name="FurrowColor07" />
-			<color name="FurrowColor08" />
-			<color name="FurrowColor09" />
-			<color name="FurrowColor10" />
-			<color name="FurrowColor11" />
-			<color name="FurrowColor12" />
+			<color name="GrainC01" />
+			<color name="GrainC02" />
+			<color name="GrainC03" />
+			<color name="GrainC04" />
+			<color name="GrainC05" />
+			<color name="GrainC06" />
+			<color name="GrainC07" />
+			<color name="GrainC08" />
+			<color name="GrainC09" />
+			<color name="GrainC10" />
+			<color name="GrainC11" />
+			<color name="GrainC12" />
+			<color name="FurrowC01" />
+			<color name="FurrowC02" />
+			<color name="FurrowC03" />
+			<color name="FurrowC04" />
+			<color name="FurrowC05" />
+			<color name="FurrowC06" />
+			<color name="FurrowC07" />
+			<color name="FurrowC08" />
+			<color name="FurrowC09" />
+			<color name="FurrowC10" />
+			<color name="FurrowC11" />
+			<color name="FurrowC12" />
 		</underlaySSRule>
 		<underlaySSRule name="GrainToMarsh" image="MarshPattern.gif">
-			<color name="GrainColor01" />
-			<color name="GrainColor02" />
-			<color name="GrainColor03" />
-			<color name="GrainColor04" />
-			<color name="GrainColor05" />
-			<color name="GrainColor06" />
-			<color name="GrainColor07" />
-			<color name="GrainColor08" />
-			<color name="GrainColor09" />
-			<color name="GrainColor10" />
-			<color name="GrainColor11" />
-			<color name="GrainColor12" />
-			<color name="FurrowColor01" />
-			<color name="FurrowColor02" />
-			<color name="FurrowColor03" />
-			<color name="FurrowColor04" />
-			<color name="FurrowColor05" />
-			<color name="FurrowColor06" />
-			<color name="FurrowColor07" />
-			<color name="FurrowColor08" />
-			<color name="FurrowColor09" />
-			<color name="FurrowColor10" />
-			<color name="FurrowColor11" />
-			<color name="FurrowColor12" />
+			<color name="GrainC01" />
+			<color name="GrainC02" />
+			<color name="GrainC03" />
+			<color name="GrainC04" />
+			<color name="GrainC05" />
+			<color name="GrainC06" />
+			<color name="GrainC07" />
+			<color name="GrainC08" />
+			<color name="GrainC09" />
+			<color name="GrainC10" />
+			<color name="GrainC11" />
+			<color name="GrainC12" />
+			<color name="FurrowC01" />
+			<color name="FurrowC02" />
+			<color name="FurrowC03" />
+			<color name="FurrowC04" />
+			<color name="FurrowC05" />
+			<color name="FurrowC06" />
+			<color name="FurrowC07" />
+			<color name="FurrowC08" />
+			<color name="FurrowC09" />
+			<color name="FurrowC10" />
+			<color name="FurrowC11" />
+			<color name="FurrowC12" />
 		</underlaySSRule>
 		<underlaySSRule name="MarshToVineyard" image="VineyardPattern.gif">
 			<color name="MarshColor1" />
@@ -326,31 +326,31 @@
 		<color name="SunkRoadColor5" red="138" green="98" blue="12" terrain="Sunken Road" elevation="UNKNOWN" />
 		<color name="SunkRoadColor6" red="139" green="88" blue="12" terrain="Sunken Road" elevation="UNKNOWN" />
 
-		<color name="GrainColor01" red="165" green="144" blue="36" terrain="Grain" elevation="UNKNOWN" />
-		<color name="GrainColor02" red="166" green="145" blue="27" terrain="Grain" elevation="UNKNOWN" />
-		<color name="GrainColor03" red="167" green="146" blue="14" terrain="Grain" elevation="UNKNOWN" />
-		<color name="GrainColor04" red="169" green="150" blue="43" terrain="Grain" elevation="UNKNOWN" />
-		<color name="GrainColor05" red="170" green="155" blue="36" terrain="Grain" elevation="UNKNOWN" />
-		<color name="GrainColor06" red="172" green="151" blue="34" terrain="Grain" elevation="UNKNOWN" />
-		<color name="GrainColor07" red="172" green="156" blue="27" terrain="Grain" elevation="UNKNOWN" />
-		<color name="GrainColor08" red="173" green="151" blue="23" terrain="Grain" elevation="UNKNOWN" />
-		<color name="GrainColor09" red="175" green="158" blue="17" terrain="Grain" elevation="UNKNOWN" />
-		<color name="GrainColor10" red="177" green="154" blue="12" terrain="Grain" elevation="UNKNOWN" />
-		<color name="GrainColor11" red="179" green="163" blue="36" terrain="Grain" elevation="UNKNOWN" />
-		<color name="GrainColor12" red="181" green="165" blue="8" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainC01" red="165" green="144" blue="36" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainC02" red="166" green="145" blue="27" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainC03" red="167" green="146" blue="14" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainC04" red="169" green="150" blue="43" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainC05" red="170" green="155" blue="36" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainC06" red="172" green="151" blue="34" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainC07" red="172" green="156" blue="27" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainC08" red="173" green="151" blue="23" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainC09" red="175" green="158" blue="17" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainC10" red="177" green="154" blue="12" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainC11" red="179" green="163" blue="36" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainC12" red="181" green="165" blue="8" terrain="Grain" elevation="UNKNOWN" />
 
-		<color name="FurrowColor01" red="166" green="144" blue="36" terrain="Open Ground" elevation="UNKNOWN" />
-		<color name="FurrowColor02" red="167" green="145" blue="27" terrain="Open Ground" elevation="UNKNOWN" />
-		<color name="FurrowColor03" red="168" green="146" blue="14" terrain="Open Ground" elevation="UNKNOWN" />
-		<color name="FurrowColor04" red="170" green="150" blue="43" terrain="Open Ground" elevation="UNKNOWN" />
-		<color name="FurrowColor05" red="171" green="155" blue="36" terrain="Open Ground" elevation="UNKNOWN" />
-		<color name="FurrowColor06" red="173" green="151" blue="34" terrain="Open Ground" elevation="UNKNOWN" />
-		<color name="FurrowColor07" red="173" green="156" blue="27" terrain="Open Ground" elevation="UNKNOWN" />
-		<color name="FurrowColor08" red="174" green="151" blue="23" terrain="Open Ground" elevation="UNKNOWN" />
-		<color name="FurrowColor09" red="176" green="158" blue="17" terrain="Open Ground" elevation="UNKNOWN" />
-		<color name="FurrowColor10" red="178" green="154" blue="12" terrain="Open Ground" elevation="UNKNOWN" />
-		<color name="FurrowColor11" red="180" green="163" blue="36" terrain="Open Ground" elevation="UNKNOWN" />
-		<color name="FurrowColor12" red="182" green="165" blue="8" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowC01" red="166" green="144" blue="36" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowC02" red="167" green="145" blue="27" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowC03" red="168" green="146" blue="14" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowC04" red="170" green="150" blue="43" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowC05" red="171" green="155" blue="36" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowC06" red="173" green="151" blue="34" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowC07" red="173" green="156" blue="27" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowC08" red="174" green="151" blue="23" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowC09" red="176" green="158" blue="17" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowC10" red="178" green="154" blue="12" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowC11" red="180" green="163" blue="36" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowC12" red="182" green="165" blue="8" terrain="Open Ground" elevation="UNKNOWN" />
 
 		<color name="Shallow StreamColor01" red="121" green="88" blue="52" terrain="Shallow Stream" elevation="UNKNOWN" />
 		<color name="Shallow StreamColor02" red="122" green="114" blue="26" terrain="Shallow Stream" elevation="UNKNOWN" />

@@ -670,8 +670,107 @@
 		<color name="GrainCrestL5" red="235" green="216" blue="104" terrain="Grain" elevation="5" />
 		<color name="GrainCrestL6" red="235" green="216" blue="105" terrain="Grain" elevation="6" />
 		<color name="GrainCrestMud" red="215" green="208" blue="99" terrain="Grain" elevation="UNKNOWN" />
+		<!-- from bde -->
+		<color name="Grain01" red="173" green="147" blue="53" terrain="Grain" elevation="0" />
+		<color name="Grain02" red="181" green="156" blue="67" terrain="Grain" elevation="0" />
+		<color name="Grain03" red="186" green="158" blue="58" terrain="Grain" elevation="0" />
+		<color name="Grain04" red="191" green="170" blue="67" terrain="Grain" elevation="0" />
+		<color name="Grain05" red="192" green="167" blue="78" terrain="Grain" elevation="0" />
+		<color name="Grain06" red="193" green="154" blue="56" terrain="Grain" elevation="0" />
+		<color name="Grain07" red="194" green="168" blue="45" terrain="Grain" elevation="0" />
+		<color name="Grain08" red="195" green="165" blue="53" terrain="Grain" elevation="0" />
+		<color name="Grain09" red="197" green="167" blue="66" terrain="Grain" elevation="0" />
+		<color name="Grain10" red="200" green="177" blue="87" terrain="Grain" elevation="0" />
+		<color name="Furrows01" red="174" green="147" blue="53" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="Furrows02" red="182" green="156" blue="67" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="Furrows03" red="194" green="154" blue="56" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="Furrows04" red="187" green="158" blue="58" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="Furrows05" red="196" green="165" blue="53" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="Furrows06" red="195" green="168" blue="45" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="Furrows07" red="193" green="167" blue="78" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="Furrows08" red="198" green="167" blue="66" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="Furrows09" red="192" green="170" blue="67" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="Furrows10" red="204" green="177" blue="74" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="Furrows11" red="201" green="177" blue="87" terrain="Open Ground" elevation="UNKNOWN" />
+		<!-- bdf -->
+		<color name="GrainColor01" red="176" green="143" blue="48" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainColor02" red="182" green="156" blue="66" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainColor03" red="183" green="152" blue="71" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainColor04" red="184" green="165" blue="79" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainColor05" red="186" green="155" blue="58" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainColor06" red="186" green="155" blue="66" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainColor07" red="187" green="159" blue="52" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainColor08" red="190" green="164" blue="73" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainColor09" red="191" green="149" blue="78" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainColor10" red="192" green="158" blue="77" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainColor11" red="193" green="160" blue="92" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainColor12" red="193" green="165" blue="67" terrain="Grain" elevation="UNKNOWN" />
+		<color name="FurrowColor01" red="177" green="143" blue="48" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowColor02" red="183" green="156" blue="66" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowColor03" red="184" green="152" blue="71" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowColor04" red="185" green="165" blue="79" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowColor05" red="187" green="155" blue="58" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowColor06" red="187" green="155" blue="66" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowColor07" red="188" green="159" blue="52" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowColor08" red="191" green="164" blue="73" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowColor09" red="192" green="149" blue="78" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowColor10" red="193" green="158" blue="77" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowColor11" red="194" green="160" blue="92" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowColor12" red="194" green="165" blue="67" terrain="Open Ground" elevation="UNKNOWN" />
+		<!-- bdg -->
+		<color name="GrainC01" red="165" green="144" blue="36" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainC02" red="166" green="145" blue="27" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainC03" red="167" green="146" blue="14" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainC04" red="169" green="150" blue="43" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainC05" red="170" green="155" blue="36" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainC06" red="172" green="151" blue="34" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainC07" red="172" green="156" blue="27" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainC08" red="173" green="151" blue="23" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainC09" red="175" green="158" blue="17" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainC10" red="177" green="154" blue="12" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainC11" red="179" green="163" blue="36" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainC12" red="181" green="165" blue="8" terrain="Grain" elevation="UNKNOWN" />
+		<color name="FurrowC01" red="166" green="144" blue="36" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowC02" red="167" green="145" blue="27" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowC03" red="168" green="146" blue="14" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowC04" red="170" green="150" blue="43" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowC05" red="171" green="155" blue="36" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowC06" red="173" green="151" blue="34" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowC07" red="173" green="156" blue="27" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowC08" red="174" green="151" blue="23" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowC09" red="176" green="158" blue="17" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowC10" red="178" green="154" blue="12" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowC11" red="180" green="163" blue="36" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowC12" red="182" green="165" blue="8" terrain="Open Ground" elevation="UNKNOWN" />
+		<!-- bdh -->
+		<color name="GrainCo01" red="167" green="132" blue="20" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainCo02" red="180" green="164" blue="20" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainCo03" red="181" green="147" blue="27" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainCo04" red="182" green="155" blue="32" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainCo05" red="187" green="158" blue="23" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainCo06" red="187" green="175" blue="29" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainCo07" red="189" green="161" blue="9" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainCo08" red="190" green="162" blue="40" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainCo09" red="191" green="164" blue="0" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainCo10" red="195" green="169" blue="27" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainCo11" red="196" green="170" blue="3" terrain="Grain" elevation="UNKNOWN" />
+		<color name="GrainCo12" red="201" green="181" blue="0" terrain="Grain" elevation="UNKNOWN" />
+		<color name="FurrowCo01" red="168" green="132" blue="20" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowCo02" red="181" green="164" blue="20" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowCo03" red="182" green="147" blue="27" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowCo04" red="183" green="155" blue="32" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowCo05" red="188" green="158" blue="23" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowCo06" red="188" green="175" blue="29" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowCo07" red="190" green="161" blue="9" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowCo08" red="191" green="162" blue="40" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowCo09" red="192" green="164" blue="0" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowCo10" red="196" green="169" blue="27" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowCo11" red="197" green="170" blue="3" terrain="Open Ground" elevation="UNKNOWN" />
+		<color name="FurrowCo12" red="202" green="181" blue="0" terrain="Open Ground" elevation="UNKNOWN" />
+
 		<color name="PlowedFields" red="208" green="177" blue="104" terrain="Plowed Field" elevation="UNKNOWN" />
 		<color name="Furrows" red="135" green="89" blue="9" terrain="Open Ground" elevation="UNKNOWN" />
+
 		<!-- Graveyard  -->
 		<color name="GraveyardWhite1" red="204" green="215" blue="171" terrain="Graveyard" elevation="UNKNOWN" />
 		<color name="GraveyardWhite2" red="164" green="164" blue="132" terrain="Graveyard" elevation="UNKNOWN" />
@@ -760,6 +859,33 @@
 		<color name="SeparatedSwampBrownL0" red="53" green="2" blue="22" terrain="Marsh" elevation="0" />
 		<color name="MudflatL0" red="127" green="91" blue="41" terrain="Open Ground" elevation="0" />
 		<color name="MudflatL_1" red="127" green="90" blue="41" terrain="Open Ground" elevation="-1" />
+		<!-- bdg -->
+		<color name="MarshColor1" red="98" green="87" blue="17" terrain="Marsh" elevation="UNKNOWN" />
+		<color name="MarshColor2" red="119" green="108" blue="38" terrain="Marsh" elevation="UNKNOWN" />
+		<color name="MarshColor3" red="121" green="118" blue="25" terrain="Marsh" elevation="UNKNOWN" />
+		<color name="MarshColor4" red="124" green="113" blue="26" terrain="Marsh" elevation="UNKNOWN" />
+		<color name="MarshColor5" red="133" green="127" blue="20" terrain="Marsh" elevation="UNKNOWN" />
+		<color name="MarshColor6" red="133" green="129" blue="35" terrain="Marsh" elevation="UNKNOWN" />
+		<color name="MarshColor7" red="134" green="137" blue="19" terrain="Marsh" elevation="UNKNOWN" />
+		<color name="MarshColor8" red="155" green="153" blue="65" terrain="Marsh" elevation="UNKNOWN" />
+		<color name="SwampColor1" red="99" green="87" blue="17" terrain="Swamp" elevation="UNKNOWN" />
+		<color name="SwampColor2" red="120" green="108" blue="38" terrain="Swamp" elevation="UNKNOWN" />
+		<color name="SwampColor3" red="122" green="118" blue="25" terrain="Swamp" elevation="UNKNOWN" />
+		<color name="SwampColor4" red="125" green="113" blue="26" terrain="Swamp" elevation="UNKNOWN" />
+		<color name="SwampColor5" red="134" green="127" blue="20" terrain="Swamp" elevation="UNKNOWN" />
+		<color name="SwampColor6" red="134" green="129" blue="35" terrain="Swamp" elevation="UNKNOWN" />
+		<color name="SwampColor7" red="135" green="137" blue="19" terrain="Swamp" elevation="UNKNOWN" />
+		<color name="SwampColor8" red="156" green="153" blue="65" terrain="Swamp" elevation="UNKNOWN" />
+		<!-- bdh -->
+		<color name="MarshCo1" red="60" green="36" blue="7" terrain="Marsh" elevation="UNKNOWN" />
+		<color name="MarshCo2" red="81" green="57" blue="16" terrain="Marsh" elevation="UNKNOWN" />
+		<color name="MarshCo3" red="91" green="68" blue="12" terrain="Marsh" elevation="UNKNOWN" />
+		<color name="MarshCo4" red="102" green="80" blue="22" terrain="Marsh" elevation="UNKNOWN" />
+		<color name="MarshCo5" red="105" green="86" blue="15" terrain="Marsh" elevation="UNKNOWN" />
+		<color name="MarshCo6" red="114" green="99" blue="19" terrain="Marsh" elevation="UNKNOWN" />
+		<color name="MarshCo7" red="119" green="107" blue="7" terrain="Marsh" elevation="UNKNOWN" />
+		<color name="MarshCo8" red="125" green="117" blue="21" terrain="Marsh" elevation="UNKNOWN" />
+
 		<!-- Miscellaneous  -->
 		<color name="Black" red="0" green="0" blue="0" terrain="UNKNOWN" elevation="UNKNOWN" />
 		<color name="WhiteHexNumbers" red="251" green="252" blue="253" terrain="UNKNOWN" elevation="UNKNOWN" />
@@ -795,6 +921,37 @@
 		<color name="L_1Winter" red="213" green="224" blue="194" terrain="Open Ground" elevation="-1" />
 		<color name="L_2Winter" red="225" green="239" blue="187" terrain="Open Ground" elevation="-2" />
 		<color name="Level1Winter" red="222" green="213" blue="188" terrain="Open Ground" elevation="1" />
+		<!-- deluxe board e -->
+		<color name="OGL1_01" red="137" green="70" blue="26" terrain="Open Ground" elevation="1" />
+		<color name="OGL1_02" red="150" green="91" blue="33" terrain="Open Ground" elevation="1" />
+		<color name="OGL1_03" red="152" green="114" blue="34" terrain="Open Ground" elevation="1" />
+		<color name="OGL1_04" red="157" green="117" blue="52" terrain="Open Ground" elevation="1" />
+		<color name="OGL1_05" red="162" green="89" blue="38" terrain="Open Ground" elevation="1" />
+		<color name="OGL1_06" red="163" green="90" blue="50" terrain="Open Ground" elevation="1" />
+		<color name="OGL1_07" red="164" green="109" blue="37" terrain="Open Ground" elevation="1" />
+		<color name="OGL1_08" red="164" green="80" blue="41" terrain="Open Ground" elevation="1" />
+		<color name="OGL1_09" red="166" green="112" blue="53" terrain="Open Ground" elevation="1" />
+		<color name="OGL1_10" red="168" green="109" blue="66" terrain="Open Ground" elevation="1" />
+		<color name="OGL1_11" red="170" green="103" blue="50" terrain="Open Ground" elevation="1" />
+		<color name="OGL1_12" red="170" green="108" blue="53" terrain="Open Ground" elevation="1" />
+		<color name="OGL1_13" red="173" green="133" blue="72" terrain="Open Ground" elevation="1" />
+		<color name="OGL1_14" red="178" green="121" blue="66" terrain="Open Ground" elevation="1" />
+		<color name="OGL1_15" red="180" green="106" blue="59" terrain="Open Ground" elevation="1" />
+		<color name="OGL2_01" red="135" green="70" blue="35" terrain="Open Ground" elevation="2" />
+		<color name="OGL2_02" red="137" green="71" blue="28" terrain="Open Ground" elevation="2" />
+		<color name="OGL2_03" red="140" green="64" blue="34" terrain="Open Ground" elevation="2" />
+		<color name="OGL2_04" red="143" green="58" blue="32" terrain="Open Ground" elevation="2" />
+		<color name="OGL2_05" red="143" green="66" blue="28" terrain="Open Ground" elevation="2" />
+		<color name="OGL2_06" red="148" green="61" blue="28" terrain="Open Ground" elevation="2" />
+		<color name="OGL2_07" red="148" green="83" blue="41" terrain="Open Ground" elevation="2" />
+		<color name="OGL2_08" red="150" green="83" blue="32" terrain="Open Ground" elevation="2" />
+		<color name="OGL2_09" red="151" green="77" blue="39" terrain="Open Ground" elevation="2" />
+		<color name="OGL2_10" red="154" green="73" blue="38" terrain="Open Ground" elevation="2" />
+		<color name="OGL2_11" red="154" green="74" blue="31" terrain="Open Ground" elevation="2" />
+		<color name="OGL2_12" red="157" green="70" blue="30" terrain="Open Ground" elevation="2" />
+		<color name="OGL2_13" red="157" green="70" blue="37" terrain="Open Ground" elevation="2" />
+		<color name="OGL2_14" red="160" green="66" blue="35" terrain="Open Ground" elevation="2" />
+		<color name="OGL2_15" red="167" green="89" blue="51" terrain="Open Ground" elevation="2" />
 		<!-- Orchards  -->
 		<color name="OrchL_2" red="85" green="100" blue="46" terrain="Orchard" elevation="-2" />
 		<color name="OrchL_1" red="83" green="98" blue="45" terrain="Orchard" elevation="-1" />
