@@ -24,7 +24,7 @@
 -->
 <boardMetadata 
 	name="e" 
-	version="6.5" 
+	version="6.6" 
 	versionDate="Dec 2023" 
 	author="TR" 
 	boardImageFileName="bde.gif" 
@@ -411,21 +411,21 @@
 			elevation - the base elevation of the terrain
 			
 		-->
-		<color name="StoneBldg1" red="42" green="35" blue="20" terrain="Stone Building" elevation="0" />
-		<color name="StoneBldg2" red="52" green="41" blue="14" terrain="Stone Building" elevation="0" />
-		<color name="StoneBldg3" red="63" green="54" blue="37" terrain="Stone Building" elevation="0" />
-		<color name="StoneBldg4" red="69" green="54" blue="27" terrain="Stone Building" elevation="0" />
-		<color name="StoneBldg5" red="77" green="70" blue="56" terrain="Stone Building" elevation="0" />
-		<color name="StoneBldg6" red="79" green="67" blue="26" terrain="Stone Building" elevation="0" />
-		<color name="StoneBldg7" red="84" green="69" blue="43" terrain="Stone Building" elevation="0" />
-		<color name="StoneBldg8" red="85" green="62" blue="28" terrain="Stone Building" elevation="0" />
-		<color name="StoneBldg9" red="96" green="87" blue="68" terrain="Stone Building" elevation="0" />
-		<color name="StoneBldg10" red="100" green="86" blue="54" terrain="Stone Building" elevation="0" />
-		<color name="StoneBldg11" red="101" green="89" blue="40" terrain="Stone Building" elevation="0" />
-		<color name="StoneBldg12" red="114" green="104" blue="84" terrain="Stone Building" elevation="0" />
-		<color name="StoneBldg13" red="116" green="104" blue="73" terrain="Stone Building" elevation="0" />
-		<color name="StoneBldg14" red="128" green="118" blue="87" terrain="Stone Building" elevation="0" />
-		<color name="StoneBldg15" red="128" green="120" blue="100" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldge1" red="42" green="35" blue="20" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldge2" red="52" green="41" blue="14" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldge3" red="63" green="54" blue="37" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldge4" red="69" green="54" blue="27" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldge5" red="77" green="70" blue="56" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldge6" red="79" green="67" blue="26" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldge7" red="84" green="69" blue="43" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldge8" red="85" green="62" blue="28" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldge9" red="96" green="87" blue="68" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldge10" red="100" green="86" blue="54" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldge11" red="101" green="89" blue="40" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldge12" red="114" green="104" blue="84" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldge13" red="116" green="104" blue="73" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldge14" red="128" green="118" blue="87" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldge15" red="128" green="120" blue="100" terrain="Stone Building" elevation="0" />
 
 		<color name="DirtRd01L0" red="165" green="117" blue="43" terrain="Dirt Road" elevation="0" />
 		<color name="DirtRd02L0" red="144" green="130" blue="38" terrain="Dirt Road" elevation="0" />
