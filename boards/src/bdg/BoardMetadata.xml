@@ -24,7 +24,7 @@
 -->
 <boardMetadata 
 	name="g" 
-	version="6.4" 
+	version="6.5" 
 	versionDate="Dec 2023" 
 	author="TR" 
 	boardImageFileName="bdg.gif" 
@@ -393,37 +393,37 @@
 		<color name="SwampColor7" red="135" green="137" blue="19" terrain="Swamp" elevation="UNKNOWN" />
 		<color name="SwampColor8" red="156" green="153" blue="65" terrain="Swamp" elevation="UNKNOWN" />
 
-		<color name="StoneBldg1" red="59" green="40" blue="19" terrain="Stone Building" elevation="UNKNOWN" />
-		<color name="StoneBldg2" red="96" green="75" blue="44" terrain="Stone Building" elevation="UNKNOWN" />
-		<color name="StoneBldg3" red="101" green="81" blue="35" terrain="Stone Building" elevation="UNKNOWN" />
-		<color name="StoneBldg4" red="113" green="101" blue="21" terrain="Stone Building" elevation="UNKNOWN" />
-		<color name="StoneBldg5" red="114" green="101" blue="30" terrain="Stone Building" elevation="UNKNOWN" />
-		<color name="StoneBldg6" red="117" green="99" blue="45" terrain="Stone Building" elevation="UNKNOWN" />
-		<color name="StoneBldg7" red="118" green="99" blue="59" terrain="Stone Building" elevation="UNKNOWN" />
-		<color name="StoneBldg8" red="118" green="100" blue="71" terrain="Stone Building" elevation="UNKNOWN" />
-		<color name="StoneBldg9" red="131" green="116" blue="60" terrain="Stone Building" elevation="UNKNOWN" />
-		<color name="StoneBldg10" red="133" green="117" blue="72" terrain="Stone Building" elevation="UNKNOWN" />
-		<color name="StoneBldg11" red="134" green="119" blue="82" terrain="Stone Building" elevation="UNKNOWN" />
-		<color name="StoneBldg12" red="135" green="120" blue="93" terrain="Stone Building" elevation="UNKNOWN" />
-		<color name="StoneBldg13" red="147" green="135" blue="85" terrain="Stone Building" elevation="UNKNOWN" />
-		<color name="StoneBldg14" red="148" green="135" blue="98" terrain="Stone Building" elevation="UNKNOWN" />
-		<color name="StoneBldg15" red="152" green="140" blue="113" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgg1" red="59" green="40" blue="19" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgg2" red="96" green="75" blue="44" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgg3" red="101" green="81" blue="35" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgg4" red="113" green="101" blue="21" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgg5" red="114" green="101" blue="30" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgg6" red="117" green="99" blue="45" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgg7" red="118" green="99" blue="59" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgg8" red="118" green="100" blue="71" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgg9" red="131" green="116" blue="60" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgg10" red="133" green="117" blue="72" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgg11" red="134" green="119" blue="82" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgg12" red="135" green="120" blue="93" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgg13" red="147" green="135" blue="85" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgg14" red="148" green="135" blue="98" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgg15" red="152" green="140" blue="113" terrain="Stone Building" elevation="UNKNOWN" />
 
-		<color name="WoodBldg1" red="83" green="51" blue="35" terrain="Wooden Building" elevation="UNKNOWN" />
-		<color name="WoodBldg2" red="86" green="58" blue="29" terrain="Wooden Building" elevation="UNKNOWN" />
-		<color name="WoodBldg3" red="96" green="56" blue="33" terrain="Wooden Building" elevation="UNKNOWN" />
-		<color name="WoodBldg4" red="105" green="74" blue="40" terrain="Wooden Building" elevation="UNKNOWN" />
-		<color name="WoodBldg5" red="108" green="67" blue="42" terrain="Wooden Building" elevation="UNKNOWN" />
-		<color name="WoodBldg6" red="112" green="69" blue="36" terrain="Wooden Building" elevation="UNKNOWN" />
-		<color name="WoodBldg7" red="117" green="75" blue="47" terrain="Wooden Building" elevation="UNKNOWN" />
-		<color name="WoodBldg8" red="119" green="68" blue="45" terrain="Wooden Building" elevation="UNKNOWN" />
-		<color name="WoodBldg9" red="122" green="77" blue="42" terrain="Wooden Building" elevation="UNKNOWN" />
-		<color name="WoodBldg10" red="124" green="90" blue="49" terrain="Wooden Building" elevation="UNKNOWN" />
-		<color name="WoodBldg11" red="125" green="72" blue="42" terrain="Wooden Building" elevation="UNKNOWN" />
-		<color name="WoodBldg12" red="128" green="71" blue="49" terrain="Wooden Building" elevation="UNKNOWN" />
-		<color name="WoodBldg13" red="130" green="72" blue="43" terrain="Wooden Building" elevation="UNKNOWN" />
-		<color name="WoodBldg14" red="135" green="86" blue="50" terrain="Wooden Building" elevation="UNKNOWN" />
-		<color name="WoodBldg15" red="139" green="80" blue="48" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgg1" red="83" green="51" blue="35" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgg2" red="86" green="58" blue="29" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgg3" red="96" green="56" blue="33" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgg4" red="105" green="74" blue="40" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgg5" red="108" green="67" blue="42" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgg6" red="112" green="69" blue="36" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgg7" red="117" green="75" blue="47" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgg8" red="119" green="68" blue="45" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgg9" red="122" green="77" blue="42" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgg10" red="124" green="90" blue="49" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgg11" red="125" green="72" blue="42" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgg12" red="128" green="71" blue="49" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgg13" red="130" green="72" blue="43" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgg14" red="135" green="86" blue="50" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgg15" red="139" green="80" blue="48" terrain="Wooden Building" elevation="UNKNOWN" />
 
 		<color name="BridgeBrown" red="115" green="100" blue="52" terrain="Single Hex Stone Bridge" elevation="UNKNOWN" />
 		<color name="BridgeGrey1" red="145" green="135" blue="89" terrain="Single Hex Stone Bridge" elevation="UNKNOWN" />

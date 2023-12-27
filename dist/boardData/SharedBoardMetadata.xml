@@ -1051,6 +1051,71 @@
 		<color name="StoneBldg14Winter" red="231" green="231" blue="231" terrain="Stone Building" elevation="UNKNOWN" />
 		<color name="StoneBldg15Winter" red="247" green="247" blue="247" terrain="Stone Building" elevation="UNKNOWN" />
 		<color name="StoneRowhouseBarWinter" red="71" green="70" blue="70" terrain="Rowhouse Wall, 1 Level" elevation="UNKNOWN" />
+		<!-- bde -->
+		<color name="StoneBldge1" red="42" green="35" blue="20" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldge2" red="52" green="41" blue="14" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldge3" red="63" green="54" blue="37" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldge4" red="69" green="54" blue="27" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldge5" red="77" green="70" blue="56" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldge6" red="79" green="67" blue="26" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldge7" red="84" green="69" blue="43" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldge8" red="85" green="62" blue="28" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldge9" red="96" green="87" blue="68" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldge10" red="100" green="86" blue="54" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldge11" red="101" green="89" blue="40" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldge12" red="114" green="104" blue="84" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldge13" red="116" green="104" blue="73" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldge14" red="128" green="118" blue="87" terrain="Stone Building" elevation="0" />
+		<color name="StoneBldge15" red="128" green="120" blue="100" terrain="Stone Building" elevation="0" />
+		<!-- bdf -->
+		<color name="StoneBldgf1" red="39" green="30" blue="16" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgf2" red="51" green="40" blue="12" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgf3" red="59" green="31" blue="20" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgf4" red="68" green="52" blue="29" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgf5" red="81" green="65" blue="27" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgf6" red="86" green="54" blue="40" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgf7" red="86" green="68" blue="44" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgf8" red="92" green="58" blue="32" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgf9" red="103" green="86" blue="60" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgf10" red="103" green="87" blue="74" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgf11" red="104" green="88" blue="43" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgf12" red="111" green="79" blue="62" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgf13" red="119" green="103" blue="78" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgf14" red="121" green="104" blue="90" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgf15" red="135" green="120" blue="102" terrain="Stone Building" elevation="UNKNOWN" />
+		<!-- bdg -->
+		<color name="StoneBldgg1" red="59" green="40" blue="19" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgg2" red="96" green="75" blue="44" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgg3" red="101" green="81" blue="35" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgg4" red="113" green="101" blue="21" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgg5" red="114" green="101" blue="30" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgg6" red="117" green="99" blue="45" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgg7" red="118" green="99" blue="59" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgg8" red="118" green="100" blue="71" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgg9" red="131" green="116" blue="60" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgg10" red="133" green="117" blue="72" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgg11" red="134" green="119" blue="82" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgg12" red="135" green="120" blue="93" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgg13" red="147" green="135" blue="85" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgg14" red="148" green="135" blue="98" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgg15" red="152" green="140" blue="113" terrain="Stone Building" elevation="UNKNOWN" />
+		<!-- bdh -->
+		<color name="StoneBldgh1" red="59" green="42" blue="10" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgh2" red="81" green="62" blue="13" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgh3" red="98" green="80" blue="19" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgh4" red="115" green="97" blue="32" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgh5" red="119" green="101" blue="20" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgh6" red="125" green="123" blue="37" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgh7" red="131" green="117" blue="48" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgh8" red="133" green="117" blue="36" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgh9" red="135" green="109" blue="31" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgh10" red="135" green="118" blue="25" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgh11" red="138" green="123" blue="19" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgh12" red="148" green="136" blue="38" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgh13" red="148" green="137" blue="55" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgh14" red="148" green="137" blue="65" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgh15" red="160" green="152" blue="70" terrain="Stone Building" elevation="UNKNOWN" />
+
 		<!-- Streams  -->
 		<color name="StreamBrown" red="98" green="61" blue="19" terrain="Shallow Stream" elevation="UNKNOWN" />
 		<color name="StreamGreen1" red="117" green="124" blue="55" terrain="Shallow Stream" elevation="UNKNOWN" />
@@ -1113,6 +1178,38 @@
 		<color name="WoodBldg14Winter" red="206" green="181" blue="165" terrain="Wooden Building" elevation="UNKNOWN" />
 		<color name="WoodBldg15Winter" red="206" green="189" blue="165" terrain="Wooden Building" elevation="UNKNOWN" />
 		<color name="WoodRowhouseBarWinter" red="72" green="70" blue="70" terrain="Rowhouse Wall, 1 Level" elevation="UNKNOWN" />
+		<!-- bdg -->
+		<color name="WoodBldgg1" red="83" green="51" blue="35" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgg2" red="86" green="58" blue="29" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgg3" red="96" green="56" blue="33" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgg4" red="105" green="74" blue="40" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgg5" red="108" green="67" blue="42" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgg6" red="112" green="69" blue="36" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgg7" red="117" green="75" blue="47" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgg8" red="119" green="68" blue="45" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgg9" red="122" green="77" blue="42" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgg10" red="124" green="90" blue="49" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgg11" red="125" green="72" blue="42" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgg12" red="128" green="71" blue="49" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgg13" red="130" green="72" blue="43" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgg14" red="135" green="86" blue="50" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgg15" red="139" green="80" blue="48" terrain="Wooden Building" elevation="UNKNOWN" />
+		<!-- bdh -->
+		<color name="WoodBldgh1" red="59" green="33" blue="12" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgh2" red="70" green="41" blue="9" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgh3" red="78" green="54" blue="14" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgh4" red="82" green="49" blue="17" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgh5" red="87" green="53" blue="12" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgh6" red="90" green="69" blue="18" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgh7" red="96" green="64" blue="21" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgh8" red="99" green="67" blue="10" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgh9" red="108" green="84" blue="27" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgh10" red="109" green="86" blue="17" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgh11" red="110" green="78" blue="26" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgh12" red="122" green="100" blue="23" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgh13" red="122" green="97" blue="38" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgh14" red="123" green="99" blue="32" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgh15" red="132" green="111" blue="39" terrain="Wooden Building" elevation="UNKNOWN" />
 		<!-- Woods and Jungle  -->
 		<color name="WoodsGreen" red="85" green="95" blue="45" terrain="Woods" elevation="UNKNOWN" />
 		<color name="WoodsBlack" red="44" green="42" blue="22" terrain="Woods" elevation="UNKNOWN" />
@@ -1662,6 +1759,38 @@
 			<colorMap fromColor="WoodBldg14" toColor="StoneBldg14"/>
 			<colorMap fromColor="WoodBldg15" toColor="StoneBldg15"/>
 			<colorMap fromColor="WoodStairwell" toColor="StoneStairwell"/>
+			<!-- bdg -->
+			<colorMap fromColor="WoodBldgg1" toColor="StoneBldg1"/>
+			<colorMap fromColor="WoodBldgg2" toColor="StoneBldg2"/>
+			<colorMap fromColor="WoodBldgg3" toColor="StoneBldg3"/>
+			<colorMap fromColor="WoodBldgg4" toColor="StoneBldg4"/>
+			<colorMap fromColor="WoodBldgg5" toColor="StoneBldg5"/>
+			<colorMap fromColor="WoodBldgg6" toColor="StoneBldg6"/>
+			<colorMap fromColor="WoodBldgg7" toColor="StoneBldg7"/>
+			<colorMap fromColor="WoodBldgg8" toColor="StoneBldg8"/>
+			<colorMap fromColor="WoodBldgg9" toColor="StoneBldg9"/>
+			<colorMap fromColor="WoodBldgg10" toColor="StoneBldg10"/>
+			<colorMap fromColor="WoodBldgg11" toColor="StoneBldg11"/>
+			<colorMap fromColor="WoodBldgg12" toColor="StoneBldg12"/>
+			<colorMap fromColor="WoodBldgg13" toColor="StoneBldg13"/>
+			<colorMap fromColor="WoodBldgg14" toColor="StoneBldg14"/>
+			<colorMap fromColor="WoodBldgg15" toColor="StoneBldg15"/>
+			<!-- bdh -->
+			<colorMap fromColor="WoodBldgh1" toColor="StoneBldg1"/>
+			<colorMap fromColor="WoodBldgh2" toColor="StoneBldg2"/>
+			<colorMap fromColor="WoodBldgh3" toColor="StoneBldg3"/>
+			<colorMap fromColor="WoodBldgh4" toColor="StoneBldg4"/>
+			<colorMap fromColor="WoodBldgh5" toColor="StoneBldg5"/>
+			<colorMap fromColor="WoodBldgh6" toColor="StoneBldg6"/>
+			<colorMap fromColor="WoodBldgh7" toColor="StoneBldg7"/>
+			<colorMap fromColor="WoodBldgh8" toColor="StoneBldg8"/>
+			<colorMap fromColor="WoodBldgh9" toColor="StoneBldg9"/>
+			<colorMap fromColor="WoodBldgh10" toColor="StoneBldg10"/>
+			<colorMap fromColor="WoodBldgh11" toColor="StoneBldg11"/>
+			<colorMap fromColor="WoodBldgh12" toColor="StoneBldg12"/>
+			<colorMap fromColor="WoodBldgh13" toColor="StoneBldg13"/>
+			<colorMap fromColor="WoodBldgh14" toColor="StoneBldg14"/>
+			<colorMap fromColor="WoodBldgh15" toColor="StoneBldg15"/>
 		</colorSSR>
 		<colorSSR name="AllWood">
 			<colorMap fromColor="StoneBldg1" toColor="WoodBldg1"/>
@@ -1680,6 +1809,70 @@
 			<colorMap fromColor="StoneBldg14" toColor="WoodBldg14"/>
 			<colorMap fromColor="StoneBldg15" toColor="WoodBldg15"/>
 			<colorMap fromColor="StoneStairwell" toColor="WoodStairwell"/>
+			<!-- bde -->
+			<colorMap fromColor="StoneBldge1" toColor="WoodBldg1"/>
+			<colorMap fromColor="StoneBldge2" toColor="WoodBldg2"/>
+			<colorMap fromColor="StoneBldge3" toColor="WoodBldg3"/>
+			<colorMap fromColor="StoneBldge4" toColor="WoodBldg4"/>
+			<colorMap fromColor="StoneBldge5" toColor="WoodBldg5"/>
+			<colorMap fromColor="StoneBldge6" toColor="WoodBldg6"/>
+			<colorMap fromColor="StoneBldge7" toColor="WoodBldg7"/>
+			<colorMap fromColor="StoneBldge8" toColor="WoodBldg8"/>
+			<colorMap fromColor="StoneBldge9" toColor="WoodBldg9"/>
+			<colorMap fromColor="StoneBldge10" toColor="WoodBldg10"/>
+			<colorMap fromColor="StoneBldge11" toColor="WoodBldg11"/>
+			<colorMap fromColor="StoneBldge12" toColor="WoodBldg12"/>
+			<colorMap fromColor="StoneBldge13" toColor="WoodBldg13"/>
+			<colorMap fromColor="StoneBldge14" toColor="WoodBldg14"/>
+			<colorMap fromColor="StoneBldge15" toColor="WoodBldg15"/>
+			<!-- bdf -->
+			<colorMap fromColor="StoneBldgf1" toColor="WoodBldg1"/>
+			<colorMap fromColor="StoneBldgf2" toColor="WoodBldg2"/>
+			<colorMap fromColor="StoneBldgf3" toColor="WoodBldg3"/>
+			<colorMap fromColor="StoneBldgf4" toColor="WoodBldg4"/>
+			<colorMap fromColor="StoneBldgf5" toColor="WoodBldg5"/>
+			<colorMap fromColor="StoneBldgf6" toColor="WoodBldg6"/>
+			<colorMap fromColor="StoneBldgf7" toColor="WoodBldg7"/>
+			<colorMap fromColor="StoneBldgf8" toColor="WoodBldg8"/>
+			<colorMap fromColor="StoneBldgf9" toColor="WoodBldg9"/>
+			<colorMap fromColor="StoneBldgf10" toColor="WoodBldg10"/>
+			<colorMap fromColor="StoneBldgf11" toColor="WoodBldg11"/>
+			<colorMap fromColor="StoneBldgf12" toColor="WoodBldg12"/>
+			<colorMap fromColor="StoneBldgf13" toColor="WoodBldg13"/>
+			<colorMap fromColor="StoneBldgf14" toColor="WoodBldg14"/>
+			<colorMap fromColor="StoneBldgf15" toColor="WoodBldg15"/>
+			<!-- bdg -->
+			<colorMap fromColor="StoneBldgg1" toColor="WoodBldg1"/>
+			<colorMap fromColor="StoneBldgg2" toColor="WoodBldg2"/>
+			<colorMap fromColor="StoneBldgg3" toColor="WoodBldg3"/>
+			<colorMap fromColor="StoneBldgg4" toColor="WoodBldg4"/>
+			<colorMap fromColor="StoneBldgg5" toColor="WoodBldg5"/>
+			<colorMap fromColor="StoneBldgg6" toColor="WoodBldg6"/>
+			<colorMap fromColor="StoneBldgg7" toColor="WoodBldg7"/>
+			<colorMap fromColor="StoneBldgg8" toColor="WoodBldg8"/>
+			<colorMap fromColor="StoneBldgg9" toColor="WoodBldg9"/>
+			<colorMap fromColor="StoneBldgg10" toColor="WoodBldg10"/>
+			<colorMap fromColor="StoneBldgg11" toColor="WoodBldg11"/>
+			<colorMap fromColor="StoneBldgg12" toColor="WoodBldg12"/>
+			<colorMap fromColor="StoneBldgg13" toColor="WoodBldg13"/>
+			<colorMap fromColor="StoneBldgg14" toColor="WoodBldg14"/>
+			<colorMap fromColor="StoneBldgg15" toColor="WoodBldg15"/>
+			<!-- bdh -->
+			<colorMap fromColor="StoneBldgh1" toColor="WoodBldg1"/>
+			<colorMap fromColor="StoneBldgh2" toColor="WoodBldg2"/>
+			<colorMap fromColor="StoneBldgh3" toColor="WoodBldg3"/>
+			<colorMap fromColor="StoneBldgh4" toColor="WoodBldg4"/>
+			<colorMap fromColor="StoneBldgh5" toColor="WoodBldg5"/>
+			<colorMap fromColor="StoneBldgh6" toColor="WoodBldg6"/>
+			<colorMap fromColor="StoneBldgh7" toColor="WoodBldg7"/>
+			<colorMap fromColor="StoneBldgh8" toColor="WoodBldg8"/>
+			<colorMap fromColor="StoneBldgh9" toColor="WoodBldg9"/>
+			<colorMap fromColor="StoneBldgh10" toColor="WoodBldg10"/>
+			<colorMap fromColor="StoneBldgh11" toColor="WoodBldg11"/>
+			<colorMap fromColor="StoneBldgh12" toColor="WoodBldg12"/>
+			<colorMap fromColor="StoneBldgh13" toColor="WoodBldg13"/>
+			<colorMap fromColor="StoneBldgh14" toColor="WoodBldg14"/>
+			<colorMap fromColor="StoneBldgh15" toColor="WoodBldg15"/>
 		</colorSSR>
 		<colorSSR name="BrushToOpenGround">
 			<colorMap fromColor="BrushL0" toColor="Level0"/>

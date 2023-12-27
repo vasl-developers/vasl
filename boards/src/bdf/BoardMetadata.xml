@@ -24,7 +24,7 @@
 -->
 <boardMetadata 
 	name="f" 
-	version="6.3" 
+	version="6.4" 
 	versionDate="Apr 2022" 
 	author="TR" 
 	boardImageFileName="bdf.gif" 
@@ -266,21 +266,21 @@
 		<color name="DirtRoadColor14" red="185" green="147" blue="45" terrain="Dirt Road" elevation="UNKNOWN" />
 		<color name="DirtRoadColor15" red="198" green="165" blue="90" terrain="Dirt Road" elevation="UNKNOWN" />
 		
-		<color name="StoneBldg1" red="39" green="30" blue="16" terrain="Stone Building" elevation="UNKNOWN" />
-		<color name="StoneBldg2" red="51" green="40" blue="12" terrain="Stone Building" elevation="UNKNOWN" />
-		<color name="StoneBldg3" red="59" green="31" blue="20" terrain="Stone Building" elevation="UNKNOWN" />
-		<color name="StoneBldg4" red="68" green="52" blue="29" terrain="Stone Building" elevation="UNKNOWN" />
-		<color name="StoneBldg5" red="81" green="65" blue="27" terrain="Stone Building" elevation="UNKNOWN" />
-		<color name="StoneBldg6" red="86" green="54" blue="40" terrain="Stone Building" elevation="UNKNOWN" />
-		<color name="StoneBldg7" red="86" green="68" blue="44" terrain="Stone Building" elevation="UNKNOWN" />
-		<color name="StoneBldg8" red="92" green="58" blue="32" terrain="Stone Building" elevation="UNKNOWN" />
-		<color name="StoneBldg9" red="103" green="86" blue="60" terrain="Stone Building" elevation="UNKNOWN" />
-		<color name="StoneBldg10" red="103" green="87" blue="74" terrain="Stone Building" elevation="UNKNOWN" />
-		<color name="StoneBldg11" red="104" green="88" blue="43" terrain="Stone Building" elevation="UNKNOWN" />
-		<color name="StoneBldg12" red="111" green="79" blue="62" terrain="Stone Building" elevation="UNKNOWN" />
-		<color name="StoneBldg13" red="119" green="103" blue="78" terrain="Stone Building" elevation="UNKNOWN" />
-		<color name="StoneBldg14" red="121" green="104" blue="90" terrain="Stone Building" elevation="UNKNOWN" />
-		<color name="StoneBldg15" red="135" green="120" blue="102" terrain="Stone Building" elevation="UNKNOWN" />		
+		<color name="StoneBldgf1" red="39" green="30" blue="16" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgf2" red="51" green="40" blue="12" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgf3" red="59" green="31" blue="20" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgf4" red="68" green="52" blue="29" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgf5" red="81" green="65" blue="27" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgf6" red="86" green="54" blue="40" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgf7" red="86" green="68" blue="44" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgf8" red="92" green="58" blue="32" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgf9" red="103" green="86" blue="60" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgf10" red="103" green="87" blue="74" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgf11" red="104" green="88" blue="43" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgf12" red="111" green="79" blue="62" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgf13" red="119" green="103" blue="78" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgf14" red="121" green="104" blue="90" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgf15" red="135" green="120" blue="102" terrain="Stone Building" elevation="UNKNOWN" />		
 	</colors>
 	
 	<colorSSRules>
