@@ -42,7 +42,6 @@ public class ASLImageSaver extends VASSAL.build.module.map.ImageSaver
         };
         
         m_MenuItem = new JMenuItem(getLaunchButton().getToolTipText());
-        //m_MenuItem.addActionListener(getLaunchButton().getListeners(ActionListener.class)[0]);
         m_MenuItem.addActionListener(e -> apply());
        getLaunchButton().addPropertyChangeListener(propertyChangeListener);
      }
@@ -60,6 +59,7 @@ public class ASLImageSaver extends VASSAL.build.module.map.ImageSaver
       ((ASLMap)map).getPopupMenu().add(m_MenuItem);
   }
 
+   // gives user same choice as with save-as-text-file to use player view or opponent view
   public void apply(){
       switch (JOptionPane.showConfirmDialog(GameModule.getGameModule().getPlayerWindow(), Resources.getString("Editor.TextSaver.by_opponents"), "", JOptionPane.YES_NO_OPTION)) {
           case JOptionPane.NO_OPTION:
