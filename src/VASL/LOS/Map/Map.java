@@ -2005,19 +2005,16 @@ public class Map  {
                 && (!status.currentHex.equals(status.targetHex) && (status.range != status.rangeToSource || (status.range == status.rangeToSource && !status.target.isCenterLocation()))) ||
                 (status.currentHex.equals(status.sourceHex) && !status.currentTerrain.isOpen() && !status.currentTerrain.isHexsideTerrain() && !status.source.isCenterLocation()) ||
                 (status.currentHex.equals(status.targetHex) && !status.currentTerrain.isOpen() && !status.currentTerrain.isHexsideTerrain() && !status.target.isCenterLocation()) ||
-                // DR added this Jan 2017 to correct error in bypass check when LOS is along the hexside in the targethex
+                //added this Jan 2017 to correct error in bypass check when LOS is along the hexside in the targethex
                 ((status.range == status.rangeToSource && (status.LOSis60Degree || status.LOSisHorizontal)) & !status.currentTerrain.isOpen() && !status.currentTerrain.isHexsideTerrain() && !status.target.isCenterLocation()))) {
-
             // ignore inherent terrain that "spills" into adjacent hex
             if(status.currentTerrain.isInherentTerrain() && !status.currentHex.getCenterLocation().getTerrain().equals(status.currentTerrain)) {
-
                 // ignore this check when terrain counter is present
                 if(status.vaslGameInterface == null  || (status.vaslGameInterface != null && status.vaslGameInterface.getTerrain(status.currentHex) == null)){
                     // need to hack to handle inherent terrain half hexes abutting another map where the other half-hex determines centerLocation terrain (board down or to the right
                     if (inherentspilltest(status)){
                         return false;
                     }
-
                 }
             }
 
@@ -3118,7 +3115,7 @@ public class Map  {
         // test for Hindrance later; this ensures that plateau effect is tested properly
         if ("Orchard, Out of Season".equals(status.currentTerrain.getName())) { obstacleadj=-1.0;}
 
-        // enables LOS from/to verticies in depression hexes where unit is at higher level than base elevation of the hex
+        // enables LOS from/to vertices in depression hexes where unit is at higher level than base elevation of the hex
         if(status.sourceHex.isDepressionTerrain() && !status.source.isCenterLocation()) {
             sourceadj=+1;
         }
@@ -3143,7 +3140,11 @@ public class Map  {
                     status.targetHex.getHexCenter().distance(status.currentCol, status.currentRow)  < status.targetHex.getHexCenter().distance(status.currentHex.getHexCenter().getX(), status.currentHex.getHexCenter().getY())) {
                 return false;
             }
-
+            // special case to ignore inhex LOSH terrain in source/target hex when los to vertex
+            if(status.rangeToSource==0 || status.rangeToTarget==0){
+                if(status.currentTerrain.isLowerLOSHindrance() || status.currentTerrain.isLOSHindrance()){
+                    return false;} // LOSH in target/source to/from vertex does not block LOS or add LOSH
+            }
             // can ignore this rule for slopes/hillocks - handled by blind hex rule
             if(status.slopes || status.startsOnHillock || status.endsOnHillock) {
                 return false;
@@ -3312,8 +3313,14 @@ public class Map  {
 
         if (status.groundLevel + status.currentTerrainHgt + obstacleadj > status.sourceElevation + sourceadj &&
                 status.groundLevel + status.currentTerrainHgt + obstacleadj > status.targetElevation + targetadj) {
-
-            // terrain blocks LOS?
+            //test for in source or target
+            if ((status.targetHex.equals(status.currentHex)|| status.sourceHex.equals(status.currentHex)) &&
+                    // are there any other 1 level hindrances
+                    (status.currentTerrain.getName().equals("Orchard") || status.currentTerrain.getName().equals("Palm Trees") ||
+                    status.currentTerrain.getName().equals("Light Woods"))){
+                return false; //LOSH terrain in vertex hex does not block LOS from/to vertex
+            }
+            // terrain blocks LOS
             if (status .currentTerrain.isLOSObstacle() && !status.currentTerrain.getName().contains("Light Woods")) {
                 status.reason = "Terrain is higher than both the source and target (A6.2)";
                 status.blocked = true;

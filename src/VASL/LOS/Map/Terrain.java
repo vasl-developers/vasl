@@ -134,6 +134,10 @@ public class Terrain {
         this.LOSObstacle = LOSObstacle;
     }
 
+    public boolean isLOSHindrance() {
+        return LOSHindrance;
+    }
+
     /**
      * Set the LOS hindrance flag
      * @param LOSHindrance the new LOS hindrance flag
