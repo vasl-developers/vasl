@@ -40,7 +40,7 @@
 		<boarddata name="08" version="6.8" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="09" version="6.7" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="10" version="6.8" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="10z" version="7.0" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="10z" version="7.1" versionDate="Jan 2024" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="11" version="6.5" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="12" version="6.8" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="13" version="6.9" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
@@ -64,7 +64,7 @@
 		<boarddata name="29" version="6.6" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="30" version="6.6" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="31" version="6.6" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="32" version="7.1" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="32" version="7.2" versionDate="Jan 2024" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="33" version="6.7" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="34" version="6.9" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="35" version="6.5" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
@@ -79,7 +79,7 @@
 		<boarddata name="44" version="6.7" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="45" version="6.8" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="46" version="6.7" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="47" version="7.2" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="47" version="7.3" versionDate="Jan 2024" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="48" version="6.6" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="49" version="6.7" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="50" version="7.0" versionDate="Apr 2022" description="" boardType="Geoboard" publisher="MMP" issued="" />
