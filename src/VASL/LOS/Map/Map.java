@@ -2897,22 +2897,20 @@ public class Map  {
             return false;
         }
         // special case for cliffs - need to trigger blind hex check unless LOS is along hexside DR
-        //int cliffadj=0;
-        //if(status.currentTerrain.isCliff()) {
-        //    cliffadj = 1;
-        //}
         if ((status.currentTerrain.isCliff()) || (status.groundLevel + status.currentTerrainHgt > Math.min(status.sourceElevation + sourceadj, status.targetElevation + targetadj) &&
                 status.groundLevel + status.currentTerrainHgt < Math.max(status.sourceElevation + sourceadj, status.targetElevation + targetadj)
                 )) {
 
             // perform cliff hexside test
             //  false and -99 are default values when no cliff present or no ajustment required; adjustment reflects lower terrain when LOS along cliff hexside
-            int cliffHexsideTerrainHeightadjustment=-99;
+            int cliffHexsideTerrainHeightadjustment=-99; boolean cliffalonghexsideinthishex = false;
             if(status.LOSis60Degree || status.LOSisHorizontal) {  //need hexside to be cliff
                 if (status.rangeToSource % 2 != 0) { // at odd range check for cliff
                     int x = getHexsideWhenLOSAlongHexside(status);
                     // if cliff then check if hex with lower terrain block
                     if(x !=-1 && status.currentHex.getHexsideLocation(x).getTerrain().isCliff()) {
+                        //set cliffalonghexside variable - no block even if adjoining cliff
+                        cliffalonghexsideinthishex = true;
                         Hex temp = getAdjacentHex(status.currentHex, x);
                         // ignore any source/target hex
                         if(!temp.equals(status.sourceHex) && !temp.equals(status.targetHex)){
@@ -2921,7 +2919,26 @@ public class Map  {
                     }
                 }
             }
-            if (isBlindHex(status, status.currentTerrainHgt, nearestHexsideIsCliff(status.currentCol, status.currentRow, status, result), cliffHexsideTerrainHeightadjustment)) {
+            // test if cliff hexside is part of source; if so, ignore
+            boolean isCliffHexside = false;
+            if(status.currentTerrain.isCliff()){
+                isCliffHexside= true;
+                for (int x=0; x<2; x++){
+                    if(x != -1) {
+                        if (getAdjacentHex(status.sourceHex, status.sourceExitHexsides[x]).equals(status.currentHex)) {
+                            Location oppositeLocation = status.currentHex.getHexsideLocation(Hex.getOppositeHexside(status.sourceExitHexsides[x]));
+                            if (oppositeLocation.getTerrain().isCliff() &&
+                                // need to check if the los point (x,y) is actually in this location
+                                oppositeLocation.getEdgeCenterPoint().distance(status.currentCol, status.currentRow)  < status.currentHex.getHexCenter().distance(status.currentCol, status.currentRow)) {
+                                isCliffHexside = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+            }; //.nearestHexsideIsCliff(status.currentCol, status.currentRow, status, result);
+            if (isBlindHex(status, status.currentTerrainHgt, isCliffHexside, cliffHexsideTerrainHeightadjustment)) {
 
                 // blocked if terrain is obstacle and not hexsides such as Rowhouse or Interior Factory Walls (handled in checkHexsideTerrainRule) DR
                 if ((status.currentTerrain.isLOSObstacle() && !status.currentTerrain.isHexsideTerrain()) || (status.currentTerrain.isOutsideFactoryWall()) ) {
@@ -3044,7 +3061,7 @@ public class Map  {
                     }
                 }
                 // see if ground level alone creates blind hex
-                else if ((status.currentTerrain.isCliff()) ||(status.groundLevel > Math.min(status.sourceElevation + sourceadj, status.targetElevation + targetadj) &&
+                else if ((isCliffHexside && !cliffalonghexsideinthishex) ||(status.groundLevel > Math.min(status.sourceElevation + sourceadj, status.targetElevation + targetadj) &&
                         status.groundLevel  < Math.max(status.sourceElevation + sourceadj, status.targetElevation + targetadj) &&
                         isBlindHex(status, 0, false, 0))){ //nearestHexsideIsCliff(status.currentCol, status.currentRow, status, result), cliffHexsideTerrainHeightadjustment))) {
 
@@ -3067,7 +3084,7 @@ public class Map  {
                         }
                     }
                     // code added by DR to handle LOS over roofless factory; no hindrance from higher elevation
-                    else if (status.currentTerrain.getLOSCategory() == Terrain.LOSCategories.FACTORY || status.currentTerrain.getLOSCategory() == Terrain.LOSCategories.OPEN)
+                    else if (isCliffHexside || status.currentTerrain.getLOSCategory() == Terrain.LOSCategories.FACTORY || status.currentTerrain.getLOSCategory() == Terrain.LOSCategories.OPEN)
                         return false;
                     else {
                         // add hindrance
@@ -3315,10 +3332,20 @@ public class Map  {
                 status.groundLevel + status.currentTerrainHgt + obstacleadj > status.targetElevation + targetadj) {
             //test for in source or target
             if ((status.targetHex.equals(status.currentHex)|| status.sourceHex.equals(status.currentHex)) &&
-                    // are there any other 1 level hindrances
+                    // are there any other 1 level hindrances?
                     (status.currentTerrain.getName().equals("Orchard") || status.currentTerrain.getName().equals("Palm Trees") ||
-                    status.currentTerrain.getName().equals("Light Woods"))){
+                    status.currentTerrain.getName().equals("Light Woods"))) {
                 return false; //LOSH terrain in vertex hex does not block LOS from/to vertex
+            } else if ((status.LOSis60Degree || status.LOSisHorizontal) && status.rangeToSource % 2 != 0){ // range is odd
+                    int x = getHexsideWhenLOSAlongHexside(status);
+                    if(x !=-1 ) {
+                        Hex temp = getAdjacentHex(status.currentHex, x);
+                        if ((status.targetHex.equals(temp)|| status.sourceHex.equals(temp)) &&
+                            (status.currentTerrain.getName().equals("Orchard") || status.currentTerrain.getName().equals("Palm Trees") ||
+                            status.currentTerrain.getName().equals("Light Woods"))){
+                            return false;
+                        }
+                    }
             }
             // terrain blocks LOS
             if (status .currentTerrain.isLOSObstacle() && !status.currentTerrain.getName().contains("Light Woods")) {
@@ -4333,7 +4360,9 @@ public class Map  {
             if (rangeToSource==1 || rangeToTarget==1){
                 if (sourceElevation > status.currentHex.getBaseHeight() && targetElevation > status.currentHex.getBaseHeight()) {return false;}
             }
-
+            if (status.currentHex.getBaseHeight() > status.groundLevel){
+                groundLevel = status.currentHex.getBaseHeight();
+            }
         } else if(isCliffHexside && (status.LOSis60Degree || status.LOSisHorizontal)) {
             // -99 is default value when no ajustment required; adjustment reflects lower terrain whey LOS along cliff hexside
             if (cliffHexsideTerrainHeightadjustment !=-99) {groundLevel=cliffHexsideTerrainHeightadjustment;}
@@ -4358,7 +4387,7 @@ public class Map  {
         }
 
         // is the obstacle a non-cliff crest line?
-        if (terrainHeight == 0 && (!isCliffHexside) ||(isCliffHexside && status.previousHex.equals(status.sourceHex) )) {
+        if (terrainHeight == 0 && (!isCliffHexside) || (isCliffHexside && status.currentHex.equals(status.sourceHex) )) {
             int depressionadj=0;
             HashSet<Integer> sidecrossed= status.getHexsideCrossed(status.currentHex);
             Iterator<Integer> i = sidecrossed.iterator();
@@ -5532,6 +5561,8 @@ public class Map  {
                 findside=status.sourceExitHexsides[0]+3;
                 if (findside>5) {findside = findside-6;}
                 return findside;
+            } else {
+                return matchside;
             }
         } else {
             matchside =status.sourceExitHexsides[0] +3;
@@ -5542,9 +5573,11 @@ public class Map  {
                     findside = findside - 6;
                 }
                 return findside;
+            } else {
+                return matchside;
             }
         }
-        return -1;
+        //return -1;
     }
     //method added by DR in support of cropping / flipping to all columns
     public String getMapConfiguration() {
