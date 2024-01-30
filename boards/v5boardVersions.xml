@@ -466,6 +466,30 @@
 		<boarddata name="DeluxeBlank" version="1.0" versionDate="Aug 2023" description="Empty deluxe geoboard" boardType="Deluxe" publisher="VASL" issued="" />
 		<boarddata name="OpV" version="1.0" versionDate="Sep 2023" description="Riley's Road - no grain" boardType="HASL" publisher="TJ" issued="" />
 		<boarddata name="SF" version="1.1" versionDate="Dec 2023" description="Sparrow Force" boardType="HASL" publisher="MMP" issued="2023/09/17" />
+		<boarddata name="AF_AbbioPriolo" version="1.1" versionDate="Jan 2024" description="Abbio Priolo" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_BiazzaRidge" version="1.1" versionDate="Jan 2024" description="Biazza Ridge" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_Brevity OP" version="1.0" versionDate="Jan 2024" description="Brevity Assault" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_GelaFarello" version="1.0" versionDate="Jan 2024" description="Gela Farello" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_Half-North" version="1.1" versionDate="Jan 2024" description="Half-North" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_Half-South" version="1.2" versionDate="Jan 2024" description="Half-South" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_ORS_1" version="1.0" versionDate="Jan 2024" description="Orsogna" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_ORS_2" version="1.0" versionDate="Jan 2024" description="Orsogna" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_ORS_3" version="1.0" versionDate="Jan 2024" description="Orsogna" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_ORS_4" version="1.0" versionDate="Jan 2024" description="Orsogna" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_PianoLupo" version="1.1" versionDate="Jan 2024" description="Biazza Ridge" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_PonteDirillo" version="1.2" versionDate="Jan 2024" description="Biazza Ridge" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_PRK_1" version="1.0" versionDate="Jan 2024" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_PRK_2" version="1.0" versionDate="Jan 2024" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_PRK_3" version="1.0" versionDate="Jan 2024" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_PRK_4" version="1.0" versionDate="Jan 2024" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_PRK_5" version="1.0" versionDate="Jan 2024" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_PRK_A" version="1.0" versionDate="Jan 2024" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_PRK_S" version="1.0" versionDate="Jan 2024" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_PRK_Y" version="1.0" versionDate="Jan 2024" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_Sollum" version="1.1" versionDate="Jan 2024" description="Brevity Assault" boardType="HASL" publisher="AF" issued="2024/01/30" />
+
+
+
 
 	</otherBoards>
 
