@@ -8,11 +8,13 @@ package VASL.build.module.map;
 
 import VASL.build.module.ASLMap;
 import VASSAL.build.Buildable;
+import VASSAL.build.GameModule;
 import VASSAL.build.module.Map;
+import VASSAL.i18n.Resources;
 import VASSAL.tools.imageop.Op;
 import java.awt.event.ActionListener;
-import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
+import java.beans.PropertyChangeListener;
+import javax.swing.*;
 
 /**
  * This class add a menuitem to the popup manu of the ASLMap
@@ -30,7 +32,26 @@ public class ASLTextSaver extends VASSAL.build.module.map.TextSaver
     super();
     
     // copy the properties from the jbutton
-    m_MenuItem = new JMenuItem(getLaunchButton().getToolTipText());
+
+    // old code replaced wtg new Jan 2023
+      if ((getLaunchButton() != null) && getLaunchButton().getListeners(ActionListener.class).length > 0)
+      {
+          PropertyChangeListener propertyChangeListener = propertyChangeEvent -> {
+              String property = propertyChangeEvent.getPropertyName();
+
+              if ("icon".equals(property))
+                  m_MenuItem.setIcon((Icon)propertyChangeEvent.getNewValue());
+          };
+
+          m_MenuItem = new JMenuItem(getLaunchButton().getToolTipText());
+          m_MenuItem.addActionListener(e -> apply());
+          getLaunchButton().addPropertyChangeListener(propertyChangeListener);
+      }
+
+
+
+
+    /*m_MenuItem = new JMenuItem(getLaunchButton().getToolTipText());
     
     try
     {
@@ -41,7 +62,7 @@ public class ASLTextSaver extends VASSAL.build.module.map.TextSaver
         ex.printStackTrace();
     }
     
-    m_MenuItem.addActionListener(getLaunchButton().getListeners(ActionListener.class)[0]);
+    m_MenuItem.addActionListener(getLaunchButton().getListeners(ActionListener.class)[0]);*/
 }
   
   @Override
@@ -55,4 +76,17 @@ public class ASLTextSaver extends VASSAL.build.module.map.TextSaver
       // adds the menuitem to the ASLMap popup menu
      ((ASLMap)map).getPopupMenu().add(m_MenuItem);
   }
+    public void apply(){
+        switch (JOptionPane.showConfirmDialog(GameModule.getGameModule().getPlayerWindow(), Resources.getString("Editor.TextSaver.by_opponents"), "", JOptionPane.YES_NO_OPTION)) {
+            case JOptionPane.NO_OPTION:
+                writeMapAsText();
+                break;
+            case JOptionPane.YES_OPTION:
+                final String myId = GameModule.getTempUserId();
+                GameModule.setTempUserId("yendoR117"); //NON-NLS
+                writeMapAsText();
+                GameModule.setTempUserId(myId);
+                break;
+        }
+    }
 }
