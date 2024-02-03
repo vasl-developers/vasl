@@ -4,10 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cd053309-7737-4f46-bfbc-8afa2aad0e9a" name="Changes" comment="#final change for 668beta6">
+    <list default="true" id="cd053309-7737-4f46-bfbc-8afa2aad0e9a" name="Changes" comment="#1581 HL images">
       <change afterPath="$PROJECT_DIR$/src/VASL/build/module/map/ASLDragHandler.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/VASL/build/module/map/BoardDataReader.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/VASL/build/module/map/ASLPieceMover.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/VASL/build/module/map/ASLPieceMover.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/vasl.iml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -22,6 +24,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -107,6 +110,7 @@
       <workItem from="1705861375397" duration="16000" />
       <workItem from="1705862924472" duration="6462000" />
       <workItem from="1706611482243" duration="38009000" />
+      <workItem from="1706786196304" duration="13646000" />
     </task>
     <task id="LOCAL-00001" summary="#1181 save map as image update">
       <option name="closed" value="true" />
@@ -204,7 +208,23 @@
       <option name="project" value="LOCAL" />
       <updated>1706753208810</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="#1581 HL images">
+      <option name="closed" value="true" />
+      <created>1706799931059</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1706799931059</updated>
+    </task>
+    <task id="LOCAL-00014" summary="#1581 HL images">
+      <option name="closed" value="true" />
+      <created>1706800017054</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1706800017054</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -221,7 +241,8 @@
     <MESSAGE value="#1532" />
     <MESSAGE value="#1644, 1626 save map as" />
     <MESSAGE value="#final change for 668beta6" />
-    <option name="LAST_COMMIT_MESSAGE" value="#final change for 668beta6" />
+    <MESSAGE value="#1581 HL images" />
+    <option name="LAST_COMMIT_MESSAGE" value="#1581 HL images" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -241,13 +262,23 @@
           <line>3362</line>
           <option name="timeStamp" value="21" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/VASL/build/module/map/DoubleBlindViewer.java</url>
+          <line>214</line>
+          <option name="timeStamp" value="22" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/VASL/build/module/map/DoubleBlindViewer.java</url>
+          <line>326</line>
+          <option name="timeStamp" value="23" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/VASL/build/module/map/ASLPieceMover.java</url>
+          <line>677</line>
+          <option name="timeStamp" value="29" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
-    <watches-manager>
-      <configuration name="Application">
-        <watch expression="" />
-      </configuration>
-    </watches-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
