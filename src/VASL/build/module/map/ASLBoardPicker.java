@@ -1445,22 +1445,23 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 ASLBoard b = (ASLBoard) board;
                 boards.addElement(b);
                 if (b != null) {
+                    if (b.getVASLBoardArchive() != null){ // error trapping issue 1571
+                        readOptions(b.getVASLBoardArchive().getBasicNodes(), b.getVASLBoardArchive().getOptionNodes());
 
-                    readOptions(b.getVASLBoardArchive().getBasicNodes(), b.getVASLBoardArchive().getOptionNodes());
+                        for (Enumeration oEnum = b.getOverlays(); oEnum.hasMoreElements(); ) {
+                            Overlay o = (Overlay) oEnum.nextElement();
+                            if (!(o instanceof SSROverlay)) {
+                                try (InputStream in = GameModule.getGameModule().getDataArchive().getInputStream(OVERLAY_SSR_CONTROL_FILE_NAME)) {
+                                    SSRControlsFile ssrControlsFile = new SSRControlsFile(in, o.getName());
+                                    readOptions(ssrControlsFile.getBasicNodes(), ssrControlsFile.getOptionNodes());
 
-                    for (Enumeration oEnum = b.getOverlays(); oEnum.hasMoreElements(); ) {
-                        Overlay o = (Overlay) oEnum.nextElement();
-                        if (!(o instanceof SSROverlay)) {
-                            try (InputStream in = GameModule.getGameModule().getDataArchive().getInputStream(OVERLAY_SSR_CONTROL_FILE_NAME)) {
-                                SSRControlsFile ssrControlsFile = new SSRControlsFile(in, o.getName());
-                                readOptions(ssrControlsFile.getBasicNodes(), ssrControlsFile.getOptionNodes());
-
-                            } catch (IOException ignore) {
+                                } catch (IOException ignore) {
+                                }
                             }
                         }
+                        nboards++;
+                        version = version.concat(b.getName() + " (ver " + b.version + ") ");
                     }
-                    nboards++;
-                    version = version.concat(b.getName() + " (ver " + b.version + ") ");
                 }
             }
             switch (nboards) {
