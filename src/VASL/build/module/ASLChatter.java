@@ -450,10 +450,14 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             userEnd = msg.indexOf(">");
 
             if (userStart != -1 && userEnd != -1) {
-                final String deletestring = msg.substring(userStart, userEnd+1);
-                msg = msg.replace(deletestring, "");
-                userStart = 0;
-                userEnd = 0;
+                if (userStart <= userEnd+1) {  //error trapping
+                    final String deletestring = msg.substring(userStart, userEnd + 1);
+                    msg = msg.replace(deletestring, "");
+                    userStart = 0;
+                    userEnd = 0;
+                } else {
+                    userStart = -1; userEnd = -1;  //jump out without changing message
+                }
             }
         } while (userStart != -1 && userEnd != -1);
         //test
