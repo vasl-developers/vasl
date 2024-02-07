@@ -133,7 +133,8 @@ public class VASLGameInterface {
         Hex h = LOSMap.gridToHex(p.x, p.y);
 
         String name = piece.getName().trim();
-
+        // need to take out any label info for next test
+        name = (parsepiecename(name)).trim();
         // ignore any piece whose name is prefixed by an ignore-type counter
         for(CounterMetadata counter: counterMetadata.values()){
 
@@ -203,6 +204,27 @@ public class VASLGameInterface {
                 addCounter(vehicleList, v, h);
             }
         }
+    }
+    private String parsepiecename(String piecename) {
+        // test for label info that must be removed
+        int userStart = 0;
+        int userEnd = 0;
+        do {
+            userStart = piecename.indexOf("(");
+            userEnd = piecename.indexOf(")");
+
+            if (userStart != -1 && userEnd != -1) {
+                if (userStart <= userEnd+1) {  //error trapping
+                    final String deletestring = piecename.substring(userStart, userEnd + 1);
+                    piecename = piecename.replace(deletestring, "");
+                    userStart = 0;
+                    userEnd = 0;
+                } else {
+                    userStart = -1; userEnd = -1;  //jump out without changing name
+                }
+            }
+        } while (userStart != -1 && userEnd != -1);
+        return piecename;
     }
 
     /**
