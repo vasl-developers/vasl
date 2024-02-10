@@ -469,7 +469,7 @@
 		<boarddata name="SF" version="1.1" versionDate="2023/12/30" description="Sparrow Force" boardType="HASL" publisher="MMP" issued="2023/09/17" />
 		<boarddata name="AF_AbbioPriolo" version="1.1" versionDate="2024/01/30" description="Abbio Priolo" boardType="HASL" publisher="AF" issued="2024/01/30" />
 		<boarddata name="AF_BiazzaRidge" version="1.1" versionDate="2024/01/30" description="Biazza Ridge" boardType="HASL" publisher="AF" issued="2024/01/30" />
-		<boarddata name="AF_Brevity OP" version="1.0" versionDate="2024/01/30" description="Brevity Assault" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_Brevity-OP" version="1.0" versionDate="2024/01/30" description="Brevity Assault" boardType="HASL" publisher="AF" issued="2024/01/30" />
 		<boarddata name="AF_GelaFarello" version="1.0" versionDate="2024/01/30" description="Gela Farello" boardType="HASL" publisher="AF" issued="2024/01/30" />
 		<boarddata name="AF_Half-North" version="1.1" versionDate="2024/01/30" description="Half-North" boardType="HASL" publisher="AF" issued="2024/01/30" />
 		<boarddata name="AF_Half-South" version="1.2" versionDate="2024/01/30" description="Half-South" boardType="HASL" publisher="AF" issued="2024/01/30" />
