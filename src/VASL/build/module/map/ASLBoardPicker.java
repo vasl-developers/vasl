@@ -134,30 +134,33 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                         b.relativePosition().move(Integer.parseInt(st2.nextToken()), Integer.parseInt(st2.nextToken()));
                         String baseName = st2.nextToken();
                         updateBoard(baseName);
-                        this.tileBoard(baseName);
+                        tileBoard(baseName);
                         buildBoard(b, boardDesc);
                         v.add(b);
-                    } catch (final BoardException e) {
+                    }
+                    catch (final BoardException e) {
                         ErrorDialog.dataWarning(new BadDataReport("Board not found", boardDesc, e));
                     }
                     command = command.substring(index + 3);
                 }
                 ASLBoard b = new VASLBoard();
                 try {
-                    StringTokenizer st2 = new StringTokenizer(command, "\t\n");
+                    final StringTokenizer st2 = new StringTokenizer(command, "\t\n");
                     b.relativePosition().move(Integer.parseInt(st2.nextToken()), Integer.parseInt(st2.nextToken()));
-                    String baseName = st2.nextToken();
+                    final String baseName = st2.nextToken();
                     updateBoard(baseName);
-                    this.tileBoard(baseName);
+                    tileBoard(baseName);
                     buildBoard(b, command);
                     v.add(b);
-                } catch (final BoardException e) {
+                }
+                catch (final BoardException e) {
                     ErrorDialog.dataWarning(new BadDataReport("Unable to build board", command, e));
                 }
             }
             comm = comm.append(new SetBoards(this, v));
             return comm;
-        } else {
+        }
+        else {
             return null;
         }
     }
@@ -173,7 +176,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 }
             }
             return s;
-        } else {
+        }
+        else {
             return null;
         }
     }
@@ -186,8 +190,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
         g.getPrefs().addOption("VASL", config);
         String storedValue = g.getPrefs().getStoredValue(BOARD_DIR);
         if (storedValue == null || !new File(storedValue).exists()) {
-            File archive = new File(g.getDataArchive().getName());
-            File dir = archive.getParentFile();
+            final File archive = new File(g.getDataArchive().getName());
+            final File dir = archive.getParentFile();
             File defaultDir = new File(dir, "boards");
             if (!defaultDir.exists()) {
                 defaultDir.mkdir();
@@ -225,15 +229,16 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
     public void finish() {
         currentBoards = new ArrayList<Board>(getBoardsFromControls());
         // test for proper board configuration
+        final GameModule g = GameModule.getGameModule();
         if (slotPanel.getComponentCount() != currentBoards.size()){
-            GameModule.getGameModule().getChatter().send("Board missing. Your board configuration must match X by X row/column matrix. Use NUL or NULV boards if required");
+            g.getChatter().send("Board missing. Your board configuration must match X by X row/column matrix. Use NUL or NULV boards if required");
         }
     }
 
     public void setGlobalMapScale() {
         Collection<Board> bds = getSelectedBoards();
         if (bds.iterator().hasNext()) {
-            double mag = bds.iterator().next().getMagnification();
+            final double mag = bds.iterator().next().getMagnification();
             double globalScale = 0.19444444;
             if (mag > 1.0) {
                 globalScale /= mag;
@@ -249,10 +254,12 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
     public void initTerrainEditor() {
         if (terrain == null) {
             terrain = new TerrainEditor();
-            try ( InputStream in = GameModule.getGameModule().getDataArchive().getInputStream(MODULE_SSR_CONTROL_FILE_NAME)) {
-                SSRControlsFile ssrControlsFile = new SSRControlsFile(in, "game module");
+            final GameModule g = GameModule.getGameModule();
+            try ( InputStream in = g.getDataArchive().getInputStream(MODULE_SSR_CONTROL_FILE_NAME)) {
+                final SSRControlsFile ssrControlsFile = new SSRControlsFile(in, "game module");
                 terrain.readOptions(ssrControlsFile.getBasicNodes(), ssrControlsFile.getOptionNodes());
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 logger.warn("Error reading SSR controls file in module archive: " + e.getMessage());
             }
         }
@@ -274,12 +281,11 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 nomatch = true;
                 if (file.startsWith("bd") && !(new File(boardDir, file)).isDirectory()) {
                     String name = file.substring(2);
-                    //String[] split = name.split(" ");
-                    //name = split[0];
                     if (name.contains(".")) {
                         name = null;
                         nomatch = false;
-                    } else {
+                    }
+                    else {
                         for (String bdname : sorted) {
                             String[] split = bdname.split(" ");
                             bdname = split[0];
@@ -289,21 +295,16 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                         }
                     }
                     if (nomatch){sorted.add(name);}
-                    //if (name != null && !sorted.contains(name)) { // prevents duplicate items in list
-                    //    sorted.add(name);
-                    //}
                 }
             }
         }
 
-        //
         // * Strings with leading zeros sort ahead of those without.
         // * Strings with leading integer parts sort ahead of those without.
         // * Strings with lesser leading integer parts sort ahead of those with
         //   greater leading integer parts.
         // * Strings which are otherwise equal are sorted lexicographically by
         //   their trailing noninteger parts.
-        //
 
         final Comparator<Object> alpha = Collator.getInstance();
         final Pattern pat = Pattern.compile("((0*)\\d*)(.*)");
@@ -330,7 +331,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 // more leading zeros comes first
                 if (z1 < z2) {
                     return 1;
-                } else if (z1 > z2) {
+                }
+                else if (z1 > z2) {
                     return -1;
                 }
 
@@ -349,20 +351,23 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                                 return o1Int.compareTo(o2Int);
 
                             }
-                        } catch (NumberFormatException e) {
+                        }
+                        catch (NumberFormatException e) {
                             // impossible
                             throw new IllegalStateException(e);
                         }
-                    } else {
+                    }
+                    else {
                         // only o1 has an integer part
                         return -1;
                     }
-                } else if (o2IntStr.length() > 0) {
+                }
+                else if (o2IntStr.length() > 0) {
                     // only o2 has an integer part
                     return 1;
                 }
 
-                // the traling string part is decisive
+                // the trailing string part is decisive
                 return alpha.compare(m1.group(3), m2.group(3));
             }
         };
@@ -390,11 +395,12 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             try (InputStream inputStream = conn.getInputStream()) {
                 allboardslist = parseboardversionFile(inputStream);
             }
+        }
+        catch (IOException e) {
 
-        } catch (IOException e){
-
-        } catch (JDOMException e) {
-            // throw new JDOMException("Cannot read the shared metadata file", e);
+        }
+        catch (JDOMException e) {
+            // throw new JDOMException(, e);
         }
         return allboardslist;
     }
@@ -409,10 +415,12 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 newboardslist = newboardsparseboardversionFile(inputStream);
             }
 
-        } catch (IOException e){
+        }
+        catch (IOException e) {
 
-        } catch (JDOMException e) {
-            // throw new JDOMException("Cannot read the shared metadata file", e);
+        }
+        catch (JDOMException e) {
+            // throw new JDOMException(, e);
         }
         return newboardslist;
     }
@@ -425,12 +433,12 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
     private ArrayList<String> parseboardversionFile(InputStream metadata) throws JDOMException {
 
         ArrayList<String> addtoboardlist = new ArrayList<String>();
-        SAXBuilder parser = new SAXBuilder();
+        final SAXBuilder parser = new SAXBuilder();
 
         try {
             // the root element will be the boardsMetadata element
-            Document doc = parser.build(metadata);
-            org.jdom2.Element root = doc.getRootElement();
+            final Document doc = parser.build(metadata);
+            final org.jdom2.Element root = doc.getRootElement();
 
             // read the shared metadata
             if(root.getName().equals(boardsFileElement)) {
@@ -458,7 +466,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 }
             }
 
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace(System.err);
             throw new JDOMException("Error reading the v5boardVersions.xml metadata", e);
         }
@@ -468,14 +477,14 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
     private ArrayList<String> newboardsparseboardversionFile(InputStream metadata) throws JDOMException {
 
         ArrayList<String> newboardlist = new ArrayList<String>();
-        SAXBuilder parser = new SAXBuilder();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-        LocalDate dateissued;
-        LocalDate datenow = LocalDate.now();
+        final SAXBuilder parser = new SAXBuilder();
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        LocalDate dateissued; LocalDate dateupdated;
+        final LocalDate datenow = LocalDate.now();
         try {
             // the root element will be the boardsMetadata element
-            Document doc = parser.build(metadata);
-            org.jdom2.Element root = doc.getRootElement();
+            final Document doc = parser.build(metadata);
+            final org.jdom2.Element root = doc.getRootElement();
 
             // read the shared metadata
             if(root.getName().equals(boardsFileElement)) {
@@ -492,6 +501,13 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                                         // read the newBoards attributes
                                         newboardlist.add(f.getAttribute(coreboardNameAttr).getValue() + "  " + f.getAttribute("boardType").getValue() + "  NEW");
                                     }
+                                    else if (!f.getAttribute(coreboardversiondateAttr).getValue().equals("")){
+                                        dateupdated = LocalDate.parse(f.getAttribute(coreboardversiondateAttr).getValue(), formatter);
+                                        if (DAYS.between(dateupdated, datenow) < 91) {
+                                            // read the Boards attributes
+                                            newboardlist.add(f.getAttribute(coreboardNameAttr).getValue() + "  " + f.getAttribute("boardType").getValue() + "  Updated");
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -506,6 +522,13 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                                         // read the newBoards attributes
                                         newboardlist.add(f.getAttribute(otherboardNameAttr).getValue() + "  " + f.getAttribute("boardType").getValue()  + "  NEW");
                                     }
+                                    else if (!f.getAttribute(otherboardversiondateAttr).getValue().equals("")) {
+                                        dateupdated = LocalDate.parse(f.getAttribute(otherboardversiondateAttr).getValue(), formatter);
+                                        if (DAYS.between(dateupdated, datenow) < 91) {
+                                            // read the Boards attributes
+                                            newboardlist.add(f.getAttribute(otherboardNameAttr).getValue() + "  " + f.getAttribute("boardType").getValue() + "  Updated");
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -513,7 +536,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 }
             }
 
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace(System.err);
             throw new JDOMException("Error reading the v5boardVersions.xml metadata", e);
         }
@@ -537,12 +561,14 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             if (commonName.equalsIgnoreCase("r") || commonName.equalsIgnoreCase("rdx")) {
                 // board r or R, this is ok
                 unReversedBoardName = commonName;
-            } else {
+            }
+            else {
                 // board rX, this is really X
-                // Red Barricades (RB) and Ruweisat Ridge (RR) should not have gotten here
+                // Red Barricades (RB) and Ruweisat Ridge (RR), etc should not have gotten here
                 unReversedBoardName = commonName.substring(1);
             }
-        } else {
+        }
+        else {
             unReversedBoardName = commonName;
         }
 
@@ -557,7 +583,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
 
         try {
             th.sliceTiles();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             ReadErrorDialog.error(e, fpath);
         }
     }
@@ -577,53 +604,44 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             String unReversedBoardName = baseName;
             if (baseName.startsWith("r") && (!baseName.equalsIgnoreCase("r") && !baseName.equalsIgnoreCase("rdx"))) {
                 // board rX, this is really X; r or R are ok
-                // Red Barricades (RB) and Ruweisat Ridge (RR) should not have gotten here
+                // Red Barricades (RB) and Ruweisat Ridge (RR), etc should not have gotten here
                 unReversedBoardName = baseName.substring(1);
             }
 
             final File boardFile = new File(boardDir, "bd" + unReversedBoardName);
-
+            final GameModule g = GameModule.getGameModule();
             // try to grab the board from repository if missing
             if (!boardFile.exists()) {
 
                 // try to fetch the missing board
-                GameModule.getGameModule().warn("Board " + unReversedBoardName + " is missing. Downloading...");
+                g.warn("Board " + unReversedBoardName + " is missing. Downloading...");
                 if (!BoardVersionChecker.updateBoard(unReversedBoardName)) {
-                    GameModule.getGameModule().warn("Board download failed");
-                } else {
-                    GameModule.getGameModule().warn("Board download succeeded");
+                    g.warn("Board download failed");
+                }
+                else {
+                    g.warn("Board download succeeded");
                 }
 
-            } else {
+            }
+            else {
 
                 // Update the board if it's out of date
 
                 // get the board version
-                VASLBoard b = new VASLBoard();
+                final VASLBoard b = new VASLBoard();
                 try {
                     b.initializeFromArchive(boardFile);
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     // Fail silently if we can't find a version
                     return;
                 }
-                /*// get the current board version from the game properties
-                Properties properties;
-                String availableVersion = null;
-                String boardVersions = ((String) GameModule.getGameModule().getPrefs().getValue(BoardVersionChecker.BOARD_VERSION_PROPERTY_KEY));
-                if (boardVersions != null && boardVersions.length() > 0) {
-                    try {
-                        properties = new PropertiesEncoder(boardVersions).getProperties();
-                        availableVersion = properties.getProperty(unReversedBoardName);
 
-                    } catch (Exception e) {
-                        // Fail silently if we can't find a version
-                        return;
-                    }
-                }*/
                 String availableVersion = null;
                 try {
                     availableVersion = BoardVersionChecker.getlatestVersionnumberfromwebrepository(unReversedBoardName);
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     // Fail silently if we can't find a version
                     return;
                 }
@@ -633,20 +651,24 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
 
                 if (availableVersion == null) {
                     serverVersion = -1;
-                } else {
+                }
+                else {
                     try {
                         serverVersion = Double.parseDouble(availableVersion);
-                    } catch (NumberFormatException nfe) {
+                    }
+                    catch (NumberFormatException nfe) {
                         serverVersion = -1;
                     }
                 }
 
                 if (b.getVersion() == null) {
                     localVersion = -1;
-                } else {
+                }
+                else {
                     try {
                         localVersion = Double.parseDouble(b.getVersion());
-                    } catch (NumberFormatException nfe) {
+                    }
+                    catch (NumberFormatException nfe) {
                         localVersion = 0;
                     }
                 }
@@ -654,7 +676,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 if (localVersion == 0) {
                     // local board is of an indeterminate state, update the board if the server version is good
                     doUpdate = (serverVersion > -1);
-                } else {
+                }
+                else {
                     // update the board if the server version greater than local version
                     doUpdate = (serverVersion > localVersion);
                 }
@@ -662,11 +685,12 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 if (doUpdate) {
 
                     // try to update board if out of date
-                    GameModule.getGameModule().warn("Board " + unReversedBoardName + " is out of date. Updating...");
+                    g.warn("Board " + unReversedBoardName + " is out of date. Updating...");
                     if (!BoardVersionChecker.updateBoard(unReversedBoardName)) {
-                        GameModule.getGameModule().warn("Update failed");
-                    } else {
-                        GameModule.getGameModule().warn("Update succeeded");
+                        g.warn("Update failed");
+                    }
+                    else {
+                        g.warn("Update succeeded");
                     }
 
                 }
@@ -679,23 +703,26 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
      */
     private void updateOverlay(String ovrName, boolean preservelevels) {
 
+        final GameModule g = GameModule.getGameModule();
         // if the boardDir doesn't exist or the overlay name is blank, bail early
         if (boardDir != null && !ovrName.equals("")) {
-            String ovrfilename = Overlay.archiveName(ovrName + "a");
+            final String ovrfilename = Overlay.archiveName(ovrName + "a");
             final File ovrFile = new File(boardDir, "overlays/" + ovrfilename);
 
             // try to grab the overlay from repository if missing
             if (!ovrFile.exists()) {
 
                 // try to fetch the missing overlay
-                GameModule.getGameModule().warn("Overlay " + ovrfilename + " is missing. Downloading...");
+                g.warn("Overlay " + ovrfilename + " is missing. Downloading...");
                 if (!BoardVersionChecker.updateOverlayFile(ovrfilename)) {
-                    GameModule.getGameModule().warn("Overlay download failed");
-                } else {
-                    GameModule.getGameModule().warn("Overlay download succeeded");
+                    g.warn("Overlay download failed");
+                }
+                else {
+                    g.warn("Overlay download succeeded");
                 }
 
-            } else {
+            }
+            else {
 
                 // Update the overlay if it's out of date
 
@@ -703,7 +730,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 String availableVersion = null;
                 try {
                     availableVersion = BoardVersionChecker.getlatestOverlayVersionnumberfromwebrepository(ovrfilename);
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     // Fail silently if we can't find a version
                     return;
                 }
@@ -713,28 +741,33 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
 
                 if (availableVersion == null) {
                     serverVersion = -1;
-                } else {
+                }
+                else {
                     try {
                         serverVersion = Double.parseDouble(availableVersion);
-                    } catch (NumberFormatException nfe) {
+                    }
+                    catch (NumberFormatException nfe) {
                         serverVersion = -1;
                     }
                 }
 
-                String currentVersion=null;
+                String currentVersion = null;
                 try {
-                    Overlay ovrfile = new Overlay(ovrName + "\t0" + "\t0" +"\t" + String.valueOf(preservelevels), new File(getBoardDir(), "overlays"));
+                    Overlay ovrfile = new Overlay(ovrName + "\t0" + "\t0" +"\t" + preservelevels, new File(getBoardDir(), "overlays"));
                     currentVersion = ovrfile.getVersion();
-                } catch (Exception e){
+                }
+                catch (Exception e) {
 
                 }
 
                 if (currentVersion == null) {
                     localVersion = -1;
-                } else {
+                }
+                else {
                     try {
                         localVersion = Double.parseDouble(currentVersion);
-                    } catch (NumberFormatException nfe) {
+                    }
+                    catch (NumberFormatException nfe) {
                         localVersion = 0;
                     }
                 }
@@ -742,7 +775,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 if (localVersion == 0) {
                     // local overlay is of an indeterminate state, update the overlay if the server version is good
                     doUpdate = (serverVersion > -1);
-                } else {
+                }
+                else {
                     // update the overlay if the server version greater than local version
                     doUpdate = (serverVersion > localVersion);
                 }
@@ -750,11 +784,12 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 if (doUpdate) {
 
                     // try to update overlay if out of date
-                    GameModule.getGameModule().warn("Overlay " + ovrfilename + " is out of date. Updating...");
+                    g.warn("Overlay " + ovrfilename + " is out of date. Updating...");
                     if (!BoardVersionChecker.updateOverlayFile(ovrfilename)) {
-                        GameModule.getGameModule().warn("Overlay download failed");
-                    } else {
-                        GameModule.getGameModule().warn("Overlay download succeeded");
+                        g.warn("Overlay download failed");
+                    }
+                    else {
+                        g.warn("Overlay download succeeded");
                     }
 
                 }
@@ -784,20 +819,22 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
 
     public Board getBoard(String name, boolean localized) {
         // extract board name from List string
-        String[] split = name.split(" ");
+        final String[] split = name.split(" ");
         name = split[0];
         updateBoard(name);
-        this.tileBoard(name);
+        tileBoard(name);
         ASLBoard b = new VASLBoard();
         if (name != null) {
             if (name.length() == 1 && name.charAt(0) <= '9' && name.charAt(0) >= '0') {
                 name = '0' + name;
-            } else if (name.length() == 1 && name.charAt(0) <= 'H' && name.charAt(0) >= 'A') {
+            }
+            else if (name.length() == 1 && name.charAt(0) <= 'H' && name.charAt(0) >= 'A') {
                 name = "dx" + name.toLowerCase();
             }
             try {
                 buildBoard(b, "0\t0\t" + name);
-            } catch (BoardException e) {
+            }
+            catch (BoardException e) {
                 e = null;
                 ErrorDialog.dataWarning(new BadDataReport("Unable to find board", name, e));
             }
@@ -810,28 +847,30 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
     }
 
     public void buildBoard(ASLBoard b, String bd) throws BoardException {
+        final GameModule g = GameModule.getGameModule();
         StringTokenizer st2 = new StringTokenizer(bd, "\t\n");
         try {
             b.relativePosition().move(Integer.parseInt(st2.nextToken()), Integer.parseInt(st2.nextToken()));
-            String baseName = st2.nextToken();
+            final String baseName = st2.nextToken();
             String unReversedBoardName;
             if (baseName.startsWith("r")) {
                 if (baseName.equalsIgnoreCase("r") || baseName.equalsIgnoreCase("rdx")) {
                     // board r or R, this is ok
                     unReversedBoardName = baseName;
                     b.setReversed(false);
-                } else {
+                }
+                else {
                     // board rX, this is really X
                     // Red Barricades (RB) and Ruweisat Ridge (RR) should not have gotten here
                     unReversedBoardName = baseName.substring(1);
                     b.setReversed(true);
                 }
-            } else {
+            }
+            else {
                 unReversedBoardName = baseName;
                 b.setReversed(false);
             }
-            File f;
-            f = new File(boardDir, "bd" + unReversedBoardName);
+            final File f = new File(boardDir, "bd" + unReversedBoardName);
             if (!f.exists()) {
 
                 throw new BoardException("Unable to find board " + baseName);
@@ -840,7 +879,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             if (b.getVASLBoardArchive() == null ){
                 throw new BoardException("Unable to create board " + baseName);
             }
-        } catch (Exception eParse) {
+        }
+        catch (Exception eParse) {
             throw new BoardException(eParse.getMessage(), eParse);
         }
         try {
@@ -849,16 +889,18 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             int wid = Integer.parseInt(st2.nextToken());
             int hgt = Integer.parseInt(st2.nextToken());
             b.setCropBounds(new Rectangle(x1, y1, wid, hgt));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             b.setCropBounds(new Rectangle(0, 0, -1, -1));
         }
 
         if (bd.contains("VER")) {
-            StringTokenizer st = new StringTokenizer(bd.substring(bd.indexOf("VER") + 4), "\t");
+            final StringTokenizer st = new StringTokenizer(bd.substring(bd.indexOf("VER") + 4), "\t");
             if (st.countTokens() >= 1) {
-                String reqver = st.nextToken();
-                if (reqver.compareTo(b.getVersion()) != 0)
-                    GameModule.getGameModule().warn("This game was saved with board " + b.getName() + " v" + reqver + ". You are using v" + b.getVersion());
+                final String reqver = st.nextToken();
+                if (reqver.compareTo(b.getVersion()) != 0) {
+                    g.warn("This game was saved with board " + b.getName() + " v" + reqver + ". You are using v" + b.getVersion());
+                }
             }
         }
 
@@ -870,7 +912,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             updateOverlay(ovrname.toLowerCase(), preservelevels);
             try {
                 b.addOverlay(new Overlay(bd, b, new File(getBoardDir(), "overlays")));
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -884,6 +927,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             try {
                 b.setMagnification(Double.parseDouble(bd.substring(bd.indexOf("ZOOM") + 5)));
             }
+
             catch (Exception e) {
                 // bury
             }
@@ -895,6 +939,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             try {
                 b.nearestFullRow = true;
             }
+
             catch (Exception e) {
                 // bury
             }
@@ -930,23 +975,26 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
 
     public void actionPerformed(ActionEvent e) {
 
-        String label = e.getActionCommand();
+        final String label = e.getActionCommand();
         if ("Add overlays".equals(label)) {
             Overlayer o;
             Dialog d = getDialogContainer();
             o = d == null ? new Overlayer(getFrameContainer()) : new Overlayer(d);
             o.setLocationRelativeTo(controls.getTopLevelAncestor());
             o.setVisible(true);
-        } else if ("Crop boards".equals(label)) {
+        }
+        else if ("Crop boards".equals(label)) {
             Cropper crop;
             Dialog d = getDialogContainer();
             crop = d == null ? new Cropper(getFrameContainer()) : new Cropper(d);
             crop.setLocationRelativeTo(controls.getTopLevelAncestor());
             crop.setVisible(true);
-        } else if ("Terrain SSR".equals(label)) {
+        }
+        else if ("Terrain SSR".equals(label)) {
             currentBoards = getBoardsFromControls();
             terrain.setup(currentBoards);
-        } else {
+        }
+        else {
             super.actionPerformed(e);
         }
     }
@@ -963,53 +1011,40 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
 
     public BoardSlot match(String s) throws BoardException {
         if ("".equals(s)) {
-            if (slotPanel.getComponentCount() == 1)
+            if (slotPanel.getComponentCount() == 1) {
                 return (BoardSlot) slotPanel.getComponent(0);
-            else
+            }
+            else {
                 throw new BoardException("No Such Board");
+            }
         }
-        for (int i = 0; i < nx; ++i)
+        for (int i = 0; i < nx; ++i) {
             for (int j = 0; j < ny; ++j) {
                 BoardSlot b = getSlot(i + nx * j);
-                if (b.getBoard() == null)
+                if (b.getBoard() == null) {
                     continue;
-                if (b.getBoard().getName().equalsIgnoreCase(s))
+                }
+                if (b.getBoard().getName().equalsIgnoreCase(s)) {
                     return (b);
+                }
             }
+        }
         throw new BoardException("No Such Board");
     }
-    /*public BoardSlot newmatch (int x) throws BoardException {
-        //BoardSlot b = getSlot(x);
-        if (nx == 1 || ny ==1) {return getSlot(x);}
-        for (int i = 0; i < nx; ++i)
-            for (int j = 0; j < ny; ++j) {
-                    if (x == i + nx * j) {return getSlot(i + nx * j);}
-            }
-        throw new BoardException("No Such Board");
-    }*/
-    public BoardSlot newmatch (int y) throws BoardException {
-        //BoardSlot b = getSlot(x);
 
-        List<Board> boards = getBoardsFromControls();
+    public BoardSlot newmatch (int y) throws BoardException {
+        final List<Board> boards = getBoardsFromControls();
         Iterator it = boards.iterator();
         for (int x = 0; x < boards.size(); x++) {
             ASLBoard b = (ASLBoard) it.next();
             if (x == y) {
                 for (int i = 0; i < boards.size(); ++i) {
-
                     ASLBoard c = (ASLBoard) getSlot(i).getBoard();
                     if (b == c) {
                         return getSlot(i);
                     }
-
                 }
-            } //throw new BoardException("No Such Board");
-            //}
-            //}
-
-
-            //if (nx == 1 || ny ==1) {return getSlot(x);}
-
+            }
         }
         return null;
     }
@@ -1026,13 +1061,14 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
         private DirectoryConfigurer dirConfig;
 
         public SetupControls() {
+            final GameModule g = GameModule.getGameModule();
             setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-            final DirectoryConfigurer pref = (DirectoryConfigurer) GameModule.getGameModule().getPrefs().getOption(BOARD_DIR);
+            final DirectoryConfigurer pref = (DirectoryConfigurer) g.getPrefs().getOption(BOARD_DIR);
             dirConfig = new DirectoryConfigurer(null, pref.getName());
             dirConfig.setValue(pref.getFileValue());
             add(dirConfig.getControls());
 
-            JCheckBox deluxe = new JCheckBox("Deluxe-size hexes");
+            final JCheckBox deluxe = new JCheckBox("Deluxe-size hexes");
             deluxe.addItemListener(new ItemListener() {
                 public void itemStateChanged(ItemEvent e) {
                     enableDeluxe = e.getStateChange() == ItemEvent.SELECTED;
@@ -1118,14 +1154,14 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             halfrow = new JRadioButton("Crop to middle of hex row");
             fullrow = new JRadioButton("Crop to nearest full hex row");
             fullrow.setSelected(true);
-            ButtonGroup bg = new ButtonGroup();
+            final ButtonGroup bg = new ButtonGroup();
             bg.add(halfrow);
             bg.add(fullrow);
             halfrow.setSelected(true);
 
             getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
             Box box = Box.createHorizontalBox();
-            JLabel l = new JLabel("Board:");
+            final JLabel l = new JLabel("Board:");
             box.add(l);
 
             // code added by DR to enable multiple instances of same board to be cropped
@@ -1134,7 +1170,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             String bdlist[] = getBoards();
             for (String nextboardname : bdlist) {
                 boardlist.add(new BoardNames(nextboardname, Integer.toString(x)));
-                x+=1;
+                x += 1;
             }
             BoardNames[] bx = new BoardNames[boardlist.size()];
             Iterator it = boardlist.iterator();
@@ -1183,7 +1219,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
          */
         private String[] getBoards() {
 
-            List<Board> boards = getBoardsFromControls();
+            final List<Board> boards = getBoardsFromControls();
             String[] b = new String[boards.size()];
             Iterator it = boards.iterator();
             for(int x = 0; x < b.length; x++) {
@@ -1211,12 +1247,13 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                         .getText().toLowerCase().trim(), fullrow.isSelected());
                 b.invalidate();
                 b.repaint();
-                row1.setText("");
-                row2.setText("");
-                coord1.setText("");
-                coord2.setText("");
-            } catch (Exception ex) {
             }
+            catch (Exception ex) {
+            }
+            row1.setText("");
+            row2.setText("");
+            coord1.setText("");
+            coord2.setText("");
         }
     }
     // code added by DR to enable multiple instances of same board to be cropped, have Overlays, and apply SSR
@@ -1273,7 +1310,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             String bdlist[] = getBoards();
             for (String nextboardname : bdlist) {
                 boardlist.add(new BoardNames(nextboardname, Integer.toString(x)));
-                x=+1;
+                x =+ 1;
             }
             BoardNames[] bx = new BoardNames[boardlist.size()];
             Iterator it = boardlist.iterator();
@@ -1326,10 +1363,10 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 setVisible(false);
                 return;
             }
-            preservelevels=preslevels.isSelected();
+            preservelevels = preslevels.isSelected();
             try {
                 BoardSlot b = newmatch(bdName.getSelectedIndex());
-                if (b==null){
+                if (b == null){
                     // fail silently
                     clear();
                     status.setText("Missing board: fix Map Config.");
@@ -1338,12 +1375,13 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 // adding auto-syncing for overlays
                 updateOverlay(ovrName.getText().toLowerCase(), preservelevels);
                 status.setText(((ASLBoardSlot) (b)).addOverlay(ovrName.getText().toLowerCase(), hex1.getText().toLowerCase(), hex2.getText().toLowerCase(), preservelevels ));
-                ovrName.setText("");
-                hex1.setText("");
-                hex2.setText("");
-            } catch (BoardException excep) {
+            }
+            catch (BoardException excep) {
                 status.setText(excep.getMessage());
             }
+            ovrName.setText("");
+            hex1.setText("");
+            hex2.setText("");
         }
 
         /**
@@ -1351,7 +1389,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
          */
         private String[] getBoards() {
 
-            List<Board> boards = getBoardsFromControls();
+            final List<Board> boards = getBoardsFromControls();
             String[] b = new String[boards.size()];
             Iterator it = boards.iterator();
             for(int x = 0; x < b.length; x++) {
@@ -1432,6 +1470,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
 
         public void setup(Collection<Board> boardList) {
             Box box = Box.createVerticalBox();
+            final GameModule g = GameModule.getGameModule();
             for (int i = 0; i < 4; ++i) {
                 TransformOption opt = new TransformOption();
                 box.add(opt.getComponent());
@@ -1451,11 +1490,12 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                         for (Enumeration oEnum = b.getOverlays(); oEnum.hasMoreElements(); ) {
                             Overlay o = (Overlay) oEnum.nextElement();
                             if (!(o instanceof SSROverlay)) {
-                                try (InputStream in = GameModule.getGameModule().getDataArchive().getInputStream(OVERLAY_SSR_CONTROL_FILE_NAME)) {
+                                try (InputStream in = g.getDataArchive().getInputStream(OVERLAY_SSR_CONTROL_FILE_NAME)) {
                                     SSRControlsFile ssrControlsFile = new SSRControlsFile(in, o.getName());
                                     readOptions(ssrControlsFile.getBasicNodes(), ssrControlsFile.getOptionNodes());
 
-                                } catch (IOException ignore) {
+                                }
+                                catch (IOException ignore) {
                                 }
                             }
                         }
@@ -1465,14 +1505,14 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 }
             }
             switch (nboards) {
-                case 0:
-                    warn("No boards loaded");
-                    break;
-                case 1:
-                    warn("Loaded board " + version);
-                    break;
-                default:
-                    warn("Loaded boards " + version + " (leave board number blank to apply to all)");
+            case 0:
+                warn("No boards loaded");
+                break;
+            case 1:
+                warn("Loaded board " + version);
+                break;
+            default:
+                warn("Loaded boards " + version + " (leave board number blank to apply to all)");
             }
             pack();
             setVisible(true);
@@ -1481,8 +1521,9 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
         public void warn(String s) {
             status.setText(s);
             Container c = this;
-            while (c.getParent() != null)
+            while (c.getParent() != null) {
                 c = c.getParent();
+            }
             c.invalidate();
             c.validate();
             c.repaint();
@@ -1492,7 +1533,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             try {
                 if (basicNodes != null && basicNodes.getLength() > 0) {
                     basicNodes = (basicNodes.item(0)).getChildNodes();
-                    Box basicPanel = Box.createHorizontalBox();
+                    final Box basicPanel = Box.createHorizontalBox();
                     for (int j = 0; j < basicNodes.getLength(); ++j) {
                         if (basicNodes.item(j).getNodeType() == Node.ELEMENT_NODE) {
                             Element el2 = (Element) basicNodes.item(j);
@@ -1508,7 +1549,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
 
                     for (int i = 0; i < optionNodes.getLength(); ++i) {
                         Element el = (Element) optionNodes.item(i);
-                        Box box = Box.createVerticalBox();
+                        final Box box = Box.createVerticalBox();
                         NodeList nl = el.getChildNodes();
                         for (int j = 0; j < nl.getLength(); ++j) {
                             if (nl.item(j).getNodeType() == Node.ELEMENT_NODE) {
@@ -1521,15 +1562,17 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                         addOption(el.getAttribute("name"), box);
                     }
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.warn("Error processing SSR control file: " + e.getMessage());
             }
         }
 
         private void addOption(String name, Component c) {
             for (int i = 0; i < optionList.getModel().getSize(); ++i) {
-                if (optionList.getModel().getElementAt(i).equals(name))
+                if (optionList.getModel().getElementAt(i).equals(name)) {
                     return;
+                }
             }
             ((DefaultListModel) optionList.getModel()).addElement(name);
             options.add(c, name);
@@ -1556,7 +1599,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                     try {
                         // changes by DR to support Terrain SSR when using multiple boards of same name
                         if (bdName.getSelectedIndex() == 0 ) { // all boards
-                            for (int t =0; t < bdName.getItemCount()-1; ++t) {
+                            for (int t = 0; t < bdName.getItemCount()-1; ++t) {
                                 ASLBoardSlot slot = (ASLBoardSlot) newmatch(t);
                                 // check first for missing boards
                                 if (slot == null) {
@@ -1566,7 +1609,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                                 }
                             }
                             // now do same loop to apply transform
-                            for (int t =0; t < bdName.getItemCount()-1; ++t) {
+                            for (int t = 0; t < bdName.getItemCount()-1; ++t) {
                                 ASLBoardSlot slot = (ASLBoardSlot) newmatch(t);
                                     slot.setTerrain(slot.getTerrain() + '\t' + optionRules());
                                     if (slot.getBoard() != null) {
@@ -1574,13 +1617,15 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                                         slot.repaint();
                                     }
                             }
-                        } else { // specific board chosen
+                        }
+                        else { // specific board chosen
                             ASLBoardSlot slot = (ASLBoardSlot) newmatch(bdName.getSelectedIndex()-1);
-                            if (slot==null){
+                            if (slot == null){
                                 //ensure that board config requirement is respected
                                 warn("Incorrect Board Configuration: must complete X by X rectangle - use bdNull");
                                 return;
-                            } else {
+                            }
+                            else {
                                 slot.setTerrain(slot.getTerrain() + '\t' + optionRules());
                                 if (slot.getBoard() != null) {
                                     ((ASLBoard) slot.getBoard()).setTerrain(basicRules() + slot.getTerrain());
@@ -1592,12 +1637,14 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                             bText = bText.length() == 0 ? opText : bText + ", " + opText;
                         }
 
-                    } catch (BoardException e1) {
+                    }
+                    catch (BoardException e1) {
                         e1.printStackTrace();
                         warn(e1.getMessage());
                     }
                     reset(optionGroup);
-                } else if ("Reset".equals(e.getActionCommand())) {
+                }
+                else if ("Reset".equals(e.getActionCommand())) {
                     reset();
                     try {
                         int n = 0;
@@ -1605,21 +1652,25 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                             ASLBoardSlot slot = null;
                             try {
                                 slot = (ASLBoardSlot) getSlot(n++);
-                            } catch (Exception noSuchSlot) {
+                            }
+                            catch (Exception noSuchSlot) {
                                 break;
                             }
                             slot.setTerrain("");
                             try {
                                 ((ASLBoard) slot.getBoard()).setTerrain("");
-                            } catch (Exception e2) {
+                            }
+                            catch (Exception e2) {
                             }
                             slot.repaint();
                         }
                         warn("Back to normal");
-                    } catch (Exception resetError) {
+                    }
+                    catch (Exception resetError) {
                         warn(resetError.getMessage());
                     }
-                } else if ("Done".equals(e.getActionCommand())) {
+                }
+                else if ("Done".equals(e.getActionCommand())) {
                     reset();
                     setVisible(false);
                 }
@@ -1648,7 +1699,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 // s = s.concat(((TerrainOption) optionGroup.elementAt(i)).getRule());
                 if (s.length() > 0 && ((TerrainOption) optionGroup.elementAt(i)).getRule().length() > 0) {
                     s = s.concat("\t").concat(((TerrainOption) optionGroup.elementAt(i)).getRule());
-                } else {
+                }
+                else {
                     s = s.concat(((TerrainOption) optionGroup.elementAt(i)).getRule());
                 }
             }
@@ -1681,8 +1733,9 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             public TerrainOption(TerrainMediator mediator, Element e) {
                 panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
                 name = e.getAttribute("name");
-                if (e.getElementsByTagName("Source").getLength() > 0)
+                if (e.getElementsByTagName("Source").getLength() > 0) {
                     mediator.addSource(this);
+                }
                 if (e.getTagName().equals("Menu")) {
                     comp = new JComboBox();
                     ((JComboBox) comp).addItemListener(new ItemListener() {
@@ -1692,7 +1745,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                         }
                     });
                     comp.setMaximumSize(new Dimension(comp.getMaximumSize().width, comp.getPreferredSize().height));
-                } else if (e.getTagName().equals("ScrollList")) {
+                }
+                else if (e.getTagName().equals("ScrollList")) {
                     comp = new JList(new DefaultListModel());
                     ((JList) comp).addListSelectionListener(new ListSelectionListener() {
                         public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
@@ -1700,7 +1754,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                             propChange.firePropertyChange("active", null, getActive());
                         }
                     });
-                } else if (e.getTagName().equals("Checkbox")) {
+                }
+                else if (e.getTagName().equals("Checkbox")) {
                     comp = new JCheckBox();
                     ((JCheckBox) comp).addItemListener(new ItemListener() {
                         public void itemStateChanged(ItemEvent evt) {
@@ -1708,7 +1763,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                             propChange.firePropertyChange("active", null, getActive());
                         }
                     });
-                } else {
+                }
+                else {
                     throw new RuntimeException("Unrecognized SSR component type " + e.getTagName());
                 }
                 NodeList n = e.getElementsByTagName("entry");
@@ -1719,9 +1775,11 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                     texts.put(entryName, entry.getAttribute("text"));
                     if (comp instanceof JCheckBox) {
                         ((JCheckBox) comp).setText(entryName);
-                    } else if (comp instanceof JList) {
+                    }
+                    else if (comp instanceof JList) {
                         ((DefaultListModel) ((JList) comp).getModel()).addElement(entryName);
-                    } else if (comp instanceof JComboBox) {
+                    }
+                    else if (comp instanceof JComboBox) {
                         ((DefaultComboBoxModel) ((JComboBox) comp).getModel()).addElement(entryName);
                         if (entry.getAttribute("default").length() > 0) {
                             defaults.addElement(entryName);
@@ -1758,7 +1816,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 }
                 if (comp instanceof JList) {
                     panel.add(new JScrollPane(comp));
-                } else {
+                }
+                else {
                     panel.add(comp);
                 }
                 panel.setVisible(e.getElementsByTagName("invisible").getLength() == 0);
@@ -1781,23 +1840,28 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 invalidate();
                 if (comp instanceof JCheckBox) {
                     ((JCheckBox) comp).setSelected(isActive && ((JCheckBox) comp).getText().equals(val));
-                } else if (comp instanceof JComboBox) {
+                }
+                else if (comp instanceof JComboBox) {
                     if (val == null || !isActive) {
                         if (defaults.size() > 0) {
                             ((JComboBox) comp).setSelectedItem(defaults.elementAt(0));
-                        } else {
+                        }
+                        else {
                             ((JComboBox) comp).setSelectedIndex(0);
                         }
-                    } else {
+                    }
+                    else {
                         ((JComboBox) comp).setSelectedItem(val);
                     }
-                } else if (comp instanceof JList) {
+                }
+                else if (comp instanceof JList) {
                     ListModel model = ((JList) comp).getModel();
                     for (int j = 0; j < model.getSize(); ++j) {
                         if (model.getElementAt(j).equals(val)) {
                             if (isActive) {
                                 ((JList) comp).addSelectionInterval(j, j);
-                            } else {
+                            }
+                            else {
                                 ((JList) comp).removeSelectionInterval(j, j);
                             }
                             break;
@@ -1822,9 +1886,11 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                     active = new Vector();
                     if (comp instanceof JCheckBox) {
                         active.addElement(((JCheckBox) comp).isSelected() ? ((JCheckBox) comp).getText() : "");
-                    } else if (comp instanceof JComboBox) {
+                    }
+                    else if (comp instanceof JComboBox) {
                         active.addElement(((JComboBox) comp).getSelectedItem());
-                    } else if (comp instanceof JList) {
+                    }
+                    else if (comp instanceof JList) {
                         List<Object> val = ((JList) comp).getSelectedValuesList();
                         for (Object o : val ) {
                             active.addElement(o);
@@ -1851,8 +1917,9 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                     text = "";
                     for (Enumeration e = getActive().elements(); e.hasMoreElements(); ) {
                         String s = (String) texts.get(e.nextElement());
-                        if (s != null && s.length() > 0)
+                        if (s != null && s.length() > 0) {
                             text = text.concat(s + ", ");
+                        }
                     }
                 }
                 return text;
@@ -1879,15 +1946,17 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             }
 
             void addComponent(String name, Component c) {
-                Box box = Box.createHorizontalBox();
+                final Box box = Box.createHorizontalBox();
                 box.add(new JLabel(name));
                 box.add(c);
                 add(box);
                 if (c instanceof JCheckBox) {
                     checkboxes.addElement(c);
-                } else if (c instanceof JComboBox) {
+                }
+                else if (c instanceof JComboBox) {
                     choices.addElement(c);
-                } else if (c instanceof JList) {
+                }
+                else if (c instanceof JList) {
                     lists.addElement(c);
                 }
             }
@@ -1899,16 +1968,20 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
 
             void setTranslation(String text, String translation, String plainName) {
                 if (translation.length() > 0) {
-                    StringTokenizer st = new StringTokenizer(translation, ",");
+                    final StringTokenizer st = new StringTokenizer(translation, ",");
                     while (st.hasMoreTokens()) {
                         translations.put(text, st.nextToken() + "\t");
                     }
-                } else
+                }
+                else {
                     translations.put(text, "");
-                if (plainName.length() > 0)
+                }
+                if (plainName.length() > 0) {
                     plain.put(text, plainName + ", ");
-                else
+                }
+                else {
                     plain.put(text, "");
+                }
             }
 
             public void reset() {
@@ -1997,7 +2070,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             }
 
             public void propertyChange(PropertyChangeEvent evt) {
-                Vector v = getTargets(((TerrainOption) evt.getSource()).getName());
+                final Vector v = getTargets(((TerrainOption) evt.getSource()).getName());
                 for (Enumeration e = v.elements(); e.hasMoreElements(); ) {
                     ((Target) e.nextElement()).sourceStateChanged((Vector) evt.getNewValue());
                 }
@@ -2021,21 +2094,24 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             }
 
             private Vector getSourceSelection(Component source) {
-                Vector v = new Vector();
+                final Vector v = new Vector();
                 if (source instanceof JCheckBox) {
                     if (((JCheckBox) source).isSelected()) {
                         v.addElement(((JCheckBox) source).getText());
                     }
-                } else if (source instanceof JComboBox) {
+                }
+                else if (source instanceof JComboBox) {
                     Object o = ((JComboBox) source).getSelectedItem();
                     if (o != null)
                         v.addElement(o);
-                } else if (source instanceof JList) {
+                }
+                else if (source instanceof JList) {
                     List<Object> objects = ((JList) source).getSelectedValuesList();
                     for (Object o : objects) {
                         v.addElement(o);
                     }
-                } else {
+                }
+                else {
                     throw new RuntimeException("Illegal source component " + source);
                 }
                 return v;
@@ -2175,7 +2251,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 Iterator it = getBoardsFromControls().iterator();
                 while (it.hasNext()) {
                     boardlist.add(new BoardNames(((ASLBoard) it.next()).getCommonName(), Integer.toString(x)));
-                    x=+1;
+                    x =+ 1;
                 }
                 Iterator itr = boardlist.iterator();
                 for(int y = 0; y < boardlist.size(); y++) {
