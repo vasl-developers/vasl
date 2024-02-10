@@ -434,7 +434,10 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
 
         ArrayList<String> addtoboardlist = new ArrayList<String>();
         final SAXBuilder parser = new SAXBuilder();
-
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        final LocalDate datenow = LocalDate.now();
+        LocalDate dateupdated;
+        String statustext = "";
         try {
             // the root element will be the boardsMetadata element
             final Document doc = parser.build(metadata);
@@ -442,15 +445,17 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
 
             // read the shared metadata
             if(root.getName().equals(boardsFileElement)) {
-
                 for(org.jdom2.Element e: root.getChildren()) {
-
                     //add coreBoards
                     if(e.getName().equals(coreboardElement)){
                         for(org.jdom2.Element f: e.getChildren()) {
                             if(f.getName().equals(boarddataType)) {
-                                // read the coreBoards attributes
-                                addtoboardlist.add(f.getAttribute(coreboardNameAttr).getValue() + "    " + f.getAttribute("boardType").getValue());
+                                dateupdated = LocalDate.parse(f.getAttribute(coreboardversiondateAttr).getValue(), formatter);
+                                statustext = (DAYS.between(dateupdated, datenow) < 91 ? "  Updated" : "");
+                                if (statustext.equals("  Updated")){
+                                    statustext = (f.getAttribute(coreboardversiondateAttr).equals(f.getAttribute(dateofissue)) ? "  New" : "  Updated");
+                                }
+                                addtoboardlist.add(f.getAttribute(coreboardNameAttr).getValue() + "    " + f.getAttribute("boardType").getValue() + statustext);
                             }
                         }
                     }
@@ -458,8 +463,12 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                     if(e.getName().equals(otherboardElement)){
                         for(org.jdom2.Element f: e.getChildren()) {
                             if(f.getName().equals(boarddataType)) {
-                                // read the coreBoards attributes
-                                addtoboardlist.add(f.getAttribute(otherboardNameAttr).getValue() + "    " + f.getAttribute("boardType").getValue());
+                                dateupdated = LocalDate.parse(f.getAttribute(otherboardversiondateAttr).getValue(), formatter);
+                                statustext = (DAYS.between(dateupdated, datenow) < 91 ? "  Updated" : "");
+                                if (statustext.equals("  Updated")){
+                                    statustext = (f.getAttribute(otherboardversiondateAttr).getValue().equals(f.getAttribute(dateofissue).getValue()) ? "  New" : "  Updated");
+                                }
+                                addtoboardlist.add(f.getAttribute(otherboardNameAttr).getValue() + "    " + f.getAttribute("boardType").getValue() + statustext);
                             }
                         }
                     }
@@ -479,7 +488,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
         ArrayList<String> newboardlist = new ArrayList<String>();
         final SAXBuilder parser = new SAXBuilder();
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-        LocalDate dateissued; LocalDate dateupdated;
+        LocalDate dateissued;
         final LocalDate datenow = LocalDate.now();
         try {
             // the root element will be the boardsMetadata element
@@ -501,13 +510,6 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                                         // read the newBoards attributes
                                         newboardlist.add(f.getAttribute(coreboardNameAttr).getValue() + "  " + f.getAttribute("boardType").getValue() + "  NEW");
                                     }
-                                    else if (!f.getAttribute(coreboardversiondateAttr).getValue().equals("")){
-                                        dateupdated = LocalDate.parse(f.getAttribute(coreboardversiondateAttr).getValue(), formatter);
-                                        if (DAYS.between(dateupdated, datenow) < 91) {
-                                            // read the Boards attributes
-                                            newboardlist.add(f.getAttribute(coreboardNameAttr).getValue() + "  " + f.getAttribute("boardType").getValue() + "  Updated");
-                                        }
-                                    }
                                 }
                             }
                         }
@@ -518,17 +520,13 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                             if(f.getName().equals(boarddataType)) {
                                 if (!f.getAttribute(dateofissue).getValue().equals("")) {
                                     dateissued = LocalDate.parse(f.getAttribute(dateofissue).getValue(), formatter);
-                                    if (DAYS.between(dateissued, datenow) < 91) {
-                                        // read the newBoards attributes
-                                        newboardlist.add(f.getAttribute(otherboardNameAttr).getValue() + "  " + f.getAttribute("boardType").getValue()  + "  NEW");
-                                    }
-                                    else if (!f.getAttribute(otherboardversiondateAttr).getValue().equals("")) {
-                                        dateupdated = LocalDate.parse(f.getAttribute(otherboardversiondateAttr).getValue(), formatter);
-                                        if (DAYS.between(dateupdated, datenow) < 91) {
-                                            // read the Boards attributes
-                                            newboardlist.add(f.getAttribute(otherboardNameAttr).getValue() + "  " + f.getAttribute("boardType").getValue() + "  Updated");
-                                        }
-                                    }
+                                }
+                                else {
+                                    dateissued = LocalDate.parse("2008-01-01");  // dummy value when none exists
+                                }
+                                if (DAYS.between(dateissued, datenow) < 91) {
+                                    // read the newBoards attributes
+                                    newboardlist.add(f.getAttribute(otherboardNameAttr).getValue() + "  " + f.getAttribute("boardType").getValue()  + "  NEW");
                                 }
                             }
                         }
