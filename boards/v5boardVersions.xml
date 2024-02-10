@@ -26,467 +26,468 @@
 <boardsMetadata>
 
 	<coreBoards>
-		<boarddata name="00" version="6.3" versionDate="Jun 2023" description="Empty geoboard" boardType="Geoboard" publisher="VASL" issued="" />
-		<boarddata name="00dx" version="6.5" versionDate="Aug 2023" description="Empty Deluxe geoboard" boardType="Deluxe" publisher="VASL" issued="" />
-		<boarddata name="00a" version="6.0" versionDate="Aug 2023" description="" boardType="Double-sided" publisher="VASL" issued="" />
-		<boarddata name="00b" version="6.0" versionDate="Aug 2023" description="" boardType="Double-sided" publisher="VASL" issued="" />
-		<boarddata name="01" version="6.7" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="02" version="7.1" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="03" version="6.7" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="04" version="6.5" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="05" version="7.0" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="06" version="6.4" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="07" version="6.5" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="08" version="6.8" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="09" version="6.7" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="10" version="6.8" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="10z" version="7.1" versionDate="Jan 2024" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="11" version="6.5" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="12" version="6.8" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="13" version="6.9" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="14" version="6.8" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="15" version="6.5" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="16" version="6.5" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="17" version="6.6" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="17z" version="6.6" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="18" version="6.7" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="19" version="6.6" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="20" version="7.3" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="21" version="6.5" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="22" version="7.0" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="23" version="6.8" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="24" version="7.1" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="25" version="6.8" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="25ETO" version="6.7" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="26" version="6.6" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="27" version="6.6" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="28" version="6.6" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="29" version="6.6" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="30" version="6.6" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="31" version="6.6" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="32" version="7.2" versionDate="Jan 2024" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="33" version="6.7" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="34" version="6.9" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="35" version="6.5" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="36" version="6.9" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="37" version="6.5" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="38" version="6.5" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="39" version="6.9" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="40" version="7.5" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="41" version="6.9" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="42" version="6.8" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="43" version="6.7" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="44" version="6.7" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="45" version="6.8" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="46" version="6.7" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="47" version="7.3" versionDate="Jan 2024" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="48" version="6.6" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="49" version="6.7" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="50" version="7.0" versionDate="Apr 2022" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="51" version="6.5" versionDate="Apr 2022" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="52" version="6.4" versionDate="Apr 2022" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="53" version="6.9" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="54" version="6.8" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="55" version="6.9" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="56" version="6.6" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="57" version="6.5" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="58" version="6.4" versionDate="Apr 2022" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="59" version="6.7" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="60" version="6.7" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="61" version="6.5" versionDate="Apr 2022" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="62" version="6.7" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="63" version="6.3" versionDate="Apr 2022" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="64" version="6.5" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="65" version="6.5" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="66" version="6.5" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="67" version="6.5" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="68" version="6.4" versionDate="Oct 2022" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="69" version="6.5" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="70" version="6.5" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="71" version="6.5" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="72" version="6.7" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="73" version="6.2" versionDate="Apr 2022" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="74" version="6.4" versionDate="Apr 2022" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="75" version="6.5" versionDate="Apr 2022" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="76" version="6.7" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="77" version="6.0" versionDate="Feb 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="78" version="6.3" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="79" version="6.5" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="80" version="6.4" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="81" version="6.4" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="82" version="6.4" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="83" version="6.4" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="84" version="6.2" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="85" version="6.4" versionDate="Feb 2024" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="86" version="6.1" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="87" version="6.2" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="88" version="6.0" versionDate="Feb 2022" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="89" version="6.1" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="90" version="6.0" versionDate="Feb 2023" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="91" version="6.0" versionDate="Oct 2023" description="" boardType="Geoboard" publisher="MMP" issued="2023/10/25" />
-		<boarddata name="92" version="6.1" versionDate="Nov 2023" description="" boardType="Geoboard" publisher="MMP" issued="2023/10/27" />
-		<boarddata name="1a" version="6.5" versionDate="Oct 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="1b" version="6.5" versionDate="Oct 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="2a" version="6.9" versionDate="Oct 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="2b" version="6.9" versionDate="Oct 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="3a" version="7.1" versionDate="Nov 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="3b" version="7.1" versionDate="Nov 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="4a" version="6.9" versionDate="Jan 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="4b" version="7.1" versionDate="Jan 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="5a" version="6.8" versionDate="Nov 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="5b" version="6.8" versionDate="Nov 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="6a" version="6.9" versionDate="Nov 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="6b" version="6.9" versionDate="Nov 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="7a" version="6.6" versionDate="Nov 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="7b" version="6.6" versionDate="Nov 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="8a" version="7.0" versionDate="Nov 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="8b" version="7.0" versionDate="Nov 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="9a" version="6.5" versionDate="Nov 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="9b" version="6.5" versionDate="Nov 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="10a" version="6.4" versionDate="Nov 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="10b" version="6.4" versionDate="Nov 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="11a" version="6.3" versionDate="Nov 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="11b" version="6.3" versionDate="Nov 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="12a" version="6.2" versionDate="Nov 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="12b" version="6.2" versionDate="Nov 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="13a" version="6.1" versionDate="Nov 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="13b" version="6.1" versionDate="Nov 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="14a" version="6.1" versionDate="Nov 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="14b" version="6.1" versionDate="Nov 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="15a" version="6.3" versionDate="Nov 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="15b" version="6.3" versionDate="Nov 2023" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="a" version="6.5" versionDate="Jan 2023" description="" boardType="Deluxe" publisher="MMP" issued="" />
-		<boarddata name="b" version="6.4" versionDate="Jan 2023" description="" boardType="Deluxe" publisher="MMP" issued="" />
-		<boarddata name="c" version="6.4" versionDate="Jan 2023" description="" boardType="Deluxe" publisher="MMP" issued="" />
-		<boarddata name="d" version="6.6" versionDate="Jan 2023" description="" boardType="Deluxe" publisher="MMP" issued="" />
-		<boarddata name="e" version="6.6" versionDate="Dec 2023" description="" boardType="Deluxe" publisher="MMP" issued="" />
-		<boarddata name="f" version="6.4" versionDate="Dec 2023" description="" boardType="Deluxe" publisher="MMP" issued="" />
-		<boarddata name="g" version="6.5" versionDate="Dec 2023" description="" boardType="Deluxe" publisher="MMP" issued="" />
-		<boarddata name="h" version="6.7" versionDate="Dec 2023" description="" boardType="Deluxe" publisher="MMP" issued="" />
-		<boarddata name="i" version="6.4" versionDate="Jan 2023" description="" boardType="Deluxe" publisher="MMP" issued="" />
-		<boarddata name="iSK" version="6.1" versionDate="Nov 2023" description="" boardType="Starter Kit" publisher="MMP" issued="" />
-		<boarddata name="j" version="6.4" versionDate="Jan 2023" description="" boardType="Deluxe" publisher="MMP" issued="" />
-		<boarddata name="jSK" version="6.1" versionDate="Nov 2023" description="" boardType="Starter Kit" publisher="MMP" issued="" />
-		<boarddata name="k" version="6.4" versionDate="Jan 2023" description="" boardType="Deluxe" publisher="MMP" issued="" />
-		<boarddata name="kSK" version="6.5" versionDate="Nov 2023" description="" boardType="Starter Kit" publisher="MMP" issued="" />
-		<boarddata name="l" version="6.4" versionDate="Jan 2023" description="" boardType="Deluxe" publisher="MMP" issued="" />
-		<boarddata name="lSK" version="6.1" versionDate="Nov 2023" description="" boardType="Starter Kit" publisher="MMP" issued="" />
-		<boarddata name="m" version="6.4" versionDate="Nov 2023" description="" boardType="Starter Kit" publisher="MMP" issued="" />
-		<boarddata name="mdx" version="6.2" versionDate="Apr 2023" description="" boardType="Deluxe" publisher="MMP" issued="" />
-		<boarddata name="n" version="6.3" versionDate="Jan 2023" description="" boardType="Starter Kit" publisher="MMP" issued="" />
-		<boarddata name="ndx" version="6.0" versionDate="Jun 2022" description="" boardType="Deluxe" publisher="MMP" issued="" />
-		<boarddata name="o" version="6.6" versionDate="Nov 2023" description="" boardType="Starter Kit" publisher="MMP" issued="" />
-		<boarddata name="odx" version="6.1" versionDate="Nov 2022" description="" boardType="Deluxe" publisher="MMP" issued="" />
-		<boarddata name="p" version="6.4" versionDate="Jan 2023" description="" boardType="Starter Kit" publisher="MMP" issued="" />
-		<boarddata name="q" version="6.5" versionDate="Jan 2023" description="" boardType="Starter Kit" publisher="MMP" issued="" />
-		<boarddata name="r" version="6.5" versionDate="Nov 2023" description="" boardType="Starter Kit" publisher="MMP" issued="" />
-		<boarddata name="s" version="6.6" versionDate="Nov 2023" description="" boardType="Starter Kit" publisher="MMP" issued="" />
-		<boarddata name="t" version="6.4" versionDate="Jan 2023" description="" boardType="Starter Kit" publisher="MMP" issued="" />
-		<boarddata name="u" version="6.4" versionDate="Jan 2023" description="" boardType="Starter Kit" publisher="MMP" issued="" />
-		<boarddata name="v" version="6.5" versionDate="Jan 2023" description="" boardType="Starter Kit" publisher="MMP" issued="" />
-		<boarddata name="w" version="6.5" versionDate="Nov 2023" description="" boardType="Starter Kit" publisher="MMP" issued="" />
-		<boarddata name="x" version="6.5" versionDate="Nov 2023" description="" boardType="Starter Kit" publisher="MMP" issued="" />
-		<boarddata name="y" version="6.4" versionDate="Jan 2023" description="" boardType="Starter Kit" publisher="MMP" issued="" />
-		<boarddata name="z" version="6.7" versionDate="Jan 2023" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="00" version="6.3" versionDate="2023/06/30" description="Empty geoboard" boardType="Geoboard" publisher="VASL" issued="" />
+		<boarddata name="00dx" version="6.5" versionDate="2023/08/30" description="Empty Deluxe geoboard" boardType="Deluxe" publisher="VASL" issued="" />
+		<boarddata name="00a" version="6.0" versionDate="2023/08/30" description="" boardType="Double-sided" publisher="VASL" issued="" />
+		<boarddata name="00b" version="6.0" versionDate="2023/08/30" description="" boardType="Double-sided" publisher="VASL" issued="" />
+		<boarddata name="01" version="6.7" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="02" version="7.1" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="03" version="6.7" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="04" version="6.5" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="05" version="7.0" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="06" version="6.4" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="07" version="6.5" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="08" version="6.8" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="09" version="6.7" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="10" version="6.8" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="10z" version="7.1" versionDate="2024/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="11" version="6.5" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="12" version="6.8" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="13" version="6.9" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="14" version="6.8" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="15" version="6.5" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="16" version="6.5" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="17" version="6.6" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="17z" version="6.6" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="18" version="6.7" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="19" version="6.6" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="20" version="7.3" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="21" version="6.5" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="22" version="7.0" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="23" version="6.8" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="24" version="7.1" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="25" version="6.8" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="25ETO" version="6.7" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="26" version="6.6" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="27" version="6.6" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="28" version="6.6" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="29" version="6.6" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="30" version="6.6" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="31" version="6.6" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="32" version="7.2" versionDate="2024/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="33" version="6.7" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="34" version="6.9" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="35" version="6.5" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="36" version="6.9" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="37" version="6.5" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="38" version="6.5" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="39" version="6.9" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="40" version="7.5" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="41" version="6.9" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="42" version="6.8" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="43" version="6.7" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="44" version="6.7" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="45" version="6.8" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="46" version="6.7" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="47" version="7.3" versionDate="2024/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="48" version="6.6" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="49" version="6.7" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="50" version="7.0" versionDate="2022/04/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="51" version="6.5" versionDate="2022/04/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="52" version="6.4" versionDate="2022/04/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="53" version="6.9" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="54" version="6.8" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="55" version="6.9" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="56" version="6.6" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="57" version="6.5" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="58" version="6.4" versionDate="2022/04/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="59" version="6.7" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="60" version="6.7" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="61" version="6.5" versionDate="2022/04/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="62" version="6.7" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="63" version="6.3" versionDate="2022/04/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="64" version="6.5" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="65" version="6.5" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="66" version="6.5" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="67" version="6.5" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="68" version="6.4" versionDate="2022/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="69" version="6.5" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="70" version="6.5" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="71" version="6.5" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="72" version="6.7" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="73" version="6.2" versionDate="2022/04/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="74" version="6.4" versionDate="2022/04/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="75" version="6.5" versionDate="2022/04/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="76" version="6.7" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="77" version="6.0" versionDate="2023/02/28" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="78" version="6.3" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="79" version="6.5" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="80" version="6.4" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="81" version="6.4" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="82" version="6.4" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="83" version="6.4" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="84" version="6.2" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="85" version="6.4" versionDate="2024/02/28" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="86" version="6.1" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="87" version="6.2" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="88" version="6.0" versionDate="2022/02/28" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="89" version="6.1" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="90" version="6.0" versionDate="2023/02/28" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="91" version="6.0" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="2023/10/25" />
+		<boarddata name="92" version="6.1" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="MMP" issued="2023/10/27" />
+		<boarddata name="1a" version="6.5" versionDate="2023/10/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="1b" version="6.5" versionDate="2023/10/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="2a" version="6.9" versionDate="2023/10/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="2b" version="6.9" versionDate="2023/10/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="3a" version="7.1" versionDate="2023/11/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="3b" version="7.1" versionDate="2023/11/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="4a" version="6.9" versionDate="2023/01/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="4b" version="7.1" versionDate="2023/01/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="5a" version="6.8" versionDate="2023/11/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="5b" version="6.8" versionDate="2023/11/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="6a" version="6.9" versionDate="2023/11/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="6b" version="6.9" versionDate="2023/11/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="7a" version="6.6" versionDate="2023/11/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="7b" version="6.6" versionDate="2023/11/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="8a" version="7.0" versionDate="2023/11/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="8b" version="7.0" versionDate="2023/11/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="9a" version="6.5" versionDate="2023/11/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="9b" version="6.5" versionDate="2023/11/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="10a" version="6.4" versionDate="2023/11/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="10b" version="6.4" versionDate="2023/11/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="11a" version="6.3" versionDate="2023/11/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="11b" version="6.3" versionDate="2023/11/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="12a" version="6.2" versionDate="2023/11/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="12b" version="6.2" versionDate="2023/11/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="13a" version="6.1" versionDate="2023/11/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="13b" version="6.1" versionDate="2023/11/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="14a" version="6.1" versionDate="2023/11/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="14b" version="6.1" versionDate="2023/11/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="15a" version="6.3" versionDate="2023/11/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="15b" version="6.3" versionDate="2023/11/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="a" version="6.5" versionDate="2023/01/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
+		<boarddata name="b" version="6.4" versionDate="2023/01/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
+		<boarddata name="c" version="6.4" versionDate="2023/01/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
+		<boarddata name="d" version="6.6" versionDate="2023/01/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
+		<boarddata name="e" version="6.6" versionDate="2023/12/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
+		<boarddata name="f" version="6.4" versionDate="2023/12/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
+		<boarddata name="g" version="6.5" versionDate="2023/12/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
+		<boarddata name="h" version="6.7" versionDate="2023/12/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
+		<boarddata name="i" version="6.4" versionDate="2023/01/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
+		<boarddata name="iSK" version="6.1" versionDate="2023/11/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="j" version="6.4" versionDate="2023/01/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
+		<boarddata name="jSK" version="6.1" versionDate="2023/11/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="k" version="6.4" versionDate="2023/01/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
+		<boarddata name="kSK" version="6.5" versionDate="2023/11/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="l" version="6.4" versionDate="2023/01/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
+		<boarddata name="lSK" version="6.1" versionDate="2023/11/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="m" version="6.4" versionDate="2023/11/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="mdx" version="6.2" versionDate="2023/04/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
+		<boarddata name="n" version="6.3" versionDate="2023/01/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="ndx" version="6.0" versionDate="2022/06/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
+		<boarddata name="o" version="6.6" versionDate="2023/11/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="odx" version="6.1" versionDate="2022/11/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
+		<boarddata name="p" version="6.4" versionDate="2023/01/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="q" version="6.5" versionDate="2023/01/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="r" version="6.5" versionDate="2023/11/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="s" version="6.6" versionDate="2023/11/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="t" version="6.4" versionDate="2023/01/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="u" version="6.4" versionDate="2023/01/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="v" version="6.5" versionDate="2023/01/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="w" version="6.5" versionDate="2023/11/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="x" version="6.5" versionDate="2023/11/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="y" version="6.4" versionDate="2023/01/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="z" version="6.7" versionDate="2023/01/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+
 	</coreBoards>
 
 	<otherBoards>
-		<boarddata name="NUL" version="1" versionDate="Aug 2008" description="Placeholder" boardType="Geoboard" publisher="VASL" issued="" />
-		<boarddata name="NULV" version="1" versionDate="Aug 2008" description="Placeholder" boardType="Geoboard" publisher="VASL" issued="" />
-		<boarddata name="BFP1" version="6.4" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFP2" version="6.5" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPA" version="6.5" versionDate="Nov 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPB" version="6.4" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPC" version="6.6" versionDate="Nov 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPD" version="6.5" versionDate="Nov 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPE" version="6.6" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPF" version="6.4" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPG" version="6.4" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPH" version="6.6" versionDate="Nov 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPI" version="6.7" versionDate="Nov 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPJ" version="6.7" versionDate="Nov 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPK" version="6.7" versionDate="Nov 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPL" version="6.5" versionDate="Nov 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPM" version="6.4" versionDate="Nov 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPN" version="6.4" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPO" version="6.7" versionDate="Nov 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPP" version="6.6" versionDate="Nov 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPQ" version="6.6" versionDate="Nov 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPR" version="6.6" versionDate="Nov 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPDW1a" version="6.5" versionDate="Nov 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPDW1b" version="6.6" versionDate="Nov 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPDW2a" version="6.3" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPDW2b" version="6.4" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPDW3a" version="6.6" versionDate="Nov 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPDW3b" version="6.5" versionDate="Nov 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPDW4a" version="6.5" versionDate="Nov 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPDW4b" version="6.5" versionDate="Nov 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPDW5a" version="6.6" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPDW5b" version="6.5" versionDate="Jan 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPDW6a" version="6.7" versionDate="Nov 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPDW6b" version="6.6" versionDate="Nov 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPDW7a" version="6.5" versionDate="Nov 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPDW7b" version="6.5" versionDate="Nov 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPDW8a" version="6.1" versionDate="Nov 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPDW8b" version="6.1" versionDate="Nov 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPDW9a" version="6.1" versionDate="Nov 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPDW9b" version="6.1" versionDate="Nov 2023" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BF1" version="1.1" versionDate="Aug 2008" description="" boardType="XXX" publisher="YYY" issued="" />
-		<boarddata name="TRBH" version="1.0" versionDate="Aug 2008" description="Those Ragged Bloody Heroes" boardType="HASL" publisher="CH" issued="" />
-		<boarddata name="CtR" version="1.0" versionDate="Jan 2019" description="Corregidor: the Rock" boardType="HASL" publisher="BFP" issued="" />
-		<boarddata name="OtOBFP" version="1.0" versionDate="Mar 2020" description="Onslaught to Orsha" boardType="HASL" publisher="BFP" issued="" />
+		<boarddata name="NUL" version="1" versionDate="2008/08/30" description="Placeholder" boardType="Geoboard" publisher="VASL" issued="" />
+		<boarddata name="NULV" version="1" versionDate="2008/08/30" description="Placeholder" boardType="Geoboard" publisher="VASL" issued="" />
+		<boarddata name="BFP1" version="6.4" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFP2" version="6.5" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPA" version="6.5" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPB" version="6.4" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPC" version="6.6" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPD" version="6.5" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPE" version="6.6" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPF" version="6.4" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPG" version="6.4" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPH" version="6.6" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPI" version="6.7" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPJ" version="6.7" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPK" version="6.7" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPL" version="6.5" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPM" version="6.4" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPN" version="6.4" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPO" version="6.7" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPP" version="6.6" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPQ" version="6.6" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPR" version="6.6" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPDW1a" version="6.5" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPDW1b" version="6.6" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPDW2a" version="6.3" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPDW2b" version="6.4" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPDW3a" version="6.6" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPDW3b" version="6.5" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPDW4a" version="6.5" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPDW4b" version="6.5" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPDW5a" version="6.6" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPDW5b" version="6.5" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPDW6a" version="6.7" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPDW6b" version="6.6" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPDW7a" version="6.5" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPDW7b" version="6.5" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPDW8a" version="6.1" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPDW8b" version="6.1" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPDW9a" version="6.1" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPDW9b" version="6.1" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BF1" version="1.1" versionDate="2008/08/30" description="" boardType="XXX" publisher="YYY" issued="" />
+		<boarddata name="TRBH" version="1.0" versionDate="2008/08/30" description="Those Ragged Bloody Heroes" boardType="HASL" publisher="CH" issued="" />
+		<boarddata name="CtR" version="1.0" versionDate="2019/01/30" description="Corregidor: the Rock" boardType="HASL" publisher="BFP" issued="" />
+		<boarddata name="OtOBFP" version="1.0" versionDate="2020/03/30" description="Onslaught to Orsha" boardType="HASL" publisher="BFP" issued="" />
 		<!--#KB=2.0 not accurate -->
-		<boarddata name="TO" version="1.2" versionDate="Aug 2008" description="Timmes' Orchard" boardType="HASL" publisher="CH" issued="" />
+		<boarddata name="TO" version="1.2" versionDate="2008/08/30" description="Timmes' Orchard" boardType="HASL" publisher="CH" issued="" />
 		<!--#SH=2.0 not accurate -->
 		<!--#PDH=1.0 PDH not exists; PdH or PHD -->
 
-		<boarddata name="StN" version=" 1.0" versionDate="Aug 2008" description="Saint-Nazaire" boardType="HASL" publisher="LFT" issued="" />
-		<boarddata name="BRV" version=" 1.1" versionDate="Aug 2008" description="Berlin: Red Vengeance" boardType="HASL" publisher="YYY" issued="" />
-		<boarddata name="FC" version="6.0" versionDate="Jun 2021" description="Fortress Cassino" boardType="HASL" publisher="YYY" issued="" />
-		<boarddata name="NG" version=" 1.0" versionDate="Aug 2008" description="Nhpum Ga" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="RR" version=" 1.0" versionDate="Aug 2008" description="Ruweisat Ridge" boardType="HASL" publisher="CH" issued="" />
-		<boarddata name="BDF" version="6.0" versionDate="Jun 2021" description="Baraque de Fraiture" boardType="HASL" publisher="FLP" issued="" />
-		<boarddata name="FrFA" version=" 6.2" versionDate="Nov 2023" description="" boardType="Geoboard" publisher="FrF" issued="" />
-		<boarddata name="HZ1" version=" 6.0" versionDate="Dec 2022" description="HazMo1" boardType="Geoboard" publisher="HazMo" issued="2023/10/05"/>
-		<boarddata name="HZ2" version=" 6.1" versionDate="Nov 2023" description="HazMo2" boardType="Geoboard" publisher="HazMo" issued="2023/10/05"/>
-		<boarddata name="HOBI" version="6.0" versionDate="Jun 2021" description="" boardType="Geoboard" publisher="HOB" issued="" />
-		<boarddata name="HOBII" version="6.0" versionDate="Jun 2021" description="" boardType="Geoboard" publisher="HOB" issued="" />
-		<boarddata name="Kreta" version=" 1.0" versionDate="Aug 2008" description="Operation Merkur" boardType="HASL" publisher="HOB" issued="" />
-		<boarddata name="OTO" version=" 1.0" versionDate="Aug 2008" description="Onslaught to Orsha" boardType="HASL" publisher="HOB" issued="" />
-		<boarddata name="KOTH" version="1.0" versionDate="Aug 2008" description="King of the Hill" boardType="HASL" publisher="HOB" issued="" />
-		<boarddata name="LFT1" version="1.0" versionDate="Aug 2008" description="" boardType="Geoboard" publisher="LFT" issued="" />
-		<boarddata name="LFT2" version="6.0" versionDate="Jun 2021" description="" boardType="Geoboard" publisher="LFT" issued="" />
-		<boarddata name="LFT3" version="6.1" versionDate="Jul 2023" description="" boardType="Geoboard" publisher="LFT" issued="" />
-		<boarddata name="LFT4" version="6.1" versionDate="Jul 2023" description="" boardType="Geoboard" publisher="LFT" issued="" />
-		<boarddata name="LFT5" version="6.0" versionDate="Mar 2023" description="" boardType="Geoboard" publisher="LFT" issued="" />
-		<boarddata name="LFT6" version="6.0" versionDate="Mar 2023" description="" boardType="Geoboard" publisher="LFT" issued="" />
-		<boarddata name="LFT7" version="6.0" versionDate="Mar 2023" description="" boardType="Geoboard" publisher="LFT" issued="" />
-		<boarddata name="LFT8" version="6.0" versionDate="Mar 2023" description="" boardType="Geoboard" publisher="LFT" issued="" />
-		<boarddata name="LFT9" version="6.0" versionDate="Mar 2023" description="" boardType="Geoboard" publisher="LFT" issued="" />
-		<boarddata name="LFT10" version="6.0" versionDate="Mar 2023" description="" boardType="Geoboard" publisher="LFT" issued="" />
-		<boarddata name="SG" version="6.0" versionDate="Apr 2021" description="Singling" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="VotG" version="3.1" versionDate="Aug 2008" description="Valor of the Guards" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="SC" version="3.0" versionDate="Aug 2008" description="Suicide Creek" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="ST" version="2.02" versionDate="Aug 2008" description="Stoumont (KGP I)" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="PB" version="0.1" versionDate="Aug 2008" description="Pegasus Bridge" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="StN" version=" 1.0" versionDate="2008/08/30" description="Saint-Nazaire" boardType="HASL" publisher="LFT" issued="" />
+		<boarddata name="BRV" version=" 1.1" versionDate="2008/08/30" description="Berlin: Red Vengeance" boardType="HASL" publisher="YYY" issued="" />
+		<boarddata name="FC" version="6.0" versionDate="2021/06/30" description="Fortress Cassino" boardType="HASL" publisher="YYY" issued="" />
+		<boarddata name="NG" version=" 1.0" versionDate="2008/08/30" description="Nhpum Ga" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="RR" version=" 1.0" versionDate="2008/08/30" description="Ruweisat Ridge" boardType="HASL" publisher="CH" issued="" />
+		<boarddata name="BDF" version="6.0" versionDate="2021/06/30" description="Baraque de Fraiture" boardType="HASL" publisher="FLP" issued="" />
+		<boarddata name="FrFA" version=" 6.2" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="FrF" issued="" />
+		<boarddata name="HZ1" version=" 6.0" versionDate="2022/12/30" description="HazMo1" boardType="Geoboard" publisher="HazMo" issued="2023/10/05"/>
+		<boarddata name="HZ2" version=" 6.1" versionDate="2023/11/30" description="HazMo2" boardType="Geoboard" publisher="HazMo" issued="2023/10/05"/>
+		<boarddata name="HOBI" version="6.0" versionDate="2021/06/30" description="" boardType="Geoboard" publisher="HOB" issued="" />
+		<boarddata name="HOBII" version="6.0" versionDate="2021/06/30" description="" boardType="Geoboard" publisher="HOB" issued="" />
+		<boarddata name="Kreta" version=" 1.0" versionDate="2008/08/30" description="Operation Merkur" boardType="HASL" publisher="HOB" issued="" />
+		<boarddata name="OTO" version=" 1.0" versionDate="2008/08/30" description="Onslaught to Orsha" boardType="HASL" publisher="HOB" issued="" />
+		<boarddata name="KOTH" version="1.0" versionDate="2008/08/30" description="King of the Hill" boardType="HASL" publisher="HOB" issued="" />
+		<boarddata name="LFT1" version="1.0" versionDate="2008/08/30" description="" boardType="Geoboard" publisher="LFT" issued="" />
+		<boarddata name="LFT2" version="6.0" versionDate="2021/06/30" description="" boardType="Geoboard" publisher="LFT" issued="" />
+		<boarddata name="LFT3" version="6.1" versionDate="2023/07/30" description="" boardType="Geoboard" publisher="LFT" issued="" />
+		<boarddata name="LFT4" version="6.1" versionDate="2023/07/30" description="" boardType="Geoboard" publisher="LFT" issued="" />
+		<boarddata name="LFT5" version="6.0" versionDate="2023/03/30" description="" boardType="Geoboard" publisher="LFT" issued="" />
+		<boarddata name="LFT6" version="6.0" versionDate="2023/03/30" description="" boardType="Geoboard" publisher="LFT" issued="" />
+		<boarddata name="LFT7" version="6.0" versionDate="2023/03/30" description="" boardType="Geoboard" publisher="LFT" issued="" />
+		<boarddata name="LFT8" version="6.0" versionDate="2023/03/30" description="" boardType="Geoboard" publisher="LFT" issued="" />
+		<boarddata name="LFT9" version="6.0" versionDate="2023/03/30" description="" boardType="Geoboard" publisher="LFT" issued="" />
+		<boarddata name="LFT10" version="6.0" versionDate="2023/03/30" description="" boardType="Geoboard" publisher="LFT" issued="" />
+		<boarddata name="SG" version="6.0" versionDate="2021/04/30" description="Singling" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="VotG" version="3.1" versionDate="2008/08/30" description="Valor of the Guards" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="SC" version="3.0" versionDate="2008/08/30" description="Suicide Creek" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="ST" version="2.02" versionDate="2008/08/30" description="Stoumont (KGP I)" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="PB" version="0.1" versionDate="2008/08/30" description="Pegasus Bridge" boardType="HASL" publisher="MMP" issued="" />
 
 
 		<!--# NG = 1.0 duplicate -->
-		<boarddata name="RB" version="1.3" versionDate="Dec 2019" description="" boardType="XXX" publisher="YYY" issued="" />
-		<boarddata name="RBv2" version="2.4" versionDate="Jun 2021" description="Red Barricades" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="RBv3" version="6.3" versionDate="Sep 2022" description="Red Barricades" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="RO" version="6.2" versionDate="Apr 2022" description="Red October" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="KR" version="6.0" versionDate="Jun 2021" description="Kakazu Ridge" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="GT" version="1.0" versionDate="Aug 2008" description="Gavatu-Tanambogo" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="CH" version="0.93" versionDate="Aug 2008" description="Cheneux (KGP II)" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="ABTF" version="6.0" versionDate="Jun 2021" description="A Bridge Too Far" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="Rileys" version="1.5" versionDate="Aug 2008" description="Riley's Road" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="Dinant" version="6.1" versionDate="Mar 2022" description="Dinant: Rommel at the Meuse" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="SA" version="1.0" versionDate="Mar 2023" description="Sainte-Mère-Église (Drop Zone: Sainte-Mère-Église)" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="FA" version="1.0" versionDate="Mar 2023" description="Fauville (Drop Zone: Sainte-Mère-Église)" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="NE" version="1.0" versionDate="Mar 2023" description="Neuville-au-Plain (Drop Zone: Sainte-Mère-Église)" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="RB" version="1.3" versionDate="2019/12/30" description="" boardType="XXX" publisher="YYY" issued="" />
+		<boarddata name="RBv2" version="2.4" versionDate="2021/06/30" description="Red Barricades" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="RBv3" version="6.3" versionDate="2022/09/30" description="Red Barricades" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="RO" version="6.2" versionDate="2022/04/30" description="Red October" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="KR" version="6.0" versionDate="2021/06/30" description="Kakazu Ridge" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="GT" version="1.0" versionDate="2008/08/30" description="Gavatu-Tanambogo" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="CH" version="0.93" versionDate="2008/08/30" description="Cheneux (KGP II)" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="ABTF" version="6.0" versionDate="2021/06/30" description="A Bridge Too Far" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="Rileys" version="1.5" versionDate="2008/08/30" description="Riley's Road" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="Dinant" version="6.1" versionDate="2022/03/30" description="Dinant: Rommel at the Meuse" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="SA" version="1.0" versionDate="2023/03/30" description="Sainte-Mère-Église (Drop Zone: Sainte-Mère-Église)" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="FA" version="1.0" versionDate="2023/03/30" description="Fauville (Drop Zone: Sainte-Mère-Église)" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="NE" version="1.0" versionDate="2023/03/30" description="Neuville-au-Plain (Drop Zone: Sainte-Mère-Église)" boardType="HASL" publisher="MMP" issued="" />
 		<!--# LG = 1.0 duplicate
 		# ER = 1.1 duplicate
 		# STN = 1.0 no such board; should be StN
 		# ESG1 = 1.0 no such board
 		# ESG2 = 1.0 no such board -->
-		<boarddata name="PBR" version="1.1" versionDate="Aug 2008" description="The Primosole Bridge" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="Blank0" version="6.0" versionDate="Aug 2008" description="Placeholder" boardType="Geoboard" publisher="VASL" issued="" />
-		<boarddata name="Blank1" version="6.0" versionDate="Aug 2008" description="Placeholder" boardType="Geoboard" publisher="VASL" issued="" />
-		<boarddata name="HH" version="1.0" versionDate="Aug 2008" description="Hell's Highway" boardType="HASL" publisher="LCP" issued="" />
-		<boarddata name="AAC" version="1.0" versionDate="Aug 2008" description="Action At Carentan" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="AK2" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="ASLNews" version="2.0" versionDate="Aug 2008" description="" boardType="Geoboard" publisher="ASL News" issued="" />
-		<boarddata name="AllAmerican" version="1.2" versionDate="Aug 2008" description="Timmes' Orchard" boardType="HASL" publisher="CH" issued="" />
-		<boarddata name="B&amp;I" version="1.2" versionDate="Aug 2008" description="Blood and Iron" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="B3R" version="1.0" versionDate="Aug 2008" description="Berlin 1" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="BB" version="1.0" versionDate="Aug 2008" description="Bloody Buron" boardType="HASL" publisher="LCP" issued="" />
-		<boarddata name="BERLIN" version="1.0" versionDate="Aug 2008" description="Berlin 1" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="BOB&#x20;DZN" version="1.0" versionDate="Aug 2008" description="Drop Zone Normandy" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="BRT" version="1.2" versionDate="Sep 2018" description="Blood Reef: TARAWA" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="Bataan" version="1.0" versionDate="Aug 2008" description="Bataan - Battle for the Mabatang Line" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="BerlinRV" version="1.0" versionDate="Aug 2008" description="Berlin 1" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="Blood&#x20;&amp;&#x20;Iron" version="1.0" versionDate="Aug 2008" description="Blood and Iron" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="Bracchi" version="1.0" versionDate="Aug 2008" description="Battle of the Bracchi Hills" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="CAC" version="1.0" versionDate="Aug 2008" description="Carnage at Cassino" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="CE" version="1.1" versionDate="Aug 2008" description="Dien Bien Phu" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="CGV" version="1.0" versionDate="Aug 2008" description="Berlin 1" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="CHDD1" version="1.0" versionDate="Aug 2008" description="Devil's Domain - Kursk Ponyri" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="CHDD2" version="1.0" versionDate="Aug 2008" description="Devil's Domain - Kursk Ponyri" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="CM" version="1.0" versionDate="Aug 2008" description="Crossing the Moro" boardType="HASL" publisher="LCP" issued="" />
-		<boarddata name="DTW" version="1.0" versionDate="Aug 2008" description="Dzerhezinsky Tractor Works" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="DaE" version="1.1" versionDate="Aug 2008" description="Decision at Elst" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="DfBG1" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="DftB" issued="" />
-		<boarddata name="ER" version="6.0" versionDate="Jun 2021" description="Edson's Ridge" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="FACTRY" version="1.0" versionDate="Aug 2008" description="" boardType="XXX" publisher="YYY" issued="" />
-		<boarddata name="FB" version="6.2" versionDate="Apr 2022" description="Festung Budapest" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="FB_NE" version="6.3" versionDate="Jan 2023" description="Festung Budapest (NE)" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="FB_NW" version="6.3" versionDate="Jan 2023" description="Festung Budapest (NW)" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="FB_SE" version="6.3" versionDate="Jan 2023" description="Festung Budapest (SE)" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="FB_SW" version="6.3" versionDate="Jan 2023" description="Festung Budapest (SW)" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="FE1" version="1.1" versionDate="Aug 2008" description="" boardType="Geoboard" publisher="FE" issued="" />
-		<boarddata name="FE2" version="1.1" versionDate="Aug 2008" description="" boardType="Geoboard" publisher="FE" issued="" />
-		<boarddata name="FE3" version="6.0" versionDate="Jun 2021" description="" boardType="Geoboard" publisher="FE" issued="" />
-		<boarddata name="FE4" version="6.0" versionDate="Jun 2021" description="" boardType="Geoboard" publisher="FE" issued="" />
-		<boarddata name="FE5" version="6.0" versionDate="Jun 2021" description="" boardType="Geoboard" publisher="FE" issued="" />
-		<boarddata name="FE6" version="6.0" versionDate="Jun 2021" description="" boardType="Geoboard" publisher="FE" issued="" />
-		<boarddata name="FE8" version="6.0" versionDate="Jun 2021" description="" boardType="Geoboard" publisher="FE" issued="" />
-		<boarddata name="FE9" version="6.0" versionDate="Jun 2021" description="" boardType="Geoboard" publisher="FE" issued="" />
-		<boarddata name="FF01" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="HOB" issued="" />
-		<boarddata name="FF02" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="HOB" issued="" />
-		<boarddata name="FF03" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="HOB" issued="" />
-		<boarddata name="FF04" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="HOB" issued="" />
-		<boarddata name="FF05" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="HOB" issued="" />
-		<boarddata name="FF06" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="HOB" issued="" />
-		<boarddata name="FF07" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="HOB" issued="" />
-		<boarddata name="FF08" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="HOB" issued="" />
-		<boarddata name="FF09" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="HOB" issued="" />
-		<boarddata name="FF10" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="HOB" issued="" />
-		<boarddata name="FF11" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="HOB" issued="" />
-		<boarddata name="FF12" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="HOB" issued="" />
-		<boarddata name="FF13" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="HOB" issued="" />
-		<boarddata name="FF14" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="HOB" issued="" />
-		<boarddata name="FF15" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="HOB" issued="" />
-		<boarddata name="FWAO" version="6.0" versionDate="Jun 2021" description="First Wave at Omaha" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="Filler1" version="1.0" versionDate="Aug 2008" description="Filler board for multi board positioning" boardType="Utility" publisher="VASL" issued="" />
-		<boarddata name="Filler2" version="1.0" versionDate="Aug 2008" description="Filler board for multi board positioning" boardType="Utility" publisher="VASL" issued="" />
-		<boarddata name="Filler3" version="1.0" versionDate="Aug 2008" description="Filler board for multi board positioning" boardType="Utility" publisher="VASL" issued="" />
-		<boarddata name="Filler4" version="1.0" versionDate="Aug 2008" description="Filler board for multi board positioning" boardType="Utility" publisher="VASL" issued="" />
-		<boarddata name="Filler5" version="1.0" versionDate="Aug 2008" description="Filler board for multi board positioning" boardType="Utility" publisher="VASL" issued="" />
-		<boarddata name="Filler6" version="1.0" versionDate="Aug 2008" description="Filler board for multi board positioning" boardType="Utility" publisher="VASL" issued="" />
-		<boarddata name="GB1" version="6.0" versionDate="Jun 2021" description="" boardType="Geoboard" publisher="GarryBoyce" issued="" />
-		<boarddata name="GB2" version="6.0" versionDate="Jun 2021" description="" boardType="Geoboard" publisher="GarryBoyce" issued="" />
-		<boarddata name="GB3" version="6.0" versionDate="Jun 2021" description="" boardType="Geoboard" publisher="GarryBoyce" issued="" />
-		<boarddata name="GB4" version="6.0" versionDate="Jun 2021" description="" boardType="Geoboard" publisher="GarryBoyce" issued="" />
-		<boarddata name="GB5" version="6.0" versionDate="Jun 2021" description="" boardType="Geoboard" publisher="GarryBoyce" issued="" />
-		<boarddata name="GE" version="1.0" versionDate="Aug 2008" description="Grain Elevator" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="GSTK" version="1.0" versionDate="Aug 2008" description="God Save the King" boardType="HASL" publisher="HOB" issued="" />
-		<boarddata name="HB" version="1.0" versionDate="Aug 2008" description="Hell's Bridgehead" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="HFv221" version="1.0" versionDate="Aug 2008" description="Schmidt-Kommerscheidt" boardType="HASL" publisher="BFP" issued="" />
-		<boarddata name="Hotton" version="2.0" versionDate="Aug 2008" description="Battle of the Bulge - Hotton" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="Hurtgen" version="1.0" versionDate="Aug 2008" description="Strass, Hurtgenwald" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="IvansWar" version="1.0" versionDate="Aug 2008" description="Ivan's War - Stalingrad" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="KB" version="2.1" versionDate="Sep 2018" description="Kellam's Bridge" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="LG" version="1.0" versionDate="Aug 2008" description="La Glieze (KGP II)" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="MC1&#x20;Snow" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="MC2" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="MC2&#x20;Snow" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="MC2a" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="MC2a&#x20;Snow" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="MC3" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="MC4" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="MC5&#x20;Snow" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="MC5A" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="MC5A&#x20;Snow" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="MC6" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="MC7" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="MID" version="1.0" versionDate="Aug 2008" description="Eastern Island (Midway)" boardType="HASL" publisher="Unknown" issued="" />
-		<boarddata name="Ma" version="1.0" versionDate="Aug 2008" description="" boardType="Geoboard" publisher="Unknown" issued="" />
-		<boarddata name="Mb" version="1.0" versionDate="Aug 2008" description="" boardType="Geoboard" publisher="Unknown" issued="" />
-		<boarddata name="Melines" version="1.0" versionDate="Aug 2008" description="Battle of the Bulge - Melines" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="N1" version="1.0" versionDate="Aug 2008" description="" boardType="Geoboard" publisher="Unknown" issued="" />
-		<boarddata name="N2" version="1.0" versionDate="Aug 2008" description="" boardType="Geoboard" publisher="Unknown" issued="" />
-		<boarddata name="N3" version="1.0" versionDate="Aug 2008" description="" boardType="Geoboard" publisher="Unknown" issued="" />
-		<boarddata name="NordicTwilight" version="1.1" versionDate="Aug 2008" description="Nordic Twilight - Wingen-sur-Moder" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="OBS" version="1.0" versionDate="Aug 2008" description="Ordeal Before Shuri" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="OzB" version="1.0" versionDate="Aug 2008" description="Ozerekya Breakout" boardType="HASL" publisher="LCP" issued="" />
-		<boarddata name="PHD" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="Unknown" issued="" />
-		<boarddata name="PHDv2" version="2.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="Unknown" issued="" />
-		<boarddata name="PdH" version="1.0" versionDate="Aug 2008" description="Pointe Du Hoc" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="Pel" version="6.0" versionDate="Jun 2021" description="Peleliu White Beach One" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="QuatreBras" version="1.0" versionDate="Aug 2008" description="Battle of the Bulge - Quatre Bras" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="RC&#x20;Novo" version="1.0" versionDate="Aug 2008" description="CSIR - ARMIR 1941/43 Novo Orlovka" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="RC&#x20;Orlovo" version="1.0" versionDate="Aug 2008" description="CSIR - ARMIR 1941/43 Orlovo Ivanovka" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="RG" version="2.0" versionDate="Aug 2008" description="Roman Glory" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="SCW0" version="1.0" versionDate="Aug 2008" description="" boardType="Geoboard" publisher="CH!" issued="" />
-		<boarddata name="SCW1" version="1.0" versionDate="Aug 2008" description="" boardType="Geoboard" publisher="CH!" issued="" />
-		<boarddata name="SCW2" version="1.0" versionDate="Aug 2008" description="" boardType="Geoboard" publisher="CH!" issued="" />
-		<boarddata name="SH" version="2.1" versionDate="Aug 2018" description="Shanley's Hill" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="STB" version="1.0" versionDate="Aug 2008" description="Scotland The Brave" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="STB1" version="1.0" versionDate="Aug 2008" description="Scotland The Brave" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="STB2" version="1.0" versionDate="Aug 2008" description="Scotland The Brave II" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="SantaMaria-HLV1" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="SantaMariaInfante" version=" 1.0" versionDate="Aug 2008" description="Santa Maria Infante" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="SpanishFury1" version="1.0" versionDate="Aug 2008" description="Spanish Fury, Russia" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="SpanishFury2" version="1.0" versionDate="Aug 2008" description="Spanish Fury, Russia" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="StLo" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="Unknown" issued="" />
-		<boarddata name="Stonne" version="2.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="TCRS" version="1.0" versionDate="Aug 2008" description="Central Railway Station" boardType="HASL" publisher="Perry Pender" issued="" />
-		<boarddata name="TL" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="TPH2" version="1.0" versionDate="Aug 2008" description="Tin Pan Hill" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="Tobruck" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="Toktong" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="Unknown" issued="" />
-		<boarddata name="TttF" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="Unknown" issued="" />
-		<boarddata name="U" version="1.0" versionDate="Aug 2008" description="" boardType="Starter Kit" publisher="MMP" issued="" />
-		<boarddata name="WC1" version="1.0" versionDate="Aug 2008" description="Witches Cauldron - The Oosterbeek Perimeter" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="WC2" version="1.0" versionDate="Aug 2008" description="Witches Cauldron - The Oosterbeek Perimeter" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="WittLastBattle" version="1.0" versionDate="Aug 2008" description="Wittman's Last Battle" boardType="HASL" publisher="Perry Pender" issued="" />
-		<boarddata name="breskenspocket" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="d1" version="1.0" versionDate="Aug 2008" description="" boardType="Deluxe" publisher="LFT" issued="" />
-		<boarddata name="d2" version="1.0" versionDate="Aug 2008" description="" boardType="Deluxe" publisher="LFT" issued="" />
-		<boarddata name="d3" version="1.0" versionDate="Aug 2008" description="" boardType="Deluxe" publisher="LFT" issued="" />
-		<boarddata name="d4" version="1.0" versionDate="Aug 2008" description="" boardType="Deluxe" publisher="LFT" issued="" />
-		<boarddata name="d5" version="1.0" versionDate="Aug 2008" description="" boardType="Deluxe" publisher="LFT" issued="" />
-		<boarddata name="d6" version="1.0" versionDate="Aug 2008" description="" boardType="Deluxe" publisher="LFT" issued="" />
-		<boarddata name="d7" version="1.0" versionDate="Aug 2008" description="" boardType="Deluxe" publisher="LFT" issued="" />
-		<boarddata name="kholmS" version="1.1" versionDate="Aug 2008" description="Kampfgruppe Scherer: the Shield of Cholm (Summer)" boardType="HASL" publisher="LFT" issued="" />
-		<boarddata name="kholmW" version="1.1" versionDate="Aug 2008" description="Kampfgruppe Scherer: the Shield of Cholm (Winter)" boardType="HASL" publisher="LFT" issued="" />
-		<boarddata name="kholmWO" version="2.1" versionDate="Aug 2008" description="Kampfgruppe Scherer: the Shield of Cholm (Winter)" boardType="HASL" publisher="LFT" issued="" />
-		<boarddata name="oto2" version="1.0" versionDate="Aug 2008" description="Onslaught to Orsha" boardType="HASL" publisher="HOB" issued="" />
-		<boarddata name="CasaBerardi" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="Unknown" issued="" />
-		<boarddata name="HS17" version="1.0" versionDate="Aug 2008" description="" boardType="HASL" publisher="Unknown" issued="" />
-		<boarddata name="DSL" version="1.0" versionDate="Aug 2008" description="Drive for Saint-Lô" boardType="HASL" publisher="LCP" issued="" />
-		<boarddata name="HC" version="1.0" versionDate="Aug 2008" description="Hell's Corner" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="TR1" version="2.0" versionDate="Aug 2008" description="" boardType="Geoboard" publisher="Tom Repetti" issued="" />
-		<boarddata name="TR2" version="2.0" versionDate="Aug 2008" description="" boardType="Geoboard" publisher="Tom Repetti" issued="" />
-		<boarddata name="TR3" version="2.0" versionDate="Aug 2008" description="" boardType="Geoboard" publisher="Tom Repetti" issued="" />
-		<boarddata name="TR4" version="2.0" versionDate="Aug 2008" description="" boardType="Geoboard" publisher="Tom Repetti" issued="" />
-		<boarddata name="TR5" version="2.0" versionDate="Aug 2008" description="" boardType="Geoboard" publisher="Tom Repetti" issued="" />
-		<boarddata name="TR6" version="2.0" versionDate="Aug 2008" description="" boardType="Geoboard" publisher="Tom Repetti" issued="" />
-		<boarddata name="TR7" version="2.0" versionDate="Aug 2008" description="" boardType="Geoboard" publisher="Tom Repetti" issued="" />
-		<boarddata name="TR8" version="2.0" versionDate="Aug 2008" description="" boardType="Geoboard" publisher="Tom Repetti" issued="" />
-		<boarddata name="HT" version="1.1" versionDate="Oct 2018" description="Hatten in Flames" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="RM" version="1.0" versionDate="Apr 2020" description="Race for the Meuse" boardType="HASL" publisher="LCP" issued="" />
-		<boarddata name="KBR" version="1.0" versionDate="Apr 2020" description="Königsberg – The Bear’s Revenge" boardType="HASL" publisher="LCP" issued="" />
-		<boarddata name="Eagles" version="1.0" versionDate="Sep 2020" description="Where the Half-Squads Dare" boardType="HASL" publisher="Grumble Jones" issued="" />
-		<boarddata name="Sch" version="1.0" versionDate="Feb 2021" description="Objective: Schmidt" boardType="HASL" publisher="BFP" issued="" />
-		<boarddata name="Voss" version="1.0" versionDate="Feb 2021" description="Objective: Schmidt" boardType="HASL" publisher="BFP" issued="" />
-		<boarddata name="RBv651" version="0.05" versionDate="Feb 2021" description="Red Barricades" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="ROv651" version="0.09" versionDate="Feb 2021" description="Red October" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="StW" version="1.0" versionDate="Mar 2021" description="" boardType="XXX" publisher="YYY" issued="" />
-		<boarddata name="NP1" version="1.0" versionDate="Mar 2020" description="" boardType="Geoboard" publisher="Unknown" issued="" />
-		<boarddata name="NP2" version="1.0" versionDate="Mar 2020" description="" boardType="Geoboard" publisher="Unknown" issued="" />
-		<boarddata name="NP3d" version="1.0" versionDate="Mar 2020" description="" boardType="Geoboard" publisher="Unknown" issued="" />
-		<boarddata name="FLP" version="1.0" versionDate="Jan 2022" description="Operation: Martlet" boardType="HASL" publisher="LCP" issued="" />
-		<boarddata name="ON" version="1.0" versionDate="Jan 2021" description="Operation Neptune" boardType="HASL" publisher="BFP" issued="" />
-		<boarddata name="OtOBFP" version="1.0" versionDate="Mar 2020" description="Onslaught to Orsha" boardType="HASL" publisher="BFP" issued="" />
-		<boarddata name="SaF" version="6.2" versionDate="Jul 2022" description="Sword and Fire: Manila" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="SaFL" version="6.4" versionDate="Sep 2022" description="Sword and Fire: Manila" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="BG1" version="1.0" versionDate="Oct 2022" description="" boardType="Geoboard" publisher="BGD" issued="" />
-		<boarddata name="DeluxeBlank" version="1.0" versionDate="Aug 2023" description="Empty deluxe geoboard" boardType="Deluxe" publisher="VASL" issued="" />
-		<boarddata name="OpV" version="1.0" versionDate="Sep 2023" description="Riley's Road - no grain" boardType="HASL" publisher="TJ" issued="" />
-		<boarddata name="SF" version="1.1" versionDate="Dec 2023" description="Sparrow Force" boardType="HASL" publisher="MMP" issued="2023/09/17" />
-		<boarddata name="AF_AbbioPriolo" version="1.1" versionDate="Jan 2024" description="Abbio Priolo" boardType="HASL" publisher="AF" issued="2024/01/30" />
-		<boarddata name="AF_BiazzaRidge" version="1.1" versionDate="Jan 2024" description="Biazza Ridge" boardType="HASL" publisher="AF" issued="2024/01/30" />
-		<boarddata name="AF_Brevity OP" version="1.0" versionDate="Jan 2024" description="Brevity Assault" boardType="HASL" publisher="AF" issued="2024/01/30" />
-		<boarddata name="AF_GelaFarello" version="1.0" versionDate="Jan 2024" description="Gela Farello" boardType="HASL" publisher="AF" issued="2024/01/30" />
-		<boarddata name="AF_Half-North" version="1.1" versionDate="Jan 2024" description="Half-North" boardType="HASL" publisher="AF" issued="2024/01/30" />
-		<boarddata name="AF_Half-South" version="1.2" versionDate="Jan 2024" description="Half-South" boardType="HASL" publisher="AF" issued="2024/01/30" />
-		<boarddata name="AF_ORS_1" version="1.0" versionDate="Jan 2024" description="Orsogna" boardType="HASL" publisher="AF" issued="2024/01/30" />
-		<boarddata name="AF_ORS_2" version="1.0" versionDate="Jan 2024" description="Orsogna" boardType="HASL" publisher="AF" issued="2024/01/30" />
-		<boarddata name="AF_ORS_3" version="1.0" versionDate="Jan 2024" description="Orsogna" boardType="HASL" publisher="AF" issued="2024/01/30" />
-		<boarddata name="AF_ORS_4" version="1.0" versionDate="Jan 2024" description="Orsogna" boardType="HASL" publisher="AF" issued="2024/01/30" />
-		<boarddata name="AF_PianoLupo" version="1.1" versionDate="Jan 2024" description="Biazza Ridge" boardType="HASL" publisher="AF" issued="2024/01/30" />
-		<boarddata name="AF_PonteDirillo" version="1.2" versionDate="Jan 2024" description="Biazza Ridge" boardType="HASL" publisher="AF" issued="2024/01/30" />
-		<boarddata name="AF_PRK_1" version="1.0" versionDate="Jan 2024" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
-		<boarddata name="AF_PRK_2" version="1.0" versionDate="Jan 2024" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
-		<boarddata name="AF_PRK_3" version="1.0" versionDate="Jan 2024" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
-		<boarddata name="AF_PRK_4" version="1.0" versionDate="Jan 2024" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
-		<boarddata name="AF_PRK_5" version="1.0" versionDate="Jan 2024" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
-		<boarddata name="AF_PRK_A" version="1.0" versionDate="Jan 2024" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
-		<boarddata name="AF_PRK_S" version="1.0" versionDate="Jan 2024" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
-		<boarddata name="AF_PRK_Y" version="1.0" versionDate="Jan 2024" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
-		<boarddata name="AF_Sollum" version="1.1" versionDate="Jan 2024" description="Brevity Assault" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="PBR" version="1.1" versionDate="2008/08/30" description="The Primosole Bridge" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="Blank0" version="6.0" versionDate="2008/08/30" description="Placeholder" boardType="Geoboard" publisher="VASL" issued="" />
+		<boarddata name="Blank1" version="6.0" versionDate="2008/08/30" description="Placeholder" boardType="Geoboard" publisher="VASL" issued="" />
+		<boarddata name="HH" version="1.0" versionDate="2008/08/30" description="Hell's Highway" boardType="HASL" publisher="LCP" issued="" />
+		<boarddata name="AAC" version="1.0" versionDate="2008/08/30" description="Action At Carentan" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="AK2" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="ASLNews" version="2.0" versionDate="2008/08/30" description="" boardType="Geoboard" publisher="ASL News" issued="" />
+		<boarddata name="AllAmerican" version="1.2" versionDate="2008/08/30" description="Timmes' Orchard" boardType="HASL" publisher="CH" issued="" />
+		<boarddata name="B&amp;I" version="1.2" versionDate="2008/08/30" description="Blood and Iron" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="B3R" version="1.0" versionDate="2008/08/30" description="Berlin 1" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="BB" version="1.0" versionDate="2008/08/30" description="Bloody Buron" boardType="HASL" publisher="LCP" issued="" />
+		<boarddata name="BERLIN" version="1.0" versionDate="2008/08/30" description="Berlin 1" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="BOB&#x20;DZN" version="1.0" versionDate="2008/08/30" description="Drop Zone Normandy" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="BRT" version="1.2" versionDate="2018/09/30" description="Blood Reef: TARAWA" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="Bataan" version="1.0" versionDate="2008/08/30" description="Bataan - Battle for the Mabatang Line" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="BerlinRV" version="1.0" versionDate="2008/08/30" description="Berlin 1" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="Blood&#x20;&amp;&#x20;Iron" version="1.0" versionDate="2008/08/30" description="Blood and Iron" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="Bracchi" version="1.0" versionDate="2008/08/30" description="Battle of the Bracchi Hills" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="CAC" version="1.0" versionDate="2008/08/30" description="Carnage at Cassino" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="CE" version="1.1" versionDate="2008/08/30" description="Dien Bien Phu" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="CGV" version="1.0" versionDate="2008/08/30" description="Berlin 1" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="CHDD1" version="1.0" versionDate="2008/08/30" description="Devil's Domain - Kursk Ponyri" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="CHDD2" version="1.0" versionDate="2008/08/30" description="Devil's Domain - Kursk Ponyri" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="CM" version="1.0" versionDate="2008/08/30" description="Crossing the Moro" boardType="HASL" publisher="LCP" issued="" />
+		<boarddata name="DTW" version="1.0" versionDate="2008/08/30" description="Dzerhezinsky Tractor Works" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="DaE" version="1.1" versionDate="2008/08/30" description="Decision at Elst" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="DfBG1" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="DftB" issued="" />
+		<boarddata name="ER" version="6.0" versionDate="2021/06/30" description="Edson's Ridge" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="FACTRY" version="1.0" versionDate="2008/08/30" description="" boardType="XXX" publisher="YYY" issued="" />
+		<boarddata name="FB" version="6.2" versionDate="2022/04/30" description="Festung Budapest" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="FB_NE" version="6.3" versionDate="2023/01/30" description="Festung Budapest (NE)" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="FB_NW" version="6.3" versionDate="2023/01/30" description="Festung Budapest (NW)" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="FB_SE" version="6.3" versionDate="2023/01/30" description="Festung Budapest (SE)" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="FB_SW" version="6.3" versionDate="2023/01/30" description="Festung Budapest (SW)" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="FE1" version="1.1" versionDate="2008/08/30" description="" boardType="Geoboard" publisher="FE" issued="" />
+		<boarddata name="FE2" version="1.1" versionDate="2008/08/30" description="" boardType="Geoboard" publisher="FE" issued="" />
+		<boarddata name="FE3" version="6.0" versionDate="2021/06/30" description="" boardType="Geoboard" publisher="FE" issued="" />
+		<boarddata name="FE4" version="6.0" versionDate="2021/06/30" description="" boardType="Geoboard" publisher="FE" issued="" />
+		<boarddata name="FE5" version="6.0" versionDate="2021/06/30" description="" boardType="Geoboard" publisher="FE" issued="" />
+		<boarddata name="FE6" version="6.0" versionDate="2021/06/30" description="" boardType="Geoboard" publisher="FE" issued="" />
+		<boarddata name="FE8" version="6.0" versionDate="2021/06/30" description="" boardType="Geoboard" publisher="FE" issued="" />
+		<boarddata name="FE9" version="6.0" versionDate="2021/06/30" description="" boardType="Geoboard" publisher="FE" issued="" />
+		<boarddata name="FF01" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="HOB" issued="" />
+		<boarddata name="FF02" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="HOB" issued="" />
+		<boarddata name="FF03" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="HOB" issued="" />
+		<boarddata name="FF04" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="HOB" issued="" />
+		<boarddata name="FF05" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="HOB" issued="" />
+		<boarddata name="FF06" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="HOB" issued="" />
+		<boarddata name="FF07" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="HOB" issued="" />
+		<boarddata name="FF08" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="HOB" issued="" />
+		<boarddata name="FF09" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="HOB" issued="" />
+		<boarddata name="FF10" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="HOB" issued="" />
+		<boarddata name="FF11" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="HOB" issued="" />
+		<boarddata name="FF12" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="HOB" issued="" />
+		<boarddata name="FF13" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="HOB" issued="" />
+		<boarddata name="FF14" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="HOB" issued="" />
+		<boarddata name="FF15" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="HOB" issued="" />
+		<boarddata name="FWAO" version="6.0" versionDate="2021/06/30" description="First Wave at Omaha" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="Filler1" version="1.0" versionDate="2008/08/30" description="Filler board for multi board positioning" boardType="Utility" publisher="VASL" issued="" />
+		<boarddata name="Filler2" version="1.0" versionDate="2008/08/30" description="Filler board for multi board positioning" boardType="Utility" publisher="VASL" issued="" />
+		<boarddata name="Filler3" version="1.0" versionDate="2008/08/30" description="Filler board for multi board positioning" boardType="Utility" publisher="VASL" issued="" />
+		<boarddata name="Filler4" version="1.0" versionDate="2008/08/30" description="Filler board for multi board positioning" boardType="Utility" publisher="VASL" issued="" />
+		<boarddata name="Filler5" version="1.0" versionDate="2008/08/30" description="Filler board for multi board positioning" boardType="Utility" publisher="VASL" issued="" />
+		<boarddata name="Filler6" version="1.0" versionDate="2008/08/30" description="Filler board for multi board positioning" boardType="Utility" publisher="VASL" issued="" />
+		<boarddata name="GB1" version="6.0" versionDate="2021/06/30" description="" boardType="Geoboard" publisher="GarryBoyce" issued="" />
+		<boarddata name="GB2" version="6.0" versionDate="2021/06/30" description="" boardType="Geoboard" publisher="GarryBoyce" issued="" />
+		<boarddata name="GB3" version="6.0" versionDate="2021/06/30" description="" boardType="Geoboard" publisher="GarryBoyce" issued="" />
+		<boarddata name="GB4" version="6.0" versionDate="2021/06/30" description="" boardType="Geoboard" publisher="GarryBoyce" issued="" />
+		<boarddata name="GB5" version="6.0" versionDate="2021/06/30" description="" boardType="Geoboard" publisher="GarryBoyce" issued="" />
+		<boarddata name="GE" version="1.0" versionDate="2008/08/30" description="Grain Elevator" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="GSTK" version="1.0" versionDate="2008/08/30" description="God Save the King" boardType="HASL" publisher="HOB" issued="" />
+		<boarddata name="HB" version="1.0" versionDate="2008/08/30" description="Hell's Bridgehead" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="HFv221" version="1.0" versionDate="2008/08/30" description="Schmidt-Kommerscheidt" boardType="HASL" publisher="BFP" issued="" />
+		<boarddata name="Hotton" version="2.0" versionDate="2008/08/30" description="Battle of the Bulge - Hotton" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="Hurtgen" version="1.0" versionDate="2008/08/30" description="Strass, Hurtgenwald" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="IvansWar" version="1.0" versionDate="2008/08/30" description="Ivan's War - Stalingrad" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="KB" version="2.1" versionDate="2018/09/30" description="Kellam's Bridge" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="LG" version="1.0" versionDate="2008/08/30" description="La Glieze (KGP II)" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="MC1&#x20;Snow" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="MC2" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="MC2&#x20;Snow" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="MC2a" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="MC2a&#x20;Snow" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="MC3" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="MC4" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="MC5&#x20;Snow" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="MC5A" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="MC5A&#x20;Snow" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="MC6" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="MC7" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="MID" version="1.0" versionDate="2008/08/30" description="Eastern Island (Midway)" boardType="HASL" publisher="Unknown" issued="" />
+		<boarddata name="Ma" version="1.0" versionDate="2008/08/30" description="" boardType="Geoboard" publisher="Unknown" issued="" />
+		<boarddata name="Mb" version="1.0" versionDate="2008/08/30" description="" boardType="Geoboard" publisher="Unknown" issued="" />
+		<boarddata name="Melines" version="1.0" versionDate="2008/08/30" description="Battle of the Bulge - Melines" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="N1" version="1.0" versionDate="2008/08/30" description="" boardType="Geoboard" publisher="Unknown" issued="" />
+		<boarddata name="N2" version="1.0" versionDate="2008/08/30" description="" boardType="Geoboard" publisher="Unknown" issued="" />
+		<boarddata name="N3" version="1.0" versionDate="2008/08/30" description="" boardType="Geoboard" publisher="Unknown" issued="" />
+		<boarddata name="NordicTwilight" version="1.1" versionDate="2008/08/30" description="Nordic Twilight - Wingen-sur-Moder" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="OBS" version="1.0" versionDate="2008/08/30" description="Ordeal Before Shuri" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="OzB" version="1.0" versionDate="2008/08/30" description="Ozerekya Breakout" boardType="HASL" publisher="LCP" issued="" />
+		<boarddata name="PHD" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="Unknown" issued="" />
+		<boarddata name="PHDv2" version="2.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="Unknown" issued="" />
+		<boarddata name="PdH" version="1.0" versionDate="2008/08/30" description="Pointe Du Hoc" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="Pel" version="6.0" versionDate="2021/06/30" description="Peleliu White Beach One" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="QuatreBras" version="1.0" versionDate="2008/08/30" description="Battle of the Bulge - Quatre Bras" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="RC&#x20;Novo" version="1.0" versionDate="2008/08/30" description="CSIR - ARMIR 1941/43 Novo Orlovka" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="RC&#x20;Orlovo" version="1.0" versionDate="2008/08/30" description="CSIR - ARMIR 1941/43 Orlovo Ivanovka" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="RG" version="2.0" versionDate="2008/08/30" description="Roman Glory" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="SCW0" version="1.0" versionDate="2008/08/30" description="" boardType="Geoboard" publisher="CH!" issued="" />
+		<boarddata name="SCW1" version="1.0" versionDate="2008/08/30" description="" boardType="Geoboard" publisher="CH!" issued="" />
+		<boarddata name="SCW2" version="1.0" versionDate="2008/08/30" description="" boardType="Geoboard" publisher="CH!" issued="" />
+		<boarddata name="SH" version="2.1" versionDate="2018/08/30" description="Shanley's Hill" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="STB" version="1.0" versionDate="2008/08/30" description="Scotland The Brave" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="STB1" version="1.0" versionDate="2008/08/30" description="Scotland The Brave" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="STB2" version="1.0" versionDate="2008/08/30" description="Scotland The Brave II" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="SantaMaria-HLV1" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="SantaMariaInfante" version=" 1.0" versionDate="2008/08/30" description="Santa Maria Infante" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="SpanishFury1" version="1.0" versionDate="2008/08/30" description="Spanish Fury, Russia" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="SpanishFury2" version="1.0" versionDate="2008/08/30" description="Spanish Fury, Russia" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="StLo" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="Unknown" issued="" />
+		<boarddata name="Stonne" version="2.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="TCRS" version="1.0" versionDate="2008/08/30" description="Central Railway Station" boardType="HASL" publisher="Perry Pender" issued="" />
+		<boarddata name="TL" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="TPH2" version="1.0" versionDate="2008/08/30" description="Tin Pan Hill" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="Tobruck" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="Toktong" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="Unknown" issued="" />
+		<boarddata name="TttF" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="Unknown" issued="" />
+		<boarddata name="U" version="1.0" versionDate="2008/08/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="WC1" version="1.0" versionDate="2008/08/30" description="Witches Cauldron - The Oosterbeek Perimeter" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="WC2" version="1.0" versionDate="2008/08/30" description="Witches Cauldron - The Oosterbeek Perimeter" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="WittLastBattle" version="1.0" versionDate="2008/08/30" description="Wittman's Last Battle" boardType="HASL" publisher="Perry Pender" issued="" />
+		<boarddata name="breskenspocket" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="d1" version="1.0" versionDate="2008/08/30" description="" boardType="Deluxe" publisher="LFT" issued="" />
+		<boarddata name="d2" version="1.0" versionDate="2008/08/30" description="" boardType="Deluxe" publisher="LFT" issued="" />
+		<boarddata name="d3" version="1.0" versionDate="2008/08/30" description="" boardType="Deluxe" publisher="LFT" issued="" />
+		<boarddata name="d4" version="1.0" versionDate="2008/08/30" description="" boardType="Deluxe" publisher="LFT" issued="" />
+		<boarddata name="d5" version="1.0" versionDate="2008/08/30" description="" boardType="Deluxe" publisher="LFT" issued="" />
+		<boarddata name="d6" version="1.0" versionDate="2008/08/30" description="" boardType="Deluxe" publisher="LFT" issued="" />
+		<boarddata name="d7" version="1.0" versionDate="2008/08/30" description="" boardType="Deluxe" publisher="LFT" issued="" />
+		<boarddata name="kholmS" version="1.1" versionDate="2008/08/30" description="Kampfgruppe Scherer: the Shield of Cholm (Summer)" boardType="HASL" publisher="LFT" issued="" />
+		<boarddata name="kholmW" version="1.1" versionDate="2008/08/30" description="Kampfgruppe Scherer: the Shield of Cholm (Winter)" boardType="HASL" publisher="LFT" issued="" />
+		<boarddata name="kholmWO" version="2.1" versionDate="2008/08/30" description="Kampfgruppe Scherer: the Shield of Cholm (Winter)" boardType="HASL" publisher="LFT" issued="" />
+		<boarddata name="oto2" version="1.0" versionDate="2008/08/30" description="Onslaught to Orsha" boardType="HASL" publisher="HOB" issued="" />
+		<boarddata name="CasaBerardi" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="Unknown" issued="" />
+		<boarddata name="HS17" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="Unknown" issued="" />
+		<boarddata name="DSL" version="1.0" versionDate="2008/08/30" description="Drive for Saint-Lô" boardType="HASL" publisher="LCP" issued="" />
+		<boarddata name="HC" version="1.0" versionDate="2008/08/30" description="Hell's Corner" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="TR1" version="2.0" versionDate="2008/08/30" description="" boardType="Geoboard" publisher="Tom Repetti" issued="" />
+		<boarddata name="TR2" version="2.0" versionDate="2008/08/30" description="" boardType="Geoboard" publisher="Tom Repetti" issued="" />
+		<boarddata name="TR3" version="2.0" versionDate="2008/08/30" description="" boardType="Geoboard" publisher="Tom Repetti" issued="" />
+		<boarddata name="TR4" version="2.0" versionDate="2008/08/30" description="" boardType="Geoboard" publisher="Tom Repetti" issued="" />
+		<boarddata name="TR5" version="2.0" versionDate="2008/08/30" description="" boardType="Geoboard" publisher="Tom Repetti" issued="" />
+		<boarddata name="TR6" version="2.0" versionDate="2008/08/30" description="" boardType="Geoboard" publisher="Tom Repetti" issued="" />
+		<boarddata name="TR7" version="2.0" versionDate="2008/08/30" description="" boardType="Geoboard" publisher="Tom Repetti" issued="" />
+		<boarddata name="TR8" version="2.0" versionDate="2008/08/30" description="" boardType="Geoboard" publisher="Tom Repetti" issued="" />
+		<boarddata name="HT" version="1.1" versionDate="2018/10/30" description="Hatten in Flames" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="RM" version="1.0" versionDate="2020/04/30" description="Race for the Meuse" boardType="HASL" publisher="LCP" issued="" />
+		<boarddata name="KBR" version="1.0" versionDate="2020/04/30" description="Königsberg – The Bear’s Revenge" boardType="HASL" publisher="LCP" issued="" />
+		<boarddata name="Eagles" version="1.0" versionDate="2020/09/30" description="Where the Half-Squads Dare" boardType="HASL" publisher="Grumble Jones" issued="" />
+		<boarddata name="Sch" version="1.0" versionDate="2021/02/28" description="Objective: Schmidt" boardType="HASL" publisher="BFP" issued="" />
+		<boarddata name="Voss" version="1.0" versionDate="2021/02/28" description="Objective: Schmidt" boardType="HASL" publisher="BFP" issued="" />
+		<boarddata name="RBv651" version="0.05" versionDate="2021/02/28" description="Red Barricades" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="ROv651" version="0.09" versionDate="2021/02/28" description="Red October" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="StW" version="1.0" versionDate="2021/03/30" description="" boardType="XXX" publisher="YYY" issued="" />
+		<boarddata name="NP1" version="1.0" versionDate="2020/03/30" description="" boardType="Geoboard" publisher="Unknown" issued="" />
+		<boarddata name="NP2" version="1.0" versionDate="2020/03/30" description="" boardType="Geoboard" publisher="Unknown" issued="" />
+		<boarddata name="NP3d" version="1.0" versionDate="2020/03/30" description="" boardType="Geoboard" publisher="Unknown" issued="" />
+		<boarddata name="FLP" version="1.0" versionDate="2022/01/30" description="Operation: Martlet" boardType="HASL" publisher="LCP" issued="" />
+		<boarddata name="ON" version="1.0" versionDate="2021/01/30" description="Operation Neptune" boardType="HASL" publisher="BFP" issued="" />
+		<boarddata name="OtOBFP" version="1.0" versionDate="2020/03/30" description="Onslaught to Orsha" boardType="HASL" publisher="BFP" issued="" />
+		<boarddata name="SaF" version="6.2" versionDate="2022/07/30" description="Sword and Fire: Manila" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="SaFL" version="6.4" versionDate="2022/09/30" description="Sword and Fire: Manila" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="BG1" version="1.0" versionDate="2022/10/30" description="" boardType="Geoboard" publisher="BGD" issued="" />
+		<boarddata name="DeluxeBlank" version="1.0" versionDate="2023/08/30" description="Empty deluxe geoboard" boardType="Deluxe" publisher="VASL" issued="" />
+		<boarddata name="OpV" version="1.0" versionDate="2023/09/30" description="Riley's Road - no grain" boardType="HASL" publisher="TJ" issued="" />
+		<boarddata name="SF" version="1.1" versionDate="2023/12/30" description="Sparrow Force" boardType="HASL" publisher="MMP" issued="2023/09/17" />
+		<boarddata name="AF_AbbioPriolo" version="1.1" versionDate="2024/01/30" description="Abbio Priolo" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_BiazzaRidge" version="1.1" versionDate="2024/01/30" description="Biazza Ridge" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_Brevity OP" version="1.0" versionDate="2024/01/30" description="Brevity Assault" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_GelaFarello" version="1.0" versionDate="2024/01/30" description="Gela Farello" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_Half-North" version="1.1" versionDate="2024/01/30" description="Half-North" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_Half-South" version="1.2" versionDate="2024/01/30" description="Half-South" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_ORS_1" version="1.0" versionDate="2024/01/30" description="Orsogna" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_ORS_2" version="1.0" versionDate="2024/01/30" description="Orsogna" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_ORS_3" version="1.0" versionDate="2024/01/30" description="Orsogna" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_ORS_4" version="1.0" versionDate="2024/01/30" description="Orsogna" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_PianoLupo" version="1.1" versionDate="2024/01/30" description="Biazza Ridge" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_PonteDirillo" version="1.2" versionDate="2024/01/30" description="Biazza Ridge" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_PRK_1" version="1.0" versionDate="2024/01/30" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_PRK_2" version="1.0" versionDate="2024/01/30" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_PRK_3" version="1.0" versionDate="2024/01/30" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_PRK_4" version="1.0" versionDate="2024/01/30" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_PRK_5" version="1.0" versionDate="2024/01/30" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_PRK_A" version="1.0" versionDate="2024/01/30" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_PRK_S" version="1.0" versionDate="2024/01/30" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_PRK_Y" version="1.0" versionDate="2024/01/30" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_Sollum" version="1.1" versionDate="2024/01/30" description="Brevity Assault" boardType="HASL" publisher="AF" issued="2024/01/30" />
 
 
 
