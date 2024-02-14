@@ -32,7 +32,11 @@ import VASL.build.module.map.boardPicker.VASLBoard;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.GameComponent;
 import VASSAL.build.module.Map;
+import VASSAL.build.module.PieceWindow;
 import VASSAL.build.module.map.boardPicker.Board;
+import VASSAL.build.widget.ListWidget;
+import VASSAL.build.widget.PanelWidget;
+import VASSAL.build.widget.PieceSlot;
 import VASSAL.configure.ColorConfigurer;
 import VASSAL.counters.GamePiece;
 import VASSAL.counters.Properties;
@@ -52,10 +56,7 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.*;
 
 import static VASSAL.build.GameModule.getGameModule;
 import static java.lang.Math.cos;
@@ -79,11 +80,39 @@ public class ASLMap extends Map {
     private ShowMapLevel m_showMapLevel = ShowMapLevel.ShowAll;
     // background color preference
     private static final String preferenceTabName = "VASL";
-
+    //JY - independent zoom factors for the boards and pieces
+    //Intended to be activated by a separate extension, but needs to be coded in the main module
+    private double bZoom; //Additional zoom factor for the boards only
+    public double getbZoom() {
+        return bZoom;
+    }
+    public void setbZoom (double z) {
+        bZoom = z;
+    }
+    private ArrayList<String> PieceSlotGpIdList = new ArrayList<>(); //List of pieces that scale with the board (mostly overlays)
+    public static final String SCALEWITHBOARDZOOM = "ScaleWithBoardZoom"; //Property name for any counters that should scale with the board zoom level
+    public static final String SCALEWITHBOARDMAG = "ScaleWithBoardMag"; //Property name for any counters that should also scale with the board magnification (not the same as the zoom)
+    private ArrayList<String> dxAvailBoards = new ArrayList<>(); //List of all available deluxe boards
+    public final int baseunexSepX = 2; //default unexpanded and expanded stack separations
+    public final int baseunexSepY = 4;
+    public final int baseexSepX = 16;
+    public final int baseexSepY = 32;
+    public int unexSepX; //stack separations, must vary with board zoom to avoid appearance of counter "drift"
+    public int unexSepY;
+    public int exSepX;
+    public int exSepY;
   public ASLMap() {
 
 
       super();
+
+      //JY
+      setbZoom(1.0D);
+      unexSepX = baseunexSepX;
+      unexSepY = baseunexSepY;
+      exSepX = baseexSepX;
+      exSepY = baseexSepY;
+      //JY
 
       try {
           readMetadata();
@@ -197,6 +226,12 @@ public class ASLMap extends Map {
         }
         GameModule.getGameModule().warn(info);
         buildVASLMap();
+
+        //JY
+        findOverlays();
+        createDeluxeBoardsList();
+        //JY
+
         // Add OBObserver location
         if (VASLMap!=null){
             for (GameComponent gc: GameModule.getGameModule().getGameState().getGameComponents()){
@@ -1585,8 +1620,14 @@ public class ASLMap extends Map {
         
         if (stack[i].getClass() != Stack.class) 
         {
-          if (Boolean.TRUE.equals(stack[i].getProperty(Properties.NO_STACK))) 
-              stack[i].draw(g, (int)(pt.x * dZoom), (int)(pt.y * dZoom), null, dZoom);
+          if (Boolean.TRUE.equals(stack[i].getProperty(Properties.NO_STACK)))
+          {
+              //JY
+              //stack[i].draw(g, (int) (pt.x * dZoom), (int) (pt.y * dZoom), null, dZoom);
+              double pZoom = PieceScalerBoardZoom(stack[i]);
+              stack[i].draw(g, (int) (pt.x * dZoom), (int) (pt.y * dZoom), null, dZoom*pZoom);
+              //JY
+          }
         }
       }
       
@@ -1619,29 +1660,54 @@ public class ASLMap extends Map {
     for (int i = 0; i < stack.length; ++i)
     {
         Point pt = mapToDrawing(stack[i].getPosition(), os_scale);
+        //JY
+        double pZoom = PieceScalerBoardZoom(stack[i]);
+        //JY
 
         if (stack[i].getClass() == Stack.class)
         {
             if (m_showMapLevel == ShowMapLevel.ShowAll)
-                getStackMetrics().draw((Stack) stack[i], pt, g, this, dzoom, visibleRect);
+                //JY
+                //getStackMetrics().draw((Stack) stack[i], pt, g, this, dzoom, visibleRect);
+                //Draw the pieces with a separate zoom from the board, and adjust the stack spacing accordingly
+                getStackMetrics().setAttribute("unexSepX", Integer.toString(unexSepX));
+            getStackMetrics().setAttribute("unexSepY", Integer.toString(unexSepY));
+            getStackMetrics().setAttribute("exSepX", Integer.toString(exSepX));
+            getStackMetrics().setAttribute("exSepY", Integer.toString(exSepY));
+            getStackMetrics().draw((Stack) stack[i], pt, g, this, dzoom*pZoom, visibleRect);
+            //JY
+                //getStackMetrics().draw((Stack) stack[i], pt, g, this, dzoom, visibleRect);
         }
         else
         {
             if (m_showMapLevel == ShowMapLevel.ShowAll  || (stack[i].getProperty("overlay") != null && m_showMapLevel == ShowMapLevel.ShowMapOnly)) // always show overlays
             {
-                stack[i].draw(g, pt.x, pt.y, c, dzoom);
+                //JY
+                //stack[i].draw(g, pt.x, pt.y, c, dzoom);
+                stack[i].draw(g, pt.x, pt.y, c, dzoom*pZoom);
+                //JY
 
                 if (Boolean.TRUE.equals(stack[i].getProperty(Properties.SELECTED)))
-                    highlighter.draw(stack[i], g, pt.x, pt.y, c, dzoom);
+                    //JY
+                    // highlighter.draw(stack[i], g, pt.x, pt.y, c, dzoom);
+                    highlighter.draw(stack[i], g, pt.x, pt.y, c, dzoom*pZoom);
+                //JY
+
             }
             else if (m_showMapLevel == ShowMapLevel.ShowMapAndOverlay)
             {
                 if (Boolean.TRUE.equals(stack[i].getProperty(Properties.NO_STACK)))
                 {
-                    stack[i].draw(g, pt.x, pt.y, c, dzoom);
+                    //JY
+                    //stack[i].draw(g, pt.x, pt.y, c, dzoom);
+                    stack[i].draw(g, pt.x, pt.y, c, dzoom*pZoom);
+                    //JY
 
                     if (Boolean.TRUE.equals(stack[i].getProperty(Properties.SELECTED)))
-                        highlighter.draw(stack[i], g, pt.x, pt.y, c, dzoom);
+                        //JY
+                        //highlighter.draw(stack[i], g, pt.x, pt.y, c, dzoom);
+                        highlighter.draw(stack[i], g, pt.x, pt.y, c, dzoom*pZoom);
+                    //JY
                 }
             }
         }
@@ -1670,14 +1736,23 @@ public class ASLMap extends Map {
 
     for (int i = 0; i < stack.length; ++i)
     {
+        //JY
+        double pZoom = PieceScalerBoardZoom(stack[i]);
+        //JY
         if (m_showMapLevel == ShowMapLevel.ShowAll || (stack[i].getProperty("overlay") != null && m_showMapLevel == ShowMapLevel.ShowMapOnly)) // always show overlays
         {
             Point pt = mapToDrawing(stack[i].getPosition(), os_scale);
 
-            stack[i].draw(g, pt.x + xOffset, pt.y + yOffset, theMap, dzoom);
+            //JY
+            //stack[i].draw(g, pt.x + xOffset, pt.y + yOffset, theMap, dzoom);
+            stack[i].draw(g, pt.x + xOffset, pt.y + yOffset, theMap, dzoom*pZoom);
+            //JY
 
             if (Boolean.TRUE.equals(stack[i].getProperty(Properties.SELECTED)))
-                highlighter.draw(stack[i], g, pt.x - xOffset, pt.y - yOffset, theMap, dzoom);
+                //JY
+                //highlighter.draw(stack[i], g, pt.x - xOffset, pt.y - yOffset, theMap, dzoom);
+                highlighter.draw(stack[i], g, pt.x - xOffset, pt.y - yOffset, theMap, dzoom*pZoom);
+            //JY
         }
         else if (m_showMapLevel == ShowMapLevel.ShowMapAndOverlay)
         {
@@ -1687,10 +1762,16 @@ public class ASLMap extends Map {
                 {
                     Point pt = mapToDrawing(stack[i].getPosition(), os_scale);
 
-                    stack[i].draw(g, pt.x + xOffset, pt.y + yOffset, theMap, dzoom);
+                    //JY
+                    //stack[i].draw(g, pt.x + xOffset, pt.y + yOffset, theMap, dzoom);
+                    stack[i].draw(g, pt.x + xOffset, pt.y + yOffset, theMap, dzoom*pZoom);
+                    //JY
 
                     if (Boolean.TRUE.equals(stack[i].getProperty(Properties.SELECTED)))
-                        highlighter.draw(stack[i], g, pt.x - xOffset, pt.y - yOffset, theMap, dzoom);
+                        //JY
+                        //highlighter.draw(stack[i], g, pt.x - xOffset, pt.y - yOffset, theMap, dzoom);
+                        highlighter.draw(stack[i], g, pt.x - xOffset, pt.y - yOffset, theMap, dzoom*pZoom);
+                    //JY
                 }
             }
         }
@@ -1711,4 +1792,97 @@ public class ASLMap extends Map {
       ShowMapAndOverlay,
       ShowMapOnly        
   }
+
+    private void findOverlays() {
+        //All pieces that should scale with the map, not the counters
+        //Mostly overlays, but some others
+        String[] ovlPalettes = {"Draggable Overlays", "Deluxe Draggable", "Terrain Overlays", "Overlays (Large)"};
+        java.util.List<PieceWindow> pwList = GameModule.getGameModule().getAllDescendantComponentsOf(PieceWindow.class);
+        for (PieceWindow pw: pwList) {
+            String pwName = pw.getAttributeValueString("name");
+            if (Arrays.asList(ovlPalettes).contains(pwName)) {
+                java.util.List<PieceSlot> psList = pw.getAllDescendantComponentsOf(PieceSlot.class);
+                for (PieceSlot ps: psList) {
+                    PieceSlotGpIdList.add(ps.getGpId());
+                }
+            }
+        }
+        String[] ovlPanels = {"Phase Track", "Turn Markers"};
+        java.util.List<PanelWidget> panList = GameModule.getGameModule().getAllDescendantComponentsOf(PanelWidget.class);
+        for (PanelWidget pw: panList) {
+            String pwName = pw.getAttributeValueString("entryName");
+            if (Arrays.asList(ovlPanels).contains(pwName)) {
+                java.util.List<PieceSlot> psList = pw.getAllDescendantComponentsOf(PieceSlot.class);
+                for (PieceSlot ps: psList) {
+                    PieceSlotGpIdList.add(ps.getGpId());
+                }
+            }
+        }
+        String[] ovlScrolls = {"< Turn Tracks", "Turn Markers (by Module)"};
+        java.util.List<ListWidget> scrList = GameModule.getGameModule().getAllDescendantComponentsOf(ListWidget.class);
+        for (ListWidget pw: scrList) {
+            String pwName = pw.getAttributeValueString("entryName");
+            if (Arrays.asList(ovlScrolls).contains(pwName)) {
+                java.util.List<PieceSlot> psList = pw.getAllDescendantComponentsOf(PieceSlot.class);
+                for (PieceSlot ps: psList) {
+                    PieceSlotGpIdList.add(ps.getGpId());
+                }
+            }
+        }
+    }
+
+    private void createDeluxeBoardsList() {
+        dxAvailBoards = VASL.build.module.map.BoardDataReader.getDeluxeBoardNamesList();
+    }
+
+    public double PieceScalerBoardZoom(GamePiece gp) {
+        //Test if piece is an overlay or otherwise should scale with the board
+        boolean keepAtBoardScale = false;
+        if (gp instanceof Stack) {
+            Stack s = (Stack) gp;
+            for (int i = s.getPieceCount(); i > 0; i--) { //Top down in the stack
+                GamePiece sgp = s.getPieceAt(i - 1);
+                if (PieceSlotGpIdList.contains(sgp.getProperty(Properties.PIECE_ID).toString()) || (sgp.getProperty(SCALEWITHBOARDZOOM) != null)) {
+                    keepAtBoardScale = true;
+                }
+            }
+        }
+        else {
+            if (PieceSlotGpIdList.contains(gp.getProperty(Properties.PIECE_ID).toString()) || (gp.getProperty(SCALEWITHBOARDZOOM) != null)) {
+                keepAtBoardScale = true;
+            }
+        }
+        return (keepAtBoardScale? 1.0D : 1.0D/getbZoom())*PieceScalerBoardMag(gp);
+    }
+
+    public double PieceScalerBoardMag(GamePiece gp) {
+        //Look for pieces that should get additional zoom due to board magnification level
+        double magZoom = 1.0;
+        double mag = 1.0;
+        for (Board b: getBoards()) {
+            mag = b.getMagnification();
+        }
+        boolean deluxe = false;
+        for (Board b: getBoards()) {
+            String bdName = b.getName();
+            deluxe = dxAvailBoards.contains(bdName);
+        }
+        if (deluxe) {mag = mag*3.0;}
+
+        if (gp instanceof Stack) {
+            Stack s = (Stack) gp;
+            for (int i = s.getPieceCount(); i > 0; i--) { //Top down in the stack
+                GamePiece sgp = s.getPieceAt(i - 1);
+                if ((sgp.getProperty(SCALEWITHBOARDMAG) != null) && (mag != 1.0)) {
+                    magZoom = mag;
+                }
+            }
+        }
+        else {
+            if ((gp.getProperty(SCALEWITHBOARDMAG) != null) && (mag != 1.0)) {
+                magZoom = mag;
+            }
+        }
+        return magZoom;
+    }
 }
