@@ -4663,9 +4663,13 @@ public class Map  {
         // copy the terrain and elevation grids
         for (int x = 0; x < map.gridWidth && x < this.gridWidth; x++) {
             for (int y = 0; y < map.gridHeight && y < this.gridHeight; y++) {
-
-                terrainGrid[left + x][upper + y] = (char) map.getGridTerrain(x, y).getType();
-                elevationGrid[left + x][upper + y] = (byte) map.getGridElevation(x, y);
+                if (left > 0 || upper > 0){
+                    doHalfHexTerrainElevationCheck(map, upperLeft, upper, left, x, y);
+                }
+                else {
+                    terrainGrid[left + x][upper + y] = (char) map.getGridTerrain(x, y).getType();
+                    elevationGrid[left + x][upper + y] = (byte) map.getGridElevation(x, y);
+                }
             }
         }
 
@@ -4757,9 +4761,12 @@ public class Map  {
         int hexCol = upperLeft.getColumnNumber();
         for (int x = 0; x < map.hexGrid.length && x < this.hexGrid.length; x++) {
             for (int y = 0; y < map.hexGrid[x].length && y < this.hexGrid[x].length; y++) {
-
-                hexGrid[x + hexCol][y + hexRow].copy(map.getHex(x, y));
-
+                if (hexRow > 0 || hexCol > 0){
+                    doHalfHexCheck(map, upperLeft, x, y);
+                }
+                else {
+                    hexGrid[x + hexCol][y + hexRow].copy(map.getHex(x, y));
+                }
             }
         }
 
@@ -4993,6 +5000,74 @@ public class Map  {
 
         return true;
     }
+
+    private void doHalfHexCheck(Map map, Hex upperLeft, int x, int y){
+        if (upperLeft.getRowNumber() > 0 && y == 0) {   // a new board is being added below an existing one
+            if (map.getHex(x, y).getHexCenter().getY() == 0){
+                Hex firsthalfhex = hexGrid[x][upperLeft.getRowNumber()]; //.copy(map.getHex(x, y));
+                Hex secondhalfhex = map.getHex(x, y);
+                Terrain firstTerrain = firsthalfhex.getCenterLocation().getTerrain();
+                Terrain secondTerrain = secondhalfhex.getCenterLocation().getTerrain();
+                if (secondTerrain.isOpen()){ // use firstTerrain
+                    // skip
+                }
+                else { // use secondTerrain
+                    hexGrid[x + upperLeft.getColumnNumber()][y + upperLeft.getRowNumber()].copy(map.getHex(x, y));
+                }
+
+            }
+
+        }
+        else {
+            hexGrid[x + upperLeft.getColumnNumber()][y + upperLeft.getRowNumber()].copy(map.getHex(x, y));
+        }
+    }
+
+    private void doHalfHexTerrainElevationCheck(Map map, Hex upperLeft, int upper, int left, int x, int y){
+        if (upperLeft.getRowNumber() > 0 && y == 0 && map.gridToHex(x, y).getHexCenter().getY() == 0) {   // a new board is being added below an existing one
+
+                Terrain firsthalfterrain = getGridTerrain(left + x, upper - 1 + y);
+                int firsthalfelevation = getGridElevation(left + x, upper - 1 +y);
+                if (!firsthalfterrain.isOpen()){
+                    terrainGrid[left+x][upper + y] = terrainGrid[left + x][upper - 1 + y];
+                }
+                else  {
+                    terrainGrid[left+x][upper + y] = (char) map.getGridTerrain(x, y).getType();
+                }
+                if (!(firsthalfelevation == 0)) {
+                    elevationGrid[left + x][upper + y] = elevationGrid[left + x][ upper -1 + y];
+                }
+                else {
+                    elevationGrid[left + x][upper + y] = (byte) map.getGridElevation(x, y);
+                }
+        }
+        else {
+            terrainGrid[left + x][upper + y] = (char) map.getGridTerrain(x, y).getType();
+            elevationGrid[left + x][upper + y] = (byte) map.getGridElevation(x, y);
+        }
+        if (upperLeft.getColumnNumber() > 0 && x == 0 && map.gridToHex(x, y).getHexCenter().getX() == 0) {   // a new board is being added to the right of an existing one
+
+            Terrain firsthalfterrain = getGridTerrain(left - 1 + x, upper + y);
+            int firsthalfelevation = getGridElevation(left - 1 + x, upper + y);
+            if (!firsthalfterrain.isOpen()){
+                terrainGrid[left+x][upper + y] = terrainGrid[left - 1 + x][upper + y];
+            }
+            else  {
+                terrainGrid[left+x][upper + y] = (char) map.getGridTerrain(x, y).getType();
+            }
+            if (!(firsthalfelevation == 0)) {
+                elevationGrid[left + x][upper + y] = elevationGrid[left - 1 + x][ upper + y];
+            }
+            else {
+                elevationGrid[left + x][upper + y] = (byte) map.getGridElevation(x, y);
+            }
+        }
+        else {
+            terrainGrid[left + x][upper + y] = (char) map.getGridTerrain(x, y).getType();
+            elevationGrid[left + x][upper + y] = (byte) map.getGridElevation(x, y);
+        }
+    }
+
     /**
      * Crops the board to the points in the map grid. Note that the "corners" of the cropped map must create
      * a map where the left and right board edges are half hexes and both corner hexes are fully on the map
