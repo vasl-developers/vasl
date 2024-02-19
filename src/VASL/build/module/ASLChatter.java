@@ -70,6 +70,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     private static final String preferenceTabName = "VASL"; // alwaysontop preference
     protected static final String DICE_CHAT_COLOR = "HTMLDiceChatColor";
 
+    private static Integer lineno=0;
+
     public enum DiceType {
         WHITE,
         COLORED,
@@ -343,6 +345,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
     @Override
     public void show(String s) {
+
         if (!s.isEmpty()) {
             if (s.startsWith("!!")) {  // dice stats button has been clicked
                 s = makeTableString(s);
@@ -352,23 +355,26 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             }
             else if (s.startsWith("*** (")) {
                 parseNewDiceRoll(s);
-                s = makeMessageString();
+                lineno+=1;
+                s = makeMessageString(lineno);
             }
             else if (s.startsWith("<")) {
                 parseUserMsg(s);
-                s = makeMessageString();
+                lineno+=1;
+                s = makeMessageString(lineno);
             }
             else if (s.startsWith("-")) {
                 parseSystemMsg(s);
             }
             else if (s.startsWith("*")) {
-                s = parseMoveMsg(s);
+                lineno+=1;
+                s = lineno.toString() + " " + parseMoveMsg(s);
             }
             else {
                 //ParseDefaultMsg(s);
             }
         }
-
+        //s = lineno.toString() + s;
         super.show(s);
     }
 
@@ -882,7 +888,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         msgpartDiceImage += "<img alt=\"alt text\" src=\"" + dicefile + "\">";
     }
 
-    private String makeMessageString() {
+    private String makeMessageString(Integer lineno) {
         // need to add html formatting
 
         if (msgpartCategory == null) {
@@ -917,7 +923,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         final String userstyle = getUserStyle();
         final String specialstyle = "msgspecial";  //text-decoration: underline";  //<p style="text-decoration: underline;">This text will be underlined.</p>
         if (useDiceImages) {
-            return "*~<span class=\"" + userstyle + "\">" + msgpartDiceImage + "</span>"
+            return "*"+ lineno.toString() + "~<span class=\"" + userstyle + "\">" + msgpartDiceImage + "</span>"
                 + "<span class=\"" + catstyle + "\">" + msgpartCategory + "</span>"
                 + "<span class=\"" + userstyle + "\">" + USER_SPACING_PADDING + msgpartUser+ "</span>"
                 + " " + "<u>"
@@ -926,7 +932,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                 + "<span class=\"" + userstyle + "\">" + msgpartRest + "</span>";
         }
         else {
-            return "*~<span class=\"" + catstyle + "\">" + msgpartCategory + "</span>"
+            return "*" + lineno.toString() + "~<span class=\"" + catstyle + "\">" + msgpartCategory + "</span>"
                 + " " + msgpartCdice + " " + msgpartWdice + " "
                 + "<span class=\"" + userstyle + "\">" + USER_SPACING_PADDING + msgpartUser + "</span>"
                 + " " + "<u>"
