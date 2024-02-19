@@ -170,6 +170,7 @@ public class ASLStackMetrics extends StackMetrics {
                 Point pt = map.mapToDrawing(positions[index], os_scale);
                 if (bounds == null || isVisible(region, bounds[index])) {
 //if (stack.isExpanded() || !e.hasMoreElements()) {
+
                     next.draw(g, pt.x, pt.y, view, zoom);
 //} else {
 //    drawUnexpanded(next, g, pt.x, pt.y, map.getView(), zoom);
