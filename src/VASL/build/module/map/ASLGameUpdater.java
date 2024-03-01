@@ -157,7 +157,9 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
                 else if (piece instanceof Stack) {
                     for (final Iterator<GamePiece> i = ((Stack) piece).getPiecesInVisibleOrderIterator(); i.hasNext(); ) {
                         final GamePiece p = i.next();
-                        if (!Boolean.TRUE.equals(p.getProperty(VASSAL.counters.Properties.INVISIBLE_TO_ME))
+                        totalCount++;
+                        // taking this code out as we want to update opponents HIP/concealed counters
+                        /*if (!Boolean.TRUE.equals(p.getProperty(VASSAL.counters.Properties.INVISIBLE_TO_ME))
                                 && !Boolean.TRUE.equals(p.getProperty(VASSAL.counters.Properties.OBSCURED_TO_ME))) {
                             totalCount++;
                         }
@@ -171,7 +173,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
                                 chat("Piece cannot be updated; delete existing piece and replace with new piece of this type from counter palette: "+ addname);
                                 notOwnedCount++;
                             }
-                        }
+                        }*/
                     }
                     if (((Stack) piece).getMap() != null) {
                         refreshables.add(new StackUpdater((Stack) piece));
@@ -914,8 +916,8 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
                 command = command.append(remove);
 
                 GamePiece newPiece;
-                if (!Boolean.TRUE.equals(piece.getProperty(VASSAL.counters.Properties.INVISIBLE_TO_ME))
-                        && !Boolean.TRUE.equals(piece.getProperty(VASSAL.counters.Properties.OBSCURED_TO_ME))) {
+                //if (!Boolean.TRUE.equals(piece.getProperty(VASSAL.counters.Properties.INVISIBLE_TO_ME))
+                //        && !Boolean.TRUE.equals(piece.getProperty(VASSAL.counters.Properties.OBSCURED_TO_ME))) {
                     // Create a new, updated piece
                     newPiece = gpIdChecker.createUpdatedPiece(piece);
                     if (newPiece == null) {
@@ -926,13 +928,15 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
                         // Could not create a new piece for some reason, use the old piece
                         newPiece = piece;
                     }
-                    else {
-                        updatedCount++;
-                    }
-                }
-                else {
-                    newPiece = piece;
-                }
+                //    else {
+                //        updatedCount++;
+                //    }
+                //}
+                //else {
+                    // Hidden or Concealed opponent's piece
+
+                    //newPiece = piece;
+                //}
 
                 // Keep a list of the new pieces to add back into the stack
                 refreshedPieces.add(newPiece);
