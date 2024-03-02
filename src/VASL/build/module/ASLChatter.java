@@ -317,7 +317,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
         addStyle(".msgcategory", f, Color.black, "bold", 0);
         addStyle(".msguser", f, myChat, "bold", 0);
-        addStyle(".msgspecial", f, gameMsg, "bold", 0);
+        addStyle(".msgspecial", f, gameMsg5, "bold", 0);
 
         style.addRule(
             " .tbl { border:0px solid #C0C0C0; border-collapse:collapse; border-spacing:0px; padding:0px; background:#CCFFCC;}" +
@@ -368,7 +368,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             }
             else if (s.startsWith("*")) {
                 lineno+=1;
-                s = lineno.toString() + " " + parseMoveMsg(s);
+                s = "* " + lineno.toString() + " " + parseMoveMsg(s);
             }
             else {
                 //ParseDefaultMsg(s);
@@ -1009,7 +1009,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
         // game message color pref
         final Prefs globalPrefs = Prefs.getGlobalPrefs();
-        final ColorConfigurer gameMsgColor = new ColorConfigurer("HTMLgameMessage1Color", Resources.getString("Chatter.game_messages_preference"), Color.black);
+        //final ColorConfigurer gameMsgColor = new ColorConfigurer("HTMLgameMessage1Color", Resources.getString("Chatter.game_messages_preference"), Color.black);
+        final ColorConfigurer gameMsgColor = new ColorConfigurer("HTMLgameMessage1Color", "Game Play messages", Color.black);
         gameMsgColor.addPropertyChangeListener(e -> {
             gameMsg = (Color) e.getNewValue();
             makeStyleSheet(null);
@@ -1021,7 +1022,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         // sys messages pref
         ColorConfigurer systemMsgColor = (ColorConfigurer) modulePrefs.getOption(SYS_MSG_COLOR);
         if (systemMsgColor == null) {
-            systemMsgColor = new ColorConfigurer(SYS_MSG_COLOR, Resources.getString("Chatter.systemessage_preference"), new Color(160, 160, 160)); //$NON-NLS-1$
+            systemMsgColor = new ColorConfigurer(SYS_MSG_COLOR, Resources.getString("Chatter.system_message_preference"), new Color(160, 160, 160)); //$NON-NLS-1$
             modulePrefs.addOption(Resources.getString("Chatter.chat_window"), systemMsgColor); //$NON-NLS-1$
         }
 
@@ -1035,7 +1036,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         // myChat preference
         ColorConfigurer myChatColor = (ColorConfigurer)modulePrefs.getOption(MY_CHAT_COLOR);
         if (myChatColor == null) {
-            myChatColor = new ColorConfigurer(MY_CHAT_COLOR, "My Name and Text Messages" , Color.gray); //$NON-NLS-1$
+            myChatColor = new ColorConfigurer(MY_CHAT_COLOR, "My Name and Text messages" , Color.gray); //$NON-NLS-1$
             modulePrefs.addOption(Resources.getString("Chatter.chat_window"), myChatColor); //$NON-NLS-1$
         }
 
@@ -1063,15 +1064,17 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         // dice chat pref
         ColorConfigurer diceChatColor = (ColorConfigurer) modulePrefs.getOption(DICE_CHAT_COLOR);
         if (diceChatColor == null) {
-            diceChatColor = new ColorConfigurer(DICE_CHAT_COLOR, "Dice Results font color: ", Color.black); //$NON-NLS-1$
+            diceChatColor = new ColorConfigurer(DICE_CHAT_COLOR, "Dice Results messages: ", Color.black); //$NON-NLS-1$
             modulePrefs.addOption(Resources.getString("Chatter.chat_window"), diceChatColor); //$NON-NLS-1$
         }
 
         gameMsg5 = (Color) modulePrefs.getValue(DICE_CHAT_COLOR);
         makeStyleSheet(null);
+        makeASLStyleSheet(null);
         diceChatColor.addPropertyChangeListener(e -> {
             gameMsg5 = (Color) e.getNewValue();
             makeStyleSheet(null);
+            makeASLStyleSheet(null);
         });
 
         // dice images pref
@@ -1087,7 +1090,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         // dice stats pref
         BooleanConfigurer showDiceStatsOption = (BooleanConfigurer) modulePrefs.getOption(SHOW_DICE_STATS);
         if (showDiceStatsOption == null) {
-            showDiceStatsOption = new BooleanConfigurer(SHOW_DICE_STATS, "Show dice stats after each dice rolls", Boolean.FALSE);  //$NON-NLS-1$
+            showDiceStatsOption = new BooleanConfigurer(SHOW_DICE_STATS, "Show dice stats after each dice/die roll", Boolean.FALSE);  //$NON-NLS-1$
             modulePrefs.addOption(Resources.getString("Chatter.chat_window"), showDiceStatsOption); //$NON-NLS-1$
         }
         showDiceStats = (Boolean) modulePrefs.getValue(SHOW_DICE_STATS);
