@@ -1775,7 +1775,7 @@ public class Map  {
                 // no previous hex set in this LOS test
                 status.previousHex = status.currentHex;
             }
-            else if(!status.previousHex.equals(status.tempHex)){
+            else if(!status.previousHex.equals(status.tempHex) && status.currentHex != null){
                 // previous hex exists and is not the same as the new hex
                 status.previousHex = status.currentHex;
             }
@@ -4110,12 +4110,29 @@ public class Map  {
 
                 // find the hex across the location hexside
                 Hex oppositeHex = getAdjacentHex(locationHex, locationHexside);
-
+                int oppositeHexside = locationHex.getOppositeHexside(locationHexside);
                 if (oppositeHex == null) {
                     return true;
                 }
                 if (range(h, oppositeHex, getMapConfiguration()) > 1) {
-                    return false;
+                    // need to see if opposite source/target allows us to ignore
+                    Hex otherEndHex = (h.equals(status.sourceHex) ? status.targetHex : status.sourceHex);
+                    if (oppositeHex.getHexsideTerrain(oppositeHexside) != null && range(locationHex, otherEndHex, getMapConfiguration()) == 2) {
+                        // need to add test for 3rd hexside which then means cannot be ignored
+                        Hex thirdHex = getAdjacentHex(locationHex, LOSHexspine);
+                        oppositeHexside = locationHex.getOppositeHexside(LOSHexspine);
+                        if (thirdHex == null) {
+                            return true;
+                        }
+                        if (thirdHex.getHexsideTerrain(oppositeHexside) != null && range(locationHex, otherEndHex, getMapConfiguration()) == 2) {
+                            return false;
+                        }
+                        else {
+                            return true;
+                        }
+                    } else {
+                        return false;
+                    }
                 }
 
                 // change the location values
@@ -4153,7 +4170,12 @@ public class Map  {
             Terrain t2 = hex1.getHexsideTerrain(LOSHexspine);
             Terrain t3 = hex2.getHexsideTerrain(hexside);
 
-            return t1 != null && (l.equals(l2) || l.equals(l3)) && (t2 == null || t3 == null);
+            if (t1 != null && (l.equals(l2) || l.equals(l3)) && (t2 == null || t3 == null)) {
+                return true;
+            }
+            else {
+                return false;
+            }
         }
         return false;
     }
