@@ -3064,6 +3064,7 @@
         <LOSSSRule name="WallsToBocage" type="terrainMap" fromValue="Wall" toValue="Bocage" />
         <LOSSSRule name="HedgesToBocage" type="terrainMap" fromValue="Hedge" toValue="Bocage" />
 		<LOSSSRule name="LightWoods" type="terrainMap" fromValue="Woods" toValue="Light Woods" />
+		<LOSSSRule name="PineWoods" type="terrainMap" fromValue="Woods" toValue="Pine Woods" />
         <!-- too many problems around roads to reliably change terrain
         <LOSSSRule name="OrchardsToShellholes" type="terrainMap" fromValue="Orchard" toValue="Shellholes" />
         <LOSSSRule name="OrchardsToCrags" type="terrainMap" fromValue="Orchard" toValue="Crags" />

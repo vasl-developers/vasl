@@ -376,6 +376,9 @@ Changes:
       <Checkbox name="Light Woods" >
          <entry name="Light Woods" rule="LightWoods" text="Light Woods"/>
       </Checkbox>
+      <Checkbox name="Pine Woods" >
+               <entry name="Pine Woods" rule="PineWoods" text="Pine Woods"/>
+            </Checkbox>
    </Option>
 </SSRControls>
 
