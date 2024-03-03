@@ -373,7 +373,7 @@ public class ASLMap extends Map {
             VASLBoards = null;
             logError("LOS disabled - unexpected error");
             logException(e);
-            GameModule.getGameModule().getChatter().send("LOS disabled - unexpected error: " + e.toString());
+            GameModule.getGameModule().getChatter().send("VASL LOS disabled due to unexpected board issue. Safe to continue play. Use VASSAL LOS string");
         }
 
         // add the boards to the VASL map
@@ -463,14 +463,14 @@ public class ASLMap extends Map {
 
             setLegacyMode();
             logError(e.toString());
-            GameModule.getGameModule().getChatter().send("VASL LOS Disabled: " + e.toString() + ". VASSAL los active");
+            GameModule.getGameModule().getChatter().send("VASL LOS Disabled. Safe to continue to play: VASSAL los active");
         }
         catch (Exception e) {
 
             setLegacyMode();
             logError("LOS disabled - unexpected error");
             logException(e);
-            GameModule.getGameModule().getChatter().send("VASL LOS disabled: " + e.toString() + ". VASSAL los active");
+            GameModule.getGameModule().getChatter().send("VASL LOS disabled due to Board issue. Safe to continue to play. VASSAL los active");
         }
         finally {
             // free up memory
@@ -1668,13 +1668,13 @@ public class ASLMap extends Map {
         {
             if (m_showMapLevel == ShowMapLevel.ShowAll)
                 //JY
-                //getStackMetrics().draw((Stack) stack[i], pt, g, this, dzoom, visibleRect);
+                getStackMetrics().draw((Stack) stack[i], pt, g, this, dzoom, visibleRect);
                 //Draw the pieces with a separate zoom from the board, and adjust the stack spacing accordingly
-                getStackMetrics().setAttribute("unexSepX", Integer.toString(unexSepX));
-            getStackMetrics().setAttribute("unexSepY", Integer.toString(unexSepY));
-            getStackMetrics().setAttribute("exSepX", Integer.toString(exSepX));
-            getStackMetrics().setAttribute("exSepY", Integer.toString(exSepY));
-            getStackMetrics().draw((Stack) stack[i], pt, g, this, dzoom*pZoom, visibleRect);
+                //getStackMetrics().setAttribute("unexSepX", Integer.toString(unexSepX));
+            //getStackMetrics().setAttribute("unexSepY", Integer.toString(unexSepY));
+            //getStackMetrics().setAttribute("exSepX", Integer.toString(exSepX));
+            //getStackMetrics().setAttribute("exSepY", Integer.toString(exSepY));
+            //getStackMetrics().draw((Stack) stack[i], pt, g, this, dzoom*pZoom, visibleRect);
             //JY
                 //getStackMetrics().draw((Stack) stack[i], pt, g, this, dzoom, visibleRect);
         }
@@ -1683,14 +1683,14 @@ public class ASLMap extends Map {
             if (m_showMapLevel == ShowMapLevel.ShowAll  || (stack[i].getProperty("overlay") != null && m_showMapLevel == ShowMapLevel.ShowMapOnly)) // always show overlays
             {
                 //JY
-                //stack[i].draw(g, pt.x, pt.y, c, dzoom);
-                stack[i].draw(g, pt.x, pt.y, c, dzoom*pZoom);
+                stack[i].draw(g, pt.x, pt.y, c, dzoom);
+                //stack[i].draw(g, pt.x, pt.y, c, dzoom*pZoom);
                 //JY
 
                 if (Boolean.TRUE.equals(stack[i].getProperty(Properties.SELECTED)))
                     //JY
-                    // highlighter.draw(stack[i], g, pt.x, pt.y, c, dzoom);
-                    highlighter.draw(stack[i], g, pt.x, pt.y, c, dzoom*pZoom);
+                    highlighter.draw(stack[i], g, pt.x, pt.y, c, dzoom);
+                    //highlighter.draw(stack[i], g, pt.x, pt.y, c, dzoom*pZoom);
                 //JY
 
             }
@@ -1699,14 +1699,14 @@ public class ASLMap extends Map {
                 if (Boolean.TRUE.equals(stack[i].getProperty(Properties.NO_STACK)))
                 {
                     //JY
-                    //stack[i].draw(g, pt.x, pt.y, c, dzoom);
-                    stack[i].draw(g, pt.x, pt.y, c, dzoom*pZoom);
+                    stack[i].draw(g, pt.x, pt.y, c, dzoom);
+                    //stack[i].draw(g, pt.x, pt.y, c, dzoom*pZoom);
                     //JY
 
                     if (Boolean.TRUE.equals(stack[i].getProperty(Properties.SELECTED)))
                         //JY
-                        //highlighter.draw(stack[i], g, pt.x, pt.y, c, dzoom);
-                        highlighter.draw(stack[i], g, pt.x, pt.y, c, dzoom*pZoom);
+                        highlighter.draw(stack[i], g, pt.x, pt.y, c, dzoom);
+                        //highlighter.draw(stack[i], g, pt.x, pt.y, c, dzoom*pZoom);
                     //JY
                 }
             }
@@ -1724,6 +1724,7 @@ public class ASLMap extends Map {
     @Override
   public void drawPieces(Graphics g, int xOffset, int yOffset) 
   {
+
 
     Graphics2D g2d = (Graphics2D) g;
     Composite oldComposite = g2d.getComposite();
