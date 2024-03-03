@@ -6,7 +6,7 @@
 
     <groupId>org.vasl</groupId>
     <artifactId>vasl</artifactId>
-    <version>6.6.8-beta8</version>
+    <version>6.6.8-beta9</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -17,7 +17,7 @@
         <dependency>
             <groupId>org.vassalengine</groupId>
             <artifactId>vassal-app</artifactId>
-            <version>3.7.8</version>
+            <version>3.7.9</version>
         </dependency>
 
         <!-- We do not have any tests yet, but time will tell... -->
@@ -71,6 +71,8 @@
                     <verbose>true</verbose>
                     <release>11</release>
                     <showDeprecation>true</showDeprecation>
+                    <source>11</source>
+                    <target>11</target>
                 </configuration>
             </plugin>
             <plugin>
