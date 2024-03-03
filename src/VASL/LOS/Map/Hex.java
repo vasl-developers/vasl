@@ -1050,7 +1050,9 @@ public class Hex {
 
 				final Location l = getHexsideLocation(x);
 				Terrain t = map.getGridTerrain((int)(l.getEdgeCenterPoint().getX()+gridadj), (int)l.getEdgeCenterPoint().getY());
-
+                if (t.isOpen()){
+                    t = checkWallHedgeGap(l);
+                }
 				// avoid errors during cropping
                 if(t == null){t = map.getTerrain("Open Ground");}
 
@@ -1073,7 +1075,74 @@ public class Hex {
             }
         }
     }
+    public Terrain checkWallHedgeGap (Location l){
+        int firstx = 0, firsty = 0, secondx = 0, secondy = 0,  startx = 0, endx =0, starty = 0, endy =0;
+        int hexside = l.getHex().getLocationHexside(l);
+        switch (hexside){
+            case 0:
+                //(x₁ + x₂)/2, (y₁ + y₂)/2
+                firstx = (int) ((hexBorder.xpoints[0] + l.getEdgeCenterPoint().getX())/2);
+                firsty = (int) ((hexBorder.ypoints[0] + l.getEdgeCenterPoint().getY())/2);
+                secondx = (int) ((hexBorder.xpoints[1] + l.getEdgeCenterPoint().getX())/2);
+                secondy = (int) ((hexBorder.ypoints[1] + l.getEdgeCenterPoint().getY())/2);
+                break;
 
+            case 3:
+                firstx = (int) ((hexBorder.xpoints[4] + l.getEdgeCenterPoint().getX())/2);
+                firsty = (int) ((hexBorder.ypoints[4] + l.getEdgeCenterPoint().getY())/2);
+                secondx = (int) ((hexBorder.xpoints[3] + l.getEdgeCenterPoint().getX())/2);
+                secondy = (int) ((hexBorder.ypoints[3] + l.getEdgeCenterPoint().getY())/2);
+                break;
+
+            case 1:
+                firstx = (int) ((hexBorder.xpoints[1] + l.getEdgeCenterPoint().getX())/2);
+                firsty = (int) ((hexBorder.ypoints[1] + l.getEdgeCenterPoint().getY())/2);
+                secondx = (int) ((hexBorder.xpoints[2] + l.getEdgeCenterPoint().getX())/2);
+                secondy = (int) ((hexBorder.ypoints[2] + l.getEdgeCenterPoint().getY())/2);
+                break;
+            case 4:
+                firstx = (int) ((hexBorder.xpoints[5] + l.getEdgeCenterPoint().getX())/2);
+                firsty = (int) ((hexBorder.ypoints[5] + l.getEdgeCenterPoint().getY())/2);
+                secondx = (int) ((hexBorder.xpoints[4] + l.getEdgeCenterPoint().getX())/2);
+                secondy = (int) ((hexBorder.ypoints[4] + l.getEdgeCenterPoint().getY())/2);
+                break;
+            case 2:
+                firstx = (int) ((hexBorder.xpoints[3] + l.getEdgeCenterPoint().getX())/2);
+                firsty = (int) ((hexBorder.ypoints[3] + l.getEdgeCenterPoint().getY())/2);
+                secondx = (int) ((hexBorder.xpoints[2] + l.getEdgeCenterPoint().getX())/2);
+                secondy = (int) ((hexBorder.ypoints[2] + l.getEdgeCenterPoint().getY())/2);
+                break;
+            case 5:
+                firstx = (int) ((hexBorder.xpoints[0] + l.getEdgeCenterPoint().getX())/2);
+                firsty = (int) ((hexBorder.ypoints[0] + l.getEdgeCenterPoint().getY())/2);
+                secondx = (int) ((hexBorder.xpoints[5] + l.getEdgeCenterPoint().getX())/2);
+                secondy = (int) ((hexBorder.ypoints[5] + l.getEdgeCenterPoint().getY())/2);
+                break;
+
+        }
+        if (getMap().onMap(firstx, firsty )) {
+            if (getMap().getGridTerrain(firstx, firsty).getName().equals("Wall")) {
+                return getMap().getTerrain("Wall");
+            }
+            else if (getMap().getGridTerrain(firstx, firsty).getName().equals("Hedge")) {
+                return getMap().getTerrain("Hedge");
+            }
+            else {
+                return null;
+            }
+        } else if (getMap().onMap(secondx, secondy )) {
+            if(getMap().getGridTerrain(secondx , secondy).getName().equals("Wall")){
+                return getMap().getTerrain("Wall");
+            }
+            else if (getMap().getGridTerrain(secondx, secondy).getName().equals("Hedge")) {
+                return getMap().getTerrain("Hedge");
+            }
+            else {
+                return null;
+            }
+        }
+        return null;
+    }
 	public Terrain getHexsideTerrain(int side) {
 
 		return hexsideTerrain[side];
