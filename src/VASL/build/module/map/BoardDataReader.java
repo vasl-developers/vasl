@@ -51,6 +51,44 @@ public class BoardDataReader {
                 namesList.add(bd.split(" ")[0]);
             }
         }
+        if (namesList.size() == 0) {
+            //Server offline, provide default list
+            namesList.add("00dx");
+            namesList.add("a");
+            namesList.add("b");
+            namesList.add("c");
+            namesList.add("d");
+            namesList.add("e");
+            namesList.add("f");
+            namesList.add("g");
+            namesList.add("h");
+            namesList.add("i");
+            namesList.add("j");
+            namesList.add("k");
+            namesList.add("l");
+            namesList.add("mdx");
+            namesList.add("ndx");
+            namesList.add("odx");
+            namesList.add("pdx");
+            namesList.add("qdx");
+            namesList.add("rdx");
+            namesList.add("sdx");
+            namesList.add("tdx");
+            namesList.add("udx");
+            namesList.add("vdx");
+            namesList.add("wdx");
+            namesList.add("xdx");
+            namesList.add("ydx");
+            namesList.add("zdx");
+            namesList.add("d1");
+            namesList.add("d2");
+            namesList.add("d3");
+            namesList.add("d4");
+            namesList.add("d5");
+            namesList.add("d6");
+            namesList.add("d7");
+            namesList.add("DeluxeBlank");
+        }
         return namesList;
     }
 

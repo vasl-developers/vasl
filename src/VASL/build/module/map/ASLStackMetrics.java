@@ -77,7 +77,74 @@ public class ASLStackMetrics extends StackMetrics {
 
     @Override
     public int getContents(Stack parent, Point[] positions, Shape[] shapes, Rectangle[] boundingBoxes, int x, int y) {
-        int val = super.getContents(parent, positions, shapes, boundingBoxes, x, y);
+        //JY
+        //Duplicate VASSAL StackMetrics.getContents(), with changes to apparent sizes to account for board zoom level
+        //int val = super.getContents(parent, positions, shapes, boundingBoxes, x, y);
+        double pZoom = ((ASLMap)map).PieceScalerBoardZoom(parent);
+        int val = parent.getMaximumVisiblePieceCount();
+        if (positions != null) {
+            val = Math.min(val, positions.length);
+        }
+        if (boundingBoxes != null) {
+            val = Math.min(val, boundingBoxes.length);
+        }
+        if (shapes != null) {
+            val = Math.min(val, shapes.length);
+        }
+        int esx = Math.max((int) (this.exSepX * pZoom), 5);
+        int esy = Math.max((int) (this.exSepY * pZoom), 10);
+        int usx = Math.max((int) (this.unexSepX * pZoom), 1);
+        int usy = Math.max((int) (this.unexSepY * pZoom), 2);
+        int dx = parent.isExpanded() ? esx : usx;
+        int dy = parent.isExpanded() ? esy : usy;
+        Point currentPos = null;
+        Rectangle currentSelBounds = null;
+
+        for(int index = 0; index < val; ++index) {
+            GamePiece child = parent.getPieceAt(index);
+            Rectangle bbox;
+            if (Boolean.TRUE.equals(child.getProperty("Invisible"))) {
+                bbox = new Rectangle(x, y, 0, 0);
+                if (positions != null) {
+                    positions[index] = bbox.getLocation();
+                }
+                if (boundingBoxes != null) {
+                    boundingBoxes[index] = scalePiece(bbox, pZoom);
+                }
+                if (shapes != null) {
+                    shapes[index] = scalePiece(bbox, pZoom);
+                }
+            } else {
+                child.setProperty("useUnrotatedShape", Boolean.TRUE);
+                Rectangle nextSelBounds = scalePiece(child.getShape().getBounds(), pZoom);
+                child.setProperty("useUnrotatedShape", Boolean.FALSE);
+                Point nextPos = new Point(0, 0);
+                if (currentPos == null) {
+                    nextSelBounds.translate(x, y);
+                    currentPos = new Point(x, y);
+                    nextPos = currentPos;
+                } else {
+                    this.nextPosition(currentPos, currentSelBounds, nextPos, nextSelBounds, dx, dy);
+                }
+                if (positions != null) {
+                    positions[index] = nextPos;
+                }
+                if (boundingBoxes != null) {
+                    bbox = scalePiece(child.boundingBox(), pZoom);
+                    bbox.translate(nextPos.x, nextPos.y);
+                    boundingBoxes[index] = bbox;
+                }
+                if (shapes != null) {
+                    Shape s = scalePiece(child.getShape(), pZoom);
+                    s = AffineTransform.getTranslateInstance((double)nextPos.x, (double)nextPos.y).createTransformedShape(s);
+                    shapes[index] = s;
+                }
+                currentPos = nextPos;
+                currentSelBounds = nextSelBounds;
+            }
+        }
+        //JY
+
         if (!parent.isExpanded()) {
             int count = parent.getPieceCount();
             BitSet visibleLocations = new BitSet(count);
@@ -90,16 +157,28 @@ public class ASLStackMetrics extends StackMetrics {
                 visibleOther.set(i, !isLocation && visibleToMe);
             }
             if (visibleLocations.cardinality() > 0 && visibleOther.cardinality() > 0) {
+                //JY
+                int dxz = (int) (15/((ASLMap)map).getbZoom());
+                //JY
                 for (int i = 0; i < count; ++i) {
                     if (visibleLocations.get(i)) {
                         if (positions != null) {
-                            positions[i].translate(-15, 0);
+                            //JY
+                            //positions[i].translate(-15, 0);
+                            positions[i].translate(-dxz, 0);
+                            //JY
                         }
                         if (boundingBoxes != null) {
-                            boundingBoxes[i].translate(-15, 0);
+                            //JY
+                            //boundingBoxes[i].translate(-15, 0);
+                            boundingBoxes[i].translate(-dxz, 0);
+                            //JY
                         }
                         if (shapes != null) {
-                            shapes[i] = AffineTransform.getTranslateInstance(-15, 0).createTransformedShape(shapes[i]);
+                            //JY
+                            //shapes[i] = AffineTransform.getTranslateInstance(-15, 0).createTransformedShape(shapes[i]);
+                            shapes[i] = AffineTransform.getTranslateInstance(-dxz, 0).createTransformedShape(shapes[i]);
+                            //JY
                         }
                     }
                 }
@@ -189,4 +268,23 @@ public class ASLStackMetrics extends StackMetrics {
             }
         }
     }
+
+    //JY
+    public Rectangle scalePiece(Rectangle r, double f) {
+        Rectangle o = new Rectangle();
+        o.width = (int) (r.width * f);
+        o.height = (int) (r.height * f);
+        o.x = (int) (r.getCenterX() - 0.5*r.width*f);
+        o.y = (int) (r.getCenterY() - 0.5*r.height*f);
+        return o;
+    }
+    public Shape scalePiece(Shape s, double f) {
+        double cx = s.getBounds2D().getCenterX();
+        double cy = s.getBounds2D().getCenterY();
+        final AffineTransform t = AffineTransform.getTranslateInstance(-cx, -cy);
+        t.scale(f, f);
+        t.translate(cx, cy);
+        return t.createTransformedShape(s);
+    }
+    //JY
 }
