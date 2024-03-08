@@ -624,7 +624,7 @@ public class Hex {
     public void resetTerrain(double gridadj) {
 
         // set the center location terrain
-        Terrain centerLocationTerrain = map.getGridTerrain((int) (centerLocation.getLOSPoint().getX()+gridadj), (int) centerLocation.getLOSPoint().getY());
+        Terrain centerLocationTerrain = map.getGridTerrain((int) (centerLocation.getLOSPoint().getX()+ gridadj), (int) centerLocation.getLOSPoint().getY());
 
         // fix center location when building misses the center dot
         if(!centerLocationTerrain.isBuilding() && getHexsideBuildingTerrain(gridadj) != null) {
@@ -1050,7 +1050,7 @@ public class Hex {
 
 				final Location l = getHexsideLocation(x);
 				Terrain t = map.getGridTerrain((int)(l.getEdgeCenterPoint().getX()+gridadj), (int)l.getEdgeCenterPoint().getY());
-                if (t.isOpen()){
+                if (t != null && t.isOpen()){
                     t = checkWallHedgeGap(l);
                 }
 				// avoid errors during cropping
