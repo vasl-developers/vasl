@@ -1235,6 +1235,9 @@
 		<!-- Woods and Jungle  -->
 		<color name="WoodsGreen" red="85" green="95" blue="45" terrain="Woods" elevation="UNKNOWN" />
 		<color name="WoodsBlack" red="44" green="42" blue="22" terrain="Woods" elevation="UNKNOWN" />
+		<!-- use next two for overlays -->
+		<color name="WoodsGreenL1" red="85" green="95" blue="46" terrain="Woods" elevation="1" />
+		<color name="WoodsBlackL1" red="44" green="42" blue="24" terrain="Woods" elevation="1" />
 		<color name="WoodsGreenWinter" red="166" green="171" blue="145" terrain="Woods" elevation="UNKNOWN" />
 		<color name="WoodsBlackWinter" red="94" green="90" blue="75" terrain="Woods" elevation="UNKNOWN" />
 		<color name="DenseJungleGreen" red="85" green="95" blue="46" terrain="Dense Jungle" elevation="UNKNOWN" />
