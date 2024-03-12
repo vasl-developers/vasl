@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg" 
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   width="48" height="48">
+<g id="PFTHtable">
+  <text style="font-size:9px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L" x="11" y="24" transform="rotate(-90,11,24)">Range</text>
+  <text style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L" x="17" y="13" >0</text>
+  <text style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L" x="17" y="22" >1</text>
+  <text style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L" x="17" y="31" >2</text>
+  <text style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L" x="17" y="40" >3</text>
+
+  <text style="font-size:9px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L" x="32" y="24" transform="rotate(-90,32,24)">TH#</text>
+
+  <text style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill-opacity:1;font-family:Nimbus Sans L" x="38" y="13" fill="black">10</text>
+  <text style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill-opacity:1;font-family:Nimbus Sans L" x="38" y="22" fill="black">8</text>
+  <text style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill-opacity:1;font-family:Nimbus Sans L" x="38" y="31" fill="black">6</text>
+  <text style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill-opacity:1;font-family:Nimbus Sans L" x="38" y="40" fill="black">4</text>
+
+ </g>
+</svg>
