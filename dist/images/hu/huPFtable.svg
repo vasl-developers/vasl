@@ -1,0 +1,15 @@
+<svg xmlns:svg="http://www.w3.org/2000/svg" width="48" height="48" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="PFTHtable">
+  <text x="11" y="24" style="font-size:9px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L" transform="rotate(-90,11,24)">Range</text>
+  <text x="17" style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L" y="13">0</text>
+  <text x="17" style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L" y="22">1</text>
+  <text x="17" style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L" y="31">2</text>
+
+  <text x="32" y="24" style="font-size:9px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L" transform="rotate(-90,32,24)">TH#</text>
+
+  <text fill="black" x="38" y="13" style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill-opacity:1;font-family:Nimbus Sans L">10</text>
+  <text fill="black" x="38" y="22" style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill-opacity:1;font-family:Nimbus Sans L">8</text>
+  <text fill="black" x="38" y="31" style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill-opacity:1;font-family:Nimbus Sans L">6</text>
+
+ </g>
+</svg>
