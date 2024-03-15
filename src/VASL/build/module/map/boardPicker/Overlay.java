@@ -141,7 +141,7 @@ public class Overlay implements Cloneable {
         }
         return image;
     }
-    public boolean getpreserveelevation(){
+    public boolean getPreserveElevation(){
         return preserveelevation;
     }
     protected Image loadImage() {

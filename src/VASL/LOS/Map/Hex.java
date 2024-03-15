@@ -658,7 +658,7 @@ public class Hex {
         centerLocation.setTerrain(centerLocationTerrain);
 
         // add building level locations -multihex is always false here because not tested yet
-        addbuildinglevels(centerLocationTerrain, false);
+        addBuildingLevels(centerLocationTerrain, false);
 
         // set the hexside location terrain
         for (int x = 0; x < 6; x++) {
@@ -871,7 +871,7 @@ public class Hex {
         return null;
     }
 
-    public void addbuildinglevels(Terrain centerLocationTerrain, boolean multihex){
+    public void addBuildingLevels(Terrain centerLocationTerrain, boolean multihex){
 
         // add building locations
         boolean oldStairway = false;
@@ -1588,7 +1588,7 @@ public class Hex {
     }
     // this method should only be used when extending the hex border to handle hexside terrain covered by an overlay
     // in many cases trace amounts of wall/hedges are outside the overlay but must be reset to OG
-    public void setoverlayborder (){
+    public void setOverlayBorder(){
         int ovrborder = 10;
         if (hexWidth > 168 && hexHeight > 194) {
             ovrborder =20;
