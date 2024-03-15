@@ -31,7 +31,7 @@ public class DataFile {
 
     public static final String VERSION_KEY = "version";
     public static final String DEFAULT_VERSION = "0.0";
-
+    public static final String NAME_KEY = "name";
     private InputStream dataFile;
     private HashMap<String, String> attributes = new HashMap<String, String>();
 
@@ -80,6 +80,11 @@ public class DataFile {
     public String getVersion() {
         if (this.dataFile==null){return DEFAULT_VERSION;}
         return  attributes.get(VERSION_KEY);
+    }
+    public String getBoardImageFileName() {
+        if (this.dataFile == null) {return null;}
+        if (attributes.get(NAME_KEY) == null) {return null;}
+        return attributes.get(NAME_KEY);
     }
     public String getAltHexGrid() {return attributes.get(BoardArchive.ALT_HEX_GRID_KEY);}
 }

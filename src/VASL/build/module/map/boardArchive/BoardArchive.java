@@ -713,9 +713,13 @@ public class BoardArchive {
     public String getBoardImageFileName() {
 
         if(legacyBoard) {
-
-            // default image naming for legacy boards
-            return "bd" + getBoardName() + ".gif";
+            if (dataFile.getBoardImageFileName() != null) {
+                return dataFile.getBoardImageFileName();
+            }
+            else {
+                // default image naming for legacy boards
+                return "bd" + getBoardName() + ".gif";
+            }
         }
         else {
             return metadata.getBoardImageFileName();
