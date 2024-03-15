@@ -1,19 +1,24 @@
-<svg xmlns:svg="http://www.w3.org/2000/svg" width="48" height="48" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg" 
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   width="48" height="48">
 <g id="pffi" transform="translate(8,9) rotate(5,8,44)">
-  <polygon style="stroke:black;stroke-width:0.2;fill:#3c3c3c" points="0.7439,0 1.7713,1.417 2.0547,2.4089 -2.0547,2.4089 -1.7713,1.417 -0.7439,0" id="charge"/>
-  <polygon style="stroke:none;fill:#2f2f2f" points="2.0547,2.4089 2.0547,2.6923 1.0628,7.2267 0.7085,7.7935  0.5668,10.9109 -0.5668,10.9109 -1.0628,7.2267 -2.0547,2.6923 -2.0547,2.4089" id="head"/>
-  <polygon style="stroke:black;stroke-width:0.2;fill:none" points="0.5668,10.9109 0.5668,34.7166 -0.5668,34.7166 -0.5668,10.9109" id="tube"/>
-  <polygon style="stroke:none;fill:#4c4c4c" points="0.5668,15.8704 0.5668,19.413 -0.5668,19.413 -0.5668,15.8704" id="midband"/>
-  <polygon style="stroke:none;fill:black" points="0.5668,7.7935 1.8421,11.336 2.2672,11.9028 1.1336,18.7045 0.5668,18.7045 0.5668,13.0364 0.9919,14.4534 1.7004,12.0445 0.5668,12.0445" id="trigger"/>
-  <line y2="15.8704" style="stroke:black;stroke-width:0.2" x1="0.1889" x2="0.1889" y1="10.9109"/>
-  <line y2="15.8704" style="stroke:black;stroke-width:0.2" x1="-0.1889" x2="-0.1889" y1="10.9109"/>
+  <polygon id="charge" points="0.7439,0 1.7713,1.417 2.0547,2.4089 -2.0547,2.4089 -1.7713,1.417 -0.7439,0" style="stroke:black;stroke-width:0.2;fill:#3c3c3c" />
+  <polygon id="head" points="2.0547,2.4089 2.0547,2.6923 1.0628,7.2267 0.7085,7.7935  0.5668,10.9109 -0.5668,10.9109 -1.0628,7.2267 -2.0547,2.6923 -2.0547,2.4089" style="stroke:none;fill:#2f2f2f" />
+  <polygon id="tube" points="0.5668,10.9109 0.5668,34.7166 -0.5668,34.7166 -0.5668,10.9109" style="stroke:black;stroke-width:0.2;fill:none" />
+  <polygon id="midband" points="0.5668,15.8704 0.5668,19.413 -0.5668,19.413 -0.5668,15.8704" style="stroke:none;fill:#4c4c4c" />
+  <polygon id="trigger" points="0.5668,7.7935 1.8421,11.336 2.2672,11.9028 1.1336,18.7045 0.5668,18.7045 0.5668,13.0364 0.9919,14.4534 1.7004,12.0445 0.5668,12.0445" style="stroke:none;fill:black" />
+  <line x1="0.1889" y1="10.9109" x2="0.1889" y2="15.8704" style="stroke:black;stroke-width:0.2" />
+  <line x1="-0.1889" y1="10.9109" x2="-0.1889" y2="15.8704" style="stroke:black;stroke-width:0.2" />
 
 </g>
 <g id="PFtext">
-  <text x="31" style="font-size:11px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:left;fill:black;fill-opacity:1;font-family:Nimbus Sans L" y="12">PF</text>
-  <text x="22.5" style="font-size:11px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:left;fill:black;fill-opacity:1;font-family:Nimbus Sans L" y="44">16-2</text>
-  <text x="26.6" style="font-size:7px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:left;fill:black;fill-opacity:1;font-family:Nimbus Sans L" y="34.5">31TK</text>
-  <text x="29.3" style="font-size:6px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:left;fill:black;fill-opacity:1;font-family:Nimbus Sans L" y="18.5">6/44+</text>
+  <text style="font-size:11px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:end;fill:black;fill-opacity:1;font-family:Nimbus Sans L" x="44.5" y="12" >PF</text>
+  <text style="font-size:11px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:end;fill:black;fill-opacity:1;font-family:Nimbus Sans L" x="44.5" y="44" >16-2</text>
+  <text style="font-size:7px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:end;fill:black;fill-opacity:1;font-family:Nimbus Sans L" x="44.5" y="34.5" >31TK</text>
+  <text style="font-size:6px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:end;fill:black;fill-opacity:1;font-family:Nimbus Sans L" x="44.5" y="18.5" >6/44+</text>
 
  </g>
 </svg>

@@ -19,10 +19,10 @@
 
 </g>
 <g id="PFtext">
-  <text style="font-size:11px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:left;fill:black;fill-opacity:1;font-family:Nimbus Sans L" x="31" y="12" >PF</text>
-  <text style="font-size:11px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:left;fill:black;fill-opacity:1;font-family:Nimbus Sans L" x="22.5" y="44" >16-3</text>
-  <text style="font-size:7px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:left;fill:black;fill-opacity:1;font-family:Nimbus Sans L" x="26.6" y="34.5" >31TK</text>
-  <text style="font-size:6px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:left;fill:black;fill-opacity:1;font-family:Nimbus Sans L" x="29.3" y="18.5" >1/45+</text>
+  <text style="font-size:11px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:end;fill:black;fill-opacity:1;font-family:Nimbus Sans L" x="44.5" y="12" >PF</text>
+  <text style="font-size:11px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:end;fill:black;fill-opacity:1;font-family:Nimbus Sans L" x="44.5" y="44" >16-3</text>
+  <text style="font-size:7px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:end;fill:black;fill-opacity:1;font-family:Nimbus Sans L" x="44.5" y="34.5" >31TK</text>
+  <text style="font-size:6px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:end;fill:black;fill-opacity:1;font-family:Nimbus Sans L" x="44.5" y="18.5" >1/45+</text>
 
  </g>
 </svg>
