@@ -1488,28 +1488,34 @@ public class ASLMap extends Map {
         return img;
     }
 
-    protected void drawPiecesNonStackableInRegion(Graphics g, Rectangle visibleRect, double dZoom) {
-      final Graphics2D g2d = (Graphics2D) g;
-      final Composite oldComposite = g2d.getComposite();
-      g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pieceOpacity));
-      
-      final GamePiece[] stack = pieces.getPieces();
-      
-      for (int i = 0; i < stack.length; ++i) {
-        Point pt = stack[i].getPosition();
-        
-        if (stack[i].getClass() != Stack.class) {
-          if (Boolean.TRUE.equals(stack[i].getProperty(Properties.NO_STACK))) {
-              //JY
-              final double pZoom = PieceScalerBoardZoom(stack[i]);
-              stack[i].draw(g, (int) (pt.x * dZoom), (int) (pt.y * dZoom), null, dZoom*pZoom);
-              //JY
-          }
+    protected void drawPiecesNonStackableInRegion(Graphics g, Rectangle visibleRect, double dZoom)
+    {
+        Graphics2D g2d = (Graphics2D) g;
+        Composite oldComposite = g2d.getComposite();
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pieceOpacity));
+
+        GamePiece[] stack = pieces.getPieces();
+
+        for (int i = 0; i < stack.length; ++i)
+        {
+            Point pt = stack[i].getPosition();
+
+            if (stack[i].getClass() != Stack.class)
+            {
+                if (Boolean.TRUE.equals(stack[i].getProperty(Properties.NO_STACK)))
+                {
+                    //JY
+                    //stack[i].draw(g, (int) (pt.x * dZoom), (int) (pt.y * dZoom), null, dZoom);
+                    double pZoom = PieceScalerBoardZoom(stack[i]);
+                    stack[i].draw(g, (int) (pt.x * dZoom), (int) (pt.y * dZoom), null, dZoom*pZoom);
+                    //JY
+                }
+            }
         }
-      }
-      g2d.setComposite(oldComposite);
+
+        g2d.setComposite(oldComposite);
     }
-  
+
     public void setShowMapLevel(ShowMapLevel showmaplevel) {
       this.showmaplevel = showmaplevel;
     }
@@ -1520,90 +1526,137 @@ public class ASLMap extends Map {
     }
   
     @Override
-    public void drawPiecesInRegion(Graphics g, Rectangle visibleRect, Component c) {
+    public void drawPiecesInRegion(Graphics g,
+                                   Rectangle visibleRect,
+                                   Component c) {
 
-        final Graphics2D g2d = (Graphics2D) g;
-        final Composite oldComposite = g2d.getComposite();
+        Graphics2D g2d = (Graphics2D) g;
+        Composite oldComposite = g2d.getComposite();
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pieceOpacity));
 
         final double os_scale = g2d.getDeviceConfiguration().getDefaultTransform().getScaleX();
         final double dzoom = getZoom() * os_scale;
 
-        final GamePiece[] stack = pieces.getPieces();
+        GamePiece[] stack = pieces.getPieces();
 
-        for (int i = 0; i < stack.length; ++i) {
+        for (int i = 0; i < stack.length; ++i)
+        {
             Point pt = mapToDrawing(stack[i].getPosition(), os_scale);
             //JY
             double pZoom = PieceScalerBoardZoom(stack[i]);
             //JY
 
-            if (stack[i].getClass() == Stack.class) {
+            if (stack[i].getClass() == Stack.class)
+            {
                 if (showmaplevel == ShowMapLevel.ShowAll) {
                     //JY
+                    //getStackMetrics().draw((Stack) stack[i], pt, g, this, dzoom, visibleRect);
                     getStackMetrics().draw((Stack) stack[i], pt, g, this, dzoom*pZoom, visibleRect);
                     //JY
                 }
             }
-            else {
-                if (showmaplevel == ShowMapLevel.ShowAll || (stack[i].getProperty("overlay") != null && showmaplevel == ShowMapLevel.ShowMapOnly)) { // always show overlays
+            else
+            {
+                if (showmaplevel == ShowMapLevel.ShowAll  || (stack[i].getProperty("overlay") != null && showmaplevel == ShowMapLevel.ShowMapOnly)) // always show overlays
+                {
                     //JY
-                    stack[i].draw(g, pt.x, pt.y, c, dzoom * pZoom);
+                    //stack[i].draw(g, pt.x, pt.y, c, dzoom);
+                    stack[i].draw(g, pt.x, pt.y, c, dzoom*pZoom);
+                    //JY
+
                     if (Boolean.TRUE.equals(stack[i].getProperty(Properties.SELECTED))) {
-                        highlighter.draw(stack[i], g, pt.x, pt.y, c, dzoom * pZoom);
-                    }
-                }
-                else if (showmaplevel == ShowMapLevel.ShowMapAndOverlay) {
-                    if (Boolean.TRUE.equals(stack[i].getProperty(Properties.NO_STACK))) {
                         //JY
-                        stack[i].draw(g, pt.x, pt.y, c, dzoom*pZoom);
-                        if (Boolean.TRUE.equals(stack[i].getProperty(Properties.SELECTED))) {
+                        // highlighter.draw(stack[i], g, pt.x, pt.y, c, dzoom);
                         highlighter.draw(stack[i], g, pt.x, pt.y, c, dzoom*pZoom);
                         //JY
+                    }
+                }
+                else if (showmaplevel == ShowMapLevel.ShowMapAndOverlay)
+                {
+                    if (Boolean.TRUE.equals(stack[i].getProperty(Properties.NO_STACK)))
+                    {
+                        //JY
+                        //stack[i].draw(g, pt.x, pt.y, c, dzoom);
+                        stack[i].draw(g, pt.x, pt.y, c, dzoom*pZoom);
+                        //JY
+
+                        if (Boolean.TRUE.equals(stack[i].getProperty(Properties.SELECTED))) {
+                            //JY
+                            //highlighter.draw(stack[i], g, pt.x, pt.y, c, dzoom);
+                            highlighter.draw(stack[i], g, pt.x, pt.y, c, dzoom*pZoom);
+                            //JY
                         }
                     }
                 }
             }
+/*
+        // draw bounding box for debugging
+        final Rectangle bb = stack[i].boundingBox();
+        g.drawRect(pt.x + bb.x, pt.y + bb.y, bb.width, bb.height);
+*/
         }
+
         g2d.setComposite(oldComposite);
     }
-
     @Override
-    public void drawPieces(Graphics g, int xoffset, int yoffset) {
+    public void drawPieces(Graphics g, int xOffset, int yOffset)
+    {
 
-        final Graphics2D g2d = (Graphics2D) g;
-        final Composite oldComposite = g2d.getComposite();
+
+        Graphics2D g2d = (Graphics2D) g;
+        Composite oldComposite = g2d.getComposite();
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pieceOpacity));
+
         final double os_scale = g2d.getDeviceConfiguration().getDefaultTransform().getScaleX();
         final double dzoom = getZoom() * os_scale;
+
         GamePiece[] stack = pieces.getPieces();
 
-        for (int i = 0; i < stack.length; ++i) {
+        for (int i = 0; i < stack.length; ++i)
+        {
             //JY
-            final double pZoom = PieceScalerBoardZoom(stack[i]);
-            if (showmaplevel == ShowMapLevel.ShowAll || (stack[i].getProperty("overlay") != null && showmaplevel == ShowMapLevel.ShowMapOnly)) { // always show overlays
+            double pZoom = PieceScalerBoardZoom(stack[i]);
+            //JY
+            if (showmaplevel == ShowMapLevel.ShowAll || (stack[i].getProperty("overlay") != null && showmaplevel == ShowMapLevel.ShowMapOnly)) // always show overlays
+            {
                 Point pt = mapToDrawing(stack[i].getPosition(), os_scale);
+
                 //JY
-                stack[i].draw(g, pt.x + xoffset, pt.y + yoffset, theMap, dzoom*pZoom);
+                //stack[i].draw(g, pt.x + xOffset, pt.y + yOffset, theMap, dzoom);
+                stack[i].draw(g, pt.x + xOffset, pt.y + yOffset, theMap, dzoom*pZoom);
+                //JY
 
                 if (Boolean.TRUE.equals(stack[i].getProperty(Properties.SELECTED))) {
                     //JY
-                    highlighter.draw(stack[i], g, pt.x - xoffset, pt.y - yoffset, theMap, dzoom * pZoom);
+                    //highlighter.draw(stack[i], g, pt.x - xOffset, pt.y - yOffset, theMap, dzoom);
+                    highlighter.draw(stack[i], g, pt.x - xOffset, pt.y - yOffset, theMap, dzoom * pZoom);
+                    //JY
                 }
             }
-            else if (showmaplevel == ShowMapLevel.ShowMapAndOverlay) {
-                if (stack[i].getClass() != Stack.class) {
-                    if (Boolean.TRUE.equals(stack[i].getProperty(Properties.NO_STACK))) {
+            else if (showmaplevel == ShowMapLevel.ShowMapAndOverlay)
+            {
+                if (stack[i].getClass() != Stack.class)
+                {
+                    if (Boolean.TRUE.equals(stack[i].getProperty(Properties.NO_STACK)))
+                    {
                         Point pt = mapToDrawing(stack[i].getPosition(), os_scale);
+
                         //JY
-                        stack[i].draw(g, pt.x + xoffset, pt.y + yoffset, theMap, dzoom*pZoom);
+                        //stack[i].draw(g, pt.x + xOffset, pt.y + yOffset, theMap, dzoom);
+                        stack[i].draw(g, pt.x + xOffset, pt.y + yOffset, theMap, dzoom*pZoom);
+                        //JY
+
                         if (Boolean.TRUE.equals(stack[i].getProperty(Properties.SELECTED))) {
                             //JY
-                            highlighter.draw(stack[i], g, pt.x - xoffset, pt.y - yoffset, theMap, dzoom * pZoom);
+                            //highlighter.draw(stack[i], g, pt.x - xOffset, pt.y - yOffset, theMap, dzoom);
+                            highlighter.draw(stack[i], g, pt.x - xOffset, pt.y - yOffset, theMap, dzoom * pZoom);
+                            //JY
                         }
                     }
                 }
             }
         }
+
         g2d.setComposite(oldComposite);
     }
     private Color getRGBColor(int c){
@@ -1638,42 +1691,47 @@ public class ASLMap extends Map {
         return bZoom;
     }
     public void setbZoom (double z) {
-        oldbZoom =  (bZoom != 0.0D) ? bZoom : 1.0D;
+        if (bZoom != 0.0D) {
+            oldbZoom = bZoom;
+        }
+        else {
+            oldbZoom = 1.0D;
+        }
+        bZoom = z;
     }
 
     private void findOverlays() {
-        final GameModule mod = getGameModule();
         //All pieces that should scale with the map, not the counters
         //Mostly overlays, but some others
-        final String[] ovlpalettes = {"Draggable Overlays", "Deluxe Draggable", "Terrain Overlays", "Overlays (Large)"};
-        java.util.List<PieceWindow> pwlist = mod.getAllDescendantComponentsOf(PieceWindow.class);
-        for (PieceWindow pw: pwlist) {
-            final String pwname = pw.getAttributeValueString("name");
-            if (Arrays.asList(ovlpalettes).contains(pwname)) {
-                java.util.List<PieceSlot> pslist = pw.getAllDescendantComponentsOf(PieceSlot.class);
-                for (PieceSlot ps: pslist) {
+        String[] ovlPalettes = {"Draggable Overlays", "Deluxe Draggable", "Terrain Overlays", "Overlays (Large)"};
+        java.util.List<PieceWindow> pwList = GameModule.getGameModule().getAllDescendantComponentsOf(PieceWindow.class);
+        for (PieceWindow pw: pwList) {
+            String pwName = pw.getAttributeValueString("name");
+            if (Arrays.asList(ovlPalettes).contains(pwName)) {
+                java.util.List<PieceSlot> psList = pw.getAllDescendantComponentsOf(PieceSlot.class);
+                for (PieceSlot ps: psList) {
                     pieceslotgpidlist.add(ps.getGpId());
                 }
             }
         }
-        String[] ovlpanels = {"Phase Track", "Turn Markers"};
-        java.util.List<PanelWidget> panlist = mod.getAllDescendantComponentsOf(PanelWidget.class);
-        for (PanelWidget pw: panlist) {
-            final String pwname = pw.getAttributeValueString("entryName");
-            if (Arrays.asList(ovlpanels).contains(pwname)) {
-                java.util.List<PieceSlot> pslist = pw.getAllDescendantComponentsOf(PieceSlot.class);
-                for (PieceSlot ps: pslist) {
+        String[] ovlPanels = {"Phase Track", "Turn Markers"};
+        java.util.List<PanelWidget> panList = GameModule.getGameModule().getAllDescendantComponentsOf(PanelWidget.class);
+        for (PanelWidget pw: panList) {
+            String pwName = pw.getAttributeValueString("entryName");
+            if (Arrays.asList(ovlPanels).contains(pwName)) {
+                java.util.List<PieceSlot> psList = pw.getAllDescendantComponentsOf(PieceSlot.class);
+                for (PieceSlot ps: psList) {
                     pieceslotgpidlist.add(ps.getGpId());
                 }
             }
         }
-        String[] ovlscrolls = {"< Turn Tracks", "Turn Markers (by Module)"};
-        java.util.List<ListWidget> scrlist = mod.getAllDescendantComponentsOf(ListWidget.class);
-        for (ListWidget pw: scrlist) {
-            String pwname = pw.getAttributeValueString("entryName");
-            if (Arrays.asList(ovlscrolls).contains(pwname)) {
-                java.util.List<PieceSlot> pslist = pw.getAllDescendantComponentsOf(PieceSlot.class);
-                for (PieceSlot ps: pslist) {
+        String[] ovlScrolls = {"< Turn Tracks", "Turn Markers (by Module)"};
+        java.util.List<ListWidget> scrList = GameModule.getGameModule().getAllDescendantComponentsOf(ListWidget.class);
+        for (ListWidget pw: scrList) {
+            String pwName = pw.getAttributeValueString("entryName");
+            if (Arrays.asList(ovlScrolls).contains(pwName)) {
+                java.util.List<PieceSlot> psList = pw.getAllDescendantComponentsOf(PieceSlot.class);
+                for (PieceSlot ps: psList) {
                     pieceslotgpidlist.add(ps.getGpId());
                 }
             }
@@ -1712,23 +1770,23 @@ public class ASLMap extends Map {
         }
         boolean deluxe = false;
         for (Board b: getBoards()) {
-            final String bdname = b.getName();
-            deluxe = dxAvailBoards.contains(bdname);
+            String bdName = b.getName();
+            deluxe = dxAvailBoards.contains(bdName);
         }
-        if (deluxe) {mag = mag * 3.0;}
+        if (deluxe) {mag = mag*3.0;}
 
         double magZoom = mag;
         if (gp instanceof Stack) {
-            final Stack s = (Stack) gp;
+            Stack s = (Stack) gp;
             for (int i = s.getPieceCount(); i > 0; i--) { //Top down in the stack
                 GamePiece sgp = s.getPieceAt(i - 1);
-                if (!(sgp.getProperty(SCALEWITHBOARDMAG) != null && mag != 1.0)) {
+                if (!((sgp.getProperty(SCALEWITHBOARDMAG) != null) && (mag != 1.0))) {
                     magZoom = 1.0;
                 }
             }
         }
         else {
-            if (!(gp.getProperty(SCALEWITHBOARDMAG) != null && mag != 1.0)) {
+            if (!((gp.getProperty(SCALEWITHBOARDMAG) != null) && (mag != 1.0))) {
                 magZoom = 1.0;
             }
         }
