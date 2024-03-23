@@ -406,9 +406,9 @@ public class LOSDataEditor {
 
                 if (map.getGridTerrain(x, y).isFactoryTerrain() &&
                         (!map.getGridTerrain(Math.max(x - 1, 0), y).isFactoryTerrain() ||
-                                !map.getGridTerrain(Math.min(x + 1, map.getGridWidth()), y).isFactoryTerrain() ||
+                                !map.getGridTerrain(Math.min(x + 1, map.getGridWidth() - 1), y).isFactoryTerrain() ||
                                 !map.getGridTerrain(x, Math.max(y - 1, 0)).isFactoryTerrain() ||
-                                !map.getGridTerrain(x, Math.min(y + 1, map.getGridHeight())).isFactoryTerrain())
+                                !map.getGridTerrain(x, Math.min(y + 1, map.getGridHeight() - 1)).isFactoryTerrain())
                         ) {
                     map.setGridTerrainCode(newTerr, x, y);
                 }
