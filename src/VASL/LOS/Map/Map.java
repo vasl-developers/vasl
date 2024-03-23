@@ -27,6 +27,7 @@ import VASL.LOS.VASLGameInterface;
 import VASL.LOS.counters.OBA;
 import VASL.LOS.counters.Smoke;
 import VASL.LOS.counters.Vehicle;
+import VASL.build.module.map.boardPicker.VASLBoard;
 import VASSAL.build.module.map.boardPicker.Board;
 
 import java.awt.*;
@@ -5046,48 +5047,49 @@ public class Map  {
     }
 
     private void doHalfHexTerrainElevationCheck(Map map, Hex upperLeft, int upper, int left, int x, int y){
-        if (upperLeft.getRowNumber() > 0 && y == 0 && map.gridToHex(x, y).getHexCenter().getY() == 0) {   // a new board is being added below an existing one
-
-                Terrain firsthalfterrain = getGridTerrain(left + x, upper - 1 + y);
-                int firsthalfelevation = getGridElevation(left + x, upper - 1 +y);
-                if (!firsthalfterrain.isOpen()){
-                    terrainGrid[left+x][upper + y] = terrainGrid[left + x][upper - 1 + y];
-                }
-                else  {
-                    terrainGrid[left+x][upper + y] = (char) map.getGridTerrain(x, y).getType();
+        int cropadjx = 0, cropadjy = 0;
+        if (upperLeft.getRowNumber() > 0 && y == 0 ) {   // a new board is being added below an existing one
+            if (this.gridToHex(x, y).getHexCenter().getY() == 0) {  // column is half-hex at top
+                // test code
+                Hex testhex = gridToHex(left + x, upper -2 + y);
+                Terrain firsthalfterrain = getGridTerrain(left + x, upper - 2 + y);
+                int firsthalfelevation = getGridElevation(left + x, upper - 2 + y);
+                if (!firsthalfterrain.isOpen()) {
+                    terrainGrid[left + x][upper + y] = terrainGrid[left + x][upper - 2 + y];
+                } else {
+                    terrainGrid[left + x][upper + y] = (char) map.getGridTerrain(x, y).getType();
                 }
                 if (!(firsthalfelevation == 0)) {
-                    elevationGrid[left + x][upper + y] = elevationGrid[left + x][ upper -1 + y];
-                }
-                else {
+                    elevationGrid[left + x][upper + y] = elevationGrid[left + x][upper - 2 + y];
+                } else {
                     elevationGrid[left + x][upper + y] = (byte) map.getGridElevation(x, y);
                 }
-        }
-        else {
-            terrainGrid[left + x][upper + y] = (char) map.getGridTerrain(x, y).getType();
-            elevationGrid[left + x][upper + y] = (byte) map.getGridElevation(x, y);
-        }
-        if (upperLeft.getColumnNumber() > 0 && x == 0 && map.gridToHex(x, y).getHexCenter().getX() == 0) {   // a new board is being added to the right of an existing one
-
-            Terrain firsthalfterrain = getGridTerrain(left - 1 + x, upper + y);
-            int firsthalfelevation = getGridElevation(left - 1 + x, upper + y);
-            if (!firsthalfterrain.isOpen()){
-                terrainGrid[left+x][upper + y] = terrainGrid[left - 1 + x][upper + y];
-            }
-            else  {
-                terrainGrid[left+x][upper + y] = (char) map.getGridTerrain(x, y).getType();
-            }
-            if (!(firsthalfelevation == 0)) {
-                elevationGrid[left + x][upper + y] = elevationGrid[left - 1 + x][ upper + y];
-            }
-            else {
-                elevationGrid[left + x][upper + y] = (byte) map.getGridElevation(x, y);
             }
         }
         else {
             terrainGrid[left + x][upper + y] = (char) map.getGridTerrain(x, y).getType();
             elevationGrid[left + x][upper + y] = (byte) map.getGridElevation(x, y);
         }
+        if (upperLeft.getColumnNumber() > 0 && x == 0 ) {   // a new board is being added to the right of an existing one
+            if (this.gridToHex(x, y).getHexCenter().getX() == 0) {  // row is half-hex on left side
+                Terrain firsthalfterrain = getGridTerrain(left - 1 + x, upper + y);
+                int firsthalfelevation = getGridElevation(left - 1 + x, upper + y);
+                if (!firsthalfterrain.isOpen()) {
+                    terrainGrid[left + x][upper + y] = terrainGrid[left - 1 + x][upper + y];
+                } else {
+                    terrainGrid[left + x][upper + y] = (char) map.getGridTerrain(x, y).getType();
+                }
+                if (!(firsthalfelevation == 0)) {
+                    elevationGrid[left + x][upper + y] = elevationGrid[left - 1 + x][upper + y];
+                } else {
+                    elevationGrid[left + x][upper + y] = (byte) map.getGridElevation(x, y);
+                }
+            }
+        }
+        //else {
+        //    terrainGrid[left + x][upper + y] = (char) map.getGridTerrain(x, y).getType();
+        //    elevationGrid[left + x][upper + y] = (byte) map.getGridElevation(x, y);
+        //}
     }
 
     /**
