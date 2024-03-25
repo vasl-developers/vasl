@@ -178,8 +178,11 @@
 		<boarddata name="o" version="6.6" versionDate="2023/11/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="odx" version="6.1" versionDate="2022/11/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
 		<boarddata name="p" version="6.4" versionDate="2023/01/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="pdx" version="6.0" versionDate="2024/03/25" description="" boardType="Deluxe" publisher="MMP" issued="" />
 		<boarddata name="q" version="6.5" versionDate="2023/01/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="qdx" version="6.0" versionDate="2024/03/25" description="" boardType="Deluxe" publisher="MMP" issued="" />
 		<boarddata name="r" version="6.5" versionDate="2023/11/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="rdx" version="6.0" versionDate="2024/03/25" description="" boardType="Deluxe" publisher="MMP" issued="" />
 		<boarddata name="s" version="6.6" versionDate="2023/11/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="t" version="6.4" versionDate="2023/01/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="u" version="6.4" versionDate="2023/01/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
