@@ -1115,6 +1115,22 @@
 		<color name="StoneBldgh13" red="148" green="137" blue="55" terrain="Stone Building" elevation="UNKNOWN" />
 		<color name="StoneBldgh14" red="148" green="137" blue="65" terrain="Stone Building" elevation="UNKNOWN" />
 		<color name="StoneBldgh15" red="160" green="152" blue="70" terrain="Stone Building" elevation="UNKNOWN" />
+		<!-- bdrdx -->
+		<color name="StoneBldgr1" red="19" green="19" blue="18" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgr2" red="39" green="42" blue="41" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgr3" red="62" green="67" blue="67" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgr4" red="66" green="85" blue="55" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgr5" red="78" green="84" blue="87" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgr6" red="87" green="95" blue="101" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgr7" red="93" green="95" blue="91" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgr8" red="99" green="108" blue="114" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgr9" red="102" green="114" blue="86" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgr10" red="111" green="113" blue="110" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgr11" red="113" green="122" blue="129" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgr12" red="129" green="138" blue="112" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgr13" red="126" green="137" blue="149" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgr14" red="134" green="138" blue="138" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldgr15" red="156" green="164" blue="166" terrain="Stone Building" elevation="UNKNOWN" />
 		<!-- bdBFPA -->
 		<color name="StoneBldgA1" red="23" green="20" blue="24" terrain="Stone Building" elevation="0" />
 		<color name="StoneBldgA2" red="4" green="43" blue="57" terrain="Stone Building" elevation="0" />
@@ -1222,6 +1238,22 @@
 		<color name="WoodBldgh13" red="122" green="97" blue="38" terrain="Wooden Building" elevation="UNKNOWN" />
 		<color name="WoodBldgh14" red="123" green="99" blue="32" terrain="Wooden Building" elevation="UNKNOWN" />
 		<color name="WoodBldgh15" red="132" green="111" blue="39" terrain="Wooden Building" elevation="UNKNOWN" />
+		<!-- bdrdx -->
+		<color name="WoodBldgr1" red="33" green="27" blue="19" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgr2" red="54" green="34" blue="16" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgr3" red="66" green="50" blue="35" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgr4" red="77" green="50" blue="26" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgr5" red="93" green="61" blue="33" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgr6" red="92" green="64" blue="45" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgr7" red="105" green="67" blue="27" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgr8" red="105" green="69" blue="40" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgr9" red="120" green="81" blue="54" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgr10" red="124" green="84" blue="45" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgr11" red="133" green="84" blue="48" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgr12" red="147" green="99" blue="57" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgr13" red="111" green="109" blue="109" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgr14" red="155" green="104" blue="52" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldgr15" red="170" green="119" blue="63" terrain="Wooden Building" elevation="UNKNOWN" />
 		<!-- bdBFPA -->
 		<color name="WoodBldgA1" red="49" green="36" blue="35" terrain="Wooden Building" elevation="0" />
 		<color name="WoodBldgA2" red="73" green="55" blue="47" terrain="Wooden Building" elevation="0" />
