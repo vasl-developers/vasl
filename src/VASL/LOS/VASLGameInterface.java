@@ -82,7 +82,8 @@ public class VASLGameInterface {
 
         this.gameMap = GameMap;
         this.LOSMap = LOSMap;
-
+        // change for losgui
+        if (GameMap == null && LOSMap == null){return;}
         // get the counter metadata and location counters
         CounterMetadataFile counterMetadataFile = new CounterMetadataFile();
         counterMetadata =  counterMetadataFile.getMetadataElements();
