@@ -813,7 +813,7 @@ public class ASLMap extends Map {
                                     elevint = losonoverlays.newlosdata.getGridElevation(losonoverlays.overpositionx, losonoverlays.overpositiony) -1;
                                 }
                                 //add Hex to collections of inherent hexes and building hexes on the overlay
-                                addHextoOverlayInhandBldgMaps(terr, losonoverlays, inhhexes, bdghexes);
+                                addHextoOverlayInhandBldgMaps(terraintype, terr, losonoverlays, inhhexes, bdghexes);
                                 //set terrain type for center location or hexside location (if hexside terrain)
                                 setOverlayTerrainType(losonoverlays, terr, terraintype);
                                 //set elevation level for point and hex
@@ -948,7 +948,7 @@ public class ASLMap extends Map {
                                     elevint = losonoverlays.newlosdata.getGridElevation(losonoverlays.overpositionx, losonoverlays.overpositiony) -1;
                                 }
                                 //add Hex to collections of inherent hexes and building hexes on the overlay
-                                addHextoOverlayInhandBldgMaps(terr, losonoverlays, inhhexes, bdghexes);
+                                addHextoOverlayInhandBldgMaps(terraintype, terr, losonoverlays, inhhexes, bdghexes);
                                 //set terrain type for center location or hexside location (if hexside terrain)
                                 setOverlayTerrainType(losonoverlays, terr, terraintype);
 
@@ -1200,18 +1200,24 @@ public class ASLMap extends Map {
         return usex >= 0 && usex < bi.getWidth() && usey >= 0 && usey < bi.getHeight();
     }
     //add Hex to collections of inherent hexes and building hexes on the overlay
-    private void addHextoOverlayInhandBldgMaps(Terrain terr, LOSonOverlays losonoverlays, HashMap<VASL.LOS.Map.Hex, VASL.LOS.Map.Terrain>  inhhexes, HashMap<VASL.LOS.Map.Hex, VASL.LOS.Map.Terrain> bdghexes) {
+    private void addHextoOverlayInhandBldgMaps(String terraintype, Terrain terr, LOSonOverlays losonoverlays, HashMap<VASL.LOS.Map.Hex, VASL.LOS.Map.Terrain>  inhhexes, HashMap<VASL.LOS.Map.Hex, VASL.LOS.Map.Terrain> bdghexes) {
 
         if (terr != null) {
-            if (terr.isInherentTerrain()) {
+            if (terr.isInherentTerrain() || (terraintype == "Steppe" && (terr.getName().equals("Brush") || terr.getName().equals("Woods")))) {
                 if (!inhhexes.containsKey(losonoverlays.newlosdata.gridToHex((int) losonoverlays.overpositionx, (int) losonoverlays.overpositiony))) {
                     //hack - ensure that the pixel is not close to a hexside as VASL geometry can put it in an adjacent hex
                     final Point hexcenter = losonoverlays.newlosdata.gridToHex((int) losonoverlays.overpositionx, (int) losonoverlays.overpositiony).getHexCenter();
                     final Double d =  Math.sqrt(((Math.pow(hexcenter.x - losonoverlays.overpositionx, 2) + (Math.pow(hexcenter.y - losonoverlays.overpositiony, 2)))));
                     if (d < 25) {
                         inhhexes.put(losonoverlays.newlosdata.gridToHex((int) losonoverlays.overpositionx, (int) losonoverlays.overpositiony), terr);
+                        // added if then to ensure only used in specific circumstance
+                        // TODO: remove if after 668 is released and test this works for other transforms
+                        if (terraintype == "Steppe" && (terr.getName().equals("Brush") || terr.getName().equals("Woods"))) {
+                            doNonInherentToInherentFix(terraintype, terr, losonoverlays);
+                        }
                     }
                 }
+
             }
             else if (terr.isBuilding()) {
                 if (!terr.getName().equals("Stone Building") && !terr.getName().equals("Wooden Building") && !terr.getName().contains("Rowhouse Wall")) {
@@ -1237,6 +1243,9 @@ public class ASLMap extends Map {
     // when adding items here also add them to VASLThread.initializeMap
     private String getOverlayTerrainType(Overlay o){
         final String overlayname = o.getName();
+        if (overlayname.contains("Steppe")) {
+            return "Steppe";
+        }
         if (overlayname.contains("elrr")){
             return "Elevated Railroad";
         }
@@ -1403,6 +1412,19 @@ public class ASLMap extends Map {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private void doNonInherentToInherentFix(String terraintype, Terrain terr, LOSonOverlays losonoverlays){
+        Point pointtoset = null;
+        Hex setterrainonhexside = losonoverlays.newlosdata.gridToHex((int) losonoverlays.overpositionx, (int) losonoverlays.overpositiony);
+        for (int z = 0; z < 6; z++) {
+            pointtoset = setterrainonhexside.getHexsideLocation(z).getEdgeCenterPoint();
+            if (z == 0){pointtoset.y -= 1;}
+            if (z == 3){pointtoset.y += 1;}
+            if(losonoverlays.newlosdata.onMap(pointtoset.x, pointtoset.y)) {
+                losonoverlays.newlosdata.setGridTerrainCode(terr.getType(), pointtoset.x, pointtoset.y);
             }
         }
     }
