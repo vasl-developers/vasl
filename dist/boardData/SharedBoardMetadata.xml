@@ -3078,6 +3078,7 @@
         <LOSSSRule name="RoadsToPaths" type="customCode" fromValue="" toValue="" />
         <LOSSSRule name="NoWoodsRoads" type="customCode" fromValue="" toValue="" />
 		<LOSSSRule name="AllBuildingsLevel1" type="customCode" fromValue="" toValue="" />
+		<LOSSSRule name="NoCliffs" type="customCode" fromValue="" toValue="" />
         <!-- simple terrain mappings -->
         <LOSSSRule name="BrushToOpenGround" type="terrainMap" fromValue="Brush" toValue="Open Ground" />
         <LOSSSRule name="SwampToMarsh" type="terrainMap" fromValue="Swamp" toValue="Marsh" />
@@ -3095,7 +3096,6 @@
         <LOSSSRule name="PlowedFields" type="terrainMap" fromValue="Grain" toValue="Plowed Field" />
         <LOSSSRule name="RiverToValley" type="terrainMap" fromValue="River" toValue="Open Ground" />
         <LOSSSRule name="PondToValley" type="terrainMap" fromValue="Water" toValue="Open Ground" />
-        <LOSSSRule name="NoCliffs" type="terrainMap" fromValue="Cliff" toValue="Open Ground" />
         <LOSSSRule name="WallsToBocage" type="terrainMap" fromValue="Wall" toValue="Bocage" />
         <LOSSSRule name="HedgesToBocage" type="terrainMap" fromValue="Hedge" toValue="Bocage" />
 		<LOSSSRule name="LightWoods" type="terrainMap" fromValue="Woods" toValue="Light Woods" />
