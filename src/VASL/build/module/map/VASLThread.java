@@ -174,7 +174,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                                     finalfilename.equals("br") || finalfilename.equals("dj") || finalfilename.equals("elrr") || finalfilename.equals("rv") ||
                                     finalfilename.equals("sw") || finalfilename.equals("rr") || finalfilename.equals("surr") ||
                                     finalfilename.equals("dx") || o.getName().contains("BSO") || o.getName().contains("SSO")) {
-                                boolean reg = true;
+
                             } else {
                                 Rectangle ovrRec = o.bounds();
                                 // get the image as a buffered image

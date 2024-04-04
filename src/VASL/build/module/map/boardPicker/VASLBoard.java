@@ -236,7 +236,11 @@ public class VASLBoard extends ASLBoard {
 
                         fillWoodsRoadHexes(LOSData);
                         changed = true;
-
+                    }
+                    else if ("NoCliffs".equals(s)) {
+                        changeGridTerrain(LOSData.getTerrain("Cliffs"), LOSData.getTerrain("Open Ground"), LOSData);
+                        removeCliffTerrain(LOSData);
+                        changed = true;
                     } else if ("Bamboo".equals(s)) {
 
                         // All brush is Bamboo
@@ -338,7 +342,7 @@ public class VASLBoard extends ASLBoard {
             // transform woods to Light Jungle and buildings to huts if PTO changes
             if (PTO) {
                 changeGridTerrain(LOSData.getTerrain("Woods"), LOSData.getTerrain("Light Jungle"), LOSData);
-                buildingsToHuts(LOSData);
+                //buildingsToHuts(LOSData);
                 changed = true;
             }
 
@@ -679,78 +683,6 @@ public class VASLBoard extends ASLBoard {
         }
 
     }
-    /**
-     * Converts all single-story houses with multiple buildings to huts
-     * @param LOSData the LOS data
-     */
-    //TODO find a better way
-    private void buildingsToHuts(Map LOSData) {
-
-/*
-        LOSDataEditor losDataEditor = new LOSDataEditor(LOSData);
-        Hex[][] hexGrid = LOSData.getHexGrid();
-        for (int x = 0; x < hexGrid.length; x++) {
-            for (int y = 0; y < hexGrid[x].length; y++) {
-
-                Hex hex = LOSData.getHex(x, y);
-                if(isHut(hex, LOSData)) {
-
-                    System.out.println(hex.getName() + ": true" );
-                }
-            }
-        }
-*/
-    }
-
-    /**
-     * @param hex the hex
-     * @return true if hex qualifies for conversion to huts in PTO
-     */
-    //TODO find a better way
-    private boolean isHut(Hex hex, Map LOSData) {
-
-        return false;
-
-/*
-        HashSet<Point> buildingPoints  = new HashSet<Point>();
-
-        // collect all building points
-        final Rectangle rectangle = hex.getHexBorder().getBounds();
-        for(int x = rectangle.x; x < rectangle.x + rectangle.width; x++) {
-            for(int y = rectangle.y; y < rectangle.y + rectangle.height; y++) {
-
-                if(hex.getHexBorder().contains(x,y) &&
-                        LOSData.onMap(x,y) &&
-                        ("Wooden Building".equals(LOSData.getGridTerrain(x,y).getName()) ||
-                         "Stone Building".equals(LOSData.getGridTerrain(x,y).getName()))) {
-
-                    buildingPoints.add(new Point(x,y));
-                }
-            }
-        }
-
-        // remove adjacent points to count the buildings
-        int max = buildingPoints.size();
-        for (int x = 0; x < max && buildingPoints.size() > 1; x++) {
-
-            Point p = buildingPoints.iterator().next();
-            Iterator<Point> iterator = buildingPoints.iterator();
-            boolean adjacent = false;
-            while (iterator.hasNext() && !adjacent) {
-                Point p2 = iterator.next();
-                if((p2.x != p.x || p2.y != p.y) && p2.distance(p) <= 1.5){
-                    adjacent = true;
-                }
-            }
-            if(adjacent) {
-                buildingPoints.remove(p);
-            }
-        }
-
-        return buildingPoints.size() > 1;
-
-*/
-    }
 
     /**
      * Changes all terrain in the terrain grid of the LOS data from one type to another
@@ -902,6 +834,38 @@ public class VASLBoard extends ASLBoard {
 
                 if(LOSData.getGridElevation(x,y) == fromElevation){
                     LOSData.setGridElevation(toElevation, x, y);
+                }
+            }
+        }
+    }
+    /**
+     * special case to handle complexity of cliff terrain
+     * @param LOSData the LOS data
+     */
+    private void removeCliffTerrain (Map LOSData){
+        Hex cliffHex = null, oppHex;
+        for(int x = 0; x < LOSData.getGridWidth(); x++) {
+            for(int y = 0; y < LOSData.getGridHeight(); y++ ) {
+
+                if(LOSData.getGridTerrain(x,y).isCliff()){
+                    // change GridTerrain
+                    LOSData.setGridTerrainCode(0, x, y); //0 = Open Ground
+                    cliffHex = LOSData.gridToHex(x, y);
+                    // change GridElevation
+                    int cliffside = cliffHex.getLocationHexside(cliffHex.getNearestLocation(x, y));
+                    int currentHexelevation = cliffHex.getBaseHeight();
+                    oppHex = LOSData.getAdjacentHex(cliffHex, cliffside);
+                    int oppHexelevation = oppHex.getBaseHeight();
+                    LOSData.setGridElevation(Math.min(currentHexelevation, oppHexelevation), x, y);
+                }
+            }
+        }
+        if (cliffHex != null){
+            // change the hexside locations
+            for (int z = 0; z < 6; z++) {
+                if (cliffHex.getHexsideLocation(z).getTerrain().isCliff()) {
+                    cliffHex.setHexsideTerrain(z, null);
+                    cliffHex.setHexsideLocationTerrain(z, LOSData.getTerrain("Open Ground"));
                 }
             }
         }
