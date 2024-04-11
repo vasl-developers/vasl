@@ -32,6 +32,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
 
+import static VASSAL.build.GameModule.getGameModule;
+
 /**
  * This class provides access to the counter metadata file in the module archive
  */
@@ -81,15 +83,15 @@ public class CounterMetadataFile {
             parseCounterMetadataFile(inputStream);
 
             // give up on any errors
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             metadataElements = null;
-            ErrorDialog.bug(e);
-        } catch (JDOMException e) {
+        }
+        catch (JDOMException e) {
             metadataElements = null;
-            ErrorDialog.bug(e);
-        } catch (NullPointerException e) {
+        }
+        catch (NullPointerException e) {
             metadataElements = null;
-            ErrorDialog.bug(e);
         }
     }
 
@@ -114,7 +116,8 @@ public class CounterMetadataFile {
                 parseCounters(root);
             }
 
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace(System.err);
             throw new JDOMException("Error reading the counter metadata", e);
         }

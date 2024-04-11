@@ -22,6 +22,7 @@ import VASL.LOS.Map.Terrain;
 import VASL.LOS.counters.*;
 import VASL.build.module.ASLMap;
 import VASL.counters.ASLProperties;
+import VASSAL.build.GameModule;
 import VASSAL.counters.GamePiece;
 import VASSAL.counters.PieceIterator;
 import VASSAL.counters.Properties;
@@ -31,6 +32,8 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+
+import static VASSAL.build.GameModule.getGameModule;
 
 /**
  * This class provides access to VASL game information. E.g. the location and status of vehicles, counter terrain, etc.
@@ -87,7 +90,13 @@ public class VASLGameInterface {
         // get the counter metadata and location counters
         CounterMetadataFile counterMetadataFile = new CounterMetadataFile();
         counterMetadata =  counterMetadataFile.getMetadataElements();
-        createLocationCounters();
+        if (counterMetadata != null) {
+            createLocationCounters();
+        }
+        else {
+            final GameModule mod = getGameModule();
+            mod.warn("CounterMetadata.xml information did not load properly. LOS results may be incorrect. If problem persits, likely a network error occurred. Please check your network connectivity and try again.");
+        }
 	}
 
     /**
