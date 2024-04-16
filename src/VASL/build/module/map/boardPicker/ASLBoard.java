@@ -90,6 +90,9 @@ public class ASLBoard extends Board {
         return uncroppedSize;
     }
 
+    public String getTerrainChanges() {return terrainChanges;}
+
+
     public Image getBaseImage() {
         try {
             return baseImageOp.getImage(null);
