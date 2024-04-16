@@ -250,7 +250,7 @@ public class VASLBoard extends ASLBoard {
                             for (int row = 0; row < losDataEditor.getMap().getHeight() + (col % 2); row++) {
 
                                 Hex hex = LOSData.getHex(col, row);
-                                if ("Bamboo".equals(hex.getCenterLocation().getTerrain().getName())) {
+                                if ("Brush".equals(hex.getCenterLocation().getTerrain().getName())) {
                                     losDataEditor.setGridTerrain(hex.getHexBorder(), LOSData.getTerrain("Bamboo"));
                                 }
                             }

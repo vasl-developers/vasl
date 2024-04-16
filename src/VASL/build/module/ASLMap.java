@@ -471,6 +471,7 @@ public class ASLMap extends Map {
             }
             else {
                 String terraintype = getOverlayTerrainType(o);
+                terraintype = resetfortransform(terraintype, losonoverlays);
                 setOverlayTerrain(losonoverlays, terraintype, o.getPreserveElevation());
             }
         }
@@ -809,6 +810,7 @@ public class ASLMap extends Map {
                                         if (terr == null){bumpx += 1; bumpy += 1;}
                                     }
                                 }
+                                terr = resetterraintypefortransform(losonoverlays.board.getTerrainChanges(), terraintype, terr);
                                 elevint = getOverlayElevationfromColor(losonoverlays, color);
                                 if (terr.isDepression()) {
                                     elevint = losonoverlays.newlosdata.getGridElevation(losonoverlays.overpositionx, losonoverlays.overpositiony) -1;
@@ -944,6 +946,7 @@ public class ASLMap extends Map {
                                         if (terr == null){bumpx += 1; bumpy += 1;}
                                     }
                                 }
+                                terr = resetterraintypefortransform(losonoverlays.board.getTerrainChanges(), terraintype, terr);
                                 elevint = getOverlayElevationfromColor(losonoverlays, color);
                                 if (terr.isDepression()){
                                     elevint = losonoverlays.newlosdata.getGridElevation(losonoverlays.overpositionx, losonoverlays.overpositiony) -1;
@@ -1204,7 +1207,8 @@ public class ASLMap extends Map {
     private void addHextoOverlayInhandBldgMaps(String terraintype, Terrain terr, LOSonOverlays losonoverlays, HashMap<VASL.LOS.Map.Hex, VASL.LOS.Map.Terrain>  inhhexes, HashMap<VASL.LOS.Map.Hex, VASL.LOS.Map.Terrain> bdghexes) {
 
         if (terr != null) {
-            if (terr.isInherentTerrain() || (terraintype == "Steppe" && (terr.getName().equals("Brush") || terr.getName().equals("Woods")))) {
+            if (terr.isInherentTerrain() || (terraintype == "Steppe" && (terr.getName().equals("Brush") || terr.getName().equals("Woods"))) ||
+                    (terraintype == "Bamboo" && (terr.getName().equals("Brush")))) {
                 if (!inhhexes.containsKey(losonoverlays.newlosdata.gridToHex((int) losonoverlays.overpositionx, (int) losonoverlays.overpositiony))) {
                     //hack - ensure that the pixel is not close to a hexside as VASL geometry can put it in an adjacent hex
                     final Point hexcenter = losonoverlays.newlosdata.gridToHex((int) losonoverlays.overpositionx, (int) losonoverlays.overpositiony).getHexCenter();
@@ -1246,6 +1250,9 @@ public class ASLMap extends Map {
         final String overlayname = o.getName();
         if (overlayname.contains("Steppe")) {
             return "Steppe";
+        }
+        if (overlayname.contains("Bamboo")) {
+            return "Bamboo";
         }
         if (overlayname.contains("elrr")){
             return "Elevated Railroad";
@@ -1329,7 +1336,7 @@ public class ASLMap extends Map {
     }
 
     private boolean isInherenttype(String terraintype) {
-        return (terraintype.equals("Orchard") || terraintype.contains("Stone Rubble") || terraintype.contains("Wooden Rubble"));
+        return (terraintype.equals("Orchard") || terraintype.contains("Stone Rubble") || terraintype.contains("Wooden Rubble") );
     }
     private void setOverlayInherentTerrain(LOSonOverlays losonoverlays, String terraintype) {
         Hex temphex = null; Hex newhex;
@@ -1429,6 +1436,22 @@ public class ASLMap extends Map {
             }
         }
     }
+    // enables terrain transformations to be applied to overlay losdata
+    // this should be a generic approach but starting with specific transforms
+
+    private Terrain resetterraintypefortransform(String terrainchanges, String terraintype, Terrain terr){
+        if (terrainchanges.contains("Bamboo") && terr.getName().equals("Brush")){
+            return sharedBoardMetadata.getTerrainTypes().get(terraintype);
+        }
+        return terr;
+    }
+    private String resetfortransform (String terraintype, LOSonOverlays losonoverlays){
+        if (terraintype.equals("Brush") && losonoverlays.board.getTerrainChanges().contains("Bamboo")){
+            return "Bamboo";
+        }
+        return terraintype;
+    }
+
     /**
      * Sets status of LOS engine to legacy mode
      */
