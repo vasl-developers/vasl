@@ -61,6 +61,8 @@ public class VASLGameInterface {
     */
     public final static String DB_COUNTER_TYPE_MARKER_KEY = "DBCounterType";
     public final static String DB_UNIT_TYPE = "unit";
+    public final static String COUNTER_TYPE_MARKER_KEY = "CounterType";
+    public final static String UNIT_TYPE = "unit";
     public final static String DB_GLOBAL_TYPE = "global";
     public final static String DB_COMMON_TYPE = "common";
 
@@ -484,6 +486,10 @@ public class VASLGameInterface {
     public boolean isDBUnitCounter(GamePiece piece) {
 
         return isPropertySet(piece, DB_COUNTER_TYPE_MARKER_KEY, DB_UNIT_TYPE);
+    }
+    public boolean isUnitCounter(GamePiece piece) {
+
+        return isPropertySet(piece, COUNTER_TYPE_MARKER_KEY, UNIT_TYPE);
     }
 
     /**

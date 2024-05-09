@@ -678,6 +678,9 @@ public class Hex {
                     terrain = map.getTerrain("PartialOrchard");
                     hexsideTerrain[x]=terrain;
                 }
+                // avoid errors during cropping
+                if(terrain == null){terrain= map.getTerrain("Open Ground");}
+
                 // if no hexside terrain use opposite location hexside terrain
 				final Hex oppositeHex = map.getAdjacentHex(this, x);
                 if(oppositeHex != null){
@@ -685,12 +688,13 @@ public class Hex {
 					final Terrain oppositeHexsideTerrain = map.getGridTerrain(
 						(int)(oppositeHex.getHexsideLocation(oppositeHexside).getEdgeCenterPoint().getX()+gridadj),
 						(int)oppositeHex.getHexsideLocation(oppositeHexside).getEdgeCenterPoint().getY());
-					if(!terrain.isHexsideTerrain() && oppositeHexsideTerrain.isHexsideTerrain()) {
-                        terrain = oppositeHexsideTerrain;
+                    if (oppositeHexsideTerrain != null) {
+                        if (!terrain.isHexsideTerrain() && oppositeHexsideTerrain.isHexsideTerrain()) {
+                            terrain = oppositeHexsideTerrain;
+                        }
                     }
                 }
-                // avoid errors during cropping
-                if(terrain == null){terrain= map.getTerrain("Open Ground");}
+
 
                 if(terrain.isHexsideTerrain()) {
                     hexsideTerrain[x] = terrain;

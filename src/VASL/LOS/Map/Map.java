@@ -136,7 +136,7 @@ public class Map  {
         else if(passgridconfig.contains("TopLeftHalfHeight")) { // hex in A1 position is half height meaning odd-numbered row (B, D, F, etc)
             this.A1CenterX = (A1CenterX == BoardArchive.missingValue() ? BoardArchive.GEO_A1_Center.x : A1CenterX);
         }
-        else if(passgridconfig.equals("FullHex") || passgridconfig.equals("FullHexOffset")) {  // first col is full width and A1 position is full height
+        else if(passgridconfig.equals("FullHex") || passgridconfig.equals("FullHexOffset") || passgridconfig.equals("FullHexEqualRows")) {  // first col is full width and A1 position is full height
             this.A1CenterX=this.hexWidth/2;
             this.A1CenterY= 32.25;
         }
@@ -181,6 +181,20 @@ public class Map  {
         if(isCropping && this.cropconfiguration.contains("Offset") && !(this.cropconfiguration.contains("FullHex"))) { A1CenterX=0;}
         hexGrid = new Hex[this.width][];
         if (this.A1CenterY==32.25 || this.A1CenterY == -612.75 || this.A1CenterY == 97.1) {   //adding configuration for BFP1 and BFP2
+            if (this.cropconfiguration.contains("EqualsRows")) {  //applies to DaE - any other boards?
+                for (int col = 0; col < this.width; col++) {
+                    hexGrid[col] = new Hex[this.height];
+                    for (int row = 0; row < this.height; row++) {
+                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, isabboard), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                    }
+                }
+                // reset the hex locations to map grid
+                for (int col = 0; col < this.width; col++) {
+                    for (int row = 0; row < this.height; row++) {
+                        hexGrid[col][row].resetHexsideLocationNames();
+                    }
+                }
+            }
             for (int col = 0; col < this.width; col++) {
                 hexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
                 for (int row = 0; row < this.height + (col % 2); row++) {

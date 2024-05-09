@@ -13,10 +13,12 @@ import VASSAL.build.module.metadata.MetaDataFactory;
 import VASSAL.build.module.metadata.SaveMetaData;
 import VASSAL.build.widget.PieceSlot;
 import VASSAL.command.*;
+import VASSAL.configure.RefreshPredefinedSetupsDialog;
 import VASSAL.counters.*;
 import VASSAL.counters.Properties;
 import VASSAL.counters.Stack;
 import VASSAL.i18n.Resources;
+import VASSAL.launch.EditorWindow;
 import VASSAL.tools.WarningDialog;
 import VASSAL.tools.version.VersionUtils;
 import org.slf4j.Logger;
@@ -90,6 +92,15 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
             nextmenuItem.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent evt) {
                     askToUpdate();
+                }
+            });
+            map.getPopupMenu().add(nextmenuItem);
+            // VASL predefined setup extension updater
+            nextmenuItem = new JMenuItem("Update Scenario Setup extension games...");
+            nextmenuItem.setEnabled(true);
+            nextmenuItem.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent evt) {
+                    askToUpdateScenSetups();
                 }
             });
             map.getPopupMenu().add(nextmenuItem);
@@ -658,6 +669,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
                     JOptionPane.showMessageDialog(null, "No update possible; game was saved with current version or higher",
                             "Updating Game . . . ", JOptionPane.WARNING_MESSAGE);
                 }
+
             }
 
         }
@@ -666,6 +678,9 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
      * Execute the update
      */
     public void doupdate(String savegameversion) {
+        if(theModule == null){
+            theModule = GameModule.getGameModule();
+        }
         final Chatter chatter = theModule.getChatter();
         final Command startmsg = new Chatter.DisplayText(chatter, "Updating game . . . ");
         startmsg.execute();
@@ -680,6 +695,11 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
             endmsg = new Chatter.DisplayText(chatter, "Update failed due to version error; terminated");
         }
         endmsg.execute();
+    }
+
+    public void askToUpdateScenSetups() {
+        ASLRefreshPredefinedSetupsDialog arpsd = new ASLRefreshPredefinedSetupsDialog(this.theModule.getPlayerWindow());
+        arpsd.setVisible(true);
     }
 
     private interface ASLUpdater {
