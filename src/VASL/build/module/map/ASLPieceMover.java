@@ -19,6 +19,7 @@
 package VASL.build.module.map;
 
 import VASL.build.module.ASLMap;
+import VASL.build.module.map.HIPFortification.HIPFortificationUpdateCommand;
 import VASL.counters.ASLHighlighter;
 import VASL.counters.ASLProperties;
 import VASL.counters.Concealable;
@@ -52,10 +53,13 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.dnd.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
+
+import static VASSAL.build.GameModule.getGameModule;
 
 public class ASLPieceMover extends PieceMover {
     /**
@@ -113,7 +117,8 @@ public class ASLPieceMover extends PieceMover {
         //JY
         //Duplicate VASSAL PieceMover code to force addition of an ASLPieceMover
         //Taken from VASSAL 3.7.9
-        //JY super.addTo(b);
+        //JY
+        super.addTo(b);  //undone rem
         // Create our target selection filters
         dragTargetSelector = createDragTargetSelector();
         selectionProcessor = createSelectionProcessor();
@@ -169,7 +174,16 @@ public class ASLPieceMover extends PieceMover {
             }
         }
     }
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        if (this.canHandleEvent(e) && !this.isClick(e.getPoint())) {
+            this.performDrop(e.getPoint());
+        }
 
+        this.dragBegin = null;
+        this.breachedThreshold = false;
+        this.map.getView().setCursor((Cursor)null);
+    }
     /**
      * When a piece is moved ensure all pieces are properly stacked
      * This fixes a bug where stacks can be slightly off on older versions of VASL
@@ -512,6 +526,10 @@ public class ASLPieceMover extends PieceMover {
                     final Command report = createMovementReporter(comm).getReportCommand();
                     report.execute();
                     comm = comm.append(report);
+                    // trigger auto-reveal fortifications
+                    HIPFortification hipfort = map.getComponentsOf(HIPFortification.class).get(0);
+                    hipfort.runupdate(allDraggedPieces);
+
                 }
             }
 
