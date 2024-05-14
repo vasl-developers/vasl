@@ -164,7 +164,7 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
 
         if (spotterpiece != null) { // if no counter qualified to reveal units has been moved then return
 
-            // reveal all HIP Fortification pieces now in LOS
+            // ask to reveal all HIP Fortification pieces now in LOS
             GamePiece[] allPieces = map.getPieces();
             for (GamePiece piece : allPieces) {
                 if (piece instanceof Stack) {
