@@ -139,8 +139,10 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
         }
         VASLGameInterface = new VASLGameInterface(map, map.getVASLMap());
         VASLGameInterface.updatePieces();  //ensures all fort counters are present and accounted for
-        // clear list of Pieces to reveal
+        // clear lists used to manage reveal
+        thePlayer.removeAll();
         asktoreveal.removeAll();
+        usespotter.removeAll();
         // select spotter
         spotterpiece = null;
         for (GamePiece testpiece : movedunits){
@@ -215,7 +217,7 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
      */
     private boolean isMyPiece(GamePiece piece) {
 
-        return  piece.getProperty("Owner") != null && piece.getProperty("Owner").equals(myPlayerName);
+        return  piece.getProperty(Properties.HIDDEN_BY) != null && piece.getProperty(Properties.HIDDEN_BY).equals(myPlayerName);
     }
 
     /**
@@ -468,6 +470,8 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
         // record the player information
         myPlayerName = (String) getGameModule().getPrefs().getValue(PLAYER_NAME);
         players.put(myPlayerName, new HIPFortification.Player(myPlayerName, GameModule.getUserId(), GameModule.getUserId())); // + "-HF"));
+        //test code - ToDo remove
+        players.put("Nightrules", new HIPFortification.Player("Nightrules", "votg2019","votg2019"));
         GameModule.getGameModule().getGameState().addGameComponent(this);
     }
 
