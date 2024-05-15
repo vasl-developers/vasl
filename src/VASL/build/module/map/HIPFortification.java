@@ -232,7 +232,7 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
             String hiddenBy = (String) piece.getProperty(Properties.HIDDEN_BY);
             for (HIPFortification.Player p : players.values()) {
                 if(hiddenBy.equals(p.getID())) {
-                    thePlayer.add(p.getID());
+                    thePlayer.add(p.getName());
                     break;
                 }
             }
@@ -347,7 +347,7 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
         return VASLGameInterface.getLocation(piece);
     }
     protected GamePiece getPiece(String revealid){
-        GamePiece[] allPieces = map.getPieces();
+        GamePiece[] allPieces = map.getAllPieces();
         for (GamePiece p : allPieces) {
             if (p instanceof Stack) {
                 for (PieceIterator pi = new PieceIterator(((Stack) p).getPiecesIterator()); pi.hasMoreElements(); ) {
@@ -479,7 +479,6 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
 
         if (parent instanceof Map) {
             GameModule.getGameModule().removeCommandEncoder(this);
-            //map.getToolBar().remove(launchButton);
         }
     }
     public void readHipFortViewerActive()
@@ -525,14 +524,15 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
             for (int i=0; i < hipqc.asktoreveallist.getItemCount(); i++){
                 String askitem = hipqc.asktoreveallist.getItem(i);
                 String owneritem = hipqc.ownerlist.getItem(i);
-                commandString = commandString + COMMAND_SEPARATOR + owneritem + COMMAND_SEPARATOR + askitem + COMMAND_SEPARATOR + spotterpiece.getId();
+                String spotteritem = hipqc.spotterlist.getItem(i);
+                commandString = commandString + COMMAND_SEPARATOR + owneritem + COMMAND_SEPARATOR + askitem + COMMAND_SEPARATOR + spotteritem;
             }
             return commandString;
         }
         if (c instanceof HIPFortification.HIPFortificationRevealCommand){
             //String commandString = COMMAND_REVEAL + revealpiece.getId() + COMMAND_SEPARATOR + spotterpiece.getId();
             HIPFortification.HIPFortificationRevealCommand hiprc = (HIPFortification.HIPFortificationRevealCommand) c;
-            String commandString = COMMAND_QUERY;
+            String commandString = COMMAND_REVEAL;
             for (int i=0; i < hiprc.asktoreveallist.getItemCount(); i++){
                 String askitem = hiprc.asktoreveallist.getItem(i);
                 String owneritem = hiprc.ownerlist.getItem(i);
@@ -575,30 +575,10 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
             List ownerlist = new List(); List querylist = new List(); List spotterlist = new List();
             String[] strings = s.split(COMMAND_SEPARATOR);
             int queryno = (strings.length -1) /3;
-            for (int i = 0; i < queryno +1; i++ ) {
-                ownerlist.add(strings[i + 1]);
-                querylist.add(strings[i + 2]);
-                spotterlist.add(strings[i + 3]);
-                //GamePiece[] allPieces = map.getPieces();
-                /*for (GamePiece p : allPieces) {
-                    if (p instanceof Stack) {
-                        for (PieceIterator pi = new PieceIterator(((Stack) p).getPiecesIterator()); pi.hasMoreElements(); ) {
-                            GamePiece p2 = pi.nextPiece();
-                            if (p2.getId().equals(strings[i + 2])) {
-                                ownerlist.add p2;
-                            } else if (p2.getId().equals(strings[i + 3])) {
-                                thespotter = p2;
-                            }
-                        }
-                    } else {
-                        if (p.getId().equals(strings[i + 2])) {
-                            thequerypiece = p;
-                        } else if (p.getId().equals(strings[3])) {
-                            thespotter = p;
-                        }
-
-                    }
-                }*/
+            for (int i = 0; i < queryno; i++ ) {
+                ownerlist.add(strings[(i*3) + 1]);
+                querylist.add(strings[(i*3) + 2]);
+                spotterlist.add(strings[(i*3) + 3]);
             }
             return new HIPFortification.HIPFortificationQueryCommand(ownerlist, querylist , spotterlist);
 
@@ -607,48 +587,14 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
             List ownerlist = new List(); List querylist = new List(); List spotterlist = new List();
             String[] strings = s.split(COMMAND_SEPARATOR);
             int queryno = (strings.length -1) /3;
-            for (int i = 0; i < queryno +1; i++ ) {
-                ownerlist.add(strings[i + 1]);
-                querylist.add(strings[i + 2]);
-                spotterlist.add(strings[i + 3]);
+            for (int i = 0; i < queryno ; i++ ) {
+                ownerlist.add(strings[(i*3) + 1]);
+                querylist.add(strings[(i*3) + 2]);
+                spotterlist.add(strings[(i*3) + 3]);
             }
             return new HIPFortification.HIPFortificationRevealCommand(ownerlist, querylist , spotterlist);
-
-            /*GamePiece thePiece = null;
-            String strings[] = s.split(COMMAND_SEPARATOR);
-            GamePiece[] allPieces = map.getAllPieces();
-            for (GamePiece p : allPieces) {
-                if (p instanceof Stack) {
-                    for (PieceIterator pi = new PieceIterator(((Stack) p).getPiecesIterator()); pi.hasMoreElements(); ) {
-                        GamePiece p2 = pi.nextPiece();
-                        if (p2.getId().equals(strings[1])) {
-                            thePiece = p2;
-                        }
-                    }
-                }
-                else {
-                    if (p.getId().equals(strings[1])) {
-                        thePiece = p;
-                    }
-                }
-                if (p instanceof Stack) {
-                    for (PieceIterator pi = new PieceIterator(((Stack) p).getPiecesIterator()); pi.hasMoreElements(); ) {
-                        GamePiece p2 = pi.nextPiece();
-                        if (p2.getId().equals(strings[2])) {
-                            spotterpiece = p2;
-                        }
-                    }
-                }
-                else {
-                    if (p.getId().equals(strings[2])) {
-                        spotterpiece = p;
-                    }
-                }
-            }
-            return new HIPFortification.HIPFortificationRevealCommand(thePiece, spotterpiece);*/
         }
         else {
-
             // push our player information when opponent synchronizes with me
             if (s.startsWith("SYNC")) {
                 GameModule.getGameModule().getChatter().send(myPlayerName + " is using Auto-Reveal of HIP Fortifications. Both players should have it enabled in Preferences/VASL");
@@ -696,12 +642,6 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
             }
         }
     }
-
-    /**
-     * Dumps a message to the local chatter and console for debugging
-     * @param message the message
-     */
-
 
     /**
      * Saves the player list and HIPFortification state
@@ -762,10 +702,7 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
         }
 
         protected void executeCommand() {
-
-            //debug("Executing HIP Fortification update command ");
             players.put(player.getName(), player);
-            //updateView();
         }
 
         protected Command myUndoCommand() {
@@ -781,17 +718,17 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
         protected List asktoreveallist;
         protected List spotterlist;
         public HIPFortificationRevealCommand(List thePlayer, List asktoreveal, List usespotter) {
-            ownerlist = thePlayer;
-            asktoreveallist = asktoreveal;
-            spotterlist = usespotter;
+            this.ownerlist = thePlayer;
+            this.asktoreveallist = asktoreveal;
+            this.spotterlist = usespotter;
         }
         protected void executeCommand() {
-            for (int i = 0; i < ownerlist.getItemCount(); i++){
-                if (ownerlist.getItem(i) != null) {
-                    GamePiece revealpiece = getPiece(asktoreveallist.getItem(i));
-                    GamePiece spotterpiece = getPiece(spotterlist.getItem(i));
+            for (int i = 0; i < this.ownerlist.getItemCount(); i++){
+                if (this.ownerlist.getItem(i) != null) {
+                    GamePiece revealpiece = getPiece(this.asktoreveallist.getItem(i));
+                    GamePiece spotterpiece = getPiece(this.spotterlist.getItem(i));
                     revealpiece.setProperty(Properties.HIDDEN_BY, null);
-                    GameModule.getGameModule().getChatter().send(revealpiece.getName() + " spotted by " + spotterpiece.getName() + " and revealed in " + map.locationName(revealpiece.getPosition()));
+                    //GameModule.getGameModule().getChatter().send(revealpiece.getName() + " spotted by " + spotterpiece.getName() + " and revealed in " + map.locationName(revealpiece.getPosition()));
                     map.repaint();
                 }
             }
@@ -810,22 +747,23 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
 
         public HIPFortificationQueryCommand(List thePlayer, List asktoreveal, List usespotter) {
 
-            ownerlist = thePlayer;
-            asktoreveallist = asktoreveal;
-            spotterlist = usespotter;
+            this.ownerlist = thePlayer;
+            this.asktoreveallist = asktoreveal;
+            this.spotterlist = usespotter;
         }
 
         protected void executeCommand() {
             String ownername = null; String spottername = null;
             List keepHIP = new List();
-            for (int i = 0; i < ownerlist.getItemCount(); i++){
-                if (ownerlist.getItem(i) != null) {
-                    HIPFortification.Player owner = players.get(ownerlist.getItem(i));  // not sure this will work
+            for (int i = 0; i < this.ownerlist.getItemCount(); i++){
+                if (this.ownerlist.getItem(i) != null) {
+                    String playertoget = ownerlist.getItem(i);
+                    HIPFortification.Player owner = players.get(playertoget);  // not sure this will work
                     ownername = owner.getName();
                     if (myPlayerName.equals(ownername)) {
                         int dialogResult = -100;
-                        GamePiece revealpiece = getPiece(asktoreveallist.getItem(i));
-                        GamePiece spotterpiece = getPiece(spotterlist.getItem(i));
+                        GamePiece revealpiece = getPiece(this.asktoreveallist.getItem(i));
+                        GamePiece spotterpiece = getPiece(this.spotterlist.getItem(i));
                         spottername = spotterpiece.getName();
                         Location l2 = getLocation(revealpiece);
                         do {
@@ -835,20 +773,31 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
                         } while (dialogResult == -100);
                         if (dialogResult == JOptionPane.NO_OPTION) {
                             //revealpiece.setProperty(Properties.HIDDEN_BY, null);
-                            keepHIP.add(String.valueOf(i));
+                            keepHIP.add(this.asktoreveallist.getItem(i));
+                        }
+                        GameModule.getGameModule().getChatter().send(revealpiece.getName() + " spotted by " + spottername + " and revealed in " + map.locationName(revealpiece.getPosition()));
+
+                    }
+                    else {
+                        keepHIP.add(this.asktoreveallist.getItem(i));
+                    }
+                }
+            }
+            if (keepHIP.getItemCount() > 0) {
+                for (int i = 0; i < keepHIP.getItemCount(); i++){
+                    for (int y = 0; y < this.asktoreveallist.getItemCount(); y++) {
+                        if (this.asktoreveallist.getItem(y).equals(keepHIP.getItem(i))) {
+                            this.asktoreveallist.remove(y);
+                            this.ownerlist.remove(y);
+                            this.spotterlist.remove(y);
+                            break;
                         }
                     }
                 }
             }
-            if (keepHIP.getItemCount() > 0){
-                for (int i = 0; i < keepHIP.getItemCount(); i++){
-                    ownerlist.remove(keepHIP.getItem(i));
-                    asktoreveallist.remove(keepHIP.getItem(i));
-                    spotterlist.remove(keepHIP.getItem(i));
-                }
-            }
-            GameModule.getGameModule().sendAndLog(new HIPFortification.HIPFortificationRevealCommand(ownerlist, asktoreveallist, spotterlist));
-
+            HIPFortification.HIPFortificationRevealCommand hipreveal = new HIPFortification.HIPFortificationRevealCommand(this.ownerlist, this.asktoreveallist, this.spotterlist);
+            GameModule.getGameModule().sendAndLog(hipreveal);
+            hipreveal.executeCommand();
         }
 
 
