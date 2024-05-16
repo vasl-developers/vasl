@@ -19,7 +19,6 @@
 package VASL.build.module.map;
 
 import VASL.build.module.ASLMap;
-import VASL.build.module.map.HIPFortification.HIPFortificationUpdateCommand;
 import VASL.counters.ASLHighlighter;
 import VASL.counters.ASLProperties;
 import VASL.counters.Concealable;
@@ -31,9 +30,7 @@ import VASSAL.build.module.Chatter;
 import VASSAL.build.module.GlobalOptions;
 import VASSAL.build.module.Map;
 import VASSAL.build.module.map.KeyBufferer;
-import VASSAL.build.module.map.MovementReporter;
 import VASSAL.build.module.map.PieceMover;
-import VASSAL.build.module.map.StackMetrics;
 import VASSAL.build.widget.PieceSlot;
 import VASSAL.command.Command;
 import VASSAL.command.NullCommand;
@@ -43,7 +40,6 @@ import VASSAL.counters.Stack;
 import VASSAL.tools.DebugControls;
 import VASSAL.tools.LaunchButton;
 import VASSAL.tools.image.ImageUtils;
-import VASSAL.tools.image.LabelUtils;
 import VASSAL.tools.swing.SwingUtils;
 import org.apache.commons.lang3.SystemUtils;
 
@@ -58,8 +54,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
-
-import static VASSAL.build.GameModule.getGameModule;
 
 public class ASLPieceMover extends PieceMover {
     /**
@@ -78,6 +72,7 @@ public class ASLPieceMover extends PieceMover {
                 for (int i = 0; i < p.length; ++i) {
                     c.append(markMoved(p[i], false));
                 }
+
                 GameModule.getGameModule().sendAndLog(c);
                 getMap().repaint();
             }
@@ -113,6 +108,7 @@ public class ASLPieceMover extends PieceMover {
         }
     }
 
+    @Override
     public void addTo(Buildable b) {
         //JY
         //Duplicate VASSAL PieceMover code to force addition of an ASLPieceMover
@@ -158,15 +154,15 @@ public class ASLPieceMover extends PieceMover {
         if (gameStarting) {
 
             if (markUnmovedButton != null) {
-                for (int l_i = map.getToolBar().getComponents().length - 1; l_i >= 0; l_i--) {
-                    Component l_objComponent = map.getToolBar().getComponent(l_i);
+                for (int i = map.getToolBar().getComponents().length - 1; i >= 0; i--) {
+                    Component objComponent = map.getToolBar().getComponent(i);
 
-                    if (l_objComponent instanceof JButton) {
-                        if ("MarkMovedPlaceHolder".equals(((JButton) l_objComponent).getName())) {
+                    if (objComponent instanceof JButton) {
+                        if ("MarkMovedPlaceHolder".equals(((JButton) objComponent).getName())) {
                             map.getToolBar().remove(markUnmovedButton);
-                            map.getToolBar().remove(l_objComponent);
+                            map.getToolBar().remove(objComponent);
 
-                            map.getToolBar().add(markUnmovedButton, l_i);
+                            map.getToolBar().add(markUnmovedButton, i);
                             break;
                         }
                     }
@@ -182,7 +178,7 @@ public class ASLPieceMover extends PieceMover {
 
         this.dragBegin = null;
         this.breachedThreshold = false;
-        this.map.getView().setCursor((Cursor)null);
+        this.map.getView().setCursor(null);
     }
     /**
      * When a piece is moved ensure all pieces are properly stacked
@@ -1004,7 +1000,7 @@ public class ASLPieceMover extends PieceMover {
          * Creates the image to use when dragging based on the zoom factor
          * passed in.
          *
-         * @param zoom DragBuffer.getBuffer
+         * zoom DragBuffer.getBuffer
          * @return dragImage
          */
         private BufferedImage makeDragImage(double mapzoom, double os_scale) {
@@ -1258,7 +1254,7 @@ public class ASLPieceMover extends PieceMover {
          * method will be overridden, but called as a super(), by the Drag Gesture
          * extension that is used, which will either be {@link DragHandler} if DragImage
          * is supported by the JRE, or {@link DragHandlerNoImage} if not. Either one will
-         * have called {@link dragGestureRecognizedPrep}, immediately below, before it
+         * have called {dragGestureRecognizedPrep}, immediately below, before it
          * calls this method.
          ******************************************************************************/
         @Override
@@ -1612,11 +1608,7 @@ public class ASLPieceMover extends PieceMover {
             super.dragGestureRecognized(dge);
         }
 
-        @Override
-        @Deprecated(since = "2023-05-15", forRemoval = true)
-        protected void makeDragCursor(double zoom) {
-            makeDragCursor(zoom, 1.0);
-        }
+
 
         /**
          * Installs the cursor image into our dragCursor JLabel.
@@ -1639,31 +1631,7 @@ public class ASLPieceMover extends PieceMover {
             dragCursorZoom = zoom;
         }
 
-        /**
-         * Moves the drag cursor on the current draw window
-         * @param dragX x position
-         * @param dragY y position
-         */
-        @Override
-        protected void moveDragCursor(int dragX, int dragY) {
-            if (drawWin != null) {
-                dragCursor.setLocation(dragX - drawOffset.x, dragY - drawOffset.y);
-            }
-        }
 
-        /**
-         * Removes the drag cursor from the current draw window
-         */
-        @Override
-        protected void removeDragCursor() {
-            if (drawWin != null) {
-                if (dragCursor != null) {
-                    dragCursor.setVisible(false);
-                    drawWin.remove(dragCursor);
-                }
-                drawWin = null;
-            }
-        }
 
         /**
          * creates or moves cursor object to given JLayeredPane. Usually called by setDrawWinToOwnerOf()
@@ -1696,21 +1664,6 @@ public class ASLPieceMover extends PieceMover {
                 drawOffset.x = -boundingBoxComp.x - currentPieceOffsetX + EXTRA_BORDER;
                 drawOffset.y = -boundingBoxComp.y - currentPieceOffsetY + EXTRA_BORDER;
                 SwingUtilities.convertPointToScreen(drawOffset, drawWin);
-            }
-        }
-
-        /**
-         * creates or moves cursor object to given window. Called when drag operation begins in a window or the cursor is
-         * dragged over a new drop-target window
-         * @param newDropWin window component to be our new draw window.
-         */
-        @Override
-        public void setDrawWinToOwnerOf(Component newDropWin) {
-            if (newDropWin != null) {
-                final JRootPane rootWin = SwingUtilities.getRootPane(newDropWin);
-                if (rootWin != null) {
-                    setDrawWin(rootWin.getLayeredPane());
-                }
             }
         }
 

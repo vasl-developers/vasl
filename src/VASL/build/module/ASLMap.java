@@ -24,27 +24,39 @@ import VASL.LOS.Map.Hex;
 import VASL.LOS.Map.Location;
 import VASL.LOS.Map.Terrain;
 import VASL.LOS.counters.CounterMetadataFile;
+import VASL.build.module.map.ASLPieceMover;
 import VASL.build.module.map.ASLStackMetrics;
 import VASL.build.module.map.boardArchive.SharedBoardMetadata;
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASL.build.module.map.boardPicker.BoardException;
 import VASL.build.module.map.boardPicker.Overlay;
 import VASL.build.module.map.boardPicker.VASLBoard;
+import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.GameComponent;
 import VASSAL.build.module.Map;
 import VASSAL.build.module.PieceWindow;
+import VASSAL.build.module.map.BoardPicker;
+import VASSAL.build.module.map.MapShader;
+import VASSAL.build.module.map.PieceMover;
+import VASSAL.build.module.map.StackMetrics;
 import VASSAL.build.module.map.boardPicker.Board;
+import VASSAL.build.module.properties.ChangePropertyCommandEncoder;
 import VASSAL.build.widget.ListWidget;
 import VASSAL.build.widget.PanelWidget;
 import VASSAL.build.widget.PieceSlot;
-import VASSAL.configure.ColorConfigurer;
+import VASSAL.configure.*;
 import VASSAL.counters.GamePiece;
 import VASSAL.counters.Properties;
 import VASSAL.counters.Stack;
+import VASSAL.i18n.Resources;
 import VASSAL.tools.DataArchive;
 import VASSAL.tools.ErrorDialog;
+import VASSAL.tools.KeyStrokeSource;
 import VASSAL.tools.imageop.Op;
+import VASSAL.tools.swing.SplitPane;
+import VASSAL.tools.swing.SwingUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.jdom2.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,8 +64,12 @@ import org.w3c.dom.Element;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.dnd.DragGestureListener;
+import java.awt.dnd.DragSource;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.HierarchyListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -135,7 +151,12 @@ public class ASLMap extends Map {
     getGameModule().getPrefs().addOption(preferenceTabName, backgroundcolor);
 
 }
-  
+    @Override
+    public void addTo(Buildable b) {
+        super.addTo(b);
+        this.theMap.setDropTarget(ASLPieceMover.DragHandler.makeDropTarget(this.theMap, 2, this));
+    }
+
   /*
    *  Work-around for VASL board being 1 pixel too large causing double stacks to form along board edges.
    *  Any snap to a board top or left edge half hex, bump it 1 pixel up or left on to the next board.
