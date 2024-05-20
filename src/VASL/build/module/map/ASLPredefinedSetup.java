@@ -22,14 +22,14 @@ import java.util.Set;
 public class ASLPredefinedSetup extends PredefinedSetup {
 
     private final Set<String> refresherOptions = new HashSet();
-    ArchiveWriter aw = new ArchiveWriter(this.extensionName, ".vmdx");
-    private String extensionName;
+    ArchiveWriter aw; // = new ArchiveWriter((String) null, ".vmdx"); //this.extensionName, ".vmdx");
+    protected String extensionName;
     public ASLPredefinedSetup(){
         super();
 
     }
-    @Override
-    public int refreshWithStatus(Set<String> options) throws IOException, IllegalBuildException {
+
+    public int refreshWithStatus(Set<String> options, ArchiveWriter aw) throws IOException, IllegalBuildException {
         if (!options.isEmpty()) {
             refresherOptions.clear();
             refresherOptions.addAll(options);
