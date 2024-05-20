@@ -190,7 +190,7 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
     }
 
     private boolean isGoodOrder(GamePiece testpiece){
-        // other conditions disqualify GoodOrder put can't be moved unit so no need to test
+        // other conditions disqualify GoodOrder but can't be moved unit so no need to test
         return !testpiece.getName().contains("broken") && !testpiece.getName().contains("Berserk") && !testpiece.getName().contains("Prisoner");
     }
     /**
@@ -347,7 +347,7 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
         return VASLGameInterface.getLocation(piece);
     }
     protected GamePiece getPiece(String revealid){
-        GamePiece[] allPieces = map.getAllPieces();
+        GamePiece[] allPieces = map.getPieces();
         for (GamePiece p : allPieces) {
             if (p instanceof Stack) {
                 for (PieceIterator pi = new PieceIterator(((Stack) p).getPiecesIterator()); pi.hasMoreElements(); ) {
@@ -764,6 +764,7 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
                         int dialogResult = -100;
                         GamePiece revealpiece = getPiece(this.asktoreveallist.getItem(i));
                         GamePiece spotterpiece = getPiece(this.spotterlist.getItem(i));
+                        if (spotterpiece == null) {return;}
                         spottername = spotterpiece.getName();
                         Location l2 = getLocation(revealpiece);
                         do {
@@ -774,9 +775,9 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
                         if (dialogResult == JOptionPane.NO_OPTION) {
                             //revealpiece.setProperty(Properties.HIDDEN_BY, null);
                             keepHIP.add(this.asktoreveallist.getItem(i));
+                        } else {
+                            GameModule.getGameModule().getChatter().send(revealpiece.getName() + " spotted by " + spottername + " and revealed in " + map.locationName(revealpiece.getPosition()));
                         }
-                        GameModule.getGameModule().getChatter().send(revealpiece.getName() + " spotted by " + spottername + " and revealed in " + map.locationName(revealpiece.getPosition()));
-
                     }
                     else {
                         keepHIP.add(this.asktoreveallist.getItem(i));

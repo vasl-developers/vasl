@@ -6,8 +6,10 @@ import VASSAL.build.module.Documentation;
 import VASSAL.build.module.GameState;
 import VASSAL.build.module.ModuleExtension;
 import VASSAL.build.module.documentation.HelpFile;
+import VASSAL.counters.Decorator;
 import VASSAL.i18n.Resources;
 import VASSAL.preferences.Prefs;
+import VASSAL.tools.ArchiveWriter;
 import VASSAL.tools.DataArchive;
 import VASSAL.tools.ErrorDialog;
 import VASSAL.tools.swing.FlowLabel;
@@ -108,7 +110,15 @@ public class ASLRefreshPredefinedSetupsDialog extends JDialog {
 
 
         final JButton  refreshButton = new JButton(Resources.getString("General.run"));
-        refreshButton.addActionListener(e -> refreshScenarioSetups());
+        refreshButton.addActionListener(e -> {
+            try {
+                refreshScenarioSetups();
+            } catch (IOException ex) {
+                //throw new RuntimeException(ex);
+                GameModule gm = GameModule.getGameModule();
+                gm.getChatter().send("Error: Predefined Scenario extension update did not save");
+            }
+        });
         //refreshButton.setEnabled(true); // this may be belt & braces - re-enabled anyway on a cancelled refresh (otherwise whole window is closed)
 
         final JButton closeButton = new JButton(Resources.getString("General.cancel"));
@@ -281,7 +291,7 @@ public class ASLRefreshPredefinedSetupsDialog extends JDialog {
         return pdsFilter != null && !pdsFilter.isBlank(); //$NON-NLS-1$
     }
 
-    private void refreshScenarioSetups() {
+    private void refreshScenarioSetups() throws IOException {
 
         setOptions();
 
@@ -325,6 +335,8 @@ public class ASLRefreshPredefinedSetupsDialog extends JDialog {
         final java.util.List<PredefinedSetup> warningPds = new ArrayList<>();
         final java.util.List<Integer> warningCount = new ArrayList<>();
         final java.util.List<PredefinedSetup> failPds = new ArrayList<>();
+
+        ArchiveWriter aw = new ArchiveWriter(apds.extensionName, ".vmdx");
 
         for (final PredefinedSetup pds : modulePdsAndMenus) {
             if (!pds.isMenu() && pds.isUseFile()) {
@@ -411,7 +423,7 @@ public class ASLRefreshPredefinedSetupsDialog extends JDialog {
                         //ASLPredefinedSetup apds = new ASLPredefinedSetup();
                         apds.setfileName(pds.getFileName());
                         //apds.setExtensionName("C:\\Users\\DougR\\Documents\\Programming Documents\\VASLBuilds\\extensions\\Scenario Setup Files");
-                        final int warnings = apds.refreshWithStatus(options);
+                        final int warnings = apds.refreshWithStatus(options, aw);
                         if (warnings > 0) {
                             lastErrorFile = fixedLength(pdsFile, FILE_NAME_REPORT_LENGTH);
                             warningPds.add(apds);
@@ -485,6 +497,13 @@ public class ASLRefreshPredefinedSetupsDialog extends JDialog {
             setTitle(Resources.getString("Editor.RefreshPredefinedSetupsDialog.title"));
             for (final Component component : getComponents(this)) component.setEnabled(true);
             optionsUserMode = true;
+        }
+
+        int dialogResult = JOptionPane.showConfirmDialog(null, "Do you want to save changes?",
+                "Need to Save Extension to Finish Updating Predefined Scenario extension files . . . ", JOptionPane.YES_NO_OPTION);
+        if (dialogResult == JOptionPane.YES_OPTION) {
+            boolean notify = false;
+            aw.save(notify);
         }
     }
 

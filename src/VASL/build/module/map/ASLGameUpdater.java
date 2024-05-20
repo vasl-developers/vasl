@@ -97,7 +97,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
             map.getPopupMenu().add(nextmenuItem);
             // VASL predefined setup extension updater
             nextmenuItem = new JMenuItem("Update Scenario Setup extension games...");
-            nextmenuItem.setEnabled(true);
+            nextmenuItem.setEnabled(false);
             nextmenuItem.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent evt) {
                     askToUpdateScenSetups();
