@@ -64,12 +64,7 @@ import org.w3c.dom.Element;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.dnd.DragGestureListener;
-import java.awt.dnd.DragSource;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.HierarchyEvent;
-import java.awt.event.HierarchyListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -1591,7 +1586,7 @@ public class ASLMap extends Map {
     public boolean isPiecesVisible() {
         return pieceOpacity != 0;
     }
-  
+
     @Override
     public void drawPiecesInRegion(Graphics g,
                                    Rectangle visibleRect,
