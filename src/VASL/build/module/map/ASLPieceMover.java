@@ -114,7 +114,7 @@ public class ASLPieceMover extends PieceMover {
         //Duplicate VASSAL PieceMover code to force addition of an ASLPieceMover
         //Taken from VASSAL 3.7.9
         //JY
-        super.addTo(b);  //undone rem
+        //super.addTo(b);  //undone rem
         // Create our target selection filters
         dragTargetSelector = createDragTargetSelector();
         selectionProcessor = createSelectionProcessor();
@@ -170,7 +170,7 @@ public class ASLPieceMover extends PieceMover {
             }
         }
     }
-    @Override
+    /*@Override
     public void mouseReleased(MouseEvent e) {
         if (this.canHandleEvent(e) && !this.isClick(e.getPoint())) {
             this.performDrop(e.getPoint());
@@ -179,7 +179,7 @@ public class ASLPieceMover extends PieceMover {
         this.dragBegin = null;
         this.breachedThreshold = false;
         this.map.getView().setCursor(null);
-    }
+    }*/
     /**
      * When a piece is moved ensure all pieces are properly stacked
      * This fixes a bug where stacks can be slightly off on older versions of VASL
