@@ -21,7 +21,10 @@ package VASL.counters;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
+import VASL.build.module.ASLMap;
+import VASL.build.module.map.HIPFortification;
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.Map;
@@ -41,14 +44,16 @@ import static VASSAL.build.GameModule.getGameModule;
  */
 public class ASLTranslate extends Translate {
   public ASLTranslate() {
+
   }
 
   // Move only selected pieces in a stack
   // Report stack movements together
   @Override
   protected Command newTranslate(KeyStroke stroke) {
+
     // The global preference should override any counter values
-    if(!(Boolean) GameModule.getGameModule().getPrefs().getValue(Map.MOVING_STACKS_PICKUP_UNITS)) {
+    if(!(Boolean) getGameModule().getPrefs().getValue(Map.MOVING_STACKS_PICKUP_UNITS)) {
       GamePiece target = this.findTarget(stroke);
       if (target == null) {
         return null;
@@ -59,10 +64,12 @@ public class ASLTranslate extends Translate {
           p = this.getMap().snapTo(p);
         }
         Command c = new NullCommand();
+        java.util.List<GamePiece> allDraggedPieces = new ArrayList<>(); //used in auto-reveal of fort
         if (target instanceof Stack) {
           for (GamePiece gamePiece : ((Stack) target).asList()) {
             if (Boolean.TRUE.equals(gamePiece.getProperty("Selected"))) {
               c = c.append(movePiece(gamePiece, p));
+                allDraggedPieces.add(gamePiece);
             }
           }
         } else {
@@ -72,7 +79,11 @@ public class ASLTranslate extends Translate {
         Command report = movementReporter.getReportCommand();
         report.execute();
         c.append(report);
-        GameModule.getGameModule().sendAndLog(c);
+        getGameModule().sendAndLog(c);
+        // auto-reveal fortification test
+        ASLMap map =   getGameModule().getComponentsOf(ASLMap.class).get(0);
+        HIPFortification hipfort = map.getComponentsOf(HIPFortification.class).get(0);
+        hipfort.runupdate(allDraggedPieces);
         return c;
       }
     }
