@@ -41,11 +41,11 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
 
     protected static final String COMMAND_SEPARATOR = ":";
     public static final String COMMAND_PREFIX = "HIP_FORT" + COMMAND_SEPARATOR;
-//    public static final String ENABLE_COMMAND_PREFIX = "ENABLE_HIP_FORT" + COMMAND_SEPARATOR;
+
     public static final String COMMAND_REVEAL = "HIP_REVEAL";
     public static final String COMMAND_QUERY = "HIP_QUERY";
     protected static final String TEXT_ICON = "HIPF Synch";
-    //protected static final String DEFAULT_PASSWORD = "#$none$#";
+
     protected static final String PLAYER_NAME = "RealName";
 
     // VASSAL attribute codes
@@ -53,8 +53,6 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
     public static final String REPORT_FORMAT = "reportFormat"; // report updates?
     public static final String REPORT = "report";              // chatter string when HIPFort update reported
 
-    // piece dynamic property constants
-    //protected static final String OWNER_PROPERTY = "Owner"; // contains the player name of the piece owner
     protected GamePiece revealpiece;
     protected GamePiece querypiece;
     protected GamePiece spotterpiece;
@@ -83,7 +81,6 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
     // class properties
     protected static boolean enabled = false;
     protected static ASLMap map;
-    //private ASLMap m_objASLMap;
 
     protected String myPlayerName;
     protected VASL.LOS.VASLGameInterface VASLGameInterface;
@@ -182,6 +179,9 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
 
     private boolean canReveal(GamePiece testpiece){
         // can the unit spot?
+        // let ? stacks trigger reveal question
+        if (testpiece.getName().contains("?")) {return true;}
+        // non units can't trigger
         if (!VASLGameInterface.isUnitCounter(testpiece)) {
             return false;
         }
@@ -238,31 +238,10 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
             }
             asktoreveal.add(querypiece.getId());
             usespotter.add(spotterpiece.getId());
-            //GameModule.getGameModule().sendAndLog(new HIPFortification.HIPFortificationQueryCommand(thePlayer, querypiece, spotterpiece));
+
         }
 
     }
-
-    /**
-     * Marks a piece as NOT spotted so it will NOT be drawn on the map
-     * @param piece the piece
-     */
-    /*private void setPieceUnspotted(GamePiece piece) {
-
-        // get the owner's game password or use default
-        String owner = (String) piece.getProperty(OWNER_PROPERTY);
-        String gamePassword = DEFAULT_PASSWORD;
-        HIPFortification.Player opponent = players.get(owner);
-        if(opponent != null) {
-            gamePassword = opponent.getGamePassword();
-        }
-
-        // use owner's game password to hide the piece
-        if(!piece.getName().equals("")){
-            //debug("Setting piece UNspotted: " + piece.getName());
-        }
-        piece.setProperty(Properties.HIDDEN_BY, gamePassword);
-    }*/
 
     /**
      * @param piece the piece
@@ -298,23 +277,34 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
         Location l1 = getLocation(spotterpiece);
         Location l2 = getLocation(piece);
         // off board?
-        if(l1 == null || l2 == null){
+        if (l1 == null || l2 == null) {
             return false;
         }
         // check the LOS
         LOSResult result = new LOSResult();
         map.getVASLMap().LOS(l1, false, l2, false, result, VASLGameInterface);
         int range = result.getRange();
-        if(!result.isBlocked()) {
-            if (range > 16 && isConcealmentTerrain(l2.getTerrain())){
+        if (!result.isBlocked()) {
+            if (range > 16 && isConcealmentTerrain(l2.getTerrain())) {
                 return false; // can't be seen
             }
         } else {
             return false; // can't be seen
         }
+        // only reveal if fortification
+        if (!isFortification(piece)) {
+            return false;
+        }
         return true;
     }
 
+    private boolean isFortification(GamePiece piece){
+        if (Decorator.getInnermost(piece).getName().contains("Foxhole") || Decorator.getInnermost(piece).getName().contains("Trench") || Decorator.getInnermost(piece).getName().contains("Wire") || piece.getName().contains("Foxhole") ||
+                Decorator.getInnermost(piece).getName().contains("Ditch") || Decorator.getInnermost(piece).getName().contains("PFZ")) {
+            return true;
+        }
+        return false;
+    }
     private boolean isConcealmentTerrain(Terrain checkterrain){
         return checkterrain.isBuildingTerrain() || checkterrain.getName().equals("Woods") ||
                 checkterrain.getName().equals("Forest") || checkterrain.getName().equals("PineWoods") ||
@@ -463,15 +453,12 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
         if (parent instanceof Map) {
             assert parent instanceof ASLMap;
             setMap((ASLMap) parent);
-            // map.getToolBar().add(launchButton);
             GameModule.getGameModule().addCommandEncoder(this);
         }
 
         // record the player information
         myPlayerName = (String) getGameModule().getPrefs().getValue(PLAYER_NAME);
         players.put(myPlayerName, new HIPFortification.Player(myPlayerName, GameModule.getUserId(), GameModule.getUserId())); // + "-HF"));
-        //test code - ToDo remove
-        players.put("Nightrules", new HIPFortification.Player("Nightrules", "votg2019","votg2019"));
         GameModule.getGameModule().getGameState().addGameComponent(this);
     }
 
@@ -773,10 +760,10 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
 
                         } while (dialogResult == -100);
                         if (dialogResult == JOptionPane.NO_OPTION) {
-                            //revealpiece.setProperty(Properties.HIDDEN_BY, null);
                             keepHIP.add(this.asktoreveallist.getItem(i));
                         } else {
-                            GameModule.getGameModule().getChatter().send(revealpiece.getName() + " spotted by " + spottername + " and revealed in " + map.locationName(revealpiece.getPosition()));
+                            String showname = (revealpiece.getName().contains("?") ? "?" : revealpiece.getName());
+                            GameModule.getGameModule().getChatter().send(showname + " spotted by " + spottername + " and revealed in " + map.locationName(revealpiece.getPosition()));
                         }
                     }
                     else {

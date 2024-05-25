@@ -1594,7 +1594,7 @@ public class ASLPieceMover extends PieceMover {
         @Override
         public void dragGestureRecognized(DragGestureEvent dge) {
             final Point mousePosition = dragGestureRecognizedPrep(dge);
-            if (mousePosition == null) return;
+            if (mousePosition == null) {return;}
 
             dragWin = dge.getComponent();
             drawWin = null;
