@@ -3,5 +3,8 @@
    <Checkbox name="">
          <entry name="AP99 - Bare Foot Beating (includes PTO)" rule="SSO_AP99" text="Bd70 Scen AP99 SSO"/>
  </Checkbox>
+    <Checkbox name="">
+         <entry name="300 - Nor Will Deep Hell Receive Them" rule="SSO_300" text="Bd70 Scen 300 SSO"/>
+ </Checkbox>
     </Option>
 </SSRControls>
