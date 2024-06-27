@@ -74,9 +74,9 @@ public class ASLHexGrid extends HexGrid {
           hexY2 = p.y > (hexY - 0.5) * dy ? hexY + 1 : hexY - 1;
           if (hexY2 < hexY) // FredKors 16-nov-2013 fix bypass coord
           {
-              int l_iSwitch = hexY2;
+              int swap = hexY2;
               hexY2 = hexY;
-              hexY = l_iSwitch;
+              hexY = swap;
           }
         }
       }
@@ -86,9 +86,9 @@ public class ASLHexGrid extends HexGrid {
           hexY2 = p.y > hexY * dy ? hexY + 1 : hexY - 1;
           if (hexY2 < hexY) // FredKors 16-nov-2013 fix bypass coord
           {
-              int l_iSwitch = hexY2;
+              int swap = hexY2;
               hexY2 = hexY;
-              hexY = l_iSwitch;
+              hexY = swap;
           }
         }
       }
@@ -157,13 +157,13 @@ public class ASLHexGrid extends HexGrid {
    * in number of hexes, e.g. hex A1 returns (0,1), B3 returns (1,3)
    */
   public static Point hexPosition(String hex) throws MapGrid.BadCoords {
-    int nx = 0, ny = 0, n = 0, l_iSignY = 1; // FredKors 15-nov-2013 Added handling of negative y coords 
+    int nx = 0, ny = 0, n = 0, signY = 1; // FredKors 15-nov-2013 Added handling of negative y coords
     nx = hex.charAt(0) - 'a';
     while (hex.charAt(n+1) < '0' || hex.charAt(n+1) > '9')
     {
         if (hex.charAt(n+1) == '-')
         {
-            l_iSignY = -1;
+            signY = -1;
         }
     	else
         {
@@ -174,7 +174,7 @@ public class ASLHexGrid extends HexGrid {
         n++;
     }
     try {
-      ny = l_iSignY * Integer.parseInt(hex.substring(n + 1));
+      ny = signY * Integer.parseInt(hex.substring(n + 1));
     }
     catch (NumberFormatException ex) {
       throw new MapGrid.BadCoords("Bad Coordinates");

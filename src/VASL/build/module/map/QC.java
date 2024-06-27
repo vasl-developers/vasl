@@ -202,15 +202,16 @@ class QCMenuItem extends JMenuItem implements DragSourceListener {
       if (pieceSlot.getPiece() != null) {
         KeyBuffer.getBuffer().clear();
         DragBuffer.getBuffer().clear();
-        GamePiece l_objNewPiece = PieceCloner.getInstance().clonePiece(pieceSlot.getPiece());
-        l_objNewPiece.setProperty(Properties.PIECE_ID, pieceSlot.getGpId());
-        DragBuffer.getBuffer().add(l_objNewPiece);
+
+        GamePiece newPiece = PieceCloner.getInstance().clonePiece(pieceSlot.getPiece());
+        newPiece.setProperty(Properties.PIECE_ID, pieceSlot.getGpId());
+        DragBuffer.getBuffer().add(newPiece);
       }
       /*
        FredKors 18.11.2015 Move the code after the dragGestureRecognized to avoid exception
        FredKors 29.03.2015 Fix a small annoying thing dragging a counter from a menu
-       if (m_objParentPopupMenu != null)
-       m_objParentPopupMenu.setVisible(false);
+       if (parentPopupMenu != null)
+       parentPopupMenu.setVisible(false);
       */
     }
   }
@@ -549,9 +550,9 @@ class QCConfigurationEntry extends DefaultMutableTreeNode {
       Element entry = document.createElement("qcentry");
 
       if (getPieceId() != null) {
-        Attr l_objAttribute = document.createAttribute("slot");
-        l_objAttribute.setValue(getPieceId());
-        entry.setAttributeNode(l_objAttribute);
+        Attr attribute = document.createAttribute("slot");
+        attribute.setValue(getPieceId());
+        entry.setAttributeNode(attribute);
       }
 
       element.appendChild(entry);
@@ -1064,10 +1065,10 @@ public class QC implements Buildable, GameComponent {
     Enumeration<TreeNode> childNodes = objConfigurationEntry.children();
 
     while (childNodes.hasMoreElements()) {
-      JMenuItem l_objMenuItem = CreateMenuItem((QCConfigurationEntry) childNodes.nextElement(), popupMenu);
+      JMenuItem menuItem = CreateMenuItem((QCConfigurationEntry) childNodes.nextElement(), popupMenu);
 
-      if (l_objMenuItem != null) {
-        popupMenu.add(l_objMenuItem);
+      if (menuItem != null) {
+        popupMenu.add(menuItem);
       }
     }
   }

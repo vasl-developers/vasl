@@ -254,15 +254,15 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         return btn;
     }
 
-    public JButton CreateChatterDiceButton(String strImage, String caption, String tooltip, KeyStroke keyStroke, final boolean bDice, final String strCat)
+    public JButton CreateChatterDiceButton(String image, String caption, String tooltip, KeyStroke keyStroke, final boolean twoDice, final String categName)
     {
         final JButton btn = new JButton(caption);
         btn.setMinimumSize(new Dimension(5, 30));
         btn.setMargin(new Insets(0, 0, 0, -1));
 
         try {
-            if (!strImage.isEmpty()) {
-                btn.setIcon(new ImageIcon(Op.load(strImage).getImage(null)));
+            if (!image.isEmpty()) {
+                btn.setIcon(new ImageIcon(Op.load(image).getImage(null)));
             }
         }
         catch (Exception ignored) {
@@ -275,11 +275,11 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                 .stream()
                 .findFirst()
                 .ifPresent(dice -> {
-                    if (bDice) {
-                        dice.DR(strCat);
+                    if (twoDice) {
+                        dice.DR(categName);
                     }
                     else {
-                        dice.dr(strCat);
+                        dice.dr(categName);
                     }
                 });
         };

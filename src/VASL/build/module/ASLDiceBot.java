@@ -1,297 +1,262 @@
 package VASL.build.module;
 
-import java.io.*;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Random;
-
-import VASL.environment.DustLevel;
 import VASL.environment.Environment;
-import VASSAL.build.*;
+import VASSAL.build.AbstractBuildable;
+import VASSAL.build.Buildable;
+import VASSAL.build.GameModule;
 import VASSAL.build.module.GlobalOptions;
 import VASSAL.configure.BooleanConfigurer;
 import VASSAL.preferences.Prefs;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.NumberFormat;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
-class InstanceNumber
+class UniqueRollSequence
 {
-    public int m_iIndex;
-    public float m_fOrder;
+    public int sequenceNumber;
+    public float sequenceOrder;
 }
 
-class InstanceComparator implements Comparator<InstanceNumber>
+class InstanceComparator implements Comparator<UniqueRollSequence>
 {
     @Override
-    public int compare(InstanceNumber shot1, InstanceNumber shot2)
+    public int compare(UniqueRollSequence shot1, UniqueRollSequence shot2)
     {
-        Float l_f1 = shot1.m_fOrder;
-        Float l_f2 = shot2.m_fOrder;
+        Float f1 = shot1.sequenceOrder;
+        Float f2 = shot2.sequenceOrder;
 
-        return l_f1.compareTo(l_f2);
+        return f1.compareTo(f2);
     }
 }
 
 class CategoryDiceStats
 {
-    private String m_strCategory;
-    private int m_iTotNumRolls;
-    private int m_iTotSumRolls;
-    private int m_iTotSumColoredRolls;
-    private int m_iTotSumWhiteRolls;
-    private boolean m_bTwoDice;
-    private int[] mar_iDetailNumColoredRolls;
-    private int[] mar_iDetailNumWhiteRolls;
-    private int[] mar_iDetailNumTotalRolls;
+    private final String categoryName;
+    private int totalNumberOfRolls;
+    private int totalSumOfRolls;
+    private int totalSumOfColoredDieRolls;
+    private int totalSumOfWhiteDieRolls;
+    private final boolean isTwoDiceCategory;
+    private final int[] detailedOneDieResults;
+    private final int[] detailedTwoDiceResults;
 
     /**
-     * @return the m_strCategory
+     * @return the category
      */
-    public String getCategory() {return m_strCategory;}
+    public String getCategoryName() {return categoryName;}
 
     /**
-     * @return the m_iTotNumRolls
+     * @return the totalNumberOfRolls
      */
-    public int getTotNumRolls() { return m_iTotNumRolls; }
+    public int getTotalNumberOfRolls() { return totalNumberOfRolls; }
 
     /**
-     * @return the m_iTotSumRolls
+     * @return the totalSumOfRolls
      */
-    public int getTotSumRolls() { return m_iTotSumRolls; }
+    public int getTotalSumOfRolls() { return totalSumOfRolls; }
 
     /**
-     * @return the m_iTotSumColoredRolls
+     * @return the totalSumOfColoredDieRolls
      */
-    public int getTotSumColoredRolls() { return m_iTotSumColoredRolls; }
+    public int getTotalSumOfColoredDieRolls() { return totalSumOfColoredDieRolls; }
 
     /**
-     * @return the m_iTotSumWhiteRolls
+     * @return the totalSumOfWhiteDieRolls
      */
-    public int getTotSumWhiteRolls() { return m_iTotSumWhiteRolls; }
+    public int getTotalSumOfWhiteDieRolls() { return totalSumOfWhiteDieRolls; }
 
     /**
-     * @return the m_bTwoDice
+     * @return the isTwoDiceCategory
      */
-    public boolean IsTwoDice() { return m_bTwoDice; }
+    public boolean isTwoDiceCategory() { return isTwoDiceCategory; }
 
     /**
-     * @return the mar_iDetailNumColoredRolls
+     * @return the detailedOneDieResults
      */
-    public int getDetailNumColoredRolls(int iNum)
+    public int getDetailedOneDieResults(int dieResult)
     {
-        if ((iNum > 0) && (iNum <= mar_iDetailNumColoredRolls.length))
-            return mar_iDetailNumColoredRolls[iNum - 1];
+        if ((dieResult > 0) && (dieResult <= detailedOneDieResults.length))
+            return detailedOneDieResults[dieResult - 1];
 
         return 0;
     }
 
     /**
-     * @return the mar_iDetailNumWhiteRolls
+     * @return the detailedTwoDiceResults
      */
-    public int getDetailNumWhiteRolls(int iNum)
+    public int getDetailedTwoDiceResults(int diceResult)
     {
-        if ((iNum > 0) && (iNum <= mar_iDetailNumWhiteRolls.length))
-            return mar_iDetailNumWhiteRolls[iNum - 1];
-
-        return 0;
-    }
-
-    /**
-     * @return the mar_iDetailNumTotalRolls
-     */
-    public int getDetailNumRolls(int iNum)
-    {
-        if (((iNum - 2) >= 0) && ((iNum - 2) < mar_iDetailNumTotalRolls.length))
-            return mar_iDetailNumTotalRolls[iNum - 2];
+        if (((diceResult - 2) >= 0) && ((diceResult - 2) < detailedTwoDiceResults.length))
+            return detailedTwoDiceResults[diceResult - 2];
 
         return 0;
     }
 
 
-    public CategoryDiceStats(String strCategory, boolean bTwoDice)
+    public CategoryDiceStats(String categ, boolean twoDiceCateg)
     {
-        m_strCategory = strCategory;
-        m_iTotNumRolls = 0;
-        m_iTotSumRolls = 0;
-        m_iTotSumColoredRolls = 0;
-        m_iTotSumWhiteRolls = 0;
-        m_bTwoDice = bTwoDice;
-        mar_iDetailNumColoredRolls = new int[6];
-        mar_iDetailNumWhiteRolls = new int[6];
-        mar_iDetailNumTotalRolls = new int[11];
+        categoryName = categ;
+        totalNumberOfRolls = 0;
+        totalSumOfRolls = 0;
+        totalSumOfColoredDieRolls = 0;
+        totalSumOfWhiteDieRolls = 0;
+        isTwoDiceCategory = twoDiceCateg;
+        detailedOneDieResults = new int[6];
+        detailedTwoDiceResults = new int[11];
 
-        for (int l_i = 0; l_i < mar_iDetailNumColoredRolls.length; l_i++)
-            mar_iDetailNumColoredRolls[l_i] = 0;
-
-        for (int l_i = 0; l_i < mar_iDetailNumWhiteRolls.length; l_i++)
-            mar_iDetailNumWhiteRolls[l_i] = 0;
-
-        for (int l_i = 0; l_i < mar_iDetailNumTotalRolls.length; l_i++)
-            mar_iDetailNumTotalRolls[l_i] = 0;
+        Arrays.fill(detailedOneDieResults, 0);
+        Arrays.fill(detailedTwoDiceResults, 0);
     }
 
-    void Add_DR(int iColoredDie, int iWhiteDie)
+    void Add_DR(int coloredDieResult, int whiteDieResult)
     {
-        if (m_bTwoDice)
+        if (isTwoDiceCategory)
         {
-            if (
-                (iColoredDie > 0)
-                && (iColoredDie <= mar_iDetailNumColoredRolls.length)
-                && (iWhiteDie > 0)
-                && (iWhiteDie <= mar_iDetailNumWhiteRolls.length)
-                )
-            {
-                m_iTotNumRolls += 1;
-                m_iTotSumRolls += iColoredDie + iWhiteDie;
-                m_iTotSumColoredRolls += iColoredDie;
-                m_iTotSumWhiteRolls += iWhiteDie;
+            if ((coloredDieResult > 0) && (coloredDieResult <= 6)
+                && (whiteDieResult > 0) && (whiteDieResult <= 6)) {
 
-                mar_iDetailNumColoredRolls[iColoredDie - 1] += 1;
-                mar_iDetailNumWhiteRolls[iWhiteDie - 1] += 1;
-                mar_iDetailNumTotalRolls[iColoredDie + iWhiteDie - 2] += 1;
+                totalNumberOfRolls++;
+                totalSumOfRolls += coloredDieResult + whiteDieResult;
+                totalSumOfColoredDieRolls += coloredDieResult;
+                totalSumOfWhiteDieRolls += whiteDieResult;
+
+                detailedTwoDiceResults[coloredDieResult + whiteDieResult - 2]++;
             }
         }
     }
 
-    void Add_dr(int iSingleDie)
+    void Add_dr(int singleDieResult)
     {
-        if (!m_bTwoDice)
+        if (!isTwoDiceCategory)
         {
-            if (
-                (iSingleDie > 0)
-                && (iSingleDie <= mar_iDetailNumColoredRolls.length)
-                )
+            if ((singleDieResult > 0) && (singleDieResult <= 6))
             {
-                m_iTotNumRolls += 1;
-                m_iTotSumRolls += iSingleDie;
+                totalNumberOfRolls++;
+                totalSumOfRolls += singleDieResult;
 
-                mar_iDetailNumColoredRolls[iSingleDie - 1] += 1;
+                detailedOneDieResults[singleDieResult - 1]++;
             }
         }
     }
 
-    public String GetAvg()
+    public String GetTextualAverage()
     {
-        NumberFormat l_nf = NumberFormat.getInstance();
+        NumberFormat numberFormat = NumberFormat.getInstance();
 
-        l_nf.setMinimumFractionDigits(2);
-        l_nf.setMaximumFractionDigits(2);
+        numberFormat.setMinimumFractionDigits(2);
+        numberFormat.setMaximumFractionDigits(2);
 
-        if (getTotNumRolls() == 0)
+        if (getTotalNumberOfRolls() == 0)
             return "-";
 
-        return l_nf.format((double) getTotSumRolls() / (double) getTotNumRolls());
+        return numberFormat.format((double) getTotalSumOfRolls() / (double) getTotalNumberOfRolls());
     }
 
-    public double GetNumericAvg()
+    public double GetNumericAverage()
     {
-        if (getTotNumRolls() == 0)
+        if (getTotalNumberOfRolls() == 0)
             return 0;
 
-        return (double) getTotSumRolls() / (double) getTotNumRolls();
+        return (double) getTotalSumOfRolls() / (double) getTotalNumberOfRolls();
     }
 
-    public String GetAvgColored()
+    public String GetColoredDieAverage()
     {
-        NumberFormat l_nf = NumberFormat.getInstance();
+        NumberFormat numberFormat = NumberFormat.getInstance();
 
-        l_nf.setMinimumFractionDigits(2);
-        l_nf.setMaximumFractionDigits(2);
+        numberFormat.setMinimumFractionDigits(2);
+        numberFormat.setMaximumFractionDigits(2);
 
-        if (getTotNumRolls() == 0)
+        if (getTotalNumberOfRolls() == 0)
             return "-";
 
-        return l_nf.format((double) getTotSumColoredRolls() / (double) getTotNumRolls());
+        return numberFormat.format((double) getTotalSumOfColoredDieRolls() / (double) getTotalNumberOfRolls());
     }
 
-    public String GetAvgWhite()
+    public String GetWhiteDieAverage()
     {
-        NumberFormat l_nf = NumberFormat.getInstance();
+        NumberFormat numberFormat = NumberFormat.getInstance();
 
-        l_nf.setMinimumFractionDigits(2);
-        l_nf.setMaximumFractionDigits(2);
+        numberFormat.setMinimumFractionDigits(2);
+        numberFormat.setMaximumFractionDigits(2);
 
-        if (getTotNumRolls() == 0)
+        if (getTotalNumberOfRolls() == 0)
             return "-";
 
-        return l_nf.format((double) getTotSumWhiteRolls() / (double) getTotNumRolls());
+        return numberFormat.format((double) getTotalSumOfWhiteDieRolls() / (double) getTotalNumberOfRolls());
     }
 }
 
 class DiceStats extends HashMap<String, CategoryDiceStats>
 {
-    public void Add_DR(String strCategory, int iColoredDie, int iWhiteDie)
+    public void Add_DR(String categName, int coloredDieResult, int whiteDieResult)
     {
-        CategoryDiceStats l_objCategoryDiceStats = get("D2_"+ strCategory);
+        CategoryDiceStats categoryDiceStats = get("D2_"+ categName);
 
-        if (l_objCategoryDiceStats == null)
+        if (categoryDiceStats == null)
         {
-            l_objCategoryDiceStats = new CategoryDiceStats(strCategory, true);
-            put("D2_"+ strCategory, l_objCategoryDiceStats);
+            categoryDiceStats = new CategoryDiceStats(categName, true);
+            put("D2_"+ categName, categoryDiceStats);
         }
 
-        l_objCategoryDiceStats.Add_DR(iColoredDie, iWhiteDie);
+        categoryDiceStats.Add_DR(coloredDieResult, whiteDieResult);
     }
 
-    public void Add_dr(String strCategory, int iSingleDie)
+    public void Add_dr(String categName, int singleDieResult)
     {
-        CategoryDiceStats l_objCategoryDiceStats = get("D1_"+ strCategory);
+        CategoryDiceStats categoryDiceStats = get("D1_"+ categName);
 
-        if (l_objCategoryDiceStats == null)
+        if (categoryDiceStats == null)
         {
-            l_objCategoryDiceStats = new CategoryDiceStats(strCategory, false);
-            put("D1_"+ strCategory, l_objCategoryDiceStats);
+            categoryDiceStats = new CategoryDiceStats(categName, false);
+            put("D1_"+ categName, categoryDiceStats);
         }
 
-        l_objCategoryDiceStats.Add_dr(iSingleDie);
+        categoryDiceStats.Add_dr(singleDieResult);
     }
 
-    public String GetNumRolledDROnTotal(String strCategory, int iNum)
+    public String GetNumRolledDROnTotal(String categName, int diceResult)
     {
-        CategoryDiceStats l_objCategoryDiceStats = get("D2_"+ strCategory);
+        CategoryDiceStats categoryDiceStats = get("D2_"+ categName);
 
-        if (l_objCategoryDiceStats == null)
+        if (categoryDiceStats == null)
             return "-/-";
 
-        return Integer.toString(l_objCategoryDiceStats.getDetailNumRolls(iNum)) + " / " + Integer.toString(l_objCategoryDiceStats.getTotNumRolls());
+        return categoryDiceStats.getDetailedTwoDiceResults(diceResult) + " / " + categoryDiceStats.getTotalNumberOfRolls();
     }
 
-    public String GetNumRolleddrOnTotal(String strCategory, int iNum)
+    public String GetNumRolleddrOnTotal(String categName, int dieResult)
     {
-        CategoryDiceStats l_objCategoryDiceStats = get("D1_"+ strCategory);
+        CategoryDiceStats categoryDiceStats = get("D1_"+ categName);
 
-        if (l_objCategoryDiceStats == null)
+        if (categoryDiceStats == null)
             return "-/-";
 
-        return Integer.toString(l_objCategoryDiceStats.getDetailNumColoredRolls(iNum)) + " / " + Integer.toString(l_objCategoryDiceStats.getTotNumRolls());
+        return categoryDiceStats.getDetailedOneDieResults(dieResult) + " / " + categoryDiceStats.getTotalNumberOfRolls();
     }
 
-    public String GetAvgDR(String strCategory)
+    public String GetAverageDR(String categName)
     {
-        CategoryDiceStats l_objCategoryDiceStats = get("D2_"+ strCategory);
+        CategoryDiceStats categoryDiceStats = get("D2_"+ categName);
 
-        if (l_objCategoryDiceStats == null)
+        if (categoryDiceStats == null)
             return "-";
 
-        return l_objCategoryDiceStats.GetAvg();
+        return categoryDiceStats.GetTextualAverage();
     }
 
-    public String GetAvgdr(String strCategory)
+    public String GetAveragedr(String categName)
     {
-        CategoryDiceStats l_objCategoryDiceStats = get("D1_"+ strCategory);
+        CategoryDiceStats categoryDiceStats = get("D1_"+ categName);
 
-        if (l_objCategoryDiceStats == null)
+        if (categoryDiceStats == null)
             return "-";
 
-        return l_objCategoryDiceStats.GetAvg();
+        return categoryDiceStats.GetTextualAverage();
     }
 }
 
@@ -299,109 +264,89 @@ public class ASLDiceBot extends AbstractBuildable
 {
     private static final String RANDOM_ORG_OPTION = "randomorgoption"; //$NON-NLS-1$
     private static final String SHOW_EXTRA_DICE_STATS = "showExtraDiceStats"; //$NON-NLS-1$
-    private static final String TOTAL_CATEGORY = "Total";
+    private static final String TOTAL_CATEGORY_NAME = "Total";
     public static final String OTHER_CATEGORY = "Other";
-    public static final String BUTTON_TEXT = "text"; //$NON-NLS-1$
-    public static final String TOOLTIP = "tooltip"; //$NON-NLS-1$
     public static final String NAME = "name"; //$NON-NLS-1$
-    public static final String ICON = "icon"; //$NON-NLS-1$
-    public static final String HOTKEY = "hotkey"; //$NON-NLS-1$
 
-    public static final String m_strHTMLSingle =
+    public static final String HTMLSingle =
             "<table class=\"tbl\"><thead><tr><th colspan=\"3\">%s</th></tr><tr><th>Category</th><th>drs</th><th>Avg</th></tr></thead><tbody>%s</tbody></table></html>";
-    public static final String m_strHTMLDouble =
+    public static final String HTMLDouble =
             "<table class=\"tbl\"><thead><tr><th colspan=\"5\">%s</th></tr><tr><th>Category</th><th>DRs</th><th>Avg 1st</th><th>Avg 2nd</th><th>Avg</th></tr></thead><tbody>%s</tbody></table></html>";
 
-    public static final String m_strHTMLSingle_Extra =
+    public static final String HTMLSingle_Extra =
             "<table class=\"tbl\"><thead><tr><th colspan=\"9\">%s</th></tr><tr><th>Category</th><th>drs</th><th>Avg</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr></thead><tbody>%s</tbody></table></html>";
-    public static final String m_strHTMLDouble_Extra =
+    public static final String HTMLDouble_Extra =
             "<table class=\"tbl\"><thead><tr><th colspan=\"16\">%s</th></tr><tr><th>Category</th><th>DRs</th><th>Avg 1st</th><th>Avg 2nd</th><th>Avg</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th></tr></thead><tbody>%s</tbody></table></html>";
 
-    private final int m_MaxInstancesPerSeries = 99;
-    private int m_iCurrentSeries = 0, m_iInstancesInCurrentSeries = m_MaxInstancesPerSeries;
+    private final int MAX_SEQUENCE_LENGTH = 99;
+    private int currentSeries = 0, numbersInCurrentSeries = MAX_SEQUENCE_LENGTH;
 
-    private static final int m_iMAXNUM = 1000;
-    private final int[] mar_iRandomNumbers = new int[m_iMAXNUM];
-    private final InstanceNumber[] mar_objInstanceNumber = new InstanceNumber[m_MaxInstancesPerSeries];
-    private final ArrayList<Integer> mar_iDereferencingIndex = new ArrayList<Integer>();
-    private boolean m_bUseRandomOrg = false;
-    private boolean m_bShowExtraDiceStats = false;
-    private final DiceStats map_objStats = new DiceStats();
-    private Environment environment = new Environment();
+    private static final int MAX_RANDOM_NUMBERS = 1000;
+    private final UniqueRollSequence[] uniqueRollSequence = new UniqueRollSequence[MAX_SEQUENCE_LENGTH];
+    private final int[] randomNumbers = new int[MAX_RANDOM_NUMBERS];
+    private final ArrayList<Integer> unusedElementList = new ArrayList<>();
+    private boolean usingRandomOrg = false;
+    private boolean showExtraDiceStats = false;
+    private final DiceStats diceStats = new DiceStats();
+    private final Environment environment = new Environment();
 
     public ASLDiceBot() {
-        for (int i = 0; i < m_MaxInstancesPerSeries; i++) {
-            mar_objInstanceNumber[i] = new InstanceNumber();
-        }
+        Arrays.setAll(uniqueRollSequence, i -> new UniqueRollSequence());
     }
 
-    public void setAttribute(String key, Object value) {
-    }
-
+    public void setAttribute(String key, Object value) { }
     public String[] getAttributeNames() {
         return new String[0];
     }
-
     public String[] getAttributeDescriptions() {
         return new String[0];
     }
     public String getAttributeValueString(String key) {
         return "";
     }
-
     public Class<?>[] getAttributeTypes() {
         return new Class<?>[0];
     }
 
     public void addTo(Buildable parent) {
-        final Prefs l_objModulePrefs = ((GameModule) parent).getPrefs();
-        BooleanConfigurer l_objRandomOrgOption = null;
-        BooleanConfigurer l_objRandomOrgOption_Exist = (BooleanConfigurer)l_objModulePrefs.getOption(RANDOM_ORG_OPTION);
+        final Prefs modulePrefs = ((GameModule) parent).getPrefs();
+        BooleanConfigurer randomOrgOption;
+        BooleanConfigurer existingRandomOrgOption = (BooleanConfigurer)modulePrefs.getOption(RANDOM_ORG_OPTION);
 
-        if (l_objRandomOrgOption_Exist == null)
+        if (existingRandomOrgOption == null)
         {
-            l_objRandomOrgOption = new BooleanConfigurer(RANDOM_ORG_OPTION, "Get DR/dr random numbers from random.org", Boolean.FALSE);  //$NON-NLS-1$
-            //l_objModulePrefs.addOption(Resources.getString("Prefs.general_tab"), l_objRandomOrgOption); //$NON-NLS-1$
-            l_objModulePrefs.addOption("VASL", l_objRandomOrgOption);
+            randomOrgOption = new BooleanConfigurer(RANDOM_ORG_OPTION, "Get DR/dr random numbers from random.org", Boolean.FALSE);  //$NON-NLS-1$
+            //modulePrefs.addOption(Resources.getString("Prefs.general_tab"), randomOrgOption); //$NON-NLS-1$
+            modulePrefs.addOption("VASL", randomOrgOption);
         }
         else
-            l_objRandomOrgOption = l_objRandomOrgOption_Exist;
+            randomOrgOption = existingRandomOrgOption;
 
-        m_bUseRandomOrg = (Boolean) (l_objModulePrefs.getValue(RANDOM_ORG_OPTION));
+        usingRandomOrg = (Boolean) (modulePrefs.getValue(RANDOM_ORG_OPTION));
 
-        l_objRandomOrgOption.addPropertyChangeListener(new PropertyChangeListener()
-        {
-            public void propertyChange(PropertyChangeEvent e)
-            {
-                m_bUseRandomOrg = (Boolean) e.getNewValue();
-                ReadRolls();
-            }
+        randomOrgOption.addPropertyChangeListener(e -> {
+            usingRandomOrg = (Boolean) e.getNewValue();
+            ReadRolls();
         });
 
-        BooleanConfigurer l_objShowExtraDiceStatsOption = null;
-        BooleanConfigurer l_objShowExtraDiceStatsOption_Exist = (BooleanConfigurer)l_objModulePrefs.getOption(SHOW_EXTRA_DICE_STATS);
+        BooleanConfigurer showExtraDiceStatsOption;
+        BooleanConfigurer existingShowExtraDiceStatsOption = (BooleanConfigurer)modulePrefs.getOption(SHOW_EXTRA_DICE_STATS);
 
-        if (l_objShowExtraDiceStatsOption_Exist == null)
+        if (existingShowExtraDiceStatsOption == null)
         {
-            l_objShowExtraDiceStatsOption = new BooleanConfigurer(SHOW_EXTRA_DICE_STATS, "Show detailed dice stats", Boolean.FALSE);  //$NON-NLS-1$
-            //l_objModulePrefs.addOption(Resources.getString("Chatter.chat_window"), l_objShowExtraDiceStatsOption); //$NON-NLS-1$
-            l_objModulePrefs.addOption("VASL", l_objShowExtraDiceStatsOption);
+            showExtraDiceStatsOption = new BooleanConfigurer(SHOW_EXTRA_DICE_STATS, "Show detailed dice stats", Boolean.FALSE);  //$NON-NLS-1$
+            //modulePrefs.addOption(Resources.getString("Chatter.chat_window"), showExtraDiceStatsOption); //$NON-NLS-1$
+            modulePrefs.addOption("VASL", showExtraDiceStatsOption);
         }
         else
-            l_objShowExtraDiceStatsOption = l_objShowExtraDiceStatsOption_Exist;
+            showExtraDiceStatsOption = existingShowExtraDiceStatsOption;
 
-        m_bShowExtraDiceStats = (Boolean) (l_objModulePrefs.getValue(SHOW_EXTRA_DICE_STATS));
+        showExtraDiceStats = (Boolean) (modulePrefs.getValue(SHOW_EXTRA_DICE_STATS));
 
-        l_objShowExtraDiceStatsOption.addPropertyChangeListener(new PropertyChangeListener()
-        {
-            public void propertyChange(PropertyChangeEvent e)
-            {
-                m_bShowExtraDiceStats = (Boolean) e.getNewValue();
-            }
-        });
+        showExtraDiceStatsOption.addPropertyChangeListener(e -> showExtraDiceStats = (Boolean) e.getNewValue());
     }
 
-    private ScenInfo GetScenInfo()
+    private ScenInfo GetScenarioInfo()
     {
         return GameModule.getGameModule().getComponentsOf(ScenInfo.class).iterator().next();
     }
@@ -412,25 +357,25 @@ public class ASLDiceBot extends AbstractBuildable
 
     private BufferedReader GetRemoteDataReader() throws Exception
     {
-        URL l_Url = new URL("https://www.random.org/integers/?num=" + String.valueOf(m_iMAXNUM) + "&min=1&max=6&col=1&base=10&format=plain&rnd=new");
-        HttpURLConnection l_Conn = (HttpURLConnection)l_Url.openConnection();
+        URL url = new URL("https://www.random.org/integers/?num=" + MAX_RANDOM_NUMBERS + "&min=1&max=6&col=1&base=10&format=plain&rnd=new");
+        HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 
-        l_Conn.setConnectTimeout(60000);
-        l_Conn.setReadTimeout(60000);
-        l_Conn.setRequestMethod("GET");
-        l_Conn.setRequestProperty("User-Agent", "Mozilla/5.0");
+        connection.setConnectTimeout(60000);
+        connection.setReadTimeout(60000);
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("User-Agent", "Mozilla/5.0");
 
-        return new BufferedReader(new InputStreamReader(l_Conn.getInputStream()));
+        return new BufferedReader(new InputStreamReader(connection.getInputStream()));
     }
 
     private void ReadRolls()
     {
-        mar_iDereferencingIndex.clear();
+        unusedElementList.clear();
 
-        // if use random.org read data from web
-        if (m_bUseRandomOrg)
+        /* if random.org is used then reads data from web */
+        if (usingRandomOrg)
         {
-            int l_i = 0;
+            int index = 0;
 
             OutputString(" ");
             OutputString(" Reading data from random.org");
@@ -438,22 +383,22 @@ public class ASLDiceBot extends AbstractBuildable
             try
             {
                 BufferedReader reader = GetRemoteDataReader();
-                String l_strLine = reader.readLine();
+                String line = reader.readLine();
 
-                while (l_strLine != null)
+                while (line != null)
                 {
-                    mar_iRandomNumbers[l_i] = Integer.parseInt(l_strLine);
-                    mar_iDereferencingIndex.add(l_i);
-                    l_i++;
+                    randomNumbers[index] = Integer.parseInt(line);
+                    unusedElementList.add(index);
+                    index++;
 
-                    l_strLine = reader.readLine();
+                    line = reader.readLine();
                 }
 
                 reader.close();
 
-                if (l_i != m_iMAXNUM) {
+                if (index != MAX_RANDOM_NUMBERS) {
                     OutputString(" Random.org not reachable or read failed");
-                    mar_iDereferencingIndex.clear();
+                    unusedElementList.clear();
                 }
                 else
                     OutputString(" Data correctly retrieved");
@@ -468,13 +413,13 @@ public class ASLDiceBot extends AbstractBuildable
         }
         else // generate data with standard dicebot
         {
-            Random l_RND = GetRandomizer();
+            Random randomizer = GetRandomizer();
 
-            for (int l_i = 0; l_i < m_iMAXNUM; l_i++)
+            for (int i = 0; i < MAX_RANDOM_NUMBERS; i++)
             {
-                mar_iRandomNumbers[l_i] = (int)((l_RND.nextFloat() * 6) + 1);
-                mar_iRandomNumbers[l_i] = l_RND.nextInt(6) + 1;
-                mar_iDereferencingIndex.add(l_i);
+                randomNumbers[i] = (int)((randomizer.nextFloat() * 6) + 1);
+                randomNumbers[i] = randomizer.nextInt(6) + 1;
+                unusedElementList.add(i);
             }
 
             OutputString(" ");
@@ -486,40 +431,43 @@ public class ASLDiceBot extends AbstractBuildable
         return GlobalOptions.getInstance().getPlayerId();
     }
 
-    private String IsSpecial(int iTotal)
+    private String IsSpecialDiceRoll(int diceRollResult)
     {
-        ScenInfo l_objScenInfo = GetScenInfo();
+        ScenInfo scenarioInfo = GetScenarioInfo();
 
-        if (iTotal == l_objScenInfo.getAxisSAN())
-        {
-            if (iTotal == l_objScenInfo.getAlliedSAN())
-            {
-                return "Axis/Allied SAN    ";
-            } else {
+        boolean axisSan = diceRollResult == scenarioInfo.getAxisSAN();
+        boolean alliedSan = diceRollResult == scenarioInfo.getAlliedSAN();
+
+        if (axisSan && alliedSan) {
+            return "Axis/Allied SAN    ";
+        }
+        else {
+            if (axisSan)
                 return "Axis SAN    ";
-            }
+            else if (alliedSan)
+                return "Allied SAN    ";
         }
-        else if (iTotal == l_objScenInfo.getAlliedSAN())
-        {
-            return "Allied SAN    ";
-        }
-        if (l_objScenInfo.getAxisBooby() != "" || l_objScenInfo.getAlliedBooby() != "") {
-            int axisbooby =0;
-            int alliedbooby =0;
-            if (l_objScenInfo.getAxisBooby() == "C" && iTotal == 12 ||
-                    l_objScenInfo.getAxisBooby() == "B" && iTotal == 11 ||
-                    l_objScenInfo.getAxisBooby() == "A" && iTotal >= 11) {
-                if (l_objScenInfo.getAlliedBooby() == "C" && iTotal == 12 ||
-                        l_objScenInfo.getAlliedBooby() == "B" && iTotal == 11 ||
-                        l_objScenInfo.getAlliedBooby() == "A" && iTotal >= 11) {
+
+        if ((diceRollResult >= 11) && ((!"".equals(scenarioInfo.getAxisBooby())) || (!"".equals(scenarioInfo.getAlliedBooby())))) {
+
+            boolean axisBoobyTrap = ("C".equals(scenarioInfo.getAxisBooby()) && diceRollResult == 12 ||
+                                     "B".equals(scenarioInfo.getAxisBooby()) && diceRollResult == 11 ||
+                                     "A".equals(scenarioInfo.getAxisBooby()));
+
+            boolean alliedBoobyTrap = ("C".equals(scenarioInfo.getAlliedBooby()) && diceRollResult == 12 ||
+                                       "B".equals(scenarioInfo.getAlliedBooby()) && diceRollResult == 11 ||
+                                       "A".equals(scenarioInfo.getAlliedBooby()));
+
+            if (axisBoobyTrap && alliedBoobyTrap) {
                     return "Axis/Allied Booby Trap    ";
-                } else {
+            }
+            else {
+                if (axisBoobyTrap) {
                     return "Axis Booby Trap   ";
                 }
-            } else if (l_objScenInfo.getAlliedBooby() == "C" && iTotal == 12 ||
-                    l_objScenInfo.getAlliedBooby() == "B" && iTotal == 11 ||
-                    l_objScenInfo.getAlliedBooby() == "A" && iTotal >= 11) {
-                return "Allied Booby Trap   ";
+                else if (alliedBoobyTrap) {
+                    return "Allied Booby Trap   ";
+                }
             }
         }
 
@@ -532,352 +480,313 @@ public class ASLDiceBot extends AbstractBuildable
 
     private int GetDieRoll()
     {
-        int l_iSlot, l_iRet;
-        Random l_RND = GetRandomizer();
+        Random randomizer = GetRandomizer();
 
-        if (mar_iDereferencingIndex.size() == 0)
+        if (unusedElementList.isEmpty())
             ReadRolls();
 
-        if (mar_iDereferencingIndex.size() > 0)
+        if (!unusedElementList.isEmpty())
         {
-            // scelgo casualmente quale numero tra 0 e m_PointersList.size
-            l_iSlot = (int) (l_RND.nextFloat() * mar_iDereferencingIndex.size());
+            // take a random unused elementIndex
+            int elementIndex = (int) (randomizer.nextFloat() * unusedElementList.size());
 
-            // prendo il numero scelto
-            l_iRet = mar_iRandomNumbers[mar_iDereferencingIndex.get(l_iSlot)];
-
-            // lo rimuovo per renderlo inutilizzabile
-            mar_iDereferencingIndex.remove(l_iSlot);
-
-            // ritorno il valore
-            return l_iRet;
+            // pick up a random unused element, remove it from the list and return it
+            return randomNumbers[unusedElementList.remove(elementIndex)];
         }
 
         return 0;
     }
 
-    public void DR(String strCategory)
+    public void DR(String categName)
     {
-        DustLevel dustLevel = environment.getCurrentDustLevel();
-        int l_iWhiteDie = 0;
-        int l_iDustDie = 0;
-        int l_iColoredDie = GetDieRoll();
+        int whiteDieResult = GetDieRoll();
+        int coloredDieResult = GetDieRoll();
+        int dustDieResult = environment.dustInEffect() ? GetDieRoll() : 0;
 
-        if(environment.dustInEffect())
+        if ((coloredDieResult != 0) && (whiteDieResult != 0))
         {
-            l_iDustDie = GetDieRoll();
-        }
+            String output;
 
-        if (l_iColoredDie != 0)
-            l_iWhiteDie = GetDieRoll();
+            diceStats.Add_DR(TOTAL_CATEGORY_NAME, coloredDieResult, whiteDieResult);
+            diceStats.Add_DR(categName, coloredDieResult, whiteDieResult);
 
-        if ((l_iColoredDie != 0) && (l_iWhiteDie != 0))
-        {
-            String l_strOutput;
-
-            map_objStats.Add_DR(TOTAL_CATEGORY, l_iColoredDie, l_iWhiteDie);
-            map_objStats.Add_DR(strCategory, l_iColoredDie, l_iWhiteDie);
-
-            if( (environment.dustInEffect() && l_iDustDie != 0) &&
-               (strCategory.equals(("TH")) || strCategory.equals(("IFT")) || strCategory.equals(("MC"))))
+            if( (environment.dustInEffect() && dustDieResult != 0) &&
+               (categName.equals(("TH")) || categName.equals(("IFT")) || categName.equals(("MC"))))
             {
-                    l_strOutput = String.format("*** (%s DR) %s,%s,%s *** - total with %s: %s     <%s>      %s[%s   avg   %s (%s)]    (%s%s)",
-                            strCategory,
-                            Integer.toString(l_iColoredDie),
-                            Integer.toString(l_iWhiteDie),
-                            Integer.toString(l_iDustDie),
-                            dustLevel.toString(),
-                            environment.isLightDust()   ?
-                                    Integer.toString(l_iColoredDie + l_iWhiteDie + (l_iDustDie / 2) ) :
-                                    Integer.toString(l_iColoredDie + l_iWhiteDie + ((l_iDustDie / 2) + (l_iDustDie % 2) ) ),
-                            GetPlayer(),
-                            IsSpecial(l_iColoredDie + l_iWhiteDie),
-                            map_objStats.GetNumRolledDROnTotal(TOTAL_CATEGORY, l_iColoredDie + l_iWhiteDie),
-                            map_objStats.GetAvgDR(strCategory),
-                            map_objStats.GetAvgDR(TOTAL_CATEGORY),
-                            getSerieInstanceNumber(),
-                            (m_bUseRandomOrg ? " - by random.org" : "")
-                    );
-            } else {
-                l_strOutput = String.format("*** (%s DR) %s,%s ***   <%s>      %s[%s   avg   %s (%s)]    (%s%s)",
-                        strCategory,
-                        Integer.toString(l_iColoredDie),
-                        Integer.toString(l_iWhiteDie),
+                output = String.format("*** (%s DR) %s,%s,%s *** - total with %s: %s     <%s>      %s[%s   avg   %s (%s)]    (%s%s)",
+                        categName,
+                        coloredDieResult,
+                        whiteDieResult,
+                        dustDieResult,
+                        environment.getCurrentDustLevel().toString(),
+                        environment.isLightDust()   ?
+                                Integer.toString(coloredDieResult + whiteDieResult + (dustDieResult / 2) ) :
+                                Integer.toString(coloredDieResult + whiteDieResult + ((dustDieResult / 2) + (dustDieResult % 2) ) ),
                         GetPlayer(),
-                        IsSpecial(l_iColoredDie + l_iWhiteDie),
-                        map_objStats.GetNumRolledDROnTotal(TOTAL_CATEGORY, l_iColoredDie + l_iWhiteDie),
-                        map_objStats.GetAvgDR(strCategory),
-                        map_objStats.GetAvgDR(TOTAL_CATEGORY),
+                        IsSpecialDiceRoll(coloredDieResult + whiteDieResult),
+                        diceStats.GetNumRolledDROnTotal(TOTAL_CATEGORY_NAME, coloredDieResult + whiteDieResult),
+                        diceStats.GetAverageDR(categName),
+                        diceStats.GetAverageDR(TOTAL_CATEGORY_NAME),
                         getSerieInstanceNumber(),
-                        (m_bUseRandomOrg ? " - by random.org" : "")
+                        (usingRandomOrg ? " - by random.org" : "")
+                );
+            } else {
+                output = String.format("*** (%s DR) %s,%s ***   <%s>      %s[%s   avg   %s (%s)]    (%s%s)",
+                        categName,
+                        coloredDieResult,
+                        whiteDieResult,
+                        GetPlayer(),
+                        IsSpecialDiceRoll(coloredDieResult + whiteDieResult),
+                        diceStats.GetNumRolledDROnTotal(TOTAL_CATEGORY_NAME, coloredDieResult + whiteDieResult),
+                        diceStats.GetAverageDR(categName),
+                        diceStats.GetAverageDR(TOTAL_CATEGORY_NAME),
+                        getSerieInstanceNumber(),
+                        (usingRandomOrg ? " - by random.org" : "")
                 );
             }
 
             // If this was a TH roll, add a reminder for hit location for stupid people
-            if(strCategory.equals(("TH"))){
-                if(l_iColoredDie < l_iWhiteDie){
-                    l_strOutput += " &lt;Turret&gt;";
-                }
-                else
-                {
-                    l_strOutput += "&lt;Hull&gt;";
-                }
+            if ("TH".equals(categName)){
+                output += coloredDieResult < whiteDieResult ? " &lt;Turret&gt;" : "&lt;Hull&gt;";
             }
 
-            OutputString(l_strOutput);
+            OutputString(output);
         }
     }
 
-    public void dr(String strCategory)
+    public void dr(String category)
     {
-        int l_iSingleDie = 0;
+        int singleDieResult = GetDieRoll();
 
-        l_iSingleDie = GetDieRoll();
-
-        if (l_iSingleDie != 0)
+        if (singleDieResult != 0)
         {
-            String l_strOutput;
+            diceStats.Add_dr(TOTAL_CATEGORY_NAME, singleDieResult);
+            diceStats.Add_dr(category, singleDieResult);
 
-            map_objStats.Add_dr(TOTAL_CATEGORY, l_iSingleDie);
-            map_objStats.Add_dr(strCategory, l_iSingleDie);
-
-            l_strOutput = String.format("*** (%s dr) %s ***   <%s>      [%s   avg   %s (%s)]    (%s%s)",
-                                        strCategory,
-                                        Integer.toString(l_iSingleDie),
+            String output = String.format("*** (%s dr) %s ***   <%s>      [%s   avg   %s (%s)]    (%s%s)",
+                                        category,
+                                        singleDieResult,
                                         GetPlayer(),
-                                        map_objStats.GetNumRolleddrOnTotal(TOTAL_CATEGORY, l_iSingleDie),
-                                        map_objStats.GetAvgdr(strCategory),
-                                        map_objStats.GetAvgdr(TOTAL_CATEGORY),
+                                        diceStats.GetNumRolleddrOnTotal(TOTAL_CATEGORY_NAME, singleDieResult),
+                                        diceStats.GetAveragedr(category),
+                                        diceStats.GetAveragedr(TOTAL_CATEGORY_NAME),
                                         getSerieInstanceNumber(),
-                                        (m_bUseRandomOrg ? " - by random.org" : "")
+                                        (usingRandomOrg ? " - by random.org" : "")
                                         );
 
-            OutputString(l_strOutput);
+            OutputString(output);
         }
     }
 
     String getSerieInstanceNumber()
     {
-        Random l_RND = GetRandomizer();
-        NumberFormat l_nf = NumberFormat.getInstance();
+        Random randomizer = GetRandomizer();
+        NumberFormat numberFormat = NumberFormat.getInstance();
 
-        if (m_iInstancesInCurrentSeries >= m_MaxInstancesPerSeries) {
-            m_iCurrentSeries++;
-            m_iInstancesInCurrentSeries = 0;
+        if (numbersInCurrentSeries >= MAX_SEQUENCE_LENGTH) {
+            currentSeries++;
+            numbersInCurrentSeries = 0;
 
-            for (int i = 0; i < m_MaxInstancesPerSeries; i++) {
-                mar_objInstanceNumber[i].m_iIndex = i + 1;
-                mar_objInstanceNumber[i].m_fOrder = l_RND.nextFloat();
+            for (int i = 0; i < MAX_SEQUENCE_LENGTH; i++) {
+                uniqueRollSequence[i].sequenceNumber = i + 1;
+                uniqueRollSequence[i].sequenceOrder = randomizer.nextFloat();
             }
 
-            Arrays.sort(mar_objInstanceNumber, new InstanceComparator());
+            Arrays.sort(uniqueRollSequence, new InstanceComparator());
         }
 
-        l_nf.setMinimumIntegerDigits(2);
+        numberFormat.setMinimumIntegerDigits(2);
 
-        return l_nf.format(m_iCurrentSeries) + "." + l_nf.format(mar_objInstanceNumber[m_iInstancesInCurrentSeries++].m_iIndex);
+        return numberFormat.format(currentSeries) + "." + numberFormat.format(uniqueRollSequence[numbersInCurrentSeries++].sequenceNumber);
     }
 
     public void statsToday()
     {
-        StringBuilder l_objStringBuilder = new StringBuilder();
-        List<CategoryDiceStats> lar_objStats = new ArrayList<CategoryDiceStats>(map_objStats.values());
+        StringBuilder stringBuilder = new StringBuilder();
+        List<CategoryDiceStats> stats = getCategoryDiceStats();
 
-        Collections.sort(lar_objStats, new Comparator<CategoryDiceStats>() {
+        for (CategoryDiceStats categoryStats : stats)
+        {
+            if (categoryStats.isTwoDiceCategory())
+                continue;
 
-            public int compare(CategoryDiceStats o1, CategoryDiceStats o2)
-            {
-                double l_dAvg1 = o1.GetNumericAvg();
-                double l_dAvg2 = o2.GetNumericAvg();
-                String[] strCatOrder = new String[]{"SA", "RS", "Rally", "IFT", "MC", "TC", "CC", "TH", "TK", "Other", "Total"};
-                String l_Cat1 = o1.getCategory();
-                String l_Cat2 = o2.getCategory();
-                int i_Cat1 = 0;
-                int i_Cat2 = 0;
+            if (categoryStats.getCategoryName().compareToIgnoreCase(TOTAL_CATEGORY_NAME) == 0)
+                continue;
 
-                if (m_bShowExtraDiceStats) {
-                    for (int i = 0; i < 11; i++) {
-                        if (l_Cat1.equals(strCatOrder[i]))
-                            i_Cat1 = i;
-                        if (l_Cat2.equals(strCatOrder[i]))
-                            i_Cat2 = i;
-                    }
-                    if (i_Cat1 > i_Cat2)
-                        return 1;
-                    else if (i_Cat1 < i_Cat2)
-                        return -1;
-                    else
-                        return 0;
-                } else {
-                    if (l_dAvg1 > l_dAvg2)
-                        return 1;
-                    else if (l_dAvg1 < l_dAvg2)
-                        return -1;
-                    else
-                        return 0;
+            if (showExtraDiceStats) {
+                stringBuilder.append(String.format("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",
+                        categoryStats.getCategoryName(),
+                        categoryStats.getTotalNumberOfRolls(),
+                        categoryStats.GetTextualAverage(),
+                        categoryStats.getDetailedOneDieResults(1),
+                        categoryStats.getDetailedOneDieResults(2),
+                        categoryStats.getDetailedOneDieResults(3),
+                        categoryStats.getDetailedOneDieResults(4),
+                        categoryStats.getDetailedOneDieResults(5),
+                        categoryStats.getDetailedOneDieResults(6))
+                );
+            } else {
+                stringBuilder.append(String.format("<tr><td>%s</td><td>%s</td><td>%s</td></tr>",
+                        categoryStats.getCategoryName(),
+                        categoryStats.getTotalNumberOfRolls(),
+                        categoryStats.GetTextualAverage())
+                );
+            }
+        }
+
+        CategoryDiceStats categoryTotal = diceStats.get("D1_" + TOTAL_CATEGORY_NAME);
+
+        if (categoryTotal != null)
+        {
+            if (showExtraDiceStats) {
+                stringBuilder.append(String.format("<tr class=\"total\"><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td></tr>",
+                        categoryTotal.getCategoryName(),
+                        categoryTotal.getTotalNumberOfRolls(),
+                        categoryTotal.GetTextualAverage(),
+                        categoryTotal.getDetailedOneDieResults(1),
+                        categoryTotal.getDetailedOneDieResults(2),
+                        categoryTotal.getDetailedOneDieResults(3),
+                        categoryTotal.getDetailedOneDieResults(4),
+                        categoryTotal.getDetailedOneDieResults(5),
+                        categoryTotal.getDetailedOneDieResults(6))
+                );
+            } else {
+                stringBuilder.append(String.format("<tr class=\"total\"><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td></tr>",
+                        categoryTotal.getCategoryName(),
+                        categoryTotal.getTotalNumberOfRolls(),
+                        categoryTotal.GetTextualAverage())
+                );
+            }
+        }
+
+        if (showExtraDiceStats) {
+            OutputString(String.format("!!" + HTMLSingle_Extra, GetPlayer() + "'s drs today", stringBuilder));
+        } else {
+            OutputString(String.format("!!" + HTMLSingle, GetPlayer() + "'s drs today", stringBuilder));
+        }
+
+        stringBuilder.setLength(0);
+
+        for (CategoryDiceStats categoryStats : stats)
+        {
+            if (!categoryStats.isTwoDiceCategory())
+                continue;
+
+            if (categoryStats.getCategoryName().compareToIgnoreCase(TOTAL_CATEGORY_NAME) == 0)
+                continue;
+
+            double average = categoryStats.GetNumericAverage();
+            String bgColor = getBgColor(average);
+
+            if (showExtraDiceStats) {
+                stringBuilder.append(String.format("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td %s>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",
+                        categoryStats.getCategoryName(),
+                        categoryStats.getTotalNumberOfRolls(),
+                        categoryStats.GetColoredDieAverage(),
+                        categoryStats.GetWhiteDieAverage(),
+                        bgColor,
+                        categoryStats.GetTextualAverage(),
+                        categoryStats.getDetailedTwoDiceResults(2),
+                        categoryStats.getDetailedTwoDiceResults(3),
+                        categoryStats.getDetailedTwoDiceResults(4),
+                        categoryStats.getDetailedTwoDiceResults(5),
+                        categoryStats.getDetailedTwoDiceResults(6),
+                        categoryStats.getDetailedTwoDiceResults(7),
+                        categoryStats.getDetailedTwoDiceResults(8),
+                        categoryStats.getDetailedTwoDiceResults(9),
+                        categoryStats.getDetailedTwoDiceResults(10),
+                        categoryStats.getDetailedTwoDiceResults(11),
+                        categoryStats.getDetailedTwoDiceResults(12))
+                );
+            } else {
+                stringBuilder.append(String.format("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td %s>%s</td></tr>",
+                        categoryStats.getCategoryName(),
+                        categoryStats.getTotalNumberOfRolls(),
+                        categoryStats.GetColoredDieAverage(),
+                        categoryStats.GetWhiteDieAverage(),
+                        bgColor,
+                        categoryStats.GetTextualAverage())
+                );
+            }
+        }
+
+        CategoryDiceStats totalCategory = diceStats.get("D2_" + TOTAL_CATEGORY_NAME);
+
+        if (totalCategory != null)
+        {
+            double average = totalCategory.GetNumericAverage();
+            String bgColor = getBgColor(average);
+
+            if (showExtraDiceStats) {
+                stringBuilder.append(String.format("<tr class=\"total\"><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\" %s>%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td></tr>",
+                        totalCategory.getCategoryName(),
+                        totalCategory.getTotalNumberOfRolls(),
+                        totalCategory.GetColoredDieAverage(),
+                        totalCategory.GetWhiteDieAverage(),
+                        bgColor,
+                        totalCategory.GetTextualAverage(),
+                        totalCategory.getDetailedTwoDiceResults(2),
+                        totalCategory.getDetailedTwoDiceResults(3),
+                        totalCategory.getDetailedTwoDiceResults(4),
+                        totalCategory.getDetailedTwoDiceResults(5),
+                        totalCategory.getDetailedTwoDiceResults(6),
+                        totalCategory.getDetailedTwoDiceResults(7),
+                        totalCategory.getDetailedTwoDiceResults(8),
+                        totalCategory.getDetailedTwoDiceResults(9),
+                        totalCategory.getDetailedTwoDiceResults(10),
+                        totalCategory.getDetailedTwoDiceResults(11),
+                        totalCategory.getDetailedTwoDiceResults(12))
+                );
+            } else {
+                stringBuilder.append(String.format("<tr class=\"total\"><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\" %s>%s</td></tr>",
+                        totalCategory.getCategoryName(),
+                        totalCategory.getTotalNumberOfRolls(),
+                        totalCategory.GetColoredDieAverage(),
+                        totalCategory.GetWhiteDieAverage(),
+                        bgColor,
+                        totalCategory.GetTextualAverage())
+                );
+            }
+        }
+
+        if (showExtraDiceStats) {
+            OutputString(String.format("!!" + HTMLDouble_Extra, GetPlayer() + "'s DRs today", stringBuilder));
+        } else {
+            OutputString(String.format("!!" + HTMLDouble,  GetPlayer() + "'s DRs today", stringBuilder));
+        }
+    }
+
+    private String getBgColor(double average) {
+        return average < 6.75 ? "bgcolor=#83C07A" : (average > 7.25 ? "bgcolor=#FE686D" : "");
+    }
+
+    private List<CategoryDiceStats> getCategoryDiceStats() {
+
+        List<CategoryDiceStats> stats = new ArrayList<>(diceStats.values());
+
+        stats.sort((o1, o2) -> {
+
+            double avg1 = o1.GetNumericAverage();
+            double avg2 = o2.GetNumericAverage();
+            String[] categoryOrder = new String[]{"SA", "RS", "Rally", "IFT", "MC", "TC", "CC", "TH", "TK", "Other", "Total"};
+            String cat1 = o1.getCategoryName();
+            String cat2 = o2.getCategoryName();
+            int catIndex1 = 0;
+            int catIndex2 = 0;
+
+            if (showExtraDiceStats) {
+                for (int i = 0; i < 11; i++) {
+                    if (cat1.equals(categoryOrder[i]))
+                        catIndex1 = i;
+                    if (cat2.equals(categoryOrder[i]))
+                        catIndex2 = i;
                 }
+                return Integer.compare(catIndex1, catIndex2);
+            } else {
+                return Double.compare(avg1, avg2);
             }
         });
-
-        for (CategoryDiceStats l_objCat_dr : lar_objStats)
-        {
-            if (l_objCat_dr.IsTwoDice())
-                continue;
-
-            if (l_objCat_dr.getCategory().compareToIgnoreCase(TOTAL_CATEGORY) == 0)
-                continue;
-
-            if (m_bShowExtraDiceStats) {
-                l_objStringBuilder.append(String.format("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",
-                        l_objCat_dr.getCategory(),
-                        l_objCat_dr.getTotNumRolls(),
-                        l_objCat_dr.GetAvg(),
-                        l_objCat_dr.getDetailNumColoredRolls(1),
-                        l_objCat_dr.getDetailNumColoredRolls(2),
-                        l_objCat_dr.getDetailNumColoredRolls(3),
-                        l_objCat_dr.getDetailNumColoredRolls(4),
-                        l_objCat_dr.getDetailNumColoredRolls(5),
-                        l_objCat_dr.getDetailNumColoredRolls(6))
-                );
-            } else {
-                l_objStringBuilder.append(String.format("<tr><td>%s</td><td>%s</td><td>%s</td></tr>",
-                        l_objCat_dr.getCategory(),
-                        l_objCat_dr.getTotNumRolls(),
-                        l_objCat_dr.GetAvg())
-                );
-            }
-        }
-
-        CategoryDiceStats l_objCat_dr = map_objStats.get("D1_" + TOTAL_CATEGORY);
-
-        if (l_objCat_dr != null)
-        {
-            if (m_bShowExtraDiceStats) {
-                l_objStringBuilder.append(String.format("<tr class=\"total\"><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td></tr>",
-                        l_objCat_dr.getCategory(),
-                        l_objCat_dr.getTotNumRolls(),
-                        l_objCat_dr.GetAvg(),
-                        l_objCat_dr.getDetailNumColoredRolls(1),
-                        l_objCat_dr.getDetailNumColoredRolls(2),
-                        l_objCat_dr.getDetailNumColoredRolls(3),
-                        l_objCat_dr.getDetailNumColoredRolls(4),
-                        l_objCat_dr.getDetailNumColoredRolls(5),
-                        l_objCat_dr.getDetailNumColoredRolls(6))
-                );
-            } else {
-                l_objStringBuilder.append(String.format("<tr class=\"total\"><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td></tr>",
-                        l_objCat_dr.getCategory(),
-                        l_objCat_dr.getTotNumRolls(),
-                        l_objCat_dr.GetAvg())
-                );
-            }
-        }
-
-        if (m_bShowExtraDiceStats) {
-            OutputString(String.format("!!" + m_strHTMLSingle_Extra, GetPlayer() + "'s drs today", l_objStringBuilder.toString()));
-        } else {
-            OutputString(String.format("!!" + m_strHTMLSingle, GetPlayer() + "'s drs today", l_objStringBuilder.toString()));
-        }
-
-        l_objStringBuilder = new StringBuilder();
-
-        for (CategoryDiceStats l_objCat_DR : lar_objStats)
-        {
-            if (!l_objCat_DR.IsTwoDice())
-                continue;
-
-            if (l_objCat_DR.getCategory().compareToIgnoreCase(TOTAL_CATEGORY) == 0)
-                continue;
-
-            String l_strBgColor = "";
-            double l_dAvg = l_objCat_DR.GetNumericAvg();
-
-            if (l_dAvg < 6.75)
-                l_strBgColor = "bgcolor=#83C07A";
-            else if (l_dAvg > 7.25)
-                l_strBgColor = "bgcolor=#FE686D";
-
-            if (m_bShowExtraDiceStats) {
-                l_objStringBuilder.append(String.format("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td %s>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",
-                        l_objCat_DR.getCategory(),
-                        l_objCat_DR.getTotNumRolls(),
-                        l_objCat_DR.GetAvgColored(),
-                        l_objCat_DR.GetAvgWhite(),
-                        l_strBgColor,
-                        l_objCat_DR.GetAvg(),
-                        l_objCat_DR.getDetailNumRolls(2),
-                        l_objCat_DR.getDetailNumRolls(3),
-                        l_objCat_DR.getDetailNumRolls(4),
-                        l_objCat_DR.getDetailNumRolls(5),
-                        l_objCat_DR.getDetailNumRolls(6),
-                        l_objCat_DR.getDetailNumRolls(7),
-                        l_objCat_DR.getDetailNumRolls(8),
-                        l_objCat_DR.getDetailNumRolls(9),
-                        l_objCat_DR.getDetailNumRolls(10),
-                        l_objCat_DR.getDetailNumRolls(11),
-                        l_objCat_DR.getDetailNumRolls(12))
-                );
-            } else {
-                l_objStringBuilder.append(String.format("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td %s>%s</td></tr>",
-                        l_objCat_DR.getCategory(),
-                        l_objCat_DR.getTotNumRolls(),
-                        l_objCat_DR.GetAvgColored(),
-                        l_objCat_DR.GetAvgWhite(),
-                        l_strBgColor,
-                        l_objCat_DR.GetAvg())
-                );
-            }
-        }
-
-        CategoryDiceStats l_objCat_DR = map_objStats.get("D2_" + TOTAL_CATEGORY);
-
-        if (l_objCat_DR != null)
-        {
-            String l_strBgColor = "";
-            double l_dAvg = l_objCat_DR.GetNumericAvg();
-
-            if (l_dAvg < 6.75)
-                l_strBgColor = "bgcolor=#83C07A";
-            else if (l_dAvg > 7.25)
-                l_strBgColor = "bgcolor=#FE686D";
-
-            if (m_bShowExtraDiceStats) {
-                l_objStringBuilder.append(String.format("<tr class=\"total\"><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\" %s>%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td></tr>",
-                        l_objCat_DR.getCategory(),
-                        l_objCat_DR.getTotNumRolls(),
-                        l_objCat_DR.GetAvgColored(),
-                        l_objCat_DR.GetAvgWhite(),
-                        l_strBgColor,
-                        l_objCat_DR.GetAvg(),
-                        l_objCat_DR.getDetailNumRolls(2),
-                        l_objCat_DR.getDetailNumRolls(3),
-                        l_objCat_DR.getDetailNumRolls(4),
-                        l_objCat_DR.getDetailNumRolls(5),
-                        l_objCat_DR.getDetailNumRolls(6),
-                        l_objCat_DR.getDetailNumRolls(7),
-                        l_objCat_DR.getDetailNumRolls(8),
-                        l_objCat_DR.getDetailNumRolls(9),
-                        l_objCat_DR.getDetailNumRolls(10),
-                        l_objCat_DR.getDetailNumRolls(11),
-                        l_objCat_DR.getDetailNumRolls(12))
-                );
-            } else {
-                l_objStringBuilder.append(String.format("<tr class=\"total\"><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\" %s>%s</td></tr>",
-                        l_objCat_DR.getCategory(),
-                        l_objCat_DR.getTotNumRolls(),
-                        l_objCat_DR.GetAvgColored(),
-                        l_objCat_DR.GetAvgWhite(),
-                        l_strBgColor,
-                        l_objCat_DR.GetAvg())
-                );
-            }
-        }
-
-        if (m_bShowExtraDiceStats) {
-            OutputString(String.format("!!" + m_strHTMLDouble_Extra, GetPlayer() + "'s DRs today", l_objStringBuilder.toString()));
-        } else {
-            OutputString(String.format("!!" + m_strHTMLDouble,  GetPlayer() + "'s DRs today",    l_objStringBuilder.toString()));
-        }
+        return stats;
     }
 }
 

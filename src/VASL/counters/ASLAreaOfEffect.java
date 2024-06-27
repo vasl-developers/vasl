@@ -16,25 +16,18 @@ import VASSAL.build.module.map.boardPicker.board.HexGrid;
 import VASSAL.build.module.map.boardPicker.board.MapGrid;
 import VASSAL.configure.ColorConfigurer;
 import VASSAL.counters.AreaOfEffect;
-import static VASSAL.counters.AreaOfEffect.ID;
 import VASSAL.counters.GamePiece;
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Composite;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
-import java.awt.geom.Ellipse2D;
+
 import static java.lang.Math.abs;
 import static java.lang.Math.round;
-import javax.swing.JOptionPane;
 
-  // FredKors 16-nov-2013 fix for the starshell - IR off map
+// FredKors 16-nov-2013 fix for the starshell - IR off map
 /**
  *
  * @author Federico
@@ -42,7 +35,7 @@ import javax.swing.JOptionPane;
 public class ASLAreaOfEffect extends AreaOfEffect {
 
     public static final String ID = "ASLAreaOfEffect;";
-    private double m_dMagnification = 1.0;   // FredKors 17-nov-2013 support for the deluxe hex
+    private double magnification = 1.0;   // FredKors 17-nov-2013 support for the deluxe hex
   
     public ASLAreaOfEffect() {
         this(ID + ColorConfigurer.colorToString(defaultTransparencyColor), null);
@@ -62,11 +55,11 @@ public class ASLAreaOfEffect extends AreaOfEffect {
   }
     public MapGrid GetASLGrid()
     {
-        MapGrid l_objGrid = new ASLHexGrid(DEFAULT_HEX_HEIGHT, false);
-        ((HexGrid)l_objGrid).setHexWidth(DEFAULT_HEX_WIDTH);
-        ((HexGrid)l_objGrid).setEdgesLegal(true);
+        MapGrid grid = new ASLHexGrid(DEFAULT_HEX_HEIGHT, false);
+        ((HexGrid)grid).setHexWidth(DEFAULT_HEX_WIDTH);
+        ((HexGrid)grid).setEdgesLegal(true);
         
-        return l_objGrid;
+        return grid;
     }
 @Override
   protected Area getArea() {
@@ -107,9 +100,9 @@ public class ASLAreaOfEffect extends AreaOfEffect {
         a = getGridShape(mapPosition, myRadius);
 
         // FredKors 17-nov-2013 support for the deluxe hex
-        if (m_dMagnification != 1.0) {
+        if (magnification != 1.0) {
             final AffineTransform t = AffineTransform.getTranslateInstance(mapPosition.x, mapPosition.y);
-            t.scale(m_dMagnification, m_dMagnification);
+            t.scale(magnification, magnification);
             t.translate(-mapPosition.x, -mapPosition.y);
             a = a.createTransformedArea(t);
         }
@@ -210,9 +203,9 @@ public class ASLAreaOfEffect extends AreaOfEffect {
   }    
 
     /**
-     * @param m_dMagnification the m_dMagnification to set
+     * @param magnif the magnification to set
      */
-    public void setMagnification(double m_dMagnification) {
-        this.m_dMagnification = m_dMagnification;
+    public void setMagnification(double magnif) {
+        this.magnification = magnif;
     }
 }
