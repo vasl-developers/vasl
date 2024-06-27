@@ -14,13 +14,8 @@ import VASSAL.counters.Properties;
 import VASSAL.counters.Stack;
 import VASSAL.tools.image.ImageUtils;
 import VASSAL.tools.imageop.Op;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.RenderingHints;
-import java.awt.Toolkit;
+
+import java.awt.*;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
@@ -56,28 +51,6 @@ class QCTreeCellRenderer extends DefaultTreeCellRenderer {
 
     QCTreeCellRenderer() {}
 
-    public BufferedImage CreateIcon(Image counterImage)
-    {
-        final int border_size = 3;
-        final int originalSize = counterImage.getWidth(null);
-        final int newSize = originalSize + 2 * border_size;
-        final BufferedImage bufferedImage = ImageUtils.createCompatibleTranslucentImage(newSize, newSize);
-        final Graphics2D graphics2D = bufferedImage.createGraphics();
-
-        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        graphics2D.setColor(Color.WHITE);
-        graphics2D.fillRect(0, 0, newSize, newSize);
-        graphics2D.setColor(Color.BLACK);
-        graphics2D.drawRect(border_size - 1, border_size - 1, originalSize + 1, originalSize + 1);
-
-        graphics2D.drawImage(counterImage, border_size, border_size, null);
-
-        graphics2D.dispose();
-
-        return bufferedImage;
-    }
-    
     @Override
     public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) 
     {
@@ -100,7 +73,7 @@ class QCTreeCellRenderer extends DefaultTreeCellRenderer {
             
             if (qcConfigurationEntry.isMenu())
             {
-                label.setIcon(new ImageIcon(CreateIcon(qcConfigurationEntry.CreateButtonMenuIcon())));
+                label.setIcon(new SizedImageIcon(qcConfigurationEntry.CreateButtonMenuIcon(), 30, 30));
                 
                 if (qcConfigurationEntry.getEntryText() != null)
                     label.setText(qcConfigurationEntry.getEntryText());
@@ -111,7 +84,7 @@ class QCTreeCellRenderer extends DefaultTreeCellRenderer {
             {
                 if (qcConfigurationEntry.getPieceSlot() != null)
                 {
-                    label.setIcon(new ImageIcon(CreateIcon(qcConfigurationEntry.CreateButtonIcon())));
+                    label.setIcon(new SizedImageIcon(qcConfigurationEntry.CreateButtonIcon(), 30, 30));
                     label.setText(qcConfigurationEntry.getPieceSlot().getPiece().getName());
                 }
                 else
@@ -127,7 +100,7 @@ class QCTreeCellRenderer extends DefaultTreeCellRenderer {
                     }
                     
                     if (unknownImage != null)
-                        label.setIcon(new ImageIcon(CreateIcon(unknownImage)));
+                        label.setIcon(new SizedImageIcon(unknownImage, 30, 30));
                     else
                         label.setIcon(null);
                     
@@ -137,6 +110,35 @@ class QCTreeCellRenderer extends DefaultTreeCellRenderer {
         }
         
         return label;
+    }
+
+
+    private static class SizedImageIcon extends ImageIcon {
+        protected final int w;
+        protected final int h;
+        private final Image img;
+
+        public SizedImageIcon(Image img, int w, int h) {
+            super(img);
+            this.w = w;
+            this.h = h;
+            this.img = img;
+        }
+
+        @Override
+        public int getIconHeight() {
+            return h;
+        }
+
+        @Override
+        public int getIconWidth() {
+            return w;
+        }
+
+        @Override
+        public void paintIcon(Component c, Graphics g, int x, int y) {
+            g.drawImage(img, x, y, w, h, c);
+        }
     }
 }
 
@@ -860,5 +862,5 @@ public class QCConfig implements DropTargetListener
 
             SaveDataModified();
         }
-    }    
+    }
 }
