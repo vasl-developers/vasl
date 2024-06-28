@@ -3,5 +3,8 @@
  <Checkbox name="">
          <entry name="AP101: When I Call Roll (complete SSR1; no other terrain transformations req'd)" rule="SSO_AP101" text="scenario AP101 overlay"/>
  </Checkbox>
+    <Checkbox name="">
+         <entry name="300 - Nor Will Deep Hell Receive Them" rule="SSO_300" text="Bd71 Scen 300 SSO"/>
+ </Checkbox>
    </Option>
 </SSRControls>
