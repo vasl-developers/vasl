@@ -1053,13 +1053,14 @@ public class ASLMap extends Map {
                     for (int j = (int) s.getY(); j < s.getY() + s.getHeight(); j++) {
                         if(losonoverlays.newlosdata.onMap(i, j)) {
                             if (inhterrhex.contains(i, j)) {
-                                if (board.isReversed()) {
-                                    int cropheight = board.getCropBounds().getHeight() == -1 ? (int) board.getUncroppedSize().getHeight() : (int) board.getCropBounds().getHeight();
-                                    int cropwidth = board.getCropBounds().getWidth() == -1 ? (int) board.getUncroppedSize().getWidth() : (int) board.getCropBounds().getWidth();
-                                    losonoverlays.newlosdata.setGridTerrainCode(terrtype, cropwidth - i, cropheight - j);
-                                }
-                                else {
-                                    losonoverlays.newlosdata.setGridTerrainCode(terrtype, i - (int) board.getCropBounds().getX(), j - (int) board.getCropBounds().getY());
+                                if (!losonoverlays.newlosdata.getGridTerrain(i, j).isHexsideTerrain()) {
+                                    if (board.isReversed()) {
+                                        int cropheight = board.getCropBounds().getHeight() == -1 ? (int) board.getUncroppedSize().getHeight() : (int) board.getCropBounds().getHeight();
+                                        int cropwidth = board.getCropBounds().getWidth() == -1 ? (int) board.getUncroppedSize().getWidth() : (int) board.getCropBounds().getWidth();
+                                        losonoverlays.newlosdata.setGridTerrainCode(terrtype, cropwidth - i, cropheight - j);
+                                    } else {
+                                        losonoverlays.newlosdata.setGridTerrainCode(terrtype, i - (int) board.getCropBounds().getX(), j - (int) board.getCropBounds().getY());
+                                    }
                                 }
                             }
                         }
@@ -1811,13 +1812,21 @@ public class ASLMap extends Map {
             Stack s = (Stack) gp;
             for (int i = s.getPieceCount(); i > 0; i--) { //Top down in the stack
                 GamePiece sgp = s.getPieceAt(i - 1);
-                if (!(pieceslotgpidlist.contains(sgp.getProperty(Properties.PIECE_ID).toString()) || (sgp.getProperty(SCALEWITHBOARDZOOM) != null))) {
+                if (sgp.getProperty(Properties.PIECE_ID) != null){
+                    if (!(pieceslotgpidlist.contains(sgp.getProperty(Properties.PIECE_ID).toString()) || (sgp.getProperty(SCALEWITHBOARDZOOM) != null))) {
+                        keepAtBoardScale = false;
+                    }
+                } else {
                     keepAtBoardScale = false;
                 }
             }
         }
         else {
-            if (!(pieceslotgpidlist.contains(gp.getProperty(Properties.PIECE_ID).toString()) || (gp.getProperty(SCALEWITHBOARDZOOM) != null))) {
+            if (gp.getProperty(Properties.PIECE_ID) != null) {
+                if (!(pieceslotgpidlist.contains(gp.getProperty(Properties.PIECE_ID).toString()) || (gp.getProperty(SCALEWITHBOARDZOOM) != null))) {
+                    keepAtBoardScale = false;
+                }
+            } else {
                 keepAtBoardScale = false;
             }
         }
