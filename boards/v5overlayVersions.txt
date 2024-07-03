@@ -69,6 +69,7 @@ ovrRTTRM = 1.1
 ovrRTTRN = 1.1
 ovrRTTRO = 1.1
 ovrRV = 2.1
+ovrRY = 1.0
 ovrS = 2.1
 ovrSD = 2.1
 ovrSH = 2.1
