@@ -247,7 +247,7 @@ public class Map  {
                     hexGrid[col][row].resetHexsideLocationNames();
                 }
             }
-        }else if (this.A1CenterY==34.0){  // Singling special case
+        }else if (this.A1CenterY==34.0 || this.A1CenterY == 59.0){  // Singling special case; Brecourt special case
             for (int col = 0; col < this.width; col++) {
                 hexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
                 for (int row = 0; row < this.height + (col % 2); row++) {
@@ -3913,12 +3913,14 @@ public class Map  {
                     break;
                 }
             }
-            if (nonlip && status.previousHex.getCenterLocation().getTerrain().getName().equals("Dier")){
+            if (status.previousHex != null) {
+                if (nonlip && status.previousHex.getCenterLocation().getTerrain().getName().equals("Dier")) {
 
-                status.blocked = true;
-                status.reason = "Unit in entrenchment cannot see/be seen over Dier Lip (F4.4)";
-                result.setBlocked(status.currentCol, status.currentRow, status.reason);
-                return true;
+                    status.blocked = true;
+                    status.reason = "Unit in entrenchment cannot see/be seen over Dier Lip (F4.4)";
+                    result.setBlocked(status.currentCol, status.currentRow, status.reason);
+                    return true;
+                }
             }
         }
         else if (status.target.getTerrain().isEntrenchmentTerrain()&& status.currentHex.getCenterLocation().getTerrain().getName().equals("Dier") &&
