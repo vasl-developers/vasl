@@ -954,8 +954,10 @@ public class Map  {
 
                 // LOS leaves the source building?
                 if (!status.LOSLeavesBuilding) {
-                    if (!status.currentTerrain.isBuilding()) {
-                        status.LOSLeavesBuilding = true;
+                    if (status.currentTerrain != null) {
+                        if (!status.currentTerrain.isBuilding()) {
+                            status.LOSLeavesBuilding = true;
+                        }
                     }
                 }
 
