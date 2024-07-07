@@ -52,6 +52,7 @@ ovrOC = 2.2
 ovrOG = 2.1
 ovrOW = 2.2
 ovrP = 2.1
+ovrRC = 1.0
 ovrRE = 1.2
 ovrRP = 3.2
 ovrRR = 2.5
