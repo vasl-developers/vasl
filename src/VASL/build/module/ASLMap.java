@@ -1222,7 +1222,6 @@ public class ASLMap extends Map {
     }
     //add Hex to collections of inherent hexes and building hexes on the overlay
     private void addHextoOverlayInhandBldgMaps(String terraintype, Terrain terr, LOSonOverlays losonoverlays, HashMap<VASL.LOS.Map.Hex, VASL.LOS.Map.Terrain>  inhhexes, HashMap<VASL.LOS.Map.Hex, VASL.LOS.Map.Terrain> bdghexes) {
-
         if (terr != null) {
             if (terr.isInherentTerrain() || (terraintype == "Steppe" && (terr.getName().equals("Brush") || terr.getName().equals("Woods"))) ||
                     (terraintype == "Bamboo" && (terr.getName().equals("Brush")))) {
@@ -1267,6 +1266,9 @@ public class ASLMap extends Map {
         final String overlayname = o.getName();
         if (overlayname.contains("Steppe")) {
             return "Steppe";
+        }
+        if (overlayname.contains("PalmTrees")) {
+            return "Palm Trees";
         }
         if (overlayname.contains("Bamboo")) {
             return "Bamboo";
@@ -1353,7 +1355,7 @@ public class ASLMap extends Map {
     }
 
     private boolean isInherenttype(String terraintype) {
-        return (terraintype.equals("Orchard") || terraintype.contains("Stone Rubble") || terraintype.contains("Wooden Rubble") );
+        return (terraintype.equals("Orchard") || terraintype.contains("Stone Rubble") || terraintype.contains("Wooden Rubble") || terraintype.equals("Palm Trees") );
     }
     private void setOverlayInherentTerrain(LOSonOverlays losonoverlays, String terraintype) {
         Hex temphex = null; Hex newhex;
