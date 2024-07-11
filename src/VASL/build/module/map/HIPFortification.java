@@ -433,7 +433,7 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
         BooleanConfigurer HIPFORTVIEWERACTIVE = (BooleanConfigurer) prefs.getOption("useautoreveal");
 
         if (HIPFORTVIEWERACTIVE == null) {
-            HIPFORTVIEWERACTIVE = new BooleanConfigurer("useautoreveal", "Auto-Reveal HIP Fortifications", Boolean.TRUE);  //$NON-NLS-1$
+            HIPFORTVIEWERACTIVE = new BooleanConfigurer("useautoreveal", "Auto-Reveal HIP Fortifications (VASL restart required)", Boolean.TRUE);  //$NON-NLS-1$
             prefs.addOption("VASL", HIPFORTVIEWERACTIVE); //$NON-NLS-1$
         }
         hipFortViewerActive = (Boolean) prefs.getValue("useautoreveal");
@@ -537,13 +537,6 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
      */
     public Command decode(String s) {
 
-        // Command string is ENABLE_HIP_FORT:<enable>
-        /*if (s.startsWith(ENABLE_COMMAND_PREFIX)) {  DISABLED initially to force use of preference/restart
-            debug("Decoded enable HIPF command string: " + s);
-            String strings[] = s.split(COMMAND_SEPARATOR);
-            return new EnableHIPFortCommand(this, Boolean.valueOf(strings[1]));
-        }*/
-
         // Command string is HIP_FORT:<player name>:<player ID>:<game password>
         if (s.startsWith(COMMAND_PREFIX)) {
 
@@ -584,8 +577,10 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
         else {
             // push our player information when opponent synchronizes with me
             if (s.startsWith("SYNC")) {
-                GameModule.getGameModule().getChatter().send(myPlayerName + " is using Auto-Reveal of HIP Fortifications. Both players should have it enabled in Preferences/VASL");
-                GameModule.getGameModule().sendAndLog(new HIPFortification.HIPFortificationUpdateCommand(players.get(myPlayerName)));
+                if (enabled) {
+                    GameModule.getGameModule().getChatter().send(myPlayerName + " is using Auto-Reveal of HIP Fortifications. Both players should have it enabled in Preferences/VASL");
+                    GameModule.getGameModule().sendAndLog(new HIPFortification.HIPFortificationUpdateCommand(players.get(myPlayerName)));
+                }
             }
             return null;
         }
@@ -608,42 +603,12 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
 
     public void setup(boolean gameStarting) {
 
-        if(enabled) {
-
-            if(gameStarting) {
-
-                // push player information
-                GameModule.getGameModule().sendAndLog(new HIPFortification.HIPFortificationUpdateCommand(players.get(myPlayerName)));
-
-                // save preferences 'cause we disable them during DB play
-                oldAutoReport   = (Boolean) getGameModule().getPrefs().getOption("centerOnMove").getValue();
-                oldCenterOnMove = (Boolean) getGameModule().getPrefs().getOption("autoReport").getValue();
-            }
-            else {
-
-                // restore preference settings
-                getGameModule().getPrefs().getOption("centerOnMove").setValue(oldCenterOnMove);
-                getGameModule().getPrefs().getOption("autoReport").setValue(oldAutoReport);
-
-                enabled = false;
-            }
-        }
     }
 
     /**
      * Saves the player list and HIPFortification state
      */
     public Command getRestoreCommand() {
-
-        //debug("Creating restore command for HIP Fortification - " + enabled + ". Player count = " + players.size());
-        //Command c = new NullCommand();
-        /*if(enabled) {
-
-            for (HIPFortification.Player p: players.values()) {
-                c = c.append(new HIPFortification.HIPFortificationUpdateCommand(p));
-            }
-            //c = c.append(new EnableHIPFortCommand(this, enabled)); DISABLED initially to force use of preference/restart
-        }*/
         return new NullCommand();
     }
 
@@ -740,12 +705,14 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
         }
 
         protected void executeCommand() {
+            if (!enabled){return;}
             String ownername = null; String spottername = null;
             List keepHIP = new List();
             for (int i = 0; i < this.ownerlist.getItemCount(); i++){
                 if (this.ownerlist.getItem(i) != null) {
                     String playertoget = ownerlist.getItem(i);
-                    HIPFortification.Player owner = players.get(playertoget);  // not sure this will work
+                    HIPFortification.Player owner = players.get(playertoget);
+                    if (owner == null){continue;}
                     ownername = owner.getName();
                     if (myPlayerName.equals(ownername)) {
                         int dialogResult = -100;
