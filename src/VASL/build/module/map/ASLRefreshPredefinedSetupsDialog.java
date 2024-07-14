@@ -292,7 +292,7 @@ public class ASLRefreshPredefinedSetupsDialog extends JDialog {
     }
 
     private void refreshScenarioSetups() throws IOException {
-
+        String versionname = setVersionToUpdateFrom();
         setOptions();
 
         // Disable options menu whilst the refresh is assessed (this greys the menu panel out)
@@ -423,7 +423,7 @@ public class ASLRefreshPredefinedSetupsDialog extends JDialog {
                         //ASLPredefinedSetup apds = new ASLPredefinedSetup();
                         apds.setfileName(pds.getFileName());
                         //apds.setExtensionName("C:\\Users\\DougR\\Documents\\Programming Documents\\VASLBuilds\\extensions\\Scenario Setup Files");
-                        final int warnings = apds.refreshWithStatus(options, aw);
+                        final int warnings = apds.refreshWithStatus(options, aw, versionname);
                         if (warnings > 0) {
                             lastErrorFile = fixedLength(pdsFile, FILE_NAME_REPORT_LENGTH);
                             warningPds.add(apds);
@@ -502,11 +502,17 @@ public class ASLRefreshPredefinedSetupsDialog extends JDialog {
         int dialogResult = JOptionPane.showConfirmDialog(null, "Do you want to save changes?",
                 "Need to Save Extension to Finish Updating Predefined Scenario extension files . . . ", JOptionPane.YES_NO_OPTION);
         if (dialogResult == JOptionPane.YES_OPTION) {
-            boolean notify = false;
-            aw.save(notify);
+            aw.saveAs();
         }
     }
 
+    private String setVersionToUpdateFrom(){
+        String setname = null;
+        do {
+            setname = JOptionPane.showInputDialog( "Updating PreDefined Setup Files . . . ", "Version to update FROM?");
+        } while (setname == null);
+        return setname;
+    }
     private boolean pdsFileProcessed(java.util.List<PredefinedSetup> modulePds, String file) {
         for (final PredefinedSetup pds : modulePds) {
             if (pds.getFileName().equals(file)) return true;

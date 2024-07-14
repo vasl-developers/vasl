@@ -12,6 +12,7 @@ import VASSAL.command.Command;
 import VASSAL.tools.ArchiveWriter;
 import VASSAL.tools.io.ZipArchive;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -29,7 +30,7 @@ public class ASLPredefinedSetup extends PredefinedSetup {
 
     }
 
-    public int refreshWithStatus(Set<String> options, ArchiveWriter aw) throws IOException, IllegalBuildException {
+    public int refreshWithStatus(Set<String> options, ArchiveWriter aw, String versionname) throws IOException, IllegalBuildException {
         if (!options.isEmpty()) {
             refresherOptions.clear();
             refresherOptions.addAll(options);
@@ -50,7 +51,8 @@ public class ASLPredefinedSetup extends PredefinedSetup {
         gs.setupRefresh();
         gs.loadGameInForeground(this.fileName, this.getSavedGameContents());
         mod.getPlayerWindow().setCursor(Cursor.getPredefinedCursor(3));
-        aslGameUpdater.doupdate("6.6.7");
+
+        aslGameUpdater.doupdate(versionname);
         //gameRefresher.execute(this.refresherOptions, (Command)null);
         File tmpFile = File.createTempFile("vassal", (String)null);
         ZipArchive tmpZip = new ZipArchive(tmpFile);
