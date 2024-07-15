@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<VASSAL.build.GameModule ModuleOther1="" ModuleOther2="" VassalVersion="3.7.12" description="VASL" name="VASL" nextPieceSlotId="15020" version="6.6.9-beta2">
+<VASSAL.build.GameModule ModuleOther1="" ModuleOther2="" VassalVersion="3.7.12" description="VASL" name="VASL" nextPieceSlotId="15020" version="6.6.9-beta4">
     <VASL.build.module.ScenInfo/>
     <VASL.build.module.CounterPaletteSearch/>
     <VASSAL.build.module.GlobalOptions autoReport="Use Preferences Setting" centerOnMove="Use Preferences Setting" chatterHTMLSupport="Always" disablePieceIndexing="false" hotKeysOnClosedWindows="Never" inventoryForAll="Always" nonOwnerUnmaskable="Use Preferences Setting" playerIdFormat="$playerName$" promptString="Let opponent unconceal my units" purgeBlankPropertyPrompts="true" sendToLocationMoveTrails="Never" specifyExtensionDirInPrefs="true" storeLeadingZeroIntegersAsStrings="false">
@@ -7310,7 +7310,7 @@
             </VASSAL.build.widget.ListWidget>
         </VASSAL.build.widget.ListWidget>
         <VASSAL.build.widget.ListWidget divider="-1" entryName="sv" height="0" scale="1.0" width="0">
-            <VASSAL.build.widget.PieceSlot entryName="?" gpid="13911" height="64" width="75">+/null/prototype;MTinf	prototype;Unit\	concealment;ASAWW22;sv\\	piece;K;D;sv\/svqmark;?/	\	\\	null;0;0;13911;0</VASSAL.build.widget.PieceSlot>
+            <VASSAL.build.widget.PieceSlot entryName="?" gpid="13911" height="64" width="75">+/null/prototype;MTinf	prototype;Unit\	prototype;concxmark\\	concealment;ASAWW22;sv\\\	piece;K;D;sv\/svqmark;?/	\	\\	\\\	null;0;0;;0</VASSAL.build.widget.PieceSlot>
             <VASSAL.build.widget.PieceSlot entryName="L?" gpid="13912" height="64" width="75">+/null/prototype;MTveh	rotate;6;88,130;90,130;CA cw;CA ccw;;;;;;;;true\	prototype;Unit58\\	concealment;ASAWW22;sv\\\	piece;K;D;sv\/svqmark58;L?/	0\	\\	\\\	null;0;0;13912;0</VASSAL.build.widget.PieceSlot>
             <VASSAL.build.widget.ListWidget divider="-1" entryName="WRK" height="0" scale="1.0" width="0">
                 <VASSAL.build.widget.PieceSlot entryName="Dozer Wreck" gpid="13913" height="64" width="75">+/null/info;no CS	prototype;svWRK\	piece;K;D;sh\/DozerUb;Dozer Wreck/	\	null;0;0;13913;0</VASSAL.build.widget.PieceSlot>

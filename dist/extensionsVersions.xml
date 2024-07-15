@@ -44,7 +44,9 @@
 		<extensiondata name="SASL Campaign Roster" version="2.1" versionDate="Jul 2023" description="SASL Campaign Roster" />
 		<extensiondata name="SKReferences" version="1.5" versionDate="Sep 2022" description="SK Charts and Player Aids" />
 		<extensiondata name="OBA and CVP Aids" version="1.3" versionDate="Oct 2023" description="OBA and CVP Player Aids" />
-		<extensiondata name="CustomUnit" version="1.1" versionDate="Feb 2024" description="Customizable MMC/SMC counters for each Nationality" />
+		<extensiondata name="CustomUnit" version="1.3" versionDate="Feb 2024" description="Customizable MMC/SMC counters for each Nationality" />
 		<extensiondata name="BoardZoomer" version="1.0" versionDate="Apr 2024" description="Zoom boards and counters independently" />
-		<extensiondata name="DYO Campaign" version="4.1" versionDate="Apr 2024" description="Counters and overlays supporting DYO Campaign games" />
+		<extensiondata name="DYO Campaign" version="5.0" versionDate="Apr 2024" description="Counters and overlays supporting DYO Campaign games" />
+		<extensiondata name="TotR" version="1.0" versionDate="Jul 2024" description="Counters for Twilight of the Reich" />
+		<extensiondata name="Scenario Setup Files 668" version="1.0" versionDate="Jul 2024" description="Scenario Setup files updated for VASL6.6.8" />
 </extensionsMetadata>
