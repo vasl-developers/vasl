@@ -932,7 +932,6 @@ public class ASLPieceMover extends PieceMover {
          *
          * @param newDropWin window component to be our new draw window.
          */
-        @Deprecated(since = "2023-05-08", forRemoval = true)
         public void setDrawWinToOwnerOf(Component newDropWin) {}
 
         /**
@@ -1666,6 +1665,16 @@ public class ASLPieceMover extends PieceMover {
                 SwingUtilities.convertPointToScreen(drawOffset, drawWin);
             }
         }
+        public void setDrawWinToOwnerOf(Component newDropWin) {
+            if (newDropWin != null) {
+                JRootPane rootWin = SwingUtilities.getRootPane(newDropWin);
+                if (rootWin != null) {
+                    this.setDrawWin(rootWin.getLayeredPane());
+                }
+            }
+
+        }
+
 
         @Override
         protected int getOffsetMult() {
