@@ -26,7 +26,7 @@ import javax.swing.JMenuItem;
 public class ASLGlobalMap extends GlobalMap {
     
   // menuitem in the popup menu
-  private JMenuItem m_MenuItem = null;
+  private JMenuItem menuItem = null;
     
   public ASLGlobalMap() 
   {
@@ -34,31 +34,26 @@ public class ASLGlobalMap extends GlobalMap {
     super();
     
     // copy the properties from the jbutton
-    if ((launch instanceof JButton) && (((JButton)launch).getListeners(ActionListener.class).length > 0))
-    {
-        PropertyChangeListener propertyChangeListener = new PropertyChangeListener() 
-        {
-            public void propertyChange(PropertyChangeEvent propertyChangeEvent) 
-            {
-                String property = propertyChangeEvent.getPropertyName();
-            
-                if ("icon".equals(property)) 
-                    m_MenuItem.setIcon((Icon)propertyChangeEvent.getNewValue());
-            }
+    if ((launch instanceof JButton) && (launch.getListeners(ActionListener.class).length > 0)) {
+        PropertyChangeListener propertyChangeListener = propertyChangeEvent -> {
+            String property = propertyChangeEvent.getPropertyName();
+
+            if ("icon".equals(property))
+                menuItem.setIcon((Icon)propertyChangeEvent.getNewValue());
         };
         
-        String l_strTooltip = launch.getToolTipText();
+        String tooltipText = launch.getToolTipText();
         
-        int l_iPos = l_strTooltip.indexOf("[");
+        int tooltipTextEnd = tooltipText.indexOf("[");
         
-        if (l_iPos > 0)
-            l_strTooltip = l_strTooltip.substring(0, l_iPos - 1);
+        if (tooltipTextEnd > 0)
+            tooltipText = tooltipText.substring(0, tooltipTextEnd - 1);
         else
-            l_strTooltip = "";        
+            tooltipText = "";
  
-        m_MenuItem = new JMenuItem(l_strTooltip);
-        m_MenuItem.addActionListener(((JButton)launch).getListeners(ActionListener.class)[0]);
-        m_MenuItem.setMargin(new Insets(0,0,0,0));
+        menuItem = new JMenuItem(tooltipText);
+        menuItem.addActionListener(((JButton)launch).getListeners(ActionListener.class)[0]);
+        menuItem.setMargin(new Insets(0,0,0,0));
         
         launch.addPropertyChangeListener(propertyChangeListener);
     }
@@ -73,6 +68,6 @@ public class ASLGlobalMap extends GlobalMap {
       // removes immediately the button from the toolbar
      map.getToolBar().remove(launch);     
      // adds the menuitem to the ASLMap popup menu
-     ((ASLMap)map).getPopupMenu().add(m_MenuItem);
+     ((ASLMap)map).getPopupMenu().add(menuItem);
   }
 }

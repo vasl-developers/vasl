@@ -29,21 +29,17 @@ import VASSAL.command.CommandEncoder;
 import VASSAL.configure.*;
 import VASSAL.i18n.Resources;
 import VASSAL.preferences.Prefs;
-import VASSAL.tools.ErrorDialog;
 import VASSAL.tools.KeyStrokeListener;
 import VASSAL.tools.KeyStrokeSource;
-import VASSAL.tools.QuickColors;
 import VASSAL.tools.imageop.Op;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
-import javax.swing.text.html.HTML;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -254,15 +250,15 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         return btn;
     }
 
-    public JButton CreateChatterDiceButton(String strImage, String caption, String tooltip, KeyStroke keyStroke, final boolean bDice, final String strCat)
+    public JButton CreateChatterDiceButton(String image, String caption, String tooltip, KeyStroke keyStroke, final boolean twoDice, final String categName)
     {
         final JButton btn = new JButton(caption);
         btn.setMinimumSize(new Dimension(5, 30));
         btn.setMargin(new Insets(0, 0, 0, -1));
 
         try {
-            if (!strImage.isEmpty()) {
-                btn.setIcon(new ImageIcon(Op.load(strImage).getImage(null)));
+            if (!image.isEmpty()) {
+                btn.setIcon(new ImageIcon(Op.load(image).getImage(null)));
             }
         }
         catch (Exception ignored) {
@@ -275,11 +271,11 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                 .stream()
                 .findFirst()
                 .ifPresent(dice -> {
-                    if (bDice) {
-                        dice.DR(strCat);
+                    if (twoDice) {
+                        dice.DR(categName);
                     }
                     else {
-                        dice.dr(strCat);
+                        dice.dr(categName);
                     }
                 });
         };
@@ -692,7 +688,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                         msgpartRest = restOfMsg;
                                     }
 
-                                    fireDiceRoll();
+                                    fireDiceRoll(otherDice);
                                 }
                             }
                         }
@@ -749,7 +745,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                         msgpartRest = restOfMsg;
                                     }
 
-                                    fireDiceRoll();
+                                    fireDiceRoll(null);
                                 }
                             }
                         }
@@ -1213,9 +1209,18 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         makeASLStyleSheet(myFont);
     }
 
-    private void fireDiceRoll() {
+    private void fireDiceRoll(Map<DiceType, Integer> otherDice) {
+
+        int thirdDie = -1;
+
+        if (otherDice != null) {
+            if (!otherDice.entrySet().isEmpty()) {
+                thirdDie = otherDice.entrySet().iterator().next().getValue();
+            }
+        }
+
         for (ChatterListener listener : chatter_listeners) {
-            listener.DiceRoll(msgpartCategory, msgpartUser, msgpartSAN, Integer.parseInt(msgpartCdice), Integer.parseInt(msgpartWdice));
+            listener.DiceRoll(msgpartCategory, msgpartUser, msgpartSAN, Integer.parseInt(msgpartCdice), Integer.parseInt(msgpartWdice), thirdDie);
         }
     }
 
@@ -1228,6 +1233,6 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     }
 
     public interface ChatterListener {
-        void DiceRoll(String category, String user, String san, int firstDie, int secondDie);
+        void DiceRoll(String category, String user, String san, int firstDie, int secondDie, int thirdRie);
     }
 }
