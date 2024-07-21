@@ -1,0 +1,7 @@
+<SSRControls>
+ <Option name="Board 18b Special overlays">
+ <Checkbox name="">
+         <entry name="294: No Man, No Problem" rule="SSO_294" text="scenario 294 overlay"/>
+ </Checkbox>
+   </Option>
+</SSRControls>
