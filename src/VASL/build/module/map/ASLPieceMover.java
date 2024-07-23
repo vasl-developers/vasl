@@ -231,7 +231,7 @@ public class ASLPieceMover extends PieceMover {
 
         GamePiece movingConcealment = null;
         Stack formerParent = null;
-        PieceIterator it = DragBuffer.getBuffer().getIterator();
+        final PieceIterator it = DragBuffer.getBuffer().getIterator();
         if (it.hasMoreElements()) {
             GamePiece moving = it.nextPiece();
             if (moving instanceof Stack) {
@@ -247,10 +247,12 @@ public class ASLPieceMover extends PieceMover {
                 formerParent = movingConcealment.getParent();
             }
         }
-        Command c = _movePieces(m, p);
+
+        final Command c = _movePieces(m, p);
         if (c == null || c.isNull()) {
             return c;
         }
+
         if (movingConcealment != null) {
             if (movingConcealment.getParent() != null) {
                 c.append(Concealable.adjustConcealment(movingConcealment.getParent()));
