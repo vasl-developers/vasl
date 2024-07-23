@@ -95,10 +95,12 @@ public class ASLPieceMover extends PieceMover {
         return map;
     }
 
+    @Override
     public String[] getAttributeNames() {
         return ArrayUtils.addAll(super.getAttributeNames(), HOTKEY);
     }
 
+    @Override
     public String getAttributeValueString(String key) {
         if (HOTKEY.equals(key)) {
             return clear.getAttributeValueString(key);
@@ -108,6 +110,7 @@ public class ASLPieceMover extends PieceMover {
         }
     }
 
+    @Override
     public void setAttribute(String key, Object value) {
         if (HOTKEY.equals(key)) {
             clear.setAttribute(key, value);
@@ -226,6 +229,7 @@ public class ASLPieceMover extends PieceMover {
      * In addition to moving pieces normally, we mark units that have moved
      * and adjust the concealment status of units
      */
+    @Override
     public Command movePieces(Map m, Point p) {
         extractMovable();
 
@@ -630,6 +634,7 @@ public class ASLPieceMover extends PieceMover {
      * @return
      * @see #createDragTargetSelector
      */
+    @Override
     protected PieceVisitorDispatcher createSelectionProcessor() {
         return new DeckVisitorDispatcher(new DeckVisitor() {
             public Object visitDeck(Deck d) {
