@@ -182,25 +182,23 @@ public class ASLPieceMover extends PieceMover {
      * This fixes a bug where stacks can be slightly off on older versions of VASL
      */
     private Command snapErrantPieces() {
-
-        ASLMap m = (ASLMap) map;
+        final ASLMap m = (ASLMap) map;
         final ArrayList<GamePiece> pieces = new ArrayList<GamePiece>();
         final GameModule theModule = GameModule.getGameModule();
 
         // get the set of all pieces not on the grid snap point
-        for (GamePiece piece : theModule.getGameState().getAllPieces()) {
-
+        for (final GamePiece piece : theModule.getGameState().getAllPieces()) {
             if (piece instanceof Stack) {
-                for (Iterator<GamePiece> i = ((Stack) piece).getPiecesInVisibleOrderIterator(); i.hasNext();) {
+                for (final Iterator<GamePiece> i = ((Stack) piece).getPiecesInVisibleOrderIterator(); i.hasNext();) {
                     final GamePiece p = i.next();
-                    if(p.getLocalizedProperty(Properties.NO_STACK) == Boolean.FALSE  && !p.getPosition().equals(m.snapTo(p.getPosition()))) {
+                    if(p.getLocalizedProperty(Properties.NO_STACK) == Boolean.FALSE && !p.getPosition().equals(m.snapTo(p.getPosition()))) {
                         // System.out.println("Piece " + p.getName() + " is off - Current: " + p.getPosition() + " Snap: " + m.snapTo(p.getPosition()));
                         pieces.add(0, p);
                     }
                 }
             }
             else if (piece.getParent() == null) {
-                if(piece.getLocalizedProperty(Properties.NO_STACK) == Boolean.FALSE && !piece.getPosition().equals(m.snapTo(piece.getPosition()))) {
+                if (piece.getLocalizedProperty(Properties.NO_STACK) == Boolean.FALSE && !piece.getPosition().equals(m.snapTo(piece.getPosition()))) {
                     // System.out.println("Piece " + piece.getName() + " is off - Current: " + piece.getPosition() + " Snap: " + m.snapTo(piece.getPosition()));
                     pieces.add(0, piece);
                 }
@@ -218,7 +216,7 @@ public class ASLPieceMover extends PieceMover {
 
         for (GamePiece p : pieces) {
             tempPoint = new Point(p.getPosition());
-            tempPoint.translate(100,0);
+            tempPoint.translate(100, 0);
             command.append(map.placeOrMerge(p, m.snapTo(tempPoint)));
         }
         return command;
