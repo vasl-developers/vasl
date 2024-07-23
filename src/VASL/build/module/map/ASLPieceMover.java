@@ -102,7 +102,7 @@ public class ASLPieceMover extends PieceMover {
     public void setAttribute(String key, Object value) {
         if (HOTKEY.equals(key)) {
             clear.setAttribute(key, value);
-        } 
+        }
         else {
             super.setAttribute(key, value);
         }
@@ -547,7 +547,7 @@ public class ASLPieceMover extends PieceMover {
         KeyBuffer.getBuffer().setSuppressActionButtons(true);
         tracker.repaint();
         return comm;
-    
+
     }
 
     /**
