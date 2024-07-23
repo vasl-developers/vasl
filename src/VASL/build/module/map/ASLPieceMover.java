@@ -734,6 +734,7 @@ public class ASLPieceMover extends PieceMover {
         private void OutputString(String strMsg) {
             GameModule.getGameModule().getChatter().send(strMsg);
         }
+
         public Rectangle scalePiece(Rectangle r, double f) {
             Rectangle o = new Rectangle();
             o.width = (int) (r.width * f);
@@ -742,6 +743,7 @@ public class ASLPieceMover extends PieceMover {
             o.y = (int) (r.getCenterY() - 0.5*r.height*f);
             return o;
         }
+
         public Shape scalePiece(Shape s, double f) {
             double cx = s.getBounds2D().getCenterX();
             double cy = s.getBounds2D().getCenterY();
@@ -750,6 +752,7 @@ public class ASLPieceMover extends PieceMover {
             t.translate(cx, cy);
             return t.createTransformedShape(s);
         }
+
         //JY private static PieceMover.AbstractDragHandler theDragHandler = PieceMover.AbstractDragHandler.AbstractDragHandlerFactory.getCorrectDragHandler();
         private static ASLPieceMover.AbstractDragHandler theDragHandler = ASLPieceMover.AbstractDragHandler.AbstractDragHandlerFactory.getCorrectDragHandler();
         //JY
