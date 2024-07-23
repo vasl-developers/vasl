@@ -1766,15 +1766,5 @@ public class ASLPieceMover extends PieceMover {
             setCargo(tempCargo);
         }
     }
-
-    @Override
-    public boolean isMandatory() {
-        return true;
-    }
-
-    @Override
-    public boolean isUnique() {
-        return true;
-    }
     //JY
 }
