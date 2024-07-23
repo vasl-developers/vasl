@@ -1615,8 +1615,6 @@ public class ASLPieceMover extends PieceMover {
             super.dragGestureRecognized(dge);
         }
 
-
-
         /**
          * Installs the cursor image into our dragCursor JLabel.
          * Sets current zoom. Should be called at beginning of drag
@@ -1637,8 +1635,6 @@ public class ASLPieceMover extends PieceMover {
             dragCursor.setIcon(new ImageIcon(img));
             dragCursorZoom = zoom;
         }
-
-
 
         /**
          * creates or moves cursor object to given JLayeredPane. Usually called by setDrawWinToOwnerOf()
@@ -1682,7 +1678,6 @@ public class ASLPieceMover extends PieceMover {
             }
 
         }
-
 
         @Override
         protected int getOffsetMult() {
