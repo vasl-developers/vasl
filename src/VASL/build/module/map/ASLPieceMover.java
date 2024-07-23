@@ -46,7 +46,16 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.SystemUtils;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.datatransfer.StringSelection;
 import java.awt.dnd.*;
 import java.awt.event.ActionEvent;
@@ -168,17 +177,6 @@ public class ASLPieceMover extends PieceMover {
         }
     }
 
-    /*@Override
-    public void mouseReleased(MouseEvent e) {
-        if (this.canHandleEvent(e) && !this.isClick(e.getPoint())) {
-            this.performDrop(e.getPoint());
-        }
-
-        this.dragBegin = null;
-        this.breachedThreshold = false;
-        this.map.getView().setCursor(null);
-    }*/
-
     /**
      * When a piece is moved ensure all pieces are properly stacked
      * This fixes a bug where stacks can be slightly off on older versions of VASL
@@ -217,6 +215,7 @@ public class ASLPieceMover extends PieceMover {
             tempPoint.translate(-100, 0);
             command.append(map.placeOrMerge(p, tempPoint));
         }
+
         for (GamePiece p : pieces) {
             tempPoint = new Point(p.getPosition());
             tempPoint.translate(100,0);
@@ -229,7 +228,7 @@ public class ASLPieceMover extends PieceMover {
      * In addition to moving pieces normally, we mark units that have moved
      * and adjust the concealment status of units
      */
-    public Command movePieces(Map m, java.awt.Point p) {
+    public Command movePieces(Map m, Point p) {
         extractMovable();
 
         GamePiece movingConcealment = null;
