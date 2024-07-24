@@ -41,10 +41,21 @@ import VASSAL.tools.DebugControls;
 import VASSAL.tools.LaunchButton;
 import VASSAL.tools.image.ImageUtils;
 import VASSAL.tools.swing.SwingUtils;
+
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.SystemUtils;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.datatransfer.StringSelection;
 import java.awt.dnd.*;
 import java.awt.event.ActionEvent;
@@ -52,7 +63,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 public class ASLPieceMover extends PieceMover {
@@ -60,17 +73,15 @@ public class ASLPieceMover extends PieceMover {
      * Preferences key for whether to mark units as having moved
      */
     public static final String MARK_MOVED = "MarkMoved";
-    public static final String HOTKEY = "hotkey";
 
-    private LaunchButton clear;
+    private final LaunchButton clear;
 
     public ASLPieceMover() {
-        ActionListener al = new ActionListener() {
+        final ActionListener al = new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                GamePiece[] p = getMap().getPieces();
-                Command c = new NullCommand();
-                for (int i = 0; i < p.length; ++i) {
-                    c.append(markMoved(p[i], false));
+                final Command c = new NullCommand();
+                for (final GamePiece p: getMap().getPieces()) {
+                    c.append(markMoved(p, false));
                 }
 
                 GameModule.getGameModule().sendAndLog(c);
@@ -84,26 +95,27 @@ public class ASLPieceMover extends PieceMover {
         return map;
     }
 
+    @Override
     public String[] getAttributeNames() {
-        String[] s = super.getAttributeNames();
-        String[] all = new String[s.length + 1];
-        System.arraycopy(s, 0, all, 0, s.length);
-        all[all.length - 1] = HOTKEY;
-        return all;
+        return ArrayUtils.addAll(super.getAttributeNames(), HOTKEY);
     }
 
+    @Override
     public String getAttributeValueString(String key) {
         if (HOTKEY.equals(key)) {
             return clear.getAttributeValueString(key);
-        } else {
+        }
+        else {
             return super.getAttributeValueString(key);
         }
     }
 
+    @Override
     public void setAttribute(String key, Object value) {
         if (HOTKEY.equals(key)) {
             clear.setAttribute(key, value);
-        } else {
+        }
+        else {
             super.setAttribute(key, value);
         }
     }
@@ -151,59 +163,45 @@ public class ASLPieceMover extends PieceMover {
     public void setup(boolean gameStarting) {
         super.setup(gameStarting);
 
-        if (gameStarting) {
+        if (gameStarting && markUnmovedButton != null) {
+            for (int i = map.getToolBar().getComponents().length - 1; i >= 0; i--) {
+                final Component objComponent = map.getToolBar().getComponent(i);
 
-            if (markUnmovedButton != null) {
-                for (int i = map.getToolBar().getComponents().length - 1; i >= 0; i--) {
-                    Component objComponent = map.getToolBar().getComponent(i);
+                if (objComponent instanceof JButton) {
+                    if ("MarkMovedPlaceHolder".equals(((JButton) objComponent).getName())) {
+                        map.getToolBar().remove(markUnmovedButton);
+                        map.getToolBar().remove(objComponent);
 
-                    if (objComponent instanceof JButton) {
-                        if ("MarkMovedPlaceHolder".equals(((JButton) objComponent).getName())) {
-                            map.getToolBar().remove(markUnmovedButton);
-                            map.getToolBar().remove(objComponent);
-
-                            map.getToolBar().add(markUnmovedButton, i);
-                            break;
-                        }
+                        map.getToolBar().add(markUnmovedButton, i);
+                        break;
                     }
                 }
             }
         }
     }
-    /*@Override
-    public void mouseReleased(MouseEvent e) {
-        if (this.canHandleEvent(e) && !this.isClick(e.getPoint())) {
-            this.performDrop(e.getPoint());
-        }
 
-        this.dragBegin = null;
-        this.breachedThreshold = false;
-        this.map.getView().setCursor(null);
-    }*/
     /**
      * When a piece is moved ensure all pieces are properly stacked
      * This fixes a bug where stacks can be slightly off on older versions of VASL
      */
     private Command snapErrantPieces() {
-
-        ASLMap m = (ASLMap) map;
+        final ASLMap m = (ASLMap) map;
         final ArrayList<GamePiece> pieces = new ArrayList<GamePiece>();
         final GameModule theModule = GameModule.getGameModule();
 
         // get the set of all pieces not on the grid snap point
-        for (GamePiece piece : theModule.getGameState().getAllPieces()) {
-
+        for (final GamePiece piece : theModule.getGameState().getAllPieces()) {
             if (piece instanceof Stack) {
-                for (Iterator<GamePiece> i = ((Stack) piece).getPiecesInVisibleOrderIterator(); i.hasNext();) {
+                for (final Iterator<GamePiece> i = ((Stack) piece).getPiecesInVisibleOrderIterator(); i.hasNext();) {
                     final GamePiece p = i.next();
-                    if(p.getLocalizedProperty(Properties.NO_STACK) == Boolean.FALSE  && !p.getPosition().equals(m.snapTo(p.getPosition()))) {
+                    if(p.getLocalizedProperty(Properties.NO_STACK) == Boolean.FALSE && !p.getPosition().equals(m.snapTo(p.getPosition()))) {
                         // System.out.println("Piece " + p.getName() + " is off - Current: " + p.getPosition() + " Snap: " + m.snapTo(p.getPosition()));
                         pieces.add(0, p);
                     }
                 }
             }
             else if (piece.getParent() == null) {
-                if(piece.getLocalizedProperty(Properties.NO_STACK) == Boolean.FALSE && !piece.getPosition().equals(m.snapTo(piece.getPosition()))) {
+                if (piece.getLocalizedProperty(Properties.NO_STACK) == Boolean.FALSE && !piece.getPosition().equals(m.snapTo(piece.getPosition()))) {
                     // System.out.println("Piece " + piece.getName() + " is off - Current: " + piece.getPosition() + " Snap: " + m.snapTo(piece.getPosition()));
                     pieces.add(0, piece);
                 }
@@ -218,9 +216,10 @@ public class ASLPieceMover extends PieceMover {
             tempPoint.translate(-100, 0);
             command.append(map.placeOrMerge(p, tempPoint));
         }
+
         for (GamePiece p : pieces) {
             tempPoint = new Point(p.getPosition());
-            tempPoint.translate(100,0);
+            tempPoint.translate(100, 0);
             command.append(map.placeOrMerge(p, m.snapTo(tempPoint)));
         }
         return command;
@@ -230,12 +229,13 @@ public class ASLPieceMover extends PieceMover {
      * In addition to moving pieces normally, we mark units that have moved
      * and adjust the concealment status of units
      */
-    public Command movePieces(Map m, java.awt.Point p) {
+    @Override
+    public Command movePieces(Map m, Point p) {
         extractMovable();
 
         GamePiece movingConcealment = null;
         Stack formerParent = null;
-        PieceIterator it = DragBuffer.getBuffer().getIterator();
+        final PieceIterator it = DragBuffer.getBuffer().getIterator();
         if (it.hasMoreElements()) {
             GamePiece moving = it.nextPiece();
             if (moving instanceof Stack) {
@@ -251,10 +251,12 @@ public class ASLPieceMover extends PieceMover {
                 formerParent = movingConcealment.getParent();
             }
         }
-        Command c = _movePieces(m, p);
+
+        final Command c = _movePieces(m, p);
         if (c == null || c.isNull()) {
             return c;
         }
+
         if (movingConcealment != null) {
             if (movingConcealment.getParent() != null) {
                 c.append(Concealable.adjustConcealment(movingConcealment.getParent()));
@@ -274,276 +276,281 @@ public class ASLPieceMover extends PieceMover {
      * @param p Point mouse released
      */
     public Command _movePieces(Map map, Point p) {
-        PieceIterator it = DragBuffer.getBuffer().getIterator();
+        final PieceIterator it = DragBuffer.getBuffer().getIterator();
         if (!it.hasMoreElements()) {
             return null;
-        } else {
-            java.util.List<GamePiece> allDraggedPieces = new ArrayList();
-            Point offset = null;
-            Command comm = new NullCommand();
-            BoundsTracker tracker = new BoundsTracker();
-            HashMap<Point, java.util.List<GamePiece>> mergeTargets = new HashMap();
-            java.util.List<GamePiece> otherPieces = new ArrayList();
-            java.util.List<GamePiece> cargoPieces = new ArrayList();
-            //java.util.List<MatMover> matPieces = new ArrayList();
+        }
 
-            while(it.hasMoreElements()) {
-                GamePiece piece = it.nextPiece();
-                if (offset == null) {
-                    offset = new Point(p.x - piece.getPosition().x, p.y - piece.getPosition().y);
-                }
+        final List<GamePiece> allDraggedPieces = new ArrayList<>();
 
-                if (Boolean.TRUE.equals(piece.getProperty("IsCargo"))) {
-                    cargoPieces.add(piece);
-                //} else if (piece.getProperty("MatID") != null) {
-                //    matPieces.add(new MatMover(piece));
-                } else {
-                    otherPieces.add(piece);
+        Point offset = null;
+        Command comm = new NullCommand();
+
+        final BoundsTracker tracker = new BoundsTracker();
+
+        final HashMap<Point, List<GamePiece>> mergeTargets = new HashMap<>();
+
+        final List<GamePiece> otherPieces = new ArrayList<>();
+        final List<GamePiece> cargoPieces = new ArrayList<>();
+        //java.util.List<MatMover> matPieces = new ArrayList();
+
+        while (it.hasMoreElements()) {
+            final GamePiece piece = it.nextPiece();
+            if (offset == null) {
+                offset = new Point(p.x - piece.getPosition().x, p.y - piece.getPosition().y);
+            }
+
+            if (Boolean.TRUE.equals(piece.getProperty("IsCargo"))) {
+                cargoPieces.add(piece);
+            //} else if (piece.getProperty("MatID") != null) {
+            //    matPieces.add(new MatMover(piece));
+            } else {
+                otherPieces.add(piece);
+            }
+        }
+
+        //Iterator var31 = matPieces.iterator();
+
+        //while(var31.hasNext()) {
+        //    MatMover mm = (MatMover)var31.next();
+        //    mm.grabCargo(cargoPieces);
+        //}
+
+        final List<GamePiece> newDragBuffer = new ArrayList();
+        newDragBuffer.addAll(otherPieces);
+        newDragBuffer.addAll(cargoPieces);
+        //Iterator var33 = matPieces.iterator();
+
+        //while(var33.hasNext()) {
+        //    MatMover mm = (MatMover)var33.next();
+        //    newDragBuffer.add(mm.getMatPiece());
+        //    newDragBuffer.addAll(mm.getCargo());
+        //}
+
+        final GameModule gm = GameModule.getGameModule();
+        final boolean isMatSupport = gm.isMatSupport();
+        Mat currentMat = null;
+        MatCargo currentCargo = null;
+        Iterator var17 = newDragBuffer.iterator();
+
+        //Command comm;
+        label246:
+        while(var17.hasNext()) {
+            GamePiece gp = (GamePiece)var17.next();
+            this.dragging = gp;
+            tracker.addPiece(this.dragging);
+            Mat tempMat = (Mat)Decorator.getDecorator(gp, Mat.class);
+            if (tempMat != null) {
+                currentMat = tempMat;
+            }
+
+            currentCargo = (MatCargo)Decorator.getDecorator(gp, MatCargo.class);
+            ArrayList<GamePiece> draggedPieces = new ArrayList(0);
+            if (this.dragging instanceof Stack) {
+                draggedPieces.addAll(((Stack)this.dragging).asList());
+            } else {
+                draggedPieces.add(this.dragging);
+            }
+
+            if (offset != null) {
+                p = new Point(this.dragging.getPosition().x + offset.x, this.dragging.getPosition().y + offset.y);
+            }
+
+            List<GamePiece> mergeCandidates = (List) mergeTargets.get(p);
+            GamePiece mergeWith = null;
+            //int i;
+            GamePiece piece;
+            if (mergeCandidates != null) {
+                final int n = mergeCandidates.size();
+
+                for(int i = 0; i < n; ++i) {
+                    piece = (GamePiece)mergeCandidates.get(i);
+                    if (map.getPieceCollection().canMerge(piece, this.dragging)) {
+                        mergeWith = piece;
+                        mergeCandidates.set(i, this.dragging);
+                        break;
+                    }
                 }
             }
 
-            //Iterator var31 = matPieces.iterator();
-
-            //while(var31.hasNext()) {
-            //    MatMover mm = (MatMover)var31.next();
-            //    mm.grabCargo(cargoPieces);
-            //}
-
-            java.util.List<GamePiece> newDragBuffer = new ArrayList();
-            newDragBuffer.addAll(otherPieces);
-            newDragBuffer.addAll(cargoPieces);
-            //Iterator var33 = matPieces.iterator();
-
-            //while(var33.hasNext()) {
-            //    MatMover mm = (MatMover)var33.next();
-            //    newDragBuffer.add(mm.getMatPiece());
-            //    newDragBuffer.addAll(mm.getCargo());
-            //}
-
-            GameModule gm = GameModule.getGameModule();
-            boolean isMatSupport = gm.isMatSupport();
-            Mat currentMat = null;
-            MatCargo currentCargo = null;
-            Iterator var17 = newDragBuffer.iterator();
-
-            //Command comm;
-            label246:
-            while(var17.hasNext()) {
-                GamePiece gp = (GamePiece)var17.next();
-                this.dragging = gp;
-                tracker.addPiece(this.dragging);
-                Mat tempMat = (Mat)Decorator.getDecorator(gp, Mat.class);
-                if (tempMat != null) {
-                    currentMat = tempMat;
-                }
-
-                currentCargo = (MatCargo)Decorator.getDecorator(gp, MatCargo.class);
-                ArrayList<GamePiece> draggedPieces = new ArrayList(0);
-                if (this.dragging instanceof Stack) {
-                    draggedPieces.addAll(((Stack)this.dragging).asList());
-                } else {
-                    draggedPieces.add(this.dragging);
-                }
-
-                if (offset != null) {
-                    p = new Point(this.dragging.getPosition().x + offset.x, this.dragging.getPosition().y + offset.y);
-                }
-
-                java.util.List<GamePiece> mergeCandidates = (java.util.List)mergeTargets.get(p);
-                GamePiece mergeWith = null;
-                //int i;
-                GamePiece piece;
-                if (mergeCandidates != null) {
-                    final int n = mergeCandidates.size();
-
-                    for(int i = 0; i < n; ++i) {
-                        piece = (GamePiece)mergeCandidates.get(i);
-                        if (map.getPieceCollection().canMerge(piece, this.dragging)) {
-                            mergeWith = piece;
-                            mergeCandidates.set(i, this.dragging);
-                            break;
-                        }
-                    }
-                }
-
-                //ArrayList mergeCandidates;
+            //ArrayList mergeCandidates;
+            if (mergeWith == null) {
+                mergeWith = map.findAnyPiece(p, this.getDropTargetSelector(this.dragging, currentCargo, currentMat));
                 if (mergeWith == null) {
-                    mergeWith = map.findAnyPiece(p, this.getDropTargetSelector(this.dragging, currentCargo, currentMat));
-                    if (mergeWith == null) {
-                        boolean ignoreGrid = false;
-                        Boolean b;
-                        if (currentCargo == null) {
-                            b = (Boolean)this.dragging.getProperty("IgnoreGrid");
-                            ignoreGrid = b != null && b;
-                        } else if (currentMat == null && currentCargo.locateNewMat(map, p) == null) {
-                            b = (Boolean)this.dragging.getProperty("baseIgnoreGrid");
-                            ignoreGrid = b != null && b;
-                        } else {
-                            ignoreGrid = true;
-                        }
-
-                        if (!ignoreGrid) {
-                            p = map.snapTo(p);
-                            mergeWith = map.findAnyPiece(p, this.getDropTargetSelector(this.dragging, currentCargo, currentMat));
-                        }
+                    boolean ignoreGrid = false;
+                    Boolean b;
+                    if (currentCargo == null) {
+                        b = (Boolean)this.dragging.getProperty("IgnoreGrid");
+                        ignoreGrid = b != null && b;
+                    } else if (currentMat == null && currentCargo.locateNewMat(map, p) == null) {
+                        b = (Boolean)this.dragging.getProperty("baseIgnoreGrid");
+                        ignoreGrid = b != null && b;
+                    } else {
+                        ignoreGrid = true;
                     }
 
-                    offset = new Point(p.x - this.dragging.getPosition().x, p.y - this.dragging.getPosition().y);
-                    if (mergeWith != null && map.getStackMetrics().isStackingEnabled()) {
+                    if (!ignoreGrid) {
+                        p = map.snapTo(p);
+                        mergeWith = map.findAnyPiece(p, this.getDropTargetSelector(this.dragging, currentCargo, currentMat));
+                    }
+                }
+
+                offset = new Point(p.x - this.dragging.getPosition().x, p.y - this.dragging.getPosition().y);
+                if (mergeWith != null && map.getStackMetrics().isStackingEnabled()) {
+                    mergeCandidates = new ArrayList();
+                    mergeCandidates.add(this.dragging);
+                    mergeCandidates.add(mergeWith);
+                    mergeTargets.put(p, mergeCandidates);
+                }
+            }
+
+            //GamePiece piece;
+            Iterator var44;
+            if (mergeWith == null) {
+                comm = ((Command)comm).append(this.movedPiece(this.dragging, p));
+                comm = comm.append(map.placeAt(this.dragging, p));
+                if (!(this.dragging instanceof Stack) && !Boolean.TRUE.equals(this.dragging.getProperty("NoStack"))) {
+                    Stack parent = map.getStackMetrics().createStack(this.dragging);
+                    if (parent != null) {
+                        comm = ((Command)comm).append(map.placeAt(parent, p));
                         mergeCandidates = new ArrayList();
                         mergeCandidates.add(this.dragging);
-                        mergeCandidates.add(mergeWith);
+                        mergeCandidates.add(parent);
                         mergeTargets.put(p, mergeCandidates);
                     }
                 }
+            } else {
+                if (mergeWith instanceof Deck) {
+                    ArrayList<GamePiece> newList = new ArrayList(0);
+                    Iterator var41 = draggedPieces.iterator();
 
-                //GamePiece piece;
-                Iterator var44;
-                if (mergeWith == null) {
-                    comm = ((Command)comm).append(this.movedPiece(this.dragging, p));
-                    comm = comm.append(map.placeAt(this.dragging, p));
-                    if (!(this.dragging instanceof Stack) && !Boolean.TRUE.equals(this.dragging.getProperty("NoStack"))) {
-                        Stack parent = map.getStackMetrics().createStack(this.dragging);
-                        if (parent != null) {
-                            comm = ((Command)comm).append(map.placeAt(parent, p));
-                            mergeCandidates = new ArrayList();
-                            mergeCandidates.add(this.dragging);
-                            mergeCandidates.add(parent);
-                            mergeTargets.put(p, mergeCandidates);
-                        }
-                    }
-                } else {
-                    if (mergeWith instanceof Deck) {
-                        ArrayList<GamePiece> newList = new ArrayList(0);
-                        Iterator var41 = draggedPieces.iterator();
-
-                        label206:
-                        while(true) {
-                            boolean isObscuredToMe;
+                    label206:
+                    while(true) {
+                        boolean isObscuredToMe;
+                        do {
                             do {
                                 do {
-                                    do {
-                                        if (!var41.hasNext()) {
-                                            if (newList.size() != draggedPieces.size()) {
-                                                draggedPieces.clear();
-                                                draggedPieces.addAll(newList);
-                                            }
-                                            break label206;
+                                    if (!var41.hasNext()) {
+                                        if (newList.size() != draggedPieces.size()) {
+                                            draggedPieces.clear();
+                                            draggedPieces.addAll(newList);
                                         }
+                                        break label206;
+                                    }
 
-                                        piece = (GamePiece)var41.next();
-                                    } while(!((Deck)mergeWith).mayContain(piece));
-                                } while(!((Deck)mergeWith).isAccessible());
+                                    piece = (GamePiece)var41.next();
+                                } while(!((Deck)mergeWith).mayContain(piece));
+                            } while(!((Deck)mergeWith).isAccessible());
 
-                                isObscuredToMe = Boolean.TRUE.equals(piece.getProperty("Obscured"));
-                            } while(isObscuredToMe && !"nobody".equals(piece.getProperty("obs;")));
+                            isObscuredToMe = Boolean.TRUE.equals(piece.getProperty("Obscured"));
+                        } while(isObscuredToMe && !"nobody".equals(piece.getProperty("obs;")));
 
-                            newList.add(piece);
-                        }
-                    }
-
-                    if (mergeWith instanceof Stack) {
-                        for(var44 = draggedPieces.iterator(); var44.hasNext(); comm = comm.append(map.getStackMetrics().merge(mergeWith, piece))) {
-                            piece = (GamePiece)var44.next();
-                            comm = ((Command)comm).append(this.movedPiece(piece, mergeWith.getPosition()));
-                        }
-                    } else {
-                        int i;
-                        for(i = draggedPieces.size() - 1; i >= 0; --i) {
-                            comm = ((Command)comm).append(this.movedPiece((GamePiece)draggedPieces.get(i), mergeWith.getPosition()));
-                            comm = comm.append(map.getStackMetrics().merge(mergeWith, (GamePiece)draggedPieces.get(i)));
-                        }
+                        newList.add(piece);
                     }
                 }
 
-                var44 = draggedPieces.iterator();
+                if (mergeWith instanceof Stack) {
+                    for(var44 = draggedPieces.iterator(); var44.hasNext(); comm = comm.append(map.getStackMetrics().merge(mergeWith, piece))) {
+                        piece = (GamePiece)var44.next();
+                        comm = ((Command)comm).append(this.movedPiece(piece, mergeWith.getPosition()));
+                    }
+                } else {
+                    int i;
+                    for(i = draggedPieces.size() - 1; i >= 0; --i) {
+                        comm = ((Command)comm).append(this.movedPiece((GamePiece)draggedPieces.get(i), mergeWith.getPosition()));
+                        comm = comm.append(map.getStackMetrics().merge(mergeWith, (GamePiece)draggedPieces.get(i)));
+                    }
+                }
+            }
 
-                while(true) {
-                    MatCargo cargo;
-                    GamePiece oldMat;
-                    do {
-                        while(true) {
-                            do {
-                                if (!var44.hasNext()) {
-                                    allDraggedPieces.addAll(draggedPieces);
-                                    tracker.addPiece(this.dragging);
-                                    continue label246;
-                                }
+            var44 = draggedPieces.iterator();
 
-                                piece = (GamePiece)var44.next();
-                                KeyBuffer.getBuffer().add(piece);
-                            } while(!isMatSupport);
-
-                            if (Boolean.TRUE.equals(piece.getProperty("IsCargo"))) {
-                                cargo = (MatCargo)Decorator.getDecorator(piece, MatCargo.class);
-                                oldMat = cargo.getMat();
-                                break;
+            while(true) {
+                MatCargo cargo;
+                GamePiece oldMat;
+                do {
+                    while(true) {
+                        do {
+                            if (!var44.hasNext()) {
+                                allDraggedPieces.addAll(draggedPieces);
+                                tracker.addPiece(this.dragging);
+                                continue label246;
                             }
 
-                            if (piece.getProperty("MatName") != null) {
-                                Mat thisMat = (Mat)Decorator.getDecorator(piece, Mat.class);
-                                if (thisMat != null) {
-                                    List<GamePiece> contents = thisMat.getContents();
-                                    Iterator var27 = contents.iterator();
+                            piece = (GamePiece)var44.next();
+                            KeyBuffer.getBuffer().add(piece);
+                        } while(!isMatSupport);
 
-                                    while(var27.hasNext()) {
-                                        GamePiece pcargo = (GamePiece)var27.next();
-                                        if (!draggedPieces.contains(pcargo) && !allDraggedPieces.contains(pcargo) && !DragBuffer.getBuffer().contains(pcargo)) {
-                                            MatCargo theCargo = (MatCargo)Decorator.getDecorator(pcargo, MatCargo.class);
-                                            if (theCargo != null) {
-                                                comm = ((Command)comm).append(theCargo.findNewMat(pcargo.getMap(), pcargo.getPosition()));
-                                            }
+                        if (Boolean.TRUE.equals(piece.getProperty("IsCargo"))) {
+                            cargo = (MatCargo)Decorator.getDecorator(piece, MatCargo.class);
+                            oldMat = cargo.getMat();
+                            break;
+                        }
+
+                        if (piece.getProperty("MatName") != null) {
+                            Mat thisMat = (Mat)Decorator.getDecorator(piece, Mat.class);
+                            if (thisMat != null) {
+                                List<GamePiece> contents = thisMat.getContents();
+                                Iterator var27 = contents.iterator();
+
+                                while(var27.hasNext()) {
+                                    GamePiece pcargo = (GamePiece)var27.next();
+                                    if (!draggedPieces.contains(pcargo) && !allDraggedPieces.contains(pcargo) && !DragBuffer.getBuffer().contains(pcargo)) {
+                                        MatCargo theCargo = (MatCargo)Decorator.getDecorator(pcargo, MatCargo.class);
+                                        if (theCargo != null) {
+                                            comm = ((Command)comm).append(theCargo.findNewMat(pcargo.getMap(), pcargo.getPosition()));
                                         }
                                     }
                                 }
                             }
                         }
-                    } while(oldMat != null && (draggedPieces.contains(oldMat) || allDraggedPieces.contains(oldMat) || DragBuffer.getBuffer().contains(oldMat)));
+                    }
+                } while(oldMat != null && (draggedPieces.contains(oldMat) || allDraggedPieces.contains(oldMat) || DragBuffer.getBuffer().contains(oldMat)));
 
-                    comm = ((Command)comm).append(cargo.findNewMat(map, p));
-                }
+                comm = ((Command)comm).append(cargo.findNewMat(map, p));
             }
-
-            if (GameModule.getGameModule().isTrueMovedSupport()) {
-                comm = ((Command)comm).append(this.doTrueMovedSupport(allDraggedPieces));
-            }
-
-
-            if (GlobalOptions.getInstance().autoReportEnabled()) {
-                if (dragging.getName().substring(0, Math.min(dragging.getName().length(), 6)).equals("<html>")) {
-                    // new code to handle Labels with html code; stop it pasting to chat
-                    Command c = new NullCommand();
-                    c.append(new Chatter.DisplayText(GameModule.getGameModule().getChatter(), "* " + "Label Counter moved" ));
-                    c.execute();
-                    comm = comm.append(c);
-                } else {
-                    // Here is the one line we have to change
-                    // final Command report = createMovementReporter(comm).getReportCommand().append(new MovementReporter.HiddenMovementReporter(comm).getReportCommand());
-                    final Command report = createMovementReporter(comm).getReportCommand();
-                    report.execute();
-                    comm = comm.append(report);
-                    // trigger auto-reveal fortifications
-                    HIPFortification hipfort = map.getComponentsOf(HIPFortification.class).get(0);
-                    hipfort.runupdate(allDraggedPieces);
-
-                }
-            }
-
-            //if (GlobalOptions.getInstance().autoReportEnabled()) {
-            //    Command report = this.createMovementReporter((Command)comm).getReportCommand().append((new MovementReporter.HiddenMovementReporter((Command)comm)).getReportCommand());
-            //    report.execute();
-            //    comm = ((Command)comm).append(report);
-            //}
-
-            if (map.getMoveKey() != null) {
-                comm = ((Command)comm).append(this.applyKeyAfterMove(allDraggedPieces, map.getMoveKey()));
-            }
-
-            comm = gm.getDeckManager().checkEmptyDecks((Command)comm);
-            KeyBuffer.getBuffer().setSuppressActionButtons(true);
-            tracker.repaint();
-            return comm;
         }
+
+        if (GameModule.getGameModule().isTrueMovedSupport()) {
+            comm = ((Command)comm).append(this.doTrueMovedSupport(allDraggedPieces));
+        }
+
+
+        if (GlobalOptions.getInstance().autoReportEnabled()) {
+            if (dragging.getName().substring(0, Math.min(dragging.getName().length(), 6)).equals("<html>")) {
+                // new code to handle Labels with html code; stop it pasting to chat
+                Command c = new NullCommand();
+                c.append(new Chatter.DisplayText(GameModule.getGameModule().getChatter(), "* " + "Label Counter moved" ));
+                c.execute();
+                comm = comm.append(c);
+            } else {
+                // Here is the one line we have to change
+                // final Command report = createMovementReporter(comm).getReportCommand().append(new MovementReporter.HiddenMovementReporter(comm).getReportCommand());
+                final Command report = createMovementReporter(comm).getReportCommand();
+                report.execute();
+                comm = comm.append(report);
+                // trigger auto-reveal fortifications
+                HIPFortification hipfort = map.getComponentsOf(HIPFortification.class).get(0);
+                hipfort.runupdate(allDraggedPieces);
+
+            }
+        }
+
+        //if (GlobalOptions.getInstance().autoReportEnabled()) {
+        //    Command report = this.createMovementReporter((Command)comm).getReportCommand().append((new MovementReporter.HiddenMovementReporter((Command)comm)).getReportCommand());
+        //    report.execute();
+        //    comm = ((Command)comm).append(report);
+        //}
+
+        if (map.getMoveKey() != null) {
+            comm = ((Command)comm).append(this.applyKeyAfterMove(allDraggedPieces, map.getMoveKey()));
+        }
+
+        comm = gm.getDeckManager().checkEmptyDecks((Command)comm);
+        KeyBuffer.getBuffer().setSuppressActionButtons(true);
+        tracker.repaint();
+        return comm;
+
     }
 
     /**
@@ -627,6 +634,7 @@ public class ASLPieceMover extends PieceMover {
      * @return
      * @see #createDragTargetSelector
      */
+    @Override
     protected PieceVisitorDispatcher createSelectionProcessor() {
         return new DeckVisitorDispatcher(new DeckVisitor() {
             public Object visitDeck(Deck d) {
@@ -726,6 +734,7 @@ public class ASLPieceMover extends PieceMover {
         private void OutputString(String strMsg) {
             GameModule.getGameModule().getChatter().send(strMsg);
         }
+
         public Rectangle scalePiece(Rectangle r, double f) {
             Rectangle o = new Rectangle();
             o.width = (int) (r.width * f);
@@ -734,6 +743,7 @@ public class ASLPieceMover extends PieceMover {
             o.y = (int) (r.getCenterY() - 0.5*r.height*f);
             return o;
         }
+
         public Shape scalePiece(Shape s, double f) {
             double cx = s.getBounds2D().getCenterX();
             double cy = s.getBounds2D().getCenterY();
@@ -742,6 +752,7 @@ public class ASLPieceMover extends PieceMover {
             t.translate(cx, cy);
             return t.createTransformedShape(s);
         }
+
         //JY private static PieceMover.AbstractDragHandler theDragHandler = PieceMover.AbstractDragHandler.AbstractDragHandlerFactory.getCorrectDragHandler();
         private static ASLPieceMover.AbstractDragHandler theDragHandler = ASLPieceMover.AbstractDragHandler.AbstractDragHandlerFactory.getCorrectDragHandler();
         //JY
@@ -1607,8 +1618,6 @@ public class ASLPieceMover extends PieceMover {
             super.dragGestureRecognized(dge);
         }
 
-
-
         /**
          * Installs the cursor image into our dragCursor JLabel.
          * Sets current zoom. Should be called at beginning of drag
@@ -1629,8 +1638,6 @@ public class ASLPieceMover extends PieceMover {
             dragCursor.setIcon(new ImageIcon(img));
             dragCursorZoom = zoom;
         }
-
-
 
         /**
          * creates or moves cursor object to given JLayeredPane. Usually called by setDrawWinToOwnerOf()
@@ -1674,7 +1681,6 @@ public class ASLPieceMover extends PieceMover {
             }
 
         }
-
 
         @Override
         protected int getOffsetMult() {
@@ -1762,16 +1768,6 @@ public class ASLPieceMover extends PieceMover {
             }
             setCargo(tempCargo);
         }
-    }
-
-    @Override
-    public boolean isMandatory() {
-        return true;
-    }
-
-    @Override
-    public boolean isUnique() {
-        return true;
     }
     //JY
 }
