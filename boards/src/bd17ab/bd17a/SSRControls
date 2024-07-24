@@ -1,0 +1,13 @@
+<SSRControls>
+ <Option name="Board 17a Special overlays">
+ <Checkbox name="">
+         <entry name="296: Damnation Game" rule="SSO_296" text="scenario 296 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="297: Breaching the Devil's Playground" rule="SSO_297" text="scenario 297 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="302: A Vast Hellish Ruin" rule="SSO_302" text="scenario 302 overlay"/>
+ </Checkbox>
+   </Option>
+</SSRControls>

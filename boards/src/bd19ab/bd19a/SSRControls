@@ -1,0 +1,19 @@
+<SSRControls>
+ <Option name="Board 19a Special overlays">
+ <Checkbox name="">
+         <entry name="291: Bridge Over the River Queen" rule="SSO_291" text="scenario 291 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="292: Four Stars of Valor" rule="SSO_292" text="scenario 292 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="293: Death Solves All Problems" rule="SSO_293" text="scenario 293 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="294: No Man, No Problem" rule="SSO_294" text="scenario 294 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="302: A Vast Hellish Ruin" rule="SSO_302" text="scenario 302 overlay"/>
+ </Checkbox>
+ </Option>
+</SSRControls>

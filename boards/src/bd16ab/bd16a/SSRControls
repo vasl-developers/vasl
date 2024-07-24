@@ -1,0 +1,10 @@
+<SSRControls>
+ <Option name="Board 16a Special overlays">
+ <Checkbox name="">
+         <entry name="299: Rails to Perdition" rule="SSO_299" text="scenario 299 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="305: No Brothers, No Friends" rule="SSO_305" text="scenario 305 overlay"/>
+ </Checkbox>
+   </Option>
+</SSRControls>

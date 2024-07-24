@@ -1,0 +1,25 @@
+<SSRControls>
+ <Option name="Board 18a Special overlays">
+ <Checkbox name="">
+         <entry name="290: Last Train to Leningrad" rule="SSO_290" text="scenario 290 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="292: Four Stars of Valor" rule="SSO_292" text="scenario 292 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="296: Damnation Game" rule="SSO_296" text="scenario 296 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="297: Breaching the Devil's Playground" rule="SSO_297" text="scenario 297 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="298: The Dead and the Dying" rule="SSO_298" text="scenario 298 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="301: St. Kilian's Bloody Sword" rule="SSO_301" text="scenario 301 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="303: La mort de Charlemagne" rule="SSO_303" text="scenario 303 overlay"/>
+ </Checkbox>
+   </Option>
+</SSRControls>
