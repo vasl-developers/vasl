@@ -133,8 +133,7 @@ public class ASLPieceMover extends PieceMover {
         dropTargetSelector = createDropTargetSelector(); // Obsolete from 3.6, but maintains backwards-compatibility with e.g. VASL
 
         // Register with our parent map
-        //JY map = (Map) b;
-        map = (ASLMap) b;
+        map = (Map) b;
         map.addLocalMouseListener(this);
         GameModule.getGameModule().getGameState().addGameComponent(this);
 
