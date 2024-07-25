@@ -18,12 +18,7 @@
  */
 package VASL.build.module.map;
 
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Shape;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.BitSet;
 
@@ -61,7 +56,7 @@ public class ASLStackMetrics extends StackMetrics {
             gameModulePrefs.addOption(generalTabKey, configurer);
         }
         disableFullColorStacks = (Boolean)(gameModulePrefs.getValue(prefKey));
-
+        if (disableFullColorStacks) {super.blankColor = Color.WHITE;}
         super.addTo(buildable);
     }
 
@@ -189,31 +184,34 @@ public class ASLStackMetrics extends StackMetrics {
 
     @Override
     public void draw(Stack stack, Graphics g, int x, int y, Component obs, double zoom) {
+        if (disableFullColorStacks) {
+            super.draw(stack, g, x, y, obs, zoom);
+        } else {
+            Highlighter highlighter = stack.getMap() == null ? BasicPiece.getHighlighter() : stack.getMap().getHighlighter();
+            Point[] positions = new Point[stack.getPieceCount()];
+            getContents(stack, positions, null, null, x, y);
 
-        Highlighter highlighter = stack.getMap() == null ? BasicPiece.getHighlighter() : stack.getMap().getHighlighter();
-        Point[] positions = new Point[stack.getPieceCount()];
-        getContents(stack, positions, null, null, x, y);
-
-        for (PieceIterator e = new PieceIterator(stack.getPiecesIterator(), unselectedVisible); e.hasMoreElements(); ) {
-            GamePiece next = e.nextPiece();
-            int index = stack.indexOf(next);
-            int nextX = x + (int) (zoom * (positions[index].x - x));
-            int nextY = y + (int) (zoom * (positions[index].y - y));
+            for (PieceIterator e = new PieceIterator(stack.getPiecesIterator(), unselectedVisible); e.hasMoreElements(); ) {
+                GamePiece next = e.nextPiece();
+                int index = stack.indexOf(next);
+                int nextX = x + (int) (zoom * (positions[index].x - x));
+                int nextY = y + (int) (zoom * (positions[index].y - y));
 //if (stack.isExpanded() || !e.hasMoreElements()) {
-            next.draw(g, nextX, nextY, obs, zoom);
+                next.draw(g, nextX, nextY, obs, zoom);
 //}
 //else {
 //    drawUnexpanded(next, g, nextX, nextY, obs, zoom);
 //}
-        }
+            }
 
-        for (PieceIterator e = new PieceIterator(stack.getPiecesIterator(), selectedVisible); e.hasMoreElements(); ) {
-            GamePiece next = e.nextPiece();
-            int index = stack.indexOf(next);
-            int nextX = x + (int) (zoom * (positions[index].x - x));
-            int nextY = y + (int) (zoom * (positions[index].y - y));
-            next.draw(g, nextX, nextY, obs, zoom);
-            highlighter.draw(next, g, nextX, nextY, obs, zoom);
+            for (PieceIterator e = new PieceIterator(stack.getPiecesIterator(), selectedVisible); e.hasMoreElements(); ) {
+                GamePiece next = e.nextPiece();
+                int index = stack.indexOf(next);
+                int nextX = x + (int) (zoom * (positions[index].x - x));
+                int nextY = y + (int) (zoom * (positions[index].y - y));
+                next.draw(g, nextX, nextY, obs, zoom);
+                highlighter.draw(next, g, nextX, nextY, obs, zoom);
+            }
         }
     }
 
