@@ -133,8 +133,7 @@ public class ASLPieceMover extends PieceMover {
         dropTargetSelector = createDropTargetSelector(); // Obsolete from 3.6, but maintains backwards-compatibility with e.g. VASL
 
         // Register with our parent map
-        //JY map = (Map) b;
-        map = (ASLMap) b;
+        map = (Map) b;
         map.addLocalMouseListener(this);
         GameModule.getGameModule().getGameState().addGameComponent(this);
 
@@ -1637,6 +1636,32 @@ public class ASLPieceMover extends PieceMover {
             dragCursor.setSize(img.getWidth(), img.getHeight());
             dragCursor.setIcon(new ImageIcon(img));
             dragCursorZoom = zoom;
+        }
+
+        /**
+         * Moves the drag cursor on the current draw window
+         * @param dragX x position
+         * @param dragY y position
+         */
+        @Override
+        protected void moveDragCursor(int dragX, int dragY) {
+            if (drawWin != null) {
+                dragCursor.setLocation(dragX - drawOffset.x, dragY - drawOffset.y);
+            }
+        }
+
+        /**
+         * Removes the drag cursor from the current draw window
+         */
+        @Override
+        protected void removeDragCursor() {
+            if (drawWin != null) {
+                if (dragCursor != null) {
+                    dragCursor.setVisible(false);
+                    drawWin.remove(dragCursor);
+                }
+                drawWin = null;
+            }
         }
 
         /**
