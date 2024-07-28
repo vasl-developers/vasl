@@ -1030,8 +1030,11 @@ public class ASLPieceMover extends PieceMover {
 
             boundingBox = firstPiece.getShape().getBounds();
             //JY
+            double pZoom = 1.0;
             final ASLMap map = (ASLMap) firstPiece.getMap();
-            double pZoom = map.PieceScalerBoardZoom(firstPiece);
+            if (map != null) {
+                pZoom = map.PieceScalerBoardZoom(firstPiece);
+            }
             if (!(firstPiece instanceof Stack)) {
                 boundingBox = this.scalePiece(firstPiece.getShape().getBounds(), pZoom); //Centred on 0 0, with min and max corresponding to width
             }
@@ -1044,7 +1047,11 @@ public class ASLPieceMover extends PieceMover {
                 //JY
                 //final Rectangle r = nextPiece.getShape().getBounds();
                 Rectangle r = nextPiece.getShape().getBounds();
-                pZoom = map.PieceScalerBoardZoom(nextPiece);
+                pZoom = 1.0;
+                if (map != null) {
+                    pZoom = map.PieceScalerBoardZoom(nextPiece);
+                }
+                //pZoom = map.PieceScalerBoardZoom(nextPiece);
                 if (!(nextPiece instanceof Stack)) {
                     r = this.scalePiece(nextPiece.getShape().getBounds(), pZoom);
                 }
