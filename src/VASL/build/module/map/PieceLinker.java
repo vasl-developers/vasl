@@ -1,5 +1,14 @@
 package VASL.build.module.map;
 
+import VASL.build.module.map.boardPicker.ASLBoard;
+import VASL.build.module.map.boardPicker.board.ASLHexGrid;
+import static VASL.build.module.map.boardPicker.ASLBoard.DEFAULT_HEX_HEIGHT;
+import static VASL.build.module.map.boardPicker.ASLBoard.DEFAULT_HEX_WIDTH;
+import VASSAL.build.module.Map;
+import VASSAL.build.module.map.boardPicker.Board;
+import VASSAL.build.module.map.boardPicker.board.GeometricGrid;
+import VASSAL.build.module.map.boardPicker.board.HexGrid;
+import VASSAL.build.module.map.boardPicker.board.MapGrid;
 import VASSAL.build.AbstractConfigurable;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
@@ -16,6 +25,8 @@ import VASSAL.configure.NamedHotKeyConfigurer;
 import VASSAL.counters.GamePiece;
 import VASSAL.counters.Properties;
 import VASSAL.tools.NamedKeyStroke;
+import VASSAL.tools.hex.Hex;
+import VASSAL.tools.hex.OffsetCoord;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -23,6 +34,8 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+
+import static VASL.build.module.map.boardPicker.ASLBoard.DEFAULT_HEX_HEIGHT;
 
 /**
  * Copyright (c) 2017 by David Sullivan
@@ -158,7 +171,7 @@ public class PieceLinker extends AbstractConfigurable implements KeyListener, Co
     }
 
     /**
-     * Draw a line between the two linked pieces
+     * Draw a line between the two linked pieces and show the range in Hexes
      */
     @Override
     public void draw(Graphics g, Map map) {
@@ -191,6 +204,11 @@ public class PieceLinker extends AbstractConfigurable implements KeyListener, Co
                             Point p1 = map.mapToDrawing(fromPiece.getPosition(), os_scale);
                             Point p2 = map.mapToDrawing(toPiece.getPosition(), os_scale);
                             g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
+                            MapGrid grid = new ASLHexGrid(DEFAULT_HEX_HEIGHT, false);
+                            ((HexGrid)grid).setHexWidth(DEFAULT_HEX_WIDTH);
+                            ((HexGrid)grid).setEdgesLegal(true);
+                            int linkrange = range(fromPiece.getPosition(), toPiece.getPosition(), map, grid);
+                            drawText(g2d, p1.x +30, p1.y + 30, "Range: " + linkrange );
                         }
                     }
                 }
@@ -198,7 +216,47 @@ public class PieceLinker extends AbstractConfigurable implements KeyListener, Co
             g2d.setStroke(oldStroke);
         }
     }
+    /**
+     * Return the range in hexes between the two linked pieces
+     */
+    public int range(Point p1, Point p2, Map map, MapGrid grid) {
+        // added so that boards with no los active will display correct range when using magnification or BoardZoomer
+        VASSAL.build.module.Map m = map;
+        Point pp1 = m.snapTo(p1);
+        Point pp2 = m.snapTo(p2);
+        for (Board board : m.getBoards()) {
+            ASLBoard b = (ASLBoard) board;
+            if (b.getMagnification() > 0) {
+                pp1.x = (int) (pp1.getX()/(b.getMagnification() * b.getMagnification()));
+                pp1.y = (int) (pp1.getY()/(b.getMagnification() * b.getMagnification()));
+                pp2.x = (int) (pp2.getX()/(b.getMagnification() * b.getMagnification()));
+                pp2.y = (int) (pp2.getY()/(b.getMagnification() * b.getMagnification())
+                );
+                break;
+            }
+        }
+        Hex h1 = OffsetCoord.qoffsetToCube(-1, new OffsetCoord(((HexGrid)grid).getRawColumn(pp1), ((HexGrid)grid).getRawRow(pp1)));
+        Hex h2 = OffsetCoord.qoffsetToCube(-1, new OffsetCoord(((HexGrid)grid).getRawColumn(pp2), ((HexGrid)grid).getRawRow(pp2)));
 
+        return h1.distance(h2);
+    }
+    /**
+     * Draw text showing the range in Hexes between two linked pieces
+     */
+    private void drawText(Graphics2D g2d, int x, int y, String s) {
+        // paint the background
+        final int border = 1;
+        g2d.setColor(Color.black);
+        final Rectangle region = new Rectangle(
+                x - border,
+                y - border - g2d.getFontMetrics().getHeight() + g2d.getFontMetrics().getDescent(),
+                g2d.getFontMetrics().stringWidth(s) + 2,
+                g2d.getFontMetrics().getHeight() + 2);
+        g2d.fillRect(region.x, region.y, region.width, region.height);
+        // draw the text
+        g2d.setColor(Color.white);
+        g2d.drawString(s, x, y);
+    }
     @Override
     public boolean drawAboveCounters() {
         return false;
