@@ -713,7 +713,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener {
             FireNeedRepaint();
     }
 
-    synchronized public void PushDiceRoll(String categoryName, String strUser, String strSAN, int firstDie, int secondDie, int thirdDie) {
+    synchronized public void PushDiceRoll(String categoryName, String strUser, String strSAN, int firstDie, int secondDie, int thirdDie, int rofDie) {
 
         String secondMsg = "";
         // add hit location info
@@ -819,8 +819,8 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener {
         ClockTick();
     }
 
-    public void DiceRoll(String categoryName, String user, String san, int firstDieResult, int secondDieResult, int thirdDie) {
-        PushDiceRoll(categoryName, user, san, firstDieResult, secondDieResult, thirdDie);
+    public void DiceRoll(String categoryName, String user, String san, int firstDieResult, int secondDieResult, int thirdDie, int rofDie) {
+        PushDiceRoll(categoryName, user, san, firstDieResult, secondDieResult, thirdDie, rofDie);
     }
 
     public void addRepaintListener(NeedRepaintEvent toAdd) {

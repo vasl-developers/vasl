@@ -57,10 +57,12 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     private static final String BUTTON_FONT = "ButtonFont";
     private static final String USE_DICE_IMAGES = "useDiceImages"; //$NON-NLS-1$
     private static final String SHOW_DICE_STATS = "showDiceStats"; //$NON-NLS-1$
+    private static final String SHOW_ROF_DIE = "showRofDie"; //$NON-NLS-1$
     private static final String CHAT_BACKGROUND_COLOR = "chatBackgroundColor"; //$NON-NLS-1$
     private static final String COLORED_DICE_COLOR = "coloredDiceColor"; //$NON-NLS-1$
     private static final String SINGLE_DIE_COLOR = "singleDieColor"; //$NON-NLS-1$
     private static final String THIRD_DIE_COLOR = "thirdDieColor"; //$NON-NLS-1$
+    private static final String ROF_DIE_COLOR = "rofDieColor"; //$NON-NLS-1$
     private static final String NOTIFICATION_LEVEL = "notificationLevel"; //$NON-NLS-1$
     private final static String USER_SPACING_PADDING =  "  ...  ";
     private static final String preferenceTabName = "VASL"; // alwaysontop preference
@@ -73,13 +75,15 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         COLORED,
         OTHER_DUST,
         BOTH,
-        SINGLE
+        SINGLE,
+        ROF
     }
 
     private Color clrBackground;
     private String clrColoredDiceColor;
     private String clrDustColoredDiceColor;
     private String clrSingleDieColor;
+    private String clrROFDieColor;
     private final JButton btnStats;
     private final JButton btnDR;
     private final JButton btnIFT;
@@ -96,6 +100,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     private boolean useDiceImages;
     private boolean showDiceStats;
 
+
     private final Environment environment = new Environment();
     private final ASLDiceFactory diceFactory = new ASLDiceFactory();
 
@@ -110,6 +115,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     private String msgpartSpecial;
     private String msgpartSAN;
     private String msgpartDiceImage;
+    private String msgpartROFDie;
 
     public ASLChatter() {
         super();
@@ -477,6 +483,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         msgpartSpecial = null;
         msgpartRest = null;
         msgpartDiceImage = null;
+        msgpartROFDie = null;
         try {
             String restOfMsg = msg.substring("*** (".length()); // Other DR) 4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
 
@@ -685,10 +692,26 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     msgpartSpecial = strSpecialMessages.toString();
 
                                     if (showDiceStats) {
-                                        msgpartRest = restOfMsg;
+                                        int endidx = restOfMsg.indexOf("R");
+                                        msgpartRest = restOfMsg.substring(0, endidx);
                                     }
-
-                                    fireDiceRoll(otherDice);
+                                    final Map<DiceType, Integer> rofDie = new HashMap<>();
+                                    if ((Boolean) GameModule.getGameModule().getPrefs().getValue((SHOW_ROF_DIE))) {
+                                        int rofroll = Integer.parseInt(restOfMsg.substring(restOfMsg.length()-1));
+                                        rofDie.put(DiceType.ROF, rofroll );
+                                        int startidx = restOfMsg.indexOf("R");
+                                        if (useDiceImages) {
+                                            restOfMsg = restOfMsg.substring(startidx, restOfMsg.length()-2);
+                                            msgpartROFDie = restOfMsg;
+                                            for (final Map.Entry<DiceType, Integer> entry : rofDie.entrySet()) {
+                                                paintIcon(entry.getValue(), entry.getKey());
+                                            }
+                                        } else {
+                                            restOfMsg = restOfMsg.substring(startidx);
+                                            msgpartROFDie = restOfMsg;
+                                        }
+                                    }
+                                    fireDiceRoll(otherDice, rofDie);
                                 }
                             }
                         }
@@ -745,7 +768,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                         msgpartRest = restOfMsg;
                                     }
 
-                                    fireDiceRoll(null);
+                                    fireDiceRoll(null, null);
                                 }
                             }
                         }
@@ -874,14 +897,16 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
 
         final String dicefile = die.getDieHTMLFragment(dice);
-        if (msgpartDiceImage == null) {
-            msgpartDiceImage = " ";
+        if (diceType != DiceType.ROF) {
+            if (msgpartDiceImage == null) {
+                msgpartDiceImage = " ";
+            } else {
+                msgpartDiceImage += "&nbsp;";
+            }
+            msgpartDiceImage += "<img alt=\"alt text\" src=\"" + dicefile + "\">";
+        } else {
+            msgpartROFDie += "<img alt=\"alt text\" src=\"" + dicefile + "\">";
         }
-        else {
-            msgpartDiceImage += "&nbsp;";
-        }
-
-        msgpartDiceImage += "<img alt=\"alt text\" src=\"" + dicefile + "\">";
     }
 
     private String makeMessageString(Integer lineno) {
@@ -914,6 +939,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         if (msgpartWdice.equals("-1")){
             msgpartWdice = "";
         }
+        if (msgpartROFDie == null){
+            msgpartROFDie = "";
+        }
 
         final String catstyle = "msgcategory";
         final String userstyle = getUserStyle();
@@ -925,7 +953,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                 + " " + "<u>"
                 + "<span class=\"" + specialstyle + "\">" + msgpartSpecial + "</span>"
                 + "</u>" + " "
-                + "<span class=\"" + userstyle + "\">" + msgpartRest + "</span>";
+                + "<span class=\"" + userstyle + "\">" + msgpartRest + "</span>"
+                + "</u>" + " "
+                + "<span class=\"" + userstyle + "\">" + msgpartROFDie + "</span>";
         }
         else {
             return "*" + lineno.toString() + "~<span class=\"" + catstyle + "\">" + msgpartCategory + "</span>"
@@ -934,7 +964,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                 + " " + "<u>"
                 + "<span class=\"" + specialstyle + "\">" + msgpartSpecial + "</span>"
                 + "</u>" + " "
-                + "<span class=\"" + userstyle + "\">" + msgpartRest + "</span>";
+                + "<span class=\"" + userstyle + "\">" + msgpartRest + "</span>"
+                + "</u>" + " "
+                + "<span class=\"" + userstyle + "\">" + msgpartROFDie + "</span>";
         }
     }
 
@@ -1092,6 +1124,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         showDiceStats = (Boolean) modulePrefs.getValue(SHOW_DICE_STATS);
         showDiceStatsOption.addPropertyChangeListener(e -> showDiceStats = (Boolean) e.getNewValue());
 
+
+
         final String[] dieColors = {
             "Black",
             "Blue",
@@ -1165,6 +1199,21 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         }
         thirdDieColor.fireUpdate();
 
+        // ROF die pref
+        final StringEnumConfigurer rofDieColor = new StringEnumConfigurer(ROF_DIE_COLOR, "ROF die color:", dieColors);
+        modulePrefs.addOption(Resources.getString("Chatter.chat_window"), rofDieColor); //$NON-NLS-1$
+        rofDieColor.addPropertyChangeListener(e -> {
+            clrROFDieColor = (String) e.getNewValue();
+            if (clrROFDieColor != null) {
+                diceFactory.setDieColor(DiceType.ROF, DieColor.getEnum(clrROFDieColor));
+            }
+        });
+        clrROFDieColor = modulePrefs.getStoredValue("rofDieColor");
+        if (clrROFDieColor != null) {
+            diceFactory.setDieColor(DiceType.SINGLE,DieColor.getEnum(clrROFDieColor));
+        }
+        rofDieColor.fireUpdate();
+
         // rule set pref
         final String[] DROptions = {
             "None",
@@ -1209,18 +1258,23 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         makeASLStyleSheet(myFont);
     }
 
-    private void fireDiceRoll(Map<DiceType, Integer> otherDice) {
+    private void fireDiceRoll(Map<DiceType, Integer> otherDice, Map<DiceType, Integer> rateDie) {
 
         int thirdDie = -1;
+        int rofDie = -1;
 
         if (otherDice != null) {
             if (!otherDice.entrySet().isEmpty()) {
                 thirdDie = otherDice.entrySet().iterator().next().getValue();
             }
         }
-
+        if (rateDie != null) {
+            if (!rateDie.entrySet().isEmpty()) {
+                rofDie = rateDie.entrySet().iterator().next().getValue();
+            }
+        }
         for (ChatterListener listener : chatter_listeners) {
-            listener.DiceRoll(msgpartCategory, msgpartUser, msgpartSAN, Integer.parseInt(msgpartCdice), Integer.parseInt(msgpartWdice), thirdDie);
+            listener.DiceRoll(msgpartCategory, msgpartUser, msgpartSAN, Integer.parseInt(msgpartCdice), Integer.parseInt(msgpartWdice), thirdDie, rofDie);
         }
     }
 
@@ -1233,6 +1287,6 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     }
 
     public interface ChatterListener {
-        void DiceRoll(String category, String user, String san, int firstDie, int secondDie, int thirdRie);
+        void DiceRoll(String category, String user, String san, int firstDie, int secondDie, int thirdRie, int rofDie);
     }
 }

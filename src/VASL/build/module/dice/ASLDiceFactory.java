@@ -14,6 +14,7 @@ public class ASLDiceFactory {
     colors.put(ASLChatter.DiceType.COLORED, DieColor.BLACK);
     colors.put(ASLChatter.DiceType.OTHER_DUST, DieColor.ORANGE);
     colors.put(ASLChatter.DiceType.SINGLE, DieColor.RED);
+    colors.put(ASLChatter.DiceType.ROF, DieColor.CYAN);
   }
 
   public void setDieColor(ASLChatter.DiceType type, DieColor color) {
@@ -32,6 +33,9 @@ public class ASLDiceFactory {
       case SINGLE:
       case COLORED: {
         return new ASLColoredDie(color);
+      }
+      case ROF: {
+        return new ASLROFDie(color);
       }
       default:
         //don't handle - crash if we can't create dice.
