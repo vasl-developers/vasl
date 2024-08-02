@@ -6,6 +6,7 @@ import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.GlobalOptions;
 import VASSAL.configure.BooleanConfigurer;
+import VASSAL.i18n.Resources;
 import VASSAL.preferences.Prefs;
 
 import java.io.BufferedReader;
@@ -264,6 +265,7 @@ public class ASLDiceBot extends AbstractBuildable
 {
     private static final String RANDOM_ORG_OPTION = "randomorgoption"; //$NON-NLS-1$
     private static final String SHOW_EXTRA_DICE_STATS = "showExtraDiceStats"; //$NON-NLS-1$
+    private static final String SHOW_ROF_DIE = "showRofDie";
     private static final String TOTAL_CATEGORY_NAME = "Total";
     public static final String OTHER_CATEGORY = "Other";
     public static final String NAME = "name"; //$NON-NLS-1$
@@ -287,6 +289,7 @@ public class ASLDiceBot extends AbstractBuildable
     private final ArrayList<Integer> unusedElementList = new ArrayList<>();
     private boolean usingRandomOrg = false;
     private boolean showExtraDiceStats = false;
+    private boolean showROFDie = false;
     private final DiceStats diceStats = new DiceStats();
     private final Environment environment = new Environment();
 
@@ -344,6 +347,16 @@ public class ASLDiceBot extends AbstractBuildable
         showExtraDiceStats = (Boolean) (modulePrefs.getValue(SHOW_EXTRA_DICE_STATS));
 
         showExtraDiceStatsOption.addPropertyChangeListener(e -> showExtraDiceStats = (Boolean) e.getNewValue());
+
+        // ROF die pref
+        BooleanConfigurer showROFdieOption = (BooleanConfigurer) modulePrefs.getOption(SHOW_ROF_DIE);
+        if (showROFdieOption == null) {
+            showROFdieOption = new BooleanConfigurer(SHOW_ROF_DIE, "Show a ROF die as part of each IFT/TH dice roll", Boolean.FALSE);  //$NON-NLS-1$
+            modulePrefs.addOption(Resources.getString("Chatter.chat_window"), showROFdieOption); //$NON-NLS-1$
+        }
+        showROFDie = (Boolean) modulePrefs.getValue((SHOW_ROF_DIE));
+        showROFdieOption.addPropertyChangeListener(e -> showROFDie = (Boolean) e.getNewValue());
+
     }
 
     private ScenInfo GetScenarioInfo()
@@ -497,10 +510,17 @@ public class ASLDiceBot extends AbstractBuildable
         return 0;
     }
 
-    public void DR(String categName)
-    {
+    public void DR(String categName) {
+        //final Prefs modulePrefs = GameModule.getGameModule().getPrefs();
+        //if ((Boolean) modulePrefs.getValue(SHOW_ROF_DIE) == null) {
+        //    showROFDie = false;
+        //} else {
+        //    showROFDie = (Boolean) modulePrefs.getValue((SHOW_ROF_DIE));
+        //}
+
         int whiteDieResult = GetDieRoll();
         int coloredDieResult = GetDieRoll();
+        int rofDieResult =  showROFDie ? GetDieRoll() : 0;
         int dustDieResult = environment.dustInEffect() ? GetDieRoll() : 0;
 
         if ((coloredDieResult != 0) && (whiteDieResult != 0))
@@ -545,9 +565,9 @@ public class ASLDiceBot extends AbstractBuildable
                 );
             }
 
-            // If this was a TH roll, add a reminder for hit location for stupid people
-            if ("TH".equals(categName)){
-                output += coloredDieResult < whiteDieResult ? " &lt;Turret&gt;" : "&lt;Hull&gt;";
+            // showing special ROF Die
+            if (showROFDie && ("TH".equals(categName) || "IFT".equals(categName))){
+                output +=  " ROF die: " + rofDieResult;
             }
 
             OutputString(output);
