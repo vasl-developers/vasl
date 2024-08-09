@@ -1,0 +1,28 @@
+// Jan 13 2018 TJ
+
+BldgShadowL_1 101,123,63
+BldgShadowL0 143,151,103
+BldgShadowL1 149,125,59
+BldgShadowL_1Mud 98,91,48
+BldgShadowL0Mud 148,141,92
+BldgShadowL1Mud 138,119,66
+DirtRdL0  220,205,123
+PlowedFields  208,177,104
+Furrows 135,89,9
+Slope   255,240,120
+Level_1  119,146,74
+Level0   175,188,106
+Level1   176,147,70
+PavedRdL0  192,192,207
+PondWater    135,190,221
+PondWhite    215,230,230
+MudWaterWhite  170,175,147
+MudWater       152,186,169
+MudLevel_1    127,119,63
+MudLevel0      170,160,95
+MudLevel1      154,131,70
+MudPavedRoad  177,177,177
+MudDirtRoad   164,147,82
+MudGrain    230,230,127
+MudFurrows  100,69,14
+MudPlowedFields 163,139,81
