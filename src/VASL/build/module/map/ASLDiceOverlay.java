@@ -69,10 +69,11 @@ class DiceRollPanelHandler {
     private final int firstDieResult;
     private final int secondDieResult;
     private final int thirdDieResult;
+    private final int rofDieResult;
     private final boolean isAxisSAN;
     private final boolean isAlliedSAN;
 
-    public DiceRollPanelHandler(long roll, long birth, String categName, String secondMsg, String userNick, String sanDescr, int firstDie, int secondDie, int thirdDie) {
+    public DiceRollPanelHandler(long roll, long birth, String categName, String secondMsg, String userNick, String sanDescr, int firstDie, int secondDie, int thirdDie, int rofDie) {
 
         rollCount = roll;
         birthTime = birth;
@@ -86,6 +87,7 @@ class DiceRollPanelHandler {
         firstDieResult = firstDie;
         secondDieResult = secondDie;
         thirdDieResult = thirdDie;
+        rofDieResult = rofDie;
 
         isAxisSAN = (sanDescr.compareToIgnoreCase("Axis SAN") == 0) || (sanDescr.compareToIgnoreCase("Axis/Allied SAN") == 0);
         isAlliedSAN = (sanDescr.compareToIgnoreCase("Allied SAN") == 0) || (sanDescr.compareToIgnoreCase("Axis/Allied SAN") == 0);
@@ -124,6 +126,9 @@ class DiceRollPanelHandler {
     }
     public int getThirdDieResult() {
         return thirdDieResult;
+    }
+    public int getRofDieResult() {
+        return rofDieResult;
     }
     public long getRollCount() {
         return rollCount;
@@ -173,6 +178,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener {
     private static final String ENEMY_DR_CAPTION_COLOR = "enemyDRCaptionColor"; //$NON-NLS-1$
     private static final String COLORED_DICE_COLOR_OVER_MAP = "coloredDiceColorOverMap"; //$NON-NLS-1$
     private static final String THIRD_DIE_COLOR_OVER_MAP = "thirdDieColorOverMap";
+    private static final String ROF_DIE_COLOR_OVER_MAP = "rofDieColorOverMap";
     private static final String SINGLE_DIE_COLOR_OVER_MAP = "singleDieColorOverMap"; //$NON-NLS-1$
     private static final String DICE_ROLL_LIFE_IN_SECONDS = "DRPersistenceOnScreen";
     private static final String PANEL_FILE_NAME = "chatter/PNL.png";
@@ -188,6 +194,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener {
     private String coloredDiceColor = "Yellow";
     private String singleDieColor = "Yellow";
     private String thirdDieColor = "Red";
+    private String rofDieColor = "Black";
     private Color friendlyPanelColor = new Color(235, 244, 251);
     private Color friendlyPanelCaptionColor = new Color(173, 210, 241);
     private Color opponentPanelColor = new Color(253, 239, 230);
@@ -197,28 +204,30 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener {
     private final BufferedImage [] coloredDieImages = new BufferedImage[6];
     private final BufferedImage [] singleDieImages = new BufferedImage[6];
     private final BufferedImage [] thirdDieImages = new BufferedImage[6];
+    private final BufferedImage [] rofDieImages = new BufferedImage[6];
     private BufferedImage friendlyPanelImage = null;
     private BufferedImage opponentPanelImage = null;
     private BufferedImage axisSAN = null;
     private BufferedImage alliedSAN = null;
 
-    private final String [] quotes = {"It could be worse... it could be raining",
-                                      "Only bad players need to be lucky!",
-                                      "I prefer unlucky things. Luck is vulgar",
+    private final String [] quotes = {"Only bad players need to be lucky!",
+                                      "It could be worse... it could be raining",
+                                      "Even the lion has unlucky days!",
                                       "Strong men believe in cause and effect",
+                                      "Often bad luck means a bad plan",
+                                      "No bad luck lasts forever",
+                                      "I prefer unlucky things. Luck is vulgar",
+                                      "You are lucky in bad luck",
                                       "When nothing goes right... go left!",
                                       "Wishes upon a star, gets hit by meteor",
-                                      "I think your guardian angel drinks",
                                       "Hit shappens!",
                                       "Fools wait for a lucky day!",
                                       "It's a cruel, cruel world!",
                                       "No one ever said life was fair",
-                                      "No bad luck lasts forever",
-                                      "Even the lion has unlucky days!",
-                                      "Often bad luck means a bad plan",
-                                      "You can’t avoid mistakes and bad luck",
-                                      "You are lucky in bad luck"
+                                      "I think your guardian angel drinks"
     };
+
+    private static int quote_number = 0;
 
     private int captionWidth = 0;
     private int captionHeight = 0;
@@ -226,8 +235,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener {
     private final int dice_y = 42;
     private final int dice_height = 26;
     private final int last_dice_x = 144;
-    private final int middle_dice_x = 112;
-    private final int first_dice_x = 80;
+    private final int dice_x_gap = 32;
     private final int text_x = 12;
     private final int text_width = 54;
 
@@ -443,6 +451,27 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener {
         thirdDieColorConfigurer.fireUpdate();
 
         // **************************************************************************************
+        StringEnumConfigurer rofDieColorConfigurer = (StringEnumConfigurer)prefs.getOption(ROF_DIE_COLOR_OVER_MAP);
+
+        if (rofDieColorConfigurer == null) {
+            rofDieColorConfigurer = new StringEnumConfigurer(ROF_DIE_COLOR_OVER_MAP, "ROF die color:", dieColors );
+            prefs.addOption(PREFERENCE_TAB, rofDieColorConfigurer); //$NON-NLS-1$
+
+            rofDieColorConfigurer.setValue(rofDieColor);
+        }
+
+        rofDieColorConfigurer.addPropertyChangeListener(e -> {
+            rofDieColor = (String) e.getNewValue();
+            if (rofDieColor == null) {
+                rofDieColor = "Black";
+            }
+            RebuildRofDieFaces(DieColor.getEnum(rofDieColor));
+            FireNeedRepaint();
+        });
+
+        rofDieColorConfigurer.fireUpdate();
+
+        // **************************************************************************************
         StringEnumConfigurer singleDieColorConfigurer = (StringEnumConfigurer)prefs.getOption(SINGLE_DIE_COLOR_OVER_MAP);
 
         if (singleDieColorConfigurer == null) {
@@ -636,6 +665,18 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener {
         }
     }
 
+    private void RebuildRofDieFaces(DieColor color) {
+
+        try {
+            for (int i = 0; i < 6; i++) {
+                rofDieImages[i] = Op.load(String.format(DIE_FILE_NAME_FORMAT, i + 1, color)).getImage(null);
+            }
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public void RegisterForDiceEvents(boolean addRegistration) {
 
         if (!isRegisteredForDiceEvents && addRegistration) {
@@ -725,12 +766,15 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener {
                 secondMsg = "HULL HIT";
 
                 if ((firstDie == 6) && (secondDie == 6)) {
-                    secondMsg = quotes[GameModule.getGameModule().getRNG().nextInt(quotes.length)];
+                    secondMsg = quotes[quote_number++];
+
+                    if (quote_number >= quotes.length)
+                        quote_number = 0;
                 }
             }
         }
 
-        rollPanels.add(0, new DiceRollPanelHandler(++rollCount, clockNow, categoryName.trim(), secondMsg, strUser, strSAN, firstDie, secondDie, thirdDie));
+        rollPanels.add(0, new DiceRollPanelHandler(++rollCount, clockNow, categoryName.trim(), secondMsg, strUser, strSAN, firstDie, secondDie, thirdDie, rofDie));
 
         if (rollPanels.size() > getMaxRollsOnScreen())
             rollPanels.subList(getMaxRollsOnScreen(), rollPanels.size()).clear();
@@ -754,24 +798,24 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener {
              DrawCaption(g, drPanel.getRollCount() + ". " + (drPanel.isFriendly() ? GetFriendlyPlayerNick() : drPanel.getUserNickName()));
         }
 
+        int rolling_dice_x = last_dice_x;
+
         // draw the dice
+        if (drPanel.getRofDieResult() != -1) {
+            g.drawImage(rofDieImages[drPanel.getRofDieResult() - 1], rolling_dice_x, local_dice_y, null);
+            rolling_dice_x -= dice_x_gap;
+        }
         if (drPanel.getThirdDieResult() != -1) {
-            if (drPanel.getSecondDieResult() != -1) {
-                g.drawImage(thirdDieImages[drPanel.getThirdDieResult() - 1], last_dice_x, local_dice_y, null);
-                g.drawImage(whiteDieImages[drPanel.getSecondDieResult() - 1], middle_dice_x, local_dice_y, null);
-                g.drawImage(coloredDieImages[drPanel.getFirstDieResult() - 1], first_dice_x, local_dice_y, null);
-            } else {
-                g.drawImage(thirdDieImages[drPanel.getThirdDieResult() - 1], last_dice_x, local_dice_y, null);
-                g.drawImage(singleDieImages[drPanel.getFirstDieResult() - 1], middle_dice_x, local_dice_y, null);
-            }
+            g.drawImage(thirdDieImages[drPanel.getThirdDieResult() - 1], rolling_dice_x, local_dice_y, null);
+            rolling_dice_x -= dice_x_gap;
+        }
+        if (drPanel.getSecondDieResult() != -1) {
+            g.drawImage(whiteDieImages[drPanel.getSecondDieResult() - 1], rolling_dice_x, local_dice_y, null);
+            rolling_dice_x -= dice_x_gap;
+            g.drawImage(coloredDieImages[drPanel.getFirstDieResult() - 1], rolling_dice_x, local_dice_y, null);
         }
         else {
-            if (drPanel.getSecondDieResult() != -1) {
-                g.drawImage(whiteDieImages[drPanel.getSecondDieResult() - 1], last_dice_x, local_dice_y, null);
-                g.drawImage(coloredDieImages[drPanel.getFirstDieResult() - 1], middle_dice_x, local_dice_y, null);
-            } else {
-                g.drawImage(singleDieImages[drPanel.getFirstDieResult() - 1], last_dice_x, local_dice_y, null);
-            }
+            g.drawImage(singleDieImages[drPanel.getFirstDieResult() - 1], rolling_dice_x, local_dice_y, null);
         }
 
         if (drPanel.getCategoryName() != null && !drPanel.getCategoryName().isEmpty()) {
