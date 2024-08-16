@@ -1,6 +1,5 @@
 package VASL.build.module;
 
-import VASL.environment.LVLevel;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.map.MapShader;
 import VASSAL.build.module.properties.GlobalProperty;
