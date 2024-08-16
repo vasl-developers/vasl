@@ -8,7 +8,9 @@ import VASSAL.build.module.properties.GlobalProperty;
 
 import javax.swing.*;
 
-public class ASLLVMapShader extends MapShader {
+import static VASL.environment.SunBlindnessLevel.NONE;
+
+public class ASLLVMapShader extends MapShader implements  VisibilityQueryable {
   private final GlobalProperty globalLVLevel = new GlobalProperty();
   private LVLevel lvLevel = LVLevel.NONE;
 
@@ -53,5 +55,21 @@ public class ASLLVMapShader extends MapShader {
     globalLVLevel.setAttribute("initialValue", lvLevel.name());
     buildComposite();
     return lvLevel != LVLevel.NONE;
+  }
+
+  @Override
+  public boolean getShadingVisible() {
+    return (lvLevel == LVLevel.NONE ? false : true);
+  }
+  public String getShadingLevel(){
+    return lvLevel.name();
+  }
+
+  @Override
+  public void setStateFromSavedGame(Boolean v, String s) {
+    lvLevel = LVLevel.getLVLevel(s);
+    GameModule.getGameModule().getChatter().send(lvLevel.toString() + " is in effect.");
+    this.boardClip=null;
+    this.setShadingVisibility(setLVAndOpacity());
   }
 }

@@ -1,6 +1,8 @@
 package VASL.build.module;
 
+import VASL.environment.DustLevel;
 import VASL.environment.HeatHazeLevel;
+import VASL.environment.SunBlindnessLevel;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.map.MapShader;
@@ -10,7 +12,7 @@ import javax.swing.*;
 
 import static VASL.environment.HeatHazeLevel.NONE;
 
-public class ASLHeatHazeMapShader extends MapShader {
+public class ASLHeatHazeMapShader extends MapShader  implements VisibilityQueryable {
   private final GlobalProperty globalHeatHazeLevel = new GlobalProperty();
   private HeatHazeLevel heatHazeLevel = NONE;
 
@@ -62,4 +64,22 @@ public class ASLHeatHazeMapShader extends MapShader {
     buildComposite();
     return heatHazeLevel != NONE;
   }
+
+  @Override
+  public boolean getShadingVisible() {
+    return (heatHazeLevel == HeatHazeLevel.NONE ? false : true);
+  }
+  public String getShadingLevel(){
+    return heatHazeLevel.name();
+  }
+
+  @Override
+  public void setStateFromSavedGame(Boolean v, String s) {
+    heatHazeLevel = HeatHazeLevel.getHeatHLevel(s);
+    GameModule.getGameModule().getChatter().send(heatHazeLevel.toString() + " is in effect.");
+    this.boardClip=null;
+    this.setShadingVisibility(setHeatHazeAndOpacity());
+  }
+
+
 }

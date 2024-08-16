@@ -1,6 +1,7 @@
 package VASL.build.module;
 
 import VASL.environment.DustLevel;
+import VASL.environment.LVLevel;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.map.MapShader;
@@ -13,15 +14,16 @@ import VASSAL.preferences.Prefs;
 import javax.swing.*;
 
 import static VASL.environment.DustLevel.*;
+import static VASL.environment.SunBlindnessLevel.NONE;
 
-public class ASLDTODustMapShader extends MapShader {
+public class ASLDTODustMapShader extends MapShader implements VisibilityQueryable {
     public final static String ENVIRONMENT = "Environment";
     public final static String SPECIAL_DUST_SETTING = "UseSpecialDustSetting";
     public final static String SPECIAL_DUST_NAME = "SpecialDustName";
     public final static String SPECIAL_DUST_DIVIDE_BY = "SpecialDustDivideBy";
     public final static String SPECIAL_DUST_ROUNDING = "SpecialDustRounding";
 
-    private DustLevel dustLevel = NONE;
+    private DustLevel dustLevel = DustLevel.NONE;
     private BooleanConfigurer useSpecialDustSetting;
     private final GlobalProperty globalDustLevel = new GlobalProperty();
 
@@ -120,7 +122,22 @@ public class ASLDTODustMapShader extends MapShader {
         }
         globalDustLevel.setAttribute("initialValue", dustLevel.name());
         buildComposite();
-        return dustLevel != NONE;
+        return dustLevel != DustLevel.NONE;
     }
 
+    @Override
+    public boolean getShadingVisible() {
+        return (dustLevel == DustLevel.NONE ? false : true);
+    }
+    public String getShadingLevel(){
+        return dustLevel.name();
+    }
+
+    @Override
+    public void setStateFromSavedGame(Boolean v, String s) {
+        dustLevel = DustLevel.getDustLevel(s);
+        GameModule.getGameModule().getChatter().send(dustLevel.toString() + " is in effect.");
+        this.boardClip=null;
+        this.setShadingVisibility(setDustAndOpacity());
+    }
 }

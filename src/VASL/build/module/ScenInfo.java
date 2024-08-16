@@ -18,10 +18,12 @@
  */
 package VASL.build.module;
 
+import VASL.environment.*;
 import VASSAL.build.AbstractBuildable;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.GameComponent;
+import VASSAL.build.module.map.MapShader;
 import VASSAL.command.Command;
 import VASSAL.command.CommandEncoder;
 import VASSAL.configure.TextConfigurer;
@@ -33,6 +35,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Hashtable;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.StringTokenizer;
 
 public class ScenInfo extends AbstractBuildable implements GameComponent, CommandEncoder {
@@ -52,6 +55,19 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
 
   private int axisSAN, alliedSAN;
   private String axisBooby, alliedBooby;
+
+  private boolean nightShade;
+  private boolean dustShade;
+  private DustLevel dustLevel = DustLevel.NONE;
+    private boolean fogShade;
+  private FogLevel fogLevel = FogLevel.NONE;
+  private boolean heathShade;
+  private HeatHazeLevel heathLevel = HeatHazeLevel.NONE;
+  private boolean lvShade;
+  private LVLevel lvLevel = LVLevel.NONE;
+  private boolean sunbShade;
+  private SunBlindnessLevel sunbLevel = SunBlindnessLevel.NONE;
+  private String shaderLevel;
   private TextConfigurer myPrivate;
 
   public ScenInfo() {
@@ -176,12 +192,14 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
     GameModule.getGameModule().addKeyStrokeListener(keyListener);
     GameModule.getGameModule().addCommandEncoder(this);
   }
-
+  // retrieves values from tokenized String (either SavedGame file or from (getState)
   public void setState(String in) {
     reset();
 
     SequenceEncoder.Decoder st = new SequenceEncoder.Decoder(in, '\t');
-    String mf = "Axis",pl = "Axis",c = "1",xELR = "?",lELR = "?",xSAN = "?",lSAN = "?", xBooby = "?", lBooby = "?";
+    String mf = "Axis",pl = "Axis",c = "1",xELR = "?",lELR = "?",xSAN = "?",lSAN = "?", xBooby = "?", lBooby = "?",
+            nightshd ="false", dustshd = "false", fogshd = "false", heathshd = "false", lvshd = "false", sunbshd = "false",
+            nightlevel = "NONE", dustlevel = "NONE", foglevel = "NONE", heathlevel = "NONE", lvlevel = "NONE", sunblevel = "NONE";
     try {
       mf = st.nextToken();
       pl = st.nextToken();
@@ -192,7 +210,18 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
       lSAN = st.nextToken();
       xBooby = st.nextToken();
       lBooby = st.nextToken();
-
+      nightshd = st.nextToken();
+      dustshd = st.nextToken();
+      fogshd = st.nextToken();
+      heathshd = st.nextToken();
+      lvshd = st.nextToken();
+      sunbshd = st.nextToken();
+      nightlevel = st.nextToken();
+      dustlevel = st.nextToken();
+      foglevel = st.nextToken();
+      heathlevel = st.nextToken();
+      lvlevel = st.nextToken();
+      sunblevel = st.nextToken();
     }
     catch (Exception e) {
     }
@@ -204,6 +233,7 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
     if (!lBooby.equals("?") && !lBooby.equals("A") && !lBooby.equals("B") && !lBooby.equals("C")) {
       lBooby = "?";
     }
+
     turn.movesFirst = mf;
     movesFirst.setSelectedItem(mf + " moves first");
     turn.player = pl;
@@ -221,6 +251,17 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
     alliedSAN = getSAN(lSAN);
     axisBooby = getBooby(xBooby);
     alliedBooby = getBooby(lBooby);
+    nightShade = getShade(nightshd);
+    dustShade = getShade(dustshd);
+    fogShade = getShade(fogshd);
+    heathShade = getShade(heathshd);
+    lvShade = getShade(lvshd);
+    sunbShade = getShade((sunbshd));
+    dustLevel = DustLevel.getDustLevel(dustlevel);
+    fogLevel = FogLevel.getFogLevel(foglevel);
+    heathLevel = HeatHazeLevel.getHeatHLevel(heathlevel);
+    lvLevel = LVLevel.getLVLevel(lvlevel);
+    sunbLevel = SunBlindnessLevel.getSunBLevel(sunblevel);
 
     if (st.hasMoreTokens()) {
       notes.setValue(st.nextToken());
@@ -240,6 +281,49 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
         myPrivate.setValue(buffer.toString());
       }
       privateNotes.put(id,buffer.toString());
+    }
+    // persistence code from Zoltan
+    Iterator<ASLMap> mapIterator = GameModule.getGameModule().getComponentsOf(ASLMap.class).iterator();
+    if (mapIterator.hasNext()) {
+      ASLMap map = mapIterator.next();
+      this.setShaderVisibility(map, ASLNightMapShader.class, nightShade);
+      this.setShaderVisibility(map, ASLDTODustMapShader.class, dustShade);
+      this.setShaderVisibility(map, ASLFogMapShader.class, fogShade);
+      this.setShaderVisibility(map, ASLHeatHazeMapShader.class, heathShade);
+      this.setShaderVisibility(map, ASLLVMapShader.class, lvShade);
+      this.setShaderVisibility(map, ASLSunBlindnessMapShader.class,  sunbShade);
+      this.setShaderState(map, ASLNightMapShader.class, nightShade, nightlevel);
+      this.setShaderState(map, ASLDTODustMapShader.class, dustShade, dustlevel);
+      this.setShaderState(map, ASLFogMapShader.class, fogShade, foglevel);
+      this.setShaderState(map, ASLHeatHazeMapShader.class, heathShade, heathlevel);
+      this.setShaderState(map, ASLLVMapShader.class, lvShade, lvlevel);
+      this.setShaderState(map, ASLSunBlindnessMapShader.class,  sunbShade, sunblevel);
+    }
+  }
+
+  // persistence code from Zoltan
+  private <T extends MapShader> void setShaderVisibility(ASLMap map, Class<T> shader, boolean value) {
+    Iterator<T> shaderIterator = map.getComponentsOf(shader).iterator();
+    if (!shaderIterator.hasNext()) {return;}
+    MapShader shaderObj = shaderIterator.next();
+    shaderObj.setShadingVisibility(value);
+  }
+  private <T extends VisibilityQueryable> boolean getShaderVisibility(ASLMap map, Class<T> shader) {
+    Iterator<T> shaderIterator = map.getComponentsOf(shader).iterator();
+    if (!shaderIterator.hasNext()) {return false;}
+    VisibilityQueryable shaderObj = shaderIterator.next();
+    Boolean visibleShader = shaderObj.getShadingVisible();
+    if (!shaderIterator.equals(ASLNightMapShader.class)){
+      shaderLevel = (visibleShader == true ? shaderObj.getShadingLevel() : "NONE");
+    }
+    return visibleShader;
+  }
+  private <T extends VisibilityQueryable> void setShaderState(ASLMap map, Class<T> shader, boolean value, String state) {
+    Iterator<T> shaderIterator = map.getComponentsOf(shader).iterator();
+    if (!shaderIterator.hasNext()) {return;}
+    VisibilityQueryable shaderObj = shaderIterator.next();
+    if (value){
+        shaderObj.setStateFromSavedGame(value, state);
     }
   }
 
@@ -298,6 +382,13 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
     }
      return n;
   }
+  private Boolean getShade(String s){
+    Boolean gs = false;
+    if (s.trim().equals("true")){
+      gs = true;
+    }
+    return gs;
+  }
 
   public void setup(boolean show) {
     launch.setEnabled(show);
@@ -328,17 +419,44 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
   public String getAttributeValueString(String name) {
     return null;
   }
-
+  // gets values added via scen info window or via Shader class/buttons
+  // puts them into tokenized String
+  // returns the tokenized String
   public String getState() {
     axisSAN = getSAN(AxisSAN.getText());
     alliedSAN = getSAN(AlliedSAN.getText());
     axisBooby = getBooby(AxisBoobyTrap.getText());
     alliedBooby = getBooby(AlliedBoobyTrap.getText());
-
+    String nsstring = "false", dsstring = "false", fsstring = "false", hsstring = "false", lsstring = "false", sbsstring = "false";
+    String nlstring = "", dlstring = "", flstring = "", hlstring = "", llstring = "", sblstring = "";
+    Iterator<ASLMap> mapIterator = GameModule.getGameModule().getComponentsOf(ASLMap.class).iterator();
+    if (mapIterator.hasNext()) {
+      ASLMap map = mapIterator.next();
+      nightShade = this.getShaderVisibility(map, ASLNightMapShader.class);
+      nsstring = (nightShade == true ? "true" : "false");
+      nlstring = "NONE";
+      dustShade = this.getShaderVisibility(map, ASLDTODustMapShader.class);
+      dsstring = (dustShade == true ? "true" : "false");
+      dlstring = shaderLevel; //dustLevel.name();
+      fogShade = this.getShaderVisibility(map, ASLFogMapShader.class);
+      fsstring = (fogShade == true ? "true" : "false");
+      flstring = shaderLevel; //fogLevel.name();
+      heathShade = this.getShaderVisibility(map, ASLHeatHazeMapShader.class);
+      hsstring = (heathShade == true ? "true" : "false");
+      hlstring = shaderLevel; //heathLevel.name();
+      lvShade = this.getShaderVisibility(map, ASLLVMapShader.class);
+      lsstring = (lvShade == true ? "true" : "false");
+      llstring = shaderLevel; //lvLevel.name();
+      sunbShade = this.getShaderVisibility(map, ASLSunBlindnessMapShader.class);
+      sbsstring = (sunbShade == true ? "true" : "false");
+      sblstring = shaderLevel; //sunbLevel.name();
+    }
     SequenceEncoder se = new SequenceEncoder('\t');
     se.append(turn.movesFirst).append(turn.player).append("" + turn.current)
         .append(AxisELR.getText()).append(AxisSAN.getText())
-        .append(AlliedELR.getText()).append(AlliedSAN.getText()).append(AxisBoobyTrap.getText()).append(AlliedBoobyTrap.getText());
+        .append(AlliedELR.getText()).append(AlliedSAN.getText()).append(AxisBoobyTrap.getText()).append(AlliedBoobyTrap.getText()).append(nsstring)
+            .append(dsstring).append(fsstring).append(hsstring).append(lsstring).append(sbsstring).append(nlstring).append(dlstring).append(flstring)
+            .append(hlstring).append(llstring).append(sblstring);
     se.append(notes.getValueString());
     for (Enumeration e = privateNotes.keys(); e.hasMoreElements();) {
       String id = (String) e.nextElement();

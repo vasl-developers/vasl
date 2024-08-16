@@ -29,4 +29,28 @@ public enum LVLevel {
   public LVLevel next() {
     return values()[ordinal() + 1];
   }
+
+  public static LVLevel getLVLevel(String s){
+    switch (s) {
+      case "NONE":
+        return LVLevel.NONE;
+      case "SHADE_ONLY":
+        return LVLevel.SHADE_ONLY;
+      case "DAWN_DUSK":
+        return LVLevel.DAWN_DUSK;
+      case "MIST":
+        return LVLevel.MIST;
+      case "RAIN":
+        return LVLevel.RAIN;
+      case "HEAVY_RAIN":
+        return LVLevel.HEAVY_RAIN;
+      case "SNOW":
+        return LVLevel.SNOW;
+      case "HEAVY_SNOW":
+        return LVLevel.HEAVY_SNOW;
+      default:
+        return LVLevel.NONE;
+
+    }
+  }
 }

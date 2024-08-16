@@ -1,5 +1,6 @@
 package VASL.build.module;
 
+import VASL.environment.HeatHazeLevel;
 import VASL.environment.SunBlindnessLevel;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.map.MapShader;
@@ -9,12 +10,12 @@ import javax.swing.*;
 
 import static VASL.environment.SunBlindnessLevel.NONE;
 
-public class ASLSunBlindnessMapShader extends MapShader {
+public class ASLSunBlindnessMapShader extends MapShader implements VisibilityQueryable {
   private final GlobalProperty globalSunBlindnessLevel = new GlobalProperty();
   private SunBlindnessLevel sunBlindnessLevel = NONE;
   public ASLSunBlindnessMapShader() {
     super();
-    shadingVisible = false;
+    //shadingVisible = false;
     globalSunBlindnessLevel.setPropertyName("sun_blindness");
     globalSunBlindnessLevel.setAttribute("initialValue",sunBlindnessLevel.name());
     GameModule gm = GameModule.getGameModule();
@@ -55,4 +56,21 @@ public class ASLSunBlindnessMapShader extends MapShader {
     buildComposite();
     return sunBlindnessLevel != SunBlindnessLevel.NONE;
   }
+
+  @Override
+  public boolean getShadingVisible() {
+    return (sunBlindnessLevel == NONE ? false : true);
+  }
+  public String getShadingLevel(){
+    return sunBlindnessLevel.name();
+  }
+
+  @Override
+  public void setStateFromSavedGame(Boolean v, String s) {
+    sunBlindnessLevel = SunBlindnessLevel.getSunBLevel(s);
+    GameModule.getGameModule().getChatter().send(sunBlindnessLevel.toString() + " is in effect.");
+    this.boardClip=null;
+    this.setShadingVisibility(setLVAndOpacity());
+  }
+
 }

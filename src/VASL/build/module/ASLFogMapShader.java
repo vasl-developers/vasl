@@ -1,7 +1,9 @@
 package VASL.build.module;
 
 import VASL.LOS.Map.Hex;
+import VASL.environment.FogIntensity;
 import VASL.environment.FogLevel;
+import VASL.environment.HeatHazeLevel;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.Map;
 import VASSAL.build.module.map.MapShader;
@@ -16,7 +18,7 @@ import java.util.Collection;
 
 import static VASL.environment.FogLevel.NONE;
 
-public class ASLFogMapShader extends MapShader {
+public class ASLFogMapShader extends MapShader implements VisibilityQueryable{
   private final GlobalProperty globalFogLevel = new GlobalProperty();
   private FogLevel fogLevel = NONE;
   public ASLFogMapShader() {
@@ -152,5 +154,21 @@ public class ASLFogMapShader extends MapShader {
         }
       }
     }
+  }
+
+  @Override
+  public boolean getShadingVisible() {
+    return shadingVisible;
+  }
+  public String getShadingLevel(){
+    return fogLevel.name();
+  }
+
+  @Override
+  public void setStateFromSavedGame(Boolean v, String s) {
+    fogLevel = FogLevel.getFogLevel(s);
+    GameModule.getGameModule().getChatter().send(fogLevel.toString() + " is in effect.");
+    this.boardClip=null;
+    this.setShadingVisibility(setFogLevelAndOpacity());
   }
 }
