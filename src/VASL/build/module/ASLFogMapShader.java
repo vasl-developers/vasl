@@ -1,20 +1,16 @@
 package VASL.build.module;
 
 import VASL.LOS.Map.Hex;
-import VASL.environment.FogIntensity;
 import VASL.environment.FogLevel;
-import VASL.environment.HeatHazeLevel;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.Map;
 import VASSAL.build.module.map.MapShader;
-import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.build.module.properties.GlobalProperty;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
-import java.util.Collection;
 
 import static VASL.environment.FogLevel.NONE;
 

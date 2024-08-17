@@ -1,7 +1,6 @@
 package VASL.build.module;
 
 import VASL.environment.DustLevel;
-import VASL.environment.LVLevel;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.map.MapShader;
@@ -14,7 +13,6 @@ import VASSAL.preferences.Prefs;
 import javax.swing.*;
 
 import static VASL.environment.DustLevel.*;
-import static VASL.environment.SunBlindnessLevel.NONE;
 
 public class ASLDTODustMapShader extends MapShader implements VisibilityQueryable {
     public final static String ENVIRONMENT = "Environment";
@@ -127,7 +125,7 @@ public class ASLDTODustMapShader extends MapShader implements VisibilityQueryabl
 
     @Override
     public boolean getShadingVisible() {
-        return (dustLevel == DustLevel.NONE ? false : true);
+        return (dustLevel != DustLevel.NONE);
     }
     public String getShadingLevel(){
         return dustLevel.name();

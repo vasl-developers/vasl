@@ -8,8 +8,6 @@ import VASSAL.build.module.properties.GlobalProperty;
 
 import javax.swing.*;
 
-import static VASL.environment.SunBlindnessLevel.NONE;
-
 public class ASLLVMapShader extends MapShader implements  VisibilityQueryable {
   private final GlobalProperty globalLVLevel = new GlobalProperty();
   private LVLevel lvLevel = LVLevel.NONE;
@@ -59,7 +57,7 @@ public class ASLLVMapShader extends MapShader implements  VisibilityQueryable {
 
   @Override
   public boolean getShadingVisible() {
-    return (lvLevel == LVLevel.NONE ? false : true);
+    return (lvLevel != LVLevel.NONE);
   }
   public String getShadingLevel(){
     return lvLevel.name();

@@ -1,6 +1,5 @@
 package VASL.build.module;
 
-import VASL.environment.HeatHazeLevel;
 import VASL.environment.SunBlindnessLevel;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.map.MapShader;
@@ -59,7 +58,7 @@ public class ASLSunBlindnessMapShader extends MapShader implements VisibilityQue
 
   @Override
   public boolean getShadingVisible() {
-    return (sunBlindnessLevel == NONE ? false : true);
+    return (sunBlindnessLevel != NONE);
   }
   public String getShadingLevel(){
     return sunBlindnessLevel.name();
