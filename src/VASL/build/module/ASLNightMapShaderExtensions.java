@@ -17,11 +17,11 @@ public class ASLNightMapShaderExtensions extends AbstractBuildable implements Ga
 
     private static final Logger logger = LoggerFactory.getLogger(ASLNightMapShaderExtensions.class);
     public static final String LAST_KNOWN_VISIBILITY_PROPERTY = "NightShaderVisibility";
-    public static final String LAST_KNOWN_LEVEL_PROPERTY = "NONE";
+    public static final String LAST_KNOWN_LEVEL_PROPERTY = "NightShaderLevel";
     public static final String DEBUG_NO_VISIBILITY_PROPERTY = "buildFile does not contain expected GlobalProperty " + LAST_KNOWN_VISIBILITY_PROPERTY;
     public static final String DEBUG_NO_LEVEL_PROPERTY = "buildFile does not contain expected GlobalProperty " + LAST_KNOWN_LEVEL_PROPERTY;
     private final char ENCODING_DELIM = '|';
-    private final String COMMAND_PREFIX = "shader.config.night" + ENCODING_DELIM;
+    private final String COMMAND_PREFIX = "vasl.shader.night" + ENCODING_DELIM;
     // Use GameComponent set the initial conditions based on the last known setting
 
     // region GameComponent
