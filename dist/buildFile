@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <VASSAL.build.GameModule ModuleOther1="" ModuleOther2="" VassalVersion="3.7.13" description="VASL" name="VASL" nextPieceSlotId="15043" version="6.6.9-beta8">
-    <VASL.build.module.ScenInfo/>
     <VASL.build.module.CounterPaletteSearch/>
     <VASSAL.build.module.GlobalOptions autoReport="Use Preferences Setting" centerOnMove="Use Preferences Setting" chatterHTMLSupport="Always" disablePieceIndexing="false" hotKeysOnClosedWindows="Never" inventoryForAll="Always" nonOwnerUnmaskable="Use Preferences Setting" playerIdFormat="$playerName$" promptString="Let opponent unconceal my units" purgeBlankPropertyPrompts="true" sendToLocationMoveTrails="Never" specifyExtensionDirInPrefs="true" storeLeadingZeroIntegersAsStrings="false">
         <VASSAL.preferences.BooleanPreference default="false" desc="Enable red CA indicator" name="caindicator" tab="VASL"/>
@@ -8789,12 +8788,6 @@
         </VASSAL.build.module.gamepieceimage.FontManager>
         <VASSAL.build.module.gamepieceimage.GamePieceLayoutsContainer/>
     </VASSAL.build.module.gamepieceimage.GamePieceImageDefinitions>
-    <VASSAL.build.module.properties.GlobalProperties>
-        <VASSAL.build.module.properties.GlobalProperty description="TurnMarker1" initialValue="Spy (white)" isNumeric="false" max="null" min="null" name="TurnMarker1" wrap="false"/>
-        <VASSAL.build.module.properties.GlobalProperty description="TurnMarkerLayerLevel1" initialValue="33" isNumeric="true" max="100" min="0" name="TurnMarkerLayerLevel1" wrap="false"/>
-        <VASSAL.build.module.properties.GlobalProperty description="TurnMarker2" initialValue="Spy (black)" isNumeric="false" max="null" min="null" name="TurnMarker2" wrap="false"/>
-        <VASSAL.build.module.properties.GlobalProperty description="TurnMarkerLayerLevel2" initialValue="34" isNumeric="true" max="100" min="0" name="TurnMarkerLayerLevel2" wrap="false"/>
-    </VASSAL.build.module.properties.GlobalProperties>
     <VASSAL.i18n.Language/>
     <VASSAL.build.module.Map allowMultiple="false" backgroundcolor="255,255,255" buttonName="Casualties Bin" changeFormat="$message$" color="0,0,0" createFormat="$pieceName$ created in $location$" edgeHeight="0" edgeWidth="0" hideKey="" hotkey="" icon="" launch="true" mapName="Casualties" markMoved="Always" markUnmovedHotkey="" markUnmovedIcon="/images/unmoved.gif" markUnmovedReport="" markUnmovedText="" markUnmovedTooltip="Mark all pieces on this map as not moved" moveKey="77,715" moveToFormat="$pieceName$ moves $previousLocation$ -&gt; $location$ *" moveWithinFormat="$pieceName$ moves $previousLocation$ -&gt; $location$ *" onlyReportChangedLocation="false" showKey="" thickness="3">
         <VASSAL.build.module.map.BoardPicker addColumnText="Add column" addRowText="Add row" boardPrompt="Select board" slotHeight="125" slotScale="0.2" slotWidth="350" title="Choose Boards">
@@ -8842,4 +8835,16 @@
     <VASSAL.build.module.PlayerRoster buttonIcon="" buttonKeyStroke="" buttonText="" buttonToolTip="Switch sides, become an observer, or allow another player to take your side in this game"/>
     <VASSAL.build.module.KeyNamer/>
     <VASSAL.build.module.properties.GlobalTranslatableMessages/>
+    <VASSAL.build.module.properties.GlobalProperties>
+        <VASSAL.build.module.properties.GlobalProperty description="TurnMarker1" initialValue="Spy (white)" isNumeric="false" max="null" min="null" name="TurnMarker1" wrap="false"/>
+        <VASSAL.build.module.properties.GlobalProperty description="TurnMarkerLayerLevel1" initialValue="33" isNumeric="true" max="100" min="0" name="TurnMarkerLayerLevel1" wrap="false"/>
+        <VASSAL.build.module.properties.GlobalProperty description="TurnMarker2" initialValue="Spy (black)" isNumeric="false" max="null" min="null" name="TurnMarker2" wrap="false"/>
+        <VASSAL.build.module.properties.GlobalProperty description="TurnMarkerLayerLevel2" initialValue="34" isNumeric="true" max="100" min="0" name="TurnMarkerLayerLevel2" wrap="false"/>
+        <VASSAL.build.module.properties.GlobalProperty description="NightShaderVisibility" initialValue="false" isNumeric="false" max="100" min="0" name="NightShaderVisibility" wrap="false"/>
+        <VASSAL.build.module.properties.GlobalProperty description="NightShaderLevel" initialValue="NONE" isNumeric="false" max="100" min="0" name="NightShaderLevel" wrap="false"/>
+        <VASSAL.build.module.properties.GlobalProperty description="FogShaderVisibility" initialValue="false" isNumeric="false" max="100" min="0" name="FogShaderVisibility" wrap="false"/>
+        <VASSAL.build.module.properties.GlobalProperty description="FogShaderLevel" initialValue="0" isNumeric="true" max="100" min="0" name="FogShaderLevel" wrap="false"/>
+    </VASSAL.build.module.properties.GlobalProperties>
+    <VASL.build.module.ScenInfo/>
+    <VASL.build.module.ASLNightMapShaderExtensions/>
 </VASSAL.build.GameModule>
