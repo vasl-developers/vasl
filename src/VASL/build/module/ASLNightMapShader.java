@@ -1,25 +1,34 @@
 package VASL.build.module;
 
 import VASSAL.build.GameModule;
+import VASSAL.build.module.GameComponent;
 import VASSAL.build.module.map.MapShader;
-import VASSAL.build.module.properties.GlobalProperty;
+import VASSAL.command.Command;
 
-public class ASLNightMapShader extends MapShader{
-  private final GlobalProperty globalNightLevel = new GlobalProperty();
-    public ASLNightMapShader() {
-      super();
-      shadingVisible = false;
-      globalNightLevel.setPropertyName("night");
-      globalNightLevel.setAttribute("initialValue", String.valueOf(shadingVisible));
-      GameModule gm = GameModule.getGameModule();
-      gm.addMutableProperty("night", globalNightLevel);
-    }
+public class ASLNightMapShader extends MapShader implements GameComponent {
+
+  public interface CommandConfig {}
+
+  public ASLNightMapShader() {
+    super();
+  }
 
   @Override
   protected void toggleShading() {
     this.boardClip=null;
-    super.toggleShading();
-    GameModule.getGameModule().getChatter().send("Night is " + (shadingVisible ? "" : "not ") + "in effect." );
-    globalNightLevel.setAttribute("initialValue", String.valueOf(shadingVisible));
+
+    Command command;
+    if (shadingVisible) {
+      command = new ASLNightMapShaderExtensions.DectivateCommand();
+    } else {
+      command = new ASLNightMapShaderExtensions.ActivateCommand();
+    }
+
+    GameModule gm = GameModule.getGameModule();
+    command.execute();
+    gm.sendAndLog(command);
+    gm.getChatter().send("Night is" + (shadingVisible ? " " : " not ") + "in effect." );
+
   }
+
 }
