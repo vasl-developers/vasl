@@ -1,13 +1,11 @@
 package VASL.build.module;
 
 import VASSAL.build.GameModule;
-import VASSAL.build.module.GameComponent;
 import VASSAL.build.module.map.MapShader;
 import VASSAL.command.Command;
+import VASL.build.module.shader.*;
 
-public class ASLNightMapShader extends MapShader implements GameComponent {
-
-  public interface CommandConfig {}
+public class ASLNightMapShader extends MapShader {
 
   public ASLNightMapShader() {
     super();
@@ -19,14 +17,20 @@ public class ASLNightMapShader extends MapShader implements GameComponent {
 
     Command command;
     if (shadingVisible) {
-      command = new ASLNightMapShaderExtensions.DectivateCommand();
+      command = new DeactivateNightShaderCommand();
     } else {
-      command = new ASLNightMapShaderExtensions.ActivateCommand();
+      command = new ActivateNightShaderCommand();
     }
 
     GameModule gm = GameModule.getGameModule();
     command.execute();
-    gm.sendAndLog(command);
+
+    // if we ever wanted to sync MapShader state between clients, this would need to happen
+    //noinspection ConstantValue
+    if (false) {
+      gm.sendAndLog(command);
+    }
+
     gm.getChatter().send("Night is" + (shadingVisible ? " " : " not ") + "in effect." );
 
   }

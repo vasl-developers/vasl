@@ -1,31 +1,30 @@
 package VASL.build.module;
 
+import VASL.build.module.shader.ActivateLowVisibilityShaderCommand;
+import VASL.build.module.shader.DeactivateLowVisibilityShaderCommand;
+import VASL.environment.Environment;
 import VASL.environment.LVLevel;
-import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.map.MapShader;
-import VASSAL.build.module.properties.GlobalProperty;
+import VASSAL.build.module.properties.MutableProperty;
+import VASSAL.command.Command;
 
 import javax.swing.*;
 
 public class ASLLVMapShader extends MapShader {
-  private final GlobalProperty globalLVLevel = new GlobalProperty();
-  private LVLevel lvLevel = LVLevel.NONE;
 
   public ASLLVMapShader() {
     super();
-    globalLVLevel.setPropertyName("lv_level");
-    globalLVLevel.setAttribute("initialValue", lvLevel.name());
-    GameModule gm = GameModule.getGameModule();
-    gm.addMutableProperty("lv_level", globalLVLevel);
-  }
-  @Override
-  public void addTo(Buildable buildable) {
-    super.addTo(buildable);
+    opacity = 20;
   }
 
   @Override
   protected void toggleShading() {
+
+    this.boardClip=null;
+
+    Environment env = new Environment();
+
     Object[] possibilities = LVLevel.values();
     LVLevel tempLvLevel = (LVLevel) JOptionPane.showInputDialog(
         getLaunchButton().getParent(),
@@ -34,24 +33,34 @@ public class ASLLVMapShader extends MapShader {
         JOptionPane.PLAIN_MESSAGE,
         getLaunchButton().getIcon(),
         possibilities,
-        lvLevel.toString());
-    if(tempLvLevel != null) {
-      lvLevel = tempLvLevel;
-    }
-    GameModule.getGameModule().getChatter().send(lvLevel.toString() + " is in effect.");
-    this.boardClip=null;
-    this.setShadingVisibility(setLVAndOpacity());
-  }
+        env.getCurrentLVLevel().toString());
 
-  private boolean setLVAndOpacity() {
-    if (lvLevel == LVLevel.NONE) {
-      opacity = 0;
+    if (tempLvLevel == null) return;
+
+    // since Commands don't accept parameters outside of encode/decode,
+    // inject the opacity into the game before we turn on/off visibility
+
+    GameModule gm = GameModule.getGameModule();
+    MutableProperty levelProperty = gm.getMutableProperty(Environment.LOW_VIS_LEVEL_PROPERTY);
+    levelProperty.setPropertyValue(tempLvLevel.name()).execute();
+
+    Command command;
+    if (tempLvLevel == LVLevel.NONE) {
+      command = new DeactivateLowVisibilityShaderCommand();
     } else {
-      opacity = 20;
+      command = new ActivateLowVisibilityShaderCommand();
     }
 
-    globalLVLevel.setAttribute("initialValue", lvLevel.name());
-    buildComposite();
-    return lvLevel != LVLevel.NONE;
+    command.execute();
+
+    // if we ever wanted to sync MapShader state between clients, this would need to happen
+    //noinspection ConstantValue
+    if (false) {
+      gm.sendAndLog(command);
+    }
+
+    gm.getChatter().send(tempLvLevel + " is in effect.");
+
   }
+
 }
