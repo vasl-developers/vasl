@@ -42,6 +42,7 @@ public class ASLLVMapShader extends MapShader {
 
     GameModule gm = GameModule.getGameModule();
     MutableProperty levelProperty = gm.getMutableProperty(Environment.LOW_VIS_LEVEL_PROPERTY);
+    if (levelProperty == null) return;
     levelProperty.setPropertyValue(tempLvLevel.name()).execute();
 
     Command command;

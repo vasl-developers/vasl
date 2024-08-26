@@ -89,6 +89,7 @@ public class ASLDTODustMapShader extends MapShader {
 
         GameModule gm = GameModule.getGameModule();
         MutableProperty levelProperty = gm.getMutableProperty(Environment.DUST_LEVEL_PROPERTY);
+        if (levelProperty == null) return;
         levelProperty.setPropertyValue(tempDustLevel.name()).execute();
 
         Command visibilityCommand;

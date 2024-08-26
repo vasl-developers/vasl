@@ -20,6 +20,7 @@ public class ActivateHeatHazeShaderCommand extends BaseShaderCommand {
         shaderObj.setShadingVisibility(true);
 
         MutableProperty visibilityProperty = gm.getMutableProperty(Environment.HEAT_HAZE_VISIBILITY_PROPERTY);
+        if (visibilityProperty == null) return;
         visibilityProperty.setPropertyValue(Boolean.TRUE.toString()).execute();
 
     }

@@ -17,6 +17,7 @@ public class ActivateNightShaderCommand extends BaseShaderCommand {
         shaderObj.setShadingVisibility(true);
 
         MutableProperty visibilityProperty = gm.getMutableProperty(Environment.NIGHT_VISIBILITY_PROPERTY);
+        if (visibilityProperty == null) return;
         visibilityProperty.setPropertyValue(Boolean.TRUE.toString()).execute();
 
     }

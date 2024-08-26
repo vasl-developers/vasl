@@ -17,6 +17,7 @@ public class ActivateLowVisibilityShaderCommand extends BaseShaderCommand {
         shaderObj.setShadingVisibility(true);
 
         MutableProperty visibilityProperty = gm.getMutableProperty(Environment.LOW_VIS_VISIBILITY_PROPERTY);
+        if (visibilityProperty == null) return;
         visibilityProperty.setPropertyValue(Boolean.TRUE.toString()).execute();
 
     }

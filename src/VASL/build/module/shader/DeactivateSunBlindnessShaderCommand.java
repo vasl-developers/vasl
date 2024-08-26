@@ -17,6 +17,7 @@ public class DeactivateSunBlindnessShaderCommand extends BaseShaderCommand {
         shaderObj.setShadingVisibility(false);
 
         MutableProperty visibilityProperty = gm.getMutableProperty(Environment.SUN_BLIND_VISIBILITY_PROPERTY);
+        if (visibilityProperty == null) return;
         visibilityProperty.setPropertyValue(Boolean.FALSE.toString()).execute();
 
     }
