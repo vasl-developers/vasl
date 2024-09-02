@@ -24,12 +24,7 @@ public class ASLNightMapShader extends MapShader {
 
     GameModule gm = GameModule.getGameModule();
     command.execute();
-
-    // if we ever wanted to sync MapShader state between clients, this would need to happen
-    //noinspection ConstantValue
-    if (false) {
-      gm.sendAndLog(command);
-    }
+    gm.sendAndLog(command);
 
     gm.getChatter().send("Night is" + (shadingVisible ? " " : " not ") + "in effect." );
 

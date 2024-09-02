@@ -16,7 +16,7 @@ public class NightShaderComponent  extends AbstractBuildable implements GameComp
     private static final Logger logger = LoggerFactory.getLogger(NightShaderComponent.class);
 
     private final char ENCODING_DELIM = '|';
-    private final String COMMAND_PREFIX = "command.shader.night" + ENCODING_DELIM;
+    private final String COMMAND_PREFIX = "command.shader.";
 
     // Use GameComponent set the initial conditions based on the last known setting
 
@@ -69,11 +69,7 @@ public class NightShaderComponent  extends AbstractBuildable implements GameComp
     public void addTo(Buildable buildable) {
         GameModule gm = GameModule.getGameModule();
         gm.getGameState().addGameComponent(this);
-        // if we ever wanted to sync MapShader state between clients, this would need to happen
-        //noinspection ConstantValue
-        if (false) {
-            gm.addCommandEncoder(this);
-        }
+        gm.addCommandEncoder(this);
     }
     // endregion
 
@@ -84,15 +80,61 @@ public class NightShaderComponent  extends AbstractBuildable implements GameComp
     public Command decode(String s) {
         if (!s.startsWith(COMMAND_PREFIX)) return null;
         SequenceEncoder.Decoder decoder = new SequenceEncoder.Decoder(s, ENCODING_DELIM);
-        //noinspection unused
-        String prefixTokenIgnored = decoder.nextToken(); // ignore the prefix
-        if (decoder.hasMoreTokens()) {
-            String firstValueIsOnOrOff = decoder.nextToken();
-            boolean visible = Boolean.parseBoolean(firstValueIsOnOrOff);
-            if (visible) {
-                return new ActivateNightShaderCommand();
+        String shaderType = decoder.nextToken();
+        if (shaderType.equalsIgnoreCase(COMMAND_PREFIX + "night")) {
+            if (decoder.hasMoreTokens()) {
+                String firstValueIsOnOrOff = decoder.nextToken();
+                boolean visible = Boolean.parseBoolean(firstValueIsOnOrOff);
+                if (visible) {
+                    return new ActivateNightShaderCommand();
+                }
+                return new DeactivateNightShaderCommand();
             }
-            return new DeactivateNightShaderCommand();
+        } else if (shaderType.equalsIgnoreCase(COMMAND_PREFIX + "dust")) {
+            if (decoder.hasMoreTokens()) {
+                String firstValueIsOnOrOff = decoder.nextToken();
+                boolean visible = Boolean.parseBoolean(firstValueIsOnOrOff);
+                if (visible) {
+                    return new ActivateDustShaderCommand();
+                }
+                return new DeactivateDustShaderCommand();
+            }
+        } else if (shaderType.equalsIgnoreCase(COMMAND_PREFIX + "heat")) {
+            if (decoder.hasMoreTokens()) {
+                String firstValueIsOnOrOff = decoder.nextToken();
+                boolean visible = Boolean.parseBoolean(firstValueIsOnOrOff);
+                if (visible) {
+                    return new ActivateHeatHazeShaderCommand();
+                }
+                return new DeactivateHeatHazeShaderCommand();
+            }
+        } else if (shaderType.equalsIgnoreCase(COMMAND_PREFIX + "fog")) {
+            if (decoder.hasMoreTokens()) {
+                String firstValueIsOnOrOff = decoder.nextToken();
+                boolean visible = Boolean.parseBoolean(firstValueIsOnOrOff);
+                if (visible) {
+                    return new ActivateFogShaderCommand();
+                }
+                return new DeactivateFogShaderCommand();
+            }
+        } else if (shaderType.equalsIgnoreCase(COMMAND_PREFIX + "low_vis")) {
+            if (decoder.hasMoreTokens()) {
+                String firstValueIsOnOrOff = decoder.nextToken();
+                boolean visible = Boolean.parseBoolean(firstValueIsOnOrOff);
+                if (visible) {
+                    return new ActivateLowVisibilityShaderCommand();
+                }
+                return new DeactivateLowVisibilityShaderCommand();
+            }
+        } else if (shaderType.equalsIgnoreCase(COMMAND_PREFIX + "sun_bln")) {
+            if (decoder.hasMoreTokens()) {
+                String firstValueIsOnOrOff = decoder.nextToken();
+                boolean visible = Boolean.parseBoolean(firstValueIsOnOrOff);
+                if (visible) {
+                    return new ActivateSunBlindnessShaderCommand();
+                }
+                return new DeactivateSunBlindnessShaderCommand();
+            }
         }
         return null;
     }
@@ -101,12 +143,47 @@ public class NightShaderComponent  extends AbstractBuildable implements GameComp
     public String encode(Command command) {
         if (!(command instanceof ShaderCommandConfig)) return null;
         SequenceEncoder encoder = new SequenceEncoder(ENCODING_DELIM);
+        String shaderType;
         if (command instanceof ActivateNightShaderCommand) {
             encoder.append(true);
-            return COMMAND_PREFIX + encoder.getValue();
+            shaderType = "night";
+        } else if (command instanceof DeactivateNightShaderCommand) {
+            encoder.append(false);
+            shaderType = "night";
+        } else if (command instanceof ActivateDustShaderCommand) {
+            encoder.append(true);
+            shaderType = "dust";
+        } else if (command instanceof DeactivateDustShaderCommand) {
+            encoder.append(false);
+            shaderType = "dust";
+        } else if (command instanceof ActivateHeatHazeShaderCommand) {
+            encoder.append(true);
+            shaderType = "heat";
+        } else if (command instanceof DeactivateHeatHazeShaderCommand) {
+            encoder.append(false);
+            shaderType = "heat";
+        } else if (command instanceof ActivateFogShaderCommand) {
+            encoder.append(true);
+            shaderType = "fog";
+        } else if (command instanceof DeactivateFogShaderCommand) {
+            encoder.append(false);
+            shaderType = "fog";
+        } else if (command instanceof ActivateLowVisibilityShaderCommand) {
+            encoder.append(true);
+            shaderType = "low_vis";
+        } else if (command instanceof DeactivateLowVisibilityShaderCommand) {
+            encoder.append(false);
+            shaderType = "low_vis";
+        } else if (command instanceof ActivateSunBlindnessShaderCommand) {
+            encoder.append(true);
+            shaderType = "sun_bln";
+        } else if (command instanceof DeactivateSunBlindnessShaderCommand) {
+            encoder.append(false);
+            shaderType = "sun_bln";
+        } else {
+            return null;
         }
-        encoder.append(false);
-        return COMMAND_PREFIX + encoder.getValue();
+        return COMMAND_PREFIX + shaderType + ENCODING_DELIM + encoder.getValue();
     }
     // endregion
 }

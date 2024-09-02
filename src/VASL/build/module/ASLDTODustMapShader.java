@@ -43,9 +43,11 @@ public class ASLDTODustMapShader extends MapShader {
                 if (specialDust) {
                     GameModule gm = GameModule.getGameModule();
                     MutableProperty levelProperty = gm.getMutableProperty(Environment.DUST_LEVEL_PROPERTY);
+                    if (levelProperty == null) return;
                     levelProperty.setPropertyValue(DustLevel.SPECIAL.name()).execute();
                     Command command = new ActivateDustShaderCommand();
                     command.execute();
+                    gm.sendAndLog(command);
                 }
 
             });
@@ -100,12 +102,7 @@ public class ASLDTODustMapShader extends MapShader {
         }
 
         visibilityCommand.execute();
-
-        // if we ever wanted to sync MapShader state between clients, this would need to happen
-        //noinspection ConstantValue
-        if (false) {
-            gm.sendAndLog(visibilityCommand);
-        }
+        gm.sendAndLog(visibilityCommand);
 
         gm.getChatter().send(tempDustLevel + " is in effect.");
 

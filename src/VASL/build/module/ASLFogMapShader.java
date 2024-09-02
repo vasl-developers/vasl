@@ -61,12 +61,7 @@ public class ASLFogMapShader extends MapShader {
     }
 
     visibilityCommand.execute();
-
-    // if we ever wanted to sync MapShader state between clients, this would need to happen
-    //noinspection ConstantValue
-    if (false) {
-      gm.sendAndLog(visibilityCommand);
-    }
+    gm.sendAndLog(visibilityCommand);
 
     gm.getChatter().send(tempFogLevel + " is in effect.");
 
