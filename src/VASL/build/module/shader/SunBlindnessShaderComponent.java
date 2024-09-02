@@ -38,7 +38,7 @@ public class SunBlindnessShaderComponent extends AbstractBuildable implements Ga
         Environment env = new Environment();
 
         Command restoreCommand;
-        if (env.isNight()) {
+        if (env.isSunBlindness()) {
             logger.trace("restore: activate");
             restoreCommand = new ActivateSunBlindnessShaderCommand();
         } else {

@@ -38,7 +38,7 @@ public class HeatHazeShaderComponent extends AbstractBuildable implements GameCo
         Environment env = new Environment();
 
         Command restoreCommand;
-        if (env.isNight()) {
+        if (env.isHeatHaze()) {
             logger.trace("restore: activate");
             restoreCommand = new ActivateHeatHazeShaderCommand();
         } else {

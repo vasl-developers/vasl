@@ -27,6 +27,6 @@ public class ActivateDustShaderCommand extends BaseShaderCommand {
 
     @Override
     protected Command myUndoCommand() {
-        return new DeactivateFogShaderCommand();
+        return new DeactivateDustShaderCommand();
     }
 }

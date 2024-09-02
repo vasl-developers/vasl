@@ -38,7 +38,7 @@ public class LowVisibilityShaderComponent extends AbstractBuildable implements G
         Environment env = new Environment();
 
         Command restoreCommand;
-        if (env.isNight()) {
+        if (env.isLV()) {
             logger.trace("restore: activate");
             restoreCommand = new ActivateLowVisibilityShaderCommand();
         } else {
