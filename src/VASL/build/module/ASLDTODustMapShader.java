@@ -1,9 +1,7 @@
 package VASL.build.module;
 
 import VASL.build.module.shader.ActivateDustShaderCommand;
-import VASL.build.module.shader.ActivateNightShaderCommand;
 import VASL.build.module.shader.DeactivateDustShaderCommand;
-import VASL.build.module.shader.DeactivateNightShaderCommand;
 import VASL.environment.DustLevel;
 import VASL.environment.Environment;
 import VASSAL.build.Buildable;
