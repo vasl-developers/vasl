@@ -1,5 +1,6 @@
 package VASL.build.module;
 
+import VASL.build.module.shader.ActivateFogShaderCommand;
 import VASL.build.module.shader.ActivateHeatHazeShaderCommand;
 import VASL.build.module.shader.DeactivateHeatHazeShaderCommand;
 import VASL.environment.Environment;
@@ -16,6 +17,14 @@ public class ASLHeatHazeMapShader extends MapShader {
 
   public ASLHeatHazeMapShader() {
     super();
+  }
+
+  public Command getRestoreCommand() {
+    Environment env = new Environment();
+    if (env.isHeatHaze()) {
+      return new ActivateHeatHazeShaderCommand();
+    }
+    return new DeactivateHeatHazeShaderCommand();
   }
 
   @Override

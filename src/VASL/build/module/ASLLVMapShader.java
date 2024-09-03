@@ -1,5 +1,6 @@
 package VASL.build.module;
 
+import VASL.build.module.shader.ActivateFogShaderCommand;
 import VASL.build.module.shader.ActivateLowVisibilityShaderCommand;
 import VASL.build.module.shader.DeactivateLowVisibilityShaderCommand;
 import VASL.environment.Environment;
@@ -16,6 +17,14 @@ public class ASLLVMapShader extends MapShader {
   public ASLLVMapShader() {
     super();
     opacity = 20;
+  }
+
+  public Command getRestoreCommand() {
+    Environment env = new Environment();
+    if (env.isLV()) {
+      return new ActivateLowVisibilityShaderCommand();
+    }
+    return new DeactivateLowVisibilityShaderCommand();
   }
 
   @Override

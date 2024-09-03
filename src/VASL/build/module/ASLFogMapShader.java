@@ -26,6 +26,14 @@ public class ASLFogMapShader extends MapShader {
     super();
   }
 
+  public Command getRestoreCommand() {
+    Environment env = new Environment();
+    if (env.isFog()) {
+      return new ActivateFogShaderCommand();
+    }
+    return new DeactivateFogShaderCommand();
+  }
+
   @Override
   protected void toggleShading() {
 

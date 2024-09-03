@@ -25,6 +25,15 @@ public class ASLDTODustMapShader extends MapShader {
 
     private BooleanConfigurer useSpecialDustSetting;
 
+    @Override
+    public Command getRestoreCommand() {
+        Environment env = new Environment();
+        if (env.isDust()) {
+            return new ActivateDustShaderCommand();
+        }
+        return new DeactivateDustShaderCommand();
+    }
+
     public ASLDTODustMapShader() {
         super();
     }
