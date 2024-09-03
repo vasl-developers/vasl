@@ -32,7 +32,7 @@ public class HeatHazeShaderComponent extends AbstractBuildable implements GameCo
         GameModule gm = GameModule.getGameModule();
         // try to reset to off when it seems correct
         if (gm.getGameFileMode() == GameModule.GameFileMode.NEW_GAME) {
-            return new DeactivateHeatHazeShaderCommand();
+            return null;
         }
 
         Environment env = new Environment();

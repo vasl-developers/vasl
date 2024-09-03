@@ -51,7 +51,9 @@ public class ASLFogMapShader extends MapShader {
     GameModule gm = GameModule.getGameModule();
     MutableProperty levelProperty = gm.getMutableProperty(Environment.FOG_LEVEL_PROPERTY);
     if (levelProperty == null) return;
-    levelProperty.setPropertyValue(tempFogLevel.name()).execute();
+    Command setPropertyCommand = levelProperty.setPropertyValue(tempFogLevel.name());
+    setPropertyCommand.execute();
+    gm.sendAndLog(setPropertyCommand);
 
     Command visibilityCommand;
     if (tempFogLevel == FogLevel.NONE) {

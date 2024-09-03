@@ -32,7 +32,7 @@ public class LowVisibilityShaderComponent extends AbstractBuildable implements G
         GameModule gm = GameModule.getGameModule();
         // try to reset to off when it seems correct
         if (gm.getGameFileMode() == GameModule.GameFileMode.NEW_GAME) {
-            return new DeactivateLowVisibilityShaderCommand();
+            return null;
         }
 
         Environment env = new Environment();

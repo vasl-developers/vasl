@@ -32,7 +32,7 @@ public class NightShaderComponent  extends AbstractBuildable implements GameComp
         GameModule gm = GameModule.getGameModule();
         // try to reset to off when it seems correct
         if (gm.getGameFileMode() == GameModule.GameFileMode.NEW_GAME) {
-            return new DeactivateNightShaderCommand();
+            return null;
         }
 
         Environment env = new Environment();

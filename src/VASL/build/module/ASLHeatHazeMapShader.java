@@ -40,7 +40,9 @@ public class ASLHeatHazeMapShader extends MapShader {
     GameModule gm = GameModule.getGameModule();
     MutableProperty levelProperty = gm.getMutableProperty(Environment.HEAT_HAZE_LEVEL_PROPERTY);
     if (levelProperty == null) return;
-    levelProperty.setPropertyValue(tempHeatHazeLevel.name()).execute();
+    Command setPropertyCommand = levelProperty.setPropertyValue(tempHeatHazeLevel.name());
+    setPropertyCommand.execute();
+    gm.sendAndLog(setPropertyCommand);
 
     Command visibilityCommand;
     if (tempHeatHazeLevel == HeatHazeLevel.NONE) {

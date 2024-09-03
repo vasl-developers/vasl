@@ -32,7 +32,7 @@ public class SunBlindnessShaderComponent extends AbstractBuildable implements Ga
         GameModule gm = GameModule.getGameModule();
         // try to reset to off when it seems correct
         if (gm.getGameFileMode() == GameModule.GameFileMode.NEW_GAME) {
-            return new DeactivateSunBlindnessShaderCommand();
+            return null;
         }
 
         Environment env = new Environment();
