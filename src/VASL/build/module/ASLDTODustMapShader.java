@@ -1,7 +1,9 @@
 package VASL.build.module;
 
 import VASL.build.module.shader.ActivateDustShaderCommand;
+import VASL.build.module.shader.ActivateNightShaderCommand;
 import VASL.build.module.shader.DeactivateDustShaderCommand;
+import VASL.build.module.shader.DeactivateNightShaderCommand;
 import VASL.environment.DustLevel;
 import VASL.environment.Environment;
 import VASSAL.build.Buildable;
@@ -26,12 +28,26 @@ public class ASLDTODustMapShader extends MapShader {
     private BooleanConfigurer useSpecialDustSetting;
 
     @Override
-    public Command getRestoreCommand() {
+    public void setup(boolean gameStarting) {
+        super.setup(gameStarting);
         Environment env = new Environment();
+        Command command;
         if (env.isDust()) {
-            return new ActivateDustShaderCommand();
+            command = new ActivateDustShaderCommand();
+        } else {
+            command = new DeactivateDustShaderCommand();
         }
-        return new DeactivateDustShaderCommand();
+        command.execute();
+    }
+
+    @Override
+    public Command getRestoreCommand() {
+//        Environment env = new Environment();
+//        if (env.isDust()) {
+//            return new ActivateDustShaderCommand();
+//        }
+//        return new DeactivateDustShaderCommand();
+        return null;
     }
 
     public ASLDTODustMapShader() {

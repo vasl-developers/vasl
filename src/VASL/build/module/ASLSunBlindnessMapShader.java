@@ -1,10 +1,7 @@
 package VASL.build.module;
 
-import VASL.build.module.shader.ActivateFogShaderCommand;
-import VASL.build.module.shader.ActivateSunBlindnessShaderCommand;
-import VASL.build.module.shader.DeactivateSunBlindnessShaderCommand;
+import VASL.build.module.shader.*;
 import VASL.environment.Environment;
-import VASL.environment.LVLevel;
 import VASL.environment.SunBlindnessLevel;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.map.MapShader;
@@ -20,12 +17,26 @@ public class ASLSunBlindnessMapShader extends MapShader {
     opacity = 10;
   }
 
-  public Command getRestoreCommand() {
+  @Override
+  public void setup(boolean gameStarting) {
+    super.setup(gameStarting);
     Environment env = new Environment();
+    Command command;
     if (env.isSunBlindness()) {
-      return new ActivateSunBlindnessShaderCommand();
+      command = new ActivateSunBlindnessShaderCommand();
+    } else {
+      command = new DeactivateSunBlindnessShaderCommand();
     }
-    return new DeactivateSunBlindnessShaderCommand();
+    command.execute();
+  }
+
+  public Command getRestoreCommand() {
+//    Environment env = new Environment();
+//    if (env.isSunBlindness()) {
+//      return new ActivateSunBlindnessShaderCommand();
+//    }
+//    return new DeactivateSunBlindnessShaderCommand();
+    return null;
   }
 
   @Override

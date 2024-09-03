@@ -1,18 +1,16 @@
 package VASL.build.module.shader;
 
-import VASL.environment.Environment;
 import VASSAL.build.AbstractBuildable;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
-import VASSAL.build.module.GameComponent;
 import VASSAL.command.Command;
 import VASSAL.command.CommandEncoder;
-import VASSAL.command.NullCommand;
 import VASSAL.tools.SequenceEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class EnvironmentComponent  extends AbstractBuildable implements GameComponent, CommandEncoder {
+// TODO: rename as EnvironmentBuildable? EnvironmentCommandEncoder?
+public class EnvironmentComponent  extends AbstractBuildable implements CommandEncoder {
 
     private static final Logger logger = LoggerFactory.getLogger(EnvironmentComponent.class);
 
@@ -28,74 +26,74 @@ public class EnvironmentComponent  extends AbstractBuildable implements GameComp
     // Use GameComponent set the initial conditions based on the last known setting
 
     // region GameComponent
-    @Override
-    public void setup(boolean gameStarting) {
-        // the "game" is started when a save file is loaded, and then game is NOT starting
-        // when the map becomes visible so this isn't useful to us as a reset point.
-    }
-
-    @Override
-    public Command getRestoreCommand() {
-        GameModule gm = GameModule.getGameModule();
-        // try to reset to off when it seems correct
-        if (gm.getGameFileMode() == GameModule.GameFileMode.NEW_GAME) {
-            return null;
-        }
-
-        Environment env = new Environment();
-
-        Command restoreCommand = new NullCommand();
-
-        if (env.isNight()) {
-            logger.trace("night: activate");
-            restoreCommand.append(new ActivateNightShaderCommand());
-        } else {
-            logger.trace("night: disabled");
-            restoreCommand.append(new DeactivateNightShaderCommand());
-        }
-
-        if (env.isDust()) {
-            logger.trace("dust: activate");
-            restoreCommand.append(new ActivateDustShaderCommand());
-        } else {
-            logger.trace("dust: disabled");
-            restoreCommand.append(new DeactivateDustShaderCommand());
-        }
-
-        if (env.isFog()) {
-            logger.trace("fog: activate");
-            restoreCommand.append(new ActivateFogShaderCommand());
-        } else {
-            logger.trace("fog: disabled");
-            restoreCommand.append(new DeactivateFogShaderCommand());
-        }
-
-        if (env.isHeatHaze()) {
-            logger.trace("heat: activate");
-            restoreCommand.append(new ActivateHeatHazeShaderCommand());
-        } else {
-            logger.trace("heat: disabled");
-            restoreCommand.append(new DeactivateHeatHazeShaderCommand());
-        }
-
-        if (env.isLV()) {
-            logger.trace("lv: activate");
-            restoreCommand.append(new ActivateLowVisibilityShaderCommand());
-        } else {
-            logger.trace("lv: disabled");
-            restoreCommand.append(new DeactivateLowVisibilityShaderCommand());
-        }
-
-        if (env.isSunBlindness()) {
-            logger.trace("sb: activate");
-            restoreCommand.append(new ActivateSunBlindnessShaderCommand());
-        } else {
-            logger.trace("sb: disabled");
-            restoreCommand.append(new DeactivateSunBlindnessShaderCommand());
-        }
-
-        return restoreCommand;
-    }
+//    @Override
+//    public void setup(boolean gameStarting) {
+//        // the "game" is started when a save file is loaded, and then game is NOT starting
+//        // when the map becomes visible so this isn't useful to us as a reset point.
+//    }
+//
+//    @Override
+//    public Command getRestoreCommand() {
+//        GameModule gm = GameModule.getGameModule();
+//        // try to reset to off when it seems correct
+//        if (gm.getGameFileMode() == GameModule.GameFileMode.NEW_GAME) {
+//            return null;
+//        }
+//
+//        Environment env = new Environment();
+//
+//        Command restoreCommand = new NullCommand();
+//
+//        if (env.isNight()) {
+//            logger.trace("night: activate");
+//            restoreCommand.append(new ActivateNightShaderCommand());
+//        } else {
+//            logger.trace("night: disabled");
+//            restoreCommand.append(new DeactivateNightShaderCommand());
+//        }
+//
+//        if (env.isDust()) {
+//            logger.trace("dust: activate");
+//            restoreCommand.append(new ActivateDustShaderCommand());
+//        } else {
+//            logger.trace("dust: disabled");
+//            restoreCommand.append(new DeactivateDustShaderCommand());
+//        }
+//
+//        if (env.isFog()) {
+//            logger.trace("fog: activate");
+//            restoreCommand.append(new ActivateFogShaderCommand());
+//        } else {
+//            logger.trace("fog: disabled");
+//            restoreCommand.append(new DeactivateFogShaderCommand());
+//        }
+//
+//        if (env.isHeatHaze()) {
+//            logger.trace("heat: activate");
+//            restoreCommand.append(new ActivateHeatHazeShaderCommand());
+//        } else {
+//            logger.trace("heat: disabled");
+//            restoreCommand.append(new DeactivateHeatHazeShaderCommand());
+//        }
+//
+//        if (env.isLV()) {
+//            logger.trace("lv: activate");
+//            restoreCommand.append(new ActivateLowVisibilityShaderCommand());
+//        } else {
+//            logger.trace("lv: disabled");
+//            restoreCommand.append(new DeactivateLowVisibilityShaderCommand());
+//        }
+//
+//        if (env.isSunBlindness()) {
+//            logger.trace("sb: activate");
+//            restoreCommand.append(new ActivateSunBlindnessShaderCommand());
+//        } else {
+//            logger.trace("sb: disabled");
+//            restoreCommand.append(new DeactivateSunBlindnessShaderCommand());
+//        }
+//
+//        return restoreCommand;
+//    }
     //endregion
 
     // Use Buildable to add the GameComponent and CommandEncoder or else the Commands are never persisted to the log
@@ -117,7 +115,7 @@ public class EnvironmentComponent  extends AbstractBuildable implements GameComp
     @Override
     public void addTo(Buildable buildable) {
         GameModule gm = GameModule.getGameModule();
-        gm.getGameState().addGameComponent(this);
+        //gm.getGameState().addGameComponent(this);
         gm.addCommandEncoder(this);
     }
     // endregion

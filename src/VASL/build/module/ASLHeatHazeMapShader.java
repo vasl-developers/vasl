@@ -1,8 +1,6 @@
 package VASL.build.module;
 
-import VASL.build.module.shader.ActivateFogShaderCommand;
-import VASL.build.module.shader.ActivateHeatHazeShaderCommand;
-import VASL.build.module.shader.DeactivateHeatHazeShaderCommand;
+import VASL.build.module.shader.*;
 import VASL.environment.Environment;
 import VASL.environment.HeatHazeLevel;
 import VASSAL.build.GameModule;
@@ -19,12 +17,26 @@ public class ASLHeatHazeMapShader extends MapShader {
     super();
   }
 
-  public Command getRestoreCommand() {
+  @Override
+  public void setup(boolean gameStarting) {
+    super.setup(gameStarting);
     Environment env = new Environment();
+    Command command;
     if (env.isHeatHaze()) {
-      return new ActivateHeatHazeShaderCommand();
+      command = new ActivateHeatHazeShaderCommand();
+    } else {
+      command = new DeactivateHeatHazeShaderCommand();
     }
-    return new DeactivateHeatHazeShaderCommand();
+    command.execute();
+  }
+
+  public Command getRestoreCommand() {
+//    Environment env = new Environment();
+//    if (env.isHeatHaze()) {
+//      return new ActivateHeatHazeShaderCommand();
+//    }
+//    return new DeactivateHeatHazeShaderCommand();
+    return null;
   }
 
   @Override

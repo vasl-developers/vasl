@@ -12,12 +12,26 @@ public class ASLNightMapShader extends MapShader {
     super();
   }
 
-  public Command getRestoreCommand() {
+  @Override
+  public void setup(boolean gameStarting) {
+    super.setup(gameStarting);
     Environment env = new Environment();
+    Command command;
     if (env.isNight()) {
-      return new ActivateNightShaderCommand();
+      command = new ActivateNightShaderCommand();
+    } else {
+      command = new DeactivateNightShaderCommand();
     }
-    return new DeactivateNightShaderCommand();
+    command.execute();
+  }
+
+  public Command getRestoreCommand() {
+//    Environment env = new Environment();
+//    if (env.isNight()) {
+//      return new ActivateNightShaderCommand();
+//    }
+//    return new DeactivateNightShaderCommand();
+    return null;
   }
 
   @Override
