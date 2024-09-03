@@ -26,7 +26,7 @@ public class ASLSunBlindnessMapShader extends MapShader {
 
     Environment env = new Environment();
 
-    Object[] possibilities = LVLevel.values();
+    Object[] possibilities = SunBlindnessLevel.values();
     SunBlindnessLevel tempSunBlindnessLevel = (SunBlindnessLevel) JOptionPane.showInputDialog(
             getLaunchButton().getParent(),
             "Select Sun Blindness type:",
