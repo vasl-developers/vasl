@@ -8853,10 +8853,5 @@
         <VASSAL.build.module.properties.GlobalProperty description="SunBlindShaderLevel" initialValue="NONE" isNumeric="false" max="100" min="0" name="SunBlindShaderLevel" wrap="false"/>
     </VASSAL.build.module.properties.GlobalProperties>
     <VASL.build.module.ScenInfo/>
-    <VASL.build.module.shader.DustShaderComponent/>
-    <VASL.build.module.shader.FogShaderComponent/>
-    <VASL.build.module.shader.HeatHazeShaderComponent/>
-    <VASL.build.module.shader.LowVisibilityShaderComponent/>
-    <VASL.build.module.shader.NightShaderComponent/>
-    <VASL.build.module.shader.SunBlindnessShaderComponent/>
+    <VASL.build.module.shader.EnvironmentComponent/>
 </VASSAL.build.GameModule>
