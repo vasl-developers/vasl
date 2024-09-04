@@ -1,38 +1,56 @@
 package VASL.build.module;
 
+import VASL.environment.Environment;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.map.MapShader;
-import VASSAL.build.module.properties.GlobalProperty;
+import VASSAL.command.Command;
+import VASL.build.module.shader.*;
 
-public class ASLNightMapShader extends MapShader implements VisibilityQueryable{
-  private final GlobalProperty globalNightLevel = new GlobalProperty();
-    public ASLNightMapShader() {
-      super();
-      //shadingVisible = false;
-      globalNightLevel.setPropertyName("night");
-      globalNightLevel.setAttribute("initialValue", String.valueOf(shadingVisible));
-      GameModule gm = GameModule.getGameModule();
-      gm.addMutableProperty("night", globalNightLevel);
+public class ASLNightMapShader extends MapShader {
+
+  public ASLNightMapShader() {
+    super();
+  }
+
+  @Override
+  public void setup(boolean gameStarting) {
+    super.setup(gameStarting);
+    Environment env = new Environment();
+    Command command;
+    if (env.isNight()) {
+      command = new ActivateNightShaderCommand();
+    } else {
+      command = new DeactivateNightShaderCommand();
     }
+    command.execute();
+  }
+
+  public Command getRestoreCommand() {
+//    Environment env = new Environment();
+//    if (env.isNight()) {
+//      return new ActivateNightShaderCommand();
+//    }
+//    return new DeactivateNightShaderCommand();
+    return null;
+  }
 
   @Override
   protected void toggleShading() {
     this.boardClip=null;
-    super.toggleShading();
-    GameModule.getGameModule().getChatter().send("Night is " + (shadingVisible ? "" : "not ") + "in effect." );
-    globalNightLevel.setAttribute("initialValue", String.valueOf(shadingVisible));
-  }
-  public boolean getShadingVisible (){
-      return shadingVisible;
-  }
-  public String getShadingLevel(){
-      return "";
+
+    Command command;
+    if (shadingVisible) {
+      command = new DeactivateNightShaderCommand();
+    } else {
+      command = new ActivateNightShaderCommand();
+    }
+
+    GameModule gm = GameModule.getGameModule();
+    command.execute();
+    gm.sendAndLog(command);
+
+    gm.getChatter().send("Night is" + (shadingVisible ? " " : " not ") + "in effect." );
+
   }
 
-  @Override
-  public void setStateFromSavedGame(Boolean v, String s) {
-    this.boardClip=null;
-    this.setShadingVisibility(v);
-    GameModule.getGameModule().getChatter().send( "Night is " + (shadingVisible ? "" : "not ") + "in effect.");
-  }
 }

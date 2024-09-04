@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <VASSAL.build.GameModule ModuleOther1="" ModuleOther2="" VassalVersion="3.7.13" description="VASL" name="VASL" nextPieceSlotId="15046" version="6.6.9-beta8">
-    <VASL.build.module.ScenInfo/>
+    <VASSAL.build.module.properties.GlobalProperties>
+        <VASSAL.build.module.properties.GlobalProperty description="TurnMarker1" initialValue="Spy (white)" isNumeric="false" max="null" min="null" name="TurnMarker1" wrap="false"/>
+        <VASSAL.build.module.properties.GlobalProperty description="TurnMarkerLayerLevel1" initialValue="33" isNumeric="true" max="100" min="0" name="TurnMarkerLayerLevel1" wrap="false"/>
+        <VASSAL.build.module.properties.GlobalProperty description="TurnMarker2" initialValue="Spy (black)" isNumeric="false" max="null" min="null" name="TurnMarker2" wrap="false"/>
+        <VASSAL.build.module.properties.GlobalProperty description="TurnMarkerLayerLevel2" initialValue="34" isNumeric="true" max="100" min="0" name="TurnMarkerLayerLevel2" wrap="false"/>
+        <VASSAL.build.module.properties.GlobalProperty description="NightShaderVisibility" initialValue="false" isNumeric="false" max="100" min="0" name="NightShaderVisibility" wrap="false"/>
+        <VASSAL.build.module.properties.GlobalProperty description="FogShaderVisibility" initialValue="false" isNumeric="false" max="100" min="0" name="FogShaderVisibility" wrap="false"/>
+        <VASSAL.build.module.properties.GlobalProperty description="FogShaderLevel" initialValue="NONE" isNumeric="false" max="100" min="0" name="FogShaderLevel" wrap="false"/>
+        <VASSAL.build.module.properties.GlobalProperty description="DustShaderVisibility" initialValue="false" isNumeric="false" max="100" min="0" name="DustShaderVisibility" wrap="false"/>
+        <VASSAL.build.module.properties.GlobalProperty description="DustShaderLevel" initialValue="NONE" isNumeric="false" max="100" min="0" name="DustShaderLevel" wrap="false"/>
+        <VASSAL.build.module.properties.GlobalProperty description="HeatHazeShaderVisibility" initialValue="false" isNumeric="false" max="100" min="0" name="HeatHazeShaderVisibility" wrap="false"/>
+        <VASSAL.build.module.properties.GlobalProperty description="HeatHazeShaderLevel" initialValue="NONE" isNumeric="false" max="100" min="0" name="HeatHazeShaderLevel" wrap="false"/>
+        <VASSAL.build.module.properties.GlobalProperty description="LowVisShaderVisibility" initialValue="false" isNumeric="false" max="100" min="0" name="LowVisShaderVisibility" wrap="false"/>
+        <VASSAL.build.module.properties.GlobalProperty description="LowVisShaderLevel" initialValue="NONE" isNumeric="false" max="100" min="0" name="LowVisShaderLevel" wrap="false"/>
+        <VASSAL.build.module.properties.GlobalProperty description="SunBlindShaderVisibility" initialValue="false" isNumeric="false" max="100" min="0" name="SunBlindShaderVisibility" wrap="false"/>
+        <VASSAL.build.module.properties.GlobalProperty description="SunBlindShaderLevel" initialValue="NONE" isNumeric="false" max="100" min="0" name="SunBlindShaderLevel" wrap="false"/>
+    </VASSAL.build.module.properties.GlobalProperties>
     <VASL.build.module.CounterPaletteSearch/>
     <VASSAL.build.module.GlobalOptions autoReport="Use Preferences Setting" centerOnMove="Use Preferences Setting" chatterHTMLSupport="Always" disablePieceIndexing="false" hotKeysOnClosedWindows="Never" inventoryForAll="Always" nonOwnerUnmaskable="Use Preferences Setting" playerIdFormat="$playerName$" promptString="Let opponent unconceal my units" purgeBlankPropertyPrompts="true" sendToLocationMoveTrails="Never" specifyExtensionDirInPrefs="true" storeLeadingZeroIntegersAsStrings="false">
         <VASSAL.preferences.BooleanPreference default="false" desc="Enable red CA indicator" name="caindicator" tab="VASL"/>
@@ -8844,4 +8860,6 @@
     <VASSAL.build.module.PlayerRoster buttonIcon="" buttonKeyStroke="" buttonText="" buttonToolTip="Switch sides, become an observer, or allow another player to take your side in this game"/>
     <VASSAL.build.module.KeyNamer/>
     <VASSAL.build.module.properties.GlobalTranslatableMessages/>
+    <VASL.build.module.ScenInfo/>
+    <VASL.build.module.shader.EnvironmentComponent/>
 </VASSAL.build.GameModule>

@@ -1005,6 +1005,14 @@
 		<color name="SRailBed3" red="108" green="106" blue="108" terrain="Railroad, Sunken" elevation="-1" />
 		<color name="SSunkRoad1" red="148" green="110" blue="28" terrain="Railroad, Sunken" elevation="-1" />
 		<color name="SSunkRoad2" red="92" green="58" blue="20" terrain="Railroad, Sunken" elevation="-1" />
+
+		<color name="WinterRails1" red="186" green="187" blue="190" terrain="Railroad, Ground Level" elevation="UNKNOWN" />
+		<color name="WinterRails2" red="150" green="151" blue="152" terrain="Railroad, Ground Level" elevation="UNKNOWN" />
+		<color name="WinterRailTies" red="195" green="154" blue="133" terrain="Railroad, Ground Level" elevation="UNKNOWN" />
+		<color name="WinterRailBed1" red="227" green="225" blue="226" terrain="Railroad, Ground Level" elevation="UNKNOWN" />
+		<color name="WinterRailBed2" red="198" green="197" blue="198" terrain="Railroad, Ground Level" elevation="UNKNOWN" />
+		<color name="WinterRailBed3" red="181" green="179" blue="179" terrain="Railroad, Ground Level" elevation="UNKNOWN" />
+
 		<!-- Rice Paddies  -->
 		<color name="RicePaddy" red="103" green="75" blue="39" terrain="Rice Paddy, Irrigated" elevation="UNKNOWN" />
 		<color name="PaddyInterior" red="174" green="168" blue="78" terrain="Rice Paddy, Irrigated" elevation="UNKNOWN" />
@@ -2847,6 +2855,13 @@
 			<colorMap fromColor="BridgeBrown" toColor="WallBrownWinter"/>
 			<colorMap fromColor="BridgeGrey1" toColor="StoneBldg10Winter"/>
 			<colorMap fromColor="BridgeGrey2" toColor="StoneBldg6Winter"/>
+			<colorMap fromColor="Rails1" toColor="WinterRails1"/>
+			<colorMap fromColor="Rails2" toColor="WinterRails2"/>
+			<colorMap fromColor="RailTies" toColor="WinterRailTies"/>
+			<colorMap fromColor="RailBed1" toColor="WinterRailBed1"/>
+			<colorMap fromColor="RailBed2" toColor="WinterRailBed2"/>
+			<colorMap fromColor="RailBed3" toColor="WinterRailBed3"/>
+
 		</colorSSR>
 		<colorSSR name="Mud">
 			<colorMap fromColor="OrchTrees" toColor="MudOrchard"/>

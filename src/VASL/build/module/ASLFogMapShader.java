@@ -1,11 +1,14 @@
 package VASL.build.module;
 
 import VASL.LOS.Map.Hex;
+import VASL.build.module.shader.*;
+import VASL.environment.Environment;
 import VASL.environment.FogLevel;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.Map;
 import VASSAL.build.module.map.MapShader;
-import VASSAL.build.module.properties.GlobalProperty;
+import VASSAL.build.module.properties.MutableProperty;
+import VASSAL.command.Command;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,19 +17,44 @@ import java.awt.geom.Area;
 
 import static VASL.environment.FogLevel.NONE;
 
-public class ASLFogMapShader extends MapShader implements VisibilityQueryable{
-  private final GlobalProperty globalFogLevel = new GlobalProperty();
-  private FogLevel fogLevel = NONE;
+public class ASLFogMapShader extends MapShader {
+
+  // used by draw()
+  private FogLevel _fogLevel = NONE;
+
   public ASLFogMapShader() {
     super();
-    globalFogLevel.setPropertyName("fog_level");
-    globalFogLevel.setAttribute("initialValue", fogLevel.name());
-    GameModule gm = GameModule.getGameModule();
-    gm.addMutableProperty("fog_level", globalFogLevel);
+  }
+
+  @Override
+  public void setup(boolean gameStarting) {
+    super.setup(gameStarting);
+    Environment env = new Environment();
+    Command command;
+    if (env.isFog()) {
+      command = new ActivateFogShaderCommand();
+    } else {
+      command = new DeactivateFogShaderCommand();
+    }
+    command.execute();
+  }
+
+  public Command getRestoreCommand() {
+//    Environment env = new Environment();
+//    if (env.isFog()) {
+//      return new ActivateFogShaderCommand();
+//    }
+//    return new DeactivateFogShaderCommand();
+    return null;
   }
 
   @Override
   protected void toggleShading() {
+
+    this.boardClip=null;
+
+    Environment env = new Environment();
+
     Object[] possibilities = FogLevel.values();
     FogLevel tempFogLevel = (FogLevel)JOptionPane.showInputDialog(
         getLaunchButton().getParent(),
@@ -35,49 +63,37 @@ public class ASLFogMapShader extends MapShader implements VisibilityQueryable{
         JOptionPane.PLAIN_MESSAGE,
         getLaunchButton().getIcon(),
         possibilities,
-        fogLevel.toString());
-    if(tempFogLevel != null) {
-      fogLevel = tempFogLevel;
-    }
-    GameModule.getGameModule().getChatter().send(fogLevel.toString() + " is in effect.");
-    this.setShadingVisibility(setFogLevelAndOpacity());
-  }
+        env.getCurrentFogLevel().toString());
 
-  private boolean setFogLevelAndOpacity() {
-    switch (fogLevel) {
-      case NONE:
-        opacity = 0;
-        break;
-      case LIGHT_FOGM1:
-      case LIGHT_FOGL0:
-      case LIGHT_FOGL1:
-      case LIGHT_FOGL2:
-      case LIGHT_FOGL3:
-      case LIGHT_FOGL4:
-        opacity = 35;
-        break;
-      case MODERATE_FOGM1:
-      case MODERATE_FOGL0:
-      case MODERATE_FOGL1:
-      case MODERATE_FOGL2:
-      case MODERATE_FOGL3:
-      case MODERATE_FOGL4:
-        opacity = 40;
-        break;
-      case HEAVY_FOGM1:
-      case HEAVY_FOGL0:
-      case HEAVY_FOGL1:
-      case HEAVY_FOGL2:
-      case HEAVY_FOGL3:
-      case HEAVY_FOGL4:
-        opacity = 45;
-        break;
+    if (tempFogLevel == null) return;
+
+    // since Commands don't accept parameters outside of encode/decode,
+    // inject the opacity into the game before we turn on/off visibility
+
+    GameModule gm = GameModule.getGameModule();
+    MutableProperty levelProperty = gm.getMutableProperty(Environment.FOG_LEVEL_PROPERTY);
+    if (levelProperty == null) return;
+    Command setPropertyCommand = levelProperty.setPropertyValue(tempFogLevel.name());
+    setPropertyCommand.execute();
+    gm.sendAndLog(setPropertyCommand);
+
+    Command visibilityCommand;
+    if (tempFogLevel == FogLevel.NONE) {
+      visibilityCommand = new DeactivateFogShaderCommand();
+    } else {
+      visibilityCommand = new ActivateFogShaderCommand();
     }
 
-    globalFogLevel.setAttribute("initialValue", fogLevel.name());
-    buildComposite();
-    return fogLevel != NONE;
+    visibilityCommand.execute();
+    gm.sendAndLog(visibilityCommand);
+
+    gm.getChatter().send(tempFogLevel + " is in effect.");
+
+    // used by draw()
+    _fogLevel = tempFogLevel;
+
   }
+
   @Override
   public void draw(Graphics g, Map map) {
     if (!shadingVisible) {
@@ -97,7 +113,7 @@ public class ASLFogMapShader extends MapShader implements VisibilityQueryable{
 
     for (Hex[] row:hexes) {
       for (Hex hex :row) {
-        if( hex.getBaseHeight() <= fogLevel.fogHeight()) {
+        if( hex.getBaseHeight() <= _fogLevel.fogHeight()) {
           Polygon finalHexPolygon = new Polygon(hex.getHexBorder().xpoints,  hex.getHexBorder().ypoints, hex.getHexBorder().npoints);
 
           // offset to the actual board rather than draw from 0,0 on the Map.
@@ -150,21 +166,5 @@ public class ASLFogMapShader extends MapShader implements VisibilityQueryable{
         }
       }
     }
-  }
-
-  @Override
-  public boolean getShadingVisible() {
-    return shadingVisible;
-  }
-  public String getShadingLevel(){
-    return fogLevel.name();
-  }
-
-  @Override
-  public void setStateFromSavedGame(Boolean v, String s) {
-    fogLevel = FogLevel.getFogLevel(s);
-    GameModule.getGameModule().getChatter().send(fogLevel.toString() + " is in effect.");
-    this.boardClip=null;
-    this.setShadingVisibility(setFogLevelAndOpacity());
   }
 }
