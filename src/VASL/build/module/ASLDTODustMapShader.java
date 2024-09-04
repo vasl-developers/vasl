@@ -1,18 +1,20 @@
 package VASL.build.module;
 
+import VASL.build.module.shader.ActivateDustShaderCommand;
+import VASL.build.module.shader.DeactivateDustShaderCommand;
 import VASL.environment.DustLevel;
+import VASL.environment.Environment;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.map.MapShader;
-import VASSAL.build.module.properties.GlobalProperty;
+import VASSAL.build.module.properties.MutableProperty;
+import VASSAL.command.Command;
 import VASSAL.configure.BooleanConfigurer;
 import VASSAL.configure.StringConfigurer;
 import VASSAL.configure.StringEnumConfigurer;
 import VASSAL.preferences.Prefs;
 
 import javax.swing.*;
-
-import static VASL.environment.DustLevel.*;
 
 public class ASLDTODustMapShader extends MapShader {
     public final static String ENVIRONMENT = "Environment";
@@ -21,16 +23,33 @@ public class ASLDTODustMapShader extends MapShader {
     public final static String SPECIAL_DUST_DIVIDE_BY = "SpecialDustDivideBy";
     public final static String SPECIAL_DUST_ROUNDING = "SpecialDustRounding";
 
-    private DustLevel dustLevel = NONE;
     private BooleanConfigurer useSpecialDustSetting;
-    private final GlobalProperty globalDustLevel = new GlobalProperty();
+
+    @Override
+    public void setup(boolean gameStarting) {
+        super.setup(gameStarting);
+        Environment env = new Environment();
+        Command command;
+        if (env.isDust()) {
+            command = new ActivateDustShaderCommand();
+        } else {
+            command = new DeactivateDustShaderCommand();
+        }
+        command.execute();
+    }
+
+    @Override
+    public Command getRestoreCommand() {
+//        Environment env = new Environment();
+//        if (env.isDust()) {
+//            return new ActivateDustShaderCommand();
+//        }
+//        return new DeactivateDustShaderCommand();
+        return null;
+    }
 
     public ASLDTODustMapShader() {
         super();
-        globalDustLevel.setPropertyName("dust_level");
-        globalDustLevel.setAttribute("initialValue", dustLevel.name());
-        GameModule gm = GameModule.getGameModule();
-        gm.addMutableProperty("dust_level", globalDustLevel);
     }
 
     @Override
@@ -43,10 +62,19 @@ public class ASLDTODustMapShader extends MapShader {
             modulePreferences.addOption(ENVIRONMENT, useSpecialDustSetting);
             useSpecialDustSetting.addPropertyChangeListener( listener -> {
                 boolean specialDust = (Boolean)listener.getNewValue();
-                if( specialDust) {
-                    dustLevel = SPECIAL;
+
+                if (specialDust) {
+                    GameModule gm = GameModule.getGameModule();
+                    MutableProperty levelProperty = gm.getMutableProperty(Environment.DUST_LEVEL_PROPERTY);
+                    if (levelProperty == null) return;
+                    Command setPropertyCommand = levelProperty.setPropertyValue(DustLevel.SPECIAL.name());
+                    setPropertyCommand.execute();
+                    gm.sendAndLog(setPropertyCommand);
+                    Command command = new ActivateDustShaderCommand();
+                    command.execute();
+                    gm.sendAndLog(command);
                 }
-                setShadingVisibility(setDustAndOpacity());
+
             });
         }
         if(modulePreferences.getValue(SPECIAL_DUST_NAME) == null) {
@@ -69,6 +97,11 @@ public class ASLDTODustMapShader extends MapShader {
 
     @Override
     protected void toggleShading() {
+
+        this.boardClip=null;
+
+        Environment env = new Environment();
+
         Object[] possibilities = DustLevel.values();
         DustLevel tempDustLevel = (DustLevel) JOptionPane.showInputDialog(
             getLaunchButton().getParent(),
@@ -77,50 +110,32 @@ public class ASLDTODustMapShader extends MapShader {
             JOptionPane.PLAIN_MESSAGE,
             getLaunchButton().getIcon(),
             possibilities,
-            dustLevel.toString());
-        if(tempDustLevel != null) {
-            dustLevel = tempDustLevel;
-        }
-        if(GameModule.getGameModule().getChatter()!= null) {
-            GameModule.getGameModule().getChatter().send(dustLevel.toString() + " is in effect.");
-        }
-        if(dustLevel == SPECIAL) {
-            useSpecialDustSetting.setValue(true);
+            env.getCurrentDustLevel().toString());
+
+        if (tempDustLevel == null) return;
+
+        GameModule gm = GameModule.getGameModule();
+        MutableProperty levelProperty = gm.getMutableProperty(Environment.DUST_LEVEL_PROPERTY);
+        if (levelProperty == null) return;
+        Command setPropertyCommand = levelProperty.setPropertyValue(tempDustLevel.name());
+        setPropertyCommand.execute();
+        gm.sendAndLog(setPropertyCommand);
+
+        Command visibilityCommand;
+        if (tempDustLevel == DustLevel.NONE) {
+            visibilityCommand = new DeactivateDustShaderCommand();
         } else {
-            useSpecialDustSetting.setValue(false);
+            visibilityCommand = new ActivateDustShaderCommand();
         }
-        this.boardClip=null;
-        this.setShadingVisibility(setDustAndOpacity());
+
+        visibilityCommand.execute();
+        gm.sendAndLog(visibilityCommand);
+
+        gm.getChatter().send(tempDustLevel + " is in effect.");
+
+        useSpecialDustSetting.setValue(tempDustLevel == DustLevel.SPECIAL);
+
     }
 
-    private boolean setDustAndOpacity() {
-        switch (dustLevel) {
-            case NONE:
-                opacity = 0;
-                break;
-            case LIGHT:
-                opacity = 5;
-                break;
-            case MODERATE:
-                opacity = 10;
-                break;
-            case HEAVY:
-                opacity = 15;
-                break;
-            case VERY_HEAVY:
-                opacity = 20;
-                break;
-            case EXTREMELY_HEAVY:
-                opacity = 25;
-                break;
-            case SPECIAL: {
-                opacity = 10;
-                break;
-            }
-        }
-        globalDustLevel.setAttribute("initialValue", dustLevel.name());
-        buildComposite();
-        return dustLevel != NONE;
-    }
 
 }

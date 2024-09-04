@@ -30,7 +30,30 @@ public enum DustLevel {
         }
         return this.dustLevelDescription;
     }
+    public DustLevel getValueFromName (String dustName){  // can be deleted - did not use this approach.
+        return DustLevel.NONE;
+    }
+    public static DustLevel getDustLevel(String s){
+        switch (s) {
+            case "NONE":
+                return DustLevel.NONE;
+            case "LIGHT":
+                return DustLevel.LIGHT;
+            case "MODERATE":
+                return DustLevel.MODERATE;
+            case "HEAVY":
+                return DustLevel.HEAVY;
+            case "VERY_HEAVY":
+                return DustLevel.VERY_HEAVY;
+            case "EXTREMELY_HEAVY":
+                return DustLevel.EXTREMELY_HEAVY;
+            case "SPECIAL":
+                return DustLevel.SPECIAL;
+            default:
+                return DustLevel.NONE;
 
+        }
+    }
     public DustLevel next() {
         return values()[ordinal() + 1];
     }

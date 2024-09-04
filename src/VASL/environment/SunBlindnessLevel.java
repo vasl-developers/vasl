@@ -20,7 +20,18 @@ public enum SunBlindnessLevel {
   public String toString() {
     return this.sunBlindnessDescription;
   }
-
+  public static SunBlindnessLevel getSunBLevel(String s) {
+    switch (s) {
+      case "NONE":
+        return SunBlindnessLevel.NONE;
+      case "EARLY_MORNING_SUN_BLINDNESS":
+        return SunBlindnessLevel.EARLY_MORNING_SUN_BLINDNESS;
+      case "LATE_AFTERNOON_SUN_BLINDNESS":
+        return SunBlindnessLevel.LATE_AFTERNOON_SUN_BLINDNESS;
+      default:
+        return SunBlindnessLevel.NONE;
+    }
+  }
   public SunBlindnessLevel next() {
     return values()[ordinal() + 1];
   }

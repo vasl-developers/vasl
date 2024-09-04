@@ -1,33 +1,51 @@
 package VASL.build.module;
 
+import VASL.build.module.shader.*;
+import VASL.environment.Environment;
 import VASL.environment.HeatHazeLevel;
-import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.map.MapShader;
-import VASSAL.build.module.properties.GlobalProperty;
+import VASSAL.build.module.properties.MutableProperty;
+import VASSAL.command.Command;
 
 import javax.swing.*;
 
-import static VASL.environment.HeatHazeLevel.NONE;
 
 public class ASLHeatHazeMapShader extends MapShader {
-  private final GlobalProperty globalHeatHazeLevel = new GlobalProperty();
-  private HeatHazeLevel heatHazeLevel = NONE;
 
   public ASLHeatHazeMapShader() {
     super();
-    globalHeatHazeLevel.setPropertyName("heat_haze_level");
-    globalHeatHazeLevel.setAttribute("initialValue", heatHazeLevel.name());
-    GameModule gm = GameModule.getGameModule();
-    gm.addMutableProperty("heat_haze_level", globalHeatHazeLevel);
   }
+
   @Override
-  public void addTo(Buildable buildable) {
-    super.addTo(buildable);
+  public void setup(boolean gameStarting) {
+    super.setup(gameStarting);
+    Environment env = new Environment();
+    Command command;
+    if (env.isHeatHaze()) {
+      command = new ActivateHeatHazeShaderCommand();
+    } else {
+      command = new DeactivateHeatHazeShaderCommand();
+    }
+    command.execute();
+  }
+
+  public Command getRestoreCommand() {
+//    Environment env = new Environment();
+//    if (env.isHeatHaze()) {
+//      return new ActivateHeatHazeShaderCommand();
+//    }
+//    return new DeactivateHeatHazeShaderCommand();
+    return null;
   }
 
   @Override
   protected void toggleShading() {
+
+    this.boardClip=null;
+
+    Environment env = new Environment();
+
     Object[] possibilities = HeatHazeLevel.values();
     HeatHazeLevel tempHeatHazeLevel = (HeatHazeLevel) JOptionPane.showInputDialog(
         getLaunchButton().getParent(),
@@ -36,30 +54,29 @@ public class ASLHeatHazeMapShader extends MapShader {
         JOptionPane.PLAIN_MESSAGE,
         getLaunchButton().getIcon(),
         possibilities,
-        heatHazeLevel.toString());
-    if(tempHeatHazeLevel != null) {
-      heatHazeLevel = tempHeatHazeLevel;
+        env.getCurrentHeatHazeLevel().toString());
+
+    if (tempHeatHazeLevel == null) return;
+
+    GameModule gm = GameModule.getGameModule();
+    MutableProperty levelProperty = gm.getMutableProperty(Environment.HEAT_HAZE_LEVEL_PROPERTY);
+    if (levelProperty == null) return;
+    Command setPropertyCommand = levelProperty.setPropertyValue(tempHeatHazeLevel.name());
+    setPropertyCommand.execute();
+    gm.sendAndLog(setPropertyCommand);
+
+    Command visibilityCommand;
+    if (tempHeatHazeLevel == HeatHazeLevel.NONE) {
+      visibilityCommand = new DeactivateHeatHazeShaderCommand();
+    } else {
+      visibilityCommand = new ActivateHeatHazeShaderCommand();
     }
-    GameModule.getGameModule().getChatter().send(heatHazeLevel.toString() + " is in effect.");
-    this.boardClip=null;
-    this.setShadingVisibility(setHeatHazeAndOpacity());
+
+    visibilityCommand.execute();
+    gm.sendAndLog(visibilityCommand);
+
+    gm.getChatter().send(tempHeatHazeLevel + " is in effect.");
+
   }
 
-  private boolean setHeatHazeAndOpacity() {
-    switch (heatHazeLevel) {
-      case NONE:
-        opacity = 0;
-        break;
-      case HEAT_HAZE:
-        opacity = 5;
-        break;
-      case INTENSE_HEAT_HAZE:
-        opacity = 15;
-        break;
-
-    }
-    globalHeatHazeLevel.setAttribute("initialValue", heatHazeLevel.name());
-    buildComposite();
-    return heatHazeLevel != NONE;
-  }
 }
