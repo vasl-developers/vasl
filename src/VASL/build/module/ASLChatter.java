@@ -695,23 +695,23 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                         int endidx = restOfMsg.indexOf("R");
                                         msgpartRest = restOfMsg.substring(0, endidx);
                                     }
-                                    final Map<DiceType, Integer> rofDie = new HashMap<>();
                                     if ((Boolean) GameModule.getGameModule().getPrefs().getValue((SHOW_ROF_DIE))) {
-                                        int rofroll = Integer.parseInt(restOfMsg.substring(restOfMsg.length()-1));
-                                        rofDie.put(DiceType.ROF, rofroll );
-                                        int startidx = restOfMsg.indexOf("R");
-                                        if (useDiceImages) {
-                                            restOfMsg = restOfMsg.substring(startidx, restOfMsg.length()-2);
-                                            msgpartROFDie = restOfMsg;
-                                            for (final Map.Entry<DiceType, Integer> entry : rofDie.entrySet()) {
-                                                paintIcon(entry.getValue(), entry.getKey());
+                                        if ("TH".equals(category) || ("IFT".equals(category))) {
+                                            int rofroll = Integer.parseInt(restOfMsg.substring(restOfMsg.length() - 1));
+                                            otherDice.put(DiceType.ROF, rofroll);
+
+                                            int startidx = restOfMsg.indexOf("R");
+                                            if (useDiceImages) {
+                                                restOfMsg = restOfMsg.substring(startidx, restOfMsg.length() - 2);
+                                                msgpartROFDie = restOfMsg;
+                                                paintIcon(rofroll, DiceType.ROF);
+                                            } else {
+                                                restOfMsg = restOfMsg.substring(startidx);
+                                                msgpartROFDie = restOfMsg;
                                             }
-                                        } else {
-                                            restOfMsg = restOfMsg.substring(startidx);
-                                            msgpartROFDie = restOfMsg;
                                         }
                                     }
-                                    fireDiceRoll(otherDice, rofDie);
+                                    fireDiceRoll(otherDice);
                                 }
                             }
                         }
@@ -768,7 +768,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                         msgpartRest = restOfMsg;
                                     }
 
-                                    fireDiceRoll(null, null);
+                                    fireDiceRoll(null);
                                 }
                             }
                         }
@@ -1258,19 +1258,17 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         makeASLStyleSheet(myFont);
     }
 
-    private void fireDiceRoll(Map<DiceType, Integer> otherDice, Map<DiceType, Integer> rateDie) {
+    private void fireDiceRoll(Map<DiceType, Integer> otherDice) {
 
         int thirdDie = -1;
         int rofDie = -1;
 
         if (otherDice != null) {
             if (!otherDice.entrySet().isEmpty()) {
-                thirdDie = otherDice.entrySet().iterator().next().getValue();
-            }
-        }
-        if (rateDie != null) {
-            if (!rateDie.entrySet().isEmpty()) {
-                rofDie = rateDie.entrySet().iterator().next().getValue();
+                if (otherDice.containsKey(DiceType.OTHER_DUST))
+                    thirdDie = otherDice.get(DiceType.OTHER_DUST);
+                if (otherDice.containsKey(DiceType.ROF))
+                    rofDie = otherDice.get(DiceType.ROF);
             }
         }
         for (ChatterListener listener : chatter_listeners) {

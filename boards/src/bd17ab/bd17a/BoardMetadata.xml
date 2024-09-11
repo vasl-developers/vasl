@@ -24,8 +24,8 @@
 -->
 <boardMetadata 
 	name="17a" 
-	version="6.2" 
-	versionDate="June 2024" 
+	version="6.4" 
+	versionDate="August 2024" 
 	author="TR" 
 	boardImageFileName="bd17a.gif" 
 	hasHills="FALSE" 
@@ -242,6 +242,7 @@
 			x - x coordinate of overly upper left
 			y - y coordinate of overlay upper left
 		-->
+		<overlaySSRule name="SSO_NKVD5" image="SSO_17a_NKVD5.gif" x="0" y="0" />
 		<overlaySSRule name="SSO_296" image="SSO_17a_296.gif" x="0" y="0" />
 		<overlaySSRule name="SSO_297" image="SSO_17a_297.gif" x="0" y="0" />
 		<overlaySSRule name="SSO_302" image="SSO_17a_302.gif" x="0" y="0" />
