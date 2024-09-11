@@ -1,0 +1,14 @@
+Mud
+  Level_1=MudLevel_1
+  Level0=MudLevel0
+  Level1=MudLevel1
+  BldgShadowL_1=BldgShadowL_1Mud
+  BldgShadowL0=BldgShadowL0Mud
+  BldgShadowL1=BldgShadowL1Mud
+  PavedRdL0=MudPavedRoad
+  DirtRdL0=MudDirtRoad
+  Slope=MudGrain
+  PlowedFields=MudPlowedFields
+  Furrows=MudFurrows
+  PondWater=MudWater
+  PondWhite=MudWaterWhite
