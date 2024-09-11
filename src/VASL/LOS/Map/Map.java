@@ -4385,9 +4385,11 @@ public class Map  {
         }
 
         if(isCliffHexside &&!status.LOSis60Degree && !status.LOSisHorizontal) {
+            //LOcation testlocation = status.currentHex.getSharedHexside(status.previousHex);
             Location testlocation = status.currentHex.getNearestLocation(status.currentCol, status.currentRow);
-
             int testhexside =status.currentHex.getLocationHexside(testlocation);
+            // hack to fix LOS bug due to cliff artwork, problem mainly found on bdRB but could be elsewhere; github issue 1805
+            if (status.currentHex.isDepressionTerrain()) {return false;}
             int newhexside=testhexside+3;
             if(newhexside>= 6) {newhexside=newhexside-6;}
             // these tests are required to negate cliff in hex adjacent to source/target that would already have been tested (near to source, far from target)
