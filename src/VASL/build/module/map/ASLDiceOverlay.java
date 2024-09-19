@@ -406,7 +406,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener {
         StringEnumConfigurer coloredDiceColorConfigurer = (StringEnumConfigurer)prefs.getOption(COLORED_DICE_COLOR_OVER_MAP);
 
         if (coloredDiceColorConfigurer == null) {
-            coloredDiceColorConfigurer = new StringEnumConfigurer(COLORED_DICE_COLOR_OVER_MAP, "Colored die color:  ", new String[] {"Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange", "AlliedM", "AxisM", "American", "British", "Finnish", "French", "German", "Italian", "Japanese", "Russian", "Swedish"} );
+            coloredDiceColorConfigurer = new StringEnumConfigurer(COLORED_DICE_COLOR_OVER_MAP, "Colored die color:  ", new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange", "AlliedM", "AxisM", "American", "British", "Finnish", "French", "German", "Italian", "Japanese", "Russian", "Swedish"} );
             prefs.addOption(PREFERENCE_TAB, coloredDiceColorConfigurer); //$NON-NLS-1$
 
             coloredDiceColorConfigurer.setValue(coloredDiceColor);
