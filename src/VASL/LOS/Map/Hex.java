@@ -585,6 +585,10 @@ public class Hex {
 		}
 		return -1;
 	}
+    public Location getSharedHexside(Hex adjacentHex){
+
+        return null;
+    }
 
     /**
      * Set the depression terrain
