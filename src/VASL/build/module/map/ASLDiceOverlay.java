@@ -409,7 +409,8 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener {
             coloredDiceColorConfigurer = new StringEnumConfigurer(COLORED_DICE_COLOR_OVER_MAP, "Colored die color:  ", new String[] {"Black", "Blue","Cyan", "Purple", "Red", "Green", "Yellow", "Orange", "AlliedM", "AxisM", "American", "British", "Finnish", "French", "German", "Italian", "Japanese", "Russian", "Swedish"} );
             prefs.addOption(PREFERENCE_TAB, coloredDiceColorConfigurer); //$NON-NLS-1$
 
-            coloredDiceColorConfigurer.setValue(coloredDiceColor);
+            //coloredDiceColorConfigurer.setValue(coloredDiceColor);
+
         }
 
         coloredDiceColorConfigurer.addPropertyChangeListener(e -> {
@@ -429,6 +430,8 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener {
 
         coloredDiceColorConfigurer.fireUpdate();
 
+
+
         // **************************************************************************************
         StringEnumConfigurer thirdDieColorConfigurer = (StringEnumConfigurer)prefs.getOption(THIRD_DIE_COLOR_OVER_MAP);
 
@@ -436,7 +439,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener {
             thirdDieColorConfigurer = new StringEnumConfigurer(THIRD_DIE_COLOR_OVER_MAP, "Third die color:", dieColors );
             prefs.addOption(PREFERENCE_TAB, thirdDieColorConfigurer); //$NON-NLS-1$
 
-            thirdDieColorConfigurer.setValue(thirdDieColor);
+            //thirdDieColorConfigurer.setValue(thirdDieColor);
         }
 
         thirdDieColorConfigurer.addPropertyChangeListener(e -> {
@@ -457,7 +460,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener {
             rofDieColorConfigurer = new StringEnumConfigurer(ROF_DIE_COLOR_OVER_MAP, "ROF die color:", dieColors );
             prefs.addOption(PREFERENCE_TAB, rofDieColorConfigurer); //$NON-NLS-1$
 
-            rofDieColorConfigurer.setValue(rofDieColor);
+            //rofDieColorConfigurer.setValue(rofDieColor);
         }
 
         rofDieColorConfigurer.addPropertyChangeListener(e -> {
@@ -478,7 +481,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener {
             singleDieColorConfigurer = new StringEnumConfigurer(SINGLE_DIE_COLOR_OVER_MAP, "Single die color:  ", dieColors );
             prefs.addOption(PREFERENCE_TAB, singleDieColorConfigurer); //$NON-NLS-1$
 
-            singleDieColorConfigurer.setValue(singleDieColor);
+            //singleDieColorConfigurer.setValue(singleDieColor);
         }
 
         singleDieColorConfigurer.addPropertyChangeListener(e -> {
