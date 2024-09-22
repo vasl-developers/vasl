@@ -8827,12 +8827,7 @@
         </VASSAL.build.module.gamepieceimage.FontManager>
         <VASSAL.build.module.gamepieceimage.GamePieceLayoutsContainer/>
     </VASSAL.build.module.gamepieceimage.GamePieceImageDefinitions>
-    <VASSAL.build.module.properties.GlobalProperties>
-        <VASSAL.build.module.properties.GlobalProperty description="TurnMarker1" initialValue="Spy (white)" isNumeric="false" max="null" min="null" name="TurnMarker1" wrap="false"/>
-        <VASSAL.build.module.properties.GlobalProperty description="TurnMarkerLayerLevel1" initialValue="33" isNumeric="true" max="100" min="0" name="TurnMarkerLayerLevel1" wrap="false"/>
-        <VASSAL.build.module.properties.GlobalProperty description="TurnMarker2" initialValue="Spy (black)" isNumeric="false" max="null" min="null" name="TurnMarker2" wrap="false"/>
-        <VASSAL.build.module.properties.GlobalProperty description="TurnMarkerLayerLevel2" initialValue="34" isNumeric="true" max="100" min="0" name="TurnMarkerLayerLevel2" wrap="false"/>
-    </VASSAL.build.module.properties.GlobalProperties>
+
     <VASSAL.i18n.Language/>
     <VASSAL.build.module.Map allowMultiple="false" backgroundcolor="255,255,255" buttonName="Casualties Bin" changeFormat="$message$" color="0,0,0" createFormat="$pieceName$ created in $location$" edgeHeight="0" edgeWidth="0" hideKey="" hotkey="" icon="" launch="true" mapName="Casualties" markMoved="Always" markUnmovedHotkey="" markUnmovedIcon="/images/unmoved.gif" markUnmovedReport="" markUnmovedText="" markUnmovedTooltip="Mark all pieces on this map as not moved" moveKey="77,715" moveToFormat="$pieceName$ moves $previousLocation$ -&gt; $location$ *" moveWithinFormat="$pieceName$ moves $previousLocation$ -&gt; $location$ *" onlyReportChangedLocation="false" showKey="" thickness="3">
         <VASSAL.build.module.map.BoardPicker addColumnText="Add column" addRowText="Add row" boardPrompt="Select board" slotHeight="125" slotScale="0.2" slotWidth="350" title="Choose Boards">
