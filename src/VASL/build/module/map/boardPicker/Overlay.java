@@ -310,7 +310,7 @@ public class Overlay implements Cloneable {
                 origin = st.nextToken();
             }
             // hack-o-potomous for boards 1b - 9b (with some room to grow) which use a different hex grid
-            String[] boards = {"1b", "2b", "3b", "4b", "5b", "6b", "7b", "8b", "9b", "10b", "11b", "12b", "13b", "14b", "15b"};
+            String[] boards = {"1b", "2b", "3b", "4b", "5b", "6b", "7b", "8b", "9b", "10b", "11b", "12b", "13b", "14b", "15b", "16b", "17b", "18b", "19b", "20b", "21", "22b"};
             if (Arrays.asList(boards).contains(board.getName())) {
 
                 char[] temp = origin.toCharArray();
