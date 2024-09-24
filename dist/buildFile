@@ -17,6 +17,7 @@
         <VASSAL.build.module.properties.GlobalProperty description="SunBlindShaderVisibility" initialValue="false" isNumeric="false" max="100" min="0" name="SunBlindShaderVisibility" wrap="false"/>
         <VASSAL.build.module.properties.GlobalProperty description="SunBlindShaderLevel" initialValue="NONE" isNumeric="false" max="100" min="0" name="SunBlindShaderLevel" wrap="false"/>
     </VASSAL.build.module.properties.GlobalProperties>
+    <VASL.build.module.ScenInfo/>
     <VASL.build.module.CounterPaletteSearch/>
     <VASSAL.build.module.GlobalOptions autoReport="Use Preferences Setting" centerOnMove="Use Preferences Setting" chatterHTMLSupport="Always" disablePieceIndexing="false" hotKeysOnClosedWindows="Never" inventoryForAll="Always" nonOwnerUnmaskable="Use Preferences Setting" playerIdFormat="$playerName$" promptString="Let opponent unconceal my units" purgeBlankPropertyPrompts="true" sendToLocationMoveTrails="Never" specifyExtensionDirInPrefs="true" storeLeadingZeroIntegersAsStrings="false">
         <VASSAL.preferences.BooleanPreference default="false" desc="Enable red CA indicator" name="caindicator" tab="VASL"/>
@@ -8875,6 +8876,6 @@
     <VASSAL.build.module.PlayerRoster buttonIcon="" buttonKeyStroke="" buttonText="" buttonToolTip="Switch sides, become an observer, or allow another player to take your side in this game"/>
     <VASSAL.build.module.KeyNamer/>
     <VASSAL.build.module.properties.GlobalTranslatableMessages/>
-    <VASL.build.module.ScenInfo/>
+
     <VASL.build.module.shader.EnvironmentComponent/>
 </VASSAL.build.GameModule>
