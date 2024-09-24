@@ -5068,7 +5068,7 @@ public class Map  {
 
     private void doHalfHexTerrainElevationCheck(Map map, Hex upperLeft, int upper, int left, int x, int y){
         int cropadjx = 0, cropadjy = 0;
-        if (upperLeft.getRowNumber() > 0 && y == 0 ) {   // a new board is being added below an existing one
+        if (upperLeft.getRowNumber() > 0 && y == 0 && !map.cropconfiguration.equals("FullHex")) {   // a new board is being added below an existing one
             if (this.gridToHex(x, y).getHexCenter().getY() == 0) {  // column is half-hex at top
                 // test code
                 Hex testhex = gridToHex(left + x, upper -2 + y);
@@ -5090,7 +5090,7 @@ public class Map  {
             terrainGrid[left + x][upper + y] = (char) map.getGridTerrain(x, y).getType();
             elevationGrid[left + x][upper + y] = (byte) map.getGridElevation(x, y);
         }
-        if (upperLeft.getColumnNumber() > 0 && x == 0 ) {   // a new board is being added to the right of an existing one
+        if (upperLeft.getColumnNumber() > 0 && x == 0 && !map.cropconfiguration.equals("Fullhex")) {   // a new board is being added to the right of an existing one
             if (this.gridToHex(x, y).getHexCenter().getX() == 0) {  // row is half-hex on left side
                 Terrain firsthalfterrain = getGridTerrain(left - 1 + x, upper + y);
                 int firsthalfelevation = getGridElevation(left - 1 + x, upper + y);
