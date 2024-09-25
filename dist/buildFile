@@ -155,7 +155,7 @@
         <VASL.build.module.map.ASLGameUpdater/>
         <VASSAL.build.module.map.Flare circleColor="255,0,0" circleScale="true" circleSize="100" flareKey="keyAlt" flareName="Map Flare" flarePulses="6" flarePulsesPerSec="3" reportFormat=""/>
         <VASL.build.module.map.HIPFortification propertiesTab="LOS" report="true" reportFormat=""/>
-        <VASL.build.module.map.ASLStackMetrics bottom="40,0" disabled="false" down="37,0" exSepX="6" exSepY="18" top="38,0" unexSepX="2" unexSepY="4" up="39,0"/>
+
     </VASL.build.module.ASLMap>
     <VASSAL.build.module.NotesWindow buttonText="" hotkey="" icon="notesV.gif" tooltip="Notes"/>
     <VASSAL.build.module.Documentation>
