@@ -300,7 +300,8 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
 
     private boolean isFortification(GamePiece piece){
         if (Decorator.getInnermost(piece).getName().contains("Foxhole") || Decorator.getInnermost(piece).getName().contains("Trench") || Decorator.getInnermost(piece).getName().contains("Wire") || piece.getName().contains("Foxhole") ||
-                Decorator.getInnermost(piece).getName().contains("Ditch") || Decorator.getInnermost(piece).getName().contains("PFZ")) {
+                Decorator.getInnermost(piece).getName().contains("Ditch") || Decorator.getInnermost(piece).getName().contains("PFZ") || Decorator.getInnermost(piece).getName().contains("Sangar")
+                || Decorator.getInnermost(piece).getName().contains("Pillbox")) {
             return true;
         }
         return false;
