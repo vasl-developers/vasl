@@ -1,4 +1,5 @@
 package VASL.build.module.map;
+import VASL.build.module.ASLExtensionManager;
 import VASSAL.build.AbstractBuildable;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
@@ -92,6 +93,10 @@ public class ExtensionVersionChecker extends AbstractBuildable implements GameCo
         readVersionFiles();
 
         //localextension_dir= GameModule.getGameModule().getPrefs().getStoredValue("extensionDIR");
+
+        //ASLExtensionManager aslem = new ASLExtensionManager();
+        //aslem.addTo(GameModule.getGameModule());
+        //aslem.updateExtensions();
         //boolean reg =true;
     }
 
