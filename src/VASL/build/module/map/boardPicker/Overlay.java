@@ -175,6 +175,8 @@ public class Overlay implements Cloneable {
     }
 
     private void readData() throws IOException {
+        // DR - these values are immediately overwritten below so I assume they are created on a "just-in-case" the try-catch fails
+        //ToDo - first tests indicate this routine is not necessary; do more testing and if possible remove
         origins = getDefaultOriginList(name);
 
         try (InputStream in = archive.getInputStream("data")) {
@@ -352,6 +354,16 @@ public class Overlay implements Cloneable {
      */
     }
 
+    /*
+    * DR - See comments in readdata()
+    * this method has not been updated since 2009 and certainly does not cover all current overlays
+    * if further testing indicates that it can be removed, then I would be in favour of doing so
+    *
+    * DR - it appears that the purpose of the values contained in these sequences is to permit the calculation of the x,y difference between the top left pixel
+    * of the overlay image (including the transparent part) and the centre of the hex1 value entered in the boardpicker Add Overlay dialog. The values in the
+    * sequence represent the hex whose center dot is the same distance (in x,y)  from 0,0 on the mapboard as the top left pixel of the overlay is from the centre
+    * dot of the "1" hex of the overlay. This is then used to determine the placement point for the overlay on the mapboard.
+     */
     private String getDefaultOriginList(String ovr) {
         String o;
         if ("st1".equals(ovr))
