@@ -205,6 +205,7 @@
 	<otherBoards>
 		<boarddata name="NUL" version="1" versionDate="2008/08/30" description="Placeholder" boardType="Geoboard" publisher="VASL" issued="" />
 		<boarddata name="NULV" version="1" versionDate="2008/08/30" description="Placeholder" boardType="Geoboard" publisher="VASL" issued="" />
+		<boarddata name="BD" version="1.0" versionDate="2024/05/30" description="" boardType="HASL" publisher="BFP" issued="2024/10/08" />
 		<boarddata name="BFP1" version="6.4" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFP2" version="6.5" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPA" version="6.5" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
