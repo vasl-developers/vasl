@@ -26,6 +26,8 @@ import VASSAL.build.GameModule;
 import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.build.module.map.boardPicker.board.HexGrid;
 import VASSAL.build.module.map.boardPicker.board.MapGrid;
+import VASSAL.counters.*;
+import VASSAL.counters.Stack;
 import VASSAL.i18n.Translatable;
 import VASSAL.tools.DataArchive;
 import VASSAL.tools.ErrorDialog;
@@ -153,6 +155,7 @@ public class ASLBoard extends Board {
         return boardFile;
     }
 
+    // Add draggable overlays from overlay extension
     public void setTerrain(String changes) throws BoardException {
         terrainChanges = changes;
         terrain = null;
@@ -170,7 +173,48 @@ public class ASLBoard extends Board {
                 overlays.add(0, o);
             }
         }
+
+        // enabling terran transforms for draggable overlays from the overlays extension
+        // get the set of new draggable overlays
+        /*LinkedList<GamePiece> draggableOverlays = new LinkedList<GamePiece>();
+        if (map != null) {
+            GamePiece draggableOverlay;
+            GamePiece[] p = map.getPieces();
+            for (GamePiece aP : p) {
+                if (aP instanceof Stack) {
+                    for (PieceIterator pi = new PieceIterator(((Stack) aP).getPiecesIterator()); pi.hasMoreElements(); ) {
+                        GamePiece p2 = pi.nextPiece();
+                        if (p2.getProperty("overlay") != null) {
+                            draggableOverlays.add(p2);
+                        }
+                    }
+                } else {
+                    if (aP.getProperty("overlay") != null) {
+                       draggableOverlays.add(aP);
+                    }
+                }
+            }
+        }*/
+
         resetImage();
+
+        /*if (draggableOverlays.size() > 0) {
+            for (GamePiece p : draggableOverlays){
+                String imageNames = p.getLocalizedName();
+                while (p instanceof Decorator) {
+                    p = ((Decorator)p).getInner(); // Traverse inwards toward BasicPiece
+                }
+                if (p instanceof BasicPiece) { // Make sure we didn't start with a Stack or Deck (or null)
+                    final BasicPiece bp = (BasicPiece) p;
+                    HashMap Names = (HashMap) bp.getPublicProperty("snapshot");
+                    String imagename = (String) Names.get("_Image");
+                    // ToDo
+                    //  1. get the image as a buffered image
+                    //  2. manipulate the Buffered image - resetImage may work (with changes?)
+                    //  3. replace the original image with the changed Buffered image
+                }
+            }
+        }*/
     }
 
     public String getVersion() {
