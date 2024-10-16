@@ -6,7 +6,7 @@
 
     <groupId>org.vasl</groupId>
     <artifactId>vasl</artifactId>
-    <version>6.6.9-beta9</version>
+    <version>6.6.9</version>
     <packaging>jar</packaging>
 
     <properties>
