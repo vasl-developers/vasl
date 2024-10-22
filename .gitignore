@@ -3,3 +3,7 @@
 # Maven
 target/
 dependency-reduced-pom.xml
+
+# IntelliJ generated files
+.idea/workspace.xml
+vasl.iml
