@@ -26,12 +26,15 @@ import VASSAL.build.module.map.boardPicker.board.MapGrid;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.IOException;
 
 public class ASLBoardSlot extends BoardSlot {
+  Timer timer;
   private String terrain = "";
   private boolean preservelevels;
   public ASLBoardSlot(ASLBoardPicker bp) {
@@ -205,6 +208,38 @@ public class ASLBoardSlot extends BoardSlot {
     }
     catch (BoardException e) {
       e.printStackTrace();
+    }
+  }
+
+  // In order to increase the responsiveness of the board picker, we delay the execution
+  // of setBoard by 750 milliseconds. This prevents the board picker from updating the
+  // board every time the user selects a new board from the drop-down list while scrolling through the list.
+  @Override
+  public void actionPerformed(ActionEvent e) {
+    if (boards.getSelectedItem().equals("Select board")) {
+      setBoard(null);
+    } else {
+      final String selectedBoard = (String) boards.getSelectedItem();
+      if (selectedBoard != null) {
+        // Cancel any existing timer
+        if (timer != null && timer.isRunning()) {
+          timer.stop();
+        }
+
+        // Delay the execution of setBoard by 750 milliseconds
+        timer = new Timer(750, new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent evt) {
+            Board b = picker.getLocalizedBoard(selectedBoard);
+            if (picker.getBoardsFromControls().contains(b)) {
+              b = b.copy();
+            }
+            setBoard(b);
+          }
+        });
+        timer.setRepeats(false); // Ensure the timer only runs once
+        timer.start();
+      }
     }
   }
 }
