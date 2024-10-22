@@ -307,68 +307,43 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
         //   their trailing noninteger parts.
 
         final Comparator<Object> alpha = Collator.getInstance();
-        final Pattern pat = Pattern.compile("((0*)\\d*)(.*)");
+
+// Predefined ordering for the second part
+        List<String> customOrder = Arrays.asList("Geoboard", "Double-sided", "Starter Kit", "Deluxe", "HASL");
 
         Comparator<String> comp = new Comparator<String>() {
             public int compare(String o1, String o2) {
-                final Matcher m1 = pat.matcher(o1);
-                final Matcher m2 = pat.matcher(o2);
+                // Split the strings into two parts (adjust the delimiter as needed)
+                String[] o1Parts = o1.split(" ", 2);
+                String[] o2Parts = o2.split(" ", 2);
 
-                if (!m1.matches()) {
-                    // impossible
-                    throw new IllegalStateException();
-                }
+                // Extract the second part (index 1), and trim to remove any leading/trailing spaces
+                String secondPart1 = o1Parts.length > 1 ? o1Parts[1].trim() : "";
+                String secondPart2 = o2Parts.length > 1 ? o2Parts[1].trim() : "";
 
-                if (!m2.matches()) {
-                    // impossible
-                    throw new IllegalStateException();
-                }
+                // Check if the second part is in the custom ordering list
+                int index1 = customOrder.indexOf(secondPart1);
+                int index2 = customOrder.indexOf(secondPart2);
 
-                // count leading zeros
-                final int z1 = m1.group(2).length();
-                final int z2 = m2.group(2).length();
-
-                // more leading zeros comes first
-                if (z1 < z2) {
-                    return 1;
-                }
-                else if (z1 > z2) {
-                    return -1;
-                }
-
-                // same number of leading zeros
-                final String o1IntStr = m1.group(1);
-                final String o2IntStr = m2.group(1);
-                if (o1IntStr.length() > 0) {
-                    if (o2IntStr.length() > 0) {
-                        try {
-                            // both strings have integer parts
-                            final BigInteger o1Int = new BigInteger(o1IntStr);
-                            final BigInteger o2Int = new BigInteger(o2IntStr);
-
-                            if (!o1Int.equals(o2Int)) {
-                                // one integer part is smaller than the other
-                                return o1Int.compareTo(o2Int);
-
-                            }
-                        }
-                        catch (NumberFormatException e) {
-                            // impossible
-                            throw new IllegalStateException(e);
-                        }
+                if (index1 != -1 || index2 != -1) {
+                    // If both are in the custom order list, compare by index
+                    if (index1 != -1 && index2 != -1) {
+                        return Integer.compare(index1, index2);
                     }
-                    else {
-                        // only o1 has an integer part
-                        return -1;
-                    }
-                }
-                else if (o2IntStr.length() > 0) {
-                    // only o2 has an integer part
-                    return 1;
+                    // If only one is in the list, that one comes first
+                    return index1 != -1 ? -1 : 1;
                 }
 
-                // the trailing string part is decisive
-                return alpha.compare(m1.group(3), m2.group(3));
+                // If both second parts are not in the custom list, compare alphabetically
+                int secondPartComparison = alpha.compare(secondPart1, secondPart2);
+                if (secondPartComparison != 0) {
+                    return secondPartComparison;
+                }
+                // Alphabetical comparison of first parts
+                String firstPart1 = o1Parts[0].trim();
+                String firstPart2 = o2Parts[0].trim();
+
+                return alpha.compare(firstPart1, firstPart2);
             }
         };
 
