@@ -71,6 +71,15 @@ import java.util.*;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.Timer;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -92,6 +101,12 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
     private boolean enableDB = false;
     private boolean preservelevels;
 
+    private JTextField searchField;
+    private JList<String> boardList;
+    private DefaultListModel<String> listModel;
+    private DirectoryConfigurer dirConfig;
+    private ListSelectionListener listSelectionListener;
+
     // implement using xml file for board versions
     private static final String boardsFileElement = "boardsMetadata";
     private static final String coreboardElement = "coreBoards";
@@ -107,6 +122,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
     private static final String otherboarddescAttr = "description";
 
     private static final String dateofissue = "issued";
+    Timer timer;
 
     public ASLBoardPicker() {
 
@@ -1058,6 +1074,95 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 }
             });
             add(deluxe);
+            // Initialize search field and list model
+            searchField = new JTextField(10);
+            listModel = new DefaultListModel<>();
+            boardList = new JList<>(listModel);
+            boardList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+            // Populate the list model with board names
+            final String[] boardNames = getAllowableBoardNames();
+            for (String name : boardNames) {
+                listModel.addElement(name);
+            }
+
+            // Add list selection listener to board list
+            boardList.addListSelectionListener(new ListSelectionListener() {
+                @Override
+                public void valueChanged(ListSelectionEvent e) {
+                    if (!e.getValueIsAdjusting()) {
+                        //Set a timer to prevent multiple selections
+                        if (timer != null && timer.isRunning()) {
+                            timer.stop();
+                        }
+                        timer = new Timer(400, new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                timer.stop();
+                                final String selectedBoard = boardList.getSelectedValue();
+                                if (selectedBoard != null) {
+                                    final ASLBoardSlot slot = (ASLBoardSlot) slotPanel.getComponent(slotPanel.getComponentCount() - 1);
+                                    slot.setBoard(getBoard(selectedBoard, false));
+                                    slotPanel.revalidate();
+                                }
+                            }
+                        });
+                        timer.setRepeats(false);
+                        timer.start();
+                        }
+                    }
+            });
+
+            // Add document listener to search field
+            searchField.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    updateList();
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    updateList();
+                }
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    updateList();
+                }
+
+                private void updateList() {
+                    String searchText = searchField.getText().toLowerCase();
+                    listModel.clear();
+                    for (String name : boardNames) {
+                        if (name.toLowerCase().contains(searchText)) {
+                            listModel.addElement(name);
+                        }
+                    }
+                }
+            });
+
+            // Add components to the panel
+
+            searchField.setMaximumSize(new Dimension(200, 20));
+            searchField.setAlignmentX(0);
+            add(searchField);
+            JScrollPane scrollPane = new JScrollPane(boardList);
+            scrollPane.setAlignmentX(0);
+            scrollPane.setMaximumSize(new Dimension(200, 200));
+            add(Box.createHorizontalGlue());
+            add(scrollPane);
+            add(Box.createHorizontalGlue());
+
+            dirConfig.addPropertyChangeListener(new PropertyChangeListener() {
+                public void propertyChange(PropertyChangeEvent evt) {
+                    // Handle property change
+                }
+            });
+            pref.addPropertyChangeListener(new PropertyChangeListener() {
+                public void propertyChange(PropertyChangeEvent evt) {
+                    // Handle property change
+                }
+            });
 
             // check-box for DB flag
 /*
@@ -1092,7 +1197,6 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 }
             });
         }
-
         public void reset() {
         }
     }
