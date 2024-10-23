@@ -39,6 +39,8 @@ public class ASLBoardSlot extends BoardSlot {
   private boolean preservelevels;
   public ASLBoardSlot(ASLBoardPicker bp) {
     super(bp);
+    //make the boards combo box invisible
+    boards.setVisible(false);
     reverseCheckBox.addItemListener(new ItemListener() {
       public void itemStateChanged(ItemEvent e) {
         Runnable runnable = new Runnable() {
