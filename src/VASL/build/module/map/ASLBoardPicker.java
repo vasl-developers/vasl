@@ -288,8 +288,9 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
         final String files[] = boardDir != null ? boardDir.list() : null;
         boolean nomatch;
         // all boards are added to the list whether in local directory or not
-        final List<String> sorted = getallboards();
+        List<String> sorted = getallboards();
         final List<String> newboards = getnewboards();
+        sorted.addAll(newboards);
         if (files != null) {
             for (String file : files) {
                 // TODO - remove requirement that boards start with "bd"
@@ -324,8 +325,8 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
 
         final Comparator<Object> alpha = Collator.getInstance();
 
-// Predefined ordering for the second part
-        List<String> customOrder = Arrays.asList("Geoboard", "Double-sided", "Starter Kit", "Deluxe", "HASL");
+        // Predefined ordering for the second part
+        List<String> customOrder = Arrays.asList("Geoboard", "Double-sided", "Starter Kit", "HASL", "Deluxe");
 
         Comparator<String> comp = new Comparator<String>() {
             public int compare(String o1, String o2) {
@@ -337,17 +338,30 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 String secondPart1 = o1Parts.length > 1 ? o1Parts[1].trim() : "";
                 String secondPart2 = o2Parts.length > 1 ? o2Parts[1].trim() : "";
 
-                // Check if the second part is in the custom ordering list
-                int index1 = customOrder.indexOf(secondPart1);
-                int index2 = customOrder.indexOf(secondPart2);
+                // Helper function to find the index of the first element of customOrder contained in the second part
+                int index1 = getFirstMatchingIndex(customOrder, secondPart1);
+                int index2 = getFirstMatchingIndex(customOrder, secondPart2);
 
-                if (index1 != -1 || index2 != -1) {
-                    // If both are in the custom order list, compare by index
-                    if (index1 != -1 && index2 != -1) {
-                        return Integer.compare(index1, index2);
+               /* // Check if the second part is in the custom ordering list
+                int index1 = customOrder.indexOf(secondPart1);
+                int index2 = customOrder.indexOf(secondPart2);*/
+
+                if (index1 != -1 && index2 != -1) {
+                    // If both are in the custom order list and have the same index
+                    if (index1 == index2) {
+                        // Perform alphabetical comparison on the first part if indexes are equal
+                        String firstPart1 = o1Parts[0].trim();
+                        String firstPart2 = o2Parts[0].trim();
+                        return alpha.compare(firstPart1, firstPart2);
                     }
-                    // If only one is in the list, that one comes first
-                    return index1 != -1 ? -1 : 1;
+                    // If both are in the custom order list but different indexes, compare by index
+                    return Integer.compare(index1, index2);
+                } else if (index1 != -1) {
+                    // If only o1 is in the custom order list, it comes first
+                    return -1;
+                } else if (index2 != -1) {
+                    // If only o2 is in the custom order list, it comes first
+                    return 1;
                 }
 
                 // If both second parts are not in the custom list, compare alphabetically
@@ -355,22 +369,32 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 if (secondPartComparison != 0) {
                     return secondPartComparison;
                 }
+
                 // Alphabetical comparison of first parts
                 String firstPart1 = o1Parts[0].trim();
                 String firstPart2 = o2Parts[0].trim();
-
                 return alpha.compare(firstPart1, firstPart2);
+            }
+            // Helper method to find the index of the first customOrder item contained in the input string
+            private int getFirstMatchingIndex(List<String> customOrder, String input) {
+                for (int i = 0; i < customOrder.size(); i++) {
+                    if (input.contains(customOrder.get(i))) {
+                        return i;
+                    }
+                }
+                return -1;  // No match found
             }
         };
 
+
         Collections.sort(sorted, comp);
         possibleBoards.clear();
-        if (!newboards.isEmpty()){
+        /*if (!newboards.isEmpty()){
 
             for (String nboard: newboards) {
                 addBoard(nboard);
             }
-        }
+        }*/
         for (String aSorted : sorted) {
             addBoard(aSorted);
         }
