@@ -80,6 +80,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.temporal.ChronoUnit;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -100,10 +101,6 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
     private boolean enableDeluxe;
     private boolean enableDB = false;
     private boolean preservelevels;
-
-    private JTextField searchField;
-    private JList<String> boardList;
-    private DefaultListModel<String> listModel;
     private DirectoryConfigurer dirConfig;
     private ListSelectionListener listSelectionListener;
 
@@ -122,7 +119,6 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
     private static final String otherboarddescAttr = "description";
 
     private static final String dateofissue = "issued";
-    Timer timer;
 
     public ASLBoardPicker() {
 
@@ -285,95 +281,83 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
      * Reads the current board directory and constructs the list of available boards
      */
     public void refreshPossibleBoards() {
-        final String files[] = boardDir != null ? boardDir.list() : null;
-        boolean nomatch;
-        // all boards are added to the list whether in local directory or not
-        List<String> sorted = getallboards();
-        final List<String> newboards = getnewboards();
-        sorted.addAll(newboards);
+        // Get the list of files in the board directory
+        final String[] files = boardDir != null ? boardDir.list() : null;
+        // Get the pre-defined list of all available boards
+        final List<String> sortedBoards = getallboards(); // Pre-sorted list of boards
+        boolean noMatch;
+
+        // Add boards found in the local directory
         if (files != null) {
             for (String file : files) {
-                // TODO - remove requirement that boards start with "bd"
-                // add all boards found in local directory
-                nomatch = true;
+                noMatch = true;
+                // TODO: Remove the requirement that board names start with "bd"
+                // Process files that start with "bd" and are not directories
                 if (file.startsWith("bd") && !(new File(boardDir, file)).isDirectory()) {
-                    String name = file.substring(2);
+                    String name = file.substring(2); // Remove "bd" prefix
+                    // Skip files with extensions (indicating they are not board files)
                     if (name.contains(".")) {
-                        name = null;
-                        nomatch = false;
+                        noMatch = false; // Skip if it has an extension
+                        continue;
                     }
-                    else {
-                        for (String bdname : sorted) {
-                            String[] split = bdname.split(" ");
-                            bdname = split[0];
-                            if (name.equals(bdname)) {
-                                nomatch = false;
-                            }
+                    // Check if the board already exists in the pre-defined sorted list
+                    for (String bdname : sortedBoards) {
+                        String existingBoardName = bdname.split(" ")[0]; // Only compare the board name part
+                        if (name.equals(existingBoardName)) {
+                            noMatch = false; // Mark as already present
+                            break;
                         }
                     }
-                    if (nomatch){sorted.add(name);}
+                    // If the board is not found in the sorted list, add it
+                    if (noMatch) {
+                        sortedBoards.add(name);
+                    }
                 }
             }
         }
 
-        // * Strings with leading zeros sort ahead of those without.
-        // * Strings with leading integer parts sort ahead of those without.
-        // * Strings with lesser leading integer parts sort ahead of those with
-        //   greater leading integer parts.
-        // * Strings which are otherwise equal are sorted lexicographically by
-        //   their trailing noninteger parts.
-
-        final Comparator<Object> alpha = Collator.getInstance();
-
-        // Predefined ordering for the second part
-        List<String> customOrder = Arrays.asList("Geoboard", "Double-sided", "Starter Kit", "HASL", "Deluxe");
-
-        Comparator<String> comp = new Comparator<String>() {
+        // Comparator to sort boards. The primary ordering will be done by the board type
+        // as per the customOrder array. Within those groups, boards will be ordered alphabetically
+        Comparator<String> customComparator = new Comparator<String>() {
+            @Override
             public int compare(String o1, String o2) {
-                // Split the strings into two parts (adjust the delimiter as needed)
                 String[] o1Parts = o1.split(" ", 2);
                 String[] o2Parts = o2.split(" ", 2);
 
-                // Extract the second part (index 1), and trim to remove any leading/trailing spaces
+                // Extract second part of each string (after space, if present)
                 String secondPart1 = o1Parts.length > 1 ? o1Parts[1].trim() : "";
                 String secondPart2 = o2Parts.length > 1 ? o2Parts[1].trim() : "";
 
-                // Helper function to find the index of the first element of customOrder contained in the second part
+                // Predefined custom order for sorting certain board categories
+                List<String> customOrder = Arrays.asList("New", "Updated", "Geoboard", "Double-sided", "Starter Kit", "HASL", "Deluxe");
+
+                // Get index of the first custom order match for each part
                 int index1 = getFirstMatchingIndex(customOrder, secondPart1);
                 int index2 = getFirstMatchingIndex(customOrder, secondPart2);
 
-               /* // Check if the second part is in the custom ordering list
-                int index1 = customOrder.indexOf(secondPart1);
-                int index2 = customOrder.indexOf(secondPart2);*/
-
+                // If both have custom order elements, compare by custom order index
                 if (index1 != -1 && index2 != -1) {
-                    // If both are in the custom order list and have the same index
                     if (index1 == index2) {
-                        // Perform alphabetical comparison on the first part if indexes are equal
-                        String firstPart1 = o1Parts[0].trim();
-                        String firstPart2 = o2Parts[0].trim();
-                        return alpha.compare(firstPart1, firstPart2);
+                        // If they have the same custom order index, compare alphabetically by first part
+                        return o1Parts[0].compareTo(o1Parts[0]);
                     }
-                    // If both are in the custom order list but different indexes, compare by index
                     return Integer.compare(index1, index2);
                 } else if (index1 != -1) {
-                    // If only o1 is in the custom order list, it comes first
+                    // If only o1 is in custom order, it comes first
                     return -1;
                 } else if (index2 != -1) {
-                    // If only o2 is in the custom order list, it comes first
+                    // If only o2 is in custom order, it comes first
                     return 1;
                 }
 
-                // If both second parts are not in the custom list, compare alphabetically
-                int secondPartComparison = alpha.compare(secondPart1, secondPart2);
+                // If neither are in the custom order, compare second parts alphabetically
+                int secondPartComparison = secondPart1.compareTo(secondPart2);
                 if (secondPartComparison != 0) {
                     return secondPartComparison;
                 }
 
-                // Alphabetical comparison of first parts
-                String firstPart1 = o1Parts[0].trim();
-                String firstPart2 = o2Parts[0].trim();
-                return alpha.compare(firstPart1, firstPart2);
+                // If second parts are equal, compare first parts alphabetically
+                return o1Parts[0].compareTo(o2Parts[0]);
             }
             // Helper method to find the index of the first customOrder item contained in the input string
             private int getFirstMatchingIndex(List<String> customOrder, String input) {
@@ -386,17 +370,12 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             }
         };
 
-
-        Collections.sort(sorted, comp);
+        // Sort the board list using the custom comparator
+        Collections.sort(sortedBoards, customComparator);
+        // Clear the existing possible boards list and repopulate it with the sorted boards
         possibleBoards.clear();
-        /*if (!newboards.isEmpty()){
-
-            for (String nboard: newboards) {
-                addBoard(nboard);
-            }
-        }*/
-        for (String aSorted : sorted) {
-            addBoard(aSorted);
+        for (String sortedBoard : sortedBoards) {
+            addBoard(sortedBoard); // Add each board to the possible boards list
         }
     }
 
@@ -408,7 +387,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             URLConnection conn = base.openConnection();
             conn.setUseCaches(false);
             try (InputStream inputStream = conn.getInputStream()) {
-                allboardslist = parseboardversionFile(inputStream);
+                allboardslist = parseBoardVersionFile(inputStream);
             }
         }
         catch (IOException e) {
@@ -420,141 +399,76 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
         return allboardslist;
     }
 
-    private ArrayList<String> getnewboards() {
-        ArrayList<String> newboardslist = new ArrayList<String>();
-        try {
-            URL base = new URL(BoardVersionChecker.getboardVersionURL());
-            URLConnection conn = base.openConnection();
-            conn.setUseCaches(false);
-            try (InputStream inputStream = conn.getInputStream()) {
-                newboardslist = newboardsparseboardversionFile(inputStream);
-            }
-
-        }
-        catch (IOException e) {
-
-        }
-        catch (JDOMException e) {
-            // throw new JDOMException(, e);
-        }
-        return newboardslist;
-    }
-
     /**
-     * Parses the board metadata xml file
+     * Parses the board metadata XML file and generates a list of boards.
+     * For each board, it checks if it was updated or issued within the last 90 days
+     * and appends the appropriate status ("Updated" or "New") to the board information.
+     *
      * @param metadata an <code>InputStream</code> for the v5boardVersions XML file
-     * @throws JDOMException
+     * @return A list of boards with optional "Updated" or "New" status.
+     * @throws JDOMException if there is an error parsing the XML file
      */
-    private ArrayList<String> parseboardversionFile(InputStream metadata) throws JDOMException {
-
-        ArrayList<String> addtoboardlist = new ArrayList<String>();
+    private ArrayList<String> parseBoardVersionFile(InputStream metadata) throws JDOMException {
+        ArrayList<String> boardList = new ArrayList<>();
         final SAXBuilder parser = new SAXBuilder();
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-        final LocalDate datenow = LocalDate.now();
-        LocalDate dateupdated;
-        String statustext = "";
+        final LocalDate today = LocalDate.now();
+        final long DAYS_THRESHOLD = 90;
+
         try {
-            // the root element will be the boardsMetadata element
+            // Parse the XML document and get the root element
             final Document doc = parser.build(metadata);
             final org.jdom2.Element root = doc.getRootElement();
 
-            // read the shared metadata
-            if(root.getName().equals(boardsFileElement)) {
-                for(org.jdom2.Element e: root.getChildren()) {
-                    //add coreBoards
-                    if(e.getName().equals(coreboardElement)){
-                        for(org.jdom2.Element f: e.getChildren()) {
-                            if(f.getName().equals(boarddataType)) {
-                                dateupdated = LocalDate.parse(f.getAttribute(coreboardversiondateAttr).getValue(), formatter);
-                                statustext = (DAYS.between(dateupdated, datenow) < 91 ? "  Updated" : "");
-                                if (statustext.equals("  Updated")){
-                                    statustext = (f.getAttribute(coreboardversiondateAttr).equals(f.getAttribute(dateofissue)) ? "  New" : "  Updated");
-                                }
-                                addtoboardlist.add(f.getAttribute(coreboardNameAttr).getValue() + "    " + f.getAttribute("boardType").getValue() + statustext);
+            // Ensure the root element matches the expected structure
+            if (root.getName().equals("boardsMetadata")) {
+                // Iterate over board sections (e.g., coreBoards, otherBoards)
+                for (org.jdom2.Element boardSection : root.getChildren()) {
+                    // Iterate over each board data element in the section
+                    for (org.jdom2.Element boardData : boardSection.getChildren()) {
+                        // Extract board attributes
+                        String boardName = boardData.getAttribute("name").getValue();
+                        String boardType = boardData.getAttribute("boardType").getValue();
+                        String versionDateStr = boardData.getAttribute("versionDate").getValue();
+                        String issuedDateStr = boardData.getAttribute("issued").getValue();
+
+                        // Add the board name and type to the list (initially without status)
+                        String boardEntry = boardName + "  " + boardType;
+                        boardList.add(boardEntry);
+
+                        // Determine if the board is "Updated" or "New"
+                        String status = "";
+                        LocalDate versionDate = LocalDate.parse(versionDateStr, formatter);
+
+                        // Check if the board was updated within the last 90 days
+                        if (ChronoUnit.DAYS.between(versionDate, today) <= DAYS_THRESHOLD) {
+                            status = "Updated";
+                        }
+
+                        // If it wasn't updated recently, check if it was issued within the last 90 days
+                        if (!issuedDateStr.isEmpty()) {
+                            LocalDate issuedDate = LocalDate.parse(issuedDateStr, formatter);
+                            if (ChronoUnit.DAYS.between(issuedDate, today) <= DAYS_THRESHOLD) {
+                                status = "New";  // "New" takes precedence over "Updated"
                             }
                         }
-                    }
-                    // add all other boards
-                    if(e.getName().equals(otherboardElement)){
-                        for(org.jdom2.Element f: e.getChildren()) {
-                            if(f.getName().equals(boarddataType)) {
-                                dateupdated = LocalDate.parse(f.getAttribute(otherboardversiondateAttr).getValue(), formatter);
-                                statustext = (DAYS.between(dateupdated, datenow) < 91 ? "  Updated" : "");
-                                if (statustext.equals("  Updated")){
-                                    statustext = (f.getAttribute(otherboardversiondateAttr).getValue().equals(f.getAttribute(dateofissue).getValue()) ? "  New" : "  Updated");
-                                }
-                                addtoboardlist.add(f.getAttribute(otherboardNameAttr).getValue() + "    " + f.getAttribute("boardType").getValue() + statustext);
-                            }
+
+                        // If a status was determined (either "Updated" or "New"), append it to the board entry
+                        // This duplicates the board in the list for 90 days while the board is updated or new
+                        // The duplicated version with the status will be displayed at the top of the list
+                        if (!status.isEmpty()) {
+                            boardList.add(boardName + "  " + boardType + "  " + status);
                         }
                     }
                 }
             }
-
+        } catch (Exception e) {
+            // Log the error and rethrow it as a JDOMException
+            e.printStackTrace();
+            throw new JDOMException("Error parsing the board metadata file", e);
         }
-        catch (IOException e) {
-            e.printStackTrace(System.err);
-            throw new JDOMException("Error reading the v5boardVersions.xml metadata", e);
-        }
-        return addtoboardlist;
-    }
 
-    private ArrayList<String> newboardsparseboardversionFile(InputStream metadata) throws JDOMException {
-
-        ArrayList<String> newboardlist = new ArrayList<String>();
-        final SAXBuilder parser = new SAXBuilder();
-        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-        LocalDate dateissued;
-        final LocalDate datenow = LocalDate.now();
-        try {
-            // the root element will be the boardsMetadata element
-            final Document doc = parser.build(metadata);
-            final org.jdom2.Element root = doc.getRootElement();
-
-            // read the shared metadata
-            if(root.getName().equals(boardsFileElement)) {
-
-                for(org.jdom2.Element e: root.getChildren()) {
-
-                    //add new coreBoards
-                    if(e.getName().equals(coreboardElement)){
-                        for(org.jdom2.Element f: e.getChildren()) {
-                            if(f.getName().equals(boarddataType)) {
-                                if (!f.getAttribute(dateofissue).getValue().equals("")) {
-                                    dateissued = LocalDate.parse(f.getAttribute(dateofissue).getValue(), formatter);
-                                    if (DAYS.between(dateissued, datenow) < 91) {
-                                        // read the newBoards attributes
-                                        newboardlist.add(f.getAttribute(coreboardNameAttr).getValue() + "  " + f.getAttribute("boardType").getValue() + "  NEW");
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    // add all other boards
-                    if(e.getName().equals(otherboardElement)){
-                        for(org.jdom2.Element f: e.getChildren()) {
-                            if(f.getName().equals(boarddataType)) {
-                                if (!f.getAttribute(dateofissue).getValue().equals("")) {
-                                    dateissued = LocalDate.parse(f.getAttribute(dateofissue).getValue(), formatter);
-                                }
-                                else {
-                                    dateissued = LocalDate.parse("2008-01-01");  // dummy value when none exists
-                                }
-                                if (DAYS.between(dateissued, datenow) < 91) {
-                                    // read the newBoards attributes
-                                    newboardlist.add(f.getAttribute(otherboardNameAttr).getValue() + "  " + f.getAttribute("boardType").getValue()  + "  NEW");
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-        }
-        catch (IOException e) {
-            e.printStackTrace(System.err);
-            throw new JDOMException("Error reading the v5boardVersions.xml metadata", e);
-        }
-        return newboardlist ;
+        return boardList;
     }
 
     public void build(Element e) {
@@ -1098,85 +1012,6 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 }
             });
             add(deluxe);
-            // Initialize search field and list model
-            searchField = new JTextField(10);
-            listModel = new DefaultListModel<>();
-            boardList = new JList<>(listModel);
-            boardList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-            // Populate the list model with board names
-            final String[] boardNames = getAllowableBoardNames();
-            for (String name : boardNames) {
-                listModel.addElement(name);
-            }
-
-            // Add list selection listener to board list
-            boardList.addListSelectionListener(new ListSelectionListener() {
-                @Override
-                public void valueChanged(ListSelectionEvent e) {
-                    if (!e.getValueIsAdjusting()) {
-                        //Set a timer to prevent multiple selections
-                        if (timer != null && timer.isRunning()) {
-                            timer.stop();
-                        }
-                        timer = new Timer(400, new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                timer.stop();
-                                final String selectedBoard = boardList.getSelectedValue();
-                                if (selectedBoard != null) {
-                                    final ASLBoardSlot slot = (ASLBoardSlot) slotPanel.getComponent(slotPanel.getComponentCount() - 1);
-                                    slot.setBoard(getBoard(selectedBoard, false));
-                                    slotPanel.revalidate();
-                                }
-                            }
-                        });
-                        timer.setRepeats(false);
-                        timer.start();
-                        }
-                    }
-            });
-
-            // Add document listener to search field
-            searchField.getDocument().addDocumentListener(new DocumentListener() {
-                @Override
-                public void insertUpdate(DocumentEvent e) {
-                    updateList();
-                }
-
-                @Override
-                public void removeUpdate(DocumentEvent e) {
-                    updateList();
-                }
-
-                @Override
-                public void changedUpdate(DocumentEvent e) {
-                    updateList();
-                }
-
-                private void updateList() {
-                    String searchText = searchField.getText().toLowerCase();
-                    listModel.clear();
-                    for (String name : boardNames) {
-                        if (name.toLowerCase().contains(searchText)) {
-                            listModel.addElement(name);
-                        }
-                    }
-                }
-            });
-
-            // Add components to the panel
-
-            searchField.setMaximumSize(new Dimension(200, 20));
-            searchField.setAlignmentX(0);
-            add(searchField);
-            JScrollPane scrollPane = new JScrollPane(boardList);
-            scrollPane.setAlignmentX(0);
-            scrollPane.setMaximumSize(new Dimension(200, 200));
-            add(Box.createHorizontalGlue());
-            add(scrollPane);
-            add(Box.createHorizontalGlue());
-
             dirConfig.addPropertyChangeListener(new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent evt) {
                     // Handle property change
