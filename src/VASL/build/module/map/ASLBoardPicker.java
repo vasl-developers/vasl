@@ -98,7 +98,6 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
     private File boardDir;
     protected TerrainEditor terrain;
     private SetupControls setupControls;
-    private boolean enableDeluxe;
     private boolean enableDB = false;
     private boolean preservelevels;
     private DirectoryConfigurer dirConfig;
@@ -766,10 +765,6 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 ErrorDialog.dataWarning(new BadDataReport("Unable to find board", name, e));
             }
         }
-        if (enableDeluxe) {
-            b.setMagnification(3.0);
-            ((HexGrid) b.getGrid()).setSnapScale(2);
-        }
         return b;
     }
 
@@ -995,23 +990,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             dirConfig.setValue(pref.getFileValue());
             add(dirConfig.getControls());
 
-            final JCheckBox deluxe = new JCheckBox("Deluxe-size hexes");
-            deluxe.addItemListener(new ItemListener() {
-                public void itemStateChanged(ItemEvent e) {
-                    enableDeluxe = e.getStateChange() == ItemEvent.SELECTED;
-                    int n = 0;
-                    ASLBoardSlot slot;
-                    while ((slot = (ASLBoardSlot) getSlot(n++)) != null) {
-                        if (slot.getBoard() != null) {
-                            slot.getBoard().setMagnification(enableDeluxe ? 3.0 : 1.0);
-                            slot.setSize(slot.getPreferredSize());
-                            slot.revalidate();
-                            slot.repaint();
-                        }
-                    }
-                }
-            });
-            add(deluxe);
+
             dirConfig.addPropertyChangeListener(new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent evt) {
                     // Handle property change
