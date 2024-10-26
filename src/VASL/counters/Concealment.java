@@ -106,8 +106,7 @@ public class Concealment extends Decorator implements EditablePiece {
           for (int i = lastIndex; i < newIndex; ++i) {
             c.append(setConcealed(parent.getPieceAt(i), true));
           }
-        }
-        else if (newIndex < lastIndex) {
+        } else if (newIndex < lastIndex) {
           if (getParent() == null) {
             lastIndex--;
           }
@@ -121,12 +120,10 @@ public class Concealment extends Decorator implements EditablePiece {
         }
         tracker.repaint();
         return c;
-      }
-      else {
+      } else {
         return super.keyEvent(stroke);
       }
-    }
-    else {
+    } else {
       return null;
     }
   }
@@ -139,22 +136,20 @@ public class Concealment extends Decorator implements EditablePiece {
       String state = p.getState();
       p.setProperty(Properties.OBSCURED_BY, concealed ? GameModule.getUserId() : null);
       return new ChangePiece(p.getId(), state, p.getState());
-    }
-    else {
+    } else {
       return null;
     }
   }
 
   /**
    * @return true if this concealment counter is applicable to the given piece (i.e. if the piece is a concealable
-   *         counter of the same nationality)
+   * counter of the same nationality)
    */
   public boolean canConceal(GamePiece p) {
     Concealable c = (Concealable) Decorator.getDecorator(p, Concealable.class);
     if (c == null || !c.isMaskable()) {
       return false;
-    }
-    else {
+    } else {
       return getNationality().equals(c.getProperty(ASLProperties.NATIONALITY));
     }
   }
@@ -183,8 +178,52 @@ public class Concealment extends Decorator implements EditablePiece {
   }
 
   public void draw(Graphics g, int x, int y, Component obs, double zoom) {
-    piece.draw(g, x, y, obs, zoom);
+    if (concealedFriendlyStack()) {
+      // draw the top concealment counter in a non-dummy stack with reduced opacity
+      Graphics2D g2d = (Graphics2D) g;
+      Composite originalComposite = g2d.getComposite();
+      g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
+      piece.draw(g, x, y, obs, zoom);
+      g2d.setComposite(originalComposite);
+    } else {
+      piece.draw(g, x, y, obs, zoom);
+    }
   }
+
+  //Check if the stack only contains counters that are either concealed or concealment counters
+  private boolean concealedFriendlyStack() {
+    Stack parent = getParent();
+    if (parent != null) {
+      for (int i = 0; i < parent.getPieceCount(); i++) {
+        GamePiece p = parent.getPieceAt(i);
+        //Print the name of the counter
+        System.out.println(GameModule.getUserId());
+        System.out.println("Stack size " + p.getProperty("StackSize"));
+        System.out.println("Stack pos " + p.getProperty("StackPos"));
+        System.out.println("Piece Name " + p.getProperty("PieceName"));
+        System.out.println("Obscured " + p.getProperty(Properties.OBSCURED_TO_ME));
+
+        if (p.getProperty("StackPos").equals("1") && !p.getProperty("StackSize").equals("1")) {
+          //get the piece located below this piece
+            GamePiece p2 = parent.getPieceAt(i -1);
+          System.out.println("Stack size2 " + p2.getProperty("StackSize"));
+          System.out.println("Stack pos2 " + p2.getProperty("StackPos"));
+          System.out.println("Piece Name2 " + p2.getProperty("PieceName"));
+          System.out.println("Obscured2 " + p2.getProperty(Properties.OBSCURED_TO_ME));
+          //check if p2.getProperty(Properties.OBSCURED_TO_ME) is a boolean  value
+          if ((p2.getProperty(Properties.OBSCURED_TO_ME) instanceof Boolean)) {
+            System.out.println("Obscured2 is a boolean");
+          }
+            //Check if the piece below is a concealment counter
+          if(p2.getProperty(Properties.OBSCURED_TO_ME) == null || !(boolean)p2.getProperty(Properties.OBSCURED_TO_ME))
+            if (!p2.getProperty("PieceName").equals("?"))
+              return true;
+        }
+      }
+    }
+    return false;
+  }
+
 
   public String getDescription() {
     return "Is Concealment counter";
