@@ -24,6 +24,7 @@ import VASSAL.command.ChangePiece;
 import VASSAL.command.Command;
 import VASSAL.counters.*;
 import VASSAL.tools.SequenceEncoder;
+import VASSAL.preferences.Prefs;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,6 +38,7 @@ public class Concealment extends Decorator implements EditablePiece {
   private KeyCommand[] commands;
   private String nation;
   private String owner;
+  Prefs prefs = GameModule.getGameModule().getPrefs();
 
   public Concealment() {
     this(ID, null);
@@ -178,46 +180,38 @@ public class Concealment extends Decorator implements EditablePiece {
   }
 
   public void draw(Graphics g, int x, int y, Component obs, double zoom) {
-    if (concealedFriendlyStack()) {
-      // draw the top concealment counter in a non-dummy stack with reduced opacity
+    // Check if the hideconcealmentcounter preference is set to true, and if the counter is a concealment counter
+    // and if the stack contains an unconcealed counter below the concealment counter
+    if (!(prefs.getValue("hideconcealmentcounter") == null) && (boolean) prefs.getValue("hideconcealmentcounter")
+            && isConcealmentCounter() && containsUnconcealedCounterBelow()) {
+      // Draw the top concealment counter in a friendly non-dummy stack with reduced opacity
       Graphics2D g2d = (Graphics2D) g;
       Composite originalComposite = g2d.getComposite();
       g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
       piece.draw(g, x, y, obs, zoom);
       g2d.setComposite(originalComposite);
-    } else {
+    }
+    else {
       piece.draw(g, x, y, obs, zoom);
     }
   }
-
-  //Check if the stack only contains counters that are either concealed or concealment counters
-  private boolean concealedFriendlyStack() {
-    Stack parent = getParent();
-    if (parent != null) {
-      for (int i = 0; i < parent.getPieceCount(); i++) {
-        GamePiece p = parent.getPieceAt(i);
-        //Print the name of the counter
-        System.out.println(GameModule.getUserId());
-        System.out.println("Stack size " + p.getProperty("StackSize"));
-        System.out.println("Stack pos " + p.getProperty("StackPos"));
-        System.out.println("Piece Name " + p.getProperty("PieceName"));
-        System.out.println("Obscured " + p.getProperty(Properties.OBSCURED_TO_ME));
-
-        if (p.getProperty("StackPos").equals("1") && !p.getProperty("StackSize").equals("1")) {
-          //get the piece located below this piece
-            GamePiece p2 = parent.getPieceAt(i -1);
-          System.out.println("Stack size2 " + p2.getProperty("StackSize"));
-          System.out.println("Stack pos2 " + p2.getProperty("StackPos"));
-          System.out.println("Piece Name2 " + p2.getProperty("PieceName"));
-          System.out.println("Obscured2 " + p2.getProperty(Properties.OBSCURED_TO_ME));
-          //check if p2.getProperty(Properties.OBSCURED_TO_ME) is a boolean  value
-          if ((p2.getProperty(Properties.OBSCURED_TO_ME) instanceof Boolean)) {
-            System.out.println("Obscured2 is a boolean");
-          }
-            //Check if the piece below is a concealment counter
-          if(p2.getProperty(Properties.OBSCURED_TO_ME) == null || !(boolean)p2.getProperty(Properties.OBSCURED_TO_ME))
-            if (!p2.getProperty("PieceName").equals("?"))
+  // Check if the counter is a concealment counter
+  private boolean isConcealmentCounter() {
+    GamePiece piece = this;
+    return Decorator.getDecorator(piece, Concealment.class) != null;
+  }
+  // Check if the stack contains an unconcealed counter below the concealment counter
+  // for the purpose of determining if the concealment counter should be drawn with reduced opacity
+  private boolean containsUnconcealedCounterBelow() {
+    Stack stack = getParent();
+    if ( stack != null) {
+      int index = stack.indexOf(Decorator.getOutermost(this));
+      for (int i = index - 1; i >= 0; i--) {
+        GamePiece piece = stack.getPieceAt(i);
+        if (Decorator.getDecorator(piece, Concealment.class) == null) {
+          if (piece.getProperty(Properties.OBSCURED_TO_ME) == null || !(boolean) piece.getProperty(Properties.OBSCURED_TO_ME)) {
               return true;
+          }
         }
       }
     }
