@@ -115,7 +115,6 @@ public class ASLBoardSlot extends BoardSlot {
 
     boards.setModel(model);
     if (model.getSize() > 0) {
-      boards.setSelectedIndex(0); // Ensure a default selection
       boards.showPopup();// Show the drop-down list
     }
   }
