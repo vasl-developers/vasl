@@ -21,6 +21,7 @@
     <VASL.build.module.CounterPaletteSearch/>
     <VASSAL.build.module.GlobalOptions autoReport="Use Preferences Setting" centerOnMove="Use Preferences Setting" chatterHTMLSupport="Always" disablePieceIndexing="false" hotKeysOnClosedWindows="Never" inventoryForAll="Always" nonOwnerUnmaskable="Use Preferences Setting" playerIdFormat="$playerName$" promptString="Let opponent unconceal my units" purgeBlankPropertyPrompts="true" sendToLocationMoveTrails="Never" specifyExtensionDirInPrefs="true" storeLeadingZeroIntegersAsStrings="false">
         <VASSAL.preferences.BooleanPreference default="false" desc="Enable red CA indicator" name="caindicator" tab="VASL"/>
+        <VASSAL.preferences.BooleanPreference default="true" desc="Reduce the top counter's opacity in friendly, concealed non-dummy stacks" name="hideconcealmentcounter" tab="VASL"/>
         <option name="newHotKey">87,520</option>
         <option name="endHotKey">87,585</option>
         <option name="stepIcon">/images/StepForward16.gif</option>
