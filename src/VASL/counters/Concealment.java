@@ -112,12 +112,16 @@ public class Concealment extends Decorator implements EditablePiece {
           if (getParent() == null) {
             lastIndex--;
           }
-          for (int i = lastIndex; i > newIndex; --i) {
+          // Start at the top of the stack and stop at soon as you encounter a concealment counter
+          for (int i = getParent().getPieceCount()-1; i > newIndex; --i) {
             GamePiece child = parent.getPieceAt(i);
             if (Decorator.getDecorator(child, Concealment.class) != null) {
               break;
             }
-            c.append(setConcealed(child, false));
+            // Only modify counters that were below the moved counter
+            if ( i <= lastIndex) {
+              c.append(setConcealed(child, false));
+            }
           }
         }
         tracker.repaint();
