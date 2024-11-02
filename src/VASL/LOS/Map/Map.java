@@ -1265,11 +1265,12 @@ public class Map  {
             currentHex = sourceHex;
             // code to fix vertex los
             int vertexadj = 0;
-            if (!source.equals(sourceHex.getCenterLocation()) && sourceHex.isDepressionTerrain()){
+            if (!source.isCenterLocation() && sourceHex.isDepressionTerrain()){
                 vertexadj =1;
             }
+            vertexadj = 0;
             sourceElevation = sourceHex.getBaseHeight() + source.getBaseHeight() + vertexadj;
-            if (!target.equals(targetHex.getCenterLocation()) && targetHex.isDepressionTerrain()){
+            if (!target.isCenterLocation() && targetHex.isDepressionTerrain()){
                 vertexadj=1;
             }
             targetElevation = targetHex.getBaseHeight() + target.getBaseHeight() + vertexadj;
