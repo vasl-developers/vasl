@@ -29,6 +29,7 @@ import VASSAL.preferences.Prefs;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
+import java.util.Objects;
 
 /**
  * A Concealment counter
@@ -199,7 +200,12 @@ public class Concealment extends Decorator implements EditablePiece {
   // Check if the counter is a concealment counter
   private boolean isConcealmentCounter() {
     GamePiece piece = this;
-    return Decorator.getDecorator(piece, Concealment.class) != null;
+    if (Decorator.getDecorator(piece, Concealment.class) != null) {
+      Concealment concealment = (Concealment) Decorator.getDecorator(piece, Concealment.class);
+      //Check if the current player is the owner of the concealment counter
+        return Objects.equals(concealment.owner, GameModule.getUserId());
+    }
+    return false;
   }
   // Check if the stack contains an unconcealed counter below the concealment counter
   // for the purpose of determining if the concealment counter should be drawn with reduced opacity
