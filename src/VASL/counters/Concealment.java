@@ -103,25 +103,22 @@ public class Concealment extends Decorator implements EditablePiece {
           return c;
         }
         // Concealment counter was deleted or moved in the stack
-        int newIndex = getParent() == null ? -1 : getParent().indexOf(Decorator.getOutermost(this));
-        if (newIndex > lastIndex) {
-          for (int i = lastIndex; i < newIndex; ++i) {
-            c.append(setConcealed(parent.getPieceAt(i), true));
+        // Set the concealment for all counters in the stack.
+        // All counters between a location delimiting counter (i.e. a buidling level counter)
+        // and a concealment counter should be concealed
+        boolean shouldConceal = false;
+        for (int i = parent.getPieceCount()-1; i >= 0; i--) {
+          GamePiece child = parent.getPieceAt(i);
+          // Counters below the concealment counter should be concealed
+          if (Decorator.getDecorator(child, Concealment.class) != null) {
+            shouldConceal = true;
           }
-        } else if (newIndex < lastIndex) {
-          if (getParent() == null) {
-            lastIndex--;
-          }
-          // Start at the top of the stack and stop at soon as you encounter a concealment counter
-          for (int i = getParent().getPieceCount()-1; i > newIndex; --i) {
-            GamePiece child = parent.getPieceAt(i);
-            if (Decorator.getDecorator(child, Concealment.class) != null) {
-              break;
+          // If the counter has a separateLocation property, counters below should be unconcealed
+          else if (child.getProperty("separateLocation") != null) {
+              shouldConceal = false;
             }
-            // Only modify counters that were below the moved counter
-            if ( i <= lastIndex) {
-              c.append(setConcealed(child, false));
-            }
+          else {
+            c.append(setConcealed(child, shouldConceal));
           }
         }
         tracker.repaint();
