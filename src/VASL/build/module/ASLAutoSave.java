@@ -72,6 +72,7 @@ public class ASLAutoSave extends AbstractBuildable {
         String autosaveFileName = directory + File.separator + "autosave " + getCurrentDateTime() + ".vsav";
         File autosaveFile = new File(autosaveFileName);
         try {
+            gameModule.warn("Autosaving game to: " + directory);
             gameState.saveGame(autosaveFile);
         } catch (IOException e) {
             gameModule.warn("Failed to save autosave file: " + autosaveFileName + "\n" + e.getMessage());
