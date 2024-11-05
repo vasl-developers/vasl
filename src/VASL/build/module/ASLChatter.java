@@ -693,7 +693,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
                                     if (showDiceStats) {
                                         int endidx = restOfMsg.indexOf("R");
-                                        msgpartRest = restOfMsg.substring(0, endidx);
+                                        msgpartRest = (endidx == -1 ? restOfMsg : restOfMsg.substring(0, endidx));
                                     }
                                     if ((Boolean) GameModule.getGameModule().getPrefs().getValue((SHOW_ROF_DIE))) {
                                         if ("TH".equals(category) || ("IFT".equals(category))) {
@@ -709,6 +709,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                                 restOfMsg = restOfMsg.substring(startidx);
                                                 msgpartROFDie = restOfMsg;
                                             }
+                                        } else {
+
                                         }
                                     }
                                     fireDiceRoll(otherDice);
