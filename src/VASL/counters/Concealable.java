@@ -123,22 +123,40 @@ public class Concealable extends Obscurable implements EditablePiece {
       if (getParent() != null) {
         for (int i = getParent().indexOf(outer),j = getParent().getPieceCount(); i < j; ++i) {
           Concealment conceal = (Concealment) Decorator.getDecorator(getParent().getPieceAt(i), Concealment.class);
-          if (conceal != null
+          // If the counter has a different_location property, the current location does not have concealment
+            if (getParent().getPieceAt(i).getProperty("separateLocation") != null) {
+                break;
+            }
+            else if (conceal != null
               && conceal.canConceal(outer)) {
             concealmentExists = true;
             break;
           }
         }
       }
+      // Concealment counter is added to the stack.
+      // Concealment is recalculated for all counters in the stack
       if (!concealmentExists) {
         GamePiece concealOuter = createConcealment();
         Concealment conceal = (Concealment) Decorator.getDecorator(concealOuter, Concealment.class);
         c.append
             (getMap().getStackMetrics().merge
              (outer, concealOuter));
-        for (int i = 0,j = getParent().indexOf(outer);
-             i < j; ++i) {
-          c.append(conceal.setConcealed(getParent().getPieceAt(i), true));
+        boolean shouldConceal = false;
+        // All counters between a location delimiting counter (i.e. a buidling level counter)
+        // and a concealment counter should be concealed
+        for (int i = getParent().getPieceCount()-1; i >= 0; i--) {
+          GamePiece child = getParent().getPieceAt(i);
+          if (Decorator.getDecorator(child, Concealment.class) != null) {
+            shouldConceal = true;
+          }
+          // If the counter has a different_location property, set it to false
+          else if (child.getProperty("separateLocation") != null) {
+            shouldConceal = false;
+          }
+          else {
+            c.append(conceal.setConcealed(child, shouldConceal));
+          }
         }
       }
     }
