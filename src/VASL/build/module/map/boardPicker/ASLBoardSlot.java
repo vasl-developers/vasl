@@ -25,17 +25,54 @@ import VASSAL.build.module.map.boardPicker.BoardSlot;
 import VASSAL.build.module.map.boardPicker.board.MapGrid;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class ASLBoardSlot extends BoardSlot {
+  Timer timer;
   private String terrain = "";
   private boolean preservelevels;
+  private ArrayList<String> allBoards;
+
   public ASLBoardSlot(ASLBoardPicker bp) {
     super(bp);
+    cacheAllBoards(); // Cache all items from boards for filtering
+
+    JPanel root = (JPanel) getComponent(0);
+    Box box = (Box) root.getComponent(0);
+
+
+    JTextField searchField = new JTextField();
+    searchField.setPreferredSize(new Dimension(75, 20));
+    searchField.setToolTipText("Search for a board");
+
+    // Adds a document listener to filter boards as the user types
+    searchField.getDocument().addDocumentListener(new DocumentListener() {
+      @Override
+      public void insertUpdate(DocumentEvent e) {
+        filterBoards(searchField.getText());
+      }
+      @Override
+      public void removeUpdate(DocumentEvent e) {
+        filterBoards(searchField.getText());
+      }
+      @Override
+      public void changedUpdate(DocumentEvent e) {
+        filterBoards(searchField.getText());
+      }
+    });
+
+    box.add(searchField, 0); // Add search field to the first position
+
+    // Listen for changes in the reverse checkbox
     reverseCheckBox.addItemListener(new ItemListener() {
       public void itemStateChanged(ItemEvent e) {
         Runnable runnable = new Runnable() {
@@ -48,6 +85,38 @@ public class ASLBoardSlot extends BoardSlot {
         SwingUtilities.invokeLater(runnable);
       }
     });
+  }
+
+  /**
+   * Cache all boards from the boards drop-down list
+   */
+  private void cacheAllBoards() {
+    DefaultComboBoxModel<String> model = (DefaultComboBoxModel<String>) boards.getModel();
+    allBoards = new ArrayList<>();
+
+    for (int i = 0; i < model.getSize(); i++) {
+      allBoards.add(model.getElementAt(i)); // Cache initial board list
+    }
+  }
+
+    /**
+     * Filter boards based on the search text
+     * @param searchText The search text
+     */
+  private void filterBoards(String searchText) {
+    DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+    searchText = searchText.toLowerCase();
+
+    for (String board : allBoards) {
+      if (board.toLowerCase().contains(searchText)) {
+        model.addElement(board);
+      }
+    }
+
+    boards.setModel(model);
+    if (model.getSize() > 0) {
+      boards.showPopup();// Show the drop-down list
+    }
   }
 
   public void setTerrain(String s) {
@@ -115,11 +184,11 @@ public class ASLBoardSlot extends BoardSlot {
     if (board.isReversed()) {
       obox.translate(-obox.width, -obox.height);
     }
-    
+
     // fredkors 14.nov.2013
     // bbox rect is in 'screen' coordinates (only width and height count)
     // while obox rect is in 'map' coordinates
-    
+
     //boolean overlapLeft = obox.x < bbox.x;
     //boolean overlapRight = obox.x + obox.width > bbox.x + bbox.width;
     //boolean overlapTop = obox.y < bbox.y;
@@ -205,6 +274,38 @@ public class ASLBoardSlot extends BoardSlot {
     }
     catch (BoardException e) {
       e.printStackTrace();
+    }
+  }
+
+  // In order to increase the responsiveness of the board picker, we delay the execution
+  // of setBoard by 500 milliseconds. This prevents the board picker from updating the
+  // board every time the user selects a new board from the drop-down list while scrolling through the list.
+  @Override
+  public void actionPerformed(ActionEvent e) {
+    if (boards.getSelectedItem().equals("Select board")) {
+      setBoard(null);
+    } else {
+      final String selectedBoard = (String) boards.getSelectedItem();
+      if (selectedBoard != null) {
+        // Cancel any existing timer
+        if (timer != null && timer.isRunning()) {
+          timer.stop();
+        }
+
+        // Delay the execution of setBoard by 500 milliseconds
+        timer = new Timer(500, new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent evt) {
+            Board b = picker.getLocalizedBoard(selectedBoard);
+            if (picker.getBoardsFromControls().contains(b)) {
+              b = b.copy();
+            }
+            setBoard(b);
+          }
+        });
+        timer.setRepeats(false); // Ensure the timer only runs once
+        timer.start();
+      }
     }
   }
 }
