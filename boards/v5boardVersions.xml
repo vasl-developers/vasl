@@ -83,19 +83,19 @@
 		<boarddata name="48" version="6.6" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="49" version="6.7" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="50" version="7.0" versionDate="2022/04/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="51" version="6.5" versionDate="2022/04/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="52" version="6.4" versionDate="2022/04/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="51" version="6.6" versionDate="2022/04/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="52" version="6.5" versionDate="2022/04/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="53" version="6.9" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="54" version="6.8" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="55" version="6.9" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="56" version="6.6" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="57" version="6.5" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="58" version="6.4" versionDate="2022/04/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="58" version="6.5" versionDate="2022/04/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="59" version="6.7" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="60" version="6.7" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="61" version="6.5" versionDate="2022/04/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="61" version="6.6" versionDate="2022/04/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="62" version="6.7" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="63" version="6.3" versionDate="2022/04/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="63" version="6.4" versionDate="2022/04/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="64" version="6.5" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="65" version="6.5" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="66" version="6.5" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
@@ -105,9 +105,9 @@
 		<boarddata name="70" version="6.6" versionDate="2024/06/18" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="71" version="6.6" versionDate="2024/06/28" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="72" version="6.7" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="73" version="6.2" versionDate="2022/04/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="74" version="6.4" versionDate="2022/04/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="75" version="6.5" versionDate="2022/04/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="73" version="6.3" versionDate="2022/04/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="74" version="6.5" versionDate="2022/04/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="75" version="6.6" versionDate="2022/04/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="76" version="6.7" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="77" version="6.0" versionDate="2023/02/28" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="78" version="6.3" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
@@ -293,7 +293,7 @@
 		<boarddata name="GT" version="1.0" versionDate="2008/08/30" description="Gavatu-Tanambogo" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="CH" version="0.93" versionDate="2008/08/30" description="Cheneux (KGP II)" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="ABTF" version="6.0" versionDate="2021/06/30" description="A Bridge Too Far" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="Rileys" version="1.5" versionDate="2008/08/30" description="Riley's Road" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="Rileys" version="1.6" versionDate="2008/08/30" description="Riley's Road" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="Dinant" version="6.1" versionDate="2022/03/30" description="Dinant: Rommel at the Meuse" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="SA" version="1.0" versionDate="2023/03/30" description="Sainte-Mère-Église (Drop Zone: Sainte-Mère-Église)" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="FA" version="1.0" versionDate="2023/03/30" description="Fauville (Drop Zone: Sainte-Mère-Église)" boardType="HASL" publisher="MMP" issued="" />
@@ -328,7 +328,7 @@
 		<boarddata name="CHDD2" version="1.0" versionDate="2008/08/30" description="Devil's Domain - Kursk Ponyri" boardType="HASL" publisher="CH!" issued="" />
 		<boarddata name="CM" version="1.0" versionDate="2008/08/30" description="Crossing the Moro" boardType="HASL" publisher="LCP" issued="" />
 		<boarddata name="DTW" version="1.0" versionDate="2008/08/30" description="Dzerhezinsky Tractor Works" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="DaE" version="1.1" versionDate="2008/08/30" description="Decision at Elst" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="DaE" version="6.0" versionDate="2008/08/30" description="Decision at Elst" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="DfBG1" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="DftB" issued="" />
 		<boarddata name="ER" version="6.0" versionDate="2021/06/30" description="Edson's Ridge" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="FACTRY" version="1.0" versionDate="2008/08/30" description="" boardType="XXX" publisher="YYY" issued="" />
@@ -476,7 +476,7 @@
 		<boarddata name="SaF" version="6.2" versionDate="2022/07/30" description="Sword and Fire: Manila" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="SaFL" version="6.4" versionDate="2022/09/30" description="Sword and Fire: Manila" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="BG1" version="1.0" versionDate="2022/10/30" description="" boardType="Geoboard" publisher="BGD" issued="" />
-		<boarddata name="DeluxeBlank" version="1.0" versionDate="2023/08/30" description="Empty deluxe geoboard" boardType="Deluxe" publisher="VASL" issued="" />
+		<boarddata name="DeluxeBlank" version="6.5" versionDate="2023/08/30" description="Empty deluxe geoboard" boardType="Deluxe" publisher="VASL" issued="" />
 		<boarddata name="OpV" version="1.0" versionDate="2023/09/30" description="Riley's Road - no grain" boardType="HASL" publisher="TJ" issued="" />
 		<boarddata name="SF" version="1.1" versionDate="2023/12/30" description="Sparrow Force" boardType="HASL" publisher="MMP" issued="2023/09/17" />
 		<boarddata name="AF_AbbioPriolo" version="1.1" versionDate="2024/01/30" description="Abbio Priolo" boardType="HASL" publisher="AF" issued="2024/01/30" />
