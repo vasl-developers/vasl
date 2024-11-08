@@ -15,6 +15,15 @@ cleanup() {
 }
 trap cleanup EXIT  # Ensure cleanup runs on exit
 
+# Function to decode HTML entities in names
+decode_html_entities() {
+    local name="$1"
+    name="${name//&#x20;/ }"   # Replace &#x20; with a space
+    name="${name//&amp;/&}"    # Replace &amp; with &
+    # Add more replacements as needed
+    echo "$name"
+}
+
 # Extract version information from a file
 extract_version() {
     local file_path="$1"
@@ -36,11 +45,11 @@ extract_version() {
     echo "$zip_version"
 }
 
-# Extract names and versions from v5boardVersions.xml
+# Extract names and versions from v5boardVersions.xml with HTML decoding
 declare -A board_versions
 while read -r line; do
     if [[ $line =~ name=\"([^\"]+)\" ]]; then
-        board_name="${BASH_REMATCH[1]}"
+        board_name=$(decode_html_entities "${BASH_REMATCH[1]}")
     fi
     if [[ $line =~ version=\"([^\"]+)\" ]]; then
         board_version="${BASH_REMATCH[1]}"
@@ -55,10 +64,16 @@ mismatches=()
 # Check each file in boards/bdFiles
 for board_file in "$BD_FILES_DIR"/*; do
     filename=$(basename "$board_file")
+
+    # Skip files that do not start with 'bd'
+    if [[ ! $filename == bd* ]]; then
+        continue
+    fi
+
     board_name="${filename#bd}"  # Strip "bd" prefix
 
-    # Remove any spaces or special characters from the board name
-    board_name_clean=$(echo "$board_name" | tr -d '\r' | xargs)
+    # Decode any HTML entities in the board name for accurate matching
+    board_name_clean=$(decode_html_entities "$board_name" | tr -d '\r' | xargs)
 
     # Check if the modified filename matches any board name in v5boardVersions.xml
     if [[ -v board_versions["$board_name_clean"] ]]; then
