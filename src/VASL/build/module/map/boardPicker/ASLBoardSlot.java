@@ -115,6 +115,9 @@ public class ASLBoardSlot extends BoardSlot {
 
     boards.setModel(model);
     if (model.getSize() > 0) {
+      Dimension preferredSize = boards.getPreferredSize();
+      preferredSize.width = Math.max(preferredSize.width, 100); // Set minimum width
+      boards.setPreferredSize(preferredSize);
       boards.showPopup();// Show the drop-down list
     }
   }
