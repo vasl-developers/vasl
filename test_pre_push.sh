@@ -132,19 +132,21 @@ for board_name in "${!board_versions[@]}"; do
     fi
 done
 
-# Print mismatches and warnings separately
-if [[ ${#mismatches[@]} -gt 0 ]]; then
-    echo "Version Mismatches Found:"
-    printf "%s\n" "${mismatches[@]}"
-fi
 
 if [[ ${#warnings[@]} -gt 0 ]]; then
     echo "Warnings:"
     printf "%s\n" "${warnings[@]}"
 fi
 
+# Print mismatches and warnings separately
+if [[ ${#mismatches[@]} -gt 0 ]]; then
+    echo "Version Mismatches Found:"
+    printf "%s\n" "${mismatches[@]}"
+fi
+
 # Exit with an error if there are mismatches
 if [[ ${#mismatches[@]} -gt 0 ]]; then
+    echo "Error: Version mismatches found. Please fix the issues before pushing."
     exit 1
 else
     echo "All checks passed."
