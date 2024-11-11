@@ -124,6 +124,14 @@ for board_file in "$BD_FILES_DIR"/*; do
     fi
 done
 
+# Check for entries in v5boardVersions.xml without corresponding bdFiles
+for board_name in "${!board_versions[@]}"; do
+    board_file="$BD_FILES_DIR/bd$board_name"
+    if [[ ! -f "$board_file" ]]; then
+        warnings+=("Warning: No file found in bdFiles directory for board '$board_name' listed in v5boardVersions.xml.")
+    fi
+done
+
 # Print mismatches and warnings separately
 if [[ ${#mismatches[@]} -gt 0 ]]; then
     echo "Version Mismatches Found:"
@@ -141,3 +149,4 @@ if [[ ${#mismatches[@]} -gt 0 ]]; then
 else
     echo "All checks passed."
 fi
+
