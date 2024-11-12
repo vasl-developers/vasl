@@ -1,11 +1,10 @@
 #!/bin/bash
 
-# Get the directory of the script to ensure relative paths work
-SCRIPT_DIR=$(dirname "$0")
 
-# Define paths relative to the script's location
-VERSION_FILE="$SCRIPT_DIR/boards/v5boardVersions.xml"
-BD_FILES_DIR="$SCRIPT_DIR/boards/bdFiles"
+# Define paths relative to the repository root
+REPO_ROOT=$(git rev-parse --show-toplevel)
+VERSION_FILE="$REPO_ROOT/boards/v5boardVersions.xml"
+BD_FILES_DIR="$REPO_ROOT/boards/bdFiles"
 TEMP_DIR=$(mktemp -d)
 mismatches=()  # Array to hold any mismatch messages
 
@@ -77,7 +76,7 @@ for board_file in "$BD_FILES_DIR"/*; do
 
     # Check if the modified filename matches any board name in v5boardVersions.xml
     if [[ -v board_versions["$board_name_clean"] ]]; then
-        expected_version="${board_versions["$board_name_clean"]}"
+        expected_version="${board_versions]["$board_name_clean"]}"
 
         file_type=$(file -b "$board_file")
         metadata_file=""
@@ -151,4 +150,3 @@ if [[ ${#mismatches[@]} -gt 0 ]]; then
 else
     echo "All checks passed."
 fi
-
