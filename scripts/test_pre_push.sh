@@ -76,7 +76,7 @@ for board_file in "$BD_FILES_DIR"/*; do
 
     # Check if the modified filename matches any board name in v5boardVersions.xml
     if [[ -v board_versions["$board_name_clean"] ]]; then
-        expected_version="${board_versions]["$board_name_clean"]}"
+        expected_version="${board_versions["$board_name_clean"]}"
 
         file_type=$(file -b "$board_file")
         metadata_file=""
