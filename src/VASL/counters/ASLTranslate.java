@@ -79,7 +79,6 @@ public class ASLTranslate extends Translate {
         Command report = movementReporter.getReportCommand();
         report.execute();
         c.append(report);
-        getGameModule().sendAndLog(c);
         // auto-reveal fortification test
         ASLMap map =   getGameModule().getComponentsOf(ASLMap.class).get(0);
         HIPFortification hipfort = map.getComponentsOf(HIPFortification.class).get(0);
