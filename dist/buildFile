@@ -44,7 +44,7 @@
         <VASL.build.module.map.HindranceKeeper/>
         <VASSAL.build.module.map.ForwardToKeyBuffer/>
         <VASSAL.build.module.map.Scroller/>
-        <VASSAL.build.module.map.MenuDisplayer/>
+        <VASL.build.module.map.ASLMenuDisplayer/>
         <VASL.build.module.map.MapCenterer/>
         <VASL.build.module.map.ASLPieceFinder Name="ASL Piece Finder"/>
         <VASL.build.module.map.PieceLinker Color="255,0,0" LinkKey="76,650" Name="Piece Linker" ThreadWidth="2" UnlinkKey="85,650"/>
