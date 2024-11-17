@@ -91,13 +91,15 @@ public class ASLMenuDisplayer extends MenuDisplayer implements Buildable {
                     }
                 }
                 // Check to see if the invoker is in the unwanted menu, if not consume event and exit
-                if (unwantedMenu == null && invoker instanceof JMenu && UNUSED.equals(((JMenu) invoker).getText())) {
-                    unwantedMenu = (JMenu) invoker;
-                    unwantedMenu.remove(this);
-                } else {
-                    // Make sure the event does not propagate to the parent component
-                    e.consume();
-                    return;
+                if (unwantedMenu == null) {
+                    if (invoker instanceof JMenu && UNUSED.equals(((JMenu) invoker).getText())) {
+                        unwantedMenu = (JMenu) invoker;
+                        unwantedMenu.remove(this);
+                    } else {
+                        // Make sure the event does not propagate to the parent component
+                        e.consume();
+                        return;
+                    }
                 }
 
                 // if popUp.getValueString() contains the commandId, remove it, else add it
