@@ -116,7 +116,7 @@ public class ASLAutoSave extends AbstractBuildable {
         BooleanConfigurer autoSaveOption = (BooleanConfigurer) modulePrefs.getOption(AUTOSAVE_OPTION);
 
         if (autoSaveOption == null) {
-            autoSaveOption = new BooleanConfigurer(AUTOSAVE_OPTION, "AutoSave game every 10 minutes", Boolean.FALSE);
+            autoSaveOption = new BooleanConfigurer(AUTOSAVE_OPTION, "AutoSave game every 10 minutes", Boolean.TRUE);
             modulePrefs.addOption("VASL", autoSaveOption);
         }
 
