@@ -22,11 +22,26 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # Step 3: Build the project
+      # Step 3: Cache Maven dependencies
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+
+      # Step 4: Build the project
       - name: Build with Maven
         run: mvn clean package
 
-      # Step 4: Upload .vmod file artifact
+      # Step 5: Debug target directory
+      - name: List target directory contents
+        run: ls -al ./target
+        continue-on-error: true
+
+      # Step 6: Upload .vmod file artifact
       - name: Upload .vmod file artifact
         uses: actions/upload-artifact@v3
         with:
@@ -73,6 +88,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: vmod-file
+          path: ./target  # Specify the target directory
 
       # Step 5: Create GitHub Release
       - name: Create GitHub Release
@@ -94,8 +110,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./*.vmod  # Look for the .vmod file in the root directory
-          asset_name: $(basename ./*.vmod)
+          asset_path: ./target/*.vmod
+          asset_name: $(basename ./target/*.vmod)
           asset_content_type: application/octet-stream
 
 #      - name: Upload target directory as zip
