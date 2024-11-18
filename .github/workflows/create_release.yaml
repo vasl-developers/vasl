@@ -51,6 +51,7 @@ jobs:
         env:
           GITHUB_ENV: $GITHUB_ENV
 
+      # Step 3: Read release notes
       - name: Read release notes
         id: read_release_notes
         run: |
@@ -93,8 +94,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./target/*.vmod
-          asset_name: $(basename ./target/*.vmod)
+          asset_path: ./*.vmod  # Look for the .vmod file in the root directory
+          asset_name: $(basename ./*.vmod)
           asset_content_type: application/octet-stream
 
 #      - name: Upload target directory as zip
