@@ -1,9 +1,9 @@
 name: Pre-Push Check
 
 on:
-  push:
+  pull_request:
     branches:
-      - master
+      - production
 
 jobs:
   pre-push-check:
@@ -19,7 +19,7 @@ jobs:
       - name: Ensure version was incremented properly
         run: |
           VERSION=$(grep -oP '(?<=<version>)[^<]+' pom.xml)
-          PREV_VERSION=$(git tag --sort=-v:refname | head -n 1)
+          PREV_VERSION=$(git show HEAD~1:pom.xml | grep -oP '(?<=<version>)[^<]+')
           
           IFS='.' read -r -a CURR_PARTS <<< "$VERSION"
           IFS='.' read -r -a PREV_PARTS <<< "$PREV_VERSION"
@@ -29,11 +29,16 @@ jobs:
             exit 1
           fi
           
-          if [ "${CURR_PARTS[0]}" -lt "${PREV_PARTS[0]}" ] ||
-             { [ "${CURR_PARTS[0]}" -eq "${PREV_PARTS[0]}" ] && [ "${CURR_PARTS[1]}" -lt "${PREV_PARTS[1]}" ]; } ||
-             { [ "${CURR_PARTS[0]}" -eq "${PREV_PARTS[0]}" ] && [ "${CURR_PARTS[1]}" -eq "${PREV_PARTS[1]}" ] && [ "${CURR_PARTS[2]}" -le "${PREV_PARTS[2]}" ]; }; then
-            echo "Error: Version $VERSION is not properly incremented from previous version $PREV_VERSION."
-            exit 1
+          # Check for proper version increments
+          if [ $((CURR_PARTS[0] - PREV_PARTS[0])) -eq 1 ] && [ "${CURR_PARTS[1]}" -eq 0 ] && [ "${CURR_PARTS[2]}" -eq 0 ]; then
+          echo "Version $VERSION properly increments the major version from $PREV_VERSION."
+          elif [ "${CURR_PARTS[0]}" -eq "${PREV_PARTS[0]}" ] && [ $((CURR_PARTS[1] - PREV_PARTS[1])) -eq 1 ] && [ "${CURR_PARTS[2]}" -eq 0 ]; then
+          echo "Version $VERSION properly increments the minor version from $PREV_VERSION."
+          elif [ "${CURR_PARTS[0]}" -eq "${PREV_PARTS[0]}" ] && [ "${CURR_PARTS[1]}" -eq "${PREV_PARTS[1]}" ] && [ $((CURR_PARTS[2] - PREV_PARTS[2])) -eq 1 ]; then
+          echo "Version $VERSION properly increments the patch version from $PREV_VERSION."
+          else
+          echo "Error: Version $VERSION is not a valid increment from $PREV_VERSION."
+          exit 1
           fi
 
       - name: Check for Whats New PDF
@@ -50,13 +55,19 @@ jobs:
           chmod +x ./scripts/test_pre_push.sh
           ./scripts/test_pre_push.sh
 
-      - name: Commit new release info to vasl/website
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git clone https://github.com/vasl/website.git
-          cd website
-          echo "New release VASL $VERSION" >> releases.md
-          echo "[Download Whats New VASL${VERSION}.pdf](https://github.com/vasl/vasl/releases/download/v${VERSION}/Whats New VASL${VERSION}.pdf)" >> releases.md
-          git add releases.md
-          git commit -m "Add new release VASL $VERSION"
+
+  test-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+
+      - name: Test build
+        run: mvn clean verify
+
