@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<VASSAL.build.GameModule ModuleOther1="" ModuleOther2="" VassalVersion="3.7.14" description="VASL" name="VASL" nextPieceSlotId="15449" version="6.6.9">
+<VASSAL.build.GameModule ModuleOther1="" ModuleOther2="" VassalVersion="3.7.14" description="VASL" name="VASL" nextPieceSlotId="15449" version="6.6.10">
     <VASSAL.build.module.properties.GlobalProperties>
         <VASSAL.build.module.properties.GlobalProperty description="TurnMarker1" initialValue="Spy (white)" isNumeric="false" max="null" min="null" name="TurnMarker1" wrap="false"/>
         <VASSAL.build.module.properties.GlobalProperty description="TurnMarkerLayerLevel1" initialValue="33" isNumeric="true" max="100" min="0" name="TurnMarkerLayerLevel1" wrap="false"/>
@@ -159,7 +159,7 @@
     </VASL.build.module.ASLMap>
     <VASSAL.build.module.NotesWindow buttonText="" hotkey="" icon="notesV.gif" tooltip="Notes"/>
     <VASSAL.build.module.Documentation>
-        <VASSAL.build.module.documentation.BrowserPDFFile pdfFile="Whats New VASL669.pdf" title="What's New"/>
+        <VASSAL.build.module.documentation.BrowserPDFFile pdfFile="Whats New VASL669-10.pdf" title="What's New"/>
         <VASSAL.build.module.documentation.BrowserPDFFile pdfFile="Counters.pdf" title="Counters"/>
         <VASSAL.build.module.documentation.BrowserPDFFile pdfFile="VASL Keystroke Cheat Sheet.pdf" title="Hotkey Listing"/>
         <VASSAL.build.module.documentation.BrowserPDFFile pdfFile="Malf.pdf" title="Malf/Broken Unit Finder"/>

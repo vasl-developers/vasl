@@ -923,13 +923,13 @@ public class ASLPieceMover extends PieceMover {
          * @param dragX x position
          * @param dragY y position
          */
-        @Deprecated(since = "2023-05-08", forRemoval = true)
+        //@Deprecated(since = "2023-05-08", forRemoval = true)
         protected void moveDragCursor(int dragX, int dragY) {}
 
         /**
          * Removes the drag cursor from the current draw window
          */
-        @Deprecated(since = "2023-05-08", forRemoval = true)
+        //@Deprecated(since = "2023-05-08", forRemoval = true)
         protected void removeDragCursor() {}
 
         /** calculates the offset between cursor dragCursor positions */
@@ -1650,17 +1650,17 @@ public class ASLPieceMover extends PieceMover {
          * @param dragX x position
          * @param dragY y position
          */
-        /*@Override
+        @Override
         protected void moveDragCursor(int dragX, int dragY) {
             if (drawWin != null) {
                 dragCursor.setLocation(dragX - drawOffset.x, dragY - drawOffset.y);
             }
-        }*/
+        }
 
         /**
          * Removes the drag cursor from the current draw window
          */
-        /*@Override
+        @Override
         protected void removeDragCursor() {
             if (drawWin != null) {
                 if (dragCursor != null) {
@@ -1669,7 +1669,7 @@ public class ASLPieceMover extends PieceMover {
                 }
                 drawWin = null;
             }
-        }*/
+        }
 
         /**
          * creates or moves cursor object to given JLayeredPane. Usually called by setDrawWinToOwnerOf()
