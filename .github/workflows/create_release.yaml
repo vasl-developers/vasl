@@ -26,12 +26,12 @@ jobs:
       - name: Build with Maven
         run: mvn clean package
 
-      # Step 4: Upload target directory artifacts
-      - name: Upload build artifacts
+      # Step 4: Upload .vmod file artifact
+      - name: Upload .vmod file artifact
         uses: actions/upload-artifact@v3
         with:
-          name: target-artifacts
-          path: target/
+          name: vmod-file
+          path: target/*.vmod
 
   create-release:
     runs-on: ubuntu-latest
@@ -42,13 +42,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Step 2: Download build artifacts
-      - name: Download build artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: target-artifacts
-
-      # Step 3: Get version dynamically from pom.xml
+      # Step 2: Get version dynamically from pom.xml
       - name: Get version from pom.xml
         id: get_version
         run: |
@@ -57,7 +51,6 @@ jobs:
         env:
           GITHUB_ENV: $GITHUB_ENV
 
-      # Step 4: Read release notes
       - name: Read release notes
         id: read_release_notes
         run: |
@@ -70,8 +63,15 @@ jobs:
           else
             echo "Error: $NOTES_FILE not found."
             exit 1
+          fi
         env:
           VERSION: ${{ env.VERSION }}
+
+      # Step 4: Download .vmod file artifact
+      - name: Download .vmod file artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: vmod-file
 
       # Step 5: Create GitHub Release
       - name: Create GitHub Release
@@ -86,7 +86,7 @@ jobs:
           draft: true
           prerelease: false
 
-      # Step 6: Upload build artifacts (.vmod, zip, tar.gz)
+      # Step 6: Upload build artifacts (.vmod)
       - name: Upload .vmod file to release
         uses: actions/upload-release-asset@v1
         env:
