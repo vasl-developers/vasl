@@ -43,7 +43,7 @@ jobs:
 
       # Step 6: Upload .vmod file artifact
       - name: Upload .vmod file artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: vmod-file
           path: target/*.vmod
@@ -85,12 +85,23 @@ jobs:
 
       # Step 4: Download .vmod file artifact
       - name: Download .vmod file artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: vmod-file
           path: ./target  # Specify the target directory
 
-      # Step 5: Create GitHub Release
+      # Step 5: Verify .vmod file exists
+      - name: Verify .vmod file exists
+        run: |
+          VMOD_FILE=$(find ./target -name '*.vmod' -print -quit)
+          if [[ -z "$VMOD_FILE" ]]; then
+          echo "Error: No .vmod file found in ./target directory"
+          exit 1
+          fi
+          echo "Found .vmod file: $VMOD_FILE"
+          echo "VMOD_FILE=$VMOD_FILE" >> $GITHUB_ENV
+
+      # Step 6: Create GitHub Release
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
@@ -103,15 +114,15 @@ jobs:
           draft: true
           prerelease: false
 
-      # Step 6: Upload build artifacts (.vmod)
+      # Step 7: Upload build artifacts (.vmod)
       - name: Upload .vmod file to release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
+          with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./target/*.vmod
-          asset_name: $(basename ./target/*.vmod)
+          asset_path: ${{ env.VMOD_FILE }}  # Use the dynamically located file
+          asset_name: $(basename ${{ env.VMOD_FILE }})
           asset_content_type: application/octet-stream
 
 #      - name: Upload target directory as zip
