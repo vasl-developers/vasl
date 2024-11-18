@@ -17,7 +17,6 @@ jobs:
         uses: rlespinasse/github-slug-action@v5
 
       - name: Ensure version was incremented properly
-        continue-on-error: true
         run: |
           VERSION=$(grep -oP '(?<=<version>)[^<]+' pom.xml | head -n 1)
           git fetch --depth=1 origin production
@@ -44,16 +43,23 @@ jobs:
           fi
 
       - name: Check for What's New text file
-        continue-on-error: true
         run: |
-          PDF_FILE="dist/Whats New VASL ${VERSION}"
-          if [[ ! -f "$PDF_FILE" ]]; then
-            echo "Error: $PDF_FILE not found."
+          VERSION=$(grep -oP '(?<=<version>)[^<]+' pom.xml | head -n 1)
+          INFO_FILE="dist/Whats New VASL ${VERSION}"
+          if [[ ! -f "$INFO_FILE" ]]; then
+            echo "Error: $INFO_FILE not found."
             exit 1
           fi
 
+  run-pre-push:
+    runs-on: ubuntu-latest
+    needs: pre-push-check
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Run pre-push script
-        continue-on-error: true
         run: |
           chmod +x ./scripts/test_pre_push.sh
           ./scripts/test_pre_push.sh
