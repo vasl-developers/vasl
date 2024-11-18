@@ -19,7 +19,8 @@ jobs:
       - name: Ensure version was incremented properly
         run: |
           VERSION=$(grep -oP '(?<=<version>)[^<]+' pom.xml)
-          PREV_VERSION=$(git show HEAD~1:pom.xml | grep -oP '(?<=<version>)[^<]+')
+          git fetch --depth=1 origin production
+          PREV_VERSION=$(git show origin/production:pom.xml | grep -oP '(?<=<version>)[^<]+')
           
           IFS='.' read -r -a CURR_PARTS <<< "$VERSION"
           IFS='.' read -r -a PREV_PARTS <<< "$PREV_VERSION"
@@ -67,6 +68,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'
+          distribution: 'temurin'
 
       - name: Test build
         run: mvn clean verify
