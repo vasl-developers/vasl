@@ -119,7 +119,7 @@ jobs:
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
+        with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ${{ env.VMOD_FILE }}  # Use the dynamically located file
           asset_name: $(basename ${{ env.VMOD_FILE }})
