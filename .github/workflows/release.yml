@@ -1,4 +1,4 @@
-name: Pre-Push Check
+name: PR Check
 
 on:
   pull_request:
@@ -18,8 +18,9 @@ jobs:
 
       - name: Ensure version was incremented properly
         run: |
-          VERSION=$(grep -oP '(?<=<version>)[^<]+' pom.xml)
-          PREV_VERSION=$(git show HEAD~1:pom.xml | grep -oP '(?<=<version>)[^<]+')
+          VERSION=$(grep -oP '(?<=<version>)[^<]+' pom.xml | head -n 1)
+          git fetch --depth=1 origin production
+          PREV_VERSION=$(git show origin/production:pom.xml | grep -oP '(?<=<version>)[^<]+' | head -n 1)
           
           IFS='.' read -r -a CURR_PARTS <<< "$VERSION"
           IFS='.' read -r -a PREV_PARTS <<< "$PREV_VERSION"
@@ -41,14 +42,22 @@ jobs:
           exit 1
           fi
 
-      - name: Check for Whats New PDF
+      - name: Check for What's New text file
         run: |
-          VERSION=$(grep -oP '(?<=<version>)[^<]+' pom.xml)
-          PDF_FILE="dist/Whats New VASL${VERSION}.pdf"
-          if [[ ! -f "$PDF_FILE" ]]; then
-            echo "Error: $PDF_FILE not found."
+          VERSION=$(grep -oP '(?<=<version>)[^<]+' pom.xml | head -n 1)
+          INFO_FILE="dist/Whats New VASL ${VERSION}"
+          if [[ ! -f "$INFO_FILE" ]]; then
+            echo "Error: $INFO_FILE not found."
             exit 1
           fi
+
+  run-pre-push:
+    runs-on: ubuntu-latest
+    needs: pre-push-check
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Run pre-push script
         run: |
@@ -67,6 +76,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'
+          distribution: 'temurin'
 
       - name: Test build
         run: mvn clean verify
