@@ -18,9 +18,9 @@ jobs:
 
       - name: Ensure version was incremented properly
         run: |
-          VERSION=$(grep -oP '(?<=<version>)[^<]+' pom.xml)
+          VERSION=$(grep -oP '(?<=<version>)[^<]+' pom.xml | head -n 1)
           git fetch --depth=1 origin production
-          PREV_VERSION=$(git show origin/production:pom.xml | grep -oP '(?<=<version>)[^<]+')
+          PREV_VERSION=$(git show origin/production:pom.xml | grep -oP '(?<=<version>)[^<]+' | head -n 1)
           
           IFS='.' read -r -a CURR_PARTS <<< "$VERSION"
           IFS='.' read -r -a PREV_PARTS <<< "$PREV_VERSION"
