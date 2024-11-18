@@ -61,7 +61,7 @@ jobs:
       - name: Read release notes
         id: read_release_notes
         run: |
-          NOTES_FILE="dist/Whats New VASL ${VERSION}"
+          NOTES_FILE="dist/Whats New VASL ${VERSION}.txt"
           if [[ -f "$NOTES_FILE" ]]; then
             RELEASE_NOTES=$(cat "$NOTES_FILE")
             echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
