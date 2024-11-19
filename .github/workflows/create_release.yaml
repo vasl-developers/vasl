@@ -119,7 +119,7 @@ jobs:
         with:
           tag_name: v${{ steps.get_version.outputs.VERSION }}
           release_name: Release ${{ steps.get_version.outputs.VERSION }}
-          body: ${{ steps.process_release_notes.outputs.body }}
+          body_path: dist/release-notes.md
           draft: true
           prerelease: false
 
@@ -154,19 +154,32 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: gh-pages
 
+      - name: Checkout main repository
+        uses: actions/checkout@v4
+        with:
+          repository: vasl-developers/vasl
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: production
+
+      - name: Read release notes
+        id: read_release_notes
+        run: |
+          RELEASE_NOTES=$(cat dist/release-notes.md)
+          echo "::set-output name=RELEASE_NOTES::$RELEASE_NOTES"
+
       - name: Update download.htm
         run: |
-            VERSION=${{ needs.create-release.outputs.VERSION }}
-            UPDATED_DATE=$(date '+%B %d, %Y')
-            RELEASE_NOTES=${{ needs.create-release.outputs.RELEASE_NOTES }}
-            DOWNLOAD_LINK=${{ needs.create-release.outputs.DOWNLOAD_LINK }}
-            NEW_DIV="<div class='well table'>
-            <a id='download${VERSION//./}' class='track btn btn-large btn-primary' href='${DOWNLOAD_LINK}'>VASL ${VERSION}</a>
-            <h2 class='pull-right'>Updated ${UPDATED_DATE}</h2>
-            <li>${RELEASE_NOTES}</li>
-            </div>"
-            
-            sed -i "/<div class='well table'>/h; \$!b; x; s@</div>@${NEW_DIV}</div>@; x; P; D" download.htm
+          VERSION=${{ needs.create-release.outputs.VERSION }}
+          UPDATED_DATE=$(date '+%B %d, %Y')
+          RELEASE_NOTES=${{ steps.read_release_notes.outputs.RELEASE_NOTES }}
+          DOWNLOAD_LINK=${{ needs.create-release.outputs.DOWNLOAD_LINK }}
+          NEW_DIV="<div class='well table'>
+          <a id='download${VERSION//./}' class='track btn btn-large btn-primary' href='${DOWNLOAD_LINK}'>VASL ${VERSION}</a>
+          <h2 class='pull-right'>Updated ${UPDATED_DATE}</h2>
+          <li>${RELEASE_NOTES}</li>
+          </div>"
+          
+          sed -i "/<div class='well table'>/h; \$!b; x; s@</div>@${NEW_DIV}</div>@; x; P; D" download.htm
 
       - name: Wait for manual approval
         if: always()
