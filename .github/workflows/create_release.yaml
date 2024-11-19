@@ -128,7 +128,7 @@ jobs:
       # Step 7: Upload build artifacts (.vmod)
       - name: Upload .vmod file to release
         id: upload_asset
-        uses: github-release/upload-release-asset-action@v1.2.0
+        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
