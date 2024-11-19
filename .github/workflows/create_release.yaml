@@ -69,22 +69,29 @@ jobs:
         env:
           GITHUB_ENV: $GITHUB_ENV
 
-      # Step 3: Read release notes
-      - name: Read release notes
-        id: read_release_notes
+      # Step 3: Check release notes and prepare for GitHub Release
+      - name: Check for correct version and read release-notes.md
+        id: process_release_notes
         run: |
-          NOTES_FILE="dist/Whats New VASL ${VERSION}.txt"
-          if [[ -f "$NOTES_FILE" ]]; then
-            RELEASE_NOTES=$(cat "$NOTES_FILE")
-            echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
-            echo "$RELEASE_NOTES" >> $GITHUB_ENV
-            echo "EOF" >> $GITHUB_ENV
-          else
+          VERSION=$(grep -oP '(?<=<version>)[^<]+' pom.xml | head -n 1)
+          
+          # Ensure the version is mentioned in the first 5 lines of release-notes.md
+          NOTES_FILE="dist/release-notes.md"
+          if [[ ! -f "$NOTES_FILE" ]]; then
             echo "Error: $NOTES_FILE not found."
             exit 1
           fi
-        env:
-          VERSION: ${{ env.VERSION }}
+
+          if ! head -n 5 "$NOTES_FILE" | grep -q "Version ${VERSION}"; then
+            echo "Error: Version ${VERSION} not found in the first 5 lines of $NOTES_FILE."
+            exit 1
+          fi
+          
+          # Read the release-notes.md content
+          RELEASE_NOTES=$(cat "$NOTES_FILE")
+          echo "::set-output name=body::$RELEASE_NOTES"
+      
+      
 
       # Step 4: Download .vmod file artifact
       - name: Download .vmod file artifact
@@ -115,7 +122,8 @@ jobs:
         with:
           tag_name: v${{ env.VERSION }}
           release_name: Release ${{ env.VERSION }}
-          body: ${{ env.RELEASE_NOTES }}
+          body: |
+            ${{ steps.process_release_notes.outputs.body }}
           draft: true
           prerelease: false
 
