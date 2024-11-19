@@ -71,7 +71,9 @@ jobs:
         id: get_version
         run: |
           VERSION=$(grep -oP '(?<=<version>)[^<]+' pom.xml | head -n 1)
-          echo "::set-output name=VERSION::$VERSION"
+          echo "VERSION: $VERSION"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
 
       # Step 3: Check release notes and prepare for GitHub Release
       - name: Check for correct version and read release-notes.md
@@ -88,7 +90,7 @@ jobs:
             exit 1
           fi
           RELEASE_NOTES=$(cat "$NOTES_FILE")
-          echo "::set-output name=body::$RELEASE_NOTES"
+          echo "body=$RELEASE_NOTES" >> $GITHUB_OUTPUT
 
       # Step 4: Download .vmod file artifact
       - name: Download .vmod file artifact
@@ -107,8 +109,8 @@ jobs:
             exit 1
           fi
           FILE_NAME=$(basename "$VMOD_FILE")
-          echo "::set-output name=VMOD_FILE::$VMOD_FILE"
-          echo "::set-output name=FILE_NAME::$FILE_NAME"
+          echo "VMOD_FILE=$VMOD_FILE" >> $GITHUB_ENV
+          echo "FILE_NAME=$FILE_NAME" >> $GITHUB_ENV
 
       # Step 6: Create GitHub Release
       - name: Create GitHub Release
@@ -117,8 +119,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ steps.get_version.outputs.VERSION }}
-          release_name: Release ${{ steps.get_version.outputs.VERSION }}
+          tag_name: v${{ env.VERSION }}
+          release_name: Release ${{ env.VERSION }}
           body_path: dist/release-notes.md
           draft: true
           prerelease: false
@@ -126,19 +128,14 @@ jobs:
       # Step 7: Upload build artifacts (.vmod)
       - name: Upload .vmod file to release
         id: upload_asset
-        uses: actions/upload-release-asset@v1
+        uses: github-release/upload-release-asset-action@v1.2.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ steps.extract_file.outputs.VMOD_FILE }}
-          asset_name: ${{ steps.extract_file.outputs.FILE_NAME }}
+          asset_path: ${{ env.VMOD_FILE }}
+          asset_name: ${{ env.FILE_NAME }}
           asset_content_type: application/octet-stream
-
-
-      - name: Save download link
-        run: |
-          echo "::set-output name=DOWNLOAD_LINK::${{ steps.upload_asset.outputs.browser_download_url }}"
 
 
   update-website:
@@ -147,6 +144,15 @@ jobs:
     needs: create-release
 
     steps:
+      - name: Check if version is beta
+        id: check_version
+        run: |
+          VERSION=${{ needs.create-release.outputs.VERSION }}
+          if [[ "$VERSION" == *"beta"* ]]; then
+            echo "This is a beta version. Skipping the rest of the workflow as we will not publish to website."
+            exit 0
+          fi
+
       - name: Checkout website repository
         uses: actions/checkout@v4
         with:
@@ -171,7 +177,7 @@ jobs:
         run: |
           VERSION=${{ needs.create-release.outputs.VERSION }}
           UPDATED_DATE=$(date '+%B %d, %Y')
-          RELEASE_NOTES=${{ steps.read_release_notes.outputs.RELEASE_NOTES }}
+          RELEASE_NOTES=${{ needs.create-release.outputs.RELEASE_NOTES }}
           DOWNLOAD_LINK=${{ needs.create-release.outputs.DOWNLOAD_LINK }}
           NEW_DIV="<div class='well table'>
           <a id='download${VERSION//./}' class='track btn btn-large btn-primary' href='${DOWNLOAD_LINK}'>VASL ${VERSION}</a>
