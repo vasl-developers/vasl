@@ -43,12 +43,11 @@ jobs:
           exit 1
           fi
 
-      - name: Check for What's New text file
+      - name: Check for correct version in release-notes.md
         run: |
           VERSION=$(grep -oP '(?<=<version>)[^<]+' pom.xml | head -n 1)
-          INFO_FILE="dist/Whats New VASL ${VERSION}"
-          if [[ ! -f "$INFO_FILE" ]]; then
-            echo "Error: $INFO_FILE not found."
+          if ! head -n 5 release-notes.md | grep -q "Version ${VERSION}"; then
+            echo "Error: Version ${VERSION} not found in the first 5 lines of release-notes.md."
             exit 1
           fi
 

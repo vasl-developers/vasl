@@ -1,9 +1,0 @@
-1) Top concealment counter can now be made transparent for owner of non-dummy stack so they can see top unit. This feature can be turned on/off in preference tab
-2) Change was made to buildFile such that when a special ammo is selected as depleted, it automatically displays below counter
-3) Fixed bug where concealed broken sw was being revealed by the report broken/mal sw/gun button
-4) Minor fix to the LOS check function so that checking los to a depression hex containing multiple center locations is accurate
-5) Implementation of autosave feature. Creates save files every 10 minutes in users "board" directory. Maximum of 20 files created. Can be turned on/off in preferences tab.
-6) Removed deluxe hex size option
-7) Reordered the boards when selecing a map and added a searchbox feature
-8) Changed implementation of concealment counters. Now we try to take into consideration multiple locations within a hex denoted by counters (e.g. building levels)
-9) Allow players to change the popup menu when right clicking on a menu item.

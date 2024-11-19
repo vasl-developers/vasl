@@ -8,6 +8,7 @@ on:
 
 jobs:
   build:
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
 
     steps:
@@ -50,6 +51,7 @@ jobs:
           path: target/*.vmod
 
   create-release:
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
     needs: build
 
@@ -119,6 +121,7 @@ jobs:
 
       # Step 7: Upload build artifacts (.vmod)
       - name: Upload .vmod file to release
+        id: upload_asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -127,6 +130,10 @@ jobs:
           asset_path: ${{ env.VMOD_FILE }}  # Full file path
           asset_name: ${{ env.FILE_NAME }}  # File name only
           asset_content_type: application/octet-stream
+
+      - name: Save download link
+        run: |
+          echo "DOWNLOAD_LINK=${{ steps.upload_asset.outputs.browser_download_url }}" >> $GITHUB_ENV
 
 #      - name: Upload target directory as zip
 #        uses: actions/upload-release-asset@v1
@@ -147,3 +154,48 @@ jobs:
 #          asset_path: ./target.tar.gz
 #          asset_name: target.tar.gz
 #          asset_content_type: application/gzip
+
+
+  update-website:
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: ubuntu-latest
+    needs: create-release
+
+    steps:
+      - name: Checkout website repository
+        uses: actions/checkout@v4
+        with:
+          repository: vasl-developers/vasl-website
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: gh-pages
+
+      - name: Update download.htm
+        run: |
+          VERSION=$(grep -oP '(?<=<version>)[^<]+' pom.xml | head -n 1)
+          UPDATED_DATE=$(date '+%B %d, %Y')
+          RELEASE_NOTES=$(cat "dist/release-notes.md")
+          NEW_DIV="<div class='well table'>
+          <a id='download${VERSION//./}' class='track btn btn-large btn-primary' href='${{ env.DOWNLOAD_LINK }}'>VASL ${VERSION}</a>
+          <h2 class='pull-right'>Updated ${UPDATED_DATE}</h2>
+          <li>${RELEASE_NOTES}</li>
+          </div>"
+
+          sed -i "/<div class='well table'>/h; \$!b; x; s@</div>@${NEW_DIV}</div>@; x; P; D" download.htm
+          
+
+      - name: Wait for manual approval
+        if: always()
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          event-type: manual-approval
+
+      # Step 5: Commit and push changes
+      - name: Commit and push changes (after approval)
+        if: ${{ github.event.inputs.approval == 'approved' }}
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add download.htm
+          git commit -m "Update download.htm with VASL ${VERSION}"
+          git push origin gh-pages
+
