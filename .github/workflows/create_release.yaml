@@ -50,6 +50,7 @@ jobs:
           name: vmod-file
           path: target/*.vmod
 
+
   create-release:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
@@ -58,6 +59,7 @@ jobs:
     outputs:
       VERSION: ${{ steps.get_version.outputs.VERSION }}
       RELEASE_NOTES: ${{ steps.process_release_notes.outputs.body }}
+      DOWNLOAD_LINK: ${{ steps.upload_asset.outputs.browser_download_url }}
 
     steps:
       # Step 1: Checkout repository
@@ -88,6 +90,57 @@ jobs:
           RELEASE_NOTES=$(cat "$NOTES_FILE")
           echo "::set-output name=body::$RELEASE_NOTES"
 
+      # Step 4: Download .vmod file artifact
+      - name: Download .vmod file artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: vmod-file
+          path: ./target  # Specify the target directory
+
+      # Step 5: Verify .vmod file exists
+      - name: Verify and extract file name
+        id: extract_file
+        run: |
+          VMOD_FILE=$(find ./target -name '*.vmod' -print -quit)
+          if [[ -z "$VMOD_FILE" ]]; then
+            echo "Error: No .vmod file found in ./target directory"
+            exit 1
+          fi
+          FILE_NAME=$(basename "$VMOD_FILE")
+          echo "::set-output name=VMOD_FILE::$VMOD_FILE"
+          echo "::set-output name=FILE_NAME::$FILE_NAME"
+
+      # Step 6: Create GitHub Release
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.get_version.outputs.VERSION }}
+          release_name: Release ${{ steps.get_version.outputs.VERSION }}
+          body: ${{ steps.process_release_notes.outputs.body }}
+          draft: true
+          prerelease: false
+
+      # Step 7: Upload build artifacts (.vmod)
+      - name: Upload .vmod file to release
+        id: upload_asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.extract_file.outputs.VMOD_FILE }}
+          asset_name: ${{ steps.extract_file.outputs.FILE_NAME }}
+          asset_content_type: application/octet-stream
+
+
+      - name: Save download link
+        run: |
+          echo "::set-output name=DOWNLOAD_LINK::${{ steps.upload_asset.outputs.browser_download_url }}"
+
+
   update-website:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
@@ -103,16 +156,17 @@ jobs:
 
       - name: Update download.htm
         run: |
-          VERSION=${{ needs.create-release.outputs.VERSION }}
-          UPDATED_DATE=$(date '+%B %d, %Y')
-          RELEASE_NOTES=${{ needs.create-release.outputs.body }}
-          NEW_DIV="<div class='well table'>
-          <a id='download${VERSION//./}' class='track btn btn-large btn-primary' href='${{ env.DOWNLOAD_LINK }}'>VASL ${VERSION}</a>
-          <h2 class='pull-right'>Updated ${UPDATED_DATE}</h2>
-          <li>${RELEASE_NOTES}</li>
-          </div>"
-
-          sed -i "/<div class='well table'>/h; \$!b; x; s@</div>@${NEW_DIV}</div>@; x; P; D" download.htm
+            VERSION=${{ needs.create-release.outputs.VERSION }}
+            UPDATED_DATE=$(date '+%B %d, %Y')
+            RELEASE_NOTES=${{ needs.create-release.outputs.RELEASE_NOTES }}
+            DOWNLOAD_LINK=${{ needs.create-release.outputs.DOWNLOAD_LINK }}
+            NEW_DIV="<div class='well table'>
+            <a id='download${VERSION//./}' class='track btn btn-large btn-primary' href='${DOWNLOAD_LINK}'>VASL ${VERSION}</a>
+            <h2 class='pull-right'>Updated ${UPDATED_DATE}</h2>
+            <li>${RELEASE_NOTES}</li>
+            </div>"
+            
+            sed -i "/<div class='well table'>/h; \$!b; x; s@</div>@${NEW_DIV}</div>@; x; P; D" download.htm
 
       - name: Wait for manual approval
         if: always()
