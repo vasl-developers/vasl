@@ -20,6 +20,13 @@ jobs:
       - name: Ensure version was incremented properly
         run: |
           VERSION=$(grep -oP '(?<=<version>)[^<]+' pom.xml | head -n 1)
+          
+          # Check if the version contains "beta"
+          if [[ "$VERSION" == *"beta"* ]]; then
+          echo "Beta version detected. Skipping version check."
+          exit 0
+          fi
+          
           git fetch --depth=1 origin production
           PREV_VERSION=$(git show origin/production:pom.xml | grep -oP '(?<=<version>)[^<]+' | head -n 1)
           
@@ -46,6 +53,13 @@ jobs:
       - name: Check for correct version in release-notes.md
         run: |
           VERSION=$(grep -oP '(?<=<version>)[^<]+' pom.xml | head -n 1)
+          
+          # Check if the version contains "beta"
+          if [[ "$VERSION" == *"beta"* ]]; then
+          echo "Beta version detected. Skipping check of release-notes.md."
+          exit 0
+          fi
+          
           if ! head -n 5 release-notes.md | grep -q "Version ${VERSION}"; then
             echo "Error: Version ${VERSION} not found in the first 5 lines of release-notes.md."
             exit 1
