@@ -1,6 +1,6 @@
-# Release Notes: Version 6.7.0  <!-- Enter proper release number in x.y.z format -->
+# Release Notes: Version 6.7.0-beta1 
 
-**Release Date:** Nov 19th 2024 <!-- Enter date -->
+**Release Date:** Nov 19th 2024 
 
 ---
 

@@ -82,31 +82,36 @@ for board_file in "$BD_FILES_DIR"/*; do
         metadata_file=""
 
         if [[ "$file_type" == *"Zip archive data"* ]]; then
-            # Extract from ZIP archive
-            if command -v unzip &> /dev/null; then
-                unzip -q -j "$board_file" -d "$TEMP_DIR" "*[Bb]oard[Mm]etadata.xml*" "data" 2>/dev/null
 
-                if [[ -f "$TEMP_DIR/BoardMetadata.xml" ]]; then
-                    metadata_file="$TEMP_DIR/BoardMetadata.xml"
-                elif [[ -f "$TEMP_DIR/boardMetadata.xml" ]]; then
-                    metadata_file="$TEMP_DIR/boardMetadata.xml"
-                elif [[ -f "$TEMP_DIR/data" ]]; then
-                    metadata_file="$TEMP_DIR/data"
-                else
-                    warnings+=("Warning: Neither BoardMetadata.xml nor data file found in $board_file.")
+            if command -v unzip &> /dev/null; then
+                # List the ZIP file's contents
+                zip_contents=$(unzip -l "$board_file" | awk '{print $4}' | tail -n +4 | head -n -2)
+
+                # Check if either BoardMetadata.xml or data exists in the root directory
+                has_board_metadata=$(echo "$zip_contents" | grep -q "^BoardMetadata.xml$"; echo $?)
+                has_data=$(echo "$zip_contents" | grep -q "^data$"; echo $?)
+
+                # If neither file is found, print a warning message
+                if [[ $has_board_metadata -ne 0 && $has_data -ne 0 ]]; then
+                    warnings+=("Warning: Neither BoardMetadata.xml nor data file is present in the root of $board_file.")
                     continue
+                fi
+
+                # Extract the file that is present for further validation
+                if [[ $has_board_metadata -eq 0 ]]; then
+                    unzip -q -j "$board_file" "BoardMetadata.xml" -d "$TEMP_DIR" 2>/dev/null
+                    metadata_file="$TEMP_DIR/BoardMetadata.xml"
+                elif [[ $has_data -eq 0 ]]; then
+                    unzip -q -j "$board_file" "data" -d "$TEMP_DIR" 2>/dev/null
+                    metadata_file="$TEMP_DIR/data"
                 fi
             else
                 echo "Error: unzip command is not available."
                 exit 1
             fi
-        elif [[ "$file_type" == *"ASCII text"* || "$file_type" == *"UTF-8 Unicode text"* ]]; then
-            # Treat as plain text file
-            metadata_file="$board_file"
-        else
-            warnings+=("Warning: Unsupported file type for $board_file. Skipping.")
-            continue
+
         fi
+
 
         zip_version=$(extract_version "$metadata_file")
         expected_version=$(echo "$expected_version" | tr -d '\r' | xargs)  # Trim whitespace and carriage returns
