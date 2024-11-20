@@ -1,0 +1,17 @@
+name: Manual Approval
+
+on:
+  workflow_dispatch:
+    inputs:
+      approval:
+        description: "Approve or reject the update"
+        required: true
+        default: "rejected"  # or "rejected"
+
+jobs:
+  handle-approval:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger next step
+        run: |
+          echo "Approval received: ${{ github.event.inputs.approval }}"

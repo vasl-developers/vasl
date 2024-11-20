@@ -82,6 +82,7 @@ for board_file in "$BD_FILES_DIR"/*; do
         metadata_file=""
 
         if [[ "$file_type" == *"Zip archive data"* ]]; then
+
             if command -v unzip &> /dev/null; then
                 # List the ZIP file's contents
                 zip_contents=$(unzip -l "$board_file" | awk '{print $4}' | tail -n +4 | head -n -2)
@@ -108,8 +109,8 @@ for board_file in "$BD_FILES_DIR"/*; do
                 echo "Error: unzip command is not available."
                 exit 1
             fi
-        fi
 
+        fi
 
 
         zip_version=$(extract_version "$metadata_file")

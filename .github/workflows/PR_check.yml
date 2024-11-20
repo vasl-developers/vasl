@@ -1,0 +1,97 @@
+name: PR Check
+
+on:
+  pull_request:
+    branches:
+      - production
+  workflow_dispatch:
+
+jobs:
+  version-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Bash
+        uses: rlespinasse/github-slug-action@v5
+
+      - name: Ensure version was incremented properly
+        run: |
+          VERSION=$(grep -oP '(?<=<version>)[^<]+' pom.xml | head -n 1)
+          
+          # Check if the version contains "beta"
+          if [[ "$VERSION" == *"beta"* ]]; then
+          echo "Beta version detected. Skipping version check."
+          exit 0
+          fi
+          
+          git fetch --depth=1 origin production
+          PREV_VERSION=$(git show origin/production:pom.xml | grep -oP '(?<=<version>)[^<]+' | head -n 1)
+          
+          IFS='.' read -r -a CURR_PARTS <<< "$VERSION"
+          IFS='.' read -r -a PREV_PARTS <<< "$PREV_VERSION"
+          
+          if [ "${#CURR_PARTS[@]}" -ne 3 ] || [ "${#PREV_PARTS[@]}" -ne 3 ]; then
+            echo "Error: Version format is incorrect. Expected format is x.y.z."
+            exit 1
+          fi
+          
+          # Check for proper version increments
+          if [ $((CURR_PARTS[0] - PREV_PARTS[0])) -eq 1 ] && [ "${CURR_PARTS[1]}" -eq 0 ] && [ "${CURR_PARTS[2]}" -eq 0 ]; then
+          echo "Version $VERSION properly increments the major version from $PREV_VERSION."
+          elif [ "${CURR_PARTS[0]}" -eq "${PREV_PARTS[0]}" ] && [ $((CURR_PARTS[1] - PREV_PARTS[1])) -eq 1 ] && [ "${CURR_PARTS[2]}" -eq 0 ]; then
+          echo "Version $VERSION properly increments the minor version from $PREV_VERSION."
+          elif [ "${CURR_PARTS[0]}" -eq "${PREV_PARTS[0]}" ] && [ "${CURR_PARTS[1]}" -eq "${PREV_PARTS[1]}" ] && [ $((CURR_PARTS[2] - PREV_PARTS[2])) -eq 1 ]; then
+          echo "Version $VERSION properly increments the patch version from $PREV_VERSION."
+          else
+          echo "Error: Version $VERSION is not a valid increment from $PREV_VERSION."
+          exit 1
+          fi
+
+      - name: Check for correct version in release-notes.md
+        run: |
+          VERSION=$(grep -oP '(?<=<version>)[^<]+' pom.xml | head -n 1)
+          
+          # Check if the version contains "beta"
+          if [[ "$VERSION" == *"beta"* ]]; then
+          echo "Beta version detected. Skipping check of release-notes.md."
+          exit 0
+          fi
+          
+          if ! head -n 5 release-notes.md | grep -q "Version ${VERSION}"; then
+            echo "Error: Version ${VERSION} not found in the first 5 lines of release-notes.md."
+            exit 1
+          fi
+
+  map-script:
+    runs-on: ubuntu-latest
+
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run pre-push script
+        run: |
+          chmod +x ./scripts/test_pre_push.sh
+          ./scripts/test_pre_push.sh
+
+
+  test-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Test build
+        run: mvn clean verify
+
