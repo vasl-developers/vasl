@@ -64,6 +64,7 @@ import org.w3c.dom.Element;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.dnd.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -149,7 +150,48 @@ public class ASLMap extends Map {
     @Override
     public void addTo(Buildable b) {
         super.addTo(b);
-        this.theMap.setDropTarget(ASLPieceMover.DragHandler.makeDropTarget(this.theMap, 2, this));
+
+        // This code is added to fix an issue with Linux users when using seperate windows, the drag
+        // gesture is not reinitializing the counter image when entering the main map from the VASL
+        // counters window. The issue is that the main map uses the ASLPiecemover and the counter window
+        // uses the older Piecemover.
+        if (System.getProperty("os.name").contains("nux")){
+            DropTargetListener aslPieceListener = ASLPieceMover.DragHandler.makeDropTarget(this.theMap, 2, this);
+            DropTargetListener pieceListener = PieceMover.DragHandler.makeDropTarget(this.theMap, 2, this);
+
+            // Define the combined listener
+            DropTargetListener combinedListener = new DropTargetListener() {
+                @Override
+                public void dragEnter(DropTargetDragEvent dtde) {
+                    pieceListener.dragEnter(dtde);
+                }
+
+                @Override
+                public void dragOver(DropTargetDragEvent dtde) {
+                    aslPieceListener.dragOver(dtde);
+                }
+
+                @Override
+                public void dropActionChanged(DropTargetDragEvent dtde) {
+                    aslPieceListener.dropActionChanged(dtde);
+                }
+
+                @Override
+                public void dragExit(DropTargetEvent dte) {
+                    aslPieceListener.dragExit(dte);
+                }
+
+                @Override
+                public void drop(DropTargetDropEvent dtde) {
+                    aslPieceListener.drop(dtde);
+                }
+            };
+
+            // Set the DropTarget with the combined listener
+            this.theMap.setDropTarget(new DropTarget(this.theMap, DnDConstants.ACTION_MOVE, combinedListener, true));
+        } else {
+            this.theMap.setDropTarget(ASLPieceMover.DragHandler.makeDropTarget(this.theMap, 2, this));
+        }
     }
 
   /*
