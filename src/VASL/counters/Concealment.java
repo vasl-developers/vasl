@@ -215,6 +215,10 @@ public class Concealment extends Decorator implements EditablePiece {
       int index = stack.indexOf(Decorator.getOutermost(this));
       for (int i = index - 1; i >= 0; i--) {
         GamePiece piece = stack.getPieceAt(i);
+        // If we reach a level counter, the concealment counter should not be drawn with reduced opacity
+        if (piece.getProperty("separateLocation") != null) {
+          return false;
+        }
         if (Decorator.getDecorator(piece, Concealment.class) == null) {
           if (piece.getProperty(Properties.OBSCURED_TO_ME) == null || !(boolean) piece.getProperty(Properties.OBSCURED_TO_ME)) {
               return true;
