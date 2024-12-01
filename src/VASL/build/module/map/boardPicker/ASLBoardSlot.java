@@ -23,6 +23,7 @@ import VASSAL.build.GameModule;
 import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.build.module.map.boardPicker.BoardSlot;
 import VASSAL.build.module.map.boardPicker.board.MapGrid;
+import VASSAL.i18n.Resources;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -285,7 +286,7 @@ public class ASLBoardSlot extends BoardSlot {
   // board every time the user selects a new board from the drop-down list while scrolling through the list.
   @Override
   public void actionPerformed(ActionEvent e) {
-    if (boards.getSelectedItem().equals("Select board")) {
+    if (Resources.getString("BoardPicker.select_board").equals(boards.getSelectedItem())) {
       setBoard(null);
     } else {
       final String selectedBoard = (String) boards.getSelectedItem();
