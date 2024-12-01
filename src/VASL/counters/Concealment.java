@@ -25,10 +25,12 @@ import VASSAL.command.Command;
 import VASSAL.counters.*;
 import VASSAL.tools.SequenceEncoder;
 import VASSAL.preferences.Prefs;
+import VASSAL.tools.imageop.Op;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
+import java.awt.image.BufferedImage;
 import java.util.Objects;
 
 /**
@@ -189,8 +191,23 @@ public class Concealment extends Decorator implements EditablePiece {
       // Draw the top concealment counter in a friendly non-dummy stack with reduced opacity
       Graphics2D g2d = (Graphics2D) g;
       Composite originalComposite = g2d.getComposite();
-      g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
-      piece.draw(g, x, y, obs, zoom);
+      String pieceName = piece.getType();
+      //Get the name of the nationality of the concealment counter
+      int index = pieceName.indexOf("/");
+      String name = pieceName.substring(index-2,index+3) + "blank";
+      int pixelSize;
+      if (pieceName.contains("58")) {
+        name = name + "58";
+        pixelSize = 30;
+      }
+      else {
+        name = name + "12";
+        pixelSize = 24;
+      }
+      BufferedImage concealedToMe = Op.load(  name + ".gif").getImage();
+      g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
+      g2d.drawImage(concealedToMe, x-(int)(pixelSize * zoom), y-(int)(pixelSize * zoom) ,
+                    (int) (pixelSize * zoom * 2 ), (int) (pixelSize * zoom * 2) , obs);
       g2d.setComposite(originalComposite);
     }
     else {
