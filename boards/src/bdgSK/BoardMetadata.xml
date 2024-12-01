@@ -1,0 +1,263 @@
+<?xml version="1.0"?>
+<!--
+    This file contains the board metadata specific to a VASL board archive.
+    Create one file per VASL board and place it in the archive.
+-->
+
+<!-- 
+    Board-level metadata
+	name - the name of the board (as it will appear in board selector drop-down - not yet supported)
+	version - the board version
+	versionDate - the date the last version was created
+	author - the caring soul who created the board
+    boardImage - the name of the VASL image file in the board archive; the name is case sensitive
+    hasHills - TRUE if the board contains base elevations above ground level
+                if not we can assume the ground level under the terrain is zero, which
+                makes the VASL LOS image translation faster and more accurate
+    height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
+    width - width of the board in hexes.
+	others - TBD e.g. alternate hex grain, etc. 
+	
+-->
+<boardMetadata 
+	name="gSK" 
+	version="1.2" 
+	versionDate="Nov 27,2024" 
+	author="Arvid Skogsholm" 
+	boardImageFileName="bdgSK.gif" 
+	hasHills="FALSE" 
+	width="33" 
+	height="10"
+	hexHeight = "64.5"
+	hexWidth = "56.25"
+>
+    <!--
+        The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
+        determine the proper building type when creating the LOS information and assumes buildings are single-hex stone or 
+        wooden buildings. Use these elements to override the building type. 
+        
+        See the terrainType elements for a complete list of building names
+    -->
+    <buildingTypes>	
+<buildingType buildingTypeName="Stone Building" hexName="H7"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="J8"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="J9"/>
+<buildingType buildingTypeName="Stone Building" hexName="K9"/>
+<buildingType buildingTypeName="Stone Building" hexName="K10"/>
+<buildingType buildingTypeName="Stone Building" hexName="O8"/>
+
+<buildingType buildingTypeName="Wooden Building, 1 Level" hexName="Q8"/>
+<buildingType buildingTypeName="Wooden Building, 1 Level" hexName="R7"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="T7"/>
+<buildingType buildingTypeName="Stone Building, 1 Level" hexName="U8"/>
+
+<buildingType buildingTypeName="Stone Building" hexName="T9"/>
+<buildingType buildingTypeName="Stone Building" hexName="W8"/>
+<buildingType buildingTypeName="Stone Building" hexName="X9"/>
+<buildingType buildingTypeName="Stone Building" hexName="Z9"/>
+<buildingType buildingTypeName="Stone Building" hexName="AA8"/>
+<buildingType buildingTypeName="Stone Building" hexName="AA10"/>
+<buildingType buildingTypeName="Stone Building" hexName="BB7"/>
+<buildingType buildingTypeName="Stone Building" hexName="BB9"/>
+<buildingType buildingTypeName="Stone Building" hexName="FF4"/>
+
+<buildingType buildingTypeName="Wooden Building, 1 Level" hexName="DD10"/>
+<buildingType buildingTypeName="Wooden Building, 1 Level" hexName="EE10"/>
+
+	</buildingTypes>
+	
+	<overlaySSRules>
+	    <!--
+			Scenario-specific overlay rules. 
+			name - the VASL SSR name
+			image - the image name
+			x - x coordinate of overly upper left
+			y - y coordinate of overlay upper left
+		-->
+		<underlaySSRule name="WallsOnly" image="WallPattern.gif">
+			<color name="HedgeGreen" />
+		</underlaySSRule>
+		<underlaySSRule name="WallToCactus" image="CactusPattern.gif">
+			<color name="WallBrown" />
+			<color name="WallGrey1" />
+			<color name="WallGrey2" />
+		</underlaySSRule>
+		<underlaySSRule name="HedgeToCactus" image="CactusPattern.gif">
+			<color name="HedgeGreen" />
+		</underlaySSRule>
+
+<overlaySSRule name="LightWoods" image="bdgSK_LightWoods.gif" x="0" y="0" />
+<overlaySSRule name="DenseJungle" image="bdgSK_DenseJungle.gif" x="0" y="0" />
+<overlaySSRule name="Bamboo" image="bdgSK_Bamboo.gif" x="0" y="0" />
+<overlaySSRule name="PalmTrees" image="bdgSK_PalmTrees.gif" x="0" y="0" />
+<overlaySSRule name="OrchardsToCrags" image="bdgSK_Orch2Crag.gif" x="0" y="0" />
+<overlaySSRule name="OrchardsToShellholes" image="bdgSK_Orch2Shell.gif" x="0" y="0" />
+<overlaySSRule name="HedgesToOG" image="bdgSK_HedgesToOG.gif" x="0" y="0" />
+<overlaySSRule name="HedgesToBocage" image="bdgSK_HedgesToBocage.gif" x="0" y="0" />
+<overlaySSRule name="NoRoads" image="bdgSK_NoRoads.gif" x="0" y="0" />
+	</overlaySSRules>
+	
+	<colors>
+		<!--
+			The VASL board colors. Used for color-specific SSR transformations. Use this element to override the shared color pallet. 
+			name - the VASL color namge
+			red, green, blue - the RBG value of the color in the image
+			terrain - the LOS terrain type
+			elevation - the base elevation of the terrain
+			
+		-->
+		<color name="BocageGreen" red="62" green="90" blue="47" terrain="Bocage" elevation="UNKNOWN" />
+		<color name="BocageBrownL0" red="176" green="145" blue="70" terrain="Bocage" elevation="0" />
+		<color name="BocageBrownL1" red="149" green="113" blue="33" terrain="Bocage" elevation="1" />
+		<color name="BocageBrownL2" red="123" green="92" blue="27" terrain="Bocage" elevation="2" />
+		<color name="BocageBrownL3" red="92" green="64" blue="4" terrain="Bocage" elevation="3" />
+
+<!-- Dirt Roads  -->
+		<color name="DirtRdL_2" red="220" green="205" blue="121" terrain="Dirt Road" elevation="-2" />
+		<color name="DirtRdL_1" red="220" green="205" blue="122" terrain="Dirt Road" elevation="-1" />
+		<color name="DirtRdL0" red="220" green="205" blue="123" terrain="Dirt Road" elevation="0" />
+		<color name="DirtRdL1" red="220" green="205" blue="124" terrain="Dirt Road" elevation="1" />
+		<color name="DirtRdL2" red="220" green="205" blue="125" terrain="Dirt Road" elevation="2" />
+		<color name="DirtRdL3" red="220" green="205" blue="126" terrain="Dirt Road" elevation="3" />
+		<color name="DirtRdL4" red="220" green="205" blue="127" terrain="Dirt Road" elevation="4" />
+		<color name="DirtRdL5" red="220" green="205" blue="128" terrain="Dirt Road" elevation="5" />
+		<color name="DirtRdL6" red="220" green="205" blue="129" terrain="Dirt Road" elevation="6" />
+		<color name="DirtRdBridge" red="220" green="206" blue="123" terrain="Dirt Road" elevation="UNKNOWN" />
+		<color name="DirtRdWinter" red="235" green="231" blue="205" terrain="Dirt Road" elevation="UNKNOWN" />
+
+<!-- Grain  -->
+		<color name="GrainL_2" red="255" green="240" blue="109" terrain="Grain" elevation="-2" />
+		<color name="GrainL_1" red="255" green="240" blue="110" terrain="Grain" elevation="-1" />
+		<color name="GrainL0" red="255" green="240" blue="111" terrain="Grain" elevation="0" />
+		<color name="GrainL1" red="255" green="240" blue="112" terrain="Grain" elevation="1" />
+		<color name="GrainL2" red="255" green="240" blue="113" terrain="Grain" elevation="2" />
+		<color name="GrainL3" red="255" green="240" blue="114" terrain="Grain" elevation="3" />
+		<color name="GrainL4" red="255" green="240" blue="115" terrain="Grain" elevation="4" />
+		<color name="GrainL5" red="255" green="240" blue="116" terrain="Grain" elevation="5" />
+		<color name="GrainL6" red="255" green="240" blue="117" terrain="Grain" elevation="6" />
+
+<!-- Paved Roads  -->
+		<color name="PavedRdL_2" red="192" green="192" blue="205" terrain="Paved Road" elevation="-2" />
+		<color name="PavedRdL_1" red="192" green="192" blue="206" terrain="Paved Road" elevation="-1" />
+		<color name="PavedRdL0" red="192" green="192" blue="207" terrain="Paved Road" elevation="0" />
+		<color name="PavedRdL1" red="192" green="192" blue="208" terrain="Paved Road" elevation="1" />
+		<color name="PavedRdL2" red="192" green="192" blue="209" terrain="Paved Road" elevation="2" />
+		<color name="PavedRdL3" red="192" green="192" blue="210" terrain="Paved Road" elevation="3" />
+		<color name="PavedRdL4" red="192" green="192" blue="211" terrain="Paved Road" elevation="4" />
+		<color name="PavedRdL5" red="192" green="192" blue="212" terrain="Paved Road" elevation="5" />
+		<color name="PavedRdL6" red="192" green="192" blue="213" terrain="Paved Road" elevation="6" />
+		<color name="PavedRdWinter" red="222" green="222" blue="222" terrain="Paved Road" elevation="UNKNOWN" />
+		<color name="PavedRdBridge" red="192" green="193" blue="207" terrain="Paved Road" elevation="UNKNOWN" />
+
+<!-- Stone Building  -->
+		<color name="StoneBldg1" red="25" green="25" blue="25" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg2" red="40" green="40" blue="40" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg3" red="55" green="55" blue="55" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg4" red="70" green="70" blue="70" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg5" red="85" green="85" blue="85" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg6" red="100" green="100" blue="100" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg7" red="115" green="115" blue="115" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg8" red="130" green="130" blue="130" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg9" red="145" green="145" blue="145" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg10" red="160" green="160" blue="160" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg11" red="175" green="175" blue="175" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg12" red="190" green="190" blue="190" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg13" red="205" green="205" blue="205" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg14" red="220" green="220" blue="220" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg15" red="235" green="235" blue="235" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg16" red="135" green="135" blue="135" terrain="Stone Building, 1 Level" elevation="UNKNOWN" />
+		<color name="StoneBldg17" red="126" green="126" blue="126" terrain="Stone Building, 2 Level" elevation="UNKNOWN" />
+		<color name="StoneStairwell" red="251" green="254" blue="255" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneRowhouseBar" red="1" green="1" blue="0" terrain="Rowhouse Wall, 1 Level" elevation="UNKNOWN" />
+		<color name="StoneBldg1Winter" red="90" green="90" blue="90" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg2Winter" red="107" green="107" blue="107" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg3Winter" red="115" green="115" blue="116" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg4Winter" red="123" green="123" blue="123" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg5Winter" red="132" green="132" blue="132" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg6Winter" red="148" green="148" blue="148" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg7Winter" red="156" green="156" blue="156" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg8Winter" red="165" green="165" blue="165" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg9Winter" red="181" green="181" blue="181" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg10Winter" red="189" green="189" blue="189" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg11Winter" red="198" green="198" blue="198" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg12Winter" red="214" green="214" blue="214" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg13Winter" red="222" green="222" blue="221" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg14Winter" red="231" green="231" blue="231" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneBldg15Winter" red="247" green="247" blue="247" terrain="Stone Building" elevation="UNKNOWN" />
+		<color name="StoneRowhouseBarWinter" red="71" green="70" blue="70" terrain="Rowhouse Wall, 1 Level" elevation="UNKNOWN" />
+
+<!-- Wooden Building  -->
+		<color name="WoodBldg1" red="15" green="10" blue="5" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg2" red="30" green="21" blue="10" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg3" red="45" green="31" blue="15" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg4" red="60" green="42" blue="20" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg5" red="75" green="52" blue="25" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg6" red="90" green="62" blue="30" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg7" red="105" green="73" blue="35" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg8" red="120" green="83" blue="40" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg9" red="135" green="94" blue="45" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg10" red="150" green="104" blue="50" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg11" red="166" green="115" blue="54" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg12" red="181" green="125" blue="59" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg13" red="194" green="135" blue="66" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg14" red="199" green="145" blue="81" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg15" red="204" green="154" blue="96" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg16" red="80" green="62" blue="30" terrain="Wooden Building, 1 Level" elevation="UNKNOWN" />
+		<color name="WoodStairwell" red="250" green="254" blue="255" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodRowhouseBar" red="2" green="1" blue="0" terrain="Rowhouse Wall, 1 Level" elevation="UNKNOWN" />
+		<color name="WoodBldg1Winter" red="123" green="90" blue="66" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg2Winter" red="132" green="107" blue="74" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg3Winter" red="140" green="107" blue="74" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg4Winter" red="148" green="115" blue="82" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg5Winter" red="156" green="123" blue="90" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg6Winter" red="165" green="132" blue="90" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg7Winter" red="165" green="140" blue="99" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg8Winter" red="173" green="148" blue="107" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg9Winter" red="181" green="148" blue="115" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg10Winter" red="181" green="156" blue="123" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg11Winter" red="189" green="165" blue="132" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg12Winter" red="189" green="173" blue="140" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg13Winter" red="198" green="173" blue="148" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg14Winter" red="206" green="181" blue="165" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodBldg15Winter" red="206" green="189" blue="165" terrain="Wooden Building" elevation="UNKNOWN" />
+		<color name="WoodRowhouseBarWinter" red="72" green="70" blue="70" terrain="Rowhouse Wall, 1 Level" elevation="UNKNOWN" />
+		
+	</colors>
+	
+	<colorSSRules>
+		<!--
+			The board color scenario-specific rules. Use this element to override the shared SSRs.		
+		-->
+		<colorSSR name="NoWhiteHexIDs">
+			<colorMap fromColor="WhiteHexNumbers" toColor="Black"/>
+			<colorMap fromColor="WinterBlackHexNumbers" toColor="Black"/>
+		</colorSSR>
+		<colorSSR name="AllPaved">
+			<colorMap fromColor="DirtRdL0" toColor="PavedRdL0"/>
+			<colorMap fromColor="DirtRdL1" toColor="PavedRdL1"/>
+			<colorMap fromColor="DirtRdL2" toColor="PavedRdL2"/>
+			<colorMap fromColor="DirtRdL3" toColor="PavedRdL3"/>
+			<colorMap fromColor="DirtRdL4" toColor="PavedRdL4"/>
+			<colorMap fromColor="DirtRdL5" toColor="PavedRdL5"/>
+			<colorMap fromColor="DirtRdL6" toColor="PavedRdL6"/>
+			<colorMap fromColor="DirtRdL_1" toColor="PavedRdL_1"/>
+			<colorMap fromColor="DirtRdL_2" toColor="PavedRdL_2"/>
+			<colorMap fromColor="DirtRdBridge" toColor="PavedRdBridge"/>
+		</colorSSR>
+
+		<colorSSR name="AllDirt">
+			<colorMap fromColor="PavedRdL0" toColor="DirtRdL0"/>
+			<colorMap fromColor="PavedRdL1" toColor="DirtRdL1"/>
+			<colorMap fromColor="PavedRdL2" toColor="DirtRdL2"/>
+			<colorMap fromColor="PavedRdL3" toColor="DirtRdL3"/>
+			<colorMap fromColor="PavedRdL4" toColor="DirtRdL4"/>
+			<colorMap fromColor="PavedRdL5" toColor="DirtRdL5"/>
+			<colorMap fromColor="PavedRdL6" toColor="DirtRdL6"/>
+			<colorMap fromColor="PavedRdL_1" toColor="DirtRdL_1"/>
+			<colorMap fromColor="PavedRdL_2" toColor="DirtRdL_2"/>
+			<colorMap fromColor="PavedRdBridge" toColor="DirtRdBridge"/>
+		</colorSSR>
+
+	</colorSSRules>
+	
+</boardMetadata>
