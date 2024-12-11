@@ -264,6 +264,8 @@
 		<boarddata name="FrFA" version=" 6.2" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="FrF" issued="" />
 		<boarddata name="HZ1" version=" 6.0" versionDate="2022/12/30" description="HazMo1" boardType="Geoboard" publisher="HazMo" issued="2023/10/05"/>
 		<boarddata name="HZ2" version=" 6.1" versionDate="2023/11/30" description="HazMo2" boardType="Geoboard" publisher="HazMo" issued="2023/10/05"/>
+		<boarddata name="HZ3a" version=" 2.0" versionDate="2024/12/11" description="HazMo5" boardType="Geoboard" publisher="HazMo" issued="2024/12/11"/>
+		<boarddata name="HZ3b" version=" 2.0" versionDate="2024/12/11" description="HazMo5" boardType="Geoboard" publisher="HazMo" issued="2024/12/11"/>
 		<boarddata name="Kreta" version=" 1.0" versionDate="2008/08/30" description="Operation Merkur" boardType="HASL" publisher="HOB" issued="" />
 		<boarddata name="OTO" version=" 1.0" versionDate="2008/08/30" description="Onslaught to Orsha" boardType="HASL" publisher="HOB" issued="" />
 		<boarddata name="KOTH" version="1.0" versionDate="2008/08/30" description="King of the Hill" boardType="HASL" publisher="HOB" issued="" />
