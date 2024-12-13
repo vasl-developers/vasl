@@ -223,7 +223,7 @@ public class VASLGameInterface {
         int userEnd = 0;
         do {
             userStart = piecename.indexOf("(");
-            userEnd = piecename.indexOf(")");
+            userEnd = piecename.lastIndexOf(")");
 
             if (userStart != -1 && userEnd != -1) {
                 if (userStart <= userEnd+1) {  //error trapping
