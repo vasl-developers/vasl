@@ -1618,7 +1618,7 @@ public class ASLPieceMover extends PieceMover {
 
             makeDragCursor(dragPieceOffCenterZoom, getDeviceScale(dge));
             setDrawWinToOwnerOf(dragWin);
-            SwingUtilities.convertPointToScreen(mousePosition, drawWin);
+            SwingUtilities.convertPointToScreen(mousePosition, dragWin);
             moveDragCursor(mousePosition.x, mousePosition.y);
 
             super.dragGestureRecognized(dge);
