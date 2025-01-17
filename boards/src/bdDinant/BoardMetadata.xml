@@ -26,9 +26,9 @@
 	
 -->
 <boardMetadata
-	name="Dinantlos"
-	version="6.1"
-	versionDate="Mar 2022"
+	name="Dinant"
+	version="6.2"
+	versionDate="Jan 2025"
 	author="ATC"
 	boardImageFileName="bdDinant.gif"
 	hasHills="TRUE"
