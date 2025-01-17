@@ -111,7 +111,7 @@
 		<boarddata name="76" version="6.7" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="77" version="6.0" versionDate="2023/02/28" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="78" version="6.3" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="79" version="6.5" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="79" version="6.6" versionDate="2025/01/15" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="80" version="6.4" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="81" version="6.4" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="82" version="6.4" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
@@ -295,7 +295,7 @@
 		<boarddata name="CH" version="0.93" versionDate="2008/08/30" description="Cheneux (KGP II)" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="ABTF" version="6.0" versionDate="2021/06/30" description="A Bridge Too Far" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="Rileys" version="1.6" versionDate="2008/08/30" description="Riley's Road" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="Dinant" version="6.1" versionDate="2022/03/30" description="Dinant: Rommel at the Meuse" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="Dinant" version="6.2" versionDate="2025/01/15" description="Dinant: Rommel at the Meuse" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="SA" version="1.0" versionDate="2023/03/30" description="Sainte-Mère-Église (Drop Zone: Sainte-Mère-Église)" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="FA" version="1.0" versionDate="2023/03/30" description="Fauville (Drop Zone: Sainte-Mère-Église)" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="NE" version="1.0" versionDate="2023/03/30" description="Neuville-au-Plain (Drop Zone: Sainte-Mère-Église)" boardType="HASL" publisher="MMP" issued="" />
@@ -470,9 +470,9 @@
 		<boarddata name="RBv651" version="0.05" versionDate="2021/02/28" description="Red Barricades" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="ROv651" version="0.09" versionDate="2021/02/28" description="Red October" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="StW" version="1.0" versionDate="2021/03/30" description="" boardType="XXX" publisher="YYY" issued="" />
-		<boarddata name="NP1" version="1.0" versionDate="2020/03/30" description="" boardType="Geoboard" publisher="Unknown" issued="" />
-		<boarddata name="NP2" version="1.0" versionDate="2020/03/30" description="" boardType="Geoboard" publisher="Unknown" issued="" />
-		<boarddata name="NP3d" version="1.0" versionDate="2020/03/30" description="" boardType="Geoboard" publisher="Unknown" issued="" />
+		<boarddata name="NP1" version="1.1" versionDate="2025/01/15" description="" boardType="Geoboard" publisher="Unknown" issued="" />
+		<boarddata name="NP2" version="1.1" versionDate="2025/01/15" description="" boardType="Geoboard" publisher="Unknown" issued="" />
+		<boarddata name="NP3d" version="1.1" versionDate="2025/01/15" description="" boardType="Geoboard" publisher="Unknown" issued="" />
 		<boarddata name="FLP" version="1.0" versionDate="2022/01/30" description="Operation: Martlet" boardType="HASL" publisher="LCP" issued="" />
 		<boarddata name="ON" version="1.0" versionDate="2021/01/30" description="Operation Neptune" boardType="HASL" publisher="BFP" issued="" />
 		<boarddata name="OtOBFP" version="1.0" versionDate="2020/03/30" description="Onslaught to Orsha" boardType="HASL" publisher="BFP" issued="" />
@@ -480,7 +480,7 @@
 		<boarddata name="SaFL" version="6.4" versionDate="2022/09/30" description="Sword and Fire: Manila" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="SaFXL" version="6.4" versionDate="2022/09/30" description="Sword and Fire: Manila" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="BG1" version="1.0" versionDate="2022/10/30" description="" boardType="Geoboard" publisher="BGD" issued="" />
-		<boarddata name="DeluxeBlank" version="6.5" versionDate="2023/08/30" description="Empty deluxe geoboard" boardType="Deluxe" publisher="VASL" issued="" />
+		<boarddata name="DeluxeBlank" version="6.6" versionDate="2025/01/15" description="Empty deluxe geoboard" boardType="Deluxe" publisher="VASL" issued="" />
 		<boarddata name="OpV" version="1.0" versionDate="2023/09/30" description="Riley's Road - no grain" boardType="HASL" publisher="TJ" issued="" />
 		<boarddata name="SF" version="1.1" versionDate="2023/12/30" description="Sparrow Force" boardType="HASL" publisher="MMP" issued="2023/09/17" />
 		<boarddata name="AF_AbbioPriolo" version="1.1" versionDate="2024/01/30" description="Abbio Priolo" boardType="HASL" publisher="AF" issued="2024/01/30" />
