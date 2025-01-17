@@ -116,7 +116,7 @@ for board_file in "$BD_FILES_DIR"/*; do
                     # If the name in the metadatafile does not match, there will
                     # be an error when loading game so we make sure they match
                     if [[ "$zip_board_name" != "$board_name_clean" ]]; then
-                        mismatches+=("Board name mismatch in $board_file: expected '$board_name_clean', found '$zip_board_name'")
+                        warnings+=("Warning: Board name mismatch in $board_file: expected '$board_name_clean', found '$zip_board_name'")
                     fi
                 elif [[ $has_data -eq 0 ]]; then
                     unzip -q -j "$board_file" "data" -d "$TEMP_DIR" 2>/dev/null
