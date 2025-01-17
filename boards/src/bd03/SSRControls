@@ -27,6 +27,9 @@
  <Checkbox name="">
          <entry name="T5: The Pouppeville Exit" rule="SSO_T5" text="scenario T5 overlay"/>
  </Checkbox>
+  <Checkbox name="">
+         <entry name="U5: Point d'Appui" rule="SSO_U5" text="scenario T5 overlay"/>
+ </Checkbox>
  <Checkbox name="">
          <entry name="All Hills To L0 Woods" rule="BSO_3_HillsToL0Woods" text="Bd 3 Hills to L0Woods"/>
  </Checkbox>

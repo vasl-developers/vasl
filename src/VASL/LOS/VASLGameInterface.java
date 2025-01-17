@@ -16,9 +16,9 @@
  */
 package VASL.LOS;
 
+import VASL.LOS.Map.Bridge;
 import VASL.LOS.Map.Hex;
 import VASL.LOS.Map.Location;
-import VASL.LOS.Map.Terrain;
 import VASL.LOS.counters.*;
 import VASL.build.module.ASLMap;
 import VASL.counters.ASLProperties;
@@ -40,7 +40,7 @@ import static VASSAL.build.GameModule.getGameModule;
  */
 public class VASLGameInterface {
 
-    ASLMap gameMap;
+    public ASLMap gameMap;
     VASL.LOS.Map.Map LOSMap;
 
     // the LOS counter rules from the shared metadata file
@@ -67,7 +67,7 @@ public class VASLGameInterface {
     public final static String DB_COMMON_TYPE = "common";
 
     // the counter lists
-    protected HashMap<Hex, Terrain> terrainList;
+    protected HashMap<Hex, CounterMetadata> terrainList;
     protected HashMap<Hex, HashSet<Smoke>> smokeList;
     protected HashMap<Hex, HashSet<OBA>> OBAList;
     protected HashMap<Hex, HashSet<Wreck>> wreckList;
@@ -110,7 +110,7 @@ public class VASLGameInterface {
 
         // reset the counter lists
         smokeList = new HashMap<Hex, HashSet<Smoke>>();
-        terrainList = new HashMap<Hex, Terrain>();
+        terrainList = new HashMap<Hex, CounterMetadata>();
         hexsideList = new HashMap<Hex, CounterMetadata>();
         OBAList = new HashMap<Hex, HashSet<OBA>>();
         wreckList = new HashMap<Hex, HashSet<Wreck>>();
@@ -159,19 +159,115 @@ public class VASLGameInterface {
         if (!Boolean.TRUE.equals(piece.getProperty(Properties.INVISIBLE_TO_ME))) {
 
             CounterMetadata counter = counterMetadata.get(name);
-
+            if (counter == null) {
+                if (name.contains("Hedge Overlay")) {
+                    name = "Hedge Overlay";
+                } else if (name.contains("Wall Overlay")) {
+                    name = "Wall Overlay";
+                } else if (name.contains("Bocage Overlay")) {
+                    name = "Bocage Overlay";
+                } else if (name.contains("Road")) {
+                    name = "Road";    // Dirt/Paved has no los impact
+                } else if (name.contains("Foot") || name.contains("Pontoon")) { // Foot/Pontoon have no los impact
+                    name = "";
+                } else if (name.contains("Bridge")) { // all Bridges are same for LOS
+                    name = "Bridge";
+                }
+                counter = counterMetadata.get(name);
+            }
             if(counter != null) {
 
                 // add counter object to the appropriate list
                 switch (counter.getType()) {
                     case OBA:
-                        OBA oba = new OBA(counter.getName(), h);
-                        addCounter(OBAList, oba, h);
+                        // ToDo Refactor after beta test
+                        OBA oba = new OBA(counter.getName(), h, counter.getRotation(), counter.getIsBarrage());
+                        // need to handle Smoke and WP FFE/Barrage by creating smoke "counter" in each hex
+                        Hex smokehex = null; int hindrance = 0; int height = 0;
+                        if(counter.getName().contains("Har")){
+                            break;
+                        }
+                        if(counter.getName().contains("Sm ") || counter.getName().contains("WP")) {
+                            if (oba.getisBarrage()) { //Barrage
+                                // get four hexes from center hex on each side depending on rotation
+                                String[] barragehexes = LOSMap.getBarrageHexes(oba);
+                                for (String shex : barragehexes) {
+                                    smokehex = LOSMap.getHex(shex);
+                                    if (smokehex != null) {
+                                        if (counter.getName().contains("+3")) {
+                                            hindrance = 3;
+                                            height = 2;
+                                        } else if (counter.getName().contains("+1")) {
+                                            hindrance = 1;
+                                            height = 4;
+                                        } else {
+                                            hindrance = 2;
+                                            height = (counter.getName().contains("Sm") ? 2 : 4);
+                                        }
+                                        Smoke smoke = new Smoke(counter.getName(), smokehex.getCenterLocation(), height, hindrance);
+                                        addCounter(smokeList, smoke, smokehex);
+                                    }
+                                }
+                            } else {  // Smoke
+                                // get 7 hex blast area
+                                String[] ffehexes = LOSMap.getAllAdjacentHexes(oba.getHex());
+                                for (String shex : ffehexes) {
+                                    smokehex = LOSMap.getHex(shex);
+                                    if (smokehex != null) {
+                                        if (counter.getName().contains("+3")) {
+                                            hindrance = 3;
+                                            height = 2;
+                                        } else if (counter.getName().contains("+1")) {
+                                            hindrance = 1;
+                                            height = 4;
+                                        } else {
+                                            hindrance = 2;
+                                            height = (counter.getName().contains("Sm") ? 2 : 4);
+                                        }
+                                        Smoke smoke = new Smoke(counter.getName(), smokehex.getCenterLocation(), height, hindrance);
+                                        addCounter(smokeList, smoke, smokehex);
+                                    }
+                                }
+                                if(counter.getName().contains("Naval")) {
+                                    // add two extra hexes if NOBA
+                                    Hex[] nobahexes = getExtraNobaHexes(counter.getRotation(), ffehexes);
+                                    for (int x = 0; x < 2; x++) {
+                                        if (nobahexes[x] != null) {
+                                            Smoke smoke = new Smoke(counter.getName(), nobahexes[x].getCenterLocation(), height, hindrance);
+                                            addCounter(smokeList, smoke, nobahexes[x]);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        // Handle NOBA Bombardment and FFE
+                        if (counter.getName().contains("Bombardment") && (counter.getName().contains("Smoke") || counter.getName().contains("Dispersed"))) {
+                            height = 2;
+                            int nobaradius = (counter.getName().contains("Small") ? 2 : 3);
+                            String [] nobaradisuhexes = LOSMap.getAllHexesInRadiusOf(oba.getHex(), nobaradius);
+                            for (String nobahex : nobaradisuhexes) {
+                                        smokehex = LOSMap.getHex(nobahex);
+                                        if (smokehex != null) {
+                                            if (counter.getName().contains("Dispersed")) {
+                                                hindrance = 2;
+                                            }
+                                            else {
+                                                hindrance = 3;
+                                            }
+                                            Smoke smoke = new Smoke(counter.getName(), smokehex.getCenterLocation(), height, hindrance);
+                                            addCounter(smokeList, smoke, smokehex);
+                                        }
+                            }
+                        }
 
+                        else {
+
+                            addCounter(OBAList, oba, h);
+                        }
                         break;
                     case TERRAIN:
                         // we assume there is only one terrain-type counter in a hex
-                        terrainList.put(h, LOSMap.getTerrain(counter.getTerrain()));
+                        terrainList.put(h, counter);
                         break;
                     case HEXSIDE:
                         hexsideList.put(h, counter);
@@ -179,19 +275,19 @@ public class VASLGameInterface {
                         break;
                     case ENTRENCHMENT:
                         // we assume there is only one terrain-type counter in a hex
-                        terrainList.put(h, LOSMap.getTerrain(counter.getTerrain()));
+                        terrainList.put(h, counter);
                         // now create a "location" in the hex
                         createLocationinHexForEntrenchments(h);
                         break;
                     case BRIDGE:
                         // we assume there is only one terrain-type counter in a hex
-                        terrainList.put(h, LOSMap.getTerrain(counter.getTerrain()));
+                        terrainList.put(h, counter);
                         // now create a "location" in the hex
                         createLocationinHexForBridges(h);
                         break;
                     case CREST:
                         // we assume there is only one terrain-type counter in a hex
-                        terrainList.put(h, LOSMap.getTerrain(counter.getTerrain()));
+                        terrainList.put(h, counter);
                         // now create a "location" in the hex
                         createLocationinHexForCrest(h);
                         break;
@@ -223,7 +319,7 @@ public class VASLGameInterface {
         int userEnd = 0;
         do {
             userStart = piecename.indexOf("(");
-            userEnd = piecename.indexOf(")");
+            userEnd = piecename.lastIndexOf(")");
 
             if (userStart != -1 && userEnd != -1) {
                 if (userStart <= userEnd+1) {  //error trapping
@@ -237,6 +333,74 @@ public class VASLGameInterface {
             }
         } while (userStart != -1 && userEnd != -1);
         return piecename;
+    }
+
+    public Hex[] getExtraNobaHexes(int rotation, String[] ffehexes) {
+        Hex[] nobahexes = new Hex[2]; Hex basehex = null;
+        switch (rotation){
+            case 1:
+                basehex = LOSMap.getHex(ffehexes[1]);
+                if (LOSMap.getAdjacentHex(basehex, 1) != null) {
+                    nobahexes[0] = LOSMap.getAdjacentHex(basehex, 1);
+                }
+                basehex = LOSMap.getHex(ffehexes[4]);
+                if (LOSMap.getAdjacentHex(basehex, 4) != null) {
+                    nobahexes[1] = LOSMap.getAdjacentHex(basehex, 4);
+                }
+                break;
+            case 2:
+                basehex = LOSMap.getHex(ffehexes[2]);
+                if (LOSMap.getAdjacentHex(basehex, 1) != null) {
+                    nobahexes[0] = LOSMap.getAdjacentHex(basehex, 1);
+                }
+                basehex = LOSMap.getHex(ffehexes[5]);
+                if (LOSMap.getAdjacentHex(basehex, 4) != null) {
+                    nobahexes[1] = LOSMap.getAdjacentHex(basehex, 4);
+                }
+                break;
+            case 3:
+                basehex = LOSMap.getHex(ffehexes[2]);
+                if (LOSMap.getAdjacentHex(basehex, 2) != null) {
+                    nobahexes[0] = LOSMap.getAdjacentHex(basehex, 2);
+                }
+                basehex = LOSMap.getHex(ffehexes[5]);
+                if (LOSMap.getAdjacentHex(basehex, 5) != null) {
+                    nobahexes[1] = LOSMap.getAdjacentHex(basehex, 5);
+                }
+                break;
+            case 4:
+                basehex = LOSMap.getHex(ffehexes[3]);
+                if (LOSMap.getAdjacentHex(basehex, 2) != null) {
+                    nobahexes[0] = LOSMap.getAdjacentHex(basehex, 2);
+                }
+                basehex = LOSMap.getHex(ffehexes[6]);
+                if (LOSMap.getAdjacentHex(basehex, 5) != null) {
+                    nobahexes[1] = LOSMap.getAdjacentHex(basehex, 5);
+                }
+                break;
+            case 5:
+                basehex = LOSMap.getHex(ffehexes[3]);
+                if (LOSMap.getAdjacentHex(basehex, 3) != null) {
+                    nobahexes[0] = LOSMap.getAdjacentHex(basehex, 3);
+                }
+                basehex = LOSMap.getHex(ffehexes[6]);
+                if (LOSMap.getAdjacentHex(basehex, 0) != null) {
+                    nobahexes[1] = LOSMap.getAdjacentHex(basehex, 0);
+                }
+                break;
+            case 6:
+                basehex = LOSMap.getHex(ffehexes[4]);
+                if (LOSMap.getAdjacentHex(basehex, 3) != null) {
+                    nobahexes[0] = LOSMap.getAdjacentHex(basehex, 3);
+                }
+                basehex = LOSMap.getHex(ffehexes[1]);
+                if (LOSMap.getAdjacentHex(basehex, 0) != null) {
+                    nobahexes[1] = LOSMap.getAdjacentHex(basehex, 0);
+                }
+                break;
+            default:
+        }
+        return nobahexes;
     }
 
     /**
@@ -346,12 +510,25 @@ public class VASLGameInterface {
      * @param hex the hex
      * @return the terrain
      */
-    public Terrain getTerrain(Hex hex) {
+    public String getTerrain(Hex hex) {
 
-        if(terrainList != null) {
-            return terrainList.get(hex);
+        if(terrainList != null && terrainList.get(hex) != null) {
+            return (terrainList.get(hex)).getTerrain();
         }
         return null;
+    }
+    public int getLevel(Hex hex) {
+        // check there is a counter in the hex
+        if(terrainList != null && terrainList.get(hex) != null) {
+            // check the countermetadata has a level value
+            if(terrainList.get(hex).getName().contains("Bridge")) {
+                 return hex.getBridgeLocationAbsoluteLevel();
+            }
+            if (terrainList.get(hex).getLevel() != -99) {
+                return (terrainList.get(hex)).getLevel();
+            }
+        }
+        return -99;
     }
 
     public CounterMetadata getHexside(Hex hex) {
@@ -444,14 +621,14 @@ public class VASLGameInterface {
                             l = l.getUpLocation();
                         }
                     }
-                    if(l.getBaseHeight() == locationCounter.getLevel()) {
+                    if(l.getLevelInHex() == locationCounter.getLevel()) {
                         return l;
                     }
 
                     // otherwise create a new location
                     else {
                         Location newLocation = new Location(location);
-                        newLocation.setBaseHeight(locationCounter.getLevel());
+                        newLocation.setLevelInHex(locationCounter.getLevel());
                         newLocation.setDownLocation(location);
                         return newLocation;
                     }
@@ -515,6 +692,7 @@ public class VASLGameInterface {
 
     private void printCounterLocations(){
 
+        //if (locationCounterList == null){return;}
         GamePiece[] p = gameMap.getPieces();
         for (GamePiece aP : p) {
             if (aP instanceof Stack) {
@@ -601,36 +779,32 @@ public class VASLGameInterface {
         location.setDownLocation((newLocation));
     }
     private void createLocationinHexForBridges(Hex h) {
-        Location location = h.getCenterLocation();
+        Location location = null; Location newLocation = null;
+        // first test if already exists
+        if(h.hasBridge()){return;}
+        location = h.getCenterLocation();
         // create new location
-        Location newLocation = new Location(location);
-        // added by DR; this is a wonky fix to deal with bridges in non-zero level terrain; not sure why its needed but it works, otherwise bridges and depressions in valleys are two levels apart and those in hills are at same level
-        int depressionadj = 0;
-        if (h.getBaseHeight() == 0) {
-            depressionadj = 1;
-        } else {
-            depressionadj = 2;
-        }
-        newLocation.setBaseHeight(h.getBaseHeight() + depressionadj);
-        // location "above" entrenchment is the center location
+        newLocation = new Location(location);
+
+        //ToDo clean this up and test all possibilities
+        int bridgeLevelInHex = h.getBridgeLocationAbsoluteLevel() - newLocation.getHex().getBaseLevelofHex();
+        newLocation.setLevelInHex(bridgeLevelInHex);
+        // location "below" bridge is the center location
         newLocation.setDownLocation(location);
         // set terrain of new location
         newLocation.setTerrain(LOSMap.getTerrain("Stone Bridge")); // use foxholes as all fortifications have the same LOS rules
-        // location 'below' center location is the entrenchment
+        // location 'above' center location is the bridge
         location.setUpLocation((newLocation));
+        // add Bridge object to hex
+        h.setBridge(new Bridge(newLocation.getTerrain(), newLocation.getLevelInHex(), newLocation,
+                true, h.getHexCenter()));
     }
     private void createLocationinHexForCrest(Hex h) {
         Location location = h.getCenterLocation();
         // create new location
         Location newLocation = new Location(location);
-        // added by DR; this is a wonky fix to deal with bridges in non-zero level terrain; not sure why its needed but it works, otherwise bridges and depressions in valleys are two levels apart and those in hills are at same level
-        int depressionadj = 0;
-        if (h.getBaseHeight() == 0) {
-            depressionadj = 1;
-        } else {
-            depressionadj = 2;
-        }
-        newLocation.setBaseHeight(h.getBaseHeight() + depressionadj);
+        int crestLevelInHex = h.getBridgeLocationAbsoluteLevel() - newLocation.getHex().getBaseLevelofHex();
+        newLocation.setLevelInHex(crestLevelInHex);
         // location "above" entrenchment is the center location
         newLocation.setDownLocation(location);
         // set terrain of new location

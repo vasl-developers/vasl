@@ -29,12 +29,18 @@ import VASL.LOS.counters.Smoke;
 import VASL.LOS.counters.Vehicle;
 import VASL.build.module.map.boardPicker.VASLBoard;
 import VASSAL.build.module.map.boardPicker.Board;
+import VASSAL.counters.GamePiece;
+import VASSAL.counters.PieceIterator;
+import VASSAL.counters.Stack;
+import VASSAL.tools.imageop.GamePieceOpImpl;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 import java.util.*;
+import java.util.List;
 
 /**
  * The <code>Map</code> class is the map API.
@@ -391,9 +397,7 @@ public class Map  {
     public Terrain getGridTerrain(int row, int col) {
 
         if (onMap(row, col)) {
-            //int gridtest = terrainGrid[row][col];
-            //Terrain gridtest2 = terrainList[gridtest];
-            //return gridtest2;
+
             return terrainList[(int) terrainGrid[row][col]];
         }
         return null;
@@ -669,6 +673,26 @@ public class Map  {
         }
     }
 
+    public String [] getAllHexesInRadiusOf(Hex originHex, double arrayradius) {
+        int maxhexes = (int) ((arrayradius / 2) * (1 + arrayradius) * 6) + 1;
+        Hex startHex;
+        int x = 0;
+        String[] hexes = new String[maxhexes];
+        hexes[x] = originHex.getName();
+        // recursive loop
+        for (String hexname : hexes) {
+            startHex = getHex(hexname);
+            String[] adjacentHexes = getAllAdjacentHexes(startHex);
+            List hexesList = Arrays.asList(hexes);
+            for (String adjhexname : adjacentHexes) {
+                if (!hexesList.contains(adjhexname) && (range (getHex(adjhexname), originHex, getMapConfiguration()) <= arrayradius)) {
+                    x += 1;
+                    hexes[x] = adjhexname;
+                }
+            }
+        }
+        return hexes;
+    }
     /**
      * Finds the hex that contains a point
      * @param x the x coordinate
@@ -1033,7 +1057,6 @@ public class Map  {
             return false;
         }
 
-
         // force check of hexside terrain for hexes with inherent terrain
         // (e.g. for case where orchard hex has wall)
         else if(status.currentTerrain.isHexsideTerrain() && hex.getCenterLocation().getTerrain().isInherentTerrain()) {
@@ -1263,17 +1286,9 @@ public class Map  {
             sourceHex = source.getHex();
             targetHex = target.getHex();
             currentHex = sourceHex;
-            // code to fix vertex los
-            int vertexadj = 0;
-            if (!source.isCenterLocation() && sourceHex.isDepressionTerrain()){
-                vertexadj =1;
-            }
-            vertexadj = 0;
-            sourceElevation = sourceHex.getBaseHeight() + source.getBaseHeight() + vertexadj;
-            if (!target.isCenterLocation() && targetHex.isDepressionTerrain()){
-                vertexadj=1;
-            }
-            targetElevation = targetHex.getBaseHeight() + target.getBaseHeight() + vertexadj;
+
+            setSourceAndTargetElevations();
+
 
             range = range(sourceHex, targetHex, source.getHex().getMap().getMapConfiguration());
 
@@ -1355,19 +1370,25 @@ public class Map  {
             double sourceadj=0;
             double targetadj=0;
 
-            if(source.getTerrain().isRooftop() && source.getBaseHeight() !=1) {
+            if(source.getTerrain().isRooftop() && source.getLevelInHex() !=1) {
                 sourceadj=-1;
             }
-            if(target.getTerrain().isRooftop() && target.getBaseHeight() !=1) {
+            if(target.getTerrain().isRooftop() && target.getLevelInHex() !=1) {
                 targetadj=-1;
             }
             exitsSourceDepression =
                     source.isDepressionTerrain() &&
-                            (((targetElevation+ targetadj) - (sourceElevation+sourceadj) > 0 &&       //source is below target; elev diff is <= range; need to check when
-                                    (targetElevation+ targetadj) - (sourceElevation+sourceadj) <= range && range!=1) ||   //evel diff = range due to depression cliffs (except when adjacent)
-                                    ((LOSis60Degree || LOSisHorizontal) && exitsDepressionTerrainHexside() ) ||       //LOS along hexside; one exit hexside is a depression
+                            (
+                                (
+                                    (targetElevation+ targetadj) - (sourceElevation+sourceadj) > 0 &&       //source is below target; elev diff is <= range; need to check when
+                                    (targetElevation+ targetadj) - (sourceElevation+sourceadj) <= range && range!=1
+                                ) ||   //evel diff = range due to depression cliffs (except when adjacent)
+                                    (
+                                        (LOSis60Degree || LOSisHorizontal) && exitsDepressionTerrainHexside()
+                                    ) ||       //LOS along hexside; one exit hexside is a depression
                                     (targetElevation+targetadj == sourceElevation+sourceadj) ||                       //source is same elevation as target
-                                    (sourceElevation+ sourceadj > targetElevation+targetadj));                        //source is above target
+                                    (sourceElevation+ sourceadj > targetElevation+targetadj)
+                            );                        //source is above target
 
             // Entering depression restriction placed when looking into a depression; reverse of above
             entersTargetDepression =
@@ -1457,13 +1478,13 @@ public class Map  {
          * 3. sourceHex is not depression terrain and adjacent hex is depression terrain and hexside is a depression hexside (base heihts are equal else first test would have been true
          */
         public boolean exitHexsideIsCrest() {
-            if((sourceExitHexsides[0] != NONE && sourceHex.getBaseHeight() !=  getAdjacentHex(sourceHex, sourceExitHexsides[0]).getBaseHeight()) ||
+            if((sourceExitHexsides[0] != NONE && sourceHex.getBaseLevelofHex() !=  getAdjacentHex(sourceHex, sourceExitHexsides[0]).getBaseLevelofHex()) ||
                     (sourceExitHexsides[0] != NONE &&
                             (sourceHex.isDepressionTerrain() && sourceHex.getHexsideLocation(sourceExitHexsides[0]).isDepressionTerrain()  && !getAdjacentHex(sourceHex, sourceExitHexsides[0]).isDepressionTerrain()) ||
                             (!sourceHex.isDepressionTerrain() && sourceHex.getHexsideLocation(sourceExitHexsides[0]).isDepressionTerrain() &&  getAdjacentHex(sourceHex, sourceExitHexsides[0]).isDepressionTerrain()) ))   {
                 return true;
             }
-            else if((sourceExitHexsides[1] != NONE && sourceHex.getBaseHeight() !=  getAdjacentHex(sourceHex, sourceExitHexsides[1]).getBaseHeight()) ||
+            else if((sourceExitHexsides[1] != NONE && sourceHex.getBaseLevelofHex() !=  getAdjacentHex(sourceHex, sourceExitHexsides[1]).getBaseLevelofHex()) ||
                     (sourceExitHexsides[1] != NONE &&
                             (sourceHex.isDepressionTerrain() && sourceHex.getHexsideLocation(sourceExitHexsides[1]).isDepressionTerrain()  && !getAdjacentHex(sourceHex, sourceExitHexsides[1]).isDepressionTerrain()) ||
                             (!sourceHex.isDepressionTerrain() && sourceHex.getHexsideLocation(sourceExitHexsides[1]).isDepressionTerrain() &&  getAdjacentHex(sourceHex, sourceExitHexsides[1]).isDepressionTerrain()) )) {
@@ -1480,13 +1501,13 @@ public class Map  {
          * 3. targetHex is not depression terrain and adjacent hex is depression terrain and hexside is a depression hexside (base heihts are equal else first test would have been true
          */
         public boolean enterHexsideIsCrest() {
-            if((targetEnterHexsides[0] != NONE && targetHex.getBaseHeight() !=  getAdjacentHex(targetHex, targetEnterHexsides[0]).getBaseHeight()) ||
+            if((targetEnterHexsides[0] != NONE && targetHex.getBaseLevelofHex() !=  getAdjacentHex(targetHex, targetEnterHexsides[0]).getBaseLevelofHex()) ||
                     (targetEnterHexsides[0] != NONE &&
                             (targetHex.isDepressionTerrain() && targetHex.getHexsideLocation(targetEnterHexsides[0]).isDepressionTerrain()  && !getAdjacentHex(targetHex, targetEnterHexsides[0]).isDepressionTerrain()) ||
                             (!targetHex.isDepressionTerrain() && targetHex.getHexsideLocation(targetEnterHexsides[0]).isDepressionTerrain() &&  getAdjacentHex(targetHex, targetEnterHexsides[0]).isDepressionTerrain()) ))  {
                 return true;
             }
-            else if((targetEnterHexsides[1] != NONE && targetHex.getBaseHeight() !=  getAdjacentHex(targetHex, targetEnterHexsides[1]).getBaseHeight()) ||
+            else if((targetEnterHexsides[1] != NONE && targetHex.getBaseLevelofHex() !=  getAdjacentHex(targetHex, targetEnterHexsides[1]).getBaseLevelofHex()) ||
                     (targetEnterHexsides[1] != NONE &&
                             (targetHex.isDepressionTerrain() && targetHex.getHexsideLocation(targetEnterHexsides[1]).isDepressionTerrain()  && !getAdjacentHex(targetHex, targetEnterHexsides[1]).isDepressionTerrain()) ||
                             (!targetHex.isDepressionTerrain() && targetHex.getHexsideLocation(targetEnterHexsides[1]).isDepressionTerrain() &&  getAdjacentHex(targetHex, targetEnterHexsides[1]).isDepressionTerrain()) )) {
@@ -1495,6 +1516,37 @@ public class Map  {
             return false;
         }
 
+        /**
+         * Determines the total elevation of the source and target locations used in a LOS Check
+         * The base formula is Base Level of Hex (-2 to + 7 or 8) + Level of Location within the hex (as measured as the difference from the Base Level of Hex)
+         * EG 2nd level of a building on a Level 1 Hill: total elevation = 1 (Base Level of Hex) + 2(Level of Location within Hex) = 3
+         *
+         * Special Cases where this formula does not work are handled
+         *
+         * ToDo fix inconsistencies in LOS code as of Jan 2025
+         * There are known situations where the LOS code is not generating the required data correctly
+         * In particluar, a number of special locations are being created using their total elevation instead of their level within the hex:
+         * Bridges
+         * Need to check Entrenchments
+         * crest
+         * Virtual Levels
+         * building levels
+         */
+        private void setSourceAndTargetElevations() {
+
+            // code to fix vertex los
+            int leveladj = 0;
+            if (!source.isCenterLocation() && sourceHex.isDepressionTerrain()){
+                leveladj =1;
+            }
+            sourceElevation = sourceHex.getBaseLevelofHex() + source.getLevelInHex() + leveladj;
+
+            leveladj = 0;
+            if (!target.isCenterLocation() && targetHex.isDepressionTerrain()){
+                leveladj=1;
+            }
+            targetElevation = targetHex.getBaseLevelofHex() + target.getLevelInHex() + leveladj;
+        }
         /**
          * Adjusts the hillock status variables for a new hex
          */
@@ -1760,13 +1812,18 @@ public class Map  {
     protected boolean applyLOSRules(LOSStatus status, LOSResult result) {
 
         // if there's a terrain counter in the hex use that terrain instead unless entrenchment
-        if(status.vaslGameInterface != null && status.vaslGameInterface.getTerrain(status.tempHex) != null &&
-                status.tempHex != status.sourceHex && status.tempHex != status.targetHex) {
-            if (!status.vaslGameInterface.getTerrain(status.tempHex).isEntrenchmentTerrain()) {
-                status.currentTerrain = status.vaslGameInterface.getTerrain(status.tempHex);
-                status.currentTerrainfromCounter = true;
-            }
+        // need to do source/target separately from intervening hexes
+        // check vaslGameInterface is initialized
+        if(status.vaslGameInterface != null )  {
+           // check tempHex is not source/target and contains a terrain counter
+           if(status.tempHex != status.sourceHex && status.tempHex != status.targetHex && status.vaslGameInterface.getTerrain(status.tempHex)!= null) {
+              // check for entrenchment counters
+             if (!getTerrain(status.vaslGameInterface.getTerrain(status.tempHex)).isEntrenchmentTerrain()) {
+                applyInterveningCounterValues(status);
+             }
+           }
         }
+
         try {
             status.currentTerrainHgt = status.currentTerrain.getHeight();
         }
@@ -1817,7 +1874,7 @@ public class Map  {
             }
 
             // still continuous slope?
-            if (Math.abs(status.sourceElevation - status.currentHex.getBaseHeight()) != status.rangeToSource) {
+            if (Math.abs(status.sourceElevation - status.currentHex.getBaseLevelofHex()) != status.rangeToSource) {
 
                 status.continuousSlope = false;
             }
@@ -1825,10 +1882,10 @@ public class Map  {
             double sourceadj=0;
             double targetadj=0;
 
-            if(status.source.getTerrain().isRooftop() && status.source.getBaseHeight() !=1) {
+            if(status.source.getTerrain().isRooftop() && status.source.getLevelInHex() !=1) {
                 sourceadj=-0.5;
             }
-            if(status.target.getTerrain().isRooftop() && status.target.getBaseHeight() !=1) {
+            if(status.target.getTerrain().isRooftop() && status.target.getLevelInHex() !=1) {
                 targetadj = -0.5;
             }
             boolean followsdepression = true;
@@ -1858,7 +1915,7 @@ public class Map  {
                                             depressionadj = 1;
                                         }
                                         else {
-                                            if (status.rangeToSource==1 && status.currentHex.getBaseHeight()<= status.sourceElevation) {
+                                            if (status.rangeToSource==1 && status.currentHex.getBaseLevelofHex()<= status.sourceElevation) {
                                                 depressionadj=1;
                                             }
                                         }
@@ -1868,7 +1925,7 @@ public class Map  {
                                             equalrangeadj=1;
                                         }
                                         if (!status.targetHex.equals(status.currentHex) &&
-                                                ((status.currentHex.getBaseHeight() + depressionadj + status.currentTerrainHgt >= status.targetElevation + targetadj) || (status.currentHex.getBaseHeight() + depressionadj + status.currentTerrainHgt > status.sourceElevation + sourceadj)) &&
+                                                ((status.currentHex.getBaseLevelofHex() + depressionadj + status.currentTerrainHgt >= status.targetElevation + targetadj) || (status.currentHex.getBaseLevelofHex() + depressionadj + status.currentTerrainHgt > status.sourceElevation + sourceadj)) &&
                                                 (!((status.targetElevation + targetadj) - (status.sourceElevation + sourceadj) >= status.range -(status.rangeToSource-1+ equalrangeadj)))) {
                                             followsdepression = false;
                                         }
@@ -1918,7 +1975,7 @@ public class Map  {
                                             equalrangeadj=1;
                                         }
                                         if (!status.sourceHex.equals(status.currentHex) &&
-                                                ((status.currentHex.getBaseHeight() + depressionadj + status.currentTerrainHgt >= status.targetElevation + targetadj) || (status.currentHex.getBaseHeight() + depressionadj + status.currentTerrainHgt > status.sourceElevation+ sourceadj)) &&
+                                                ((status.currentHex.getBaseLevelofHex() + depressionadj + status.currentTerrainHgt >= status.targetElevation + targetadj) || (status.currentHex.getBaseLevelofHex() + depressionadj + status.currentTerrainHgt > status.sourceElevation+ sourceadj)) &&
                                                 (!((status.sourceElevation + sourceadj) - (status.targetElevation + targetadj) >= status.range -(status.rangeToTarget-1+ equalrangeadj)))) {
                                             followsdepression = false;
                                         }
@@ -1965,13 +2022,18 @@ public class Map  {
         } else {
             insamehex = true;
         }
-        // check for hexside counter terrain (ie drifts, roadblocks, etc)
+        // check for hexside counter terrain (ie drifts, roadblocks, etc) and reset value of currentTerrain if found
         for (Integer hexside : hexsides) {
             if (status.vaslGameInterface.getHexside(status.currentHex) != null) {
                 CounterMetadata counter = status.vaslGameInterface.getHexside((status.currentHex));
-                if (hexside == counter.getCoverArch()) {
+                if (counter.getName().contains("Overlay")) {
+                    // draggable overlay of hexside: Hedge, Wall, Bocage, Panji - others?
+                    status.currentTerrain = getTerrainFromOverlayImage(status, getOverlayPiece(status));
+                } else if (hexside == counter.getCoverArch()) {
+                    // counter metadata includes which hexside is terrain
                     status.currentTerrain = getTerrain(counter.getTerrain());
                 } else {
+                    // los is along hexside which has terrain
                     if (status.LOSis60Degree || status.LOSisHorizontal) {
                         if (status.sourceExitHexsides[0] == counter.getCoverArch() ||
                                 status.sourceExitHexsides[1] == counter.getCoverArch() ||
@@ -1982,6 +2044,7 @@ public class Map  {
                         }
                     }
                 }
+                break;
             }
         }
         // check the LOS rules
@@ -2071,6 +2134,105 @@ public class Map  {
         return false;
     }
 
+    protected Terrain getTerrainFromOverlayImage(LOSStatus status, GamePiece overlaypiece){
+        Terrain imageterrain = null;
+        Point imagepoint = new Point();
+        BufferedImage img = getImage(overlaypiece);
+
+        imagepoint.x = img.getWidth()/2 +  status.currentCol - (int) (status.currentHex.getHexCenter().getX());
+        imagepoint.y = img.getHeight()/2 + status.currentRow - (int) (status.currentHex.getHexCenter().getY());
+        int c = img.getRGB(imagepoint.x, imagepoint.y);
+        if ((c >> 24) != 0x00) { // not a transparent pixel
+            //Retrieving the R G B values
+            Color color = getRGBColor(c);
+            imageterrain = getOverlayTerrainfromColor(color, status);
+        }
+        else {
+            imageterrain = getGridTerrain(status.currentCol, status.currentRow);
+        }
+        if (imageterrain == null){imageterrain = getTerrain("Open Ground");}
+        return imageterrain;
+    }
+    // copied from ASLMap - refactor
+    private Color getRGBColor(int c){
+        final int red = (c & 0x00ff0000) >> 16;
+        final int green = (c & 0x0000ff00) >> 8;
+        final int blue = c & 0x000000ff;
+        return new Color(red, green, blue);
+    }
+    // copied from ASLMap - refactor
+    private Terrain getOverlayTerrainfromColor(Color color, LOSStatus status){
+        int terrint = 0;
+        for (Board b: status.vaslGameInterface.gameMap.getBoards()) {
+            VASLBoard useboard = (VASLBoard) b;
+            if (useboard.getVASLBoardArchive() != null) {
+                terrint = useboard.getVASLBoardArchive().getTerrainForColor(color);
+                break;
+            }
+        }
+        if (terrint >= 0) {
+            return getTerrain(terrint);
+        }
+        return null;
+    }
+
+    public static BufferedImage getImage(GamePiece p)
+    {
+        if (p == null) return null;
+
+        final GamePieceOpImpl op = new GamePieceOpImpl(p);
+        return op.eval();
+    }
+    private void applyInterveningCounterValues(LOSStatus status){
+        Terrain counterTerrain = getTerrain(status.vaslGameInterface.getTerrain(status.tempHex));
+        if (counterTerrain.isInherentTerrain()) {
+            status.currentTerrain = counterTerrain;
+        }
+        else {
+            if (getOverlayPiece(status) == null) {return;}
+            status.currentTerrain = getTerrainFromOverlayImage(status, getOverlayPiece(status));
+        }
+        status.currentTerrainfromCounter = true;
+        if (status.vaslGameInterface.getLevel(status.tempHex) != -99) {
+            status.groundLevel = status.vaslGameInterface.getLevel(status.tempHex);
+        }
+    };
+
+    private void applySourceTargetCounterValues(LOSStatus status){
+        if (status.vaslGameInterface.getLevel(status.sourceHex) != -99) {
+           status.sourceElevation = status.vaslGameInterface.getLevel(status.sourceHex);
+
+        }
+        if (status.vaslGameInterface.getLevel(status.targetHex) != -99 ) {
+            status.targetElevation = status.vaslGameInterface.getLevel(status.targetHex);
+
+        }
+    }
+
+    private GamePiece getOverlayPiece(LOSStatus status){
+        GamePiece[] p = status.vaslGameInterface.gameMap.getPieces();
+        for (GamePiece aP : p) {
+            Point testpoint = new Point  ((int) aP.getPosition().getX() - status.vaslGameInterface.gameMap.getEdgeBuffer().width, (int) aP.getPosition().getY() - status.vaslGameInterface.gameMap.getEdgeBuffer().height);
+            if (status.currentHex.contains(testpoint)) {  // make sure overlay is in current hex
+                if (aP instanceof VASSAL.counters.Stack) {
+                    for (PieceIterator pi = new PieceIterator(((Stack) aP).getPiecesIterator()); pi.hasMoreElements(); ) {
+                        GamePiece piece = pi.nextPiece();
+                        if (piece.getProperty("overlay") != null) {  // is overlay
+                            return piece;
+                            //status.currentTerrain = getTerrainFromOverlayImage(status, piece);
+                            //break;
+                        }
+                    }
+                } else {
+                    return aP;
+                    //status.currentTerrain = getTerrainFromOverlayImage(status, aP);
+                    //break;
+                }
+            }
+        }
+        return null;
+    }
+
     /**
      * Applies the LOS rules to LOS within the same hex
      * @param status the LOS status
@@ -2090,7 +2252,7 @@ public class Map  {
 
                 // if both locations are building, ensure difference in levels is <= 1 and stairway
                 if (status.source.getTerrain().isBuildingTerrain() && status.target.getTerrain().isBuildingTerrain()) {
-                    if (Math.abs(status.source.getBaseHeight() - status.target.getBaseHeight()) > 1 ||
+                    if (Math.abs(status.source.getLevelInHex() - status.target.getLevelInHex()) > 1 ||
                             !status.source.getHex().hasStairway()) {
 
                         result.setBlocked(
@@ -2163,8 +2325,8 @@ public class Map  {
      * @return true if location is in the smoke
      */
     protected static boolean locationInSmoke(Location location, Smoke smoke) {
-        return location.getBaseHeight() >= smoke.getLocation().getBaseHeight() &&
-                location.getBaseHeight() < smoke.getLocation().getBaseHeight() + smoke.getHeight();
+        return location.getLevelInHex() >= smoke.getLocation().getLevelInHex() &&
+                location.getLevelInHex() < smoke.getLocation().getLevelInHex() + smoke.getHeight();
     }
 
     /**
@@ -2347,36 +2509,52 @@ public class Map  {
             if (obaList != null && !obaList.isEmpty()) {
 
                 for (OBA oba: obaList) {
-
+                    // dont add OBA Hindrance if SMOKE
+                    if (oba.getName().contains("Sm ") || oba.getName().contains("WP")) {
+                        // do nothing
+                    }
                     // must be within the blast area
-                    if(range(status.currentHex, oba.getHex(), getMapConfiguration()) <= oba.getBlastAreaRadius()){
-
-                        // source or target are within the OBA
-                        if(locationInOBA(status.source, oba) || locationInOBA(status.target, oba)) {
-
-                            result.addOBAHindrance(oba, status.currentCol, status.currentRow);
-                            if(result.isBlocked()){
-                                return true;
+                    else if (oba.getisBarrage()) { //Barrage
+                        Hex barrageHex;
+                        // test four hexes from center hex on each side depending on rotation
+                        String [] barragehexes = getBarrageHexes(oba);
+                        for (int x =0; x <9; x++){
+                            if (barragehexes[x] != null) {
+                                barrageHex = getHex(barragehexes[x]);
+                                if (barrageHex.equals(status.currentHex)) {
+                                    if (addOBAHindranceAndCheckBlocked(result, oba, status)) {
+                                        return true;
+                                    }
+                                    break;
+                                }
                             }
                         }
-                        // source and target are within the OBA elevation
-                        else if(status.source.getAbsoluteHeight() >= oba.getHex().getCenterLocation().getAbsoluteHeight() &&
-                                status.source.getAbsoluteHeight() < oba.getHex().getCenterLocation().getAbsoluteHeight() + oba.getBlastHeight() &&
-                                status.target.getAbsoluteHeight() >= oba.getHex().getCenterLocation().getAbsoluteHeight() &&
-                                status.target.getAbsoluteHeight() < oba.getHex().getCenterLocation().getAbsoluteHeight() + oba.getBlastHeight()){
+                    }
+                    else {  //FFE
+                        if (range(status.currentHex, oba.getHex(), getMapConfiguration()) <= oba.getBlastAreaRadius()) {
 
+                            // source or target are within the OBA
+                            if (locationInOBA(status.source, oba) || locationInOBA(status.target, oba)) {
+                                if (addOBAHindranceAndCheckBlocked(result, oba, status)) {return true;}
+                            }
+                            // source and target are within the OBA elevation
+                            else if (status.source.getAbsoluteHeight() >= oba.getHex().getCenterLocation().getAbsoluteHeight() &&
+                                    status.source.getAbsoluteHeight() < oba.getHex().getCenterLocation().getAbsoluteHeight() + oba.getBlastHeight() &&
+                                    status.target.getAbsoluteHeight() >= oba.getHex().getCenterLocation().getAbsoluteHeight() &&
+                                    status.target.getAbsoluteHeight() < oba.getHex().getCenterLocation().getAbsoluteHeight() + oba.getBlastHeight()) {
 
-                            result.addOBAHindrance(oba, status.currentCol, status.currentRow);
-                            if(result.isBlocked()){
-                                return true;
+                                if (addOBAHindranceAndCheckBlocked(result, oba, status)) {return true;}
+                            }
+                            // OBA creates "blind hex"
+                            else if (isBlindHex(status, oba.getBlastHeight())) {
+                                if (addOBAHindranceAndCheckBlocked(result, oba, status)) {return true;}
                             }
                         }
-                        // OBA creates "blind hex"
-                        else if (isBlindHex(status, oba.getBlastHeight())){
-
-                            result.addOBAHindrance(oba, status.currentCol, status.currentRow);
-                            if(result.isBlocked()){
-                                return true;
+                        else if (oba.getName().contains("Naval")){
+                            String[] ffehexes = getAllAdjacentHexes(oba.getHex());
+                            Hex[] nobahexes = status.vaslGameInterface.getExtraNobaHexes(oba.getRotation(), ffehexes);
+                            if (status.currentHex.equals(nobahexes[0]) || status.currentHex.equals(nobahexes[1])){
+                                if (addOBAHindranceAndCheckBlocked(result, oba, status)) {return true;}
                             }
                         }
                     }
@@ -2386,6 +2564,179 @@ public class Map  {
         return false;
     }
 
+    private  boolean addOBAHindranceAndCheckBlocked(LOSResult result, OBA oba, LOSStatus status) {
+        result.addOBAHindrance(oba, status.currentCol, status.currentRow);
+        if (result.isBlocked()) {
+            return true;
+        }
+        return false;
+    }
+
+    public String[] getBarrageHexes(OBA oba) {
+        String[] barragearray = new String[9];
+        barragearray[0] = oba.getHex().getName();
+        Hex firstarmstartHex = oba.getHex(); Hex secondarmstartHex = oba.getHex();
+        int otherhexside = oba.getHex().getOppositeHexside(oba.getRotation()-1);
+        int hexside = 0; int secondhexside = 0;
+        // ToDo - refactor after beta test
+        switch (oba.getRotation()) {
+            case 1:
+                for (int x = 1; x < 5; x++) {
+                    if (getAdjacentHex(firstarmstartHex, oba.getRotation()-1) != null) {
+                        barragearray[x] = getAdjacentHex(firstarmstartHex, oba.getRotation() - 1).getName();
+                        firstarmstartHex = getAdjacentHex(firstarmstartHex, oba.getRotation() - 1);
+                    }
+                    if (getAdjacentHex(secondarmstartHex, otherhexside) != null) {
+                        barragearray[x+4] = getAdjacentHex(secondarmstartHex, otherhexside).getName();
+                        secondarmstartHex = getAdjacentHex(secondarmstartHex, otherhexside);
+                    }
+                }
+                break;
+            case 2:
+                if (oba.getName().contains("alt")){
+                    for (int x = 1; x < 5; x++) {
+                        if (x == 1 || x == 3){
+                            hexside = 1; secondhexside = 3;
+                        } else {
+                            hexside = 0; secondhexside = 4;
+                        }
+                        if (getAdjacentHex(firstarmstartHex, hexside) != null) {
+                            barragearray[x] = getAdjacentHex(firstarmstartHex, hexside).getName();
+                            firstarmstartHex = getAdjacentHex(firstarmstartHex, hexside);
+                        }
+                        if (getAdjacentHex(secondarmstartHex, secondhexside) != null) {
+                            barragearray[x+4] = getAdjacentHex(secondarmstartHex, secondhexside).getName();
+                            secondarmstartHex = getAdjacentHex(secondarmstartHex, secondhexside);
+                        }
+                    }
+                } else {
+                    for (int x = 1; x < 5; x++) {
+                        if (x == 1 || x == 3){
+                            hexside = 0; secondhexside = 4;
+                        } else {
+                            hexside = 1; secondhexside = 3;
+                        }
+                        if (getAdjacentHex(firstarmstartHex, hexside) != null) {
+                            barragearray[x] = getAdjacentHex(firstarmstartHex, hexside).getName();
+                            firstarmstartHex = getAdjacentHex(firstarmstartHex, hexside);
+                        }
+                        if (getAdjacentHex(secondarmstartHex, secondhexside) != null) {
+                            barragearray[x+4] = getAdjacentHex(secondarmstartHex, secondhexside).getName();
+                            secondarmstartHex = getAdjacentHex(secondarmstartHex, secondhexside);
+                        }
+                    }
+                }
+                break;
+            case 3:
+                otherhexside = oba.getHex().getOppositeHexside(oba.getRotation()-2);
+                for (int x = 1; x < 5; x++) {
+                    if (getAdjacentHex(firstarmstartHex, oba.getRotation()-2) != null) {
+                        barragearray[x] = getAdjacentHex(firstarmstartHex, oba.getRotation() - 2).getName();
+                        firstarmstartHex = getAdjacentHex(firstarmstartHex, oba.getRotation() - 2);
+                    }
+                    if (getAdjacentHex(secondarmstartHex, otherhexside) != null) {
+                        barragearray[x+4] = getAdjacentHex(secondarmstartHex, otherhexside).getName();
+                        secondarmstartHex = getAdjacentHex(secondarmstartHex, otherhexside);
+                    }
+                }
+                break;
+            case 4:
+                if (oba.getName().contains("alt")){
+                    for (int x = 1; x < 5; x++) {
+                        if (x == 1 || x == 3){
+                            hexside = 2; secondhexside = 4;
+                        } else {
+                            hexside = 1; secondhexside = 5;
+                        }
+                        if (getAdjacentHex(firstarmstartHex, hexside) != null) {
+                            barragearray[x] = getAdjacentHex(firstarmstartHex, hexside).getName();
+                            firstarmstartHex = getAdjacentHex(firstarmstartHex, hexside);
+                        }
+                        if (getAdjacentHex(secondarmstartHex, secondhexside) != null) {
+                            barragearray[x+4] = getAdjacentHex(secondarmstartHex, secondhexside).getName();
+                            secondarmstartHex = getAdjacentHex(secondarmstartHex, secondhexside);
+                        }
+                    }
+                } else {
+                    for (int x = 1; x < 5; x++) {
+                        if (x == 1 || x == 3){
+                            hexside = 1; secondhexside = 5;
+                        } else {
+                            hexside = 2; secondhexside = 4;
+                        }
+                        if (getAdjacentHex(firstarmstartHex, hexside) != null) {
+                            barragearray[x] = getAdjacentHex(firstarmstartHex, hexside).getName();
+                            firstarmstartHex = getAdjacentHex(firstarmstartHex, hexside);
+                        }
+                        if (getAdjacentHex(secondarmstartHex, secondhexside) != null) {
+                            barragearray[x+4] = getAdjacentHex(secondarmstartHex, secondhexside).getName();
+                            secondarmstartHex = getAdjacentHex(secondarmstartHex, secondhexside);
+                        }
+                    }
+                }
+                break;
+            case 5:
+                otherhexside = oba.getHex().getOppositeHexside(oba.getRotation()-3);
+                for (int x = 1; x < 5; x++) {
+                    if (getAdjacentHex(firstarmstartHex, oba.getRotation()-3) != null) {
+                        barragearray[x] = getAdjacentHex(firstarmstartHex, oba.getRotation() - 3).getName();
+                        firstarmstartHex = getAdjacentHex(firstarmstartHex, oba.getRotation() - 3);
+                    }
+                    if (getAdjacentHex(secondarmstartHex,otherhexside) != null) {
+                        barragearray[x+4] = getAdjacentHex(secondarmstartHex, otherhexside).getName();
+                        secondarmstartHex = getAdjacentHex(secondarmstartHex, otherhexside);
+                    }
+                }
+                break;
+            case 6:
+                if (oba.getName().contains("alt")){
+                    for (int x = 1; x < 5; x++) {
+                        if (x == 1 || x == 3){
+                            hexside = 2; secondhexside = 0;
+                        } else {
+                            hexside = 3; secondhexside = 5;
+                        }
+                        if (getAdjacentHex(firstarmstartHex, hexside) != null) {
+                            barragearray[x] = getAdjacentHex(firstarmstartHex, hexside).getName();
+                            firstarmstartHex = getAdjacentHex(firstarmstartHex, hexside);
+                        }
+                        if (getAdjacentHex(secondarmstartHex, secondhexside) != null) {
+                            barragearray[x+4] = getAdjacentHex(secondarmstartHex, secondhexside).getName();
+                            secondarmstartHex = getAdjacentHex(secondarmstartHex, secondhexside);
+                        }
+                    }
+                } else {
+                    for (int x = 1; x < 5; x++) {
+                        if (x == 1 || x == 3){
+                            hexside = 3; secondhexside = 5;
+                        } else {
+                            hexside = 2; secondhexside = 0;
+                        }
+                        if (getAdjacentHex(firstarmstartHex, hexside) != null) {
+                            barragearray[x] = getAdjacentHex(firstarmstartHex, hexside).getName();
+                            firstarmstartHex = getAdjacentHex(firstarmstartHex, hexside);
+                        }
+                        if (getAdjacentHex(secondarmstartHex, secondhexside) != null) {
+                            barragearray[x+4] = getAdjacentHex(secondarmstartHex, secondhexside).getName();
+                            secondarmstartHex = getAdjacentHex(secondarmstartHex, secondhexside);
+                        }
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+        return barragearray;
+    }
+
+    public String[] getAllAdjacentHexes(Hex passhex) {
+        String[] adjarray = new String[7];
+        adjarray[0] = passhex.getName();
+        for (int x = 0; x < 6; x++) {
+            adjarray[x+1] = getAdjacentHex(passhex, x).getName();
+        }
+        return adjarray;
+    }
     /**
      * @param location the location
      * @param oba the OBA counter
@@ -2394,8 +2745,8 @@ public class Map  {
     private boolean locationInOBA(Location location, OBA oba) {
 
         return  range(oba.getHex(), location.getHex(), getMapConfiguration()) <= oba.getBlastAreaRadius() &&
-                location.getBaseHeight() >= oba.getHex().getCenterLocation().getBaseHeight() &&
-                location.getBaseHeight() < oba.getHex().getCenterLocation().getBaseHeight() + oba.getBlastHeight();
+                location.getLevelInHex() >= oba.getHex().getCenterLocation().getLevelInHex() &&
+                location.getLevelInHex() < oba.getHex().getCenterLocation().getLevelInHex() + oba.getBlastHeight();
     }
 
     /**
@@ -2411,11 +2762,11 @@ public class Map  {
         int rooftopadj=0;
         int rangetest=0;
         Hex rangehex=null;
-        if(status.source.getTerrain().isRooftop() && status.source.getBaseHeight() !=1) {
+        if(status.source.getTerrain().isRooftop() && status.source.getLevelInHex() !=1) {
             rooftopadj=-1;
             rangehex=status.sourceHex;
         }
-        if (status.target.getTerrain().isRooftop()&& status.target.getBaseHeight() !=1) {
+        if (status.target.getTerrain().isRooftop()&& status.target.getLevelInHex() !=1) {
             rooftopadj=-1;
             rangehex=status.targetHex;
         }
@@ -2531,10 +2882,10 @@ public class Map  {
         double sourceadj=0;
         double targetadj=0;
 
-        if(status.source.getTerrain().isRooftop() && status.source.getBaseHeight() !=1) {
+        if(status.source.getTerrain().isRooftop() && status.source.getLevelInHex() !=1) {
             sourceadj=-0.5;
         }
-        if(status.target.getTerrain().isRooftop() && status.target.getBaseHeight() !=1) {
+        if(status.target.getTerrain().isRooftop() && status.target.getLevelInHex() !=1) {
             targetadj=-0.5;
         }
         boolean test1 = false;
@@ -2546,7 +2897,7 @@ public class Map  {
         // restricted by exiting a depression? (checked in all hexes)
         if (status.exitsSourceDepression) {
             // special case for bridges
-            int currentHexBaseHeight=status.currentHex.getBaseHeight();
+            int currentHexBaseHeight=status.currentHex.getBaseLevelofHex();
             boolean currentHexIsDepressionTerrain= status.currentHex.isDepressionTerrain();
             if (status.currentHex.getCenterLocation().getTerrain().isBridge() ){
                 currentHexIsDepressionTerrain=true;
@@ -2585,7 +2936,7 @@ public class Map  {
                 result.setBlocked(status.currentCol, status.currentRow, status.reason);
                 return true;
             }
-            if (status.exitHexsideIsCrest() && (status.LOSis60Degree || status.LOSisHorizontal) && finalSourceElevation >= finalTargetElevation) {
+            if (status.exitHexsideIsCrest() && (status.LOSis60Degree || status.LOSisHorizontal) && finalSourceElevation >= finalTargetElevation && !(status.source.getTerrain().isBridge())) {
                 status.blocked = true;
                 status.reason = "Exits Crest Line - Depression hexside at vertex (B19.51)";
                 result.setBlocked(status.currentCol, status.currentRow, status.reason);
@@ -2596,7 +2947,7 @@ public class Map  {
         // LOS must enter a depression?
         if (status.entersTargetDepression) {
             // special case for bridges
-            int currentHexBaseHeight=status.currentHex.getBaseHeight();
+            int currentHexBaseHeight=status.currentHex.getBaseLevelofHex();
             boolean currentHexIsDepressionTerrain= status.currentHex.isDepressionTerrain();
             if (status.currentHex.getCenterLocation().getTerrain().isBridge() ){
                 currentHexIsDepressionTerrain=true;
@@ -2637,7 +2988,7 @@ public class Map  {
                 result.setBlocked(status.currentCol, status.currentRow, status.reason);
                 return true;
             }
-            if (status.enterHexsideIsCrest() && (status.LOSis60Degree || status.LOSisHorizontal) && finalTargetElevation >= finalSourceElevation) {
+            if (status.enterHexsideIsCrest() && (status.LOSis60Degree || status.LOSisHorizontal) && finalTargetElevation >= finalSourceElevation && !(status.target.getTerrain().isBridge())) {
                 status.blocked = true;
                 status.reason = "Enters Crest Line - Depression hexside at vertex (B19.51)";
                 result.setBlocked(status.currentCol, status.currentRow, status.reason);
@@ -2653,7 +3004,7 @@ public class Map  {
     // return false if non-depression ground level impacts LOS
     private boolean specialtestDepressionGroundLevelOnEntry (LOSStatus status) {
         if (status.rangeToSource !=1) {return false;}
-        if (status.sourceElevation <= status.currentHex.getBaseHeight()) {return false;}
+        if (status.sourceElevation <= status.currentHex.getBaseLevelofHex()) {return false;}
         if(status.currentHex.isDepressionTerrain() &&
                 status.sourceHex.getHexCenter().distance(status.currentCol, status.currentRow)  < status.sourceHex.getHexCenter().distance(status.currentHex.getHexCenter().getX(), status.currentHex.getHexCenter().getY())) {
             return true;
@@ -2662,7 +3013,7 @@ public class Map  {
     }
     private boolean specialtestDepressionGroundLevelOnExit (LOSStatus status) {
         if (status.rangeToTarget != 1) {return false;}
-        if (status.targetElevation <= status.currentHex.getBaseHeight()) {return false;}
+        if (status.targetElevation <= status.currentHex.getBaseLevelofHex()) {return false;}
         if (status.currentHex.isDepressionTerrain() &&
                 status.targetHex.getHexCenter().distance(status.currentCol, status.currentRow)  < status.targetHex.getHexCenter().distance(status.currentHex.getHexCenter().getX(), status.currentHex.getHexCenter().getY())) {
             return true;
@@ -2889,11 +3240,11 @@ public class Map  {
         if(status.target.getTerrain().isCellar()) {
             targetadj=+1;
         }
-        if(status.source.getTerrain().isRooftop() && status.source.getBaseHeight() !=1) {
+        if(status.source.getTerrain().isRooftop() && status.source.getLevelInHex() !=1) {
             sourceadj=-0.5;
             rangehex=status.sourceHex;
         }
-        if(status.target.getTerrain().isRooftop() && status.target.getBaseHeight() !=1) {
+        if(status.target.getTerrain().isRooftop() && status.target.getLevelInHex() !=1) {
             targetadj=-0.5;
             rangehex=status.targetHex;
         }
@@ -2932,7 +3283,7 @@ public class Map  {
                         Hex temp = getAdjacentHex(status.currentHex, x);
                         // ignore any source/target hex
                         if(!temp.equals(status.sourceHex) && !temp.equals(status.targetHex)){
-                            cliffHexsideTerrainHeightadjustment= Math.min(status.currentHex.getBaseHeight(), temp.getBaseHeight());
+                            cliffHexsideTerrainHeightadjustment= Math.min(status.currentHex.getBaseLevelofHex(), temp.getBaseLevelofHex());
                         }
                     }
                 }
@@ -3128,12 +3479,12 @@ public class Map  {
         double obstacleadj=0;
         int rooftopadj=0;
         Hex rangehex=null;
-        if(status.source.getTerrain().isRooftop() && status.source.getBaseHeight() !=1) {  // hack to handle SK (all buildings single story
+        if(status.source.getTerrain().isRooftop() && status.source.getLevelInHex() !=1) {  // hack to handle SK (all buildings single story
             sourceadj=-0.5;
             rooftopadj=1;
             rangehex=status.sourceHex;
         }
-        if(status.target.getTerrain().isRooftop() && status.target.getBaseHeight() !=1) {  // hack to handle SK (all buildings single story) {
+        if(status.target.getTerrain().isRooftop() && status.target.getLevelInHex() !=1) {  // hack to handle SK (all buildings single story) {
             targetadj=-0.5;
             rooftopadj=1;
             rangehex=status.targetHex;
@@ -3150,14 +3501,7 @@ public class Map  {
         // test for Hindrance later; this ensures that plateau effect is tested properly
         if ("Orchard, Out of Season".equals(status.currentTerrain.getName())) { obstacleadj=-1.0;}
 
-        // enables LOS from/to vertices in depression hexes where unit is at higher level than base elevation of the hex
-        if(status.sourceHex.isDepressionTerrain() && !status.source.isCenterLocation()) {
-            sourceadj=+1;
-        }
 
-        if(status.targetHex.isDepressionTerrain() && !status.target.isCenterLocation()) {
-            targetadj=+1;
-        }
         // code to fix groundlevel when checking LOS to/from vertex
         // Dec 23 commented out these lines as causing bd02 issues; need to see if it creates other issues; code was added to address issue #418
         //if (!(status.sourceHex.getNearestLocation(status.currentCol, status.currentRow).equals(status.sourceHex.getCenterLocation())) && !status.sourceHex.isDepressionTerrain() && status.sourceHex.equals(status.tempHex)){status.groundLevel = status.sourceHex.getBaseHeight();}
@@ -3167,11 +3511,11 @@ public class Map  {
                 (status.groundLevel + status.currentTerrainHgt+obstacleadj > Math.min(status.sourceElevation+ sourceadj, status.targetElevation + targetadj))) {
 
             // add a B10.2 EXC test; ignore same level terrain in lower level adj hex and vice versa
-            if (status.rangeToSource==1 && (status.currentTerrainHgt+ obstacleadj==0 && status.sourceElevation> status.currentHex.getBaseHeight()) &&
+            if (status.rangeToSource==1 && (status.currentTerrainHgt+ obstacleadj==0 && status.sourceElevation> status.currentHex.getBaseLevelofHex()) &&
                     status.sourceHex.getHexCenter().distance(status.currentCol, status.currentRow)  < status.sourceHex.getHexCenter().distance(status.currentHex.getHexCenter().getX(), status.currentHex.getHexCenter().getY())) {
                 return false;
             }
-            if (status.rangeToTarget==1 && (status.currentTerrainHgt+ obstacleadj==0 && status.targetElevation> status.currentHex.getBaseHeight()) &&
+            if (status.rangeToTarget==1 && (status.currentTerrainHgt+ obstacleadj==0 && status.targetElevation> status.currentHex.getBaseLevelofHex()) &&
                     status.targetHex.getHexCenter().distance(status.currentCol, status.currentRow)  < status.targetHex.getHexCenter().distance(status.currentHex.getHexCenter().getX(), status.currentHex.getHexCenter().getY())) {
                 return false;
             }
@@ -3253,9 +3597,9 @@ public class Map  {
                         int lowerHexheight;
                         // ignore any source/target hex
                         if(!temp.equals(status.sourceHex) && !temp.equals(status.targetHex)){
-                            lowerHexheight= Math.min(status.currentHex.getBaseHeight(), temp.getBaseHeight());
+                            lowerHexheight= Math.min(status.currentHex.getBaseLevelofHex(), temp.getBaseLevelofHex());
                         } else {
-                            lowerHexheight = status.currentHex.getBaseHeight();
+                            lowerHexheight = status.currentHex.getBaseLevelofHex();
                         }
                         if (lowerHexheight < Math.max(status.sourceElevation, status.targetElevation)) {return false;}
                     }
@@ -3268,8 +3612,6 @@ public class Map  {
                     // second test deals with terrain obstacles (woods) in depression hex (B19.21)
                     (!(status.exitsSourceDepression && status.currentTerrain.isDepression()) || (status.currentHex.isDepressionTerrain() && status.currentTerrainHgt >= 1) ))
                     ) {
-            //if (!(status.ignoreGroundLevelHex != null && status.ignoreGroundLevelHex.containsExtended(status.currentCol, status.currentRow)) ){
-            //    if(!(status.entersTargetDepression && status.currentHex.isDepressionTerrain())  ) {
 
                     // Need to handle special case where source unit is adjacent to a water obstacle looking
                     // at a target in the water obstacle. We can ignore the bit of open ground that extends into
@@ -3317,10 +3659,10 @@ public class Map  {
         double sourceadj=0;
         double targetadj=0;
         double obstacleadj=0;
-        if(status.source.getTerrain().isRooftop() && status.source.getBaseHeight() !=1) {
+        if(status.source.getTerrain().isRooftop() && status.source.getLevelInHex() !=1) {
             sourceadj=-0.5;
         }
-        if(status.target.getTerrain().isRooftop() && status.target.getBaseHeight() !=1) {
+        if(status.target.getTerrain().isRooftop() && status.target.getLevelInHex() !=1) {
             targetadj=-0.5;
         }
         if(status.currentTerrain.isHalfLevelHeight() && !status.currentTerrain.isHexsideTerrain()) {
@@ -3756,10 +4098,10 @@ public class Map  {
         // code added by DR to deal with rooftop 1/2 level
         double sourceadj=0;
         double targetadj=0;
-        if(status.source.getTerrain().isRooftop() && status.source.getBaseHeight() !=1 && !(status.target.getTerrain().isRooftop())) {
+        if(status.source.getTerrain().isRooftop() && status.source.getLevelInHex() !=1 && !(status.target.getTerrain().isRooftop())) {
             sourceadj=-0.5;
         }
-        if(status.target.getTerrain().isRooftop() && status.target.getBaseHeight() !=1 && !(status.source.getTerrain().isRooftop())) {
+        if(status.target.getTerrain().isRooftop() && status.target.getLevelInHex() !=1 && !(status.source.getTerrain().isRooftop())) {
             targetadj=-0.5;
         }
 
@@ -3878,10 +4220,10 @@ public class Map  {
         if(status.target.getTerrain().isCellar()) {
             targetadj=+1;
         }
-        if(status.source.getTerrain().isRooftop() && status.source.getBaseHeight() !=1) {
+        if(status.source.getTerrain().isRooftop() && status.source.getLevelInHex() !=1) {
             sourceadj=-0.5;
         }
-        if(status.target.getTerrain().isRooftop() && status.target.getBaseHeight() !=1) {
+        if(status.target.getTerrain().isRooftop() && status.target.getLevelInHex() !=1) {
             targetadj=-0.5;
         }
         if (status.currentTerrain.isBridge()) {
@@ -3897,9 +4239,9 @@ public class Map  {
                     int lowerHexheight;
                     // ignore any source/target hex
                     if(!temp.equals(status.sourceHex) && !temp.equals(status.targetHex)){
-                        lowerHexheight= Math.min(status.currentHex.getBaseHeight(), temp.getBaseHeight());
+                        lowerHexheight= Math.min(status.currentHex.getBaseLevelofHex(), temp.getBaseLevelofHex());
                     } else {
-                        lowerHexheight = status.currentHex.getBaseHeight();
+                        lowerHexheight = status.currentHex.getBaseLevelofHex();
                     }
                     if (lowerHexheight <= Math.max(status.sourceElevation, status.targetElevation)) {return false;}
                 }
@@ -3944,12 +4286,6 @@ public class Map  {
             }
         }
 
-        if(status.sourceHex.isDepressionTerrain() && !status.source.isCenterLocation()) {
-            sourceadj=+1;
-        }
-        if(status.targetHex.isDepressionTerrain() && !status.target.isCenterLocation()) {
-            targetadj=+1;
-        }
         if (status.groundLevel > status.sourceElevation + sourceadj && status.groundLevel > status.targetElevation+ targetadj && (status.ignoreGroundLevelHex !=status.currentHex)) {
 
             status.reason = "Ground level is higher than both the source and target (A6.2)";
@@ -4064,7 +4400,14 @@ public class Map  {
         // if using hexside counter terrain, override hex/location terrain
         if (status.vaslGameInterface != null && status.vaslGameInterface.getHexside(status.currentHex) !=null){
             CounterMetadata counter = status.vaslGameInterface.getHexside((status.currentHex));
-            if (locationHexside == counter.getCoverArch()) {
+            if (counter.getTerrain().equals(status.currentTerrain.getName())){
+                // always ignore if adjacent
+                if (isAdjacentHexside(h, l)){
+                    return true;
+                } else {
+                    return false;
+                }
+            } else if (locationHexside == counter.getCoverArch()) {
                 locationHexsideTerrain= getTerrain(counter.getTerrain());
                 // always ignore if adjacent
                 if (isAdjacentHexside(h, l)){
@@ -4109,7 +4452,7 @@ public class Map  {
         }
         // ignore hexspines if not bocage and partialorchards
         if (isHexspine(h, l) && (locationHexsideTerrain != null)) {
-            if (BOCAGE.equals(locationHexsideTerrain.getName()) && PARTIALORCHARD.equals(locationHexsideTerrain.getName())) {
+            if (BOCAGE.equals(locationHexsideTerrain.getName()) || PARTIALORCHARD.equals(locationHexsideTerrain.getName())) {
                 return false;
             } else {
                 return true;
@@ -4331,11 +4674,11 @@ public class Map  {
         double sourceadj=0;
         double targetadj=0;
         boolean sourceortargetishalfheight=false;
-        if(status.source.getTerrain().isRooftop() && status.source.getBaseHeight() !=1) {
+        if(status.source.getTerrain().isRooftop() && status.source.getLevelInHex() !=1) {
             sourceadj=-0.5;  // could be 0.5 but would that cause other problems?
             sourceortargetishalfheight=true;
         }
-        if(status.target.getTerrain().isRooftop() && status.target.getBaseHeight() !=1) {
+        if(status.target.getTerrain().isRooftop() && status.target.getLevelInHex() !=1) {
             targetadj=-0.5;   // could be 0.5 but would that cause other problems? yes with obstacle height.
             sourceortargetishalfheight=true;
         }
@@ -4402,10 +4745,10 @@ public class Map  {
             }
             // final test; if both source and elevation are above cliff then no blind hex possible
             if (rangeToSource==1 || rangeToTarget==1){
-                if (sourceElevation > status.currentHex.getBaseHeight() && targetElevation > status.currentHex.getBaseHeight()) {return false;}
+                if (sourceElevation > status.currentHex.getBaseLevelofHex() && targetElevation > status.currentHex.getBaseLevelofHex()) {return false;}
             }
-            if (status.currentHex.getBaseHeight() > status.groundLevel){
-                groundLevel = status.currentHex.getBaseHeight();
+            if (status.currentHex.getBaseLevelofHex() > status.groundLevel){
+                groundLevel = status.currentHex.getBaseLevelofHex();
             }
         } else if(isCliffHexside && (status.LOSis60Degree || status.LOSisHorizontal)) {
             // -99 is default value when no ajustment required; adjustment reflects lower terrain whey LOS along cliff hexside
@@ -5327,14 +5670,7 @@ public class Map  {
     }
     public boolean checkPartialOrchards (LOSStatus status,LOSResult result, HashSet<Integer> hexsides) {
         Terrain checkhexside;
-        /*if (status.LOSisHorizontal || status.LOSis60Degree){
-            hexsides.clear();
-            if(status.sourceExitHexsides[0]!=-1) {hexsides.add(status.sourceExitHexsides[0]);}
-            if(status.sourceExitHexsides[1]!=-1){ hexsides.add(status.sourceExitHexsides[1]);}
-            if(status.targetEnterHexsides[0]!=-1){ hexsides.add(status.targetEnterHexsides[0]);}
-            if(status.targetEnterHexsides[1]!=-1){ hexsides.add(status.targetEnterHexsides[1]);}
-        }*/
-        //for (Integer hexside : hexsides) {
+
 
         // get Terrain for hexside crossed by LOS
         int hexside=status.currentHex.getLocationHexside(status.currentHex.getNearestLocation(status.currentCol, status.currentRow));
@@ -5363,23 +5699,7 @@ public class Map  {
                         if (checkHexsideTerrainRule(status, result)) {
                             return true;
                         }
-                            /*if (isBlindHex(status, checkhexside.getHeight()+ heightadj)) {
 
-                                status.reason = "Source or Target location is in a blind hex (B9.52)";
-                                status.blocked = true;
-                                result.setBlocked(status.currentCol, status.currentRow, status.reason);
-                                return true;
-                            }*/
-                        // add hindrance unless range is 1
-                        //if (status.range > 1) {
-                        // add hindrance
-
-
-                        //if (addHindranceHex(status, result)) {
-                        //    return true;
-                        //}
-
-                        //}
                     }
                 }
             }
@@ -5394,10 +5714,10 @@ public class Map  {
         // must be rowhouse wall or IFW to get here
         double sourceadj=0;
         double targetadj=0;
-        if (status.source.getTerrain().isRooftop() && status.source.getBaseHeight() !=1) {
+        if (status.source.getTerrain().isRooftop() && status.source.getLevelInHex() !=1) {
             sourceadj = -1;
         }
-        if (status.target.getTerrain().isRooftop() && status.target.getBaseHeight() !=1) {
+        if (status.target.getTerrain().isRooftop() && status.target.getLevelInHex() !=1) {
             targetadj=-1;
         }
         if (status.currentTerrain.getName().contains("Interior Factory Wall") && (result.isLOSis60Degree() | result.isLOSisHorizontal()) ) {

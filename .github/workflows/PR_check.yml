@@ -7,6 +7,8 @@ on:
   workflow_dispatch:
 
 jobs:
+  #Check if the version was incremented properly
+  #If this is a beta version, this check is skipped
   version-check:
     runs-on: ubuntu-latest
 
@@ -64,10 +66,11 @@ jobs:
             echo "Error: Version ${VERSION} not found in the first 5 lines of release-notes.md."
             exit 1
           fi
-
+  #Run the test_pre_push.sh script which will make sure the
+  #maps in the bdFiles folder match the entries in the v5boardVersions.xml file
   map-script:
-    runs-on: ubuntu-latest
 
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
@@ -78,7 +81,7 @@ jobs:
           chmod +x ./scripts/test_pre_push.sh
           ./scripts/test_pre_push.sh
 
-
+  #Check if the build is successful
   test-build:
     runs-on: ubuntu-latest
 

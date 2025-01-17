@@ -67,9 +67,14 @@ public class CounterMetadataFile {
     protected static final String counterPositionAttribute = "position";
     protected static final String counterCoveredArchAttribute = "ca";
 
+    protected static final String counterRotationAttribute = "rotation";
+    protected static final String counterIsBarrageAttribute = "isBarrage";
+
     // constant values for the counter position attribute
     public static final String counterPositionAbove = "above";
     public static final String getCounterPositionBelow = "below";
+
+
 
     // List of the counter elements
     protected LinkedHashMap<String, CounterMetadata> metadataElements = new LinkedHashMap<String, CounterMetadata>(30);
@@ -150,7 +155,9 @@ public class CounterMetadataFile {
             else if(e.getName().equals(terrainCounterElement)) {
                 counterMetadata = new CounterMetadata(name, CounterMetadata.CounterType.TERRAIN);
                 counterMetadata.setTerrain(e.getAttributeValue(counterTerrainAttribute));
-
+                if (e.getAttribute(counterLevelAttribute) != null) {
+                    counterMetadata.setLevel(e.getAttribute(counterLevelAttribute).getIntValue());
+                }
             }
             else if(e.getName().equals(hexsideCounterElement)) {
                 counterMetadata = new CounterMetadata(name, CounterMetadata.CounterType.HEXSIDE);
@@ -160,7 +167,8 @@ public class CounterMetadataFile {
             }
             else if(e.getName().equals(OBACounterElement)) {
                 counterMetadata = new CounterMetadata(name, CounterMetadata.CounterType.OBA);
-
+                counterMetadata.setRotation(e.getAttribute(counterRotationAttribute).getIntValue());
+                counterMetadata.setIsBarrage(e.getAttribute(counterIsBarrageAttribute).getBooleanValue());
             }
             else if(e.getName().equals(wreckCounterElement)) {
                 counterMetadata = new CounterMetadata(name, CounterMetadata.CounterType.WRECK);
@@ -173,6 +181,7 @@ public class CounterMetadataFile {
                 counterMetadata = new CounterMetadata(name, CounterMetadata.CounterType.BRIDGE);
                 counterMetadata.setHindrance(e.getAttribute(counterHindranceAttribute).getIntValue());
                 counterMetadata.setPosition(e.getAttributeValue(counterPositionAttribute));
+                counterMetadata.setTerrain(e.getAttributeValue((counterTerrainAttribute)));
             }
             else if(e.getName().equals(buildingLevelCounterElement)) {
                 counterMetadata = new CounterMetadata(name, CounterMetadata.CounterType.BUILDING_LEVEL);

@@ -143,13 +143,17 @@ jobs:
       - name: Check if version is beta
         id: check_version
         run: |
-          VERSION=${{ needs.create-release.outputs.VERSION }}
-          if [[ "$VERSION" == *"beta"* ]]; then
-            echo "This is a beta version. Skipping the rest of the workflow as we will not publish to website."
-            exit 0
-          fi
+            VERSION=${{ needs.create-release.outputs.VERSION }}
+            if [[ "$VERSION" == *"beta"* ]]; then
+              echo "This is a beta version. Skipping the rest of the workflow as we will not publish to the website."
+              echo "IS_BETA=true" >> $GITHUB_ENV
+              exit 0
+            else
+              echo "IS_BETA=false" >> $GITHUB_ENV
+            fi
 
       - name: Checkout website repository
+        if: env.IS_BETA != 'true'
         uses: actions/checkout@v4
         with:
           repository: vasl-developers/vasl-website
@@ -157,6 +161,7 @@ jobs:
           ref: gh-pages
 
       - name: Checkout main repository
+        if: env.IS_BETA != 'true'
         uses: actions/checkout@v4
         with:
           repository: vasl-developers/vasl
@@ -165,6 +170,7 @@ jobs:
 
 
       - name: Update download.htm
+        if: env.IS_BETA != 'true'
         run: |
           VERSION=${{ needs.create-release.outputs.VERSION }}
           DOWNLOAD_LINK=${{ needs.create-release.outputs.DOWNLOAD_LINK }}
@@ -183,13 +189,13 @@ jobs:
           sed -i "/<div class='well table'>/h; \$!b; x; s@</div>@${NEW_DIV}</div>@; x; P; D" download.htm
 
       - name: Wait for manual approval
-        if: always()
+        if: always() && env.IS_BETA != 'true'
         uses: peter-evans/repository-dispatch@v2
         with:
           event-type: manual-approval
 
-      - name: Commit and push changes (after approval)
-        if: ${{ github.event.inputs.approval == 'approved' }}
+      - name: Commit and push changes (after approval_
+        if: ${{ github.event.inputs.approval == 'approved' }} && env.IS_BETA != 'true'
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"

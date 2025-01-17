@@ -31,6 +31,8 @@ public class CounterMetadata {
         level - denotes location level
         position - for location denotes if pieces above/below the counter are in the location.
         coverArch - covered arch of location
+        rotation - used only for Barrage, rotation of Barrage counter
+        isBarrange - used for OBA/Barrage
 
      */
     private String name;
@@ -41,6 +43,8 @@ public class CounterMetadata {
     private int level;
     private String position;
     private int coverArch;
+    private int rotation;
+    private boolean isBarrage;
 
     public static enum CounterType {SMOKE, WRECK, OBA, TERRAIN, IGNORE, BUILDING_LEVEL, CREST, ROOF, ENTRENCHMENT, CLIMB, BRIDGE, HEXSIDE}
 
@@ -152,4 +156,33 @@ public class CounterMetadata {
     public void setPosition(String position) {
         this.position = position;
     }
+
+    /**
+     * @return the rotation for Barrage/OBA
+     */
+    public int getRotation() {
+        return rotation;
+    }
+
+    /**
+     * Set the rotation for Barrage/OBA
+     */
+    public void setRotation(int rotation) {
+        this.rotation = rotation;
+    }
+
+    /**
+     * @return is Barrage
+     */
+    public boolean getIsBarrage() {
+        return isBarrage;
+    }
+
+    /**
+     * Set is Barrage
+     */
+    public void setIsBarrage(boolean isBarrage) {
+        this.isBarrage = isBarrage;
+    }
+
 }

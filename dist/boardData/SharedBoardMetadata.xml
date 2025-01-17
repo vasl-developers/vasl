@@ -564,10 +564,12 @@
 		<!-- 21 Jan 15 - DS - Added missing PTO colors  -->
 		<color name="BocageGreen" red="62" green="90" blue="47" terrain="Bocage" elevation="UNKNOWN" />
 		<color name="BocageBrown" red="176" green="145" blue="70" terrain="Bocage" elevation="UNKNOWN" />
+		<color name="BocageBrownL_1" red="182" green="145" blue="66" terrain="Bocage" elevation="-1" />
 		<color name="BocageBrownL0" red="176" green="145" blue="70" terrain="Bocage" elevation="0" />
 		<color name="BocageBrownL1" red="149" green="113" blue="33" terrain="Bocage" elevation="1" />
 		<color name="BocageBrownL2" red="123" green="92" blue="27" terrain="Bocage" elevation="2" />
 		<color name="BocageBrownL3" red="92" green="64" blue="4" terrain="Bocage" elevation="3" />
+
 		<!-- Bridges  -->
 		<color name="BridgeBrown" red="153" green="99" blue="43" terrain="Single Hex Stone Bridge" elevation="UNKNOWN" />
 		<color name="BridgeGrey1" red="159" green="157" blue="157" terrain="Single Hex Stone Bridge" elevation="UNKNOWN" />

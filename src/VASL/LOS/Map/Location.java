@@ -28,7 +28,7 @@ public class Location {
 
 	// property variables
 	private String  	name;
-	private int			baseHeight;
+	private int levelInHex;
 	private Point		LOSPoint;
 	private Point		auxLOSPoint;	//auxiliary LOS point for bypass locations
 	private Point		edgeCenterPoint;
@@ -43,17 +43,9 @@ public class Location {
 	public	String  getName(){return name;}
 	public	void 	setName(String newName) {name = newName;}
 
-    public Location(
-            String n,
-            int hgt,
-            Point LOSpt,
-            Point auxLOSpt,
-            Point edgept,
-            Hex hex,
-            Terrain terr) {
-
+    public Location(String n, int locationlevel, Point LOSpt, Point auxLOSpt, Point edgept, Hex hex, Terrain terr) {
         name			= n;
-        baseHeight		= hgt;
+        levelInHex = locationlevel;
         LOSPoint		= LOSpt;
         auxLOSPoint		= auxLOSpt;
         edgeCenterPoint	= edgept;
@@ -62,22 +54,19 @@ public class Location {
     }
 
     public Location(Location l) {
-
         // use the same points
         LOSPoint		= (Point) l.getLOSPoint().clone();
         auxLOSPoint		= (Point) l.getAuxLOSPoint().clone();
         edgeCenterPoint	= (Point) l.getEdgeCenterPoint().clone();
-
         hex				= l.getHex();
-
         copyLocation(l);
     }
 
     public Location(){}
 
-	public	int	 	getBaseHeight() {return baseHeight;}
-	public	void	setBaseHeight(int newBaseHeight) {baseHeight = newBaseHeight;}
-	public	int	 	getAbsoluteHeight() {return baseHeight + hex.getBaseHeight();}
+	public	int getLevelInHex() {return levelInHex;}
+	public	void setLevelInHex(int newLevelInHex) {levelInHex = newLevelInHex;}
+	public	int	 	getAbsoluteHeight() {return levelInHex + hex.getBaseLevelofHex();}
 
 	public Terrain  getTerrain() {return terrain;}
 	public	void 	setTerrain(Terrain newTerrain) {terrain = newTerrain;}
@@ -90,37 +79,14 @@ public class Location {
 
 	public Terrain  getDepressionTerrain(){ return depressionTerrain;}
 	public	void	setDepressionTerrain(Terrain newDepressionTerrain){
-
-		// removing depression terrain?
-		if (newDepressionTerrain == null){
-
-			// ensure the location base elevation is the same as the center
-			if(hex.getCenterLocation().isDepressionTerrain()){
-				baseHeight = 1;
-			}
-			else {
-				baseHeight = 0;
-			}
-		}
-
-		// adding depression terrain?
-		else if (depressionTerrain == null) {
-
-			// set the location height same as center
-			baseHeight = 0;
-
-		}
-
 		depressionTerrain = newDepressionTerrain;
 	}
 
 	public	boolean	isDepressionTerrain() {
-
         return (depressionTerrain != null);
 	}
 
 	public	boolean	isCenterLocation() {
-
 			return hex.isCenterLocation(this);
 	}
 
@@ -130,24 +96,35 @@ public class Location {
 	public Location getDownLocation() {return downLocation;}
 	public	void	setDownLocation(Location newDownLocation) {downLocation = newDownLocation;}
 
-	public void copyLocation(Location l) {
+	public Location getNextLevelLocation(String upOrDown) {
+		if (upOrDown.equals("up")) {
+			return getUpLocation();
+		}
+		else if (upOrDown.equals("down")) {
+			return getDownLocation();
+		}
+		return null;
+	}
+	public void setNextLevelLocation (Location nextLocation, String upOrDown) {
+		if (upOrDown.equals("up")) {
+			setUpLocation(nextLocation);
+		} else if (upOrDown.equals("down")) {
+			setDownLocation(nextLocation);
+		}
+	}
 
-		// copy the flags
-		baseHeight 		= l.getBaseHeight();
+	public void copyLocation(Location l) {
 
 		// copy name, terrain values
 		name				= l.getName();
-		baseHeight			= l.getBaseHeight();
+		levelInHex 			= l.getLevelInHex();
 		terrain 			= l.getTerrain();
 		depressionTerrain 	= l.getDepressionTerrain();
 	}
 
     public boolean auxLOSPointIsCloser(int x, int y) {
-
         return Point.distance(x, y, LOSPoint.x, LOSPoint.y) >
                Point.distance(x, y, auxLOSPoint.x, auxLOSPoint.y);
-
-        }
-
+    }
 }
 

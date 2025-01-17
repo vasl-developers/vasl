@@ -99,6 +99,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
     private Color hindranceColor;
     private Color blockedColor;
     private double magnification;
+
     private void setGridSnapToVertex(boolean toVertex) {
         for (Board b : map.getBoards()) {
             HexGrid grid =
@@ -363,12 +364,11 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         if(source.getHex().isDepressionTerrain() && !source.getLOSPoint().equals(source.getHex().getHexCenter())) {
             leveladj=+1;
         }
-        sourcelevel= source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj ;
+        sourcelevel= source.getAbsoluteHeight() +leveladj;                  //getLevelInHex() + source.getHex().getBaseLevelofHex() + leveladj ;
 
         // make the source and the target the same
         target = source;
         useAuxTargetLOSPoint = useAuxSourceLOSPoint;
-
     }
 
     /**
@@ -486,7 +486,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             if(target.getHex().isDepressionTerrain() && !target.getLOSPoint().equals(target.getHex().getHexCenter())){
                 leveladj=+1;
             }
-            targetlevel= target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj ;
+            targetlevel = target.getAbsoluteHeight() + leveladj;               //getLevelInHex() + target.getHex().getBaseLevelofHex() + leveladj;
 
         }
         super.mouseDragged(e);
@@ -608,67 +608,31 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             if (losOnOverlay) {
                 // if crosses overlay draw straight line in default color
                 g.setColor(LOSColor);
-                g.drawLine(
-                        sourceLOSPoint.x,
-                        sourceLOSPoint.y,
-                        targetLOSPoint.x,
-                        targetLOSPoint.y);
+                g.drawLine(sourceLOSPoint.x, sourceLOSPoint.y, targetLOSPoint.x, targetLOSPoint.y);
             }
             else {
                 if (result.isBlocked()) {
                     if (result.hasHindrance()) {
                         g.setColor(LOSColor);
-                        g.drawLine(
-                                sourceLOSPoint.x,
-                                sourceLOSPoint.y,
-                                h.x,
-                                h.y);
+                        g.drawLine(sourceLOSPoint.x, sourceLOSPoint.y, h.x, h.y);
                         g.setColor(hindranceColor);
-                        g.drawLine(
-                                h.x,
-                                h.y,
-                                b.x,
-                                b.y);
+                        g.drawLine(h.x, h.y, b.x, b.y);
                         g.setColor(blockedColor);
-                        g.drawLine(
-                                b.x,
-                                b.y,
-                                targetLOSPoint.x,
-                                targetLOSPoint.y);
+                        g.drawLine(b.x, b.y, targetLOSPoint.x, targetLOSPoint.y);
                     } else {
                         g.setColor(LOSColor);
-                        g.drawLine(
-                                sourceLOSPoint.x,
-                                sourceLOSPoint.y,
-                                b.x,
-                                b.y);
+                        g.drawLine(sourceLOSPoint.x, sourceLOSPoint.y, b.x, b.y);
                         g.setColor(blockedColor);
-                        g.drawLine(
-                                b.x,
-                                b.y,
-                                targetLOSPoint.x,
-                                targetLOSPoint.y);
+                        g.drawLine(b.x, b.y, targetLOSPoint.x, targetLOSPoint.y);
                     }
                 } else if (result.hasHindrance()) {
                     g.setColor(LOSColor);
-                    g.drawLine(
-                            sourceLOSPoint.x,
-                            sourceLOSPoint.y,
-                            h.x,
-                            h.y);
+                    g.drawLine(sourceLOSPoint.x, sourceLOSPoint.y, h.x, h.y);
                     g.setColor(hindranceColor);
-                    g.drawLine(
-                            h.x,
-                            h.y,
-                            targetLOSPoint.x,
-                            targetLOSPoint.y);
+                    g.drawLine(h.x, h.y, targetLOSPoint.x, targetLOSPoint.y);
                 } else {
                     g.setColor(LOSColor);
-                    g.drawLine(
-                            sourceLOSPoint.x,
-                            sourceLOSPoint.y,
-                            targetLOSPoint.x,
-                            targetLOSPoint.y);
+                    g.drawLine(sourceLOSPoint.x, sourceLOSPoint.y, targetLOSPoint.x, targetLOSPoint.y);
                 }
             }
             // use the draw range property to turn all text on/off
@@ -678,7 +642,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                 final int shift = g.getFontMetrics().getHeight();
 
                 // draw the source elevation
-                switch (source.getBaseHeight() + source.getHex().getBaseHeight()) {
+                switch (source.getLevelInHex() + source.getHex().getBaseLevelofHex()) {
                     case -1:
                     case -2:
                         g.setColor(Color.red);
@@ -720,11 +684,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                         int overlayHeight = (int)(draggableOverlay.boundingBox().height * ovrZoom);
                         Point overlayCenter = new Point((int)(draggableOverlay.getPosition().x * ovrZoom), (int) (draggableOverlay.getPosition().y * ovrZoom));
 
-                        g.drawRect(
-                                overlayCenter.x - overlayWidth/2,
-                                overlayCenter.y - overlayHeight/2,
-                                overlayWidth,
-                                overlayHeight);
+                        g.drawRect(overlayCenter.x - overlayWidth/2,overlayCenter.y - overlayHeight/2, overlayWidth, overlayHeight);
                     }
 
                     g.setColor(oldcolor);
@@ -748,7 +708,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                                 sourceLOSPoint.x - 20,
                                 sourceLOSPoint.y - sourceLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) - (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
                                 source.getName() + "  (" + sourcelevelString + ")");
-                    } else if (source.getBaseHeight() != 0) {
+                    } else if (source.getLevelInHex() != 0) {
                         lastRangeRect = drawText(g,
                                 sourceLOSPoint.x - 20,
                                 sourceLOSPoint.y - sourceLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) -  (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
@@ -756,7 +716,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                     }
 
                     // draw the target elevation
-                    switch (target.getBaseHeight() + target.getHex().getBaseHeight()) {
+                    switch (target.getLevelInHex() + target.getHex().getBaseLevelofHex()) {
                         case -1:
                         case -2:
                             g.setColor(Color.red);
@@ -785,7 +745,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                                 targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), //- 20,
                                 targetLOSPoint.y + targetLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
                                 target.getName() + "  (" + targetlevelString + ")"));
-                    } else if (target.getBaseHeight() != 0) {
+                    } else if (target.getLevelInHex() != 0) {
                         lastRangeRect.add(drawText(g,
                                 targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), //- 20,
                                 targetLOSPoint.y + targetLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
@@ -824,105 +784,69 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             return;
         }
         final int code = e.getKeyCode();
-        // move up
-        if (code == KeyEvent.VK_KP_UP || code == KeyEvent.VK_UP) {
-            e.consume(); // prevents the map from scrolling when trying to move end point
-            double leveladj=0;
-            // move the source up
-            if (e.isControlDown() && source != null) {
-                if (source.getUpLocation() != null) {
-                    source = source.getUpLocation();
-                }else if (source.getBaseHeight()<10) {
-                    source.getHex().setvirtualLocation(source.getBaseHeight() + 1, source, "Up");
-                    source = source.getUpLocation();
-                }
-                leveladj=0;
-                if(source.getName().contains("Rooftop") && source.getBaseHeight() !=1) {
-                    //if (!source.getDownLocation().getTerrain().getName().equals("Wooden Building") || source.getBaseHeight() !=1 ) {  // exception to handle Wooden Warehouses in bdRO
-                        leveladj = -0.5;
-                    //}
-                }
-                if(source.getHex().isDepressionTerrain() && !source.getLOSPoint().equals(source.getHex().getHexCenter())) {
-                    leveladj=+1;
-                }
-                sourcelevel= source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj ;
-                doLOS();
-                map.repaint();
+        e.consume(); // prevents the map from scrolling when trying to move end point
+        String levelchangedirection = "";
+        Location levelchangelocation = null;
+        if (code == KeyEvent.VK_KP_UP || code == KeyEvent.VK_UP) {  // set the direction (up/down)
+            levelchangedirection = "up";
+        }
+        else if (code == KeyEvent.VK_KP_DOWN || code == KeyEvent.VK_DOWN) {
+            levelchangedirection = "down";
+        }
+        levelchangelocation = (e.isControlDown() && source != null ? source : target);  // set the source or target
+        if (levelchangelocation == null || levelchangedirection == "") {return;}
+        processLevelChange(levelchangelocation, levelchangedirection);
+        doLOS();
+        map.repaint();
+        VASLLOSCommand vasllosCommand= new VASLLOSCommand(this, this.getAnchor(), this.getArrow(), true, false, sourcelevel,   targetlevel);
+        GameModule.getGameModule().sendAndLog(vasllosCommand);
+    }
+
+    public void processLevelChange(Location levelchangelocation, String levelchangedirection){
+        double leveladj = 0; int virtualleveladj = 0; int depressionadj = 0; int baseleveladj = 0; String sourceortarget = "";
+
+        if (levelchangelocation.getNextLevelLocation(levelchangedirection) != null) {  // upper level exists already
+            levelchangelocation = levelchangelocation.getNextLevelLocation(levelchangedirection);
+            if (levelchangelocation.equals(levelchangelocation.getHex().getCenterLocation())) {
+                baseleveladj = levelchangelocation.getHex().getBaseLevelofHex();
             }
-            // move the target up
-            else if (target != null) {
-                if (target.getUpLocation() != null) {
-                    target = target.getUpLocation();
-                }else if (target.getBaseHeight()<10){
-                    target.getHex().setvirtualLocation( target.getBaseHeight()+1, target, "Up");
-                    target = target.getUpLocation();
-                }
-                leveladj=0;
-                if(target.getName().contains("Rooftop") &&  target.getBaseHeight() !=1){
-                    //if (!target.getDownLocation().getTerrain().getName().equals("Wooden Building") || target.getBaseHeight() !=1) {  // exception to handle Wooden Warehouses in bdRO
-                        leveladj = -0.5;
-                    //}
-                }
-                if(target.getHex().isDepressionTerrain() && !target.getLOSPoint().equals(target.getHex().getHexCenter())) {
-                    leveladj=+1;
-                }
-                targetlevel= target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj ;
-                doLOS();
-                map.repaint();
+            // handle special cases
+            if (levelchangelocation.getName().contains("Rooftop") && levelchangelocation.getLevelInHex() != 1) {
+                leveladj = -0.5;
             }
         }
-        // move down
-        else if (code == KeyEvent.VK_KP_DOWN || code == KeyEvent.VK_DOWN) {
-            e.consume();
-            double leveladj=0;
-            // move the source down
-            if (e.isControlDown() && source != null) {
-                if (source.getDownLocation() != null) {
-                    source = source.getDownLocation();
-                }else if (source.getBaseHeight()>-3){
-                    source.getHex().setvirtualLocation(source.getBaseHeight() - 1, source, "Down");
-                    source = source.getDownLocation();
-                }
-                leveladj=0;
-                if(source.getName().contains("Rooftop") && source.getBaseHeight() !=1) {
-                    leveladj=-0.5;
-                }
-                if(source.getHex().isDepressionTerrain() && !source.getLOSPoint().equals(source.getHex().getHexCenter())) {
-                    leveladj=+1;
-                }
-                sourcelevel= source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj ;
-                doLOS();
-                map.repaint();
-            }
-            // move the target down
-            else if (target != null) {
-                if (target.getDownLocation() != null) {
-                    target = target.getDownLocation();
-                }else if (target.getBaseHeight()>-3){
-                    target.getHex().setvirtualLocation(target.getBaseHeight() - 1, target, "Down");
-                    target = target.getDownLocation();
-                }
-                leveladj=0;
-                if(target.getName().contains("Rooftop") && target.getBaseHeight() !=1) {
-                    leveladj=-0.5;
-                }
-                if(target.getHex().isDepressionTerrain() && !target.getLOSPoint().equals(target.getHex().getHexCenter())) {
-                    leveladj=+1;
-                }
-                targetlevel= target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj ;
-                doLOS();
-                map.repaint();
+        else if (-3 < levelchangelocation.getLevelInHex() && levelchangelocation.getLevelInHex() <10) {   // no upper level so create virtual levels up to 10
+            virtualleveladj = (levelchangedirection.equals("up") ? 1 : -1);
+            // handle special cases
+
+            levelchangelocation.getHex().setvirtualLocation(levelchangelocation.getLevelInHex() + virtualleveladj + leveladj + depressionadj, levelchangelocation, levelchangedirection);
+            levelchangelocation = (levelchangedirection.equals("up") ? levelchangelocation.getUpLocation() : levelchangelocation.getDownLocation());
+            depressionadj = 0;
+        }
+        if (levelchangelocation.getHex().equals(source.getHex())) {
+                sourcelevel = levelchangelocation.getAbsoluteHeight() + leveladj;                                         //levelchangelocation.getLevelInHex() + depressionadj + baseleveladj + leveladj;     //levelchangelocation.getBaseHeight() + levelchangelocation.getHex().getBaseHeight() + leveladj;
+                source = levelchangelocation;
+        }
+        else {
+                targetlevel = levelchangelocation.getAbsoluteHeight() + leveladj;            //levelchangelocation.getLevelInHex() + depressionadj + baseleveladj + leveladj;
+                target = levelchangelocation;
+        }
+    }
+
+    /*private double getSourceOrTargetCounterLevelValue(String sourceortarget){
+        //need to add test for bridge counter
+        if (sourceortarget.equals("source")) {
+            if (VASLGameInterface.getLevel(source.getHex()) != -99) {
+                return VASLGameInterface.getLevel(source.getHex());
             }
         }
         else {
-            return;
+            if (VASLGameInterface.getLevel(target.getHex()) != -99) {
+                return VASLGameInterface.getLevel(target.getHex());
+            }
         }
-
-        VASLLOSCommand vasllosCommand= new VASLLOSCommand(this, this.getAnchor(), this.getArrow(), true, false, sourcelevel,   targetlevel);
-        GameModule.getGameModule().sendAndLog(vasllosCommand);
-
-    }
-
+        return -99;
+    };*/
     private static boolean useAuxLOSPoint(Location l, int x, int y) {
 
         final Point LOSPoint = l.getLOSPoint();
@@ -1082,7 +1006,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                     leveladj = +1;
                 }
             }
-            sourcelevel = source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj;
+            sourcelevel =  source.getAbsoluteHeight() + leveladj;          //source.getLevelInHex() + source.getHex().getBaseLevelofHex() + leveladj;
             while (newsourceLevel < sourcelevel) {
                 if (source.getDownLocation() == null) {
                     break;
@@ -1097,7 +1021,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                     leveladj = +1;
                 }
             }
-            sourcelevel = source.getBaseHeight() + source.getHex().getBaseHeight() + leveladj;
+            sourcelevel = source.getAbsoluteHeight() + leveladj;                //source.getLevelInHex() + source.getHex().getBaseLevelofHex() + leveladj;
             while (newtargetLevel > targetlevel) {
                 if (target.getUpLocation() == null) {
                     break;
@@ -1112,7 +1036,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                     leveladj = +1;
                 }
             }
-            targetlevel = target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj;
+            targetlevel = target.getAbsoluteHeight() + leveladj;                //target.getLevelInHex() + target.getHex().getBaseLevelofHex() + leveladj;
             while (newtargetLevel < targetlevel) {
                 if (target.getDownLocation() == null) {
                     break;
@@ -1127,7 +1051,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                     leveladj = +1;
                 }
             }
-            targetlevel = target.getBaseHeight() + target.getHex().getBaseHeight() + leveladj;
+            targetlevel = target.getAbsoluteHeight() + leveladj;     //target.getLevelInHex() + target.getHex().getBaseLevelofHex() + leveladj;
         }
     }
 
@@ -1147,17 +1071,6 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
 
             // this is for the new draggable overlays
             for (GamePiece p : draggableOverlays) {
-                //while (p instanceof Decorator) {
-                //    p = ((Decorator)p).getInner(); // Traverse inwards toward BasicPiece
-                //}
-                //if (p instanceof BasicPiece) { // Make sure we didn't start with a Stack or Deck (or null)
-                //    final BasicPiece bp = (BasicPiece) p;
-                //    SortedSet<String> imageNames = bp.getAllImageNames();
-
-                    //BufferedImage bi = new BufferedImage(i.getWidth(), i.getHeight(),
-                    //        BufferedImage.TYPE_INT_ARGB);
-
-                //}
 
                 int overlayWidth  = p.boundingBox().width;
                 int overlayHeight = p.boundingBox().height;

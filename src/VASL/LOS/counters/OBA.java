@@ -29,15 +29,21 @@ public class OBA extends Counter {
     private Hex hex;
     private int blastHeight = 2;
     private int blastAreaRadius = 1;
-
+    private int rotation = 1;
+    private boolean isBarrage = false;
     /**
      * Create an OBA counter
      * @param name the counter name
      * @param hex the hex location of the counter
      */
-    public OBA(String name, Hex hex){
+    public OBA(String name, Hex hex, int rotation, boolean isBarrage) {
         super(name);
         this.hex = hex;
+        this.rotation = rotation;
+        this.isBarrage = isBarrage;
+        if (name.contains("Bombardment")) {
+            blastAreaRadius = (name.contains("Small") ? 2 : 3);
+        }
     }
 
     /**
@@ -60,4 +66,7 @@ public class OBA extends Counter {
     public int getBlastAreaRadius(){
         return blastAreaRadius;
     }
+    public int getRotation(){return rotation;}
+    public boolean getisBarrage(){return isBarrage;}
+
 }

@@ -5,11 +5,9 @@ import VASL.build.module.map.boardArchive.BoardArchive;
 import VASL.build.module.map.boardArchive.SharedBoardMetadata;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Vector;
 
 
@@ -275,9 +273,9 @@ public class LOSDataEditor {
                         Hex oppositeHex = map.getAdjacentHex(hex, hex.getLocationHexside(hex.getNearestLocation(x, y)));
 
                         if (oppositeHex == null) {
-                            map.setGridElevation(hex.getBaseHeight(), x, y);
+                            map.setGridElevation(hex.getBaseLevelofHex(), x, y);
                         } else {
-                            map.setGridElevation(Math.min(hex.getBaseHeight(), oppositeHex.getBaseHeight()), x, y);
+                            map.setGridElevation(Math.min(hex.getBaseLevelofHex(), oppositeHex.getBaseLevelofHex()), x, y);
                         }
                     }
                 }
@@ -344,7 +342,7 @@ public class LOSDataEditor {
                 if (map.getGridTerrain(x, y).getName().equals("Sunken Road")) {
 
                     // fix elevated roads
-                    if (map.gridToHex(x, y).getBaseHeight() == 1) {
+                    if (map.gridToHex(x, y).getBaseLevelofHex() == 1) {
                         map.setGridElevation(1, x, y);
                         map.setGridTerrainCode(map.getTerrain("Elevated Road").getType(), x, y);
                     }
@@ -633,9 +631,9 @@ public class LOSDataEditor {
 
                         // if we're already a depression, use the current elevation
                         if (currentHex.isDepressionTerrain()) {
-                            map.setGridElevation(currentHex.getBaseHeight(), x, y);
+                            map.setGridElevation(currentHex.getBaseLevelofHex(), x, y);
                         } else {
-                            map.setGridElevation(currentHex.getBaseHeight() - 1, x, y);
+                            map.setGridElevation(currentHex.getBaseLevelofHex() - 1, x, y);
                         }
                     } else {
                         map.setGridElevation(newElevation, x, y);
@@ -729,10 +727,10 @@ public class LOSDataEditor {
                 for (int row = 0; row < map.getHeight(); row++) { // no extra hex for boards where each col has same number of rows (eg RO)
                     Hex[][] hexGrid = map.getHexGrid();
 
-                    if (hexGrid[col][row].getBaseHeight() == fromElevation &&
+                    if (hexGrid[col][row].getBaseLevelofHex() == fromElevation &&
                         hexGrid[col][row].getHexBorder().intersects(s.getBounds())) {
 
-                        hexGrid[col][row].setBaseHeight(toElevation);
+                        hexGrid[col][row].setBaseLevelofHex(toElevation);
                         changed = true;
                     }
                 }
@@ -743,10 +741,10 @@ public class LOSDataEditor {
 
                     Hex[][] hexGrid = map.getHexGrid();
 
-                    if (hexGrid[col][row].getBaseHeight() == fromElevation &&
+                    if (hexGrid[col][row].getBaseLevelofHex() == fromElevation &&
                         hexGrid[col][row].getHexBorder().intersects(s.getBounds())) {
 
-                        hexGrid[col][row].setBaseHeight(toElevation);
+                        hexGrid[col][row].setBaseLevelofHex(toElevation);
                         changed = true;
                     }
                 }

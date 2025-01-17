@@ -50,42 +50,28 @@ public class Bridge {
 
 	// constructors
 	public Bridge(
-		Terrain newTerrain,
-		int			newRoadLevel,
-		int			newRotation,
-		Location	newLocation,
-		boolean     newSingleHex,
-		Point       newCenter
-	) {
+		Terrain newTerrain, int	newRoadLevel, Location newLocation, boolean newSingleHex, Point newCenter) {
 
 		terrain			= newTerrain;
 		roadLevel		= newRoadLevel;
-		rotation		= newRotation;
 		location		= newLocation;
 		singleHex		= newSingleHex;
 		center          = newCenter;
 
-		setShape();
-		setRoadShape();
+		//setShape();
+		//setRoadShape();
 	}
 
-	public Bridge(
-		Terrain newTerrain,
-		int			newRoadLevel,
-		int			newRotation,
-		Location	newLocation,
-		boolean     newSingleHex
-	) {
+	public Bridge(Terrain newTerrain, int newRoadLevel, Location newLocation, boolean newSingleHex) {
 
 		terrain			= newTerrain;
 		roadLevel		= newRoadLevel;
-		rotation		= newRotation;
 		location		= newLocation;
 		singleHex		= newSingleHex;
 		center          = new Point(0, 0);
 
-		setShape();
-		setRoadShape();
+		//setShape();
+		//setRoadShape();
 	}
 
 	public Terrain getTerrain(){ return terrain;}

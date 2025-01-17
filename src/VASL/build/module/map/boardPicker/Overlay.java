@@ -537,7 +537,7 @@ public class Overlay implements Cloneable {
         try {
             losmap= board.getVASLBoardArchive().getLOSData("Normal", false);
             if (losmap==null){return;}
-            hex1elevation = losmap.getHex(hex1).getBaseHeight();
+            hex1elevation = losmap.getHex(hex1).getBaseLevelofHex();
         } catch (Exception e) {
             return;
         }

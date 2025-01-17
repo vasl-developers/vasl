@@ -660,7 +660,7 @@ public class VASLBoard extends ASLBoard {
                             upcheck = upcheck.getUpLocation();
                         }
                         if (upcheck.getTerrain().isRooftop()) {
-                            upcheck.setBaseHeight(1);
+                            upcheck.setLevelInHex(1);
                             nextcheck=null;
                             upcheck.setDownLocation(loctocheck);
                             loctocheck.setUpLocation(upcheck);
@@ -853,9 +853,9 @@ public class VASLBoard extends ASLBoard {
                     cliffHex = LOSData.gridToHex(x, y);
                     // change GridElevation
                     int cliffside = cliffHex.getLocationHexside(cliffHex.getNearestLocation(x, y));
-                    int currentHexelevation = cliffHex.getBaseHeight();
+                    int currentHexelevation = cliffHex.getBaseLevelofHex();
                     oppHex = LOSData.getAdjacentHex(cliffHex, cliffside);
-                    int oppHexelevation = oppHex.getBaseHeight();
+                    int oppHexelevation = oppHex.getBaseLevelofHex();
                     LOSData.setGridElevation(Math.min(currentHexelevation, oppHexelevation), x, y);
                 }
             }

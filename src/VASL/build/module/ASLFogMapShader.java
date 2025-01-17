@@ -113,7 +113,7 @@ public class ASLFogMapShader extends MapShader {
 
     for (Hex[] row:hexes) {
       for (Hex hex :row) {
-        if( hex.getBaseHeight() <= _fogLevel.fogHeight()) {
+        if( hex.getBaseLevelofHex() <= _fogLevel.fogHeight()) {
           Polygon finalHexPolygon = new Polygon(hex.getHexBorder().xpoints,  hex.getHexBorder().ypoints, hex.getHexBorder().npoints);
 
           // offset to the actual board rather than draw from 0,0 on the Map.

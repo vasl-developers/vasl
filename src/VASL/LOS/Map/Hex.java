@@ -36,7 +36,7 @@ public class Hex {
 	private	String	name;
 	private	int		columnNumber;
 	private	int		rowNumber;
-	private	int		baseHeight;
+	private	int baseLevelofHex;
 	private	boolean northOnMap		= true;
 	private	boolean northEastOnMap  = true;
 	private	boolean southEastOnMap  = true;
@@ -62,8 +62,7 @@ public class Hex {
 	private	boolean[] hexsideHasCliff  = new boolean[6];
 
 	// other stuff
-    //TODO: bridge object no longer used
-	private	Bridge	bridge;
+    private Bridge	bridge;
     private	boolean stairway;
 
     private double hexWidth;
@@ -79,12 +78,12 @@ public class Hex {
      * @param hexHeight hex height
      * @param hexWidth hex width
      * @param map the map
-     * @param baseHeight base height/elevation
+     * @param baseLevelofHex base elevation of hex
      * @param terrain default terrain used for all locations
      */
-    public Hex(int col, int row, String name, Point2D.Double centerDot, double hexHeight, double hexWidth, Map map, int baseHeight, Terrain terrain) {
+    public Hex(int col, int row, String name, Point2D.Double centerDot, double hexHeight, double hexWidth, Map map, int baseLevelofHex, Terrain terrain) {
 
-		this.baseHeight = baseHeight;
+		this.baseLevelofHex = baseLevelofHex;
 		columnNumber = col;
 		rowNumber	= row;
 		this.map	= map;
@@ -180,7 +179,7 @@ public class Hex {
         // create center and hexside locations
         centerLocation = new Location(
                 name,
-                baseHeight,
+                baseLevelofHex,
                 getHexCenter(),
                 getHexCenter(),
                 getHexCenter(),
@@ -190,7 +189,7 @@ public class Hex {
 
         hexsideLocations[0] = new Location(
                 name + ":North",
-                baseHeight,
+                baseLevelofHex,
                 new Point((int)vertexPoints[0].getX(),
                         (int)vertexPoints[0].getY()),
                 new Point((int)vertexPoints[1].getX(),
@@ -203,7 +202,7 @@ public class Hex {
 
         hexsideLocations[1] = new Location(
                 name +  ":NorthEast",
-                baseHeight,
+                baseLevelofHex,
                 new Point((int)vertexPoints[1].getX(),
                         (int)vertexPoints[1].getY()),
                 new Point((int)vertexPoints[2].getX(),
@@ -216,7 +215,7 @@ public class Hex {
 
         hexsideLocations[2] = new Location(
                 name +  ":SouthEast",
-                baseHeight,
+                baseLevelofHex,
                 new Point((int)vertexPoints[2].getX(),
                         (int)vertexPoints[2].getY()),
                 new Point((int)vertexPoints[3].getX(),
@@ -229,7 +228,7 @@ public class Hex {
 
         hexsideLocations[3] = new Location(
                 name +  ":South",
-                baseHeight,
+                baseLevelofHex,
                 new Point((int)vertexPoints[3].getX(),
                         (int)vertexPoints[3].getY()),
                 new Point((int)vertexPoints[4].getX(),
@@ -242,7 +241,7 @@ public class Hex {
 
         hexsideLocations[4] = new Location(
                 name +  ":SouthWest",
-                baseHeight,
+                baseLevelofHex,
                 new Point((int)vertexPoints[4].getX(),
                         (int)vertexPoints[4].getY()),
                 new Point((int)vertexPoints[5].getX(),
@@ -255,7 +254,7 @@ public class Hex {
 
         hexsideLocations[5] = new Location(
                 name +  ":NorthWest",
-                baseHeight,
+                baseLevelofHex,
                 new Point((int)vertexPoints[5].getX(),
                         (int)vertexPoints[5].getY()),
                 new Point((int)vertexPoints[0].getX(),
@@ -391,8 +390,6 @@ public class Hex {
         }
     }
 
-
-
 	// used to update the hexside location once the map has been fully initialized
 	public void resetHexsideLocationNames(){
 
@@ -410,28 +407,10 @@ public class Hex {
 	// bridge methods
 	public Bridge  getBridge(){ return bridge;}
 	public void    setBridge(Bridge bridge){
-
 		this.bridge = bridge;
-
-		// create the new bridge location
-		final Location l = new Location(
-			name + ":Bridge",
-			bridge.getRoadLevel() - baseHeight,
-			new Point((int) center.getX(), (int)center.getY()),
-			new Point((int) center.getX(), (int)center.getY()),
-			new Point((int) center.getX(), (int)center.getY()),
-			this,
-                bridge.getTerrain()
-		);
-		bridge.setLocation(l);
-
-		// set the location up/down pointers
-		l.setDownLocation(centerLocation);
-		centerLocation.setUpLocation(l);
 	}
 
 	public boolean hasBridge(){
-
         return (bridge != null);
 	}
 
@@ -467,16 +446,17 @@ public class Hex {
 	public Polygon  getHexBorder()			{return hexBorder;}
 	public Polygon  getExtendedHexBorder()	{return extendedHexBorder;}
 	public Point	getHexCenter()			{return new Point((int) center.getX(), (int) center.getY());}
-	public int	    getBaseHeight()			{return baseHeight;}
+	public int      getBaseLevelofHex()		{return baseLevelofHex;}
+
 
     private boolean[] slopes = new boolean[6]; // flags for hexsides having slopes - all false by default
-
+    private boolean[] rbrrembankments = new boolean[6]; // flags for hexsides having RB rr embankments - all false by default
+    private boolean[] partialorchards = new boolean[6]; // flags for hexsides having partial orchards - all false by default
     /**
-     * Set the hexside slopes flags
-     * @param slopes the slopes array of length 6 - [0] is the top hexside and the others are clockwise from there
+     * Set the hexside slopes/rrembankment and Partial Orchard flags
+     * [0] is the top hexside and the others are clockwise from there
      */
     public void setSlopes(boolean[] slopes) {
-
         // must be an array of 6 flags;
         if(slopes.length != 6) {
             return;
@@ -484,15 +464,7 @@ public class Hex {
         this.slopes = slopes;
     }
 
-    // code added by DR to enable RB rr embankments and Partial Orchards
-    private boolean[] rbrrembankments = new boolean[6]; // flags for hexsides having RB rr embankments - all false by default
-    private boolean[] partialorchards = new boolean[6]; // flags for hexsides having RB rr embankments - all false by default
-    /**
-     * Set the hexside rrembankment and Partial Orchard flags
-     * [0] is the top hexside and the others are clockwise from there
-     */
     public void setRBrrembankments(boolean[] rbrrembankments) {
-
         // must be an array of 6 flags;
         if(rbrrembankments.length != 6) {
             return;
@@ -500,7 +472,6 @@ public class Hex {
         this.rbrrembankments = rbrrembankments;
     }
     public void setPartialOrchards(boolean[] partialorchards) {
-
         // must be an array of 6 flags;
         if(partialorchards.length != 6) {
             return;
@@ -514,7 +485,10 @@ public class Hex {
     public boolean hasSlope(int hexside) {
         return slopes[hexside];
     }
-
+    public boolean hasRRembankment(int hexside) {
+        return rbrrembankments[hexside];
+    }
+    public boolean hasPartialOrchard(int hexside) {return partialorchards[hexside];}
 	public Location getCenterLocation() { return centerLocation;}
 
 	public void setHexBorder(Polygon newHexBorder) {
@@ -586,7 +560,7 @@ public class Hex {
 		return -1;
 	}
     public Location getSharedHexside(Hex adjacentHex){
-
+        // ToDo complete this method
         return null;
     }
 
@@ -595,11 +569,9 @@ public class Hex {
      * @param terr the depression terrain - pass null to remove depression terrain
      */
     public void setDepressionTerrain(Terrain terr) {
-
 		// change the depression terrain in the center location
 		centerLocation.setDepressionTerrain(terr);
-
-		// if were removing the depression terrain, ensure all hexside
+		// if we are removing the depression terrain (terr == null), ensure all hexside
 		// depression terrain is also removed
 		if (terr == null) {
 			for(int x = 0; x < 6; x++){
@@ -609,7 +581,6 @@ public class Hex {
 	}
 
 	public void setHexsideDepressionTerrain(int side) {
-
 		// change the depression terrain in the hexside location
 		hexsideLocations[side].setDepressionTerrain(centerLocation.getDepressionTerrain());
 	}
@@ -618,7 +589,6 @@ public class Hex {
      * @return true if terrain is depression terrain
      */
     public boolean isDepressionTerrain() {
-
 		return centerLocation.isDepressionTerrain();
 	}
 
@@ -711,7 +681,7 @@ public class Hex {
         }
 
         // set the hex base height
-        setBaseHeight(map.getGridElevation((int) (centerLocation.getLOSPoint().getX()+ gridadj), (int) centerLocation.getLOSPoint().getY()));
+        setBaseLevelofHex(map.getGridElevation((int) (centerLocation.getLOSPoint().getX()+ gridadj), (int) centerLocation.getLOSPoint().getY()));
 
         // next two methods reversed by DR
 
@@ -793,7 +763,7 @@ public class Hex {
     private void fixBridges(double gridadj) {
 
         if(hasBridgeTerrain()) {
-
+            Location bridgeLocation = null;
             // determine if existing location is bridge or depression terrain
 
             if (centerLocation.isDepressionTerrain()) {
@@ -802,9 +772,11 @@ public class Hex {
                 newLocation.setDepressionTerrain(null);
                 newLocation.setTerrain(getBridgeTerrain(gridadj));
                 // elevated road check
-                newLocation.setBaseHeight(getBridgeLocationHeight());
+                int bridgeLevelInHex = getBridgeLocationAbsoluteLevel() - newLocation.getHex().getBaseLevelofHex();
+                newLocation.setLevelInHex(bridgeLevelInHex);
                 newLocation.setDownLocation(centerLocation);
                 centerLocation.setUpLocation(newLocation);
+                bridgeLocation = newLocation;
             }
             else if (centerLocation.getTerrain().isBridge()) {
                 // need to add new depression location
@@ -812,15 +784,15 @@ public class Hex {
                 newLocation.setDepressionTerrain(getDepressionTerrain(gridadj));
                 // added by DR; this is a wonky fix to deal with bridges in non-zero level terrain; not sure why its needed but it works, otherwise bridges and depressions in valleys are two levels apart and those in hills are at same level
                 int depressionadj = 0;
-                if (baseHeight == 0) {
+                if (baseLevelofHex == 0) {
                     depressionadj = 1;
                 } else {
-                    if (baseHeight > 0) {
+                    if (baseLevelofHex > 0) {
                         depressionadj = 2;
                     }
                 }
-
-                newLocation.setBaseHeight(baseHeight - depressionadj);
+                //ToDo check to see if this line is ever used and if it works properly
+                newLocation.setLevelInHex(centerLocation.getLevelInHex() - depressionadj);
                 newLocation.setTerrain(getDepressionTerrain(gridadj));
                 newLocation.setUpLocation(centerLocation);
                 centerLocation.setDownLocation(newLocation);
@@ -829,35 +801,16 @@ public class Hex {
                 // need to add new bridge location
                 final Location newLocation = new Location(centerLocation);
                 newLocation.setDepressionTerrain(null);
-                // added by DR; this is a wonky fix to deal with bridges in non-zero level terrain; not sure why its needed but it works, otherwise bridges and depressions in valleys are two levels apart and those in hills are at same level
-                int depressionadj = 0;
-                if (baseHeight == 0) {
-                    depressionadj = 1;
-                } else {
-                    depressionadj = 2;
-                }
-                newLocation.setBaseHeight(baseHeight + depressionadj);
+                int bridgeLevelInHex = getBridgeLocationAbsoluteLevel() - newLocation.getHex().getBaseLevelofHex();
+                newLocation.setLevelInHex(bridgeLevelInHex);
+                //newLocation.setLevelInHex(baseLevelofHex + depressionadj);
                 newLocation.setTerrain(getBridgeTerrain(gridadj));
                 newLocation.setDownLocation(centerLocation);
                 centerLocation.setUpLocation(newLocation);
-
+                bridgeLocation = newLocation;
             }
-
-            // DR removed the following code as it did not seem to work properly
-
-            // make the center location the road location by removing the depression terrain
-            //final Terrain depressionTerrain = centerLocation.getDepressionTerrain();
-
-            //final int height = centerLocation.getBaseHeight();
-            //centerLocation.setDepressionTerrain(null);
-            //centerLocation.setBaseHeight(height);
-
-            //final Location newLocation = new Location(centerLocation);
-            //newLocation.setDepressionTerrain(depressionTerrain);
-            //newLocation.setBaseHeight(baseHeight - 1);
-
-            //newLocation.setUpLocation(centerLocation);
-            //centerLocation.setDownLocation(newLocation);
+            setBridge(new Bridge(getBridgeTerrain(gridadj), getBridgeLocationAbsoluteLevel(), bridgeLocation,
+                    true, new Point((int) center.getX(), (int) center.getY())));
         }
     }
 
@@ -875,7 +828,6 @@ public class Hex {
                 }
             }
         }
-
         return null;
     }
 
@@ -1193,21 +1145,20 @@ public class Hex {
 
 	}
 
-	public void setBaseHeight(int hgt) {
+	public void setBaseLevelofHex(int levelofHex) {
 
-		baseHeight = hgt;
+		baseLevelofHex = levelofHex;
 	}
 
-    public int getBridgeLocationHeight(){
-        for (double x=centerLocation.getLOSPoint().getX()-5; x<centerLocation.getLOSPoint().getX()+5; x++ ){
-            for (double y=centerLocation.getLOSPoint().getY()-5; y<centerLocation.getLOSPoint().getY()+5; y++ ){
-                int bridgeelevation = map.getGridElevation((int) x, (int) y);
-                if (bridgeelevation > centerLocation.getHex().getBaseHeight()){
-                    return bridgeelevation - centerLocation.getHex().getBaseHeight();
-                }
+    public int getBridgeLocationAbsoluteLevel(){
+        for (int x = 0; x < 6; x++ ) {
+            Terrain hexsideterrain = getHexsideLocation(x).getTerrain();
+            if (hexsideterrain != null && !hexsideterrain.isDepression() && hexsideterrain.isRoad()) {
+                int bridgeelevation = map.getGridElevation(((int) getHexsideLocation(x).getEdgeCenterPoint().getX()), ((int) getHexsideLocation(x).getEdgeCenterPoint().getY()));
+                return bridgeelevation;
             }
         }
-        return centerLocation.getBaseHeight();
+        return getBaseLevelofHex() +1;  // default if loop above returns no value
     }
 	// geometric methods
 	public boolean  contains(int x, int y)			{
@@ -1399,6 +1350,7 @@ public class Hex {
 		if (bridge != null){
 
 			flipHexPoint(bridge.getCenter());
+
 			bridge.setRotation(bridge.getRotation() >= 180 ? bridge.getRotation() - 180 : bridge.getRotation() + 180);
 		}
 	}
@@ -1420,7 +1372,7 @@ public class Hex {
 */
 		// copy hex values
 		name 		= h.getName();
-		baseHeight	= h.getBaseHeight();
+		baseLevelofHex = h.getBaseLevelofHex();
 
 		// copy the center location
 		centerLocation.copyLocation(h.getCenterLocation());
@@ -1433,7 +1385,7 @@ public class Hex {
 			// create a new location
 			final Location temp = new Location (
 				source.getName(),
-				source.getBaseHeight(),
+				source.getLevelInHex(),
 				(Point) current.getLOSPoint().clone(),
 				(Point) current.getAuxLOSPoint().clone(),
 				(Point) current.getEdgeCenterPoint().clone(),
@@ -1457,7 +1409,7 @@ public class Hex {
 			// create a new location
 			final Location temp = new Location (
 				source2.getName(),
-				source2.getBaseHeight(),
+				source2.getLevelInHex(),
 				(Point) current2.getLOSPoint().clone(),
 				(Point) current2.getAuxLOSPoint().clone(),
 				(Point) current2.getEdgeCenterPoint().clone(),
@@ -1513,7 +1465,7 @@ public class Hex {
 			setBridge(new Bridge(
 				h.getBridge().getTerrain(),
 				h.getBridge().getRoadLevel(),
-				h.getBridge().getRotation(),
+				//h.getBridge().getRotation(),
 				new Location(),
 				h.getBridge().isSingleHex(),
 				(Point) h.getBridge().getCenter().clone()
@@ -1586,7 +1538,7 @@ public class Hex {
                 this,
                 terrain
         );
-        if (direction.equals("Up")) {
+        if (direction.equals("up")) {
             currentLocation.setUpLocation(l);
             l.setDownLocation(currentLocation);
         } else {

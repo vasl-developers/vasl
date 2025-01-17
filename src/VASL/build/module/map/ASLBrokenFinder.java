@@ -82,7 +82,7 @@ public class ASLBrokenFinder extends AbstractConfigurable implements GameCompone
             this.m_objMap = (Map) parent;
             m_objMap.addDrawComponent(this);
             
-            m_piecePropertiesFilter.setExpression("InvisibleToOthers != true && BRK_Active = true && ObscuredToOthers != true || PieceName = DM || PieceName = Disrupt");
+            m_piecePropertiesFilter.setExpression("InvisibleToOthers != true && BRK_Active = true && Obscured != true || PieceName = DM || PieceName = Disrupt");
         }
     }
 

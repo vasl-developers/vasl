@@ -43,6 +43,17 @@ extract_version() {
 
     echo "$zip_version"
 }
+extract_board_name() {
+    local file_path="$1"
+    local board_name
+
+     # Skip the first line to avoid capturing the XML declaration
+            name_line=$(tail -n +2 "$file_path" | grep 'name="' | head -n 1)
+            # Extract and clean the version attribute from the matched line
+            board_name=$(echo "$name_line" | grep -o 'name="[^"]*"' | sed -e 's/name="//' -e 's/"//' | tr -d '\r' | xargs)
+
+    echo "$board_name"
+}
 
 # Extract names and versions from v5boardVersions.xml with HTML decoding
 declare -A board_versions
@@ -101,6 +112,12 @@ for board_file in "$BD_FILES_DIR"/*; do
                 if [[ $has_board_metadata -eq 0 ]]; then
                     unzip -q -j "$board_file" "BoardMetadata.xml" -d "$TEMP_DIR" 2>/dev/null
                     metadata_file="$TEMP_DIR/BoardMetadata.xml"
+                    zip_board_name=$(extract_board_name "$metadata_file")
+                    # If the name in the metadatafile does not match, there will
+                    # be an error when loading game so we make sure they match
+                    if [[ "$zip_board_name" != "$board_name_clean" ]]; then
+                        mismatches+=("Board name mismatch in $board_file: expected '$board_name_clean', found '$zip_board_name'")
+                    fi
                 elif [[ $has_data -eq 0 ]]; then
                     unzip -q -j "$board_file" "data" -d "$TEMP_DIR" 2>/dev/null
                     metadata_file="$TEMP_DIR/data"

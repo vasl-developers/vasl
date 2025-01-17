@@ -210,28 +210,353 @@
     <terrain name="Lv 6 og snow" terrain="Open Ground" level="6"/>
     <terrain name="Prepared Fire Zone - Open" terrain="Open Ground"/>
     <terrain name="Prepared Fire Zone - Vineyard" terrain="Vineyard"/>
+    <terrain name="Road" terrain="Paved Road"/>   <!-- Dirt/Paved has no effect on LOS -->
     <hexside name="Drift: 1 ca1" terrain="Hedge" ca="1"/>
     <hexside name="Drift: 2 ca2" terrain="Hedge" ca="2"/>
     <hexside name="Drift: 3 ca3" terrain="Hedge" ca="3"/>
     <hexside name="Drift: 4 ca4" terrain="Hedge" ca="4"/>
     <hexside name="Drift: 5 ca5" terrain="Hedge" ca="5"/>
     <hexside name="Drift: 6 ca6" terrain="Hedge" ca="6"/>
-
+    <hexside name="Hedge Overlay" terrain="Hedge" ca="2"/>
+    <hexside name="Wall Overlay" terrain="Wall" ca="3"/>
+    <hexside name="Bocage Overlay" terrain="Bocage" ca="6"/>
     <terrain name="Stone Rubble RB" terrain="Stone Rubble"/>
     <terrain name="Wood Rubble RB" terrain="Wooden Rubble"/>
 
     <wreck name="Wreck"/>
     <wreck name="Burnt Out Wreck"/>
 
-    <OBA name="Red OBA FFE:1"/>
-    <OBA name="Red OBA FFE:2"/>
-    <OBA name="Red OBA FFE:C"/>
-    <OBA name="Blue OBA FFE:1"/>
-    <OBA name="Blue OBA FFE:2"/>
-    <OBA name="Blue OBA FFE:C"/>
-    <OBA name="Green OBA FFE:1"/>
-    <OBA name="Green OBA FFE:2"/>
-    <OBA name="Green OBA FFE:C"/>
+    <OBA name="+3 Smoke Sm FFE:1" rotation="1" isBarrage="FALSE"/>
+    <OBA name="+3 Smoke Sm FFE:2" rotation="1" isBarrage="FALSE"/>
+    <OBA name="+3 Smoke Sm FFE:C" rotation="1" isBarrage="FALSE"/>
+    <OBA name="+2 Smoke Sm FFE:1" rotation="1" isBarrage="FALSE"/>
+    <OBA name="+2 Smoke Sm FFE:2" rotation="1" isBarrage="FALSE"/>
+    <OBA name="+2 Smoke Sm FFE:C" rotation="1" isBarrage="FALSE"/>
+    <OBA name="+2 WP WP FFE:1" rotation="1" isBarrage="FALSE"/>
+    <OBA name="+2 WP WP FFE:2" rotation="1" isBarrage="FALSE"/>
+    <OBA name="+2 WP WP FFE:C" rotation="1" isBarrage="FALSE"/>
+    <OBA name="+1 WP WP FFE:1" rotation="1" isBarrage="FALSE"/>
+    <OBA name="+1 WP WP FFE:2" rotation="1" isBarrage="FALSE"/>
+    <OBA name="+1 WP WP FFE:C" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Red FFE:1" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Red FFE:2" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Red FFE:C" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Blue FFE:1" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Blue FFE:2" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Blue FFE:C" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Green FFE:1" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Green FFE:2" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Green FFE:C" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Red Har FFE:1" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Red Har FFE:2" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Red Har FFE:C" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Blue Har FFE:1" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Blue Har FFE:2" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Blue Har FFE:C" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Green Har FFE:1" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Green Har FFE:2" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Green Har FFE:C" rotation="1" isBarrage="FALSE"/>
+    <OBA name="rot 1 +3 Sm Barrage FFE:1" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 2 +3 Sm Barrage FFE:1" rotation="2" isBarrage="TRUE"/>
+    <OBA name="rot 2 alt +3 Sm Barrage FFE:1" rotation="2" isBarrage="TRUE"/>
+    <OBA name="rot 3 +3 Sm Barrage FFE:1" rotation="3" isBarrage="TRUE"/>
+    <OBA name="rot 3 alt +3 Sm Barrage FFE:1" rotation="3" isBarrage="TRUE"/>
+    <OBA name="rot 4 +3 Sm Barrage FFE:1" rotation="4" isBarrage="TRUE"/>
+    <OBA name="rot 4 alt +3 Sm Barrage FFE:1" rotation="4" isBarrage="TRUE"/>
+    <OBA name="rot 5 +3 Sm Barrage FFE:1" rotation="5" isBarrage="TRUE"/>
+    <OBA name="rot 5 alt +3 Sm Barrage FFE:1" rotation="5" isBarrage="TRUE"/>
+    <OBA name="rot 6 +3 Sm Barrage FFE:1" rotation="6" isBarrage="TRUE"/>
+    <OBA name="rot 6 alt +3 Sm Barrage FFE:1" rotation="6" isBarrage="TRUE"/>
+    <OBA name="rot 1 +3 Sm Barrage FFE:2" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 2 +3 Sm Barrage FFE:2" rotation="2" isBarrage="TRUE"/>
+    <OBA name="rot 2 alt +3 Sm Barrage FFE:2" rotation="2" isBarrage="TRUE"/>
+    <OBA name="rot 3 +3 Sm Barrage FFE:2" rotation="3" isBarrage="TRUE"/>
+    <OBA name="rot 3 alt +3 Sm Barrage FFE:2" rotation="3" isBarrage="TRUE"/>
+    <OBA name="rot 4 +3 Sm Barrage FFE:2" rotation="4" isBarrage="TRUE"/>
+    <OBA name="rot 4 alt +3 Sm Barrage FFE:2" rotation="4" isBarrage="TRUE"/>
+    <OBA name="rot 5 +3 Sm Barrage FFE:2" rotation="5" isBarrage="TRUE"/>
+    <OBA name="rot 5 alt +3 Sm Barrage FFE:2" rotation="5" isBarrage="TRUE"/>
+    <OBA name="rot 6 +3 Sm Barrage FFE:2" rotation="6" isBarrage="TRUE"/>
+    <OBA name="rot 6 alt +3 Sm Barrage FFE:2" rotation="6" isBarrage="TRUE"/>
+    <OBA name="rot 1 +3 Sm Barrage FFE:C" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 2 +3 Sm Barrage FFE:C" rotation="2" isBarrage="TRUE"/>
+    <OBA name="rot 2 alt +3 Sm Barrage FFE:C" rotation="2" isBarrage="TRUE"/>
+    <OBA name="rot 3 +3 Sm Barrage FFE:C" rotation="3" isBarrage="TRUE"/>
+    <OBA name="rot 3 alt +3 Sm Barrage FFE:C" rotation="3" isBarrage="TRUE"/>
+    <OBA name="rot 4 +3 Sm Barrage FFE:C" rotation="4" isBarrage="TRUE"/>
+    <OBA name="rot 4 alt +3 Sm Barrage FFE:C" rotation="4" isBarrage="TRUE"/>
+    <OBA name="rot 5 +3 Sm Barrage FFE:C" rotation="5" isBarrage="TRUE"/>
+    <OBA name="rot 5 alt +3 Sm Barrage FFE:C" rotation="5" isBarrage="TRUE"/>
+    <OBA name="rot 6 +3 Sm Barrage FFE:C" rotation="6" isBarrage="TRUE"/>
+    <OBA name="rot 6 alt +3 Sm Barrage FFE:C" rotation="6" isBarrage="TRUE"/>
+    <OBA name="rot 1 +2 WP Barrage FFE:1" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 2 +2 WP Barrage FFE:1" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 2 alt +2 WP Barrage FFE:1" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 3 +2 WP Barrage FFE:1" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 3 alt +2 WP Barrage FFE:1" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 4 +2 WP Barrage FFE:1" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 4 alt +2 WP Barrage FFE:1" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 5 +2 WP Barrage FFE:1" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 5 alt +2 WP Barrage FFE:1" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 6 +2 WP Barrage FFE:1" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 6 alt +2 WP Barrage FFE:1" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 1 +2 WP Barrage FFE:2" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 2 +2 WP Barrage FFE:2" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 2 alt +2 WP Barrage FFE:2" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 3 +2 WP Barrage FFE:2" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 3 alt +2 WP Barrage FFE:2" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 4 +2 WP Barrage FFE:2" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 4 alt +2 WP Barrage FFE:2" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 5 +2 WP Barrage FFE:2" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 5 alt +2 WP Barrage FFE:2" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 6 +2 WP Barrage FFE:2" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 6 alt +2 WP Barrage FFE:2" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 1 +2 WP Barrage FFE:C" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 2 +2 WP Barrage FFE:C" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 2 alt +2 WP Barrage FFE:C" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 3 +2 WP Barrage FFE:C" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 3 alt +2 WP Barrage FFE:C" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 4 +2 WP Barrage FFE:C" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 4 alt +2 WP Barrage FFE:C" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 5 +2 WP Barrage FFE:C" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 5 alt +2 WP Barrage FFE:C" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 6 +2 WP Barrage FFE:C" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 6 alt +2 WP Barrage FFE:C" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 1 +2 Sm Barrage FFE:1" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 2 +2 Sm Barrage FFE:1" rotation="2" isBarrage="TRUE"/>
+    <OBA name="rot 2 alt +2 Sm Barrage FFE:1" rotation="2" isBarrage="TRUE"/>
+    <OBA name="rot 3 +2 Sm Barrage FFE:1" rotation="3" isBarrage="TRUE"/>
+    <OBA name="rot 3 alt +2 Sm Barrage FFE:1" rotation="3" isBarrage="TRUE"/>
+    <OBA name="rot 4 +2 Sm Barrage FFE:1" rotation="4" isBarrage="TRUE"/>
+    <OBA name="rot 4 alt +2 Sm Barrage FFE:1" rotation="4" isBarrage="TRUE"/>
+    <OBA name="rot 5 +2 Sm Barrage FFE:1" rotation="5" isBarrage="TRUE"/>
+    <OBA name="rot 5 alt +2 Sm Barrage FFE:1" rotation="5" isBarrage="TRUE"/>
+    <OBA name="rot 6 +2 Sm Barrage FFE:1" rotation="6" isBarrage="TRUE"/>
+    <OBA name="rot 6 alt +2 Sm Barrage FFE:1" rotation="6" isBarrage="TRUE"/>
+    <OBA name="rot 1 +2 Sm Barrage FFE:2" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 2 +2 Sm Barrage FFE:2" rotation="2" isBarrage="TRUE"/>
+    <OBA name="rot 2 alt +2 Sm Barrage FFE:2" rotation="2" isBarrage="TRUE"/>
+    <OBA name="rot 3 +2 Sm Barrage FFE:2" rotation="3" isBarrage="TRUE"/>
+    <OBA name="rot 3 alt +2 Sm Barrage FFE:2" rotation="3" isBarrage="TRUE"/>
+    <OBA name="rot 4 +2 Sm Barrage FFE:2" rotation="4" isBarrage="TRUE"/>
+    <OBA name="rot 4 alt +2 Sm Barrage FFE:2" rotation="4" isBarrage="TRUE"/>
+    <OBA name="rot 5 +2 Sm Barrage FFE:2" rotation="5" isBarrage="TRUE"/>
+    <OBA name="rot 5 alt +2 Sm Barrage FFE:2" rotation="5" isBarrage="TRUE"/>
+    <OBA name="rot 6 +2 Sm Barrage FFE:2" rotation="6" isBarrage="TRUE"/>
+    <OBA name="rot 6 alt +2 Sm Barrage FFE:2" rotation="6" isBarrage="TRUE"/>
+    <OBA name="rot 1 +2 Sm Barrage FFE:C" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 2 +2 Sm Barrage FFE:C" rotation="2" isBarrage="TRUE"/>
+    <OBA name="rot 2 alt +2 Sm Barrage FFE:C" rotation="2" isBarrage="TRUE"/>
+    <OBA name="rot 3 +2 Sm Barrage FFE:C" rotation="3" isBarrage="TRUE"/>
+    <OBA name="rot 3 alt +2 Sm Barrage FFE:C" rotation="3" isBarrage="TRUE"/>
+    <OBA name="rot 4 +2 Sm Barrage FFE:C" rotation="4" isBarrage="TRUE"/>
+    <OBA name="rot 4 alt +2 Sm Barrage FFE:C" rotation="4" isBarrage="TRUE"/>
+    <OBA name="rot 5 +2 Sm Barrage FFE:C" rotation="5" isBarrage="TRUE"/>
+    <OBA name="rot 5 alt +2 Sm Barrage FFE:C" rotation="5" isBarrage="TRUE"/>
+    <OBA name="rot 6 +2 Sm Barrage FFE:C" rotation="6" isBarrage="TRUE"/>
+    <OBA name="rot 6 alt +2 Sm Barrage FFE:C" rotation="6" isBarrage="TRUE"/>
+    <OBA name="rot 1 +1 WP Barrage FFE:1" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 2 +1 WP Barrage FFE:1" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 2 alt +1 WP Barrage FFE:1" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 3 +1 WP Barrage FFE:1" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 3 alt +1 WP Barrage FFE:1" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 4 +1 WP Barrage FFE:1" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 4 alt +1 WP Barrage FFE:1" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 5 +1 WP Barrage FFE:1" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 5 alt +1 WP Barrage FFE:1" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 6 +1 WP Barrage FFE:1" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 6 alt +1 WP Barrage FFE:1" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 1 +1 WP Barrage FFE:2" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 2 +1 WP Barrage FFE:2" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 2 alt +1 WP Barrage FFE:2" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 3 +1 WP Barrage FFE:2" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 3 alt +1 WP Barrage FFE:2" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 4 +1 WP Barrage FFE:2" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 4 alt +1 WP Barrage FFE:2" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 5 +1 WP Barrage FFE:2" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 5 alt +1 WP Barrage FFE:2" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 6 +1 WP Barrage FFE:2" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 6 alt +1 WP Barrage FFE:2" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 1 +1 WP Barrage FFE:C" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 2 +1 WP Barrage FFE:C" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 2 alt +1 WP Barrage FFE:C" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 3 +1 WP Barrage FFE:C" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 3 alt +1 WP Barrage FFE:C" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 4 +1 WP Barrage FFE:C" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 4 alt +1 WP Barrage FFE:C" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 5 +1 WP Barrage FFE:C" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 5 alt +1 WP Barrage FFE:C" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 6 +1 WP Barrage FFE:C" rotation="1" isBarrage="TRUE"/>
+    <OBA name="rot 6 alt +1 WP Barrage FFE:C" rotation="1" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 1 FFE:1" rotation="1" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 1 FFE:2" rotation="1" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 1 FFE:C" rotation="1" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 2 FFE:1" rotation="2" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 2 alt FFE:1" rotation="2" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 2 FFE:2" rotation="2" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 2 alt FFE:2" rotation="2" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 2 FFE:C" rotation="2" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 2 alt FFE:C" rotation="2" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 3 FFE:1" rotation="3" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 3 alt FFE:1" rotation="3" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 3 FFE:2" rotation="3" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 3 alt FFE:2" rotation="3" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 3 FFE:C" rotation="3" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 3 alt FFE:C" rotation="3" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 4 FFE:1" rotation="4" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 4 alt FFE:1" rotation="4" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 4 FFE:2" rotation="4" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 4 alt FFE:2" rotation="4" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 4 FFE:C" rotation="4" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 4 alt FFE:C" rotation="4" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 5 FFE:1" rotation="5" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 5 alt FFE:1" rotation="5" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 5 FFE:2" rotation="5" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 5 alt FFE:2" rotation="5" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 5 FFE:C" rotation="5" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 5 alt FFE:C" rotation="5" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 6 FFE:1" rotation="6" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 6 alt FFE:1" rotation="6" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 6 FFE:2" rotation="6" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 6 alt FFE:2" rotation="6" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 6 FFE:C" rotation="6" isBarrage="TRUE"/>
+    <OBA name="Red HE Barrage rot 6 alt FFE:C" rotation="6" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 1 FFE:1" rotation="1" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 1 alt FFE:1" rotation="1" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 1 FFE:2" rotation="1" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 1 alt FFE:2" rotation="1" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 1 FFE:C" rotation="1" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 1 alt FFE:C" rotation="1" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 2 FFE:1" rotation="2" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 2 alt FFE:1" rotation="2" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 2 FFE:2" rotation="2" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 2 alt FFE:2" rotation="2" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 2 FFE:C" rotation="2" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 2 alt FFE:C" rotation="2" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 3 FFE:1" rotation="3" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 3 alt FFE:1" rotation="3" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 3 FFE:2" rotation="3" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 3 alt FFE:2" rotation="3" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 3 FFE:C" rotation="3" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 3 alt FFE:C" rotation="3" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 4 FFE:1" rotation="4" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 4 alt FFE:1" rotation="4" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 4 FFE:2" rotation="4" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 4 alt FFE:2" rotation="4" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 4 FFE:C" rotation="4" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 4 alt FFE:C" rotation="4" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 5 FFE:1" rotation="5" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 5 alt FFE:1" rotation="5" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 5 FFE:2" rotation="5" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 5 alt FFE:2" rotation="5" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 5 FFE:C" rotation="5" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 5 alt FFE:C" rotation="5" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 6 FFE:1" rotation="6" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 6 alt FFE:1" rotation="6" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 6 FFE:2" rotation="6" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 6 alt FFE:2" rotation="6" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 6 FFE:C" rotation="6" isBarrage="TRUE"/>
+    <OBA name="Blue HE Barrage rot 6 alt FFE:C" rotation="6" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 1 FFE:1" rotation="1" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 1 alt FFE:1" rotation="1" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 1 FFE:2" rotation="1" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 1 alt FFE:2" rotation="1" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 1 FFE:C" rotation="1" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 1 alt FFE:C" rotation="1" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 2 FFE:1" rotation="2" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 2 alt FFE:1" rotation="2" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 2 FFE:2" rotation="2" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 2 alt FFE:2" rotation="2" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 2 FFE:C" rotation="2" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 2 alt FFE:C" rotation="2" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 3 FFE:1" rotation="3" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 3 alt FFE:1" rotation="3" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 3 FFE:2" rotation="3" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 3 alt FFE:2" rotation="3" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 3 FFE:C" rotation="3" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 3 alt FFE:C" rotation="3" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 4 FFE:1" rotation="4" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 4 alt FFE:1" rotation="4" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 4 FFE:2" rotation="4" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 4 alt FFE:2" rotation="4" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 4 FFE:C" rotation="4" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 4 alt FFE:C" rotation="4" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 5 FFE:1" rotation="5" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 5 alt FFE:1" rotation="5" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 5 FFE:2" rotation="5" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 5 alt FFE:2" rotation="5" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 5 FFE:C" rotation="5" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 5 alt FFE:C" rotation="5" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 6 FFE:1" rotation="6" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 6 alt FFE:1" rotation="6" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 6 FFE:2" rotation="6" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 6 alt FFE:2" rotation="6" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 6 FFE:C" rotation="6" isBarrage="TRUE"/>
+    <OBA name="Green HE Barrage rot 6 alt FFE:C" rotation="6" isBarrage="TRUE"/>
+
+    <OBA name="Naval r1 FFE:1" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Naval r1 FFE:2" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Naval r1 FFE:C" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Naval r2 FFE:1" rotation="2" isBarrage="FALSE"/>
+    <OBA name="Naval r2 FFE:2" rotation="2" isBarrage="FALSE"/>
+    <OBA name="Naval r2 FFE:C" rotation="2" isBarrage="FALSE"/>
+    <OBA name="Naval r3 FFE:1" rotation="3" isBarrage="FALSE"/>
+    <OBA name="Naval r3 FFE:2" rotation="3" isBarrage="FALSE"/>
+    <OBA name="Naval r3 FFE:C" rotation="3" isBarrage="FALSE"/>
+    <OBA name="Naval r4 FFE:1" rotation="4" isBarrage="FALSE"/>
+    <OBA name="Naval r4 FFE:2" rotation="4" isBarrage="FALSE"/>
+    <OBA name="Naval r4 FFE:C" rotation="4" isBarrage="FALSE"/>
+    <OBA name="Naval r5 FFE:1" rotation="5" isBarrage="FALSE"/>
+    <OBA name="Naval r5 FFE:2" rotation="5" isBarrage="FALSE"/>
+    <OBA name="Naval r5 FFE:C" rotation="5" isBarrage="FALSE"/>
+    <OBA name="Naval r6 FFE:1" rotation="6" isBarrage="FALSE"/>
+    <OBA name="Naval r6 FFE:2" rotation="6" isBarrage="FALSE"/>
+    <OBA name="Naval r6 FFE:C" rotation="6" isBarrage="FALSE"/>
+
+    <OBA name="Naval WP r1 +2 FFE:1" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Naval WP r1 +2 FFE:2" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Naval WP r1 +2 FFE:C" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Naval WP r2 +2 FFE:1" rotation="2" isBarrage="FALSE"/>
+    <OBA name="Naval WP r2 +2 FFE:2" rotation="2" isBarrage="FALSE"/>
+    <OBA name="Naval WP r2 +2 FFE:C" rotation="2" isBarrage="FALSE"/>
+    <OBA name="Naval WP r3 +2 FFE:1" rotation="3" isBarrage="FALSE"/>
+    <OBA name="Naval WP r3 +2 FFE:2" rotation="3" isBarrage="FALSE"/>
+    <OBA name="Naval WP r3 +2 FFE:C" rotation="3" isBarrage="FALSE"/>
+    <OBA name="Naval WP r4 +2 FFE:1" rotation="4" isBarrage="FALSE"/>
+    <OBA name="Naval WP r4 +2 FFE:2" rotation="4" isBarrage="FALSE"/>
+    <OBA name="Naval WP r4 +2 FFE:C" rotation="4" isBarrage="FALSE"/>
+    <OBA name="Naval WP r5 +2 FFE:1" rotation="5" isBarrage="FALSE"/>
+    <OBA name="Naval WP r5 +2 FFE:2" rotation="5" isBarrage="FALSE"/>
+    <OBA name="Naval WP r5 +2 FFE:C" rotation="5" isBarrage="FALSE"/>
+    <OBA name="Naval WP r6 +2 FFE:1" rotation="6" isBarrage="FALSE"/>
+    <OBA name="Naval WP r6 +2 FFE:2" rotation="6" isBarrage="FALSE"/>
+    <OBA name="Naval WP r6 +2 FFE:C" rotation="6" isBarrage="FALSE"/>
+
+    <OBA name="Naval WP r1 +1 FFE:1" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Naval WP r1 +1 FFE:2" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Naval WP r1 +1 FFE:C" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Naval WP r2 +1 FFE:1" rotation="2" isBarrage="FALSE"/>
+    <OBA name="Naval WP r2 +1 FFE:2" rotation="2" isBarrage="FALSE"/>
+    <OBA name="Naval WP r2 +1 FFE:C" rotation="2" isBarrage="FALSE"/>
+    <OBA name="Naval WP r3 +1 FFE:1" rotation="3" isBarrage="FALSE"/>
+    <OBA name="Naval WP r3 +1 FFE:2" rotation="3" isBarrage="FALSE"/>
+    <OBA name="Naval WP r3 +1 FFE:C" rotation="3" isBarrage="FALSE"/>
+    <OBA name="Naval WP r4 +1 FFE:1" rotation="4" isBarrage="FALSE"/>
+    <OBA name="Naval WP r4 +1 FFE:2" rotation="4" isBarrage="FALSE"/>
+    <OBA name="Naval WP r4 +1 FFE:C" rotation="4" isBarrage="FALSE"/>
+    <OBA name="Naval WP r5 +1 FFE:1" rotation="5" isBarrage="FALSE"/>
+    <OBA name="Naval WP r5 +1 FFE:2" rotation="5" isBarrage="FALSE"/>
+    <OBA name="Naval WP r5 +1 FFE:C" rotation="5" isBarrage="FALSE"/>
+    <OBA name="Naval WP r6 +1 FFE:1" rotation="6" isBarrage="FALSE"/>
+    <OBA name="Naval WP r6 +1 FFE:2" rotation="6" isBarrage="FALSE"/>
+    <OBA name="Naval WP r6 +1 FFE:C" rotation="6" isBarrage="FALSE"/>
+
+    <OBA name="Small NOBA Bombardment" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Small Naval Bombardment Smoke" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Small Naval Bombardment Dispersed Smoke" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Large Naval Bombardment" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Large Naval Bombardment Smoke" rotation="1" isBarrage="FALSE"/>
+    <OBA name="Large Naval Bombardment Dispersed" rotation="1" isBarrage="FALSE"/>
 
     <!-- These counters should be ignored as they will create false LOS conditions (e.g. treated as hindrances) -->
     <ignore name="Barricade" />
@@ -261,6 +586,8 @@
     <bridge name="Bridge: 1-4" hindrance="1" position="above" />
     <bridge name="Wood Pier 1-4" hindrance="1" position="above" />
     <bridge name="Stone Pier 1-4" hindrance="1" position="above" />
+    <bridge name="Bridge" terrain="Stone Bridge" hindrance="1" position="above" />
+
 
     <entrenchment name="1S Foxhole" position="below" />
     <entrenchment name="2S Foxhole"  position="below" />

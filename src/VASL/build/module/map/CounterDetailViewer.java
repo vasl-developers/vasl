@@ -17,7 +17,6 @@
 package VASL.build.module.map;
 
 import VASL.LOS.Map.Hex;
-import VASL.LOS.Map.Map;
 import VASL.build.module.ASLMap;
 import static VASL.build.module.map.boardPicker.ASLBoard.DEFAULT_HEX_HEIGHT;
 import java.awt.Rectangle;
@@ -30,7 +29,6 @@ import VASSAL.counters.BasicPiece;
 import VASSAL.counters.Deck;
 import VASSAL.counters.Decorator;
 import VASSAL.counters.GamePiece;
-import VASSAL.counters.Labeler;
 import VASSAL.tools.image.LabelUtils;
 import VASSAL.counters.Properties;
 import VASSAL.counters.Stack;
@@ -43,7 +41,6 @@ import java.awt.Shape;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import javax.swing.JComponent;
-import javax.swing.JOptionPane;
 
 public class CounterDetailViewer extends VASSAL.build.module.map.CounterDetailViewer 
 {
@@ -310,7 +307,7 @@ public class CounterDetailViewer extends VASSAL.build.module.map.CounterDetailVi
       if(vaslmap != null) {
           Hex checkhex = vaslmap.gridToHex((int) counterposition.getX() - aslmap.getEdgeBuffer().width, (int) counterposition.getY() - aslmap.getEdgeBuffer().height);
           if (checkhex != null) {
-              baselevel = Integer.toString(checkhex.getBaseHeight());
+              baselevel = Integer.toString(checkhex.getBaseLevelofHex());
           }
       }
       return baselevel;
