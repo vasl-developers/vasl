@@ -36,6 +36,7 @@ import VASSAL.build.GameModule;
 import VASSAL.build.module.GameComponent;
 import VASSAL.build.module.Map;
 import VASSAL.build.module.PieceWindow;
+import VASSAL.build.module.map.PieceMover;
 import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.build.widget.ListWidget;
 import VASSAL.build.widget.PanelWidget;
