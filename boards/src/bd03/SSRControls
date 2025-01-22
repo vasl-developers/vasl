@@ -27,9 +27,20 @@
  <Checkbox name="">
          <entry name="T5: The Pouppeville Exit" rule="SSO_T5" text="scenario T5 overlay"/>
  </Checkbox>
-  <Checkbox name="">
-         <entry name="U5: Point d'Appui" rule="SSO_U5" text="scenario T5 overlay"/>
+ <Checkbox name="">
+         <entry name="U4: Climax at Nijmegen Bridge" rule="SSO_U4" text="scenario U4 overlay"/>
  </Checkbox>
+
+ <Checkbox name="">
+         <entry name="U5: Point d'Appui" rule="SSO_U5" text="scenario U5 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="U11: Thrust and Parry" rule="SSO_U11" text="scenario U11 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="U18: Assault On A Queen" rule="SSO_U18" text="scenario U18 overlay"/>
+ </Checkbox>
+
  <Checkbox name="">
          <entry name="All Hills To L0 Woods" rule="BSO_3_HillsToL0Woods" text="Bd 3 Hills to L0Woods"/>
  </Checkbox>

@@ -24,5 +24,9 @@
  <Checkbox name="">
          <entry name="Bd 8 BSO Contest Winner" rule="BSO_08_BSOCW" text="BSO Contest Winner"/>
  </Checkbox>
+<Checkbox name="">
+         <entry name="U4: Climax at Nijmegen Bridge" rule="SSO_U4" text="scenario U4 overlay"/>
+ </Checkbox>
+
     </Option>
 </SSRControls>

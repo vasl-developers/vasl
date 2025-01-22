@@ -30,14 +30,14 @@
 		<boarddata name="00dx" version="6.5" versionDate="2023/08/30" description="Empty Deluxe geoboard" boardType="Deluxe" publisher="VASL" issued="" />
 		<boarddata name="00a" version="6.0" versionDate="2023/08/30" description="" boardType="Double-sided" publisher="VASL" issued="" />
 		<boarddata name="00b" version="6.0" versionDate="2023/08/30" description="" boardType="Double-sided" publisher="VASL" issued="" />
-		<boarddata name="01" version="6.7" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="01" version="6.8" versionDate="2025/01/22" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="02" version="7.1" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="03" version="6.9" versionDate="2025/01/07" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="03" version="7.0" versionDate="2025/01/22" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="04" version="6.5" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="05" version="7.0" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="06" version="6.4" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="06" version="6.5" versionDate="2025/01/22" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="07" version="6.5" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="08" version="6.9" versionDate="2024/12/22" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="08" version="7.0" versionDate="2025/01/22" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="09" version="6.7" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="10" version="6.8" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="10z" version="7.1" versionDate="2024/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
