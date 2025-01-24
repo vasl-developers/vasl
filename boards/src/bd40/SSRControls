@@ -33,5 +33,9 @@
 <Checkbox name="">
          <entry name="AP103 - That Damn Bridge (Overlays O2,O4,O5; Shellholes; Marsh)" rule="SSO_AP103" text="Bd40 Scen AP103 SSO"/>
  </Checkbox>
+<Checkbox name="">
+         <entry name="U36 - Operation Switchback" rule="40_SSO_U36" text="Bd40 Scen U36 SSO"/>
+</Checkbox>
+
     </Option>
 </SSRControls>

@@ -27,6 +27,10 @@
 <Checkbox name="">
          <entry name="U4: Climax at Nijmegen Bridge" rule="SSO_U4" text="scenario U4 overlay"/>
  </Checkbox>
+<Checkbox name="">
+         <entry name="U37: Scheldt Fortress South" rule="08_SSO_U37" text="scenario U37 overlay"/>
+ </Checkbox>
+
 
     </Option>
 </SSRControls>
