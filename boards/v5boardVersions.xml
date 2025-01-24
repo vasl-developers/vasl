@@ -32,10 +32,10 @@
 		<boarddata name="00b" version="6.0" versionDate="2023/08/30" description="" boardType="Double-sided" publisher="VASL" issued="" />
 		<boarddata name="01" version="6.8" versionDate="2025/01/22" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="02" version="7.2" versionDate="2025/01/23" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="03" version="7.1" versionDate="2025/01/23" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="03" version="7.2" versionDate="2025/01/24" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="04" version="6.6" versionDate="2025/01/23" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="05" version="7.0" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="06" version="6.6" versionDate="2025/01/23" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="06" version="6.7" versionDate="2025/01/24" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="07" version="6.6" versionDate="2025/01/23" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="08" version="7.1" versionDate="2025/01/23" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="09" version="6.8" versionDate="2025/01/23" description="" boardType="Geoboard" publisher="MMP" issued="" />
