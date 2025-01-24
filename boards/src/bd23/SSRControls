@@ -15,5 +15,9 @@
  <Checkbox name="">
          <entry name="22: Kurhaus Clash" rule="SSO_22" text="scenario 22 overlay"/>
  </Checkbox>
+<Checkbox name="">
+         <entry name="U36: Operation Switchback" rule="23_SSO_U36" text="scenario U36 overlay"/>
+ </Checkbox>
+
     </Option>
 </SSRControls>

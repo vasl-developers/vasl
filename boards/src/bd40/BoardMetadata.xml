@@ -45,8 +45,8 @@
 
 <boardMetadata 
 	name="40" 
-	version="7.5" 
-	versionDate="Oct 2023" 
+	version="7.6" 
+	versionDate="Jan 2025" 
 	author="TR" 
 	boardImageFileName="bd40.gif" 
 	hasHills="TRUE" 
@@ -169,7 +169,9 @@
 	<overlaySSRule name="SSO_AP73" image="40_SSO_AP73.gif" x="22" y="1" />
 	
 	<overlaySSRule name="SSO_AP77" image="40_SSO_AP77.gif" x="1" y="14" />
-	
+
+	<overlaySSRule name="40_SSO_U36" image="40_SSO_U36.gif" x="0" y="0" />
+
 	
 	<overlaySSRule name="SSO_AP103" image="40_SSO_AP103.gif" x="0" y="0" />
 	
