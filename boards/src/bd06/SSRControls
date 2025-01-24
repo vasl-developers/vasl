@@ -1,41 +1,32 @@
 <SSRControls>
-   <Option name="Board 7 Special Overlays">
-       <Checkbox name="" >
-         <entry name="Remove Islands" rule="07_BSO_RemoveIslands" text="Remove Islands"/>
-      </Checkbox>
-      <Checkbox name="" >
-         <entry name="Islands are Level 0 Open Ground" rule="07_BSO_L0Islands" text="Islands are Level 0 Open Ground"/>
-      </Checkbox>
-	  <Checkbox name="" >
-         <entry name="Hexrow 1 side is water" rule="07_BSO_Hexrow1SideisWater" text="Bd 7 hexrow 1 side is water"/>
-      </Checkbox>
-	  <Checkbox name="" >
-         <entry name="Hexrow 10 side is water" rule="07_BSO_Hexrow10SideisWater" text="Bd 7 hexrow 10 side is water"/>
-      </Checkbox>
-	   <Checkbox name="">
-         <entry name="Scenario 19 - Backs To The Sea" rule="SSO_07_19" text="Bd7 Scen 19 SSO"/>
-       </Checkbox>
-	   <Checkbox name="">
-         <entry name="Scenario 25 - Gavin's Gamble" rule="SSO_07_25" text="Bd7 Scen 25 SSO"/>
-       </Checkbox>
-	   <Checkbox name="">
-         <entry name="Scenario 53 - A High Price To Pay" rule="SSO_07_53" text="Bd7 Scen 53 SSO"/>
-       </Checkbox>
-	   <Checkbox name="">
-         <entry name="Scenario 54 - Bridge To Nowhere" rule="SSO_07_54" text="Bd7 Scen 54 SSO"/>
-       </Checkbox>
-	   <Checkbox name="">
-         <entry name="Scenario A28 - The Professionals" rule="SSO_07_A28" text="Bd7 Scen A28 SSO"/>
-       </Checkbox>
-	   <Checkbox name="">
-         <entry name="Scenario A96 - In Rommel's Wake" rule="SSO_07_A96" text="Bd7 Scen A96 SSO"/>
-       </Checkbox>
-	   <Checkbox name="">
-         <entry name="Scenario A120 - Uncommon Valor" rule="SSO_07_A120" text="Bd7 Scen 120 SSO"/>
-       </Checkbox>
-	</Checkbox>
-	   <Checkbox name="">
-         <entry name="Scenario U37 - Scheldt Fortress South" rule="07_SSO_U37" text="Bd7 Scen U37 SSO"/>
-       </Checkbox>
-  </Option>
-  </SSRControls>
+ <Option name="Board 6 Special overlays">
+ <Checkbox name="">
+         <entry name="Only bldg 6M5 is Stone" rule="BSO_6_OnlyChateauIsStone" text="Only 6M5 is Stone"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="137 - Italian Brothers" rule="SSO_6_137" text="Scenario 137 SSO"/>
+ </Checkbox>
+  <Checkbox name="">
+         <entry name="A27 - King's Castle" rule="SSO_6_A27" text="Scenario A27 SSO"/>
+ </Checkbox>
+   <Checkbox name="">
+         <entry name="A64 - Chateau de Quesnoy" rule="SSO_6_A64" text="Scenario A64 SSO"/>
+ </Checkbox>
+    <Checkbox name="">
+         <entry name="U - Chance d'une Affaire" rule="SSO_6_U" text="Scenario U SSO"/>
+ </Checkbox>
+<Checkbox name="">
+         <entry name="U5 - Point D'Appui" rule="06_SSO_U5" text="Scenario U5 SSO"/>
+ </Checkbox>
+
+   <Checkbox name="">
+         <entry name="U18 - Assault On A Queen" rule="SSO_6_U18" text="Scenario U18 SSO"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="U37 - Scheldt Fortress South" rule="06_SSO_U37" text="Scenario U37 SSO"/>
+ </Checkbox>
+     <Checkbox name="">
+         <entry name="ASLUG 2.1 - Chateau Cherry" rule="SSO_6_ASLUG2pt1" text="Scenario ASLUG2.1 SSO"/>
+ </Checkbox>
+    </Option>
+</SSRControls>
