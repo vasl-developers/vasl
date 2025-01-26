@@ -41,6 +41,10 @@
          <entry name="U18: Assault On A Queen" rule="SSO_U18" text="scenario U18 overlay"/>
  </Checkbox>
 <Checkbox name="">
+         <entry name="U21: The French Perimeter" rule="SSO_U21" text="scenario U21 overlay"/>
+ </Checkbox>
+
+<Checkbox name="">
          <entry name="U36: Operation Switchback" rule="SSO_U36" text="scenario U36 overlay"/>
  </Checkbox>
 
