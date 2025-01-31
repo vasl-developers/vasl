@@ -13,10 +13,14 @@
          <entry name="3: The Czerniakow Bridgehead" rule="SSO_23_3" text="Scenario 3 SSO"/>
  </Checkbox>
  <Checkbox name="">
+         <entry name="10: The Citadel" rule="23_SSO_10" text="Scenario 10 SSO"/>
+ </Checkbox>
+
+ <Checkbox name="">
          <entry name="22: Kurhaus Clash" rule="SSO_22" text="scenario 22 overlay"/>
  </Checkbox>
 <Checkbox name="">
-         <entry name="U36: Operation Switchback" rule="23_SSO_U36" text="scenario U36 overlay"/>
+         <entry name="U36: Operation Switchback" rule="SSO_U36" text="scenario U36 overlay"/>
  </Checkbox>
 
     </Option>
