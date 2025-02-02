@@ -9,5 +9,16 @@
 	 <Checkbox>
        <entry name="FT279 - The Russians Are Coming" rule="SSO_FT279"/>
      </Checkbox>
+	<Checkbox>
+       <entry name="All DTO" rule="BSO_LFT10_all_DTO"/>
+     </Checkbox>
+	<Checkbox>
+       <entry name="All ETO" rule="BSO_LFT10_all_ETO"/>
+     </Checkbox>
+	<Checkbox>
+       <entry name="LFT Arid" rule="BSO_LFT10_LFT_Arid"/>
+     </Checkbox>
+
+
      </Option>
 </SSRControls>

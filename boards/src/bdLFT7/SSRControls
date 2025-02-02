@@ -12,5 +12,9 @@
 	  <Checkbox>
        <entry name="FT293 - Wild Men From Texas" rule="SSO_FT293"/>
      </Checkbox>
+	<Checkbox>
+       <entry name="I6 Plaza" rule="LFT_AridPlazas"/>
+     </Checkbox>
+
      </Option>
 </SSRControls>

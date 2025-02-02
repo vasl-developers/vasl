@@ -20,6 +20,13 @@
      </Checkbox>	
 	 <Checkbox>
        <entry name="FT288 - Fondouk Express" rule="LFT_AridPlazas,BSO_LFT9_AllStone"/>
-     </Checkbox>	 
+     </Checkbox>
+	 <Checkbox>
+       <entry name="All Stone" rule="BSO_LFT9_AllStone"/>
+     </Checkbox>
+	<Checkbox>
+       <entry name="Arid Plazas" rule="LFT_AridPlazas"/>
+     </Checkbox>
+
      </Option>
 </SSRControls>
