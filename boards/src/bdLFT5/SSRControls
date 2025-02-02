@@ -15,5 +15,15 @@
 	 	 <Checkbox>
        <entry name="FT289 - Haka at Takrouna" rule="SSO_FT289"/>
      </Checkbox>
+	<Checkbox>
+       		<entry name="No Wadi Cliffs" rule="BSO_LFT5_NoWadiCliffs"/>
+     	</Checkbox>
+	<Checkbox>
+       		<entry name="R8 to T7 Path" rule="BSO_LFT5_R8T7Path"/>
+     	</Checkbox>
+	<Checkbox>
+       		<entry name="R8 to T7 Brush" rule="BSO_LFT5_R8T7Brush"/>
+     	</Checkbox>
+
      </Option>
 </SSRControls>
