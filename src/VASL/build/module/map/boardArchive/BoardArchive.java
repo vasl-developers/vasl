@@ -133,11 +133,11 @@ public class BoardArchive {
             //}
 
             // read the SSR controls file
-            //try (InputStream SSRControlsFileStream = getInputStreamForArchiveFile(archive, SSRControlsFileName)) {
-            //    SSRControlsFile = new SSRControlsFile(SSRControlsFileStream, archiveName);
-            //} catch (Exception ignore) {
+            try (InputStream SSRControlsFileStream = getInputStreamForArchiveFile(archive, SSRControlsFileName)) {
+                SSRControlsFile = new SSRControlsFile(SSRControlsFileStream, archiveName);
+            } catch (Exception ignore) {
                 // bury
-            //}
+            }
         }
     }
 

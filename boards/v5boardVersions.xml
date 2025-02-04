@@ -278,7 +278,7 @@
 		<boarddata name="LFT7" version="6.1" versionDate="2025/02/02" description="" boardType="Geoboard" publisher="LFT" issued="" />
 		<boarddata name="LFT8" version="6.1" versionDate="2025/02/02" description="" boardType="Geoboard" publisher="LFT" issued="" />
 		<boarddata name="LFT9" version="6.1" versionDate="2025/02/02" description="" boardType="Geoboard" publisher="LFT" issued="" />
-		<boarddata name="LFT10" version="6.1" versionDate="2025/02/02" description="" boardType="Geoboard" publisher="LFT" issued="" />
+		<boarddata name="LFT10" version="6.2" versionDate="2025/02/04" description="" boardType="Geoboard" publisher="LFT" issued="" />
 		<boarddata name="SG" version="6.0" versionDate="2021/04/30" description="Singling" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="VotG" version="3.1" versionDate="2008/08/30" description="Valor of the Guards" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="SC" version="3.0" versionDate="2008/08/30" description="Suicide Creek" boardType="HASL" publisher="MMP" issued="" />
