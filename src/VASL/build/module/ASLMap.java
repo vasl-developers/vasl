@@ -496,6 +496,7 @@ public class ASLMap extends Map {
             if(o.getName().equals("")){continue;} // prevents error when using underlays (which are added as overlays)
             if(o.getName().contains("BSO") && (!o.getName().contains("BSO_LFT3"))) {continue;} // prevents error when using BSO which are handled elsewhere
             if(o.getName().contains("NoCliffs")) {continue;} // cliff los adjustment handled in VASLBoard
+            if(o.getName().contains("LightWoods")) {continue;} // Light Woods are handled by LOSSSRule terrain mapping. dont need to go through overlay method
             // BSO_LFT3 may be a special case; treat it as so for now; if find others then need to develop a proper solution
             losonoverlays.ovrrec = o.bounds();
             // get the image as a buffered image
