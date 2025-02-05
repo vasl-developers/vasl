@@ -10,7 +10,7 @@
        <entry name="FT292 - Engineer Hill" rule="SSO_FT292"/>
      </Checkbox>	 
 	 <Checkbox>
-       <entry name="FT293 - Wild Men From Texas" rule="SSO_FT293"/>
+       <entry name="FT293 - Wild Men From Texas" rule="SSO_FT293,LightWoods"/>
      </Checkbox>
 	<Checkbox>
        <entry name="R8 building to OG" rule="BSO_LFT3_R8toOG"/>
