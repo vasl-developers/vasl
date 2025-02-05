@@ -850,9 +850,8 @@ public class ASLMap extends Map {
                                 //Retrieving the R G B values
                                 Color color = getRGBColor(c);
                                 terr = getOverlayTerrainfromColor(color, losonoverlays);
-                                int bumpx = 0; int bumpy = 0;
                                 while(terr == null) {
-                                    color = getOverlayNearestColor(losonoverlays, losonoverlays.overpositionx + bumpx, losonoverlays.overpositiony + bumpy);
+                                    color = getOverlayNearestColor(losonoverlays, losonoverlays.overpositionx, losonoverlays.overpositiony);
                                     if (color.equals(Color.white)) {
                                         terr = losonoverlays.newlosdata.getTerrain(losonoverlays.board.getVASLBoardArchive().getTerrainForVASLColor("L0Winter"));
                                     }
@@ -1001,9 +1000,8 @@ public class ASLMap extends Map {
                                 //Retrieving the R G B values
                                 Color color = getRGBColor(c);
                                 terr = getOverlayTerrainfromColor(color, losonoverlays);
-                                int bumpx = 0; int bumpy = 0;
                                 while(terr == null){
-                                    color = getOverlayNearestColor(losonoverlays, losonoverlays.overpositionx + bumpx, losonoverlays.overpositiony + bumpy);
+                                    color = getOverlayNearestColor(losonoverlays, losonoverlays.overpositionx, losonoverlays.overpositiony);
                                     if (color.equals(Color.white)){
                                         terr = losonoverlays.newlosdata.getTerrain(losonoverlays.board.getVASLBoardArchive().getTerrainForVASLColor("L0Winter"));
                                     }

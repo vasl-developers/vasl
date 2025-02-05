@@ -1535,6 +1535,7 @@
 		<color name="DTO_BT_CragBlack" red="68" green="68" blue="68" terrain="BTCrags" elevation="UNKNOWN" />
 		<color name="AD_DensePalm" red="118" green="114" blue="38" terrain="Dense Jungle" elevation="UNKNOWN" />
 		<color name="AD_ETO_DensePalm" red="82" green="98" blue="48" terrain="Dense Jungle" elevation="UNKNOWN" />
+		<color name="DTO_LightWoods" red="119" green="119" blue="58" terrain="Light Woods" elevation="UNKNOWN" />
 	</colors>
 
 	<terrainTypes>
