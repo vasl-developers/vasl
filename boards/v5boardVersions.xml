@@ -287,9 +287,9 @@
 
 
 		<!--# NG = 1.0 duplicate -->
-		<boarddata name="RBv2" version="2.4" versionDate="2021/06/30" description="Red Barricades" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="RBv3" version="6.4" versionDate="2024/09/10" description="Red Barricades" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="RO" version="6.2" versionDate="2022/04/30" description="Red October" boardType="HASL" publisher="MMP" issued="" />
+		<!--<boarddata name="RBv2" version="2.4" versionDate="2021/06/30" description="Red Barricades" boardType="HASL" publisher="MMP" issued="" /> -->
+		<boarddata name="RBv3" version="6.5" versionDate="2025/02/10" description="Red Barricades" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="RO" version="6.3" versionDate="2025/02/10" description="Red October" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="KR" version="6.0" versionDate="2021/06/30" description="Kakazu Ridge" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="GT" version="1.0" versionDate="2008/08/30" description="Gavatu-Tanambogo" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="CH" version="0.93" versionDate="2008/08/30" description="Cheneux (KGP II)" boardType="HASL" publisher="MMP" issued="" />
@@ -467,8 +467,8 @@
 		<boarddata name="Eagles" version="1.0" versionDate="2020/09/30" description="Where the Half-Squads Dare" boardType="HASL" publisher="Grumble Jones" issued="" />
 		<boarddata name="Sch" version="1.0" versionDate="2021/02/28" description="Objective: Schmidt" boardType="HASL" publisher="BFP" issued="" />
 		<boarddata name="Voss" version="1.0" versionDate="2021/02/28" description="Objective: Schmidt" boardType="HASL" publisher="BFP" issued="" />
-		<boarddata name="RBv651" version="0.05" versionDate="2021/02/28" description="Red Barricades" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="ROv651" version="0.09" versionDate="2021/02/28" description="Red October" boardType="HASL" publisher="MMP" issued="" />
+		<!--<boarddata name="RBv651" version="0.05" versionDate="2021/02/28" description="Red Barricades" boardType="HASL" publisher="MMP" issued="" /> -->
+		<!--<boarddata name="ROv651" version="0.09" versionDate="2021/02/28" description="Red October" boardType="HASL" publisher="MMP" issued="" /> -->
 		<boarddata name="StW" version="1.0" versionDate="2021/03/30" description="" boardType="XXX" publisher="YYY" issued="" />
 		<boarddata name="NP1" version="1.1" versionDate="2025/01/15" description="" boardType="Geoboard" publisher="Unknown" issued="" />
 		<boarddata name="NP2" version="1.1" versionDate="2025/01/15" description="" boardType="Geoboard" publisher="Unknown" issued="" />

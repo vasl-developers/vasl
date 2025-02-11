@@ -3307,6 +3307,7 @@ public class Map  {
                 }
 
             }; //.nearestHexsideIsCliff(status.currentCol, status.currentRow, status, result);
+
             if (isBlindHex(status, status.currentTerrainHgt, isCliffHexside, cliffHexsideTerrainHeightadjustment)) {
 
                 // blocked if terrain is obstacle and not hexsides such as Rowhouse or Interior Factory Walls (handled in checkHexsideTerrainRule) DR
