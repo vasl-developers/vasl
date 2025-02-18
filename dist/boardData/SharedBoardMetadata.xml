@@ -1020,6 +1020,10 @@
 		<color name="PaddyInterior" red="174" green="168" blue="78" terrain="Rice Paddy, Irrigated" elevation="UNKNOWN" />
 		<!-- Rubble  -->
 		<color name="StoneRubble" red="115" green="115" blue="116" terrain="Stone Rubble" elevation="0" />
+		<color name="StoneRubble2" red="130" green="130" blue="131" terrain="Stone Rubble" elevation="UNKNOWN" />
+		<color name="StoneRubble3" red="85" green="85" blue="86" terrain="Stone Rubble" elevation="UNKNOWN" />
+		<color name="StoneRubble4" red="160" green="160" blue="161" terrain="Stone Rubble" elevation="UNKNOWN" />
+		<color name="StoneRubble5" red="55" green="55" blue="56" terrain="Stone Rubble" elevation="UNKNOWN" />
 		<color name="WoodRubble" red="181" green="125" blue="60" terrain="Wooden Rubble" elevation="UNKNOWN" />
 		<color name="WoodRubble2" red="117" green="100" blue="39" terrain="Wooden Rubble" elevation="UNKNOWN" />
 		<!-- Shellholes  -->
