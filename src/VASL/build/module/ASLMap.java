@@ -1000,6 +1000,7 @@ public class ASLMap extends Map {
                                 //Retrieving the R G B values
                                 Color color = getRGBColor(c);
                                 terr = getOverlayTerrainfromColor(color, losonoverlays);
+
                                 while(terr == null){
                                     color = getOverlayNearestColor(losonoverlays, losonoverlays.overpositionx, losonoverlays.overpositiony);
                                     if (color.equals(Color.white)){
@@ -1136,7 +1137,7 @@ public class ASLMap extends Map {
             bdglevelhex.getCenterLocation().setTerrain(bdghexes.get(bdglevelhex));
             Terrain centerlocationterrain = bdglevelhex.getCenterLocation().getTerrain();
             final boolean multihex = isOverlayBldgMultiHex(bdglevelhex, losonoverlays);
-                bdglevelhex.addBuildingLevels(centerlocationterrain, multihex);
+            bdglevelhex.addBuildingLevels(centerlocationterrain, multihex);
         }
     }
     private boolean isOverlayBldgMultiHex(Hex bdglevelhex, LOSonOverlays losonoverlays){
@@ -1160,21 +1161,24 @@ public class ASLMap extends Map {
         hexsidepoints[5] = new Point ((int) (-horizontaloffset + hexcentreonoverlay.x + 1),  (int) (-verticaloffset/2.0 + hexcentreonoverlay.y + 1.0));
         // now test if hexside points contain building colour; if the do, it is multihex building
         for (int i = 0; i < 6; i++) {
-            final int c = losonoverlays.bi.getRGB((int) hexsidepoints[i].getX(), (int) hexsidepoints[i].getY());
-            Terrain terr= null;
-            if ((c >> 24) != 0x00) { // not a transparent pixel
-                String terraintouse = "Open Ground";
-                //Retrieving the R G B values
-                final Color color = getRGBColor(c);
-                final int terrint = losonoverlays.board.getVASLBoardArchive().getTerrainForColor(color);
-                if (terrint >= 0) {
-                    terr = losonoverlays.newlosdata.getTerrain(terrint);
-                    terraintouse = terr.getName();
-                }
-                if (terr != null) {
-                    if (terr.isBuilding()) {
-                        multihexbdg=true;
-                        break;
+            // test hexsidepoint is on the overlay
+            if (hexsidepoints[i].getX() >= 0 && hexsidepoints[i].getY() >= 0 && hexsidepoints[i].getX() <= losonoverlays.bi.getWidth() && hexsidepoints[i].getY() <= losonoverlays.bi.getHeight()) {
+                final int c = losonoverlays.bi.getRGB((int) hexsidepoints[i].getX(), (int) hexsidepoints[i].getY());
+                Terrain terr = null;
+                if ((c >> 24) != 0x00) { // not a transparent pixel
+                    String terraintouse = "Open Ground";
+                    //Retrieving the R G B values
+                    final Color color = getRGBColor(c);
+                    final int terrint = losonoverlays.board.getVASLBoardArchive().getTerrainForColor(color);
+                    if (terrint >= 0) {
+                        terr = losonoverlays.newlosdata.getTerrain(terrint);
+                        terraintouse = terr.getName();
+                    }
+                    if (terr != null) {
+                        if (terr.isBuilding()) {
+                            multihexbdg = true;
+                            break;
+                        }
                     }
                 }
             }

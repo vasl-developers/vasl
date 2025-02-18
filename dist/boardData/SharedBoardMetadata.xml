@@ -1020,6 +1020,10 @@
 		<color name="PaddyInterior" red="174" green="168" blue="78" terrain="Rice Paddy, Irrigated" elevation="UNKNOWN" />
 		<!-- Rubble  -->
 		<color name="StoneRubble" red="115" green="115" blue="116" terrain="Stone Rubble" elevation="0" />
+		<color name="StoneRubble2" red="130" green="130" blue="131" terrain="Stone Rubble" elevation="UNKNOWN" />
+		<color name="StoneRubble3" red="85" green="85" blue="86" terrain="Stone Rubble" elevation="UNKNOWN" />
+		<color name="StoneRubble4" red="160" green="160" blue="161" terrain="Stone Rubble" elevation="UNKNOWN" />
+		<color name="StoneRubble5" red="55" green="55" blue="56" terrain="Stone Rubble" elevation="UNKNOWN" />
 		<color name="WoodRubble" red="181" green="125" blue="60" terrain="Wooden Rubble" elevation="UNKNOWN" />
 		<color name="WoodRubble2" red="117" green="100" blue="39" terrain="Wooden Rubble" elevation="UNKNOWN" />
 		<!-- Shellholes  -->
@@ -1536,6 +1540,54 @@
 		<color name="AD_DensePalm" red="118" green="114" blue="38" terrain="Dense Jungle" elevation="UNKNOWN" />
 		<color name="AD_ETO_DensePalm" red="82" green="98" blue="48" terrain="Dense Jungle" elevation="UNKNOWN" />
 		<color name="DTO_LightWoods" red="119" green="119" blue="58" terrain="Light Woods" elevation="UNKNOWN" />
+
+		<!-- HASL colors for HASL overlays -->
+		<color name="Factory_Exterior_WallsL1_51" red="1" green="7" blue="11" terrain="Stone Factory Wall, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_52" red="0" green="3" blue="0" terrain="Stone Factory Wall, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_53" red="15" green="19" blue="21" terrain="Stone Factory Wall, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_54" red="7" green="13" blue="16" terrain="Stone Factory Wall, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_55" red="25" green="28" blue="30" terrain="Stone Factory Wall, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_56" red="27" green="29" blue="27" terrain="Stone Factory Wall, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_57" red="5" green="8" blue="4" terrain="Stone Factory Wall, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_58" red="12" green="16" blue="19" terrain="Stone Factory Wall, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_59" red="27" green="25" blue="28" terrain="Stone Factory Wall, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_510" red="10" green="7" blue="12" terrain="Stone Factory Wall, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_511" red="3" green="9" blue="12" terrain="Stone Factory Wall, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL1_51" red="148" green="157" blue="152" terrain="Gutted Stone Factory, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL1_52" red="112" green="116" blue="119" terrain="Gutted Stone Factory, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL1_53" red="147" green="149" blue="146" terrain="Gutted Stone Factory, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL1_54" red="142" green="144" blue="141" terrain="Gutted Stone Factory, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL1_55" red="144" green="153" blue="148" terrain="Gutted Stone Factory, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL1_56" red="110" green="110" blue="102" terrain="Gutted Stone Factory, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL1_57" red="152" green="154" blue="151" terrain="Gutted Stone Factory, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL1_58" red="145" green="157" blue="157" terrain="Gutted Stone Factory, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL1_59" red="142" green="153" blue="154" terrain="Gutted Stone Factory, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL1_510" red="137" green="149" blue="149" terrain="Gutted Stone Factory, 1.5 Level" elevation="UNKNOWN" />
+
+		<color name="Factory_Exterior_WallsL2_51" red="1" green="7" blue="12" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL2_52" red="0" green="3" blue="1" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" />
+		<!-- <color name="Factory_Exterior_WallsL2_53" red="15" green="19" blue="21" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL2_54" red="7" green="13" blue="16" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" /> -->
+		<color name="Factory_Exterior_WallsL2_55" red="25" green="28" blue="31" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" />
+		<!--<color name="Factory_Exterior_WallsL2_56" red="27" green="29" blue="27" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" /> -->
+		<color name="Factory_Exterior_WallsL2_57" red="5" green="8" blue="5" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" />
+		<!-- <color name="Factory_Exterior_WallsL2_58" red="12" green="16" blue="19" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" /> -->
+		<color name="Factory_Exterior_WallsL1_59" red="27" green="25" blue="29" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_510" red="10" green="7" blue="13" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_511" red="3" green="9" blue="13" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_512" red="20" green="23" blue="26" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_513" red="43" green="46" blue="49" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_514" red="16" green="12" blue="18" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_515" red="17" green="21" blue="24" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_516" red="13" green="19" blue="27" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL2_51" red="149" green="158" blue="154" terrain="Gutted Stone Factory, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL2_52" red="112" green="107" blue="106" terrain="Gutted Stone Factory, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL2_53" red="147" green="149" blue="147" terrain="Gutted Stone Factory, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL2_54" red="142" green="144" blue="142" terrain="Gutted Stone Factory, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL2_55" red="144" green="153" blue="149" terrain="Gutted Stone Factory, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL2_56" red="145" green="157" blue="158" terrain="Gutted Stone Factory, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL2_57" red="142" green="153" blue="155" terrain="Gutted Stone Factory, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL2_57" red="137" green="149" blue="150" terrain="Gutted Stone Factory, 2.5 Level" elevation="UNKNOWN" />
 	</colors>
 
 	<terrainTypes>
