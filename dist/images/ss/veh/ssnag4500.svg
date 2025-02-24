@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg width="60" height="60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<!--
-		Note #:		Buessing-NAG 4500 <i>tr</i>
-		Name:		96b
+		Note #:		96b
+		Name:		Buessing-NAG 4500 <i>tr</i>
 		Version:	1.0
 
 		Author(s): Gordon Molek, Klas Malmström, Alan Bills
@@ -33,8 +33,6 @@
 	</g>
 	<!-- Unit depiction -->
 	<image x="0" y="0" width="60" height="60" preserveAspectRatio="xMidYMid meet" transform="" href="svg/ssnag4500.png" xlink:href="svg/ssnag4500.png"/>
-	<!-- Chapter H Note # -->
-	<text x="50%" y="57%" dominant-baseline="auto" text-anchor="middle"><tspan style="font-size:14.00px;font-weight:normal;font-family:Nimbus Sans L;fill:red;fill-opacity:1;stroke:white;stroke-opacity:1;stroke-width:0.4">96b</tspan></text>
 	<!-- PP # -->
 	<svg x="3.00" y="51.00" width="36.00" height="6.00" style="overflow:visible">
 		<text x="0%" y="98%" dominant-baseline="auto" text-anchor="start"><tspan style="font-size:8.00px;font-weight:bold;font-family:Nimbus Sans L;fill:white;fill-opacity:1;stroke-width:0.2">29PP</tspan></text>
