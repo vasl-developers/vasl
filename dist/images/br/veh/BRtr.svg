@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg width="60" height="60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<!--
-		Note #:		Generic Truck <i>tr</i>
-		Name:		g6
+		Note #:		g6
+		Name:		Generic Truck <i>tr</i>
 		Version:	1.0
 
 		Author(s): Gordon Molek, Klas Malmström, Alan Bills
@@ -35,11 +35,11 @@
 	<image x="0" y="0" width="60" height="60" preserveAspectRatio="xMidYMid meet" transform="" href="svg/BRtr.png" xlink:href="svg/BRtr.png"/>
 	<!-- Front Armor -->
 	<svg x="40.00" y="15.00" width="18.00" height="12.00" style="overflow:visible">
-		<text x="66%" y="79%" dominant-baseline="auto" text-anchor="middle"><tspan style="font-size:9.50px;font-weight:bold;font-family:Nimbus Sans L;fill:black;fill-opacity:1;stroke:none;stroke-width:0.2"></tspan></text>
+		<text x="66%" y="79%" dominant-baseline="auto" text-anchor="middle"><tspan style="font-size:9.50px;font-weight:bold;font-family:Nimbus Sans L;fill:black;fill-opacity:1;stroke:none;stroke-width:0.5"></tspan></text>
 	</svg>
 	<!-- Side/Rear Armor -->
 	<svg x="40.00" y="26.00" width="18.00" height="12.00" style="overflow:visible">
-		<text x="66%" y="79%" dominant-baseline="auto" text-anchor="middle"><tspan style="font-size:9.50px;font-weight:bold;font-family:Nimbus Sans L;fill:black;fill-opacity:1;stroke:none;stroke-width:0.2"></tspan></text>
+		<text x="66%" y="79%" dominant-baseline="auto" text-anchor="middle"><tspan style="font-size:9.50px;font-weight:bold;font-family:Nimbus Sans L;fill:black;fill-opacity:1;stroke:none;stroke-width:0.5"></tspan></text>
 	</svg>
 	<!-- Movement -->
 	<svg x="30.00" y="3.00" width="27.00" height="12.00" style="overflow:visible">
