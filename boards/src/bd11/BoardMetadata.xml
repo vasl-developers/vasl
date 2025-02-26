@@ -21,7 +21,7 @@
 	v6.0 Nov 2013 (TR)
 	v6.1 Mar 2018 update version for lightwoods transform
 -->
-<boardMetadata name="11" version="6.5" versionDate="Oct 2023" author="TR" boardImageFileName="bd11.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="11" version="6.8" versionDate="Feb 2025" author="TR" boardImageFileName="bd11.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -82,6 +82,8 @@
 		<overlaySSRule name="BSO_11_Rogue" image="BSO_11_Rogue.gif" x="0" y="0" />
 		<overlaySSRule name="NoRoads" image="bd11_NoRoads.gif" x="1" y="1" />
 		<overlaySSRule name="LightWoods" image="bd11_LightWoods.gif" x="0" y="0" />
+		<overlaySSRule name="SSO_U37_11" image="SSO_U37_11.gif" x="0" y="0" />
+
 		
 	</overlaySSRules>
 	

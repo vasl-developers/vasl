@@ -18,6 +18,13 @@
   <Checkbox name="">
          <entry name="AP73: Happy Valley" rule="SSO_AP73" text="scenario AP73 overlay"/>
  </Checkbox>
+<Checkbox name="">
+         <entry name="U26: Bald Hill" rule="SSO_U26" text="scenario U26 overlay"/>
+ </Checkbox>
+
+ <Checkbox name="">
+         <entry name="U36: Operation Switchback" rule="SSO_U36" text="scenario U36 overlay"/>
+ </Checkbox>
  <Checkbox name="">
          <entry name="Overlay TR2-1" rule="2_BSO_TR2-1" text="overlay TR2-1"/>
  </Checkbox>

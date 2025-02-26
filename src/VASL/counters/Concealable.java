@@ -294,7 +294,11 @@ public class Concealable extends Obscurable implements EditablePiece {
   private void loadImages(Component obs) {
     if (concealedToMe == null) {
       //try {
-        concealedToMe = Op.load(imageName + ".gif").getImage();
+        if (imageName.contains(".")) {  // imagename already has file extension - either .svg or .gif
+          concealedToMe = Op.load(imageName).getImage();
+        } else {       // no file extension present in imagename
+          concealedToMe = Op.load(imageName + ".gif").getImage();
+        }
         if (concealedToMe != null) {
           concealedToMe = null;
           conceal = new ScaledImagePainter();

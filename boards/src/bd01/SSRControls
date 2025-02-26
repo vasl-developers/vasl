@@ -9,5 +9,9 @@
  <Checkbox name="">
          <entry name="O: The St. Goar Assault" rule="SSO_O" text="scenario O overlay"/>
  </Checkbox>
+<Checkbox name="">
+         <entry name="U4: Climax At Nijmegen Bridge" rule="SSO_U4" text="scenario U4 overlay"/>
+ </Checkbox>
+
    </Option>
 </SSRControls>

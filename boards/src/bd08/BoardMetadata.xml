@@ -24,7 +24,7 @@
 	v6.4 Mar 2018 update version for lightwoods transform (ATC)
 
 -->
-<boardMetadata name="08" version="6.9" versionDate="Dec 2024" author="TR" boardImageFileName="bd08.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="08" version="7.3" versionDate="Feb 2025" author="TR" boardImageFileName="bd08.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -121,6 +121,9 @@
 		<overlaySSRule name="SSO_J39" image="08_SSO_J39.gif" x="36" y="28" />
 		<overlaySSRule name="SSO_SP132" image="08_SSO_SP132.gif" x="410" y="200" />
 		<overlaySSRule name="SSO_FE149" image="08_SSO_FE149.gif" x="88" y="325" />
+		<overlaySSRule name="SSO_U4" image="08_SSO_U4.gif" x="0" y="0" />
+		<overlaySSRule name="SSO_U37_08" image="SSO_U37_08.gif" x="0" y="0" />
+
 		<overlaySSRule name="BSO_08_BSOCW" image="BSO_08_BSOCW.gif" x="76" y="1" />
 		<overlaySSRule name="8_BSO_NoIsland" image="08_NoIsland.gif" x="1570" y="262" />
 		<overlaySSRule name="8_BSO_1SideWater" image="08_Hexrow1SideToWater.gif" x="1" y="1" />

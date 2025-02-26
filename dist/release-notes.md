@@ -17,7 +17,7 @@
 ---
 
 ## 📈 Improvements
-- Improvement 1: Implement SVG graphics for all Gun and Vehicle counters. 
+- Improvement 1: Implement SVG graphics for all Boats, Planes and Shared Vehicles (white counters) and revised Vehicle counters based on feedback from Beta3. 
 
 
 ---

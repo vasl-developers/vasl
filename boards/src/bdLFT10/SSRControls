@@ -1,13 +1,24 @@
 <SSRControls>
    <Option name="Board LFT 10 Special Transformations">
    <Checkbox>
-       <entry name="Mandatory LFT AD Arid/Desert Terrain Changes" rule="BSO_LFT10_LFT_Arid"/>
+       <entry name="Mandatory LFT AD Arid/Desert Terrain Changes" rule="BSO_LFT10_LFT_Arid,LightWoods"/>
      </Checkbox>
 	 <Checkbox>
-       <entry name="FT276 - Genghis Khan Lives!" rule="SSO_FT276"/>
+       <entry name="FT276 - Genghis Khan Lives!" rule="SSO_FT276,LightWoods"/>
      </Checkbox>
 	 <Checkbox>
-       <entry name="FT279 - The Russians Are Coming" rule="SSO_FT279"/>
+       <entry name="FT279 - The Russians Are Coming" rule="SSO_FT279,LightWoods"/>
      </Checkbox>
+	<Checkbox>
+       <entry name="All DTO" rule="BSO_LFT10_all_DTO"/>
+     </Checkbox>
+	<Checkbox>
+       <entry name="All ETO" rule="BSO_LFT10_all_ETO"/>
+     </Checkbox>
+	<Checkbox>
+       <entry name="LFT Arid" rule="BSO_LFT10_LFT_Arid,LightWoods"/>
+     </Checkbox>
+
+
      </Option>
 </SSRControls>

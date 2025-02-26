@@ -33,5 +33,8 @@
 	   <Checkbox name="">
          <entry name="Scenario A120 - Uncommon Valor" rule="SSO_07_A120" text="Bd7 Scen 120 SSO"/>
        </Checkbox>
+	<Checkbox name="">
+         <entry name="Scenario U37 - Scheldt Fortress South" rule="SSO_U37_07" text="Bd7 Scen U37 SSO"/>
+       </Checkbox>
   </Option>
   </SSRControls>

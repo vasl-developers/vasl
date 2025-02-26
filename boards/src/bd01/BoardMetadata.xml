@@ -21,7 +21,7 @@
 	6.1 add lightwoods transform (ATC) Mar 2018
 	12/14/22 - added SSO_1_4 - TJ
 -->
-<boardMetadata name="01" version="6.7" versionDate="Jan 2023" author="TR" boardImageFileName="bd01.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="01" version="6.9" versionDate="Jan 2025" author="TR" boardImageFileName="bd01.gif" hasHills="FALSE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -114,6 +114,8 @@
 		<overlaySSRule name="SSO_32" image="SSO_32.gif" x="61" y="1" />
 		<overlaySSRule name="NoRoads" image="01_NoRoads.gif" x="1" y="1" />
 		<overlaySSRule name="LightWoods" image="01_LightWoods.gif" x="0" y="0" />
+		<overlaySSRule name="SSO_U4" image="01_SSO_U4.gif" x="0" y="0" />
+
 	</overlaySSRules>
 	
 	<colors>

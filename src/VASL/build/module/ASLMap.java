@@ -26,6 +26,7 @@ import VASL.LOS.Map.Terrain;
 import VASL.LOS.counters.CounterMetadataFile;
 import VASL.build.module.map.ASLPieceMover;
 import VASL.build.module.map.ASLStackMetrics;
+import VASL.build.module.map.boardArchive.BoardMetadata;
 import VASL.build.module.map.boardArchive.SharedBoardMetadata;
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASL.build.module.map.boardPicker.BoardException;
@@ -419,11 +420,12 @@ public class ASLMap extends Map {
                     if(board.isCropped()) {
                         losdata = board.cropLOSData(losdata);
                     }
+                    //add overlays to LOS
+                    losdata = adjustLOSForOverlays(board, losdata);
+                    // flip after overlay adjustment
                     if(board.isReversed()) {
                         losdata.flip();
                     }
-                    //add overlays to LOS
-                    losdata = adjustLOSForOverlays(board, losdata);
                     // add the board LOS data to the map
                     // .insertMap is designed to work with only geo board thus need to test for non-geo boards (in this situation geo boards inclues AP boards and deluxe boards)
                     if ((board.getWidth() == 33 && board.getHeight() == 10) || (board.getWidth() == 17 && board.getHeight() == 20) || (board.getWidth() == 15 && board.getHeight() ==5)) {
@@ -479,10 +481,10 @@ public class ASLMap extends Map {
         public BufferedImage bi;
         public VASLBoard board;
         public Rectangle ovrrec;
-        public int currentx;
-        public int currenty;
-        public int overpositionx;
-        public int overpositiony;
+        public int currentx;  //position on overlay
+        public int currenty;  // position on overlay
+        public int overpositionx; //position on mapboard
+        public int overpositiony;  // position on mapboard
 
     }
     private VASL.LOS.Map.Map adjustLOSForOverlays(VASLBoard board, VASL.LOS.Map.Map losdata) {
@@ -495,6 +497,7 @@ public class ASLMap extends Map {
             if(o.getName().equals("")){continue;} // prevents error when using underlays (which are added as overlays)
             if(o.getName().contains("BSO") && (!o.getName().contains("BSO_LFT3"))) {continue;} // prevents error when using BSO which are handled elsewhere
             if(o.getName().contains("NoCliffs")) {continue;} // cliff los adjustment handled in VASLBoard
+            if(o.getName().contains("LightWoods")) {continue;} // Light Woods are handled by LOSSSRule terrain mapping. dont need to go through overlay method
             // BSO_LFT3 may be a special case; treat it as so for now; if find others then need to develop a proper solution
             losonoverlays.ovrrec = o.bounds();
             // get the image as a buffered image
@@ -833,146 +836,6 @@ public class ASLMap extends Map {
             HashMap<VASL.LOS.Map.Hex, VASL.LOS.Map.Terrain>  inhhexes = new HashMap<VASL.LOS.Map.Hex, VASL.LOS.Map.Terrain>();
             HashMap<VASL.LOS.Map.Hex, VASL.LOS.Map.Terrain>  bdghexes = new HashMap<VASL.LOS.Map.Hex, VASL.LOS.Map.Terrain>();
             losonoverlays.overpositionx =0; losonoverlays.overpositiony=0;
-            if (losonoverlays.board.isReversed()){
-                // flip the overlay grid
-                for (losonoverlays.currentx = 0; losonoverlays.currentx < losonoverlays.bi.getWidth(); losonoverlays.currentx++) {
-                    for (losonoverlays.currenty = 0; losonoverlays.currenty < losonoverlays.bi.getHeight(); losonoverlays.currenty++) {
-                        int cropheight = losonoverlays.board.getCropBounds().getHeight() == -1 ? (int) losonoverlays.board.getUncroppedSize().getHeight() : (int)losonoverlays.board.getCropBounds().getHeight();
-                        int cropwidth = losonoverlays.board.getCropBounds().getWidth() ==-1 ? (int) losonoverlays.board.getUncroppedSize().getWidth() : (int) losonoverlays.board.getCropBounds().getWidth() ;
-                        losonoverlays.overpositionx = cropwidth - losonoverlays.ovrrec.x  -losonoverlays.currentx -1 + (int) losonoverlays.board.getCropBounds().getX();
-                        losonoverlays.overpositiony = cropheight - losonoverlays.ovrrec.y -losonoverlays.currenty -1 + (int) losonoverlays.board.getCropBounds().getY();
-                        if (losonoverlays.newlosdata.onMap(losonoverlays.overpositionx, losonoverlays.overpositiony) && losonoverlays.newlosdata.gridToHex(losonoverlays.overpositionx, losonoverlays.overpositiony) !=null) {
-                            int c = losonoverlays.bi.getRGB(losonoverlays.currentx, losonoverlays.currenty);
-                            Terrain terr= null; int elevint=0;
-                            if ((c >> 24) != 0x00) { // not a transparent pixel
-                                //Retrieving the R G B values
-                                Color color = getRGBColor(c);
-                                terr = getOverlayTerrainfromColor(color, losonoverlays);
-                                int bumpx = 0; int bumpy = 0;
-                                while(terr == null) {
-                                    color = getOverlayNearestColor(losonoverlays, losonoverlays.overpositionx + bumpx, losonoverlays.overpositiony + bumpy);
-                                    if (color.equals(Color.white)) {
-                                        terr = losonoverlays.newlosdata.getTerrain(losonoverlays.board.getVASLBoardArchive().getTerrainForVASLColor("L0Winter"));
-                                    }
-                                    else {
-                                        terr = getOverlayTerrainfromColor(color, losonoverlays);
-                                        if (terr == null){bumpx += 1; bumpy += 1;}
-                                    }
-                                }
-                                terr = resetterraintypefortransform(losonoverlays.board.getTerrainChanges(), terraintype, terr);
-                                elevint = getOverlayElevationfromColor(losonoverlays, color);
-                                if (terr.isDepression()) {
-                                    elevint = losonoverlays.newlosdata.getGridElevation(losonoverlays.overpositionx, losonoverlays.overpositiony) -1;
-                                }
-                                //add Hex to collections of inherent hexes and building hexes on the overlay
-                                addHextoOverlayInhandBldgMaps(terraintype, terr, losonoverlays, inhhexes, bdghexes);
-                                //set terrain type for center location or hexside location (if hexside terrain)
-                                setOverlayTerrainType(losonoverlays, terr, terraintype);
-                                //set elevation level for point and hex
-                                if (!preserveelevation) {
-                                    // turn this into a method if can do so with reversed board
-                                    //set elevation for point
-                                    losonoverlays.newlosdata.setGridElevation(elevint, losonoverlays.overpositionx, losonoverlays.overpositiony );
-                                    int testx = 0; int testy = 0;
-                                    //adjust point values to match hexgrid data
-                                    if ((int)losonoverlays.board.getCropBounds().getX() == 0 && (int)losonoverlays.board.getCropBounds().getWidth() != -1) {
-                                        testx = ((int) losonoverlays.board.getUncroppedSize().getWidth()) - ((int) losonoverlays.board.getCropBounds().getWidth() - losonoverlays.overpositionx);
-                                    }
-                                    else {
-                                        testx = losonoverlays.overpositionx;
-                                    }
-                                    if ((int)losonoverlays.board.getCropBounds().getY() == 0 && (int)losonoverlays.board.getCropBounds().getHeight() != -1) {
-                                        testy = (int) losonoverlays.board.getUncroppedSize().getHeight() - ((int) losonoverlays.board.getCropBounds().getHeight() - losonoverlays.overpositiony);
-                                    }
-                                    else {
-                                        testy = losonoverlays.overpositiony;
-                                    }
-                                    //test if pixel is hex center
-                                    if (testx  == (int)(losonoverlays.newlosdata.gridToHex(losonoverlays.overpositionx, losonoverlays.overpositiony).getCenterLocation().getLOSPoint()).getX() &&
-                                        testy == (int)(losonoverlays.newlosdata.gridToHex(losonoverlays.overpositionx, losonoverlays.overpositiony).getCenterLocation().getLOSPoint()).getY()) {
-                                        // if white center dot on overlay aligns with hex center, won't set elevation properly so need to look for nearby terrain type
-                                        // bit of a hack but should work - try it until we get a bug
-                                        color = getRGBColor(c);
-                                        if (color.equals(Color.white) || color.equals(Color.black)) { // && j<=(x+6)) {
-                                            color = getOverlayNearestColor(losonoverlays, losonoverlays.overpositionx, losonoverlays.overpositiony);
-                                            elevint = color.equals(Color.white) ? 0 : losonoverlays.board.getVASLBoardArchive().getElevationForColor(color);
-                                        }
-                                    }
-                                    // this sets base elevation for the hex - crest line & depression hexes can contain multiple elevations
-                                    // hack for LFT3; change if applies to other boards
-                                    if (!losonoverlays.board.getVASLBoardArchive().getVASLColorName(color).contains("SnowHexDots2")) {
-                                        losonoverlays.newlosdata.gridToHex(losonoverlays.overpositionx, losonoverlays.overpositiony).setBaseLevelofHex(elevint);
-                                    }
-                                }
-                            }
-                            else {
-                                // transparent pixel - check if center dot
-                                //adjust point values to match hexgrid data
-                                int testx = 0; int testy = 0;
-                                if ((int)losonoverlays.board.getCropBounds().getX() == 0 && (int)losonoverlays.board.getCropBounds().getWidth() != -1) {
-                                    testx = ((int) losonoverlays.board.getUncroppedSize().getWidth()) - ((int) losonoverlays.board.getCropBounds().getWidth() - losonoverlays.overpositionx);
-                                }
-                                else {
-                                    testx = losonoverlays.overpositionx;
-                                }
-                                if ((int)losonoverlays.board.getCropBounds().getY() == 0 && (int)losonoverlays.board.getCropBounds().getHeight() != -1) {
-                                    testy = (int) losonoverlays.board.getUncroppedSize().getHeight() - ((int) losonoverlays.board.getCropBounds().getHeight() - losonoverlays.overpositiony);
-                                }
-                                else {
-                                    testy = losonoverlays.overpositiony;
-                                }
-                                //test if pixel is hex center
-                                if (losonoverlays.overpositionx + (int) losonoverlays.board.getCropBounds().getX() == (int)(losonoverlays.newlosdata.gridToHex(losonoverlays.overpositionx, losonoverlays.overpositiony ).getHexCenter()).getX() &&
-                                        losonoverlays.overpositiony + (int) losonoverlays.board.getCropBounds().getY()  == (int)(losonoverlays.newlosdata.gridToHex(losonoverlays.overpositionx , losonoverlays.overpositiony).getHexCenter()).getY()) {
-                                    // if center dot on overlay is transparent and aligns with hex center, won't set elevation properly so need to look for nearby terrain type
-                                    // bit of a hack but should work - try it until we get a bug
-                                    // the bug is with overlays where the border is transparent so test
-                                    // (1) if pixel is on the overlay edge and (2) if so are pixels 2 away also transparent
-                                    // in those conditions, skip actions
-                                    if (!pixelOnTransparentOverlayBorder(losonoverlays)) {
-                                        int j = 0, k = 0;
-                                        elevint = -99;
-
-                                        while ((c >> 24) == 0x00 && j <= 6) {
-                                            j += 2;
-                                            k += 2;
-                                            if (losonoverlays.newlosdata.onMap(losonoverlays.currentx + j, losonoverlays.currenty + k) && pointIsOnOverlay(losonoverlays.bi, losonoverlays.currentx+j, losonoverlays.currenty+k)) {
-                                                c = losonoverlays.bi.getRGB(losonoverlays.currentx + j, losonoverlays.currenty + k);
-                                            }
-                                            else if (losonoverlays.newlosdata.onMap(losonoverlays.currentx + j, losonoverlays.currenty - k) && pointIsOnOverlay(losonoverlays.bi, losonoverlays.currentx+j, losonoverlays.currenty-k)) {
-                                                c = losonoverlays.bi.getRGB(losonoverlays.currentx + j, losonoverlays.currenty - k);
-                                            }
-                                            else if (losonoverlays.newlosdata.onMap(losonoverlays.currentx - j, losonoverlays.currenty + k) && pointIsOnOverlay(losonoverlays.bi, losonoverlays.currentx-j, losonoverlays.currenty+k)) {
-                                                c = losonoverlays.bi.getRGB(losonoverlays.currentx - j, losonoverlays.currenty + k);
-                                            }
-                                            else if (losonoverlays.newlosdata.onMap(losonoverlays.currentx - j, losonoverlays.currenty - k) && pointIsOnOverlay(losonoverlays.bi, losonoverlays.currentx-j, losonoverlays.currenty-k)) {
-                                                c = losonoverlays.bi.getRGB(losonoverlays.currentx - j, losonoverlays.currenty - k);
-                                            }
-                                            else {
-                                                break;
-                                            }
-                                            final Color color = getRGBColor(c);
-                                            if ((color.equals(Color.white))) {
-                                                elevint = 0;
-                                            }
-                                            else {
-                                                elevint = losonoverlays.board.getVASLBoardArchive().getElevationForColor(color);
-                                            }
-                                        }
-                                        // this sets base elevation for the hex - crest line & depression hexes can contain multiple elevations
-                                        if (elevint != -99) {
-                                            losonoverlays.newlosdata.gridToHex(losonoverlays.overpositionx, losonoverlays.overpositiony).setBaseLevelofHex(elevint);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                addOverlayInhTerrainToLOS(inhhexes, losonoverlays, losonoverlays.board);
-                addOverlayBldgLevelsToLOS(bdghexes, losonoverlays);
-            }
-            else {
                 for (losonoverlays.currentx = 0; losonoverlays.currentx < losonoverlays.bi.getWidth(); losonoverlays.currentx++) {
                     for (losonoverlays.currenty = 0; losonoverlays.currenty < losonoverlays.bi.getHeight(); losonoverlays.currenty++) {
                         losonoverlays.overpositionx = losonoverlays.currentx + (int) losonoverlays.ovrrec.getX() - (int) losonoverlays.board.getCropBounds().getX();
@@ -984,19 +847,29 @@ public class ASLMap extends Map {
                                 //Retrieving the R G B values
                                 Color color = getRGBColor(c);
                                 terr = getOverlayTerrainfromColor(color, losonoverlays);
-                                int bumpx = 0; int bumpy = 0;
+
                                 while(terr == null){
-                                    color = getOverlayNearestColor(losonoverlays, losonoverlays.overpositionx + bumpx, losonoverlays.overpositiony + bumpy);
+                                    color = getOverlayNearestColor(losonoverlays, losonoverlays.overpositionx, losonoverlays.overpositiony);
                                     if (color.equals(Color.white)){
                                         terr = losonoverlays.newlosdata.getTerrain(losonoverlays.board.getVASLBoardArchive().getTerrainForVASLColor("L0Winter"));
                                     }
                                     else {
                                         terr = getOverlayTerrainfromColor(color, losonoverlays);
-                                        if (terr == null){bumpx += 1; bumpy += 1;}
+                                        if (terr == null) {   //bumpx += 1; bumpy += 1;}
+                                            // use OG with elevint from existing losdata; this is a hack when can't find terrain
+                                            int passelev = losonoverlays.newlosdata.getGridElevation(losonoverlays.overpositionx, losonoverlays.overpositiony);
+                                            String colorname = useDefaultTerrain (passelev);
+                                            terr = losonoverlays.newlosdata.getTerrain(losonoverlays.board.getVASLBoardArchive().getTerrainForVASLColor(colorname));
+
+                                        }
                                     }
                                 }
                                 terr = resetterraintypefortransform(losonoverlays.board.getTerrainChanges(), terraintype, terr);
                                 elevint = getOverlayElevationfromColor(losonoverlays, color);
+                                // if elevint = -99 then method above could not find a proper elevation for terrain; revert to current elevation in mapboard losdata
+                                if (elevint == -99){
+                                    elevint = losonoverlays.newlosdata.getGridElevation(losonoverlays.overpositionx, losonoverlays.overpositiony);
+                                }
                                 if (terr.isDepression()){
                                     elevint = losonoverlays.newlosdata.getGridElevation(losonoverlays.overpositionx, losonoverlays.overpositiony) -1;
                                 }
@@ -1018,6 +891,10 @@ public class ASLMap extends Map {
                                         if (color.equals(Color.white) || color.equals(Color.black)){ // && j<=(x+6)) {
                                             color = getOverlayNearestColor(losonoverlays, losonoverlays.overpositionx, losonoverlays.overpositiony);
                                             elevint = color.equals(Color.white) ? 0 : getOverlayElevationfromColor(losonoverlays, color);
+                                            // if elevint = -99 then method above could not find a proper elevation for terrain; revert to current elevation in mapboard losdata
+                                            if (elevint == -99){
+                                                elevint = 0;  //this is a hack and may not always return a useful result - watch for errors
+                                            }
                                         }
                                         // this sets base elevation for the hex - crest line & depression hexes can contain multiple elevations
                                         // hack for LFT3; change if applies to other boards
@@ -1074,7 +951,7 @@ public class ASLMap extends Map {
                 }
                 addOverlayInhTerrainToLOS(inhhexes, losonoverlays, losonoverlays.board);
                 addOverlayBldgLevelsToLOS(bdghexes, losonoverlays);
-            }
+
         }
     }
 
@@ -1107,7 +984,7 @@ public class ASLMap extends Map {
             bdglevelhex.getCenterLocation().setTerrain(bdghexes.get(bdglevelhex));
             Terrain centerlocationterrain = bdglevelhex.getCenterLocation().getTerrain();
             final boolean multihex = isOverlayBldgMultiHex(bdglevelhex, losonoverlays);
-                bdglevelhex.addBuildingLevels(centerlocationterrain, multihex);
+            bdglevelhex.addBuildingLevels(centerlocationterrain, multihex);
         }
     }
     private boolean isOverlayBldgMultiHex(Hex bdglevelhex, LOSonOverlays losonoverlays){
@@ -1131,21 +1008,24 @@ public class ASLMap extends Map {
         hexsidepoints[5] = new Point ((int) (-horizontaloffset + hexcentreonoverlay.x + 1),  (int) (-verticaloffset/2.0 + hexcentreonoverlay.y + 1.0));
         // now test if hexside points contain building colour; if the do, it is multihex building
         for (int i = 0; i < 6; i++) {
-            final int c = losonoverlays.bi.getRGB((int) hexsidepoints[i].getX(), (int) hexsidepoints[i].getY());
-            Terrain terr= null;
-            if ((c >> 24) != 0x00) { // not a transparent pixel
-                String terraintouse = "Open Ground";
-                //Retrieving the R G B values
-                final Color color = getRGBColor(c);
-                final int terrint = losonoverlays.board.getVASLBoardArchive().getTerrainForColor(color);
-                if (terrint >= 0) {
-                    terr = losonoverlays.newlosdata.getTerrain(terrint);
-                    terraintouse = terr.getName();
-                }
-                if (terr != null) {
-                    if (terr.isBuilding()) {
-                        multihexbdg=true;
-                        break;
+            // test hexsidepoint is on the overlay
+            if (hexsidepoints[i].getX() >= 0 && hexsidepoints[i].getY() >= 0 && hexsidepoints[i].getX() <= losonoverlays.bi.getWidth() && hexsidepoints[i].getY() <= losonoverlays.bi.getHeight()) {
+                final int c = losonoverlays.bi.getRGB((int) hexsidepoints[i].getX(), (int) hexsidepoints[i].getY());
+                Terrain terr = null;
+                if ((c >> 24) != 0x00) { // not a transparent pixel
+                    String terraintouse = "Open Ground";
+                    //Retrieving the R G B values
+                    final Color color = getRGBColor(c);
+                    final int terrint = losonoverlays.board.getVASLBoardArchive().getTerrainForColor(color);
+                    if (terrint >= 0) {
+                        terr = losonoverlays.newlosdata.getTerrain(terrint);
+                        terraintouse = terr.getName();
+                    }
+                    if (terr != null) {
+                        if (terr.isBuilding()) {
+                            multihexbdg = true;
+                            break;
+                        }
                     }
                 }
             }
@@ -1177,19 +1057,21 @@ public class ASLMap extends Map {
     }
     private Integer getOverlayElevationfromColor(LOSonOverlays losonoverlays, Color color) {
         int elevint = losonoverlays.board.getVASLBoardArchive().getElevationForColor(color);
-        if (elevint == -99) {
+        if (elevint == BoardMetadata.NO_ELEVATION) {
             Color newcolor = getOverlayNearestColor(losonoverlays, losonoverlays.overpositionx, losonoverlays.overpositiony);
             if (newcolor == null) { //transparent pixel
                 elevint = losonoverlays.newlosdata.getGridElevation(losonoverlays.overpositionx, losonoverlays.overpositiony);
             }
             else {
-                if ((newcolor.equals(Color.white))) {
+                if ((newcolor.equals(Color.white) || newcolor.equals(Color.BLACK))) {
                     elevint = 0;
                 }
                 else {
                     elevint = losonoverlays.board.getVASLBoardArchive().getElevationForColor(newcolor);
-                    // this is a hack and may cause errors - test
-                    if (elevint == -99) {elevint = 0;}
+                    // DR comments this out Jan 25 due to evidence of errors.
+                    // see calling code for related changes to handle a -99 return
+                    //if (elevint == -99) {elevint = 0;}
+
                 }
             }
         }
@@ -1214,10 +1096,11 @@ public class ASLMap extends Map {
                 c = losonoverlays.bi.getRGB(losonoverlays.currentx - (a - 1), losonoverlays.currenty - a);
             }
             else {
-                c= -5260182;  // use OG as default - see if this causes LOS errors
+                //c= -5260182;  // use OG as default - see if this causes LOS errors
             }
-            color = getRGBColor(c);
+            if(c != 0){color = getRGBColor(c);}
             a += 1;
+            if (a > 5){break;}
         }
         return color;
     }
@@ -1256,7 +1139,9 @@ public class ASLMap extends Map {
     //add Hex to collections of inherent hexes and building hexes on the overlay
     private void addHextoOverlayInhandBldgMaps(String terraintype, Terrain terr, LOSonOverlays losonoverlays, HashMap<VASL.LOS.Map.Hex, VASL.LOS.Map.Terrain>  inhhexes, HashMap<VASL.LOS.Map.Hex, VASL.LOS.Map.Terrain> bdghexes) {
         if (terr != null) {
-            if (terr.isInherentTerrain() || (terraintype == "Steppe" && (terr.getName().equals("Brush") || terr.getName().equals("Woods"))) ||
+            if (terr.isInherentTerrain() ||
+                    (terraintype == "Steppe" && (terr.getName().equals("Brush") || terr.getName().equals("Woods"))) ||
+                    (terraintype == "Broken" && terr.getName().equals("Brush")) ||
                     (terraintype == "Bamboo" && (terr.getName().equals("Brush")))) {
                 if (!inhhexes.containsKey(losonoverlays.newlosdata.gridToHex((int) losonoverlays.overpositionx, (int) losonoverlays.overpositiony))) {
                     //hack - ensure that the pixel is not close to a hexside as VASL geometry can put it in an adjacent hex
@@ -1266,9 +1151,9 @@ public class ASLMap extends Map {
                         inhhexes.put(losonoverlays.newlosdata.gridToHex((int) losonoverlays.overpositionx, (int) losonoverlays.overpositiony), terr);
                         // added if then to ensure only used in specific circumstance
                         // TODO: remove if after 668 is released and test this works for other transforms
-                        if (terraintype == "Steppe" && (terr.getName().equals("Brush") || terr.getName().equals("Woods"))) {
+                        //if (terraintype == "Steppe" && (terr.getName().equals("Brush") || terr.getName().equals("Woods"))) {
                             doNonInherentToInherentFix(terraintype, terr, losonoverlays);
-                        }
+                        //}
                     }
                 }
 
@@ -1293,12 +1178,42 @@ public class ASLMap extends Map {
                 "AD_WinterBlackHexNumbers".equals(colorName);
     }
 
+    private String useDefaultTerrain (int passelev) {
+        switch (passelev) {
+            case -2:
+                return "Level_2";
+            case -1:
+                return "Level_1";
+            case 0:
+                return "Level0";
+            case 1:
+                return "Level1";
+            case 2:
+                return "Level2";
+            case 3:
+                return "Level3";
+            case 4:
+                return "Level4";
+            case 5:
+                return "Level5";
+            case 6:
+                return "Level6";
+            default:
+                return "Level0";
+
+        }
+
+    }
+
     // if overlayname returns "" from this method then los checking won't work with the overlay
     // when adding items here also add them to VASLThread.initializeMap
     private String getOverlayTerrainType(Overlay o){
         final String overlayname = o.getName();
         if (overlayname.contains("Steppe")) {
             return "Steppe";
+        }
+        if(overlayname.contains("BrokenTerrain")) {
+            return "Broken";
         }
         if (overlayname.contains("PalmTrees")) {
             return "Palm Trees";

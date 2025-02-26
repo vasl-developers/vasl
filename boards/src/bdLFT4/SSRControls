@@ -9,5 +9,9 @@
 	 <Checkbox>
        <entry name="FT289 - Haka at Takrouna" rule="SSO_FT289"/>
      </Checkbox>
+
+	<Checkbox>
+       <entry name="No Wadi Cliffs" rule="BSO_LFT4_NoWadiCliffs"/>
+     </Checkbox>
      </Option>
 </SSRControls>

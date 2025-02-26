@@ -15,6 +15,16 @@
     <Checkbox name="">
          <entry name="U - Chance d'une Affaire" rule="SSO_6_U" text="Scenario U SSO"/>
  </Checkbox>
+<Checkbox name="">
+         <entry name="U5 - Point D'Appui" rule="06_SSO_U5" text="Scenario U5 SSO"/>
+ </Checkbox>
+
+   <Checkbox name="">
+         <entry name="U18 - Assault On A Queen" rule="SSO_6_U18" text="Scenario U18 SSO"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="U37 - Scheldt Fortress South" rule="SSO_U37_06" text="Scenario U37 SSO"/>
+ </Checkbox>
      <Checkbox name="">
          <entry name="ASLUG 2.1 - Chateau Cherry" rule="SSO_6_ASLUG2pt1" text="Scenario ASLUG2.1 SSO"/>
  </Checkbox>

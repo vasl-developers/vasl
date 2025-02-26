@@ -1020,6 +1020,10 @@
 		<color name="PaddyInterior" red="174" green="168" blue="78" terrain="Rice Paddy, Irrigated" elevation="UNKNOWN" />
 		<!-- Rubble  -->
 		<color name="StoneRubble" red="115" green="115" blue="116" terrain="Stone Rubble" elevation="0" />
+		<color name="StoneRubble2" red="130" green="130" blue="131" terrain="Stone Rubble" elevation="UNKNOWN" />
+		<color name="StoneRubble3" red="85" green="85" blue="86" terrain="Stone Rubble" elevation="UNKNOWN" />
+		<color name="StoneRubble4" red="160" green="160" blue="161" terrain="Stone Rubble" elevation="UNKNOWN" />
+		<color name="StoneRubble5" red="55" green="55" blue="56" terrain="Stone Rubble" elevation="UNKNOWN" />
 		<color name="WoodRubble" red="181" green="125" blue="60" terrain="Wooden Rubble" elevation="UNKNOWN" />
 		<color name="WoodRubble2" red="117" green="100" blue="39" terrain="Wooden Rubble" elevation="UNKNOWN" />
 		<!-- Shellholes  -->
@@ -1406,7 +1410,7 @@
 		<color name="WadiBrown3" red="127" green="91" blue="33" terrain="Wadi" elevation="UNKNOWN" />
 		<color name="WadiBlack" red="83" green="51" blue="37" terrain="Wadi" elevation="UNKNOWN" />
 		<color name="WadiCliff" red="65" green="54" blue="28" terrain="Cliff" elevation="UNKNOWN" />
-		<color name="DTO_BrushL_1" red="161" green="160" blue="56" terrain="Brush" elevation="0" />
+		<color name="DTO_BrushL_1" red="161" green="160" blue="56" terrain="Brush" elevation="-1" />
 		<color name="DTO_BrushL0" red="161" green="161" blue="56" terrain="Brush" elevation="0" />
 		<color name="DTO_BrushL1" red="161" green="162" blue="56" terrain="Brush" elevation="1" />
 		<color name="DTO_BrushL2" red="161" green="163" blue="56" terrain="Brush" elevation="2" />
@@ -1521,7 +1525,8 @@
 		<color name="Cactus Patch1" red="194" green="165" blue="68" terrain="Cactus Patch" elevation="0" />
 		<color name="Cactus Patch2" red="137" green="83" blue="35" terrain="Cactus Patch" elevation="0" />
 		<color name="Cactus Patch3" red="149" green="171" blue="61" terrain="Cactus Patch" elevation="0" />
-		<color name="AD_Debris" red="117" green="98" blue="61" terrain="Debris" elevation="0" />
+		<!-- <color name="AD_Debris" red="117" green="98" blue="61" terrain="Debris" elevation="0" /> -->
+		<color name="AD_Debris" red="117" green="98" blue="71" terrain="Debris" elevation="0" />
 		<color name="AD_Stone Rubble" red="100" green="100" blue="100" terrain="Stone Rubble" elevation="0" />
 		<color name="DTO_Shellhole1" red="177" green="135" blue="57" terrain="Shellholes" elevation="-1" />
 		<color name="DTO_Shellhole2" red="97" green="67" blue="27" terrain="Shellholes" elevation="-1" />
@@ -1530,6 +1535,59 @@
 		<color name="AD_CragBlackWinter" red="113" green="113" blue="111" terrain="Crags" elevation="UNKNOWN" />
 		<color name="AD_WinterBlackHexNumbers" red="64" green="64" blue="64" terrain="UNKNOWN" elevation="UNKNOWN" />
 		<color name="AD_Level_1Winter" red="212" green="224" blue="194" terrain="Open Ground" elevation="-1" />
+		<color name="DTO_BT_CragGrey" red="184" green="184" blue="177" terrain="BTCrags" elevation="UNKNOWN" />
+		<color name="DTO_BT_CragBlack" red="68" green="68" blue="68" terrain="BTCrags" elevation="UNKNOWN" />
+		<color name="AD_DensePalm" red="118" green="114" blue="38" terrain="Dense Jungle" elevation="UNKNOWN" />
+		<color name="AD_ETO_DensePalm" red="82" green="98" blue="48" terrain="Dense Jungle" elevation="UNKNOWN" />
+		<color name="DTO_LightWoods" red="119" green="119" blue="58" terrain="Light Woods" elevation="UNKNOWN" />
+
+		<!-- HASL colors for HASL overlays -->
+		<color name="Factory_Exterior_WallsL1_51" red="1" green="7" blue="11" terrain="Stone Factory Wall, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_52" red="0" green="3" blue="0" terrain="Stone Factory Wall, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_53" red="15" green="19" blue="21" terrain="Stone Factory Wall, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_54" red="7" green="13" blue="16" terrain="Stone Factory Wall, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_55" red="25" green="28" blue="30" terrain="Stone Factory Wall, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_56" red="27" green="29" blue="27" terrain="Stone Factory Wall, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_57" red="5" green="8" blue="4" terrain="Stone Factory Wall, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_58" red="12" green="16" blue="19" terrain="Stone Factory Wall, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_59" red="27" green="25" blue="28" terrain="Stone Factory Wall, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_510" red="10" green="7" blue="12" terrain="Stone Factory Wall, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_511" red="3" green="9" blue="12" terrain="Stone Factory Wall, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL1_51" red="148" green="157" blue="152" terrain="Gutted Stone Factory, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL1_52" red="112" green="116" blue="119" terrain="Gutted Stone Factory, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL1_53" red="147" green="149" blue="146" terrain="Gutted Stone Factory, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL1_54" red="142" green="144" blue="141" terrain="Gutted Stone Factory, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL1_55" red="144" green="153" blue="148" terrain="Gutted Stone Factory, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL1_56" red="110" green="110" blue="102" terrain="Gutted Stone Factory, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL1_57" red="152" green="154" blue="151" terrain="Gutted Stone Factory, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL1_58" red="145" green="157" blue="157" terrain="Gutted Stone Factory, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL1_59" red="142" green="153" blue="154" terrain="Gutted Stone Factory, 1.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL1_510" red="137" green="149" blue="149" terrain="Gutted Stone Factory, 1.5 Level" elevation="UNKNOWN" />
+
+		<color name="Factory_Exterior_WallsL2_51" red="1" green="7" blue="12" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL2_52" red="0" green="3" blue="1" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" />
+		<!-- <color name="Factory_Exterior_WallsL2_53" red="15" green="19" blue="21" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL2_54" red="7" green="13" blue="16" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" /> -->
+		<color name="Factory_Exterior_WallsL2_55" red="25" green="28" blue="31" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" />
+		<!--<color name="Factory_Exterior_WallsL2_56" red="27" green="29" blue="27" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" /> -->
+		<color name="Factory_Exterior_WallsL2_57" red="5" green="8" blue="5" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" />
+		<!-- <color name="Factory_Exterior_WallsL2_58" red="12" green="16" blue="19" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" /> -->
+		<color name="Factory_Exterior_WallsL1_59" red="27" green="25" blue="29" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_510" red="10" green="7" blue="13" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_511" red="3" green="9" blue="13" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_512" red="20" green="23" blue="26" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_513" red="43" green="46" blue="49" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_514" red="16" green="12" blue="18" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_515" red="17" green="21" blue="24" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Factory_Exterior_WallsL1_516" red="13" green="19" blue="27" terrain="Stone Factory Wall, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL2_51" red="149" green="158" blue="154" terrain="Gutted Stone Factory, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL2_52" red="112" green="107" blue="106" terrain="Gutted Stone Factory, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL2_53" red="147" green="149" blue="147" terrain="Gutted Stone Factory, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL2_54" red="142" green="144" blue="142" terrain="Gutted Stone Factory, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL2_55" red="144" green="153" blue="149" terrain="Gutted Stone Factory, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL2_56" red="145" green="157" blue="158" terrain="Gutted Stone Factory, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL2_57" red="142" green="153" blue="155" terrain="Gutted Stone Factory, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Gutted_FactoryL2_57" red="137" green="149" blue="150" terrain="Gutted Stone Factory, 2.5 Level" elevation="UNKNOWN" />
 	</colors>
 
 	<terrainTypes>
@@ -1718,6 +1776,7 @@
 		<terrainType name="Crest" typeCode="202" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="0" mapColorGreen="0" mapColorBlue="001" LOSCategory="OPEN"  />
 		<terrainType name="MultipleWooden" typeCode="203" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="164" mapColorGreen="116" mapColorBlue="64" LOSCategory="BUILDING"  />
 		<terrainType name="Monument" typeCode="204" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="0" mapColorRed="10" mapColorGreen="127" mapColorBlue="138" LOSCategory="OTHER"  />
+		<terrainType name="BTCrags" typeCode="205" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="215" mapColorGreen="215" mapColorBlue="213" LOSCategory="OTHER"  />
 
 	</terrainTypes>
 

@@ -62,14 +62,16 @@ public class BoardArchive {
 
     // legacy board (i.e. V5) file names
     private static final String dataFileName = "data"; // name of the legacy data file
-    private static final String colorsFileName = "colors"; // name of the legacy colors file
-    private static final String colorSSRFileName = "colorSSR"; // name of the legacy colorSSR file
+    //ToDo remove these references completely in 6.7.1 if not using them causes no problems in 6.7.0
+    //private static final String colorsFileName = "colors"; // name of the legacy colors file
+    //private static final String colorSSRFileName = "colorSSR"; // name of the legacy colorSSR file
     private static final String SSRControlsFileName = "SSRControls";
 
     protected boolean legacyBoard = true;
     // for legacy files null means they do not exist
     private DataFile dataFile;
-    private ColorsFile colorsFile;
+    //ToDo remove these references completely in 6.7.1 if not using them causes no problems in 6.7.0
+    //private ColorsFile colorsFile;
     private SSRControlsFile SSRControlsFile;
 
     /**
@@ -121,14 +123,14 @@ public class BoardArchive {
                     dataFile = null;
                 }
             }
-
+            //ToDo remove these references completely in 6.7.1 if not using them causes no problems in 6.7.0
             // read the legacy colors file
-            try (InputStream colorsFileStream = getInputStreamForArchiveFile(archive, colorsFileName)) {
-                colorsFile = new ColorsFile(colorsFileStream, archiveName);
-            } catch (Exception ignore) {
+            //try (InputStream colorsFileStream = getInputStreamForArchiveFile(archive, colorsFileName)) {
+                //colorsFile = new ColorsFile(colorsFileStream, archiveName);
+            //} catch (Exception ignore) {
                 // bury
-                colorsFile = null;
-            }
+                //colorsFile = null;
+            //}
 
             // read the SSR controls file
             try (InputStream SSRControlsFileStream = getInputStreamForArchiveFile(archive, SSRControlsFileName)) {
@@ -149,8 +151,10 @@ public class BoardArchive {
 
             // board colors replace the shared metadata colors
             LinkedHashMap<String, BoardColor> boardColors = new LinkedHashMap<String, BoardColor>(sharedBoardMetadata.getBoardColors().size());
-            boardColors.putAll(sharedBoardMetadata.getBoardColors());
-            //test code - don't add or change colors from board colors file
+            // Use the metadata version rather than the sharedBoardMetadata version as the metadata version can have additional entries from the BMD.xml file
+            //boardColors.putAll(sharedBoardMetadata.getBoardColors());
+            boardColors.putAll(metadata.getBoardColors());
+            //ToDo remove these references completely in 6.7.1 if not using them causes no problems in 6.7.0
             //if(colorsFile != null) {
             //    boardColors.putAll(colorsFile.getColors());
             //}
@@ -165,9 +169,10 @@ public class BoardArchive {
      * @return the set of color SSR rules
      */
     public LinkedHashMap<String, ColorSSRule> getColorSSRules() {
-            // ONLY use sharedBoardMetadata.xml in VASL as source
             LinkedHashMap<String, ColorSSRule> colorSSRules = new LinkedHashMap<String, ColorSSRule>();
-            colorSSRules.putAll(sharedBoardMetadata.getColorSSRules());
+            // Use the metadata version rather than the sharedBoardMetadata version as the metadata version can have additional entries from the BMD.xml file
+            //colorSSRules.putAll(sharedBoardMetadata.getColorSSRules());
+            colorSSRules.putAll(metadata.getColorSSRules());
             return colorSSRules;
     }
 

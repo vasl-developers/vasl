@@ -321,29 +321,63 @@ Changes:
          </entry>
       </Checkbox>
    </Option>
-  <Option name="DTO Transformations">  
-      <Checkbox name="DTO Broken Terrain">
-		<entry name="DTO Broken Terrain" rule="BrokenTerrain" text="DTO Broken Terrain">
+   <Option name="DTO Transformations">
+           <Checkbox name="DTO Broken Terrain">
+     		<entry name="DTO Broken Terrain" rule="BrokenTerrain" text="DTO Broken Terrain">
+     		   <Target sourceName="Terrain">
+                    <!-- <activate sourceProperty="DTO terrain"/> -->
+     	       </Target>
+             </entry>
+           </Checkbox>
+           <Checkbox name="DTO Steppe Terrain">
+     			<entry name="DTO Steppe Terrain" rule="SteppeTerrain" text="DTO Steppe Terrain">
+     		   <Target sourceName="Terrain">
+                    <!-- <activate sourceProperty="DTO terrain"/> -->
+     	       </Target>
+             </entry>
+     		</Checkbox>
+     	<Checkbox name="Use Desert Colors for ETO boards">
+              <entry name="Use Desert Colors for ETO boards" rule="ETOtoDTO" text="Desert colors">
+                 <Target sourceName="Terrain">
+                    <!-- <activate sourceProperty="DTO terrain"/> -->
+                 </Target>
+     			</entry>
+           </Checkbox>
+           </Option>
+  <Option name="Arid/Desert (AD) Transformations">
+      <Checkbox name="AD Broken Terrain">
+		<entry name="AD Broken Terrain" rule="LFT_BrokenTerrain" text="AD Broken Terrain">
 		   <Target sourceName="Terrain">
                <!-- <activate sourceProperty="DTO terrain"/> -->
 	       </Target>   
         </entry>
       </Checkbox>
-      <Checkbox name="DTO Steppe Terrain">
-			<entry name="DTO Steppe Terrain" rule="SteppeTerrain" text="DTO Steppe Terrain">
-		   <Target sourceName="Terrain">
-               <!-- <activate sourceProperty="DTO terrain"/> -->
-	       </Target>   
+      <Checkbox name="Orchards to Dense Palms">
+     	<entry name="Orchards to Dense Palms" rule="OrchardsToDensePalm" text="Orchards to Dense Palms">
+     	   <Target sourceName="Terrain">
+              <!-- <activate sourceProperty="DTO terrain"/> -->
+           </Target>
         </entry>
-		</Checkbox>
-	<Checkbox name="Use Desert Colors for ETO boards">
-         <entry name="Use Desert Colors for ETO boards" rule="ETOtoDTO" text="Desert colors">
-            <Target sourceName="Terrain">
-               <!-- <activate sourceProperty="DTO terrain"/> -->
-            </Target>
-			</entry>
       </Checkbox>
-      </Option>
+	  <Checkbox name="Roads to Tracks">
+       	<entry name="Roads to Tracks" rule="RoadsToTracks" text="Roads to Tracks">
+       	   <Target sourceName="Terrain">
+                    <!-- <activate sourceProperty="DTO terrain"/> -->
+           </Target>
+        </entry>
+      </Checkbox>
+	  <Menu name="Brush-Roads">
+              <entry name="Normal"/>
+              <entry name="Paths" rule="BrushRoadsToPaths" text="brush-roads are paths">
+              <Target sourceName="Terrain">
+                     <activate sourceProperty="PTO light jungle"/>
+                     <activate sourceProperty="PTO dense jungle"/>
+      	      </Target>
+              </entry>
+              <entry name="Filled in with Brush" rule="NoBrushRoads" text="brush-roads are brush"/>
+      </Menu>
+  </Option>
+
   <Option name="Other Transformations">
       <Menu name="X to Vineyard">
          <entry name="None"/>
