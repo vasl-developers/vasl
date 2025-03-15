@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="60" height="60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<!--
+		Name:		kfwOBA-VTEC
+		Version:	0.1
+
+		Author(s): Gordon Molek, Klas Malmström, Alan Bills
+		Tester(s): Alan Bills, Alan Cannamore, Doug Rimmer
+	-->
+
+	<text x="30" y="18" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:middle;fill:white;fill-opacity:1;Nimbus Sans L">1</text>
+	<text x="54" y="18" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:middle;fill:white;fill-opacity:1;Nimbus Sans L">2</text>
+	<text x="54" y="50" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:middle;fill:white;fill-opacity:1;Nimbus Sans L">3</text>
+	<text x="30" y="50" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:middle;fill:white;fill-opacity:1;Nimbus Sans L">4</text>
+	<text x="6" y="50" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:middle;fill:white;fill-opacity:1;Nimbus Sans L">5</text>
+	<text x="6" y="18" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:middle;fill:white;fill-opacity:1;Nimbus Sans L">6</text>
+
+	<path id="Large Hexagon" style="fill:none;stroke:white;stroke-width:1.5;stroke-opacity:1.00" d="M 43.045125,7.4246216 56.100305,30.06722 43.01883,52.694636 16.882175,52.679455 3.8269945,30.036857 16.90847,7.4094401 Z" />
+	
+	<text x="30.00" y="33.50" style="font-size:11px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:middle;fill:white;fill-opacity:1;Nimbus Sans L">VTE:C</text>
+</svg>
