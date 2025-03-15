@@ -30,6 +30,14 @@ import java.util.Random;
 
 import static VASSAL.build.GameModule.getGameModule;
 
+/**
+ * This class provides functionality for the Draw Counter map window
+ * which allows users to add counters to the window from the counter palette and toolbar
+ * and then randomly select one at a time which is then moved to the Main Map window
+ * and placed close to the top left corner of the map image
+ *
+ * A number of the methods are required by the implemented classes.
+ */
 public class RandomSelectCounter extends AbstractConfigurable implements KeyListener, GameComponent, Drawable, CommandEncoder {
     ASLMap map;
     Map rsc;
@@ -39,10 +47,15 @@ public class RandomSelectCounter extends AbstractConfigurable implements KeyList
     private static final String SELECT_CENTER = "SelectCenter";
     private static final String SELECT_RIGHT = "SelectRight";
     private static final String MOVE_SELECTION = "MoveSelection";
+    //the value of these NamedKeyStrokes are passed to the class from the buildFile entry for the class
+    //they represent the keystrokes that KeyPressed "listens" for
     private NamedKeyStroke selectLeft = new NamedKeyStroke("selleft"); // CTL+SHIFT+N 78,195
     private NamedKeyStroke selectCenter = new NamedKeyStroke("selcenter"); // CTL+SHIFT+Y 89,195
     private NamedKeyStroke selectRight = new NamedKeyStroke("selright"); // CTL+SHIFT+Z 90,195
+    //This keystroke is used in doSelectAndMove to trigger the selected counter to move to the Main map
+    //it is "listened" for by a Send To Location trait in various counter prototypes (Unit, DBGlobal, DBCommon)
     private NamedKeyStroke moveSelection = new NamedKeyStroke("movselection"); // CTL+SHIFT+B 66,195
+
     @Override
     public String[] getAttributeDescriptions() {
         return new String[]{
@@ -115,7 +128,6 @@ public class RandomSelectCounter extends AbstractConfigurable implements KeyList
 
     @Override
     public void keyPressed(KeyEvent e) {
-        //Map rsc = getMap();
         if (rsc == null) {return;}
         if (selectLeft.equals(NamedKeyStroke.of(e))) {
             doSelectandMove(rsc, "Left Select");
@@ -138,6 +150,8 @@ public class RandomSelectCounter extends AbstractConfigurable implements KeyList
             mod.getGameState().addGameComponent(this);
             map.addDrawComponent(this);
             map.getView().addKeyListener(this);
+            // this menu item opens the Draw Counters map window
+            // if first time, it adds the Select buttons to the Draw Counters window
             JMenuItem nextmenuItem = new JMenuItem("Draw Counters Window");
             nextmenuItem.setEnabled(true);
             nextmenuItem.addActionListener(new ActionListener() {
@@ -152,9 +166,9 @@ public class RandomSelectCounter extends AbstractConfigurable implements KeyList
     private void startSelectCounter() {
         Iterator var7 = GameModule.getGameModule().getBuildables().iterator();
         while (var7.hasNext()) {
-            Buildable CheckforSelectCounter = (Buildable) var7.next();
-            if (CheckforSelectCounter instanceof Map && ((Map) CheckforSelectCounter).getMapName().equals("Select Counters")) {
-                rsc = (Map) CheckforSelectCounter;
+            Buildable drawcounter = (Buildable) var7.next();
+            if (drawcounter instanceof Map && ((Map) drawcounter).getMapName().equals("Select Counters")) {
+                rsc = (Map) drawcounter;
                 rsc.getView().addKeyListener(this);
                 if (notbuilt) {
                     setuprscwindow(rsc);
@@ -170,7 +184,9 @@ public class RandomSelectCounter extends AbstractConfigurable implements KeyList
     }
 
     public void setuprscwindow(Map rsc){
-        // add buttons to the toolbar
+        // add buttons to the toolbar of the Draw Counters map window
+        // could not be pre-built as part of the Draw Counter map window because
+        // listeners here would not "hear" the button clicks
         JButton buttonDrawLeft = new JButton("Pull From Left");
         buttonDrawLeft.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt)  {
@@ -201,12 +217,12 @@ public class RandomSelectCounter extends AbstractConfigurable implements KeyList
     }
 
     public void doSelectandMove(Map rsc, String selectedzone){
-       // Randomly Select One Counter
+       // Randomly Select One Counter and move it the Main Map Window
         LinkedList<GamePiece> drawList = new LinkedList<GamePiece>();
         // get all of the game pieces on the Map
         GamePiece[] p = rsc.getPieces();
         GamePiece piece;
-        // add each of the pieces in selected zone to list
+        // add each of the pieces in selected zone to a list
         for (GamePiece aP : p) {
             if (aP instanceof Stack) {
                 for (PieceIterator pi = new PieceIterator(((Stack) aP).getPiecesIterator()); pi.hasMoreElements(); ) {
@@ -221,7 +237,7 @@ public class RandomSelectCounter extends AbstractConfigurable implements KeyList
                 }
             }
         }
-        // randomly select from list
+        // randomly select from list - code from Google search; it appears to work
         Random rand = new Random();
         GamePiece randomCounter = null;
         int numberOfElements = 1;
@@ -230,6 +246,8 @@ public class RandomSelectCounter extends AbstractConfigurable implements KeyList
             randomCounter = drawList.get(randomIndex);
             drawList.remove(randomIndex);
             randomCounter.setProperty(Properties.SELECTED, Boolean.TRUE);
+            // send keystroke that we be heard by the selected counters Send To Location trait - which contains
+            // required conditions (on Draw Counters map window, Selected, and in CurrentZone
             randomCounter.keyEvent(KeyStroke.getKeyStroke(KeyEvent.VK_B, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
 
         }
