@@ -1,7 +1,6 @@
 package VASL.build.module.map;
 
 import VASL.build.module.ASLMap;
-import VASSAL.build.AbstractBuildable;
 import VASSAL.build.AbstractConfigurable;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
@@ -17,25 +16,21 @@ import VASSAL.counters.GamePiece;
 import VASSAL.counters.PieceIterator;
 import VASSAL.counters.Properties;
 import VASSAL.counters.Stack;
-import VASSAL.tools.KeyStrokeListener;
 import VASSAL.tools.NamedKeyStroke;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.security.Key;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
 
-import static VASSAL.build.GameModule.getGameModule;
 
 /**
  * This class provides functionality for the Draw Counter map window
  * which allows users to add counters to the window from the counter palette and toolbar
  * and then randomly select one at a time which is then moved to the Main Map window
  * and placed close to the top left corner of the map image
- *
  * A number of the methods are required by the implemented classes.
  */
 public class RandomSelectCounter extends AbstractConfigurable implements KeyListener, GameComponent, Drawable, CommandEncoder {
@@ -164,9 +159,9 @@ public class RandomSelectCounter extends AbstractConfigurable implements KeyList
     }
 
     private void startSelectCounter() {
-        Iterator var7 = GameModule.getGameModule().getBuildables().iterator();
-        while (var7.hasNext()) {
-            Buildable drawcounter = (Buildable) var7.next();
+        Iterator it = GameModule.getGameModule().getBuildables().iterator();
+        while (it.hasNext()) {
+            Buildable drawcounter = (Buildable) it.next();
             if (drawcounter instanceof Map && ((Map) drawcounter).getMapName().equals("Select Counters")) {
                 rsc = (Map) drawcounter;
                 rsc.getView().addKeyListener(this);
@@ -219,7 +214,7 @@ public class RandomSelectCounter extends AbstractConfigurable implements KeyList
     public void doSelectandMove(Map rsc, String selectedzone){
        // Randomly Select One Counter and move it the Main Map Window
         LinkedList<GamePiece> drawList = new LinkedList<GamePiece>();
-        // get all of the game pieces on the Map
+        // get all the game pieces on the Map
         GamePiece[] p = rsc.getPieces();
         GamePiece piece;
         // add each of the pieces in selected zone to a list
@@ -239,7 +234,7 @@ public class RandomSelectCounter extends AbstractConfigurable implements KeyList
         }
         // randomly select from list - code from Google search; it appears to work
         Random rand = new Random();
-        GamePiece randomCounter = null;
+        GamePiece randomCounter;
         int numberOfElements = 1;
         for (int i = 0; i < numberOfElements; i++) {
             int randomIndex = rand.nextInt(drawList.size());
@@ -270,9 +265,7 @@ public class RandomSelectCounter extends AbstractConfigurable implements KeyList
 
     @Override
     public Command getRestoreCommand() {
-        Command c = new NullCommand();
-
-        return c;
+        return new NullCommand();
     }
 
     public void executeCommand() {
