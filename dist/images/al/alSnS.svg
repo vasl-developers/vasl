@@ -29,6 +29,7 @@
 			<path id="highlight" style="display:inline;fill:none;stroke:#ffffff;stroke-width:25.1286;stroke-opacity:50;filter:url(#highlight_filter)" d="M 108.87244,1035.2258 C 98.057485,1024.4109 91.386017,1009.4524 91.386017,992.87843 V 162.80328 c 0,-33.14792 26.685873,-59.83379 59.833793,-59.83379 h 830.07521 c 16.57394,0 31.53238,6.67147 42.34738,17.48643" transform="matrix(1.0387133,0,0,1.0339712,-12.412385,-8.9484139) scale(0.06) translate(118,54)"/>
 		</g>
 	</g>
+	<image id="Silhouettes" x="0" y="0" width="60" height="60" preserveAspectRatio="xMidYMid meet" transform="scale(0.80)" style="opacity:0.33" href="svg/alSniper.png" xlink:href="svg/alSniper.png"/>
 	<path id="Hexagon" style="fill:none;stroke:black;stroke-width:1.5;stroke-opacity:0.33" transform="scale(0.80)" d="M 43.045125,7.4246216 56.100305,30.06722 43.01883,52.694636 16.882175,52.679455 3.8269945,30.036857 16.90847,7.4094401 Z"/>
 	<text x="24" y="13" style="font-size:9px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-expanded;text-anchor:middle;fill:black;fill-opacity:0.33;Nimbus Sans L">1</text>
 	<text x="42" y="13" style="font-size:9px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-expanded;text-anchor:middle;fill:black;fill-opacity:0.33;Nimbus Sans L">2</text>

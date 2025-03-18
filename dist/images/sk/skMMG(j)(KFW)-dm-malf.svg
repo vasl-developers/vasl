@@ -32,6 +32,8 @@
 	</g>
 	<line x1="5" y1="5" x2="43" y2="43" style="stroke:white; stroke-width:3.00"/>
 	<line x1="5" y1="43" x2="43" y2="5" style="stroke:white; stroke-width:3.00"/>
+	<!-- Unit Depiction -->
+	<image x="0" y="0" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" transform="scale(1.00)" href="svg/skMMG(j)(KFW)-dm-malf.png" xlink:href="svg/skMMG(j)(KFW)-dm-malf.png"/>
 	<text x="44.5" y="11" style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:end;fill:black;fill-opacity:1;font-family:Nimbus Sans L">dmMMG(j)</text>
 	<text x="34.00" y="24.00" style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L" transform="rotate(-90,34,24)">2PP</text>
 </svg>

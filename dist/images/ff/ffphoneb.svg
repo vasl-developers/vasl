@@ -30,7 +30,7 @@
 		</g>
 	</g>
 	<text x="50%" y="12.00" style="font-size:8.5px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L">No Move</text>
-	<text<line x1="3" y1="16" x2="45" y2="16" style="stroke:black;stroke-width:1.00"/>
+	<line x1="3" y1="16" x2="45" y2="16" style="stroke:black;stroke-width:1.00"/>
 	<text x="50%" y="25.00" style="font-size:8.5px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L">Security</text>
 	<text x="50%" y="35.00" style="font-size:8.5px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L">Area 2 DR</text>
 	<text x="50%" y="44.00" style="font-size:8.5px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L">Removes</text>

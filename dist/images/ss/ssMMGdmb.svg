@@ -29,10 +29,10 @@
 			<path id="highlight" style="display:inline;fill:none;stroke:#ffffff;stroke-width:25.1286;stroke-opacity:50;filter:url(#highlight_filter)" d="M 108.87244,1035.2258 C 98.057485,1024.4109 91.386017,1009.4524 91.386017,992.87843 V 162.80328 c 0,-33.14792 26.685873,-59.83379 59.833793,-59.83379 h 830.07521 c 16.57394,0 31.53238,6.67147 42.34738,17.48643" transform="matrix(1.0387133,0,0,1.0339712,-12.412385,-8.9484139) scale(0.06) translate(118,54)"/>
 		</g>
 	</g>
-	<!-- Unit Depiction -->
-	<image x="0" y="0" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" transform="scale(1.00)" href="svg/ssMMGdmb.png" xlink:href="svg/ssMMGdmb.png"/>
 	<line x1="5" y1="5" x2="43" y2="43" style="stroke:#b4b4b4; stroke-width:3.00"/>
 	<line x1="5" y1="43" x2="43" y2="5" style="stroke:#b4b4b4; stroke-width:3.00"/>
+	<!-- Unit Depiction -->
+	<image x="0" y="0" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" transform="scale(1.00)" href="svg/ssMMGdmb.png" xlink:href="svg/ssMMGdmb.png"/>
 	<text x="44.5" y="11" style="font-size:11px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:end;fill:white;fill-opacity:1;font-family:Nimbus Sans L">dmMMG</text>
 	<text x="30.00" y="24.00" style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill:white;fill-opacity:1;font-family:Nimbus Sans L" transform="rotate(-90,30,24)">2PP</text>
 </svg>

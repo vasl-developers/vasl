@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg width="48" height="48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<!--
-		Name:		unradio(KFW)
+		Name:		unRadio(KFW)
 		Version:	0.1
 
 		Author(s): Gordon Molek, Klas Malmström, Alan Bills
@@ -31,7 +31,7 @@
 		</g>
 	</g>
 	<!-- Unit Depiction -->
-	<image x="0" y="0" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" transform="scale(1.00)" href="svg/unradio(KFW).png" xlink:href="svg/unradio(KFW).png"/>
+	<image x="0" y="0" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" transform="scale(1.00)" href="svg/unRadio(KFW).png" xlink:href="svg/unRadio(KFW).png"/>
 	<text x="44.5" y="11" style="font-size:11px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:end;fill:black;fill-opacity:1;font-family:Nimbus Sans L">Radio</text>
 	<text x="44.5" y="42.0" style="font-size:11px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:end;fill:black;fill-opacity:1;font-family:Nimbus Sans L">8</text>
 	<text x="30.00" y="24.00" style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L" transform="rotate(-90,30,24)">1PP</text>

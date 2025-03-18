@@ -33,7 +33,7 @@
 	<line x1="5" y1="43" x2="43" y2="5" style="stroke:white; stroke-width:3.00"/>
 	<text x="2" y="11" style="font-size:11px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:start;fill:black;fill-opacity:1;font-family:Nimbus Sans L">R2</text>
 	<text x="45" y="45" style="font-size:11px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:end;fill:black;fill-opacity:1;font-family:Nimbus Sans L">X6</text>
-	<text x="35.50" y="43.50" style="font-size:7.00px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:start;fill:black;fill-opacity:1;font-family:Nimbus Sans L">.50</text>
+	<text x="45.00" y="43.50" style="font-size:7.00px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:end;fill:black;fill-opacity:1;font-family:Nimbus Sans L">.50</text>
 	<!-- Unit Depiction -->
 	<image x="0" y="0" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" transform="scale(1.00)" href="svg/nkHMG50b.png" xlink:href="svg/nkHMG50b.png"/>
 </svg>
