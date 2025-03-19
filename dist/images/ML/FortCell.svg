@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="60" height="60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<!--
+		Name:		FortCell
+		Version:	0.1
+
+		Author(s): Gordon Molek, Klas Malmström, Alan Bills
+		Tester(s): Alan Bills, Alan Cannamore, Doug Rimmer
+		Counter data scraped with permission from: https://www.klasm.com/ASL/Listings/OrdnanceListings.html
+	-->
+
+	<!-- The bevel - is there a better/more efficient way to achieve this? -->
+	<defs id="bevel">
+		<filter id="highlight_filter" x="-0.058226637" y="-0.058226637" width="1.1144796" height="1.1144796" style="color-interpolation-filters:sRGB;">
+			<feGaussianBlur stdDeviation="10 10" result="fbSourceGraphic" id="feGaussianBlur3"/>
+			<feColorMatrix result="fbSourceGraphicAlpha" in="fbSourceGraphic" values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0" id="feColorMatrix3"/>
+			<feGaussianBlur id="feGaussianBlur4" stdDeviation="10 10" result="blur" in="fbSourceGraphic"/>
+		</filter>
+		<filter id="shadow_filter" x="-0.030508946" y="-0.030508946" width="1.0629916" height="1.0629916" style="color-interpolation-filters:sRGB;">
+			<feGaussianBlur id="feGaussianBlur5" stdDeviation="10 10" result="blur"/>
+		</filter>
+		<clipPath id="counter_clipping">
+			<rect x="0" y="0" width="100%" height="100%" ry="4" rx="4" style="display:inline;fill:red;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"/>
+		</clipPath>
+	</defs>
+	<g id="background">
+		<rect id="color" x="0" y="0" width="100%" height="100%" ry="4" rx="4" style="display:inline;fill:#ff7f00;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"/>
+		<g id="bevel" clip-path="url(#counter_clipping)">
+			<path id="shadow" style="display:inline;fill:none;stroke:#000000;stroke-width:25.1286;filter:url(#shadow_filter);stroke-opacity:50" d="m 1023.6424,120.45592 c 10.8149,10.81495 17.4864,25.7734 17.4864,42.34736 v 830.07515 c 0,33.14797 -26.6859,59.83377 -59.83378,59.83377 H 151.21981 c -16.57396,0 -31.54851,-6.6875 -42.34737,-17.4864" transform="matrix(1.0503456,0,0,1.0590455,-36.912259,-39.56161) scale(0.06) translate(490,500)"/>
+			<path id="highlight" style="display:inline;fill:none;stroke:#ffffff;stroke-width:25.1286;stroke-opacity:50;filter:url(#highlight_filter)" d="M 108.87244,1035.2258 C 98.057485,1024.4109 91.386017,1009.4524 91.386017,992.87843 V 162.80328 c 0,-33.14792 26.685873,-59.83379 59.833793,-59.83379 h 830.07521 c 16.57394,0 31.53238,6.67147 42.34738,17.48643" transform="matrix(1.0387133,0,0,1.0339712,-12.412385,-8.9484139) scale(0.06) translate(118,54)"/>
+		</g>
+	</g>
+
+	<path id="Floor pattern" style="fill:#000000" d="M 3,30 V 3 H 30 57 V 30 57 H 30 3 Z M 55.666667,52.833333 V 50 H 30 4.3333333 v 2.833333 2.833334 H 30 55.666667 Z m 0,-6.333333 V 44 H 30 4.3333333 V 46.5 49 H 30 55.666667 Z M 16,41 c 0,-1.555556 0.111111,-2 0.5,-2 0.388889,0 0.5,0.444444 0.5,2 v 2 h 7 c 6,0 7,-0.07143 7,-0.5 C 31,42.166667 30.666667,42 30,42 29.333333,42 29,41.833333 29,41.5 29,41.166667 28.666667,41 28,41 27.037037,41 27,40.944444 27,39.5 V 38 H 15.666667 4.3333333 V 40.5 43 H 10.166667 16 Z M 49,32 V 21 H 41.5 34 V 32 43 H 41.5 49 Z M 35,38.5 V 35 h 4 4 V 34 33 H 39 C 35.666667,33 35,32.916667 35,32.5 35,32.080247 35.722222,32 39.5,32 43.277778,32 44,31.919753 44,31.5 44,31.080247 43.277778,31 39.5,31 35.722222,31 35,30.919753 35,30.5 35,30.075758 35.833333,30 40.5,30 H 46 V 28.5 27 H 40.5 C 35.833333,27 35,26.924242 35,26.5 35,26.074074 35.888889,26 41,26 h 6 v -1 -1 h -6 c -5.111111,0 -6,-0.07407 -6,-0.5 0,-0.42735 0.944444,-0.5 6.5,-0.5 H 48 V 32.5 42 H 41.5 35 Z m 20.666667,2 V 38 H 52.833333 50 v 2.5 2.5 h 2.833333 2.833334 z M 33,32 c 0,-8.666667 -0.06667,-10 -0.5,-10 -0.433333,0 -0.5,1.333333 -0.5,10 0,8.666667 0.06667,10 0.5,10 0.433333,0 0.5,-1.333333 0.5,-10 z m -2,-1 c 0,-8.666667 -0.06667,-10 -0.5,-10 -0.433333,0 -0.5,1.333333 -0.5,10 0,8.666667 0.06667,10 0.5,10 0.433333,0 0.5,-1.333333 0.5,-10 z m -2,-1 c 0,-8.666667 -0.06667,-10 -0.5,-10 -0.433333,0 -0.5,1.333333 -0.5,10 0,8.666667 0.06667,10 0.5,10 0.433333,0 0.5,-1.333333 0.5,-10 z m -6,4.5 V 32 H 13.666667 4.3333333 V 34.5 37 H 13.666667 23 Z m 4,0 V 32 H 25.5 24 v 2.5 2.5 h 1.5 1.5 z m 28.666667,0 V 32 H 52.833333 50 v 2.5 2.5 h 2.833333 2.833334 z M 27,28.5 C 27,26.5 26.9,26 26.5,26 26.225,26 26,26.225 26,26.5 26,26.775 25.775,27 25.5,27 25.225,27 25,26.775 25,26.5 25,26.066308 23.62963,26 14.666667,26 H 4.3333333 V 28.5 31 H 15.666667 27 Z m 28.666667,0 V 26 H 52.833333 50 v 2.5 2.5 h 2.833333 2.833334 z M 12,22.5 V 20 H 9 C 6.5555556,20 6,20.092593 6,20.5 6,20.811111 5.6851852,21 5.1666667,21 4.3703704,21 4.3333333,21.088889 4.3333333,23 v 2 H 8.1666667 12 Z m 15,0 V 20 H 20.5 14 v 1.5 C 14,22.611111 13.87037,23 13.5,23 13.166667,23 13,23.333333 13,24 v 1 h 7 7 z m 28.666667,0 V 20 H 52.833333 50 v 2.5 2.5 h 2.833333 2.833334 z m 0,-6 V 14 H 30 4.3333333 V 16.5 19 H 30 55.666667 Z m 0,-4 C 55.666667,12.059885 52.592593,12 30,12 7.4074074,12 4.3333333,12.059885 4.3333333,12.5 4.3333333,12.940115 7.4074074,13 30,13 c 22.592593,0 25.666667,-0.05988 25.666667,-0.5 z m 0,-3 V 8 H 30 4.3333333 V 9.5 11 H 30 55.666667 Z m 0,-3.8333333 V 4.3333333 H 30 4.3333333 V 5.6666667 7 H 30 55.666667 Z"/>
+	<path id="Fortified" style="fill:#000000" d="M 2,48 V 38 H 3.5 5 v 8.5 8.5 h 8 8 V 56.5 58 H 11.5 2 Z m 37,8.5 V 55 h 8 8 V 46.5 38 H 56.5 58 V 48 58 H 48.5 39 Z M 2,12 V 2 H 11.5 21 V 3.5 5 H 13 5 V 13.5 22 H 3.5 2 Z m 53,1.5 V 5 H 47 39 V 3.5 2 H 48.5 58 V 12 22 H 56.5 55 Z"/>
+	
+	<rect id="color" x="5" y="5" width="50" height="13" ry="0" rx="0" style="display:inline;fill:#ff7f00;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"/>
+	<text x="50%" y="15.50" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">CELLAR</text>
+	
+	<rect id="color" x="8" y="44" width="44" height="11" ry="0" rx="0" style="display:inline;fill:#ff7f00;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"/>
+	<text x="50%" y="53" style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">Foritified</text>
+</svg>

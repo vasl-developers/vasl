@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="48" height="48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<!--
+		Name:		RFP08
+		Version:	0.1
+
+		Author(s): Gordon Molek, Klas Malmström, Alan Bills
+		Tester(s): Alan Bills, Alan Cannamore, Doug Rimmer
+	-->
+
+	<!-- The bevel - is there a better/more efficient way to achieve this? -->
+	<defs id="bevel">
+		<filter id="highlight_filter" x="-0.058226637" y="-0.058226637" width="1.1144796" height="1.1144796" style="color-interpolation-filters:sRGB;">
+			<feGaussianBlur stdDeviation="10 10" result="fbSourceGraphic" id="feGaussianBlur3"/>
+			<feColorMatrix result="fbSourceGraphicAlpha" in="fbSourceGraphic" values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0" id="feColorMatrix3"/>
+			<feGaussianBlur id="feGaussianBlur4" stdDeviation="10 10" result="blur" in="fbSourceGraphic"/>
+		</filter>
+		<filter id="shadow_filter" x="-0.030508946" y="-0.030508946" width="1.0629916" height="1.0629916" style="color-interpolation-filters:sRGB;">
+			<feGaussianBlur id="feGaussianBlur5" stdDeviation="10 10" result="blur"/>
+		</filter>
+		<clipPath id="counter_clipping">
+			<rect x="0" y="0" width="100%" height="100%" ry="4" rx="4" style="display:inline;fill:red;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"/>
+		</clipPath>
+	</defs>
+	<g id="background">
+		<rect id="color" x="0" y="0" width="100%" height="100%" ry="4" rx="4" style="display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"/>
+		<g id="bevel" clip-path="url(#counter_clipping)">
+			<path id="shadow" style="display:inline;fill:none;stroke:#000000;stroke-width:25.1286;filter:url(#shadow_filter);stroke-opacity:50" d="m 1023.6424,120.45592 c 10.8149,10.81495 17.4864,25.7734 17.4864,42.34736 v 830.07515 c 0,33.14797 -26.6859,59.83377 -59.83378,59.83377 H 151.21981 c -16.57396,0 -31.54851,-6.6875 -42.34737,-17.4864" transform="matrix(1.0503456,0,0,1.0590455,-36.912259,-39.56161) scale(0.06) translate(290,310)"/>
+			<path id="highlight" style="display:inline;fill:none;stroke:#ffffff;stroke-width:25.1286;stroke-opacity:50;filter:url(#highlight_filter)" d="M 108.87244,1035.2258 C 98.057485,1024.4109 91.386017,1009.4524 91.386017,992.87843 V 162.80328 c 0,-33.14792 26.685873,-59.83379 59.833793,-59.83379 h 830.07521 c 16.57394,0 31.53238,6.67147 42.34738,17.48643" transform="matrix(1.0387133,0,0,1.0339712,-12.412385,-8.9484139) scale(0.06) translate(118,54)"/>
+		</g>
+	</g>
+
+	<!-- <path id="Original Blast" style="color:#000000;fill:#538d1a;stroke-linecap:round;-inkscape-stroke:none" d="m 27.526114,11.77389 -5.217218,6.940933 -5.578945,-6.869681 0.183216,8.675274 -7.8913589,-0.09543 6.7991519,7.664732 -5.420343,4.066848 6.189971,1.77279 -5.431943,8.754058 9.507252,-3.981052 2.706254,3.78126 3.576032,-4.601368 6.172565,5.717358 -2.278347,-7.802303 6.005741,-0.148998 -3.970725,-5.429925 5.49018,-3.715707 -5.59635,-3.518733 3.022542,-9.419468 -7.553675,6.719259 z m -0.783845,2.802984 0.61592,7.819731 6.771974,-6.192498 -2.514621,7.160987 5.320669,3.130244 -5.465027,3.604617 3.359763,4.583585 -5.301267,0.08064 1.745274,5.724275 -4.424195,-4.072503 -3.428064,4.417008 -2.385651,-3.414494 -7.413597,3.184015 4.681543,-7.333629 -5.669857,-1.595767 4.696812,-3.462988 -6.22311,-6.855264 6.977373,0.02412 -0.313602,-6.597246 4.563871,5.506129 z" transform="translate(-1,-5)"/> -->
+	<path id="New Blast" style="color:#000000;fill:#538d1a;stroke-linecap:round;-inkscape-stroke:none" d="m 27.526114,11.77389 -5.217218,6.940933 -5.578945,-6.869681 0.183216,8.675274 -7.8913589,-0.09543 6.7991519,7.664732 -5.420343,4.066848 6.189971,1.77279 -5.431943,8.754058 9.507252,-3.981052 2.706254,3.78126 3.576032,-4.601368 6.172565,5.717358 -2.278347,-7.802303 6.005741,-0.148998 -3.970725,-5.429925 8.156847,-3.616942 -8.263017,-3.617498 3.022542,-9.419468 -7.553675,6.719259 z m -0.783845,2.802984 0.61592,7.819731 6.771974,-6.192498 -2.514621,7.160987 7.691039,3.253701 -7.835397,3.48116 3.359763,4.583585 -5.301267,0.08064 1.745274,5.724275 -4.424195,-4.072503 -3.428064,4.417008 -2.385651,-3.414494 -7.413597,3.184015 4.681543,-7.333629 -5.669857,-1.595767 4.696812,-3.462988 -6.22311,-6.855264 6.977373,0.02412 -0.313602,-6.597246 4.563871,5.506129 z" transform="translate(-1,-5)"/>
+
+	<text x="19.00" y="28.00" style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-expanded;text-anchor:start;fill:#538d1a;fill-opacity:1;Nimbus Sans L">8</text>
+</svg>

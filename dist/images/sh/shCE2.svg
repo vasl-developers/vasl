@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="68" height="68" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<!--
+		Name:		shCE2
+		Version:	0.1
+
+		Author(s): Gordon Molek, Klas Malmström, Alan Bills
+		Tester(s): Alan Bills, Alan Cannamore, Doug Rimmer
+	-->
+
+	<image x="0" y="0" width="68" height="68" preserveAspectRatio="xMidYMid meet" transform="scale(1.00)" clip-path="url(#legacy_clipping)" href="./svg/shCE2.png" xlink:href="./svg/shCE2.png"/>
+	
+	<text x="11" y="52" style="font-size:13px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-condensed;text-anchor:start;fill:black;fill-opacity:1;font-family:Nimbus Sans L" transform="rotate(-60,11,52) translate(4,28)">CE</text>
+</svg>
