@@ -17,10 +17,8 @@
 ---
 
 ## 📈 Improvements
-- Improvement 1: Implement SVG graphics for all Boats, Planes and Shared Vehicles (white counters) and revised Vehicle counters based on feedback from Beta3. 
+- Improvement 1: Implement SVG graphics for all infantry units, guns and vehicles, Boats, Planes, LC and Shared Vehicles (white counters) and many information counters. Almost all vehicle counters have been tweaked to reflect feedback from users of earlier betas.
 
-
----
 
 ## ⚠️ Compatibility Notes
 - **Minimum Version Required:** Built with VASSAL 3.7.15
@@ -30,5 +28,5 @@
 ---
 
 ## 📋 Additional Notes
-- Use the Game Updater tool to convert games saved with older versions.
+- Use the Game Updater tool to convert games saved with older versions. This will update counter graphics to the svg versions in Beta6.
 
