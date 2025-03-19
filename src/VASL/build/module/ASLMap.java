@@ -1553,9 +1553,21 @@ public class ASLMap extends Map {
         GamePiece[] stack = pieces.getPieces();
         // Create a java.util.map indication how many stacks are at each point on the map
         // This is used to determine if a HIP stack has enemy game pieces at the same location
+        // If it does, then it will be drawn offset to be visible to owner
         java.util.Map<Point, Integer> pieceMap = new HashMap<Point, Integer>();
         for (int i = 0; i < stack.length; ++i) {
             // increment the count of pieces at this point
+            String name = stack[i].getName();
+            Stack s = null;
+            if (stack[i] instanceof Stack) {
+                s = (Stack) stack[i];
+            } else {
+                continue;
+            }
+            int x = s.getPieceCount();
+            if (x == 0 || name.equals(""))
+                //empty stack, ignore
+                continue;
             Point pt = stack[i].getPosition();
             Integer count = pieceMap.get(pt);
             if (count == null) {
