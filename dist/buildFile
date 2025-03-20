@@ -171,6 +171,11 @@
         <VASSAL.build.module.documentation.BrowserPDFFile pdfFile="Casualties Bin.pdf" title="Casualties Bin"/>
         <VASSAL.build.module.documentation.AboutScreen fileName="VASL-Splash.png" title="About VASL"/>
         <VASSAL.build.module.documentation.HelpFile fileName="Credits.txt" fileType="archive" title="Credits" vassalDoc="user"/>
+        <VASL.build.module.GitHubIssueCreator
+                title="Submit Suggestion"
+                repoOwner="your-github-username"
+                repoName="your-repo-name"
+            />
     </VASSAL.build.module.Documentation>
     <VASL.build.module.ASLCommandEncoder noColorPreferences=""/>
     <VASSAL.build.module.PieceWindow defaultWidth="0" hidden="false" hotkey="67,520" icon="counters" name="VASL Counters" scale="1.0" text="" tooltip="Show/Hide the VASL Counters window">
