@@ -1008,7 +1008,8 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             makeStyleSheet((Font) evt.getNewValue());
             makeASLStyleSheet((Font) evt.getNewValue());
             send(" ");
-            send("- Chatter font changed");
+            send("We want your input to improve VASL ");
+            send("Under the 'Help' menu, click on Submit Suggestions and fill out the form!");
             send(" ");
         });
         chatFontConfigurer.fireUpdate();
