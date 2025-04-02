@@ -88,7 +88,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
             ASLMap map = (ASLMap) parent;
             // VASL game converter
             JMenuItem nextmenuItem = new JMenuItem("Update game...");
-            nextmenuItem.setEnabled(true);
+            nextmenuItem.setEnabled(false);
             nextmenuItem.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent evt) {
                     askToUpdate();
@@ -190,7 +190,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
                         refreshables.add(new StackUpdater((Stack) piece));
                     }
                 }
-
+                // ToDo need to rethink this as all Infantry counters appear to be considered stacks even if alone - if a counter is stackable, it is a stack: is this correct?
                 // An Unstacked piece
                 else {
                     final GamePiece p = (GamePiece) piece;
@@ -260,7 +260,12 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
         final List<Deck> decks = new ArrayList<>();
         options.clear();
         final Chatter chatter = theModule.getChatter();
-        options.add("DeleteNoMap"); //$NON-NLS-1$
+        //options.add("DeleteNoMap"); //$NON-NLS-1$
+        //options.add("RefreshPieces");
+        //options.add("UseLabelerName");
+        //options.add("UseRotateName");
+        //options.add("UseLayerName");
+
         if (command == null) {
             command = new NullCommand();
         }
@@ -905,8 +910,8 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
         @Override
         public void refresh(Command command) {
 
-            // Test mode, just try to create a new piece for each visible to me piece in the Stack
-            if (isTestMode()) {
+            /*// Test mode, just try to create a new piece for each visible to me piece in the Stack
+            //if (isTestMode()) {
                 final List<GamePiece> pieces = stack.asList();
                 for (final GamePiece piece : pieces) {
                     if (!Boolean.TRUE.equals(piece.getProperty(VASSAL.counters.Properties.INVISIBLE_TO_ME))
@@ -922,7 +927,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
                     }
                 }
                 return;
-            }
+            //}*/
 
             // Take a copy of the pieces in the stack
             final List<GamePiece> pieces = stack.asList();
@@ -948,9 +953,9 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
                         // Could not create a new piece for some reason, use the old piece
                         newPiece = piece;
                     }
-                //    else {
-                //        updatedCount++;
-                //    }
+                    else {
+                        updatedCount++;
+                    }
                 //}
                 //else {
                     // Hidden or Concealed opponent's piece
