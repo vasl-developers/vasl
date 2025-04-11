@@ -482,7 +482,7 @@
 		<boarddata name="BG1" version="1.0" versionDate="2022/10/30" description="" boardType="Geoboard" publisher="BGD" issued="" />
 		<boarddata name="DeluxeBlank" version="6.6" versionDate="2025/01/15" description="Empty deluxe geoboard" boardType="Deluxe" publisher="VASL" issued="" />
 		<boarddata name="OpV" version="1.0" versionDate="2023/09/30" description="Riley's Road - no grain" boardType="HASL" publisher="TJ" issued="" />
-		<boarddata name="SF" version="1.1" versionDate="2023/12/30" description="Sparrow Force" boardType="HASL" publisher="MMP" issued="2023/09/17" />
+		<boarddata name="SF" version="1.2" versionDate="2025/04/11" description="Sparrow Force" boardType="HASL" publisher="MMP" issued="2023/09/17" />
 		<boarddata name="AF_AbbioPriolo" version="1.1" versionDate="2024/01/30" description="Abbio Priolo" boardType="HASL" publisher="AF" issued="2024/01/30" />
 		<boarddata name="AF_BiazzaRidge" version="1.1" versionDate="2024/01/30" description="Biazza Ridge" boardType="HASL" publisher="AF" issued="2024/01/30" />
 		<boarddata name="AF_Brevity-OP" version="1.0" versionDate="2024/01/30" description="Brevity Assault" boardType="HASL" publisher="AF" issued="2024/01/30" />
