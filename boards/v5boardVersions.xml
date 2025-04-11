@@ -329,7 +329,7 @@
 		<boarddata name="CHDD2" version="1.0" versionDate="2008/08/30" description="Devil's Domain - Kursk Ponyri" boardType="HASL" publisher="CH!" issued="" />
 		<boarddata name="CM" version="1.0" versionDate="2008/08/30" description="Crossing the Moro" boardType="HASL" publisher="LCP" issued="" />
 		<boarddata name="DTW" version="1.0" versionDate="2008/08/30" description="Dzerhezinsky Tractor Works" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="DaE" version="6.0" versionDate="2008/08/30" description="Decision at Elst" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="DaE" version="6.1" versionDate="2025/04/11" description="Decision at Elst" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="DfBG1" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="DftB" issued="" />
 		<boarddata name="ER" version="6.0" versionDate="2021/06/30" description="Edson's Ridge" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="FACTRY" version="1.0" versionDate="2008/08/30" description="" boardType="XXX" publisher="YYY" issued="" />
