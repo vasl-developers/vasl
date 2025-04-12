@@ -225,7 +225,7 @@ public class BoardArchive {
                     final int height = infile.readInt();
                     final int gridWidth = infile.readInt();
                     final int gridHeight = infile.readInt();
-
+                    //ToDo fix this passgridconfig needs to look for BMD.xml data
                     String passgridconfig = offset;
                     if (isGEO()) {
                         map = new Map(width, height, terrainTypes, passgridconfig, isCropping);
@@ -248,9 +248,9 @@ public class BoardArchive {
                     map.setPartialOrchards(metadata.getPartialOrchards());
 
                     // read the hex information
-                    if(map.getMapConfiguration().equals("TopLeftHalfHeightEqualRowCount") || map.getA1CenterY()==65) {
+                    if(map.getMapConfiguration().contains("EqualRowCount") || map.getA1CenterY()==65) {
                         for (int col = 0; col < map.getWidth(); col++) {
-                            for (int row = 0; row < map.getHeight(); row++) { // no extra hex for boards where each col has same number of rows (eg RO)
+                            for (int row = 0; row < map.getHeight(); row++) { // no extra hex for boards where each col has same number of rows (eg RO/DaE)
                                 final byte stairway = infile.readByte();
                                 if ((int) stairway == 1) {
                                     map.getHex(col, row).setStairway(true);
@@ -316,9 +316,9 @@ public class BoardArchive {
             }
 
             // write the hex information
-            if(map.getMapConfiguration().equals("TopLeftHalfHeightEqualRowCount")){
+            if(map.getMapConfiguration().contains("EqualRowCount")){
                 for (int col = 0; col < map.getWidth(); col++) {
-                    for (int row = 0; row < map.getHeight(); row++) { // no extra hex for boards where each col has same number of rows (eg RO)
+                    for (int row = 0; row < map.getHeight(); row++) { // no extra hex for boards where each col has same number of rows (eg RO/DaE)
                         outfile.writeByte( map.getHex(col, row).hasStairway() ? 1: 0);
                     }
                 }

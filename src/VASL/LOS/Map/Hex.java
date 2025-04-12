@@ -387,7 +387,22 @@ public class Hex {
                 southEastOnMap = false;
                 southWestOnMap = false;
             }
+        } else if (map.getMapConfiguration() == "FullHexEqualRowCount") {
+            // no need to do first and last col tests as all east/west hexides on map due to "Full" config
+            // first hex in odd column ?
+            if ((columnNumber % 2 == 1) && (rowNumber == 0)) {
+                northOnMap = false;
+                northEastOnMap = false;
+                northWestOnMap = false;
+            }
+            // last hex in even column?
+            if ((columnNumber % 2 == 0) && (rowNumber == map.getHeight()-1)) {
+                southOnMap = false;
+                southEastOnMap = false;
+                southWestOnMap = false;
+            }
         }
+
     }
 
 	// used to update the hexside location once the map has been fully initialized
