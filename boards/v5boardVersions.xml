@@ -228,6 +228,9 @@
 		<boarddata name="BFPP" version="6.6" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPQ" version="6.6" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPR" version="6.6" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPS" version="6.0" versionDate="2025/01/30" description="" boardType="Geoboard" publisher="BFP" issued="2025/04/14" />
+		<boarddata name="BFPT" version="6.0" versionDate="2025/01/30" description="" boardType="Geoboard" publisher="BFP" issued="2025/04/14" />
+		<boarddata name="BFPU" version="6.0" versionDate="2025/01/30" description="" boardType="Geoboard" publisher="BFP" issued="2025/04/14" />
 		<boarddata name="BFPDW1a" version="6.5" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPDW1b" version="6.6" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPDW2a" version="6.3" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
@@ -246,6 +249,10 @@
 		<boarddata name="BFPDW8b" version="6.1" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPDW9a" version="6.1" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPDW9b" version="6.1" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPDW10a" version="6.0" versionDate="2025/01/30" description="" boardType="Geoboard" publisher="BFP" issued="2025/04/14" />
+		<boarddata name="BFPDW10b" version="6.0" versionDate="2025/01/30" description="" boardType="Geoboard" publisher="BFP" issued="2025/04/14" />
+		<boarddata name="BFPHW1a" version="6.0" versionDate="2025/01/30" description="" boardType="Geoboard" publisher="BFP" issued="2025/04/14" />
+		<boarddata name="BFPHW1b" version="6.0" versionDate="2025/01/30" description="" boardType="Geoboard" publisher="BFP" issued="2025/04/14" />
 		<boarddata name="BF1" version="1.1" versionDate="2008/08/30" description="" boardType="XXX" publisher="YYY" issued="" />
 		<boarddata name="TRBH" version="1.0" versionDate="2008/08/30" description="Those Ragged Bloody Heroes" boardType="HASL" publisher="CH" issued="" />
 		<boarddata name="CtR" version="1.0" versionDate="2019/01/30" description="Corregidor: the Rock" boardType="HASL" publisher="BFP" issued="" />
