@@ -149,7 +149,7 @@ public class MarkMoved extends Decorator implements EditablePiece {
     if (hasMoved) {
       Rectangle r = piece.getShape().getBounds();
       try {
-        ImageOp im = Op.load(markImage + ".gif");
+        ImageOp im = Op.load(markImage + ".svg");
         if (zoom != 1.0) {
           im = Op.scale(im,zoom);
         }

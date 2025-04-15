@@ -302,7 +302,11 @@ public class Concealable extends Obscurable implements EditablePiece {
         if (concealedToMe != null) {
           concealedToMe = null;
           conceal = new ScaledImagePainter();
-          conceal.setImageName(imageName + ".gif");
+          if (imageName.contains(".")) { // imagename already has file extension - either .svg or .gif
+            conceal.setImageName(imageName);
+          } else {
+            conceal.setImageName(imageName + ".gif");
+          }
           imageSize = conceal.getImageSize();
         }
         else {
@@ -320,7 +324,7 @@ public class Concealable extends Obscurable implements EditablePiece {
       //}
     }
     if (concealedToOthers == null) {
-      concealedToOthers = Op.load(nation + "/" + nation + "qmarkme.gif").getImage();
+      concealedToOthers = Op.load(nation + "/" + nation + "qmarkme.svg").getImage();
       if (concealedToOthers == null) {
         // Using generic qmarkme.gif image and prefs-specified colors
         BufferedImage rev = new BufferedImage(20, 20, BufferedImage.TYPE_4BYTE_ABGR);

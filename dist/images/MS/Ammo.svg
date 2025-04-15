@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="48" height="48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<!--
+		Name:		Ammo
+		Version:	0.1
+
+		Author(s): Gordon Molek, Klas Malmström, Alan Bills
+		Tester(s): Alan Bills, Alan Cannamore, Doug Rimmer
+		Counter data scraped with permission from: https://www.klasm.com/ASL/Listings/OrdnanceListings.html
+	-->
+
+	<defs id="fonts">
+		<style>
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: normal;
+				src: url("../fonts/NimbusSanL-Reg.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: normal;
+				src: url("../fonts/NimbusSanL-Bol.ttf") format("ttf");
+			}
+		</style>
+	</defs>
+	<image x="2.00" y="-4.00" width="48" height="48" preserveAspectRatio="xMidYMid meet" transform="scale(1.00)" href="svg/Ammo.png" xlink:href="svg/Ammo.png"/>
+	
+	<text x="44.00" y="10.00" style="font-size:9px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:end;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">Ammo</text>
+	<text x="4.00" y="20.00" style="font-size:8px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;text-anchor:start;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">X12</text>
+	<text x="44.00" y="20.00" style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:end;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">All PP</text>
+	<text x="44.00" y="44.00" style="font-size:10px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:end;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">36</text>
+
+</svg>

@@ -7,6 +7,7 @@
 		Author(s): Gordon Molek, Klas Malmström, Alan Bills
 		Tester(s): Alan Bills, Alan Cannamore, Doug Rimmer
 	-->
+	
 	<!-- The bevel - is there a better/more efficient way to achieve this? -->
 	<defs id="bevel">
 		<filter id="highlight_filter" x="-0.058226637" y="-0.058226637" width="1.1144796" height="1.1144796" style="color-interpolation-filters:sRGB;">
@@ -27,7 +28,7 @@
 		<rect id="color" x="0" y="0" width="100%" height="100%" ry="4" rx="4" style="display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"/>
 		<g id="bevel" clip-path="url(#counter_clipping)">
 			<path id="shadow" style="display:inline;fill:none;stroke:#000000;stroke-width:25.1286;filter:url(#shadow_filter);stroke-opacity:50" d="m 1023.6424,120.45592 c 10.8149,10.81495 17.4864,25.7734 17.4864,42.34736 v 830.07515 c 0,33.14797 -26.6859,59.83377 -59.83378,59.83377 H 151.21981 c -16.57396,0 -31.54851,-6.6875 -42.34737,-17.4864" transform="matrix(1.0503456,0,0,1.0590455,-36.912259,-39.56161) scale(0.06) translate(290,310)"/>
-			<path id="highlight" style="display:inline;fill:none;stroke:#ffffff;stroke-width:25.1286;stroke-opacity:50;filter:url(#highlight_filter)" d="M 108.87244,1035.2258 C 98.057485,1024.4109 91.386017,1009.4524 91.386017,992.87843 V 162.80328 c 0,-33.14792 26.685873,-59.83379 59.833793,-59.83379 h 830.07521 c 16.57394,0 31.53238,6.67147 42.34738,17.48643" transform="matrix(1.0387133,0,0,1.0339712,-12.412385,-8.9484139) scale(0.06) translate(118,54)"/>
+			<path id="highlight" style="display:inline;fill:none;stroke:#d8d8d8;stroke-width:25.1286;stroke-opacity:50;filter:url(#highlight_filter)" d="M 108.87244,1035.2258 C 98.057485,1024.4109 91.386017,1009.4524 91.386017,992.87843 V 162.80328 c 0,-33.14792 26.685873,-59.83379 59.833793,-59.83379 h 830.07521 c 16.57394,0 31.53238,6.67147 42.34738,17.48643" transform="matrix(1.0387133,0,0,1.0339712,-12.412385,-8.9484139) scale(0.06) translate(118,54)"/>
 		</g>
 	</g>
 	
@@ -40,10 +41,7 @@
 	
 		<path id="bottom_text" style="stroke:#000000;stroke-width:0.25;fill:#000000" transform="translate(-15,0) scale(0.74)" d="m 130.20101,174.21111 h -4.125 v -26.72919 l -8.625,18.18751 h -2.45834 l -8.56251,-18.18751 v 26.72919 h -3.85417 v -31.02086 h 5.62501 l 8.27084,17.27085 8,-17.27085 h 5.72917 z m 19.27085,0 h -12.25001 v -3.16667 h 4.06251 v -24.68752 h -4.06251 v -3.16667 h 12.25001 v 3.16667 h -4.0625 v 24.68752 h 4.0625 z m 30.68752,0 h -5.10417 l -14.70834,-27.75003 v 27.75003 h -3.85417 v -31.02086 h 6.39584 l 13.41668,25.33335 v -25.33335 h 3.85416 z m 28.68753,0 h -20.43752 v -31.02086 h 20.43752 v 3.66667 h -16.31252 v 8.5 h 16.31252 v 3.66667 h -16.31252 v 11.52085 h 16.31252 z m 30.20835,0 h -5.10417 l -14.70834,-27.75003 v 27.75003 h -3.85417 v -31.02086 h 6.39584 l 13.41667,25.33335 v -25.33335 h 3.85417 z m 14.81252,-31.02086 -0.54167,22.47918 h -3.54167 l -0.58333,-22.47918 z m -0.20834,31.02086 h -4.25 v -4.39584 h 4.25 z"/>
 	</svg>
-	<!--
-	<line x1="30" y1="39" x2="40" y2="39" style="stroke:black;stroke-width:2.50"/>
-	<line x1="30" y1="39" x2="40" y2="39" style="stroke:black;stroke-width:1.00" marker-end="url(#arrow)"/>
-	-->
+
 	<g id="arrow">
 		<rect x="30.873154" y="38.645298" width="6.6320395" height="0.65823561" style="fill:#000000;stroke:#000000;stroke-width:1.68535"/>
 		<path style="fill:#000000;stroke:#000000" transform="matrix(1.2320512,0,0,0.96419604,-13.913918,1.4571501)" d="m 41.795955,37.000374 1.702973,0.980495 1.702972,0.980496 -1.70062,0.984569 -1.70062,0.98457 -0.0024,-1.965065 z"/>

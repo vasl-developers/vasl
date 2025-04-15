@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="48" height="48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<!--
+		Name:		Labor1
+		Version:	0.1
+
+		Author(s): Gordon Molek, Klas Malmström, Alan Bills
+		Tester(s): Alan Bills, Alan Cannamore, Doug Rimmer
+		Counter data scraped with permission from: https://www.klasm.com/ASL/Listings/OrdnanceListings.html
+	-->
+
+	<defs id="fonts">
+		<style>
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: normal;
+				src: url("../fonts/NimbusSanL-Reg.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: normal;
+				src: url("../fonts/NimbusSanL-Bol.ttf") format("ttf");
+			}
+		</style>
+	</defs>
+	<!-- The bevel - is there a better/more efficient way to achieve this? -->
+	<defs id="bevel">
+		<filter id="highlight_filter" x="-0.058226637" y="-0.058226637" width="1.1144796" height="1.1144796" style="color-interpolation-filters:sRGB;">
+			<feGaussianBlur stdDeviation="10 10" result="fbSourceGraphic" id="feGaussianBlur3"/>
+			<feColorMatrix result="fbSourceGraphicAlpha" in="fbSourceGraphic" values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0" id="feColorMatrix3"/>
+			<feGaussianBlur id="feGaussianBlur4" stdDeviation="10 10" result="blur" in="fbSourceGraphic"/>
+		</filter>
+		<filter id="shadow_filter" x="-0.030508946" y="-0.030508946" width="1.0629916" height="1.0629916" style="color-interpolation-filters:sRGB;">
+			<feGaussianBlur id="feGaussianBlur5" stdDeviation="10 10" result="blur"/>
+		</filter>
+		<clipPath id="counter_clipping">
+			<rect x="0" y="0" width="100%" height="100%" ry="4" rx="4" style="display:inline;fill:red;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"/>
+		</clipPath>
+	</defs>
+	<g id="background">
+		<rect id="color" x="0" y="0" width="100%" height="100%" ry="4" rx="4" style="display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"/>
+		<g id="bevel" clip-path="url(#counter_clipping)">
+			<path id="shadow" style="display:inline;fill:none;stroke:#000000;stroke-width:25.1286;filter:url(#shadow_filter);stroke-opacity:50" d="m 1023.6424,120.45592 c 10.8149,10.81495 17.4864,25.7734 17.4864,42.34736 v 830.07515 c 0,33.14797 -26.6859,59.83377 -59.83378,59.83377 H 151.21981 c -16.57396,0 -31.54851,-6.6875 -42.34737,-17.4864" transform="matrix(1.0503456,0,0,1.0590455,-36.912259,-39.56161) scale(0.06) translate(290,310)"/>
+			<path id="highlight" style="display:inline;fill:none;stroke:#d8d8d8;stroke-width:25.1286;stroke-opacity:50;filter:url(#highlight_filter)" d="M 108.87244,1035.2258 C 98.057485,1024.4109 91.386017,1009.4524 91.386017,992.87843 V 162.80328 c 0,-33.14792 26.685873,-59.83379 59.833793,-59.83379 h 830.07521 c 16.57394,0 31.53238,6.67147 42.34738,17.48643" transform="matrix(1.0387133,0,0,1.0339712,-12.412385,-8.9484139) scale(0.06) translate(118,54)"/>
+		</g>
+	</g>
+	
+	<svg x="5.00" y="22.00" width="24.00" height="20.00" viewBox="0 0 144 155"> 
+		<path id="tools" style="fill:#000000" d="m 21.5,153.97365 c -8.128927,-1.64046 -9.171274,-2.4349 -10.508518,-8.00916 -1.8481608,-7.704 -0.851068,-18.4052 2.279497,-24.46449 1.63769,-3.16979 7.548755,-9.93372 16.148611,-18.47858 l 13.565333,-13.478587 6.280346,6.224522 6.280346,6.224525 9.962871,-10.000398 9.96287,-10.000395 L 56.582589,63.082675 C 40.059627,46.542528 37.465624,44.316775 35.871871,45.312091 c -1.379317,0.861398 -2.11955,0.84023 -3.046912,-0.08713 C 32.151232,44.551232 31.314231,44 30.964957,44 30.066807,44 17.061954,60.328317 12.248144,67.5 10.033103,70.8 6.6447975,76.595333 4.7185762,80.378518 1.7325376,86.243231 1.114813,86.937104 0.52740494,85.086345 -1.7944019,77.77098 6.0619149,57.394023 16.685596,43.176789 c 3.009707,-4.027767 5.23844,-7.932366 4.95274,-8.676887 -0.2857,-0.744522 0.122335,-1.886314 0.906745,-2.537316 1.219729,-1.012285 1.138739,-1.549086 -0.559441,-3.707971 -5.038033,-6.404822 0.798728,-12.624173 6.670594,-7.107841 1.866324,1.753321 2.559261,1.91927 3.780829,0.905459 0.822631,-0.682723 2.063754,-1.051961 2.758052,-0.820528 0.694298,0.231433 4.654843,-2.088524 8.80121,-5.155459 C 57.000698,6.4573286 77.189802,-1.245387 84.553105,0.60268446 86.930338,1.199332 86.795204,1.3717131 82.290674,3.4887076 73.881408,7.4408123 56.559017,19.525242 45.667898,29.037453 c -0.457656,0.399714 -0.25973,1.643265 0.439836,2.763448 1.039055,1.663793 1.021891,2.337984 -0.09375,3.682246 -1.211707,1.460017 0.767425,3.780877 17.553604,20.584514 l 18.919289,18.938966 18.98601,-18.986011 18.98601,-18.986011 -4.95097,-5.026552 -4.95097,-5.026553 3.22878,-3.228776 3.22877,-3.228776 13.23077,13.230769 13.23077,13.230769 -3.22877,3.228776 -3.22878,3.228776 -5.02655,-4.950969 -5.02656,-4.95097 -19.07862,19.078624 -19.078624,19.078625 25.845924,26.264822 c 14.21526,14.44565 25.99297,27.13829 26.17269,28.20586 0.43015,2.55515 -1.54479,4.83097 -4.19226,4.83097 -1.4399,0 -10.54706,-8.42195 -28.3717,-26.23707 l -26.251089,-26.237073 -10.001794,9.964264 -10.001795,9.964259 5.995939,6.04972 c 3.297767,3.32734 5.995939,6.52234 5.995939,7.1 0,1.85745 -26.357402,27.02856 -30.531725,29.15756 -2.217448,1.13095 -6.687595,2.54724 -9.933659,3.14731 -6.522833,1.20581 -6.383705,1.20506 -12.034616,0.0647 z"/>
+	</svg>
+	
+	<text x="50%" y="13.00" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">LABOR</text>
+	<text x="42.00" y="36.00" style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:end;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">-1</text>
+
+</svg>

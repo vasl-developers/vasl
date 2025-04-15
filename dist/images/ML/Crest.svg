@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="60" height="60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<!--
+		Name:		Crest
+		Version:	0.1
+
+		Author(s): Gordon Molek, Klas Malmström, Alan Bills
+		Tester(s): Alan Bills, Alan Cannamore, Doug Rimmer
+	-->
+
+	<defs id="fonts">
+		<style>
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: normal;
+				src: url("../fonts/NimbusSanL-Reg.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: normal;
+				src: url("../fonts/NimbusSanL-Bol.ttf") format("ttf");
+			}
+		</style>
+	</defs>
+	<defs>
+		<clipPath id="clip-bottom">
+			<rect x="0.00" y="0.00" width="100%" height="49%"/>
+		</clipPath>	
+		<clipPath id="clip-top">
+			<rect x="0.00" y="52%" width="100%" height="50%"/>
+		</clipPath>	
+	</defs>
+	
+	<text x="50%" y="22.00" style="font-size:9px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">Crest</text>
+
+	<path id="Solid-hexagon" style="fill:none;stroke:#000000;stroke-width:1.75;stroke-opacity:1.00" clip-path="url(#clip-bottom)" d="M 40.42883,11.950105 50.872974,30.064184 40.407794,48.166116 19.49847,48.153972 9.0543255,30.039893 19.519506,11.93796 Z"/>
+	
+	<path id="Dashed-hexagon" style="fill:none;stroke:#000000;stroke-width:0.75;stroke-opacity:1.00" stroke-dasharray="8 4" clip-path="url(#clip-top)" d="M 40.42883,11.950105 50.872974,30.064184 40.407794,48.166116 19.49847,48.153972 9.0543255,30.039893 19.519506,11.93796 Z"/>
+	
+	<text x="50%" y="39.00" style="font-size:7px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">Area</text>
+	<text x="50%" y="46.00" style="font-size:7px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">Fire</text>
+	
+	<g id="arrow-down">
+		<path style="fill:#000000;fill-opacity:0.878327;stroke:none;stroke-width:1.001;stroke-dasharray:none" d="m 30.119199,54.679318 6.12607,-3.61829 -2.0203,-0.01283 v -1.629513 h -8.029061 v 1.629513 h -2.189744 z"/>
+	</g>
+
+	<g id="arrow-right">
+		<path style="fill:#000000;fill-opacity:0.878327;stroke:none;stroke-width:1;stroke-dasharray:none" d="m 51.120978,43.046525 -0.116272,-7.105519 -1.020611,1.757001 -1.421104,-0.826824 -3.97909,6.898813 1.421104,0.813905 -1.098126,1.91203 z"/>
+	</g>
+
+	<g id="arrow-left">
+		<path style="fill:#000000;fill-opacity:0.878327;stroke:none;stroke-width:1;stroke-dasharray:none" d="m 9.135027,43.135078 6.211696,3.452065 -1.011302,-1.762376 1.426602,-0.8173 -3.985002,-6.8954 -1.415414,0.82376 -1.106804,-1.90702 z"/>
+	</g>
+  
+</svg>

@@ -10,6 +10,22 @@
 		Counter data scraped with permission from: https://www.klasm.com/ASL/Listings/VehicleListings.html
 	-->
 
+	<defs id="fonts">
+		<style>
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: normal;
+				src: url("../../fonts/NimbusSanL-Reg.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: normal;
+				src: url("../../fonts/NimbusSanL-Bol.ttf") format("ttf");
+			}
+		</style>
+	</defs>
 	<!-- The bevel - is there a better/more efficient way to achieve this? -->
 	<defs id="bevel">
 		<filter id="highlight_filter" x="-0.058226637" y="-0.058226637" width="1.1144796" height="1.1144796" style="color-interpolation-filters:sRGB;">
@@ -38,15 +54,15 @@
 	<!-- Unit depiction -->
 	<image x="0" y="0" width="60" height="60" preserveAspectRatio="xMidYMid meet" transform="" href="svg/IS2.png" xlink:href="svg/IS2.png"/>
 	<!-- MA, text position adjusts to account for any overlined/underlined text. -->
-	<svg x="3.00" y="48.00" width="54.00" height="12.00" style="overflow:visible">
-		<text x="0.00" y="75.00%" dominant-baseline="auto" text-anchor="start" style="font-size:12.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">122L</text>
+	<svg x="3.00" y="47.00" width="54.00" height="10.00" style="overflow:visible">
+		<text x="0.00" y="100.00%" dominant-baseline="auto" text-anchor="start" style="font-size:12.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">122L</text>
 	</svg>
 	<!-- Malfunction B/X -->
-	<svg x="3.00" y="36.40" width="5.40" height="9.60" style="overflow:visible">
+	<svg x="3.00" y="34.90" width="5.40" height="9.60" style="overflow:visible">
 		<text x="0" y="76%" dominant-baseline="auto" text-anchor="start"><tspan style="font-size:8.40px;font-weight:normal;font-family:Nimbus Sans L;fill:black;fill-opacity:1;stroke-width:0.2">B</tspan></text>
 	</svg>
 	<!-- Malfunction B/X Number -->
-	<svg x="8.40" y="36.40" width="9.60" height="9.60" style="overflow:visible">
+	<svg x="8.40" y="34.90" width="9.60" height="9.60" style="overflow:visible">
 		<circle cx="50%" cy="50%" r="4.5" style="display:inline;fill:none;fill-opacity:1;stroke:black;stroke-width:0.36;stroke-dasharray:none;stroke-opacity:1"></circle> <!-- Low Ammo circle. Stroke width increases the radius! -->
 		<text x="50%" y="76%" dominant-baseline="auto" text-anchor="middle"><tspan style="font-size:7.20px;font-weight:normal;font-family:Nimbus Sans L;fill:black;fill-opacity:1;stroke-width:0.2">11</tspan></text>
 	</svg>

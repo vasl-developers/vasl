@@ -7,7 +7,23 @@
 		Author(s): Gordon Molek, Klas Malmström, Alan Bills
 		Tester(s): Alan Bills, Alan Cannamore, Doug Rimmer
 	-->
-	
+
+	<defs id="fonts">
+		<style>
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: normal;
+				src: url("../fonts/NimbusSanL-Reg.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: normal;
+				src: url("../fonts/NimbusSanL-Bol.ttf") format("ttf");
+			}
+		</style>
+	</defs>
 	<circle id="white" cx="50%" cy="50%" r="7.20" fill="#ffffff"/>
 	
 	<circle id="Outer" cx="50%" cy="50%" r="20.00" style="display:inline;fill:none;fill-opacity:0.0;stroke:#000000;stroke-width:1.50;stroke-dasharray:none;stroke-opacity:1"></circle>

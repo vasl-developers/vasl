@@ -10,6 +10,22 @@
 		Counter data scraped with permission from: https://www.klasm.com/ASL/Listings/VehicleListings.html
 	-->
 
+	<defs id="fonts">
+		<style>
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: normal;
+				src: url("../../fonts/NimbusSanL-Reg.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: normal;
+				src: url("../../fonts/NimbusSanL-Bol.ttf") format("ttf");
+			}
+		</style>
+	</defs>
 	<!-- The bevel - is there a better/more efficient way to achieve this? -->
 	<defs id="bevel">
 		<filter id="highlight_filter" x="-0.058226637" y="-0.058226637" width="1.1144796" height="1.1144796" style="color-interpolation-filters:sRGB;">
@@ -27,7 +43,7 @@
 	<g id="background">
 		<rect id="color" x="0" y="0" width="100%" height="100%" ry="4" rx="4" style="display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"/>
 		<g id="bevel" clip-path="url(#counter_clipping)">
-			<path id="shadow" style="display:inline;fill:none;stroke:#000000;stroke-width:25.1286;filter:url(#shadow_filter);stroke-opacity:50" d="m 1023.6424,120.45592 c 10.8149,10.81495 17.4864,25.7734 17.4864,42.34736 v 830.07515 c 0,33.14797 -26.6859,59.83377 -59.83378,59.83377 H 151.21981 c -16.57396,0 -31.54851,-6.6875 -42.34737,-17.4864" transform="matrix(1.0503456,0,0,1.0590455,-36.912259,-39.56161) scale(0.06) translate(490,500)"/>
+			<path id="shadow" style="display:inline;fill:none;stroke:#707070;stroke-width:25.1286;filter:url(#shadow_filter);stroke-opacity:50" d="m 1023.6424,120.45592 c 10.8149,10.81495 17.4864,25.7734 17.4864,42.34736 v 830.07515 c 0,33.14797 -26.6859,59.83377 -59.83378,59.83377 H 151.21981 c -16.57396,0 -31.54851,-6.6875 -42.34737,-17.4864" transform="matrix(1.0503456,0,0,1.0590455,-36.912259,-39.56161) scale(0.06) translate(490,500)"/>
 			<path id="highlight" style="display:inline;fill:none;stroke:#ffffff;stroke-width:25.1286;stroke-opacity:50;filter:url(#highlight_filter)" d="M 108.87244,1035.2258 C 98.057485,1024.4109 91.386017,1009.4524 91.386017,992.87843 V 162.80328 c 0,-33.14792 26.685873,-59.83379 59.833793,-59.83379 h 830.07521 c 16.57394,0 31.53238,6.67147 42.34738,17.48643" transform="matrix(1.0387133,0,0,1.0339712,-12.412385,-8.9484139) scale(0.06) translate(118,54)"/>
 		</g>
 	</g>
@@ -38,11 +54,11 @@
 	<!-- Unit depiction -->
 	<image x="0" y="0" width="60" height="60" preserveAspectRatio="xMidYMid meet" transform="" href="svg/sspziiil.png" xlink:href="svg/sspziiil.png"/>
 	<!-- MA, text position adjusts to account for any overlined/underlined text. -->
-	<svg x="3.00" y="48.00" width="54.00" height="12.00" style="overflow:visible">
-		<text x="0.00" y="75.00%" dominant-baseline="auto" text-anchor="start" style="font-size:12.00px;font-weight:bold;font-family:Nimbus Sans L;fill:white">50L</text>
+	<svg x="3.00" y="47.00" width="54.00" height="10.00" style="overflow:visible">
+		<text x="0.00" y="100.00%" dominant-baseline="auto" text-anchor="start" style="font-size:12.00px;font-weight:bold;font-family:Nimbus Sans L;fill:white">50L</text>
 	</svg>
 	<!-- ROF -->
-	<svg x="3.00" y="34.78" width="11.22" height="11.22" style="overflow:visible">
+	<svg x="3.00" y="33.28" width="11.22" height="11.22" style="overflow:visible">
 		<text x="50%" y="75%" dominant-baseline="auto" text-anchor="middle"><tspan style="font-size:8.40px;font-weight:bold;font-family:Nimbus Sans L;font-family:Nimbus Sans L;fill:white;fill-opacity:1;stroke-width:0.2">2</tspan></text>
 		<rect x="0.25" y="0.25" width="10.72" height="10.72" style="display:inline;fill:none;fill-opacity:1;stroke:white;stroke-width:0.50px;stroke-dasharray:none;stroke-opacity:1"/>
 	</svg>
