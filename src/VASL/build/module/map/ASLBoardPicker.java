@@ -794,8 +794,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             }
             final File f = new File(boardDir, "bd" + unReversedBoardName);
             if (!f.exists()) {
-
-                throw new BoardException("Unable to find board " + baseName);
+                throw new BoardException("File does not exist: " + f.getPath());
             }
             b.initializeFromArchive(f);
             if (b.getVASLBoardArchive() == null ){
