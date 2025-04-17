@@ -16,6 +16,7 @@
 - Fix 4: Fixed Russian SU-76m not showing as open topped.
 - Fix 5: Fixed German Opel Blitz wreck not showing.
 - Fix 6: Fixed color mismatch of label text on customizable American blank counter.
+- Fix 7: Fixed smoke exponent for American 7-4-7 'E' Squad.
 
 
 ---
