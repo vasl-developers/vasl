@@ -1,6 +1,6 @@
-# Release Notes: Version 6.7.1 
+# Release Notes: Version 6.7.1-beta1 
 
-**Release Date:** TBD 2025
+**Release Date:** April 2025
 
 ---
 
@@ -22,7 +22,8 @@
 ---
 
 ## 📈 Improvements
-- Improvement 1: 
+- Improvement 1: Added LOS Checking to HASL bdDaE
+- Improvement 2: Changes to autosave feature so that users can select what directory files will be save to. Also changed how games are saved so that they do not get added to the recent games tab.
 - 
 
 ## ⚠️ Compatibility Notes
