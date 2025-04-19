@@ -1,3 +1,4 @@
+
 # Release Notes: Version 6.7.1-beta1 
 
 **Release Date:** April 2025
@@ -6,6 +7,7 @@
 
 ## 🚀 New Features
  - Feature 1: Font required for updated (SVG) counter graphics is now included in the VASL VMOD, no need to separately download and install the font.
+
 
 ---
 
@@ -19,12 +21,14 @@
 - Fix 7: Fixed smoke exponent for American 7-4-7 'E' Squad.
 
 
+
 ---
 
 ## 📈 Improvements
 - Improvement 1: Added LOS Checking to HASL bdDaE
 - Improvement 2: Changes to autosave feature so that users can select what directory files will be save to. Also changed how games are saved so that they do not get added to the recent games tab.
 - 
+
 
 ## ⚠️ Compatibility Notes
 - **Minimum Version Required:** Built with VASSAL 3.7.15
