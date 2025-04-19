@@ -8,6 +8,22 @@
 		Tester(s): Alan Bills, Alan Cannamore, Doug Rimmer
 	-->
 
+	<defs id="fonts">
+		<style>
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: normal;
+				src: url("../fonts/NimbusSanL-Reg.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: normal;
+				src: url("../fonts/NimbusSanL-Bol.ttf") format("ttf");
+			}
+		</style>
+	</defs>
 	<!-- The bevel - is there a better/more efficient way to achieve this? -->
 	<defs id="bevel">
 		<filter id="highlight_filter" x="-0.058226637" y="-0.058226637" width="1.1144796" height="1.1144796" style="color-interpolation-filters:sRGB;">
@@ -29,5 +45,8 @@
 			<path id="highlight" style="display:inline;fill:none;stroke:#ffffff;stroke-width:25.1286;stroke-opacity:50;filter:url(#highlight_filter)" d="M 108.87244,1035.2258 C 98.057485,1024.4109 91.386017,1009.4524 91.386017,992.87843 V 162.80328 c 0,-33.14792 26.685873,-59.83379 59.833793,-59.83379 h 830.07521 c 16.57394,0 31.53238,6.67147 42.34738,17.48643" transform="matrix(1.0387133,0,0,1.0339712,-12.412385,-8.9484139) scale(0.06) translate(118,54)"/>
 		</g>
 	</g>
-	<text id="Values" transform="translate(44,24) rotate(-90)" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-expanded;text-anchor:middle;fill:black;fill-opacity:1;Nimbus Sans L">_leader</text>
+	<text x="50%" y="12.00" style="font-size:8.5px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1.0;font-family:Nimbus Sans L">TH DR, ML</text>
+	<text x="50%" y="22.00" style="font-size:8.5px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1.0;font-family:Nimbus Sans L">OVR, CC</text>
+	<text x="50%" y="32.00" style="font-size:8.5px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1.0;font-family:Nimbus Sans L">HD Mnvr</text>
+	<text x="50%" y="42.00" style="font-size:8.5px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1.0;font-family:Nimbus Sans L">Bog Rmvl</text>
 </svg>

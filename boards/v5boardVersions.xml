@@ -228,6 +228,9 @@
 		<boarddata name="BFPP" version="6.6" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPQ" version="6.6" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPR" version="6.6" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPS" version="6.0" versionDate="2025/01/30" description="" boardType="Geoboard" publisher="BFP" issued="2025/04/14" />
+		<boarddata name="BFPT" version="6.2" versionDate="2025/04/14" description="" boardType="Geoboard" publisher="BFP" issued="2025/04/14" />
+		<boarddata name="BFPU" version="6.1" versionDate="2025/04/14" description="" boardType="Geoboard" publisher="BFP" issued="2025/04/14" />
 		<boarddata name="BFPDW1a" version="6.5" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPDW1b" version="6.6" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPDW2a" version="6.3" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
@@ -246,6 +249,10 @@
 		<boarddata name="BFPDW8b" version="6.1" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPDW9a" version="6.1" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPDW9b" version="6.1" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPDW10a" version="6.0" versionDate="2025/01/30" description="" boardType="Geoboard" publisher="BFP" issued="2025/04/14" />
+		<boarddata name="BFPDW10b" version="6.0" versionDate="2025/01/30" description="" boardType="Geoboard" publisher="BFP" issued="2025/04/14" />
+		<boarddata name="BFPHW1a" version="6.0" versionDate="2025/01/30" description="" boardType="Geoboard" publisher="BFP" issued="2025/04/14" />
+		<boarddata name="BFPHW1b" version="6.0" versionDate="2025/01/30" description="" boardType="Geoboard" publisher="BFP" issued="2025/04/14" />
 		<boarddata name="BF1" version="1.1" versionDate="2008/08/30" description="" boardType="XXX" publisher="YYY" issued="" />
 		<boarddata name="TRBH" version="1.0" versionDate="2008/08/30" description="Those Ragged Bloody Heroes" boardType="HASL" publisher="CH" issued="" />
 		<boarddata name="CtR" version="1.0" versionDate="2019/01/30" description="Corregidor: the Rock" boardType="HASL" publisher="BFP" issued="" />
@@ -329,7 +336,7 @@
 		<boarddata name="CHDD2" version="1.0" versionDate="2008/08/30" description="Devil's Domain - Kursk Ponyri" boardType="HASL" publisher="CH!" issued="" />
 		<boarddata name="CM" version="1.0" versionDate="2008/08/30" description="Crossing the Moro" boardType="HASL" publisher="LCP" issued="" />
 		<boarddata name="DTW" version="1.0" versionDate="2008/08/30" description="Dzerhezinsky Tractor Works" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="DaE" version="6.0" versionDate="2008/08/30" description="Decision at Elst" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="DaE" version="6.1" versionDate="2025/04/11" description="Decision at Elst" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="DfBG1" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="DftB" issued="" />
 		<boarddata name="ER" version="6.0" versionDate="2021/06/30" description="Edson's Ridge" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="FACTRY" version="1.0" versionDate="2008/08/30" description="" boardType="XXX" publisher="YYY" issued="" />
@@ -482,7 +489,7 @@
 		<boarddata name="BG1" version="1.0" versionDate="2022/10/30" description="" boardType="Geoboard" publisher="BGD" issued="" />
 		<boarddata name="DeluxeBlank" version="6.6" versionDate="2025/01/15" description="Empty deluxe geoboard" boardType="Deluxe" publisher="VASL" issued="" />
 		<boarddata name="OpV" version="1.0" versionDate="2023/09/30" description="Riley's Road - no grain" boardType="HASL" publisher="TJ" issued="" />
-		<boarddata name="SF" version="1.1" versionDate="2023/12/30" description="Sparrow Force" boardType="HASL" publisher="MMP" issued="2023/09/17" />
+		<boarddata name="SF" version="1.2" versionDate="2025/04/11" description="Sparrow Force" boardType="HASL" publisher="MMP" issued="2023/09/17" />
 		<boarddata name="AF_AbbioPriolo" version="1.1" versionDate="2024/01/30" description="Abbio Priolo" boardType="HASL" publisher="AF" issued="2024/01/30" />
 		<boarddata name="AF_BiazzaRidge" version="1.1" versionDate="2024/01/30" description="Biazza Ridge" boardType="HASL" publisher="AF" issued="2024/01/30" />
 		<boarddata name="AF_Brevity-OP" version="1.0" versionDate="2024/01/30" description="Brevity Assault" boardType="HASL" publisher="AF" issued="2024/01/30" />
@@ -504,7 +511,7 @@
 		<boarddata name="AF_PRK_S" version="1.0" versionDate="2024/01/30" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
 		<boarddata name="AF_PRK_Y" version="1.0" versionDate="2024/01/30" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
 		<boarddata name="AF_Sollum" version="1.1" versionDate="2024/01/30" description="Brevity Assault" boardType="HASL" publisher="AF" issued="2024/01/30" />
-
+		<boarddata name="LS" version="1.0" versionDate="2025/04/08" description="Lysyanka" boardType="HASL" publisher="" issued="2025/04/08" />
 
 
 

@@ -669,9 +669,9 @@ public class LOSDataEditor {
         }
 
         // change the hex grid
-        if(map.getMapConfiguration().equals("TopLeftHalfHeightEqualRowCount")){
+        if(map.getMapConfiguration().contains("EqualRowCount")){
             for (int col = 0; col < map.getWidth(); col++) {
-                for (int row = 0; row < map.getHeight(); row++) { // no extra hex for boards where each col has same number of rows (eg RO)
+                for (int row = 0; row < map.getHeight(); row++) { // no extra hex for boards where each col has same number of rows (eg RO/DaE)
 
                     Hex[][] hexGrid = map.getHexGrid();
 

@@ -204,7 +204,7 @@ public class Concealment extends Decorator implements EditablePiece {
         name = name + "12";
         pixelSize = 24;
       }
-      BufferedImage concealedToMe = Op.load(  name + ".gif").getImage();
+      BufferedImage concealedToMe = Op.load(  name + ".svg").getImage();
       g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
       g2d.drawImage(concealedToMe, x-(int)(pixelSize * zoom), y-(int)(pixelSize * zoom) ,
                     (int) (pixelSize * zoom * 2 ), (int) (pixelSize * zoom * 2) , obs);

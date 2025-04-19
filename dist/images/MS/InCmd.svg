@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="48" height="48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<!--
+		Name:		InCmd
+		Version:	0.1
+
+		Author(s): Gordon Molek, Klas Malmström, Alan Bills
+		Tester(s): Alan Bills, Alan Cannamore, Doug Rimmer
+	-->
+
+	<defs id="fonts">
+		<style>
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: normal;
+				src: url("../fonts/NimbusSanL-Reg.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: normal;
+				src: url("../fonts/NimbusSanL-Bol.ttf") format("ttf");
+			}
+		</style>
+	</defs>
+	<path id="Flash" style="fill:#ffffff;stroke:#ffffff" d="m 34.783908,8.5866968 -3.049364,9.3689092 8.286683,3.630721 -8.131627,3.611479 3.951209,5.441495 -5.997469,0.128235 2.27095,7.81393 -6.14412,-5.681756 -3.5672,4.610155 -2.70842,-3.800353 -9.492104,3.956928 5.406925,-8.705728 -6.2416142,-1.787597 5.5037312,-4.082139 -6.8497523,-7.695702 7.9244943,0.155886 -0.203995,-8.6909098 5.613778,6.8097218 5.13867,-6.8525069 0.730632,8.4769679 z"/>
+
+	<path id="Hexagon" style="fill:none;stroke:#000000" d="m 27.28,44.055053 -6.9635,-0.0105 -3.47266,-6.035816 3.490838,-6.02532 6.9635,0.01049 3.472661,6.035816 z"/>
+	
+	<text x="50%" y="15.00" style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-expanded;text-anchor:middle;fill:#ff0000;fill-opacity:1;font-family:Nimbus Sans L">In</text>
+	<text x="50%" y="28.00" style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-expanded;text-anchor:middle;fill:#ff0000;fill-opacity:1;font-family:Nimbus Sans L">CMD</text>
+	<text x="50%" y="42.00" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-expanded;text-anchor:middle;fill:#ff0000;fill-opacity:1;font-family:Nimbus Sans L">2</text>
+</svg>

@@ -9,6 +9,22 @@
 		Tester(s): Alan Bills, Alan Cannamore, Doug Rimmer
 	-->
 
+	<defs id="fonts">
+		<style>
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: normal;
+				src: url("../fonts/NimbusSanL-Reg.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: normal;
+				src: url("../fonts/NimbusSanL-Bol.ttf") format("ttf");
+			}
+		</style>
+	</defs>
 	<!-- The bevel - is there a better/more efficient way to achieve this? -->
 	<defs id="bevel">
 		<filter id="highlight_filter" x="-0.058226637" y="-0.058226637" width="1.1144796" height="1.1144796" style="color-interpolation-filters:sRGB;">
@@ -34,6 +50,6 @@
 	<!-- Morale -->
 	<svg x="30.00" y="30.00" width="16.00" height="16.00" style="overflow:visible">
 		<rect id="Self rally" x="1" y="1" width="14.5" height="14.5" style="display:inline;fill:none;fill-opacity:0.0;stroke:black;stroke-width:0.75;stroke-dasharray:none;stroke-opacity:1"/>
-	<text id="Morale" x="50%" y="80%" style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-expanded;text-anchor:middle;fill:black;fill-opacity:1;Nimbus Sans L">8</text>
+	<text id="Morale" x="50%" y="80%" style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-expanded;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L">8</text>
 	</svg>
 </svg>

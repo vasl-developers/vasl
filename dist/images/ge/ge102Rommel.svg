@@ -8,6 +8,22 @@
 		Tester(s): Alan Bills, Alan Cannamore, Doug Rimmer
 	-->
 
+	<defs id="fonts">
+		<style>
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: normal;
+				src: url("../fonts/NimbusSanL-Reg.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: normal;
+				src: url("../fonts/NimbusSanL-Bol.ttf") format("ttf");
+			}
+		</style>
+	</defs>
 	<!-- The bevel - is there a better/more efficient way to achieve this? -->
 	<defs id="bevel">
 		<filter id="highlight_filter" x="-0.058226637" y="-0.058226637" width="1.1144796" height="1.1144796" style="color-interpolation-filters:sRGB;">
@@ -30,6 +46,6 @@
 		</g>
 	</g>
 	<rect x="32" y="12" width="12" height="24" ry="1.5" rx="1.5" style="display:inline;fill:white;fill-opacity:1;stroke:black;stroke-width:0.50;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1.00"/>
-	<text id="Values" transform="translate(42,24) rotate(-90)" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-expanded;text-anchor:middle;fill:black;fill-opacity:1;Nimbus Sans L">10-2</text>
-	<text id="Name" transform="translate(30,24) rotate(-90)" style="font-size:9px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-expanded;text-anchor:middle;fill:black;fill-opacity:1;Nimbus Sans L">Rommel</text>
+	<text id="Values" transform="translate(42,24) rotate(-90)" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-expanded;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L">10-2</text>
+	<text id="Name" transform="translate(30,24) rotate(-90)" style="font-size:9px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-expanded;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L">Rommel</text>
 </svg>

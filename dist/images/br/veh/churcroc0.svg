@@ -10,6 +10,22 @@
 		Counter data scraped with permission from: https://www.klasm.com/ASL/Listings/VehicleListings.html
 	-->
 
+	<defs id="fonts">
+		<style>
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: normal;
+				src: url("../../fonts/NimbusSanL-Reg.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: normal;
+				src: url("../../fonts/NimbusSanL-Bol.ttf") format("ttf");
+			}
+		</style>
+	</defs>
 	<!-- The bevel - is there a better/more efficient way to achieve this? -->
 	<defs id="bevel">
 		<filter id="highlight_filter" x="-0.058226637" y="-0.058226637" width="1.1144796" height="1.1144796" style="color-interpolation-filters:sRGB;">
@@ -38,11 +54,11 @@
 	<!-- Unit depiction -->
 	<image x="0" y="0" width="60" height="60" preserveAspectRatio="xMidYMid meet" transform="" href="svg/churcroc0.png" xlink:href="svg/churcroc0.png"/>
 	<!-- MA, text position adjusts to account for any overlined/underlined text. -->
-	<svg x="3.00" y="48.00" width="54.00" height="12.00" style="overflow:visible">
-		<text x="0.00" y="75.00%" dominant-baseline="auto" text-anchor="start" style="font-size:12.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">75</text>
+	<svg x="3.00" y="47.00" width="54.00" height="10.00" style="overflow:visible">
+		<text x="0.00" y="100.00%" dominant-baseline="auto" text-anchor="start" style="font-size:12.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">75</text>
 	</svg>
 	<!-- ROF -->
-	<svg x="3.00" y="34.78" width="11.22" height="11.22" style="overflow:visible">
+	<svg x="3.00" y="33.28" width="11.22" height="11.22" style="overflow:visible">
 		<text x="50%" y="75%" dominant-baseline="auto" text-anchor="middle"><tspan style="font-size:8.40px;font-weight:bold;font-family:Nimbus Sans L;font-family:Nimbus Sans L;fill:black;fill-opacity:1;stroke-width:0.2">1</tspan></text>
 		<rect x="0.25" y="0.25" width="10.72" height="10.72" style="display:inline;fill:none;fill-opacity:1;stroke:black;stroke-width:0.50px;stroke-dasharray:none;stroke-opacity:1"/>
 	</svg>

@@ -10,6 +10,22 @@
 		Counter data scraped with permission from: https://www.klasm.com/ASL/Listings/VehicleListings.html
 	-->
 
+	<defs id="fonts">
+		<style>
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: normal;
+				src: url("../../fonts/NimbusSanL-Reg.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: normal;
+				src: url("../../fonts/NimbusSanL-Bol.ttf") format("ttf");
+			}
+		</style>
+	</defs>
 	<!-- The bevel - is there a better/more efficient way to achieve this? -->
 	<defs id="bevel">
 		<filter id="highlight_filter" x="-0.058226637" y="-0.058226637" width="1.1144796" height="1.1144796" style="color-interpolation-filters:sRGB;">
@@ -34,11 +50,12 @@
 	<!-- Unit depiction -->
 	<image x="0" y="0" width="60" height="60" preserveAspectRatio="xMidYMid meet" transform="" href="svg/badapc.png" xlink:href="svg/badapc.png"/>
 	<!-- MA, text position adjusts to account for any overlined/underlined text. -->
-	<svg x="3.00" y="45.00" width="54.00" height="15.00" style="overflow:visible">
-		<text x="0.00" y="60.00%" dominant-baseline="auto" text-anchor="start" style="font-size:12.00px;font-weight:bold;font-family:Nimbus Sans L;fill:red">BF<tspan style="text-decoration:underline">24</tspan></text>
+	<svg x="3.00" y="46.00" width="54.00" height="11.00" style="overflow:visible">
+		<text x="0.00" y="87.00%" dominant-baseline="auto" text-anchor="start" style="font-size:12.00px;font-weight:bold;font-family:Nimbus Sans L;fill:red">BF24</text>
+		<line x1="13.50" y1="100%" x2="25.00" y2="100%" style="stroke:red;stroke-width:1.00"/> <!-- underline -->
 	</svg>
 	<!-- Malfunction -->
-	<svg x="3.00" y="36.40" width="24.00" height="6.60" style="overflow:visible">
+	<svg x="3.00" y="36.90" width="24.00" height="6.60" style="overflow:visible">
 		<text x="0" y="98%" dominant-baseline="auto" text-anchor="start"><tspan style="font-size:8.40px;font-weight:normal;font-family:Nimbus Sans L;fill:red;fill-opacity:1;stroke-width:0.2">X11</tspan></text>
 	</svg>
 	<!-- Front Armor -->

@@ -92,9 +92,9 @@ public class Turreted extends Embellishment0 implements EditablePiece {
     backImages = new ScaledImagePainter[6];
     for (int i=0;i<6;++i) {
       frontImages[i] = new ScaledImagePainter();
-      frontImages[i].setImageName(front+(i+1));
+      frontImages[i].setImageName(front+(i+1)+".svg");
       backImages[i] = new ScaledImagePainter();
-      backImages[i].setImageName(back+(i+1));
+      backImages[i].setImageName(back+(i+1)+".svg");
     }
   }
 

@@ -8,6 +8,22 @@
 		Tester(s): Alan Bills, Alan Cannamore, Doug Rimmer
 	-->
 
+	<defs id="fonts">
+		<style>
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: normal;
+				src: url("../fonts/NimbusSanL-Reg.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: normal;
+				src: url("../fonts/NimbusSanL-Bol.ttf") format("ttf");
+			}
+		</style>
+	</defs>
 	<!-- The bevel - is there a better/more efficient way to achieve this? -->
 	<defs id="bevel">
 		<filter id="highlight_filter" x="-0.058226637" y="-0.058226637" width="1.1144796" height="1.1144796" style="color-interpolation-filters:sRGB;">
@@ -32,12 +48,12 @@
 	</g>
 	<!-- Silhouettes -->
 	<image x="0" y="0" width="48" height="48" preserveAspectRatio="xMidYMid meet" transform="scale(1.00)" href="svg/kmc448sqKFW.png" xlink:href="svg/kmc448sqKFW.png"/>
-	<text id="Firepower" x="11" y="43.00" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-expanded;text-anchor:middle;fill:black;fill-opacity:1;Nimbus Sans L">4</text>
+	<text id="Firepower" x="11" y="43.00" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-expanded;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L">4</text>
 	<line id="Dash1" x1="15.50" y1="40.00" x2="19.50" y2="40.00" style="stroke:black; stroke-width:1.5"/>
-	<text id="SmokeExponent" x="17.25" y="38.50" style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1;Nimbus Sans L">1</text>
-	<text id="Range" x="24" y="43.00" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-expanded;text-anchor:middle;fill:black;fill-opacity:1;Nimbus Sans L">4</text>
+	<text id="SmokeExponent" x="17.25" y="38.50" style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L">1</text>
+	<text id="Range" x="24" y="43.00" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-expanded;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L">4</text>
 	<line id="dash2" x1="28.50" y1="40.00" x2="32.50" y2="40.00" style="stroke:black; stroke-width:1.5"/>
-	<text id="Morale" x="37" y="43.00" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-expanded;text-anchor:middle;fill:black;fill-opacity:1;Nimbus Sans L">8</text>
+	<text id="Morale" x="37" y="43.00" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-expanded;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L">8</text>
 	<line id="ELR" x1="33.75" y1="45.00" x2="40.25" y2="45.00" style="stroke:black; stroke-width:1.25"/>
 	<!-- Class -->
 	<svg x="35.00" y="2.00" width="11.00" height="11.00" style="overflow:visible">

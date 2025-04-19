@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="9" height="60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<!--
+		Name:		mimmoblie
+		Version:	0.1
+
+		Author(s): Gordon Molek, Klas Malmström, Alan Bills
+		Tester(s): Alan Bills, Alan Cannamore, Doug Rimmer
+	-->
+
+	<defs id="fonts">
+		<style>
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: normal;
+				src: url("fonts/NimbusSanL-Reg.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: normal;
+				src: url("fonts/NimbusSanL-Bol.ttf") format("ttf");
+			}
+		</style>
+	</defs>
+	<path id="tab" d="M 2.5,3 H 8.980472 L 9.0063103,57.051677 2.5,57 C 1.1150437,56.989 0,55.885 0,54.5 V 5.5 C 0,4.115 1.115,3 2.5,3 Z"/>
+	
+	<text x="8.00" y="30.00" transform="rotate(-90,8.00,30.00)" style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;fill:#ffffff;fill-opacity:1;font-family:Nimbus Sans L">IMMOB</text>
+
+</svg>

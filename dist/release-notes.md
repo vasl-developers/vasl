@@ -1,23 +1,33 @@
-# Release Notes: Version 6.7.0-beta6 
 
-**Release Date:** Jan 21st 2025
+# Release Notes: Version 6.7.1-beta1 
+
+**Release Date:** April 2025
 
 ---
 
 ## 🚀 New Features
-
-
+ - Feature 1: Font required for updated (SVG) counter graphics is now included in the VASL VMOD, no need to separately download and install the font.
 
 
 ---
 
 ## 🛠 Bug Fixes
+- Fix 1: Fixed problems with concealment/mini-concealment counters.
+- Fix 2: Fixed reverse side of PF counters disapearing.
+- Fix 3: Fixed invisible "small" translucent Sniper counters.
+- Fix 4: Fixed Russian SU-76m not showing as open topped.
+- Fix 5: Fixed German Opel Blitz wreck not showing.
+- Fix 6: Fixed color mismatch of label text on customizable American blank counter.
+- Fix 7: Fixed smoke exponent for American 7-4-7 'E' Squad.
+
 
 
 ---
 
 ## 📈 Improvements
-- Improvement 1: Implement SVG graphics for all infantry units, guns and vehicles, Boats, Planes, LC and Shared Vehicles (white counters) and many information counters. Almost all vehicle counters have been tweaked to reflect feedback from users of earlier betas.
+- Improvement 1: Added LOS Checking to HASL bdDaE
+- Improvement 2: Changes to autosave feature so that users can select what directory files will be save to. Also changed how games are saved so that they do not get added to the recent games tab.
+- 
 
 
 ## ⚠️ Compatibility Notes
@@ -28,5 +38,5 @@
 ---
 
 ## 📋 Additional Notes
-- Use the Game Updater tool to convert games saved with older versions. This will update counter graphics to the svg versions in Beta6.
+
 
