@@ -49,8 +49,8 @@ underlay CactusPattern.gif HedgeGreen
 OrchardsToCactusPatches
 underlay CactusPattern.gif OrchL_2,OrchL_1,OrchL0,OrchL1,OrchL2,OrchL3,OrchL4,OrchL5,OrchL6,OrchTrees
 
-OrchardsToCactusPatches
-underlay CactusPattern.gif OrchL_2,OrchL_1,OrchL0,OrchL1,OrchL2,OrchL3,OrchL4,OrchL5,OrchL6,OrchTrees
+OrchardsToOliveGroves
+underlay OliveGrovePattern.gif OrchL_2,OrchL_1,OrchL0,OrchL1,OrchL2,OrchL3,OrchL4,OrchL5,OrchL6,OrchTrees
 
 ShellholesToCactusPatches
 underlay CactusPattern.gif Shellhole1,Shellhole2,Shellhole3

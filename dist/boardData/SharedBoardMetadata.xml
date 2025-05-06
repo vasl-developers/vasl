@@ -221,6 +221,26 @@
 			<color name="DTO_OrchL6" />
 			<color name="DTO_OrchTrees" />
 		</underlaySSRule>
+		<underlaySSRule name="OrchardsToOliveGroves" image="OliveGrovePattern.gif">
+			<color name="OrchL_2" />
+			<color name="OrchL_1" />
+			<color name="OrchL0" />
+			<color name="OrchL1" />
+			<color name="OrchL2" />
+			<color name="OrchL3" />
+			<color name="OrchL4" />
+			<color name="OrchL5" />
+			<color name="OrchL6" />
+			<color name="OrchTrees" />
+			<color name="DTO_OrchL0" />
+			<color name="DTO_OrchL1" />
+			<color name="DTO_OrchL2" />
+			<color name="DTO_OrchL3" />
+			<color name="DTO_OrchL4" />
+			<color name="DTO_OrchL5" />
+			<color name="DTO_OrchL6" />
+			<color name="DTO_OrchTrees" />
+		</underlaySSRule>
 		<underlaySSRule name="ShellholesToCactusPatches" image="CactusPattern.gif">
 			<color name="Shellhole1" />
 			<color name="Shellhole2" />
