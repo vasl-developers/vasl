@@ -55,7 +55,7 @@
 	<image x="0" y="0" width="60" height="60" preserveAspectRatio="xMidYMid meet" transform="" href="svg/usPOA-CWS-H5(KFW).png" xlink:href="svg/usPOA-CWS-H5(KFW).png"/>
 	<!-- MA, text position adjusts to account for any overlined/underlined text. -->
 	<svg x="3.00" y="47.00" width="54.00" height="10.00" style="overflow:visible">
-		<text x="0.00" y="100.00%" dominant-baseline="auto" text-anchor="start" style="font-size:12.00px;font-weight:bold;font-family:Nimbus Sans L;fill:red">TF32</text>
+		<text x="0.00" y="100.00%" dominant-baseline="auto" text-anchor="start" style="font-size:12.00px;font-weight:bold;font-family:Nimbus Sans L;fill:#e10000">TF32</text>
 	</svg>
 	<!-- SA, text position adjusts to account for any overlined/underlined text. -->
 	<svg x="3.00" y="36.50" width="36.00" height="8.00" style="overflow:visible">
@@ -64,7 +64,7 @@
 	</svg>
 	<!-- Malfunction -->
 	<svg x="3.00" y="27.90" width="24.00" height="6.60" style="overflow:visible">
-		<text x="0" y="98%" dominant-baseline="auto" text-anchor="start"><tspan style="font-size:8.40px;font-weight:normal;font-family:Nimbus Sans L;fill:red;fill-opacity:1;stroke-width:0.2">X12</tspan></text>
+		<text x="0" y="98%" dominant-baseline="auto" text-anchor="start"><tspan style="font-size:8.40px;font-weight:normal;font-family:Nimbus Sans L;fill:#e10000;fill-opacity:1;stroke-width:0.2">X12</tspan></text>
 	</svg>
 	<!-- Malfunction B/X Number -->
 	<svg x="48.90" y="38.40" width="9.60" height="9.60" style="overflow:visible">
@@ -81,8 +81,8 @@
 	</svg>
 	<!-- Front Armor -->
 	<svg x="40.00" y="15.00" width="18.00" height="12.00" style="overflow:visible">
-		<text x="66%" y="75%" dominant-baseline="auto" text-anchor="middle"><tspan style="font-size:8.50px;font-weight:bold;font-family:Nimbus Sans L;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:0.2">11</tspan></text>
-		<circle cx="66%" cy="50%" r="5.5" style="display:inline;fill:none;fill-opacity:0.0;stroke:#ff0000;stroke-width:0.75;stroke-dasharray:none;stroke-opacity:1"></circle> <!-- Inferior Turret Armor -->
+		<text x="66%" y="75%" dominant-baseline="auto" text-anchor="middle"><tspan style="font-size:8.50px;font-weight:bold;font-family:Nimbus Sans L;fill:#e10000;fill-opacity:1;stroke:none;stroke-width:0.2">11</tspan></text>
+		<circle cx="66%" cy="50%" r="5.5" style="display:inline;fill:none;fill-opacity:0.0;stroke:#e10000;stroke-width:0.75;stroke-dasharray:none;stroke-opacity:1"></circle> <!-- Inferior Turret Armor -->
 	</svg>
 	<!-- Side/Rear Armor -->
 	<svg x="40.00" y="26.00" width="18.00" height="12.00" style="overflow:visible">
@@ -96,7 +96,7 @@
 	<!-- Movement -->
 	<svg x="30.00" y="3.00" width="27.00" height="12.00" style="overflow:visible">
 		<rect x="6.00" width="21.00" height="12.00" y="0.00" ry="6.00" style="display:inline;fill:white;fill-opacity:1;stroke:none;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"></rect>
-		<text x="100%" y="84.00%" dominant-baseline="auto" text-anchor="end" style="font-size:11.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">15</text>
+		<text x="97%" y="84.00%" dominant-baseline="auto" text-anchor="end" style="font-size:11.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">15</text>
 	</svg>
 	<!-- Ground Pressure -->
 	<svg x="2.00" y="2.00" width="10.00" height="10.00" style="overflow:visible">

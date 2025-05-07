@@ -59,7 +59,7 @@
 	</svg>
 	<!-- Front Armor -->
 	<svg x="40.00" y="15.00" width="18.00" height="12.00" style="overflow:visible">
-		<text x="66%" y="79%" dominant-baseline="auto" text-anchor="middle"><tspan style="font-size:9.50px;font-weight:bold;font-family:Nimbus Sans L;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:0.5">11</tspan></text>
+		<text x="66%" y="79%" dominant-baseline="auto" text-anchor="middle"><tspan style="font-size:9.50px;font-weight:bold;font-family:Nimbus Sans L;fill:#e10000;fill-opacity:1;stroke:none;stroke-width:0.5">11</tspan></text>
 	</svg>
 	<!-- Side/Rear Armor -->
 	<svg x="40.00" y="26.00" width="18.00" height="12.00" style="overflow:visible">
@@ -68,6 +68,6 @@
 	<!-- Movement -->
 	<svg x="30.00" y="3.00" width="27.00" height="12.00" style="overflow:visible">
 		<rect x="6.00" width="21.00" height="12.00" y="0.00" ry="6.00" style="display:inline;fill:white;fill-opacity:1;stroke:none;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"></rect>
-		<text x="100%" y="84.00%" dominant-baseline="auto" text-anchor="end" style="font-size:11.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">8</text>
+		<text x="97%" y="84.00%" dominant-baseline="auto" text-anchor="end" style="font-size:11.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">8</text>
 	</svg>
 </svg>

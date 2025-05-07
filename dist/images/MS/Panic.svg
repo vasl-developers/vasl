@@ -46,8 +46,8 @@
 		</g>
 	</g>
 	
-	<path id="flash" style="fill:#ff0000;stroke-width:2;stroke-linecap:round" d="m 36.450087,7.6950177 -1.894011,11.3641243 11.16424,0.705609 -9.663255,6.678566 7.90914,6.004895 L 32.76542,32.733016 34.890682,42.748641 25.29166,35.313163 17.746749,44.128079 17.149376,32.322853 5.8699562,35.886229 12.640197,27.340998 3.1518602,21.521569 13.642567,19.812358 8.5197488,9.5758854 18.959363,14.52356 22.437035,4.0245576 27.476131,13.967461 Z"/>
+	<path id="flash" style="fill:#ff0000;stroke-width:2;stroke-linecap:round" d="m 37.736323,6.5841773 -1.309358,12.0657077 9.293351,1.114866 -9.663255,6.678566 7.90914,6.004895 L 32.76542,32.733016 34.890682,42.748641 24.29775,36.248608 17.220561,45.35585 13.582994,37.350868 4.2329282,38.692563 11.997079,27.80872 3.1518602,21.521569 13.642567,19.812358 8.5197488,9.5758854 18.959363,14.52356 22.437035,4.0245576 27.476131,13.558204 Z"/>
 
-	<text x="26.00" y="28.00" transform="rotate(-45,26.00,28.00)" style="font-size:18px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:ultra-condensed;text-anchor:middle;stroke:#ff0000;stroke-width:0.75;fill:#ffffff;fill-opacity:1;font-family:Nimbus Sans L">PANIC</text>
+	<text x="25.50" y="27.50" transform="rotate(-45,25.50,27.50)" style="font-size:10px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:middle;fill:#ffffff;fill-opacity:1;font-family:Nimbus Sans L">PANIC</text>
 	
 </svg>

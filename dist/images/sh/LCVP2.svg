@@ -54,7 +54,7 @@
 	</svg>
 	<!-- Front Armor -->
 	<svg x="40.00" y="15.00" width="18.00" height="12.00" style="overflow:visible">
-		<text x="66%" y="70%" dominant-baseline="auto" text-anchor="middle"><tspan style="font-size:7.50px;font-weight:bold;font-family:Nimbus Sans L;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:0.5">★</tspan></text>
+		<text x="66%" y="70%" dominant-baseline="auto" text-anchor="middle"><tspan style="font-size:7.50px;font-weight:bold;font-family:Nimbus Sans L;fill:#e10000;fill-opacity:1;stroke:none;stroke-width:0.5">★</tspan></text>
 	</svg>
 	<!-- Side/Rear Armor -->
 	<svg x="40.00" y="26.00" width="18.00" height="12.00" style="overflow:visible">
@@ -62,7 +62,7 @@
 	</svg>
 	<!-- Movement -->
 	<svg x="30.00" y="3.00" width="27.00" height="12.00" style="overflow:visible">
-		<text x="100%" y="84.00%" dominant-baseline="auto" text-anchor="end" style="font-size:11.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">5</text>
+		<text x="97%" y="84.00%" dominant-baseline="auto" text-anchor="end" style="font-size:11.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">5</text>
 	</svg>
 	<text x="30" y="10" dominant-baseline="auto" text-anchor="middle"><tspan style="font-size:8.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black;fill-opacity:1;stroke:none;stroke-width:0.2">+2</tspan></text> <!-- Bog -->
 </svg>

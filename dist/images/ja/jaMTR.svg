@@ -49,7 +49,7 @@
 	<image x="0" y="0" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" transform="scale(1.00)" href="svg/jaMTR.png" xlink:href="svg/jaMTR.png"/>
 	<text x="44.5" y="11" style="font-size:11px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:end;fill:black;fill-opacity:1;font-family:Nimbus Sans L">MTR</text>
 	<text x="2.0" y="43.5" style="font-size:10px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:start;fill:black;fill-opacity:1;font-family:Nimbus Sans L"><tspan style="text-decoration:overline">50</tspan><tspan style="font-size:5" baseline-shift="super">&#x273D;</tspan></text>
-	<text x="46" y="43.5" style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:end;fill:black;fill-opacity:1;font-family:Nimbus Sans L">[2-13]&#x002A;</text>
+	<text x="46" y="43.5" style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:end;fill:black;fill-opacity:1;font-family:Nimbus Sans L">[1-16]&#x002A;</text>
 	<text x="30.00" y="24.00" style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L" transform="rotate(-90,30,24)">4PP</text>
 	<!-- ROF -->
 	<svg x="33.00" y="14.00" width="12.00" height="12.00" style="overflow:visible">
