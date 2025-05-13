@@ -1,11 +1,13 @@
 # Release Notes: Version 6.7.1-beta3 
 
+
 **Release Date:** May 15, 2025
 
 ---
 
 ## 🚀 New Features
  - Feature 1: Counters for Slaughter at Ponyri added to the HASL and CGs section.
+
 
 ---
 
@@ -14,6 +16,7 @@
 - Fix 2: Corrected color of Russian MMC unit depictions.
 - Fix 3: Corrected Japanese HMG PP value to '4'.
 - Fix 4: Corrected Japanese 50mm MTR range to "1-16".
+
 
 ---
 
@@ -24,6 +27,7 @@
 - Improvement 4: Removed thin black stroke on "white" text OBA counter variants to improve readabilty.
 - Improvement 5: More closely matched BMG & RMG malfunction counters/Multi-fire counters/"Bad Things" flags to the physical game components.
 - Improvement 6: Added "Orchards to Olive Groves" transformation. 
+
 
 ## ⚠️ Compatibility Notes
 - **Minimum Version Required:** Built with VASSAL 3.7.16
