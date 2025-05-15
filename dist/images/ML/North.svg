@@ -2,7 +2,7 @@
 <svg width="60" height="60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<!--
 		Name:		North
-		Version:	0.1
+		Version:	0.2
 
 		Author(s): Gordon Molek, Klas Malmström, Alan Bills
 		Tester(s): Alan Bills, Alan Cannamore, Doug Rimmer
@@ -47,7 +47,8 @@
 		</g>
 	</g>
 	
-	<svg width="60" height="60" viewBox="-30 -33 60 60">
+	<!-- gemhack <svg width="60" height="60" viewBox="-30 -33 60 60"> -->
+	<svg width="60" height="60" viewBox="-30 -34 60 60">
 		<circle r="19" cx="0" cy="0" fill="none" stroke="#000000" stroke-width="0.50"/>
 		<circle r="15" cx="0" cy="0" fill="none" stroke="#000000" stroke-width="1.00"/>
 		
@@ -86,6 +87,6 @@
 		</g>		
 	</svg>
 	
-	<text x="50%" y="9.00" style="font-size:10px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">N</text>
+	<text x="50%" y="10.00" style="font-size:10px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">N</text>
 	
 </svg>

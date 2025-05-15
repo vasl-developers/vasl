@@ -59,11 +59,11 @@
 	</svg>
 	<!-- SA, text position adjusts to account for any overlined/underlined text. -->
 	<svg x="3.00" y="38.50" width="36.00" height="6.00" style="overflow:visible">
-		<text x="0.00" y="98.00%" dominant-baseline="auto" text-anchor="start" style="font-size:8.00px;font-weight:bold;font-family:Nimbus Sans L;fill:red">BF24</text>
+		<text x="0.00" y="98.00%" dominant-baseline="auto" text-anchor="start" style="font-size:8.00px;font-weight:bold;font-family:Nimbus Sans L;fill:#e10000">BF24</text>
 	</svg>
 	<!-- Malfunction -->
 	<svg x="3.00" y="29.90" width="24.00" height="6.60" style="overflow:visible">
-		<text x="0" y="98%" dominant-baseline="auto" text-anchor="start"><tspan style="font-size:8.40px;font-weight:normal;font-family:Nimbus Sans L;fill:red;fill-opacity:1;stroke-width:0.2">X10</tspan></text>
+		<text x="0" y="98%" dominant-baseline="auto" text-anchor="start"><tspan style="font-size:8.40px;font-weight:normal;font-family:Nimbus Sans L;fill:#e10000;fill-opacity:1;stroke-width:0.2">X10</tspan></text>
 	</svg>
 	<!-- ROF -->
 	<svg x="3.00" y="16.68" width="11.22" height="11.22" style="overflow:visible">
@@ -87,6 +87,6 @@
 	<!-- Movement -->
 	<svg x="30.00" y="3.00" width="27.00" height="12.00" style="overflow:visible">
 		<rect x="6.00" width="21.00" height="12.00" y="0.00" ry="6.00" style="display:inline;fill:white;fill-opacity:1;stroke:none;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"></rect>
-		<text x="100%" y="84.00%" dominant-baseline="auto" text-anchor="end" style="font-size:11.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">17</text>
+		<text x="97%" y="84.00%" dominant-baseline="auto" text-anchor="end" style="font-size:11.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">17</text>
 	</svg>
 </svg>

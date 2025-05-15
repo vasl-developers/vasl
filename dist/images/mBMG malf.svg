@@ -24,7 +24,7 @@
 			}
 		</style>
 	</defs>
-	<path id="tab" style="fill:#800020" d="M 19,0.01869159 V 8 c 0,0.554 -0.446,1 -1,1 H 2 C 1.446,9 1,8.554 1,8 V 0.01869159 Z"/>
+	<path id="tab" style="fill:#bc94dc" d="M 19,0.01869159 V 8 c 0,0.554 -0.446,1 -1,1 H 2 C 1.446,9 1,8.554 1,8 V 0.01869159 Z"/>
 	
 	<text x="50%" y="7.00" style="font-size:7px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill:#ffffff;fill-opacity:1;font-family:Nimbus Sans L">BMG</text>
 

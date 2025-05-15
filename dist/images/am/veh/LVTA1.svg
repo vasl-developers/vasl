@@ -64,12 +64,12 @@
 	</svg>
 	<!-- Front Armor -->
 	<svg x="40.00" y="15.00" width="18.00" height="12.00" style="overflow:visible">
-		<text x="66%" y="79%" dominant-baseline="auto" text-anchor="middle"><tspan style="font-size:9.50px;font-weight:bold;font-family:Nimbus Sans L;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:0.5">1</tspan></text>
+		<text x="66%" y="79%" dominant-baseline="auto" text-anchor="middle"><tspan style="font-size:9.50px;font-weight:bold;font-family:Nimbus Sans L;fill:#e10000;fill-opacity:1;stroke:none;stroke-width:0.5">1</tspan></text>
 	</svg>
 	<!-- Side/Rear Armor -->
 	<svg x="40.00" y="26.00" width="18.00" height="12.00" style="overflow:visible">
-		<text x="66%" y="79%" dominant-baseline="auto" text-anchor="middle"><tspan style="font-size:9.50px;font-weight:bold;font-family:Nimbus Sans L;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:0.2">0</tspan></text>
-		<rect x="7.00" y="1.00" width="10.50" height="10.50" style="display:inline;fill:none;fill-opacity:0.0;stroke:#ff0000;stroke-width:0.75;stroke-dasharray:none;stroke-opacity:1"/> <!-- Superior Turret Armor -->
+		<text x="66%" y="79%" dominant-baseline="auto" text-anchor="middle"><tspan style="font-size:9.50px;font-weight:bold;font-family:Nimbus Sans L;fill:#e10000;fill-opacity:1;stroke:none;stroke-width:0.2">0</tspan></text>
+		<rect x="7.00" y="1.00" width="10.50" height="10.50" style="display:inline;fill:none;fill-opacity:0.0;stroke:#e10000;stroke-width:0.75;stroke-dasharray:none;stroke-opacity:1"/> <!-- Superior Turret Armor -->
 	</svg>
 	<!-- Machine guns -->
 	<svg x="21.00" y="49.40" width="36.00" height="9.60" style="overflow:visible">
@@ -78,7 +78,7 @@
 	<!-- Movement -->
 	<svg x="30.00" y="3.00" width="27.00" height="12.00" style="overflow:visible">
 		<rect x="6.00" width="21.00" height="12.00" y="0.00" ry="6.00" style="display:inline;fill:white;fill-opacity:1;stroke:none;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"></rect>
-		<text x="100%" y="84.00%" dominant-baseline="auto" text-anchor="end" style="font-size:11.00px;font-weight:bold;font-family:Nimbus Sans L;fill:red">12<tspan style="font-size:8px;font-weight:bold;font-family:Nimbus Sans L" baseline-shift="super">3</tspan></text>
+		<text x="97%" y="84.00%" dominant-baseline="auto" text-anchor="end" style="font-size:11.00px;font-weight:bold;font-family:Nimbus Sans L;fill:#e10000">12<tspan style="font-size:8px;font-weight:bold;font-family:Nimbus Sans L" baseline-shift="super">3</tspan></text>
 	</svg>
 	<!-- Ground Pressure -->
 	<svg x="2.00" y="2.00" width="10.00" height="10.00" style="overflow:visible">

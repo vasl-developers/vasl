@@ -51,4 +51,6 @@
 	<text x="45" y="45" style="font-size:11px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:end;fill:black;fill-opacity:1;font-family:Nimbus Sans L">X6</text>
 	<text x="29.00" y="29.00" style="font-size:7.00px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L" transform="rotate(-45.00,29.00,29.00)">*Snow&#47;Mud</text>
 	<text x="33.00" y="33.00" style="font-size:7.00px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L" transform="rotate(-45.00,33.00,33.00)">B10/X11</text>
+	<!-- Unit Depiction -->
+	<image x="0" y="0" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" transform="scale(1.00)" href="svg/fiLMGsmb.png" xlink:href="svg/fiLMGsmb.png"/>
 </svg>

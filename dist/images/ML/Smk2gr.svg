@@ -2,7 +2,7 @@
 <svg width="60" height="60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<!--
 		Name:		Smk2gr
-		Version:	0.1
+		Version:	0.2
 
 		Author(s): Gordon Molek, Klas Malmström, Alan Bills
 		Tester(s): Alan Bills, Alan Cannamore, Doug Rimmer
@@ -49,7 +49,7 @@
 	
 	<image id="Unit Depiction" x="0" y="0" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" transform="scale(1.00)" href="svg/Smk2gr.png" xlink:href="svg/Smk2gr.png"/>
 	
-	<text x="50%" y="14.00" style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">Smoke</text>
+	<text x="50%" y="14.00" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">Dispersed</text>
 	<text x="5.00" y="30.00" style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:start;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">+2</text>
 	<text x="55.00" y="28.00" style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;text-anchor:end;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">level 2</text>
 	

@@ -1,40 +1,36 @@
-
-# Release Notes: Version 6.7.1-beta2 
-=======
+# Release Notes: Version 6.7.1-beta3 
 
 
-
-**Release Date:** April 19, 2025
+**Release Date:** May 15, 2025
 
 ---
 
 ## 🚀 New Features
- - Feature 1: Font required for updated (SVG) counter graphics is now included in the VASL VMOD, no need to separately download and install the font.
+ - Feature 1: Counters for Slaughter at Ponyri added to the HASL and CGs section.
 
 
 ---
 
 ## 🛠 Bug Fixes
-- Fix 1: Fixed problems with concealment/mini-concealment counters.
-- Fix 2: Fixed reverse side of PF counters disapearing.
-- Fix 3: Fixed invisible "small" translucent Sniper counters.
-- Fix 4: Fixed Russian SU-76m not showing as open topped.
-- Fix 5: Fixed German Opel Blitz wreck not showing.
-- Fix 6: Fixed color mismatch of label text on customizable American blank counter.
-- Fix 7: Fixed smoke exponent for American 7-4-7 'E' Squad.
-
+- Fix 1: Fixed rendering of infantry "Class IDs".
+- Fix 2: Corrected color of Russian MMC unit depictions.
+- Fix 3: Corrected Japanese HMG PP value to '4'.
+- Fix 4: Corrected Japanese 50mm MTR range to "1-16".
 
 
 ---
 
 ## 📈 Improvements
-- Improvement 1: Added LOS Checking to HASL bdDaE
-- Improvement 2: Changes to autosave feature so that users can select what directory files will be save to. Also changed how games are saved so that they do not get added to the recent games tab.
-- 
+- Improvement 1: Adjusted shade of red used in vehicle and gun counter notation to improve visibility.
+- Improvement 2: Adjusted position of vehicle movement point values for improved readabilty.
+- Improvement 3: Matched broken side "Class IDs" to the new good order side versions.
+- Improvement 4: Removed thin black stroke on "white" text OBA counter variants to improve readabilty.
+- Improvement 5: More closely matched BMG & RMG malfunction counters/Multi-fire counters/"Bad Things" flags to the physical game components.
+- Improvement 6: Added "Orchards to Olive Groves" transformation. 
 
 
 ## ⚠️ Compatibility Notes
-- **Minimum Version Required:** Built with VASSAL 3.7.15
+- **Minimum Version Required:** Built with VASSAL 3.7.16
 - Compatible with games saved in versions 6.6.6–6.6.9.
 
 

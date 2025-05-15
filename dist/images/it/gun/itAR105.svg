@@ -60,8 +60,8 @@
 	</svg>
 	<!-- Manhandling # -->
 	<svg x="48.00" y="14.40" width="9.00" height="9.00" style="overflow:visible">
-		<circle cx="50%" cy="50%" r="4.20" style="display:inline;fill:none;fill-opacity:1;stroke:red;stroke-width:0.36;stroke-dasharray:none;stroke-opacity:1"></circle>
-		<text x="50%" y="80%" dominant-baseline="auto" text-anchor="middle" style="font-size:8.40px;font-weight:bold;font-family:Nimbus Sans L;fill:red;fill-opacity:1">6</text>
+		<circle cx="50%" cy="50%" r="4.20" style="display:inline;fill:none;fill-opacity:1;stroke:#e10000;stroke-width:0.36;stroke-dasharray:none;stroke-opacity:1"></circle>
+		<text x="50%" y="80%" dominant-baseline="auto" text-anchor="middle" style="font-size:8.40px;font-weight:bold;font-family:Nimbus Sans L;fill:#e10000;fill-opacity:1">6</text>
 	</svg>
 	<!-- Manhandling -->
 	<svg x="40.20" y="13.80" width="10.20" height="10.20" style="overflow:visible">

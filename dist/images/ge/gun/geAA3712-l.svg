@@ -49,6 +49,6 @@
 	</g>
 	<!-- Unit depiction -->
 	<image x="0" y="0" width="60" height="60" preserveAspectRatio="xMidYMid meet" transform="" href="svg/geAA3712-l.png" xlink:href="svg/geAA3712-l.png"/>
-	<text x="57.00" y="20.40" dominant-baseline="auto" text-anchor="end"><tspan style="font-size:8.40px;font-weight:bold;font-family:Nimbus Sans L;fill:black;fill-opacity:1">M</tspan><tspan style="font-size:8.40px;font-weight:bold;font-family:Nimbus Sans L;fill:red;fill-opacity:1">8</tspan></text>
+	<text x="57.00" y="20.40" dominant-baseline="auto" text-anchor="end"><tspan style="font-size:8.40px;font-weight:bold;font-family:Nimbus Sans L;fill:black;fill-opacity:1">M</tspan><tspan style="font-size:8.40px;font-weight:bold;font-family:Nimbus Sans L;fill:#e10000;fill-opacity:1">8</tspan></text>
 	<text x="3" y="8.00" text-anchor="start" style="font-size:7.00px;font-weight:normal;font-family:Nimbus Sans L;fill:black">Limbered</text>
 </svg>

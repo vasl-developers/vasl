@@ -259,6 +259,7 @@ Changes:
          <entry name="Shellholes" rule="OrchardsToShellholes" text="Orch2Shell"/>
          <entry name="Crags" rule="OrchardsToCrags" text="Orch2Crag"/>
          <entry name="Cactus Patches" rule="OrchardsToCactusPatches" text="Orch2CactusPatch"/>
+         <entry name="Olive Groves" rule="OrchardsToOliveGroves" text="Orch2OliveGrove"/>
          <entry name="Palm Trees" rule="PalmTrees" text="Orchards to Palm Trees">
             <Target sourceName="Terrain">
                <activate sourceProperty="PTO light jungle"/>

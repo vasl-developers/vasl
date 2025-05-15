@@ -68,7 +68,7 @@
 	</svg>
 	<!-- Movement -->
 	<svg x="30.00" y="3.00" width="27.00" height="12.00" style="overflow:visible">
-		<text x="100%" y="84.00%" dominant-baseline="auto" text-anchor="end" style="font-size:11.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">*SL</text>
+		<text x="97%" y="84.00%" dominant-baseline="auto" text-anchor="end" style="font-size:11.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">*SL</text>
 	</svg>
 	<!-- Motorcycle Manhandling -->
 	<text x="57.00" y="24.00" dominant-baseline="auto" text-anchor="end"><tspan style="font-size:8.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black;fill-opacity:1">M</tspan><tspan style="font-size:8px;font-weight:bold;font-family:Nimbus Sans L;fill:black;fill-opacity:1">7</tspan></text>
