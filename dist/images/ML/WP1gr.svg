@@ -2,7 +2,7 @@
 <svg width="60" height="60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<!--
 		Name:		WP1gr
-		Version:	0.2
+		Version:	0.3
 
 		Author(s): Gordon Molek, Klas Malmström, Alan Bills
 		Tester(s): Alan Bills, Alan Cannamore, Doug Rimmer
@@ -50,8 +50,8 @@
 		</g>
 	</g>
 	
-	<text x="50%" y="14.00" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">Dispersed</text>
-	<text x="57.00" y="57.00" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:end;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">+1</text>
-	<text x="10.00" y="35.00" transform="rotate(-90.00,10.00,35.00)" style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">level 4</text>
+	<text x="50%" y="15.00" style="font-size:11px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">Dispersed</text>
+	<text x="56.00" y="55.00" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:end;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">+1</text>
+	<text x="12.00" y="35.00" transform="rotate(-90.00,12.00,35.00)" style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">level 4</text>
 	
 </svg>
