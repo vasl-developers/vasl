@@ -25,7 +25,7 @@
 - Improvement 2: Adjusted position of PP text on several British SW counters to improve readability.
 - Improvement 3: Converted miscellaneous gun and vehicle counters to SVG.
 - Improvement 4: Adjusted 5/8" Smoke & WP text to interoperate with updated Nationality Smoke extension.
-- Improvement 5: 
+- Improvement 5: Phase wheel converted to SVG.
 - Improvement 6: 
 
 
