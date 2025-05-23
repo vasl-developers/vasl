@@ -54,5 +54,5 @@
 	<text x="50%" y="15.50" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">CELLAR</text>
 	
 	<rect id="color" x="8" y="44" width="44" height="11" ry="0" rx="0" style="display:inline;fill:#ff7f00;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"/>
-	<text x="50%" y="53" style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">Foritified</text>
+	<text x="50%" y="53" style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">Fortified</text>
 </svg>
