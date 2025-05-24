@@ -2,7 +2,7 @@
 <svg width="48" height="48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<!--
 		Name:		StarG
-		Version:	0.1
+		Version:	0.2
 
 		Author(s): Gordon Molek, Klas Malmström, Alan Bills
 		Tester(s): Alan Bills, Alan Cannamore, Doug Rimmer
@@ -24,9 +24,10 @@
 			}
 		</style>
 	</defs>
+	
 	<path id="flash" style="fill:#ffffff;stroke-width:2;stroke-linecap:round" d="m 36.450087,7.6950177 -1.894011,11.3641243 11.16424,0.705609 -9.663255,6.678566 7.90914,6.004895 L 32.76542,32.733016 34.890682,42.748641 25.29166,35.313163 17.746749,44.128079 17.149376,32.322853 5.8699562,35.886229 12.640197,27.340998 3.1518602,21.521569 13.642567,19.812358 8.5197488,9.5758854 18.959363,14.52356 22.437035,4.0245576 27.476131,13.967461 Z"/>
 
 	<path id="Hexagon" style="fill:none;stroke:#00ff00" d="m 27.28,30.055053 -6.9635,-0.0105 -3.47266,-6.035816 3.490838,-6.02532 6.9635,0.01049 3.472661,6.035816 z"/>
 	
-	<text x="19.50" y="28.00" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-expanded;text-anchor:start;fill:#00ff00;fill-opacity:1;font-family:Nimbus Sans L">3</text>
+	<text x="24.00" y="28.00" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-expanded;text-anchor:middle;fill:#00ff00;fill-opacity:1;font-family:Nimbus Sans L">3</text>
 </svg>
