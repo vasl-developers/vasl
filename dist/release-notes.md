@@ -13,8 +13,8 @@
 
 ## 🛠 Bug Fixes
 - Fix 1: Corrected typos on fortified building level counters.
-- Fix 2: 
-- Fix 3: 
+- Fix 2: Added SVG "shared"/white concealment counters.
+- Fix 3: Issue 1729 SdKfz 10/5 counter error fixed.
 - Fix 4: 
 
 
