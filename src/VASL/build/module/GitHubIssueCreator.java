@@ -2,6 +2,8 @@ package VASL.build.module;
 
 import VASSAL.build.AbstractConfigurable;
 import VASSAL.build.Buildable;
+import VASSAL.build.GameModule;
+import VASSAL.build.module.Chatter;
 import VASSAL.build.module.documentation.HelpFile;
 import VASSAL.tools.menu.MenuItemProxy;
 import VASSAL.tools.menu.MenuManager;
@@ -10,7 +12,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.security.Security;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Collection;
@@ -49,6 +53,37 @@ public class GitHubIssueCreator extends AbstractConfigurable {
     public static final String TITLE = "title";
     public static final String REPO_OWNER = "vasl-developers";
     public static final String REPO_NAME = "vasl";
+
+    /**
+     * Helper method to send error messages to the chat window
+     */
+    private void logErrorToChat(String errorMessage) {
+        System.err.println(errorMessage); // Keep console logging for debugging
+        GameModule gameModule = GameModule.getGameModule();
+        if (gameModule != null) {
+            Chatter chatter = gameModule.getChatter();
+            if (chatter != null) {
+                chatter.show("* GitHub Issue Creator Error: " + errorMessage);
+            }
+        }
+    }
+
+    /**
+     * Helper method to send exception stack traces to the chat window
+     */
+    private void logExceptionToChat(Exception e) {
+        e.printStackTrace(); // Keep console logging for debugging
+
+        // Convert stack trace to string
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+        String stackTrace = sw.toString();
+
+        // Log the exception message and first line of stack trace to chat
+        String errorMessage = e.getClass().getName() + ": " + e.getMessage();
+        logErrorToChat(errorMessage);
+    }
 
     // Extract GitHub App credentials from environment variables (set these in your GitHub Secrets)
     private static final String GITHUB_APP_ID = "1186007"; // Expected value: "1186007"
@@ -217,24 +252,29 @@ public class GitHubIssueCreator extends AbstractConfigurable {
     private boolean submitGitHubIssue(String title, String body, List<String> labels) {
         OkHttpClient client = new OkHttpClient();
 
+        // Log GitHub App and repository information for debugging
+        //logErrorToChat("GitHub App ID: " + GITHUB_APP_ID);
+        //logErrorToChat("Repository Owner: " + repoOwner);
+        //logErrorToChat("Repository Name: " + repoName);
+
         // Step 1: Generate a JWT using the GitHub App credentials.
         String jwt = generateJwt();
         if (jwt == null || jwt.isEmpty()) {
-            System.err.println("Failed to generate JWT.");
+            //logErrorToChat("Failed to generate JWT.");
             return false;
         }
 
         // Step 2: Retrieve the installation ID for this repository.
         String installationId = getInstallationId(jwt);
         if (installationId == null) {
-            System.err.println("Failed to retrieve installation ID.");
+            //logErrorToChat("Failed to retrieve installation ID.");
             return false;
         }
 
         // Step 3: Request an installation access token.
         String installationToken = getInstallationAccessToken(jwt, installationId);
         if (installationToken == null) {
-            System.err.println("Failed to retrieve installation access token.");
+            //logErrorToChat("Failed to retrieve installation access token.");
             return false;
         }
 
@@ -267,16 +307,17 @@ public class GitHubIssueCreator extends AbstractConfigurable {
             if (response.isSuccessful()) {
                 return true;
             } else {
-                System.err.println("Failed to create issue: " + response.code() + " " + response.message());
+                String errorMsg = "Failed to create issue: " + response.code() + " " + response.message();
+                //logErrorToChat(errorMsg);
                 String responseBody = response.body() != null ? response.body().string() : "";
-                System.err.println("Response Body: " + responseBody);
+                //logErrorToChat("Response Body: " + responseBody);
                 return false;
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null,
                     "An error occurred while submitting your suggestion.\nError: " + e.getMessage(),
                     "Submission Error", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
+            logExceptionToChat(e);
             return false;
         }
     }
@@ -286,11 +327,12 @@ public class GitHubIssueCreator extends AbstractConfigurable {
      *
      */
     private String generateJwt() {
-        long now = System.currentTimeMillis();
-        long exp = now + 600 * 1000; // 10 minutes validity
+        long nowMs = System.currentTimeMillis();
+        // Try a shorter window—GitHub allows at most 600s (10m), but let’s use 5m to be safe
+        long expMs = nowMs + 5 * 60 * 1000;
 
         if (GITHUB_PRIVATE_KEY == null || GITHUB_PRIVATE_KEY.isEmpty()) {
-            System.err.println("Error: GitHub private key is not set. Please ensure the GITHUB_PRIVATE_KEY environment variable is configured.");
+            //logErrorToChat("Error: GitHub private key is not set. Please ensure the GITHUB_PRIVATE_KEY environment variable is configured.");
             return null;
         }
 
@@ -300,13 +342,21 @@ public class GitHubIssueCreator extends AbstractConfigurable {
 
             // Create the JWT token
             Algorithm algorithm = Algorithm.RSA256(null, privateKey);
-            return JWT.create()
-                    .withIssuedAt(new Date(now))
-                    .withExpiresAt(new Date(exp))
+            // Ensure App ID is correctly formatted as a string
+            String token = JWT.create()
+                    .withIssuedAt(new Date(nowMs))
+                    .withExpiresAt(new Date(expMs))
                     .withIssuer(GITHUB_APP_ID)
                     .sign(algorithm);
+
+            // Log the first 10 characters of the token for debugging
+            if (token != null && token.length() > 10) {
+                //logErrorToChat("JWT token generated (first 10 chars): " + token.substring(0, 10) + "...");
+            }
+
+            return token;
         } catch (Exception e) {
-            e.printStackTrace();
+            logExceptionToChat(e);
             return null;
         }
     }
@@ -334,23 +384,71 @@ public class GitHubIssueCreator extends AbstractConfigurable {
      */
     private String getInstallationId(String jwt) {
         OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url(String.format("https://api.github.com/repos/%s/%s/installation", repoOwner, repoName))
+
+        // First try to get the installation ID for the specific repository
+        String repoUrl = String.format("https://api.github.com/repos/%s/%s/installation", repoOwner, repoName);
+        //logErrorToChat("Requesting installation ID from: " + repoUrl);
+        Request repoRequest = new Request.Builder()
+                .url(repoUrl)
                 .header("Authorization", "Bearer " + jwt)
                 .header("Accept", "application/vnd.github.v3+json")
                 .build();
 
-        try (Response response = client.newCall(request).execute()) {
+        try (Response response = client.newCall(repoRequest).execute()) {
             if (response.isSuccessful()) {
                 String responseBody = response.body() != null ? response.body().string() : "";
                 JSONObject jsonResponse = new JSONObject(responseBody);
                 return jsonResponse.optString("id", null);
             } else {
-                System.err.println("Failed to get installation info: " + response.code() + " " + response.message());
+                String responseBody = response.body() != null ? response.body().string() : "";
+                //logErrorToChat("Failed to get installation info from repo endpoint: " + response.code() + " " + response.message());
+                //logErrorToChat("Response Body: " + responseBody);
+
+                // If that fails, try to list all installations for the GitHub App
+                //logErrorToChat("Trying alternative approach: listing all installations for the GitHub App");
+                String appUrl = "https://api.github.com/app/installations";
+                Request appRequest = new Request.Builder()
+                        .url(appUrl)
+                        .header("Authorization", "Bearer " + jwt)
+                        .header("Accept", "application/vnd.github.v3+json")
+                        .build();
+
+                try (Response appResponse = client.newCall(appRequest).execute()) {
+                    if (appResponse.isSuccessful()) {
+                        String appResponseBody = appResponse.body() != null ? appResponse.body().string() : "";
+                        //logErrorToChat("Successfully retrieved installations list. Response: " + appResponseBody);
+
+                        // Parse the response to find the installation for our repository
+                        try {
+                            org.json.JSONArray installations = new org.json.JSONArray(appResponseBody);
+                            for (int i = 0; i < installations.length(); i++) {
+                                JSONObject installation = installations.getJSONObject(i);
+                                // Check if this installation is for our repository
+                                if (installation.has("account")) {
+                                    JSONObject account = installation.getJSONObject("account");
+                                    if (account.has("login") && account.getString("login").equals(repoOwner)) {
+                                        //logErrorToChat("Found installation for " + repoOwner + ": " + installation.optString("id"));
+                                        return installation.optString("id");
+                                    }
+                                }
+                            }
+                            //logErrorToChat("No installation found for " + repoOwner);
+                        } catch (Exception e) {
+                            //logErrorToChat("Error parsing installations response: " + e.getMessage());
+                        }
+                    } else {
+                        String appResponseBody = appResponse.body() != null ? appResponse.body().string() : "";
+                        //logErrorToChat("Failed to list installations: " + appResponse.code() + " " + appResponse.message());
+                        //logErrorToChat("Response Body: " + appResponseBody);
+                    }
+                } catch (IOException e) {
+                    //logErrorToChat("Error listing installations: " + e.getMessage());
+                }
+
                 return null;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logExceptionToChat(e);
             return null;
         }
     }
@@ -373,11 +471,13 @@ public class GitHubIssueCreator extends AbstractConfigurable {
                 JSONObject jsonResponse = new JSONObject(responseBody);
                 return jsonResponse.optString("token", null);
             } else {
-                System.err.println("Failed to get installation access token: " + response.code() + " " + response.message());
+                String responseBody = response.body() != null ? response.body().string() : "";
+                //logErrorToChat("Failed to get installation access token: " + response.code() + " " + response.message());
+                //logErrorToChat("Response Body: " + responseBody);
                 return null;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            //logExceptionToChat(e);
             return null;
         }
     }
@@ -471,4 +571,3 @@ public class GitHubIssueCreator extends AbstractConfigurable {
         // No images to add
     }
 }
-
