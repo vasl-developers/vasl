@@ -117,6 +117,10 @@ public class VASLBoard extends ASLBoard {
             if (this.getName().equals("RO")) {
                 cropconfig = "ROadjustment";
             }
+            // DaE special case due to EqualRowCount
+            if (this.getName().equals("DaE")) {
+                cropconfig = "DaEadjustment";
+            }
             if (this.nearestFullRow) {
                 cropconfig += "FullHex";
                 if (this.getCropBounds().getX() == 0) {
@@ -126,6 +130,7 @@ public class VASLBoard extends ASLBoard {
                     cropconfig += "RightHalf";
                 }
             }
+
             return losData.crop(new Point(bounds.x, bounds.y), new Point(bounds.x + bounds.width, bounds.y + bounds.height), offset, cropconfig);
         }
     }

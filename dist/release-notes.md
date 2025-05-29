@@ -1,7 +1,7 @@
 # Release Notes: Version 6.7.1-beta4 
 
 
-**Release Date:** May 15, 2025
+**Release Date:** Jun 1, 2025
 
 ---
 
@@ -15,7 +15,7 @@
 - Fix 1: Corrected typos on fortified building level counters.
 - Fix 2: Added SVG "shared"/white concealment counters.
 - Fix 3: Issue 1729 SdKfz 10/5 counter error fixed.
-- Fix 4: 
+- Fix 4: LOS now working again for maps with multiple columns of boards
 
 
 ---
