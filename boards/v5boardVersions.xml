@@ -171,7 +171,7 @@
 		<boarddata name="e" version="6.7" versionDate="2024/12/23" description="" boardType="Deluxe" publisher="MMP" issued="" />
 		<boarddata name="f" version="6.4" versionDate="2023/12/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
 		<boarddata name="g" version="6.5" versionDate="2023/12/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
-		<boarddata name="gSK" version="2.1" versionDate="2024/12/27" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="gSK" version="2.2" versionDate="2025/05/16" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="h" version="6.7" versionDate="2023/12/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
 		<boarddata name="hSK" version="2.1" versionDate="2024/12/27" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="i" version="6.4" versionDate="2023/01/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
