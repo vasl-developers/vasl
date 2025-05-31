@@ -355,7 +355,7 @@ public class ASLMap extends Map {
             if (b.getVASLBoardArchive().getHexGridConfig() != null) {passgridconfig = b.getVASLBoardArchive().getHexGridConfig();}
             if (b.isCropped()) {iscropping = true;}
             if (b.nearestFullRow) {
-                passgridconfig = "FullHex";
+                if (!(passgridconfig.contains("FullHex"))) {passgridconfig = "FullHex";}
                 fullhexadj=-1;
                 if (b.getCropBounds().getX() == 0) {passgridconfig = "FullHexLeftHalf"; fullhexadj = 0;}
                 if (b.getCropBounds().getMaxX() == b.getUncroppedSize().getWidth()) {passgridconfig = "FullHexRightHalf"; fullhexadj = 0;}
@@ -366,7 +366,8 @@ public class ASLMap extends Map {
                     passgridconfig = passgridconfig + "Offset";  // only need to set this if cropping the left edge when board has offset (ie RB and RO)
                 }
             }
-            int passwidth = (iscropping  ? (int) Math.round(mapBoundary.width/ b.getHexWidth()+ 1 + fullhexadj) : b.getVASLBoardArchive().getBoardWidth());
+            int passwidth = (int) Math.round(mapBoundary.width/ b.getHexWidth()+ 1 + fullhexadj);
+            //int passwidth = (iscropping  ? (int) Math.round(mapBoundary.width/ b.getHexWidth()+ 1 + fullhexadj) : b.getVASLBoardArchive().getBoardWidth());
             VASLMap = new VASL.LOS.Map.Map(hexwidth, hexheight, passwidth,
                     (int) Math.round(mapBoundary.height/ b.getHexHeight()), b.getA1CenterX(), passA1centery, mapBoundary.width, mapBoundary.height,
                     sharedBoardMetadata.getTerrainTypes(), passgridconfig, iscropping);
@@ -399,7 +400,7 @@ public class ASLMap extends Map {
                         if (board.getCropBounds().getMaxX() == board.getUncroppedSize().getWidth()) {croptype = "FullHexRightHalf";}
                     }
                     // ToDo this is a hack to get DaE working - need to clean up and also fix usage of croptype; it is doing too many things; create second variable, something like mapconfigtype
-                    else if (board.getName().equals("DaE") && ! board.isCropped()) {
+                    if (board.getName().equals("DaE") ) {
                         croptype = "FullHexEqualRowCount";
                     }
                     if(board.isCropped()) {

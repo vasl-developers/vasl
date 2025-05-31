@@ -1,7 +1,7 @@
-# Release Notes: Version 6.7.1-beta3 
+# Release Notes: Version 6.7.1-beta4 
 
 
-**Release Date:** May 15, 2025
+**Release Date:** Jun 1, 2025
 
 ---
 
@@ -12,21 +12,21 @@
 ---
 
 ## 🛠 Bug Fixes
-- Fix 1: Fixed rendering of infantry "Class IDs".
-- Fix 2: Corrected color of Russian MMC unit depictions.
-- Fix 3: Corrected Japanese HMG PP value to '4'.
-- Fix 4: Corrected Japanese 50mm MTR range to "1-16".
+- Fix 1: Corrected typos on fortified building level counters.
+- Fix 2: Added SVG "shared"/white concealment counters.
+- Fix 3: Issue 1729 SdKfz 10/5 counter error fixed.
+- Fix 4: LOS now working again for maps with multiple columns of boards
 
 
 ---
 
 ## 📈 Improvements
-- Improvement 1: Adjusted shade of red used in vehicle and gun counter notation to improve visibility.
-- Improvement 2: Adjusted position of vehicle movement point values for improved readabilty.
-- Improvement 3: Matched broken side "Class IDs" to the new good order side versions.
-- Improvement 4: Removed thin black stroke on "white" text OBA counter variants to improve readabilty.
-- Improvement 5: More closely matched BMG & RMG malfunction counters/Multi-fire counters/"Bad Things" flags to the physical game components.
-- Improvement 6: Added "Orchards to Olive Groves" transformation. 
+- Improvement 1: Added "Airborne" text to British Airborne SW mortar.
+- Improvement 2: Adjusted position of PP text on several British SW counters to improve readability.
+- Improvement 3: Converted miscellaneous gun and vehicle counters to SVG.
+- Improvement 4: Adjusted 5/8" Smoke & WP text to interoperate with updated Nationality Smoke extension.
+- Improvement 5: Phase wheel converted to SVG.
+- Improvement 6: 
 
 
 ## ⚠️ Compatibility Notes

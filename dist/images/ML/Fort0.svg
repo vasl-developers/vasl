@@ -49,7 +49,7 @@
 
     <path id="Fortified" style="fill:#000000" d="M 2,48 V 38 H 3.5 5 v 8.5 8.5 h 8 8 V 56.5 58 H 11.5 2 Z m 37,8.5 V 55 h 8 8 V 46.5 38 H 56.5 58 V 48 58 H 48.5 39 Z M 2,12 V 2 H 11.5 21 V 3.5 5 H 13 5 V 13.5 22 H 3.5 2 Z m 53,1.5 V 5 H 47 39 V 3.5 2 H 48.5 58 V 12 22 H 56.5 55 Z"/>
 
-	<text x="50%" y="15" style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">Foritified</text>
+	<text x="50%" y="15" style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">Fortified</text>
 	<text x="50%" y="25" style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">Building</text>
 	<text x="50%" y="35" style="font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">Location</text>
 	<line x1="10" y1="40" x2="50" y2="40" style="stroke:black;stroke-width:1.50"/>
