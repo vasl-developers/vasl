@@ -3,5 +3,8 @@
        <Checkbox name="">
          <entry name="G16 - Alligator Creek" rule="SSO_34_G16" text="Scenario G16 SSO"/>
        </Checkbox>
-  </Option>
-  </SSRControls>
+       <Checkbox name="">
+         <entry name="ASLUG 12 - One-Log Bridge" rule="SSO_34_ASLUG12" text="Scenario ASLUG12 SSO"/>
+       </Checkbox>
+   </Option>
+</SSRControls>
