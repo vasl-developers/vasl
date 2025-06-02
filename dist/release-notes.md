@@ -26,7 +26,7 @@
 - Improvement 3: Converted miscellaneous gun and vehicle counters to SVG.
 - Improvement 4: Adjusted 5/8" Smoke & WP text to interoperate with updated Nationality Smoke extension.
 - Improvement 5: Phase wheel converted to SVG.
-- Improvement 6: 
+- Improvement 6: Drawing LOS now does not hide all the unis, they are visible with reduced opacity.
 
 
 ## ⚠️ Compatibility Notes
