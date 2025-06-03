@@ -52,7 +52,7 @@
 	<!-- MA, text position adjusts to account for any overlined/underlined text. -->
 	<svg x="3.00" y="47.00" width="54.00" height="10.00" style="overflow:visible">
 		<text x="0.00" y="100.00%" dominant-baseline="auto" text-anchor="start" style="font-size:12.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">&#x002A;</text>
-		<text x="4.80" y="100.00%" dominant-baseline="auto" text-anchor="start" style="font-size:12.00px;font-weight:bold;font-family:Nimbus Sans L;fill:none">88<tspan style="font-size:6.00px;fill:white" baseline-shift="super">●</tspan></text>
+		<text x="4.80" y="100.00%" dominant-baseline="auto" text-anchor="start" style="font-size:12.00px;font-weight:bold;font-family:Nimbus Sans L;fill:none">88<tspan style="font-size:10.00px;fill:white">●</tspan></text>
 		<text x="4.80" y="100.00%" dominant-baseline="auto" text-anchor="start" style="font-size:12.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">88</text>
 	</svg>
 	<!-- Malfunction B/X -->
