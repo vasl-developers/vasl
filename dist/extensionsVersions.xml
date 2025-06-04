@@ -22,7 +22,7 @@
 -->
 <extensionsMetadata>
 		<extensiondata name="SASLDice" version="1.1" versionDate="Jun 2023" description="Adds SASL Dicerollers to Chat" />
-		<extensiondata name="BFP" version="6.00" versionDate="May 2025" description="BFP Counters for All BFP Modules" />
+		<extensiondata name="BFP" version="6.1" versionDate="June 2025" description="BFP Counters for All BFP Modules" />
 		<extensiondata name="Festung Budapest" version="1.3" versionDate="Feb 2024" description="FB Counters" />
 		<extensiondata name="HoB Special Forces" version="2.2" versionDate="Jan 2023" description="British and German HOB Counters" />
 		<extensiondata name="Inor" version="1.1" versionDate="Jun 2023" description="Counters for LFT's Green Hell of Inor" />

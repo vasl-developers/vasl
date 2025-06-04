@@ -61,7 +61,7 @@
 	<!-- SA, text position adjusts to account for any overlined/underlined text. -->
 	<svg x="3.00" y="35.50" width="36.00" height="8.00" style="overflow:visible">
 		<text x="0.00" y="98.00%" dominant-baseline="auto" text-anchor="start" style="font-size:8.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">&#x002A;</text>
-		<text x="3.00" y="98.00%" dominant-baseline="auto" text-anchor="start" style="font-size:8.00px;font-weight:bold;font-family:Nimbus Sans L;fill:none">B76<tspan style="font-size:4.80px;fill:white" baseline-shift="super">●</tspan></text>
+		<text x="3.00" y="98.00%" dominant-baseline="auto" text-anchor="start" style="font-size:8.00px;font-weight:bold;font-family:Nimbus Sans L;fill:none">B76<tspan style="font-size:9.00px;fill:white" baseline-shift="10%">●</tspan></text>
 		<line x1="7.31" y1="0%" x2="15.93" y2="0%" style="stroke:black;stroke-width:1.00"/> <!-- overline -->
 		<text x="3.00" y="98.00%" dominant-baseline="auto" text-anchor="start" style="font-size:8.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">B76<tspan style="font-size:4px;font-weight:bold;font-family:Nimbus Sans L" baseline-shift="super">&#x273D;</tspan></text>
 		<line x1="7.31" y1="0%" x2="15.93" y2="0%" style="stroke:black;stroke-width:1.00"/> <!-- overline -->
