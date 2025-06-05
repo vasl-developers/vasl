@@ -7,6 +7,9 @@
          <entry name="15: Trapped!" rule="SSO_15" text="scenario 15 overlay"/>
  </Checkbox>
  <Checkbox name="">
+         <entry name="27:The Liberation of Tulle" rule="SSO_27" text="scenario 27 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
          <entry name="48: Toujours l'audace" rule="SSO_48" text="scenario 48 overlay"/>
  </Checkbox>
  <Checkbox name="">
@@ -24,6 +27,9 @@
 
  <Checkbox name="">
          <entry name="U36: Operation Switchback" rule="SSO_U36" text="scenario U36 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="CH34: The Lighthouse" rule="SSO_CH34" text="scenario CH34 overlay"/>
  </Checkbox>
  <Checkbox name="">
          <entry name="Overlay TR2-1" rule="2_BSO_TR2-1" text="overlay TR2-1"/>
