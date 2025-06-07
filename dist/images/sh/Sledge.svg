@@ -61,7 +61,7 @@
 	</g>
 	<!-- Unit depiction -->
 	<image x="0" y="0" width="60" height="60" preserveAspectRatio="xMidYMid meet" transform="" href="svg/Sledge.png" xlink:href="svg/Sledge.png"/>
-	<text x="39" y="27" style="font-size:6.00px;font-style:light;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L" transform="rotate(60,45,17)">Sledge</text> <!-- Name -->
+	<text x="39" y="27" style="font-size:5.00px;font-style:light;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L" transform="rotate(60,45,17)">Sledge</text> <!-- Name -->
 	<!-- PP # -->
 	<svg x="3.00" y="51.00" width="36.00" height="6.00" style="overflow:visible">
 		<text x="0%" y="98%" dominant-baseline="auto" text-anchor="start"><tspan style="font-size:8.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black;fill-opacity:1;stroke-width:0.2">15PP</tspan></text>

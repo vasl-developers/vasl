@@ -60,7 +60,7 @@
 		</g>
 	</g>
 	<!-- Unit depiction -->
-	<image x="0" y="0" width="60" height="60" preserveAspectRatio="xMidYMid meet" transform="scale(1.00) translate(0, 0) rotate(60, 30, 30)" href="svg/Jeep2.svg" xlink:href="svg/Jeep2.svg"/>
+	<image x="0" y="0" width="60" height="60" preserveAspectRatio="xMidYMid meet" transform="" href="svg/Jeep2.png" xlink:href="svg/Jeep2.png"/>
 	<!-- MA, text position adjusts to account for any overlined/underlined text. -->
 	<svg x="3.00" y="50.00" width="54.00" height="7.00" style="overflow:visible">
 		<text x="0.00" y="100.00%" dominant-baseline="auto" text-anchor="start" style="font-size:8.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">&#x002A;</text>

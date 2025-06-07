@@ -2,7 +2,7 @@
 <svg width="60" height="60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<!--
 		Note #:		g4
-		Name:		Generic Ino_fire
+		Name:		Generic INF
 		Version:	1.0
 
 		Author(s): Gordon Molek, Klas Malmström, Alan Bills
@@ -64,6 +64,6 @@
 	<image x="0" y="0" width="60" height="60" preserveAspectRatio="xMidYMid meet" transform="" href="svg/huINgen.png" xlink:href="svg/huINgen.png"/>
 	<!-- Gun Type -->
 	<svg x="27.00" y="0.00" width="30.00" height="11.00" style="overflow:visible">
-		<text x="100%" y="100%" dominant-baseline="auto" text-anchor="end" style="font-size:11.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">Ino_fire</text>
+		<text x="100%" y="100%" dominant-baseline="auto" text-anchor="end" style="font-size:11.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">INF</text>
 	</svg>
 </svg>
