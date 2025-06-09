@@ -63,6 +63,7 @@
 	<text x="44.5" y="11" style="font-size:11px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:end;fill:black;fill-opacity:1;font-family:Nimbus Sans L">HMG</text>
 	<text x="44.5" y="42.0" style="font-size:11px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:end;fill:black;fill-opacity:1;font-family:Nimbus Sans L">6-<tspan style="text-decoration:underline">12</tspan></text>
 	<text x="30.00" y="24.00" style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L" transform="rotate(-90,30,24)">5PP</text>
+	<text x="44.50" y="33.00" style="font-size:7px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:end;fill:black;fill-opacity:1;font-family:Nimbus Sans L">B11</text>
 	<!-- ROF -->
 	<svg x="33.00" y="14.00" width="12.00" height="12.00" style="overflow:visible">
 		<rect x="1" y="1" width="10.5" height="10.5" style="display:inline;fill:none;fill-opacity:0.0;stroke:black;stroke-width:0.75;stroke-dasharray:none;stroke-opacity:1"/>

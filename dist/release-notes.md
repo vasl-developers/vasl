@@ -13,7 +13,7 @@
 ---
 
 ## 🛠 Bug Fixes
-- Fix 1: 
+- Fix 1: Corrected Communist Chinese MMG & HMG PP and B#s. 
 - Fix 2: 
 - Fix 3: 
 - Fix 4: 
