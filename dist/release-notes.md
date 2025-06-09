@@ -8,6 +8,7 @@
 ## 🚀 New Features
  - Feature 1: Counters for Twighlight of the Reich added to the German and Axis Minors counter palette sections.
  - Feature 2: Polish Eagles counters from Doomed Battalions Fourth Edition added to the Allied Minors counter palette section.
+ - Feature 3: Added WW-I Russian armored trucks from "Special Operations" magazine ASL Scenario O5.
 
 
 ---
