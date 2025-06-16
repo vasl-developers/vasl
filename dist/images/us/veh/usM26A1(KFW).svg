@@ -59,6 +59,10 @@
 			<path id="highlight" style="display:inline;fill:none;stroke:#ffffff;stroke-width:25.1286;stroke-opacity:50;filter:url(#highlight_filter)" d="M 108.87244,1035.2258 C 98.057485,1024.4109 91.386017,1009.4524 91.386017,992.87843 V 162.80328 c 0,-33.14792 26.685873,-59.83379 59.833793,-59.83379 h 830.07521 c 16.57394,0 31.53238,6.67147 42.34738,17.48643" transform="matrix(1.0387133,0,0,1.0339712,-12.412385,-8.9484139) scale(0.06) translate(118,54)"/>
 		</g>
 	</g>
+	<!-- Fast Turret -->
+	<svg x="0.00" y="0.00" width="60.00" height="60.00" style="overflow:visible">
+		<circle cx="30.00" cy="30.00" r="25.00" style="display:inline;fill:none;fill-opacity:1;stroke:white;stroke-width:1.8;stroke-dasharray:none;stroke-opacity:1"></circle>
+	</svg>
 	<!-- Unit depiction -->
 	<image x="0" y="0" width="60" height="60" preserveAspectRatio="xMidYMid meet" transform="" href="svg/usM26A1(KFW).png" xlink:href="svg/usM26A1(KFW).png"/>
 	<!-- MA, text position adjusts to account for any overlined/underlined text. -->

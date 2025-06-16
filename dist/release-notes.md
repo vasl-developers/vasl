@@ -16,8 +16,8 @@
 ## 🛠 Bug Fixes
 - Fix 1: Corrected Communist Chinese MMG & HMG PP and B#s. 
 - Fix 2: Corrected malfunctioned side of Finnish LMG(r).
-- Fix 3: 
-- Fix 4: 
+- Fix 3: USMC Assault Engineer smoke exponent changed to 5.
+- Fix 4: US (Korea Forgotten War) M26A1 fast turret indicator reinstated.
 
 
 ---
