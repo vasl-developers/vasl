@@ -16,9 +16,12 @@
                 makes the VASL LOS image translation faster and more accurate
     height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
     width - width of the board in hexes.
-	others - TBD e.g. alternate hex grain, etc. 
+	others - TBD e.g. alternate hex grain, etc.
+
+	v6.6 6/8/25 added SSO_15_CH59 - TJ
+
 -->
-<boardMetadata name="15" version="6.5" versionDate="Oct 2023" author="TR" boardImageFileName="bd15.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="15" version="6.6" versionDate="2025/06/08" author="TR" boardImageFileName="bd15.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -82,6 +85,7 @@
 		<overlaySSRule name="SSO_15_ESG35" image="SSO_15_ESG35.gif" x="38" y="8" />
 		<overlaySSRule name="SSO_15_G12" image="SSO_15_G12.gif" x="1" y="1" />
 		<overlaySSRule name="SSO_15_J18" image="SSO_15_J18.gif" x="239" y="98" />
+		<overlaySSRule name="SSO_15_CH59" image="SSO_15_CH59.gif" x="918" y="1" />
 		<overlaySSRule name="DenseJungle" image="15_DenseJungle.gif" x="1" y="1" />
 		<overlaySSRule name="LightWoods" image="15_LightWoods.gif" x="1" y="1" />
 		<overlaySSRule name="Bamboo" image="15_Bamboo.gif" x="695" y="1" />
