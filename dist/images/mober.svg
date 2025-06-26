@@ -39,5 +39,5 @@
 	<path id="tab" style="fill:#ff9320" d="M 2.5,1 H 8.9847747 V 47 H 2.5 C 1.115,47 0,45.885 0,44.5 V 3.5 C 0,2.115 1.115,1 2.5,1 Z"/>
 	 
 	<text x="7.50" y="24.00" transform="rotate(-90,7.50,24.00)" style="font-size:9px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">BERSERK</text>
-	 
+
 </svg>

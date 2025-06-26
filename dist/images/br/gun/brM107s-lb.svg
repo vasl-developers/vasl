@@ -74,6 +74,7 @@
 		<text x="80%" y="143%" dominant-baseline="auto" text-anchor="end" style="font-size:10.80px;font-weight:bold;font-family:Nimbus Sans L;fill:black;fill-opacity:1">&#x002A;</text>
 	</svg>
 	<text x="57.00" y="8.00" text-anchor="end" style="font-size:7.00px;font-weight:normal;font-family:Nimbus Sans L;fill:black">Limbered</text>
+	<text x="4.00" y="56.00" style="font-size:7.00px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:start;fill:black;fill-opacity:1;font-family:Nimbus Sans L">Towed&#x273D;</text>
 	<!-- Unit depiction -->
 	<image x="0" y="0" width="60" height="60" preserveAspectRatio="xMidYMid meet" transform="rotate(-90, 30, 30)" href="svg/brM107s-l.png" xlink:href="svg/brM107s-l.png"/>
 </svg>

@@ -18,6 +18,7 @@
 - Fix 2: Corrected malfunctioned side of Finnish LMG(r).
 - Fix 3: USMC Assault Engineer smoke exponent changed to 5.
 - Fix 4: US (Korea Forgotten War) M26A1 fast turret indicator reinstated.
+- Fix 5: Make RST square on vehicles more pronounced.
 
 
 ---

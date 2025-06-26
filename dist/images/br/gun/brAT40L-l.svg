@@ -64,8 +64,8 @@
 	<!-- MA, text position adjusts to account for any overlined/underlined text. -->
 	<svg x="3.00" y="46.00" width="54.00" height="11.00" style="overflow:visible">
 		<text x="0.00" y="87.00%" dominant-baseline="auto" text-anchor="start" style="font-size:6.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black" baseline-shift="super">&#x273D;</text>
-		<text x="4.80" y="87.00%" dominant-baseline="auto" text-anchor="start" style="font-size:12.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black"><tspan style="text-decoration:underline">40</tspan></text>
-		<line x1="4.80" y1="100%" x2="298.05" y2="100%" style="stroke:black;stroke-width:1.00"/> <!-- underline -->
+		<text x="4.80" y="87.00%" dominant-baseline="auto" text-anchor="start" style="font-size:12.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">40</text>
+		<line x1="4.80" y1="100%" x2="16.30" y2="100%" style="stroke:black;stroke-width:1.00"/> <!-- underline -->
 	</svg>
 	<!-- Malfunction -->
 	<svg x="3.00" y="36.90" width="24.00" height="6.60" style="overflow:visible">
