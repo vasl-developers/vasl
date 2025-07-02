@@ -24,6 +24,18 @@
 				font-style: normal;
 				src: url("../../fonts/NimbusSanL-Bol.ttf") format("ttf");
 			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: italic;
+				src: url("../../fonts/NimbusSanL-RegIta.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: italic;
+				src: url("../../fonts/NimbusSanL-BolIta.ttf") format("ttf");
+			}
 		</style>
 	</defs>
 	<!-- The bevel - is there a better/more efficient way to achieve this? -->
@@ -49,7 +61,7 @@
 	</g>
 	<!-- Restricted Slow Turret -->
 	<svg x="0.00" y="0.00" width="60.00" height="60.00" style="overflow:visible">
-		<rect x="6.00" y="6.00" width="48.00" height="48.00" style="display:inline;fill:none;fill-opacity:1;stroke:white;stroke-width:2.4;stroke-dasharray:none;stroke-opacity:1"></rect>
+		<rect x="7.00" y="7.00" width="46.00" height="46.00" style="display:inline;fill:none;fill-opacity:1;stroke:white;stroke-width:4.25;stroke-dasharray:none;stroke-opacity:1"></rect>
 	</svg>
 	<!-- Unit depiction -->
 	<image x="0" y="0" width="60" height="60" preserveAspectRatio="xMidYMid meet" transform="" href="svg/slPziiA.png" xlink:href="svg/slPziiA.png"/>
