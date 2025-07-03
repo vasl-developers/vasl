@@ -1,7 +1,7 @@
 # Release Notes: Version 6.7.1-beta5 
 
 
-**Release Date:** Jun 1, 2025
+**Release Date:** Jul 2, 2025
 
 ---
 
@@ -35,7 +35,6 @@
 
 ## ⚠️ Compatibility Notes
 - **Minimum Version Required:** Built with VASSAL 3.7.16
-- Compatible with games saved in versions 6.6.6–6.6.9.
 
 
 ---
