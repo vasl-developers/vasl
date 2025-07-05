@@ -24,6 +24,18 @@
 				font-style: normal;
 				src: url("../../fonts/NimbusSanL-Bol.ttf") format("ttf");
 			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: italic;
+				src: url("../../fonts/NimbusSanL-RegIta.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: italic;
+				src: url("../../fonts/NimbusSanL-BolIta.ttf") format("ttf");
+			}
 		</style>
 	</defs>
 	<!-- The bevel - is there a better/more efficient way to achieve this? -->
@@ -61,4 +73,5 @@
 		<text x="80%" y="143%" dominant-baseline="auto" text-anchor="end" style="font-size:10.80px;font-weight:bold;font-family:Nimbus Sans L;fill:black;fill-opacity:1">&#x002A;</text>
 	</svg>
 	<text x="3" y="8.00" text-anchor="start" style="font-size:7.00px;font-weight:normal;font-family:Nimbus Sans L;fill:black">Limbered</text>
+	<text x="4.00" y="56.00" style="font-size:7.00px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:start;fill:black;fill-opacity:1;font-family:Nimbus Sans L">Towed&#x273D;</text>
 </svg>

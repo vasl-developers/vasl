@@ -164,6 +164,12 @@
 		<boarddata name="18b" version="6.1" versionDate="2024/07/21" description="" boardType="Double-sided" publisher="MMP" issued="" />
 		<boarddata name="19a" version="6.0" versionDate="2024/07/02" description="" boardType="Double-sided" publisher="MMP" issued="" />
 		<boarddata name="19b" version="6.0" versionDate="2024/07/02" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="20a" version="6.0" versionDate="2025/06/09" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="20b" version="6.0" versionDate="2025/06/09" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="21a" version="6.0" versionDate="2025/06/09" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="21b" version="6.0" versionDate="2025/06/09" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="22a" version="6.0" versionDate="2025/06/09" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="22b" version="6.0" versionDate="2025/06/09" description="" boardType="Double-sided" publisher="MMP" issued="" />
 		<boarddata name="a" version="6.5" versionDate="2023/01/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
 		<boarddata name="b" version="6.4" versionDate="2023/01/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
 		<boarddata name="c" version="6.4" versionDate="2023/01/30" description="" boardType="Deluxe" publisher="MMP" issued="" />

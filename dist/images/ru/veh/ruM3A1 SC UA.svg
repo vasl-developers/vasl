@@ -2,7 +2,8 @@
 <svg width="60" height="60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<!--
 		Note #:		54va
-		Name:		M3A1 Scout Car(a) <i>APC</i> (Unarmed)
+		Name:		M3A1 Scout Car(a) <i>APC</i>
+		Comment:	(Unarmed)
 		Version:	1.0
 
 		Author(s): Gordon Molek, Klas Malmström, Alan Bills
@@ -23,6 +24,18 @@
 				font-weight: bold;
 				font-style: normal;
 				src: url("../../fonts/NimbusSanL-Bol.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: italic;
+				src: url("../../fonts/NimbusSanL-RegIta.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: italic;
+				src: url("../../fonts/NimbusSanL-BolIta.ttf") format("ttf");
 			}
 		</style>
 	</defs>
