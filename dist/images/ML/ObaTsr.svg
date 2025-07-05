@@ -22,6 +22,18 @@
 				font-style: normal;
 				src: url("../fonts/NimbusSanL-Bol.ttf") format("ttf");
 			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: italic;
+				src: url("../fonts/NimbusSanL-RegIta.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: italic;
+				src: url("../fonts/NimbusSanL-BolIta.ttf") format("ttf");
+			}
 		</style>
 	</defs>
 	<path id="Large Hexagon" style="fill:none;stroke:#000000;stroke-width:1.5;stroke-opacity:1.00" d="M 43.045125,7.4246216 56.100305,30.06722 43.01883,52.694636 16.882175,52.679455 3.8269945,30.036857 16.90847,7.4094401 Z" />

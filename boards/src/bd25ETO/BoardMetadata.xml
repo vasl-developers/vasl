@@ -17,8 +17,11 @@
     height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
+
+	v6.9 6/18/25 added SSO_25ETO_CH59 - TJ
+
 -->
-<boardMetadata name="25ETO" version="6.8" versionDate="Dec 2024" author="TR" boardImageFileName="bd25ETO.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="25ETO" version="6.9" versionDate="2025/06/18" author="TR" boardImageFileName="bd25ETO.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -71,7 +74,8 @@
 			image - the image name
 			x - x coordinate of overly upper left
 			y - y coordinate of overlay upper left
-		-->		
+		-->
+		<overlaySSRule name="SSO_25ETO_CH59" image="SSO_25ETO_CH59.gif" x="1" y="1" />		
 		<overlaySSRule name="OrchardsToCrags" image="25ETO_Orch2Crag.gif" x="0" y="0" />
 		<overlaySSRule name="OrchardsToShellholes" image="25ETO_Orch2Shell.gif" x="0" y="0" />
 		<overlaySSRule name="PalmTrees" image="25ETO_PalmTrees.gif" x="0" y="0" />

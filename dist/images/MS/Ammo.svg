@@ -23,6 +23,18 @@
 				font-style: normal;
 				src: url("../fonts/NimbusSanL-Bol.ttf") format("ttf");
 			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: italic;
+				src: url("../fonts/NimbusSanL-RegIta.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: italic;
+				src: url("../fonts/NimbusSanL-BolIta.ttf") format("ttf");
+			}
 		</style>
 	</defs>
 	<image x="2.00" y="-4.00" width="48" height="48" preserveAspectRatio="xMidYMid meet" transform="scale(1.00)" href="svg/Ammo.png" xlink:href="svg/Ammo.png"/>

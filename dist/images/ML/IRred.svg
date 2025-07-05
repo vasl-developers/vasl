@@ -23,6 +23,18 @@
 				font-style: normal;
 				src: url("../fonts/NimbusSanL-Bol.ttf") format("ttf");
 			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: italic;
+				src: url("../fonts/NimbusSanL-RegIta.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: italic;
+				src: url("../fonts/NimbusSanL-BolIta.ttf") format("ttf");
+			}
 		</style>
 	</defs>
 	<path id="flash_background" style="fill:#ffffff;stroke-width:2;stroke-linecap:round" d="m 35.240612,15.205981 11.953045,-6.7500293 -2.58297,12.4631903 13.077859,1.63203 -11.719654,8.733109 8.948151,8.210045 L 41.912489,40.219724 41.418586,52.167871 31.650272,42.097652 22.482116,53.988579 22.163215,40.513095 7.2502221,42.995306 15.606038,32.906147 1.9990529,25.873414 17.30362,23.077722 11.022341,11.434126 23.95583,15.997515 29.025739,3.8286182 Z"/>

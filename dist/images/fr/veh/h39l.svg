@@ -24,6 +24,18 @@
 				font-style: normal;
 				src: url("../../fonts/NimbusSanL-Bol.ttf") format("ttf");
 			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: italic;
+				src: url("../../fonts/NimbusSanL-RegIta.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: italic;
+				src: url("../../fonts/NimbusSanL-BolIta.ttf") format("ttf");
+			}
 		</style>
 	</defs>
 	<!-- The bevel - is there a better/more efficient way to achieve this? -->
@@ -49,10 +61,10 @@
 	</g>
 	<!-- One Man Turret - It is the way (unless there's a better way) -->
 	<svg x="0.00" y="0.00" width="60.00" height="60.00" style="overflow:visible">
-			<rect x="13.20" y="4.80" width="33.60" height="2.40" style="display:inline;fill:white;fill-opacity:1;stroke:none;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"></rect>
-			<rect x="52.60" y="13.20" width="2.40" height="33.60" style="display:inline;fill:white;fill-opacity:1;stroke:none;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"></rect>
-			<rect x="13.20" y="52.60" width="33.60" height="2.40" style="display:inline;fill:white;fill-opacity:1;stroke:none;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"></rect>
-			<rect x="4.80" y="13.20" width="2.40" height="33.60" style="display:inline;fill:white;fill-opacity:1;stroke:none;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"></rect>
+			<rect x="13.20" y="4.80" width="33.60" height="3.40" style="display:inline;fill:white;fill-opacity:1;stroke:none;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"></rect>
+			<rect x="51.60" y="13.20" width="3.40" height="33.60" style="display:inline;fill:white;fill-opacity:1;stroke:none;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"></rect>
+			<rect x="13.20" y="51.60" width="33.60" height="3.40" style="display:inline;fill:white;fill-opacity:1;stroke:none;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"></rect>
+			<rect x="4.80" y="13.20" width="3.40" height="33.60" style="display:inline;fill:white;fill-opacity:1;stroke:none;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"></rect>
 	</svg>
 	<!-- Unit depiction -->
 	<image x="0" y="0" width="60" height="60" preserveAspectRatio="xMidYMid meet" transform="" href="svg/h39l.png" xlink:href="svg/h39l.png"/>

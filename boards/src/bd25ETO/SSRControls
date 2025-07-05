@@ -6,5 +6,8 @@
 	  <Checkbox name="Hammada">
         <entry name="Hammada" rule="Hammada"/>
       </Checkbox>
+       <Checkbox name="">
+         <entry name="CH59 - Bucking For Sergeant" rule="SSO_25ETO_CH59" text="CH59 SSO"/>
+ </Checkbox>
 	  </Option>
 </SSRControls>
