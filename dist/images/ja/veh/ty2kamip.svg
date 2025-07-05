@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg width="60" height="60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<!--
-		Note #:		6a
-		Name:		Type 2 KA-MI <i>aLT</i>
+		Note #:		6b
+		Name:		Type 2 KA-MI <i>aLT</i> w Pontoons
 		Version:	1.0
 
 		Author(s): Gordon Molek, Klas Malmström, Alan Bills
@@ -92,7 +92,7 @@
 	<!-- Movement -->
 	<svg x="30.00" y="3.00" width="27.00" height="12.00" style="overflow:visible">
 		<rect x="6.00" width="21.00" height="12.00" y="0.00" ry="6.00" style="display:inline;fill:white;fill-opacity:1;stroke:none;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"></rect>
-		<text x="97%" y="84.00%" dominant-baseline="auto" text-anchor="end" style="font-size:11.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black"><tspan style="font-family:Nimbus Sans L;font-weight:bold;font-size:6.0px;fill:black" baseline-shift="super">&#x273D;</tspan>14<tspan style="font-size:8px;font-weight:bold;font-family:Nimbus Sans L" baseline-shift="super">3</tspan></text>
+		<text x="97%" y="84.00%" dominant-baseline="auto" text-anchor="end" style="font-size:11.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">&#x002A;14<tspan style="font-size:8px;font-weight:bold;font-family:Nimbus Sans L" baseline-shift="super">3</tspan></text>
 	</svg>
 	<!-- Ground Pressure -->
 	<svg x="2.00" y="2.00" width="10.00" height="10.00" style="overflow:visible">
