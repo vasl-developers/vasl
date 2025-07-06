@@ -60,7 +60,7 @@
 	</g>
 	<line x1="10" y1="10" x2="50" y2="50" style="stroke:white; stroke-width:3.00"/>
 	<line x1="10" y1="50" x2="50" y2="10" style="stroke:white; stroke-width:3.00"/>
-	<text x="57.00" y="11.00" text-anchor="end" style="font-size:8pt;font-family:Nimbus Sans L;fill:black">R1</text>
+	<text x="57.00" y="11.00" text-anchor="end" style="font-size:8pt;font-weight:bold;font-family:Nimbus Sans L;fill:black">R1</text>
 	<text x="3.00" y="8.00" text-anchor="start" style="font-size:7.00px;font-weight:normal;font-family:Nimbus Sans L;fill:black">Limbered</text>
 	<!-- Unit depiction -->
 	<image x="0" y="0" width="60" height="60" preserveAspectRatio="xMidYMid meet" transform="" href="svg/ruINFgen-l.png" xlink:href="svg/ruINFgen-l.png"/>
