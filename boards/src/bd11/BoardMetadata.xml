@@ -20,8 +20,9 @@
 	
 	v6.0 Nov 2013 (TR)
 	v6.1 Mar 2018 update version for lightwoods transform
+	v6.9 7/3/25 added SSO_11_48 - TJ
 -->
-<boardMetadata name="11" version="6.8" versionDate="Feb 2025" author="TR" boardImageFileName="bd11.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="11" version="6.9" versionDate="2025/07/03" author="TR" boardImageFileName="bd11.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -78,6 +79,7 @@
 		<overlaySSRule name="NoHedges" image="bd11_HedgesToOG.gif" x="125" y="1" />
 		<overlaySSRule name="HedgesToBocage" image="bd11_HedgesToBocage.gif" x="125" y="1" />
 		<overlaySSRule name="WallsToBocage" image="bd11_WallsToBocage.gif" x="14" y="1" />
+		<overlaySSRule name="SSO_11_48" image="SSO_11_48.gif" x="41" y="13" />
 		<overlaySSRule name="BSO_11_Z5IsL2" image="BSO_11_Z5IsL2.gif" x="1333" y="235" />
 		<overlaySSRule name="BSO_11_Rogue" image="BSO_11_Rogue.gif" x="0" y="0" />
 		<overlaySSRule name="NoRoads" image="bd11_NoRoads.gif" x="1" y="1" />
