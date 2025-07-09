@@ -60,17 +60,17 @@
 	</g>
 	<line x1="10" y1="10" x2="50" y2="50" style="stroke:white; stroke-width:3.00"/>
 	<line x1="10" y1="50" x2="50" y2="10" style="stroke:white; stroke-width:3.00"/>
-	<text x="3.00" y="11.00" text-anchor="start" style="font-size:8pt;font-family:Nimbus Sans L;fill:black">R1</text>
-	<text x="57.00" y="57.00" text-anchor="end" style="font-size:8pt;font-family:Nimbus Sans L;fill:black">X6</text>
+	<text x="57.00" y="11.00" text-anchor="end" style="font-size:8pt;font-weight:bold;font-family:Nimbus Sans L;fill:black">R1</text>
+	<text x="3.00" y="57.00" text-anchor="start" style="font-size:8pt;font-weight:bold;font-family:Nimbus Sans L;fill:black">X6</text>
 	<!-- Manhandling # -->
-	<svg x="48.00" y="36.00" width="9.00" height="9.00" style="overflow:visible">
+	<svg x="48.00" y="14.40" width="9.00" height="9.00" style="overflow:visible">
 		<circle cx="50%" cy="50%" r="4.20" style="display:inline;fill:none;fill-opacity:1;stroke:#e10000;stroke-width:0.36;stroke-dasharray:none;stroke-opacity:1"></circle>
 		<text x="50%" y="80%" dominant-baseline="auto" text-anchor="middle" style="font-size:8.40px;font-weight:bold;font-family:Nimbus Sans L;fill:#e10000;fill-opacity:1">2</text>
 	</svg>
 	<!-- Manhandling -->
-	<svg x="40.20" y="35.40" width="10.20" height="10.20" style="overflow:visible">
+	<svg x="40.20" y="13.80" width="10.20" height="10.20" style="overflow:visible">
 		<text x="75%" y="80%" dominant-baseline="auto" text-anchor="end" style="font-size:8.40px;font-weight:bold;font-family:Nimbus Sans L;fill:black;fill-opacity:1">M</text>
 	</svg>
 	<!-- Unit depiction -->
-	<image x="0" y="0" width="60" height="60" preserveAspectRatio="xMidYMid meet" transform="rotate(-90, 30, 30)" href="svg/nkAR152.png" xlink:href="svg/nkAR152.png"/>
+	<image x="0" y="0" width="60" height="60" preserveAspectRatio="xMidYMid meet" transform="" href="svg/nkAR152.png" xlink:href="svg/nkAR152.png"/>
 </svg>

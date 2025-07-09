@@ -18,19 +18,17 @@
 - Fix 2: Corrected malfunctioned side of Finnish LMG(r).
 - Fix 3: USMC Assault Engineer smoke exponent changed to 5.
 - Fix 4: US (Korea Forgotten War) M26A1 fast turret indicator reinstated.
-- Fix 5: Make RST square on vehicles more pronounced.
-- Fix 6: Fix Partisan and Russian Paratrooper class IDs on broken side.
+- Fix 5: Fix Partisan and Russian Paratrooper class IDs on broken side.
+- Fix 6: Fix manhandling on Japanese 76L and 120L AA guns, and regenerate Type 2 Ka-Mi w/ pontoons.
+- Fix 7: Fix NKVD and SaP para squads' broken sides.
+- Fix 8: Fix malfunctioned and dismantled Swedish 81mm Mortar.
+- Fix 9: Fix star shell draggable overlays.
 
 
 ---
 
 ## 📈 Improvements
-- Improvement 1: 
-- Improvement 2: 
-- Improvement 3: 
-- Improvement 4: 
-- Improvement 5: 
-- Improvement 6: 
+- Improvement 1: Make RST square on vehicles more pronounced.
 
 
 ## ⚠️ Compatibility Notes
