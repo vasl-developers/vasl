@@ -17,8 +17,11 @@
     height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
+	
+	7/10/25 - added SSO_21_135 - TJ
+	7/11/25 - added SSO_21_bars - TJ
 -->
-<boardMetadata name="21" version="6.5" versionDate="Oct 2023" author="TR" boardImageFileName="bd21.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="21" version="6.6" versionDate="2025/07/11" author="TR" boardImageFileName="bd21.gif" hasHills="FALSE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -186,6 +189,8 @@
 		<overlaySSRule name="OrchardsToCrags" image="21_Orch2Crag.gif" x="39" y="10" />
 		<overlaySSRule name="PalmTrees" image="21_Orch2PalmTrees.gif" x="35" y="10" />
 		<overlaySSRule name="Bamboo" image="21_Bamboo.gif" x="199" y="94" />
+		<overlaySSRule name="SSO_bars" image="SSO_21_bars.gif" x="38" y="36" />
+		<overlaySSRule name="SSO_135" image="SSO_21_135.gif" x="918" y="1" />		
 		<overlaySSRule name="SSO_ASLUG5" image="21_SSO_ASLUG5.gif" x="519" y="163" />
 		<overlaySSRule name="NoRoads" image="21_NoRoads.gif" x="1" y="1" />
 		<overlaySSRule name="LightWoods" image="21_LightWoods.gif" x="0" y="0" />
