@@ -526,7 +526,7 @@
 		<boarddata name="AF_PRK_Y" version="1.0" versionDate="2024/01/30" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
 		<boarddata name="AF_Sollum" version="1.1" versionDate="2024/01/30" description="Brevity Assault" boardType="HASL" publisher="AF" issued="2024/01/30" />
 		<boarddata name="LS" version="1.0" versionDate="2025/04/08" description="Lysyanka" boardType="HASL" publisher="" issued="2025/04/08" />
-		<boarddata name="BS" version="1.0" versionDate="2025/07/13" description="Brickworks" boardType="HASL" publisher="" issued="2025/07/13" />
+		<boarddata name="BW" version="1.0" versionDate="2025/07/13" description="Brickworks" boardType="HASL" publisher="" issued="2025/07/13" />
 
 
 
