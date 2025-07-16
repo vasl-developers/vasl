@@ -59,8 +59,10 @@ public class LOSDataEditor {
     public Map createNewLOSData() {
 
         Map m;
-        String passgridconfig= boardArchive.getHexGridConfig();
-        if(passgridconfig==null){passgridconfig="Normal";}
+        String passcropgridconfig= boardArchive.getHexGridConfig();
+        if(passcropgridconfig==null){passcropgridconfig="Normal";}
+        String passboardgridconfig = "Normal"; ////placeholder while I debug code
+        //ToDo - a vale for pssboardgridconfig needs to be passed to the createNewLOSData() method
         boolean isCropping=false;
         if (boardArchive.isGEO()) {
 
@@ -72,7 +74,7 @@ public class LOSDataEditor {
                     boardArchive.getA1CenterY(),
                     boardArchive.getBoardImage().getWidth(),
                     boardArchive.getBoardImage().getHeight(),
-                    sharedBoardMetadata.getTerrainTypes(), passgridconfig, isCropping);
+                    sharedBoardMetadata.getTerrainTypes(), passboardgridconfig, passcropgridconfig, isCropping);
             m.setSlopes(boardArchive.getSlopes());
         } else {
             m = new Map(
@@ -85,7 +87,7 @@ public class LOSDataEditor {
                     boardArchive.getA1CenterY(),
                     boardArchive.getBoardImage().getWidth(),
                     boardArchive.getBoardImage().getHeight(),
-                    sharedBoardMetadata.getTerrainTypes(), passgridconfig, isCropping);
+                    sharedBoardMetadata.getTerrainTypes(), passboardgridconfig, passcropgridconfig, isCropping);
             m.setSlopes(boardArchive.getSlopes());
         }
         return m;
@@ -722,7 +724,7 @@ public class LOSDataEditor {
         }
 
         // change the base height of the hex grid
-        if(map.getMapConfiguration().equals("TopLeftHalfHeightEqualRowCount")){
+        if(map.getMapConfiguration().equals("ToplefthalfheightEqualRowCount")){
             for (int col = 0; col < map.getWidth(); col++) {
                 for (int row = 0; row < map.getHeight(); row++) { // no extra hex for boards where each col has same number of rows (eg RO)
                     Hex[][] hexGrid = map.getHexGrid();
@@ -758,7 +760,7 @@ public class LOSDataEditor {
      */
     public void flip() {
 
-        map.flip();
+        //map.flip();
     }
 
     /**

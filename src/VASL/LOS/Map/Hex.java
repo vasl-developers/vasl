@@ -16,12 +16,15 @@
  */
 package VASL.LOS.Map;
 
+import VASSAL.build.GameModule;
+
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
 
+import static VASSAL.build.GameModule.getGameModule;
 import static java.lang.StrictMath.cos;
 
 /**
@@ -168,6 +171,12 @@ public class Hex {
         createLocations(terr, vertexPoints, hexsidePoints);
 	}
 
+    public void resetHexAndLocationNames(String name){
+        this.name = name;
+        this.centerLocation.setName(name);
+        resetHexsideLocationNames();
+    }
+
     /**
      * Create the the set of "empty" hex locations - i.e they will not reflect the grid terrain
      * @param terr a default terrain used for all locations
@@ -287,6 +296,7 @@ public class Hex {
     private void  setHexFlags() {
         // reworked Jan 2020 by Doug R to reflect hex configuration possibilities
         // first column?
+        //ToDo fix this
         if (map.getMapConfiguration() == "Normal" && map.getA1CenterY()!=65) {
             if (columnNumber == 0) {
                 southWestOnMap = false;
@@ -309,7 +319,7 @@ public class Hex {
                 southEastOnMap = false;
                 southWestOnMap = false;
             }
-        } else if (map.getMapConfiguration() == "TopLeftHalfHeight") {
+        } else if (map.getMapConfiguration() == "Toplefthalfheight") {
             // first column
             if (columnNumber == 0) {
                 southWestOnMap = false;
@@ -347,7 +357,7 @@ public class Hex {
                 southEastOnMap = false;
                 southWestOnMap = false;
             }
-        } else if (map.getMapConfiguration() == "FullHexHalfHeight") {
+        } else if (map.getMapConfiguration() == "FullHexhalfheight") {
             // no need to do first and last col tests as all east/west hexides on map due to "Full" config
             //first hex in even column (A, C, E as A = col 0)
             if ((columnNumber % 2 == 0) && (rowNumber == 0)) {
@@ -361,10 +371,11 @@ public class Hex {
                 southEastOnMap = false;
                 southWestOnMap = false;
             }
+            //ToDo check this below
             // above works for geo style where one col (odd or even) has all full height hexes and the other column has a top and bottom half hex
             // need to deal with configuration where one col (odd or even) has top half height hex and bottom full height and the other column has top full height hex and bottom half height hex
             // at present RO is the only los-enabled map board with this configuration - see below
-        } else if (map.getMapConfiguration() == "TopLeftHalfHeightEqualRowCount" || map.getA1CenterY()==65) {
+        } else if (map.getMapConfiguration() == "ToplefthalfheightEqualRowCount" || map.getA1CenterY()==65) {
             // first column
             if (columnNumber == 0) {
                 southWestOnMap = false;
@@ -408,12 +419,40 @@ public class Hex {
 	// used to update the hexside location once the map has been fully initialized
 	public void resetHexsideLocationNames(){
 
-		if (map.getAdjacentHex(this, 0) != null) hexsideLocations[0].setName(name + "/" + map.getAdjacentHex(this, 0).getName());
-		if (map.getAdjacentHex(this, 1) != null) hexsideLocations[1].setName(name + "/" + map.getAdjacentHex(this, 1).getName());
-		if (map.getAdjacentHex(this, 2) != null) hexsideLocations[2].setName(name + "/" + map.getAdjacentHex(this, 2).getName());
-		if (map.getAdjacentHex(this, 3) != null) hexsideLocations[3].setName(name + "/" + map.getAdjacentHex(this, 3).getName());
-		if (map.getAdjacentHex(this, 4) != null) hexsideLocations[4].setName(name + "/" + map.getAdjacentHex(this, 4).getName());
-		if (map.getAdjacentHex(this, 5) != null) hexsideLocations[5].setName(name + "/" + map.getAdjacentHex(this, 5).getName());
+		if (map.getAdjacentHex(this, 0) != null) {
+            hexsideLocations[0].setName(name + "/" + map.getAdjacentHex(this, 0).getName());
+        }
+        else {
+            hexsideLocations[0].setName("");
+        }
+		if (map.getAdjacentHex(this, 1) != null) {
+            hexsideLocations[1].setName(name + "/" + map.getAdjacentHex(this, 1).getName());
+        }
+        else {
+            hexsideLocations[1].setName("");
+        }
+		if (map.getAdjacentHex(this, 2) != null) {
+            hexsideLocations[2].setName(name + "/" + map.getAdjacentHex(this, 2).getName());
+        }
+        else {
+            hexsideLocations[2].setName("");
+        }
+		if (map.getAdjacentHex(this, 3) != null) {
+            hexsideLocations[3].setName(name + "/" + map.getAdjacentHex(this, 3).getName());
+        } else {
+            hexsideLocations[3].setName("");
+        }
+		if (map.getAdjacentHex(this, 4) != null) {
+            hexsideLocations[4].setName(name + "/" + map.getAdjacentHex(this, 4).getName());
+        }
+        else {
+            hexsideLocations[5].setName("");
+        }
+		if (map.getAdjacentHex(this, 5) != null) {
+            hexsideLocations[5].setName(name + "/" + map.getAdjacentHex(this, 5).getName());
+        } else {
+            hexsideLocations[5].setName("");
+        }
 	}
 
 	// get the map
@@ -1183,8 +1222,7 @@ public class Hex {
 
 	// nearest Hexside aiming point
 	public Location getNearestLocation(int x, int y) {
-
-		// get distance to center
+        // get distance to center
 		double  distance	 = Point2D.distance(
 			(double) x,
 			(double) y,
@@ -1298,7 +1336,11 @@ public class Hex {
 		flipHexPoint(centerLocation.getEdgeCenterPoint());
 		flipHexPoint(centerLocation.getLOSPoint());
 		flipHexPoint(centerLocation.getAuxLOSPoint());
-
+        //ToDo test code
+        Point centerpoint = new Point((int) center.getX(), (int) center.getY());
+        flipHexPoint(centerpoint);
+        centerLocation.getHex().center.x = centerpoint.getX();
+        centerLocation.getHex().center.y = centerpoint.getY();
 		// flip the points in the hexside locations
 		for (int x = 0; x < 6; x++){
 

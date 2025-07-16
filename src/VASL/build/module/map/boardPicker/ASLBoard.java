@@ -18,6 +18,7 @@
  */
 package VASL.build.module.map.boardPicker;
 
+import VASL.LOS.Map.Terrain;
 import VASL.build.module.ASLMap;
 import VASL.build.module.map.boardArchive.BoardArchive;
 import VASL.build.module.map.boardPicker.board.ASLHexGrid;
@@ -62,6 +63,15 @@ public class ASLBoard extends Board {
     private ImageOp baseImageOp;
     private DataArchive boardArchive;
     public boolean nearestFullRow;
+    private String storerow1;
+    private String storerow2;
+    private String storecoord1;
+    private String storecoord2;
+    private HashMap<String, Integer> startcropcol = new HashMap<String, Integer>();
+    private HashMap<String, Integer> startcroprow = new HashMap<String, Integer>();
+    private HashMap<String, Integer> endcropcol = new HashMap<String, Integer>();
+    private HashMap<String, Integer> endcroprow = new HashMap<String, Integer>();
+
 
     protected BoardArchive VASLBoardArchive;
     private static final Logger logger = LoggerFactory.getLogger(ASLMap.class);
@@ -76,6 +86,55 @@ public class ASLBoard extends Board {
 
     public Rectangle getCropBounds() {
         return cropBounds;
+    }
+    public String getRow1(){
+        return storerow1;
+    }
+    public void setRow1 (String passRow1){
+        this.storerow1 = passRow1;
+    }
+    public String getRow2(){
+        return storerow2;
+    }
+    public void setRow2 (String passRow2){
+        this.storerow2 = passRow2;
+    }
+    public String getCoord1(){
+         return storecoord1;
+    }
+    public void setCoord1 (String passCoord1){
+        this.storecoord1 = passCoord1;
+    }
+    public String getCoord2(){
+        return storecoord2;
+    }
+    public void setCoord2 (String passCoord2){
+        this.storecoord2 = passCoord2;
+    }
+    public void setstartcropcol (String startcolname, Integer startcolindex){
+        startcropcol.put(startcolname, startcolindex);
+    }
+    public void setstartcroprow (String startrowname, Integer startrowindex){
+        startcroprow.put(startrowname, startrowindex);
+    }
+    public void setendcropcol(String endcolname, Integer endcolindex){
+        endcropcol.put(endcolname, endcolindex);
+    }
+    public void setendcroprow (String endrowname, Integer endrowindex){
+        endcroprow.put(endrowname, endrowindex);
+    }
+
+    public HashMap<String, Integer> getstartcropcol(){
+            return startcropcol;
+    }
+    public HashMap<String, Integer> getstartcroprow(){
+        return startcroprow;
+    }
+    public HashMap<String, Integer> getendcropcol(){
+        return endcropcol;
+    }
+    public HashMap<String, Integer> getendcroprow(){
+        return endcroprow;
     }
 
     public void setMagnification(double mag) {
@@ -285,12 +344,14 @@ public class ASLBoard extends Board {
     }
 
     public void crop(String row1, String row2, String coord1, String coord2) throws MapGrid.BadCoords {
+
         crop(row1, row2, coord1, coord2, true);
     }
 
     public void crop(String row1, String row2, String coord1, String coord2, boolean nearestFullRow) throws MapGrid.BadCoords {
         double dx = ((HexGrid) getGrid()).getHexWidth();
         double dy = ((HexGrid) getGrid()).getHexSize();
+
         Rectangle newCropBounds = new Rectangle(0, 0, -1, -1);
         newCropBounds.x = (row1.length() == 0 ? 0 : getGrid().getLocation(row1 + "0").x);
         newCropBounds.width = row2.length() == 0 ? -1 : (getGrid().getLocation(row2 + "0").x - newCropBounds.x);
@@ -310,8 +371,13 @@ public class ASLBoard extends Board {
                 newCropBounds.width += (int) (dx / 2);
             }
         }
-         setCropBounds(newCropBounds);
-        this.nearestFullRow=nearestFullRow;
+        setCropBounds(newCropBounds);
+        this.nearestFullRow = nearestFullRow;
+        setCoord1(coord1);
+        setCoord2(coord2);
+        setRow1(row1);
+        setRow2(row2);
+
     }
 
     public String locationName(Point p) {

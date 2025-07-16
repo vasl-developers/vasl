@@ -294,9 +294,17 @@ public class ASLMap extends Map {
 
     /**
      * Builds the VASL map
+     * a VASL map is required by the VASL LOS engine; if map does not support VASL LOS checking then no need for VASL Map
+     * the VASL map is first created as an empty shell of the correct size in pixels and with a hex grid
+     * that has the required number of hexes and also the proper hex configuration along the left and right map edges
+     * this grid will always have hex A1 as the top left hex with whatever hex configuration (full/half height and width) is required.
+     * after the empty VASL map is created addBoardsToMap is called to populate the VASL map with board data
+     * key variables:
+     *
+     *
      */
     protected void buildVASLMap() {
-        // a VASL map is required by the VASL LOS engine; if map does not support VASL LOS checking then no need for VASL Map
+        // setup for map window
         final GameModule mod = getGameModule();
         // set background color from preference
         super.bgColor = (Color) mod.getPrefs().getValue("backcolor");
@@ -304,87 +312,203 @@ public class ASLMap extends Map {
         final Boolean alwaysontop = Boolean.TRUE.equals(mod.getPrefs().getValue("PWAlwaysOnTop"));
         mod.getPlayerWindow().setAlwaysOnTop(alwaysontop);
         repaint();
-        legacyMode = false;
-        boolean nullBoards = false; // are null boards being used?
 
-        // create an empty VASL map of the correct size
-        LinkedList<VASLBoard> vaslboards = new LinkedList<VASLBoard>(); // keep the boards so they are instantiated once
+        // set variables
+        legacyMode = false;  // if legacyMode then no VASL LOS checking
+        boolean nullBoards = false; // are null boards being used?
+        LinkedList<VASLBoard> vaslboards = new LinkedList<VASLBoard>(); // list of boards
+        String gridconfigWidth = "";
+        String gridconfigHeight = "";
+        String fliphexconfig="";
+        boolean iscropping = false;
+        double hexheight = 0.0; //hex height in pixels
+        double hexwidth = 0.0;  //hex width in pixels
+        int indexOfCol1 = 0;  //numerical index of map columns (A, B, C, . . .) zero-based
+        int indexOfCol2 = 0;
+        // populate board list
         try {
             // see if there are any legacy boards in the board set
-            // and determine the size of the map
-            final Rectangle mapBoundary = new Rectangle(0,0);
-            double hexheight = 0.0;
-            double hexwidth = 0.0;
-            for(Board b: boards) {
-
+            // and determine the size of the map in pixels
+            final Rectangle mapBoundary = new Rectangle(0, 0);
+            for (Board b : boards) {
                 final VASLBoard board = (VASLBoard) b;
                 // ignore null boards
-                if(!"NUL".equals(b.getName()) && !"NULV".equals(b.getName())) {
-
-                    if(board.isLegacyBoard()) {
-                        throw new BoardException("VASL LOS disabled - Board " + board.getName() + " does not support LOS checking. VASSAL los active - safe to continue play");
+                if (!"NUL".equals(b.getName()) && !"NULV".equals(b.getName())) {
+                    if (board.isLegacyBoard()) {
+                        throw new Exception("VASL LOS disabled - Board " + board.getName() + " does not support LOS checking. VASSAL los active - safe to continue play");
                     }
                     mapBoundary.add(b.bounds());
                     vaslboards.add(board);
                     // make sure the hex geometry of all boards is the same
                     if (hexheight != 0.0 && Math.round(board.getHexHeight()) != Math.round(hexheight) || hexwidth != 0.0 && Math.round(board.getHexWidth()) != Math.round(hexwidth)) {
-                        throw new BoardException("VASL LOS disabled: Map configuration contains multiple hex sizes. VASSAL los active - safe to continue play");
+                        throw new Exception("VASL LOS disabled: Map configuration contains multiple hex sizes. VASSAL los active - safe to continue play");
                     }
                     hexheight = board.getHexHeight();
                     hexwidth = board.getHexWidth();
-                }
-                else {
+                } else {
                     nullBoards = true;
                 }
             }
+            // handle non-standard boards separately.
+            // there are only 3 but they complexify the crop/flip options enormously so pull out
+            for (VASLBoard board : vaslboards) {
+                if (board.getName().equals("RBv3") || board.getName().equals("RO") || board.getName().equals("DaE")) {
+                    buildVASLMapforNonStandardBoards(vaslboards, mod);
+                    return;
+                }
+            }
+            // all boards past this point have either standard geo 33 x 10 or a/b 17 x 20 configurations
+            // with half-hexes on left and right sides and 10/11 or 20/21 hex row configurations
+            // no other configurations will work and should be added to the non standard list above
+            // the code below will support all possible width and height crops with or without flipping
+            // see vasl repo on github Wiki tab for list of all crop and flip configurations
+
             // this is a hack to fix problem with board geometry. Standard geo hexes cannot have a width greater than 56.25 or they will exceed the board size of 1800 pixels
             // even if they are actually 56.3125 in size
             // ToDo need to edit BoardMetaData.xml to change hexHeight to 56.25 - this is a hack for incorrect BoardMetaData - need to correct Board files
-            if (hexwidth == 56.3125){hexwidth = 56.25;}
+            if (hexwidth == 56.3125) {hexwidth = 56.25;
+            }
             // remove the edge buffer from the map boundary size
             mapBoundary.width -= edgeBuffer.width;
             mapBoundary.height -= edgeBuffer.height;
-
-            // create the VASL map
+            // create the VASL map object with the correct size and underlying hex grid configuration
             // variables to pass cropping values
-            String passgridconfig="Normal";
-            boolean iscropping=false;
-            int fullhexadj=0;
-
-            VASLBoard b = vaslboards.get(0); // we can use the geometry of any chosen board - assuming all are the same
-            if (b.getVASLBoardArchive().getHexGridConfig() != null) {passgridconfig = b.getVASLBoardArchive().getHexGridConfig();}
-            if (b.isCropped()) {iscropping = true;}
-            if (b.nearestFullRow) {
-                if (!(passgridconfig.contains("FullHex"))) {passgridconfig = "FullHex";}
-                fullhexadj=-1;
-                if (b.getCropBounds().getX() == 0) {passgridconfig = "FullHexLeftHalf"; fullhexadj = 0;}
-                if (b.getCropBounds().getMaxX() == b.getUncroppedSize().getWidth()) {passgridconfig = "FullHexRightHalf"; fullhexadj = 0;}
-            }
-            final double passA1centery = b.getA1CenterY();
-            if (b.getA1CenterX() != 0 && b.getA1CenterX() != -999 && b.getA1CenterX() != -901) {
-                if (b.getCropBounds().getX() != 0) {
-                    passgridconfig = passgridconfig + "Offset";  // only need to set this if cropping the left edge when board has offset (ie RB and RO)
+            gridconfigWidth = "HalfHexWidth"; //A1 default value before cropping/flipping adjustment
+            gridconfigHeight = "FullHeight"; // A1 default value of geo and a/b boards
+            //int fullhexadj = 1; // used to determine number of col in map when cropping to left and/or right hexes to fullhex width
+            String toplefthexheight = "LeftHexFullHeight"; // holds height of top left hex after crop; start with default value
+            String toprighthexheight = "RightHexFullHeight"; // holds height of top right hex after crop; start with default value
+            String toplefthexwidth = "LeftHexHalfWidth"; // holds with width of the top left hex after crop; start with default value
+            VASLBoard b = vaslboards.get(0); // this will always be the top left board and drives the configuration of the left side of the map
+            indexOfCol2 = b.getWidth() - 1 ; //32; //default value
+            if (b.isCropped()) {
+                //set Width value
+                iscropping = true;
+                if (b.nearestFullRow) {  //value set in ASLBoard.getState() or ASLBoard.crop()
+                    // if both left and right edges of this board are cropped, cropgridconfig will equal "FullHexWidth"
+                    gridconfigWidth = "FullHexWidth"; // set as default when nearestFullRow is selected
+                    toplefthexwidth = "FullHexWidth";
+                    //fullhexadj = 0; //
+                    // left edge is not cropped to full hex; half width value whether cropped or not
+                    if (b.getCropBounds().getX() == 0) {
+                        gridconfigWidth = "FullHexWidthLeftHalf";
+                        toplefthexwidth = "HalfHexWidth";
+                        //fullhexadj = 1;
+                    }
+                    // right edge is not cropped to full hex; half width value whether cropped or not
+                    if (b.getCropBounds().getMaxX() == b.getUncroppedSize().getWidth()) {
+                        gridconfigWidth = "FullHexWidthRightHalf";
+                        //fullhexadj = 1;
+                    }
+                } // no need to handle if nearestFullRow is false - simply use default value as all geo and a/b boards are halfwidth left and right
+                // set hex height value for top row of crop
+                //retieve crop values
+                //ToDo add "b" board test
+                boolean isbboard = b.getA1CenterX() == -901 ? true : false;
+                String column_names = "abcdefghijklmnopqrstuvwxyz"; //""ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                indexOfCol1 = b.getRow1().length() != 0 ? column_names.indexOf(b.getRow1().charAt(0)) : 0;
+                indexOfCol2 = b.getRow2().length() != 0 ? (b.getRow2().length() == 2 ? column_names.indexOf(b.getRow2().charAt(0)) + 26 : column_names.indexOf(b.getRow2().charAt(0))) : b.getVASLBoardArchive().getBoardWidth() - 1;
+                indexOfCol1 = isbboard ? indexOfCol1 -16 : indexOfCol1;  //adjust col value for "b" boards 1b - 22b
+                indexOfCol2 = isbboard ? indexOfCol2 -16 : indexOfCol2;
+                int valueOfRow1 = b.getCoord1().equals("") ? 0 : Integer.parseInt(b.getCoord1());
+                int valueOfRow2 = b.getCoord2().equals("") ? b.getVASLBoardArchive().getBoardHeight() : Integer.parseInt(b.getCoord2());
+                b.setstartcropcol(b.getRow1(), indexOfCol1);
+                b.setendcropcol(b.getRow2(), indexOfCol2);
+                b.setstartcroprow(b.getCoord1(), valueOfRow1);
+                b.setendcroprow(b.getCoord2(), valueOfRow2);
+                boolean Col1isOdd = indexOfCol1 % 2 == 0 ? false : true;
+                boolean Col1isEven = !Col1isOdd;
+                boolean Col2isOdd = indexOfCol2 % 2 == 0 ? false : true;
+                boolean Col2isEven = !Col2isOdd;
+                //boolean Row1isOdd = (Col1isOdd && valueOfRow1 % 2 == 0) ? true : false;
+                //boolean Row1isEven = !Row1isOdd;
+                //boolean Row2isOdd = valueOfRow2 % 2 == 0 ? true : false;
+                //boolean Row2isEven = !Row2isOdd;
+                // use crop values to determine left and right hex height configuration
+                // cropping height in hexes (via Coord) seems to have no impact - ToDo: perhaps when flipped?
+                if (Col1isEven) {
+                    toplefthexheight = "LeftHexFullHeight";
+                //} else if (Col1isEven && Row1isOdd) {
+                //    toplefthexheight = "LeftHexFullHeight";
+                } else if (Col1isOdd) { // && Row1isEven) {
+                    toplefthexheight = "LeftHexHalfHeight";
+                //} else if (Col1isOdd && Row1isOdd) {
+                //    toplefthexheight = "LeftHexHalfHeight";
                 }
+                if (Col2isEven) {
+                    toprighthexheight = "RightHexFullHeight";
+                //} else if (Col1isOdd && Col2isEven) {
+                //    toprighthexheight = "RightHexFullfHeight";
+                //} else if (Col1isEven && Col2isOdd) {
+                //    toprighthexheight = "RightHexHalffHeight";
+                } else if (Col2isOdd) {
+                    toprighthexheight = "RightHexHalfHeight";
+                }
+
             }
-            int passwidth = (int) Math.round(mapBoundary.width/ b.getHexWidth()+ 1 + fullhexadj);
-            //int passwidth = (iscropping  ? (int) Math.round(mapBoundary.width/ b.getHexWidth()+ 1 + fullhexadj) : b.getVASLBoardArchive().getBoardWidth());
-            VASLMap = new VASL.LOS.Map.Map(hexwidth, hexheight, passwidth,
-                    (int) Math.round(mapBoundary.height/ b.getHexHeight()), b.getA1CenterX(), passA1centery, mapBoundary.width, mapBoundary.height,
-                    sharedBoardMetadata.getTerrainTypes(), passgridconfig, iscropping);
-        }
+            // flip values
+            if (b.isReversed()) {
+                // hex width
+                if (b.nearestFullRow) {
+                    fliphexconfig = "FullHexWidth";
+                    //toplefthexwidth = "FullHexWidth";
+                }
+                if (gridconfigWidth.equals("FullHexWidthRightHalf")) {
+                    fliphexconfig = "FullHexWidthLeftHalf";
+                    //toplefthexwidth = "HalfHexWidth";
+                } else if (gridconfigWidth.equals("FullHexWidthLeftHalf")) {
+                    fliphexconfig = "FullHexWidthRightHalf";
+                    //toplefthexwidth = "FullHexWidth";
+                }
+                //gridconfigWidth = fliphexwidth;
+                // hex height
+                String topleft = toprighthexheight.equals("RightHexFullHeight") ? "LeftHexFullHeight" : "LeftHexHalfHeight";
+                fliphexconfig += topleft;
+                toprighthexheight = toplefthexheight.equals("LeftHexFullHeight") ? "RightHexFullHeight" : "RightHexHalfHeight";
+                //toplefthexheight = topleft; //can't replace toplefthexheight right away or can't do toprighthexheight test
+
+            }
+
+            gridconfigHeight = toplefthexheight;
+            // set crop variables
+            double passA1centerx = setA1CenterX(toplefthexwidth);
+            double passA1centery = toplefthexheight == "LeftHexFullHeight" ? hexheight/2 : 0;
+            int passwidthinhexes = indexOfCol2 - indexOfCol1 +1;
+            int passheightinhexes = (int) Math.round(mapBoundary.height / b.getHexHeight());
+
+            // handle creation of VASL map with multiple boards separtely
+            if (boards.size() == 1) {
+                VASLMap = new VASL.LOS.Map.Map(vaslboards.get(0), passA1centerx, passA1centery, sharedBoardMetadata.getTerrainTypes(), passwidthinhexes, passheightinhexes);
+                addOneBoardToMap(vaslboards.get(0), mod, passA1centerx, passA1centery, fliphexconfig);
+            }
+            else {
+                VASLMap = createmultiboardmap(hexwidth, hexheight, passwidthinhexes, passheightinhexes,
+                        passA1centerx, passA1centery, mapBoundary.width, mapBoundary.height,
+                        sharedBoardMetadata.getTerrainTypes(), "", "", iscropping);
+            }
         // clean up and fall back to legacy mode if an unexpected exception is thrown
-        catch (BoardException e) {
+        }catch (BoardException e) {
             setLegacyMode();
             logError(e.toString());
             mod.getChatter().send(e.toString());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             setLegacyMode();
             vaslboards = null;
             logError("LOS disabled - unexpected error");
             logException(e);
             mod.getChatter().send("VASL LOS disabled due to unexpected board issue. Safe to continue play. Use VASSAL LOS string");
         }
+        //addBoardsToMap(vaslboards, mod, nullBoards, "", "", iscropping);
+    }
+    /**
+     * Populates the VASL map with terrain, elevation, and hex information from the boards used in the map
+     * For each board used in the map, this method:
+     * - creates a new Map object (#2) which contains the full board and populates the terrainGrid, elevationGrid and HexGrid with los data
+     * - the los data (terrainGrid, elevationGrid and HexGrid) is amended to reflect applicable terrain transformations
+     * - when required creates a new empty Map object (#3) which is cropped and then copies the needed data from Map #2 to Map #3
+     * -
+     */
+     protected void addBoardsToMap(LinkedList<VASLBoard> vaslboards, GameModule mod, boolean nullBoards, String passboardgridconfig, String passcropgridconfig, boolean isCropping) {
         // add the boards to the VASL map
         try {
             // load the LOS data
@@ -392,21 +516,25 @@ public class ASLMap extends Map {
                 // read the LOS data and flip/crop the board if needed
                 for (VASLBoard board : vaslboards) {
                     // variables to support cropping and flipping
-                    String croptype = "Normal"; boolean iscropping = false; double fullhexadj = 0; double gridadj = 0;
+                    boolean iscropping = false; double fullhexadj = 0; double gridadj = 0;
                     if (board.nearestFullRow) {
-                        croptype = "FullHex";
-                        fullhexadj = board.getHexWidth()/2;
-                        if (board.getCropBounds().getX() == 0) {croptype = "FullHexLeftHalf";}
-                        if (board.getCropBounds().getMaxX() == board.getUncroppedSize().getWidth()) {croptype = "FullHexRightHalf";}
-                    }
-                    // ToDo this is a hack to get DaE working - need to clean up and also fix usage of croptype; it is doing too many things; create second variable, something like mapconfigtype
-                    if (board.getName().equals("DaE") ) {
-                        croptype = "FullHexEqualRowCount";
+                        passcropgridconfig = "FullHex";
+                        fullhexadj = board.getHexWidth() / 2;
+                        if (board.getCropBounds().getX() == 0) {
+                            passcropgridconfig = "FullHexLeftHalf";
+                        }
+                        if (board.getCropBounds().getMaxX() == board.getUncroppedSize().getWidth()) {
+                            passcropgridconfig = "FullHexRightHalf";
+                        }
+                        if (passboardgridconfig.contains("EqualRowCount")) {
+                            passcropgridconfig = passcropgridconfig + "EqualRowCount";
+                        }
                     }
                     if(board.isCropped()) {
                         iscropping = true;
-                        if (!croptype.contains("LeftHalf")) {
+                        if (!passcropgridconfig.contains("LeftHalf")) {
                             if (!(board.getA1CenterX() == -901)) {
+                                //ToDo here is where gridadj becomes non-zero
                                 gridadj = board.getA1CenterX() - fullhexadj;
                                 if (board.getCropBounds().width == -1) {gridadj = 0;}
                             }
@@ -417,20 +545,26 @@ public class ASLMap extends Map {
                     }
                     if (board.getA1CenterX() != 0 && board.getA1CenterX() != -999 && board.getA1CenterX() != -901) {
                         if (board.getCropBounds().getX() != 0) {
-                            croptype = croptype + "Offset";  // only need to set this if cropping the left edge when board has offset (ie RB and RO)
+                    //        passcropgridconfig = passcropgridconfig + "Offset";  // only need to set this if cropping the left edge when board has offset (ie RB and RO)
                         }
                     }
-                    VASL.LOS.Map.Map losdata = board.getLOSData(sharedBoardMetadata.getTerrainTypes(), croptype, iscropping, gridadj);
+                    //#2
+                    //test change
+                    //gridadj = 0;
+                    //gridadj can always be passed as "0" because retrieving losdata for full map ToDo NO this is wrong see 20 lines above
+                    VASL.LOS.Map.Map losdata = board.getLOSData(sharedBoardMetadata.getTerrainTypes(), false, 0); //passboardgridconfig, passcropgridconfig, false, 0);
                     // apply the SSR changes, crop and flip if needed
+                    // ToDo need to test that this is working properly and whether gridadj should always be zero
                     board.applyColorSSRules(losdata, sharedBoardMetadata.getLOSSSRules(), gridadj);
                     if(board.isCropped()) {
-                        losdata = board.cropLOSData(losdata);
+                        //#3
+                        //losdata = board.cropLOSData(losdata, passboardgridconfig, passcropgridconfig);
                     }
                     //add overlays to LOS
                     losdata = adjustLOSForOverlays(board, losdata);
                     // flip after overlay adjustment
                     if(board.isReversed()) {
-                        losdata.flip();
+                        //losdata.flip();
                     }
                     // add the board LOS data to the map
                     // .insertMap is designed to work with only geo board thus need to test for non-geo boards (in this situation geo boards inclues AP boards and deluxe boards)
@@ -452,6 +586,7 @@ public class ASLMap extends Map {
                             }
                         }
                         else {
+                            //HASL maps with LOS
                             if (!VASLMap.insertNonGeoMap(losdata, VASLMap.gridToHex(board.getBoardLocation().x, board.getBoardLocation().y + cropadj + (nullBoards ? 1 : 0)))) {
                                 // didn't work, so assume an unsupported feature
                                 throw new BoardException("VASL LOS Disabled: Unable to insert board " + board.getName() + " into the VASL map. Safe to continue play. VASSAL los active");
@@ -478,6 +613,222 @@ public class ASLMap extends Map {
             vaslboards = null;
         }
     }
+    protected void addOneBoardToMap(VASLBoard board, GameModule mod, double passA1centerx, double passA1centery, String fliphexconfig) {
+        // add the board to the VASL map
+        try {
+            // load the LOS data
+            if(!legacyMode) {
+            // read the LOS data and flip/crop the board if needed
+                // variables to support cropping and flipping
+                double fullhexadj = 0; double gridadj = 0;
+
+                if (board.nearestFullRow) {
+                        //passcropgridconfig = "FullHex";
+                        fullhexadj = board.getHexWidth() / 2;
+                        /*if (board.getCropBounds().getX() == 0) {
+                            passcropgridconfig = "FullHexLeftHalf";
+                        }
+                        if (board.getCropBounds().getMaxX() == board.getUncroppedSize().getWidth()) {
+                            passcropgridconfig = "FullHexRightHalf";
+                        }
+                        if (passboardgridconfig.contains("EqualRowCount")) {
+                            passcropgridconfig = passcropgridconfig + "EqualRowCount";
+                        }*/
+                }
+                //ToDo this should be handled in buildVASLMap
+                /*if(board.isCropped()) {
+                    iscropping = true;
+                    if (!passcropgridconfig.contains("LeftHalf")) {
+                        if (!(board.getA1CenterX() == -901)) {
+                            gridadj = board.getA1CenterX() - fullhexadj;
+                            if (board.getCropBounds().width == -1) {gridadj = 0;}  //cropping coordinates only
+                        }
+                        else {
+                            gridadj = - fullhexadj;
+                        }
+                    }
+                }
+                if (board.getA1CenterX() != 0 && board.getA1CenterX() != -999 && board.getA1CenterX() != -901) {
+                    if (board.getCropBounds().getX() != 0) {
+                            //        passcropgridconfig = passcropgridconfig + "Offset";  // only need to set this if cropping the left edge when board has offset (ie RB and RO)
+                    }
+                }*/
+
+                // Add the LOS data to the map
+                VASL.LOS.Map.Map newvaslmap = board.getVASLBoardArchive().addLOSDatatoVASLMap(sharedBoardMetadata.getTerrainTypes(), board, gridadj, VASLMap);
+
+
+                //#2
+                //gridadj = 0;
+                //gridadj can always be passed as "0" because retrieving losdata for full map
+                //VASL.LOS.Map.Map losdata = board.getLOSData(sharedBoardMetadata.getTerrainTypes(), false, 0);
+                // apply the SSR changes, crop and flip if needed
+                // ToDo need to test that this is working properly and whether gridadj should always be zero
+                board.applyColorSSRules(newvaslmap, sharedBoardMetadata.getLOSSSRules(), gridadj);
+                //if(board.isCropped()) {
+                //#3
+                    //newvaslmap = board.cropLOSData(newvaslmap, passA1centerx, passA1centery);
+                //}
+                //add overlays to LOS
+                newvaslmap = adjustLOSForOverlays(board, newvaslmap);
+                // flip after overlay adjustment
+                if(board.isReversed()) {
+                    newvaslmap.flip(fliphexconfig);
+                }
+                    // add the board LOS data to the map
+                    // .insertMap is designed to work with only geo board thus need to test for non-geo boards (in this situation geo boards inclues AP boards and deluxe boards)
+                    //if ((board.getWidth() == 33 && board.getHeight() == 10) || (board.getWidth() == 17 && board.getHeight() == 20) || (board.getWidth() == 15 && board.getHeight() ==5)) {
+                        //line below is not a good fix; make sure it works in all situations or change
+                    //    int cropadj = 1;  // ensures that cropping a board by row works properly DR (rows such as A7 have uneven total height which results in incorrect choice from gridToHex)
+                       //if (!VASLMap.insertMap(losdata, VASLMap.gridToHex(board.getBoardLocation().x, board.getBoardLocation().y + cropadj + (nullBoards ? 1 : 0)))) {
+                            // didn't work, so assume an unsupported feature
+                            //throw new BoardException("VASL LOS Disabled: Unable to insert board " + board.getName() + " into the VASL map. Safe to continue play. VASSAL los active");
+                        //}
+                    //}
+                    /*else {
+                        // add board LOS data for non-standard size board
+                        //line below is not a good fix; make sure it works in all situations or change
+                        final int cropadj = 1;  // ensures that cropping a board by row number works properly DR (rows such as A7 have uneven total height which results in incorrect choice from gridToHex)
+                        if (vaslboards.size() == 1) {
+                            if(!VASLMap.insertOneMap(losdata)){
+                                throw new BoardException("VASL LOS Disabled: Unable to insert board " + board.getName() + " into the VASL map. Safe to continue play. VASSAL los active");
+                            }
+                        }
+                        else {
+                            //HASL maps with LOS
+                            if (!VASLMap.insertNonGeoMap(losdata, VASLMap.gridToHex(board.getBoardLocation().x, board.getBoardLocation().y + cropadj + (nullBoards ? 1 : 0)))) {
+                                // didn't work, so assume an unsupported feature
+                                throw new BoardException("VASL LOS Disabled: Unable to insert board " + board.getName() + " into the VASL map. Safe to continue play. VASSAL los active");
+                            }
+                        }
+                    }*/
+                mod.warn("VASL LOS Enabled");
+                VASLMap = newvaslmap;
+            }
+        }
+        catch (BoardException e) {
+            setLegacyMode();
+            logError(e.toString());
+            mod.getChatter().send("VASL LOS Disabled. Safe to continue to play: VASSAL los active");
+        }
+        catch (Exception e) {
+            setLegacyMode();
+            logError("LOS disabled - unexpected error");
+            logException(e);
+            mod.getChatter().send("VASL LOS disabled due to Board issue. Safe to continue to play. VASSAL los active");
+        }
+        finally {
+            // free up memory
+            //vaslboards = null;
+        }
+    }
+    /**
+     * Use this method to initiate LOS for non-standard boards that support los checking (currently only RBv3, RO, and DaE)
+    */
+    private void buildVASLMapforNonStandardBoards(LinkedList<VASLBoard> vaslboards, GameModule mod){
+        String passcropgridconfig = "Normal"; //default value before cropping/flipping adjustment
+        String passboardgridconfig = "Normal"; // default value of grid configuration of geo and a/b boards
+        boolean iscropping = false;
+        double hexheight = 0.0; //hex height in pixels
+        double hexwidth = 0.0;  //hex width in pixels
+        final Rectangle mapBoundary = new Rectangle(0, 0);
+        // this is a hack to fix problem with board geometry. Standard geo hexes cannot have a width greater than 56.25 or they will exceed the board size of 1800 pixels
+        // even if they are actually 56.3125 in size
+        // ToDo need to edit BoardMetaData.xml to change hexHeight to 56.25 - this is a hack for incorrect BoardMetaData - need to correct Board files
+        if (hexwidth == 56.3125) {hexwidth = 56.25;            }
+        // remove the edge buffer from the map boundary size
+        mapBoundary.width -= edgeBuffer.width;
+        mapBoundary.height -= edgeBuffer.height;
+        // create the VASL map object with the correct size and underlying hex grid configuration
+        // variables to pass cropping values
+        passcropgridconfig = "Normal"; //default value before cropping/flipping adjustment
+        passboardgridconfig = "Normal"; // default value of grid configuration of geo and a/b boards
+        int fullhexadj = 0;
+        try {
+        VASLBoard b = vaslboards.get(0); // this will always be the top left board and drives the configuration of the left side of the map
+        if (b.getVASLBoardArchive().getHexGridConfig() != null) {  // many older geo boards do not include the hexgridconfig metadata in their boardMetadata.xml file
+            passboardgridconfig = b.getVASLBoardArchive().getHexGridConfig();
+        }
+        if (b.isCropped()) {
+            iscropping = true;
+        }
+        if (b.nearestFullRow) {  //value set in ASLBoard.getState() or ASLBoard.crop()
+            // if both left and right edges of this board are cropped, passcropgridconfig will equal "FullHex"
+            if (!(passcropgridconfig.contains("FullHex"))) {
+                passcropgridconfig = "FullHex";
+            }
+            fullhexadj = -1;
+            if (b.getCropBounds().getX() == 0) {
+                passcropgridconfig = "FullHexLeftHalf";
+                fullhexadj = 0;
+            }
+            if (b.getCropBounds().getMaxX() == b.getUncroppedSize().getWidth()) {
+                passcropgridconfig = "FullHexRightHalf";
+                fullhexadj = 0;
+            }
+        } else if(iscropping) {  // non-standard board such as DaE is cropped to middle of hex
+            if (b.getCropBounds().getX() != 0 && b.getCropBounds().getMaxX() != b.getUncroppedSize().getWidth()) {  // cropped on both sides
+                passcropgridconfig = "LeftHalfRightHalf";
+            } else if (b.getCropBounds().getX() == 0 && (b.getCropBounds().getMaxX() == b.getUncroppedSize().getWidth()) || b.getCropBounds().getMaxX() == -1){  // cropped on neither side (rows cropped not columns)
+                passcropgridconfig += "HeightCropOnly";
+            } else {
+                if (b.getCropBounds().getX() != 0) {  // left side cropped
+                    passcropgridconfig = "LeftHalf";
+                }
+                if (b.getCropBounds().getMaxX() != b.getUncroppedSize().getWidth()) {  //right side cropped
+                    passcropgridconfig = "RightHalf";
+                }
+            }
+        }
+        if(iscropping && passboardgridconfig.contains("EqualRowCount")){
+            passcropgridconfig = passcropgridconfig + "EqualRowCount";
+        }
+        final double passA1centery = b.getA1CenterY();
+        if (b.getA1CenterX() != 0 && b.getA1CenterX() != -999 && b.getA1CenterX() != -901) {
+            if (b.getCropBounds().getX() != 0) {
+                //passcropgridconfig = passcropgridconfig + "Offset";  // only need to set this if cropping the left edge when board has offset (ie RB and RO)
+            }
+        }
+        int numofcolsadj = passboardgridconfig.contains("FullHex") ? 0 : 1;  // if board has one or more half-width hexes then need to add an extra col
+        int passwidthinhexes = (int) Math.round(mapBoundary.width / b.getHexWidth() + numofcolsadj + fullhexadj);
+        VASLMap = new VASL.LOS.Map.Map(hexwidth, hexheight, passwidthinhexes,
+                (int) Math.round(mapBoundary.height / b.getHexHeight()), b.getA1CenterX(), passA1centery, mapBoundary.width, mapBoundary.height,
+                sharedBoardMetadata.getTerrainTypes(), passboardgridconfig, passcropgridconfig, iscropping);
+        }
+    // clean up and fall back to legacy mode if an unexpected exception is thrown
+        catch (Exception e) {
+        setLegacyMode();
+        logError(e.toString());
+        mod.getChatter().send(e.toString());
+    /*} catch (BoardException e) {
+        setLegacyMode();
+        vaslboards = null;
+        logError("LOS disabled - unexpected error");
+        logException(e);
+        mod.getChatter().send("VASL LOS disabled due to unexpected board issue. Safe to continue play. Use VASSAL LOS string");*/
+    }
+    //addBoardsToMap(vaslboards, mod, nullBoards, passboardgridconfig, passcropgridconfig, iscropping);
+    };
+
+    private VASL.LOS.Map.Map createmultiboardmap(double hexWidth, double hexHeight, int width, int height, double A1CenterX, double A1CenterY, int imageWidth,
+               int imageHeight, HashMap<String, Terrain> terrainNameMap, String passboardgridconfig, String passcropgridconfig, boolean isCropping){
+
+        VASL.LOS.Map.Map createmultimap = null;
+        return createmultimap;
+    }
+
+    private double setA1CenterX(String topleftHexWidth){
+        if (topleftHexWidth.equals("HalfHexWidth")) {
+            return 0;
+        }
+        else if (topleftHexWidth.equals("FullHexWidth")) {
+            return 28.125;
+        }
+        else {
+            return 0;
+        }
+    };
+
     /**
      * A class that allows the LOSData, Graphic image and point information to be passed to various methods and classes
      * Note that all properties are public to eliminate getter/setter clutter
@@ -654,7 +1005,7 @@ public class ASLMap extends Map {
     }
     private void setDierLip(LOSonOverlays losonoverlays) {
         // step through each hex and reset the terrain.
-        if(losonoverlays.newlosdata.getMapConfiguration().equals("TopLeftHalfHeightEqualRowCount") || losonoverlays.newlosdata.getA1CenterY() == 65) {
+        if(losonoverlays.newlosdata.getMapConfiguration().equals("ToplefthalfheightEqualRowCount") || losonoverlays.newlosdata.getA1CenterY() == 65) {
             for (losonoverlays.currentx = 0; losonoverlays.currentx < losonoverlays.newlosdata.getWidth(); losonoverlays.currentx++) {
                 for (losonoverlays.currenty = 0; losonoverlays.currenty < losonoverlays.newlosdata.getHeight(); losonoverlays.currenty++) { // no extra hex for boards where each col has same number of rows (eg RO)
                     if(losonoverlays.newlosdata.getHex(losonoverlays.currentx, losonoverlays.currenty).getCenterLocation().getTerrain().getName().equals("Dier")) {
