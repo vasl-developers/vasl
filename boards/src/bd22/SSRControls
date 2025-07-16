@@ -1,6 +1,9 @@
 <SSRControls>
  <Option name="Board 22 Special overlays">
  <Checkbox name="">
+         <entry name="building hexsides are Rowhouse bars" rule="SSO_bars" text="Rowhouse bars"/>
+ </Checkbox>
+ <Checkbox name="">
          <entry name="A47: White Tigers" rule="SSO_A47" text="scenario A47 overlay"/>
  </Checkbox>
  <Checkbox name="">

@@ -10,14 +10,19 @@
          <entry name="Hexrow 10 side is water" rule="23_BSO_10SideWater" text="bd 23 row 10 side to water"/>
  </Checkbox>
  <Checkbox name="">
+         <entry name="building hexsides are Rowhouse bars" rule="SSO_bars" text="Rowhouse bars"/>
+ </Checkbox>
+ <Checkbox name="">
          <entry name="3: The Czerniakow Bridgehead" rule="SSO_23_3" text="Scenario 3 SSO"/>
  </Checkbox>
  <Checkbox name="">
          <entry name="10: The Citadel" rule="23_SSO_10" text="Scenario 10 SSO"/>
  </Checkbox>
-
  <Checkbox name="">
          <entry name="22: Kurhaus Clash" rule="SSO_22" text="scenario 22 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="135: Acts of Defiance" rule="SSO_23_135" text="Scenario 135 SSO"/>
  </Checkbox>
 <Checkbox name="">
          <entry name="U36: Operation Switchback" rule="SSO_U36" text="scenario U36 overlay"/>
