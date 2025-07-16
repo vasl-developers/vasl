@@ -83,7 +83,7 @@ public class ASLBoard extends Board {
         ((HexGrid) getGrid()).setEdgesLegal(true);
         reversible = true;
     }
-
+    // variables to suppoprt cropping and flipping of los-enabled boards
     public Rectangle getCropBounds() {
         return cropBounds;
     }
@@ -123,7 +123,6 @@ public class ASLBoard extends Board {
     public void setendcroprow (String endrowname, Integer endrowindex){
         endcroprow.put(endrowname, endrowindex);
     }
-
     public HashMap<String, Integer> getstartcropcol(){
             return startcropcol;
     }
@@ -371,6 +370,7 @@ public class ASLBoard extends Board {
                 newCropBounds.width += (int) (dx / 2);
             }
         }
+        // methods to support los-enabled cropping and flipping
         setCropBounds(newCropBounds);
         this.nearestFullRow = nearestFullRow;
         setCoord1(coord1);

@@ -96,9 +96,11 @@ public class VASLBoard extends ASLBoard {
     /**
      * Crops the LOS data
      *
-     * @param losData the map LOS data
      */
-    public Map cropLOSData(Map losData, double passA1centerx, double passA1centery) { //, String passboardgridconfig, String cropconfig) {
+    //ToDo delete this method
+    // No longer used due to changes to los-enabled crop/flip - can be deleted when changes complete
+    @Deprecated(since="6.7.1", forRemoval=true)
+   /* public Map cropLOSData(Map losData, double passA1centerx, double passA1centery) { //, String passboardgridconfig, String cropconfig) {
         if (!isCropped()) {
             return null;
         } else {
@@ -114,11 +116,11 @@ public class VASLBoard extends ASLBoard {
                 bounds.height = getUncroppedSize().height;
             }
 
-            /*if (this.getName().equals("RO")) {
+            *//*if (this.getName().equals("RO")) {
                 cropconfig = "ROadjustment";
-            }*/
+            }*//*
 
-            /*if (this.nearestFullRow) {
+            *//*if (this.nearestFullRow) {
                 //if(!(cropconfig.contains("FullHex"))) {cropconfig += "FullHex";}
                 if (this.getCropBounds().getX() == 0) {
                     if(!(cropconfig.contains("LeftHalf"))) {cropconfig += "LeftHalf";}
@@ -126,11 +128,11 @@ public class VASLBoard extends ASLBoard {
                 if (this.getCropBounds().getMaxX() == this.getUncroppedSize().getWidth()) {
                     if(!(cropconfig.contains("RightHalf"))) {cropconfig += "RightHalf";}
                 }
-            }*/
+            }*//*
 
             return losData.crop(new Point(bounds.x, bounds.y), new Point(bounds.x + bounds.width, bounds.y + bounds.height), offset, passA1centerx, passA1centery);
         }
-    }
+    }*/
 
     /**
      * @return a rectangle defining the board's location within the map
@@ -147,6 +149,10 @@ public class VASLBoard extends ASLBoard {
      * @param terrainTypes the terrain types
      * @return the LOS data
      */
+
+    //ToDo delete this method
+    // No longer used due to changes to los-enabled crop/flip - can be deleted when changes complete
+    @Deprecated(since="6.7.1", forRemoval=true)
     public Map getLOSData(HashMap<String, Terrain> terrainTypes, boolean isCropping, double gridadj) {
         return VASLBoardArchive.getLOSData(terrainTypes, isCropping, gridadj);
     }
