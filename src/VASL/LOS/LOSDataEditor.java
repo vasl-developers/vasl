@@ -59,13 +59,15 @@ public class LOSDataEditor {
     public Map createNewLOSData() {
 
         Map m;
+        //ToDo - a value for passboardgridconfig needs to be passed to the createNewLOSData() method
+        // review to determine if these two variables are needed with new crop/fip
         String passcropgridconfig= boardArchive.getHexGridConfig();
         if(passcropgridconfig==null){passcropgridconfig="Normal";}
-        String passboardgridconfig = "Normal"; ////placeholder while I debug code
-        //ToDo - a vale for pssboardgridconfig needs to be passed to the createNewLOSData() method
+        String passboardgridconfig = "Normal";
+
         boolean isCropping=false;
         if (boardArchive.isGEO()) {
-
+            //ToDo switch to new method for creating a map in VASL.LOS.Map.Map
             m = new Map(boardArchive.getHexWidth(),
                     boardArchive.getHexHeight(),
                     boardArchive.getBoardWidth(),
@@ -722,7 +724,7 @@ public class LOSDataEditor {
                 }
             }
         }
-
+        //ToDo - does getMapConfiguration test need to be used with new crop/flip
         // change the base height of the hex grid
         if(map.getMapConfiguration().equals("ToplefthalfheightEqualRowCount")){
             for (int col = 0; col < map.getWidth(); col++) {
@@ -757,6 +759,7 @@ public class LOSDataEditor {
 
     /**
      * Rotates the map 180 degrees. Should only be used for geomorphic map boards
+     * //ToDo does this need to be part of LOSDataEditor since it is not used
      */
     public void flip() {
 

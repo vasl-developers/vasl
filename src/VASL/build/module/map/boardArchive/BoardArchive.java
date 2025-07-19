@@ -283,11 +283,11 @@ public class BoardArchive {
         //}
         return map;
     }
-
+    // this is the new method of adding los data to a VASL map
+    //ToDo check that all params are required
     public Map addLOSDatatoVASLMap (HashMap<String, Terrain> terrainTypes, VASL.build.module.map.boardPicker.VASLBoard board, double gridad, VASL.LOS.Map.Map VASLMap){
 
         // read the map if necessary; need to do so always in case of changes to a cropped or flipped board
-        //if (map == null){
         try (ZipFile archive = new ZipFile(qualifiedBoardArchive)) {
             try (ObjectInputStream infile = new ObjectInputStream(
                     new BufferedInputStream(
@@ -348,16 +348,15 @@ public class BoardArchive {
                 //ToDo check if either of this needs to be done for geo boards
                 // code added to enable rr embankments in RB and Partial Orchards
                 // set the rr embankments
+                // should this be after hexgrid loop?
                 VASLMap.setRBrrembankments(metadata.getRBrrembankments());
                 VASLMap.setPartialOrchards(metadata.getPartialOrchards());
 
                 // read the hex information
                 //determine if even/odd col has extra row - depends on crop
-                //boolean extrarowisodd =  VASLMap.getA1CenterY() == 0 ? false : true;
-                String newname = "";
                 if (startrow != 0){startrow -= 1;} //adjustment required t0 align with zero-based row arrays
                 for (int col = 0; col < (startcol + width); col++) {
-                    int heightadj = col % 2 == 1 ? 1 : 0;  // ((extrarowisodd && col % 2 == 1) || (!extrarowisodd && col % 2 == 0)) ? 1 : 0;
+                    int heightadj = col % 2 == 1 ? 1 : 0;
                      for (int row = 0; row < (startrow + height + heightadj); row++) {
                         if (col >= startcol && row >= startrow) {
                             final byte stairway = infile.readByte();
@@ -374,7 +373,6 @@ public class BoardArchive {
                         }
                     }
                 }
-                //}
                 // reset the hex locations to map grid
                 for (int col = 0; col < VASLMap.getHexGrid().length; col++) {
                     for (int row = 0; row < VASLMap.getHexGrid()[col].length; row++) {
@@ -392,7 +390,6 @@ public class BoardArchive {
             logger.warn("Could not read the LOS data in board " + qualifiedBoardArchive);
             return null;
         }
-        //}
         return VASLMap;
     }
     /**
