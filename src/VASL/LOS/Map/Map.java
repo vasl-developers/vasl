@@ -185,7 +185,7 @@ public class Map  {
 
     //revised method; works for new routine
     //ToDo will need additional changes to work with HASL board and perhaps for multi-board map
-	private Hex [][] createtheHexGrid(boolean isCropping, boolean isabboard) {
+	private Hex [][] createtheHexGrid(boolean isCropping, boolean isabboard, boolean isdwboard) {
         // create the hex grid
         int startcol =0; int startrow =0;
         hexGrid = new Hex[this.width][];
@@ -209,7 +209,7 @@ public class Map  {
                 hexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
                 for (int row = 0; row < (startrow + this.height + (col % 2)); row++) {
                     if (col >= startcol && row >= startrow) {
-                        hexGrid[col - startcol][row- startrow] = new Hex(col - startcol, row - startrow, getGEOHexName(col, row, isabboard), getHexCenterPoint(col - startcol, row - startrow), hexHeight, hexWidth, this, 0, terrainList[0]);
+                        hexGrid[col - startcol][row- startrow] = new Hex(col - startcol, row - startrow, getGEOHexName(col, row, isabboard, isdwboard), getHexCenterPoint(col - startcol, row - startrow), hexHeight, hexWidth, this, 0, terrainList[0]);
                     }
                 }
             }
@@ -243,7 +243,7 @@ public class Map  {
                     evencol = col % 2 == 0 ? 1 : 0;
                     hexGrid[col] = new Hex[this.height + evencol]; // add 1 if even
                     for (int row = 0; row < this.height + evencol; row++) {
-                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, isabboard), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, isabboard, isdwboard), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
                     }
                 }
 
@@ -266,7 +266,7 @@ public class Map  {
                 }
                 hexGrid[col] = new Hex[this.height + evencol];
                 for (int row = 0; row < this.height; row++) {
-                    hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, isabboard), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                    hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, isabboard, isdwboard), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
                 }
             }
 
@@ -305,7 +305,7 @@ public class Map  {
         this.hexHeight=hexHeight;
         this.hexWidth=hexWidth;
         boolean isbboard = b.getA1CenterX() == -901 ? true : false;  // "b" board test
-
+        boolean isdwboard = b.getA1CenterY() == -612.75 ? true : false;  // "DW" board test
         this.A1CenterX = passA1centerx;
         this.A1CenterY = passA1centery;
         // initialize
@@ -322,7 +322,7 @@ public class Map  {
         this.cropconfiguration += this.A1CenterY == 0 ? "LeftHexHalfHeight" : "LeftHexFullHeight";
 
         //create the hexGrid
-        createtheHexGrid(b.isCropped(), isbboard);
+        createtheHexGrid(b.isCropped(), isbboard, isdwboard);
         // at this point the terrainGrid, elevationGrid and HexGrid are created but hold no los data
     }
 
@@ -370,7 +370,7 @@ public class Map  {
      * @param row the hex row (0 = the first row in the column)
      * @return the hex name. If invalid the empty string is returned
      */
-    public String getGEOHexName(int col, int row, boolean isbboard) {
+    public String getGEOHexName(int col, int row, boolean isbboard, boolean isdwboard) {
 
         char c;
         String name = "";
@@ -398,14 +398,27 @@ public class Map  {
         }
 
         // add row as suffix - even cols (e.g. A = 0) will start with 1; odd cols will start with zero
-        // negative A1 y offset implies boards BFP DW 2b
-        int rowOffset = A1CenterY < 0.0 ? (int) (-A1CenterY/hexHeight) + 1: 0;
-        if (A1CenterY==65){return name + (row + rowOffset);}
-        if(A1CenterY==32.5 && getMapConfiguration().contains("ROadjustment")){
-            return name + (row + rowOffset);
-                } else {
-            return name + (row + rowOffset + (col % 2 == 0 ? 1 : 0));
+        int dwadj = 0;
+        if (isdwboard) {
+            /*if (A1CenterY == 65) {
+                return name + (row + 10); // + rowOffset);
+            }
+            else {
+                return name + row; // + rowOffset + (col % 2 == 0 ? 1 : 0));
+            }*/
+            dwadj = 10;
         }
+        int rowOffset = A1CenterY < 0.0 ? (int) (-A1CenterY / hexHeight) + 1 : 0;
+        if (A1CenterY == 65) {
+            return name + (row + rowOffset + dwadj);
+        } else {
+            if (A1CenterY == 32.5 && getMapConfiguration().contains("ROadjustment")) {
+                return name + (row + rowOffset + dwadj);
+            } else {
+                return name + (row + rowOffset + dwadj + (col % 2 == 0 ? 1 : 0));
+            }
+        }
+
     }
 
     /**
@@ -4956,11 +4969,12 @@ public class Map  {
         // create the hex grid
         Hex [][] newhexGrid = new Hex[this.width][];
         //ToDo test the BFP special cases
+        boolean isdwboard = this.getA1CenterY() == -612.75 ? true : false;  // "DW" board test
         if (this.A1CenterY == this.hexHeight/2 || this.A1CenterY == 32.25 || this.A1CenterY == -612.75 || this.A1CenterY == 97.1) {  //extra tests to handle BFP deluxe and DWb boards.
             for (int col = 0; col < this.width; col++) {
                 newhexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
                 for (int row = 0; row < this.height + (col % 2); row++) {
-                    newhexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                    newhexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false, isdwboard), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
                 }
             }
 
@@ -4977,7 +4991,7 @@ public class Map  {
                 evencol = col % 2 == 0 ? 1 : 0;
                 newhexGrid[col] = new Hex[this.height + evencol]; // add 1 if even
                 for (int row = 0; row < this.height + evencol; row++) {
-                    newhexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                    newhexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
                 }
             }
 
@@ -4993,7 +5007,7 @@ public class Map  {
             for (int col = 0; col < this.width; col++) {
                 newhexGrid[col] = new Hex[this.height]; // no extra hex added as this config each col has same number of hexes
                 for (int row = 0; row < this.height; row++) {
-                    newhexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                    newhexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
                 }
             }
 
@@ -5097,7 +5111,7 @@ public class Map  {
                     evencol = col % 2 == 0 ? 1 : 0;
                     hexGrid[col] = new Hex[this.height + evencol]; // add 1 if even
                     for (int row = 0; row < this.height + evencol; row++) {
-                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
                     }
                 }
 
@@ -5118,7 +5132,7 @@ public class Map  {
                     evencol = col % 2 == 0 ? 0 : 1;
                     hexGrid[col] = new Hex[this.height + evencol]; // add 1 if odd
                     for (int row = 0; row < this.height + evencol; row++) {
-                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
                     }
                 }
 
@@ -5138,7 +5152,7 @@ public class Map  {
                     evencol = col % 2 == 0 ? 0 : 1;
                     hexGrid[col] = new Hex[this.height + evencol]; // add 1 if odd
                     for (int row = 0; row < this.height + evencol; row++) {
-                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
                     }
                 }
 
@@ -5158,7 +5172,7 @@ public class Map  {
                     evencol = col % 2 == 0 ? 0 : 1;
                     hexGrid[col] = new Hex[this.height + evencol]; // add 1 if odd
                     for (int row = 0; row < this.height + evencol; row++) {
-                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
                     }
                 }
 
@@ -5238,7 +5252,7 @@ public class Map  {
                 evencol = col % 2 == 0 ? 1 : 0;
                 hexGrid[col] = new Hex[this.height + evencol]; // add 1 if even
                 for (int row = 0; row < this.height + evencol; row++) {
-                    hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                    hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
                 }
             }
 
@@ -5257,7 +5271,7 @@ public class Map  {
                 evencol = col % 2 == 0 ? 0 : 1;
                 hexGrid[col] = new Hex[this.height + evencol];
                 for (int row = 0; row < this.height + evencol; row++) {
-                    hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                    hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
                 }
             }
 
@@ -5362,7 +5376,7 @@ public class Map  {
                     evencol = col % 2 == 0 ? 1 : 0;
                     hexGrid[col] = new Hex[this.height + evencol]; // add 1 if even
                     for (int row = 0; row < this.height + evencol; row++) {
-                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
                     }
                 }
 
@@ -5382,7 +5396,7 @@ public class Map  {
                     evencol = col % 2 == 0 ? 0 : 1;
                     hexGrid[col] = new Hex[this.height + evencol]; // add 1 if odd
                     for (int row = 0; row < this.height + evencol; row++) {
-                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
                     }
                 }
 
@@ -5401,7 +5415,7 @@ public class Map  {
                     evencol = col % 2 == 0 ? 0 : 1;
                     hexGrid[col] = new Hex[this.height + evencol]; // add 1 if odd
                     for (int row = 0; row < this.height + evencol; row++) {
-                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
                     }
                 }
 
@@ -5420,7 +5434,7 @@ public class Map  {
                     evencol = col % 2 == 0 ? 0 : 1;
                     hexGrid[col] = new Hex[this.height + evencol];
                     for (int row = 0; row < this.height + evencol; row++) {
-                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
                     }
                 }
 

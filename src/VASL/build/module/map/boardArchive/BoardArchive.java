@@ -302,11 +302,13 @@ public class BoardArchive {
                 cropWidth = gridWidth; // default values when no cropping
                 cropHeight = gridHeight;
                 boolean isbboard = this.getA1CenterX() == -901 ? true : false;
+                boolean isdwboard = this.getA1CenterY() == -612.75 ? true : false;  // "DW" board test
                 if (board.isCropped()){
                     startx = (int) board.getCropBounds().getX();
                     starty = (int) board.getCropBounds().getY();
                     startcol = board.getRow1().length() == 2 ? board.getstartcropcol().get(board.getRow1()) +26 : board.getstartcropcol().get(board.getRow1());
                     startrow = board.getstartcroprow().get(board.getCoord1());
+                    if (isdwboard){startrow += 10;}
                     endcol = board.getRow2().length() == 2 ? board.getendcropcol().get(board.getRow2()) + 26 : board.getendcropcol().get(board.getRow2());
                     endrow = board.getendcroprow().get(board.getCoord2());
                     width = VASLMap.getWidth();
@@ -365,7 +367,7 @@ public class BoardArchive {
                             } else {
                                 VASLMap.getHex(col - startcol, row - startrow).setStairway(false);
                             }
-                            VASLMap.getHex(col - startcol, row - startrow).resetHexAndLocationNames(VASLMap.getGEOHexName(col , row, isbboard));
+                            VASLMap.getHex(col - startcol, row - startrow).resetHexAndLocationNames(VASLMap.getGEOHexName(col , row, isbboard, isdwboard));
 
                         }
                         else {

@@ -396,6 +396,7 @@ public class ASLMap extends Map {
                 // set hex height value for top row of crop
                 //retieve crop values
                 boolean isbboard = b.getA1CenterX() == -901 ? true : false;  // "b" board test
+                boolean isdwboard = b.getA1CenterY() == -612.75 ? true : false;  // "DW" board test
                 String column_names = "abcdefghijklmnopqrstuvwxyz"; //""ABCDEFGHIJKLMNOPQRSTUVWXYZ";
                 indexOfCol1 = b.getRow1().length() != 0 ? column_names.indexOf(b.getRow1().charAt(0)) : 0;
                 indexOfCol2 = b.getRow2().length() != 0 ? (b.getRow2().length() == 2 ? column_names.indexOf(b.getRow2().charAt(0)) + 26 : column_names.indexOf(b.getRow2().charAt(0))) : b.getVASLBoardArchive().getBoardWidth() - 1;
@@ -403,6 +404,8 @@ public class ASLMap extends Map {
                 indexOfCol2 = isbboard ? indexOfCol2 -16 : indexOfCol2;
                 int valueOfRow1 = b.getCoord1().equals("") ? 0 : Integer.parseInt(b.getCoord1());
                 int valueOfRow2 = b.getCoord2().equals("") ? b.getVASLBoardArchive().getBoardHeight() : Integer.parseInt(b.getCoord2());
+                valueOfRow1 = isdwboard ? valueOfRow1 -10 : valueOfRow1;  //adjust col value for "b" boards 1b - 22b to ensure correct hex name
+                valueOfRow2 = isdwboard ? valueOfRow2 -10 : valueOfRow2;
                 b.setstartcropcol(b.getRow1(), indexOfCol1);
                 b.setendcropcol(b.getRow2(), indexOfCol2);
                 b.setstartcroprow(b.getCoord1(), valueOfRow1);
