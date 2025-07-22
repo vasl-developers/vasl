@@ -202,15 +202,16 @@ public class BoardArchive {
      * @return <code>Map</code> object. Null if the LOS data does not exist or an error occurred.
      */
     public Map getLOSData(String offset, boolean isCropping){
-
-        return getLOSData(sharedBoardMetadata.getTerrainTypes(), offset, isCropping, 0);
+        //ToDo fix this
+        return null;
+        //return getLOSData(sharedBoardMetadata.getTerrainTypes(), offset, isCropping, 0);
     }
 
     /**
      * Reads the map from disk using the provide terrain types.
      * @return <code>Map</code> object. Null if the LOS data does not exist or an error occurred.
      */
-    public Map getLOSData(HashMap<String, Terrain> terrainTypes, String offset, boolean isCropping, double gridadj){
+    public Map getLOSData(HashMap<String, Terrain> terrainTypes, boolean isCropping, double gridadj){
 
         // read the map if necessary; need to do so always in case of changes to a cropped or flipped board
          //if (map == null){
@@ -225,13 +226,10 @@ public class BoardArchive {
                     final int height = infile.readInt();
                     final int gridWidth = infile.readInt();
                     final int gridHeight = infile.readInt();
-                    //ToDo fix this passgridconfig needs to look for BMD.xml data
-                    String passgridconfig = offset;
                     if (isGEO()) {
-                        map = new Map(width, height, terrainTypes, passgridconfig, isCropping);
+                        map = new Map(width, height, terrainTypes, "", "", isCropping); // passboardgridconfig, passcropgridconfig, isCropping);
                     } else {
-                        //DR added code to pass hexWidth and Hexheight plus crop config and flag
-                        map = new Map(getHexWidth(), getHexHeight(), width, height, getA1CenterX(), getA1CenterY(), gridWidth, gridHeight, terrainTypes, passgridconfig, isCropping);
+                        map = new Map(getHexWidth(), getHexHeight(), width, height, getA1CenterX(), getA1CenterY(), gridWidth, gridHeight, terrainTypes, "", "", isCropping); //passboardgridconfig, passcropgridconfig, isCropping);
                     }
 
                     // read the terrain and elevations grids
@@ -285,7 +283,117 @@ public class BoardArchive {
         //}
         return map;
     }
+    // this is the new method of adding los data to a VASL map
+    //ToDo check that all params are required
+    public Map addLOSDatatoVASLMap (HashMap<String, Terrain> terrainTypes, VASL.build.module.map.boardPicker.VASLBoard board, double gridad, VASL.LOS.Map.Map VASLMap){
 
+        // read the map if necessary; need to do so always in case of changes to a cropped or flipped board
+        try (ZipFile archive = new ZipFile(qualifiedBoardArchive)) {
+            try (ObjectInputStream infile = new ObjectInputStream(
+                    new BufferedInputStream(
+                            new GZIPInputStream(
+                                    getInputStreamForArchiveFile(archive, LOSDataFileName))))) {
+                int startx = 0; int starty = 0; int startcol =0; int startrow =0; int endcol =0; int endrow =0; int cropWidth =0; int cropHeight = 0;
+                // these values MUST be read from infile before creating terrainGrid and elevationGrid or data will be incorrectly read from infile
+                int width = infile.readInt();
+                int height = infile.readInt();
+                int gridWidth = infile.readInt();
+                int gridHeight = infile.readInt();
+                cropWidth = gridWidth; // default values when no cropping
+                cropHeight = gridHeight;
+                boolean isbboard = this.getA1CenterX() == -901 ? true : false;
+                boolean isdwboard = this.getA1CenterY() == -612.75 ? true : false;  // "DW" board test
+                if (board.isCropped()){
+                    startx = (int) board.getCropBounds().getX();
+                    starty = (int) board.getCropBounds().getY();
+                    startcol = board.getRow1().length() == 2 ? board.getstartcropcol().get(board.getRow1()) +26 : board.getstartcropcol().get(board.getRow1());
+                    startrow = board.getstartcroprow().get(board.getCoord1());
+                    if (isdwboard){startrow += 10;}
+                    endcol = board.getRow2().length() == 2 ? board.getendcropcol().get(board.getRow2()) + 26 : board.getendcropcol().get(board.getRow2());
+                    endrow = board.getendcroprow().get(board.getCoord2());
+                    width = VASLMap.getWidth();
+                    height = VASLMap.getHeight();
+                    cropWidth = VASLMap.getGridWidth();
+                    cropHeight = VASLMap.getGridHeight();
+                }
+
+                // read the terrain and elevations grids
+                for (int x = 0; x < (gridWidth); x++) { //startx + gridWidth); x++) {
+                    for (int y = 0; y < (gridHeight); y++) { //starty + gridHeight); y++) {
+                        if (x >= startx && x < (startx + cropWidth) && y >= starty && y < (starty + cropHeight)) {
+                            VASLMap.setGridElevation((int) infile.readByte(), x -startx, y - starty);
+                            VASLMap.setGridTerrainCode((int) infile.readByte() & (0xff), x - startx, y - starty);
+                        }
+                        else {
+                            //need to do this twice to properly step through infile
+                            infile.readByte();
+                            infile.readByte();
+                        }
+                    }
+
+                }
+                //copy the hex grid
+                /*for (int x = 0; x < VASLMap.hexGrid.length; x++) {
+                    for (int y = 0; y < VASLMap.hexGrid[x].length; y++) {
+                        if (offsetsize<=0) {
+                            newMap.hexGrid[x][y] = (hexGrid[x + upperLeftHex.getColumnNumber()][y + upperLeftHex.getRowNumber()]);
+                        } else {
+                            int evencol =0;
+                            if(this.cropconfiguration.contains("ROadjustment") && !(this.cropconfiguration.contains("EqualRowCount"))){
+                                evencol = x % 2 == 0 ? 0 : -1;}
+                            newMap.hexGrid[x][y] = (hexGrid[x + upperLeftHex.getColumnNumber()][y + upperLeftHex.getRowNumber()+ evencol]);
+
+                        }
+                    }
+                }*/
+
+                //ToDo check if either of this needs to be done for geo boards
+                // code added to enable rr embankments in RB and Partial Orchards
+                // set the rr embankments
+                // should this be after hexgrid loop?
+                VASLMap.setRBrrembankments(metadata.getRBrrembankments());
+                VASLMap.setPartialOrchards(metadata.getPartialOrchards());
+
+                // read the hex information
+                //determine if even/odd col has extra row - depends on crop
+                if (startrow != 0){startrow -= 1;} //adjustment required t0 align with zero-based row arrays
+                for (int col = 0; col < (startcol + width); col++) {
+                    int heightadj = col % 2 == 1 ? 1 : 0;
+                     for (int row = 0; row < (startrow + height + heightadj); row++) {
+                        if (col >= startcol && row >= startrow) {
+                            final byte stairway = infile.readByte();
+                            if ((int) stairway == 1) {
+                                VASLMap.getHex(col - startcol, row - startrow).setStairway(true);
+                            } else {
+                                VASLMap.getHex(col - startcol, row - startrow).setStairway(false);
+                            }
+                            VASLMap.getHex(col - startcol, row - startrow).resetHexAndLocationNames(VASLMap.getGEOHexName(col , row, isbboard, isdwboard));
+
+                        }
+                        else {
+                            infile.readByte();
+                        }
+                    }
+                }
+                // reset the hex locations to map grid
+                for (int col = 0; col < VASLMap.getHexGrid().length; col++) {
+                    for (int row = 0; row < VASLMap.getHexGrid()[col].length; row++) {
+                        VASLMap.getHexGrid()[col][row].resetHexsideLocationNames();
+                    }
+                }
+                // code moved from before stairway loop to enable factory quasi-levels in stairway hexes
+                VASLMap.resetHexTerrain(0); //gridadj);
+
+                // set the slopes
+                VASLMap.setSlopes(metadata.getSlopes());
+
+            }
+        } catch(Exception e) {
+            logger.warn("Could not read the LOS data in board " + qualifiedBoardArchive);
+            return null;
+        }
+        return VASLMap;
+    }
     /**
      * Write the LOS data to the board archive
      * @param map the LOS data
