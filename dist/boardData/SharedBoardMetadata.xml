@@ -241,6 +241,26 @@
 			<color name="DTO_OrchL6" />
 			<color name="DTO_OrchTrees" />
 		</underlaySSRule>
+		<underlaySSRule name="OutOfSeasonOrchardsToOliveGroves" image="OliveGrovePattern.gif">
+			<color name="OrchL_2" />
+			<color name="OrchL_1" />
+			<color name="OrchL0" />
+			<color name="OrchL1" />
+			<color name="OrchL2" />
+			<color name="OrchL3" />
+			<color name="OrchL4" />
+			<color name="OrchL5" />
+			<color name="OrchL6" />
+			<color name="OrchTrees" />
+			<color name="DTO_OrchL0" />
+			<color name="DTO_OrchL1" />
+			<color name="DTO_OrchL2" />
+			<color name="DTO_OrchL3" />
+			<color name="DTO_OrchL4" />
+			<color name="DTO_OrchL5" />
+			<color name="DTO_OrchL6" />
+			<color name="DTO_OrchTrees" />
+		</underlaySSRule>
 		<underlaySSRule name="ShellholesToCactusPatches" image="CactusPattern.gif">
 			<color name="Shellhole1" />
 			<color name="Shellhole2" />
@@ -3206,7 +3226,8 @@
         <LOSSSRule name="CragsToOrchard" type="terrainMap" fromValue="Crags" toValue="Orchard" />
         <LOSSSRule name="CragsToShellholes" type="terrainMap" fromValue="Crags" toValue="Shellholes" />
 		<LOSSSRule name="OrchardsToShellholes" type="terrainMap" fromValue="Orchard" toValue="Shellholes" />
-
+		<LOSSSRule name="OrchardsToOliveGroves" type="terrainMap" fromValue="Orchard" toValue="Olive Grove" />
+		<LOSSSRule name="OutOfSeasonOrchardsToOliveGroves" type="terrainMap" fromValue="Orchard, Out of Season" toValue="Olive Grove" />
         <!-- simple elevation maps. Note that elevations can only be decreased -->
         <LOSSSRule name="Level6ToLevel5" type="elevationMap" fromValue="6" toValue="5" />
         <LOSSSRule name="Level5ToLevel4" type="elevationMap" fromValue="5" toValue="4" />

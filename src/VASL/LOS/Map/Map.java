@@ -56,8 +56,8 @@ import java.util.List;
 public class Map  {
 
     // default hex geometry
-    private double hexHeight = BoardArchive.GEO_HEX_HEIGHT;
-    private double hexWidth = BoardArchive.GEO_HEX_WIDTH;
+    private double hexHeight = 0; //BoardArchive.GEO_HEX_HEIGHT;  don't use anymore
+    private double hexWidth = 0; //BoardArchive.GEO_HEX_WIDTH;
 
     // terrain names which is used a number of times
     //ToDo review use of these variables and add others
@@ -124,8 +124,8 @@ public class Map  {
         this.height = height;
 
         //Set the hex geometry
-        this.hexHeight=hexHeight;
-        this.hexWidth=hexWidth;
+        this.hexHeight = hexHeight;
+        this.hexWidth = hexWidth;
         double checkforabboards=(A1CenterX == BoardArchive.missingValue() ? BoardArchive.GEO_A1_Center.x : A1CenterX);
         boolean isabboard = (checkforabboards == -901);  // added to support cropping of a-b boards
 
@@ -302,8 +302,8 @@ public class Map  {
         this.height = passheightinhexes;
 
         //Set the hex geometry
-        this.hexHeight=hexHeight;
-        this.hexWidth=hexWidth;
+        this.hexHeight=b.getHexHeight();
+        this.hexWidth=b.getHexWidth();
         boolean isbboard = b.getA1CenterX() == -901 ? true : false;  // "b" board test
         boolean isdwboard = b.getA1CenterY() == -612.75 ? true : false;  // "DW" board test
         this.A1CenterX = passA1centerx;
@@ -398,24 +398,14 @@ public class Map  {
         }
 
         // add row as suffix - even cols (e.g. A = 0) will start with 1; odd cols will start with zero
-        int dwadj = 0;
-        if (isdwboard) {
-            /*if (A1CenterY == 65) {
-                return name + (row + 10); // + rowOffset);
-            }
-            else {
-                return name + row; // + rowOffset + (col % 2 == 0 ? 1 : 0));
-            }*/
-            dwadj = 10;
-        }
         int rowOffset = A1CenterY < 0.0 ? (int) (-A1CenterY / hexHeight) + 1 : 0;
         if (A1CenterY == 65) {
-            return name + (row + rowOffset + dwadj);
+            return name + (row + rowOffset);
         } else {
             if (A1CenterY == 32.5 && getMapConfiguration().contains("ROadjustment")) {
-                return name + (row + rowOffset + dwadj);
+                return name + (row + rowOffset);
             } else {
-                return name + (row + rowOffset + dwadj + (col % 2 == 0 ? 1 : 0));
+                return name + (row + rowOffset + (col % 2 == 0 ? 1 : 0));
             }
         }
 
@@ -3543,9 +3533,9 @@ public class Map  {
             targetadj=+1;
         }
         // test for Hindrance later; this ensures that plateau effect is tested properly
-        if ("Orchard, Out of Season".equals(status.currentTerrain.getName())) { obstacleadj=-1.0;}
-
-
+        if ("Orchard, Out of Season".equals(status.currentTerrain.getName())) {
+            obstacleadj = -1.0;
+        }
         // code to fix groundlevel when checking LOS to/from vertex
         // Dec 23 commented out these lines as causing bd02 issues; need to see if it creates other issues; code was added to address issue #418
         //if (!(status.sourceHex.getNearestLocation(status.currentCol, status.currentRow).equals(status.sourceHex.getCenterLocation())) && !status.sourceHex.isDepressionTerrain() && status.sourceHex.equals(status.tempHex)){status.groundLevel = status.sourceHex.getBaseHeight();}
