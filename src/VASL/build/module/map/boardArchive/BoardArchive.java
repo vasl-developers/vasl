@@ -38,6 +38,7 @@ public class BoardArchive {
     private static final Logger logger = LoggerFactory.getLogger(BoardArchive.class);
 
     // constants for standard geomorphic boards, which compensate for VASL "fuzzy" geometry. Hexes are slightly too wide.
+    //ToDo Review and determine if all of these should be removed as code handles a range of board size including a/b and deluxe
     public static final double GEO_WIDTH = 33;
     public static final double GEO_HEIGHT = 10;
     public static final double GEO_IMAGE_WIDTH = 1800;
@@ -293,7 +294,7 @@ public class BoardArchive {
                     new BufferedInputStream(
                             new GZIPInputStream(
                                     getInputStreamForArchiveFile(archive, LOSDataFileName))))) {
-                int startx = 0; int starty = 0; int startcol =0; int startrow =0; int endcol =0; int endrow =0; int cropWidth =0; int cropHeight = 0;
+                int startx = 0; int starty = 0; int startcol =0; int startrow =0; int endcol =0; int endrow =0; int cropWidth =0; int cropHeight = 0; int dwadj = 0;
                 // these values MUST be read from infile before creating terrainGrid and elevationGrid or data will be incorrectly read from infile
                 int width = infile.readInt();
                 int height = infile.readInt();
@@ -308,7 +309,11 @@ public class BoardArchive {
                     starty = (int) board.getCropBounds().getY();
                     startcol = board.getRow1().length() == 2 ? board.getstartcropcol().get(board.getRow1()) +26 : board.getstartcropcol().get(board.getRow1());
                     startrow = board.getstartcroprow().get(board.getCoord1());
-                    if (isdwboard){startrow += 10;}
+                    // handle double height geo boards that have row numbers 11 - 20 mainly the BFPDW a/b boards
+                    if (isdwboard){
+                        startrow += 10;
+                        dwadj += 10;
+                    }
                     endcol = board.getRow2().length() == 2 ? board.getendcropcol().get(board.getRow2()) + 26 : board.getendcropcol().get(board.getRow2());
                     endrow = board.getendcroprow().get(board.getCoord2());
                     width = VASLMap.getWidth();
@@ -359,7 +364,7 @@ public class BoardArchive {
                 if (startrow != 0){startrow -= 1;} //adjustment required t0 align with zero-based row arrays
                 for (int col = 0; col < (startcol + width); col++) {
                     int heightadj = col % 2 == 1 ? 1 : 0;
-                     for (int row = 0; row < (startrow + height + heightadj); row++) {
+                     for (int row = 0 + dwadj; row < (startrow + height + heightadj); row++) {
                         if (col >= startcol && row >= startrow) {
                             final byte stairway = infile.readByte();
                             if ((int) stairway == 1) {

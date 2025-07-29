@@ -1328,6 +1328,8 @@ public class Hex {
         flipHexPoint(centerpoint);
         centerLocation.getHex().center.x = centerpoint.getX();
         centerLocation.getHex().center.y = centerpoint.getY();
+        centerDot.x = centerpoint.getX();
+        centerDot.y = centerpoint.getY();
 		// flip the points in the hexside locations
 		for (int x = 0; x < 6; x++){
 
