@@ -20,9 +20,10 @@
 
 	v6.6 6/8/25 added SSO_15_CH59 - TJ
 	v6.7 7/21/25 modified SSO_15_A43 - TJ
+	v6.8 7/27/25 modified SSO_15_CH59 - TJ
 
 -->
-<boardMetadata name="15" version="6.7" versionDate="2025/07/21" author="TR" boardImageFileName="bd15.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="15" version="6.8" versionDate="2025/07/27" author="TR" boardImageFileName="bd15.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
