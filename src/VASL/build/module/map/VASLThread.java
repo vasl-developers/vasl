@@ -695,7 +695,6 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                             "LOS Check Disabled - Overlay nearby. Range: " + Map.range(source.getHex(), target.getHex(), LOSMap.getMapConfiguration())));
 
                 } else {
-                    // code added by DR to handle rooftop levels
                     double leveladj = 0;
                     String sourcelevelString = "";
                     String targetlevelString = "";
@@ -706,6 +705,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                     else {  // hide decimal place
                         sourcelevelString = "Level " + (int)sourcelevel;
                     }
+                    if (source.getTerrain().isEntrenchmentTerrain()) {sourcelevelString += " (Entrenched)";}
                     if (isVerbose()) {
                         lastRangeRect = drawText(g,
                                 sourceLOSPoint.x - 20,
@@ -743,6 +743,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                     else {  // hide decimal place
                         targetlevelString="Level " + (int)targetlevel;
                     }
+                    if (target.getTerrain().isEntrenchmentTerrain()) {targetlevelString += " (Entrenched)";}
                     if (isVerbose()) {
                         lastRangeRect.add(drawText(g,
                                 targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), //- 20,
