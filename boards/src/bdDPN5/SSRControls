@@ -1,0 +1,7 @@
+<SSRControls>
+ <Option name="Board DPN5 Special Overlays">
+ <Checkbox name="">
+         <entry name="Scenario N16 No Laughing Matter" rule="SSO_N16_No_Laughing_Matter" text="Scen N16 SSO"/>
+ </Checkbox>
+   </Option>
+</SSRControls>

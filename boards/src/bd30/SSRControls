@@ -7,7 +7,7 @@
       <entry name="Scrub is Open Ground" rule="ScrubToOG"/>
     </Checkbox>
     <Checkbox name="">
-      <entry name="Scenario A61 - Across the Wier" rule="SSO_30_A61" text="Bd30 Scen A61 SSO"/>
+      <entry name="Scenario N16 - No Laughing Matter" rule="SSO_30_N16"/> 
     </Checkbox>
   </Option>
 </SSRControls>
