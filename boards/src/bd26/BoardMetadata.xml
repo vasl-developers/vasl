@@ -17,8 +17,12 @@
     height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
+
+	v6.7 8/18/25 - added SSO_26_253 - TJ
+	v6.7 8/23/25 - added SSO_26_254 - TJ
+
 -->
-<boardMetadata name="26" version="6.6" versionDate="Jan 2023" author="TR" boardImageFileName="bd26.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="26" version="6.7" versionDate="2025/08/23" author="TR" boardImageFileName="bd26.gif" hasHills="FALSE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -77,6 +81,8 @@
 		<overlaySSRule name="ScrubToOG" image="26_ScrubToOG.gif" x="192" y="99" />
 		<overlaySSRule name="SSO_26_58" image="SSO_26_58.gif" x="1" y="607" />
 		<overlaySSRule name="SSO_26_65" image="SSO_26_65.gif" x="21" y="26" />
+		<overlaySSRule name="SSO_26_253" image="SSO_26_253.gif" x="1" y="1" />
+		<overlaySSRule name="SSO_26_254" image="SSO_26_254.gif" x="1" y="1" />
 		<overlaySSRule name="SSO_26_ASLUG16" image="SSO_26_ASLUG16.gif" x="21" y="26" />
 		<overlaySSRule name="SSO_26_G24" image="SSO_26_G24.gif" x="21" y="26" />
 		<overlaySSRule name="SSO_26_G45" image="SSO_26_G45.gif" x="1" y="1" />
