@@ -20,9 +20,10 @@
 	
 	Nov 2013 v6.0 Original issue (TR)
 	Mar 2018 v6.1 Added lightwoods transform(ATC) 
-	7/3/25 - added SSO_04_134 - TJ
+	v6.8 - 7/3/25 - added SSO_04_134 - TJ
+	v6.9 - 8/27/25 - added SSO_04_A18 - TJ
 -->
-<boardMetadata name="04" version="6.8" versionDate="2025/07/03" author="TR" boardImageFileName="bd04.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="04" version="6.9" versionDate="2025/08/27" author="TR" boardImageFileName="bd04.gif" hasHills="FALSE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -85,6 +86,7 @@
 		<overlaySSRule name="LightWoods" image="04_LightWoods.gif" x="0" y="0" />
 		<overlaySSRule name="SSO_U37" image="04_SSO_U37.gif" x="0" y="0" />
 		<overlaySSRule name="SSO_134" image="SSO_04_134.gif" x="762" y="332" />
+		<overlaySSRule name="SSO_A18" image="SSO_04_A18.gif" x="1" y="1" />		
 
 	</overlaySSRules>
 	

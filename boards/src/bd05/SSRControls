@@ -1,6 +1,12 @@
 <SSRControls>
  <Option name="Board 5 Special overlays">
  <Checkbox name="">
+         <entry name="163: Stopped Cold" rule="SSO_163" text="scenario 163 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="A18: Sbeitla Probe" rule="SSO_A18" text="scenario A18 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
          <entry name="A21: Counterattack on the Vistula" rule="SSO_A21" text="scenario A21 overlay"/>
  </Checkbox>
  <Checkbox name="">
