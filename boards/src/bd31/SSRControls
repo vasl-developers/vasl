@@ -7,13 +7,16 @@
       <entry name="Scrub is Open Ground" rule="ScrubToOG"/>
     </Checkbox>
     <Checkbox name="">
-      <entry name="Scenario A39 - Showdown at Tug Argan Pass" rule="SSO_31_A39" text="Bd31 Scen A39 SSO"/>
+      <entry name="254 - Criniti's Escape" rule="SSO_31_254" text="Bd31 Scen 254 SSO"/>
     </Checkbox>
     <Checkbox name="">
-      <entry name="Scenario ASLUG8 - Desert Citadel" rule="SSO_31_ASLUG8" text="Bd31 Scen ASLUG8 SSO"/>
+      <entry name="A39 - Showdown at Tug Argan Pass" rule="SSO_31_A39" text="Bd31 Scen A39 SSO"/>
     </Checkbox>
     <Checkbox name="">
-      <entry name="Scenario J79 - Rommel's Remedy" rule="SSO_31_J79" text="Bd31 Scen J79 SSO"/>
+      <entry name="ASLUG8 - Desert Citadel" rule="SSO_31_ASLUG8" text="Bd31 Scen ASLUG8 SSO"/>
+    </Checkbox>
+    <Checkbox name="">
+      <entry name="J79 - Rommel's Remedy" rule="SSO_31_J79" text="Bd31 Scen J79 SSO"/>
     </Checkbox>
   </Option>
 </SSRControls>
