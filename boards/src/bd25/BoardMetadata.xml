@@ -19,8 +19,12 @@
 	others - TBD e.g. alternate hex grain, etc. 
 	
 	v6.2 fix terrain, SSO and BSO transforms (ATC)
+	v7.0 8/12/25 added SSO_25_CH59 - TJ
+	v7.0 8/13/25 replaced SSO_25_A23 - TJ
+	v7.0 8/16/25 added SSO_25_253 - TJ
+	v7.0 8/17/25 added SSO_25_256 - TJ
 -->
-<boardMetadata name="25" version="6.9" versionDate="Dec 2024" author="TR" boardImageFileName="bd25.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="25" version="7.0" versionDate="2025/08/17" author="TR" boardImageFileName="bd25.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -90,8 +94,11 @@
 		<overlaySSRule name="NoCliffs" image="25_NoCliffs.gif" x="238" y="28" />
 		<overlaySSRule name="HedgesToOG" image="25_HedgesToOG.gif" x="32" y="61" />
 		<overlaySSRule name="WallsToOG" image="25_NoWalls.gif" x="1155" y="60" />
+		<overlaySSRule name="SSO_25_CH59" image="SSO_25_CH59.gif" x="1" y="1" />
 		<overlaySSRule name="SSO_25_A39" image="SSO_25_A39.gif" x="1" y="1" />
-		<overlaySSRule name="SSO_25_A23" image="SSO_25_A23.gif" x="1" y="1" />
+		<overlaySSRule name="SSO_25_A23" image="SSO_25_A23.gif" x="581" y="1" />
+		<overlaySSRule name="SSO_25_253" image="SSO_25_253.gif" x="1" y="1" />
+		<overlaySSRule name="SSO_25_256" image="SSO_25_256.gif" x="122" y="14" />
 		<overlaySSRule name="SSO_25_81" image="SSO_25_81.gif" x="1" y="1" />
 		<overlaySSRule name="SSO_25_72" image="SSO_25_72.gif" x="1" y="74" />
 		<overlaySSRule name="SSO_25_36" image="SSO_25_36.gif" x="1" y="1" />

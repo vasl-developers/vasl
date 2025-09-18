@@ -7,22 +7,28 @@
       <entry name="Scrub is Open Ground" rule="ScrubToOG"/>
     </Checkbox>
     <Checkbox name="">
-      <entry name="Scenario 58 - Ci Arrendiamo" rule="SSO_26_58" text="Bd26 Scen 58 SSO"/>
+      <entry name="58 - Ci Arrendiamo" rule="SSO_26_58" text="Bd26 58 SSO"/>
     </Checkbox>
     <Checkbox name="">
-      <entry name="Scenario 65 - Red Star Red Sun" rule="SSO_26_65" text="Bd26 Scen 65 SSO"/>
+      <entry name="65 - Red Star Red Sun" rule="SSO_26_65" text="Bd26 65 SSO"/>
     </Checkbox>
     <Checkbox name="">
-      <entry name="Scenario ASLUG16 - Bunshin Gogeki" rule="SSO_26_ASLUG16" text="Bd26 Scen ASLUG16 SSO"/>
+      <entry name="253 - Our Place in the Sun" rule="SSO_26_253" text="Bd26 253 SSO"/>
     </Checkbox>
     <Checkbox name="">
-      <entry name="Scenario G24 - Mountain Comes To Mohammed" rule="SSO_26_G24" text="Bd26 Scen G24 SSO"/>
+      <entry name="254 - Criniti's Escape" rule="SSO_26_254" text="Bd26 254 SSO"/>
     </Checkbox>
     <Checkbox name="">
-      <entry name="Scenario G45 - Halha River Bridge" rule="SSO_26_G45" text="Bd26 Scen G45 SSO"/>
+      <entry name="ASLUG16 - Bunshin Gogeki" rule="SSO_26_ASLUG16" text="Bd26 ASLUG16 SSO"/>
     </Checkbox>
     <Checkbox name="">
-      <entry name="Scenario J47 - They're Here! Reverse!" rule="SSO_26_J47" text="Bd26 Scen J47 SSO"/>
+      <entry name="G24 - Mountain Comes To Mohammed" rule="SSO_26_G24" text="Bd26 G24 SSO"/>
+    </Checkbox>
+    <Checkbox name="">
+      <entry name="G45 - Halha River Bridge" rule="SSO_26_G45" text="Bd26 G45 SSO"/>
+    </Checkbox>
+    <Checkbox name="">
+      <entry name="J47 - They're Here! Reverse!" rule="SSO_26_J47" text="Bd26 J47 SSO"/>
     </Checkbox>
   </Option>
 </SSRControls>

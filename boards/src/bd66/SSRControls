@@ -1,0 +1,7 @@
+<SSRControls>
+ <Option name="Board 66 Special overlays">
+ <Checkbox name="">
+         <entry name="AP108: Yes Sir!" rule="66_SSO_AP108" text="scenario AP108 overlay"/>
+ </Checkbox>
+    </Option>
+</SSRControls>

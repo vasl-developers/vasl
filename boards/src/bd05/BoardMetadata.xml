@@ -20,9 +20,11 @@
 
 	2/8/15 - fixed overlay SSR rules adding rule sets
 	3/11/15 - fixed "no woods roads" SSR rule
+	v7.1 - 8/27/25 - added SSO_05_A18 - TJ
+	v7.1 - 8/28/25 - added SSO_05_163 - TJ
 
 -->
-<boardMetadata name="05" version="7.0" versionDate="Jan 2023" author="TR" boardImageFileName="bd05.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="05" version="7.1" versionDate="2025/08/28" author="TR" boardImageFileName="bd05.gif" hasHills="FALSE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -72,6 +74,8 @@
 		</overlaySSRuleSet>
 		<overlaySSRule name="NoWoodsRoads" image="05_NoWoodsRoad.gif" x="409" y="116" />
 		<overlaySSRule name="RoadsToPaths" image="05_WoodsRoad2Path.gif" x="426" y="116" />
+		<overlaySSRule name="SSO_163" image="SSO_05_163.gif" x="106" y="50" />
+		<overlaySSRule name="SSO_A18" image="SSO_05_A18.gif" x="1" y="1" />
 		<overlaySSRule name="SSO_A21" image="05_SSO_A21.gif" x="1199" y="493" />
 		<overlaySSRule name="SSO_A40" image="05_SSO_A40.gif" x="1210" y="50" />
 		<overlaySSRule name="BSO_05_BSOCW" image="BSO_05_BSOCW.gif" x="234" y="1" />
