@@ -1002,7 +1002,7 @@
 		<color name="OrchL2" red="83" green="98" blue="48" terrain="Orchard" elevation="2" />
 		<color name="OrchL3" red="83" green="98" blue="49" terrain="Orchard" elevation="3" />
 		<color name="OrchL4" red="83" green="98" blue="50" terrain="Orchard" elevation="4" />
-		<color name="OrchL5" red="83" green="98" blue="51" terrain="Orchard" elevation="4" />
+		<color name="OrchL5" red="83" green="98" blue="51" terrain="Orchard" elevation="5" />
 		<color name="OrchL6" red="83" green="98" blue="52" terrain="Orchard" elevation="6" />
 		<color name="OrchTrees" red="82" green="98" blue="46" terrain="Orchard" elevation="UNKNOWN" />
 		<color name="OliveGroveGreen" red="171" green="222" blue="104" terrain="Olive Grove" elevation="UNKNOWN" />
@@ -1418,7 +1418,7 @@
 		<color name="Scrub8L_1" red="164" green="159" blue="111" terrain="Scrub" elevation="-1" />
 		<color name="Scrub9" red="162" green="155" blue="128" terrain="Scrub" elevation="UNKNOWN" />
 		<color name="Scrub10" red="145" green="142" blue="133" terrain="Scrub" elevation="UNKNOWN" />
-		<color name="Scrub10L_10" red="145" green="142" blue="132" terrain="Scrub" elevation="-1" />
+		<color name="Scrub10L_1" red="145" green="142" blue="132" terrain="Scrub" elevation="-1" />
 		<color name="CactusTan" red="222" green="189" blue="99" terrain="Cactus Patch" elevation="UNKNOWN" />
 		<color name="CactusGreen" red="123" green="132" blue="8" terrain="Cactus Patch" elevation="UNKNOWN" />
 		<color name="CactusBrown" red="90" green="66" blue="33" terrain="Cactus Patch" elevation="UNKNOWN" />
@@ -1820,7 +1820,7 @@
 		<terrainType name="MultipleWooden" typeCode="203" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="164" mapColorGreen="116" mapColorBlue="64" LOSCategory="BUILDING"  />
 		<terrainType name="Monument" typeCode="204" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="0" mapColorRed="10" mapColorGreen="127" mapColorBlue="138" LOSCategory="OTHER"  />
 		<terrainType name="BTCrags" typeCode="205" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="215" mapColorGreen="215" mapColorBlue="213" LOSCategory="OTHER"  />
-
+		<!--VASL code may hit a bug if typeCode > 255  need to test and change code -->
 	</terrainTypes>
 
 	<colorSSRules>

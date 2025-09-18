@@ -688,7 +688,7 @@ public class LOSDataEditor {
             }
         } else {
             for (int col = 0; col < map.getWidth(); col++) {
-                for (int row = 0; row < map.getHeight() + (col % 2); row++) {
+                for (int row = 0; row < map.getHexGrid()[col].length; row++) {
 
                     Hex[][] hexGrid = map.getHexGrid();
 

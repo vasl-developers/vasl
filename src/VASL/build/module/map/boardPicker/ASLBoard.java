@@ -84,9 +84,13 @@ public class ASLBoard extends Board {
         reversible = true;
     }
     // variables to suppoprt cropping and flipping of los-enabled boards
+    // the Row and Coord variables hold (1) values entered in the Crop Boards window in BoardPicker or
+    // (2) calculated in ASLMap.buildVASLMap() and are
+    // used ASLMap.buildVASLMap() and BoardArchive.addLOSDatatoVASLMap()
     public Rectangle getCropBounds() {
         return cropBounds;
     }
+
     public String getRow1(){
         return storerow1;
     }
@@ -123,15 +127,14 @@ public class ASLBoard extends Board {
     public void setendcroprow (String endrowname, Integer endrowindex){
         endcroprow.put(endrowname, endrowindex);
     }
+
     public HashMap<String, Integer> getstartcropcol(){
             return startcropcol;
     }
     public HashMap<String, Integer> getstartcroprow(){
         return startcroprow;
     }
-    public HashMap<String, Integer> getendcropcol(){
-        return endcropcol;
-    }
+    public HashMap<String, Integer> getendcropcol(){return endcropcol;}
     public HashMap<String, Integer> getendcroprow(){
         return endcroprow;
     }
@@ -142,8 +145,6 @@ public class ASLBoard extends Board {
     }
 
     /**
-     * *
-     *
      * @return the size of the board if it were not cropped
      */
     public Dimension getUncroppedSize() {
@@ -151,7 +152,6 @@ public class ASLBoard extends Board {
     }
 
     public String getTerrainChanges() {return terrainChanges;}
-
 
     public Image getBaseImage() {
         try {
