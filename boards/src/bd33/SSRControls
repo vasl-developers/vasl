@@ -1,0 +1,8 @@
+<SSRControls>
+ <Option name="Board 33 Special overlays">
+ <Checkbox name="">
+         <entry name="BFP GS 2: Hard Realities" rule="SSO_33_BFP_GS2" text="scenario BFP GS 2 Overlay"/>
+ </Checkbox>
+ 
+   </Option>
+</SSRControls>

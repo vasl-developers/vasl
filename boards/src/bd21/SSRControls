@@ -1,5 +1,11 @@
 <SSRControls>
  <Option name="Board 21 Special overlays">
+ <Checkbox name="">
+         <entry name="building hexsides are Rowhouse bars" rule="SSO_bars" text="Rowhouse bars overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="135 - Acts of Defiance" rule="SSO_135" text="scenario 135 overlay"/>
+ </Checkbox>
   <Checkbox name="">
          <entry name="ASLUG5: Shootout at Singling" rule="SSO_ASLUG5" text="scenario ASLUG5 overlay"/>
  </Checkbox>

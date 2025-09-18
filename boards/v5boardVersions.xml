@@ -31,30 +31,30 @@
 		<boarddata name="00a" version="6.0" versionDate="2023/08/30" description="" boardType="Double-sided" publisher="VASL" issued="" />
 		<boarddata name="00b" version="6.0" versionDate="2023/08/30" description="" boardType="Double-sided" publisher="VASL" issued="" />
 		<boarddata name="01" version="6.9" versionDate="2025/01/31" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="02" version="7.5" versionDate="2025/06/05" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="02" version="7.6" versionDate="2025/07/21" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="03" version="7.5" versionDate="2025/02/03" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="04" version="6.8" versionDate="2025/07/03" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="05" version="7.0" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="06" version="6.8" versionDate="2025/02/03" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="07" version="6.7" versionDate="2025/02/03" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="08" version="7.3" versionDate="2025/02/03" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="09" version="7.3" versionDate="2025/06/25" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="09" version="7.4" versionDate="2025/07/22" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="10" version="7.0" versionDate="2025/02/03" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="10z" version="7.1" versionDate="2024/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="11" version="6.9" versionDate="2025/07/03" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="12" version="6.9" versionDate="2025/01/14" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="13" version="6.9" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="14" version="6.8" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="15" version="6.6" versionDate="2025/06/08" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="15" version="6.8" versionDate="2025/07/27" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="16" version="6.5" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="17" version="6.6" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="17z" version="6.6" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="18" version="6.8" versionDate="2024/12/23" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="19" version="6.6" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="20" version="7.3" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="21" version="6.5" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="22" version="7.0" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="23" version="7.2" versionDate="2025/02/03" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="20" version="7.4" versionDate="2023/07/12" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="21" version="6.7" versionDate="2025/07/15" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="22" version="7.1" versionDate="2025/07/13" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="23" version="7.3" versionDate="2025/07/13" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="24" version="7.5" versionDate="2025/02/22" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="25" version="6.9" versionDate="2024/12/23" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="25ETO" version="6.9" versionDate="2025/06/18" description="" boardType="Geoboard" publisher="MMP" issued="" />
@@ -65,7 +65,7 @@
 		<boarddata name="30" version="6.6" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="31" version="6.6" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="32" version="7.2" versionDate="2024/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="33" version="6.7" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="33" version="6.8" versionDate="2025/07/08" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="34" version="7.0" versionDate="2025/06/02" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="35" version="6.5" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="36" version="7.0" versionDate="2024/12/13" description="" boardType="Geoboard" publisher="MMP" issued="" />
@@ -122,7 +122,7 @@
 		<boarddata name="87" version="6.3" versionDate="2024/12/23" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="88" version="6.0" versionDate="2022/02/28" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="89" version="6.1" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="90" version="6.0" versionDate="2023/02/28" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="90" version="6.1" versionDate="2025/07/08" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="91" version="6.0" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="2023/10/25" />
 		<boarddata name="92" version="6.1" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="MMP" issued="2023/10/27" />
 		<boarddata name="93" version="6.0" versionDate="2025/05/12" description="" boardType="Geoboard" publisher="MMP" issued="" />
@@ -224,6 +224,8 @@
 		<boarddata name="BFPE" version="6.7" versionDate="2024/12/24" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPF" version="6.5" versionDate="2024/12/24" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPG" version="6.4" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPGS1" version="6.2" versionDate="2023/07/13" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPGS3" version="6.5" versionDate="2023/07/13" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPH" version="6.7" versionDate="2024/12/23" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPI" version="6.8" versionDate="2024/12/23" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPJ" version="6.9" versionDate="2025/03/26" description="" boardType="Geoboard" publisher="BFP" issued="" />
@@ -524,6 +526,7 @@
 		<boarddata name="AF_PRK_Y" version="1.0" versionDate="2024/01/30" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
 		<boarddata name="AF_Sollum" version="1.1" versionDate="2024/01/30" description="Brevity Assault" boardType="HASL" publisher="AF" issued="2024/01/30" />
 		<boarddata name="LS" version="1.0" versionDate="2025/04/08" description="Lysyanka" boardType="HASL" publisher="" issued="2025/04/08" />
+		<boarddata name="BW" version="1.0" versionDate="2025/07/13" description="Brickworks" boardType="HASL" publisher="" issued="2025/07/13" />
 
 
 

@@ -344,15 +344,16 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         if (!isEnabled() || legacyMode) {
             return;
         }
-
         setSourceFromMousePressedEvent(new Point(e.getPoint()));
+        if(source == null) {return;}
+        // the call to super.mousePressed is storing hex value when los is to or from a vertex; need to overwrite
+        super.anchorLocation = source.getName();
+        super.lastLocation = this.anchorLocation;
 
-        if(source == null) {
-            return;
-        }
+
 
         // if Ctrl click, use upper-most non-rooftop location
-        if (SwingUtils.isSelectionToggle(e)) { //BR// Vassal 3.3 mouse interface adjustment
+        if (SwingUtils.isSelectionToggle(e)) {
             while (source.getUpLocation() != null && !source.getUpLocation().getName().contains("Rooftop")) {
                 source = source.getUpLocation();
             }
@@ -364,8 +365,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         if(source.getHex().isDepressionTerrain() && !source.getLOSPoint().equals(source.getHex().getHexCenter())) {
             leveladj=+1;
         }
-        sourcelevel= source.getAbsoluteHeight() +leveladj;                  //getLevelInHex() + source.getHex().getBaseLevelofHex() + leveladj ;
-
+        sourcelevel= source.getAbsoluteHeight() +leveladj;
         // make the source and the target the same
         target = source;
         useAuxTargetLOSPoint = useAuxSourceLOSPoint;
@@ -440,7 +440,8 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                 super.reportFormat.setProperty("ToLocation", super.lastLocation);
                 if (LOSMap == null) {
                     super.reportFormat.setProperty("Range", super.lastRange);
-                } else if(source == null || target == null ) {
+
+                  } else if(source == null || target == null ) {
                     return;
                 } else {
                     super.reportFormat.setProperty("Range", String.valueOf(Map.range(source.getHex(), target.getHex(), LOSMap.getMapConfiguration()))); //super.lastRange);
@@ -505,6 +506,8 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             if (p == null || !LOSMap.onMap(p.x, p.y)) return;
             target = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
             useAuxTargetLOSPoint = useAuxLOSPoint(target, p.x, p.y);
+            // need to overwrite super class which reverts to hex name when los to/from vertex
+            super.lastLocation = target.getName();
         }
         catch (Exception e) {
             // trap error - no need for action DR

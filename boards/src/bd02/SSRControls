@@ -13,6 +13,12 @@
          <entry name="48: Toujours l'audace" rule="SSO_48" text="scenario 48 overlay"/>
  </Checkbox>
  <Checkbox name="">
+         <entry name="78: Encounter at Cornimont" rule="SSO_78" text="scenario 78 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="99: Probing Layforce" rule="SSO_99" text="scenario 99 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
          <entry name="T11: The Attempt to Relieve Peiper" rule="SSO_T11" text="scenario T11 overlay"/>
  </Checkbox>
  <Checkbox name="">

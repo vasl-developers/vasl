@@ -6,6 +6,9 @@
   <Checkbox name="">
          <entry name="Use FT5 Pillbox overlay on 9DD3" rule="BSO_09_FT05" text="FT5 Pillbox overlay"/>
  </Checkbox>
+<Checkbox name="">
+         <entry name="99: Probing Layforce" rule="SSO_09_99" text="99 board 09"/>
+ </Checkbox>
  <Checkbox name="">
          <entry name="U36: Operation Switchback" rule="09_SSO_U36" text="U36 board 09"/>
  </Checkbox>
