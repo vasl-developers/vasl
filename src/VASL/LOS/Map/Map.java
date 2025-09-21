@@ -435,7 +435,7 @@ public class Map  {
                 name += c;
             }
         }
-
+        if (isdwboard) {row += 10;}
         // add row as suffix - even cols (e.g. A = 0) will start with 1; odd cols will start with zero
         int rowOffset = A1CenterY < 0.0 ? (int) (-A1CenterY / hexHeight) + 1 : 0;
         if (A1CenterY == 65) {
@@ -558,12 +558,7 @@ public class Map  {
         } else {
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < getHexGrid()[x].length; y++) { // add 1 hex if odd
-                    //test code
-                    if (getHex(x,y).getName().contains("T9")){
-                        boolean reg = true;
-                    }
                     getHex(x, y).resetTerrain(0,0);
-
                 }
             }
         }
