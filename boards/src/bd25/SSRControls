@@ -1,25 +1,34 @@
 <SSRControls>
    <Option name="Board 25 Special Overlays">
-     <Checkbox name="No Gully Cliffs">
-       <entry name="No Gully Cliffs" rule="BSO_25_NoGullyCliffs"/>
-     </Checkbox>
-	  <Checkbox name="Hammada is Open Ground">
-        <entry name="Hammada is Open Ground" rule="HammadaToOG"/>
-      </Checkbox>
-      <Checkbox name="">
-         <entry name="Scenario 36 - Rachi Ridge" rule="SSO_25_36" text="Bd25 Scen 36 SSO"/>
-       </Checkbox>
-	         <Checkbox name="">
-         <entry name="Scenario 72 - Sea of Tranquility" rule="SSO_25_72" text="Bd25 Scen 72 SSO"/>
-       </Checkbox>
-	   	         <Checkbox name="">
-         <entry name="Scenario 81 - Fratricidal Fighting" rule="SSO_25_81" text="Bd25 Scen 81 SSO"/>
-       </Checkbox>
-	   	   	         <Checkbox name="">
-         <entry name="Scenario A23 - Contest in the Clouds" rule="SSO_25_A23" text="Bd25 Scen A23 SSO"/>
-       </Checkbox>
-	   	   	   	         <Checkbox name="">
-         <entry name="Scenario A39 - Showdown at Tug Argan Pass" rule="SSO_25_A39" text="Bd25 Scen A39 SSO"/>
-       </Checkbox>
+	<Checkbox name="No Gully Cliffs">
+		<entry name="No Gully Cliffs" rule="BSO_25_NoGullyCliffs"/>
+	</Checkbox>
+	<Checkbox name="Hammada is Open Ground">
+ 	        <entry name="Hammada is Open Ground" rule="HammadaToOG"/>
+ 	</Checkbox>
+	<Checkbox name="">
+	        <entry name="36 - Rachi Ridge" rule="SSO_25_36" text="Bd25 36 SSO"/>
+	</Checkbox>
+	<Checkbox name="">
+	        <entry name="72 - Sea of Tranquility" rule="SSO_25_72" text="Bd25 72 SSO"/>
+	</Checkbox>
+	<Checkbox name="">
+ 	       <entry name="81 - Fratricidal Fighting" rule="SSO_25_81" text="Bd25 81 SSO"/>
+	</Checkbox>
+	<Checkbox name="">
+ 	       <entry name="253 - Our Place in the Sun" rule="SSO_25_253" text="Bd25 253 SSO"/>
+	</Checkbox>
+	<Checkbox name="">
+ 	       <entry name="256 - The Golden Mountain" rule="SSO_25_256" text="Bd25 256 SSO"/>
+	</Checkbox>
+	<Checkbox name="">
+ 	       <entry name="A23 - Contest in the Clouds" rule="SSO_25_A23" text="Bd25 A23 SSO"/>
+        </Checkbox>
+	<Checkbox name="">
+	        <entry name="A39 - Showdown at Tug Argan Pass" rule="SSO_25_A39" text="Bd25 A39 SSO"/>
+        </Checkbox>
+	<Checkbox name="">
+	        <entry name="CH59 - Bucking for Sergeant" rule="SSO_25_CH59" text="Bd25 CH59 SSO"/>
+        </Checkbox>
     </Option>
 </SSRControls>
