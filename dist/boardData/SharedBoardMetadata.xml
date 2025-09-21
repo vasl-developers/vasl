@@ -1002,7 +1002,7 @@
 		<color name="OrchL2" red="83" green="98" blue="48" terrain="Orchard" elevation="2" />
 		<color name="OrchL3" red="83" green="98" blue="49" terrain="Orchard" elevation="3" />
 		<color name="OrchL4" red="83" green="98" blue="50" terrain="Orchard" elevation="4" />
-		<color name="OrchL5" red="83" green="98" blue="51" terrain="Orchard" elevation="4" />
+		<color name="OrchL5" red="83" green="98" blue="51" terrain="Orchard" elevation="5" />
 		<color name="OrchL6" red="83" green="98" blue="52" terrain="Orchard" elevation="6" />
 		<color name="OrchTrees" red="82" green="98" blue="46" terrain="Orchard" elevation="UNKNOWN" />
 		<color name="OliveGroveGreen" red="171" green="222" blue="104" terrain="Olive Grove" elevation="UNKNOWN" />
@@ -1418,7 +1418,7 @@
 		<color name="Scrub8L_1" red="164" green="159" blue="111" terrain="Scrub" elevation="-1" />
 		<color name="Scrub9" red="162" green="155" blue="128" terrain="Scrub" elevation="UNKNOWN" />
 		<color name="Scrub10" red="145" green="142" blue="133" terrain="Scrub" elevation="UNKNOWN" />
-		<color name="Scrub10L_10" red="145" green="142" blue="132" terrain="Scrub" elevation="-1" />
+		<color name="Scrub10L_1" red="145" green="142" blue="132" terrain="Scrub" elevation="-1" />
 		<color name="CactusTan" red="222" green="189" blue="99" terrain="Cactus Patch" elevation="UNKNOWN" />
 		<color name="CactusGreen" red="123" green="132" blue="8" terrain="Cactus Patch" elevation="UNKNOWN" />
 		<color name="CactusBrown" red="90" green="66" blue="33" terrain="Cactus Patch" elevation="UNKNOWN" />
@@ -1435,6 +1435,7 @@
 		<color name="Hammada3Winter" red="170" green="171" blue="169" terrain="Hammada" elevation="UNKNOWN" />
 		<color name="Hammada4Winter" red="200" green="201" blue="199" terrain="Hammada" elevation="UNKNOWN" />
 		<color name="Hammada5Winter" red="80" green="83" blue="77" terrain="Hammada" elevation="UNKNOWN" />
+		<color name="Hillock2" red="180" green="132" blue ="16" terrain="Hillock" elevation="UNKNOWN" />
 		<color name="Scrub_1" red="189" green="165" blue="51" terrain="Scrub" elevation="UNKNOWN" />
 		<color name="Scrub_2" red="168" green="141" blue="34" terrain="Scrub" elevation="UNKNOWN" />
 		<color name="Scrub_3" red="148" green="126" blue="37" terrain="Scrub" elevation="UNKNOWN" />
@@ -1523,6 +1524,7 @@
 		<color name="DTO_DuneLow2" red="201" green="158" blue="14" terrain="Sand Dune, Low" elevation="UNKNOWN" />
 		<color name="DTO_DuneLow3" red="232" green="188" blue="0" terrain="Sand Dune, Low" elevation="UNKNOWN" />
 		<color name="DTO_DuneLow4" red="218" green="178" blue="139" terrain="Sand Dune, Low" elevation="UNKNOWN" />
+		<color name="DTO_DuneLow5" red="252" green="232" blue="139" terrain="Sand Dune, Low" elevation="UNKNOWN" />
 		<color name="DTO_StoneBldg1" red="10" green="13" blue="12" terrain="Stone Building" elevation="UNKNOWN" />
 		<color name="DTO_StoneBldg2" red="49" green="52" blue="52" terrain="Stone Building" elevation="UNKNOWN" />
 		<color name="DTO_StoneBldg3" red="63" green="65" blue="65" terrain="Stone Building" elevation="UNKNOWN" />
@@ -1559,8 +1561,9 @@
 		<color name="DTO_WoodStairwell" red="250" green="251" blue="250" terrain="Rowhouse Wall, 1 Level" elevation="UNKNOWN" />
 
 		<!-- Desert colors for desert overlays, including AD terrain -->
-		<color name="Hillock1" red="114" green="83" blue="42" terrain="Hillock Summit" elevation="UNKNOWN" />
-		<color name="Dier" red="252" green="223" blue="89" terrain="Dier" elevation="UNKNOWN" />
+		<color name="Hillock1" red="114" green="83" blue="42" terrain="Hillock Summit" elevation="1" />
+		<color name="Dier1" red="252" green="223" blue="89" terrain="Dier" elevation="UNKNOWN" />
+		<color name="Dier2" red="202" green="152" blue="0" terrain="Dier" elevation="UNKNOWN" />
 		<color name="Cactus Patch" red="230" green="192" blue="82" terrain="Cactus Patch" elevation="0" />
 		<color name="Cactus Patch1" red="194" green="165" blue="68" terrain="Cactus Patch" elevation="0" />
 		<color name="Cactus Patch2" red="137" green="83" blue="35" terrain="Cactus Patch" elevation="0" />
@@ -1733,9 +1736,9 @@
         <terrainType name="Dier Lip" typeCode="103" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="HEXSIDE"  />
         <terrainType name="Wadi" typeCode="104" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="191" mapColorGreen="111" mapColorBlue="7" LOSCategory="DEPRESSION"  />
         <terrainType name="Hillock" typeCode="105" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="85" mapColorGreen="45" mapColorBlue="4" LOSCategory="OTHER"  />
-        <terrainType name="Hillock Summit" typeCode="106" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="114" mapColorGreen="83" mapColorBlue="42" LOSCategory="OPEN"  />  //mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="OPEN"  />
+        <terrainType name="Hillock Summit" typeCode="106" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="114" mapColorGreen="83" mapColorBlue="42" LOSCategory="OPEN"  />  //mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="OPEN"  />
         <terrainType name="Sand" typeCode="107" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="OPEN"  />
-        <terrainType name="Sand Dune, Low" typeCode="108" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="OTHER"  />
+        <terrainType name="Sand Dune, Low" typeCode="108" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="OTHER"  />
         <terrainType name="Dune, Crest Low" typeCode="109" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="HEXSIDE"  />
         <terrainType name="Dune, Crest High" typeCode="110" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="HEXSIDE"  />
         <terrainType name="Sangar" typeCode="111" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="250" mapColorGreen="235" mapColorBlue="130" LOSCategory="OPEN"  />
@@ -1817,7 +1820,7 @@
 		<terrainType name="MultipleWooden" typeCode="203" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="164" mapColorGreen="116" mapColorBlue="64" LOSCategory="BUILDING"  />
 		<terrainType name="Monument" typeCode="204" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="0" mapColorRed="10" mapColorGreen="127" mapColorBlue="138" LOSCategory="OTHER"  />
 		<terrainType name="BTCrags" typeCode="205" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="215" mapColorGreen="215" mapColorBlue="213" LOSCategory="OTHER"  />
-
+		<!--VASL code may hit a bug if typeCode > 255  need to test and change code -->
 	</terrainTypes>
 
 	<colorSSRules>

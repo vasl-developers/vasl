@@ -177,7 +177,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                                     finalfilename.equals("1") || finalfilename.equals("2") || finalfilename.equals("3") || finalfilename.equals("4") ||
                                     finalfilename.equals("5") || finalfilename.equals("6") || finalfilename.equals("7") || finalfilename.equals("8") ||
                                     finalfilename.equals("9") || finalfilename.equals("10") ||
-                                    finalfilename.equals("dx") || o.getName().contains("BSO") || o.getName().contains("SSO")) {
+                                    finalfilename.equals("dx") || o.getName().contains("BSO") || o.getName().contains("SSO") || o.getName().contains("Bocage")) {
 
                             } else {
                                 Rectangle ovrRec = o.bounds();
@@ -347,7 +347,14 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         setSourceFromMousePressedEvent(new Point(e.getPoint()));
         if(source == null) {return;}
         // the call to super.mousePressed is storing hex value when los is to or from a vertex; need to overwrite
-        super.anchorLocation = source.getName();
+        String boardname = "";
+        if (map != null && map.getBoardCount() > 1) {
+            Board b = map.findBoard(e.getPoint());
+            if (b != null) {
+                boardname = b.getName();
+            }
+        }
+        super.anchorLocation = boardname + source.getName();
         super.lastLocation = this.anchorLocation;
 
 
@@ -473,6 +480,17 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             if (target == null || (target.equals(oldLocation) && useAuxTargetLOSPoint == oldAuxFlag)) {
                 return;
             }
+            // need to overwrite super class which reverts to hex name when los to/from vertex
+            String boardname = "";
+            final Point p = map.componentToMap(e.getPoint());
+            if (map != null && map.getBoardCount() > 1) {
+                Board b = map.findBoard(p);
+                if (b != null) {
+                    boardname = b.getName();
+                }
+            }
+            super.lastLocation = boardname + target.getName();
+
 
             // if Ctrl click, use upper-most non-rooftop location
             if (e.isControlDown()) {
@@ -506,11 +524,9 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             if (p == null || !LOSMap.onMap(p.x, p.y)) return;
             target = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
             useAuxTargetLOSPoint = useAuxLOSPoint(target, p.x, p.y);
-            // need to overwrite super class which reverts to hex name when los to/from vertex
-            super.lastLocation = target.getName();
         }
         catch (Exception e) {
-            // trap error - no need for action DR
+            // trap error - no need for action
         }
     }
 
@@ -526,7 +542,15 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         if (p == null || !LOSMap.onMap(p.x, p.y)) {return;} // error handling
         target = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
         useAuxTargetLOSPoint = useAuxLOSPoint(target, p.x, p.y);
-
+        // need to overwrite super class which reverts to hex name when los to/from vertex
+        String boardname = "";
+        if (map != null && map.getBoardCount() > 1) {
+            Board b = map.findBoard(p);
+            if (b != null) {
+                boardname = b.getName();
+            }
+        }
+        super.lastLocation = boardname + target.getName();
     }
 
     private boolean isEnabled() {
@@ -695,7 +719,6 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                             "LOS Check Disabled - Overlay nearby. Range: " + Map.range(source.getHex(), target.getHex(), LOSMap.getMapConfiguration())));
 
                 } else {
-                    // code added by DR to handle rooftop levels
                     double leveladj = 0;
                     String sourcelevelString = "";
                     String targetlevelString = "";
@@ -706,6 +729,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                     else {  // hide decimal place
                         sourcelevelString = "Level " + (int)sourcelevel;
                     }
+                    if (source.getTerrain().isEntrenchmentTerrain()) {sourcelevelString += " (Entrenched)";}
                     if (isVerbose()) {
                         lastRangeRect = drawText(g,
                                 sourceLOSPoint.x - 20,
@@ -743,6 +767,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                     else {  // hide decimal place
                         targetlevelString="Level " + (int)targetlevel;
                     }
+                    if (target.getTerrain().isEntrenchmentTerrain()) {targetlevelString += " (Entrenched)";}
                     if (isVerbose()) {
                         lastRangeRect.add(drawText(g,
                                 targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), //- 20,

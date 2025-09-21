@@ -7,7 +7,13 @@
       <entry name="Scrub is Open Ground" rule="ScrubToOG"/>
     </Checkbox>
     <Checkbox name="">
-      <entry name="Scenario A61 - Across the Wier" rule="SSO_30_A61" text="Bd30 Scen A61 SSO"/>
+      <entry name="254 - Criniti's Escape" rule="SSO_30_254"/> 
+    </Checkbox>
+    <Checkbox name="">
+      <entry name="A61 - Across the Wire" rule="SSO_30_A61"/> 
+    </Checkbox>
+    <Checkbox name="">
+      <entry name="N16 - No Laughing Matter" rule="SSO_30_N16"/> 
     </Checkbox>
   </Option>
 </SSRControls>
