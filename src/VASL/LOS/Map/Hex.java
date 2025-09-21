@@ -1033,6 +1033,12 @@ public class Hex {
         if (centerLocation.getTerrain().isDepression()){
             centerLocation.setDepressionTerrain(centerLocation.getTerrain());
         }
+        else if(centerLocation.getDepressionTerrain() == null) {
+
+        }
+        else if (centerLocation.getDepressionTerrain().isDepression()){
+            centerLocation.setTerrain(centerLocation.getDepressionTerrain());
+        }
     }
 
     /**
