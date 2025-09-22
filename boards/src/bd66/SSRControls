@@ -3,5 +3,9 @@
  <Checkbox name="">
          <entry name="AP108: Yes Sir!" rule="66_SSO_AP108" text="scenario AP108 overlay"/>
  </Checkbox>
+<Checkbox name="">
+         <entry name="No Stream" rule="66_NoStream" text=""/>
+ </Checkbox>
+
     </Option>
 </SSRControls>
