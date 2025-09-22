@@ -23,6 +23,18 @@
 				font-style: normal;
 				src: url("../../fonts/NimbusSanL-Bol.ttf") format("ttf");
 			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: italic;
+				src: url("../../fonts/NimbusSanL-RegIta.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: italic;
+				src: url("../../fonts/NimbusSanL-BolIta.ttf") format("ttf");
+			}
 		</style>
 	</defs>
 	<!-- The bevel - is there a better/more efficient way to achieve this? -->
@@ -48,7 +60,7 @@
 	</g>
 	<line x1="10" y1="10" x2="50" y2="50" style="stroke:white; stroke-width:3.00"/>
 	<line x1="10" y1="50" x2="50" y2="10" style="stroke:white; stroke-width:3.00"/>
-	<text x="3.00" y="11.00" text-anchor="start" style="font-size:8pt;font-family:Nimbus Sans L;fill:black">R1</text>
+	<text x="57.00" y="11.00" text-anchor="end" style="font-size:8pt;font-weight:bold;font-family:Nimbus Sans L;fill:black">R1</text>
 	<!-- Unit depiction -->
-	<image x="0" y="0" width="60" height="60" preserveAspectRatio="xMidYMid meet" transform="rotate(-90, 30, 30)" href="svg/alATgen.png" xlink:href="svg/alATgen.png"/>
+	<image x="0" y="0" width="60" height="60" preserveAspectRatio="xMidYMid meet" transform="" href="svg/alATgen.png" xlink:href="svg/alATgen.png"/>
 </svg>

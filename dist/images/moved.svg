@@ -22,14 +22,25 @@
 				font-style: normal;
 				src: url("fonts/NimbusSanL-Bol.ttf") format("ttf");
 			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: italic;
+				src: url("fonts/NimbusSanL-RegIta.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: italic;
+				src: url("fonts/NimbusSanL-BolIta.ttf") format("ttf");
+			}
 		</style>
 	</defs>
 	<path id="tab" d="M 0.01952798,2 H 6.5 C 7.885,2 9,3.115 9,4.5 v 39 C 9,44.885 7.885,46 6.5,46 h -6.52181322 z"/>
-	
+
 	<text x="50%" y="13.00" style="font-size:8px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;fill:#ffffff;fill-opacity:1;font-family:Nimbus Sans L">M</text>
 	<text x="50%" y="20.00" style="font-size:8px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;fill:#ffffff;fill-opacity:1;font-family:Nimbus Sans L">O</text>
 	<text x="50%" y="27.00" style="font-size:8px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;fill:#ffffff;fill-opacity:1;font-family:Nimbus Sans L">V</text>
 	<text x="50%" y="34.00" style="font-size:8px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;fill:#ffffff;fill-opacity:1;font-family:Nimbus Sans L">E</text>
 	<text x="50%" y="41.00" style="font-size:8px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;fill:#ffffff;fill-opacity:1;font-family:Nimbus Sans L">D</text>
-
 </svg>

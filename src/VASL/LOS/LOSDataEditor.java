@@ -59,11 +59,15 @@ public class LOSDataEditor {
     public Map createNewLOSData() {
 
         Map m;
-        String passgridconfig= boardArchive.getHexGridConfig();
-        if(passgridconfig==null){passgridconfig="Normal";}
+        //ToDo - a value for passboardgridconfig needs to be passed to the createNewLOSData() method
+        // review to determine if these two variables are needed with new crop/fip
+        String passcropgridconfig= boardArchive.getHexGridConfig();
+        if(passcropgridconfig==null){passcropgridconfig="Normal";}
+        String passboardgridconfig = "Normal";
+
         boolean isCropping=false;
         if (boardArchive.isGEO()) {
-
+            //ToDo switch to new method for creating a map in VASL.LOS.Map.Map
             m = new Map(boardArchive.getHexWidth(),
                     boardArchive.getHexHeight(),
                     boardArchive.getBoardWidth(),
@@ -72,7 +76,7 @@ public class LOSDataEditor {
                     boardArchive.getA1CenterY(),
                     boardArchive.getBoardImage().getWidth(),
                     boardArchive.getBoardImage().getHeight(),
-                    sharedBoardMetadata.getTerrainTypes(), passgridconfig, isCropping);
+                    sharedBoardMetadata.getTerrainTypes(), passboardgridconfig, passcropgridconfig, isCropping);
             m.setSlopes(boardArchive.getSlopes());
         } else {
             m = new Map(
@@ -85,7 +89,7 @@ public class LOSDataEditor {
                     boardArchive.getA1CenterY(),
                     boardArchive.getBoardImage().getWidth(),
                     boardArchive.getBoardImage().getHeight(),
-                    sharedBoardMetadata.getTerrainTypes(), passgridconfig, isCropping);
+                    sharedBoardMetadata.getTerrainTypes(), passboardgridconfig, passcropgridconfig, isCropping);
             m.setSlopes(boardArchive.getSlopes());
         }
         return m;
@@ -684,7 +688,7 @@ public class LOSDataEditor {
             }
         } else {
             for (int col = 0; col < map.getWidth(); col++) {
-                for (int row = 0; row < map.getHeight() + (col % 2); row++) {
+                for (int row = 0; row < map.getHexGrid()[col].length; row++) {
 
                     Hex[][] hexGrid = map.getHexGrid();
 
@@ -720,9 +724,9 @@ public class LOSDataEditor {
                 }
             }
         }
-
+        //ToDo - does getMapConfiguration test need to be used with new crop/flip
         // change the base height of the hex grid
-        if(map.getMapConfiguration().equals("TopLeftHalfHeightEqualRowCount")){
+        if(map.getMapConfiguration().equals("ToplefthalfheightEqualRowCount")){
             for (int col = 0; col < map.getWidth(); col++) {
                 for (int row = 0; row < map.getHeight(); row++) { // no extra hex for boards where each col has same number of rows (eg RO)
                     Hex[][] hexGrid = map.getHexGrid();
@@ -755,10 +759,11 @@ public class LOSDataEditor {
 
     /**
      * Rotates the map 180 degrees. Should only be used for geomorphic map boards
+     * //ToDo does this need to be part of LOSDataEditor since it is not used
      */
     public void flip() {
 
-        map.flip();
+        //map.flip();
     }
 
     /**

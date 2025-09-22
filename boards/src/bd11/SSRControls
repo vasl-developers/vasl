@@ -1,9 +1,15 @@
 <SSRControls>
  <Option name="Board 11 Special overlays">
  <Checkbox name="">
-         <entry name="U37: Scheldt Fortress South" rule="SSO_U37_11" text="U37 overlay"/>
+         <entry name="48 - Toujours L'Audace" rule="SSO_11_48" text="Bd11 Scen 48 SSO"/>
  </Checkbox>
-<Checkbox name="">
+ <Checkbox name="">
+         <entry name="A76 - Night Drop" rule="SSO_11_A76" text="Bd11 Scen A76 SSO"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="U37 - Scheldt Fortress South" rule="SSO_U37_11" text="U37 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
          <entry name="Z5 Grainfield is Level 2 hill" rule="BSO_11_Z5IsL2" text="Z5 Grain is L2 Hill"/>
  </Checkbox>
  <Checkbox name="">

@@ -24,6 +24,18 @@
 				font-style: normal;
 				src: url("../../fonts/NimbusSanL-Bol.ttf") format("ttf");
 			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: italic;
+				src: url("../../fonts/NimbusSanL-RegIta.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: italic;
+				src: url("../../fonts/NimbusSanL-BolIta.ttf") format("ttf");
+			}
 		</style>
 	</defs>
 	<!-- The bevel - is there a better/more efficient way to achieve this? -->
@@ -48,7 +60,7 @@
 		</g>
 	</g>
 	<!-- Unit depiction -->
-	<image x="0" y="0" width="60" height="60" preserveAspectRatio="xMidYMid meet" transform="scale(0.60) translate(15, 15) rotate(60, 30, 30)" href="svg/MotorB3.svg" xlink:href="svg/MotorB3.svg"/>
+	<image x="0" y="0" width="60" height="60" preserveAspectRatio="xMidYMid meet" transform="" href="svg/MotorB3.png" xlink:href="svg/MotorB3.png"/>
 	<!-- PP # -->
 	<svg x="21.00" y="51.00" width="36.00" height="6.00" style="overflow:visible">
 		<text x="100%" y="98%" dominant-baseline="auto" text-anchor="end"><tspan style="font-size:8.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black;fill-opacity:1;stroke-width:0.2">0PP</tspan></text>

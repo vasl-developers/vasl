@@ -4,7 +4,13 @@
          <entry name="32: Subterranean Quarry" rule="SSO_32" text="scenario 32 overlay"/>
  </Checkbox>
  <Checkbox name="">
+         <entry name="134: Counterattack on the Vistula" rule="SSO_134" text="scenario 134 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
          <entry name="O: The St. Goar Assault" rule="SSO_O" text="scenario O overlay"/>
+ </Checkbox>
+ <Checkbox name="">
+         <entry name="A18: Sbeitla Probe" rule="SSO_A18" text="scenario A18 overlay"/>
  </Checkbox>
  <Checkbox name="">
          <entry name="A23: Contest in the Clouds" rule="SSO_A23" text="scenario A23 overlay"/>

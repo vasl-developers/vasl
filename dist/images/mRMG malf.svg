@@ -22,6 +22,18 @@
 				font-style: normal;
 				src: url("fonts/NimbusSanL-Bol.ttf") format("ttf");
 			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: italic;
+				src: url("fonts/NimbusSanL-RegIta.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: italic;
+				src: url("fonts/NimbusSanL-BolIta.ttf") format("ttf");
+			}
 		</style>
 	</defs>
 	<path id="tab" style="fill:#a56e32" d="M 1,0 8.9744214,0.02436054 9.0231425,20 H 1 C 0.446,20 0,19.554 0,19 V 1 C 0,0.446 0.44600258,-0.00169237 1,0 Z"/>

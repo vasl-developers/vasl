@@ -9,5 +9,7 @@
  <Checkbox name="">
          <entry name="River and Marsh is L0 open ground" rule="79_BSO_NoRiver" text=""/>
  </Checkbox>
-   </Option>
+<Checkbox name="">
+         <entry name="Scenario N16 No Laughing Matter" rule="79_SSO_N16" text=""/>
+ </Checkbox>   </Option>
 </SSRControls>

@@ -1,10 +1,16 @@
 <SSRControls>
    <Option name="Board 20 Special Overlays">
        <Checkbox name="">
+         <entry name="building hexsides are Rowhouse bars" rule="SSO_bars" text="Rowhouse bars"/>
+       </Checkbox>
+       <Checkbox name="">
          <entry name="Scenario 3 - The Czerniakow Bridgehead" rule="SSO_20_3" text="Scenario 3 SSO"/>
        </Checkbox>
        <Checkbox name="">
          <entry name="Scenario 4 - The Commissar's House" rule="SSO_20_4" text="Scenario 4 SSO"/>
+       </Checkbox>
+       <Checkbox name="">
+         <entry name="Scenario 135 - Acts Of Defiance" rule="SSO_20_135" text="Scenario 135 SSO"/>
        </Checkbox>
   </Option>
   </SSRControls>

@@ -45,7 +45,7 @@ public class Hex {
 	private	boolean northWestOnMap  = true;
 
 	// the parent map
-	private Map map;
+	private final Map map;
 
 	// geometric variables
 	private	Point2D.Double   center;
@@ -169,6 +169,16 @@ public class Hex {
 	}
 
     /**
+     * Change name of Hex, CenterLocation and hexside locations when doing cropping/flipping
+     * @param name new name for hex
+     */
+    public void resetHexAndLocationNames(String name){
+        this.name = name;
+        this.centerLocation.setName(name);
+        resetHexsideLocationNames();
+    }
+
+    /**
      * Create the the set of "empty" hex locations - i.e they will not reflect the grid terrain
      * @param terr a default terrain used for all locations
      * @param vertexPoints the hex vertex points
@@ -275,8 +285,8 @@ public class Hex {
 
         double newX = x == -1.0 ? 0.0 : x;
         double newY = y == -1.0 ? 0.0 : y;
-        newX = (int) newX == map.getGridWidth()  || (int) newX == map.getGridWidth() || (int) newX == (map.getGridWidth() + 1.0)  ? (map.getGridWidth()  - 1.0) : newX;
-        newY = (int) newY == map.getGridHeight() || (int) newY == map.getGridHeight() || (int) newY == (map.getGridHeight() + 1.0) ? (map.getGridHeight() - 1.0) : newY;
+        newX = (int) newX == map.getGridWidth()  || (int) newX == (map.getGridWidth() + 1.0)  ? (map.getGridWidth()  - 1.0) : newX;
+        newY = (int) newY == map.getGridHeight() || (int) newY == (map.getGridHeight() + 1.0) ? (map.getGridHeight() - 1.0) : newY;
 
         return new Point2D.Double(newX, newY);
     }
@@ -287,7 +297,9 @@ public class Hex {
     private void  setHexFlags() {
         // reworked Jan 2020 by Doug R to reflect hex configuration possibilities
         // first column?
-        if (map.getMapConfiguration() == "Normal" && map.getA1CenterY()!=65) {
+        //ToDo fix this to work with new flipping and cropping
+        // need different values for getMapConfiguration()
+        if (map.getMapConfiguration().equals("Normal") && map.getA1CenterY()!=65) {
             if (columnNumber == 0) {
                 southWestOnMap = false;
                 northWestOnMap = false;
@@ -309,7 +321,7 @@ public class Hex {
                 southEastOnMap = false;
                 southWestOnMap = false;
             }
-        } else if (map.getMapConfiguration() == "TopLeftHalfHeight") {
+        } else if (map.getMapConfiguration().equals("Toplefthalfheight")) {
             // first column
             if (columnNumber == 0) {
                 southWestOnMap = false;
@@ -333,7 +345,7 @@ public class Hex {
                 southEastOnMap = false;
                 southWestOnMap = false;
             }
-        } else if (map.getMapConfiguration() == "FullHex") {
+        } else if (map.getMapConfiguration().equals("FullHex")) {
             // no need to do first and last col tests as all east/west hexides on map due to "Full" config
             // first hex in odd column?
             if ((columnNumber % 2 == 1) && (rowNumber == 0)) {
@@ -347,7 +359,7 @@ public class Hex {
                 southEastOnMap = false;
                 southWestOnMap = false;
             }
-        } else if (map.getMapConfiguration() == "FullHexHalfHeight") {
+        } else if (map.getMapConfiguration().equals("FullHexhalfheight")) {
             // no need to do first and last col tests as all east/west hexides on map due to "Full" config
             //first hex in even column (A, C, E as A = col 0)
             if ((columnNumber % 2 == 0) && (rowNumber == 0)) {
@@ -361,10 +373,11 @@ public class Hex {
                 southEastOnMap = false;
                 southWestOnMap = false;
             }
+            //ToDo check this below
             // above works for geo style where one col (odd or even) has all full height hexes and the other column has a top and bottom half hex
             // need to deal with configuration where one col (odd or even) has top half height hex and bottom full height and the other column has top full height hex and bottom half height hex
             // at present RO is the only los-enabled map board with this configuration - see below
-        } else if (map.getMapConfiguration() == "TopLeftHalfHeightEqualRowCount" || map.getA1CenterY()==65) {
+        } else if (map.getMapConfiguration().equals("ToplefthalfheightEqualRowCount") || map.getA1CenterY()==65) {
             // first column
             if (columnNumber == 0) {
                 southWestOnMap = false;
@@ -387,7 +400,7 @@ public class Hex {
                 southEastOnMap = false;
                 southWestOnMap = false;
             }
-        } else if (map.getMapConfiguration() == "FullHexEqualRowCount") {
+        } else if (map.getMapConfiguration().equals("FullHexEqualRowCount")) {
             // no need to do first and last col tests as all east/west hexides on map due to "Full" config
             // first hex in odd column ?
             if ((columnNumber % 2 == 1) && (rowNumber == 0)) {
@@ -405,15 +418,43 @@ public class Hex {
 
     }
 
-	// used to update the hexside location once the map has been fully initialized
+	// used to update the hexside location once the map has been fully initialized and in new crop/flip methods
 	public void resetHexsideLocationNames(){
 
-		if (map.getAdjacentHex(this, 0) != null) hexsideLocations[0].setName(name + "/" + map.getAdjacentHex(this, 0).getName());
-		if (map.getAdjacentHex(this, 1) != null) hexsideLocations[1].setName(name + "/" + map.getAdjacentHex(this, 1).getName());
-		if (map.getAdjacentHex(this, 2) != null) hexsideLocations[2].setName(name + "/" + map.getAdjacentHex(this, 2).getName());
-		if (map.getAdjacentHex(this, 3) != null) hexsideLocations[3].setName(name + "/" + map.getAdjacentHex(this, 3).getName());
-		if (map.getAdjacentHex(this, 4) != null) hexsideLocations[4].setName(name + "/" + map.getAdjacentHex(this, 4).getName());
-		if (map.getAdjacentHex(this, 5) != null) hexsideLocations[5].setName(name + "/" + map.getAdjacentHex(this, 5).getName());
+		if (map.getAdjacentHex(this, 0) != null) {
+            hexsideLocations[0].setName(name + "/" + map.getAdjacentHex(this, 0).getName());
+        }
+        else {
+            hexsideLocations[0].setName("");
+        }
+		if (map.getAdjacentHex(this, 1) != null) {
+            hexsideLocations[1].setName(name + "/" + map.getAdjacentHex(this, 1).getName());
+        }
+        else {
+            hexsideLocations[1].setName("");
+        }
+		if (map.getAdjacentHex(this, 2) != null) {
+            hexsideLocations[2].setName(name + "/" + map.getAdjacentHex(this, 2).getName());
+        }
+        else {
+            hexsideLocations[2].setName("");
+        }
+		if (map.getAdjacentHex(this, 3) != null) {
+            hexsideLocations[3].setName(name + "/" + map.getAdjacentHex(this, 3).getName());
+        } else {
+            hexsideLocations[3].setName("");
+        }
+		if (map.getAdjacentHex(this, 4) != null) {
+            hexsideLocations[4].setName(name + "/" + map.getAdjacentHex(this, 4).getName());
+        }
+        else {
+            hexsideLocations[5].setName("");
+        }
+		if (map.getAdjacentHex(this, 5) != null) {
+            hexsideLocations[5].setName(name + "/" + map.getAdjacentHex(this, 5).getName());
+        } else {
+            hexsideLocations[5].setName("");
+        }
 	}
 
 	// get the map
@@ -465,7 +506,7 @@ public class Hex {
 
 
     private boolean[] slopes = new boolean[6]; // flags for hexsides having slopes - all false by default
-    private boolean[] rbrrembankments = new boolean[6]; // flags for hexsides having RB rr embankments - all false by default
+    private boolean[] rbrrembankments = new boolean[6]; // flags for hexsides having rr embankments - all false by default
     private boolean[] partialorchards = new boolean[6]; // flags for hexsides having partial orchards - all false by default
     /**
      * Set the hexside slopes/rrembankment and Partial Orchard flags
@@ -574,6 +615,7 @@ public class Hex {
 		}
 		return -1;
 	}
+
     public Location getSharedHexside(Hex adjacentHex){
         // ToDo complete this method
         return null;
@@ -583,6 +625,7 @@ public class Hex {
      * Set the depression terrain
      * @param terr the depression terrain - pass null to remove depression terrain
      */
+    //ToDo check this method - is the hexsideLocations loop correct? seems recursive
     public void setDepressionTerrain(Terrain terr) {
 		// change the depression terrain in the center location
 		centerLocation.setDepressionTerrain(terr);
@@ -610,26 +653,31 @@ public class Hex {
     /**
      * Resets the hex locations using the terrain information in the map terrain grid
      */
-    public void resetTerrain(double gridadj) {
-
+    public void resetTerrain(double passposx, double passposy) {
+        //ToDo add all overlay and other terrain updates here
         // set the center location terrain
-        Terrain centerLocationTerrain = map.getGridTerrain((int) (centerLocation.getLOSPoint().getX()+ gridadj), (int) centerLocation.getLOSPoint().getY());
-
+        int terrainpointx = (int) (centerLocation.getLOSPoint().getX() + passposx);
+        if (terrainpointx > -5 && terrainpointx < 0) {terrainpointx = 0;}
+        //if (terrainpointx > map.getGridWidth()) {terrainpointx = map.getGridWidth() - 1;}  // this is a hack to fix hex inconsistencies ToDo fix the source -
+        int terrainpointy = (int) (centerLocation.getLOSPoint().getY() + passposy-1);
+        if (terrainpointy > -5 && terrainpointy < 0) {terrainpointy = 0;}
+        Terrain centerLocationTerrain = map.getGridTerrain(terrainpointx, terrainpointy); //centerLocation.getLOSPoint().getX()+ boardposx), (int) centerLocation.getLOSPoint().getY());
         // fix center location when building misses the center dot
-        if(!centerLocationTerrain.isBuilding() && getHexsideBuildingTerrain(gridadj) != null) {
-            centerLocationTerrain = getHexsideBuildingTerrain(gridadj);
+        if(!centerLocationTerrain.isBuilding() && getHexsideBuildingTerrain(passposx) != null) {
+            centerLocationTerrain = getHexsideBuildingTerrain(passposx);
         }
+        if (centerLocationTerrain  == null) {centerLocationTerrain = map.getTerrain("Open Ground");}
         // hack to deal with I24-I26 wooden warehouses on bdRO
         if (!centerLocationTerrain.isBuilding()) {
             Terrain firsttestforbuilding =null, secondtestforbuilding=null, thirdtestforbuilding=null, fourthtestforbuilding=null;
-            int firsttestx = (int) (centerLocation.getLOSPoint().getX() + gridadj + 5);
-            int secondtestx = (int) (centerLocation.getLOSPoint().getX() + gridadj - 5);
+            int firsttestx = (int) (centerLocation.getLOSPoint().getX() + passposx + 5);
+            int secondtestx = (int) (centerLocation.getLOSPoint().getX() + passposx - 5);
             int firsttesty= (int) (centerLocation.getLOSPoint().getY() + 5);
             int secondtesty = (int) (centerLocation.getLOSPoint().getY() - 5);
                 if (map.onMap(firsttestx, (int) centerLocation.getLOSPoint().getY())) {firsttestforbuilding = map.getGridTerrain(firsttestx, (int) centerLocation.getLOSPoint().getY());}
                 if (map.onMap(secondtestx, (int) centerLocation.getLOSPoint().getY())) {secondtestforbuilding = map.getGridTerrain(secondtestx, (int) centerLocation.getLOSPoint().getY());}
-                if (map.onMap((int) (centerLocation.getLOSPoint().getX() + gridadj), firsttesty)) {thirdtestforbuilding = map.getGridTerrain((int) (centerLocation.getLOSPoint().getX() + gridadj), firsttesty);}
-                if (map.onMap((int) (centerLocation.getLOSPoint().getX() + gridadj), secondtesty)) {fourthtestforbuilding = map.getGridTerrain((int) (centerLocation.getLOSPoint().getX() + gridadj), secondtesty);}
+                if (map.onMap((int) (centerLocation.getLOSPoint().getX() + passposx), firsttesty)) {thirdtestforbuilding = map.getGridTerrain((int) (centerLocation.getLOSPoint().getX() + passposx), firsttesty);}
+                if (map.onMap((int) (centerLocation.getLOSPoint().getX() + passposx), secondtesty)) {fourthtestforbuilding = map.getGridTerrain((int) (centerLocation.getLOSPoint().getX() + passposx), secondtesty);}
                 if(firsttestforbuilding!=null && firsttestforbuilding.isBuilding()) {
                     centerLocationTerrain = firsttestforbuilding;
                 }
@@ -655,10 +703,9 @@ public class Hex {
             if (isHexsideOnMap(x)) {
 
                 Terrain terrain =  map.getGridTerrain(
-                        (int) (getHexsideLocation(x).getEdgeCenterPoint().getX()+gridadj),
+                        (int) (getHexsideLocation(x).getEdgeCenterPoint().getX() + passposx),
                         (int) getHexsideLocation(x).getEdgeCenterPoint().getY());
 
-                // code added by DR to add RB rr embankment and partial orchard info to Hex
                 if (rbrrembankments[x]){
                     terrain = map.getTerrain("Rrembankment");
                     hexsideTerrain[x]=terrain;
@@ -675,7 +722,7 @@ public class Hex {
                 if(oppositeHex != null){
                     final int oppositeHexside = (x + 3) % 6;
 					final Terrain oppositeHexsideTerrain = map.getGridTerrain(
-						(int)(oppositeHex.getHexsideLocation(oppositeHexside).getEdgeCenterPoint().getX()+gridadj),
+						(int)(oppositeHex.getHexsideLocation(oppositeHexside).getEdgeCenterPoint().getX() + passposx),
 						(int)oppositeHex.getHexsideLocation(oppositeHexside).getEdgeCenterPoint().getY());
                     if (oppositeHexsideTerrain != null) {
                         if (!terrain.isHexsideTerrain() && oppositeHexsideTerrain.isHexsideTerrain()) {
@@ -696,21 +743,19 @@ public class Hex {
         }
 
         // set the hex base height
-        setBaseLevelofHex(map.getGridElevation((int) (centerLocation.getLOSPoint().getX()+ gridadj), (int) centerLocation.getLOSPoint().getY()));
-
-        // next two methods reversed by DR
+        setBaseLevelofHex(map.getGridElevation((int) (centerLocation.getLOSPoint().getX() + passposx), (int) centerLocation.getLOSPoint().getY()));
 
         // set the depression terrain
         setDepressionTerrain();
 
         // set inherent terrain in the hex grid
-        setInherentTerrain(gridadj);
+        setInherentTerrain(0);
 
         // reset the hexside terrain
-         resetHexsideTerrain(gridadj);
+         resetHexsideTerrain(0);
 
         // correct for single hex bridges
-        fixBridges(gridadj);
+        fixBridges(0);
     }
 
     /**
@@ -736,7 +781,6 @@ public class Hex {
      * This is a hack to check if a building is multi-hex or single hex
      * Used when creating cellars and rooftops
      * @return true if any hexside has building terrain
-     * Added by DR to enable HASL LOS
      */
     private boolean isMultihexBuilding() {
         for(int x = 0; x <6; x++) {
@@ -798,9 +842,12 @@ public class Hex {
                 final Location newLocation = new Location(centerLocation);
                 newLocation.setDepressionTerrain(getDepressionTerrain(gridadj));
                 // added by DR; this is a wonky fix to deal with bridges in non-zero level terrain; not sure why its needed but it works, otherwise bridges and depressions in valleys are two levels apart and those in hills are at same level
-                int depressionadj = 0;
-                if (baseLevelofHex == 0) {
-                    depressionadj = 1;
+                int depressionadj = 1;
+                if (baseLevelofHex == 0 && centerLocation.getLevelInHex() == 0) {
+                    centerLocation.setLevelInHex(1);
+                //}
+                //else if (baseLevelofHex == 0) {
+                //    depressionadj = 1;
                 } else {
                     if (baseLevelofHex > 0) {
                         depressionadj = 2;
@@ -811,6 +858,7 @@ public class Hex {
                 newLocation.setTerrain(getDepressionTerrain(gridadj));
                 newLocation.setUpLocation(centerLocation);
                 centerLocation.setDownLocation(newLocation);
+                bridgeLocation = centerLocation;
             }
             else if (centerLocation.getTerrain().isWaterTerrain()){
                 // need to add new bridge location
@@ -849,11 +897,10 @@ public class Hex {
     public void addBuildingLevels(Terrain centerLocationTerrain, boolean multihex){
 
         // add building locations
-        boolean oldStairway = false;
         if (centerLocationTerrain.isBuilding()) {
 
             // keep stairway if resetting a multi-level building
-            oldStairway = stairway &&
+            boolean oldStairway = stairway &&
                     !"Stone Building, 1 Level".equals(centerLocation.getTerrain().getName()) &&
                     !"Wooden Building, 1 Level".equals(centerLocation.getTerrain().getName());
 
@@ -866,12 +913,12 @@ public class Hex {
             for (int level = 1; level <= centerLocationTerrain.getHeight(); level++) {
 
                 // need to ignore buildings without upper level locations - bit of a hack so we can use the building height
-                if (multihex== true || (multihex==false && !"Wooden Building".equals(centerLocationTerrain.getName()) &&
+                if (multihex || (!multihex && !"Wooden Building".equals(centerLocationTerrain.getName()) &&
                         !"Stone Building".equals(centerLocationTerrain.getName()) &&
                         !"Huts".equals(centerLocationTerrain.getName()) &&
                         !"MultipleWooden".equals(centerLocationTerrain.getName()))) {
 
-                    // code added by DR to prevent quasi-levels in Factory hexes without stairways
+                    // prevent quasi-levels in Factory hexes without stairways
                     if ((centerLocationTerrain.getLOSCategory() == Terrain.LOSCategories.FACTORY) &&
                             !(stairway)) {
                     } else {
@@ -898,7 +945,7 @@ public class Hex {
                             "Wooden Building, 1 Level".equals(centerLocation.getTerrain().getName()) ||
                             oldStairway;
 
-            // add cellars and rooftops to buildings. will add them to multihex non-factories) DR
+            // add cellars and rooftops to multihex non-factories
             // need to ignore buildings without upper level locations - bit of a hack so we can use the building height
 
             // cellars
@@ -921,7 +968,6 @@ public class Hex {
 
                     previousLocation.setDownLocation(l);
                     l.setUpLocation(previousLocation);
-                    previousLocation = l;
                 }
             }
 
@@ -957,7 +1003,6 @@ public class Hex {
 
                     previousLocation.setUpLocation(l);
                     l.setDownLocation(previousLocation);
-                    previousLocation = l;
                 }
             }
             fixspecialcasesAddRooftops(); // handles RO wooden warehouses and SK transform (all buildings are single story)
@@ -987,6 +1032,12 @@ public class Hex {
 
         if (centerLocation.getTerrain().isDepression()){
             centerLocation.setDepressionTerrain(centerLocation.getTerrain());
+        }
+        else if(centerLocation.getDepressionTerrain() == null) {
+
+        }
+        else if (centerLocation.getDepressionTerrain().isDepression()){
+            centerLocation.setTerrain(centerLocation.getDepressionTerrain());
         }
     }
 
@@ -1051,7 +1102,7 @@ public class Hex {
         }
     }
     public Terrain checkWallHedgeGap (Location l){
-        int firstx = 0, firsty = 0, secondx = 0, secondy = 0,  startx = 0, endx =0, starty = 0, endy =0;
+        int firstx = 0, firsty = 0, secondx = 0, secondy = 0;
         int hexside = l.getHex().getLocationHexside(l);
         switch (hexside){
             case 0:
@@ -1144,7 +1195,6 @@ public class Hex {
 	}
 
 	public Location getHexsideLocation(int hexside){
-        //test code wrapped around return line to avoid break; DR
         if (!(hexside ==-1)) {
             return hexsideLocations[hexside];
         }
@@ -1157,7 +1207,18 @@ public class Hex {
 	public void setHexsideLocationTerrain(int hexside, Terrain terr){
 
 		hexsideLocations[hexside].setTerrain(terr);
+        // removing?
+        if (terr == null){
 
+            hexsideLocations[hexside].setTerrain(getMap().getTerrain("Open Ground"));
+        }
+        else if(terr.isHexsideTerrain()) {
+            hexsideTerrain[hexside] = terr;
+        }
+        //ToDo test and make sure (1) this works and works properly with the rest of los
+        else if(terr.isInherentTerrain()) {
+            hexsideTerrain[hexside] = terr;
+        }
 	}
 
 	public void setBaseLevelofHex(int levelofHex) {
@@ -1169,25 +1230,22 @@ public class Hex {
         for (int x = 0; x < 6; x++ ) {
             Terrain hexsideterrain = getHexsideLocation(x).getTerrain();
             if (hexsideterrain != null && !hexsideterrain.isDepression() && hexsideterrain.isRoad()) {
-                int bridgeelevation = map.getGridElevation(((int) getHexsideLocation(x).getEdgeCenterPoint().getX()), ((int) getHexsideLocation(x).getEdgeCenterPoint().getY()));
-                return bridgeelevation;
+                return map.getGridElevation(((int) getHexsideLocation(x).getEdgeCenterPoint().getX()), ((int) getHexsideLocation(x).getEdgeCenterPoint().getY()));
             }
         }
         return getBaseLevelofHex() +1;  // default if loop above returns no value
     }
 	// geometric methods
 	public boolean  contains(int x, int y)			{
-        return hexBorder.getBounds().contains(x,y) && hexBorder.contains(x, y);}
+        return hexBorder.getBounds().contains(x,y) && hexBorder.contains(x, y);
+    }
 	public boolean  containsExtended(int x, int y)	{return extendedHexBorder.contains(x, y);}
 	public boolean  contains(Point p)				{return hexBorder.contains(p);}
 
 	// nearest Hexside aiming point
 	public Location getNearestLocation(int x, int y) {
-
-		// get distance to center
-		double  distance	 = Point2D.distance(
-			(double) x,
-			(double) y,
+        // get distance to center
+		double  distance	 = Point2D.distance(x, y,
 			centerLocation.getLOSPoint().getX(),
 			centerLocation.getLOSPoint().getY());
 		Location currentLocation = centerLocation;
@@ -1203,9 +1261,7 @@ public class Hex {
 				side == 4 && southWestOnMap 	||
 				side == 5 && northWestOnMap){
 
-				final double nextDistance = Point2D.distance(
-					(double) x,
-					(double) y,
+				final double nextDistance = Point2D.distance(x, y,
 					hexsideLocations[side].getEdgeCenterPoint().getX(),
 					hexsideLocations[side].getEdgeCenterPoint().getY()
 				);
@@ -1225,15 +1281,11 @@ public class Hex {
     public int getNearestHexside(int x, int y, int side1, int side2) {
 
         // get distance to center
-        double  firstDistance	 = Point2D.distance(
-                (double) x,
-                (double) y,
+        double  firstDistance	 = Point2D.distance(x, y,
                 hexsideLocations[side1].getEdgeCenterPoint().getX(),
                 hexsideLocations[side1].getEdgeCenterPoint().getY());
 
-        double secondDistance = Point2D.distance(
-                (double) x,
-                (double) y,
+        double secondDistance = Point2D.distance(x, y,
                 hexsideLocations[side2].getEdgeCenterPoint().getX(),
                 hexsideLocations[side2].getEdgeCenterPoint().getY());
 
@@ -1290,21 +1342,28 @@ public class Hex {
 		}
 	}
 
-	public void flip(){
+	public void flip(Hex flipdestinationhex){
 
 		// transform the hex polygons
 
 		// flip the points in the center location
-		flipHexPoint(centerLocation.getEdgeCenterPoint());
-		flipHexPoint(centerLocation.getLOSPoint());
-		flipHexPoint(centerLocation.getAuxLOSPoint());
-
+		flipHexPoint(centerLocation.getEdgeCenterPoint(), flipdestinationhex.centerLocation.getEdgeCenterPoint());
+		flipHexPoint(centerLocation.getLOSPoint(), flipdestinationhex.centerLocation.getLOSPoint());
+		flipHexPoint(centerLocation.getAuxLOSPoint(), flipdestinationhex.centerLocation.getAuxLOSPoint());
+        //ToDo test this code
+        Point centerpoint = new Point((int) center.getX(), (int) center.getY());
+        Point destinationcenterpoint = new Point((int) flipdestinationhex.center.getX(), (int) flipdestinationhex.center.getY());
+        flipHexPoint(centerpoint, destinationcenterpoint);
+        centerLocation.getHex().center.x = centerpoint.getX();
+        centerLocation.getHex().center.y = centerpoint.getY();
+        centerDot.x = centerpoint.getX();
+        centerDot.y = centerpoint.getY();
 		// flip the points in the hexside locations
 		for (int x = 0; x < 6; x++){
 
-			flipHexPoint(hexsideLocations[x].getEdgeCenterPoint());
-			flipHexPoint(hexsideLocations[x].getLOSPoint());
-			flipHexPoint(hexsideLocations[x].getAuxLOSPoint());
+			flipHexPoint(hexsideLocations[x].getEdgeCenterPoint(), flipdestinationhex.hexsideLocations[x].getEdgeCenterPoint());
+			flipHexPoint(hexsideLocations[x].getLOSPoint(), flipdestinationhex.hexsideLocations[x].getLOSPoint());
+			flipHexPoint(hexsideLocations[x].getAuxLOSPoint(), flipdestinationhex.hexsideLocations[x].getAuxLOSPoint());
 		}
 
 		// shuffle the indexes of the hexside variables
@@ -1346,38 +1405,37 @@ public class Hex {
 
         // up and down locations
 		Location l = centerLocation.getUpLocation();
-		while (l != null){
-
-			flipHexPoint(l.getLOSPoint());
-			flipHexPoint(l.getAuxLOSPoint());
+        while (l != null){
+			flipHexPoint(l.getLOSPoint(), flipdestinationhex.centerLocation.getLOSPoint());
+			flipHexPoint(l.getAuxLOSPoint(), flipdestinationhex.centerLocation.getAuxLOSPoint());
 			l = l.getUpLocation();
-		}
+        }
 
 		Location l2 = centerLocation.getDownLocation();
-		while (l2 != null){
-
-			flipHexPoint(l2.getLOSPoint());
-			flipHexPoint(l2.getAuxLOSPoint());
-			l2 = l2.getDownLocation();
-		}
+        while (l2 != null) {
+            flipHexPoint(l2.getLOSPoint(), flipdestinationhex.centerLocation.getLOSPoint());
+            flipHexPoint(l2.getAuxLOSPoint(), flipdestinationhex.centerLocation.getAuxLOSPoint());
+            l2 = l2.getDownLocation();
+        }
 
 		// flip bridge
 		if (bridge != null){
-
-			flipHexPoint(bridge.getCenter());
+            flipdestinationhex.setBridge(bridge);
+			flipHexPoint(bridge.getCenter(), flipdestinationhex.bridge.getCenter());
 
 			bridge.setRotation(bridge.getRotation() >= 180 ? bridge.getRotation() - 180 : bridge.getRotation() + 180);
 		}
 	}
 
-	private void flipHexPoint(Point p){
+	private void flipHexPoint(Point p, Point destinationp){
 
-		p.x = map.getGridWidth() - p.x - 1;
-		p.y = map.getGridHeight() - p.y - 1;
+		p.x = destinationp.x;
+        p.y = destinationp.y;
 	}
 
 	public void copy(Hex h){
 
+            // ToDo test this and use if works
 /*
 	Note: When a "half hex" is being copied, no attempt is made to resolve
 	conflicting terrain types or ground level elevations. It is assumed the
@@ -1490,7 +1548,7 @@ public class Hex {
         //stairways and slopes
         stairway = h.hasStairway();
         slopes = h.getSlopes();
-        // code added by DR April 2016 to enable RB rr embankments and partial orchards
+
         rbrrembankments=h.getRBrrembankments();
         partialorchards = h.getPartialOrchards();
 	}
@@ -1498,7 +1556,7 @@ public class Hex {
     private boolean[] getSlopes() {
         return slopes;
     }
-    // code added by DR to enable RB rr embankments and partial orchards
+
     public boolean[] getRBrrembankments() {
         return rbrrembankments;
     }
@@ -1515,9 +1573,11 @@ public class Hex {
         this.stairway = stairway;
     }
 
-    public void resetHexFlags() {setHexFlags();}
+    public void resetHexFlags() {
+        setHexFlags();
+    }
 
-    //added by DR to support OffBoardObservers
+    //support OffBoardObservers
     public void setOBO(int OBOlevel) {
         Terrain terrain = map.getTerrain("OffBObserver");
         final Location l = new Location(
@@ -1622,7 +1682,6 @@ public class Hex {
         // 1. RO Wooden warehouses
         // 2. Wooden Building hexes when Sk (all buildings are single story applied).
         Terrain centerLocationTerrain = getCenterLocation().getTerrain();
-        boolean multihex = false;
         // 1. RO Wooden warehouses
         if ("Wooden Building".equals(centerLocationTerrain.getName()) &&
             (this.getName().equals("I21") ||
@@ -1641,7 +1700,8 @@ public class Hex {
             this.getName().equals("J26")
                     )) {
                 // 2nd part of bdRO hack to enable roofs on I24, I25, I26, I29 and I30
-                if (this.getName().equals("I24") || this.getName().equals("I25") || this.getName().equals("I29")) {
+                //ToDo check if the following code is needed/works properly as it does not seem to be used
+                /*if (this.getName().equals("I24") || this.getName().equals("I25") || this.getName().equals("I29")) {
                     Point p = hexsideLocations[3].getEdgeCenterPoint();
                     Terrain terrain = map.getGridTerrain(p.x - 5, p.y);
 
@@ -1649,10 +1709,9 @@ public class Hex {
                     Point p = hexsideLocations[0].getEdgeCenterPoint();
                     Terrain terrain = map.getGridTerrain(p.x - 5, p.y);
 
-                }
+                }*/
                 // 1. & 2. Wooden Building hexes when Sk (all buildings are single story applied).
-                Terrain roofterrain;
-                roofterrain = map.getTerrain("Rooftop");
+                Terrain roofterrain = map.getTerrain("Rooftop");
                 final Location l = new Location(
                         centerLocation.getName() + " Rooftop ",
                         1,

@@ -23,6 +23,18 @@
 				font-style: normal;
 				src: url("../fonts/NimbusSanL-Bol.ttf") format("ttf");
 			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: italic;
+				src: url("../fonts/NimbusSanL-RegIta.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: italic;
+				src: url("../fonts/NimbusSanL-BolIta.ttf") format("ttf");
+			}
 		</style>
 	</defs>
 	<path id="arrow" style="fill:#ff0000;fill-opacity:0.878327" d="m 18.995927,36.197572 1.151036,-9.548869 1.915746,3.321308 3.608219,-2.085719 3.903438,6.761434 -3.617416,2.089501 1.908058,3.323952 z"/>

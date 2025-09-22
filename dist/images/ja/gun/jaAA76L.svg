@@ -24,6 +24,18 @@
 				font-style: normal;
 				src: url("../../fonts/NimbusSanL-Bol.ttf") format("ttf");
 			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: italic;
+				src: url("../../fonts/NimbusSanL-RegIta.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: italic;
+				src: url("../../fonts/NimbusSanL-BolIta.ttf") format("ttf");
+			}
 		</style>
 	</defs>
 	<!-- The bevel - is there a better/more efficient way to achieve this? -->
@@ -66,5 +78,5 @@
 	<svg x="27.00" y="0.00" width="30.00" height="11.00" style="overflow:visible">
 		<text x="100%" y="100%" dominant-baseline="auto" text-anchor="end" style="font-size:11.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">AA</text>
 	</svg>
-	<text x="57.00" y="20.40" dominant-baseline="auto" text-anchor="end"><tspan style="font-size:8.40px;font-weight:bold;font-family:Nimbus Sans L;fill:black;fill-opacity:1">M</tspan><tspan style="font-size:8.40px;font-weight:bold;font-family:Nimbus Sans L;fill:#e10000;fill-opacity:1">-</tspan></text>
+	<text x="57.00" y="20.40" dominant-baseline="auto" text-anchor="end"><tspan style="font-size:8.40px;font-weight:bold;font-family:Nimbus Sans L;fill:black;fill-opacity:1">M</tspan><tspan style="font-size:8.40px;font-weight:bold;font-family:Nimbus Sans L;fill:#e10000;fill-opacity:1">&#x002A;</tspan></text>
 </svg>

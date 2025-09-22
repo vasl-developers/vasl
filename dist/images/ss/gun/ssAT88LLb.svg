@@ -23,6 +23,18 @@
 				font-style: normal;
 				src: url("../../fonts/NimbusSanL-Bol.ttf") format("ttf");
 			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: italic;
+				src: url("../../fonts/NimbusSanL-RegIta.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: italic;
+				src: url("../../fonts/NimbusSanL-BolIta.ttf") format("ttf");
+			}
 		</style>
 	</defs>
 	<!-- The bevel - is there a better/more efficient way to achieve this? -->
@@ -48,17 +60,17 @@
 	</g>
 	<line x1="10" y1="10" x2="50" y2="50" style="stroke:#b4b4b4; stroke-width:3.00"/>
 	<line x1="10" y1="50" x2="50" y2="10" style="stroke:#b4b4b4; stroke-width:3.00"/>
-	<text x="3.00" y="11.00" text-anchor="start" style="font-size:8pt;font-family:Nimbus Sans L;fill:white">R1</text>
-	<text x="57.00" y="57.00" text-anchor="end" style="font-size:8pt;font-family:Nimbus Sans L;fill:white">X6</text>
+	<text x="57.00" y="11.00" text-anchor="end" style="font-size:8pt;font-weight:bold;font-family:Nimbus Sans L;fill:white">R1</text>
+	<text x="3.00" y="57.00" text-anchor="start" style="font-size:8pt;font-weight:bold;font-family:Nimbus Sans L;fill:white">X6</text>
 	<!-- Manhandling # -->
-	<svg x="48.00" y="36.00" width="9.00" height="9.00" style="overflow:visible">
+	<svg x="48.00" y="14.40" width="9.00" height="9.00" style="overflow:visible">
 		<circle cx="50%" cy="50%" r="4.20" style="display:inline;fill:none;fill-opacity:1;stroke:white;stroke-width:0.36;stroke-dasharray:none;stroke-opacity:1"></circle>
 		<text x="50%" y="80%" dominant-baseline="auto" text-anchor="middle" style="font-size:8.40px;font-weight:bold;font-family:Nimbus Sans L;fill:white;fill-opacity:1">4</text>
 	</svg>
 	<!-- Manhandling -->
-	<svg x="40.20" y="35.40" width="10.20" height="10.20" style="overflow:visible">
+	<svg x="40.20" y="13.80" width="10.20" height="10.20" style="overflow:visible">
 		<text x="75%" y="80%" dominant-baseline="auto" text-anchor="end" style="font-size:8.40px;font-weight:bold;font-family:Nimbus Sans L;fill:white;fill-opacity:1">M</text>
 	</svg>
 	<!-- Unit depiction -->
-	<image x="0" y="0" width="60" height="60" preserveAspectRatio="xMidYMid meet" transform="rotate(-90, 30, 30)" href="svg/ssAT88LL.png" xlink:href="svg/ssAT88LL.png"/>
+	<image x="0" y="0" width="60" height="60" preserveAspectRatio="xMidYMid meet" transform="" href="svg/ssAT88LL.png" xlink:href="svg/ssAT88LL.png"/>
 </svg>

@@ -24,6 +24,18 @@
 				font-style: normal;
 				src: url("../../fonts/NimbusSanL-Bol.ttf") format("ttf");
 			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: italic;
+				src: url("../../fonts/NimbusSanL-RegIta.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: italic;
+				src: url("../../fonts/NimbusSanL-BolIta.ttf") format("ttf");
+			}
 		</style>
 	</defs>
 	<!-- The bevel - is there a better/more efficient way to achieve this? -->
@@ -52,8 +64,8 @@
 	<!-- MA, text position adjusts to account for any overlined/underlined text. -->
 	<svg x="3.00" y="46.00" width="54.00" height="11.00" style="overflow:visible">
 		<text x="0.00" y="100.00%" dominant-baseline="auto" text-anchor="start" style="font-size:6.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black" baseline-shift="super">&#x273D;</text>
-		<text x="4.80" y="100.00%" dominant-baseline="auto" text-anchor="start" style="font-size:12.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black"><tspan style="text-decoration:overline">105</tspan></text>
-		<line x1="4.80" y1="0%" x2="298.05" y2="0%" style="stroke:black;stroke-width:1.00"/> <!-- overline -->
+		<text x="4.80" y="100.00%" dominant-baseline="auto" text-anchor="start" style="font-size:12.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">105</text>
+		<line x1="4.80" y1="0%" x2="22.05" y2="0%" style="stroke:black;stroke-width:1.00"/> <!-- overline -->
 	</svg>
 	<!-- Gun Type -->
 	<svg x="27.00" y="0.00" width="30.00" height="11.00" style="overflow:visible">
