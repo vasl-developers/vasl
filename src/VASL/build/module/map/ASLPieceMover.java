@@ -68,6 +68,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import static VASSAL.build.GameModule.getGameModule;
+
 public class ASLPieceMover extends PieceMover {
     /**
      * Preferences key for whether to mark units as having moved
@@ -534,6 +536,11 @@ public class ASLPieceMover extends PieceMover {
 
             }
         }
+        //
+        // Check for SASL activation possibilities
+        //
+        SASLActivationChecker saslActivationChecker = map.getComponentsOf(SASLActivationChecker.class).get(0);
+        saslActivationChecker.runUpdate(allDraggedPieces);
 
         //if (GlobalOptions.getInstance().autoReportEnabled()) {
         //    Command report = this.createMovementReporter((Command)comm).getReportCommand().append((new MovementReporter.HiddenMovementReporter((Command)comm)).getReportCommand());

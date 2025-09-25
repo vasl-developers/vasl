@@ -1,14 +1,17 @@
 package VASL.build.module;
 
+import VASL.build.module.map.SASLActivationChecker;
 import VASL.environment.Environment;
 import VASSAL.build.AbstractBuildable;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.GlobalOptions;
+import VASSAL.build.module.Map;
 import VASSAL.configure.BooleanConfigurer;
 import VASSAL.i18n.Resources;
 import VASSAL.preferences.Prefs;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -291,6 +294,7 @@ public class ASLDiceBot extends AbstractBuildable
     private boolean showExtraDiceStats = false;
     private boolean showROFDie = false;
     private final DiceStats diceStats = new DiceStats();
+    private final DiceStats diceStatsSasl = new DiceStats();
     private final Environment environment = new Environment();
 
     public ASLDiceBot() {
@@ -526,47 +530,90 @@ public class ASLDiceBot extends AbstractBuildable
         if ((coloredDieResult != 0) && (whiteDieResult != 0))
         {
             String output;
+            //
+            // For SASL Campaign Game Roster support.
+            // TODO: Refactor this?
+            //
+            if (!categName.startsWith("ENEMY")) {
+                diceStats.Add_DR(TOTAL_CATEGORY_NAME, coloredDieResult, whiteDieResult);
+                diceStats.Add_DR(categName, coloredDieResult, whiteDieResult);
 
-            diceStats.Add_DR(TOTAL_CATEGORY_NAME, coloredDieResult, whiteDieResult);
-            diceStats.Add_DR(categName, coloredDieResult, whiteDieResult);
-
-            if( (environment.dustInEffect() && dustDieResult != 0) &&
-               (categName.equals(("TH")) || categName.equals(("IFT")) || categName.equals(("MC"))))
-            {
-                output = String.format("*** (%s DR) %s,%s,%s *** - total with %s: %s     <%s>      %s[%s   avg   %s (%s)]    (%s%s)",
-                        categName,
-                        coloredDieResult,
-                        whiteDieResult,
-                        dustDieResult,
-                        environment.getCurrentDustLevel().toString(),
-                        environment.isLightDust()   ?
-                                Integer.toString(coloredDieResult + whiteDieResult + (dustDieResult / 2) ) :
-                                Integer.toString(coloredDieResult + whiteDieResult + ((dustDieResult / 2) + (dustDieResult % 2) ) ),
-                        GetPlayer(),
-                        IsSpecialDiceRoll(coloredDieResult + whiteDieResult),
-                        diceStats.GetNumRolledDROnTotal(TOTAL_CATEGORY_NAME, coloredDieResult + whiteDieResult),
-                        diceStats.GetAverageDR(categName),
-                        diceStats.GetAverageDR(TOTAL_CATEGORY_NAME),
-                        getSerieInstanceNumber(),
-                        (usingRandomOrg ? " - by random.org" : "")
-                );
+                if( (environment.dustInEffect() && dustDieResult != 0) &&
+                        (categName.equals(("TH")) || categName.equals(("IFT")) || categName.equals(("MC"))))
+                {
+                    output = String.format("*** (%s DR) %s,%s,%s *** - total with %s: %s     <%s>      %s[%s   avg   %s (%s)]    (%s%s)",
+                            categName,
+                            coloredDieResult,
+                            whiteDieResult,
+                            dustDieResult,
+                            environment.getCurrentDustLevel().toString(),
+                            environment.isLightDust()   ?
+                                    Integer.toString(coloredDieResult + whiteDieResult + (dustDieResult / 2) ) :
+                                    Integer.toString(coloredDieResult + whiteDieResult + ((dustDieResult / 2) + (dustDieResult % 2) ) ),
+                            GetPlayer(),
+                            IsSpecialDiceRoll(coloredDieResult + whiteDieResult),
+                            diceStats.GetNumRolledDROnTotal(TOTAL_CATEGORY_NAME, coloredDieResult + whiteDieResult),
+                            diceStats.GetAverageDR(categName),
+                            diceStats.GetAverageDR(TOTAL_CATEGORY_NAME),
+                            getSerieInstanceNumber(),
+                            (usingRandomOrg ? " - by random.org" : "")
+                    );
+                } else {
+                    output = String.format("*** (%s DR) %s,%s ***   <%s>      %s[%s   avg   %s (%s)]    (%s%s)",
+                            categName,
+                            coloredDieResult,
+                            whiteDieResult,
+                            GetPlayer(),
+                            IsSpecialDiceRoll(coloredDieResult + whiteDieResult),
+                            diceStats.GetNumRolledDROnTotal(TOTAL_CATEGORY_NAME, coloredDieResult + whiteDieResult),
+                            diceStats.GetAverageDR(categName),
+                            diceStats.GetAverageDR(TOTAL_CATEGORY_NAME),
+                            getSerieInstanceNumber(),
+                            (usingRandomOrg ? " - by random.org" : "")
+                    );
+                }
             } else {
-                output = String.format("*** (%s DR) %s,%s ***   <%s>      %s[%s   avg   %s (%s)]    (%s%s)",
-                        categName,
-                        coloredDieResult,
-                        whiteDieResult,
-                        GetPlayer(),
-                        IsSpecialDiceRoll(coloredDieResult + whiteDieResult),
-                        diceStats.GetNumRolledDROnTotal(TOTAL_CATEGORY_NAME, coloredDieResult + whiteDieResult),
-                        diceStats.GetAverageDR(categName),
-                        diceStats.GetAverageDR(TOTAL_CATEGORY_NAME),
-                        getSerieInstanceNumber(),
-                        (usingRandomOrg ? " - by random.org" : "")
-                );
+                diceStatsSasl.Add_DR(TOTAL_CATEGORY_NAME, coloredDieResult, whiteDieResult);
+                diceStatsSasl.Add_DR(categName, coloredDieResult, whiteDieResult);
+
+                if( (environment.dustInEffect() && dustDieResult != 0) &&
+                        (categName.equals(("ENEMY TH")) || categName.equals(("ENEMY IFT")) || categName.equals(("ENEMY MC"))))
+                {
+                    output = String.format("*** (%s DR) %s,%s,%s *** - total with %s: %s     <%s>      %s[%s   avg   %s (%s)]    (%s%s)",
+                            categName,
+                            coloredDieResult,
+                            whiteDieResult,
+                            dustDieResult,
+                            environment.getCurrentDustLevel().toString(),
+                            environment.isLightDust()   ?
+                                    Integer.toString(coloredDieResult + whiteDieResult + (dustDieResult / 2) ) :
+                                    Integer.toString(coloredDieResult + whiteDieResult + ((dustDieResult / 2) + (dustDieResult % 2) ) ),
+                            GetPlayer(),
+                            IsSpecialDiceRoll(coloredDieResult + whiteDieResult),
+                            diceStatsSasl.GetNumRolledDROnTotal(TOTAL_CATEGORY_NAME, coloredDieResult + whiteDieResult),
+                            diceStatsSasl.GetAverageDR(categName),
+                            diceStatsSasl.GetAverageDR(TOTAL_CATEGORY_NAME),
+                            getSerieInstanceNumber(),
+                            (usingRandomOrg ? " - by random.org" : "")
+                    );
+                } else {
+                    output = String.format("*** (%s DR) %s,%s ***   <%s>      %s[%s   avg   %s (%s)]    (%s%s)",
+                            categName,
+                            coloredDieResult,
+                            whiteDieResult,
+                            GetPlayer(),
+                            IsSpecialDiceRoll(coloredDieResult + whiteDieResult),
+                            diceStatsSasl.GetNumRolledDROnTotal(TOTAL_CATEGORY_NAME, coloredDieResult + whiteDieResult),
+                            diceStatsSasl.GetAverageDR(categName),
+                            diceStatsSasl.GetAverageDR(TOTAL_CATEGORY_NAME),
+                            getSerieInstanceNumber(),
+                            (usingRandomOrg ? " - by random.org" : "")
+                    );
+                }
             }
 
             // showing special ROF Die
-            if (showROFDie && ("TH".equals(categName) || "IFT".equals(categName))){
+            if (showROFDie && categName.contains("TH") || categName.contains("IFT")) {
                 output +=  " ROF die: " + rofDieResult;
             }
 
@@ -580,21 +627,38 @@ public class ASLDiceBot extends AbstractBuildable
 
         if (singleDieResult != 0)
         {
-            diceStats.Add_dr(TOTAL_CATEGORY_NAME, singleDieResult);
-            diceStats.Add_dr(category, singleDieResult);
+            if (!category.startsWith("ENEMY")) {
+                diceStats.Add_dr(TOTAL_CATEGORY_NAME, singleDieResult);
+                diceStats.Add_dr(category, singleDieResult);
 
-            String output = String.format("*** (%s dr) %s ***   <%s>      [%s   avg   %s (%s)]    (%s%s)",
-                                        category,
-                                        singleDieResult,
-                                        GetPlayer(),
-                                        diceStats.GetNumRolleddrOnTotal(TOTAL_CATEGORY_NAME, singleDieResult),
-                                        diceStats.GetAveragedr(category),
-                                        diceStats.GetAveragedr(TOTAL_CATEGORY_NAME),
-                                        getSerieInstanceNumber(),
-                                        (usingRandomOrg ? " - by random.org" : "")
-                                        );
+                String output = String.format("*** (%s dr) %s ***   <%s>      [%s   avg   %s (%s)]    (%s%s)",
+                        category,
+                        singleDieResult,
+                        GetPlayer(),
+                        diceStats.GetNumRolleddrOnTotal(TOTAL_CATEGORY_NAME, singleDieResult),
+                        diceStats.GetAveragedr(category),
+                        diceStats.GetAveragedr(TOTAL_CATEGORY_NAME),
+                        getSerieInstanceNumber(),
+                        (usingRandomOrg ? " - by random.org" : "")
+                );
+                OutputString(output);
+            } else {
+                diceStatsSasl.Add_dr(TOTAL_CATEGORY_NAME, singleDieResult);
+                diceStatsSasl.Add_dr(category, singleDieResult);
 
-            OutputString(output);
+                String output = String.format("*** (%s dr) %s ***   <%s>      [%s   avg   %s (%s)]    (%s%s)",
+                        category,
+                        singleDieResult,
+                        GetPlayer(),
+                        diceStatsSasl.GetNumRolleddrOnTotal(TOTAL_CATEGORY_NAME, singleDieResult),
+                        diceStatsSasl.GetAveragedr(category),
+                        diceStatsSasl.GetAveragedr(TOTAL_CATEGORY_NAME),
+                        getSerieInstanceNumber(),
+                        (usingRandomOrg ? " - by random.org" : "")
+                );
+
+                OutputString(output);
+            }
         }
     }
 
@@ -775,6 +839,177 @@ public class ASLDiceBot extends AbstractBuildable
             OutputString(String.format("!!" + HTMLDouble,  GetPlayer() + "'s DRs today", stringBuilder));
         }
     }
+    //
+    // TODO refactor this?
+    //
+    public void statsTodaySasl()
+    {
+        boolean saslCGRpresent = false;
+
+        for (final VASSAL.build.module.Map map : Map.getMapList()) {
+            if (map.getMapName().equals("Main Map")) {
+                SASLActivationChecker saslActivationChecker = map.getComponentsOf(SASLActivationChecker.class).get(0);
+                saslCGRpresent = saslActivationChecker.isEnabled();
+                break;
+            }
+        }
+
+        if (saslCGRpresent) {
+            StringBuilder stringBuilder = new StringBuilder();
+            List<CategoryDiceStats> stats = getCategoryDiceStatsSasl();
+
+            for (CategoryDiceStats categoryStats : stats) {
+                if (categoryStats.isTwoDiceCategory())
+                    continue;
+
+                if (categoryStats.getCategoryName().compareToIgnoreCase(TOTAL_CATEGORY_NAME) == 0)
+                    continue;
+
+                if (showExtraDiceStats) {
+                    stringBuilder.append(String.format("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",
+                            categoryStats.getCategoryName().replace("ENEMY ", ""),
+                            categoryStats.getTotalNumberOfRolls(),
+                            categoryStats.GetTextualAverage(),
+                            categoryStats.getDetailedOneDieResults(1),
+                            categoryStats.getDetailedOneDieResults(2),
+                            categoryStats.getDetailedOneDieResults(3),
+                            categoryStats.getDetailedOneDieResults(4),
+                            categoryStats.getDetailedOneDieResults(5),
+                            categoryStats.getDetailedOneDieResults(6))
+                    );
+                } else {
+                    stringBuilder.append(String.format("<tr><td>%s</td><td>%s</td><td>%s</td></tr>",
+                            categoryStats.getCategoryName().replace("ENEMY ", ""),
+                            categoryStats.getTotalNumberOfRolls(),
+                            categoryStats.GetTextualAverage())
+                    );
+                }
+            }
+
+            CategoryDiceStats categoryTotal = diceStatsSasl.get("D1_" + TOTAL_CATEGORY_NAME);
+
+            if (categoryTotal != null) {
+                if (showExtraDiceStats) {
+                    stringBuilder.append(String.format("<tr class=\"total\"><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td></tr>",
+                            categoryTotal.getCategoryName().replace("ENEMY ", ""),
+                            categoryTotal.getTotalNumberOfRolls(),
+                            categoryTotal.GetTextualAverage(),
+                            categoryTotal.getDetailedOneDieResults(1),
+                            categoryTotal.getDetailedOneDieResults(2),
+                            categoryTotal.getDetailedOneDieResults(3),
+                            categoryTotal.getDetailedOneDieResults(4),
+                            categoryTotal.getDetailedOneDieResults(5),
+                            categoryTotal.getDetailedOneDieResults(6))
+                    );
+                } else {
+                    stringBuilder.append(String.format("<tr class=\"total\"><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td></tr>",
+                            categoryTotal.getCategoryName().replace("ENEMY ", ""),
+                            categoryTotal.getTotalNumberOfRolls(),
+                            categoryTotal.GetTextualAverage())
+                    );
+                }
+            }
+
+            if (showExtraDiceStats) {
+                OutputString(String.format("!!" + HTMLSingle_Extra, GetPlayer() + "'s ENEMY drs today", stringBuilder));
+            } else {
+                OutputString(String.format("!!" + HTMLSingle, GetPlayer() + "'s ENEMY drs today", stringBuilder));
+            }
+
+            stringBuilder.setLength(0);
+
+            for (CategoryDiceStats categoryStats : stats) {
+                if (!categoryStats.isTwoDiceCategory())
+                    continue;
+
+                if (categoryStats.getCategoryName().compareToIgnoreCase(TOTAL_CATEGORY_NAME) == 0)
+                    continue;
+
+                double average = categoryStats.GetNumericAverage();
+                String bgColor = getBgColor(average);
+
+                if (showExtraDiceStats) {
+                    stringBuilder.append(String.format("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td %s>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",
+                            categoryStats.getCategoryName().replace("ENEMY ", ""),
+                            categoryStats.getTotalNumberOfRolls(),
+                            categoryStats.GetColoredDieAverage(),
+                            categoryStats.GetWhiteDieAverage(),
+                            bgColor,
+                            categoryStats.GetTextualAverage(),
+                            categoryStats.getDetailedTwoDiceResults(2),
+                            categoryStats.getDetailedTwoDiceResults(3),
+                            categoryStats.getDetailedTwoDiceResults(4),
+                            categoryStats.getDetailedTwoDiceResults(5),
+                            categoryStats.getDetailedTwoDiceResults(6),
+                            categoryStats.getDetailedTwoDiceResults(7),
+                            categoryStats.getDetailedTwoDiceResults(8),
+                            categoryStats.getDetailedTwoDiceResults(9),
+                            categoryStats.getDetailedTwoDiceResults(10),
+                            categoryStats.getDetailedTwoDiceResults(11),
+                            categoryStats.getDetailedTwoDiceResults(12))
+                    );
+                } else {
+                    stringBuilder.append(String.format("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td %s>%s</td></tr>",
+                            categoryStats.getCategoryName().replace("ENEMY ", ""),
+                            categoryStats.getTotalNumberOfRolls(),
+                            categoryStats.GetColoredDieAverage(),
+                            categoryStats.GetWhiteDieAverage(),
+                            bgColor,
+                            categoryStats.GetTextualAverage())
+                    );
+                }
+            }
+
+            CategoryDiceStats totalCategory = diceStatsSasl.get("D2_" + TOTAL_CATEGORY_NAME);
+
+            if (totalCategory != null) {
+                double average = totalCategory.GetNumericAverage();
+                String bgColor = getBgColor(average);
+                String categoryName = totalCategory.getCategoryName();
+
+                if (categoryName.startsWith("ENEMY ")) {
+                    categoryName.replace("ENEMY ", "");
+                }
+
+                if (showExtraDiceStats) {
+                    stringBuilder.append(String.format("<tr class=\"total\"><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\" %s>%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td></tr>",
+                            totalCategory.getCategoryName().replace("ENEMY ", ""),
+                            totalCategory.getTotalNumberOfRolls(),
+                            totalCategory.GetColoredDieAverage(),
+                            totalCategory.GetWhiteDieAverage(),
+                            bgColor,
+                            totalCategory.GetTextualAverage(),
+                            totalCategory.getDetailedTwoDiceResults(2),
+                            totalCategory.getDetailedTwoDiceResults(3),
+                            totalCategory.getDetailedTwoDiceResults(4),
+                            totalCategory.getDetailedTwoDiceResults(5),
+                            totalCategory.getDetailedTwoDiceResults(6),
+                            totalCategory.getDetailedTwoDiceResults(7),
+                            totalCategory.getDetailedTwoDiceResults(8),
+                            totalCategory.getDetailedTwoDiceResults(9),
+                            totalCategory.getDetailedTwoDiceResults(10),
+                            totalCategory.getDetailedTwoDiceResults(11),
+                            totalCategory.getDetailedTwoDiceResults(12))
+                    );
+                } else {
+                    stringBuilder.append(String.format("<tr class=\"total\"><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\">%s</td><td class=\"up\" %s>%s</td></tr>",
+                            totalCategory.getCategoryName().replace("ENEMY ", ""),
+                            totalCategory.getTotalNumberOfRolls(),
+                            totalCategory.GetColoredDieAverage(),
+                            totalCategory.GetWhiteDieAverage(),
+                            bgColor,
+                            totalCategory.GetTextualAverage())
+                    );
+                }
+            }
+
+            if (showExtraDiceStats) {
+                OutputString(String.format("!!" + HTMLDouble_Extra, GetPlayer() + "'s ENEMY DRs today", stringBuilder));
+            } else {
+                OutputString(String.format("!!" + HTMLDouble, GetPlayer() + "'s ENEMY DRs today", stringBuilder));
+            }
+        }
+    }
 
     private String getBgColor(double average) {
         return average < 6.75 ? "bgcolor=#83C07A" : (average > 7.25 ? "bgcolor=#FE686D" : "");
@@ -808,5 +1043,34 @@ public class ASLDiceBot extends AbstractBuildable
         });
         return stats;
     }
-}
+    //
+    // TODO refactor this?
+    //
+    private List<CategoryDiceStats> getCategoryDiceStatsSasl() {
+        List<CategoryDiceStats> stats = new ArrayList<>(diceStatsSasl.values());
 
+        stats.sort((o1, o2) -> {
+
+            double avg1 = o1.GetNumericAverage();
+            double avg2 = o2.GetNumericAverage();
+            String[] categoryOrder = new String[]{"SA", "RS", "Rally", "IFT", "MC", "TC", "CC", "TH", "TK", "Other", "Total"};
+            String cat1 = o1.getCategoryName();
+            String cat2 = o2.getCategoryName();
+            int catIndex1 = 0;
+            int catIndex2 = 0;
+
+            if (showExtraDiceStats) {
+                for (int i = 0; i < 11; i++) {
+                    if (cat1.equals(categoryOrder[i]))
+                        catIndex1 = i;
+                    if (cat2.equals(categoryOrder[i]))
+                        catIndex2 = i;
+                }
+                return Integer.compare(catIndex1, catIndex2);
+            } else {
+                return Double.compare(avg1, avg2);
+            }
+        });
+        return stats;
+    }
+}
