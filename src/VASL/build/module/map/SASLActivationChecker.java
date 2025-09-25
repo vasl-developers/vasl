@@ -390,12 +390,11 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
         return result;
     }
     /**
-     * gemhack: redo comments!!!
      * Can piece1 see piece2?
      * Sub-classes could override this method to implement custom sighting rules
      * @param piece1 the piece being viewed
      * @param piece2 the piece doing the viewing
-     * @return true if piece1 can see piece2
+     * @return the range if piece1 can see piece2, -1 otherwise
      */
     public int losRange(GamePiece piece1, GamePiece piece2) {
         int range = -1;
