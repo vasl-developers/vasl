@@ -1,0 +1,41 @@
+<boardMetadata
+name="TFF2"
+version="0.1"
+versionDate="Mai 27th 2025"
+author="Benjamin Drieu"
+boardImageFileName="bdTFF2.png"
+hasHills="TRUE"
+width="49"
+height="29"
+hexHeight = "60"
+hexWidth = "52"
+A1CenterX = "21"
+A1CenterY = "31"
+>
+
+<!--
+The type of buildings >
+<buildingType hexName="F6" buildingTypeName="Stone Building, 1 Level" />
+
+
+-->
+<buildingTypes>
+</buildingTypes>
+
+<overlaySSRules>
+<!--
+Scenario-specific overlay rules.
+name - the VASL SSR name
+image - the image name
+x - x coordinate of overly upper left
+y - y coordinate of overlay upper left
+-->
+</overlaySSRules>
+
+<colors>
+</colors>
+
+<colorSSRules>
+</colorSSRules>
+
+</boardMetadata>
