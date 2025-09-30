@@ -27,6 +27,7 @@ import VASL.LOS.VASLGameInterface;
 import VASL.LOS.counters.OBA;
 import VASL.LOS.counters.Smoke;
 import VASL.LOS.counters.Vehicle;
+import VASL.build.module.map.boardPicker.ASLBoard;
 import VASL.build.module.map.boardPicker.VASLBoard;
 import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.counters.GamePiece;
@@ -184,8 +185,7 @@ public class Map  {
 	}
 
     //revised method; works for new routine
-    //ToDo will need separate method to work with HASL boards and other non-standard boards
-	private Hex [][] createtheHexGrid(boolean isCropping, boolean isabboard, boolean isdwboard) {
+    private Hex [][] createtheHexGrid(boolean isCropping, boolean isabboard, boolean isdwboard) {
         // create the hex grid
         int startcol =0; int startrow =0;
         hexGrid = new Hex[this.width][];
@@ -294,6 +294,230 @@ public class Map  {
         }
         return hexGrid;
     }
+    //this method will only be called if one of the non-standard, LOS-enabled HASL maps is in use (RBv3, RO, DaE, SG)
+    private Hex [][] createtheHASLHexGrid(VASLBoard b) {
+        // create the hex grid
+        //ToDo check for cropping. For 671 these HASL maps are already kicked out if flipped
+        //ToDo check need for and use of startcol, startrow
+        int startcol =0; int startrow =0;
+        hexGrid = new Hex[this.width][];
+        if (b.getName().contains("RBv3")){
+            if (this.A1CenterY== this.hexHeight / 2) {
+                for (int col = 0; col < (startcol + this.width); col++) {
+                    hexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
+                    for (int row = 0; row < (startrow + this.height + (col % 2)); row++) {
+                        if (col >= startcol && row >= startrow) {
+                            hexGrid[col - startcol][row- startrow] = new Hex(col - startcol, row - startrow, getGEOHexName(col, row, false, false), getHexCenterPoint(col - startcol, row - startrow), hexHeight, hexWidth, this, 0, terrainList[0]);
+                        }
+                    }
+                }
+            }
+            else if (this.A1CenterY==0){
+                int evencol =0;
+                for (int col = 0; col < this.width; col++) {
+                    evencol = col % 2 == 0 ? 1 : 0;
+                    hexGrid[col] = new Hex[this.height + evencol]; // add 1 if even
+                    for (int row = 0; row < this.height + evencol; row++) {
+                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                    }
+                }
+            }
+            // reset the hex locations to map grid
+            for (int col = 0; col < hexGrid.length; col++) {
+                for (int row = 0; row < hexGrid[col].length; row++) {
+                    hexGrid[col][row].resetHexsideLocationNames();
+                }
+            }
+        } if (b.getName().contains("RO")) {
+            if (this.A1CenterY == 0) {  //topleft is half height
+                for (int col = 0; col < (startcol + this.width); col++) {
+                    hexGrid[col] = new Hex[this.height];  // + (col % 2)]; // add 1 if odd
+                    for (int row = 0; row < (startrow + this.height); row++) { // + (col % 2)); row++) {
+                        if (col >= startcol && row >= startrow) {
+                            hexGrid[col - startcol][row- startrow] = new Hex(col - startcol, row - startrow, getGEOHexName(col, row, false, false), getHexCenterPoint(col - startcol, row - startrow), hexHeight, hexWidth, this, 0, terrainList[0]);
+                        }
+                    }
+                }
+            }
+            else if (this.A1CenterY == this.hexHeight / 2){  //topleft is full height
+                int evencol =0;
+                for (int col = 0; col < this.width; col++) {
+                    //evencol = col % 2 == 0 ? 1 : 0;
+                    hexGrid[col] = new Hex[this.height];  // + evencol]; // add 1 if even
+                    for (int row = 0; row < this.height + evencol; row++) {
+                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                    }
+                }
+            }
+            // reset the hex locations to map grid
+            for (int col = 0; col < hexGrid.length; col++) {
+                for (int row = 0; row < hexGrid[col].length; row++) {
+                    hexGrid[col][row].resetHexsideLocationNames();
+                }
+            }
+        }
+        else if (b.getName().contains("DaE")){ // each col has equal number of rows
+            if (this.A1CenterY== this.hexHeight / 2) {
+                for (int col = 0; col < (startcol + this.width); col++) {
+                    hexGrid[col] = new Hex[this.height];
+                    for (int row = 0; row < (startrow + this.height); row++) {
+                        if (col >= startcol && row >= startrow) {
+                            hexGrid[col - startcol][row- startrow] = new Hex(col - startcol, row - startrow, getGEOHexName(col, row, false, false), getHexCenterPoint(col - startcol, row - startrow), hexHeight, hexWidth, this, 0, terrainList[0]);
+                        }
+                    }
+                }
+            }
+            else if (this.A1CenterY==0){
+                for (int col = 0; col < this.width; col++) {
+                    hexGrid[col] = new Hex[this.height];
+                    for (int row = 0; row < this.height; row++) {
+                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                    }
+                }
+            }
+            // reset the hex locations to map grid
+            for (int col = 0; col < hexGrid.length; col++) {
+                for (int row = 0; row < hexGrid[col].length; row++) {
+                    hexGrid[col][row].resetHexsideLocationNames();
+                }
+            }
+        }
+        else if (b.getName().contains("SG")){
+            if (this.A1CenterY == b.getVASLBoardArchive().getA1CenterY()) {
+                for (int col = 0; col < (startcol + this.width); col++) {
+                    hexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
+                    for (int row = 0; row < (startrow + this.height + (col % 2)); row++) {
+                        if (col >= startcol && row >= startrow) {
+                            hexGrid[col - startcol][row- startrow] = new Hex(col - startcol, row - startrow, getGEOHexName(col, row, false, false), getHexCenterPoint(col - startcol, row - startrow), hexHeight, hexWidth, this, 0, terrainList[0]);
+                        }
+                    }
+                }
+            }
+            else if (this.A1CenterY == b.getVASLBoardArchive().getA1CenterY() - this.hexHeight /2 ){
+                int evencol =0;
+                for (int col = 0; col < this.width; col++) {
+                    evencol = col % 2 == 0 ? 1 : 0;
+                    hexGrid[col] = new Hex[this.height + evencol]; // add 1 if even
+                    for (int row = 0; row < this.height + evencol; row++) {
+                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false, false), getHASLHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                    }
+                }
+            }
+            // reset the hex locations to map grid
+            for (int col = 0; col < hexGrid.length; col++) {
+                for (int row = 0; row < hexGrid[col].length; row++) {
+                    hexGrid[col][row].resetHexsideLocationNames();
+                }
+            }
+        }
+        else {
+            return null;
+        }
+
+        /*if (this.A1CenterY==32.25 || this.A1CenterY == -612.75 || this.A1CenterY == 97.1) {   //adding configuration for BFP1 and BFP2
+            *//*if (this.cropconfiguration.contains("EqualRowCount")) {  //applies to DaE/RO - any other boards?
+                for (int col = 0; col < this.width; col++) {
+                    hexGrid[col] = new Hex[this.height];
+                    for (int row = 0; row < this.height; row++) {
+                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, isabboard), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                    }
+                }
+                // reset the hex locations to map grid
+                for (int col = 0; col < this.width; col++) {
+                    for (int row = 0; row < this.height; row++) {
+                        hexGrid[col][row].resetHexsideLocationNames();
+                    }
+                }
+            }
+            else {*//*
+            for (int col = 0; col < (startcol + this.width); col++) {
+                hexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
+                for (int row = 0; row < (startrow + this.height + (col % 2)); row++) {
+                    if (col >= startcol && row >= startrow) {
+                        //hexGrid[col - startcol][row- startrow] = new Hex(col - startcol, row - startrow, getGEOHexName(col, row, isabboard, isdwboard), getHexCenterPoint(col - startcol, row - startrow), hexHeight, hexWidth, this, 0, terrainList[0]);
+                    }
+                }
+            }
+
+            // reset the hex locations to map grid
+            for (int col = 0; col < this.width; col++) {
+                for (int row = 0; row < this.height + (col % 2); row++) {
+                    hexGrid[col][row].resetHexsideLocationNames();
+                }
+            }
+            //    }
+        }
+        else if (this.A1CenterY==0){
+            int evencol =0;
+            *//*if (this.cropconfiguration.contains("EqualRowCount")) {  //applies to DaE/RO - any other boards?
+                for (int col = 0; col < this.width; col++) {
+                    hexGrid[col] = new Hex[this.height];
+                    for (int row = 0; row < this.height; row++) {
+                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, isabboard), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                    }
+                }
+                // reset the hex locations to map grid
+                for (int col = 0; col < this.width; col++) {
+                    for (int row = 0; row < this.height; row++) {
+                        hexGrid[col][row].resetHexsideLocationNames();
+                    }
+                }
+            }
+            else {*//*
+            for (int col = 0; col < this.width; col++) {
+                evencol = col % 2 == 0 ? 1 : 0;
+                hexGrid[col] = new Hex[this.height + evencol]; // add 1 if even
+                for (int row = 0; row < this.height + evencol; row++) {
+                    //hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, isabboard, isdwboard), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                }
+            }
+
+            // reset the hex locations to map grid
+            for (int col = 0; col < this.width; col++) {
+                evencol = col % 2 == 0 ? 1 : 0;
+                for (int row = 0; row < this.height + evencol; row++) {
+                    hexGrid[col][row].resetHexsideLocationNames();
+                }
+            }
+            //}
+        }else if (this.A1CenterY==65){
+            int evencol=0;
+            if(this.cropconfiguration.contains("ROadjustment")){A1CenterY=32.5;}  // Red October special case when cropping
+            for (int col = 0; col < this.width; col++) {
+                if (this.cropconfiguration.contains("ROadjustment") && !(this.cropconfiguration.contains("EqualRowCount"))) {
+                    evencol = col % 2 == 0 ? 0 : 1;
+                } else {
+                    evencol = 0;
+                }
+                hexGrid[col] = new Hex[this.height + evencol];
+                for (int row = 0; row < this.height; row++) {
+                    //hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, isabboard, isdwboard), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                }
+            }
+
+            // reset the hex locations to map grid
+            for (int col = 0; col < this.width; col++) {
+                for (int row = 0; row < this.height; row++) {
+                    hexGrid[col][row].resetHexsideLocationNames();
+                }
+            }
+        *//*}else if (this.A1CenterY==34.0 || this.A1CenterY == 59.0){  // Singling special case; Brecourt special case
+            for (int col = 0; col < this.width; col++) {
+                hexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
+                for (int row = 0; row < this.height + (col % 2); row++) {
+                    hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, isabboard), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                }
+            }
+
+            // reset the hex locations to map grid
+            for (int col = 0; col < this.width; col++) {
+                for (int row = 0; row < this.height + (col % 2); row++) {
+                    hexGrid[col][row].resetHexsideLocationNames();
+                }
+            }*//*
+        }*/
+        return hexGrid;
+    }
 
     // ToDo uses of this constructor should be eliminated as further work on new crop/flip methods proceeds
     @Deprecated(since="6.7.1", forRemoval=true)
@@ -329,7 +553,6 @@ public class Map  {
         // at this point the terrainGrid, elevationGrid and HexGrid are created but hold no los data
     }*/
 
-    //test code - a constructor for a multi-board map
     //this is the current constructor for all geo maps
     public Map (LinkedList<VASLBoard> vaslboards, double passA1centerx, double passA1centery, HashMap<String, Terrain> terrainNameMap, int passwidthinhexes, int passheightinhexes, Rectangle mapBoundary){
         this.width = passwidthinhexes;
@@ -358,7 +581,52 @@ public class Map  {
         this.cropconfiguration += this.A1CenterY == 0 ? "LeftHexHalfHeight" : "LeftHexFullHeight";
 
         //create the hexGrid
+        //have a separate loop for non-standard boards
+        //Dinant follows standard board layout and so can be treated as geo
+        if (b.getName().equals("RBv3") || b.getName().equals("RO") || b.getName().equals("DaE") ||
+                 b.getName().equals("SG")) { //b.getName().equals("Dinant") ||
+            createtheHASLHexGrid(b);
+            return;
+        }
+
         createtheHexGrid(b.isCropped(), isbboard, isdwboard);
+        // at this point the terrainGrid, elevationGrid and HexGrid are created but hold no los data
+    }
+
+    //new constructor for HASL and non-standard maps
+    public Map (LinkedList<VASLBoard> vaslboards, double passA1centerx, double passA1centery, HashMap<String, Terrain> terrainNameMap, int passwidthinhexes, int passheightinhexes, Rectangle mapBoundary, boolean haslnongeo){
+        this.width = passwidthinhexes;
+        this.height = passheightinhexes;
+
+        // Use initial board to set geometry
+        VASLBoard b = vaslboards.get(0);
+        //Set the hex geometry
+        this.hexHeight=b.getHexHeight();
+        this.hexWidth=b.getHexWidth();
+        this.A1CenterX = passA1centerx;
+        this.A1CenterY = passA1centery;
+        // initialize
+        setTerrain(terrainNameMap);
+        gridWidth = mapBoundary.width;
+        gridHeight = mapBoundary.height;
+
+        if (!haslnongeo) {return;}
+
+        terrainGrid = new char[gridWidth][gridHeight];
+        elevationGrid = new byte[gridWidth][gridHeight];
+
+        // cropconfiguration needs to be set to enable Hex.setHexFlags
+        //ToDo handle all crop options - see if we can remove
+        this.cropconfiguration = this.A1CenterX == 0 ? "HalfHexWidth" : "FullHexWidth";
+        this.cropconfiguration += (this.A1CenterY == 0) || (this.A1CenterY == b.getA1CenterY() - (hexHeight /2)) ? "LeftHexHalfHeight" : "LeftHexFullHeight";
+
+        //create the hexGrid
+        //have a separate loop for non-standard boards
+        //Dinant follows standard board layout and so can be treated as geo
+        if (b.getName().equals("RBv3") || b.getName().equals("RO") || b.getName().equals("DaE") ||
+                b.getName().equals("SG")) { //b.getName().equals("Dinant") ||
+            createtheHASLHexGrid(b);
+        }
         // at this point the terrainGrid, elevationGrid and HexGrid are created but hold no los data
     }
 
@@ -395,6 +663,43 @@ public class Map  {
             p = new Point2D.Double(
                 (A1CenterX < 0.0 ? 0.0 : A1CenterX) + hexWidth * (double) col,
                 (A1CenterY < 0.0 ? hexHeight/2.0 : A1CenterY) + hexHeight * (double) row - hexHeight/2.0 * (double) (col%2));
+        }
+        if (p.getX() >= getGridWidth()) {p.x = getGridWidth() - 1;}
+        return p;
+    }
+
+    public Point2D.Double getHASLHexCenterPoint(int col, int row) {
+
+        // some columns will be offset half a hex toward the top of the map; A1CenterY value determines if it is the odd or even columns
+        // A1CenterY=0 means that top left hex is half height ( col 0 = even column) - if A1CenterY=65 then top left hex is half height and is A0 (eg RO map)
+        // if the A1 x offset is negative (e.g. boards 1b+), assume it's zero
+
+        // addded to support unlimited cropping
+        int evencol=0;
+        Point2D.Double p = new Point2D.Double();
+        if (A1CenterY==0) {
+            evencol = col % 2 == 0 ? 1 : 0;
+            p = new Point2D.Double(
+                    (A1CenterX < 0.0 ? 0.0 : A1CenterX) + hexWidth * (double) col,
+                    hexHeight/2.0 + hexHeight * (double) row - hexHeight/2.0 * evencol ); //(double) (col%2)
+        }
+        else if (A1CenterY==65) {
+
+            p = new Point2D.Double(
+                    (A1CenterX < 0.0 ? 0.0 : A1CenterX) + hexWidth * (double) col,
+                    hexHeight * (double) row + hexHeight/2.0 * (double) (col%2));
+        }
+        else if (A1CenterY == 1.875) {  //Singling map topleft hex is half height
+            evencol = col % 2 == 0 ? 1 : 0;
+            p = new Point2D.Double(
+                    (A1CenterX < 0.0 ? 0.0 : A1CenterX) + hexWidth * (double) col,
+                    hexHeight/2.0 + (hexHeight * (double) row) - (hexHeight/2.0 * evencol) +A1CenterY );
+
+        }
+        else {
+            p = new Point2D.Double(
+                    (A1CenterX < 0.0 ? 0.0 : A1CenterX) + hexWidth * (double) col,
+                    (A1CenterY < 0.0 ? hexHeight/2.0 : A1CenterY) + hexHeight * (double) row - hexHeight/2.0 * (double) (col%2));
         }
         if (p.getX() >= getGridWidth()) {p.x = getGridWidth() - 1;}
         return p;
@@ -441,15 +746,60 @@ public class Map  {
         if (A1CenterY == 65) {
             return name + (row + rowOffset);
         } else {
-            if (A1CenterY == 32.5 && getMapConfiguration().contains("ROadjustment")) {
-                return name + (row + rowOffset);
-            } else {
-                return name + (row + rowOffset + (col % 2 == 0 ? 1 : 0));
-            }
+            //if (A1CenterY == 32.5 && getMapConfiguration().contains("ROadjustment")) {
+            //    return name + (row + rowOffset);
+            //} else {
+            return name + (row + rowOffset + (col % 2 == 0 ? 1 : 0));
+            //}
         }
 
     }
 
+
+    /**
+     * Find the hex name for a hex on a board
+     * By convention the columns are A-Z, then AA-ZZ, then AAA-ZZZ for max of 26*3 columns
+     * Row number can be any integer
+     * NOTE - does NOT handle arbitrary negative offsets for A1 - assumes offsets < 0 are for boards 1b - 22b, etc.
+     * @param col the hex column (0 = the first column in the grid)
+     * @param row the hex row (0 = the first row in the column)
+     * @return the hex name. If invalid the empty string is returned
+     */
+    public String getHASLHexName(int col, int row, ASLBoard board) {
+
+        //get col name
+        char c;
+        String name = "";
+        c = (char) ((int) 'A' + col%26);
+        name += c;
+        for (int x = 0; x < col/26; x++) {
+            name += c;
+        }
+
+        // add row as suffix
+        if(!board.getName().contains("RO")) {
+            int rowadj = col % 2 == 0 ? 1 : 0;
+            row = row + rowadj;
+        }
+        else {
+            final Rectangle croppedBounds = board.getCropBounds();
+            if (!(croppedBounds.y == 0)) {
+                if (col % 2 == 0){row +=1;}
+            }
+        }
+        return name + row;
+        /*int rowOffset = A1CenterY < 0.0 ? (int) (-A1CenterY / hexHeight) + 1 : 0;
+        if (A1CenterY == 65) {
+            return name + (row + rowOffset);
+        } else {
+            //if (A1CenterY == 32.5 && getMapConfiguration().contains("ROadjustment")) {
+            //    return name + (row + rowOffset);
+            //} else {
+            return name + (row + rowOffset + (col % 2 == 0 ? 1 : 0));
+            //}
+        }*/
+
+    }
     /**
      * Constructs a new <code>Map</code> as a standard geomorphic map board (10 x 33 hexes)
      * @param w the width of the map in hexes
@@ -549,7 +899,7 @@ public class Map  {
         // EqualRowCount applies only to DaE map - ?
         // ToDo check this - plus should A1CenterY will never be 65, 64.47 maybe?
         // plus should resetTerrain params be different?
-        if(getMapConfiguration().contains("EqualRowCount") || getA1CenterY()==65){
+        /*if(getMapConfiguration().contains("EqualRowCount") || getA1CenterY()==65){
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) { // no extra hex for boards where each col has same number of rows (eg DaE, RO)
                     getHex(x, y).resetTerrain(0,0);
@@ -561,8 +911,13 @@ public class Map  {
                     getHex(x, y).resetTerrain(0,0);
                 }
             }
-        }
+        }*/
 
+        for (int col = 0; col < getHexGrid().length; col++) {
+            for (int row = 0; row < getHexGrid()[col].length; row++) {
+                getHex(col,row).resetTerrain(0,0);
+            }
+        }
         // recreate the hillocks
         buildHillocks();
     }
