@@ -324,10 +324,10 @@ public class BoardArchive {
                             // and ensure it works for cropped / flipped boards
                             // it is not fully working - test and fix
                             if (boardposx > 0 && x == 0){  //new board to the right
-                                Terrain firsthalfhex = VASLMap.getGridTerrain(boardposx -1 , y);
+                                Terrain firsthalfhex = VASLMap.getGridTerrain(boardposx -1 , y - startcropy + boardposy);
                                 Terrain secondhalfhex = VASLMap.getTerrain(terrainint);
                                 if (!firsthalfhex.isOpen() && secondhalfhex.isOpen()) {
-                                    terrainint = VASLMap.getGridTerrainCode(boardposx - 1, y);
+                                    terrainint = VASLMap.getGridTerrainCode(boardposx - 1, y - startcropy + boardposy);
                                 }
                             }
                             if (boardposy > 0 && y == 0){ //new board below
@@ -349,9 +349,8 @@ public class BoardArchive {
                         }
                     }
                 }
-                // New method Sept 14 - need to make all changes to Terrain and Elevation Grids then flip if necessary
 
-                // terrain transformations
+                // terrain transformations - need to make all changes to Terrain and Elevation Grids then flip if necessary
                 board.applyColorSSRulestoTerrainElevationGrids(VASLMap, sharedBoardMetadata.getLOSSSRules());
 
                 //add overlays to LOS
@@ -402,12 +401,9 @@ public class BoardArchive {
                         }
                     }
 
-                    //ToDo eliminate passpos variables if code works with them set to boardposx - startcropx
-                    int passposx = boardposx - startcropx; // > 0 ? boardposx - startcropx : 0;
-                    int passposy = boardposy - startcropy; // > 0 ? boardposy - startcropy : 0;
                     for (int col = 0; col < flippedgrid.length; col++) {
                         for (int row = 0; row < flippedgrid[col].length; row++) {
-                            flippedgrid[col][row].resetTerrain(passposx , passposy);
+                            flippedgrid[col][row].resetTerrain(boardposx - startcropx, boardposy - startcropy);
                         }
                     }
 
@@ -475,6 +471,160 @@ public class BoardArchive {
         return VASLMap;
     }
 
+    /*
+     * this is the new method of adding los data to a HASL VASL map
+     * need to read each element from the LOSData file and discard where not needed; or will assign incorrect values to variables
+     */
+    //ToDo check that all params are required
+    public Map  addHASLLOSDatatoVASLMap (HashMap<String, Terrain> terrainTypes, VASLBoard board, Map VASLMap, String fliphexconfig, ASLMap aslmap) throws BoardException {
+        // open LOSData file and read data
+        try (ZipFile archive = new ZipFile(qualifiedBoardArchive)) {
+            try (ObjectInputStream infile = new ObjectInputStream(
+                    new BufferedInputStream(
+                            new GZIPInputStream(
+                                    getInputStreamForArchiveFile(archive, LOSDataFileName))))) {
+                int startcropx = 0; int startcropy = 0; int startcol =0; int startrow =0; int endcol =0; int endrow =0; int cropWidth =0; int cropHeight = 0; int dwadj = 0;
+                int boardposx = 0; int boardposy = 0; // position of top left corner of board in multi-board map
+                // these values MUST be read from infile before creating terrainGrid and elevationGrid or data will be incorrectly read from infile
+                int width = infile.readInt();
+                int height = infile.readInt();
+                int gridWidth = infile.readInt();
+                int gridHeight = infile.readInt();
+                cropWidth = gridWidth; // default values when no cropping
+                cropHeight = gridHeight;
+                boardposx = (int) (board.bounds().getX() - board.getMap().getEdgeBuffer().getWidth());
+                boardposy = (int) (board.bounds().getY() - board.getMap().getEdgeBuffer().getHeight());
+                Hex boardstarthex = VASLMap.gridToHex(boardposx, boardposy);
+                int mapcol = boardstarthex.getColumnNumber();
+                int maprow = boardstarthex.getRowNumber();
+                // add hack to fix RB/RO join
+                if (maprow > 0 && board.getName().contains("RO")) { maprow += 1;}
+                if (board.isCropped()){
+                    // uses the board getters to retrieve data set in ASLMap.buildVASLMap()
+                    startcropx = (int) board.getCropBounds().getX();
+                    startcropy = (int) board.getCropBounds().getY();
+                    startcol = board.getRow1().length() == 2 ? board.getstartcropcol().get(board.getRow1()) +26 : board.getstartcropcol().get(board.getRow1());
+                    startrow = board.getstartcroprow().get(board.getCoord1());
+                    endcol = board.getendcropcol().get(board.getRow2());
+                    endrow = board.getendcroprow().get(board.getCoord2());
+                    int cropcoladj = (endcol == board.getWidth()) ? 0 : 1;
+                    if (board.getCropBounds().getWidth() != -1) {width = endcol - startcol + cropcoladj;}
+                    // handle funky RBv3/RO crop to merge boards
+                    if (board.getName().contains("RO") && boardposy > 0) { // adding RO below RBv3
+                        height = endrow;
+                    } else if (board.getCropBounds().getHeight() != -1) { // this formula only works if rows actually cropped
+                        height = endrow - startrow;
+                    }
+                    cropWidth = (int) board.getCropBounds().getWidth() == -1 ? gridWidth : (int) board.getCropBounds().getWidth();
+                    cropHeight = (int) board.getCropBounds().getHeight() == -1 ? gridHeight : (int) board.getCropBounds().getHeight();
+                }
+
+                // read the terrain and elevations grids
+                // using boardpos x and y to handle multiboard maps
+                for (int x = 0; x < (gridWidth); x++) { //startx + gridWidth); x++) {
+                    for (int y = 0; y < (gridHeight); y++) { //starty + gridHeight); y++) {
+                        if (x >= startcropx && x < (startcropx + cropWidth) && y >= startcropy && y < (startcropy + cropHeight)) {
+                            VASLMap.setGridElevation((int) infile.readByte(), x -startcropx + boardposx, y - startcropy + boardposy);
+                            int terrainint = infile.readByte() & 255;
+                            //ToDo turn the tests below into a HalfHexCheck method
+                            // and ensure it works for cropped / flipped boards
+                            // it is not fully working - test and fix
+                            if (boardposx > 0 && x == 0){  //new board to the right
+                                Terrain firsthalfhex = VASLMap.getGridTerrain(boardposx -1 , y - startcropy + boardposy);
+                                Terrain secondhalfhex = VASLMap.getTerrain(terrainint);
+                                if (!firsthalfhex.isOpen() && secondhalfhex.isOpen()) {
+                                    terrainint = VASLMap.getGridTerrainCode(boardposx - 1, y - startcropy + boardposy);
+                                }
+                            }
+                            if (boardposy > 0 && y == 0){ //new board below
+                                Terrain firsthalfhex = VASLMap.getGridTerrain(x -startcropx + boardposx, y - startcropy + boardposy - 1);
+                                Terrain secondhalfhex = VASLMap.getTerrain(terrainint);
+                                if (!firsthalfhex.isOpen() && secondhalfhex.isOpen()) {
+                                    terrainint = firsthalfhex.getType();
+                                }
+                                else if(firsthalfhex.isOpen() && !secondhalfhex.isOpen()){
+                                    terrainint = secondhalfhex.getType();
+                                }
+                            }
+                            VASLMap.setGridTerrainCode(terrainint, x - startcropx + boardposx, y - startcropy + boardposy);
+                        }
+                        else {
+                            //need to do this twice to properly step through infile
+                            infile.readByte();
+                            infile.readByte();
+                        }
+                    }
+                }
+
+                // terrain transformations - need to make all changes to Terrain and Elevation Grids then flip if necessary
+                board.applyColorSSRulestoTerrainElevationGrids(VASLMap, sharedBoardMetadata.getLOSSSRules());
+
+                //add overlays to LOS
+                VASLMap = aslmap.adjustLOSForOverlays(board, VASLMap, false);
+
+                // AT THIS POINT ALL CHANGES HAVE BEEN MADE TO TERRAIN AND ELEVATION GRIDS
+                if (board.isReversed()) {
+                    VASLMap.flipTerrainAndElevationGrids(board);
+                }
+
+                // now create and populate the hexGrid
+                // read-in the hex information
+                //determine if even/odd col has extra row - depends on crop
+                if (startrow != 0) {startrow -= 1;} //adjustment required to align with zero-based row arrays
+                int heightadj = 0;
+                for (int col = 0; col < (startcol + width); col++) {
+                    if (board.getName().contains("RBv3") || board.getName().contains("SG")) {
+                        heightadj = col % 2 == 1 ? 1 : 0;
+                    }  // DaE has equal rows so no heightadj required
+                    // if adding RO to RBv3 then heightadj required
+                    else if (board.getName().contains("RO") && maprow > 0){
+                        heightadj = col % 2 == 1 ? 1 : 0;
+                    }
+                    for (int row = 0 + dwadj; row < (startrow + height + heightadj); row++) {
+                        if (col >= startcol && row >= startrow) {
+                            final byte stairway = infile.readByte();
+                            if ((int) stairway == 1) {
+                                VASLMap.getHex(mapcol + col - startcol, maprow + row - startrow).setStairway(true);
+                            } else {
+                                VASLMap.getHex(mapcol + col - startcol, maprow + row - startrow).setStairway(false);
+                            }
+                            VASLMap.getHex(mapcol + col - startcol, maprow + row - startrow).resetHexAndLocationNames(VASLMap.getHASLHexName(col, row, board));
+
+                        } else {
+                            infile.readByte();
+                        }
+                    }
+                }
+
+                // terrain transforms that require hexGrid changes
+                board.applyColorSSRulestoHexGrid(VASLMap, sharedBoardMetadata.getLOSSSRules());
+
+                // update hexGrid to include overlays changes
+                VASLMap = aslmap.adjustLOSForOverlays(board, VASLMap, true);
+                //ToDo check if either of this needs to be done
+                // code added to enable rr embankments in RB and Partial Orchards
+                // set the rr embankments
+                // should this be after hexgrid loop?
+                VASLMap.setRBrrembankments(metadata.getRBrrembankments());
+                VASLMap.setPartialOrchards(metadata.getPartialOrchards());
+                // set the slopes
+                VASLMap.setSlopes(metadata.getSlopes());
+
+                // reset the hexside locations to map grid
+                for (int col = 0; col < VASLMap.getHexGrid().length; col++) {
+                    for (int row = 0; row < VASLMap.getHexGrid()[col].length; row++) {
+                        VASLMap.getHexGrid()[col][row].resetHexsideLocationNames();
+                    }
+                }
+                // code moved from before stairway loop to enable factory quasi-levels in stairway hexes
+                VASLMap.resetHexTerrain(0); //gridadj);
+            }
+        } catch(Exception e) {
+            logger.warn("Could not read the LOS data in board " + qualifiedBoardArchive);
+            return null;
+        }
+        return VASLMap;
+    }
         /**
      * Write the LOS data to the board archive
      * @param map the LOS data
