@@ -38,26 +38,28 @@ import static VASSAL.build.GameModule.getGameModule;
 public class SASLActivationChecker extends AbstractConfigurable implements GameComponent, Drawable, KeyListener {
     public static SASLActivationChecker saslActivationChecker;
 
-    protected GamePiece movingFriendlyCounter;
-    protected GamePiece movingSuspectCounter;
-
     protected static ASLMap mainMap;
     protected static Map saslMap;
 
     protected VASL.LOS.VASLGameInterface VASLGameInterface;
 
+    ArrayList<GamePiece> movingFriendlyCounters = new ArrayList<GamePiece>();
+    ArrayList<GamePiece> movingSuspectCounters = new ArrayList<GamePiece>();
+
     final ArrayList<GamePiece> pieceList = new ArrayList<GamePiece>();
-    protected boolean visible = false;
-    private String friendlyNationality;
-    private String alliedNationalityOne;
-    private String alliedNationalityTwo;
-    private String enemyNationality;
+
+    private String friendlyNationality = "";    // Uses the 2 character nationalities, e.g., "ge", "ru", "ax", etc.
+    private String alliedNationalityOne = "";   // Uses the 2 character nationalities, e.g., "ge", "ru", "ax", etc.
+    private String alliedNationalityTwo = "";   // Uses the 2 character nationalities, e.g., "ge", "ru", "ax", etc.
+    private String enemyNationality = "";       // Uses the SASL nationalities as defined in "private static final String[] nationalities" below.
 
     // KeyListener (begin)
     private static final String NAME = "Name";
 
     private static final String CLEAR_FLARES_KEY = "ClearFlaresKey";
     private NamedKeyStroke clearFlaresKey = new NamedKeyStroke("d85f6a40"); // CTL+ALT+X, 88,650
+    private static final String CHECK_ACTIVATIONS_KEY = "CheckActivationsKey";
+    private NamedKeyStroke checkActivationsKey = new NamedKeyStroke("d85f6a41"); // CTL+ALT+S, 83,650
     // KeyListener (end)
 
     private static final String[] nationalities = {
@@ -109,6 +111,10 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
         mainMap = m;
     }
 
+    private String getEnemyNationality(GamePiece piece) {
+        return piece.getProperty("SuspectNationality").toString();
+    }
+
     private String getNationality(GamePiece piece) {
         String result = "";
 
@@ -121,62 +127,90 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
     }
 
     private String checkPieceLocation(GamePiece piece, String regionName) {
-        String result = "invalid";
+        String result = "";
         Point currentPoint = piece.getPosition();
         Region region = saslMap.findRegion(regionName);
 
         if ((region != null) && (currentPoint.getX() == region.getOrigin().getX()) && (currentPoint.getY() == region.getOrigin().getY())) {
-            result = getNationality(piece);
+            if (regionName.equals("Enemy")) {
+                result = getEnemyNationality(piece);
+            } else {
+                result = getNationality(piece);
+            }
         }
 
         return result;
     }
 
-    private void checkNationalities(GamePiece piece) {
-        String nationality = checkPieceLocation(piece, "FrNat");
+    private String nationalityOfPieceInRegion(GamePiece[]p, String currentNationality, String regionName) {
+        String result = currentNationality;
+        String nationality = "";
 
-        if (friendlyNationality.isEmpty()) {
-            if (!nationality.isEmpty() && !nationality.equals("invalid")) {
-                friendlyNationality = nationality;
-            }
-        } else {
-            if (nationality.isEmpty()) {
-                friendlyNationality = "";
-            }
-        }
+        outerloop:
+        for (GamePiece aP : p) {
+            if (aP instanceof Stack) {
+                for (PieceIterator pi = new PieceIterator(((Stack) aP).getPiecesIterator()); pi.hasMoreElements(); ) {
+                    String temp = checkPieceLocation(pi.nextPiece(), regionName);
 
-        nationality = checkPieceLocation(piece, "AlNat1");
+                    if (!temp.isEmpty()) {
+                        nationality = temp;
+                        break outerloop;
+                    }
+                }
+            } else {
+                String temp = checkPieceLocation(aP, regionName);
 
-        if (alliedNationalityOne.isEmpty()) {
-            if (!nationality.isEmpty() && !nationality.equals("invalid")) {
-                alliedNationalityOne = nationality;
-            }
-        } else {
-            if (nationality.isEmpty()) {
-                alliedNationalityOne = "";
-            }
-        }
-
-        nationality = checkPieceLocation(piece, "AlNat2");
-
-        if (alliedNationalityTwo.isEmpty()) {
-            if (!nationality.isEmpty() && !nationality.equals("invalid")) {
-                alliedNationalityTwo = nationality;
-            }
-        } else {
-            if (nationality.isEmpty()) {
-                alliedNationalityTwo = "";
+                if (!temp.isEmpty()) {
+                    nationality = temp;
+                    break outerloop;
+                }
             }
         }
 
-        nationality = checkPieceLocation(piece, "Enemy");
+        if (currentNationality.isEmpty()) {
+            if (!nationality.isEmpty()) {
+                result = nationality;
+            }
+        } else {
+            if (nationality.isEmpty()) {
+               result = "";
+            }
+        }
+
+        return result;
+    }
+
+    private void nationalityOfEnemy(GamePiece[]p) {
+        String nationality = "None";
+        String regionName = "Enemy";
+
+        outerloop:
+        for (GamePiece aP : p) {
+            if (aP instanceof Stack) {
+                for (PieceIterator pi = new PieceIterator(((Stack) aP).getPiecesIterator()); pi.hasMoreElements(); ) {
+                    String temp = checkPieceLocation(pi.nextPiece(), regionName);
+
+                    if (!temp.isEmpty()) {
+                        nationality = temp;
+                        break outerloop;
+                    }
+                }
+            } else {
+                String temp = checkPieceLocation(aP, regionName);
+
+                if (!temp.isEmpty()) {
+                    nationality = temp;
+                    break outerloop;
+                }
+            }
+        }
 
         if (enemyNationality.isEmpty()) {
-            if (!nationality.isEmpty() && !nationality.equals("invalid")) {
+            if (!nationality.contains("None")) {
                 enemyNationality = nationality;
             }
         } else {
-            if (nationality.isEmpty()) {
+            if (nationality.contains("None")) {
                 enemyNationality = "";
             }
         }
@@ -189,22 +223,14 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
     }
 
     private void updateNationalities() {
-        friendlyNationality = "";
-        alliedNationalityOne = "";
-        alliedNationalityTwo = "";
-        enemyNationality = "";
-
         GamePiece[]p = saslMap.getPieces();
-        for (GamePiece aP : p) {
-            if (aP instanceof Stack) {
-                for (PieceIterator pi = new PieceIterator(((Stack) aP).getPiecesIterator()); pi.hasMoreElements(); ) {
-                    checkNationalities(pi.nextPiece());
-                }
-            } else {
-                checkNationalities(aP);
-            }
-        }
-    }
+
+        friendlyNationality = nationalityOfPieceInRegion(p, friendlyNationality, "FrNat");
+        alliedNationalityOne = nationalityOfPieceInRegion(p, alliedNationalityOne, "AlNat1");
+        alliedNationalityTwo = nationalityOfPieceInRegion(p, alliedNationalityTwo, "AlNat2");
+
+        nationalityOfEnemy(p);
+     }
 
     private void pieceListClear() {
         if (!pieceList.isEmpty()) {
@@ -217,10 +243,24 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
         }
     }
 
+    private boolean clearMovingCounters(boolean clear) {
+        boolean result = clear;
+
+        if (clear) {
+            movingFriendlyCounters.clear();
+            movingSuspectCounters.clear();
+            result = false;
+        }
+
+        return result;
+    }
+
     /**
      * Updates the player's view of the mainMap, revealing pieces that are now in LOS
      */
     private void updateView(ArrayList<GamePiece>movedunits) {
+        boolean clear = true;
+
         if ((saslMap == null) && !isSaslExtensionPresent()) {
             return; // Nothing to see here, move along ...
         }
@@ -234,30 +274,25 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
         VASLGameInterface = new VASLGameInterface(mainMap, mainMap.getVASLMap());
         VASLGameInterface.updatePieces();
 
-        outerloop:
         for (GamePiece piece : movedunits) {
             if (piece instanceof Stack) {
                 for (PieceIterator pi = new PieceIterator(((Stack)piece).getPiecesIterator()); pi.hasMoreElements(); ) {
                     GamePiece currentPiece = pi.nextPiece();
 
                     if (canActivate(currentPiece)) {
-                        movingFriendlyCounter = currentPiece;
-                        movingSuspectCounter = null;
-                        break outerloop;
+                        clear = clearMovingCounters(clear);
+                        movingFriendlyCounters.add(currentPiece);
                     } else if (canBeActivated(currentPiece)) {
-                        movingSuspectCounter = currentPiece;
-                        movingFriendlyCounter = null;
-                        break outerloop;
+                        clear = clearMovingCounters(clear);
+                        movingSuspectCounters.add(currentPiece);
                     }
                 }
             } else if (canActivate(piece)) {
-                movingFriendlyCounter = piece;
-                movingSuspectCounter = null;
-                break;
+                clear = clearMovingCounters(clear);
+                movingFriendlyCounters.add(piece);
             } else if (canBeActivated(piece)) {
-                movingSuspectCounter = piece;
-                movingFriendlyCounter = null;
-                break;
+                clear = clearMovingCounters(clear);
+                movingSuspectCounters.add(piece);
             }
         }
 
@@ -266,14 +301,13 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
 
     private void generateFlareList() {
         pieceListClear();
-        visible = false;
 
-        if (movingFriendlyCounter != null || movingSuspectCounter != null) {
+        if (!movingFriendlyCounters.isEmpty() || !movingSuspectCounters.isEmpty()) { // if (movingFriendlyCounter != null || movingSuspectCounter != null) {
             GamePiece[] allPieces = mainMap.getPieces();
 
             for (GamePiece piece : allPieces) {
                 if (piece instanceof Stack) {
-                    for (PieceIterator pi = new PieceIterator(((Stack) piece).getPiecesIterator()); pi.hasMoreElements(); ) {
+                    for (PieceIterator pi = new PieceIterator(((Stack)piece).getPiecesIterator()); pi.hasMoreElements(); ) {
                         testActivation(pi.nextPiece());
                     }
                 } else {
@@ -325,16 +359,20 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
         int range = -1;
 
         if (!isOffboard(piece)) {
-            if (movingFriendlyCounter != null) {
-                if (!(movingFriendlyCounter == piece) && !isFriendlyUnit(piece) && piece.getName().contains("Suspect")) {
-                    if ((range = losRange(movingFriendlyCounter, piece)) >= 0) {
-                        setPieceSpotted(piece, range);
+            if (!movingFriendlyCounters.isEmpty()) {
+                for (GamePiece testPiece : movingFriendlyCounters) {
+                    if (!(testPiece == piece) && !isFriendlyUnit(piece) && piece.getName().contains("Suspect")) {
+                        if ((range = losRange(testPiece, piece)) >= 0) {
+                            setPieceSpotted(piece, range, true);
+                        }
                     }
                 }
-            } else if (movingSuspectCounter != null) {
-                if (!(movingSuspectCounter == piece) && isFriendlyUnit(piece) && !piece.getName().contains("Suspect")) {
-                    if ((range = losRange(movingSuspectCounter, piece)) >= 0) {
-                        setPieceSpotted(movingSuspectCounter, range);
+            } else if (!movingSuspectCounters.isEmpty()) {
+                for (GamePiece testPiece : movingSuspectCounters) {
+                    if (!(testPiece == piece) && isFriendlyUnit(piece) && !piece.getName().contains("Suspect")) {
+                        if ((range = losRange(testPiece, piece)) >= 0) {
+                            setPieceSpotted(testPiece, range, false);
+                        }
                     }
                 }
             }
@@ -345,7 +383,7 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
      * Marks a piece as spotted so it will be drawn on the mainMap
      * @param piece the piece
      */
-    private void setPieceSpotted(GamePiece piece, int range) {
+    private void setPieceSpotted(GamePiece piece, int range, boolean friendly) {
         if (!Decorator.getInnermost(piece).getName().isEmpty()) {
             if (piece instanceof Decorator || piece instanceof BasicPiece) {
                 if (!pieceList.contains(piece)) {
@@ -353,7 +391,7 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
 
                     piece.setProperty("ActivationFlag", 2);
 
-                    if (piece != movingSuspectCounter) {
+                    if (friendly) {
                         piece.setProperty("RangeBracket", activationRanges[getActivationRangesIndex(getSuspectNationality(piece))][range]);
                     }
                 }
@@ -457,10 +495,35 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
         return null;
     }
 
+    /**
+     * Get all currently selected pieces
+     * @return LinkedList of selected pieces
+     */
+    private ArrayList<GamePiece> getSelectedPieces() {
+        ArrayList<GamePiece> temp = new ArrayList<GamePiece>();
+
+        for (GamePiece piece : GameModule.getGameModule().getGameState().getAllPieces()) {
+            if (isSelected(piece)) {
+                temp.add(piece);
+            }
+        }
+
+        return temp;
+    }
+
+    /**
+     * @param p the piece
+     * @return true if the piece is selected
+     */
+    private boolean isSelected(GamePiece p) {
+        return Boolean.TRUE.equals(p.getProperty(Properties.SELECTED)) && p.getId() != null && !"".equals(p.getId());
+    }
+
    @Override
    public Class<?>[] getAttributeTypes() {
        return new Class<?>[] {
                String.class,
+               NamedKeyStroke.class,
                NamedKeyStroke.class
        };
    }
@@ -469,7 +532,8 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
    public String[] getAttributeNames() {
        return new String[] {
                NAME,
-               CLEAR_FLARES_KEY
+               CLEAR_FLARES_KEY,
+               CHECK_ACTIVATIONS_KEY
        };
    }
 
@@ -477,7 +541,8 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
    public String[] getAttributeDescriptions() {
        return new String[] {
                "SASLActivationChecker ",
-               "Clear Flares Key "
+               "Clear Flares Key ",
+               "Check Activations Key "
        };
    }
 
@@ -487,6 +552,8 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
            return getConfigureName();
        } else if (CLEAR_FLARES_KEY.equals(key)) {
            return NamedHotKeyConfigurer.encode(clearFlaresKey);
+       } else if (CHECK_ACTIVATIONS_KEY.equals(key)) {
+           return NamedHotKeyConfigurer.encode(checkActivationsKey);
        } else {
            return null;
        }
@@ -503,6 +570,11 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
                value = NamedHotKeyConfigurer.decode((String)value);
            }
            clearFlaresKey = (NamedKeyStroke)value;
+       } else if (CHECK_ACTIVATIONS_KEY.equals(key)) {
+           if (value instanceof String) {
+               value = NamedHotKeyConfigurer.decode((String)value);
+           }
+           checkActivationsKey = (NamedKeyStroke)value;
        }
    }
 
@@ -572,7 +644,21 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
     @Override
     public void keyPressed(KeyEvent e) {
         if (clearFlaresKey.equals(NamedKeyStroke.of(e))) {
+            movingFriendlyCounters.clear();
+            movingSuspectCounters.clear();
+
             pieceListClear();
+
+            e.consume();
+        } else if (checkActivationsKey.equals(NamedKeyStroke.of(e))) {
+            pieceListClear();
+
+            ArrayList<GamePiece> selectedPieces = getSelectedPieces();
+
+            if (!selectedPieces.isEmpty()) {
+                updateView(selectedPieces);
+            }
+
             e.consume();
         }
     }
