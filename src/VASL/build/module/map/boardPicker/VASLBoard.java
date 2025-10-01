@@ -169,7 +169,7 @@ public class VASLBoard extends ASLBoard {
 
     /**
      * Applies the color scenario-specific rules to the LOS data
-     *
+     * This method is used for both "geo" and "HASL/non-standard" map code
      * @param LOSData the LOS data to modify
      */
     public void applyColorSSRulestoTerrainElevationGrids(Map LOSData, HashMap<String, LOSSSRule> losssRules) throws BoardException {
@@ -192,6 +192,7 @@ public class VASLBoard extends ASLBoard {
                     /* this fix allows LOS checking across BSO on the RB/RO boards
                        an effort was made to expand this to all BSO on all LOS-enabled boards
                        but too many problems/exceptions were encounted. Since the RB code seemed to work, I have left it in. Doug Rimmer September 2018 */
+                    //ToDo time to come back and get BSO working with LOS
                     if (this.name.equals("RBv3") || this.name.equals("RO")) {
                         applyRBROrule(s, LOSData);
                         changed = true;
@@ -203,7 +204,8 @@ public class VASLBoard extends ASLBoard {
 
                 // these are rules that have to be handled in the code
                 else if ("customCode".equals(rule.getType())) {
-
+                    //ToDo transforms which require hexgrid changes are disabled here and done in applyColorSSRulestoHexGrid
+                    // test to confirm all are working both here and there
                     /*if ("AllBuildingsLevel1".equals(s)) {
                         setAllBuildingstoSingleStory(LOSData);
                         changed=true;
@@ -371,6 +373,7 @@ public class VASLBoard extends ASLBoard {
         }
     }
 
+
     public void applyColorSSRulestoHexGrid(Map LOSData, HashMap<String, LOSSSRule> losssRules) throws BoardException {
 
         if (!isLegacyBoard() && !terrainChanges.isEmpty()) {
@@ -416,7 +419,8 @@ public class VASLBoard extends ASLBoard {
                             }
                         }
                         changed = true;
-
+                        //ToDo transforms which require terrain and/or elevation grid changes are disabled here and done in applyColorSSRulestoTerrainElevationGrids
+                        // test to confirm all are working both here and there
                     } /*else if ("RowhouseBarsToBuildings".equals(s)) {
 
                         // for simplicity assume stone building as type will not impact LOS
