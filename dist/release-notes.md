@@ -1,7 +1,7 @@
 # Release Notes: Version 6.7.1-beta7 
 
 
-**Release Date:** September 30, 2025
+**Release Date:** October 2, 2025
 
 ---
 
@@ -24,7 +24,8 @@ opened if a bug is encountered. It will be safe to continue to play but only the
 ---
 
 ## 📈 Improvements
-- 
+- Improvement 1 Debris Overlay added to Draggable Overlays; has changeable level background and works with LOS
+- Improvement 2 Sangar counter now has winter color
 
 
 ## ⚠️ Compatibility Notes
