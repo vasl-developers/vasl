@@ -21,6 +21,7 @@ package VASL.build.module;
 import VASL.build.module.dice.ASLDiceFactory;
 import VASL.build.module.dice.ASLDie;
 import VASL.build.module.dice.DieColor;
+import VASL.build.module.map.SASLActivationChecker;
 import VASL.environment.*;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
@@ -67,6 +68,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     private final static String USER_SPACING_PADDING =  "  ...  ";
     private static final String preferenceTabName = "VASL"; // alwaysontop preference
     protected static final String DICE_CHAT_COLOR = "HTMLDiceChatColor";
+    private static final String SHOW_SASL_DICE = "showSaslDice"; //$NON-NLS-1$
 
     private static Integer lineno=0;
 
@@ -84,22 +86,24 @@ public class ASLChatter extends VASSAL.build.module.Chatter
     private String clrDustColoredDiceColor;
     private String clrSingleDieColor;
     private String clrROFDieColor;
-    private final JButton btnStats;
-    private final JButton btnDR;
-    private final JButton btnIFT;
-    private final JButton btnTH;
-    private final JButton btnTK;
-    private final JButton btnMC;
-    private final JButton btnRally;
-    private final JButton btnCC;
-    private final JButton btnTC;
-    private final JButton btndr;
-    private final JButton btnSA;
-    private final JButton btnRS;
-    private final JPanel buttonPanel;
+    private JButton btnStats;
+    private JButton btnDR;
+    private JButton btnIFT;
+    private JButton btnTH;
+    private JButton btnTK;
+    private JButton btnMC;
+    private JButton btnRally;
+    private JButton btnCC;
+    private JButton btnTC;
+    private JButton btndr;
+    private JButton btnSA;
+    private JButton btnRS;
+    private JPanel buttonPanel;
+    private JPanel buttonPanelSasl; // For SASL Campaign Game Roster Extension buttons
+
     private boolean useDiceImages;
     private boolean showDiceStats;
-
+    private boolean showSaslDice;
 
     private final Environment environment = new Environment();
     private final ASLDiceFactory diceFactory = new ASLDiceFactory();
@@ -139,7 +143,9 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                 }
             }
         });
+    }
 
+    public void create() {
         btnStats = createStatsDiceButton(KeyStroke.getKeyStroke(KeyEvent.VK_F3, InputEvent.CTRL_DOWN_MASK));
         btnDR = CreateChatterDiceButton("DRs.gif", "DR", "DR", KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), true, ASLDiceBot.OTHER_CATEGORY);
         btnIFT = CreateChatterDiceButton("", "IFT", "IFT attack DR", KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), true, "IFT");
@@ -160,7 +166,21 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridBagLayout());
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 2, 1));
-        buttonPanel.setMaximumSize(new Dimension(1000, 1000));
+        buttonPanel.setMaximumSize(new Dimension(1200, 1000));
+
+        JPanel panelContainerSasl = null;
+        buttonPanelSasl = null;
+
+        if (showSaslDice) {
+            panelContainerSasl = new JPanel();
+            panelContainerSasl.setLayout(new BoxLayout(panelContainerSasl, BoxLayout.LINE_AXIS));
+            panelContainerSasl.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+            buttonPanelSasl = new JPanel();
+            buttonPanelSasl.setLayout(new GridBagLayout());
+            buttonPanelSasl.setBorder(BorderFactory.createEmptyBorder(1, 1, 2, 1));
+            buttonPanelSasl.setMaximumSize(new Dimension(1200, 1000));
+        }
 
         final GridBagConstraints gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.fill = GridBagConstraints.BOTH;
@@ -185,30 +205,60 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
         final GroupLayout groupLayout = new GroupLayout(this);
         setLayout(groupLayout);
-        groupLayout.setHorizontalGroup(
-            groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addComponent(scroll)
-                .addComponent(panelContainer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(input)
-        );
-        groupLayout.setVerticalGroup(
-            groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(
-                groupLayout.createSequentialGroup()
-                    .addComponent(scroll, GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
-                    .addGap(0, 0, 0)
-                    .addComponent(panelContainer, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, 0)
-                    .addComponent(input, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-            )
-        );
+
+        if (panelContainerSasl != null) {
+            panelContainerSasl.add(buttonPanelSasl);
+
+            groupLayout.setHorizontalGroup(
+                    groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(scroll)
+                            .addComponent(panelContainer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(panelContainerSasl, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(input)
+            );
+            groupLayout.setVerticalGroup(
+                    groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(
+                            groupLayout.createSequentialGroup()
+                                    .addComponent(scroll, GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
+                                    .addGap(0, 0, 0)
+                                    .addComponent(panelContainer, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(panelContainerSasl, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                    .addGap(0, 0, 0)
+                                    .addComponent(input, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    )
+            );
+        } else {
+            groupLayout.setHorizontalGroup(
+                    groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(scroll)
+                            .addComponent(panelContainer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(input)
+            );
+            groupLayout.setVerticalGroup(
+                    groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(
+                            groupLayout.createSequentialGroup()
+                                    .addComponent(scroll, GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
+                                    .addGap(0, 0, 0)
+                                    .addComponent(panelContainer, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                    .addGap(0, 0, 0)
+                                    .addComponent(input, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    )
+            );
+        }
 
         clrBackground = Color.white;
     }
 
-    // Is this still used?
-    @Deprecated
-    public JPanel getButtonPanel() {  //used by SASLDice extension
+    public boolean getShowSaslDice() {
+        return showSaslDice;
+    }
+
+    public JPanel getButtonPanel() {  // Used by SASL Campaign Game Roster extension
         return buttonPanel;
+    }
+
+    public JPanel getButtonPanelSasl() {  // Used by SASL Campaign Game Roster extension
+        return buttonPanelSasl;
     }
 
     private void setButtonsFonts(Font font) {
@@ -244,6 +294,36 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                 .stream()
                 .findFirst()
                 .ifPresent(dice -> dice.statsToday());
+        };
+
+        btn.addActionListener(al);
+        final KeyStrokeListener listener = new KeyStrokeListener(al);
+        listener.setKeyStroke(keyStroke);
+        addHotKeyToTooltip(btn, listener, "Dice rolls stats");
+        btn.setFocusable(false);
+        mod.addKeyStrokeListener(listener);
+
+        return btn;
+    }
+
+    public JButton createStatsDiceButtonSasl(KeyStroke keyStroke) {
+        final JButton btn = new JButton("");
+        btn.setMinimumSize(new Dimension(5, 30));
+        btn.setMargin(new Insets(0, 0, 0, -1));
+
+        try {
+            btn.setIcon(new ImageIcon(Op.load("stat.png").getImage(null)));
+        }
+        catch (Exception ignored) {
+        }
+
+        final GameModule mod = GameModule.getGameModule();
+
+        final ActionListener al = e -> {
+            mod.getComponentsOf(ASLDiceBot.class)
+                    .stream()
+                    .findFirst()
+                    .ifPresent(dice -> dice.statsTodaySasl());
         };
 
         btn.addActionListener(al);
@@ -474,7 +554,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
 
     private void parseNewDiceRoll(String msg) {
         // *** (Other DR) 4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
-        String category, dice, user, san = "";
+        String category, originalCategory, dice, user, san = "";
         int firstDie, secondDie;
         msgpartCategory = null;
         msgpartUser = null;
@@ -490,7 +570,10 @@ public class ASLChatter extends VASSAL.build.module.Chatter
             int pos = restOfMsg.indexOf(" DR) ");
 
             if (pos != -1) {
-                category = restOfMsg.substring(0, pos);
+                originalCategory = restOfMsg.substring(0, pos);
+                category = originalCategory;
+                category = originalCategory.replace("ENEMY ", "");
+
                 restOfMsg = restOfMsg.substring(pos + " DR) ".length()); //4,2 ***   <FredKors>      Allied SAN    [1 / 8   avg   6,62 (6,62)]    (01.51 - by random.org)
 
                 pos = restOfMsg.indexOf(" ***");
@@ -646,7 +729,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                     }
 
                                     // check if SASL Dice button clicked and if so ask for special message string - SASL Dice buttons are created via extension
-                                    if (DRNotificationLevel == 3 && category.equals("EP")){
+                                    if (DRNotificationLevel == 3 && category.equals("Action")) {
                                         if (firstDie == secondDie) {
                                             switch (firstDie) {
                                             case 1:
@@ -674,7 +757,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                             strSpecialMessages.append(", ");
                                         }
                                     }
-                                    msgpartCategory = BEFORE_CATEGORY + category;
+                                    msgpartCategory = BEFORE_CATEGORY + originalCategory;
 
                                     msgpartCdice = Integer.toString(firstDie);
                                     msgpartWdice = Integer.toString(secondDie);
@@ -726,7 +809,10 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                 pos = restOfMsg.indexOf(" dr) ");
 
                 if (pos != -1) {
-                    category = restOfMsg.substring(0, pos);
+                    originalCategory = restOfMsg.substring(0, pos);
+                    category = originalCategory;
+                    category = originalCategory.replace("ENEMY ", "");
+
                     restOfMsg = restOfMsg.substring(pos + " dr) ".length()); //3 ***   <FredKors>      [1 / 1   avg   3,00 (3,00)]    (01.84)
 
                     pos = restOfMsg.indexOf(" ***");
@@ -744,7 +830,7 @@ public class ASLChatter extends VASSAL.build.module.Chatter
                                 if (!parts[1].isEmpty() && !parts[2].isEmpty()) {
                                     user = parts[1];
 
-                                    msgpartCategory = BEFORE_CATEGORY + category;
+                                    msgpartCategory = BEFORE_CATEGORY + originalCategory;
 
                                     msgpartCdice = dice;
                                     msgpartWdice = "-1";
@@ -995,6 +1081,18 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         mod.getPlayerWindow().addChatter(this);
         mod.getControlPanel().add(this, BorderLayout.CENTER);
         final Prefs modulePrefs = mod.getPrefs();
+
+        // Show SASL dr/DR pref
+        // Needs to be now so that the create() call after this can set up the panels
+        BooleanConfigurer showSaslDiceOption = (BooleanConfigurer) modulePrefs.getOption(SHOW_SASL_DICE);
+        if (showSaslDiceOption == null) {
+            showSaslDiceOption = new BooleanConfigurer(SHOW_SASL_DICE, "Show SASL dice (VASL restart required)", Boolean.FALSE);  //$NON-NLS-1$
+            modulePrefs.addOption(Resources.getString("Chatter.chat_window"), showSaslDiceOption); //$NON-NLS-1$
+        }
+        showSaslDice = (Boolean) modulePrefs.getValue(SHOW_SASL_DICE);
+        showSaslDiceOption.addPropertyChangeListener(e -> showSaslDice = (Boolean) e.getNewValue());
+
+        create();
 
         // font pref
         FontConfigurer chatFontConfigurer = (FontConfigurer) modulePrefs.getOption("ChatFont");

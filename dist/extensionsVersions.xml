@@ -21,7 +21,7 @@
 	description - text describing the extension ie "Adds SASLDice rollers to Chat"
 -->
 <extensionsMetadata>
-		<extensiondata name="SASLDice" version="1.1" versionDate="Jun 2023" description="Adds SASL Dicerollers to Chat" />
+		<!-- DEPRECATED <extensiondata name="SASLDice" version="1.1" versionDate="Jun 2023" description="Adds SASL Dicerollers to Chat" /> -->
 		<extensiondata name="BFP" version="6.1" versionDate="June 2025" description="BFP Counters for All BFP Modules" />
 		<extensiondata name="Festung Budapest" version="1.3" versionDate="Feb 2024" description="FB Counters" />
 		<extensiondata name="HoB Special Forces" version="2.2" versionDate="Jan 2023" description="British and German HOB Counters" />
@@ -41,7 +41,7 @@
 		<extensiondata name="PTOTerrain" version="1.0" versionDate="" description="PTO Terrain Chart" />
 		<extensiondata name="Hideable Control Markers" version="2.5" versionDate="Apr 2024" description="Hideable Control and Perimeter Markers" />
 		<extensiondata name="Scenario Aid Card" version="2.2" versionDate="Jul 2023" description="Scenario Aid Card" />
-		<extensiondata name="SASL Campaign Roster" version="2.2" versionDate="Jun 2025" description="SASL Campaign Roster" />
+		<extensiondata name="SASL Campaign Roster" version="4.0" versionDate="Oct 2025" description="SASL Campaign Roster" />
 		<extensiondata name="SKReferences" version="1.5" versionDate="Sep 2022" description="SK Charts and Player Aids" />
 		<extensiondata name="OBA and CVP Aids" version="2.0" versionDate="May 2025" description="OBA and CVP Player Aids" />
 		<extensiondata name="CustomUnit" version="1.3" versionDate="Feb 2024" description="Customizable MMC/SMC counters for each Nationality" />
