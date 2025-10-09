@@ -25,6 +25,7 @@ import java.util.List;
 
 import VASL.build.module.ASLMap;
 import VASL.build.module.map.HIPFortification;
+import VASL.build.module.map.SASLActivationChecker;
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.Map;
@@ -74,6 +75,7 @@ public class ASLTranslate extends Translate {
           }
         } else {
           c = super.newTranslate(stroke);
+          allDraggedPieces.add(target);
         }
         MovementReporter movementReporter = new MovementReporter(c);
         Command report = movementReporter.getReportCommand();
@@ -83,6 +85,9 @@ public class ASLTranslate extends Translate {
         ASLMap map =   getGameModule().getComponentsOf(ASLMap.class).get(0);
         HIPFortification hipfort = map.getComponentsOf(HIPFortification.class).get(0);
         hipfort.runupdate(allDraggedPieces);
+        // SASL Activation Check test
+        SASLActivationChecker saslAC = map.getComponentsOf(SASLActivationChecker.class).get(0);
+        saslAC.runUpdate(allDraggedPieces);
         return c;
       }
     }
