@@ -98,7 +98,7 @@
 		<boarddata name="63" version="6.4" versionDate="2022/04/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="64" version="6.6" versionDate="2024/12/23" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="65" version="6.5" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="66" version="6.7" versionDate="2025/08/21" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="66" version="6.8" versionDate="2025/09/22" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="67" version="6.5" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="68" version="6.5" versionDate="2024/12/23" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="69" version="6.5" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
@@ -295,6 +295,9 @@
 		<boarddata name="LFT8" version="6.1" versionDate="2025/02/02" description="" boardType="Geoboard" publisher="LFT" issued="" />
 		<boarddata name="LFT9" version="6.1" versionDate="2025/02/02" description="" boardType="Geoboard" publisher="LFT" issued="" />
 		<boarddata name="LFT10" version="6.4" versionDate="2025/02/05" description="" boardType="Geoboard" publisher="LFT" issued="" />
+		<boarddata name="Inor" version="3.0" versionDate="2021/09/01" description="" boardType="HASL" publisher="LFT" issued="" />
+		<boarddata name="TFF1" version="0.1" versionDate="2025/05/27" description="" boardType="HASL" publisher="LFT" issued="" />
+		<boarddata name="TFF2" version="0.1" versionDate="2025/05/27" description="" boardType="HASL" publisher="LFT" issued="" />
 		<boarddata name="SG" version="6.0" versionDate="2021/04/30" description="Singling" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="VotG" version="3.1" versionDate="2008/08/30" description="Valor of the Guards" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="SC" version="3.0" versionDate="2008/08/30" description="Suicide Creek" boardType="HASL" publisher="MMP" issued="" />

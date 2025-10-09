@@ -192,20 +192,24 @@ public class PieceLinker extends AbstractConfigurable implements KeyListener, Co
                 GamePiece fromPiece = gs.getPieceForId(fromPieceID);
                 if (fromPiece != null &&
                         isSelected(fromPiece) &&
-                        (fromPiece.getProperty(Properties.INVISIBLE_TO_ME) == null || Boolean.FALSE.equals(fromPiece.getProperty(Properties.INVISIBLE_TO_ME))) &&
-                        (fromPiece.getProperty(Properties.OBSCURED_TO_ME) == null || Boolean.FALSE.equals(fromPiece.getProperty(Properties.OBSCURED_TO_ME)))) {
+                        (fromPiece.getProperty(Properties.INVISIBLE_TO_ME) == null || Boolean.FALSE.equals(fromPiece.getProperty(Properties.INVISIBLE_TO_ME)))) {
+                        //&&
+                        //(fromPiece.getProperty(Properties.OBSCURED_TO_ME) == null || Boolean.FALSE.equals(fromPiece.getProperty(Properties.OBSCURED_TO_ME)))) {
 
                     ArrayList<String> toPieceIDs = links.get(fromPieceID);
                     for (String s : toPieceIDs) {
                         GamePiece toPiece = gs.getPieceForId(s);
                         if (toPiece != null &&
-                                (toPiece.getProperty(Properties.INVISIBLE_TO_ME) == null || Boolean.FALSE.equals(toPiece.getProperty(Properties.INVISIBLE_TO_ME))) &&
-                                (toPiece.getProperty(Properties.OBSCURED_TO_ME) == null || Boolean.FALSE.equals(toPiece.getProperty(Properties.OBSCURED_TO_ME)))) {
+                                (toPiece.getProperty(Properties.INVISIBLE_TO_ME) == null || Boolean.FALSE.equals(toPiece.getProperty(Properties.INVISIBLE_TO_ME)))) {
+                            //&&
+                               // (toPiece.getProperty(Properties.OBSCURED_TO_ME) == null || Boolean.FALSE.equals(toPiece.getProperty(Properties.OBSCURED_TO_ME)))) {
                             Point p1 = map.mapToDrawing(fromPiece.getPosition(), os_scale);
                             Point p2 = map.mapToDrawing(toPiece.getPosition(), os_scale);
                             g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
-                            MapGrid grid = new ASLHexGrid(DEFAULT_HEX_HEIGHT, false);
-                            ((HexGrid)grid).setHexWidth(DEFAULT_HEX_WIDTH);
+                            ArrayList<ASLBoard>mapBoards = (ArrayList) map.getBoards();
+                            ASLBoard board = mapBoards.get(0);
+                            MapGrid grid = new ASLHexGrid(board.getVASLBoardArchive().getHexHeight(), false);
+                            ((HexGrid)grid).setHexWidth(board.getVASLBoardArchive().getHexHeight());
                             ((HexGrid)grid).setEdgesLegal(true);
                             int linkrange = range(fromPiece.getPosition(), toPiece.getPosition(), map, grid);
                             drawText(g2d, p1.x +30, p1.y + 30, "Range: " + linkrange );

@@ -60,13 +60,14 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.dnd.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
+import static VASSAL.build.GameModule.getGameModule;
 
 public class ASLPieceMover extends PieceMover {
     /**
@@ -122,11 +123,8 @@ public class ASLPieceMover extends PieceMover {
 
     @Override
     public void addTo(Buildable b) {
-        //JY
         //Duplicate VASSAL PieceMover code to force addition of an ASLPieceMover
-        //Taken from VASSAL 3.7.9
-        //JY
-        //super.addTo(b);  //undone rem
+
         // Create our target selection filters
         dragTargetSelector = createDragTargetSelector();
         selectionProcessor = createSelectionProcessor();
@@ -137,10 +135,8 @@ public class ASLPieceMover extends PieceMover {
         map.addLocalMouseListener(this);
         GameModule.getGameModule().getGameState().addGameComponent(this);
 
-        //JY PieceMover.DragHandler.addPieceMover(this);
         ASLPieceMover.DragHandler.addPieceMover(this);
         map.getView().addMouseMotionListener(this);
-        //JY map.setDragGestureListener(PieceMover.DragHandler.getTheDragHandler());
         map.setDragGestureListener(ASLPieceMover.DragHandler.getTheDragHandler());
         map.setPieceMover(this);
 
@@ -153,7 +149,6 @@ public class ASLPieceMover extends PieceMover {
                 map.getAttributeValueString(Map.MARK_UNMOVED_HOTKEY));
         setAttribute(Map.MARK_UNMOVED_REPORT,
                 map.getAttributeValueString(Map.MARK_UNMOVED_REPORT));
-        //JY
 
         map.setHighlighter(new ASLHighlighter());
     }
@@ -194,14 +189,12 @@ public class ASLPieceMover extends PieceMover {
                 for (final Iterator<GamePiece> i = ((Stack) piece).getPiecesInVisibleOrderIterator(); i.hasNext();) {
                     final GamePiece p = i.next();
                     if(p.getLocalizedProperty(Properties.NO_STACK) == Boolean.FALSE && !p.getPosition().equals(m.snapTo(p.getPosition()))) {
-                        // System.out.println("Piece " + p.getName() + " is off - Current: " + p.getPosition() + " Snap: " + m.snapTo(p.getPosition()));
                         pieces.add(0, p);
                     }
                 }
             }
             else if (piece.getParent() == null) {
                 if (piece.getLocalizedProperty(Properties.NO_STACK) == Boolean.FALSE && !piece.getPosition().equals(m.snapTo(piece.getPosition()))) {
-                    // System.out.println("Piece " + piece.getName() + " is off - Current: " + piece.getPosition() + " Snap: " + m.snapTo(piece.getPosition()));
                     pieces.add(0, piece);
                 }
             }
@@ -291,7 +284,6 @@ public class ASLPieceMover extends PieceMover {
 
         final List<GamePiece> otherPieces = new ArrayList<>();
         final List<GamePiece> cargoPieces = new ArrayList<>();
-        //java.util.List<MatMover> matPieces = new ArrayList();
 
         while (it.hasMoreElements()) {
             final GamePiece piece = it.nextPiece();
@@ -301,30 +293,14 @@ public class ASLPieceMover extends PieceMover {
 
             if (Boolean.TRUE.equals(piece.getProperty("IsCargo"))) {
                 cargoPieces.add(piece);
-            //} else if (piece.getProperty("MatID") != null) {
-            //    matPieces.add(new MatMover(piece));
             } else {
                 otherPieces.add(piece);
             }
         }
 
-        //Iterator var31 = matPieces.iterator();
-
-        //while(var31.hasNext()) {
-        //    MatMover mm = (MatMover)var31.next();
-        //    mm.grabCargo(cargoPieces);
-        //}
-
         final List<GamePiece> newDragBuffer = new ArrayList();
         newDragBuffer.addAll(otherPieces);
         newDragBuffer.addAll(cargoPieces);
-        //Iterator var33 = matPieces.iterator();
-
-        //while(var33.hasNext()) {
-        //    MatMover mm = (MatMover)var33.next();
-        //    newDragBuffer.add(mm.getMatPiece());
-        //    newDragBuffer.addAll(mm.getCargo());
-        //}
 
         final GameModule gm = GameModule.getGameModule();
         final boolean isMatSupport = gm.isMatSupport();
@@ -357,7 +333,6 @@ public class ASLPieceMover extends PieceMover {
 
             List<GamePiece> mergeCandidates = (List) mergeTargets.get(p);
             GamePiece mergeWith = null;
-            //int i;
             GamePiece piece;
             if (mergeCandidates != null) {
                 final int n = mergeCandidates.size();
@@ -534,12 +509,11 @@ public class ASLPieceMover extends PieceMover {
 
             }
         }
-
-        //if (GlobalOptions.getInstance().autoReportEnabled()) {
-        //    Command report = this.createMovementReporter((Command)comm).getReportCommand().append((new MovementReporter.HiddenMovementReporter((Command)comm)).getReportCommand());
-        //    report.execute();
-        //    comm = ((Command)comm).append(report);
-        //}
+        //
+        // Check for SASL activation possibilities
+        //
+        SASLActivationChecker saslActivationChecker = map.getComponentsOf(SASLActivationChecker.class).get(0);
+        saslActivationChecker.runUpdate(allDraggedPieces);
 
         if (map.getMoveKey() != null) {
             comm = ((Command)comm).append(this.applyKeyAfterMove(allDraggedPieces, map.getMoveKey()));
@@ -568,7 +542,7 @@ public class ASLPieceMover extends PieceMover {
                     GamePiece p1 = pi.nextPiece();
                     if (p1.getProperty(ASLProperties.LOCATION) == null) {
                         toMove.add(p1);
-                    } else // FRedKors 20/12/2013 If a stack contains an immobile counter, I don't move it AND I deselect it
+                    } else
                     {
                         KeyBuffer.getBuffer().remove(p1);
                     }
@@ -584,7 +558,7 @@ public class ASLPieceMover extends PieceMover {
             }
         }
 
-        // FredKors 30/11/2013 : PRB if a stack contains INVISIBLE_TO_ME counters, they are added as single counters as movable
+        // PRB if a stack contains INVISIBLE_TO_ME counters, they are added as single counters as movable
         DragBuffer.getBuffer().clear();
 
         for (Iterator<GamePiece> i = movable.iterator(); i.hasNext(); ) {
@@ -614,7 +588,7 @@ public class ASLPieceMover extends PieceMover {
                     if ((iNumSameParent == 1) || (bOnlyFixedCounters))
                         DragBuffer.getBuffer().add(p);
                     else
-                        KeyBuffer.getBuffer().remove(p);// FRedKors 20/12/2013 If a stack contains an immobile counter, I don't move it AND I deselect it
+                        KeyBuffer.getBuffer().remove(p);// If a stack contains an immobile counter, I don't move it AND I deselect it
                 } else
                     DragBuffer.getBuffer().add(p); // if it is a single counter, I move it
             }
@@ -644,7 +618,7 @@ public class ASLPieceMover extends PieceMover {
                 return null;
             }
 
-            // Modified by FredKors 30/11/2013 : Filter INVISIBLE_TO_ME counters
+            // Filter INVISIBLE_TO_ME counters
             public Object visitStack(Stack s) {
                 DragBuffer.getBuffer().clear();
                 // RFE 1629255 - Only add selected pieces within the stack to the DragBuffer
@@ -716,20 +690,12 @@ public class ASLPieceMover extends PieceMover {
         });
     }
 
-    //JY
+
     //Duplicate VASSAL PieceMover.AbstractDragHandler class to allow overloading of various methods
-    //Taken from VASSAL 3.7.9
-    /**
-     * Common functionality for DragHandler for cases with and without drag
-     * image support.
-     *
-     * @author Pieter Geerkens
-     */
     public abstract static class AbstractDragHandler
             implements DragGestureListener, DragSourceListener,
             DragSourceMotionListener, DropTargetListener {
 
-        //JY
         private void OutputString(String strMsg) {
             GameModule.getGameModule().getChatter().send(strMsg);
         }
@@ -752,22 +718,15 @@ public class ASLPieceMover extends PieceMover {
             return t.createTransformedShape(s);
         }
 
-        //JY private static PieceMover.AbstractDragHandler theDragHandler = PieceMover.AbstractDragHandler.AbstractDragHandlerFactory.getCorrectDragHandler();
         private static ASLPieceMover.AbstractDragHandler theDragHandler = ASLPieceMover.AbstractDragHandler.AbstractDragHandlerFactory.getCorrectDragHandler();
-        //JY
 
         /** returns the singleton DragHandler instance */
-        //JY public static PieceMover.AbstractDragHandler getTheDragHandler() {return theDragHandler;}
         public static ASLPieceMover.AbstractDragHandler getTheDragHandler() {return theDragHandler;}
 
-        //JY public static void setTheDragHandler(PieceMover.AbstractDragHandler myHandler) {theDragHandler = myHandler;}
-        public static void setTheDragHandler(ASLPieceMover.AbstractDragHandler myHandler) {theDragHandler = myHandler;}
+         public static void setTheDragHandler(ASLPieceMover.AbstractDragHandler myHandler) {theDragHandler = myHandler;}
 
-        /**
-         * Picks the correct drag handler based on our OS, DragSource, and preferences.
-         */
+        // Picks the correct drag handler based on our OS, DragSource, and preferences.
         public static class AbstractDragHandlerFactory {
-            //JY public static PieceMover.AbstractDragHandler getCorrectDragHandler() {
             public static ASLPieceMover.AbstractDragHandler getCorrectDragHandler() {
                 if (!DragSource.isDragImageSupported() || GlobalOptions.getInstance().isForceNonNativeDrag()) {
                     return new DragHandlerNoImage();
@@ -813,7 +772,6 @@ public class ASLPieceMover extends PieceMover {
          * Registers a PieceMover
          * @param pm PieceMover for this dragHandler
          */
-        //JY public static void addPieceMover(PieceMover pm) {
         public static void addPieceMover(ASLPieceMover pm) {
             if (!pieceMovers.contains(pm)) {
                 pieceMovers.add(pm);
@@ -842,19 +800,6 @@ public class ASLPieceMover extends PieceMover {
             DragHandler.getTheDragHandler().dropTargetListeners.remove(theComponent);
         }
 
-        //JY
-        /*
-        private static StackMetrics getStackMetrics(GamePiece piece) {
-            final Map map = piece.getMap();
-            if (map != null) {
-                final StackMetrics sm = map.getStackMetrics();
-                if (sm != null) {
-                    return sm;
-                }
-            }
-            return new StackMetrics();
-        }
-        */
         private static ASLStackMetrics getStackMetrics(GamePiece piece) {
             final Map map = piece.getMap();
             if (map != null) {
@@ -866,7 +811,6 @@ public class ASLPieceMover extends PieceMover {
             return new ASLStackMetrics();
         }
 
-        //JY protected static List<PieceMover> pieceMovers = new ArrayList<>(); // our piece movers
         protected static List<ASLPieceMover> pieceMovers = new ArrayList<>(); // our piece movers
 
         protected static final int CURSOR_ALPHA = 127; // pseudo cursor is 50% transparent
@@ -991,13 +935,9 @@ public class ASLPieceMover extends PieceMover {
                 p.y *= zoom;
             }
 
-            //JY
-            //final int w = boundingBox.width + EXTRA_BORDER * 2;
-            //final int h = boundingBox.height + EXTRA_BORDER * 2;
             int eb = Math.max((int) (EXTRA_BORDER / ASLMap.getbZoom()), EXTRA_BORDER);
             final int w = boundingBox.width + eb * 2;
             final int h = boundingBox.height + eb * 2;
-            //JY
 
             final BufferedImage image = ImageUtils.createCompatibleTranslucentImage(w, h);
             drawDragImage(image, target, relativePositions, zoom);
@@ -1029,7 +969,7 @@ public class ASLPieceMover extends PieceMover {
             GamePiece lastPiece = firstPiece;
 
             boundingBox = firstPiece.getShape().getBounds();
-            //JY
+
             double pZoom = 1.0;
             final ASLMap map = (ASLMap) firstPiece.getMap();
             if (map != null) {
@@ -1038,24 +978,20 @@ public class ASLPieceMover extends PieceMover {
             if (!(firstPiece instanceof Stack)) {
                 boundingBox = this.scalePiece(firstPiece.getShape().getBounds(), pZoom); //Centred on 0 0, with min and max corresponding to width
             }
-            //JY
+
             relativePositions.add(new Point(0, 0));
 
             int stackCount = 0;
             while (dragContents.hasMoreElements()) {
                 final GamePiece nextPiece = dragContents.nextPiece();
-                //JY
-                //final Rectangle r = nextPiece.getShape().getBounds();
                 Rectangle r = nextPiece.getShape().getBounds();
                 pZoom = 1.0;
                 if (map != null) {
                     pZoom = map.PieceScalerBoardZoom(nextPiece);
                 }
-                //pZoom = map.PieceScalerBoardZoom(nextPiece);
                 if (!(nextPiece instanceof Stack)) {
                     r = this.scalePiece(nextPiece.getShape().getBounds(), pZoom);
                 }
-                //JY
                 final Point p = new Point(
                         nextPiece.getPosition().x - firstPiece.getPosition().x,
                         nextPiece.getPosition().y - firstPiece.getPosition().y
@@ -1064,9 +1000,7 @@ public class ASLPieceMover extends PieceMover {
 
                 if (nextPiece.getPosition().equals(lastPiece.getPosition())) {
                     stackCount++;
-                    //JY final StackMetrics sm = getStackMetrics(nextPiece);
                     final ASLStackMetrics sm = getStackMetrics(nextPiece);
-                    //JY r.translate(sm.unexSepX * stackCount, -sm.unexSepY * stackCount
                     int usx = Integer.parseInt(sm.getAttributeValueString("unexSepX"));
                     int usy = Integer.parseInt(sm.getAttributeValueString("unexSepY"));
                     r.translate(usx * stackCount, -usy * stackCount);
@@ -1080,7 +1014,6 @@ public class ASLPieceMover extends PieceMover {
             return relativePositions;
         }
 
-        //JY
         protected void nextPositionAPM(Point currentPos, Rectangle currentBounds, Point nextPos, Rectangle nextBounds, int dx, int dy) {
             int deltaX;
             if (dx > 0) {
@@ -1106,8 +1039,8 @@ public class ASLPieceMover extends PieceMover {
             Highlighter highlighter = stack.getMap() == null ? BasicPiece.getHighlighter() : stack.getMap().getHighlighter();
             Point[] positions = new Point[stack.getPieceCount()];
             final ASLStackMetrics sm = getStackMetrics(stack);
-            int usx = Integer.parseInt(sm.getAttributeValueString("unexSepX")); //usx = Math.max((int)(usx*pZoom), 1);
-            int usy = Integer.parseInt(sm.getAttributeValueString("unexSepY")); //usy = Math.max((int)(usy*pZoom), 2);
+            int usx = Integer.parseInt(sm.getAttributeValueString("unexSepX"));
+            int usy = Integer.parseInt(sm.getAttributeValueString("unexSepY"));
             int dx = usx;
             int dy = usy;
             Point currentPos = null;
@@ -1144,7 +1077,6 @@ public class ASLPieceMover extends PieceMover {
                 highlighter.draw(next, g, nextX, nextY, obs, zoom);
             }
         }
-        //JY
 
         private void drawDragImage(BufferedImage image, Component target,
                                    List<Point> relativePositions, double zoom) {
@@ -1161,17 +1093,13 @@ public class ASLPieceMover extends PieceMover {
 
                 final GamePiece piece = dragContents.nextPiece();
                 final Point pos = relativePositions.get(index++);
-                //JY
-                //final Map map = piece.getMap();
+
                 final ASLMap map = (ASLMap) piece.getMap();
                 double pZoom = ((ASLMap)map).PieceScalerBoardZoom(piece);
-                //JY
+
 
                 if (piece instanceof Stack) {
                     stackCount = 0;
-                    //JY piece.draw(g, EXTRA_BORDER - boundingBox.x + pos.x,
-                    //JY        EXTRA_BORDER - boundingBox.y + pos.y,
-                    //JY        map == null ? target : map.getView(), zoom);
                     drawStack((Stack) piece, g, EXTRA_BORDER - boundingBox.x + pos.x,
                             EXTRA_BORDER - boundingBox.y + pos.y, map.getView(), zoom * pZoom);
                 }
@@ -1179,31 +1107,21 @@ public class ASLPieceMover extends PieceMover {
                     final Point offset = new Point(0, 0);
                     if (pos.equals(lastPos)) {
                         stackCount++;
-                        //JY
-                        //final StackMetrics sm = getStackMetrics(piece);
                         final ASLStackMetrics sm = getStackMetrics(piece);
-                        //offset.x = (int) Math.round(sm.unexSepX * stackCount * zoom);
-                        //offset.y = (int) Math.round(sm.unexSepY * stackCount * zoom);
                         int usx = Integer.parseInt(sm.getAttributeValueString("unexSepX")); usx = Math.max((int)(usx*pZoom), 1);
                         int usy = Integer.parseInt(sm.getAttributeValueString("unexSepY")); usy = Math.max((int)(usy*pZoom), 2);
                         offset.x = (int) Math.round(usx * stackCount * zoom);
                         offset.y = (int) Math.round(usy * stackCount * zoom);
-                        //JY
                     }
                     else {
                         stackCount = 0;
                     }
-
-                    //JY
-                    //final int x = EXTRA_BORDER - boundingBox.x + pos.x + offset.x;
-                    //final int y = EXTRA_BORDER - boundingBox.y + pos.y - offset.y;
                     int eb = EXTRA_BORDER;
                     if ((ASLMap.getbZoom() < 1.0) || (ASLMap.getbZoom() > 1.0)) {
                         eb = Math.max((int) (EXTRA_BORDER / ASLMap.getbZoom() * (zoom > 1.0 ? zoom : 1.0)), EXTRA_BORDER);
                     }
                     final int x = eb - boundingBox.x + pos.x + offset.x;
                     final int y = eb - boundingBox.y + pos.y - offset.y;
-                    //JY
 
                     String owner = "";
                     final GamePiece parent = piece.getParent();
@@ -1219,22 +1137,15 @@ public class ASLPieceMover extends PieceMover {
 
                     final AffineTransform t = AffineTransform.getScaleInstance(zoom, zoom);
                     t.translate(x / zoom, y / zoom);
-                    //JY
-                    //g.setClip(t.createTransformedShape(piece.getShape()));
-                    //piece.draw(g, x, y, map == null ? target : map.getView(), zoom);
                     Shape s = this.scalePiece(piece.getShape(), pZoom);
                     g.setClip(t.createTransformedShape(s));
                     piece.draw(g, x, y, map == null ? target : map.getView(), zoom*pZoom);
-                    //JY
 
                     g.setClip(null);
 
                     final Highlighter highlighter = map == null ?
                             BasicPiece.getHighlighter() : map.getHighlighter();
-                    //JY
-                    //highlighter.draw(piece, g, x, y, null, zoom);
                     highlighter.draw(piece, g, x, y, null, zoom*pZoom);
-                    //JY
 
                     if (piece.getParent() instanceof Deck) {
                         piece.setProperty(Properties.OBSCURED_BY, owner);
@@ -1391,7 +1302,6 @@ public class ASLPieceMover extends PieceMover {
             );
 
             //BR// Inform PieceMovers of relevant metrics
-            //JY for (final PieceMover pieceMover : pieceMovers) {
             for (final ASLPieceMover pieceMover : pieceMovers) {
                 pieceMover.setCurPieceOffset(currentPieceOffsetX, currentPieceOffsetY);
                 pieceMover.setBreachedThreshold(true);
@@ -1520,9 +1430,9 @@ public class ASLPieceMover extends PieceMover {
         }
     }
 
-    //JY
+
     //Duplicate the various VASSAL PieceMover.DragHandler classes to make sure these extend ASLPieceMover, not PieceMover
-    //Taken from VASSAL 3.7.9
+
     /**
      * VASSAL's front-line drag handler for drag-and-drop of pieces.
      *
@@ -1531,7 +1441,7 @@ public class ASLPieceMover extends PieceMover {
      *
      * @author Pieter Geerkens
      */
-    //JY public static class DragHandler extends PieceMover.AbstractDragHandler {
+
     public static class DragHandler extends ASLPieceMover.AbstractDragHandler {
         @Override
         public void dragGestureRecognized(DragGestureEvent dge) {
@@ -1570,7 +1480,7 @@ public class ASLPieceMover extends PieceMover {
      * Special MacOSX variant of DragHandler, because of differences in how
      * device scaling is handled.
      */
-    //JY public static class DragHandlerMacOSX extends PieceMover.DragHandler {
+
     public static class DragHandlerMacOSX extends ASLPieceMover.DragHandler {
         @Override
         protected int getOffsetMult() {
@@ -1599,7 +1509,7 @@ public class ASLPieceMover extends PieceMover {
      * @author Jim Urbas
      * @version 0.4.2
      */
-    //JY public static class DragHandlerNoImage extends PieceMover.AbstractDragHandler {
+
     public static class DragHandlerNoImage extends ASLPieceMover.AbstractDragHandler {
         protected Component dragWin; // the component that initiated the drag operation
         protected Component dropWin; // the drop target the mouse is currently over
@@ -1801,5 +1711,5 @@ public class ASLPieceMover extends PieceMover {
             setCargo(tempCargo);
         }
     }
-    //JY
+
 }

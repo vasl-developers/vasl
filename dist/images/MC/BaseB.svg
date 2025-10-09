@@ -15,10 +15,4 @@
 	   
 	<path id="Gray_hexagon" style="display:inline;fill:#cccccc;stroke:none;stroke-width:1.5;stroke-linecap:round;stroke-dasharray:none" d="M 95.636191,74.776541 74.854076,95.604075 45.431611,95.636191 24.604078,74.854076 24.571962,45.431611 45.354077,24.604078 74.776541,24.571962 95.604075,45.354077 Z"/>
 
-	<!-- gemhack
-	<line id="horizontal" x1="0.00" y1="60.00" x2="120.00" y2="60.00" style="stroke:#ff00ff;stroke-width:0.50"/>
-	<line id="vertical" x1="60.00" y1="0.00" x2="60.00" y2="120.00" style="stroke:#ff00ff;stroke-width:0.50"/>
-	<line id="upward_diagonal" x1="0.00" y1="120.00" x2="120.00" y2="0.00" style="stroke:#ff00ff;stroke-width:0.50"/>
-	<line id="downward_diagonal" x1="0.00" y1="0.00" x2="120.00" y2="120.00" style="stroke:#ff00ff;stroke-width:0.50"/>
-	gemhack -->
 </svg>

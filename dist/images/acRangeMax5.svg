@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="48" height="9" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<!--
+		Name:		acRangeMax5
+		Version:	0.1
+
+		Author(s): Gordon Molek, Klas Malmström, Alan Bills
+		Tester(s): Alan Bills, Alan Cannamore, Doug Rimmer
+	-->
+
+
+	<defs id="fonts">
+		<style>
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: normal;
+				src: url("fonts/NimbusSanL-Reg.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: normal;
+				src: url("fonts/NimbusSanL-Bol.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: italic;
+				src: url("fonts/NimbusSanL-RegIta.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: italic;
+				src: url("fonts/NimbusSanL-BolIta.ttf") format("ttf");
+			}
+		</style>
+	</defs>
+
+	<path id="bottom tab" style="display:inline;fill:#ff9320;stroke-width:0;stroke-opacity:0" d="M 48,0 V 5 c 0,2.216 -1.784,4 -4,4 H 4 C 1.784,9 0,7.216 0,5 L 0,0 Z" />
+	<text x="50%" y="7.25" style="font-size:8px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">DRM &#8804; -2</text>
+
+</svg>
