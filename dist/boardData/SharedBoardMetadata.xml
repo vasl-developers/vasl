@@ -2656,6 +2656,9 @@
 		<colorSSR name="Level_1ToLevel0">
 			<colorMap fromColor="Level_1" toColor="Level0"/>
 		</colorSSR>
+		<colorSSR name="Level_1ToLevel1">
+			<colorMap fromColor="Level_1" toColor="Level1"/>
+		</colorSSR>
 		<colorSSR name="Level_2ToLevel_1">
 			<colorMap fromColor="Level_2" toColor="Level_1"/>
 		</colorSSR>
@@ -3247,8 +3250,9 @@
         <LOSSSRule name="Level2ToLevel0" type="elevationMap" fromValue="2" toValue="0" />
         <LOSSSRule name="Level2ToLevel_1" type="elevationMap" fromValue="2" toValue="-1" />
         <LOSSSRule name="Level1ToLevel0" type="elevationMap" fromValue="1" toValue="0" />
-        <LOSSSRule name="Level1ToLevel_1" type="elevationMap" fromValue="1" toValue="_1" />
+        <LOSSSRule name="Level1ToLevel_1" type="elevationMap" fromValue="1" toValue="-1" />
         <LOSSSRule name="Level_1ToLevel0" type="elevationMap" fromValue="-1" toValue="0" />
+		<LOSSSRule name="Level_1ToLevel1" type="elevationMap" fromValue="-1" toValue="1" />
         <LOSSSRule name="Level_2ToLevel_1" type="elevationMap" fromValue="-2" toValue="-1" />
         <LOSSSRule name="Level_2ToLevel0" type="elevationMap" fromValue="-2" toValue="0" />
 
