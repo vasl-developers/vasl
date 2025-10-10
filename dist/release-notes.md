@@ -1,7 +1,7 @@
 # Release Notes: Version 6.7.1-beta7 
 
 
-**Release Date:** Oct, 2025
+**Release Date:** October, 2025
 
 ---
 
