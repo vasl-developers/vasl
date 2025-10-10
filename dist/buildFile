@@ -164,7 +164,7 @@
     </VASL.build.module.ASLMap>
     <VASSAL.build.module.NotesWindow buttonText="" hotkey="" icon="notesV.gif" tooltip="Notes"/>
     <VASSAL.build.module.Documentation>
-        <VASSAL.build.module.documentation.BrowserPDFFile pdfFile="Whats New VASL671beta6.pdf" title="What's New in 671b5"/>
+        <VASSAL.build.module.documentation.BrowserPDFFile pdfFile="Whats New VASL671beta7.pdf" title="What's New in 671b7"/>
         <VASSAL.build.module.documentation.BrowserPDFFile pdfFile="Counters.pdf" title="Counters"/>
         <VASSAL.build.module.documentation.BrowserPDFFile pdfFile="VASL Keystroke Cheat Sheet.pdf" title="Hotkey Listing"/>
         <VASSAL.build.module.documentation.BrowserPDFFile pdfFile="Malf.pdf" title="Malf/Broken Unit Finder"/>
