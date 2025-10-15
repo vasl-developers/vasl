@@ -758,11 +758,10 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener {
     }
 
     synchronized public void PushDiceRoll(String categoryName, String strUser, String strSAN, int firstDie, int secondDie, int thirdDie, int rofDie) {
-
+        String categoryMsg = categoryName.trim().replace("ENEMY ", "");
         String secondMsg = "";
         // add hit location info
-        if (categoryName.trim().equals("TH")) {
-
+        if (categoryMsg.equals("TH")) {
             if (firstDie < secondDie) {
                 secondMsg = "TURRET HIT";
             } else {
@@ -792,13 +791,28 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener {
         g.translate(panelPosition.x, panelPosition.y);
 
         int local_dice_y = dice_y - (!"".equals(drPanel.getSecondaryMsg()) ? 5 : 0);
+        boolean enemy = false;
+        String categoryName = drPanel.getCategoryName();
+
+        if (categoryName != null && !categoryName.isEmpty() && categoryName.contains("ENEMY")) {
+            categoryName = categoryName.replace("ENEMY ", "");
+            enemy = true;
+        }
 
         // draw the background
-        g.drawImage(drPanel.isFriendly() ? friendlyPanelImage : opponentPanelImage, 0, 0, null);
+        if (enemy) {
+            g.drawImage(opponentPanelImage, 0, 0, null);
+        } else {
+            g.drawImage(drPanel.isFriendly() ? friendlyPanelImage : opponentPanelImage, 0, 0, null);
+        }
 
         // draw the caption
         if (panelCaptionFont != null) {
-             DrawCaption(g, drPanel.getRollCount() + ". " + (drPanel.isFriendly() ? GetFriendlyPlayerNick() : drPanel.getUserNickName()));
+            if (enemy) {
+                DrawCaption(g, drPanel.getRollCount() + ". ENEMY");
+            } else {
+                DrawCaption(g, drPanel.getRollCount() + ". " + (drPanel.isFriendly() ? GetFriendlyPlayerNick() : drPanel.getUserNickName()));
+            }
         }
 
         int rolling_dice_x = last_dice_x;
@@ -821,8 +835,8 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener {
             g.drawImage(singleDieImages[drPanel.getFirstDieResult() - 1], rolling_dice_x, local_dice_y, null);
         }
 
-        if (drPanel.getCategoryName() != null && !drPanel.getCategoryName().isEmpty()) {
-            DrawCategory(g, drPanel.getCategoryName(), drPanel.getSecondaryMsg(), new Rectangle(text_x, local_dice_y, text_width, dice_height));
+        if (categoryName != null && !categoryName.isEmpty()) {
+            DrawCategory(g, categoryName, drPanel.getSecondaryMsg(), new Rectangle(text_x, local_dice_y, text_width, dice_height));
         }
 
         g.translate(-panelPosition.x, -panelPosition.y);
@@ -904,6 +918,7 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
     private boolean isToolbarActive = false;
     private final String DICE_OVERLAY_TOOLBAR_POS = "DiceOverlayToolbarPos";
     private final String DICE_OVERLAY_TOOLBAR_ACTIVE = "DiceOverlayToolbarActive";
+    private boolean showSaslDice = false;
 
     // this component is not configurable
     @Override
@@ -1046,6 +1061,7 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
     public void CreateToolbar() {
 
         if (toolbar == null) {
+            showSaslDice = ((ASLChatter)(GameModule.getGameModule().getChatter())).getShowSaslDice();
 
             toolbar = new JToolBar(SwingConstants.VERTICAL);
             toolbar.setVisible(false);
@@ -1057,11 +1073,12 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
 
             final int iW = 32;
             int rowNum = 0;
+            int rowNumSASL = 0;
 
             GridBagLayout layout = new GridBagLayout();
-            layout.columnWidths = new int[] { iW };
+            layout.columnWidths = new int[] { iW, iW };
             layout.rowHeights = new int[] { 0, iW };
-            layout.columnWeights = new double[] { 0.0 };
+            layout.columnWeights = new double[] { 0.0, 0.0 };
             layout.rowWeights = new double[] { 1.0, 0.0, 0.0 };
             p.setLayout(layout);
 
@@ -1070,68 +1087,160 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
             AbstractButton btn;
 
             Component l_objVertGlue = Box.createVerticalGlue();
-            AddButton(p, l_objVertGlue, rowNum++, 2);
+            AddButton(p, l_objVertGlue, 0, rowNum++, 2);
 
             btn = CreateKeepAliveButton();
-            AddButton(p, btn, rowNum++, 20);
+            AddButton(p, btn, 0, rowNum++, 20);
             comps.add(btn);
 
             btn = CreateActionButton("chatter/CLEAR.png", "Clear the screen from DRs", e -> diceRollQueueHandler.KillAll());
-            AddButton(p, btn, rowNum++, 2);
+            AddButton(p, btn, 0, rowNum++, 2);
             comps.add(btn);
 
             btn = CreateActionButton("chatter/REWIND.png", String.format("Show last %s DRs", diceRollQueueHandler.getMaxRollsOnScreen()), e -> diceRollQueueHandler.ShowLastDiceRoll());
-            AddButton(p, btn, rowNum++, 20);
+            AddButton(p, btn, 0, rowNum++, 20);
             comps.add(btn);
 
+            rowNumSASL = rowNum;    // Save this row for below when we enumerate the SASL ENEMY buttons
+
             btn = CreateDiceButton("DRs.gif", "", "DR", KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), true, ASLDiceBot.OTHER_CATEGORY);
-            AddButton(p, btn, rowNum++, 2);
+            AddButton(p, btn, 0, rowNum++, 2);
             comps.add(btn);
 
             btn = CreateDiceButton("", "IFT", "IFT attack DR", KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), true, "IFT");
-            AddButton(p, btn, rowNum++, 2);
+            AddButton(p, btn, 0, rowNum++, 2);
             comps.add(btn);
 
             btn = CreateDiceButton("", "TH", "To Hit DR", KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), true, "TH");
-            AddButton(p, btn, rowNum++, 2);
+            AddButton(p, btn, 0, rowNum++, 2);
             comps.add(btn);
 
             btn = CreateDiceButton("", "TK", "To Kill DR", KeyStroke.getKeyStroke(KeyEvent.VK_K, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), true, "TK");
-            AddButton(p, btn, rowNum++, 2);
+            AddButton(p, btn, 0, rowNum++, 2);
             comps.add(btn);
 
             btn = CreateDiceButton("", "MC", "Morale Check DR", KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), true, "MC");
-            AddButton(p, btn, rowNum++, 2);
+            AddButton(p, btn, 0, rowNum++, 2);
             comps.add(btn);
 
             btn = CreateDiceButton("", "R", "Rally DR", KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), true, "Rally");
-            AddButton(p, btn, rowNum++, 2);
+            AddButton(p, btn, 0, rowNum++, 2);
             comps.add(btn);
 
             btn = CreateDiceButton("", "CC", "Close Combat DR", KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), true, "CC");
-            AddButton(p, btn, rowNum++, 2);
+            AddButton(p, btn, 0, rowNum++, 2);
             comps.add(btn);
 
             btn = CreateDiceButton("", "TC", "Task Check DR", KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), true, "TC");
-            AddButton(p, btn, rowNum++, 10);
+            AddButton(p, btn, 0, rowNum++, 10);
             comps.add(btn);
 
             btn = CreateDiceButton("dr.gif", "", "dr", KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), false, ASLDiceBot.OTHER_CATEGORY);
-            AddButton(p, btn, rowNum++, 2);
+            AddButton(p, btn, 0, rowNum++, 2);
             comps.add(btn);
 
             btn = CreateDiceButton("", "SA", "Sniper Activation dr", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), false, "SA");
-            AddButton(p, btn, rowNum++, 2);
+            AddButton(p, btn, 0, rowNum++, 2);
             comps.add(btn);
 
-            btn = CreateDiceButton("", "RS", "Random Selection dr", KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), false, "RS");
-            AddButton(p, btn, rowNum++, 20);
-            comps.add(btn);
+
+            if (!showSaslDice) {
+                btn = CreateDiceButton("", "RS", "Random Selection dr", KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), false, "RS");
+                AddButton(p, btn, 0, rowNum++, 20);
+                comps.add(btn);
+            } else {
+                btn = CreateDiceButton("", "RS", "Random Selection dr", KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), false, "RS");
+                AddButton(p, btn, 0, rowNum++, 10);
+                comps.add(btn);
+
+                AddButton(p, new JToolBar.Separator(), 0, rowNum++, 2);
+
+                btn = CreateDiceButton("", "CMD", "FRIENDLY CMD DR", KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), true, "CMD");
+                btn.setBackground(new Color(82, 165, 82));
+                AddButton(p, btn, 0, rowNum++, 2);
+                comps.add(btn);
+
+                btn = CreateDiceButton("", "RE", "FRIENDLY RE DR", KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), true, "RE");
+                btn.setBackground(new Color(82, 165, 82));
+                AddButton(p, btn, 0, rowNum++, 20);
+                comps.add(btn);
+            }
 
             btn = CreateActionButton("chatter/ARROW.png", "Move the toolbar to the other side", e -> ToolbarMove());
-            AddButton(p, btn, rowNum, 2);
+            AddButton(p, btn, 0, rowNum, 2);
             comps.add(btn);
 
+            if (showSaslDice) {
+                btn = CreateDiceButton("DRs.gif", "", "ENEMY DR", KeyStroke.getKeyStroke(KeyEvent.VK_F2, InputEvent.ALT_DOWN_MASK), true, "ENEMY Other");
+                btn.setBackground(new Color(165, 165, 165));
+                AddButton(p, btn, 1, rowNumSASL++, 2);
+                comps.add(btn);
+
+                btn = CreateDiceButton("", "IFT", "ENEMY IFT attack DR", KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), true, "ENEMY IFT");
+                btn.setBackground(new Color(165, 165, 165));
+                AddButton(p, btn, 1, rowNumSASL++, 2);
+                comps.add(btn);
+
+                btn = CreateDiceButton("", "TH", "ENEMY To Hit DR", KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), true, "ENEMY TH");
+                btn.setBackground(new Color(165, 165, 165));
+                AddButton(p, btn, 1, rowNumSASL++, 2);
+                comps.add(btn);
+
+                btn = CreateDiceButton("", "TK", "ENEMY To Kill DR", KeyStroke.getKeyStroke(KeyEvent.VK_K, InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), true, "ENEMY TK");
+                btn.setBackground(new Color(165, 165, 165));
+                AddButton(p, btn, 1, rowNumSASL++, 2);
+                comps.add(btn);
+
+                btn = CreateDiceButton("", "MC", "ENEMY Morale Check DR", KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), true, "ENEMY MC");
+                btn.setBackground(new Color(165, 165, 165));
+                AddButton(p, btn, 1, rowNumSASL++, 2);
+                comps.add(btn);
+
+                btn = CreateDiceButton("", "R", "ENEMY Rally DR", KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), true, "ENEMY Rally");
+                btn.setBackground(new Color(165, 165, 165));
+                AddButton(p, btn, 1, rowNumSASL++, 2);
+                comps.add(btn);
+
+                btn = CreateDiceButton("", "CC", "ENEMY Close Combat DR", KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), true, "ENEMY CC");
+                btn.setBackground(new Color(165, 165, 165));
+                AddButton(p, btn, 1, rowNumSASL++, 2);
+                comps.add(btn);
+
+                btn = CreateDiceButton("", "TC", "ENEMY Task Check DR", KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), true, "ENEMY TC");
+                btn.setBackground(new Color(165, 165, 165));
+                AddButton(p, btn, 1, rowNumSASL++, 10);
+                comps.add(btn);
+
+                btn = CreateDiceButton("dr.gif", "", "ENEMY dr", KeyStroke.getKeyStroke(KeyEvent.VK_F1, InputEvent.ALT_DOWN_MASK), false, "ENEMY Other");
+                btn.setBackground(new Color(165, 165, 165));
+                AddButton(p, btn, 1, rowNumSASL++, 2);
+                comps.add(btn);
+
+                btn = CreateDiceButton("", "SA", "ENEMY Sniper Activation dr", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), false, "ENEMY SA");
+                btn.setBackground(new Color(165, 165, 165));
+                AddButton(p, btn, 1, rowNumSASL++, 2);
+                comps.add(btn);
+
+                btn = CreateDiceButton("", "RS", "ENEMY Random Selection dr", KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), false, "ENEMY RS");
+                btn.setBackground(new Color(165, 165, 165));
+                AddButton(p, btn, 1, rowNumSASL++, 10);
+                comps.add(btn);
+
+                btn = CreateDiceButton("", "AC", "ENEMY AC dr", KeyStroke.getKeyStroke(KeyEvent.VK_B, InputEvent.ALT_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), false, "ENEMY AC");
+                btn.setBackground(new Color(165, 165, 165));
+                AddButton(p, btn, 1, rowNumSASL++, 2);
+                comps.add(btn);
+
+                btn = CreateDiceButton("", "ACT", "ENEMY Action DR", KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.ALT_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), true, "ENEMY Action");
+                btn.setBackground(new Color(165, 165, 165));
+                AddButton(p, btn, 1, rowNumSASL++, 2);
+                comps.add(btn);
+
+                btn = CreateDiceButton("", "RE", "ENEMY RE DR", KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.ALT_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK), true, "ENEMY RE");
+                btn.setBackground(new Color(165, 165, 165));
+                AddButton(p, btn, 1, rowNumSASL++, 20);
+                comps.add(btn);
+            }
             // find the minimum width for full text display on all buttons,
             // but don't go under 32px
             int text_w = 32;
@@ -1178,13 +1287,13 @@ public class ASLDiceOverlay extends AbstractConfigurable implements GameComponen
         NeedRepaint();
     }
 
-    private void AddButton(JPanel panel, Component component, int row, int gap) {
+    private void AddButton(JPanel panel, Component component, int column, int row, int gap) {
         GridBagConstraints gridBagConstraints;
 
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.fill = GridBagConstraints.BOTH;
         gridBagConstraints.insets = new Insets(0, 0, gap, 0);
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = column;
         gridBagConstraints.gridy = row;
 
         panel.add(component, gridBagConstraints);
