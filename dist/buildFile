@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<VASSAL.build.GameModule ModuleOther1="" ModuleOther2="" VassalVersion="3.7.18" description="VASL" name="VASL" nextPieceSlotId="15594" version="6.7.1-beta7">
+<VASSAL.build.GameModule ModuleOther1="" ModuleOther2="" VassalVersion="3.7.18" description="VASL" name="VASL" nextPieceSlotId="15595" version="6.7.1-beta8">
     <VASSAL.build.module.properties.GlobalProperties>
         <VASSAL.build.module.properties.GlobalProperty description="TurnMarker1" initialValue="Spy (white)" isNumeric="false" max="null" min="null" name="TurnMarker1" wrap="false"/>
         <VASSAL.build.module.properties.GlobalProperty description="TurnMarkerLayerLevel1" initialValue="33" isNumeric="true" max="100" min="0" name="TurnMarkerLayerLevel1" wrap="false"/>
@@ -164,7 +164,7 @@
     </VASL.build.module.ASLMap>
     <VASSAL.build.module.NotesWindow buttonText="" hotkey="" icon="notesV.gif" tooltip="Notes"/>
     <VASSAL.build.module.Documentation>
-        <VASSAL.build.module.documentation.BrowserPDFFile pdfFile="Whats New VASL671beta7.pdf" title="What's New in 671b7"/>
+        <VASSAL.build.module.documentation.BrowserPDFFile pdfFile="Whats New VASL671beta8.pdf" title="What's New in 671b8"/>
         <VASSAL.build.module.documentation.BrowserPDFFile pdfFile="Counters.pdf" title="Counters"/>
         <VASSAL.build.module.documentation.BrowserPDFFile pdfFile="VASL Keystroke Cheat Sheet.pdf" title="Hotkey Listing"/>
         <VASSAL.build.module.documentation.BrowserPDFFile pdfFile="Malf.pdf" title="Malf/Broken Unit Finder"/>
@@ -6305,6 +6305,7 @@
                 <VASSAL.build.widget.PanelWidget entryName="Rubble" fixed="true" nColumns="1" scale="1.0" vert="false">
                     <VASSAL.build.widget.PieceSlot entryName="Wood Rubble" gpid="4133" height="64" width="75">+/null/prototype;DBGlobal	mark;Overlay\	immob;i;I;R;\\	emb2;;2;;Type;2;T;;2;;;;0;false;0;0;DO\/RubbleStone,DO\/RubbleWood;,;true;;;;false;;1;1;true;;84,130;;;1.0;;true\\\	piece;K;D;;Wood Rubble/	true\	\\	2\\\	null;0;0;4133;0</VASSAL.build.widget.PieceSlot>
                     <VASSAL.build.widget.PieceSlot entryName="Stone Rubble" gpid="4134" height="64" width="75">+/null/prototype;DBGlobal	mark;Overlay\	immob;i;I;R;\\	emb2;;2;;Type;2;T;;2;;;;0;false;0;0;DO\/RubbleStone,DO\/RubbleWood;,;true;;;;false;;1;1;true;;84,130;;;1.0;;true\\\	piece;K;D;;Stone Rubble/	true\	\\	1\\\	null;0;0;4134;0</VASSAL.build.widget.PieceSlot>
+                    <VASSAL.build.widget.PieceSlot entryName="Debris" gpid="15594" height="76" width="85">+/null/prototype;DBGlobal	mark;Overlay\	immob;i;I;R;\\	emb2;;128;A;;128;;;128;;;;0;false;0;0;DO\/Debris.png;+ orchard;true;;;;false;;1;1;true;;;;;1.0;;true\\\	emb2;;128;A;Higher;128;;Lower;128;;;;0;false;0;0;DO\/pOGL_2,DO\/pOGL_1,DO\/pOGL0,DO\/pOGL1,DO\/pOGL2,DO\/pOGL3,DO\/pOGL4,DO\/pOGL5,DO\/pOGL6, ;Lv -2,Lv -1,Lv 0,Lv 1,Lv 2,Lv 3,Lv 4,Lv 5,Lv 6,no Lv;true;;;;false;;1;1;true;;93,130;91,130;;1.0;;true\\\\	piece;K;D; ;Debris/	true\	\\	1\\\	3\\\\	null;161;81;15594;1;ppScale;1.0</VASSAL.build.widget.PieceSlot>
                 </VASSAL.build.widget.PanelWidget>
                 <VASSAL.build.widget.PanelWidget entryName="Shellholes" fixed="false" nColumns="3" scale="1.0" vert="true">
                     <VASSAL.build.widget.PieceSlot entryName="Shellholes" gpid="4135" height="64" width="75">+/null/prototype;DBGlobal	mark;Overlay\	immob;i;I;R;\\	emb2;;2;;Color;2;C;;2;;;;0;false;0;0;DO\/Shellhole,DO\/ShellholeChoc;,;true;;;;false;;1;1;true;;67,130;;;1.0;;true\\\	piece;K;D;;Shellholes/	true\	\\	1\\\	null;0;0;4135;0</VASSAL.build.widget.PieceSlot>
