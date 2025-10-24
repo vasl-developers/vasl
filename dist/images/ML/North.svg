@@ -59,7 +59,6 @@
 		</g>
 	</g>
 	
-	<!-- gemhack <svg width="60" height="60" viewBox="-30 -33 60 60"> -->
 	<svg width="60" height="60" viewBox="-30 -34 60 60">
 		<circle r="19" cx="0" cy="0" fill="none" stroke="#000000" stroke-width="0.50"/>
 		<circle r="15" cx="0" cy="0" fill="none" stroke="#000000" stroke-width="1.00"/>

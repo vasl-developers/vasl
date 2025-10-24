@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="48" height="9" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<!--
+		Name:		acBottomBlank
+		Version:	0.1
+
+		Author(s): Gordon Molek, Klas Malmström, Alan Bills
+		Tester(s): Alan Bills, Alan Cannamore, Doug Rimmer
+	-->
+
+	<path id="bottom tab" style="display:inline;fill:#ff9320;stroke-width:0;stroke-opacity:0" d="M 48,0 V 5 c 0,2.216 -1.784,4 -4,4 H 4 C 1.784,9 0,7.216 0,5 L 0,0 Z" />
+
+</svg>

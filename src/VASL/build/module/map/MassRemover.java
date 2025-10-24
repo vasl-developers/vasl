@@ -29,6 +29,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JPopupMenu;
 
+import VASSAL.counters.BasicPiece;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -97,7 +98,17 @@ public class MassRemover implements Buildable {
   }
 
   protected boolean isMatch(GamePiece p, String name) {
-    return p.getName().equals(name);
+    // getName() will return {PieceName} ({LabelText}), e.g. Prep Fire (foo)
+    // using BASIC_NAME should bypass this decoration.
+    if ((p == null) || (name == null)) return false;
+    String basicName = (String) p.getProperty(BasicPiece.BASIC_NAME);
+    // allow isMatch to match *either* the basic name or the decorated name because
+    // the list of things to remove doesn't always use the basic name
+    // (e.g. '1 FP' instead of 'Residual FP').
+    if (basicName != null) {
+      if (name.equals(basicName)) return true;
+    }
+    return name.equals(p.getName());
   }
 
   public org.w3c.dom.Element getBuildElement(org.w3c.dom.Document doc) {

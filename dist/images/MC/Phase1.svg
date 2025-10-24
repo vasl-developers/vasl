@@ -46,10 +46,5 @@
 	<text x="33.00" y="88.00" transform="rotate(-135,33.00,88.00)"	style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">RtPh</text>
 	<text x="21.50" y="60.00" transform="rotate(-90,21.50,60.00)"	style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">APh</text>
 	<text x="33.00" y="33.00" transform="rotate(-45,33.00,33.00)"	style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:middle;fill:#ff0000;fill-opacity:1;font-family:Nimbus Sans L">CCPh</text>
-	<!-- gemhack
-	<line id="horizontal" x1="0.00" y1="60.00" x2="120.00" y2="60.00" style="stroke:#ff00ff;stroke-width:0.50"/>
-	<line id="vertical" x1="60.00" y1="0.00" x2="60.00" y2="120.00" style="stroke:#ff00ff;stroke-width:0.50"/>
-	<line id="upward_diagonal" x1="0.00" y1="120.00" x2="120.00" y2="0.00" style="stroke:#ff00ff;stroke-width:0.50"/>
-	<line id="downward_diagonal" x1="0.00" y1="0.00" x2="120.00" y2="120.00" style="stroke:#ff00ff;stroke-width:0.50"/>
-	gemhack -->
+
 </svg>
