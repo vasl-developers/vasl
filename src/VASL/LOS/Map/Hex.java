@@ -653,13 +653,14 @@ public class Hex {
     /**
      * Resets the hex locations using the terrain information in the map terrain grid
      */
-    public void resetTerrain(double passposx, double passposy) {
+    public void resetTerrain(){ //double passposx, double passposy) {
         //ToDo add all overlay and other terrain updates here
         // set the center location terrain
+        int passposx = 0;
         int terrainpointx = (int) (centerLocation.getLOSPoint().getX() + passposx);
         if (terrainpointx > -5 && terrainpointx < 0) {terrainpointx = 0;}
         //if (terrainpointx > map.getGridWidth()) {terrainpointx = map.getGridWidth() - 1;}  // this is a hack to fix hex inconsistencies ToDo fix the source -
-        int terrainpointy = (int) (centerLocation.getLOSPoint().getY() + passposy-1);
+        int terrainpointy = (int) (centerLocation.getLOSPoint().getY() -1 ); //+ passposy-1);
         if (terrainpointy > -5 && terrainpointy < 0) {terrainpointy = 0;}
         Terrain centerLocationTerrain = map.getGridTerrain(terrainpointx, terrainpointy); //centerLocation.getLOSPoint().getX()+ boardposx), (int) centerLocation.getLOSPoint().getY());
         // fix center location when building misses the center dot
@@ -738,7 +739,7 @@ public class Hex {
                         hexsideHasCliff[x] = true;
                     }
                 }
-                 getHexsideLocation(x).setTerrain(terrain);
+                getHexsideLocation(x).setTerrain(terrain);
             }
         }
 

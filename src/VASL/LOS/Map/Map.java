@@ -915,7 +915,7 @@ public class Map  {
 
         for (int col = 0; col < getHexGrid().length; col++) {
             for (int row = 0; row < getHexGrid()[col].length; row++) {
-                getHex(col,row).resetTerrain(0,0);
+                getHex(col,row).resetTerrain();
             }
         }
         // recreate the hillocks
@@ -5358,9 +5358,6 @@ public class Map  {
                     newterrainGrid[x][y] = terrainGrid[boardwidth + boardposx - (x - boardposx) - 1][boardheight + boardposy - (y - boardposy) - 1];
                     newelevationGrid[x][y] = elevationGrid[boardwidth + boardposx - (x - boardposx) - 1][boardheight + boardposy - (y - boardposy) - 1];
                     char griditem = terrainGrid[boardwidth + boardposx - (x - boardposx) - 1][boardheight + boardposy - (y - boardposy) - 1];
-                    if (x == 2 && y == 70) {
-                        boolean reg = true;
-                    }
                 }
                 else {
                     newterrainGrid[x][y] = terrainGrid[x][y];
