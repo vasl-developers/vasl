@@ -218,6 +218,7 @@ public class TextInfo extends Decorator implements EditablePiece {
     final int ascent = fm.getAscent();
     final StringTokenizer st = new StringTokenizer(info, "^,", true);
     boolean superScript = false;
+    boolean redSubstring = false; // gemhack
     while (st.hasMoreTokens()) {
       String s = st.nextToken();
       g.setColor(Color.black);
@@ -247,8 +248,42 @@ public class TextInfo extends Decorator implements EditablePiece {
           break;
       }
 
-      g.drawString(s, x, y);
-      x += fm.stringWidth(s);
+      final String redStartTag = "[red]";
+      final String redEndTag = "[/red]";
+
+      int redStartTagIndex = s.indexOf(redStartTag);
+      int redEndTagIndex = s.indexOf(redEndTag);
+
+      if (redStartTagIndex == -1 || redEndTagIndex == -1) {
+        // Either no tags or something is broken, just pass it through
+        g.drawString(s, x, y);
+        x += fm.stringWidth(s);
+      } else {
+        boolean redText = false;
+        String s2 = "";
+
+        while (!s.isEmpty()) {
+          if (redStartTagIndex == 0) {
+            g.setColor(Color.red);
+            s2 = s.substring(redStartTagIndex + redStartTag.length(), redEndTagIndex);
+            s = s.substring(redEndTagIndex + redEndTag.length());
+          } else if (redStartTagIndex != -1) {
+            g.setColor(Color.black);
+            s2 = s.substring(0, redStartTagIndex);
+            s = s.substring(redStartTagIndex);
+          } else {
+            g.setColor(Color.black);
+            s2 = s;
+            s = "";
+          }
+
+          g.drawString(s2, x, y);
+          x += fm.stringWidth(s2);
+
+          redStartTagIndex = s.indexOf("[red]");
+          redEndTagIndex = s.indexOf("[/red]");
+        }
+      }
     }
   }
 
