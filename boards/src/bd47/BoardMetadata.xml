@@ -18,7 +18,7 @@
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
 -->
-<boardMetadata name="47" version="7.4" versionDate="Jan 2025" author="TR" boardImageFileName="bd47.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="47" version="7.5" versionDate="2025/10/28" author="TR" boardImageFileName="bd47.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -80,6 +80,8 @@
 		<overlaySSRule name="NoWoodsRoads" image="47_NoWoodsRoads.gif" x="13" y="1" />
 		<overlaySSRule name="RoadsToPaths" image="47_RoadsToPaths.gif" x="13" y="1" />
 		<overlaySSRule name="NoRoads" image="47_NoRoads.gif" x="1" y="1" />
+		<overlaySSRule name="SSO_47_AP10" image="SSO_47_AP10.gif" x="0" y="0" />
+
 	</overlaySSRules>
 	
 	<colors>
