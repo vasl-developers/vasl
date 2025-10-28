@@ -212,15 +212,16 @@ public class TextInfo extends Decorator implements EditablePiece {
     g.setColor(Color.black);
     g.drawRect(x, y - h / 2, w - 1, h - 1);
 
-    x += 7*zoom;
-    y += h / 2 - 6*zoom;
+    x += (int) (7 * zoom);
+    y += (int) ((double) h / 2 - (6 * zoom));
 
     final int ascent = fm.getAscent();
     final StringTokenizer st = new StringTokenizer(info, "^,", true);
     boolean superScript = false;
-    boolean redSubstring = false; // gemhack
     while (st.hasMoreTokens()) {
       String s = st.nextToken();
+      if (s.isEmpty()) continue;  // possible?
+
       g.setColor(Color.black);
 
       switch (s.charAt(0)) {
@@ -253,13 +254,14 @@ public class TextInfo extends Decorator implements EditablePiece {
 
       int redStartTagIndex = s.indexOf(redStartTag);
       int redEndTagIndex = s.indexOf(redEndTag);
+      // simple guard for "foo[/red]bar[red]" mistakes
+      boolean malformed = redEndTagIndex <= redStartTagIndex;
 
-      if (redStartTagIndex == -1 || redEndTagIndex == -1) {
+      if (redStartTagIndex == -1 || redEndTagIndex == -1 || malformed) {
         // Either no tags or something is broken, just pass it through
         g.drawString(s, x, y);
         x += fm.stringWidth(s);
       } else {
-        boolean redText = false;
         String s2 = "";
 
         while (!s.isEmpty()) {
