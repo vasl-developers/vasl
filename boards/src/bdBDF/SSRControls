@@ -1,0 +1,13 @@
+<SSRControls>
+   <Option name="Board BdF Special Overlays">
+       <Checkbox name="">
+         <entry name="Brush to Scrub" rule="BdF_Brush_to_Scrub" text="BdF_Brush_to_Scrub"/>
+       </Checkbox>
+       <Checkbox name="">
+         <entry name="Alternate Terrain" rule="BdF_alt_terrain" text="BdF_alt_terrain"/>
+       </Checkbox>
+       <Checkbox name="">
+         <entry name="CH ASLComp variant" rule="BdF_CH_variant" text="BdF_CH_variant"/>
+       </Checkbox>
+   </Option>
+</SSRControls>

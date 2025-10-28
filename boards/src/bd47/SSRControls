@@ -1,0 +1,8 @@
+<SSRControls>
+   <Option name="Board 47 Special Overlays">
+  	<Checkbox name="">
+         		<entry name="Scenario AP10 - Closing The Net" rule="SSO_47_AP10" text="Bd47 Scen AP10 SSO"/>
+       	</Checkbox>
+  </Option> 
+ </SSRControls>
+  
