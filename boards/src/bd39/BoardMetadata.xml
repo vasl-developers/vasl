@@ -18,7 +18,7 @@
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
 -->
-<boardMetadata name="39" version="7.0" versionDate="2025/10/28" author="TR" boardImageFileName="bd39.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="39" version="7.1" versionDate="2025/10/28" author="TR" boardImageFileName="bd39.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -70,7 +70,7 @@
 		<overlaySSRule name="SSO_39_70" image="SSO_39_70.gif" x="1" y="1" />
 		<overlaySSRule name="SSO_39_A86" image="SSO_39_A86.gif" x="1" y="1" />
 		<overlaySSRule name="SSO_39_CH35" image="SSO_39_CH35.gif" x="1" y="1" />
-		<overlaySSRule name="SSO_39_AP10" image="SSO_39_AP10.gif" x="1" y="1" />
+		<overlaySSRule name="SSO_39_AP10" image="SSO_39_AP10.gif" x="0" y="0" />
 		<overlaySSRule name="OrchardsToShellholes" image="39_Orch2Shell.gif" x="1" y="1" />
 		<overlaySSRule name="OrchardsToCrags" image="39_Orch2Crag.gif" x="1" y="4" />
 		<overlaySSRule name="PalmTrees" image="39_PalmTrees.gif" x="1" y="1" />
