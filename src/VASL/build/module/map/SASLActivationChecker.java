@@ -112,7 +112,9 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
     }
 
     private String getEnemyNationality(GamePiece piece) {
-        return piece.getProperty("SuspectNationality").toString();
+        Object property = piece.getProperty("SuspectNationality");
+
+        return (property != null)? property.toString(): "None";
     }
 
     private String getNationality(GamePiece piece) {
