@@ -37,6 +37,7 @@ public class BoardZoomer extends AbstractToolbarItem {
             1.0,
             1.25,
             1.5,
+            1.75,
             2.0,
             3.0
     };
