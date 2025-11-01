@@ -276,7 +276,7 @@
 		<boarddata name="FC" version="6.0" versionDate="2021/06/30" description="Fortress Cassino" boardType="HASL" publisher="YYY" issued="" />
 		<boarddata name="NG" version=" 1.0" versionDate="2008/08/30" description="Nhpum Ga" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="RR" version=" 1.0" versionDate="2008/08/30" description="Ruweisat Ridge" boardType="HASL" publisher="CH" issued="" />
-		<boarddata name="BDF" version="6.1" versionDate="2025/10/17" description="Baraque de Fraiture" boardType="HASL" publisher="FLP" issued="" />
+		<boarddata name="BdF" version="6.1" versionDate="2025/10/17" description="Baraque de Fraiture" boardType="HASL" publisher="FLP" issued="" />
 		<boarddata name="FrFA" version=" 6.2" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="FrF" issued="" />
 		<boarddata name="HZ1" version=" 6.0" versionDate="2022/12/30" description="HazMo1" boardType="Geoboard" publisher="HazMo" issued="2023/10/05"/>
 		<boarddata name="HZ2" version=" 6.1" versionDate="2023/11/30" description="HazMo2" boardType="Geoboard" publisher="HazMo" issued="2023/10/05"/>
