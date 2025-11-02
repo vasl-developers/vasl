@@ -32,6 +32,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -206,8 +207,8 @@ public class PieceLinker extends AbstractConfigurable implements KeyListener, Co
                             Point p1 = map.mapToDrawing(fromPiece.getPosition(), os_scale);
                             Point p2 = map.mapToDrawing(toPiece.getPosition(), os_scale);
                             g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
-                            ArrayList<ASLBoard>mapBoards = (ArrayList) map.getBoards();
-                            ASLBoard board = mapBoards.get(0);
+                            Collection<Board> mapBoards = map.getBoards();
+                            ASLBoard board = (ASLBoard)mapBoards.toArray()[0];
                             MapGrid grid = new ASLHexGrid(board.getVASLBoardArchive().getHexHeight(), false);
                             ((HexGrid)grid).setHexWidth(board.getVASLBoardArchive().getHexHeight());
                             ((HexGrid)grid).setEdgesLegal(true);
