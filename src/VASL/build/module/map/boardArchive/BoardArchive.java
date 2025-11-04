@@ -401,11 +401,11 @@ public class BoardArchive {
                         }
                     }
 
-                    for (int col = 0; col < flippedgrid.length; col++) {
+                    /*for (int col = 0; col < flippedgrid.length; col++) {
                         for (int row = 0; row < flippedgrid[col].length; row++) {
                             flippedgrid[col][row].resetTerrain(boardposx - startcropx, boardposy - startcropy);
                         }
-                    }
+                    }*/
 
                     // now copy into hexGrid
                     for (int col = 0; col < width; col++) {
@@ -413,6 +413,7 @@ public class BoardArchive {
                             Hex flippedHex = flippedgrid[width - col - 1][flippedgrid[width - col -1].length - row -1];
                             VASLMap.flipthehex(flippedHex, true, VASLMap.getHexGrid()[mapcol + col][maprow + row]);
                             VASLMap.getHexGrid()[mapcol + col][maprow + row].copy(flippedHex);
+                            VASLMap.getHexGrid()[mapcol + col][maprow + row].resetTerrain(); // boardposx - startcropx, boardposy - startcropy);
                         }
                     }
                 }

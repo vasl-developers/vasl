@@ -1,7 +1,7 @@
-# Release Notes: Version 6.7.1-beta8 
+# Release Notes: Version 6.7.1-beta9 
 
 
-**Release Date:** October, 2025
+**Release Date:** November 3, 2025
 
 ---
 
@@ -10,13 +10,14 @@
 ---
 
 ## 🛠 Bug Fixes
- - Fix 1: Resolved counter linking crash
- - Fix 2: Re-enabled various "mass remover" functions such as remove all "Gray Smoke", "Defensive Fire", "Residual Fire", etc.
- - Fix 3: Restored new "Debris" draggable overlay
+ - Fix 1: Added missing SaP and SaF counters
+ - Fix 2: Counter errors for Russian radio and Chinese MMG fixed
+ - Fix 3: LOS Bugs with missing Bridge and Gully/Stream locations fixed
 
 ---
 
 ## 📈 Improvements
+ - Improvement 1: LOS Code should work in all crop / flip configurations (for LOS enabled boards)
 
 ---
 

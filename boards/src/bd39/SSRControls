@@ -1,14 +1,17 @@
 <SSRControls>
    <Option name="Board 39 Special Overlays">
-	   <Checkbox name="">
-         <entry name="Scenario 70 - KP 167" rule="SSO_39_70" text="Bd39 Scen 118 SSO"/>
-       </Checkbox>
-	   <Checkbox name="">
-         <entry name="Scenario A86 - Fighting Sparrow" rule="SSO_39_A86" text="Bd39 Scen A86 SSO"/>
-       </Checkbox>
-	   	   <Checkbox name="">
-         <entry name="Scenario CH35 - Obong-Ni" rule="SSO_39_CH35" text="Bd39 Scen CH35 SSO"/>
-       </Checkbox>
-  </Option>
-  </SSRControls>
+	<Checkbox name="">
+         		<entry name="Scenario 70 - KP 167" rule="SSO_39_70" text="Bd39 Scen 118 SSO"/>
+       	</Checkbox>
+	<Checkbox name="">
+         		<entry name="Scenario A86 - Fighting Sparrow" rule="SSO_39_A86" text="Bd39 Scen A86 SSO"/>
+       	</Checkbox>
+	<Checkbox name="">
+         		<entry name="Scenario CH35 - Obong-Ni" rule="SSO_39_CH35" text="Bd39 Scen CH35 SSO"/>
+       	</Checkbox>
+  	<Checkbox name="">
+         		<entry name="Scenario AP10 - Closing The Net" rule="SSO_39_AP10" text="Bd39 Scen AP10 SSO"/>
+       	</Checkbox>
+  </Option> 
+ </SSRControls>
   
