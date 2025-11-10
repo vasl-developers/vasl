@@ -65,7 +65,7 @@ import java.util.*;
 import java.util.List;
 
 import static VASSAL.build.GameModule.getGameModule;
-import static java.lang.Math.cos;
+
 
 public class ASLMap extends Map {
     private JPopupMenu mainpopup = null;
