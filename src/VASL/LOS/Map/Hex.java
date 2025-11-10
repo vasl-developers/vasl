@@ -914,15 +914,17 @@ public class Hex {
             for (int level = 1; level <= centerLocationTerrain.getHeight(); level++) {
 
                 // need to ignore buildings without upper level locations - bit of a hack so we can use the building height
-                if (multihex || (!multihex && !"Wooden Building".equals(centerLocationTerrain.getName()) &&
+                //if (multihex || (!multihex && !"Wooden Building".equals(centerLocationTerrain.getName()) &&
+                if (!"Wooden Building".equals(centerLocationTerrain.getName()) &&
                         !"Stone Building".equals(centerLocationTerrain.getName()) &&
                         !"Huts".equals(centerLocationTerrain.getName()) &&
-                        !"MultipleWooden".equals(centerLocationTerrain.getName()))) {
+                        !"MultipleWooden".equals(centerLocationTerrain.getName())) {
 
                     // prevent quasi-levels in Factory hexes without stairways
-                    if ((centerLocationTerrain.getLOSCategory() == Terrain.LOSCategories.FACTORY) &&
-                            !(stairway)) {
-                    } else {
+                    if ((centerLocationTerrain.getLOSCategory() == Terrain.LOSCategories.FACTORY) && !(stairway)) {
+
+                    }
+                    else {
                         final Location l = new Location(
                                 centerLocation.getName() + " Level " + level,
                                 level,
@@ -953,8 +955,10 @@ public class Hex {
             previousLocation = centerLocation;
             if (!"Wooden Building".equals(centerLocationTerrain.getName()) &&
                     !"Stone Building".equals(centerLocationTerrain.getName()) &&
+                    !"Huts".equals(centerLocationTerrain.getName()) &&
+                    !"MultipleWooden".equals(centerLocationTerrain.getName()) &&
                     !(centerLocationTerrain.getLOSCategory() == Terrain.LOSCategories.FACTORY)) {
-                if (multihex || isMultihexBuilding()) {
+                //if (multihex || isMultihexBuilding()) {
                     Terrain cellarterrain;
                     cellarterrain = map.getTerrain("Cellar");
                     final Location l = new Location(
@@ -969,7 +973,7 @@ public class Hex {
 
                     previousLocation.setDownLocation(l);
                     l.setUpLocation(previousLocation);
-                }
+                //}
             }
 
             // rooftops
@@ -977,9 +981,11 @@ public class Hex {
             // need to ignore buildings without upper level locations - bit of a hack so we can use the building height
             if (!"Wooden Building".equals(centerLocationTerrain.getName()) &&
                     !"Stone Building".equals(centerLocationTerrain.getName()) &&
+                    !"Huts".equals(centerLocationTerrain.getName()) &&
+                    !"MultipleWooden".equals(centerLocationTerrain.getName()) &&
                     !centerLocationTerrain.isRoofless()) {
 
-                if (multihex || isMultihexBuilding()) {
+                //if (multihex || isMultihexBuilding()) {
 
                     Terrain roofterrain;
                     roofterrain = map.getTerrain("Rooftop");
@@ -1004,7 +1010,7 @@ public class Hex {
 
                     previousLocation.setUpLocation(l);
                     l.setDownLocation(previousLocation);
-                }
+                //}
             }
             fixspecialcasesAddRooftops(); // handles RO wooden warehouses and SK transform (all buildings are single story)
         }

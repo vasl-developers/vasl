@@ -1,3 +1,4 @@
+
 package VASL.build.module.map;
 
 import VASSAL.build.Buildable;
@@ -8,7 +9,7 @@ import VASSAL.tools.menu.MenuManager;
 
 public class ASLPredefinedSetup2 extends PredefinedSetup {
 
-    @Override
+    //@Override
     public void addTo(Buildable parent) {
         if (parent instanceof GameModule) {
             MenuManager.getInstance().addToSection("PredefinedSetup", getMenuInUse());

@@ -109,6 +109,7 @@ public class ASLHexGrid extends HexGrid {
     String hex = hexrow(hexX) + hexY;
     if (hexX2 != UNSPECIFIED)
       hex += "/" + hexrow(hexX2) + hexY2;
+    if (hex.contains("-")) {hex = "offboard";}
     return (hex);
   }
 
