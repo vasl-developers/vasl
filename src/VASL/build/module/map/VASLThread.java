@@ -1000,7 +1000,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
 	}
 
     //@Override
-    protected void setEndPointsandLevels(Point newAnchor, Point newArrow, double sourceLevel, double targetLevel) {
+    protected void  setEndPointsandLevels(Point newAnchor, Point newArrow, double sourceLevel, double targetLevel) {
         anchor.x = newAnchor.x;
         anchor.y = newAnchor.y;
         arrow.x = newArrow.x;
@@ -1033,8 +1033,9 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                 if (source.getHex().isDepressionTerrain() && !source.getLOSPoint().equals(source.getHex().getHexCenter())) {
                     leveladj = +1;
                 }
+                sourcelevel = source.getAbsoluteHeight() + leveladj;          //source.getLevelInHex() + source.getHex().getBaseLevelofHex() + leveladj;
             }
-            sourcelevel =  source.getAbsoluteHeight() + leveladj;          //source.getLevelInHex() + source.getHex().getBaseLevelofHex() + leveladj;
+            sourcelevel = source.getAbsoluteHeight() + leveladj;
             while (newsourceLevel < sourcelevel) {
                 if (source.getDownLocation() == null) {
                     break;
@@ -1048,8 +1049,9 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                 if (source.getHex().isDepressionTerrain() && !source.getLOSPoint().equals(source.getHex().getHexCenter())) {
                     leveladj = +1;
                 }
+                sourcelevel = source.getAbsoluteHeight() + leveladj;
             }
-            sourcelevel = source.getAbsoluteHeight() + leveladj;                //source.getLevelInHex() + source.getHex().getBaseLevelofHex() + leveladj;
+            sourcelevel = source.getAbsoluteHeight() + leveladj;               //source.getLevelInHex() + source.getHex().getBaseLevelofHex() + leveladj;
             while (newtargetLevel > targetlevel) {
                 if (target.getUpLocation() == null) {
                     break;
@@ -1063,8 +1065,9 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                 if (target.getHex().isDepressionTerrain() && !target.getLOSPoint().equals(target.getHex().getHexCenter())) {
                     leveladj = +1;
                 }
+                targetlevel = target.getAbsoluteHeight() + leveladj;                //target.getLevelInHex() + target.getHex().getBaseLevelofHex() + leveladj;
             }
-            targetlevel = target.getAbsoluteHeight() + leveladj;                //target.getLevelInHex() + target.getHex().getBaseLevelofHex() + leveladj;
+            targetlevel = target.getAbsoluteHeight() + leveladj;
             while (newtargetLevel < targetlevel) {
                 if (target.getDownLocation() == null) {
                     break;
@@ -1078,8 +1081,9 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                 if (target.getHex().isDepressionTerrain() && !target.getLOSPoint().equals(target.getHex().getHexCenter())) {
                     leveladj = +1;
                 }
+                targetlevel = target.getAbsoluteHeight() + leveladj;     //target.getLevelInHex() + target.getHex().getBaseLevelofHex() + leveladj;
             }
-            targetlevel = target.getAbsoluteHeight() + leveladj;     //target.getLevelInHex() + target.getHex().getBaseLevelofHex() + leveladj;
+            targetlevel = target.getAbsoluteHeight() + leveladj;
         }
     }
 
