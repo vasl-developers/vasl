@@ -1,6 +1,5 @@
+
 # Release Notes: Version 6.7.1
-
-
 **Release Date:** November 18, 2025
 
 ---
