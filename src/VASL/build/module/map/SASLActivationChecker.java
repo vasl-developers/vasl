@@ -112,7 +112,12 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
     }
 
     private String getEnemyNationality(GamePiece piece) {
-        return piece.getProperty("SuspectNationality").toString();
+        String result = "";
+        Object prop = piece.getProperty("SuspectNationality");
+        if (prop != null) {
+            result = prop.toString();
+        }
+        return result;
     }
 
     private String getNationality(GamePiece piece) {
@@ -120,7 +125,10 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
 
         Concealable c = (Concealable)Decorator.getDecorator(piece, Concealable.class);
         if (c != null && c.isMaskable()) {
-            result = (String)c.getProperty(ASLProperties.NATIONALITY);
+            Object prop = c.getProperty(ASLProperties.NATIONALITY);
+            if (prop != null) {
+                result = prop.toString();
+            }
         }
 
         return result;
@@ -400,7 +408,11 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
     }
 
     private String getSuspectNationality(GamePiece piece) {
-        String nationality = piece.getProperty("SuspectNationality").toString();
+        String nationality = "None";
+        Object prop = piece.getProperty("SuspectNationality");
+        if (prop != null) {
+            nationality = prop.toString();
+        }
 
         if (nationality.equals("None") && !enemyNationality.isEmpty()) {
             nationality = enemyNationality;
