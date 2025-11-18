@@ -45,10 +45,10 @@
  - Fix 27: Communist Phone and Radio counter names with correct case.
  - Fix 28: Correct SS 5-4-8 AE smoke exponent from ‘2’ to ‘4’.
  - Fix 29: Fixing various vehicle wrecks not working.
- - Fix 30: Resolved counter linking crash
+ - Fix 30: Resolved counter linking crash.
  - Fix 31: Re-enabled various "mass remover" functions such as remove all "Gray Smoke", "Defensive Fire", "Residual Fire", etc.
- - Fix 32: Counter errors for Russian radio and Chinese MMG fixed
- - Fix 33: LOS Bugs with missing Bridge and Gully/Stream locations fixed
+ - Fix 32: Counter errors for Russian radio and Chinese MMG fixed.
+ - Fix 33: LOS Bugs with missing Bridge and Gully/Stream locations fixed.
 
 ---
 
