@@ -65,7 +65,7 @@ import java.util.*;
 import java.util.List;
 
 import static VASSAL.build.GameModule.getGameModule;
-import static java.lang.Math.cos;
+
 
 public class ASLMap extends Map {
     private JPopupMenu mainpopup = null;
@@ -1323,7 +1323,7 @@ public class ASLMap extends Map {
             }
         }
             addOverlayInhTerrainToLOS(inhhexes, losonoverlays, losonoverlays.board);
-            addOverlayBldgLevelsToLOS(bdghexes, losonoverlays);
+            //addOverlayBldgLevelsToLOS(bdghexes, losonoverlays);
             addOverlayHexElevationToLOS(elevhexes, losonoverlays);
         //}
     }
@@ -1348,39 +1348,22 @@ public class ASLMap extends Map {
         }
     }
 
-    private void addOverlayBldgLevelsToLOS(HashMap<Hex, Terrain> bdghexes, LOSonOverlays losonoverlays) {
+    /*private void addOverlayBldgLevelsToLOS(HashMap<Hex, Terrain> bdghexes, LOSonOverlays losonoverlays) {
         for (Hex bdglevelhex : bdghexes.keySet()) {
             bdglevelhex.getCenterLocation().setTerrain(bdghexes.get(bdglevelhex));
             Terrain centerlocationterrain = bdglevelhex.getCenterLocation().getTerrain();
-            final boolean multihex = isOverlayBldgMultiHex(bdglevelhex, losonoverlays);
+            final boolean multihex = false; //isOverlayBldgMultiHex(bdglevelhex, losonoverlays);
             bdglevelhex.addBuildingLevels(centerlocationterrain, multihex);
         }
-    }
+    }*/
 
-    private boolean isOverlayBldgMultiHex(Hex bdglevelhex, LOSonOverlays losonoverlays) {
-        //ToDo simplify this method since it is being done after TerrainGrid has been adjusted
-        // (1) find which hex point is in; (2) find hexcenter point (3) test hexside centre points
+    /*private boolean isOverlayBldgMultiHex(Hex bdglevelhex, LOSonOverlays losonoverlays) {
+        //ToDo no longer needed due to changes to Hex code
+
         boolean multihexbdg = false;
-        // find where on overlay the hex is centered
-        final Point hexcentreonoverlay = new Point();
-        //ToDo test these next to lines - do they need to use ovrXYstart
-        hexcentreonoverlay.x = (int) (bdglevelhex.getHexCenter().getX() - losonoverlays.ovrXstart);  //losonoverlays.ovrrec.getX());
-        hexcentreonoverlay.y = (int) (bdglevelhex.getHexCenter().getY() - losonoverlays.ovrYstart);   //ovrrec.getY());
-        // use hex center to test if hexsides contain building pixels
-        final double verticaloffset = bdglevelhex.getMap().getHexHeight() / 2.0;
-        // the hexside point is the hexside center point translated one pixel toward the hex center point
-        // [0] is the top hexside and the other points are clock-wise from there
-        Point[] hexsidepoints = new Point[6];
-        final double horizontaloffset = cos(Math.toRadians(30.0)) * verticaloffset;
-
-        hexsidepoints[0] = new Point((hexcentreonoverlay.x), (int) (-verticaloffset + hexcentreonoverlay.y + 1.0));
-        hexsidepoints[1] = new Point((int) (horizontaloffset + hexcentreonoverlay.x - 1), (int) (-verticaloffset / 2.0 + hexcentreonoverlay.y + 1.0));
-        hexsidepoints[2] = new Point((int) (horizontaloffset + hexcentreonoverlay.x - 1), (int) (verticaloffset / 2.0 + hexcentreonoverlay.y - 1.0));
-        hexsidepoints[3] = new Point(hexcentreonoverlay.x, (int) (verticaloffset + hexcentreonoverlay.y - 1.0));
-        hexsidepoints[4] = new Point((int) (-horizontaloffset + hexcentreonoverlay.x + 1), (int) (verticaloffset / 2.0 + hexcentreonoverlay.y - 1.0));
-        hexsidepoints[5] = new Point((int) (-horizontaloffset + hexcentreonoverlay.x + 1), (int) (-verticaloffset / 2.0 + hexcentreonoverlay.y + 1.0));
-        // now test if hexside points contain building colour; if the do, it is multihex building
-        for (int i = 0; i < 6; i++) {
+        // test if hexside points contain building colour; if they do, and adjacent hex is same building type it is multihex building
+        // not true for BFP boards
+        *//*for (int i = 0; i < 6; i++) {
             // test hexsidepoint is on the overlay
             if (hexsidepoints[i].getX() >= 0 && hexsidepoints[i].getY() >= 0 && hexsidepoints[i].getX() <= losonoverlays.bi.getWidth() && hexsidepoints[i].getY() <= losonoverlays.bi.getHeight()) {
                 final int c = losonoverlays.bi.getRGB((int) hexsidepoints[i].getX(), (int) hexsidepoints[i].getY());
@@ -1402,9 +1385,9 @@ public class ASLMap extends Map {
                     }
                 }
             }
-        }
+        }*//*
         return multihexbdg;
-    }
+    }*/
 
     private void addOverlayHexElevationToLOS(LinkedList<VASL.LOS.Map.Hex> elevhexes,  LOSonOverlays losonoverlays) {
         //elevhexes contains every hex covered by the overlay need to test them all to Depression Terrain settings
@@ -1606,11 +1589,12 @@ public class ASLMap extends Map {
                 }
 
             } else if (terr.isBuilding()) {
-                if (!terr.getName().equals("Stone Building") && !terr.getName().equals("Wooden Building") && !terr.getName().contains("Rowhouse Wall")) {
-                    if (!bdghexes.containsKey(losonoverlays.newlosdata.gridToHex((int) losonoverlays.overpositionx, (int) losonoverlays.overpositiony))) {
-                        bdghexes.put(losonoverlays.newlosdata.gridToHex((int) losonoverlays.overpositionx, (int) losonoverlays.overpositiony), terr);
+                // ToDo no longer needed due to change to Hex code
+                /*if (!terr.getName().equals("Stone Building") && !terr.getName().equals("Wooden Building") && !terr.getName().contains("Rowhouse Wall")) {
+                    if (!bdghexes.containsKey(losonoverlays.newlosdata.gridToHex((int) losonoverlays.currentx, (int) losonoverlays.currenty))) {
+                        bdghexes.put(losonoverlays.newlosdata.gridToHex((int) losonoverlays.currentx, (int) losonoverlays.currenty), terr);
                     }
-                }
+                }*/
             }
         }
     }
