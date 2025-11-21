@@ -74,10 +74,6 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
     protected boolean report = true;
     protected FormattedString reportFormat = new FormattedString(TEXT_ICON);
 
-    // save the old preference setting - these are disabled during DB play
-    Boolean oldCenterOnMove = Boolean.TRUE;
-    Boolean oldAutoReport = Boolean.TRUE;
-
     // class properties
     protected static boolean enabled = false;
     protected static ASLMap map;
@@ -91,44 +87,19 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
         hipFortViewer = this;
     }
 
-    /**
-     * Enable/disable FortHIP play
-     * @param e enabled?
-     */
-    /*public void enableFortHIP(boolean e) {  DISABLED initially to force use of preference/restart
-
-        if(enabled && !e) {
-            getGameModule().getChatter().send("Auto-reveal of HIP Fortifications has been disabled for this game");
-        }
-        else if(!enabled && e) {
-            getGameModule().getChatter().send("Auto-reveal of HIP Fortifcations has been enabled for this game");
-        }
-
-        enabled = e;
-
-    }*/
-
-    /**
-     * @return true if FortHIP play has been enabled
-     */
+    // @return true if FortHIP play has been enabled
     public boolean isEnabled() {
         return enabled;
     }
 
 
-    /**
-     * Update the map
-     * @param m the map
-     */
+    // Update the map
     public static void setMap(ASLMap m) {
         map = m;
     }
 
-    /**
-     * Updates the player's view of the map, revealing pieces that are now in LOS
-     */
+    // Updates the player's view of the map, revealing pieces that are now in LOS
     private void updateView(ArrayList<GamePiece> movedunits) {
-
 
         // gotta have a map to update the view
         if(map == null ||  map.getVASLMap() == null) {
@@ -595,6 +566,7 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
         return new Class[0];
     }
     public void runupdate(java.util.List<GamePiece> allDraggedPieces){
+        if (map.getVASLMap() == null){return;} // error handling; HIPFortification only works on LOS enabled maps
         spotterpiece = null;
         revealpiece = null;
         querypiece = null;
