@@ -212,20 +212,22 @@ public class VASLGameInterface {
                                 // get 7 hex blast area
                                 String[] ffehexes = LOSMap.getAllAdjacentHexes(oba.getHex());
                                 for (String shex : ffehexes) {
-                                    smokehex = LOSMap.getHex(shex);
-                                    if (smokehex != null) {
-                                        if (counter.getName().contains("+3")) {
-                                            hindrance = 3;
-                                            height = 2;
-                                        } else if (counter.getName().contains("+1")) {
-                                            hindrance = 1;
-                                            height = 4;
-                                        } else {
-                                            hindrance = 2;
-                                            height = (counter.getName().contains("Sm") ? 2 : 4);
+                                    if (!shex.equalsIgnoreCase("offboard")) {
+                                        smokehex = LOSMap.getHex(shex);
+                                        if (smokehex != null) {
+                                            if (counter.getName().contains("+3")) {
+                                                hindrance = 3;
+                                                height = 2;
+                                            } else if (counter.getName().contains("+1")) {
+                                                hindrance = 1;
+                                                height = 4;
+                                            } else {
+                                                hindrance = 2;
+                                                height = (counter.getName().contains("Sm") ? 2 : 4);
+                                            }
+                                            Smoke smoke = new Smoke(counter.getName(), smokehex.getCenterLocation(), height, hindrance);
+                                            addCounter(smokeList, smoke, smokehex);
                                         }
-                                        Smoke smoke = new Smoke(counter.getName(), smokehex.getCenterLocation(), height, hindrance);
-                                        addCounter(smokeList, smoke, smokehex);
                                     }
                                 }
                                 if(counter.getName().contains("Naval")) {
@@ -337,65 +339,90 @@ public class VASLGameInterface {
 
     public Hex[] getExtraNobaHexes(int rotation, String[] ffehexes) {
         Hex[] nobahexes = new Hex[2]; Hex basehex = null;
+        // need to handle missing or offboard hexes
         switch (rotation){
             case 1:
-                basehex = LOSMap.getHex(ffehexes[1]);
-                if (LOSMap.getAdjacentHex(basehex, 1) != null) {
-                    nobahexes[0] = LOSMap.getAdjacentHex(basehex, 1);
+                if (!ffehexes[1].equalsIgnoreCase("offboard")) {
+                    basehex = LOSMap.getHex(ffehexes[1]);
+                    if (LOSMap.getAdjacentHex(basehex, 1) != null) {
+                        nobahexes[0] = LOSMap.getAdjacentHex(basehex, 1);
+                    }
                 }
-                basehex = LOSMap.getHex(ffehexes[4]);
-                if (LOSMap.getAdjacentHex(basehex, 4) != null) {
-                    nobahexes[1] = LOSMap.getAdjacentHex(basehex, 4);
+                if (!ffehexes[4].equalsIgnoreCase("offboard")) {
+                    basehex = LOSMap.getHex(ffehexes[4]);
+                    if (LOSMap.getAdjacentHex(basehex, 4) != null) {
+                        nobahexes[1] = LOSMap.getAdjacentHex(basehex, 4);
+                    }
                 }
                 break;
             case 2:
-                basehex = LOSMap.getHex(ffehexes[2]);
-                if (LOSMap.getAdjacentHex(basehex, 1) != null) {
-                    nobahexes[0] = LOSMap.getAdjacentHex(basehex, 1);
+                if (!ffehexes[2].equalsIgnoreCase("offboard")) {
+                    basehex = LOSMap.getHex(ffehexes[2]);
+                    if (LOSMap.getAdjacentHex(basehex, 1) != null) {
+                        nobahexes[0] = LOSMap.getAdjacentHex(basehex, 1);
+                    }
                 }
-                basehex = LOSMap.getHex(ffehexes[5]);
-                if (LOSMap.getAdjacentHex(basehex, 4) != null) {
-                    nobahexes[1] = LOSMap.getAdjacentHex(basehex, 4);
+                if (!ffehexes[5].equalsIgnoreCase("offboard")) {
+                    basehex = LOSMap.getHex(ffehexes[5]);
+                    if (LOSMap.getAdjacentHex(basehex, 4) != null) {
+                        nobahexes[1] = LOSMap.getAdjacentHex(basehex, 4);
+                    }
                 }
                 break;
             case 3:
-                basehex = LOSMap.getHex(ffehexes[2]);
-                if (LOSMap.getAdjacentHex(basehex, 2) != null) {
-                    nobahexes[0] = LOSMap.getAdjacentHex(basehex, 2);
+                if (!ffehexes[2].equalsIgnoreCase("offboard")) {
+                    basehex = LOSMap.getHex(ffehexes[2]);
+                    if (LOSMap.getAdjacentHex(basehex, 2) != null) {
+                        nobahexes[0] = LOSMap.getAdjacentHex(basehex, 2);
+                    }
                 }
-                basehex = LOSMap.getHex(ffehexes[5]);
-                if (LOSMap.getAdjacentHex(basehex, 5) != null) {
-                    nobahexes[1] = LOSMap.getAdjacentHex(basehex, 5);
+                if (!ffehexes[5].equalsIgnoreCase("offboard")) {
+                    basehex = LOSMap.getHex(ffehexes[5]);
+                    if (LOSMap.getAdjacentHex(basehex, 5) != null) {
+                        nobahexes[1] = LOSMap.getAdjacentHex(basehex, 5);
+                    }
                 }
                 break;
             case 4:
-                basehex = LOSMap.getHex(ffehexes[3]);
-                if (LOSMap.getAdjacentHex(basehex, 2) != null) {
-                    nobahexes[0] = LOSMap.getAdjacentHex(basehex, 2);
+                if (!ffehexes[3].equalsIgnoreCase("offboard")) {
+                    basehex = LOSMap.getHex(ffehexes[3]);
+                    if (LOSMap.getAdjacentHex(basehex, 2) != null) {
+                        nobahexes[0] = LOSMap.getAdjacentHex(basehex, 2);
+                    }
                 }
-                basehex = LOSMap.getHex(ffehexes[6]);
-                if (LOSMap.getAdjacentHex(basehex, 5) != null) {
-                    nobahexes[1] = LOSMap.getAdjacentHex(basehex, 5);
+                if (!ffehexes[6].equalsIgnoreCase("offboard")) {
+                    basehex = LOSMap.getHex(ffehexes[6]);
+                    if (LOSMap.getAdjacentHex(basehex, 5) != null) {
+                        nobahexes[1] = LOSMap.getAdjacentHex(basehex, 5);
+                    }
                 }
                 break;
             case 5:
-                basehex = LOSMap.getHex(ffehexes[3]);
-                if (LOSMap.getAdjacentHex(basehex, 3) != null) {
-                    nobahexes[0] = LOSMap.getAdjacentHex(basehex, 3);
+                if (!ffehexes[3].equalsIgnoreCase("offboard")) {
+                    basehex = LOSMap.getHex(ffehexes[3]);
+                    if (LOSMap.getAdjacentHex(basehex, 3) != null) {
+                        nobahexes[0] = LOSMap.getAdjacentHex(basehex, 3);
+                    }
                 }
-                basehex = LOSMap.getHex(ffehexes[6]);
-                if (LOSMap.getAdjacentHex(basehex, 0) != null) {
-                    nobahexes[1] = LOSMap.getAdjacentHex(basehex, 0);
+                if (!ffehexes[6].equalsIgnoreCase("offboard")) {
+                    basehex = LOSMap.getHex(ffehexes[6]);
+                    if (LOSMap.getAdjacentHex(basehex, 0) != null) {
+                        nobahexes[1] = LOSMap.getAdjacentHex(basehex, 0);
+                    }
                 }
                 break;
             case 6:
-                basehex = LOSMap.getHex(ffehexes[4]);
-                if (LOSMap.getAdjacentHex(basehex, 3) != null) {
-                    nobahexes[0] = LOSMap.getAdjacentHex(basehex, 3);
+                if (!ffehexes[4].equalsIgnoreCase("offboard")) {
+                    basehex = LOSMap.getHex(ffehexes[4]);
+                    if (LOSMap.getAdjacentHex(basehex, 3) != null) {
+                        nobahexes[0] = LOSMap.getAdjacentHex(basehex, 3);
+                    }
                 }
-                basehex = LOSMap.getHex(ffehexes[1]);
-                if (LOSMap.getAdjacentHex(basehex, 0) != null) {
-                    nobahexes[1] = LOSMap.getAdjacentHex(basehex, 0);
+                if (!ffehexes[1].equalsIgnoreCase("offboard")) {
+                    basehex = LOSMap.getHex(ffehexes[1]);
+                    if (LOSMap.getAdjacentHex(basehex, 0) != null) {
+                        nobahexes[1] = LOSMap.getAdjacentHex(basehex, 0);
+                    }
                 }
                 break;
             default:
