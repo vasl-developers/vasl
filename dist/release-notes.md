@@ -10,7 +10,8 @@
 ---
 
 ## 🛠 Bug Fixes
- - Fix 1: Fixed Null bug causing crash in VASLThread.
+ - Fix 1: Fixed several Null bugs causing VASL to crash.
+ - Fix 2: Fixed bug when adding overlays via boardpicker. 
  - 
 
 ---

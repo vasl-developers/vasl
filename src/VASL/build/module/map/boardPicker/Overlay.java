@@ -32,6 +32,7 @@ import javax.imageio.stream.MemoryCacheImageInputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.file.InvalidPathException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.StringTokenizer;
@@ -73,9 +74,11 @@ public class Overlay implements Cloneable {
         }
         this.board = board;
         overlayFile = new File(overlayDir, archiveName());
-
-        archive = new DataArchive(overlayFile.getPath(), "");
-
+        try {
+            archive = new DataArchive(overlayFile.getPath(), "");
+        } catch (InvalidPathException e) {
+            throw new BoardException("Incorrect path name for overlay. Confirm name and retry to add overlay.");
+        }
         readData();
         transform(preserveelevation);
         try {
