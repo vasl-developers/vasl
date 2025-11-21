@@ -539,12 +539,9 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         final Point p = mapMouseToMapCoordinates(eventPoint);
         adjustformagnification(p);
         if (LOSMap == null) {return;} // error handling - no VASLMap
-        if (p == null || !LOSMap.onMap(p.x, p.y)) {return;} // error handling - no point or point not on map
-        try { // error handling - can't find a location from point; parts of hexes on map edge?
-            target = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
-        }catch (NullPointerException e) {
-            return;
-        }
+        // error handling - can't find a location from point; parts of hexes on map edge?
+        if (p == null || !LOSMap.onMap(p.x, p.y) || LOSMap.gridToHex(p.x, p.y) == null ) {return;} // error handling - no point or point not on map or not in a hex
+        target = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
         useAuxTargetLOSPoint = useAuxLOSPoint(target, p.x, p.y);
         // need to overwrite super class which reverts to hex name when los to/from vertex
         String boardname = "";
