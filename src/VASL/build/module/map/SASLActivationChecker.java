@@ -624,6 +624,7 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
     }
 
     public void runUpdate(java.util.List<GamePiece> allDraggedPieces) {
+        if (mainMap.getVASLMap() == null){return;} // error handling; SASLActivationChecker only works on LOS enabled maps
         ArrayList movedUnits = (ArrayList)allDraggedPieces;
         updateView(movedUnits);
     }
