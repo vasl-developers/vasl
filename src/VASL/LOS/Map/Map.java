@@ -1142,9 +1142,11 @@ public class Map  {
             String[] adjacentHexes = getAllAdjacentHexes(startHex);
             List hexesList = Arrays.asList(hexes);
             for (String adjhexname : adjacentHexes) {
-                if (!hexesList.contains(adjhexname) && (range (getHex(adjhexname), originHex, getMapConfiguration()) <= arrayradius)) {
-                    x += 1;
-                    hexes[x] = adjhexname;
+                if (!adjhexname.equalsIgnoreCase("offboard")) {  //handle missing hexes
+                    if (!hexesList.contains(adjhexname) && (range(getHex(adjhexname), originHex, getMapConfiguration()) <= arrayradius)) {
+                        x += 1;
+                        hexes[x] = adjhexname;
+                    }
                 }
             }
         }
@@ -3104,7 +3106,11 @@ public class Map  {
         String[] adjarray = new String[7];
         adjarray[0] = passhex.getName();
         for (int x = 0; x < 6; x++) {
-            adjarray[x+1] = getAdjacentHex(passhex, x).getName();
+            try {
+                adjarray[x + 1] = getAdjacentHex(passhex, x).getName();
+            } catch (Exception e){
+                adjarray[x + 1] = "offboard";
+            }
         }
         return adjarray;
     }
