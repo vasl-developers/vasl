@@ -542,7 +542,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         if (p == null || !LOSMap.onMap(p.x, p.y)) {return;} // error handling - no point or point not on map
         try { // error handling - can't find a location from point; parts of hexes on map edge?
             target = LOSMap.gridToHex(p.x, p.y).getNearestLocation(p.x, p.y);
-        }catch (Exception e) {
+        }catch (NullPointerException e) {
             return;
         }
         useAuxTargetLOSPoint = useAuxLOSPoint(target, p.x, p.y);
