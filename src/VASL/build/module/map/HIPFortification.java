@@ -651,6 +651,7 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
             for (int i = 0; i < this.ownerlist.getItemCount(); i++){
                 if (this.ownerlist.getItem(i) != null) {
                     GamePiece revealpiece = getPiece(this.asktoreveallist.getItem(i));
+                    if (revealpiece == null){continue;} // error handling: NPE if revealpiece is null
                     GamePiece spotterpiece = getPiece(this.spotterlist.getItem(i));
                     revealpiece.setProperty(Properties.HIDDEN_BY, null);
                     //GameModule.getGameModule().getChatter().send(revealpiece.getName() + " spotted by " + spotterpiece.getName() + " and revealed in " + map.locationName(revealpiece.getPosition()));
