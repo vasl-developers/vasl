@@ -306,7 +306,7 @@
 
 
 		<!--# NG = 1.0 duplicate -->
-		<!--<boarddata name="RBv2" version="2.4" versionDate="2021/06/30" description="Red Barricades" boardType="HASL" publisher="MMP" issued="" /> -->
+		<boarddata name="RBv2" version="2.4" versionDate="2021/06/33" description="Red Barricades" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="RBv3" version="6.5" versionDate="2025/02/10" description="Red Barricades" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="RO" version="6.3" versionDate="2025/02/10" description="Red October" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="KR" version="6.0" versionDate="2021/06/30" description="Kakazu Ridge" boardType="HASL" publisher="MMP" issued="" />
