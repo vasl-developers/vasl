@@ -452,11 +452,11 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                                 }
                             }
 
-                        } catch (Exception ex) {
+                        } catch (DateTimeParseException ex) {
                             // for the benefit of the log
-                            ex.printStackTrace();
+                            logger.warn(String.valueOf(ex));
                             // for the benefit of the user
-                            GameModule.getGameModule().warn("Error parsing board date: please report using Submit Suggestion from the Help Menu");
+                            //GameModule.getGameModule().warn("Error parsing board date: please report using Submit Suggestion from the Help Menu");
                             // for the benefit of the app
                             // status text will remain unchanged, no action required
                         }
