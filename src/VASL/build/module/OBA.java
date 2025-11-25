@@ -745,7 +745,8 @@ public class OBA extends AbstractBuildable
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			final int x = e.getX();
+			int x = 0;
+			if (e.getX() >= 0) {x = e.getX();} // error handling, pos should never be negative so x cannot be either
 
 			final String oldState = mod.getState();
 			final int pos = x / (boxX + 4);
@@ -770,7 +771,7 @@ public class OBA extends AbstractBuildable
 			} else if (pos < mod.getShowing().length()) {    // Shuffle card back into Deck
 				final String col = mod.getShowing().substring(pos, pos + 1);
 				mod.setShowing(mod.getShowing().substring(0, pos) + mod.getShowing().substring(pos + 1));
-				if ("r".equals(col)) {
+ 				if ("r".equals(col)) {
 					mod.setRed(mod.getRed() + 1);
 				} else {
 					mod.setBlack(mod.getBlack() + 1);
