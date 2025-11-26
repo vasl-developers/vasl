@@ -2511,17 +2511,18 @@ public class Map  {
         Terrain imageterrain = null;
         Point imagepoint = new Point();
         BufferedImage img = getImage(overlaypiece);
-
+        //ToDo - test the formulas for imagepoint.x and .y are correct
         imagepoint.x = img.getWidth()/2 +  status.currentCol - (int) (status.currentHex.getHexCenter().getX());
         imagepoint.y = img.getHeight()/2 + status.currentRow - (int) (status.currentHex.getHexCenter().getY());
-        int c = img.getRGB(imagepoint.x, imagepoint.y);
-        if ((c >> 24) != 0x00) { // not a transparent pixel
-            //Retrieving the R G B values
-            Color color = getRGBColor(c);
-            imageterrain = getOverlayTerrainfromColor(color, status);
-        }
-        else {
-            imageterrain = getGridTerrain(status.currentCol, status.currentRow);
+        if (img.getWidth() > imagepoint.x && img.getHeight() > imagepoint.y) {  // point must be in bounds of img
+            int c = img.getRGB(imagepoint.x, imagepoint.y);
+            if ((c >> 24) != 0x00) { // not a transparent pixel
+                //Retrieving the R G B values
+                Color color = getRGBColor(c);
+                imageterrain = getOverlayTerrainfromColor(color, status);
+            } else {
+                imageterrain = getGridTerrain(status.currentCol, status.currentRow);
+            }
         }
         if (imageterrain == null){imageterrain = getTerrain("Open Ground");}
         return imageterrain;
@@ -6041,7 +6042,7 @@ public class Map  {
 
         int localGridWidth = lowerRight.x - upperLeft.x;
         int localGridHeight = lowerRight.y - upperLeft.y;
-        // ToDo test code - remove
+
         String passboardgridconfig="";
         String passcropgridconfig="";
         // need to reset some map values in order to properly create the hex grid

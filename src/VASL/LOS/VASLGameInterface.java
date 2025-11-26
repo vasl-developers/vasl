@@ -141,7 +141,7 @@ public class VASLGameInterface {
         Point p = piece.getPosition();
         p.translate(-gameMap.getEdgeBuffer().width, -gameMap.getEdgeBuffer().height);
 
-        if (!LOSMap.onMap(p.x, p.y)) return;
+        if (p == null || !LOSMap.onMap(p.x, p.y) || LOSMap.gridToHex(p.x, p.y) == null ) {return;} // error handling - no point or point not on map or not in a hex
         Hex h = LOSMap.gridToHex(p.x, p.y);
 
         String name = piece.getName().trim();

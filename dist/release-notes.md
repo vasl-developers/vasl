@@ -11,7 +11,9 @@
 
 ## 🛠 Bug Fixes
  - Fix 1: Fixed several Null bugs causing VASL to crash.
- - Fix 2: Fixed bug when adding overlays via boardpicker. 
+ - Fix 2: Fixed bugs when adding overlays via boardpicker. 
+ - Fix 3: Fixed Board data bug causing VASL to crash.
+ - Fix 4: Fixed OBA Window bug causing VASL to crash.
  - 
 
 ---

@@ -204,10 +204,16 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
     if (!lBooby.equals("?") && !lBooby.equals("A") && !lBooby.equals("B") && !lBooby.equals("C")) {
       lBooby = "?";
     }
+
     turn.movesFirst = mf;
     movesFirst.setSelectedItem(mf + " moves first");
     turn.player = pl;
-    turn.current = Integer.parseInt(c);
+    try {
+        Integer currentTurn = Integer.parseInt(c);
+        turn.current = currentTurn;
+    } catch (NumberFormatException e) {
+        turn.current = 1;
+    }
     AxisELR.setText(xELR);
     AlliedELR.setText(lELR);
     AxisSAN.setText(xSAN);
@@ -215,12 +221,12 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
     AxisBoobyTrap.setText(xBooby);
     AlliedBoobyTrap.setText(lBooby);
 
-    turn.repaint();
-
     axisSAN = getSAN(xSAN);
     alliedSAN = getSAN(lSAN);
     axisBooby = getBooby(xBooby);
     alliedBooby = getBooby(lBooby);
+
+    turn.repaint();
 
     if (st.hasMoreTokens()) {
       notes.setValue(st.nextToken());
