@@ -14,7 +14,7 @@
  - Fix 2: Fixed bugs when adding overlays via boardpicker. 
  - Fix 3: Fixed Board data bug causing VASL to crash.
  - Fix 4: Fixed OBA Window bug causing VASL to crash.
- - 
+ - Fix 5: Fixed ROF Die bugs causing crash.  
 
 ---
 
