@@ -32,6 +32,7 @@ import VASSAL.build.module.Map;
 import VASSAL.build.module.map.MovementReporter;
 import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.build.module.map.boardPicker.board.HexGrid;
+import VASSAL.build.module.map.boardPicker.board.SquareGrid;
 import VASSAL.command.Command;
 import VASSAL.command.NullCommand;
 import VASSAL.counters.*;
@@ -159,9 +160,18 @@ public class ASLTranslate extends Translate {
   @Override
   protected void translate(Point p) {
       Board b = getMap().findBoard(p);
-      if (getMap().getMapName().equals("Casualties")){  // need to disable one hex moves by CTRL-numberpad because there is no grid in Casbin; VASSAL error results
+      // test for situations where Key Combos won't work: b is null; Casbin and Tray extensions (?) which don't have grid
+      SquareGrid testgrid = new SquareGrid();
+      if (b == null) {
+          // do nothing
+      }
+      else if (getMap().getMapName().equals("Casualties")){  // need to disable one hex moves by CTRL-numberpad because there is no grid in Casbin
           getGameModule().getChatter().send("Key Combos cannot move units in the Casualties Bin. Drag and Drop instead!");
-      } else {
+      }
+      else if (b.getGrid() == null || b.getGrid() instanceof SquareGrid){
+          getGameModule().getChatter().send("Key Combos (CTRL + Arrow or Numpad) cannot move units on this map. Drag and Drop instead!");
+      }
+      else {
           if (b != null && ((HexGrid) b.getGrid()).getHexSize() != ASLBoard.DEFAULT_HEX_HEIGHT) {
               int x = p.x;
               int y = p.y;
