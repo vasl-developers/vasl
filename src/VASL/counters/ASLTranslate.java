@@ -32,6 +32,8 @@ import VASSAL.build.module.Map;
 import VASSAL.build.module.map.MovementReporter;
 import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.build.module.map.boardPicker.board.HexGrid;
+import VASSAL.build.module.map.boardPicker.board.MapGrid;
+import VASSAL.build.module.map.boardPicker.board.SquareGrid;
 import VASSAL.command.Command;
 import VASSAL.command.NullCommand;
 import VASSAL.counters.*;
@@ -158,15 +160,33 @@ public class ASLTranslate extends Translate {
 
   @Override
   protected void translate(Point p) {
-      Board b = getMap().findBoard(p);
-      if (getMap().getMapName().equals("Casualties")){  // need to disable one hex moves by CTRL-numberpad because there is no grid in Casbin; VASSAL error results
-          getGameModule().getChatter().send("Key Combos cannot move units in the Casualties Bin. Drag and Drop instead!");
-      } else {
-          if (b != null && ((HexGrid) b.getGrid()).getHexSize() != ASLBoard.DEFAULT_HEX_HEIGHT) {
+      //create variables
+      Map mmap = getMap();
+      Board b = mmap.findBoard(p);
+      MapGrid mgrid; VASSAL.build.module.Chatter mchat;
+      // test for situations where Key Combos won't work: b is null; Casbin and Tray extensions (?) which don't have hexgrid
+      if (b == null) {
+          // do nothing
+          return;
+      }
+      else {
+          //set variables
+          mgrid = b.getGrid();
+          mchat = getGameModule().getChatter();
+      }
+      if (mmap.getMapName().equals("Casualties")){  // need to disable one hex moves by CTRL-numberpad because there is no hexgrid in Casbin
+          mchat.send("Key Combos cannot move units in the Casualties Bin. Drag and Drop instead!");
+      }
+      else if (mgrid == null || mgrid instanceof SquareGrid){ // need to disable one hex moves by CTRL-numberpad because there is no hexgrid on this map
+          // this applies specifically to the Cloaking Display Tray extension
+          mchat.send("Key Combos (CTRL + Arrow or Numpad) cannot move units on this map. Drag and Drop instead!");
+      }
+      else {
+          if (b != null && ((HexGrid) mgrid).getHexSize() != ASLBoard.DEFAULT_HEX_HEIGHT) {
               int x = p.x;
               int y = p.y;
               super.translate(p);
-              double scale = ((HexGrid) b.getGrid()).getHexSize() / ASLBoard.DEFAULT_HEX_HEIGHT;
+              double scale = ((HexGrid) mgrid).getHexSize() / ASLBoard.DEFAULT_HEX_HEIGHT;
               p.x = x + (int) Math.round(scale * (p.x - x));
               p.y = y + (int) Math.round(scale * (p.y - y));
           } else {
