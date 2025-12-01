@@ -3,7 +3,7 @@
 	<!--
 		Note #:		22
 		Name:		Autoprot S37 <i>APC</i>
-		Version:	1.0
+		Version:	1.1
 
 		Author(s): Gordon Molek, Klas Malmström, Alan Bills
 		Tester(s): Alan Bills, Alan Cannamore, Doug Rimmer
@@ -89,7 +89,7 @@
 	</svg>
 	<!-- Movement -->
 	<svg x="30.00" y="3.00" width="27.00" height="12.00" style="overflow:visible">
-		<rect x="6.00" width="21.00" height="12.00" y="0.00" ry="6.00" style="display:inline;fill:white;fill-opacity:1;stroke:none;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"></rect>
+		<circle cx="21.00" cy="50%" r="6.00" style="display:inline;fill:white;fill-opacity:1;stroke:none;stroke-width:6;stroke-dasharray:none;stroke-opacity:1"></circle>
 		<text x="97%" y="84.00%" dominant-baseline="auto" text-anchor="end" style="font-size:11.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">&#x002A;21</text>
 	</svg>
 	<!-- Ground Pressure -->

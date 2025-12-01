@@ -7,6 +7,7 @@ import VASL.LOS.VASLGameInterface;
 import VASL.build.module.ASLMap;
 import VASL.counters.ASLProperties;
 import VASL.counters.Concealable;
+import VASL.environment.Environment;
 import VASSAL.build.AbstractConfigurable;
 import VASSAL.build.AutoConfigurable;
 import VASSAL.build.Buildable;
@@ -40,6 +41,7 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
 
     protected static ASLMap mainMap;
     protected static Map saslMap;
+    protected static Map sacMap;
 
     protected VASL.LOS.VASLGameInterface VASLGameInterface;
 
@@ -52,6 +54,8 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
     private String alliedNationalityOne = "";   // Uses the 2 character nationalities, e.g., "ge", "ru", "ax", etc.
     private String alliedNationalityTwo = "";   // Uses the 2 character nationalities, e.g., "ge", "ru", "ax", etc.
     private String enemyNationality = "";       // Uses the SASL nationalities as defined in "private static final String[] nationalities" below.
+
+    private int nvr = -1;
 
     // KeyListener (begin)
     private static final String NAME = "Name";
@@ -77,8 +81,17 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
         "US/USMC 44+",
         "USMC 41-43",
     };
-
-    private static final int[][] activationRanges = {
+    //
+    // Values correspond to the layer/level displayed by the suspect counter.
+    // 2 - Automatic
+    // 3 - Less than or equal to 2
+    // 4 - Less than or equal to 1
+    // 5 - Less than or equal to 0
+    // 6 - Less than or equal to -1
+    // 7 - Less than or equal to -2
+    // 8 - Long range
+    //
+    private static final int[][] activationRangesInfantry = {
         // 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16 }, // Ranges
         {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // None
         {  2,  2,  3,  4,  5,  5,  6,  7,  7,  7,  7,  8,  8,  8,  8,  8,  8 }, // Allied Minors
@@ -95,7 +108,47 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
         {  2,  2,  3,  4,  4,  5,  6,  6,  7,  7,  7,  8,  8,  8,  8,  8,  8 }, // USMC 41-43
     };
 
+    private static final int[][] activationRangesVehicles = {
+            // 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16 }, // Ranges
+            {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // None
+            {  2,  2,  3,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // Allied Minors
+            {  2,  2,  3,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // Axis Minors
+            {  2,  2,  3,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // China
+            {  2,  2,  3,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // France (Vichy)
+            {  2,  2,  3,  4,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // Germany
+            {  2,  2,  3,  4,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // Great Britain
+            {  2,  2,  3,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // Italy
+            {  2,  2,  3,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // Japan
+            {  2,  2,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // Partisan
+            {  2,  2,  3,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // Russia
+            {  2,  2,  3,  4,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // US/USMC 44+
+            {  2,  2,  3,  4,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // USMC 41-43
+    };
+    /* TODO: NOT NEEDED?
+    private static final int[][] activationRangesTrackedVehicles = {
+            // 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16 }, // Ranges
+            {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // None
+            {  2,  2,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // Allied Minors
+            {  2,  2,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // Axis Minors
+            {  2,  2,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // China
+            {  2,  2,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // France (Vichy)
+            {  2,  2,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // Germany
+            {  2,  2,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // Great Britain
+            {  2,  2,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // Italy
+            {  2,  2,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // Japan
+            {  2,  2,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // Partisan
+            {  2,  2,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // Russia
+            {  2,  2,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // US/USMC 44+
+            {  2,  2,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // USMC 41-43
+    };
+    TODO: NOT NEEDED? */
     // Activation Ranges (end)
+
+    enum CounterType {
+        NON_VEHICLE,
+        VEHICLE,
+        TRACKED_VEHICLE
+    }
     /**
      * @return true if SASLActivationChecker should be active.
      */
@@ -240,6 +293,50 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
         nationalityOfEnemy(p);
      }
 
+    private int getNvr() {
+        GamePiece[]p = sacMap.getPieces();
+        GamePiece nvr = null;
+
+        outerloop:
+        for (GamePiece aP : p) {
+            if (aP instanceof Stack) {
+                for (PieceIterator pi = new PieceIterator(((Stack) aP).getPiecesIterator()); pi.hasMoreElements(); ) {
+                    if (pi.nextPiece().getName().contains("NVR")) {
+                        nvr = pi.nextPiece();
+                        break outerloop;
+                    }
+                }
+            } else {
+                if (aP.getName().contains("NVR")) {
+                    nvr = aP;
+                    break;
+                }
+            }
+        }
+
+        int result = -1;
+
+        if (nvr != null) {
+            result = Integer.parseInt(nvr.getName().replace("NVR ", ""));
+        }
+
+        return result;
+    }
+
+    private void updateNightStatus() {
+        if ((sacMap == null) && !isSacExtensionPresent()) {
+            return; // Nothing to see here, move along ...
+        }
+
+        Environment env = new Environment();
+
+        if (env.isNight()) {
+            nvr = getNvr();
+        } else {
+            nvr = -1;
+        }
+    }
+
     private void pieceListClear() {
         if (!pieceList.isEmpty()) {
             for (GamePiece piece : pieceList) {
@@ -278,6 +375,8 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
         }
 
         updateNationalities();
+
+        updateNightStatus();
 
         VASLGameInterface = new VASLGameInterface(mainMap, mainMap.getVASLMap());
         VASLGameInterface.updatePieces();
@@ -339,8 +438,22 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
         return containsExtension;
     }
 
+    private boolean isSacExtensionPresent() {
+        boolean containsExtension = false;
+
+        for (Buildable checkForSacExtension : getGameModule().getBuildables()) {
+            if (checkForSacExtension instanceof Map && ((Map)checkForSacExtension).getMapName().equals("Scenario Aid Card")) {
+                sacMap = (Map)checkForSacExtension;
+                containsExtension = true;
+                break;
+            }
+        }
+
+        return containsExtension;
+    }
+
     private boolean canActivate(GamePiece piece) {
-        if (isOffboard(piece) || !isFriendlyUnit(piece)) {
+        if (!isOnboard(piece) || !isFriendlyUnit(piece)) {
             return false;
         }
 
@@ -356,30 +469,44 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
     }
 
     private boolean canBeActivated(GamePiece piece) {
-        if (isOffboard(piece) || isFriendlyUnit(piece)) {
+        if (!isOnboard(piece) || isFriendlyUnit(piece)) {
             return false;
         }
 
         return piece.getName().contains("Suspect");
     }
 
+    CounterType getCounterType(GamePiece piece) {
+        CounterType result = CounterType.NON_VEHICLE;
+
+        if (isTrackedVehicle(piece)) {
+            result = CounterType.TRACKED_VEHICLE;
+        } else if (isVehicle(piece)) {
+            result = CounterType.VEHICLE;
+        }
+
+        return result;
+    }
+
     private void testActivation(GamePiece piece) {
         int range = -1;
 
-        if (!isOffboard(piece)) {
+        if (isOnboard(piece)) {
             if (!movingFriendlyCounters.isEmpty()) {
                 for (GamePiece testPiece : movingFriendlyCounters) {
                     if (!(testPiece == piece) && !isFriendlyUnit(piece) && piece.getName().contains("Suspect")) {
-                        if ((range = losRange(testPiece, piece)) >= 0) {
-                            setPieceSpotted(piece, range, true);
+                        CounterType counterType = getCounterType(testPiece);
+
+                        if ((range = losRange(testPiece, piece, counterType)) >= 0) {
+                            setPieceSpotted(piece, range, true, counterType);
                         }
                     }
                 }
             } else if (!movingSuspectCounters.isEmpty()) {
                 for (GamePiece testPiece : movingSuspectCounters) {
                     if (!(testPiece == piece) && isFriendlyUnit(piece) && !piece.getName().contains("Suspect")) {
-                        if ((range = losRange(testPiece, piece)) >= 0) {
-                            setPieceSpotted(testPiece, range, false);
+                        if ((range = losRange(testPiece, piece, CounterType.NON_VEHICLE)) >= 0) {
+                            setPieceSpotted(testPiece, range, false, CounterType.NON_VEHICLE);
                         }
                     }
                 }
@@ -391,16 +518,33 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
      * Marks a piece as spotted so it will be drawn on the mainMap
      * @param piece the piece
      */
-    private void setPieceSpotted(GamePiece piece, int range, boolean friendly) {
+    private void setPieceSpotted(GamePiece piece, int range, boolean friendly, CounterType counterType) {
         if (!Decorator.getInnermost(piece).getName().isEmpty()) {
             if (piece instanceof Decorator || piece instanceof BasicPiece) {
                 if (!pieceList.contains(piece)) {
                     pieceList.add(piece);
 
-                    piece.setProperty("ActivationFlag", 2);
-
                     if (friendly) {
-                        piece.setProperty("RangeBracket", activationRanges[getActivationRangesIndex(getSuspectNationality(piece))][range]);
+                        int rangeBracket = 0;
+
+                        switch (counterType) {
+                            case VEHICLE:
+                            case TRACKED_VEHICLE:
+                                rangeBracket = activationRangesVehicles[getActivationRangesIndex(getSuspectNationality(piece))][range];
+                                // TODO: not needed? rangeBracket = activationRangesTrackedVehicles[getActivationRangesIndex(getSuspectNationality(piece))][range];
+                                break;
+
+                            default:
+                                rangeBracket = activationRangesInfantry[getActivationRangesIndex(getSuspectNationality(piece))][range];
+                                break;
+                        }
+
+                        if (rangeBracket != 0) {
+                            piece.setProperty("ActivationFlag", 2);
+                            piece.setProperty("RangeBracket", rangeBracket);
+                        }
+                    } else {
+                        piece.setProperty("ActivationFlag", 2);
                     }
                 }
             }
@@ -439,6 +583,144 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
 
         return result;
     }
+
+    private int range(GamePiece piece1, GamePiece piece2) {
+        int range = -1;
+
+        if (piece1 != null && piece2 != null) {
+            Location l1 = VASLGameInterface.getLocation(piece1);
+            Location l2 = VASLGameInterface.getLocation(piece2);
+
+            if (l1 != null && l2 != null) {
+                // check the range
+                LOSResult losResult = new LOSResult();
+                mainMap.getVASLMap().LOS(l1, false, l2, false, losResult, VASLGameInterface);
+
+                range = losResult.getRange();
+            }
+        }
+
+        return range;
+    }
+
+    private int getBlazeIlluminationRange(GamePiece blaze) {
+        int range = 0;
+
+        // TODO: should be a way?!? ASLAreaOfEffect blazeAoE = (ASLAreaOfEffect)blaze.getProperty("ASLAreaOfEffect");
+
+        // TODO: should be a way?!? if (blazeAoE != null) {
+        // TODO: should be a way?!?     range = blazeAoE.getRadius();
+        // TODO: should be a way?!? }
+        switch (blaze.getName()) {
+            case "Blaze":
+            case "1-level Blaze":
+                range = 2;
+                break;
+
+            case "2-level Blaze":
+                range = 4;
+                break;
+
+            case "3-level Blaze":
+                range = 6;
+                break;
+
+            case "4-level Blaze":
+                range = 8;
+                break;
+
+            default:
+                break;
+        }
+
+        return range;
+    }
+
+    private boolean isOnboard(GamePiece piece) {
+        return (VASLGameInterface.getLocation(piece) != null);
+    }
+
+    private boolean illuminates(GamePiece target, GamePiece possibleIlluminator) {
+        boolean result = false;
+
+        if (isOnboard(possibleIlluminator)) {
+            if (possibleIlluminator.getName().contains("Starshell") && (range(target, possibleIlluminator) <= 3)) {
+                result = true;
+            } else if (possibleIlluminator.getName().contains("IR") && (range(target, possibleIlluminator) <= 6)) {
+                result = true;
+            } else if (possibleIlluminator.getName().contains("Blaze") && (range(target, possibleIlluminator) <= getBlazeIlluminationRange(possibleIlluminator))) {
+                result = true;
+            }
+        }
+
+        return result;
+    }
+
+    private boolean illuminated(GamePiece piece) {
+        boolean result = false;
+        GamePiece[] allPieces = mainMap.getPieces();
+
+        outerloop:
+        for (GamePiece tempPiece : allPieces) {
+            if (tempPiece instanceof Stack) {
+                for (PieceIterator pi = new PieceIterator(((Stack)tempPiece).getPiecesIterator()); pi.hasMoreElements(); ) {
+                    if (true == (result = illuminates(piece, pi.nextPiece()))) {
+                        break outerloop;
+                    }
+                }
+            } else {
+                if (true == (result = illuminates(piece, tempPiece))) {
+                    break outerloop;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    boolean isTrackedVehicle(GamePiece piece) {
+        boolean result = false;
+        Object prop = piece.getProperty("vehicleType");
+
+        if (prop != null) {
+            switch (prop.toString()) {
+                case "ft":      // fully-tracked
+                case "ft_a":    // fully-tracked (amphibious)
+                case "ht":      // half-tracked
+                    result = true;
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        return result;
+    }
+
+    boolean isVehicle(GamePiece piece) {
+        boolean result = false;
+        Object prop = piece.getProperty("vehicleType");
+
+        if (prop != null) {
+            switch (prop.toString()) {
+                case "ac":      // armored car
+                case "hd":      // horse-drawn
+                case "mc":      // motorcycle
+                case "sk":      // skis
+                case "tr":      // truck
+                case "tr_a":    // truck (amphibious)
+                    result = true;
+                    break;
+
+                default:
+                    GameModule.getGameModule().getChatter().send("gemhack: WARNING! isVehicle('" + piece.getName() +"') got " + prop.toString());
+                    break;
+            }
+        }
+
+        return result;
+    }
     /**
      * Can piece1 see piece2?
      * Sub-classes could override this method to implement custom sighting rules
@@ -446,7 +728,7 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
      * @param piece2 the piece doing the viewing
      * @return the range if piece1 can see piece2, -1 otherwise
      */
-    public int losRange(GamePiece piece1, GamePiece piece2) {
+    public int losRange(GamePiece piece1, GamePiece piece2, CounterType counterType) {
         int range = -1;
 
         if (piece1 != null && piece2 != null) {
@@ -459,16 +741,38 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
                 mainMap.getVASLMap().LOS(l1, false, l2, false, losResult, VASLGameInterface);
 
                 if (!losResult.isBlocked() && (losResult.getRange() <= 16)) {
+                    int myNvr = nvr;
+
                     range = losResult.getRange();
+
+                    if (counterType != CounterType.NON_VEHICLE) {
+                        double temp = (double)nvr;
+
+                        if (counterType == CounterType.TRACKED_VEHICLE) {
+                            temp = (myNvr == 0) ? 2.0 : (temp * 2.0);
+                        } else if (counterType == CounterType.VEHICLE) {
+                            temp = (myNvr == 0) ? 1.0 : (temp * 1.5);
+                        }
+
+                        myNvr = (int) Math.round(temp);
+                    }
+
+                    if (myNvr >= 0) {
+                        if (illuminated(piece2)) {
+                            if (!illuminated(piece1)) {
+                                range = -1;
+                            }
+                        } else if (range > myNvr) {
+                            if (!illuminated(piece1)) {
+                                range = -1;
+                            }
+                        }
+                    }
                 }
             }
         }
 
         return range;
-    }
-
-    private boolean isOffboard(GamePiece piece) {
-        return (VASLGameInterface.getLocation(piece) == null);
     }
 
     private boolean isConcealmentTerrain(Terrain checkterrain) {
@@ -596,12 +900,7 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
            mainMap = (ASLMap)parent;
            mainMap.addDrawComponent(this);
            mainMap.getView().addKeyListener(this);
-
-           GameModule mod = GameModule.getGameModule();
-           mod.getGameState().addGameComponent(this);
        }
-
-       getGameModule().getGameState().addGameComponent(this);
 
        // add this component to the mainMap toolbar  ToDo IS THIS NEEDED?
        if (parent instanceof Map) {
