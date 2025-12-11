@@ -16,11 +16,12 @@
         <VASSAL.build.module.properties.GlobalProperty description="LowVisShaderLevel" initialValue="NONE" isNumeric="false" max="100" min="0" name="LowVisShaderLevel" wrap="false"/>
         <VASSAL.build.module.properties.GlobalProperty description="SunBlindShaderVisibility" initialValue="false" isNumeric="false" max="100" min="0" name="SunBlindShaderVisibility" wrap="false"/>
         <VASSAL.build.module.properties.GlobalProperty description="SunBlindShaderLevel" initialValue="NONE" isNumeric="false" max="100" min="0" name="SunBlindShaderLevel" wrap="false"/>
-        <VASSAL.build.module.properties.GlobalProperty description="PreserveElevation" initialValue="false" isNumeric="false" max="100" min="0" name="PreserveElevation" wrap="false"/>
+        <VASSAL.build.module.properties.GlobalProperty description="PersistElevation" initialValue="false" isNumeric="false" max="100" min="0" name="PersistElevation" wrap="false"/>
     </VASSAL.build.module.properties.GlobalProperties>
     <VASL.build.module.ScenInfo/>
     <VASL.build.module.ASLAutoSave/>
     <VASL.build.module.CounterPaletteSearch/>
+    <VASL.build.module.LOSSettingsAndPrefs/>
     <VASSAL.build.module.GlobalOptions autoReport="Use Preferences Setting" centerOnMove="Use Preferences Setting" chatterHTMLSupport="Always" disablePieceIndexing="false" hotKeysOnClosedWindows="Never" inventoryForAll="Always" minMaxHeap="0" nonOwnerUnmaskable="Use Preferences Setting" playerIdFormat="$playerName$" promptString="Let opponent unconceal my units" purgeBlankPropertyPrompts="true" sendToLocationMoveTrails="Never" specifyExtensionDirInPrefs="true" storeLeadingZeroIntegersAsStrings="false">
         <VASSAL.preferences.BooleanPreference default="false" desc="Enable red CA indicator" name="caindicator" tab="VASL"/>
         <VASSAL.preferences.BooleanPreference default="true" desc="Reduce the top counter's opacity in friendly, concealed non-dummy stacks" name="hideconcealmentcounter" tab="VASL"/>
@@ -147,6 +148,7 @@
         <VASL.build.module.ASLHeatHazeMapShader addToMapToolbar="false" alwaysOn="false" boardList="" boards="Yes" border="false" borderColor="0,0,0" borderOpacity="100" borderWidth="1" buttonText="" color="250,233,0" drawOver="true" hotkey="" icon="heathaze" name="Heat Haze" opacity="0" pattern="nightshade" scaleImage="false" startsOn="false" tooltip="Heat Haze" type="Background"/>
         <VASL.build.module.ASLSunBlindnessMapShader addToMapToolbar="false" alwaysOn="false" boardList="" boards="Yes" border="false" borderColor="0,0,0" borderOpacity="100" borderWidth="1" buttonText="" color="255,122,0" drawOver="true" hotkey="" icon="sunblindness" name="Sun Blindness" opacity="0" pattern="nightshade" scaleImage="false" startsOn="false" tooltip="Sun Blindness" type="Background"/>
         <VASL.build.module.ASLFogMapShader addToMapToolbar="false" alwaysOn="false" boardList="" boards="Yes" border="false" borderColor="0,0,0" borderOpacity="100" borderWidth="1" buttonText="" color="215,217,204" drawOver="true" hotkey="" icon="fog" name="Fog" opacity="0" pattern="nightshade" scaleImage="false" startsOn="false" tooltip="Fog" type="Background"/>
+
         <VASSAL.build.module.map.HighlightLastMoved color="255,0,0" enabled="true" thickness="3"/>
         <VASL.build.module.map.CounterDetailViewer bgColor="239,239,239" borderColor="0,0,0" borderInnerThickness="2" borderThickness="2" borderWidth="8" centerAll="false" centerPiecesVertically="false" centerText="false" combineCounterSummary="false" counterReportFormat="" delay="500" description="" display="from all layers" emptyHexReportForma="$LocationName$" enableHTML="false" extraTextPadding="0" fgColor="0,0,0" fontSize="11" graphicsZoom="1.0" hotkey="32,130" layerList="" minDisplayPieces="1" onlyShowFirstSummary="false" propertyFilter="" showDeck="false" showDeckDepth="1" showDeckMasked="false" showMoveSelectde="false" showNoStack="false" showNonMovable="false" showOnlyTopOfStack="false" showOverlap="false" showTerrainBeneath="never" showTerrainHeight="150" showTerrainSnappy="true" showTerrainText="$LocationName$" showTerrainWidth="150" showTerrainZoom="1.0" showgraph="true" showgraphsingle="false" showtext="true" showtextsingle="false" stopAfterShowing="false" stretchWidthPieces="false" stretchWidthSummary="false" summaryReportFormat="$LocationName$" unrotatePieces="false" version="4" verticalBottomText="10" verticalOffset="0" verticalTopText="5" zoomlevel="1.0"/>
         <VASSAL.build.module.properties.GlobalProperties/>
@@ -164,7 +166,7 @@
     </VASL.build.module.ASLMap>
     <VASSAL.build.module.NotesWindow buttonText="" hotkey="" icon="notesV.gif" tooltip="Notes"/>
     <VASSAL.build.module.Documentation>
-        <VASSAL.build.module.documentation.BrowserPDFFile pdfFile="Whats New VASL671.pdf" title="What's New in v6.7.1"/>
+        <VASSAL.build.module.documentation.BrowserPDFFile pdfFile="Whats New VASL672-beta1.pdf" title="What's New in v6.7.2-beta1"/>
         <VASSAL.build.module.documentation.BrowserPDFFile pdfFile="Counters.pdf" title="Counters"/>
         <VASSAL.build.module.documentation.BrowserPDFFile pdfFile="VASL Keystroke Cheat Sheet.pdf" title="Hotkey Listing"/>
         <VASSAL.build.module.documentation.BrowserPDFFile pdfFile="Malf.pdf" title="Malf/Broken Unit Finder"/>
@@ -8970,4 +8972,5 @@
     <VASSAL.build.module.KeyNamer/>
     <VASSAL.build.module.properties.GlobalTranslatableMessages/>
     <VASL.build.module.shader.EnvironmentComponent/>
+    <VASL.build.module.LOSSettingsAndPrefs/>
 </VASSAL.build.GameModule>

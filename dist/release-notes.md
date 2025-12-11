@@ -1,6 +1,6 @@
 
 # Release Notes: Version 6.7.2-beta1
-**Release Date:** November , 2025
+**Release Date:** Dec 14, 2025
 
 ---
 
@@ -19,7 +19,8 @@
 ---
 
 ## 📈 Improvements
- - Improvement 1: 
+ - Improvement 1: Selecting Preserve Board Elevation when adding Overlays in Boardpicker now works better with LOS and changes are stored in the .vsav file and will persist across sessions.
+
 
 ---
 

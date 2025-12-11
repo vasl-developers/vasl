@@ -864,6 +864,8 @@ public class Map  {
         terrainGrid[row][col] = (char) terrainCode;
     }
 
+    // determine whether to use terrain code from overlay or terrain code from map (due to preserve elevation option)
+
     /**
      * Returns the ground level for the pixel at row, col of the map image.
      * @param row the row coordinate
