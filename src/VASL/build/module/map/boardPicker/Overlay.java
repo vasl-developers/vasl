@@ -18,14 +18,15 @@
  */
 package VASL.build.module.map.boardPicker;
 
-import VASL.LOS.Map.Map;
-import VASL.build.module.map.boardArchive.BoardColor;
-import VASL.build.module.map.boardArchive.ColorSSRule;
+import VASL.LOS.Map.Terrain;
+import VASL.build.module.map.boardArchive.BoardMetadata;
+import VASL.build.module.map.boardArchive.SharedBoardMetadata;
 import VASSAL.build.module.map.boardPicker.board.MapGrid;
 import VASSAL.build.module.map.boardPicker.board.MapGrid.BadCoords;
 import VASSAL.tools.DataArchive;
 import VASSAL.tools.SequenceEncoder;
 import VASSAL.tools.image.ImageUtils;
+import org.jdom2.JDOMException;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.MemoryCacheImageInputStream;
@@ -35,7 +36,10 @@ import java.io.*;
 import java.nio.file.InvalidPathException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.StringTokenizer;
+
+import static VASSAL.build.GameModule.getGameModule;
 
 /**
  * Overlays of all types and sizes
@@ -47,13 +51,19 @@ public class Overlay implements Cloneable {
     protected File overlayFile;
     public String hex1 = "", hex2 = "";
     private String origins;
-    private boolean preserveelevation= false;
+    private boolean  persistelevation = false;
     java.util.Map<Integer, Integer> mappings;
     protected Rectangle boundaries = new Rectangle();
     // boundaries are in local coordinates of the parent board
     // i.e., not accounting for cropping and reversal
     protected ASLBoard board;
     protected DataArchive archive;
+    // next 4 items added Dec 25; copied from other classes which cannot be accessed by Overlay
+    // as LOS code continues to evolve these may be able to be called from their initial class
+    private static final String sharedBoardMetadataFileName = "boardData/SharedBoardMetadata.xml"; // name of the shared board metadata file
+    private static SharedBoardMetadata sharedBoardMetadata = null;
+    private Terrain[] terrainList = new Terrain[256];
+    HashMap<String, Terrain> nameMap;
 
     public Overlay() {
     }
@@ -69,7 +79,7 @@ public class Overlay implements Cloneable {
             hex1 = st.nextToken();
             hex2 = st.nextToken();
             if (st.hasMoreTokens()) {
-                preserveelevation= Boolean.parseBoolean(st.nextToken());
+               persistelevation  = Boolean.parseBoolean(st.nextToken());
             }
         }
         this.board = board;
@@ -80,7 +90,7 @@ public class Overlay implements Cloneable {
             throw new BoardException("Incorrect path name for overlay. Confirm name and retry to add overlay.");
         }
         readData();
-        transform(preserveelevation);
+        transform(persistelevation);
         try {
             setBounds();
         } catch (BadCoords e) {
@@ -88,6 +98,7 @@ public class Overlay implements Cloneable {
         }
         check();
     }
+
     public Overlay(String ovr, File overlayDir) throws IOException, BoardException {
         StringTokenizer st = new StringTokenizer(ovr, "\t");
         if (st.countTokens() >= 3) {
@@ -95,16 +106,16 @@ public class Overlay implements Cloneable {
             hex1 = st.nextToken();
             hex2 = st.nextToken();
             if (st.hasMoreTokens()) {
-                preserveelevation=Boolean.parseBoolean(st.nextToken());
+               persistelevation  = Boolean.parseBoolean(st.nextToken());
             }
         }
 
         overlayFile = new File(overlayDir, archiveName());
-
         archive = new DataArchive(overlayFile.getPath(), "");
         readData();
-        transform(preserveelevation);
+        transform(persistelevation);
     }
+
     public SSRFilter getTerrain() {
         SSRFilter terrain = board.getTerrain();
         if (terrain == null) {
@@ -144,9 +155,14 @@ public class Overlay implements Cloneable {
         }
         return image;
     }
-    public boolean getPreserveElevation(){
-        return preserveelevation;
+
+    public boolean getPersistElevation() {
+        return persistelevation;
     }
+    public void setPersistElevation (boolean persistelev) {
+        persistelevation = persistelev;
+    }
+
     protected Image loadImage() {
         Image im = null;
         char c = getOrientation();
@@ -154,7 +170,7 @@ public class Overlay implements Cloneable {
             c = 'a';
         }
 
-        try (InputStream in = archive.getInputStream(fileName(name + c))){
+        try (InputStream in = archive.getInputStream(fileName(name + c))) {
             im = ImageIO.read(new MemoryCacheImageInputStream(in));
         } catch (IOException e) {
             e.printStackTrace();
@@ -162,7 +178,8 @@ public class Overlay implements Cloneable {
 
         return im;
     }
-    public void setImage(BufferedImage bi){
+
+    public void setImage(BufferedImage bi) {
         image = (Image) bi;
     }
 
@@ -328,7 +345,7 @@ public class Overlay implements Cloneable {
 
                 try {
                     int row = Integer.parseInt(origin.substring(1));
-                    origin = origin.substring(0,1) + String.valueOf(row + 10);
+                    origin = origin.substring(0, 1) + String.valueOf(row + 10);
                 } catch (Exception e) {
                     // bury
                 }
@@ -339,33 +356,33 @@ public class Overlay implements Cloneable {
         } catch (Exception e) {
             throw new BoardException("Illegal orientation \'" + orient + "\' for overlay " + name);
         }
-    /*
-     * Orientations are:
-     *
-     * 2 1 : a
-     *
-     * 2 1 : b
-     *
-     * 1 2 : c
-     *
-     * 1 2 : d
-     *
-     * 1 2 : e
-     *
-     * 2 1 : f
-     *
-     */
+        /*
+         * Orientations are:
+         *
+         * 2 1 : a
+         *
+         * 2 1 : b
+         *
+         * 1 2 : c
+         *
+         * 1 2 : d
+         *
+         * 1 2 : e
+         *
+         * 2 1 : f
+         *
+         */
     }
 
     /*
-    * DR - See comments in readdata()
-    * this method has not been updated since 2009 and certainly does not cover all current overlays
-    * if further testing indicates that it can be removed, then I would be in favour of doing so
-    *
-    * DR - it appears that the purpose of the values contained in these sequences is to permit the calculation of the x,y difference between the top left pixel
-    * of the overlay image (including the transparent part) and the centre of the hex1 value entered in the boardpicker Add Overlay dialog. The values in the
-    * sequence represent the hex whose center dot is the same distance (in x,y)  from 0,0 on the mapboard as the top left pixel of the overlay is from the centre
-    * dot of the "1" hex of the overlay. This is then used to determine the placement point for the overlay on the mapboard.
+     * DR - See comments in readdata()
+     * this method has not been updated since 2009 and certainly does not cover all current overlays
+     * if further testing indicates that it can be removed, then I would be in favour of doing so
+     *
+     * DR - it appears that the purpose of the values contained in these sequences is to permit the calculation of the x,y difference between the top left pixel
+     * of the overlay image (including the transparent part) and the centre of the hex1 value entered in the boardpicker Add Overlay dialog. The values in the
+     * sequence represent the hex whose center dot is the same distance (in x,y)  from 0,0 on the mapboard as the top left pixel of the overlay is from the centre
+     * dot of the "1" hex of the overlay. This is then used to determine the placement point for the overlay on the mapboard.
      */
     private String getDefaultOriginList(String ovr) {
         String o;
@@ -533,109 +550,119 @@ public class Overlay implements Cloneable {
     public DataArchive getDataArchive() {
         return archive;
     }
-    public void transform(boolean preserveelevation){
-        if(!preserveelevation){return;}
-        Map losmap;
-        Integer hex1elevation;
-        try {
-            losmap= board.getVASLBoardArchive().getLOSData("Normal", false);
-            if (losmap==null){return;}
-            hex1elevation = losmap.getHex(hex1).getBaseLevelofHex();
-        } catch (Exception e) {
+
+    public void transform(boolean persistelevation) {
+        if (!persistelevation) {
             return;
         }
-
-        if (hex1elevation != 0){
-            Image i = getImage();
-            // get the image as a buffered image
-            BufferedImage bi = new BufferedImage(i.getWidth(null), i.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-            Rectangle ovrRec = bounds();
-            Graphics2D bGr = bi.createGraphics();
-            bGr.drawImage(i, 0, 0, null);
-            bGr.dispose();
-            String addnewelev = (hex1elevation == -1 ? "_1" : Integer.toString(hex1elevation));
-            String elevationtransform = "Level0ToLevel"+addnewelev;
-            dotransform(elevationtransform, bi);
-            setImage(bi);
+        // new transform to support preserve elevation
+        try {
+            readMetadata();
         }
-
-    }
-    private int colorToInt(Color color) {
-        return (color.getRed() << 16) + (color.getGreen() << 8) + color.getBlue();
-    }
-    public void dotransform(String elevationtransform, BufferedImage bi){
-        // load the color mappings
-        java.util.Map<String, Integer> colorValues = new HashMap<String, Integer>();
-        mappings = new HashMap<Integer, Integer>();
-        for (BoardColor boardColor : board.getVASLBoardArchive().getBoardColors().values()) {
-            colorValues.put(boardColor.getVASLColorName(), colorToInt(boardColor.getColor()));
+        catch (JDOMException e) {
+            return;
         }
+        final Image i = getImage();
+        // error handling
+        if (i == null) {
+            return;
+        }
+        // get the image as a buffered image
+        BufferedImage bi = new BufferedImage(i.getWidth(null), i.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+        Rectangle ovrRec = bounds();
+        Graphics2D bGr = bi.createGraphics();
+        bGr.drawImage(i, 0, 0, null);
+        bGr.dispose();
 
-
-        for (java.util.Map.Entry<String, ColorSSRule> entry : board.getVASLBoardArchive().getColorSSRules().entrySet()) {
-
-            String ruleName = entry.getKey();
-
-            if (elevationtransform.equals(ruleName)) {
-
-                ColorSSRule colorSSRule = board.getVASLBoardArchive().getColorSSRules().get(ruleName);
-
-                for (java.util.Map.Entry<String, String> entry1 : colorSSRule.getColorMaps().entrySet()) {
-
-                    int fromColor = 0;
-                    int toColor = 0;
-                    try {
-                        fromColor = colorValues.get(entry1.getKey());
-                        toColor = colorValues.get(entry1.getValue());
-
-                        if (fromColor >= 0 && toColor >= 0 && fromColor != toColor) {
-
-                            if (!mappings.containsKey(fromColor)) {
-                                mappings.put(fromColor, toColor);
-                            }
-
-                            // Also apply this mapping to previous mappings
-                            if (mappings.containsValue(fromColor)) {
-
-                                for (java.util.Map.Entry<Integer, Integer> e : mappings.entrySet()) {
-                                    if (e.getValue() == fromColor)
-                                        e.setValue(toColor);
-                                }
-                            }
-                        }
-                    } catch (Exception e) {
-                        if (colorValues.get(entry1.getKey()) == null){
-                            //logger.warn("Board " + board.getName() + " missing color entry in color SSR mapping: " + entry1.getKey());
-                        }
-                        if (colorValues.get(entry1.getValue()) == null){
-                            //logger.warn("Board " + board.getName() + " missing color entry in color SSR mapping: " + entry1.getValue());
-                        }
+        int c = 0;
+        Terrain terr = null;
+        int currentwidth = 0;
+        int currentheight = 0;
+        for (currentwidth = 0; currentwidth < bi.getWidth(); currentwidth++) {
+            for (currentheight = 0; currentheight < bi.getHeight(); currentheight++) {
+                c = bi.getRGB(currentwidth, currentheight);
+                if ((c >> 24) != 0x00) { // not a transparent pixel
+                    //Retrieving the R G B values
+                    Color color = getRGBColor(c);
+                    terr = getOverlayTerrainfromColor(color);
+                    if (terr == null || (terr.getLOSCategory() == Terrain.LOSCategories.OPEN && !(getName().contains("og")))) {
+                        int transparentWhite = 0x00FFFFFF;
+                        bi.setRGB(currentwidth, currentheight, transparentWhite);
                     }
                 }
             }
         }
+        setImage(bi);
+    }
 
-        if (!mappings.isEmpty()) {
-            final int h = bi.getHeight();
-            final int[] row = new int[bi.getWidth()];
-            for (int y = 0; y < h; ++y) {
-                bi.getRGB(0, y, row.length, 1, row, 0, row.length);
-                for (int x = 0; x < row.length; ++x) {
-                    row[x] = filterRGB(x, y, row[x]);
-                }
-                bi.setRGB(0, y, row.length, 1, row, 0, row.length);
+    /* Methods getRGBColor, getOverlayTerrainfromColor, readMetaData, getOverlayTerrain, and SetTerrain were added
+     * in December 2025 to support the PreserveElevation functionality when adding overlays to a board
+     * They are copied (with adjustments) from other classes not available to Overlay at the point at which
+     * they are required (especially when starting a new game).
+     * As the LOS code continues to be reworked, it may be possible to access the methods from their original
+     * classes.
+     */
+
+    // returns RGB values for an image color (expressed as an integer value)
+    private Color getRGBColor(int c) {
+        final int red = (c & 0x00ff0000) >> 16;
+        final int green = (c & 0x0000ff00) >> 8;
+        final int blue = c & 0x000000ff;
+        return new Color(red, green, blue);
+    }
+
+    // returns a Terrain object using the Color from the overlay image
+    private Terrain getOverlayTerrainfromColor(Color color) {
+        LinkedHashMap<Color, String> colorToVASLColorName = new LinkedHashMap<Color, String>(100);
+        colorToVASLColorName.putAll(sharedBoardMetadata.getColorToVASLColorName());
+        String vaslcolor = colorToVASLColorName.get(color);
+        if (vaslcolor == null) {
+            return null;
+        }
+        String terrainName = sharedBoardMetadata.getBoardColors().get(vaslcolor).getTerrainName();
+        if(terrainName.equals(BoardMetadata.UNKNOWN)) {
+            return null;
+        }
+        else {
+            final int terrint = sharedBoardMetadata.getTerrainTypes().get(terrainName).getType();
+            if (terrint >= 0) {
+                return getOverlayTerrain(terrint);
             }
         }
+        return null;
     }
-    public int filterRGB(int x, int y, int rgb) {
-        return ((0xff000000 & rgb) | mapColor(rgb & 0xffffff));
-    }
-    private int mapColor(int rgb) {
-        int rval = rgb;
-        Integer mappedValue = mappings.get(rgb);
-        if (mappedValue != null) {
-            rval = mappedValue;
+
+    // read the shared board metadata
+    private void readMetadata() throws JDOMException {
+
+        final DataArchive archive = getGameModule().getDataArchive();
+        // shared board metadata
+        try (InputStream inputStream = archive.getInputStream(sharedBoardMetadataFileName)) {
+            sharedBoardMetadata = new SharedBoardMetadata();
+            sharedBoardMetadata.parseSharedBoardMetadataFile(inputStream);
+            nameMap = sharedBoardMetadata.getTerrainTypes();
+            setTerrain(nameMap);
+            // give up on any errors
+        } catch (IOException e) {
+            sharedBoardMetadata = null;
+            throw new JDOMException("Cannot read the shared metadata file", e);
+        } catch (JDOMException e) {
+            sharedBoardMetadata = null;
+            throw new JDOMException("Cannot read the shared metadata file", e);
+        } catch (NullPointerException e) {
+            sharedBoardMetadata = null;
+            throw new JDOMException("Cannot read the shared metadata file", e);
         }
-        return rval;
+    }
+
+    // returns a Terrain object, using the typeCode element as the index
+    private Terrain getOverlayTerrain(int t) {
+        return terrainList[t];
+    }
+    // Sets the terrain name map and populate the terrain list
+    public final void setTerrain(HashMap<String, Terrain> nameMap) {
+        for(String name : nameMap.keySet()) {
+            terrainList[nameMap.get(name).getType()] = nameMap.get(name);
+        }
     }
 }
