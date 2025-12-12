@@ -86,7 +86,7 @@ public class ASLTranslate extends Translate {
         // auto-reveal fortification test
         ASLMap map =   getGameModule().getComponentsOf(ASLMap.class).get(0);
         HIPFortification hipfort = map.getComponentsOf(HIPFortification.class).get(0);
-        hipfort.runupdate(allDraggedPieces);
+        if (hipfort.isEnabled()) {hipfort.runupdate(allDraggedPieces);}
         // SASL Activation Check test
         SASLActivationChecker saslAC = map.getComponentsOf(SASLActivationChecker.class).get(0);
         saslAC.runUpdate(allDraggedPieces);
