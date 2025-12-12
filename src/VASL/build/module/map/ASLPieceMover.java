@@ -505,7 +505,7 @@ public class ASLPieceMover extends PieceMover {
                 comm = comm.append(report);
                 // trigger auto-reveal fortifications
                 HIPFortification hipfort = map.getComponentsOf(HIPFortification.class).get(0);
-                hipfort.runupdate(allDraggedPieces);
+                if (hipfort.isEnabled()) {hipfort.runupdate(allDraggedPieces);}
 
             }
         }
