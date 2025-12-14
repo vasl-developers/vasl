@@ -243,7 +243,7 @@ public abstract class AbstractMetadata {
     /**
      * @return the board colors
      */
-    protected LinkedHashMap<String, BoardColor> getBoardColors() {
+    public LinkedHashMap<String, BoardColor> getBoardColors() {
         return boardColors;
     }
 

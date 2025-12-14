@@ -121,7 +121,7 @@ Changes:
    <Option name="Buildings">
       <Menu name="Construction">
          <entry name="Normal"/>
-         <entry name="All Wood" rule="AllWood" text="all buildings are wood"/>
+         <entry name="All Wood" rule="AllWood,MultipleStonetoMultipleWooden" text="all buildings are wood"/>
          <entry name="All Stone" rule="AllStone" text="all buildings are stone"/>
       </Menu>
       <Checkbox name="No Stairwells" >

@@ -269,7 +269,7 @@ public class BoardArchive {
     * need to read each element from the LOSData file and discard where not needed; or will assign incorrect values to variables
      */
     //ToDo check that all params are required
-    public Map  addLOSDatatoVASLMap (HashMap<String, Terrain> terrainTypes, VASLBoard board, Map VASLMap, String fliphexconfig, ASLMap aslmap) throws BoardException {
+    public Map  addLOSDatatoVASLMap (HashMap<String, Terrain> terrainTypes, VASLBoard board, Map VASLMap, String fliphexconfig, ASLMap aslmap, boolean persistevelation) throws BoardException {
         // open LOSData file and read data
         try (ZipFile archive = new ZipFile(qualifiedBoardArchive)) {
             try (ObjectInputStream infile = new ObjectInputStream(
@@ -354,7 +354,7 @@ public class BoardArchive {
                 board.applyColorSSRulestoTerrainElevationGrids(VASLMap, sharedBoardMetadata.getLOSSSRules());
 
                 //add overlays to LOS
-                VASLMap = aslmap.adjustLOSForOverlays(board, VASLMap, false);
+                VASLMap = aslmap.adjustLOSForOverlays(board, VASLMap, false, persistevelation);
 
                 // AT THIS POINT ALL CHANGES HAVE BEEN MADE TO TERRAIN AND ELEVATION GRIDS
                 if (board.isReversed()) {
@@ -446,7 +446,7 @@ public class BoardArchive {
                 board.applyColorSSRulestoHexGrid(VASLMap, sharedBoardMetadata.getLOSSSRules());
 
                 // update hexGrid to include overlays changes
-                VASLMap = aslmap.adjustLOSForOverlays(board, VASLMap, true);
+                VASLMap = aslmap.adjustLOSForOverlays(board, VASLMap, true, persistevelation);
                 //ToDo check if either of this needs to be done for geo boards
                 // code added to enable rr embankments in RB and Partial Orchards
                 // set the rr embankments
@@ -477,7 +477,7 @@ public class BoardArchive {
      * need to read each element from the LOSData file and discard where not needed; or will assign incorrect values to variables
      */
     //ToDo check that all params are required
-    public Map  addHASLLOSDatatoVASLMap (HashMap<String, Terrain> terrainTypes, VASLBoard board, Map VASLMap, String fliphexconfig, ASLMap aslmap) throws BoardException {
+    public Map  addHASLLOSDatatoVASLMap (HashMap<String, Terrain> terrainTypes, VASLBoard board, Map VASLMap, String fliphexconfig, ASLMap aslmap, boolean persistelevation) throws BoardException {
         // open LOSData file and read data
         try (ZipFile archive = new ZipFile(qualifiedBoardArchive)) {
             try (ObjectInputStream infile = new ObjectInputStream(
@@ -561,7 +561,7 @@ public class BoardArchive {
                 board.applyColorSSRulestoTerrainElevationGrids(VASLMap, sharedBoardMetadata.getLOSSSRules());
 
                 //add overlays to LOS
-                VASLMap = aslmap.adjustLOSForOverlays(board, VASLMap, false);
+                VASLMap = aslmap.adjustLOSForOverlays(board, VASLMap, false, persistelevation);
 
                 // AT THIS POINT ALL CHANGES HAVE BEEN MADE TO TERRAIN AND ELEVATION GRIDS
                 if (board.isReversed()) {
@@ -601,7 +601,7 @@ public class BoardArchive {
                 board.applyColorSSRulestoHexGrid(VASLMap, sharedBoardMetadata.getLOSSSRules());
 
                 // update hexGrid to include overlays changes
-                VASLMap = aslmap.adjustLOSForOverlays(board, VASLMap, true);
+                VASLMap = aslmap.adjustLOSForOverlays(board, VASLMap, true, persistelevation);
                 //ToDo check if either of this needs to be done
                 // code added to enable rr embankments in RB and Partial Orchards
                 // set the rr embankments

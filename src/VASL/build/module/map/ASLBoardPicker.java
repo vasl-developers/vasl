@@ -18,6 +18,7 @@
  */
 package VASL.build.module.map;
 
+import VASL.LOS.Map.ASLPersistElevation;
 import VASL.build.module.map.boardArchive.SSRControlsFile;
 import VASL.build.module.map.boardPicker.*;
 import VASSAL.Info;
@@ -925,6 +926,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             terrain.setup(currentBoards);
         }
         else {
+            if (preservelevels) {;}
             super.actionPerformed(e);
         }
     }
@@ -1283,10 +1285,14 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
 
         public void actionPerformed(ActionEvent e) {
             if ("Done".equals(e.getActionCommand())) {
+                if (preservelevels){
+                    ASLPersistElevation aslpe = new ASLPersistElevation();
+                    boolean persistelevation = aslpe.togglePersistElevation();
+                }
                 setVisible(false);
                 return;
             }
-            preservelevels = preslevels.isSelected();
+            if(preslevels.isSelected()) {preservelevels = true;}
             try {
                 BoardSlot b = newmatch(bdName.getSelectedIndex());
                 if (b == null){
