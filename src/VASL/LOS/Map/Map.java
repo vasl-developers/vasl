@@ -103,6 +103,7 @@ public class Map  {
     private HashSet<Hillock> hillocks = new HashSet<Hillock>();
 
     // ToDo uses of this constructor should be eliminated as further work on new crop/flip methods proceeds
+    // May need to reinstate this for use in los-gui
     @Deprecated(since="6.7.1", forRemoval=true)
     /**
      * Constructs a new <code>Map</code> object using custom hex size and explicit image size.
@@ -180,7 +181,9 @@ public class Map  {
         elevationGrid = new byte[gridWidth][gridHeight];
 
 		//create the hexGrid
-        //createtheHexGrid(isCropping, isabboard);
+        //ToDo fix isdwboard
+        boolean isdwboard = false;
+        createtheHexGrid(isCropping, isabboard, isdwboard);
         // at this point the terrainGrid, elevationGrid and HexGrid are created but hold no los data
 	}
 
@@ -2561,7 +2564,7 @@ public class Map  {
     }
     private void applyInterveningCounterValues(LOSStatus status){
         Terrain counterTerrain = getTerrain(status.vaslGameInterface.getTerrain(status.tempHex));
-        if (counterTerrain.isInherentTerrain()) {
+        if (counterTerrain.isInherentTerrain() || counterTerrain.isOpen()) {
             status.currentTerrain = counterTerrain;
         }
         else {
