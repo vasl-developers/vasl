@@ -613,7 +613,7 @@ public class ASLDiceBot extends AbstractBuildable
             }
 
             // showing special ROF Die
-            if (showROFDie && categName.contains("TH") || categName.contains("IFT")) {
+            if (showROFDie && (categName.contains("TH") || categName.contains("IFT"))) {
                 output +=  " ROF die: " + rofDieResult;
             }
 

@@ -19,7 +19,7 @@
 
 package VASL.build.module;
 
-import VASL.LOS.LOSDataEditor;
+import VASL.LOS.Map.ASLPersistElevation;
 import VASL.LOS.Map.Hex;
 import VASL.LOS.Map.Location;
 import VASL.LOS.Map.Terrain;
@@ -62,7 +62,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
-import java.util.List;
 
 import static VASSAL.build.GameModule.getGameModule;
 
@@ -511,7 +510,7 @@ public class ASLMap extends Map {
      * - amends the LOS data to reflect overlays applied to the map
      * - flips the Terrain and elevation LOS data which should not be flipped until the previous two changes have been applied
      */
-    protected void addHASLBoardsToMap(LinkedList<VASLBoard> vaslboards, GameModule mod, String fliphexconfig) {
+    protected void addHASLBoardsToMap(LinkedList<VASLBoard> vaslboards, GameModule mod, String fliphexconfig) throws BoardException {
         for (VASLBoard board : vaslboards) {
             addOneHASLBoardToMap(board, mod, fliphexconfig);
         }
@@ -525,7 +524,9 @@ public class ASLMap extends Map {
         try {
             if (!legacyMode) {
                 // Add the LOS data to the map - cropped if necessary
-                VASL.LOS.Map.Map newvaslmap = board.getVASLBoardArchive().addLOSDatatoVASLMap(sharedBoardMetadata.getTerrainTypes(), board, VASLMap, fliphexconfig, this);
+                ASLPersistElevation aslpe = new ASLPersistElevation();
+                boolean persistelevation = aslpe.setpersistelevprop(true);
+                VASL.LOS.Map.Map newvaslmap = board.getVASLBoardArchive().addLOSDatatoVASLMap(sharedBoardMetadata.getTerrainTypes(), board, VASLMap, fliphexconfig, this, persistelevation);
                 VASLMap = newvaslmap;
             }
         } catch (BoardException e) {
@@ -542,12 +543,14 @@ public class ASLMap extends Map {
         }
     }
 
-    protected void addOneHASLBoardToMap(VASLBoard board, GameModule mod, String fliphexconfig) {
+    protected void addOneHASLBoardToMap(VASLBoard board, GameModule mod, String fliphexconfig) throws BoardException {
         // add the board to the VASL map
         try {
             if (!legacyMode) {
                 // Add the LOS data to the map - cropped if necessary
-                VASL.LOS.Map.Map newvaslmap = board.getVASLBoardArchive().addHASLLOSDatatoVASLMap(sharedBoardMetadata.getTerrainTypes(), board, VASLMap, fliphexconfig, this);
+                ASLPersistElevation aslpe = new ASLPersistElevation();
+                boolean persistelevation = aslpe.setpersistelevprop(true);
+                VASL.LOS.Map.Map newvaslmap = board.getVASLBoardArchive().addHASLLOSDatatoVASLMap(sharedBoardMetadata.getTerrainTypes(), board, VASLMap, fliphexconfig, this, persistelevation);
                 VASLMap = newvaslmap;
             }
         } catch (BoardException e) {
@@ -802,7 +805,7 @@ public class ASLMap extends Map {
         public int overYfinish;  // botton side of overlay
     }
 
-    public VASL.LOS.Map.Map adjustLOSForOverlays(VASLBoard board, VASL.LOS.Map.Map losdata, boolean hexGridtest) {
+    public VASL.LOS.Map.Map adjustLOSForOverlays(VASLBoard board, VASL.LOS.Map.Map losdata, boolean hexGridtest, boolean persistevelation) {
         //ToDo check this still works with revised cropping and flipping
         final LOSonOverlays losonoverlays = new LOSonOverlays();
         losonoverlays.newlosdata = losdata;
@@ -841,6 +844,11 @@ public class ASLMap extends Map {
             String terraintype = getOverlayTerrainType(o);
             terraintype = resetfortransform(terraintype, losonoverlays);
             //setOverlayTerrain(losonoverlays, terraintype, o.getPreserveElevation());
+            // add preserve board elevation status
+            if (persistevelation) {
+                o.setPersistElevation(persistevelation);
+                o.transform(persistevelation);
+            }
             if(hexGridtest){
                 // need to flip overlay as Terrain and Elevation Grids are flipped by this point
                 if (board.isReversed()) {
@@ -857,10 +865,10 @@ public class ASLMap extends Map {
                         losonoverlays.ovrYstart = (int) (boardheight - (o.bounds().y + o.bounds().getHeight()) + (board.bounds().getY() - board.getMap().getEdgeBuffer().getHeight()));
                     }
                 }
-                updateHexGridforOverlayTerrain(losonoverlays, terraintype, o.getPreserveElevation(), board.isReversed());
+                updateHexGridforOverlayTerrain(losonoverlays, terraintype, o.getPersistElevation(), board.isReversed());
             }
             else {
-                updateTerrainElevationGridsforOverlays(losonoverlays, terraintype, o.getPreserveElevation());
+                updateTerrainElevationGridsforOverlays(losonoverlays, terraintype, o.getPersistElevation());
             }
         }
         losonoverlays.newlosdata.buildHillocks();
@@ -897,8 +905,8 @@ public class ASLMap extends Map {
 
             HashMap<VASL.LOS.Map.Hex, VASL.LOS.Map.Terrain> inhhexes = new HashMap<VASL.LOS.Map.Hex, VASL.LOS.Map.Terrain>();
             HashMap<VASL.LOS.Map.Hex, VASL.LOS.Map.Terrain> bdghexes = new HashMap<VASL.LOS.Map.Hex, VASL.LOS.Map.Terrain>();
-            losonoverlays.overpositionx = 0;
-            losonoverlays.overpositiony = 0;
+            losonoverlays.overpositionx = 0; //position on map
+            losonoverlays.overpositiony = 0; // position on map
             int c = 0; Terrain terr = null; int elevint = 0;
             for (losonoverlays.currentx = 0; losonoverlays.currentx < losonoverlays.bi.getWidth(); losonoverlays.currentx++) {
                 for (losonoverlays.currenty = 0; losonoverlays.currenty < losonoverlays.bi.getHeight(); losonoverlays.currenty++) {
@@ -930,26 +938,30 @@ public class ASLMap extends Map {
                             //addHextoOverlayInhandBldgMaps(terraintype, terr, losonoverlays, inhhexes, bdghexes);
                             // set terrain type for point, and center location or hexside location (if hexside terrain)
                             // set grid terrain
+                            //losonoverlays.newlosdata.determineGridTerrainCode(terr.getType(), losonoverlays.overpositionx, losonoverlays.overpositiony, preserveelevation);
                             losonoverlays.newlosdata.setGridTerrainCode(terr.getType(), losonoverlays.overpositionx, losonoverlays.overpositiony);
                             //// handle elevation update
                             //test code
                             if (terr.getName().contains("Wadi")){
                                 boolean reg = true;
                             }
-                            elevint = getOverlayElevationfromColor(losonoverlays, color);
+                            if (!preserveelevation) {
+                                elevint = getOverlayElevationfromColor(losonoverlays, color);
+                            }
                             // if elevint = -99 then method above could not find a proper elevation for terrain; revert to current elevation in mapboard losdata
-                            if (elevint == -99) {
+                            if (elevint == -99 || preserveelevation ) {
                                 elevint = losonoverlays.newlosdata.getGridElevation(losonoverlays.overpositionx, losonoverlays.overpositiony);
+                                //ToDo add code to preserve terraincode
                             }
                             if (terr.isDepression()) {
                                 elevint = preserveelevation ? losonoverlays.newlosdata.getGridElevation(losonoverlays.overpositionx, losonoverlays.overpositiony) - 1 : -1;
                             //    losonoverlays.newlosdata.gridToHex(losonoverlays.overpositionx, losonoverlays.overpositiony).setBaseLevelofHex(elevint);
                             }
 
-                            if (!preserveelevation) {
+                            //if (!preserveelevation) {
                                 // ToDo turn this into a method if can do so with reversed board
                                 //set elevation for point; no need to set if preserveelevation=true; just use elevation from board
-                                losonoverlays.newlosdata.setGridElevation(elevint, losonoverlays.overpositionx, losonoverlays.overpositiony);
+                            losonoverlays.newlosdata.setGridElevation(elevint, losonoverlays.overpositionx, losonoverlays.overpositiony);
                                 //test if pixel is hex center
                                 /*if (losonoverlays.overpositionx == (int) (losonoverlays.newlosdata.gridToHex(losonoverlays.overpositionx, losonoverlays.overpositiony).getHexCenter()).getX() &&
                                         losonoverlays.overpositiony == (int) (losonoverlays.newlosdata.gridToHex(losonoverlays.overpositionx, losonoverlays.overpositiony).getHexCenter()).getY()) {
@@ -983,7 +995,7 @@ public class ASLMap extends Map {
                                     }
 
                                 }*/
-                            }
+                            //}
                         } else { // transparent pixel
                             //test if pixel is hex center
                             /*if (losonoverlays.overpositionx + (int) losonoverlays.board.getCropBounds().getX() == (int) (losonoverlays.newlosdata.gridToHex(losonoverlays.overpositionx, losonoverlays.overpositiony).getHexCenter()).getX() &&

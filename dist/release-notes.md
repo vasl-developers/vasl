@@ -1,6 +1,6 @@
 
 # Release Notes: Version 6.7.2-beta1
-**Release Date:** November , 2025
+**Release Date:** Dec 14, 2025
 
 ---
 
@@ -14,12 +14,13 @@
  - Fix 2: Fixed bugs when adding overlays via boardpicker. 
  - Fix 3: Fixed Board data bug causing VASL to crash.
  - Fix 4: Fixed OBA Window bug causing VASL to crash.
- - 
+ - Fix 5: Fixed ROF Die bugs causing crash.  
 
 ---
 
 ## 📈 Improvements
- - Improvement 1: 
+ - Improvement 1: Selecting Preserve Board Elevation when adding Overlays in Boardpicker now works better with LOS and changes are stored in the .vsav file and will persist across sessions.
+
 
 ---
 
