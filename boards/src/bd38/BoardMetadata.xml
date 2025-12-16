@@ -18,7 +18,7 @@
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
 -->
-<boardMetadata name="38" version="6.5" versionDate="Oct 2023" author="TR" boardImageFileName="bd38.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="38" version="6.6" versionDate="2025/12/15" author="TR" boardImageFileName="bd38.gif" hasHills="FALSE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -68,6 +68,7 @@
 			y - y coordinate of overlay upper left
 		-->		
 		<overlaySSRule name="SSO_38_74" image="SSO_38_74.gif" x="790" y="1" />
+		<overlaySSRule name="SSO_38_245" image="SSO_38_245.gif" x="0" y="0" />
 		<overlaySSRule name="SSO_38_J63" image="SSO_38_J63.gif" x="531" y="2" />
 		<overlaySSRule name="OrchardsToShellholes" image="38_Orch2Shell.gif" x="1" y="1" />
 		<overlaySSRule name="OrchardsToCrags" image="38_Orch2Crag.gif" x="2" y="3" />
