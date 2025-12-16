@@ -9,5 +9,7 @@
        <Checkbox name="">
          <entry name="Scenario J63 - Silesian Interlude" rule="SSO_38_J63" text="Bd38 Scen J63 SSO"/>
        </Checkbox>
-   </Option>
+	<Checkbox name="">
+         <entry name="Scenario A245 - The Time Of Humiliations" rule="SSO_38_245" text="Bd38 Scen 245 SSO"/>
+       </Checkbox>   </Option>
 </SSRControls>
