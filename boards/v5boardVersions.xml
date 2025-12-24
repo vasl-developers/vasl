@@ -527,7 +527,12 @@
 		<boarddata name="AF_PRK_A" version="1.0" versionDate="2024/01/30" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
 		<boarddata name="AF_PRK_S" version="1.0" versionDate="2024/01/30" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
 		<boarddata name="AF_PRK_Y" version="1.0" versionDate="2024/01/30" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
-		<boarddata name="AF_Sollum" version="1.1" versionDate="2024/01/30" description="Brevity Assault" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_ZAM_2" version="1.0" versionDate="2025/12/24" description="ZAMOLY 1" boardType="HASL" publisher="AF" issued="2025/12/24" />
+		<boarddata name="AF_ZAM_3" version="1.0" versionDate="2025/12/24" description="ZAMOLY 1" boardType="HASL" publisher="AF" issued="2025/12/24" />
+		<boarddata name="AF_ZAM_5" version="1.0" versionDate="2025/12/24" description="ZAMOLY 1" boardType="HASL" publisher="AF" issued="2025/12/24" />
+		<boarddata name="AF_ZAM_6" version="1.0" versionDate="2025/12/24" description="ZAMOLY 1" boardType="HASL" publisher="AF" issued="2025/12/24" />
+		<boarddata name="AF_ZAM_8" version="1.0" versionDate="2025/12/24" description="ZAMOLY 1" boardType="HASL" publisher="AF" issued="2025/12/24" />
+		<boarddata name="AF_ZAM_9" version="1.0" versionDate="2025/12/24" description="ZAMOLY 1" boardType="HASL" publisher="AF" issued="2025/12/24" />
 		<boarddata name="LS" version="1.0" versionDate="2025/04/08" description="Lysyanka" boardType="HASL" publisher="" issued="2025/04/08" />
 		<boarddata name="BW" version="1.0" versionDate="2025/07/13" description="Brickworks" boardType="HASL" publisher="" issued="2025/07/13" />
 		<boarddata name="DPN5" version="6.1" versionDate="2025/07/29" description="" boardType="" publisher="" issued="2025/07/29" />
