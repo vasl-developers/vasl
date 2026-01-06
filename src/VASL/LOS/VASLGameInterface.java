@@ -143,7 +143,10 @@ public class VASLGameInterface {
 
         if (p == null || !LOSMap.onMap(p.x, p.y) || LOSMap.gridToHex(p.x, p.y) == null ) {return;} // error handling - no point or point not on map or not in a hex
         Hex h = LOSMap.gridToHex(p.x, p.y);
-
+        Location hexloc = h.getNearestLocation(p.x, p.y );
+        int hexside = -1;
+        hexside = h.getLocationHexside(hexloc);
+        Hex sh = LOSMap.getAdjacentHex(h, hexside);
         String name = piece.getName().trim();
         // need to take out any label info for next test
         name = (parsepiecename(name)).trim();
@@ -172,6 +175,12 @@ public class VASLGameInterface {
                     name = "";
                 } else if (name.contains("Bridge")) { // all Bridges are same for LOS
                     name = "Bridge";
+                } else if (name.contains("Rowhouse Bar")) {
+                    name = "Rowhouse Bar Overlay";
+                } else if (name.contains("StoneBreach")) {
+                    name = "StoneBreach Rowhouse Overlay";
+                } else if (name.contains("Wood Breach")) {
+                    name = "Wood Breach Rowhouse Overlay";
                 }
                 counter = counterMetadata.get(name);
             }
@@ -272,8 +281,8 @@ public class VASLGameInterface {
                         terrainList.put(h, counter);
                         break;
                     case HEXSIDE:
+                        counter.setHexside(hexside);
                         hexsideList.put(h, counter);
-
                         break;
                     case ENTRENCHMENT:
                         // we assume there is only one terrain-type counter in a hex
@@ -560,9 +569,9 @@ public class VASLGameInterface {
 
     public CounterMetadata getHexside(Hex hex) {
 
-        if(hexsideList != null) {
-            return hexsideList.get(hex);
-        }
+          if (hexsideList != null) {
+              return hexsideList.get(hex);
+          }
         return null;
     }
     /**

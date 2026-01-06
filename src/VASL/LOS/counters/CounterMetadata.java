@@ -45,6 +45,7 @@ public class CounterMetadata {
     private int coverArch;
     private int rotation;
     private boolean isBarrage;
+    private int hside;
 
     public static enum CounterType {SMOKE, WRECK, OBA, TERRAIN, IGNORE, BUILDING_LEVEL, CREST, ROOF, ENTRENCHMENT, CLIMB, BRIDGE, HEXSIDE}
 
@@ -82,6 +83,12 @@ public class CounterMetadata {
     }
 
     /**
+     * @return the hexside amount (for Rowhouse counters)
+     */
+    public int getHexside() {
+        return hside;
+    }
+    /**
      * @return the counter type
      */
     public CounterType getType() {
@@ -112,6 +119,13 @@ public class CounterMetadata {
         this.hindrance = hindrance;
     }
 
+    /**
+     * Set the hexside
+     * @param hside the hexside
+     */
+    public void setHexside(int hexside) {
+        this.hside = hexside;
+    }
     /**
      * @return the location level
      */
