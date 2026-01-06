@@ -1,6 +1,6 @@
 
 # Release Notes: Version 6.7.2-beta2
-**Release Date:** Dec 14, 2025
+**Release Date:** Jan 6, 2026
 
 ---
 
