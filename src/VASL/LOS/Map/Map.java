@@ -2284,6 +2284,12 @@ public class Map  {
                 applyInterveningCounterValues(status);
              }
            }
+           else if (status.vaslGameInterface.getTerrain(status.tempHex)!= null) {
+             // check for Rowhouse/Factory bar/breach counters
+             if (!getTerrain(status.vaslGameInterface.getTerrain(status.tempHex)).isRowhouseFactoryWallOrBreach()) {
+                   applyInterveningCounterValues(status);
+             }
+           }
         }
 
         try {
@@ -2378,13 +2384,44 @@ public class Map  {
         } else {
             insamehex = true;
         }
-        // check for hexside counter terrain (ie drifts, roadblocks, etc) and reset value of currentTerrain if found
+        // check for hexside counter terrain (ie walls, hedges, drifts, roadblocks, etc) and reset value of currentTerrain if found
+        int usehexside = -1;
         for (Integer hexside : hexsides) {
+            CounterMetadata counter = null;
             if (status.vaslGameInterface.getHexside(status.currentHex) != null) {
-                CounterMetadata counter = status.vaslGameInterface.getHexside((status.currentHex));
+                counter = status.vaslGameInterface.getHexside((status.currentHex));
+                usehexside = counter.getHexside();
+            }
+            else if (status.vaslGameInterface.getHexside(status.previousHex) != null) {
+                counter = status.vaslGameInterface.getHexside((status.previousHex));
+                usehexside = status.previousHex.getOppositeHexside(counter.getHexside());
+            }
+            else {
+                for ( int hside = 0 ; hside < 6 ; hside++) {
+                    if (status.currentHex.isPointOnHexside(status.currentCol, status.currentRow, hside)) {
+                        Hex testhex = getAdjacentHex(status.currentHex, hside);
+                        if (status.vaslGameInterface.getHexside(testhex) != null) {
+                            counter = status.vaslGameInterface.getHexside((testhex));
+                            if (counter.getHexside() == testhex.getOppositeHexside(hside)) {
+                                usehexside = hside;
+                            }
+                            else {
+                                counter = null;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            if (counter != null){
                 if (counter.getName().contains("Overlay")) {
-                    // draggable overlay of hexside: Hedge, Wall, Bocage, Panji - others?
-                    status.currentTerrain = getTerrainFromOverlayImage(status, getOverlayPiece(status));
+                    if (usehexside == -1 ){  //Hedge, Wall, Bocage
+                        status.currentTerrain = getTerrainFromOverlayImage(status, getOverlayPiece(status), usehexside);
+                    }
+                    else if (status.currentHex.isPointOnHexside(status.currentCol, status.currentRow, usehexside)) { //counter.getHexside())) {
+                        // draggable overlay of hexside: Hedge, Wall, Bocage, Rowhouse/Factory Bar and Breach - others?
+                        status.currentTerrain = getTerrainFromOverlayImage(status, getOverlayPiece(status), hexside);
+                    }
                 } else if (hexside == counter.getCoverArch()) {
                     // counter metadata includes which hexside is terrain
                     status.currentTerrain = getTerrain(counter.getTerrain());
@@ -2512,23 +2549,45 @@ public class Map  {
         return false;
     }
 
-    protected Terrain getTerrainFromOverlayImage(LOSStatus status, GamePiece overlaypiece){
+    protected Terrain getTerrainFromOverlayImage(LOSStatus status, GamePiece overlaypiece, int hexside){
         Terrain imageterrain = null;
         Point imagepoint = new Point();
         BufferedImage img = getImage(overlaypiece);
-        //ToDo - test the formulas for imagepoint.x and .y are correct
-        imagepoint.x = img.getWidth()/2 +  status.currentCol - (int) (status.currentHex.getHexCenter().getX());
-        imagepoint.y = img.getHeight()/2 + status.currentRow - (int) (status.currentHex.getHexCenter().getY());
+        Location hexsideloc = status.currentHex.getHexsideLocation(hexside);
+        //ToDo - test the formulas for imagepoint.x and .y are correct - working so far in Dec 25
+        if (hexside == -1) {  //hex terrain or no terrain
+            imagepoint.x = img.getWidth() / 2 + status.currentCol - (int) (status.currentHex.getHexCenter().getX());
+            imagepoint.y = img.getHeight() / 2 + status.currentRow - (int) (status.currentHex.getHexCenter().getY());
+        }
+        else {  // hexside terrain
+            imagepoint.x = img.getWidth() / 2 + status.currentCol - (int) (hexsideloc.getEdgeCenterPoint().getX());  // status.currentHex.getHexCenter().getX());
+            imagepoint.y = img.getHeight() / 2 + status.currentRow - (int) (hexsideloc.getEdgeCenterPoint().getY());  // status.currentHex.getHexCenter().getY());
+        }
         if (img.getWidth() > imagepoint.x && img.getHeight() > imagepoint.y) {  // point must be in bounds of img
             int c = img.getRGB(imagepoint.x, imagepoint.y);
             if ((c >> 24) != 0x00) { // not a transparent pixel
                 //Retrieving the R G B values
                 Color color = getRGBColor(c);
-                imageterrain = getOverlayTerrainfromColor(color, status);
+                // handle some particular special cases here; may resolve differently in future
+                if (color.equals(Color.BLACK) && overlaypiece.getName().contains("Rowhouse Bar")) {
+                    imageterrain = getTerrain("Rowhouse Wall");
+                }
+                else if (color.equals(Color.BLACK) && overlaypiece.getName().contains("StoneBreach")) {
+                    imageterrain = getTerrain("Breach");
+                }
+                else {
+                    imageterrain = getOverlayTerrainfromColor(color, status);
+                    if (imageterrain.isBuilding() &&
+                      (overlaypiece.getName().contains("StoneBreach")) || overlaypiece.getName().contains("Wood Breach")) {
+                        imageterrain = getTerrain("Breach");
+                    }
+                }
             } else {
+                // if overlay pixel is transparent use underlying map terrain
                 imageterrain = getGridTerrain(status.currentCol, status.currentRow);
             }
         }
+        // handle NPE situation by using default terrain
         if (imageterrain == null){imageterrain = getTerrain("Open Ground");}
         return imageterrain;
     }
@@ -2569,7 +2628,7 @@ public class Map  {
         }
         else {
             if (getOverlayPiece(status) == null) {return;}
-            status.currentTerrain = getTerrainFromOverlayImage(status, getOverlayPiece(status));
+            status.currentTerrain = getTerrainFromOverlayImage(status, getOverlayPiece(status), -1);
         }
         status.currentTerrainfromCounter = true;
         if (status.vaslGameInterface.getLevel(status.tempHex) != -99) {
@@ -2592,7 +2651,7 @@ public class Map  {
         GamePiece[] p = status.vaslGameInterface.gameMap.getPieces();
         for (GamePiece aP : p) {
             Point testpoint = new Point  ((int) aP.getPosition().getX() - status.vaslGameInterface.gameMap.getEdgeBuffer().width, (int) aP.getPosition().getY() - status.vaslGameInterface.gameMap.getEdgeBuffer().height);
-            if (status.currentHex.contains(testpoint)) {  // make sure overlay is in current hex
+            if (status.currentHex.containsExtended(testpoint.x, testpoint.y)) {  // make sure overlay is in current hex
                 if (aP instanceof VASSAL.counters.Stack) {
                     for (PieceIterator pi = new PieceIterator(((Stack) aP).getPiecesIterator()); pi.hasMoreElements(); ) {
                         GamePiece piece = pi.nextPiece();
@@ -3512,9 +3571,9 @@ public class Map  {
             targetadj=+1;
         }
         // rowhouse/factory wall?
-        if (status.currentTerrain.isRowhouseFactoryWall()) {
+        if (status.currentTerrain.isRowhouseFactoryWallOrBreach()) {
             // code added by DR to deal with factory fire along/across Factory wall hexside
-            if (checkRowhouseFactoryWall(status, result)) {
+            if (checkRowhouseFactoryWallAndBreach(status, result)) {
                 status.reason = "Cannot see through rowhouse/factory wall (B23.71/O5.31)";
                 status.blocked = true;
                 result.setBlocked(status.currentCol, status.currentRow, status.reason);
@@ -3973,7 +4032,7 @@ public class Map  {
                 return false;
             }
             // can also ignore for Rowhouse or Interior Factory walls - handled by blind hex rule
-            if(status.currentTerrain.isRowhouseFactoryWall()){
+            if(status.currentTerrain.isRowhouseFactoryWallOrBreach()){
                 return false;
             }
 
@@ -4921,8 +4980,12 @@ public class Map  {
         Terrain locationHexsideTerrain = locationHex.getHexsideTerrain(locationHexside);
 
         // ToDo confirm that this has no unforeseen impacts
-        if (locationHexsideTerrain == null) {return true;}
-        if (status.currentTerrain.isHexsideTerrain() && locationHexsideTerrain !=  status.currentTerrain) {
+        if (locationHexsideTerrain == null) { // no hexside terrain in base hex and no counter
+            if(!(status.currentTerrain.isHexsideTerrain())) {
+                return true;
+            }
+        }
+        else if (status.currentTerrain.isHexsideTerrain() && locationHexsideTerrain !=  status.currentTerrain) {  // hexside terrain and counter hexside terrain don't match
             return true;
         }
         // if using hexside counter terrain, override hex/location terrain
@@ -5283,7 +5346,7 @@ public class Map  {
             // -99 is default value when no ajustment required; adjustment reflects lower terrain when LOS along cliff hexside
             if (cliffHexsideTerrainHeightadjustment !=-99) {groundLevel=cliffHexsideTerrainHeightadjustment;}
         }
-        if(status.currentTerrain.isRowhouseFactoryWall()) {
+        if(status.currentTerrain.isRowhouseFactoryWallOrBreach()) {
             // hex containing IFW hexside is "first" blind hex; use range adjustment to handle
             if(status.LOSisHorizontal || status.LOSis60Degree){
                 if (swapLOS) {
@@ -6335,7 +6398,7 @@ public class Map  {
         return false;
     }
     // method added by DR to handle LOS along/across Rowhouse and Interior Factory Walls
-    public boolean checkRowhouseFactoryWall (LOSStatus status,LOSResult result) {
+    public boolean checkRowhouseFactoryWallAndBreach(LOSStatus status, LOSResult result) {
         // must be rowhouse wall or IFW to get here
         double sourceadj=0;
         double targetadj=0;
@@ -6345,6 +6408,23 @@ public class Map  {
         if (status.target.getTerrain().isRooftop() && status.target.getLevelInHex() !=1) {
             targetadj=-1;
         }
+        // add last test for breach
+        if (status.currentTerrain.getName().contains("Interior Factory Wall") || status.currentTerrain.getName().contains("Rowhouse Wall")){
+            if (status.vaslGameInterface.getHexside(status.currentHex) != null) {
+                CounterMetadata counter = status.vaslGameInterface.getHexside((status.currentHex));
+                if (counter.getName().contains("Breach") && counter.getHexside() == status.currentHex.getLocationHexside(status.currentHex.getNearestLocation(status.currentCol, status.currentRow))) {
+                    status.currentTerrain = getTerrain("Breach");
+                }
+            }
+        }
+
+        if (status.currentTerrain.getName().contains("Breach")){
+             // if Breached return false as true implies blocked
+             if(checkBreachApplies(status, result, status.currentHex.getNearestLocation(status.currentCol, status.currentRow))) {
+                 return false;
+             };
+        }
+
         if (status.currentTerrain.getName().contains("Interior Factory Wall") && (result.isLOSis60Degree() | result.isLOSisHorizontal()) ) {
             // special case of LOS along IFW
             int firsthexside = result.getSourceExitHexspine() + 1;
@@ -6398,10 +6478,10 @@ public class Map  {
                         Terrain ter3 = status.currentHex.getHexsideTerrain(thirdvertexside);
                         Terrain ter4 = status.currentHex.getHexsideTerrain(fourthvertexside);
 
-                        if(( ter1 != null && status.currentHex.getHexsideTerrain(firstvertexside).isRowhouseFactoryWall() && !(status.sourceHex.equals(getAdjacentHex(status.currentHex, firstvertexside)) || status.targetHex.equals(getAdjacentHex(status.currentHex, firstvertexside)) )) ||
-                                ( ter2 !=null && status.currentHex.getHexsideTerrain(secondvertexside).isRowhouseFactoryWall() && !(status.sourceHex.equals(getAdjacentHex(status.currentHex, secondvertexside)) || status.targetHex.equals(getAdjacentHex(status.currentHex, secondvertexside)) )) ||
-                                ( ter3 !=null && status.currentHex.getHexsideTerrain(thirdvertexside).isRowhouseFactoryWall() && !(status.sourceHex.equals(getAdjacentHex(altHex, thirdvertexside)) || status.targetHex.equals(getAdjacentHex(altHex, thirdvertexside)) )) ||
-                                ( ter4 !=null && status.currentHex.getHexsideTerrain(fourthvertexside).isRowhouseFactoryWall() && !(status.sourceHex.equals(getAdjacentHex(altHex, fourthvertexside))  || status.targetHex.equals(getAdjacentHex(altHex, fourthvertexside)) ))) {
+                        if(( ter1 != null && status.currentHex.getHexsideTerrain(firstvertexside).isRowhouseFactoryWallOrBreach() && !(status.sourceHex.equals(getAdjacentHex(status.currentHex, firstvertexside)) || status.targetHex.equals(getAdjacentHex(status.currentHex, firstvertexside)) )) ||
+                                ( ter2 !=null && status.currentHex.getHexsideTerrain(secondvertexside).isRowhouseFactoryWallOrBreach() && !(status.sourceHex.equals(getAdjacentHex(status.currentHex, secondvertexside)) || status.targetHex.equals(getAdjacentHex(status.currentHex, secondvertexside)) )) ||
+                                ( ter3 !=null && status.currentHex.getHexsideTerrain(thirdvertexside).isRowhouseFactoryWallOrBreach() && !(status.sourceHex.equals(getAdjacentHex(altHex, thirdvertexside)) || status.targetHex.equals(getAdjacentHex(altHex, thirdvertexside)) )) ||
+                                ( ter4 !=null && status.currentHex.getHexsideTerrain(fourthvertexside).isRowhouseFactoryWallOrBreach() && !(status.sourceHex.equals(getAdjacentHex(altHex, fourthvertexside))  || status.targetHex.equals(getAdjacentHex(altHex, fourthvertexside)) ))) {
                             if(isBlindHex(status, status.currentTerrainHgt)) {
                                 return true;
                             }
@@ -6585,6 +6665,17 @@ public class Map  {
             }
         }
         // LOS is not blocked
+        return false;
+    }
+    // if there is a Breach counter on the hexside does it enable los given source/target hexes
+    public boolean checkBreachApplies(LOSStatus status, LOSResult result, Location l) {
+        if(status.LOSis60Degree || status.LOSisHorizontal) {return false;} // no los possible when along hexside
+        if (isAdjacentHexside(status.sourceHex, l) && isAdjacentHexside(status.targetHex, l)) {
+            return true;
+        }
+        else if (l.getTerrain().getName().contains("Interior Factory Wall")){
+            return true;
+        }
         return false;
     }
 

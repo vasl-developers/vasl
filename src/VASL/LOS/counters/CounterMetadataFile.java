@@ -66,7 +66,7 @@ public class CounterMetadataFile {
     protected static final String counterLevelAttribute = "level";
     protected static final String counterPositionAttribute = "position";
     protected static final String counterCoveredArchAttribute = "ca";
-
+    protected static final String counterHexsideAttribute = "hside";
     protected static final String counterRotationAttribute = "rotation";
     protected static final String counterIsBarrageAttribute = "isBarrage";
 
@@ -162,8 +162,12 @@ public class CounterMetadataFile {
             else if(e.getName().equals(hexsideCounterElement)) {
                 counterMetadata = new CounterMetadata(name, CounterMetadata.CounterType.HEXSIDE);
                 counterMetadata.setTerrain(e.getAttributeValue(counterTerrainAttribute));
-                counterMetadata.setCoverArch(e.getAttribute(counterCoveredArchAttribute).getIntValue());
-
+                if (e.getAttribute(counterCoveredArchAttribute) != null) {
+                    counterMetadata.setCoverArch(e.getAttribute(counterCoveredArchAttribute).getIntValue());
+                }
+                if (e.getAttribute(counterHexsideAttribute) != null) {
+                    counterMetadata.setHexside(e.getAttribute(counterHexsideAttribute).getIntValue());
+                }
             }
             else if(e.getName().equals(OBACounterElement)) {
                 counterMetadata = new CounterMetadata(name, CounterMetadata.CounterType.OBA);

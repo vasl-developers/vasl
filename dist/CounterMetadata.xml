@@ -208,9 +208,13 @@
     <terrain name="Lv 4 og snow" terrain="Open Ground" level="4"/>
     <terrain name="Lv 5 og snow" terrain="Open Ground" level="5"/>
     <terrain name="Lv 6 og snow" terrain="Open Ground" level="6"/>
-    <terrain name="Prepared Fire Zone - Open" terrain="Open Ground"/>
-    <terrain name="Prepared Fire Zone - Vineyard" terrain="Vineyard"/>
+    <terrain name="Prepared Fire Zone - Open" terrain="Open Ground" level="-99"/>
+    <terrain name="Prepared Fire Zone - Vineyard" terrain="Vineyard" level="-99"/>
     <terrain name="Road" terrain="Paved Road"/>   <!-- Dirt/Paved has no effect on LOS -->
+    <terrain name="Stone Rubble RB" terrain="Stone Rubble"/>
+    <terrain name="Wood Rubble RB" terrain="Wooden Rubble"/>
+
+    //hexside
     <hexside name="Drift: 1 ca1" terrain="Hedge" ca="1"/>
     <hexside name="Drift: 2 ca2" terrain="Hedge" ca="2"/>
     <hexside name="Drift: 3 ca3" terrain="Hedge" ca="3"/>
@@ -218,10 +222,11 @@
     <hexside name="Drift: 5 ca5" terrain="Hedge" ca="5"/>
     <hexside name="Drift: 6 ca6" terrain="Hedge" ca="6"/>
     <hexside name="Hedge Overlay" terrain="Hedge" ca="2"/>
-    <hexside name="Wall Overlay" terrain="Wall" ca="3"/>
-    <hexside name="Bocage Overlay" terrain="Bocage" ca="6"/>
-    <terrain name="Stone Rubble RB" terrain="Stone Rubble"/>
-    <terrain name="Wood Rubble RB" terrain="Wooden Rubble"/>
+    <hexside name="Wall Overlay" terrain="Wall" ca="6"/>
+    <hexside name="Bocage Overlay" terrain="Bocage" ca="1"/>
+    <hexside name="StoneBreach Rowhouse Overlay" terrain="Breach" hside="1"/>
+    <hexside name="Wood Breach Rowhouse Overlay" terrain="Breach" hside="1"/>
+    <hexside name="Rowhouse Bar Overlay" terrain="Rowhouse Wall" hside="1"/>
 
     <wreck name="Wreck"/>
     <wreck name="Burnt Out Wreck"/>

@@ -276,7 +276,7 @@ public class Terrain {
     public boolean isHexsideTerrain() {
 
         return LOSCategory == LOSCategories.HEXSIDE ||
-                isRowhouseFactoryWall();
+                isRowhouseFactoryWallOrBreach();
     }
 
     /**
@@ -298,16 +298,16 @@ public class Terrain {
     }
 
     /**
-     * @return true if terrain is a rowhouse or interior factory wall
+     * @return true if terrain is a rowhouse or interior factory wall or a breach
      */
-    public boolean isRowhouseFactoryWall(){
+    public boolean isRowhouseFactoryWallOrBreach(){
 
         return name.equals("Rowhouse Wall") ||
                 name.equals("Rowhouse Wall, 1 Level") ||
                 name.equals("Rowhouse Wall, 2 Level") ||
                 name.equals("Rowhouse Wall, 3 Level") ||
                 name.equals("Rowhouse Wall, 4 Level") ||
-                // code added DR to handle interior factory walls
+                name.equals("Breach") ||
                 name.equals("Interior Factory Wall, 1 Level") ||
                 name.equals("Interior Factory Wall, 2 Level");
 
