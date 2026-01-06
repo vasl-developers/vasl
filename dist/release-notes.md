@@ -11,6 +11,7 @@
 
 ## 🛠 Bug Fixes
  - Fix 1: Slaughter at Ponyri Sapper Squads/Halfsquads broken sides.  
+ - Fix 2: Japanese 9-0 leader fixed.
 
 ---
 
