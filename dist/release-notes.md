@@ -12,6 +12,11 @@
 ## 🛠 Bug Fixes
  - Fix 1: Slaughter at Ponyri Sapper Squads/Halfsquads broken sides.  
  - Fix 2: Japanese 9-0 leader fixed.
+ - Fix 3: Fixed several Null bugs causing VASL to crash.
+ - Fix 4: Fixed bugs when adding overlays via boardpicker. 
+ - Fix 5: Fixed Board data bug causing VASL to crash.
+ - Fix 6: Fixed OBA Window bug causing VASL to crash.
+ - Fix 7: Fixed ROF Die bugs causing crash.  
 
 ---
 
