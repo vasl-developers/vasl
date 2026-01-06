@@ -490,7 +490,7 @@ public class LOSDataEditor {
                 if (s.contains(x, y)) {
                     if (map.onMap(x , y)) {
                         // only apply rowhouse/factory walls to buildings
-                        if (terr.isRowhouseFactoryWall()) {
+                        if (terr.isRowhouseFactoryWallOrBreach()) {
 
                             Terrain currentTerrain = map.getGridTerrain(x, y);
 
