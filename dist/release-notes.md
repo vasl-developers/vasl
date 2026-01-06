@@ -1,5 +1,5 @@
 
-# Release Notes: Version 6.7.2-beta1
+# Release Notes: Version 6.7.2-beta2
 **Release Date:** Dec 14, 2025
 
 ---
@@ -10,11 +10,8 @@
 ---
 
 ## 🛠 Bug Fixes
- - Fix 1: Fixed several Null bugs causing VASL to crash.
- - Fix 2: Fixed bugs when adding overlays via boardpicker. 
- - Fix 3: Fixed Board data bug causing VASL to crash.
- - Fix 4: Fixed OBA Window bug causing VASL to crash.
- - Fix 5: Fixed ROF Die bugs causing crash.  
+ - Fix 1: Slaughter at Ponyri Sapper Squads/Halfsquads broken sides.  
+ - Fix 2: Japanese 9-0 leader fixed.
 
 ---
 
