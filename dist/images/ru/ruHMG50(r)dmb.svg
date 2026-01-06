@@ -63,5 +63,5 @@
 	<image x="0" y="0" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" transform="scale(1.00)" href="svg/ruHMG50(r)dmb.png" xlink:href="svg/ruHMG50(r)dmb.png"/>
 	<text x="44.5" y="11" style="font-size:11px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:end;fill:black;fill-opacity:1;font-family:Nimbus Sans L">dmHMG</text>
 	<text x="34.00" y="24.00" style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L" transform="rotate(-90,34,24)">3PP</text>
-	<text x="44.50" y="18.00" style="font-size:7.00px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:end;fill:black;fill-opacity:1;font-family:Nimbus Sans L">.50</text>
+	<text x="44.50" y="45.00" style="font-size:7.00px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:end;fill:black;fill-opacity:1;font-family:Nimbus Sans L">.50</text>
 </svg>

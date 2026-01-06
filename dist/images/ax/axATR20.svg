@@ -14,25 +14,25 @@
 				font-family: Nimbus Sans L;
 				font-weight: normal;
 				font-style: normal;
-				src: url("../fonts/NimbusSanL-Reg.ttf") format("ttf");
+				src: url("../../fonts/NimbusSanL-Reg.ttf") format("ttf");
 			}
 			@font-face {
 				font-family: Nimbus Sans L;
 				font-weight: bold;
 				font-style: normal;
-				src: url("../fonts/NimbusSanL-Bol.ttf") format("ttf");
+				src: url("../../fonts/NimbusSanL-Bol.ttf") format("ttf");
 			}
 			@font-face {
 				font-family: Nimbus Sans L;
 				font-weight: normal;
 				font-style: italic;
-				src: url("../fonts/NimbusSanL-RegIta.ttf") format("ttf");
+				src: url("../../fonts/NimbusSanL-RegIta.ttf") format("ttf");
 			}
 			@font-face {
 				font-family: Nimbus Sans L;
 				font-weight: bold;
 				font-style: italic;
-				src: url("../fonts/NimbusSanL-BolIta.ttf") format("ttf");
+				src: url("../../fonts/NimbusSanL-BolIta.ttf") format("ttf");
 			}
 		</style>
 	</defs>
@@ -59,5 +59,14 @@
 	</g>
 	<!-- Unit Depiction -->
 	<image x="0" y="0" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" transform="scale(1.00)" href="svg/axATR20.png" xlink:href="svg/axATR20.png"/>
-	<text x="44.5" y="11" style="font-size:11px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:end;fill:black;fill-opacity:1;font-family:Nimbus Sans L"></text>
+	<text x="44.5" y="11" style="font-size:11px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:end;fill:black;fill-opacity:1;font-family:Nimbus Sans L">ATR</text>
+	<text x="44.5" y="42.0" style="font-size:11px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:end;fill:black;fill-opacity:1;font-family:Nimbus Sans L">1-12</text>
+	<text x="32.00" y="24.00" style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L" transform="rotate(-90,32,24)">5PP</text>
+	<!-- ROF -->
+	<svg x="33.00" y="14.00" width="12.00" height="12.00" style="overflow:visible">
+		<rect x="1" y="1" width="10.5" height="10.5" style="display:inline;fill:none;fill-opacity:0.0;stroke:black;stroke-width:0.75;stroke-dasharray:none;stroke-opacity:1"/>
+		<text x="50%" y="80%" style="font-size:9px;font-style:normal;font-variant:normal;font-weight:bold;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L">2</text>
+	</svg>
+	<text x="10.00" y="36.00" style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L" transform="rotate(-90,10,36)"><tspan style="text-decoration:underline">20</tspan>L</text>
+	<text x="10.00" y="20.00" style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;fill:black;fill-opacity:1;font-family:Nimbus Sans L" transform="rotate(-90,10,20)">M36</text>
 </svg>
