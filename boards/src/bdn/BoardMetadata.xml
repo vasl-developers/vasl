@@ -26,8 +26,8 @@
 
 <boardMetadata 
 	name="n" 
-	version="6.3" 
-	versionDate="Jan 2023" 
+	version="6.4" 
+	versionDate="2026/01/06" 
 	author="BK" 
 	boardImageFileName="bdn.gif" 
 	hasHills="FALSE" 
@@ -91,6 +91,7 @@
 		<overlaySSRule name="NoWoodsRoads" image="n_NoWoodsRoads.gif" x="744" y="315" />
 		<overlaySSRule name="RoadsToPaths" image="n_RoadsToPaths.gif" x="744" y="315" />
 		<overlaySSRule name="NoRoads" image="n_NoRoads.gif" x="1" y="1" />
+		<overlaySSRule name="SSO_S66" image="n_SSO_S66.gif" x="0" y="0" />
 	</overlaySSRules>
 	
 	<colors>
