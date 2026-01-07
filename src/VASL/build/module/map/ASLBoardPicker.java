@@ -18,6 +18,7 @@
  */
 package VASL.build.module.map;
 
+import VASL.LOS.Map.ASLPersistElevation;
 import VASL.build.module.map.boardArchive.SSRControlsFile;
 import VASL.build.module.map.boardPicker.*;
 import VASSAL.Info;
@@ -437,19 +438,28 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
 
                         // Determine if the board is "Updated" or "New"
                         String status = "";
-                        LocalDate versionDate = LocalDate.parse(versionDateStr, formatter);
-
-                        // Check if the board was updated within the last 90 days
-                        if (ChronoUnit.DAYS.between(versionDate, today) <= DAYS_THRESHOLD) {
-                            status = "Updated";
-                        }
-
-                        // If it wasn't updated recently, check if it was issued within the last 90 days
-                        if (!issuedDateStr.isEmpty()) {
-                            LocalDate issuedDate = LocalDate.parse(issuedDateStr, formatter);
-                            if (ChronoUnit.DAYS.between(issuedDate, today) <= DAYS_THRESHOLD) {
-                                status = "New";  // "New" takes precedence over "Updated"
+                        // If the date string is null, empty, or invalid, ignore and don't modify the status variable
+                        try {
+                            LocalDate versionDate = LocalDate.parse(versionDateStr, formatter);
+                            // Check if the board was updated within the last 90 days
+                            if (ChronoUnit.DAYS.between(versionDate, today) <= DAYS_THRESHOLD) {
+                                status = "Updated";
                             }
+                            // If it wasn't updated recently, check if it was issued within the last 90 days
+                            if (!issuedDateStr.isEmpty()) {
+                                LocalDate issuedDate = LocalDate.parse(issuedDateStr, formatter);
+                                if (ChronoUnit.DAYS.between(issuedDate, today) <= DAYS_THRESHOLD) {
+                                    status = "New";  // "New" takes precedence over "Updated"
+                                }
+                            }
+
+                        } catch (DateTimeParseException ex) {
+                            // for the benefit of the log
+                            logger.warn("", ex);
+                            // for the benefit of the user
+                            //GameModule.getGameModule().warn("Error parsing board date: please report using Submit Suggestion from the Help Menu");
+                            // for the benefit of the app
+                            // status text will remain unchanged, no action required
                         }
 
                         // If a status was determined (either "Updated" or "New"), append it to the board entry
@@ -916,6 +926,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             terrain.setup(currentBoards);
         }
         else {
+            if (preservelevels) {;}
             super.actionPerformed(e);
         }
     }
@@ -1274,10 +1285,14 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
 
         public void actionPerformed(ActionEvent e) {
             if ("Done".equals(e.getActionCommand())) {
+                if (preservelevels){
+                    ASLPersistElevation aslpe = new ASLPersistElevation();
+                    boolean persistelevation = aslpe.togglePersistElevation();
+                }
                 setVisible(false);
                 return;
             }
-            preservelevels = preslevels.isSelected();
+            if(preslevels.isSelected()) {preservelevels = true;}
             try {
                 BoardSlot b = newmatch(bdName.getSelectedIndex());
                 if (b == null){

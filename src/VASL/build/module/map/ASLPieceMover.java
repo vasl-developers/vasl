@@ -505,7 +505,7 @@ public class ASLPieceMover extends PieceMover {
                 comm = comm.append(report);
                 // trigger auto-reveal fortifications
                 HIPFortification hipfort = map.getComponentsOf(HIPFortification.class).get(0);
-                hipfort.runupdate(allDraggedPieces);
+                if (hipfort.isEnabled()) {hipfort.runupdate(allDraggedPieces);}
 
             }
         }
@@ -1095,8 +1095,10 @@ public class ASLPieceMover extends PieceMover {
                 final Point pos = relativePositions.get(index++);
 
                 final ASLMap map = (ASLMap) piece.getMap();
-                double pZoom = ((ASLMap)map).PieceScalerBoardZoom(piece);
-
+                double pZoom = 1.0;
+                if (map != null) {
+                    pZoom = map.PieceScalerBoardZoom(piece);
+                }
 
                 if (piece instanceof Stack) {
                     stackCount = 0;

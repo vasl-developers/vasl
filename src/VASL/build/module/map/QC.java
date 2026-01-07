@@ -1416,8 +1416,12 @@ public class QC implements Buildable, GameComponent {
       }
 
       if (sniperFinderButton != null && sniperFinderButton.getActionListeners().length == 0) {
-        sniperFinderButton.setIcon(new ImageIcon(Op.load("sniper").getImage()));
-
+        if (Op.load("sniper").getImage() != null){
+          sniperFinderButton.setIcon(new ImageIcon(Op.load("sniper").getImage()));
+        }
+         else  {
+          // can we do anything to fix this at runtime?
+        }
         ActionListener al = e -> {
           ASLSniperFinder sniperFinder = map.getComponentsOf(ASLSniperFinder.class).iterator().next();
 

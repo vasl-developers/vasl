@@ -84,6 +84,7 @@ public class Concealable extends Obscurable implements EditablePiece {
   }
 
   protected void drawObscuredToMe(Graphics g, int x, int y, Component obs, double zoom) {
+    if (obs == null) {return;} // error handling - if obs is null then loadImages(obs) will cause NPE
     loadImages(obs);
     int size = (int) (zoom * imageSize.width);
 
@@ -99,6 +100,7 @@ public class Concealable extends Obscurable implements EditablePiece {
   }
 
   protected void drawObscuredToOthers(Graphics g, int x, int y, Component obs, double zoom) {
+    if (obs == null) {return;} // error handling - if obs is null then loadImages(obs) will cause NPE
     loadImages(obs);
     piece.draw(g, x, y, obs, zoom);
     int size = (int) (zoom * imageSize.width);
@@ -292,6 +294,7 @@ public class Concealable extends Obscurable implements EditablePiece {
   private ScaledImagePainter conceal = null;
 
   private void loadImages(Component obs) {
+    // error handling - if obs is null then loadImages(obs) will cause NPE; handle in calling method
     if (concealedToMe == null) {
       //try {
         if (imageName.contains(".")) {  // imagename already has file extension - either .svg or .gif

@@ -67,14 +67,14 @@
 		<boarddata name="32" version="7.3" versionDate="2025/10/27" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="33" version="6.8" versionDate="2025/07/08" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="34" version="7.0" versionDate="2025/06/02" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="35" version="6.5" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="35" version="6.6" versionDate="2025/12/15" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="36" version="7.0" versionDate="2024/12/13" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="37" version="6.5" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="38" version="6.5" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="38" version="6.6" versionDate="2025/12/15" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="39" version="7.1" versionDate="2025/10/28" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="40" version="7.7" versionDate="2025/02/03" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="41" version="7.0" versionDate="2024/12/23" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="42" version="6.9" versionDate="2024/12/23" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="42" version="7.1" versionDate="2025/12/22" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="43" version="6.7" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="44" version="6.7" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="45" version="6.8" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
@@ -183,14 +183,14 @@
 		<boarddata name="i" version="6.4" versionDate="2023/01/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
 		<boarddata name="iSK" version="6.1" versionDate="2023/11/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="j" version="6.4" versionDate="2023/01/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
-		<boarddata name="jSK" version="6.1" versionDate="2023/11/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="jSK" version="6.2" versionDate="2026/01/07" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="k" version="6.4" versionDate="2023/01/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
 		<boarddata name="kSK" version="6.5" versionDate="2023/11/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="l" version="6.4" versionDate="2023/01/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
 		<boarddata name="lSK" version="6.1" versionDate="2023/11/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="m" version="6.4" versionDate="2023/11/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="mdx" version="6.2" versionDate="2023/04/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
-		<boarddata name="n" version="6.3" versionDate="2023/01/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="n" version="6.4" versionDate="2026/01/06" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="ndx" version="6.0" versionDate="2022/06/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
 		<boarddata name="o" version="6.6" versionDate="2023/11/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="odx" version="6.1" versionDate="2022/11/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
@@ -198,15 +198,15 @@
 		<boarddata name="pdx" version="6.0" versionDate="2024/03/25" description="" boardType="Deluxe" publisher="MMP" issued="" />
 		<boarddata name="q" version="6.5" versionDate="2023/01/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="qdx" version="6.0" versionDate="2024/03/25" description="" boardType="Deluxe" publisher="MMP" issued="" />
-		<boarddata name="r" version="6.5" versionDate="2023/11/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="r" version="6.6" versionDate="2026/01/07" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="rdx" version="6.0" versionDate="2024/03/25" description="" boardType="Deluxe" publisher="MMP" issued="" />
 		<boarddata name="s" version="6.6" versionDate="2023/11/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="t" version="6.4" versionDate="2023/01/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="u" version="6.4" versionDate="2023/01/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="v" version="6.5" versionDate="2023/01/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="w" version="6.5" versionDate="2023/11/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
-		<boarddata name="x" version="6.5" versionDate="2023/11/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
-		<boarddata name="y" version="6.4" versionDate="2023/01/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="x" version="6.6" versionDate="2026/01/07" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="y" version="6.5" versionDate="2026/01/06" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="z" version="6.7" versionDate="2023/01/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 
 	</coreBoards>
@@ -280,8 +280,9 @@
 		<boarddata name="FrFA" version=" 6.2" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="FrF" issued="" />
 		<boarddata name="HZ1" version=" 6.0" versionDate="2022/12/30" description="HazMo1" boardType="Geoboard" publisher="HazMo" issued="2023/10/05"/>
 		<boarddata name="HZ2" version=" 6.1" versionDate="2023/11/30" description="HazMo2" boardType="Geoboard" publisher="HazMo" issued="2023/10/05"/>
-		<boarddata name="HZ3a" version=" 2.0" versionDate="2024/12/11" description="HazMo5" boardType="Geoboard" publisher="HazMo" issued="2024/12/11"/>
-		<boarddata name="HZ3b" version=" 2.2" versionDate="2024/12/11" description="HazMo5" boardType="Geoboard" publisher="HazMo" issued="2024/12/11"/>
+		<boarddata name="HZ3a" version=" 2.0" versionDate="2024/12/11" description="HazMo3" boardType="Geoboard" publisher="HazMo" issued="2024/12/11"/>
+		<boarddata name="HZ3b" version=" 2.2" versionDate="2024/12/11" description="HazMo3" boardType="Geoboard" publisher="HazMo" issued="2024/12/11"/>
+		<boarddata name="HZ4a" version=" 6.0" versionDate="2025/12/31" description="HazMo4" boardType="Geoboard" publisher="HazMo" issued="2025/12/31"/>
 		<boarddata name="Kreta" version=" 1.0" versionDate="2008/08/30" description="Operation Merkur" boardType="HASL" publisher="HOB" issued="" />
 		<boarddata name="OTO" version=" 1.0" versionDate="2008/08/30" description="Onslaught to Orsha" boardType="HASL" publisher="HOB" issued="" />
 		<boarddata name="KOTH" version="1.0" versionDate="2008/08/30" description="King of the Hill" boardType="HASL" publisher="HOB" issued="" />
@@ -527,7 +528,12 @@
 		<boarddata name="AF_PRK_A" version="1.0" versionDate="2024/01/30" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
 		<boarddata name="AF_PRK_S" version="1.0" versionDate="2024/01/30" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
 		<boarddata name="AF_PRK_Y" version="1.0" versionDate="2024/01/30" description="PROKHOROVKA" boardType="HASL" publisher="AF" issued="2024/01/30" />
-		<boarddata name="AF_Sollum" version="1.1" versionDate="2024/01/30" description="Brevity Assault" boardType="HASL" publisher="AF" issued="2024/01/30" />
+		<boarddata name="AF_ZAM_2" version="1.0" versionDate="2025/12/24" description="ZAMOLY 1" boardType="HASL" publisher="AF" issued="2025/12/24" />
+		<boarddata name="AF_ZAM_3" version="1.0" versionDate="2025/12/24" description="ZAMOLY 1" boardType="HASL" publisher="AF" issued="2025/12/24" />
+		<boarddata name="AF_ZAM_5" version="1.0" versionDate="2025/12/24" description="ZAMOLY 1" boardType="HASL" publisher="AF" issued="2025/12/24" />
+		<boarddata name="AF_ZAM_6" version="1.0" versionDate="2025/12/24" description="ZAMOLY 1" boardType="HASL" publisher="AF" issued="2025/12/24" />
+		<boarddata name="AF_ZAM_8" version="1.0" versionDate="2025/12/24" description="ZAMOLY 1" boardType="HASL" publisher="AF" issued="2025/12/24" />
+		<boarddata name="AF_ZAM_9" version="1.0" versionDate="2025/12/24" description="ZAMOLY 1" boardType="HASL" publisher="AF" issued="2025/12/24" />
 		<boarddata name="LS" version="1.0" versionDate="2025/04/08" description="Lysyanka" boardType="HASL" publisher="" issued="2025/04/08" />
 		<boarddata name="BW" version="1.0" versionDate="2025/07/13" description="Brickworks" boardType="HASL" publisher="" issued="2025/07/13" />
 		<boarddata name="DPN5" version="6.1" versionDate="2025/07/29" description="" boardType="" publisher="" issued="2025/07/29" />

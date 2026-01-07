@@ -194,7 +194,15 @@ public class Concealment extends Decorator implements EditablePiece {
       String pieceName = piece.getType();
       //Get the name of the nationality of the concealment counter
       int index = pieceName.indexOf("/");
-      String name = pieceName.substring(index-2,index+3) + "blank";
+      // error handling for incorrect index value
+      String name = "";
+      try {
+        name = pieceName.substring(index-2,index+3) + "blank";
+      } catch (StringIndexOutOfBoundsException e) {
+        GameModule.getGameModule().warn("Could not find correct concealment counter. Drag from Counter Palette Window.");
+        index = 2;
+        name = pieceName.substring(index-2,index+3) + "blank";
+      }
       int pixelSize;
       if (pieceName.contains("58")) {
         name = name + "58";

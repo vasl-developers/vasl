@@ -74,7 +74,8 @@ class DiceRollPanelHandler {
     private final boolean isAlliedSAN;
 
     public DiceRollPanelHandler(long roll, long birth, String categName, String secondMsg, String userNick, String sanDescr, int firstDie, int secondDie, int thirdDie, int rofDie) {
-
+        // this class handles the "dice over the map" VASL dice
+        // dice displayed in the Chat window are handled by ASLDiceBot
         rollCount = roll;
         birthTime = birth;
         isAlive = true;
@@ -818,7 +819,7 @@ class DiceRollQueueHandler implements ActionListener, ChatterListener {
         int rolling_dice_x = last_dice_x;
 
         // draw the dice
-        if (drPanel.getRofDieResult() != -1) {
+        if (drPanel.getRofDieResult() != -1 && drPanel.getRofDieResult() != 0) {
             g.drawImage(rofDieImages[drPanel.getRofDieResult() - 1], rolling_dice_x, local_dice_y, null);
             rolling_dice_x -= dice_x_gap;
         }
