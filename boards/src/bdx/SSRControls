@@ -1,0 +1,8 @@
+<SSRControls>
+ <Option name="Board x Special overlays">
+ <Checkbox name="">
+         <entry name="S031: Going To New York!" rule="x_SSO_S31" text="scenario S031 SSO"/>
+ </Checkbox>
+
+   </Option>
+</SSRControls>
