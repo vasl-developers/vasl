@@ -1,0 +1,8 @@
+<SSRControls>
+ <Option name="Board n Special overlays">
+ <Checkbox name="">
+         <entry name="S066: Bailey's Bridge" rule="SSO_S66" text="scenario S066 SSO"/>
+ </Checkbox>
+
+   </Option>
+</SSRControls>
