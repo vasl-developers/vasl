@@ -1,0 +1,8 @@
+<SSRControls>
+ <Option name="Board y Special overlays">
+ <Checkbox name="">
+         <entry name="S019: Purple Heart Lane" rule="SSO_S19" text="scenario S019 SSO"/>
+ </Checkbox>
+
+   </Option>
+</SSRControls>
