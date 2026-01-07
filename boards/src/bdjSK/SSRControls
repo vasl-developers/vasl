@@ -1,0 +1,8 @@
+<SSRControls>
+ <Option name="Board jSK Special overlays">
+ <Checkbox name="">
+         <entry name="S082: Four Hours More" rule="SSO_S82" text="scenario S082 SSO"/>
+ </Checkbox>
+
+   </Option>
+</SSRControls>
