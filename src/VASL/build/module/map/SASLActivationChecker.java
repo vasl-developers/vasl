@@ -71,6 +71,7 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
         "Allied Minors",
         "Axis Minors",
         "China",
+        "Finland",
         "France",
         "Germany",
         "Great Britain",
@@ -80,6 +81,11 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
         "Russia",
         "US/USMC 44+",
         "USMC 41-43",
+        "BCFK",
+        "CPVA",
+        "KPA",
+        "OUNC",
+        "South Korea",
     };
     //
     // Values correspond to the layer/level displayed by the suspect counter.
@@ -97,6 +103,7 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
         {  2,  2,  3,  4,  5,  5,  6,  7,  7,  7,  7,  8,  8,  8,  8,  8,  8 }, // Allied Minors
         {  2,  2,  3,  4,  5,  6,  6,  7,  7,  8,  8,  8,  8,  8,  8,  8,  8 }, // Axis Minors
         {  2,  2,  3,  4,  5,  6,  6,  7,  7,  8,  8,  8,  8,  8,  8,  8,  8 }, // China
+        {  2,  2,  3,  4,  5,  6,  6,  7,  7,  8,  8,  8,  8,  8,  8,  8,  8 }, // Finland
         {  2,  2,  3,  4,  5,  5,  6,  7,  7,  7,  7,  8,  8,  8,  8,  8,  8 }, // France (Vichy)
         {  2,  2,  3,  4,  4,  5,  5,  6,  6,  7,  7,  7,  7,  8,  8,  8,  8 }, // Germany
         {  2,  2,  3,  4,  4,  5,  6,  6,  7,  7,  7,  8,  8,  8,  8,  8,  8 }, // Great Britain
@@ -106,6 +113,11 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
         {  2,  2,  3,  4,  5,  6,  6,  7,  7,  8,  8,  8,  8,  8,  8,  8,  8 }, // Russia
         {  2,  2,  3,  4,  4,  5,  5,  6,  6,  7,  7,  7,  7,  8,  8,  8,  8 }, // US/USMC 44+
         {  2,  2,  3,  4,  4,  5,  6,  6,  7,  7,  7,  8,  8,  8,  8,  8,  8 }, // USMC 41-43
+        {  2,  2,  3,  4,  4,  5,  5,  6,  6,  7,  7,  8,  8,  8,  8,  8,  8 }, // BCFK
+        {  2,  2,  3,  4,  5,  6,  7,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8 }, // CPVA
+        {  2,  2,  3,  4,  5,  6,  6,  7,  7,  8,  8,  8,  8,  8,  8,  8,  8 }, // KPA
+        {  2,  2,  3,  4,  5,  6,  7,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8 }, // OUNC
+        {  2,  2,  3,  4,  5,  6,  6,  7,  7,  8,  8,  8,  8,  8,  8,  8,  8 }, // South Korea
     };
 
     private static final int[][] activationRangesVehicles = {
@@ -114,6 +126,7 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
             {  2,  2,  3,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // Allied Minors
             {  2,  2,  3,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // Axis Minors
             {  2,  2,  3,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // China
+            {  2,  2,  3,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // Finland
             {  2,  2,  3,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // France (Vichy)
             {  2,  2,  3,  4,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // Germany
             {  2,  2,  3,  4,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // Great Britain
@@ -123,31 +136,24 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
             {  2,  2,  3,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // Russia
             {  2,  2,  3,  4,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // US/USMC 44+
             {  2,  2,  3,  4,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // USMC 41-43
+            {  2,  2,  3,  4,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // BCFK
+            {  2,  2,  3,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // CPVA
+            {  2,  2,  3,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // KPA
+            {  2,  2,  3,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // OUNC
+            {  2,  2,  3,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // South Korea
     };
-    /* TODO: NOT NEEDED?
-    private static final int[][] activationRangesTrackedVehicles = {
-            // 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16 }, // Ranges
-            {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // None
-            {  2,  2,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // Allied Minors
-            {  2,  2,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // Axis Minors
-            {  2,  2,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // China
-            {  2,  2,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // France (Vichy)
-            {  2,  2,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // Germany
-            {  2,  2,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // Great Britain
-            {  2,  2,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // Italy
-            {  2,  2,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // Japan
-            {  2,  2,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // Partisan
-            {  2,  2,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // Russia
-            {  2,  2,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // US/USMC 44+
-            {  2,  2,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, // USMC 41-43
-    };
-    TODO: NOT NEEDED? */
     // Activation Ranges (end)
 
     enum CounterType {
         NON_VEHICLE,
-        VEHICLE,
-        TRACKED_VEHICLE
+        TRACKED_VEHICLE,
+        VEHICLE
+    }
+
+    enum VehicleStatus {
+        BUTTONED_UP,
+        CREW_EXPOSED,
+        UNARMORED
     }
     /**
      * @return true if SASLActivationChecker should be active.
@@ -301,8 +307,10 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
         for (GamePiece aP : p) {
             if (aP instanceof Stack) {
                 for (PieceIterator pi = new PieceIterator(((Stack) aP).getPiecesIterator()); pi.hasMoreElements(); ) {
-                    if (pi.nextPiece().getName().contains("NVR")) {
-                        nvr = pi.nextPiece();
+                    GamePiece tempPiece = pi.nextPiece();
+
+                    if (tempPiece.getName().contains("NVR")) {
+                        nvr = tempPiece;
                         break outerloop;
                     }
                 }
@@ -317,23 +325,23 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
         int result = -1;
 
         if (nvr != null) {
-            result = Integer.parseInt(nvr.getName().replace("NVR ", ""));
+            String name = (String)nvr.getProperty(BasicPiece.BASIC_NAME);
+
+            if (name.equals("NVR")) { // Protect ourselves from old "NVR" counters.
+                result = 1;
+            } else if (name.equals("NVR7")) { // Protect ourselves from old "NVR7" counters.
+                result = 7;
+            } else {
+                result = Integer.parseInt(name.replace("NVR ", ""));
+            }
         }
 
         return result;
     }
 
     private void updateNightStatus() {
-        if ((sacMap == null) && !isSacExtensionPresent()) {
-            return; // Nothing to see here, move along ...
-        }
-
-        Environment env = new Environment();
-
-        if (env.isNight()) {
+        if ((sacMap != null) || isSacExtensionPresent()) {
             nvr = getNvr();
-        } else {
-            nvr = -1;
         }
     }
 
@@ -498,7 +506,7 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
                         CounterType counterType = getCounterType(testPiece);
 
                         if ((range = losRange(testPiece, piece, counterType)) >= 0) {
-                            setPieceSpotted(piece, range, true, counterType);
+                            setPieceSpotted(testPiece, piece, range, true, counterType);
                         }
                     }
                 }
@@ -506,7 +514,7 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
                 for (GamePiece testPiece : movingSuspectCounters) {
                     if (!(testPiece == piece) && isFriendlyUnit(piece) && !piece.getName().contains("Suspect")) {
                         if ((range = losRange(testPiece, piece, CounterType.NON_VEHICLE)) >= 0) {
-                            setPieceSpotted(testPiece, range, false, CounterType.NON_VEHICLE);
+                            setPieceSpotted(piece, testPiece, range, false, CounterType.NON_VEHICLE);
                         }
                     }
                 }
@@ -514,15 +522,32 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
         }
     }
 
+    private int getVehicleRangeBracket(GamePiece viewed, GamePiece viewer, CounterType counterType, int range) {
+        int result = activationRangesVehicles[getActivationRangesIndex(getSuspectNationality(viewer))][range];
+        VehicleStatus vehicleStatus = VehicleStatus.UNARMORED;
+
+        if (viewed.getName().contains("BU")) {
+            vehicleStatus = VehicleStatus.BUTTONED_UP;
+        } else if (viewed.getName().contains("CE")) {
+            vehicleStatus = VehicleStatus.CREW_EXPOSED;
+        }
+
+        if ((result > 2) && (VehicleStatus.BUTTONED_UP == vehicleStatus)) {
+            result = 0;
+        }
+
+        return result;
+    }
     /**
      * Marks a piece as spotted so it will be drawn on the mainMap
-     * @param piece the piece
+     * @param viewed the piece being viewed
+     * @param viewer the piece doing the viewing
      */
-    private void setPieceSpotted(GamePiece piece, int range, boolean friendly, CounterType counterType) {
-        if (!Decorator.getInnermost(piece).getName().isEmpty()) {
-            if (piece instanceof Decorator || piece instanceof BasicPiece) {
-                if (!pieceList.contains(piece)) {
-                    pieceList.add(piece);
+    private void setPieceSpotted(GamePiece viewed, GamePiece viewer, int range, boolean friendly, CounterType counterType) {
+        if (!Decorator.getInnermost(viewer).getName().isEmpty()) {
+            if (viewer instanceof Decorator || viewer instanceof BasicPiece) {
+                if (!pieceList.contains(viewer)) {
+                    pieceList.add(viewer);
 
                     if (friendly) {
                         int rangeBracket = 0;
@@ -530,21 +555,20 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
                         switch (counterType) {
                             case VEHICLE:
                             case TRACKED_VEHICLE:
-                                rangeBracket = activationRangesVehicles[getActivationRangesIndex(getSuspectNationality(piece))][range];
-                                // TODO: not needed? rangeBracket = activationRangesTrackedVehicles[getActivationRangesIndex(getSuspectNationality(piece))][range];
+                                rangeBracket = getVehicleRangeBracket(viewed, viewer, counterType, range);
                                 break;
 
                             default:
-                                rangeBracket = activationRangesInfantry[getActivationRangesIndex(getSuspectNationality(piece))][range];
+                                rangeBracket = activationRangesInfantry[getActivationRangesIndex(getSuspectNationality(viewer))][range];
                                 break;
                         }
 
                         if (rangeBracket != 0) {
-                            piece.setProperty("ActivationFlag", 2);
-                            piece.setProperty("RangeBracket", rangeBracket);
+                            viewer.setProperty("ActivationFlag", 2);
+                            viewer.setProperty("RangeBracket", rangeBracket);
                         }
                     } else {
-                        piece.setProperty("ActivationFlag", 2);
+                        viewer.setProperty("ActivationFlag", 2);
                     }
                 }
             }
@@ -664,12 +688,14 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
         for (GamePiece tempPiece : allPieces) {
             if (tempPiece instanceof Stack) {
                 for (PieceIterator pi = new PieceIterator(((Stack)tempPiece).getPiecesIterator()); pi.hasMoreElements(); ) {
-                    if (true == (result = illuminates(piece, pi.nextPiece()))) {
+                    result = illuminates(piece, pi.nextPiece());
+                    if (result) {
                         break outerloop;
                     }
                 }
             } else {
-                if (true == (result = illuminates(piece, tempPiece))) {
+                result = illuminates(piece, tempPiece);
+                if (result) {
                     break outerloop;
                 }
             }
@@ -714,7 +740,6 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
                     break;
 
                 default:
-                    GameModule.getGameModule().getChatter().send("gemhack: WARNING! isVehicle('" + piece.getName() +"') got " + prop.toString());
                     break;
             }
         }
@@ -722,18 +747,18 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
         return result;
     }
     /**
-     * Can piece1 see piece2?
+     * Can viewed see viewer?
      * Sub-classes could override this method to implement custom sighting rules
-     * @param piece1 the piece being viewed
-     * @param piece2 the piece doing the viewing
-     * @return the range if piece1 can see piece2, -1 otherwise
+     * @param viewed the piece being viewed
+     * @param viewer the piece doing the viewing
+     * @return the range if viewing piece can see viewed piece, -1 otherwise
      */
-    public int losRange(GamePiece piece1, GamePiece piece2, CounterType counterType) {
+    private int losRange(GamePiece viewed, GamePiece viewer, CounterType counterType) {
         int range = -1;
 
-        if (piece1 != null && piece2 != null) {
-            Location l1 = VASLGameInterface.getLocation(piece1);
-            Location l2 = VASLGameInterface.getLocation(piece2);
+        if (viewed != null && viewer != null) {
+            Location l1 = VASLGameInterface.getLocation(viewed);
+            Location l2 = VASLGameInterface.getLocation(viewer);
 
             if (l1 != null && l2 != null) {
                 // check the LOS
@@ -758,12 +783,12 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
                     }
 
                     if (myNvr >= 0) {
-                        if (illuminated(piece2)) {
-                            if (!illuminated(piece1)) {
+                        if (illuminated(viewer)) {
+                            if (!illuminated(viewed)) {
                                 range = -1;
                             }
                         } else if (range > myNvr) {
-                            if (!illuminated(piece1)) {
+                            if (!illuminated(viewed)) {
                                 range = -1;
                             }
                         }
@@ -923,9 +948,13 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
     }
 
     public void runUpdate(java.util.List<GamePiece> allDraggedPieces) {
-        if (mainMap.getVASLMap() == null){return;} // error handling; SASLActivationChecker only works on LOS enabled maps
-        ArrayList movedUnits = (ArrayList)allDraggedPieces;
-        updateView(movedUnits);
+        if (null != mainMap.getVASLMap()) {
+            ArrayList<GamePiece> movedUnits = (ArrayList<GamePiece>)allDraggedPieces;
+
+            if (null != movedUnits) {
+                updateView(movedUnits);
+            }
+        }
     }
 
     public void setup(boolean gameStarting) {

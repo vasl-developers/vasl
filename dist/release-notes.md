@@ -5,8 +5,8 @@
 ---
 
 ## 🚀 New Features
-
- - 
+ - SASL support for Finnish and Forgotten War nationalities (BCFK, CPVA, KPA, OUNC, SK). Use the existing U.S. Army S? for Korea.
+ 
 ---
 
 ## 🛠 Bug Fixes
