@@ -3,7 +3,7 @@
 	<!--
 		Note #:		67.2
 		Name:		mSPW S307(f) <i>SPA</i>
-		Version:	1.0
+		Version:	1.1
 
 		Author(s): Gordon Molek, Klas Malmström, Alan Bills
 		Tester(s): Alan Bills, Alan Cannamore, Doug Rimmer
@@ -93,7 +93,8 @@
 	</svg>
 	<!-- Movement -->
 	<svg x="30.00" y="3.00" width="27.00" height="12.00" style="overflow:visible">
-		<rect x="6.00" width="21.00" height="12.00" y="0.00" ry="6.00" style="display:inline;fill:white;fill-opacity:1;stroke:none;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"></rect>
+		<circle cx="10.00" cy="75%" r="3.00" style="display:inline;fill:white;fill-opacity:1;stroke:none;stroke-width:6;stroke-dasharray:none;stroke-opacity:1"></circle>
+		<rect x="12.00" y="0.00" width="15.00" height="12.00" ry="6.00" style="display:inline;fill:white;fill-opacity:1;stroke:none;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"></rect>
 		<text x="97%" y="84.00%" dominant-baseline="auto" text-anchor="end" style="font-size:11.00px;font-weight:bold;font-family:Nimbus Sans L;fill:#e10000">10</text>
 	</svg>
 </svg>

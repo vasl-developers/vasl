@@ -21,8 +21,8 @@
 -->
 <boardMetadata 
 	name="jSK" 
-	version="6.1" 
-	versionDate="Nov 2023" 
+	version="6.2" 
+	versionDate="2026/01/07" 
 	author="TR" 
 	boardImageFileName="bdjSK.gif" 
 	hasHills="FALSE" 
@@ -205,6 +205,7 @@
 <overlaySSRule name="NoWoodsRoads" image="bdjSK_NoWoodsRoads.gif" x="1197" y="523" />
 <overlaySSRule name="RoadsToPaths" image="bdjSK_WoodsRoadsToPaths.gif" x="1197" y="523" />
 <overlaySSRule name="NoRoads" image="bdjSK_NoRoads.gif" x="0" y="0" />
+<overlaySSRule name="SSO_S82" image="jSK_SSO_S82.png" x="0" y="0" />
 	</overlaySSRules>
 	
 	<colors>
