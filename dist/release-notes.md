@@ -10,7 +10,8 @@
 ---
 
 ## 🛠 Bug Fixes
- - Fix 1: Removed assault fire underscore from British AE and E half squads. 
+ - Fix 1: Removed assault fire underscore from British AE and E half squads.
+ - Fix 2: Display Bulgarian 70* INF Gun in Counter Palette properly. 
 
 ---
 
