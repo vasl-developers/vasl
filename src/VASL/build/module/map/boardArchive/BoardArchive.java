@@ -179,12 +179,12 @@ public class BoardArchive {
 
     /**
      * Reads the map from disk using terrain types read from the board archive
+     * Use only for losgui
      * @return <code>Map</code> object. Null if the LOS data does not exist or an error occurred.
      */
-    public Map getLOSData(String offset, boolean isCropping){
+    public Map readLOSData(String offset, boolean isCropping){
         //ToDo fix this
-        return null;
-        //return getLOSData(sharedBoardMetadata.getTerrainTypes(), offset, isCropping, 0);
+        return getLOSData(sharedBoardMetadata.getTerrainTypes(), offset, isCropping, 0);
     }
 
     /**
@@ -192,9 +192,9 @@ public class BoardArchive {
      * @return <code>Map</code> object. Null if the LOS data does not exist or an error occurred.
      */
     //ToDo delete this method
-    // No longer used due to changes to los-enabled crop/flip - can be deleted when changes complete
+    // Use only for LOSGUI
     @Deprecated(since="6.7.1", forRemoval=true)
-    public Map getLOSData(HashMap<String, Terrain> terrainTypes, boolean isCropping, double gridadj){
+    public Map getLOSData(HashMap<String, Terrain> terrainTypes, String offset, boolean isCropping, double gridadj){
 
         try (ZipFile archive = new ZipFile(qualifiedBoardArchive)) {  //open the LOSData file of the board
             try (ObjectInputStream infile = new ObjectInputStream(
@@ -210,7 +210,7 @@ public class BoardArchive {
                 if (isGEO()) {
                     map = new Map(widthInHexes, heightInHexes, terrainTypes, "", "", isCropping); // passboardgridconfig, passcropgridconfig, isCropping);
                 } else {
-                    map = new Map(getHexWidth(), getHexHeight(), widthInHexes, heightInHexes, getA1CenterX(), getA1CenterY(), gridWidth, gridHeight, terrainTypes, "", "", isCropping); //passboardgridconfig, passcropgridconfig, isCropping);
+                    //map = new Map(getHexWidth(), getHexHeight(), widthInHexes, heightInHexes, getA1CenterX(), getA1CenterY(), gridWidth, gridHeight, terrainTypes, "", "", isCropping); //passboardgridconfig, passcropgridconfig, isCropping);
                 }
 
                 // read the terrain and elevations grids
