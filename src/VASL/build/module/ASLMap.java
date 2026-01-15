@@ -56,11 +56,13 @@ import org.w3c.dom.Element;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.List;
 import java.awt.dnd.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Array;
 import java.util.*;
 
 import static VASSAL.build.GameModule.getGameModule;
@@ -89,7 +91,7 @@ public class ASLMap extends Map {
     public static final String SCALEWITHBOARDZOOM = "ScaleWithBoardZoom"; //Property name for any counters that should scale with the board zoom level
     public static final String SCALEWITHBOARDMAG = "ScaleWithBoardMag"; //Property name for any counters that should also scale with the board magnification (not the same as the zoom)
     public ArrayList<String> dxAvailBoards = new ArrayList<>(); //List of all available deluxe boards
-
+    protected LinkedList<VASL.LOS.Map.Hex> hexestofixlist = new LinkedList<>();
 
     public ASLMap() {
         super();
@@ -350,7 +352,7 @@ public class ASLMap extends Map {
             */
             for (VASLBoard board : vaslboards) {
                 if (board.getName().equals("RBv3") || board.getName().equals("RO") || board.getName().equals("DaE") ||
-                         board.getName().equals("SG")) { //board.getName().equals("Dinant") ||
+                         board.getName().equals("SG") || board.getName().equals("HT")) {
                     if (board.isReversed()){
                         return;
                     }
@@ -482,6 +484,105 @@ public class ASLMap extends Map {
             logException(e);
             mod.getChatter().send("VASL LOS disabled due to unexpected board issue. Safe to continue play. Use VASSAL LOS string");
         }
+
+        if (hexestofixlist.size() != 0){
+            doBuildingfix();
+        }
+    }
+
+    private void doBuildingfix() {
+        JFrame frame = new JFrame("Adding Overlays To LOS");
+        frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(600, 400);
+
+        Box b = Box.createHorizontalBox();
+        // Create a JComboBox
+        JLabel hexlabel = new JLabel("Select Hex:");
+        final JComboBox<String> hexList = new JComboBox<>();
+        for (Hex fixhex : hexestofixlist) {
+            hexList.addItem(fixhex.getName());
+        }
+        hexList.setSelectedIndex(0); // Optional: sets the default selected item
+        // Add an ActionListener to handle item selection events
+        hexList.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Get the selected item
+                String newhex = (String) hexList.getSelectedItem();
+            }
+        });
+        b.add(hexlabel);
+        b.add(hexList);
+        frame.getContentPane().add(b);
+
+        b = Box.createHorizontalBox();
+        b.add(new JLabel("Select Building Type for Hex: "));
+        // Define the items for the dropdown list
+        String[] buildingtypes = {"Stone Building", "Wooden Building", "Stone Building, 1 Level", "Wooden Building, 1 Level", "Stone Building, 2 Level", "Wooden Building, 2 Level", "Stone Building, 3 Level", "Wooden Building, 3 Level"};
+        // Create a JComboBox
+        final JComboBox<String> buildingList = new JComboBox<>(buildingtypes);
+        buildingList.setSelectedIndex(0); // Optional: sets the default selected item
+        // Add an ActionListener to handle item selection events
+        buildingList.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Get the selected item
+                String newterrain = (String) buildingList.getSelectedItem();
+
+                            }
+        });
+        b.add(buildingList);
+        frame.getContentPane().add(b);
+        JButton updateButton = new JButton("Update");
+        updateButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String newhex = (String) hexList.getSelectedItem();
+                String newterrain = (String) buildingList.getSelectedItem();
+                updateBuildingHex(newhex, newterrain);
+            }
+        });
+        JButton closeButton = new JButton("Close");
+        closeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                frame.setVisible(false);
+            }
+        });
+
+        b = Box.createHorizontalBox();
+        b.add(updateButton);
+        b.add(closeButton);
+        frame.getContentPane().add(b);
+
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                //save();
+                frame.setVisible(false);
+            }
+        });
+
+        // Make the frame visible
+        frame.pack();
+        frame.setVisible(true);
+
+    }
+
+    private void updateBuildingHex(String hexname, String terrainname) {
+        VASL.LOS.Map.Map losMap = getVASLMap();
+        Hex fixhex = losMap.getHex(hexname);
+        int startx = (int) fixhex.getCenterLocation().getLOSPoint().getX() - (int) (losMap.getHexWidth()/2 +5);
+        int starty = (int) fixhex.getCenterLocation().getLOSPoint().getY() - (int) (losMap.getHexHeight()/2 + 5);
+
+        for (int x = startx ; x < fixhex.getCenterLocation().getLOSPoint().getX() + (losMap.getHexWidth()/2 + 6); x++){
+            for (int y = starty; y < fixhex.getCenterLocation().getLOSPoint().getY() + (losMap.getHexHeight()/2 + 6); y++){
+                Point testpoint = new Point(x, y);
+                if (fixhex.contains(testpoint)){
+                    if(losMap.getGridTerrain(x, y).isBuilding()){
+                        int terrtype = losMap.getTerrain(terrainname).getType();
+                        losMap.setGridTerrainCode(terrtype, x, y);
+                    }
+                }
+            }
+        }
+        fixhex.resetTerrain();
     }
 
     /**
@@ -627,6 +728,10 @@ public class ASLMap extends Map {
                 } else if (b.getName().contains("SG")) {
                     gridconfigWidth = "HalfHexWidthOffset";
                     toplefthexheight = "LeftHexFullHeightOffset";
+                    toplefthexwidth = "HalfHexWidthOffset";
+                } else if (b.getName().contains("HT")) {
+                    gridconfigWidth = "HalfHexWidthOffset";
+                    toplefthexheight = "LeftHexFullHeight";
                     toplefthexwidth = "HalfHexWidthOffset";
                 }
                 if (b.isCropped()) {
@@ -868,7 +973,7 @@ public class ASLMap extends Map {
                 updateHexGridforOverlayTerrain(losonoverlays, terraintype, o.getPersistElevation(), board.isReversed());
             }
             else {
-                updateTerrainElevationGridsforOverlays(losonoverlays, terraintype, o.getPersistElevation());
+                updateTerrainElevationGridsforOverlays(losonoverlays, terraintype, o);
             }
         }
         losonoverlays.newlosdata.buildHillocks();
@@ -896,13 +1001,13 @@ public class ASLMap extends Map {
         }
     }
 
-    private void updateTerrainElevationGridsforOverlays(LOSonOverlays losonoverlays, String terraintype, boolean preserveelevation) {
+    private void updateTerrainElevationGridsforOverlays(LOSonOverlays losonoverlays, String terraintype, Overlay o) {
         // ToDo delete this call if no longer required
         // first test for inherent terrain type and send to separate method; use this method for non-inherent or mixed non-inherent/inherent overlays
         //if (isInherenttype(terraintype)) {
         //    updateTerrainElevationGridsforOverlayInherentTerrain(losonoverlays, terraintype);
         //} else {
-
+            boolean preserveelevation = o.getPersistElevation();
             HashMap<VASL.LOS.Map.Hex, VASL.LOS.Map.Terrain> inhhexes = new HashMap<VASL.LOS.Map.Hex, VASL.LOS.Map.Terrain>();
             HashMap<VASL.LOS.Map.Hex, VASL.LOS.Map.Terrain> bdghexes = new HashMap<VASL.LOS.Map.Hex, VASL.LOS.Map.Terrain>();
             losonoverlays.overpositionx = 0; //position on map
@@ -932,19 +1037,22 @@ public class ASLMap extends Map {
                             }
                             // special case for transform where image does not change
                             terr = resetterraintypefortransform(losonoverlays.board.getTerrainChanges(), terr);
-
-                            // handle terrain update
-                            //add Hex to collections of inherent hexes and building hexes on the overlay
-                            //addHextoOverlayInhandBldgMaps(terraintype, terr, losonoverlays, inhhexes, bdghexes);
-                            // set terrain type for point, and center location or hexside location (if hexside terrain)
-                            // set grid terrain
-                            //losonoverlays.newlosdata.determineGridTerrainCode(terr.getType(), losonoverlays.overpositionx, losonoverlays.overpositiony, preserveelevation);
-                            losonoverlays.newlosdata.setGridTerrainCode(terr.getType(), losonoverlays.overpositionx, losonoverlays.overpositiony);
-                            //// handle elevation update
-                            //test code
-                            if (terr.getName().contains("Wadi")){
-                                boolean reg = true;
+                            // special case for building overlays
+                            if (terr.isBuildingTerrain()) {
+                                if (!terr.isHexsideTerrain()) {
+                                    setBuildingTerrainFromOverlay(losonoverlays, o, terr);
+                                }
+                                else {
+                                    // is Rowhouse or Factory Wall
+                                    losonoverlays.newlosdata.setGridTerrainCode(terr.getType(), losonoverlays.overpositionx, losonoverlays.overpositiony);
+                                }
                             }
+                            else {
+                                // handle terrain update
+                                losonoverlays.newlosdata.setGridTerrainCode(terr.getType(), losonoverlays.overpositionx, losonoverlays.overpositiony);
+                            }
+
+                            // handle elevation update
                             if (!preserveelevation) {
                                 elevint = getOverlayElevationfromColor(losonoverlays, color);
                             }
@@ -1360,46 +1468,58 @@ public class ASLMap extends Map {
         }
     }
 
-    /*private void addOverlayBldgLevelsToLOS(HashMap<Hex, Terrain> bdghexes, LOSonOverlays losonoverlays) {
-        for (Hex bdglevelhex : bdghexes.keySet()) {
-            bdglevelhex.getCenterLocation().setTerrain(bdghexes.get(bdglevelhex));
-            Terrain centerlocationterrain = bdglevelhex.getCenterLocation().getTerrain();
-            final boolean multihex = false; //isOverlayBldgMultiHex(bdglevelhex, losonoverlays);
-            bdglevelhex.addBuildingLevels(centerlocationterrain, multihex);
+    public void setBuildingTerrainFromOverlay(LOSonOverlays losonoverlays, Overlay o, Terrain terr) {
+        String newterrain = null;
+        String overlayname = o.getName().substring(1);
+        int passoverlay;
+        try {
+            passoverlay = Integer.parseInt(overlayname);
         }
-    }*/
+        catch (NumberFormatException e) {
+            passoverlay = 0;
+        }
+        switch (passoverlay) {
+            case 1: case 2: case 4: case 5: case 6: case 7: case 11:
+                newterrain = "Stone Building";
+                break;
+            case  3: case 9: case 26: case 28: case 29:
+                newterrain = "Wooden Building";
+                break;
+            case 12: case 17: case 19: case 20: case 21: case 22: case 23: case 24: case 25: case 27: case 30: case 39:
+                newterrain = "Stone Building, 1 Level";
+                break;
+            case 13: case 41:
+                newterrain = "Wooden Building, 1 Level";
+                break;
+            case 8: case 16: case 38: case 40:
+                newterrain = "Stone Building, 2 Level";
+                break;
+            case 10:
+                newterrain = "Wooden Building, 2 Level";
+                break;
+            //case -99:
+            //    newterrain = "Stone Building, 3 Level";
+            //    break;
+            case 14: case 15: case 18: case 32: case 33: case 34: case 35: case 36: case 37:
+                newterrain = "Multiple Types";
+                break;
+            default:
+                newterrain = "StoneBuilding";
+        }
+        if (newterrain == "Multiple Types") {
+            addtoFixHexList(losonoverlays);
+            newterrain = terr.getName();
+        }
+        int terrainCode = losonoverlays.newlosdata.getTerrain(newterrain).getType();
+        losonoverlays.newlosdata.setGridTerrainCode(terrainCode, losonoverlays.overpositionx, losonoverlays.overpositiony);
 
-    /*private boolean isOverlayBldgMultiHex(Hex bdglevelhex, LOSonOverlays losonoverlays) {
-        //ToDo no longer needed due to changes to Hex code
-
-        boolean multihexbdg = false;
-        // test if hexside points contain building colour; if they do, and adjacent hex is same building type it is multihex building
-        // not true for BFP boards
-        *//*for (int i = 0; i < 6; i++) {
-            // test hexsidepoint is on the overlay
-            if (hexsidepoints[i].getX() >= 0 && hexsidepoints[i].getY() >= 0 && hexsidepoints[i].getX() <= losonoverlays.bi.getWidth() && hexsidepoints[i].getY() <= losonoverlays.bi.getHeight()) {
-                final int c = losonoverlays.bi.getRGB((int) hexsidepoints[i].getX(), (int) hexsidepoints[i].getY());
-                Terrain terr = null;
-                if ((c >> 24) != 0x00) { // not a transparent pixel
-                    String terraintouse = "Open Ground";
-                    //Retrieving the R G B values
-                    final Color color = getRGBColor(c);
-                    final int terrint = losonoverlays.board.getVASLBoardArchive().getTerrainForColor(color);
-                    if (terrint >= 0) {
-                        terr = losonoverlays.newlosdata.getTerrain(terrint);
-                        terraintouse = terr.getName();
-                    }
-                    if (terr != null) {
-                        if (terr.isBuilding()) {
-                            multihexbdg = true;
-                            break;
-                        }
-                    }
-                }
-            }
-        }*//*
-        return multihexbdg;
-    }*/
+    }
+    private void addtoFixHexList(LOSonOverlays losonoverlays) {
+        Hex hextoadd = losonoverlays.newlosdata.gridToHex(losonoverlays.overpositionx, losonoverlays.overpositiony);
+        if (!hexestofixlist.contains(hextoadd)) {
+            hexestofixlist.add(hextoadd);
+        }
+    }
 
     private void addOverlayHexElevationToLOS(LinkedList<VASL.LOS.Map.Hex> elevhexes,  LOSonOverlays losonoverlays) {
         //elevhexes contains every hex covered by the overlay need to test them all to Depression Terrain settings
