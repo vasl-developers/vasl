@@ -154,7 +154,8 @@ public class VASLBoard extends ASLBoard {
     // No longer used due to changes to los-enabled crop/flip - can be deleted when changes complete
     @Deprecated(since="6.7.1", forRemoval=true)
     public Map getLOSData(HashMap<String, Terrain> terrainTypes, boolean isCropping, double gridadj) {
-        return VASLBoardArchive.getLOSData(terrainTypes, isCropping, gridadj);
+        //return VASLBoardArchive.getLOSData(terrainTypes, isCropping, gridadj);
+        return null;
     }
 
     @Override
