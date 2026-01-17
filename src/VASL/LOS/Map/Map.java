@@ -2057,10 +2057,20 @@ public class Map  {
             }
 
             // because rubble is inherent terrain we can put this check here
-            if(STONE_RUBBLE.equals(currentTerrain.getName())  && STONE_RUBBLE.equals(currentHex.getCenterLocation().getTerrain().getName())||
-                    WOODEN_RUBBLE.equals(currentTerrain.getName()) && WOODEN_RUBBLE.equals(currentHex.getCenterLocation().getTerrain().getName())) {
-                if(firstRubbleCrossed == null) {
-                    firstRubbleCrossed = currentHex;
+            if(STONE_RUBBLE.equals(currentTerrain.getName())) {
+                if (STONE_RUBBLE.equals(currentHex.getCenterLocation().getTerrain().getName()) ||
+                        STONE_RUBBLE.equals(vaslGameInterface.getTerrain(currentHex))) {
+                    if (firstRubbleCrossed == null) {
+                        firstRubbleCrossed = currentHex;
+                    }
+                }
+            }
+            else if (WOODEN_RUBBLE.equals(currentTerrain.getName())) {
+                if (WOODEN_RUBBLE.equals(currentHex.getCenterLocation().getTerrain().getName()) ||
+                        WOODEN_RUBBLE.equals(vaslGameInterface.getTerrain(currentHex))) {
+                    if (firstRubbleCrossed == null) {
+                        firstRubbleCrossed = currentHex;
+                    }
                 }
             }
         }
@@ -4186,15 +4196,24 @@ public class Map  {
         double sourceadj=0;
         double targetadj=0;
         double obstacleadj=0;
+        // Rooftop special case
         if(status.source.getTerrain().isRooftop() && status.source.getLevelInHex() !=1) {
             sourceadj=-0.5;
         }
         if(status.target.getTerrain().isRooftop() && status.target.getLevelInHex() !=1) {
             targetadj=-0.5;
         }
+        // Hillock special case - source or target is on a hillock
+        if(status.startsOnHillock){
+            sourceadj =+ 0.5;
+        }
+        if (status.endsOnHillock) {
+            targetadj =+ 0.5;
+        }
         if(status.currentTerrain.isHalfLevelHeight() && !status.currentTerrain.isHexsideTerrain()) {
             obstacleadj=+0.5;
         }
+        // cellar special case
         if(status.source.getTerrain().isCellar()) {
             sourceadj=+1;
         }
@@ -4382,8 +4401,8 @@ public class Map  {
 
                 // check intervening rubble
                 else if (STONE_RUBBLE.equals(status.currentTerrain.getName()) || WOODEN_RUBBLE.equals(status.currentTerrain.getName())){
-
-                    if(status.currentHex != status.firstRubbleCrossed) {
+                    // F6.412 can only see adjacent hex past 2nd rubble
+                    if((status.currentHex != status.firstRubbleCrossed) && (range(status.currentHex, status.targetHex, getMapConfiguration()) != 1)) {
 
                         status.reason = "More than one intervening rubble hex (F6.4)";
                         status.blocked = true;

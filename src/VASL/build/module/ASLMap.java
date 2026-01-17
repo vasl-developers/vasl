@@ -490,6 +490,14 @@ public class ASLMap extends Map {
         }
     }
 
+    /**
+     * Overlay color schemes do not distinguish between building types
+     * Fixes building hexes in an overlay which has multiple building types
+     * such overlays are handled as exceptions:
+     * - asks user to select each hex covered by overlay and specify the building type
+     * - the Terrain Grid is updated to apply these types to building pixels
+     * - Hex data is updated to include terrain type and create level locations as required
+     */
     private void doBuildingfix() {
         JFrame frame = new JFrame("Adding Overlays To LOS");
         frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
