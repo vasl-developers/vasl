@@ -443,6 +443,7 @@ public class BoardArchive {
                 }
 
                 // terrain transforms that require hexGrid changes
+
                 board.applyColorSSRulestoHexGrid(VASLMap, sharedBoardMetadata.getLOSSSRules());
 
                 // update hexGrid to include overlays changes
