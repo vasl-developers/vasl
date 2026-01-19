@@ -654,32 +654,26 @@ public class Hex {
     /**
      * Resets the hex locations using the terrain information in the map terrain grid
      */
-    public void resetTerrain(){ //double passposx, double passposy) {
+    public void resetTerrain(){
         //ToDo add all overlay and other terrain updates here
         // set the center location terrain
-        int passposx = 0;
-        int terrainpointx = (int) (centerLocation.getLOSPoint().getX() + passposx);
-        if (terrainpointx > -5 && terrainpointx < 0) {terrainpointx = 0;}
-        //if (terrainpointx > map.getGridWidth()) {terrainpointx = map.getGridWidth() - 1;}  // this is a hack to fix hex inconsistencies ToDo fix the source -
-        int terrainpointy = (int) (centerLocation.getLOSPoint().getY() -1 ); //+ passposy-1);
-        if (terrainpointy > -5 && terrainpointy < 0) {terrainpointy = 0;}
-        Terrain centerLocationTerrain = map.getGridTerrain(terrainpointx, terrainpointy); //centerLocation.getLOSPoint().getX()+ boardposx), (int) centerLocation.getLOSPoint().getY());
+        Terrain centerLocationTerrain = getnearcenterLocationTerrain();
         // fix center location when building misses the center dot
-        if(!centerLocationTerrain.isBuilding() && getHexsideBuildingTerrain(passposx) != null) {
-            centerLocationTerrain = getHexsideBuildingTerrain(passposx);
+        if(!centerLocationTerrain.isBuilding() && getHexsideBuildingTerrain(0) != null) {
+            centerLocationTerrain = getHexsideBuildingTerrain(0);
         }
         if (centerLocationTerrain  == null) {centerLocationTerrain = map.getTerrain("Open Ground");}
         // hack to deal with I24-I26 wooden warehouses on bdRO
         if (!centerLocationTerrain.isBuilding()) {
             Terrain firsttestforbuilding =null, secondtestforbuilding=null, thirdtestforbuilding=null, fourthtestforbuilding=null;
-            int firsttestx = (int) (centerLocation.getLOSPoint().getX() + passposx + 5);
-            int secondtestx = (int) (centerLocation.getLOSPoint().getX() + passposx - 5);
+            int firsttestx = (int) (centerLocation.getLOSPoint().getX() + 5);
+            int secondtestx = (int) (centerLocation.getLOSPoint().getX() - 5);
             int firsttesty= (int) (centerLocation.getLOSPoint().getY() + 5);
             int secondtesty = (int) (centerLocation.getLOSPoint().getY() - 5);
                 if (map.onMap(firsttestx, (int) centerLocation.getLOSPoint().getY())) {firsttestforbuilding = map.getGridTerrain(firsttestx, (int) centerLocation.getLOSPoint().getY());}
                 if (map.onMap(secondtestx, (int) centerLocation.getLOSPoint().getY())) {secondtestforbuilding = map.getGridTerrain(secondtestx, (int) centerLocation.getLOSPoint().getY());}
-                if (map.onMap((int) (centerLocation.getLOSPoint().getX() + passposx), firsttesty)) {thirdtestforbuilding = map.getGridTerrain((int) (centerLocation.getLOSPoint().getX() + passposx), firsttesty);}
-                if (map.onMap((int) (centerLocation.getLOSPoint().getX() + passposx), secondtesty)) {fourthtestforbuilding = map.getGridTerrain((int) (centerLocation.getLOSPoint().getX() + passposx), secondtesty);}
+                if (map.onMap((int) (centerLocation.getLOSPoint().getX()), firsttesty)) {thirdtestforbuilding = map.getGridTerrain((int) (centerLocation.getLOSPoint().getX()), firsttesty);}
+                if (map.onMap((int) (centerLocation.getLOSPoint().getX()), secondtesty)) {fourthtestforbuilding = map.getGridTerrain((int) (centerLocation.getLOSPoint().getX()), secondtesty);}
                 if(firsttestforbuilding!=null && firsttestforbuilding.isBuilding()) {
                     centerLocationTerrain = firsttestforbuilding;
                 }
@@ -705,7 +699,7 @@ public class Hex {
             if (isHexsideOnMap(x)) {
 
                 Terrain terrain =  map.getGridTerrain(
-                        (int) (getHexsideLocation(x).getEdgeCenterPoint().getX() + passposx),
+                        (int) (getHexsideLocation(x).getEdgeCenterPoint().getX()),
                         (int) getHexsideLocation(x).getEdgeCenterPoint().getY());
 
                 if (rbrrembankments[x]){
@@ -724,7 +718,7 @@ public class Hex {
                 if(oppositeHex != null){
                     final int oppositeHexside = (x + 3) % 6;
 					final Terrain oppositeHexsideTerrain = map.getGridTerrain(
-						(int)(oppositeHex.getHexsideLocation(oppositeHexside).getEdgeCenterPoint().getX() + passposx),
+						(int)(oppositeHex.getHexsideLocation(oppositeHexside).getEdgeCenterPoint().getX()),
 						(int)oppositeHex.getHexsideLocation(oppositeHexside).getEdgeCenterPoint().getY());
                     if (oppositeHexsideTerrain != null) {
                         if (!terrain.isHexsideTerrain() && oppositeHexsideTerrain.isHexsideTerrain()) {
@@ -745,7 +739,7 @@ public class Hex {
         }
 
         // set the hex base height
-        setBaseLevelofHex(map.getGridElevation((int) (centerLocation.getLOSPoint().getX() + passposx), (int) centerLocation.getLOSPoint().getY()));
+        setBaseLevelofHex(map.getGridElevation((int) (centerLocation.getLOSPoint().getX()), (int) centerLocation.getLOSPoint().getY()));
 
         // set the depression terrain
         setDepressionTerrain();
@@ -758,6 +752,18 @@ public class Hex {
 
         // correct for single hex bridges
         fixBridges(0);
+    }
+
+    /**
+     * gets Terrain one pixel away from center point of hex
+     * @return Terrain
+     */
+    public Terrain getnearcenterLocationTerrain(){
+        int terrainpointx = (int) (centerLocation.getLOSPoint().getX() );
+        if (terrainpointx > -5 && terrainpointx < 0) {terrainpointx = 0;}
+        int terrainpointy = (int) (centerLocation.getLOSPoint().getY() -1 );
+        if (terrainpointy > -5 && terrainpointy < 0) {terrainpointy = 0;}
+        return map.getGridTerrain(terrainpointx, terrainpointy);
     }
 
     /**
