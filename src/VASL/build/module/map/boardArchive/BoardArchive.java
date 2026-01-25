@@ -181,16 +181,16 @@ public class BoardArchive {
      * Reads the map from disk using terrain types read from the board archive
      * Use only for losgui
      * @return <code>Map</code> object. Null if the LOS data does not exist or an error occurred.
-     */
+     *//*
     public Map readLOSData(String offset, boolean isCropping){
         //ToDo fix this
         return getLOSData(sharedBoardMetadata.getTerrainTypes(), offset, isCropping, 0);
     }
 
-    /**
+    *//**
      * Reads the map from disk using the provide terrain types.
      * @return <code>Map</code> object. Null if the LOS data does not exist or an error occurred.
-     */
+     *//*
     //ToDo delete this method
     // Use only for LOSGUI
     @Deprecated(since="6.7.1", forRemoval=true)
@@ -263,7 +263,7 @@ public class BoardArchive {
         }
 
         return map;
-    }
+    }*/
     /*
     * this is the new method of adding los data to a VASL map
     * need to read each element from the LOSData file and discard where not needed; or will assign incorrect values to variables
@@ -799,7 +799,7 @@ public class BoardArchive {
      * @param fileName the file to open in the archive
      * @return InputStream to the desired file
      */
-    private InputStream getInputStreamForArchiveFile(ZipFile archive, String fileName) throws IOException {
+    public InputStream getInputStreamForArchiveFile(ZipFile archive, String fileName) throws IOException {
 
         final Enumeration<? extends ZipEntry> entries = archive.entries();
         while (entries.hasMoreElements()){
@@ -1124,6 +1124,13 @@ public class BoardArchive {
     // added to handle boards with original configuration where top left hex is half height and half width (ie BRT)
     public String getHexGridConfig(){
         return metadata.getHexGridConfig();
+    }
+
+    public String getQualifiedBoardArchive(){
+        return qualifiedBoardArchive;
+    }
+    public BoardMetadata getMetadata(){
+        return metadata;
     }
 }
 
