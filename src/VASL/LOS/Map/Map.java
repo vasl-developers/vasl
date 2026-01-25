@@ -838,6 +838,7 @@ public class Map  {
      * @param h the height of the map in hexes
      */
     //ToDo find useages and rework to confirm to new crop/flip apporach - it may well be already the one used by new methods
+    // one useage is in LOSGUI when opening a non-Geo Board - LOSEditorJComponent.getLOSData();
     public Map(int w, int h, HashMap<String, Terrain> terrainNameMap, String passboardgridconfig, String passgridconfig, boolean isCropping) {
         //DR added four variables to pass in hexWidth and hexHeight, grid configuration and cropping flag
         this(BoardArchive.GEO_HEX_WIDTH, BoardArchive.GEO_HEX_HEIGHT, w, h, BoardArchive.GEO_A1_Center.x, BoardArchive.GEO_A1_Center.y, (int) BoardArchive.GEO_IMAGE_WIDTH, (int) BoardArchive.GEO_IMAGE_HEIGHT, terrainNameMap, passboardgridconfig, passgridconfig, isCropping);

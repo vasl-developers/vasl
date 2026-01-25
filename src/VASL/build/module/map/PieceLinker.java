@@ -1,5 +1,6 @@
 package VASL.build.module.map;
 
+import VASL.build.module.ASLMap;
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASL.build.module.map.boardPicker.board.ASLHexGrid;
 import static VASL.build.module.map.boardPicker.ASLBoard.DEFAULT_HEX_HEIGHT;
@@ -61,7 +62,7 @@ public class PieceLinker extends AbstractConfigurable implements KeyListener, Co
 
     private static final String LINK_COMMAND_PREFIX = "LINK_PIECE:";
     private static final String UNLINK_COMMAND_PREFIX = "UNLINK_PIECE:";
-    private Map map;
+    private ASLMap map;
 
     private static final String NAME = "Name";
     private static final String THREAD_COLOR = "Color";
@@ -162,7 +163,7 @@ public class PieceLinker extends AbstractConfigurable implements KeyListener, Co
 
         // add this component to the game and register a mouse listener
         if (parent instanceof Map) {
-            this.map = (Map) parent;
+            this.map = (ASLMap) parent;
             GameModule mod = GameModule.getGameModule();
             mod.addCommandEncoder(this);
             mod.getGameState().addGameComponent(this);
@@ -175,7 +176,10 @@ public class PieceLinker extends AbstractConfigurable implements KeyListener, Co
      * Draw a line between the two linked pieces and show the range in Hexes
      */
     @Override
-    public void draw(Graphics g, Map map) {
+    public void draw(Graphics g, Map map1) {
+        if (map.getVASLMap() == null ){
+            map = (ASLMap) map1;
+        }
         if (visible && !links.isEmpty()) {
 
             g.setColor(threadColor);
@@ -207,12 +211,16 @@ public class PieceLinker extends AbstractConfigurable implements KeyListener, Co
                             Point p1 = map.mapToDrawing(fromPiece.getPosition(), os_scale);
                             Point p2 = map.mapToDrawing(toPiece.getPosition(), os_scale);
                             g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
-                            Collection<Board> mapBoards = map.getBoards();
-                            ASLBoard board = (ASLBoard)mapBoards.toArray()[0];
-                            MapGrid grid = new ASLHexGrid(board.getVASLBoardArchive().getHexHeight(), false);
-                            ((HexGrid)grid).setHexWidth(board.getVASLBoardArchive().getHexHeight());
-                            ((HexGrid)grid).setEdgesLegal(true);
-                            int linkrange = range(fromPiece.getPosition(), toPiece.getPosition(), map, grid);
+                            int linkrange = 0;
+                            if (map.getVASLMap() == null ) {
+                                Collection<Board> mapBoards = map.getBoards();
+                                ASLBoard board = (ASLBoard) mapBoards.toArray()[0];
+                                MapGrid grid = board.getGrid();
+                                linkrange = range(fromPiece.getPosition(), toPiece.getPosition(), map, grid);
+                            }
+                            else {
+                                linkrange = map.getVASLMap().range(map.getVASLMap().gridToHex((int)fromPiece.getPosition().getX(), (int)fromPiece.getPosition().getY()), map.getVASLMap().gridToHex((int)toPiece.getPosition().getX(), (int)toPiece.getPosition().getY()), map.getVASLMap().getMapConfiguration());
+                            }
                             drawText(g2d, p1.x +30, p1.y + 30, "Range: " + linkrange );
                         }
                     }
@@ -227,8 +235,10 @@ public class PieceLinker extends AbstractConfigurable implements KeyListener, Co
     public int range(Point p1, Point p2, Map map, MapGrid grid) {
         // added so that boards with no los active will display correct range when using magnification or BoardZoomer
         VASSAL.build.module.Map m = map;
-        Point pp1 = m.snapTo(p1);
-        Point pp2 = m.snapTo(p2);
+        Point newp1  = new Point ((int)(p1.getX() - map.getEdgeBuffer().getWidth()),  (int)(p1.getY() - map.getEdgeBuffer().getHeight()));
+        Point newp2  = new Point ((int)(p2.getX() - map.getEdgeBuffer().getWidth()),  (int)(p2.getY() - map.getEdgeBuffer().getHeight()));
+        Point pp1 = m.snapTo(newp1);
+        Point pp2 = m.snapTo(newp2);
         for (Board board : m.getBoards()) {
             ASLBoard b = (ASLBoard) board;
             if (b.getMagnification() > 0) {

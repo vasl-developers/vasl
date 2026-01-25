@@ -775,7 +775,7 @@ public class LOSDataEditor {
      * Read the LOS data or create it if it doesn't exist
      */
     //ToDo fix this as it will always equate to create new data
-    public void readLOSData() {
+    /*public void readLOSData() {
 
         // code added by DR to enable unlimited cropping
         String offset=boardArchive.getHexGridConfig();
@@ -786,11 +786,14 @@ public class LOSDataEditor {
             // convert the image
             createLOSData();
         }
-    }
+    }*/
 
     public BufferedImage getBoardImage() {
 
         return boardArchive.getBoardImage();
     }
 
+    public String getQualifiedBoardArchive(){
+        return boardArchive.getQualifiedBoardArchive();
+    }
 }
