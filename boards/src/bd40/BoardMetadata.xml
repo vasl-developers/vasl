@@ -45,8 +45,8 @@
 
 <boardMetadata 
 	name="40" 
-	version="7.7" 
-	versionDate="Feb 2025" 
+	version="7.8" 
+	versionDate="2026/01/17" 
 	author="TR" 
 	boardImageFileName="bd40.gif" 
 	hasHills="TRUE" 
@@ -231,13 +231,15 @@
 			
 				</colorSSR>
 		
-	-->
+	Jan 26 commented out these two colors in order to enable Marsh to Woods transform; it may cause other problems with the board.
 		
 
 	<color name="RiverMarshGreenL0" red="47" green="99" blue="35" terrain="Marsh" elevation="0" />
 		
 	<color name="RiverMarshBrownL0" red="51" green="0" blue="19" terrain="Marsh" elevation="0" />
 	
+-->
+
 	</colors>
 	
 	
