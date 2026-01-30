@@ -2,12 +2,10 @@ package VASL.build.module.map;
 
 import VASL.LOS.Map.LOSResult;
 import VASL.LOS.Map.Location;
-import VASL.LOS.Map.Terrain;
 import VASL.LOS.VASLGameInterface;
 import VASL.build.module.ASLMap;
 import VASL.counters.ASLProperties;
 import VASL.counters.Concealable;
-import VASL.environment.Environment;
 import VASSAL.build.AbstractConfigurable;
 import VASSAL.build.AutoConfigurable;
 import VASSAL.build.Buildable;
@@ -45,10 +43,10 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
 
     protected VASL.LOS.VASLGameInterface VASLGameInterface;
 
-    ArrayList<GamePiece> movingFriendlyCounters = new ArrayList<GamePiece>();
-    ArrayList<GamePiece> movingSuspectCounters = new ArrayList<GamePiece>();
+    ArrayList<GamePiece> movingFriendlyCounters = new ArrayList<>();
+    ArrayList<GamePiece> movingSuspectCounters = new ArrayList<>();
 
-    final ArrayList<GamePiece> pieceList = new ArrayList<GamePiece>();
+    final ArrayList<GamePiece> pieceList = new ArrayList<>();
 
     private String friendlyNationality = "";    // Uses the 2 character nationalities, e.g., "ge", "ru", "ax", etc.
     private String alliedNationalityOne = "";   // Uses the 2 character nationalities, e.g., "ge", "ru", "ax", etc.
@@ -229,7 +227,7 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
 
                 if (!temp.isEmpty()) {
                     nationality = temp;
-                    break outerloop;
+                    break;
                 }
             }
         }
@@ -267,7 +265,7 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
 
                 if (!temp.isEmpty()) {
                     nationality = temp;
-                    break outerloop;
+                    break;
                 }
             }
         }
@@ -357,15 +355,12 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
     }
 
     private boolean clearMovingCounters(boolean clear) {
-        boolean result = clear;
-
         if (clear) {
             movingFriendlyCounters.clear();
             movingSuspectCounters.clear();
-            result = false;
         }
 
-        return result;
+        return false;
     }
 
     /**
@@ -497,7 +492,7 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
     }
 
     private void testActivation(GamePiece piece) {
-        int range = -1;
+        int range;
 
         if (isOnboard(piece)) {
             if (!movingFriendlyCounters.isEmpty()) {
@@ -522,7 +517,7 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
         }
     }
 
-    private int getVehicleRangeBracket(GamePiece viewed, GamePiece viewer, CounterType counterType, int range) {
+    private int getVehicleRangeBracket(GamePiece viewed, GamePiece viewer, int range) {
         int result = activationRangesVehicles[getActivationRangesIndex(getSuspectNationality(viewer))][range];
         VehicleStatus vehicleStatus = VehicleStatus.UNARMORED;
 
@@ -550,12 +545,12 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
                     pieceList.add(viewer);
 
                     if (friendly) {
-                        int rangeBracket = 0;
+                        int rangeBracket;
 
                         switch (counterType) {
                             case VEHICLE:
                             case TRACKED_VEHICLE:
-                                rangeBracket = getVehicleRangeBracket(viewed, viewer, counterType, range);
+                                rangeBracket = getVehicleRangeBracket(viewed, viewer, range);
                                 break;
 
                             default:
@@ -696,7 +691,7 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
             } else {
                 result = illuminates(piece, tempPiece);
                 if (result) {
-                    break outerloop;
+                    break;
                 }
             }
         }
@@ -771,7 +766,7 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
                     range = losResult.getRange();
 
                     if (counterType != CounterType.NON_VEHICLE) {
-                        double temp = (double)nvr;
+                        double temp = nvr;
 
                         if (counterType == CounterType.TRACKED_VEHICLE) {
                             temp = (myNvr == 0) ? 2.0 : (temp * 2.0);
@@ -800,48 +795,12 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
         return range;
     }
 
-    private boolean isConcealmentTerrain(Terrain checkterrain) {
-        return checkterrain.isBuildingTerrain() || checkterrain.getName().equals("Woods") ||
-                checkterrain.getName().equals("Forest") || checkterrain.getName().equals("PineWoods") ||
-                checkterrain.getName().equals("Brush") || checkterrain.getName().equals("Light Woods") || checkterrain.getName().equals("Bamboo") ||
-                checkterrain.getName().equals("Vineyard") || checkterrain.getName().equals("PFZ Vineyard") ||
-                checkterrain.getName().equals("Orchard") || checkterrain.getName().equals("Palm Trees") || checkterrain.getName().equals("Rice Paddy, In Season") ||
-                checkterrain.getName().equals("Cactus Patch") || checkterrain.getName().equals("Broken Ground") ||
-                checkterrain.getName().equals("Olive Grove") || checkterrain.getName().equals("Orchard, Out of Season") ||
-                checkterrain.getName().equals("Grain") || checkterrain.getName().equals("Kunai") ||
-                checkterrain.getName().equals("Marsh") || checkterrain.getName().equals("Palm Debris") ||
-                checkterrain.getName().equals("Wooden Rubble") || checkterrain.getName().equals("Stone Rubble") ||
-                checkterrain.getName().equals("Light Jungle") || checkterrain.getName().equals("Dense Jungle") ||
-                checkterrain.getName().equals("Bocage") || checkterrain.getName().equals("Scrub") ||
-                checkterrain.getName().equals("Swamp");
-    }
-
-    protected GamePiece getPiece(String revealId) {
-        GamePiece[] allPieces = mainMap.getPieces();
-
-        for (GamePiece p : allPieces) {
-            if (p instanceof Stack) {
-                for (PieceIterator pi = new PieceIterator(((Stack) p).getPiecesIterator()); pi.hasMoreElements(); ) {
-                    GamePiece p2 = pi.nextPiece();
-
-                    if (p2.getId().equals(revealId)) {
-                        return p2;
-                    }
-                }
-            } else if (p.getId().equals(revealId)) {
-                return p;
-            }
-        }
-
-        return null;
-    }
-
     /**
      * Get all currently selected pieces
      * @return LinkedList of selected pieces
      */
     private ArrayList<GamePiece> getSelectedPieces() {
-        ArrayList<GamePiece> temp = new ArrayList<GamePiece>();
+        ArrayList<GamePiece> temp = new ArrayList<>();
 
         for (GamePiece piece : GameModule.getGameModule().getGameState().getAllPieces()) {
             if (isSelected(piece)) {
