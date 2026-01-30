@@ -3,6 +3,7 @@ package VASL.LOS;
 import VASL.LOS.Map.*;
 import VASL.build.module.map.boardArchive.BoardArchive;
 import VASL.build.module.map.boardArchive.SharedBoardMetadata;
+import VASL.build.module.map.boardPicker.VASLBoard;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -68,6 +69,7 @@ public class LOSDataEditor {
         boolean isCropping=false;
         if (boardArchive.isGEO()) {
             //ToDo switch to new method for creating a map in VASL.LOS.Map.Map
+            //return null;
             m = new Map(boardArchive.getHexWidth(),
                     boardArchive.getHexHeight(),
                     boardArchive.getBoardWidth(),
@@ -79,6 +81,9 @@ public class LOSDataEditor {
                     sharedBoardMetadata.getTerrainTypes(), passboardgridconfig, passcropgridconfig, isCropping);
             m.setSlopes(boardArchive.getSlopes());
         } else {
+            final Rectangle mapBoundary = new Rectangle(boardArchive.getBoardImage().getWidth(), boardArchive.getBoardImage().getHeight());
+             //m = new Map(vaslboards, boardArchive.getA1CenterX(), boardArchive.getA1CenterY(), sharedBoardMetadata.getTerrainTypes(), boardArchive.getBoardWidth(), boardArchive.getBoardHeight(), mapBoundary, true);
+
             m = new Map(
                     // DR added two new parameters
                     boardArchive.getHexWidth(),
@@ -769,22 +774,26 @@ public class LOSDataEditor {
     /**
      * Read the LOS data or create it if it doesn't exist
      */
-    public void readLOSData() {
+    //ToDo fix this as it will always equate to create new data
+    /*public void readLOSData() {
 
         // code added by DR to enable unlimited cropping
         String offset=boardArchive.getHexGridConfig();
         if (offset==null){offset="Normal";}
-        map = boardArchive.getLOSData(offset, false);
+        map = boardArchive.readLOSData(offset, false);
         if (map == null) {
 
             // convert the image
             createLOSData();
         }
-    }
+    }*/
 
     public BufferedImage getBoardImage() {
 
         return boardArchive.getBoardImage();
     }
 
+    public String getQualifiedBoardArchive(){
+        return boardArchive.getQualifiedBoardArchive();
+    }
 }

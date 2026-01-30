@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<!--
+    This file contains the board metadata specific to a VASL board archive.
+    Create one file per VASL board and place it in the archive.
+-->
+
+<!-- 
+    Board-level metadata
+	name - the name of the board (as it will appear in board selector drop-down - not yet supported)
+	version - the board version
+	versionDate - the date the last version was created
+	author - the caring soul who created the board
+    boardImage - the name of the VASL image file in the board archive; the name is case sensitive
+    hasHills - TRUE/FALSE if the board contains base elevations above ground level
+                if not we can assume the ground level under the terrain is zero, which
+                makes the VASL LOS image translation faster and more accurate
+    height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
+    width - width of the board in hexes.
+	others - TBD e.g. alternate hex grain, etc. 
+	
+	v6.2 fix terrain, SSO and BSO transforms (ATC)
+-->
+<boardMetadata 
+	name="25b" 
+	version="6.0" 
+	versionDate="Jan 2026" 
+	author="TR" 
+	boardImageFileName="bd25b.gif" 
+	hasHills="TRUE" 
+	width="17" 
+	height="20"
+	hexHeight = "64.5"
+	hexWidth = "56.3125"
+	A1CenterX = "-901"
+	A1CenterY = "32.25">
+
+    <!--
+        The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
+        determine the proper building type when creating the LOS information and assumes buildings are single-hex stone or 
+        wooden buildings. Use these elements to override the building type. 
+        
+        See the terrainType elements for a complete list of building names
+        <buildingType hexName="O4" buildingTypeName="Stone Building, 2 Level" />
+
+	-->
+    <buildingTypes>
+		<buildingType hexName="X10" buildingTypeName="Stone Building, 1 Level" />
+		<buildingType hexName="Y10" buildingTypeName="Stone Building, 1 Level" />
+		<buildingType hexName="X12" buildingTypeName="Stone Building, 1 Level" />
+		
+	</buildingTypes>
+	
+	<overlaySSRules>
+	    <!--
+			Scenario-specific underlay rules. 
+			name - the VASL SSR name
+			image - the image name
+			color - the VASL color name
+			
+			Example:
+			<underlaySSRule name="WallToCactus" image="CactusPattern.gif">
+				<color name="WallBrown" />
+				<color name="WallGrey1" />
+				<color name="WallGrey2" />
+			</underlaySSRule>			
+		-->
+		
+		<underlaySSRule name="WallsOnly" image="WallPattern.gif">
+			<color name="HedgeGreen" />
+		</underlaySSRule>
+		
+		<overlaySSRule name="Level2ToLevel1" image="bd25b_Level2ToLevel1.gif" x="0" y="0" />
+		<overlaySSRule name="Level1ToLevel0" image="bd25b_Level1ToLevel0.gif" x="0" y="0" />
+		<overlaySSRule name="PalmTrees" image="bd25b_PalmTrees.gif" x="0" y="0" />
+		<overlaySSRule name="OrchardsToShellholes" image="bd25b_OrchardsToShellholes.gif" x="0" y="0" />
+		<overlaySSRule name="OrchardsToCrags" image="bd25b_OrchardsToCrags.gif" x="0" y="0" />
+		<overlaySSRule name="WallsToBocage" image="bd25b_WallsToBocage.gif" x="0" y="0" />
+		<overlaySSRule name="HedgesToBocage" image="bd25b_HedgesToBocage.gif" x="0" y="0" />
+		<overlaySSRule name="BridgeToFord" image="bd25b_BridgeToFord.gif" x="0" y="0" />
+		<overlaySSRule name="NoBridge" image="bd25b_NoBridge.gif" x="0" y="0" />
+		<overlaySSRule name="NoWoodsRoads" image="bd25b_NoWoodsRoads.gif" x="0" y="0" />
+		<overlaySSRule name="RoadsToPaths" image="bd25b_RoadsToPaths.gif" x="0" y="0" />
+		<overlaySSRule name="DenseJungle" image="bd25b_DenseJungle.gif" x="0" y="0" />
+		<overlaySSRule name="Bamboo" image="bd25b_Bamboo.gif" x="0" y="0" />	
+		<overlaySSRule name="LightWoods" image="bd25b_LightWoods.gif" x="0" y="0" />
+		<overlaySSRule name="NoRoads" image="bd25b_NoRoads.gif" x="0" y="0" />
+
+		
+	</overlaySSRules>
+	
+	
+	<colors>
+		<!--
+			The VASL board colors. Used for color-specific SSR transformations. Use this element to override the shared color pallet. 
+			name - the VASL color name
+			red, green, blue - the RBG value of the color in the image
+			terrain - the LOS terrain type
+			elevation - the base elevation of the terrain
+			Example:
+			<colors>
+			    <color name="IAMRED" red="255" green="6" blue="6" terrain="Wooden Building" elevation="0" />
+			    <color name="IAMBLUE" red="6" green="6" blue="255" terrain="Wooden Building" elevation="0" />
+		    </colors>
+			
+		-->
+
+
+	</colors>
+	
+		<colorSSRules>
+		<!--
+		Example:
+		<colorSSR name="RowhouseBarsToBuildings">
+			<colorMap fromColor="IAMRED" toColor="IAMBLUE"/>
+		</colorSSR>
+		-->
+		
+		</colorSSRules>
+</boardMetadata>

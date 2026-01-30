@@ -1,0 +1,17 @@
+<SSRControls>
+ <Option name="Board 24b Special overlays">
+    <Checkbox name="">
+         <entry name="Hexrow Q side of the River is Water" rule="BSO_24b_Q_side_is_Water" text="Hexrow Q side of the River is Water"/>
+	 </Checkbox>
+    <Checkbox name="">
+         <entry name="Hexrow GG side of the River is Water" rule="BSO_24b_GG_side_is_Water" text="Hexrow GG side of the River is Water"/>
+	 </Checkbox>
+	     <Checkbox name="">
+         <entry name="Bridge in W6-X5" rule="BSO_24b_W6-X5_Bridge" text="bd24b Bridge in W6-X5"/>
+	 </Checkbox>
+	     <Checkbox name="">
+         <entry name="Bridge in Y14-Z14" rule="BSO_24b_Y14-Z14_Bridge" text="bd24b Bridge in Y14-Z14"/>
+	 </Checkbox>
+    </Option>
+</SSRControls>
+
