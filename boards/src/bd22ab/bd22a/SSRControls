@@ -1,0 +1,14 @@
+<SSRControls>
+ <Option name="Board 22a Special overlays">
+    <Checkbox name="">
+         <entry name="Bridge over River in N14-O15" rule="BSO_22a_bridge_over_river" text="Bridge over river in 22a N14-O15"/>
+ </Checkbox>
+     <Checkbox name="">
+         <entry name="Larger land side is Water" rule="BSO_22a_Larger_Land_Side_Is_Water" text="bd22a larger land side is water"/>
+ </Checkbox>
+      <Checkbox name="">
+         <entry name="Smaller land side is Water" rule="BSO_22a_Smaller_Land_Side_Is_Water" text="bd22a smaller land side is water"/>
+ </Checkbox>
+    </Option>
+</SSRControls>
+

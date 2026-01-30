@@ -1,0 +1,8 @@
+<SSRControls>
+ <Option name="Board 26a Special overlays">
+    <Checkbox name="">
+         <entry name="AP230 Suxy Beasts" rule="SSO_AP230" text="SSO for AP230"/>
+	 </Checkbox>
+    </Option>
+</SSRControls>
+

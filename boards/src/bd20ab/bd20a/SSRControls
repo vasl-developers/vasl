@@ -1,0 +1,14 @@
+<SSRControls>
+ <Option name="Board 20a Special overlays">
+    <Checkbox name="">
+         <entry name="Bridge over River in L10-M10" rule="BSO_20a_bridge_over_river" text="Bridge over river in 20a L10-M10"/>
+ </Checkbox>
+     <Checkbox name="">
+         <entry name="Graveyard side is Water" rule="BSO_20a_Graveyard_Side_Is_Water" text="bd20a graveyard side is water"/>
+ </Checkbox>
+      <Checkbox name="">
+         <entry name="Non-Graveyard side is Water" rule="BSO_20a_Non_Graveyard_Side_Is_Water" text="bd20a non graveyard side is water"/>
+ </Checkbox>
+    </Option>
+</SSRControls>
+

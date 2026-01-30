@@ -1,0 +1,17 @@
+<SSRControls>
+ <Option name="Board 23b Special overlays">
+    <Checkbox name="">
+         <entry name="Grain-Roads to Grain" rule="BSO_23b_GrainRoadsToGrain" text="bd23b Grain Roads to Grain"/>
+	 </Checkbox>
+	     <Checkbox name="">
+         <entry name="Grain-Roads to Paths" rule="BSO_23b_GrainRoadsToPaths" text="bd23b Grain Roads to Paths"/>
+	 </Checkbox>
+	     <Checkbox name="">
+         <entry name="Brush-Roads to Brush" rule="BSO_23b_BrushRoadsToBrush" text="bd23b Brush Roads to Brush"/>
+	 </Checkbox>
+	     <Checkbox name="">
+         <entry name="Brush-Roads to Paths" rule="BSO_23b_BrushRoadsToPaths" text="bd23b Brush Roads to Paths"/>
+	 </Checkbox>
+    </Option>
+</SSRControls>
+
