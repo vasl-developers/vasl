@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<!--
+    This file contains the board metadata specific to a VASL board archive.
+    Create one file per VASL board and place it in the archive.
+-->
+
+<!-- 
+    Board-level metadata
+	name - the name of the board (as it will appear in board selector drop-down - not yet supported)
+	version - the board version
+	versionDate - the date the last version was created
+	author - the caring soul who created the board
+    boardImage - the name of the VASL image file in the board archive; the name is case sensitive
+    hasHills - TRUE/FALSE if the board contains base elevations above ground level
+                if not we can assume the ground level under the terrain is zero, which
+                makes the VASL LOS image translation faster and more accurate
+    height - height of the board in hexes. Standard geomorphic boards are 10 by 33 hexes
+    width - width of the board in hexes.
+	A1CenterX - x coordinate of hex A1 center dot
+	A1CenterY - Y coordinate of hex A1 center dot
+	hexWidth - x.x width of each hex in pixels
+	hexHeight - x.x height of each hex in pixels
+	altHexGrain - TRUE/FALSE if the board uses an alternate hex grain for hex numbering
+	others - TBD
+	
+	v1.0 Sep 2018 Hatten in Flames VASL conversion by Tim Fachko based on the original art by C Kibler
+	v1.1 Oct 2018 fixes missing H4 walls
+	v2.0 Jan 2026 LOS enabled by Gordon Molek
+-->
+<boardMetadata
+	name="HT"
+	version="2.0"
+	versionDate="Jan 2026"
+	author="TJ (LOS enabled by GM)"
+	boardImageFileName="bdHT.gif"
+	hasHills="FALSE"
+	width="33"
+	height="30"
+	hexWidth="56.25"
+	hexHeight="64.466666"
+	A1CenterX="6"
+	A1CenterY="32"
+	HexGridConfig = "Normal"
+	altHexGrain="FALSE">
+
+    <!--
+        The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
+        determine the proper building type when creating the LOS information and assumes buildings are single-hex stone or 
+        wooden buildings. Use these elements to override the building type. 
+        
+        See the terrainType elements for a complete list of building names
+    -->
+    <buildingTypes>
+    </buildingTypes>
+
+	<overlaySSRules>
+	    <!--
+			Scenario-specific overlay rules. 
+			name - the VASL SSR name
+			image - the image name
+			x - x coordinate of overly upper left
+			y - y coordinate of overlay upper left
+		-->
+	</overlaySSRules>
+	
+	<colors>
+		<!--
+			The VASL board colors. Used for color-specific SSR transformations. Use this element to override the shared color pallet. 
+			name - the VASL color name
+			red, green, blue - the RBG value of the color in the image
+			terrain - the LOS terrain type
+			elevation - the base elevation of the terrain
+			
+		-->
+		<color name="HedgeGreen" red="0" green="99" blue="0" terrain="Hedge" elevation="0" />
+		<color name="Church" red="0" green="132" blue="132" terrain="Stone Building, 2 Level" elevation="0" />
+		<color name="WallBrown" red="66" green="66" blue="66" terrain="Wall" elevation="0" />
+		<color name="StoneBldg1" red="99" green="99" blue="99" terrain="Stone Building" elevation="0" />
+		<color name="OrchL0" red="136" green="112" blue="74" terrain="Orchard, Out of Season" elevation="0" />
+		<color name="StoneBldg2" red="148" green="148" blue="148" terrain="Stone Building, 1 Level" elevation="0" />
+		<color name="WoodsL0" red="165" green="173" blue="99" terrain="Woods" elevation="0" />
+		<color name="WoodBldg1" red="189" green="99" blue="8" terrain="Wooden Building" elevation="0" />
+		<color name="GraveyardGreen" red="189" green="206" blue="189" terrain="Graveyard" elevation="0" />
+		<color name="DirtRdL0" red="239" green="231" blue="206" terrain="Dirt Road" elevation="0" />
+		<color name="Level0" red="247" green="255" blue="247" terrain="Open Ground" elevation="0" />
+	</colors>
+	
+	<colorSSRules>
+		<!--
+			The board color scenario-specific rules. Use this element to override the shared SSRs.		
+		-->
+	</colorSSRules>
+	
+</boardMetadata>
