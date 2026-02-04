@@ -178,8 +178,8 @@ public class BoardMetadata extends AbstractMetadata {
                 // set flags indicating board-specific information
                 // test code - don't get colors from bdXX files; only use colors from SharedBoardMetaData.xml
                 boardSpecificColors= root.getChild(colorSSRulesElement) != null && root.getChild(colorSSRulesElement).getChildren().size() > 0;
-                boardSpecificColorSSR = root.getChild(colorSSRulesElement) != null &&
-                        root.getChild(colorSSRulesElement).getChildren().size() >0;
+                boardSpecificColorSSR = true; //root.getChild(colorSSRulesElement) != null &&
+                        //root.getChild(colorSSRulesElement).getChildren().size() >0;
                 boardSpecificOverlayRules = root.getChild(overlaySSRulesElement) != null &&
                         root.getChild(overlaySSRulesElement).getChildren().size() > 0;
             }

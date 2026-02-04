@@ -154,7 +154,8 @@ public class VASLBoard extends ASLBoard {
     // No longer used due to changes to los-enabled crop/flip - can be deleted when changes complete
     @Deprecated(since="6.7.1", forRemoval=true)
     public Map getLOSData(HashMap<String, Terrain> terrainTypes, boolean isCropping, double gridadj) {
-        return VASLBoardArchive.getLOSData(terrainTypes, isCropping, gridadj);
+        //return VASLBoardArchive.getLOSData(terrainTypes, isCropping, gridadj);
+        return null;
     }
 
     @Override
@@ -483,16 +484,20 @@ public class VASLBoard extends ASLBoard {
                             for (int row = 0; row < losDataEditor.getMap().getHexGrid()[col].length; row++) {
 
                                 Hex currentHex = LOSData.getHex(col, row);
-                                if ("Marsh".equals(currentHex.getCenterLocation().getTerrain().getName())) {
+                                int terrainpointx = (int) (currentHex.getCenterLocation().getLOSPoint().getX() );
+                                if (terrainpointx > -5 && terrainpointx < 0) {terrainpointx = 0;}
+                                int terrainpointy = (int) (currentHex.getCenterLocation().getLOSPoint().getY() -1 );
+                                if (terrainpointy > -5 && terrainpointy < 0) {terrainpointy = 0;}
+                                Terrain nearcenterLocationTerrain = currentHex.getnearcenterLocationTerrain(); //losDataEditor.getMap().getGridTerrain(terrainpointx, terrainpointy);
+                                if ("Marsh".equals(nearcenterLocationTerrain.getName())) {
 
                                     boolean apply = false;
                                     for (int x = 0; x < 6; x++) {
-
                                         Hex adjacentHex = LOSData.getAdjacentHex(currentHex, x);
                                         if (adjacentHex != null &&
-                                                ("Woods".equals(adjacentHex.getCenterLocation().getTerrain().getName()) ||
-                                                        "Light Jungle".equals(adjacentHex.getCenterLocation().getTerrain().getName()) ||
-                                                        "Dense Jungle".equals(adjacentHex.getCenterLocation().getTerrain().getName()))) {
+                                                ("Woods".equals(adjacentHex.getnearcenterLocationTerrain().getName()) ||
+                                                        "Light Jungle".equals(adjacentHex.getnearcenterLocationTerrain().getName()) ||
+                                                        "Dense Jungle".equals(adjacentHex.getnearcenterLocationTerrain().getName()))) {
 
                                             apply = true;
                                         }
