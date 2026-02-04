@@ -6,7 +6,9 @@ import org.jdom2.JDOMException;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Contains metadata that is common to the shared and board metadata files
@@ -234,9 +236,45 @@ public abstract class AbstractMetadata {
             if (colorSSRule.getColorMaps().size() < 1) {
                 throw new JDOMException("colorSSRule " + name + " has no mappings");
             }
+            if (!colorSSRules.containsKey(name)) {
+                //new rule
+                colorSSRules.put(name, colorSSRule);
+            } else {
+                // add to existing rule
+                Map<String, Integer> colorValues = new HashMap<String, Integer>();
+                for (BoardColor boardColor : boardColors.values()) {
+                    colorValues.put(boardColor.getVASLColorName(), colorToInt(boardColor.getColor()));
+                }
+                // get existing rule
+                //ColorSSRule exists = colorSSRules.get(colorSSRule);
+                ColorSSRule exists = colorSSRules.get(name);
+                // get maps in BMD rule
+                for (Map.Entry<String, String> entry1 : colorSSRule.getColorMaps().entrySet()) {
 
-            // save the rule
-            colorSSRules.put(name, colorSSRule);
+                    int fromColor = 0;
+                    int toColor = 0;
+                    try {
+                        fromColor = colorValues.get(entry1.getKey());
+                        toColor = colorValues.get(entry1.getValue());
+
+                        if (fromColor >= 0 && toColor >= 0 && fromColor != toColor) {
+
+                            if (!exists.getColorMaps().containsKey(fromColor)) {
+                                exists.addColorMap(entry1.getKey(), entry1.getValue());
+                            }
+
+                        }
+                    } catch (Exception ex) {
+                        if (colorValues.get(entry1.getKey()) == null) {
+                            //logger.warn("Board " + board.getName() + " missing color entry in color SSR mapping: " + entry1.getKey());
+                        }
+                        if (colorValues.get(entry1.getValue()) == null) {
+                            //logger.warn("Board " + board.getName() + " missing color entry in color SSR mapping: " + entry1.getValue());
+                        }
+                    }
+
+                }
+            }
         }
     }
 
@@ -343,5 +381,8 @@ public abstract class AbstractMetadata {
      */
     public LinkedHashMap<String, UnderlaySSRule> getUnderlaySSRules() {
         return underlaySSRules;
+    }
+    private int colorToInt(Color color) {
+            return (color.getRed() << 16) + (color.getGreen() << 8) + color.getBlue();
     }
 }
