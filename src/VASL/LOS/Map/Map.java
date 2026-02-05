@@ -5360,7 +5360,10 @@ public class Map  {
             rangeToSource = rangeToTarget;
             rangeToTarget = rangetemp;
         }
-
+        // now round down source elevation to full level ONLY if height above obstacle > 1 A6.42
+        if (sourceElevation - (groundLevel + terrainHeight) > 1) {
+            sourceElevation = Math.floor(sourceElevation);
+        }
         // increment source elevation for slopes/hillocks in special case where terrain is same height as upper location
         if(status.slopes || status.startsOnHillock) {
             if (status.groundLevel + status.currentTerrainHgt == Math.max(status.sourceElevation, status.targetElevation)) {
