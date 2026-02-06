@@ -192,8 +192,9 @@ public class VASLBoard extends ASLBoard {
                 if (rule == null) {
                     /* this fix allows LOS checking across BSO on the RB/RO boards
                        an effort was made to expand this to all BSO on all LOS-enabled boards
-                       but too many problems/exceptions were encounted. Since the RB code seemed to work, I have left it in. Doug Rimmer September 2018 */
-                    //ToDo time to come back and get BSO working with LOS
+                       but too many problems/exceptions were encounted. Since the RB code seemed to work, it was left in.
+                       We could take this out and handle RB overlays in ASLMap.adjustLOSforOverlays
+                       but it would take a lot of work to create terrain colours for the GuttedFactory overlays */
                     if (this.name.equals("RBv3") || this.name.equals("RO")) {
                         applyRBROrule(s, LOSData);
                         changed = true;

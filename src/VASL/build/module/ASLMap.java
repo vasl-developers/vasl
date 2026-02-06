@@ -942,6 +942,9 @@ public class ASLMap extends Map {
             if (o.getName().contains("LightWoods")) { // Light Woods are handled by LOSSSRule terrain mapping. dont need to go through overlay method
                 continue;
             }
+            if (o.getName().contains("RB_Gutted")) { //RB Gutted Factory overlays handled in VASLBoard.applyColorSSRulestoTerrainElevationGrids
+                continue;
+            }
             losonoverlays.ovrrec = o.bounds();
 
             // get the image as a buffered image
