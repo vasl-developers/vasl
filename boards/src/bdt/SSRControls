@@ -1,0 +1,8 @@
+<SSRControls>
+ <Option name="Board t Special overlays">
+ <Checkbox name="">
+         <entry name="S040: Island Retreat" rule="SSO_S40" text="scenario S040 SSO"/>
+ </Checkbox>
+
+   </Option>
+</SSRControls>
