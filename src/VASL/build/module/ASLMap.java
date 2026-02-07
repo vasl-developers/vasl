@@ -352,7 +352,7 @@ public class ASLMap extends Map {
             */
             for (VASLBoard board : vaslboards) {
                 if (board.getName().equals("RBv3") || board.getName().equals("RO") || board.getName().equals("DaE") ||
-                         board.getName().equals("SG") || board.getName().equals("HT")) {
+                         board.getName().equals("SG") || board.getName().equals("HT") || board.getName().equals("VotG")) {
                     if (board.isReversed()){
                         return;
                     }
@@ -741,6 +741,9 @@ public class ASLMap extends Map {
                     gridconfigWidth = "HalfHexWidthOffset";
                     toplefthexheight = "LeftHexFullHeight";
                     toplefthexwidth = "HalfHexWidthOffset";
+                } else if (b.getName().contains("VotG")) {
+                    gridconfigWidth = "FullHexWidthOffset";
+                    toplefthexwidth = "FullHexWidthOffset";
                 }
                 if (b.isCropped()) {
                     //set Width value
@@ -770,6 +773,9 @@ public class ASLMap extends Map {
                                 //gridconfigWidth = "HalfHexWidthOffset";
                                 toplefthexheight = "LeftHexFullHeightOffset";
                                 toprighthexwidth = "HalfHexWidthOffset";
+                            }else if (b.getName().contains("VotG")) {
+                                //gridconfigWidth = "FullHexWidth";
+                                toprighthexwidth = "FullHexWidthOffset";
                             }
                         }
                     }
@@ -847,7 +853,7 @@ public class ASLMap extends Map {
                     if (toplefthexwidth.contains("HalfHexWidthOffset")) {
                         passA1centerx = b.getA1CenterX(); // board is not cropped on left edge and A1centerx will include offset
                     }
-                    else if (b.getVASLBoardArchive().getBoardName().contains("DaE") && toplefthexwidth.contains("FullHexWidthOffset")) {
+                    else if ((b.getVASLBoardArchive().getBoardName().contains("DaE") || b.getVASLBoardArchive().getBoardName().contains("VotG")) && toplefthexwidth.contains("FullHexWidthOffset")) {
                         passA1centerx = b.getA1CenterX();
                     }
                     else if (toplefthexwidth.contains("FullHexWidth")) {
