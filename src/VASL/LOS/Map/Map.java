@@ -5271,7 +5271,7 @@ public class Map  {
             // hindrance must be between the source and target
             if(range(status.sourceHex, status.currentHex, getMapConfiguration()) < range(status.sourceHex, status.targetHex, getMapConfiguration()) &&
                range(status.targetHex, status.currentHex, getMapConfiguration()) < range(status.sourceHex, status.targetHex, getMapConfiguration())){
-                int hindrancevalue =1;
+                double hindrancevalue =1;
                 // handle special cases where terrain hindrance is not 1
                 // if LOS along hexspine, check for higher hindrance
                 if((status.LOSis60Degree || status.LOSisHorizontal) && (status.rangeToSource % 2 != 0)) { // only need to check both hexes when range from source is odd
@@ -5295,6 +5295,9 @@ public class Map  {
                             if (testhex.getCenterLocation().getTerrain().isRoofless() || status.currentTerrain.getName().contains("Light Woods")) {
                                 hindrancevalue = 2;
                             }
+                            else if (status.currentTerrain.getName().contains("Rice Paddy, In Season")) {
+                                hindrancevalue = 0.5;
+                            }
                         }
                     }
                     else if(hexsidetouched==secondsidetest){
@@ -5303,17 +5306,23 @@ public class Map  {
                             if (testhex.getCenterLocation().getTerrain().isRoofless() || status.currentTerrain.getName().contains("Light Woods")) {
                                 hindrancevalue = 2;
                             }
+                            else if (status.currentTerrain.getName().contains("Rice Paddy, In Season")) {
+                                hindrancevalue = 0.5;
+                            }
                         }
                     }
                 }
                 else if(status.currentTerrain.getName().contains("Light Woods")){
                     hindrancevalue = 2;
                 }
+                else if (status.currentTerrain.getName().contains("Rice Paddy, In Season")) {
+                    hindrancevalue = 0.5;
+                }
                 else {
                     // roofless factory debris
-                    if (status.currentTerrain.isRoofless()) {hindrancevalue = 2;
-                    }
+                    if (status.currentTerrain.isRoofless()) {hindrancevalue = 2;}
                 }
+
                 result.addMapHindrance(status.currentHex, hindrancevalue, status.currentCol, status.currentRow);
 
                 // see if hindrance caused LOS to be blocked

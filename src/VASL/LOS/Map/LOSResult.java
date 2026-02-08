@@ -49,7 +49,7 @@ public class LOSResult {
 	private boolean LOSisHorizontal;
 
     // the <Integer> is the range to the hindrance hex
-	protected HashMap<Integer, Integer>  mapHindrances = new HashMap<Integer, Integer>();
+	protected HashMap<Integer, Double>  mapHindrances = new HashMap<Integer, Double>();
 
     // <Integer, Integer> = <range, hindrance>
 	private	HashMap<Integer, Integer>	smokeHindrances	= new HashMap<Integer, Integer>();
@@ -65,7 +65,6 @@ public class LOSResult {
     public boolean isLOSisHorizontal() { return LOSisHorizontal;}
     public boolean isLOSis60Degree()   {return LOSis60Degree;}
 	public boolean hasHindrance(){
-
         return mapHindrances.size() + smokeHindrances.size() + vehicleHindrances.size() + obaHindrances.size() > 0;
 	}
 
@@ -73,7 +72,7 @@ public class LOSResult {
      * @return total hindrances in results
      */
     public int getHindrance() {
-		int hindrance=0;
+		double hindrance=0;
 		for(Integer range : mapHindrances.keySet()) {
 			hindrance += mapHindrances.get(range);
 		}
@@ -90,7 +89,7 @@ public class LOSResult {
         // add the OBA hindrances
         hindrance += obaHindrances.size();
 
-		return hindrance;
+		return (int) Math.floor(hindrance);
 	}
 
     /**
@@ -99,7 +98,7 @@ public class LOSResult {
      * @param x current x of LOS
      * @param y current y of LOS
      */
-    public void addMapHindrance(Hex h, int hindrance, int x, int y){
+    public void addMapHindrance(Hex h, double hindrance, int x, int y){
 
         setFirstHindrance(x, y);
 

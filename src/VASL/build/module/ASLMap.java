@@ -1521,7 +1521,7 @@ public class ASLMap extends Map {
                 newterrain = "Multiple Types";
                 break;
             default:
-                newterrain = "StoneBuilding";
+                newterrain = "Stone Building";
         }
         if (newterrain == "Multiple Types") {
             addtoFixHexList(losonoverlays);
@@ -1899,6 +1899,9 @@ public class ASLMap extends Map {
         }
         else if (overlayname.contains("w")) {
             return "Wadi";
+        }
+        else if (overlayname.contains("rp")) {
+            return "Rice Paddy";
         }
         else {
             return "";
