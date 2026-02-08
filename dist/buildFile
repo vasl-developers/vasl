@@ -172,6 +172,7 @@
         <VASSAL.build.module.documentation.BrowserPDFFile pdfFile="Shaders (Night, etc).pdf" title="Shaders (Night, etc)"/>
         <VASSAL.build.module.documentation.BrowserPDFFile pdfFile="Perimeter.pdf" title="Perimeters"/>
         <VASSAL.build.module.documentation.BrowserPDFFile pdfFile="Casualties Bin.pdf" title="Casualties Bin"/>
+        <VASSAL.build.module.documentation.BrowserPDFFile pdfFile="VASL Overlays.pdf" title="Overlays"/>
         <VASSAL.build.module.documentation.BrowserPDFFile pdfFile="Update Game file (.vsav or .vlog).pdf" title="Update Game Tool"/>
         <VASSAL.build.module.documentation.BrowserPDFFile pdfFile="VASL Compatibility.pdf" title="Version Compatibility"/>
         <VASSAL.build.module.documentation.AboutScreen fileName="VASL-Splash.png" title="About VASL"/>
