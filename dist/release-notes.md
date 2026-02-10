@@ -23,7 +23,8 @@
 ## 📈 Improvements
  - Improvement 1: LOS support for bdHT (Hatten In Flames) added.
  - Improvement 2: LOS support for Rice Paddy overlays.
- - Overlays documentation added to Help menu.
+ - Improvement 3: Overlays documentation added to Help menu.
+ - Improvement 4: Restore full visibility to counters (LOSH) retained during LOS Checks.
 
 ---
 
