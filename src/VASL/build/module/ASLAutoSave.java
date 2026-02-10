@@ -57,7 +57,7 @@ public class ASLAutoSave extends AbstractBuildable {
         }
 
         File dir = new File(dirPath);
-        if (!dir.exists() && !dir.mkdirs()) {
+        if (!VASL.build.module.FileHelper.FileExists(dir) && !dir.mkdirs()) {
             gameModule.warn("Failed to create autosave directory: " + dirPath); // Log a warning if directory creation fails
         }
         return dirPath;
@@ -71,7 +71,8 @@ public class ASLAutoSave extends AbstractBuildable {
         if (dir != null) {
             directory = dir.getAbsolutePath();
             // Ensure the directory exists
-            if (!new File(directory).exists() && !new File(directory).mkdirs()) {
+            File autoSaveFolder = new File(directory);
+            if (!VASL.build.module.FileHelper.FileExists(autoSaveFolder) && !autoSaveFolder.mkdirs()) {
                 gameModule.warn("Failed to create autosave directory: " + directory);
             }
         }
@@ -117,7 +118,7 @@ public class ASLAutoSave extends AbstractBuildable {
             gameModule.warn("Saved autosave file to: " + autosaveFileName);
 
             // Delete the temporary file
-            if (tmpFile.exists()) {
+            if (VASL.build.module.FileHelper.FileExists(tmpFile)) {
                 tmpFile.delete();
             }
         } catch (IOException e) {
