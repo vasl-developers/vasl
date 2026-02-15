@@ -18,7 +18,7 @@
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
 -->
-<boardMetadata name="72" version="6.8" versionDate="2025/10/27" author="ATC" boardImageFileName="bd72.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="72" version="6.9" versionDate="2026/02/12" author="ATC" boardImageFileName="bd72.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -86,7 +86,7 @@
 		<overlaySSRule name="NoRoads" image="72_NoRoads.gif" x="0" y="0" />
 		<overlaySSRule name="LightWoods" image="72_LightWoods.gif" x="0" y="0" />
 		<overlaySSRule name="WoodsRoadtoPath" image="72_WoodsRoad2Path.gif" x="0" y="0" />
-		<overlaySSRule name="BSONoStream" image="BSO_72_NoStream.gif" x="0" y="0" />
+		<overlaySSRule name="BSO_72_NoStream" image="BSO_72_NoStream.gif" x="0" y="0" />
 	</overlaySSRules>
 	
 	<colors>

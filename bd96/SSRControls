@@ -1,0 +1,20 @@
+<SSRControls>
+ <Option name="Board 96 Special overlays">
+     <Checkbox name="">
+         <entry name="No Shellholes" rule="bd96_BSO_No_Shellholes" text="bd96 No Shellholes"/>
+	 </Checkbox>
+    <Checkbox name="">
+         <entry name="No Debris" rule="bd96_BSO_No_Debris" text="bd96 No Debris"/>
+	 </Checkbox>
+	     <Checkbox name="">
+         <entry name="No Rubble" rule="bd96_BSO_No_Rubble" text="bd96 No Rubble"/>
+	 </Checkbox>
+	     <Checkbox name="">
+         <entry name="No Runway Lines" rule="bd96_BSO_NoRunwayLines" text="bd96 No Runway Lines"/>
+	 </Checkbox>
+	     <Checkbox name="">
+         <entry name="Remove Boulevard dots" rule="bd96_BSO_No_Boulevard_Dots" text="bd96 remove Boulevard dots"/>
+	 </Checkbox>
+    </Option>
+</SSRControls>
+

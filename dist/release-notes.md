@@ -1,5 +1,5 @@
 
-# Release Notes: Version 6.7.2-beta3
+# Release Notes: Version 6.7.2-beta4
 **Release Date:** Feb 3, 2026
 
 ---
@@ -16,11 +16,16 @@
  - Fix 4: Added missing Finnish S? counter.
  - Fix 5: LOS bugs for Hillocks and Marsh to Swamp transform fixed.
  - Fix 6: Range display for linked (CTRL-ALT-L) counters fixed.
+ - Fix 7: LOS bugs with RB Gutted Factories fixed.
+ - Fix 8: Added missing Deluxe Starshell images.
 
 ---
 
 ## 📈 Improvements
  - Improvement 1: LOS support for bdHT (Hatten In Flames) added.
+ - Improvement 2: LOS support for Rice Paddy overlays.
+ - Improvement 3: Overlays documentation added to Help menu.
+ - Improvement 4: Restore full visibility to counters (LOSH) retained during LOS Checks.
 
 ---
 
