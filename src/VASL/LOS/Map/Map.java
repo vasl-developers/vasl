@@ -281,7 +281,7 @@ public class Map  {
                     hexGrid[col][row].resetHexsideLocationNames();
                 }
             }
-        }else if (this.A1CenterY==32.0){ // || this.A1CenterY == 59.0){  // Hatten special case Singling special case; Brecourt special case
+        }else if (this.A1CenterY==32.0 || this.A1CenterY==35.0){ // || this.A1CenterY == 59.0){  // Hatten special case Singling special case; Brecourt special case; VotG special case
             for (int col = 0; col < this.width; col++) {
                 hexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
                 for (int row = 0; row < this.height + (col % 2); row++) {
@@ -415,6 +415,34 @@ public class Map  {
             }
         }
         else if (b.getName().contains("VotG")){ // each col has equal number of rows
+            if (this.A1CenterY== this.hexHeight / 2) {
+                for (int col = 0; col < (startcol + this.width); col++) {
+                    hexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
+                    for (int row = 0; row < (startrow + this.height + (col % 2)); row++) {
+                        if (col >= startcol && row >= startrow) {
+                            hexGrid[col - startcol][row- startrow] = new Hex(col - startcol, row - startrow, getGEOHexName(col, row, false, false), getHexCenterPoint(col - startcol, row - startrow), hexHeight, hexWidth, this, 0, terrainList[0]);
+                        }
+                    }
+                }
+            }
+            else if (this.A1CenterY==0){
+                int evencol =0;
+                for (int col = 0; col < this.width; col++) {
+                    evencol = col % 2 == 0 ? 1 : 0;
+                    hexGrid[col] = new Hex[this.height + evencol]; // add 1 if even
+                    for (int row = 0; row < this.height + evencol; row++) {
+                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                    }
+                }
+            }
+            // reset the hex locations to map grid
+            for (int col = 0; col < hexGrid.length; col++) {
+                for (int row = 0; row < hexGrid[col].length; row++) {
+                    hexGrid[col][row].resetHexsideLocationNames();
+                }
+            }
+        }
+        else if (b.getName().contains("SaPF")){ // each col has equal number of rows
             if (this.A1CenterY== this.hexHeight / 2) {
                 for (int col = 0; col < (startcol + this.width); col++) {
                     hexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
@@ -577,6 +605,32 @@ public class Map  {
             }*//*
         }*/
         return hexGrid;
+    }
+
+    private boolean addVolgaPierHindrance(LOSStatus status, LOSResult result) {
+        //
+        // Special case for Valor of the Guards
+        //
+        // If currentHex is a Volga Pier (and the LOS crosses the depiction)
+        //      AND
+        // If sourceHex and targetHex are both water hexes
+        //      OR
+        // If sourceHex is a Volga Pier hex and targetHex is a water hex
+        //      OR
+        // If sourceHex is a water hex and targetHex is a Volga Pier hex
+        //      THEN
+        //  currentHex is a hindrance
+        //
+        boolean sourceIsWater = status.source.getTerrain().isWaterTerrain();
+        boolean targetIsWater = status.target.getTerrain().isWaterTerrain();
+        boolean sourceIsPier = status.source.getTerrain().getName().contains("Volga Pier");
+        boolean targetIsPier = status.target.getTerrain().getName().contains("Volga Pier");
+
+        if ((sourceIsWater && targetIsWater) || (sourceIsPier && targetIsWater) || (sourceIsWater && targetIsPier)) {
+            return addHindranceHex(status, result);
+        }
+
+        return false;
     }
 
     // ToDo uses of this constructor should be eliminated as further work on new crop/flip methods proceeds
@@ -4311,7 +4365,9 @@ public class Map  {
                     return false;
                 } else if (!status.slopes){ // added slopes test to fix issue 502 DR
                     // add hindrance
-                    if (addHindranceHex(status, result)) {
+                    if (status.currentTerrain.getName().contains("Volga Pier")) {
+                        return addVolgaPierHindrance(status, result);
+                    } else if (addHindranceHex(status, result)) {
                         return true;
                     }
                 }
@@ -4808,7 +4864,9 @@ public class Map  {
         else {
 
             // must be hindrance
-            if (addHindranceHex(status, result)) {
+            if (status.currentTerrain.getName().contains("Volga Pier")) {
+                return addVolgaPierHindrance(status, result);
+            } else if (addHindranceHex(status, result)) {
                 return true;
             }
         }
@@ -5295,7 +5353,7 @@ public class Map  {
                             if (testhex.getCenterLocation().getTerrain().isRoofless() || status.currentTerrain.getName().contains("Light Woods")) {
                                 hindrancevalue = 2;
                             }
-                            else if (status.currentTerrain.getName().contains("Rice Paddy, In Season")) {
+                            else if (status.currentTerrain.getName().contains("Rice Paddy, In Season") || status.currentTerrain.getName().contains("Light Grain")) {
                                 hindrancevalue = 0.5;
                             }
                         }
@@ -5306,7 +5364,7 @@ public class Map  {
                             if (testhex.getCenterLocation().getTerrain().isRoofless() || status.currentTerrain.getName().contains("Light Woods")) {
                                 hindrancevalue = 2;
                             }
-                            else if (status.currentTerrain.getName().contains("Rice Paddy, In Season")) {
+                            else if (status.currentTerrain.getName().contains("Rice Paddy, In Season") || status.currentTerrain.getName().contains("Light Grain")) {
                                 hindrancevalue = 0.5;
                             }
                         }
@@ -5315,7 +5373,7 @@ public class Map  {
                 else if(status.currentTerrain.getName().contains("Light Woods")){
                     hindrancevalue = 2;
                 }
-                else if (status.currentTerrain.getName().contains("Rice Paddy, In Season")) {
+                else if (status.currentTerrain.getName().contains("Rice Paddy, In Season") || status.currentTerrain.getName().contains("Light Grain")) {
                     hindrancevalue = 0.5;
                 }
                 else {
