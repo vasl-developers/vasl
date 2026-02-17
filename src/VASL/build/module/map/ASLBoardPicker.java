@@ -201,11 +201,11 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
 
         g.getPrefs().addOption("VASL", config);
         String storedValue = g.getPrefs().getStoredValue(BOARD_DIR);
-        if (storedValue == null || !new File(storedValue).exists()) {
+        if (storedValue == null) {
             final File archive = new File(g.getDataArchive().getName());
             final File dir = archive.getParentFile();
             File defaultDir = new File(dir, "boards");
-            if (!defaultDir.exists()) {
+            if (!VASL.build.module.FileHelper.FileExists(defaultDir)) {
                 defaultDir.mkdir();
             }
             config.setValue(defaultDir);
@@ -547,7 +547,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             final File boardFile = new File(boardDir, "bd" + unReversedBoardName);
             final GameModule g = GameModule.getGameModule();
             // try to grab the board from repository if missing
-            if (!boardFile.exists()) {
+            if (!VASL.build.module.FileHelper.FileExists(boardFile)) {
 
                 // try to fetch the missing board
                 g.warn("Board " + unReversedBoardName + " is missing. Downloading...");
@@ -646,7 +646,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
             final File ovrFile = new File(boardDir, "overlays/" + ovrfilename);
 
             // try to grab the overlay from repository if missing
-            if (!ovrFile.exists()) {
+            if (!VASL.build.module.FileHelper.FileExists(ovrFile)) {
 
                 // try to fetch the missing overlay
                 g.warn("Overlay " + ovrfilename + " is missing. Downloading...");
@@ -803,7 +803,7 @@ public class ASLBoardPicker extends BoardPicker implements ActionListener  {
                 b.setReversed(false);
             }
             final File f = new File(boardDir, "bd" + unReversedBoardName);
-            if (!f.exists()) {
+            if (!VASL.build.module.FileHelper.FileExists(f)) {
                 throw new BoardException("File does not exist: " + f.getPath());
             }
             b.initializeFromArchive(f);

@@ -33,7 +33,7 @@ public class BoardBuilder {
 
         File baseFolder = new File(INPUT_FOLDER);
 
-        if (!baseFolder.exists()) {
+        if (!VASL.build.module.FileHelper.FileExists(baseFolder)) {
             System.out.println(String.format("Could not find %s.", baseFolder));
             return;
         }
