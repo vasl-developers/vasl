@@ -1849,6 +1849,12 @@ public class ASLMap extends Map {
                         }
                     }
                 }
+                else {
+                    if (inhhexes.containsKey(losonoverlays.newlosdata.gridToHex((int) losonoverlays.overpositionx, (int) losonoverlays.overpositiony))) {
+                        inhhexes.remove(losonoverlays.newlosdata.gridToHex((int) losonoverlays.overpositionx, (int) losonoverlays.overpositiony));
+                    }
+                }
+
 
             } else if (terr.isBuilding()) {
                 // ToDo no longer needed due to change to Hex code
