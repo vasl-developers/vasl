@@ -1475,7 +1475,11 @@ public class Map  {
                 // reset variables
                 //status.ignoreGroundLevelHex = null;
                 // code added by DR to enable Roofless factory hexes
-
+                // test code
+                if(status.currentCol == 79 && status.currentRow == 218){
+                    boolean reg = true;
+                }
+                //end test code
                 status.currentTerrain = getGridTerrain(status.currentCol, status.currentRow);
                 status.groundLevel = getGridElevation(status.currentCol, status.currentRow);
 
