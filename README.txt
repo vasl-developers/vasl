@@ -9,6 +9,6 @@ standalone application. The library is used by VASSAL
 This is the source code used in VASL, the VASSAL module for Advanced
 Squad Leader.
 
-To participate in the further development of VASL and linked products, please read the Getting Started with VASL Development document found in the dev documentation� directory of the VASL repository on this site. This document provides detailed instructions on obtaining, installing, and using a number of tools necessary to enable VASL development. 
+To participate in the further development of VASL and linked products, please read the Getting Started with VASL Development document found in the dev documentation directory of the VASL repository on this site. This document provides detailed instructions on obtaining, installing, and using a number of tools necessary to enable VASL development. 
 
 
