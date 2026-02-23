@@ -5,7 +5,8 @@
 ---
 
 ## 🚀 New Features
- - 
+ - LOS terrain types added for "Volga Piers" (VotG) and "Light Grain" (SaP).
+ - LOS enabled for VotG and SaPF (full SaP map ONLY, not the individual ones) maps.
  
 ---
 
