@@ -1513,7 +1513,7 @@ public class ASLMap extends Map {
     private void checkInherentTerrainProperlyRemoved(LOSonOverlays losonoverlays){
         for (Hex hexToCheck : losonoverlays.inherentTerrainHexesToCheckList) {
             Terrain terr = hexToCheck.getCenterLocation().getTerrain();
-            if (!terr.isInherentTerrain()) {
+            //if (!terr.isInherentTerrain()) {
                 //loop through all pixels in hex
                 Rectangle s = hexToCheck.getHexBorder().getBounds();
                 for (int i = (int) s.getX(); i < s.getX() + s.getWidth(); i++) {
@@ -1530,7 +1530,7 @@ public class ASLMap extends Map {
                 }
                 hexToCheck.getCenterLocation().setTerrain(losonoverlays.newlosdata.getTerrain(terr.getType()));
                 hexToCheck.resetHexsideTerrain(0);
-            }
+            //}
         }
 
     }
