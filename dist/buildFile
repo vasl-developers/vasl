@@ -177,8 +177,7 @@
         <VASSAL.build.module.documentation.BrowserPDFFile pdfFile="VASL Compatibility.pdf" title="Version Compatibility"/>
         <VASSAL.build.module.documentation.AboutScreen fileName="VASL-Splash.png" title="About VASL"/>
         <VASSAL.build.module.documentation.HelpFile fileName="Credits.txt" fileType="archive" title="Credits" vassalDoc="user"/>
-        <VASL.build.module.GitHubIssueCreator title="Submit Suggestion" vasl="vasl" vasl-developers="vasl-developers"/>
-    </VASSAL.build.module.Documentation>
+        </VASSAL.build.module.Documentation>
     <VASL.build.module.ASLCommandEncoder noColorPreferences="true"/>
     <VASSAL.build.module.PieceWindow defaultWidth="0" hidden="false" hotkey="67,520" icon="counters" name="VASL Counters" scale="1.0" text="" tooltip="Show/Hide the VASL Counters window">
         <VASSAL.build.widget.TabWidget>
