@@ -446,8 +446,8 @@
 		<boarddata name="RC&#x20;Orlovo" version="1.0" versionDate="2008/08/30" description="CSIR - ARMIR 1941/43 Orlovo Ivanovka" boardType="HASL" publisher="CH!" issued="" />
 		<boarddata name="RG" version="2.0" versionDate="2008/08/30" description="Roman Glory" boardType="HASL" publisher="CH!" issued="" />
 		<boarddata name="SaPC" version="1.0" versionDate="2025/05/12" description="Slaughter at Ponyri - Center" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="SaPF" version="1.0" versionDate="2025/05/12" description="Slaughter at Ponyri - Full" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="SaPN" version="1.1" versionDate="2026/03/01" description="Slaughter at Ponyri - North" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="SaPF" version="1.1" versionDate="2026/03/01" description="Slaughter at Ponyri - Full" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="SaPN" version="1.0" versionDate="2026/03/01" description="Slaughter at Ponyri - North" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="SaPS" version="1.0" versionDate="2025/05/12" description="Slaughter at Ponyri - South" boardType="HASL" publisher="MMP" issued="" />	
 		<boarddata name="SaPT" version="1.0" versionDate="2025/05/12" description="Slaughter at Ponyri - Train" boardType="HASL" publisher="MMP" issued="" />		
 		<boarddata name="SCW0" version="1.0" versionDate="2008/08/30" description="" boardType="Geoboard" publisher="CH!" issued="" />
