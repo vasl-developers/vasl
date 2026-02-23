@@ -353,7 +353,8 @@ public class ASLMap extends Map {
             */
             for (VASLBoard board : vaslboards) {
                 if (board.getName().equals("RBv3") || board.getName().equals("RO") || board.getName().equals("DaE") ||
-                         board.getName().equals("SG") || board.getName().equals("HT") || board.getName().equals("VotG")) {
+                         board.getName().equals("SG") || board.getName().equals("HT") || board.getName().equals("VotG") ||
+                         board.getName().equals("SaPF")) {
                     if (board.isReversed()){
                         return;
                     }
@@ -723,7 +724,7 @@ public class ASLMap extends Map {
                 indexOfCol2 = b.getWidth() - 1;
                 valueOfRow1 = 0;
                 valueOfRow2 = b.getHeight(); //default value
-                if (b.getName().contains("RBv3")) {
+                if (b.getName().contains("RBv3") || b.getName().contains("SaPF")) {
                     gridconfigWidth = "HalfHexWidthOffset";
                     toplefthexheight = "LeftHexFullHeight";
                     toplefthexwidth = "HalfHexWidthOffset";
@@ -760,7 +761,7 @@ public class ASLMap extends Map {
                             //gridconfigWidth = "FullHexWidth";
                             toprighthexwidth = "FullHexWidth";
                         } else {
-                            if (b.getName().contains("RBv3")) {
+                            if (b.getName().contains("RBv3") || b.getName().contains("SaPF")) {
                                 //gridconfigWidth = "HalfHexWidthOffset";
                                 toprighthexwidth = "HalfHexWidthOffset";
                             } else if (b.getName().contains("RO")) {
