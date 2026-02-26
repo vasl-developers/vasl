@@ -2525,7 +2525,7 @@ public class Map  {
             }
             else {
                 for ( int hside = 0 ; hside < 6 ; hside++) {
-                    if (status.currentHex.isPointOnHexside(status.currentCol, status.currentRow, hside)) {
+                    if (status.currentHex.isPointOnHexside(status.currentCol, status.currentRow, hside, 2, 3)) {
                         Hex testhex = getAdjacentHex(status.currentHex, hside);
                         if (status.vaslGameInterface.getHexside(testhex) != null) {
                             counter = status.vaslGameInterface.getHexside((testhex));
@@ -2545,7 +2545,7 @@ public class Map  {
                     if (usehexside == -1 ){  //Hedge, Wall, Bocage
                         status.currentTerrain = getTerrainFromOverlayImage(status, getOverlayPiece(status), usehexside);
                     }
-                    else if (status.currentHex.isPointOnHexside(status.currentCol, status.currentRow, usehexside)) { //counter.getHexside())) {
+                    else if (status.currentHex.isPointOnHexside(status.currentCol, status.currentRow, usehexside,2,3)) { //counter.getHexside())) {
                         // draggable overlay of hexside: Hedge, Wall, Bocage, Rowhouse/Factory Bar and Breach - others?
                         status.currentTerrain = getTerrainFromOverlayImage(status, getOverlayPiece(status), hexside);
                     }
