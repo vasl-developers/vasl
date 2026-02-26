@@ -326,7 +326,7 @@ class QCConfiguration extends DefaultMutableTreeNode {
 
     File configurationDirectory = new File(Info.getConfDir() + System.getProperty("file.separator","\\") + "qcconfigs");
 
-    if (!configurationDirectory.exists()) {
+    if (!VASL.build.module.FileHelper.FileExists(configurationDirectory)) {
       configurationDirectory.mkdir();
     }
     else if (!configurationDirectory.isDirectory()) {
@@ -394,7 +394,7 @@ class QCConfiguration extends DefaultMutableTreeNode {
   public boolean SaveXML() {
     try {
       if (xmlConfigurationFile != null) {
-        if (!xmlConfigurationFile.exists()) {
+        if (!VASL.build.module.FileHelper.FileExists(xmlConfigurationFile)) {
           xmlConfigurationFile.createNewFile();
         }
 
@@ -451,7 +451,7 @@ class QCConfiguration extends DefaultMutableTreeNode {
   }
 
   public void DeleteXML() {
-    if (xmlConfigurationFile != null && xmlConfigurationFile.exists()) {
+    if (VASL.build.module.FileHelper.FileExists(xmlConfigurationFile)) {
       xmlConfigurationFile.delete();
     }
   }
@@ -799,7 +799,7 @@ public class QC implements Buildable, GameComponent {
 
       // now read the custom configuration files
       // check for configs dir
-      if (!configurationDirectory.exists()) {
+      if (!VASL.build.module.FileHelper.FileExists(configurationDirectory)) {
         configurationDirectory.mkdir();
       }
       else if (!configurationDirectory.isDirectory()) {

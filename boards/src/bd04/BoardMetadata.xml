@@ -23,7 +23,7 @@
 	v6.8 - 7/3/25 - added SSO_04_134 - TJ
 	v6.9 - 8/27/25 - added SSO_04_A18 - TJ
 -->
-<boardMetadata name="04" version="6.9" versionDate="2025/08/27" author="TR" boardImageFileName="bd04.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="04" version="7.0" versionDate="2026/02/16" author="TR" boardImageFileName="bd04.gif" hasHills="FALSE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily

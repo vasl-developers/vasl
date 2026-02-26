@@ -1,6 +1,6 @@
 
 # Release Notes: Version 6.7.2-beta4
-**Release Date:** Feb 3, 2026
+**Release Date:** Feb 20, 2026
 
 ---
 
@@ -27,6 +27,7 @@
  - Improvement 2: LOS support for Rice Paddy overlays.
  - Improvement 3: Overlays documentation added to Help menu.
  - Improvement 4: Restore full visibility to counters (LOSH) retained during LOS Checks.
+ - Improvement 5: LOS now works (mostly) with BSO and SSO overlay files.
 
 ---
 

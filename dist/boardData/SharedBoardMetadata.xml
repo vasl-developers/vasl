@@ -1058,7 +1058,7 @@
 		<!-- Rice Paddies  -->
 		<color name="RicePaddy" red="103" green="75" blue="39" terrain="Rice Paddy Bank" elevation="UNKNOWN" />
 		<color name="PaddyInterior1" red="174" green="168" blue="78" terrain="Rice Paddy, Drained" elevation="UNKNOWN" />
-		<color name="PaddyInterior2" red="135" green="190" blue="220" terrain="Rice Paddy, Irrigated" elevation="UNKNOWN" />
+		<color name="PaddyInterior2" red="135" green="190" blue="221" terrain="Rice Paddy, Irrigated" elevation="UNKNOWN" />
 		<color name="PaddyInterior3" red="255" green="241" blue="111" terrain="Rice Paddy, In Season" elevation="UNKNOWN" />
 		<!-- Rubble  -->
 		<color name="StoneRubble" red="115" green="115" blue="116" terrain="Stone Rubble" elevation="0" />

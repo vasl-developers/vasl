@@ -738,7 +738,8 @@ public class Map  {
         //have a separate loop for non-standard boards
         //Dinant follows standard board layout and so can be treated as geo
         if (b.getName().equals("RBv3") || b.getName().equals("RO") || b.getName().equals("DaE") ||
-                b.getName().equals("SG") || b.getName().equals("HT") || b.getName().equals("VotG")) {
+                b.getName().equals("SG") || b.getName().equals("HT") || b.getName().equals("VotG") ||
+                b.getName().equals("SaPF")) {
             createtheHASLHexGrid(b);
         }
         // at this point the terrainGrid, elevationGrid and HexGrid are created but hold no los data
@@ -1529,7 +1530,11 @@ public class Map  {
                 // reset variables
                 //status.ignoreGroundLevelHex = null;
                 // code added by DR to enable Roofless factory hexes
-
+                // test code
+                if(status.currentCol == 79 && status.currentRow == 218){
+                    boolean reg = true;
+                }
+                //end test code
                 status.currentTerrain = getGridTerrain(status.currentCol, status.currentRow);
                 status.groundLevel = getGridElevation(status.currentCol, status.currentRow);
 
