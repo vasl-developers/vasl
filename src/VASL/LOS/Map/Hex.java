@@ -1741,7 +1741,7 @@ public class Hex {
         }
     }
 
-    public boolean isPointOnHexside(double x, double y, int hexside){
+    public boolean isPointOnHexside(double x, double y, int hexside, int startint, int stopint){
         // A small tolerance value for floating-point comparisons
         final double EPSILON = 1; //1e-9;
         // Point variables
@@ -1749,9 +1749,9 @@ public class Hex {
         Point A = new Point((int)hexsideloc.getLOSPoint().getX(), (int)hexsideloc.getLOSPoint().getY());
         Point B = new Point((int)hexsideloc.getAuxLOSPoint().getX(), (int)hexsideloc.getAuxLOSPoint().getY());
         Point P = new Point((int)x, (int)y);
-        // use for loops to test a 5 pixel band for the hexside
-        for (int testx = -2 ; testx < 3 ; testx++) {
-            for (int testy = -2; testy < 3; testy++) {
+        // use for loops to test a pixel band for the hexside; startint and stopint define width of band
+        for (int testx = -startint ; testx < stopint ; testx++) {
+            for (int testy = -startint; testy < stopint; testy++) {
                 if (Line2D.ptSegDist(A.x, A.y, B.x, B.y, P.x + testx, P.y + testy) < EPSILON) {return true;}
             }
         }
