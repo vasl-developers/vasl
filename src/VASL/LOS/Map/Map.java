@@ -281,7 +281,7 @@ public class Map  {
                     hexGrid[col][row].resetHexsideLocationNames();
                 }
             }
-        }else if (this.A1CenterY==32.0){ // || this.A1CenterY == 59.0){  // Hatten special case Singling special case; Brecourt special case
+        }else if (this.A1CenterY==32.0 || this.A1CenterY==35.0){ // || this.A1CenterY == 59.0){  // Hatten special case Singling special case; Brecourt special case; VotG special case
             for (int col = 0; col < this.width; col++) {
                 hexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
                 for (int row = 0; row < this.height + (col % 2); row++) {
@@ -403,6 +403,62 @@ public class Map  {
                 for (int col = 0; col < this.width; col++) {
                     hexGrid[col] = new Hex[this.height];
                     for (int row = 0; row < this.height; row++) {
+                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                    }
+                }
+            }
+            // reset the hex locations to map grid
+            for (int col = 0; col < hexGrid.length; col++) {
+                for (int row = 0; row < hexGrid[col].length; row++) {
+                    hexGrid[col][row].resetHexsideLocationNames();
+                }
+            }
+        }
+        else if (b.getName().contains("VotG")){ // each col has equal number of rows
+            if (this.A1CenterY== this.hexHeight / 2) {
+                for (int col = 0; col < (startcol + this.width); col++) {
+                    hexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
+                    for (int row = 0; row < (startrow + this.height + (col % 2)); row++) {
+                        if (col >= startcol && row >= startrow) {
+                            hexGrid[col - startcol][row- startrow] = new Hex(col - startcol, row - startrow, getGEOHexName(col, row, false, false), getHexCenterPoint(col - startcol, row - startrow), hexHeight, hexWidth, this, 0, terrainList[0]);
+                        }
+                    }
+                }
+            }
+            else if (this.A1CenterY==0){
+                int evencol =0;
+                for (int col = 0; col < this.width; col++) {
+                    evencol = col % 2 == 0 ? 1 : 0;
+                    hexGrid[col] = new Hex[this.height + evencol]; // add 1 if even
+                    for (int row = 0; row < this.height + evencol; row++) {
+                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                    }
+                }
+            }
+            // reset the hex locations to map grid
+            for (int col = 0; col < hexGrid.length; col++) {
+                for (int row = 0; row < hexGrid[col].length; row++) {
+                    hexGrid[col][row].resetHexsideLocationNames();
+                }
+            }
+        }
+        else if (b.getName().contains("SaPF")){ // each col has equal number of rows
+            if (this.A1CenterY== this.hexHeight / 2) {
+                for (int col = 0; col < (startcol + this.width); col++) {
+                    hexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
+                    for (int row = 0; row < (startrow + this.height + (col % 2)); row++) {
+                        if (col >= startcol && row >= startrow) {
+                            hexGrid[col - startcol][row- startrow] = new Hex(col - startcol, row - startrow, getGEOHexName(col, row, false, false), getHexCenterPoint(col - startcol, row - startrow), hexHeight, hexWidth, this, 0, terrainList[0]);
+                        }
+                    }
+                }
+            }
+            else if (this.A1CenterY==0){
+                int evencol =0;
+                for (int col = 0; col < this.width; col++) {
+                    evencol = col % 2 == 0 ? 1 : 0;
+                    hexGrid[col] = new Hex[this.height + evencol]; // add 1 if even
+                    for (int row = 0; row < this.height + evencol; row++) {
                         hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
                     }
                 }
@@ -551,6 +607,32 @@ public class Map  {
         return hexGrid;
     }
 
+    private boolean addVolgaPierHindrance(LOSStatus status, LOSResult result) {
+        //
+        // Special case for Valor of the Guards
+        //
+        // If currentHex is a Volga Pier (and the LOS crosses the depiction)
+        //      AND
+        // If sourceHex and targetHex are both water hexes
+        //      OR
+        // If sourceHex is a Volga Pier hex and targetHex is a water hex
+        //      OR
+        // If sourceHex is a water hex and targetHex is a Volga Pier hex
+        //      THEN
+        //  currentHex is a hindrance
+        //
+        boolean sourceIsWater = status.source.getTerrain().isWaterTerrain();
+        boolean targetIsWater = status.target.getTerrain().isWaterTerrain();
+        boolean sourceIsPier = status.source.getTerrain().getName().contains("Volga Pier");
+        boolean targetIsPier = status.target.getTerrain().getName().contains("Volga Pier");
+
+        if ((sourceIsWater && targetIsWater) || (sourceIsPier && targetIsWater) || (sourceIsWater && targetIsPier)) {
+            return addHindranceHex(status, result);
+        }
+
+        return false;
+    }
+
     // ToDo uses of this constructor should be eliminated as further work on new crop/flip methods proceeds
     @Deprecated(since="6.7.1", forRemoval=true)
     /**
@@ -616,7 +698,7 @@ public class Map  {
         //have a separate loop for non-standard boards
         //Dinant follows standard board layout and so can be treated as geo
         if (b.getName().equals("RBv3") || b.getName().equals("RO") || b.getName().equals("DaE") ||
-                 b.getName().equals("SG")) { //b.getName().equals("Dinant") ||
+                 b.getName().equals("SG") || b.getName().equals("VotG")) { //b.getName().equals("Dinant") ||
             createtheHASLHexGrid(b);
             return;
         }
@@ -656,7 +738,8 @@ public class Map  {
         //have a separate loop for non-standard boards
         //Dinant follows standard board layout and so can be treated as geo
         if (b.getName().equals("RBv3") || b.getName().equals("RO") || b.getName().equals("DaE") ||
-                b.getName().equals("SG") || b.getName().equals("HT")) {
+                b.getName().equals("SG") || b.getName().equals("HT") || b.getName().equals("VotG") ||
+                b.getName().equals("SaPF")) {
             createtheHASLHexGrid(b);
         }
         // at this point the terrainGrid, elevationGrid and HexGrid are created but hold no los data
@@ -1447,7 +1530,11 @@ public class Map  {
                 // reset variables
                 //status.ignoreGroundLevelHex = null;
                 // code added by DR to enable Roofless factory hexes
-
+                // test code
+                if(status.currentCol == 79 && status.currentRow == 218){
+                    boolean reg = true;
+                }
+                //end test code
                 status.currentTerrain = getGridTerrain(status.currentCol, status.currentRow);
                 status.groundLevel = getGridElevation(status.currentCol, status.currentRow);
 
@@ -2438,7 +2525,7 @@ public class Map  {
             }
             else {
                 for ( int hside = 0 ; hside < 6 ; hside++) {
-                    if (status.currentHex.isPointOnHexside(status.currentCol, status.currentRow, hside)) {
+                    if (status.currentHex.isPointOnHexside(status.currentCol, status.currentRow, hside, 2, 3)) {
                         Hex testhex = getAdjacentHex(status.currentHex, hside);
                         if (status.vaslGameInterface.getHexside(testhex) != null) {
                             counter = status.vaslGameInterface.getHexside((testhex));
@@ -2458,7 +2545,7 @@ public class Map  {
                     if (usehexside == -1 ){  //Hedge, Wall, Bocage
                         status.currentTerrain = getTerrainFromOverlayImage(status, getOverlayPiece(status), usehexside);
                     }
-                    else if (status.currentHex.isPointOnHexside(status.currentCol, status.currentRow, usehexside)) { //counter.getHexside())) {
+                    else if (status.currentHex.isPointOnHexside(status.currentCol, status.currentRow, usehexside,2,3)) { //counter.getHexside())) {
                         // draggable overlay of hexside: Hedge, Wall, Bocage, Rowhouse/Factory Bar and Breach - others?
                         status.currentTerrain = getTerrainFromOverlayImage(status, getOverlayPiece(status), hexside);
                     }
@@ -4283,7 +4370,9 @@ public class Map  {
                     return false;
                 } else if (!status.slopes){ // added slopes test to fix issue 502 DR
                     // add hindrance
-                    if (addHindranceHex(status, result)) {
+                    if (status.currentTerrain.getName().contains("Volga Pier")) {
+                        return addVolgaPierHindrance(status, result);
+                    } else if (addHindranceHex(status, result)) {
                         return true;
                     }
                 }
@@ -4780,7 +4869,9 @@ public class Map  {
         else {
 
             // must be hindrance
-            if (addHindranceHex(status, result)) {
+            if (status.currentTerrain.getName().contains("Volga Pier")) {
+                return addVolgaPierHindrance(status, result);
+            } else if (addHindranceHex(status, result)) {
                 return true;
             }
         }
@@ -5243,7 +5334,7 @@ public class Map  {
             // hindrance must be between the source and target
             if(range(status.sourceHex, status.currentHex, getMapConfiguration()) < range(status.sourceHex, status.targetHex, getMapConfiguration()) &&
                range(status.targetHex, status.currentHex, getMapConfiguration()) < range(status.sourceHex, status.targetHex, getMapConfiguration())){
-                int hindrancevalue =1;
+                double hindrancevalue =1;
                 // handle special cases where terrain hindrance is not 1
                 // if LOS along hexspine, check for higher hindrance
                 if((status.LOSis60Degree || status.LOSisHorizontal) && (status.rangeToSource % 2 != 0)) { // only need to check both hexes when range from source is odd
@@ -5267,6 +5358,9 @@ public class Map  {
                             if (testhex.getCenterLocation().getTerrain().isRoofless() || status.currentTerrain.getName().contains("Light Woods")) {
                                 hindrancevalue = 2;
                             }
+                            else if (status.currentTerrain.getName().contains("Rice Paddy, In Season") || status.currentTerrain.getName().contains("Light Grain")) {
+                                hindrancevalue = 0.5;
+                            }
                         }
                     }
                     else if(hexsidetouched==secondsidetest){
@@ -5275,17 +5369,23 @@ public class Map  {
                             if (testhex.getCenterLocation().getTerrain().isRoofless() || status.currentTerrain.getName().contains("Light Woods")) {
                                 hindrancevalue = 2;
                             }
+                            else if (status.currentTerrain.getName().contains("Rice Paddy, In Season") || status.currentTerrain.getName().contains("Light Grain")) {
+                                hindrancevalue = 0.5;
+                            }
                         }
                     }
                 }
                 else if(status.currentTerrain.getName().contains("Light Woods")){
                     hindrancevalue = 2;
                 }
+                else if (status.currentTerrain.getName().contains("Rice Paddy, In Season") || status.currentTerrain.getName().contains("Light Grain")) {
+                    hindrancevalue = 0.5;
+                }
                 else {
                     // roofless factory debris
-                    if (status.currentTerrain.isRoofless()) {hindrancevalue = 2;
-                    }
+                    if (status.currentTerrain.isRoofless()) {hindrancevalue = 2;}
                 }
+
                 result.addMapHindrance(status.currentHex, hindrancevalue, status.currentCol, status.currentRow);
 
                 // see if hindrance caused LOS to be blocked
@@ -5360,7 +5460,10 @@ public class Map  {
             rangeToSource = rangeToTarget;
             rangeToTarget = rangetemp;
         }
-
+        // now round down source elevation to full level ONLY if height above obstacle > 1 A6.42
+        if (sourceElevation - (groundLevel + terrainHeight) > 1) {
+            sourceElevation = Math.floor(sourceElevation);
+        }
         // increment source elevation for slopes/hillocks in special case where terrain is same height as upper location
         if(status.slopes || status.startsOnHillock) {
             if (status.groundLevel + status.currentTerrainHgt == Math.max(status.sourceElevation, status.targetElevation)) {

@@ -1056,8 +1056,10 @@
 		<color name="WinterRailBed3" red="181" green="179" blue="179" terrain="Railroad, Ground Level" elevation="UNKNOWN" />
 
 		<!-- Rice Paddies  -->
-		<color name="RicePaddy" red="103" green="75" blue="39" terrain="Rice Paddy, Irrigated" elevation="UNKNOWN" />
-		<color name="PaddyInterior" red="174" green="168" blue="78" terrain="Rice Paddy, Irrigated" elevation="UNKNOWN" />
+		<color name="RicePaddy" red="103" green="75" blue="39" terrain="Rice Paddy Bank" elevation="UNKNOWN" />
+		<color name="PaddyInterior1" red="174" green="168" blue="78" terrain="Rice Paddy, Drained" elevation="UNKNOWN" />
+		<color name="PaddyInterior2" red="135" green="190" blue="221" terrain="Rice Paddy, Irrigated" elevation="UNKNOWN" />
+		<color name="PaddyInterior3" red="255" green="241" blue="111" terrain="Rice Paddy, In Season" elevation="UNKNOWN" />
 		<!-- Rubble  -->
 		<color name="StoneRubble" red="115" green="115" blue="116" terrain="Stone Rubble" elevation="0" />
 		<color name="StoneRubble2" red="130" green="130" blue="131" terrain="Stone Rubble" elevation="UNKNOWN" />
@@ -1763,7 +1765,7 @@
         <terrainType name="Swamp" typeCode="133" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="2" mapColorRed="47" mapColorGreen="99" mapColorBlue="36" LOSCategory="OTHER"  />
         <terrainType name="Rice Paddy, Drained" typeCode="135" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="47" mapColorGreen="99" mapColorBlue="36" LOSCategory="OPEN"  />
         <terrainType name="Rice Paddy, Irrigated" typeCode="136" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="47" mapColorGreen="99" mapColorBlue="36" LOSCategory="OPEN"  />
-        <terrainType name="Rice Paddy, In Season" typeCode="137" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="47" mapColorGreen="99" mapColorBlue="36" LOSCategory="OPEN"  />
+        <terrainType name="Rice Paddy, In Season" typeCode="137" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="0" mapColorRed="47" mapColorGreen="99" mapColorBlue="36" LOSCategory="OPEN"  />
         <terrainType name="Rice Paddy Bank" typeCode="138" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="205" mapColorGreen="175" mapColorBlue="84" LOSCategory="OPEN"  />
         <terrainType name="Panji" typeCode="139" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="0" mapColorGreen="0" mapColorBlue="0" LOSCategory="OPEN"  />
         <terrainType name="Ocean" typeCode="140" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="0" mapColorGreen="128" mapColorBlue="255" LOSCategory="OPEN"  />
@@ -1822,6 +1824,8 @@
 		<terrainType name="BTCrags" typeCode="205" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="215" mapColorGreen="215" mapColorBlue="213" LOSCategory="OTHER"  />
 		<terrainType name="MultipleStone" typeCode="206" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="125" mapColorGreen="135" mapColorBlue="135" LOSCategory="BUILDING"  />
 		<terrainType name="Breach" typeCode="207" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="125" mapColorGreen="135" mapColorBlue="136" LOSCategory="BUILDING"  />
+		<terrainType name="Light Grain" typeCode="208" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="0" mapColorRed="255" mapColorGreen="255" mapColorBlue="137" LOSCategory="OPEN"  />
+		<terrainType name="Volga Pier" typeCode="209" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="0" mapColorRed="255" mapColorGreen="255" mapColorBlue="137" LOSCategory="OTHER"  />
 
 		<!--ToDo VASL code may hit a bug if typeCode > 255 OR if there are more than 255 terrainTypes - need to test and change code -->
 	</terrainTypes>

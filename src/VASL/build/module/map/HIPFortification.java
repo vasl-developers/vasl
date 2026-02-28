@@ -285,7 +285,7 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
                 checkterrain.getName().equals("Orchard") || checkterrain.getName().equals("Palm Trees") || checkterrain.getName().equals("Rice Paddy, In Season") ||
                 checkterrain.getName().equals("Cactus Patch") || checkterrain.getName().equals("Broken Ground") ||
                 checkterrain.getName().equals("Olive Grove") || checkterrain.getName().equals("Orchard, Out of Season") ||
-                checkterrain.getName().equals("Grain") || checkterrain.getName().equals("Kunai") ||
+                checkterrain.getName().equals("Grain") || checkterrain.getName().equals("Light Grain") || checkterrain.getName().equals("Kunai") ||
                 checkterrain.getName().equals("Marsh") || checkterrain.getName().equals("Palm Debris") ||
                 checkterrain.getName().equals("Wooden Rubble") || checkterrain.getName().equals("Stone Rubble") ||
                 checkterrain.getName().equals("Light Jungle") || checkterrain.getName().equals("Dense Jungle") ||
