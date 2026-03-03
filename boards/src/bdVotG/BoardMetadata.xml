@@ -24,12 +24,13 @@
 	others - TBD
 	
 	v3.1 Mar 2008 Tom Repetti
-	v5.0 Feb 2026 LOS enabled by Gordon Molek
+	v4.0 Feb 2026 LOS enabled by Gordon Molek
+	v4.1 Mar 2026 Fixing LOS to/from hexes with gutted building walls by Gordon Molek
 -->
 <boardMetadata
 	name="VotG"
-	version="4.0"
-	versionDate="Feb 2026"
+	version="4.1"
+	versionDate="Mar 2026"
 	author="TR (LOS enabled by GM)"
 	boardImageFileName="bdVotG.gif"
 	hasHills="TRUE"

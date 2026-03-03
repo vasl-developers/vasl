@@ -6551,9 +6551,12 @@ public class Map  {
     }
     // method added by DR to handle LOS along/across Rowhouse and Interior Factory Walls
     public boolean checkRowhouseFactoryWallAndBreach(LOSStatus status, LOSResult result) {
-        // must be rowhouse wall or IFW to get here
+        // must be rowhouse wall or IFW or gutted building wall to get here
         double sourceadj=0;
         double targetadj=0;
+        if (status.currentTerrain.getName().contains("Gutted Building Wall") && (status.currentHex == status.sourceHex || status.currentHex == status.targetHex)) {
+            return false; // Not blocked if we are the source or target hex
+        }
         if (status.source.getTerrain().isRooftop() && status.source.getLevelInHex() !=1) {
             sourceadj = -1;
         }
