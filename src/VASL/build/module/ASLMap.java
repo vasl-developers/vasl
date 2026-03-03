@@ -1314,16 +1314,18 @@ public class ASLMap extends Map {
                                     if (elevint == -99) {
                                         elevint = 0;  //this is a hack and may not always return a useful result - watch for errors
                                     }
-                                    // add depression terrain test as elevation will always be unnknown for them
-                                    terr = getOverlayTerrainfromColor(color, losonoverlays);
-                                    if (terr == null) {
-                                        terr = fixnullterrain(losonoverlays, losonoverlays.overpositionx, losonoverlays.overpositiony);
-                                        // use OG with elevint from existing losdata; this is a hack when can't find terrain
-                                    }
-                                    if (terr.isDepression()) {
-                                        // use current base level for point as it will have been set in line 1145
-                                        elevint = losonoverlays.newlosdata.getGridElevation(losonoverlays.overpositionx, losonoverlays.overpositiony);
-                                        //losonoverlays.newlosdata.setGridElevation(elevint, losonoverlays.overpositionx, losonoverlays.overpositiony);
+                                    // add depression terrain test as elevation will always be unknown for them - depression must be on overlay
+                                    if (pointIsOnOverlay(losonoverlays.bi, losonoverlays.currentx, losonoverlays.currenty)) {
+                                        terr = getOverlayTerrainfromColor(color, losonoverlays);
+                                        if (terr == null) {
+                                            terr = fixnullterrain(losonoverlays, losonoverlays.overpositionx, losonoverlays.overpositiony);
+                                            // use OG with elevint from existing losdata; this is a hack when can't find terrain
+                                        }
+                                        if (terr.isDepression()) {
+                                            // use current base level for point as it will have been set in line 1145
+                                            elevint = losonoverlays.newlosdata.getGridElevation(losonoverlays.overpositionx, losonoverlays.overpositiony);
+                                            //losonoverlays.newlosdata.setGridElevation(elevint, losonoverlays.overpositionx, losonoverlays.overpositiony);
+                                        }
                                     }
                                 }
                             }
@@ -1586,19 +1588,21 @@ public class ASLMap extends Map {
 
     private Terrain  getOverlayTerrainfromColor(Color color, LOSonOverlays losonoverlays) {
         Terrain terr = null;
-        final int terrint = losonoverlays.board.getVASLBoardArchive().getTerrainForColor(color);
+        int terrint = losonoverlays.board.getVASLBoardArchive().getTerrainForColor(color);
         if (terrint >= 0) {
             return losonoverlays.newlosdata.getTerrain(terrint);
         } else {
             while (terr == null) {  // handles cases where pixel color does not match any color from ShardBoardMetaData.xml
                 color = getOverlayNearestColor(losonoverlays, losonoverlays.overpositionx, losonoverlays.overpositiony);
-                if (color.equals(Color.white)) {
+                if (color == null ) { //transparent pixel
+                    terr = losonoverlays.newlosdata.getGridTerrain(losonoverlays.overpositionx, losonoverlays.overpositiony);
+                } else if (color.equals(Color.white)) {
                     terr = losonoverlays.newlosdata.getTerrain(losonoverlays.board.getVASLBoardArchive().getTerrainForVASLColor("L0Winter"));
+                } else if( color.equals(Color.BLACK)) {
+                    terr = losonoverlays.newlosdata.getGridTerrain(losonoverlays.overpositionx, losonoverlays.overpositiony);
                 } else {
-                    terr = getOverlayTerrainfromColor(color, losonoverlays);
-                    if (terr == null) {
-                        terr = fixnullterrain(losonoverlays, losonoverlays.overpositionx, losonoverlays.overpositiony);
-                    }
+                    terrint = losonoverlays.board.getVASLBoardArchive().getTerrainForColor(color);
+                    terr = losonoverlays.newlosdata.getTerrain(terrint);
                 }
             }
         }
