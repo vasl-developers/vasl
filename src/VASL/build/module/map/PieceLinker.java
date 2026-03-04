@@ -219,7 +219,9 @@ public class PieceLinker extends AbstractConfigurable implements KeyListener, Co
                                 linkrange = range(fromPiece.getPosition(), toPiece.getPosition(), map, grid);
                             }
                             else {
-                                linkrange = map.getVASLMap().range(map.getVASLMap().gridToHex((int)fromPiece.getPosition().getX(), (int)fromPiece.getPosition().getY()), map.getVASLMap().gridToHex((int)toPiece.getPosition().getX(), (int)toPiece.getPosition().getY()), map.getVASLMap().getMapConfiguration());
+                                VASL.LOS.Map.Hex sourceHex = map.getVASLMap().gridToHex((int)(fromPiece.getPosition().getX() - map.getEdgeBuffer().getWidth()), (int)(fromPiece.getPosition().getY() - map.getEdgeBuffer().getHeight()));
+                                VASL.LOS.Map.Hex targetHex = map.getVASLMap().gridToHex((int)(toPiece.getPosition().getX() - map.getEdgeBuffer().getWidth()), (int)(toPiece.getPosition().getY() - map.getEdgeBuffer().getHeight()));
+                                linkrange = map.getVASLMap().range(sourceHex, targetHex, map.getVASLMap().getMapConfiguration());
                             }
                             drawText(g2d, p1.x +30, p1.y + 30, "Range: " + linkrange );
                         }
