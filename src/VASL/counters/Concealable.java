@@ -100,7 +100,7 @@ public class Concealable extends Obscurable implements EditablePiece {
   }
 
   protected void drawObscuredToOthers(Graphics g, int x, int y, Component obs, double zoom) {
-    if (obs == null) {return;} // error handling - if obs is null then loadImages(obs) will cause NPE
+    // if (obs == null) {return;} // error handling - if obs is null then loadImages(obs) will cause NPE
     loadImages(obs);
     piece.draw(g, x, y, obs, zoom);
     int size = (int) (zoom * imageSize.width);
