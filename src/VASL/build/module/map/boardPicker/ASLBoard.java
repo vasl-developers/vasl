@@ -287,6 +287,11 @@ public class ASLBoard extends Board {
     }
 
     protected void resetImage() {
+
+        if (imageFile == null) {
+            ErrorDialog.dataWarning(new BadDataReport("Unable to open board file", boardFile.getName()));
+            return;
+        }
         final ImageTileSource ts =
                 GameModule.getGameModule().getImageTileSource();
 
