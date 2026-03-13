@@ -126,9 +126,10 @@
 		<boarddata name="91" version="6.0" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="2023/10/25" />
 		<boarddata name="92" version="6.2" versionDate="2025/07/29" description="" boardType="Geoboard" publisher="MMP" issued="2023/10/27" />
 		<boarddata name="93" version="6.0" versionDate="2025/05/12" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="96" version="6.1" versionDate="2026/02/18" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="96" version="6.2" versionDate="2026/03/09" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="97" version="6.0" versionDate="2026/02/05" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="99" version="6.0" versionDate="2026/03/02" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="98" version="6.0" versionDate="2026/03/03" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="99" version="6.1" versionDate="2026/03/09" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="1a" version="6.5" versionDate="2023/10/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
 		<boarddata name="1b" version="6.5" versionDate="2023/10/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
 		<boarddata name="2a" version="7.0" versionDate="2024/12/23" description="" boardType="Double-sided" publisher="MMP" issued="" />
@@ -311,7 +312,7 @@
 		<boarddata name="TFF1" version="0.1" versionDate="2025/05/27" description="" boardType="HASL" publisher="LFT" issued="" />
 		<boarddata name="TFF2" version="0.1" versionDate="2025/05/27" description="" boardType="HASL" publisher="LFT" issued="" />
 		<boarddata name="SG" version="6.0" versionDate="2021/04/30" description="Singling" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="VotG" version="4.0" versionDate="2026/03/01" description="Valor of the Guards" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="VotG" version="4.1" versionDate="2026/03/03" description="Valor of the Guards" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="SC" version="3.0" versionDate="2008/08/30" description="Suicide Creek" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="ST" version="2.02" versionDate="2008/08/30" description="Stoumont (KGP I)" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="PB" version="0.1" versionDate="2008/08/30" description="Pegasus Bridge" boardType="HASL" publisher="MMP" issued="" />

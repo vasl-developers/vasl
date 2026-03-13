@@ -20,11 +20,11 @@
 	
 -->
 <boardMetadata 
-	name="99" 
-	version="6.1" 
-	versionDate="2026/03/09" 
+	name="98" 
+	version="6.0" 
+	versionDate="Mar 2026" 
 	author="TR" 
-	boardImageFileName="bd99.gif" 
+	boardImageFileName="bd98.gif" 
 	hasHills="TRUE" 
 	width="33" 
 	height="10"
@@ -61,22 +61,23 @@
 		<underlaySSRule name="HedgeToCactus" image="CactusPattern.gif">
 			<color name="HedgeGreen" />
 		</underlaySSRule>
-
-			<overlaySSRule name="RoadsToPaths" image="bd99_WoodsRoadToPath.gif" x="0" y="0" />
-			<overlaySSRule name="NoWoodsRoads" image="bd99_WoodsRoadToWoods.gif" x="0" y="0" />
-			<overlaySSRule name="Level2ToLevel1" image="bd99_Level2ToLevel1.gif" x="0" y="0" />		
-			<overlaySSRule name="Level1ToLevel0" image="bd99_Level1ToLevel0.gif" x="0" y="0" />	
-			<overlaySSRule name="CragsToOrchards" image="bd99_CragsToOrchards.gif" x="0" y="0" />		
-			<overlaySSRule name="CragsToPalm" image="bd99_CragsToPalm.gif" x="0" y="0" />		
-			<overlaySSRule name="CragsToShellholes" image="bd99_CragsToShellholes.gif" x="0" y="0" />		
-			<overlaySSRule name="NoCliffs" image="bd99_NoCliffs.gif" x="0" y="0" />
-			<overlaySSRule name="Bamboo" image="bd99_Bamboo.gif" x="0" y="0" />
-			<overlaySSRule name="OrchardsToCrags" image="bd99_OrchardsToCrags.gif" x="0" y="0" />
-			<overlaySSRule name="OrchardsToShellholes" image="bd99_OrchardsToShellholes.gif" x="0" y="0" />
-			<overlaySSRule name="PalmTrees" image="bd99_PalmTrees.gif" x="0" y="0" />
-			<overlaySSRule name="LightWoods" image="bd99_LightWoods.gif" x="0" y="0" />
-			<overlaySSRule name="DenseJungle" image="bd99_DenseJungle.gif" x="0" y="0" />
-			<overlaySSRule name="NoRoads" image="bd99_NoRoads.gif" x="0" y="0" />
+			<overlaySSRule name="BridgeToFord" image="bd98_BridgeToFord.gif" x="0" y="0" />
+			<overlaySSRule name="NoBridge" image="bd98_NoBridge.gif" x="0" y="0" />
+			<overlaySSRule name="RoadsToPaths" image="bd98_WoodsRoadToPath.gif" x="0" y="0" />
+			<overlaySSRule name="NoWoodsRoads" image="bd98_WoodsRoadToWoods.gif" x="0" y="0" />
+			<overlaySSRule name="Level3ToLevel2" image="bd98_Level3ToLevel2.gif" x="0" y="0" />	
+			<overlaySSRule name="Level2ToLevel1" image="bd98_Level2ToLevel1.gif" x="0" y="0" />		
+			<overlaySSRule name="Level1ToLevel0" image="bd98_Level1ToLevel0.gif" x="0" y="0" />	
+			<overlaySSRule name="CragsToOrchards" image="bd98_CragsToOrchards.gif" x="0" y="0" />		
+			<overlaySSRule name="CragsToPalm" image="bd98_CragsToPalm.gif" x="0" y="0" />		
+			<overlaySSRule name="CragsToShellholes" image="bd98_CragsToShellholes.gif" x="0" y="0" />		
+			<overlaySSRule name="NoCliffs" image="bd98_NoCliffs.gif" x="0" y="0" />
+			<overlaySSRule name="OrchardsToCrags" image="bd98_OrchardsToCrags.gif" x="0" y="0" />
+			<overlaySSRule name="OrchardsToShellholes" image="bd98_OrchardsToShellholes.gif" x="0" y="0" />
+			<overlaySSRule name="PalmTrees" image="bd98_PalmTrees.gif" x="0" y="0" />
+			<overlaySSRule name="LightWoods" image="bd98_LightWoods.gif" x="0" y="0" />
+			<overlaySSRule name="DenseJungle" image="bd98_DenseJungle.gif" x="0" y="0" />
+			<overlaySSRule name="NoRoads" image="bd98_NoRoads.gif" x="0" y="0" />
 	</overlaySSRules>
 	
 	<colors>
@@ -88,7 +89,6 @@
 			elevation - the base elevation of the terrain
 			
 		-->
-
 	</colors>
 	
 	<colorSSRules>
