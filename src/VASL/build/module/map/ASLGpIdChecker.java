@@ -76,7 +76,8 @@ public class ASLGpIdChecker {
         return refresherOptions.contains("UseLabelerName"); //$NON-NLS-1$
     }
     public boolean useLayerName() {
-        return refresherOptions.contains("UseLayerName"); //$NON-NLS-1$
+        return true; //test code
+        //return refresherOptions.contains("UseLayerName"); //$NON-NLS-1$
     }
 
     public boolean useName() {
@@ -256,7 +257,7 @@ public class ASLGpIdChecker {
         final String gpid = (String) oldPiece.getProperty(Properties.PIECE_ID);
         GamePiece newPiece;
         if (Decorator.getInnermost(oldPiece).getName()=="User-Labeled"){
-            return oldPiece;
+            return oldPiece;  //do not update Label counters as it will remove the labels (and we never change their functionality)
         } else {
             // Find a slot with a matching gpid
             if (gpid != null && !gpid.isEmpty()) {
@@ -394,6 +395,7 @@ public class ASLGpIdChecker {
      */
 
     protected void copyState(GamePiece oldPiece, GamePiece newPiece) {
+        String listofdecs = ""; // test code
         GamePiece p = newPiece;
         while (p != null) {
             if (p instanceof BasicPiece) {
@@ -401,11 +403,16 @@ public class ASLGpIdChecker {
                 p = null;
             }
             else {
+
                 final Decorator decoratorNew = (Decorator) p;
                 final String newState = findState(oldPiece, p, decoratorNew, p.getClass());
+                listofdecs += newState + " ";  //test code
                 // Do not copy the state of Marker traits, we want to see the new value from the new definition
                 if (newState != null && newState.length() > 0 && !(decoratorNew instanceof Marker)) {
                     decoratorNew.mySetState(newState);
+                }
+                else {  //test code to see if the above is correct
+                    boolean reg = true;
                 }
                 p = decoratorNew.getInner();
             }
@@ -423,12 +430,18 @@ public class ASLGpIdChecker {
      */
     protected String findState(GamePiece oldPiece, GamePiece pNew, Decorator decoratorNewPc, Class<? extends GamePiece> classToFind) {
         GamePiece p = oldPiece;
-        final String typeToFind = decoratorNewPc.myGetType();
+        // it is necessary to strip out the ".xxx" suffixes in the type strings or they will not match properly
+        String typeToFind = decoratorNewPc.myGetType().replace(".svg", "");
+        typeToFind = typeToFind.replace(".png", "");
+        typeToFind = typeToFind.replace(".gif", "");
         while (p != null && !(p instanceof BasicPiece)) {
             final Decorator d = (Decorator) Decorator.getDecorator(p, classToFind);
             if (d != null) {
                 if (d.getClass().equals(classToFind)) {
-                    if (d.myGetType().equals(typeToFind)) {
+                    String oldType = d.myGetType().replace(".svg", "");
+                    oldType = oldType.replace(".png", "");
+                    oldType = oldType.replace(".gif", "");
+                    if (oldType.equals(typeToFind)) {
                         return d.myGetState();
                     }
                     else if (d instanceof Labeler) {
@@ -442,8 +455,10 @@ public class ASLGpIdChecker {
                     else if (d instanceof Embellishment) {
                         if (useLayerName()) {
                             final String nameToFind = ((Embellishment)decoratorNewPc).getLayerName();
-                            if (((Embellishment) d).getLayerName().equals(nameToFind)) {
-                                return d.myGetState();
+                            if (!nameToFind.equals("")) { // testcode
+                                if (((Embellishment) d).getLayerName().equals(nameToFind)) {
+                                    return d.myGetState();
+                                }
                             }
                         }
                     }

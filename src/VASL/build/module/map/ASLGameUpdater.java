@@ -88,7 +88,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
             ASLMap map = (ASLMap) parent;
             // VASL game converter
             JMenuItem nextmenuItem = new JMenuItem("Update game...");
-            nextmenuItem.setEnabled(false);
+            nextmenuItem.setEnabled(true);
             nextmenuItem.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent evt) {
                     askToUpdate();
@@ -110,6 +110,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
     public boolean isTestMode() {
         return options.contains("TestMode"); //$NON-NLS-1$
     }
+
     public boolean start(String savegameversion) throws ParseException {
 
         final GameModule g = GameModule.getGameModule();
@@ -127,6 +128,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
         msg.execute();
         return execute(command);
     }
+
    public void log(String message) {
         // Log to chatter
         GameModule.getGameModule().warn(message);
@@ -495,16 +497,21 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
             msg.append(new Chatter.DisplayText(chatter, notFoundCount + " counters were not found"));
         }
         msg.execute();
+        //command.execute();
+        //command = null;  //testcode
         //command.append(msg);
 
-        // update extensions
+        /*
+         * 5/ Update Extensions
+         */
         msg = new Chatter.DisplayText(chatter,  "Checking if installed extensions need updating");
         msg.execute();
         ASLUpdater extupdate = new ExtensionUpdater();
-        extupdate.refresh(command);
+        //extupdate.refresh(command); //test code
 
-
-        // update LOS checking
+        /*
+         * 6/ Update LOS Checking
+         */
         boolean legacyMode = false;
         for (final Map map : Map.getMapList()) {
             if (map.getMapName().equals("Main Map")) {
@@ -964,7 +971,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
                 //}
 
                 // Keep a list of the new pieces to add back into the stack
-                refreshedPieces.add(newPiece);
+                 refreshedPieces.add(newPiece);
 
                 // Add the new pieces back into the GameState
                 final Command add = new AddPiece(newPiece);
