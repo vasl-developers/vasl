@@ -3,7 +3,7 @@
 	<!--
 		Note #:		15
 		Name:		Sherman IIA(a) <i>MT</i>
-		Version:	1.0
+		Version:	2.0
 
 		Author(s): Gordon Molek, Klas Malmström, Alan Bills
 		Tester(s): Alan Bills, Alan Cannamore, Doug Rimmer
@@ -76,7 +76,8 @@
 	</svg>
 	<!-- Front Armor -->
 	<svg x="40.00" y="15.00" width="18.00" height="12.00" style="overflow:visible">
-		<text x="66%" y="79%" dominant-baseline="auto" text-anchor="middle"><tspan style="font-size:9.50px;font-weight:bold;font-family:Nimbus Sans L;fill:#e10000;fill-opacity:1;stroke:none;stroke-width:0.5">11</tspan></text>
+		<text x="66%" y="75%" dominant-baseline="auto" text-anchor="middle"><tspan style="font-size:8.50px;font-weight:bold;font-family:Nimbus Sans L;fill:#e10000;fill-opacity:1;stroke:none;stroke-width:0.2">11</tspan></text>
+		<circle cx="66%" cy="50%" r="5.5" style="display:inline;fill:none;fill-opacity:0.0;stroke:#e10000;stroke-width:0.75;stroke-dasharray:none;stroke-opacity:1"></circle> <!-- Inferior Turret Armor -->
 	</svg>
 	<!-- Side/Rear Armor -->
 	<svg x="40.00" y="26.00" width="18.00" height="12.00" style="overflow:visible">

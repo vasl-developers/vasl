@@ -10,7 +10,7 @@
 ---
 
 ## 🛠 Bug Fixes
- - Fix 1:
+ - Fix 1: 2461: British Sherman IIA(a) missing front inferior turret armor symbol,
  - Fix 2:
  - Fix 3:
  - Fix 4:
