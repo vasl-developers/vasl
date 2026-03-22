@@ -10,7 +10,7 @@
 ---
 
 ## 🛠 Bug Fixes
- - Fix 1:
+ - Fix 1: 2461: British Sherman IIA(a) missing front inferior turret armor symbol,
  - Fix 2:
  - Fix 3:
  - Fix 4:
@@ -23,7 +23,7 @@
 
 ## 📈 Improvements
  - Improvement 1: Created "Gutted Building Wall" terrain types to support VotG LOS.
- - Improvement 2:
+ - Improvement 2: Added missing Axis Minor "German" MMG, HMG and PSK counters.
  - Improvement 3:
  - Improvement 4:
  - Improvement 5:
