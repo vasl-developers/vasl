@@ -111,6 +111,10 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
         return options.contains("TestMode"); //$NON-NLS-1$
     }
 
+    /**
+     * Checks for saveGame version older than VASL6.2 and runs converter if required
+     * triggers counter updates
+     */
     public boolean start(String savegameversion) throws ParseException {
 
         final GameModule g = GameModule.getGameModule();
@@ -126,6 +130,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
 
         Command msg = new Chatter.DisplayText(chatter, " Updating counter traits with " + g.getGameVersion());
         msg.execute();
+        // do the update; execute handles pieces, extensions, los
         return execute(command);
     }
 
@@ -245,6 +250,9 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
         return refreshables;
     }
 
+    /**
+     * Checks if multiplayer game is underway and if so stops the Update
+     */
     private boolean isGameActive() {
         final GameModule gm = GameModule.getGameModule();
         final BasicLogger logger = gm.getBasicLogger();
@@ -253,8 +261,8 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
 
 
     /**
-     * The default execute() method calls: GameModule.getGameModule().getGameState().getAllPieces()
-     * to set the pieces list, this method provides an alternative way to specify which pieces should be refreshed.
+     * The default execute() method
+     * main method to handle all aspects of Updating: Pieces, Decks, Mats, Extensions, LOS
      *
      * @throws IllegalBuildException - if we get a gpIdChecker error
      */
@@ -262,11 +270,12 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
         final List<Deck> decks = new ArrayList<>();
         options.clear();
         final Chatter chatter = theModule.getChatter();
+        // these options exist in the VASSAL version - ToDo: should VASL methods use them??
         //options.add("DeleteNoMap"); //$NON-NLS-1$
         //options.add("RefreshPieces");
         //options.add("UseLabelerName");
         //options.add("UseRotateName");
-        //options.add("UseLayerName");
+        options.add("UseLayerName");
 
         if (command == null) {
             command = new NullCommand();
@@ -327,6 +336,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
          * 4/ Refresh properties of decks in the game
          */
         if (options.contains("RefreshDecks")) { //NON-NLS
+            // can't update if game active
             if (isGameActive()) {
                 // If somebody feels like packaging all these things into Commands, help yourself...
                 log(Resources.getString("GameRefresher.deck_refresh_during_multiplayer"));
@@ -538,6 +548,9 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
         return true;
     }
 
+    /*
+    // attempts to restore los checking
+     */
     public void dolosrestore(ASLMap themap){
         BoardSwapper bs = themap.getComponentsOf(BoardSwapper.class).get(0);
         bs.recordPiecePositions();
@@ -571,6 +584,8 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
         bs.restorePiecePositions();
         themap.repaint();
     }
+
+    // tests if los checking is now active
     private void checkRestoreResult(ASLMap theMap){
 
         boolean legacyMode = false;
@@ -601,7 +616,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
      */
     @Override
     public void setup(boolean gameStarting) {
-        //updateAction.setEnabled(gameStarting);
+        //updateAction.setEnabled(gameStarting);  not enabled in VASL version of Updater
     }
 
     @Override
@@ -674,7 +689,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
                     int dialogResult = JOptionPane.showConfirmDialog(null, "Make sure all necessary extensions are installed and Chat Window shows no error messages. \n \n DO NOT ATTEMPT IF ONLINE WITH OTHER PLAYER(S). \n \n Proceed?",
                             "Updating Game . . . ", JOptionPane.YES_NO_OPTION);
                     if(dialogResult == JOptionPane.YES_OPTION) {
-
+                        // starts the update process
                         doupdate(saveModuleVersion);
                     }
                 } else {
@@ -687,7 +702,8 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
         }
     }
     /**
-     * Execute the update
+     * Execute the update routine
+     * Provides status messages at beginning and end
      */
     public void doupdate(String savegameversion) {
         if(theModule == null){
@@ -917,25 +933,6 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
         @Override
         public void refresh(Command command) {
 
-            /*// Test mode, just try to create a new piece for each visible to me piece in the Stack
-            //if (isTestMode()) {
-                final List<GamePiece> pieces = stack.asList();
-                for (final GamePiece piece : pieces) {
-                    if (!Boolean.TRUE.equals(piece.getProperty(VASSAL.counters.Properties.INVISIBLE_TO_ME))
-                            && !Boolean.TRUE.equals(piece.getProperty(VASSAL.counters.Properties.OBSCURED_TO_ME))) {
-                        // Create a new, updated piece
-                        if (gpIdChecker.createUpdatedPiece(piece) == null) {
-                            notFoundCount++;
-                            log(Resources.getString("GameRefresher.refresh_error_nomatch_pieceslot", piece.getName(), piece.getId()));
-                        }
-                        else {
-                            updatedCount++;
-                        }
-                    }
-                }
-                return;
-            //}*/
-
             // Take a copy of the pieces in the stack
             final List<GamePiece> pieces = stack.asList();
 
@@ -948,30 +945,19 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
                 command = command.append(remove);
 
                 GamePiece newPiece;
-                //if (!Boolean.TRUE.equals(piece.getProperty(VASSAL.counters.Properties.INVISIBLE_TO_ME))
-                //        && !Boolean.TRUE.equals(piece.getProperty(VASSAL.counters.Properties.OBSCURED_TO_ME))) {
-                    // Create a new, updated piece
-                    newPiece = gpIdChecker.createUpdatedPiece(piece);
-                    if (newPiece == null) {
-                        notFoundCount++;
-                        GameModule.getGameModule().warn(Resources.getString("GameRefresher.refresh_error_nomatch_pieceslot", piece.getName(), piece.getId()))  ;
-
-                        //log(Resources.getString("GameRefresher.refresh_error_nomatch_pieceslot", piece.getName(), piece.getId()));
-                        // Could not create a new piece for some reason, use the old piece
-                        newPiece = piece;
-                    }
-                    else {
-                        updatedCount++;
-                    }
-                //}
-                //else {
-                    // Hidden or Concealed opponent's piece
-
-                    //newPiece = piece;
-                //}
-
+                // Create a new, updated piece
+                newPiece = gpIdChecker.createUpdatedPiece(piece);
+                if (newPiece == null) {
+                    notFoundCount++;
+                    GameModule.getGameModule().warn(Resources.getString("GameRefresher.refresh_error_nomatch_pieceslot", piece.getName(), piece.getId()))  ;
+                    // Could not create a new piece for some reason, use the old piece
+                    newPiece = piece;
+                }
+                else {
+                    updatedCount++;
+                }
                 // Keep a list of the new pieces to add back into the stack
-                 refreshedPieces.add(newPiece);
+                refreshedPieces.add(newPiece);
 
                 // Add the new pieces back into the GameState
                 final Command add = new AddPiece(newPiece);
@@ -1028,21 +1014,6 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
             refreshedPiece = piece;
 
             if (refreshable) {
-                // Test mode, just try to create a new piece for each visible to me piece in the Stack
-                if (isTestMode()) {
-                    if (!Boolean.TRUE.equals(piece.getProperty(VASSAL.counters.Properties.INVISIBLE_TO_ME))
-                            && !Boolean.TRUE.equals(piece.getProperty(VASSAL.counters.Properties.OBSCURED_TO_ME))) {
-                        // Create a new, updated piece
-                        if (gpIdChecker.createUpdatedPiece(piece) == null) {
-                            notFoundCount++;
-                            log(Resources.getString("GameRefresher.refresh_error_nomatch_pieceslot", piece.getName(), piece.getId()));
-                        }
-                        else {
-                            updatedCount++;
-                        }
-                    }
-                    return;
-                }
 
                 // Remove the existing piece the Map and the GameState
                 final Command remove = new RemovePiece(piece);
@@ -1057,8 +1028,6 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
                     if (refreshedPiece == null) {
                         notFoundCount++;
                         GameModule.getGameModule().warn(Resources.getString("GameRefresher.refresh_error_nomatch_pieceslot", piece.getName(), piece.getId()))  ;
-
-                        //log(Resources.getString("GameRefresher.refresh_error_nomatch_pieceslot", piece.getName(), piece.getId()));
                         // Could not create a new piece for some reason, use the old piece
                         refreshedPiece = piece;
                     }
@@ -1085,13 +1054,9 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
     }
     private class ExtensionUpdater implements ASLUpdater {
 
-        //private final List<ASLUpdater> updatedExt = new ArrayList<>();
-
-
         public ExtensionUpdater() {
             super();
         }
-
 
         @Override
         public List<GamePiece> getPieces() {
@@ -1110,7 +1075,6 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
          */
         @Override
         public void refresh(Command command) {
-            boolean containsExtension = false;
 
             LinkedList<String> updateList= new LinkedList<String>();
             Iterator extit = GameModule.getGameModule().getComponentsOf(ModuleExtension.class).iterator();
@@ -1161,12 +1125,6 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
                 if (doUpdate) {
                     //if update available, ask if user wants to update
                     updateList.add(ext.getName());
-                    //try {
-                        //GameModule.getGameModule().remove(ext);
-                        //ext.getDataArchive().close();
-                    //}  catch (IOException e) {
-                    //    boolean reg = true;
-                    //}
                 }
             }
             if(updateList.isEmpty()){
@@ -1189,7 +1147,6 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
             }
         }
         protected String getVersionErrorMsg(String v) {
-            //return Resources.getString("ModuleExtension.wrong_extension_version", new Object[]{this.version, this.name, v});
             return "No version data available so could not determine if update required for " + v;
         }
     }
