@@ -1,12 +1,10 @@
 package VASL.build.module.map;
 
-import VASL.LOS.counters.CounterMetadata;
 import VASSAL.build.GameModule;
 import VASSAL.build.GpIdSupport;
 import VASSAL.build.module.Chatter;
 import VASSAL.build.module.PrototypeDefinition;
 import VASSAL.build.widget.PieceSlot;
-import VASSAL.command.Command;
 import VASSAL.counters.BasicPiece;
 import VASSAL.counters.Decorator;
 import VASSAL.counters.Embellishment;
@@ -160,7 +158,7 @@ public class ASLGpIdChecker {
             }
         }
 
-        if (id == null || id.length() == 0) {   // gpid not generated yet?
+        if (id == null || id.isEmpty()) {   // gpid not generated yet?
             errorSlots.add(element);
         }
         else {
@@ -251,7 +249,7 @@ public class ASLGpIdChecker {
     public GamePiece createUpdatedPiece(GamePiece oldPiece) {
         final String gpid = (String) oldPiece.getProperty(Properties.PIECE_ID);
         GamePiece newPiece;
-        if (Decorator.getInnermost(oldPiece).getName()=="User-Labeled"){
+        if (Decorator.getInnermost(oldPiece).getName().equals("User-Labeled")){
             return oldPiece;  //do not update Label counters as it will remove the labels (and we never change their functionality)
         } else {
             // Find a slot with a matching gpid
@@ -300,11 +298,7 @@ public class ASLGpIdChecker {
     }
 
     private String checkknownmatches(String gpid){
-        if(knownmatches.containsKey(gpid)){
-            return knownmatches.get(gpid);
-        } else {
-            return null;
-        }
+        return knownmatches.getOrDefault(gpid, null);
     }
 
     private void fillknownmatches(){
@@ -316,13 +310,7 @@ public class ASLGpIdChecker {
             parseknownmatches(inputStream);
 
             // give up on any errors
-        } catch (IOException e) {
-            knownmatches = null;
-            ErrorDialog.bug(e);
-        } catch (JDOMException e) {
-            knownmatches = null;
-            ErrorDialog.bug(e);
-        } catch (NullPointerException e) {
+        } catch (IOException | JDOMException | NullPointerException e) {
             knownmatches = null;
             ErrorDialog.bug(e);
         }
@@ -408,7 +396,7 @@ public class ASLGpIdChecker {
                 final Decorator decoratorNew = (Decorator) p;
                 final String newState = findState(oldPiece, p, decoratorNew, p.getClass());
                 // Do not copy the state of Marker traits, we want to see the new value from the new definition
-                if (newState != null && newState.length() > 0 && !(decoratorNew instanceof Marker)) {
+                if (newState != null && !newState.isEmpty() && !(decoratorNew instanceof Marker)) {
                     decoratorNew.mySetState(newState);
                 }
                 p = decoratorNew.getInner();
