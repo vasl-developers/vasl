@@ -19,8 +19,7 @@
 
 package VASL.build.module.map.boardPicker;
 
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -546,9 +545,11 @@ public class VASLBoard extends ASLBoard {
                     applyElevationMapRule(rule, LOSData);
                     changed = true;
 
-                } else if ("terrainToElevationMap".equals(rule.getType())) {
-
-                    applyTerrainToElevationMapRule(rule, LOSData);
+                } */
+                else if ("terrainToElevationMap".equals(rule.getType())) {
+                    // need to set Hex values
+                    LOSData.resetHexTerrain(0);
+                    //applyTerrainToElevationMapRule(rule, LOSData);
                     changed = true;
                 } else if ("elevationToTerrainMap".equals(rule.getType())) {
 
@@ -558,7 +559,7 @@ public class VASLBoard extends ASLBoard {
 
                     applyTerrainToSelectElevationMapRule(rule, LOSData);
                     changed = true;
-                }*/
+                }
             }
 
             // transform woods to Light Jungle and buildings to huts if PTO changes
@@ -761,10 +762,38 @@ public class VASLBoard extends ASLBoard {
                     LOSData.setGridElevation(toElevation, x, y);
                     LOSData.setGridTerrainCode(LOSData.getTerrain("Open Ground").getType(), x, y);
                 }
+                else {
+                    // this method is a hack required by inconsistent grain terrain
+                   if (rule.getName().contains("GrainTo") && LOSData.getGridTerrain(x, y).getType() == 0){
+                        if (isPixelSurroundedByTerrainType(fromTerrain, x, y, LOSData)){
+                            // terrain should be grain so make the elevation change
+                            LOSData.setGridElevation( toElevation, x, y);
+                        }
+                   }
+                }
             }
         }
     }
 
+    private static boolean isPixelSurroundedByTerrainType(Terrain fromTerrain, int x, int y, Map LOSData) throws BoardException {
+        int isFromTerrain = 0;
+        for (int w = -1; w < 2; w++) {
+            for (int h = -1; h < 2; h++) {
+                if (w == 0 && h == 0){continue;}
+                if (LOSData.onMap(x+h, y+w)) {
+                    isFromTerrain = (LOSData.getGridTerrain(x + h, y + w).equals(fromTerrain)) ? isFromTerrain =+1 : isFromTerrain;
+                }
+            }
+        }
+        return isFromTerrain >= 2 ? true : false;
+    }
+
+    private static Color getRGBColor(int c){
+        final int red = (c & 0x00ff0000) >> 16;
+        final int green = (c & 0x0000ff00) >> 8;
+        final int blue = c & 0x000000ff;
+        return new Color(red, green, blue);
+    }
     /**
      * Apply terrain to select elevation rule to the LOS data; where terrain exists at more than 1 level on board and want to change independently
      *

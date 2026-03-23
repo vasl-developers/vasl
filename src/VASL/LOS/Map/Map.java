@@ -5409,13 +5409,18 @@ public class Map  {
      * @param status the LOS status
      * @param terrainHeight the terrain height
      * @param isCliffHexside is a cliff hexside?
+     * @param cliffHexsideTerrainHeightadjustment lower lever of cliff when los along cliff hexside
      * @return true if target is in a blind hex
      */
     protected static boolean isBlindHex(LOSStatus status, int terrainHeight, boolean isCliffHexside, int cliffHexsideTerrainHeightadjustment) {
-        // code added by DR to handle LOS to/from rooftops
+        // there is a formula for determining if a hex is a BlindHex
+        // this method sets the variouables for the formula and also handles exceptions
+
         double sourceadj=0;
         double targetadj=0;
         boolean sourceortargetishalfheight=false;
+
+        // handle LOS to/from rooftops
         if(status.source.getTerrain().isRooftop() && status.source.getLevelInHex() !=1) {
             sourceadj=-0.5;  // could be 0.5 but would that cause other problems?
             sourceortargetishalfheight=true;
@@ -5424,13 +5429,16 @@ public class Map  {
             targetadj=-0.5;   // could be 0.5 but would that cause other problems? yes with obstacle height.
             sourceortargetishalfheight=true;
         }
+
         double terrainHeightadj=0;
         if(sourceortargetishalfheight==true &&status.currentTerrain.isBuilding() && status.currentTerrain.isHalfLevelHeight()) { terrainHeightadj =0.5;}
         double sourceElevation = status.sourceElevation;
         double targetElevation = status.targetElevation;
-        int rangeToSource = status.rangeToSource;
-        int rangeToTarget = status.rangeToTarget;
+        double rangeToSource = status.rangeToSource;
+        double rangeToTarget = status.rangeToTarget;
         int groundLevel = status.groundLevel;
+        Hex starthex=status.sourceHex;
+        Hex finishhex=status.targetHex;
 
         // blind hex NA for same-level LOS
         if(sourceElevation == targetElevation){
@@ -5441,13 +5449,9 @@ public class Map  {
         sourceElevation=sourceElevation + sourceadj;
         targetElevation=targetElevation + targetadj;
 
-        Hex starthex=status.sourceHex;
-        Hex finishhex=status.targetHex;
-
-        // if LOS raising, swap source/target and use the same logic as LOS falling
+        // if LOS rising, swap source/target and use the same logic as LOS falling
         boolean swapLOS=false;
         if (sourceElevation < targetElevation) {
-
             // swap elevations
             swapLOS=true;
             double temp = sourceElevation;
@@ -5456,7 +5460,7 @@ public class Map  {
             starthex=status.targetHex;
             finishhex=status.sourceHex;
             // swap range
-            int rangetemp = rangeToSource;
+            double rangetemp = rangeToSource;
             rangeToSource = rangeToTarget;
             rangeToTarget = rangetemp;
         }
@@ -5478,8 +5482,7 @@ public class Map  {
             if (status.currentHex.isDepressionTerrain() && !status.currentHex.equals(status.targetHex)) {
                 return false;
             }
-            int newhexside=testhexside+3;
-            if(newhexside>= 6) {newhexside=newhexside-6;}
+
             // these tests are required to negate cliff in hex adjacent to source/target that would already have been tested (near to source, far from target)
             if (rangeToSource==1 && sourceElevation > terrainHeight && testlocation.getTerrain().isCliff() && starthex.getHexCenter().distance(status.currentCol, status.currentRow) < starthex.getHexCenter().distance(status.currentHex.getHexCenter().getX(), status.currentHex.getHexCenter().getY())) { //starthex.getHexsideLocation(newhexside).getTerrain().isCliff()) {
                 return false;
@@ -5487,10 +5490,13 @@ public class Map  {
             if (rangeToTarget==1 && sourceElevation > terrainHeight && testlocation.getTerrain().isCliff() && finishhex.getHexCenter().distance(status.currentCol, status.currentRow) > finishhex.getHexCenter().distance(status.currentHex.getHexCenter().getX(), status.currentHex.getHexCenter().getY())) {
                 return false;
             }
-            // final test; if both source and elevation are above cliff then no blind hex possible
-            if (rangeToSource==1 || rangeToTarget==1){
-                if (sourceElevation > status.currentHex.getBaseLevelofHex() && targetElevation > status.currentHex.getBaseLevelofHex()) {return false;}
+            // final test; if either source and elevation are above cliff and the other is equal to or above, then no blind hex possible
+            //revised code to try and solve cliff bug Mar 26 - it may cause issues
+            if ((sourceElevation >= status.currentHex.getBaseLevelofHex() && targetElevation > status.currentHex.getBaseLevelofHex()) ||
+                (sourceElevation > status.currentHex.getBaseLevelofHex() && targetElevation >= status.currentHex.getBaseLevelofHex())) {
+                return false;
             }
+            // set ground level to top of cliff
             if (status.currentHex.getBaseLevelofHex() > status.groundLevel){
                 groundLevel = status.currentHex.getBaseLevelofHex();
             }
@@ -5498,6 +5504,9 @@ public class Map  {
             // -99 is default value when no ajustment required; adjustment reflects lower terrain when LOS along cliff hexside
             if (cliffHexsideTerrainHeightadjustment !=-99) {groundLevel=cliffHexsideTerrainHeightadjustment;}
         }
+
+        //Handle EXC
+        // IFW
         if(status.currentTerrain.isRowhouseFactoryWallOrBreach()) {
             // hex containing IFW hexside is "first" blind hex; use range adjustment to handle
             if(status.LOSisHorizontal || status.LOSis60Degree){
@@ -5514,10 +5523,9 @@ public class Map  {
                 rangeToTarget += 1;
                 rangeToSource -= 1;
             }
-
         }
 
-        // is the obstacle a non-cliff crest line?
+        // EXC: non-cliff crest line
         if (terrainHeight == 0 && (!isCliffHexside) || (isCliffHexside && status.currentHex.equals(status.sourceHex) )) {
             int depressionadj=0;
             HashSet<Integer> sidecrossed= status.getHexsideCrossed(status.currentHex);
@@ -5536,8 +5544,17 @@ public class Map  {
             }
         }
         else {
-            return rangeToTarget <= Math.max(2 * (groundLevel + terrainHeight+ terrainHeightadj) + (rangeToSource / 5) - sourceElevation - targetElevation + 1, 1);
+            // EXC: Cliff and Bocage - # of Blind hexes
+            int cliffadj = (isCliffHexside ) ? -1 : 0;
+            int bocageadj = (status.currentTerrain.getName().contains("Bocage") && (sourceElevation - (groundLevel + terrainHeight) >=2 ))  ? -1 : 0;
+            return getBlind(groundLevel, terrainHeight, terrainHeightadj, rangeToSource, rangeToTarget, sourceElevation, targetElevation, cliffadj, bocageadj);
         }
+    }
+
+    protected static boolean getBlind(int groundLevel, int terrainHeight, double terrainHeightadj, double rangeToSource,
+        double rangeToTarget, double sourceElevation, double targetElevation, int cliffadj, int bocageadj){
+        // cliffadj& bocageadj handle special case for minimum # of blind hex for cliff/bocage hexside
+        return rangeToTarget <= Math.max(2 * (groundLevel + terrainHeight+ terrainHeightadj) + (rangeToSource / 5) - sourceElevation - targetElevation + 1 + cliffadj, 1 + bocageadj);
     }
 
     /**
