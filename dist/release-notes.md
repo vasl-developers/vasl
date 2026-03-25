@@ -24,7 +24,7 @@
 ## 📈 Improvements
  - Improvement 1: Created "Gutted Building Wall" terrain types to support VotG LOS.
  - Improvement 2: Added missing Axis Minor "German" MMG, HMG and PSK counters.
- - Improvement 3:
+ - Improvement 3: Minor graphical changes to the Japanese HMG/.50 cal HMG counters.
  - Improvement 4:
  - Improvement 5:
 
