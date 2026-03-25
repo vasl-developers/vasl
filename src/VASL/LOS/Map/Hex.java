@@ -657,7 +657,9 @@ public class Hex {
     public void resetTerrain(){
         //ToDo add all overlay and other terrain updates here
         // set the center location terrain
+
         Terrain centerLocationTerrain = getnearcenterLocationTerrain();
+        int centerLocationElevation = getnearcenterLocationElevation();
         // fix center location when building misses the center dot
         if(!centerLocationTerrain.isBuilding() && getHexsideBuildingTerrain(0) != null) {
             centerLocationTerrain = getHexsideBuildingTerrain(0);
@@ -739,14 +741,11 @@ public class Hex {
         }
 
         // set the hex base height
-        setBaseLevelofHex(map.getGridElevation((int) (centerLocation.getLOSPoint().getX()), (int) centerLocation.getLOSPoint().getY()));
-
+        setBaseLevelofHex(centerLocationElevation);
         // set the depression terrain
         setDepressionTerrain();
-
         // set inherent terrain in the hex grid
         setInherentTerrain(0);
-
         // reset the hexside terrain
          resetHexsideTerrain(0);
 
@@ -759,11 +758,37 @@ public class Hex {
      * @return Terrain
      */
     public Terrain getnearcenterLocationTerrain(){
-        int terrainpointx = (int) (centerLocation.getLOSPoint().getX() );
-        if (terrainpointx > -5 && terrainpointx < 0) {terrainpointx = 0;}
-        int terrainpointy = (int) (centerLocation.getLOSPoint().getY() -1 );
-        if (terrainpointy > -5 && terrainpointy < 0) {terrainpointy = 0;}
-        return map.getGridTerrain(terrainpointx, terrainpointy);
+        if (map.onMap((int)centerLocation.getLOSPoint().getX()+1, (int)centerLocation.getLOSPoint().getY()-1 )){
+            return map.getGridTerrain((int)centerLocation.getLOSPoint().getX()+1, (int)centerLocation.getLOSPoint().getY()-1 );
+        }
+        else if (map.onMap((int)centerLocation.getLOSPoint().getX()+1, (int)centerLocation.getLOSPoint().getY()+1 )){
+            return map.getGridTerrain((int)centerLocation.getLOSPoint().getX()+1, (int)centerLocation.getLOSPoint().getY()+1 );
+        }
+        else if (map.onMap((int)centerLocation.getLOSPoint().getX()-1, (int)centerLocation.getLOSPoint().getY()+1 )){
+            return map.getGridTerrain((int)centerLocation.getLOSPoint().getX()-1, (int)centerLocation.getLOSPoint().getY()+1 );
+        }
+        else if (map.onMap((int)centerLocation.getLOSPoint().getX()-1, (int)centerLocation.getLOSPoint().getY()- 1 )){
+            return map.getGridTerrain((int)centerLocation.getLOSPoint().getX()-1, (int)centerLocation.getLOSPoint().getY()+1 );
+        }
+        return map.getGridTerrain((int)centerLocation.getLOSPoint().getX(), (int)centerLocation.getLOSPoint().getY() );
+
+    }
+
+    public int getnearcenterLocationElevation(){
+        if (map.onMap((int)centerLocation.getLOSPoint().getX()+1, (int)centerLocation.getLOSPoint().getY()-1 )){
+            return map.getGridElevation((int)centerLocation.getLOSPoint().getX()+1, (int)centerLocation.getLOSPoint().getY()-1 );
+        }
+        else if (map.onMap((int)centerLocation.getLOSPoint().getX()+1, (int)centerLocation.getLOSPoint().getY()+1 )){
+            return map.getGridElevation((int)centerLocation.getLOSPoint().getX()+1, (int)centerLocation.getLOSPoint().getY()+1 );
+        }
+        else if (map.onMap((int)centerLocation.getLOSPoint().getX()-1, (int)centerLocation.getLOSPoint().getY()+1 )){
+            return map.getGridElevation((int)centerLocation.getLOSPoint().getX()-1, (int)centerLocation.getLOSPoint().getY()+1 );
+        }
+        else if (map.onMap((int)centerLocation.getLOSPoint().getX()-1, (int)centerLocation.getLOSPoint().getY()- 1 )){
+            return map.getGridElevation((int)centerLocation.getLOSPoint().getX()-1, (int)centerLocation.getLOSPoint().getY()+1 );
+        }
+        return map.getGridElevation((int)centerLocation.getLOSPoint().getX(), (int)centerLocation.getLOSPoint().getY() );
+
     }
 
     /**

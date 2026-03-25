@@ -1,12 +1,10 @@
 package VASL.build.module.map;
 
-import VASL.LOS.counters.CounterMetadata;
 import VASSAL.build.GameModule;
 import VASSAL.build.GpIdSupport;
 import VASSAL.build.module.Chatter;
 import VASSAL.build.module.PrototypeDefinition;
 import VASSAL.build.widget.PieceSlot;
-import VASSAL.command.Command;
 import VASSAL.counters.BasicPiece;
 import VASSAL.counters.Decorator;
 import VASSAL.counters.Embellishment;
@@ -47,11 +45,12 @@ public class ASLGpIdChecker {
     private final Set<String> refresherOptions = new HashSet<>();
     private static final Logger logger = LoggerFactory.getLogger(ASLGameUpdater.class);
     private HashMap<String, String> knownmatches;
+
     public ASLGpIdChecker() {
         gpIdSupport = GameModule.getGameModule().getGpIdSupport();
         maxId = -1;
         fillknownmatches();
-        //this((GpIdSupport) null);
+
     }
 
     public ASLGpIdChecker(GpIdSupport gpIdSupport) {
@@ -63,23 +62,19 @@ public class ASLGpIdChecker {
     // This constructor is used by the GameRefresher to refresh a game with extensions possibly loaded
     public ASLGpIdChecker(Set<String> options) {
         this();
-//    this.useName = useName;
-//    this.useLabelerName = useLabelerName;
         this.extensionsLoaded = true;
         if (!options.isEmpty()) {
             this.refresherOptions.addAll(options);
         }
         fillknownmatches();
     }
-
+    // use these to control what tests are used in findState()
     public boolean useLabelerName() {
         return refresherOptions.contains("UseLabelerName"); //$NON-NLS-1$
     }
     public boolean useLayerName() {
-        return true; //test code
-        //return refresherOptions.contains("UseLayerName"); //$NON-NLS-1$
+        return refresherOptions.contains("UseLayerName"); //$NON-NLS-1$
     }
-
     public boolean useName() {
         return refresherOptions.contains("UseName"); //$NON-NLS-1$
     }
@@ -87,12 +82,10 @@ public class ASLGpIdChecker {
     /**
      * Add a PieceSlot to our cross-reference and any PlaceMarker
      * traits it contains.
-     *
      * @param pieceSlot PieceSlot to add to cross-reference
      */
     public void add(PieceSlot pieceSlot) {
         testGpId(pieceSlot.getGpId(), new ASLGpIdChecker.SlotElement(pieceSlot));
-
         // PlaceMarker traits within the PieceSlot definition also contain GpId's.
         checkTrait(pieceSlot.getPiece());
     }
@@ -109,7 +102,6 @@ public class ASLGpIdChecker {
     /**
      * Check for PlaceMarker traits in a GamePiece and add them to
      * the cross-reference
-     *
      * @param gp GamePiece to check
      */
     protected void checkTrait(GamePiece gp) {
@@ -166,7 +158,7 @@ public class ASLGpIdChecker {
             }
         }
 
-        if (id == null || id.length() == 0) {   // gpid not generated yet?
+        if (id == null || id.isEmpty()) {   // gpid not generated yet?
             errorSlots.add(element);
         }
         else {
@@ -195,12 +187,13 @@ public class ASLGpIdChecker {
     }
 
     /**
-     * Where any errors found?
+     * Were any errors found?
      * @return Error count
      */
     public boolean hasErrors() {
         return !errorSlots.isEmpty();
     }
+
     public void log(String message) {
         // Log to chatter
         GameModule.getGameModule().warn(message);
@@ -256,7 +249,7 @@ public class ASLGpIdChecker {
     public GamePiece createUpdatedPiece(GamePiece oldPiece) {
         final String gpid = (String) oldPiece.getProperty(Properties.PIECE_ID);
         GamePiece newPiece;
-        if (Decorator.getInnermost(oldPiece).getName()=="User-Labeled"){
+        if (Decorator.getInnermost(oldPiece).getName().equals("User-Labeled")){
             return oldPiece;  //do not update Label counters as it will remove the labels (and we never change their functionality)
         } else {
             // Find a slot with a matching gpid
@@ -293,17 +286,19 @@ public class ASLGpIdChecker {
                 }
             }
         }
-        chat(oldPiece.getName() + " cannot be updated; delete existing piece and replace with new piece of this type from counter palette");
-        //log(Resources.getString("GameRefresher.refresh_error_nomatch_pieceslot", "", oldPiece.getName()));
+
+        String oldPieceCommonName;
+        if (oldPiece.getName().equals("") || oldPiece.getName().equals("?")) {
+            oldPieceCommonName = Decorator.getInnermost(oldPiece).getName();
+        } else {
+            oldPieceCommonName = oldPiece.getName();
+        }
+        chat(oldPieceCommonName + " cannot be updated; delete existing piece and replace with new piece of this type from counter palette");
         return oldPiece;
     }
 
     private String checkknownmatches(String gpid){
-        if(knownmatches.containsKey(gpid)){
-            return knownmatches.get(gpid);
-        } else {
-            return null;
-        }
+        return knownmatches.getOrDefault(gpid, null);
     }
 
     private void fillknownmatches(){
@@ -315,13 +310,7 @@ public class ASLGpIdChecker {
             parseknownmatches(inputStream);
 
             // give up on any errors
-        } catch (IOException e) {
-            knownmatches = null;
-            ErrorDialog.bug(e);
-        } catch (JDOMException e) {
-            knownmatches = null;
-            ErrorDialog.bug(e);
-        } catch (NullPointerException e) {
+        } catch (IOException | JDOMException | NullPointerException e) {
             knownmatches = null;
             ErrorDialog.bug(e);
         }
@@ -386,6 +375,8 @@ public class ASLGpIdChecker {
 
     return false;
   }*/
+
+
     /**
      * Copy as much state information as possible from the old
      * piece to the new piece
@@ -393,9 +384,7 @@ public class ASLGpIdChecker {
      * @param oldPiece Piece to copy state from
      * @param newPiece Piece to copy state to
      */
-
     protected void copyState(GamePiece oldPiece, GamePiece newPiece) {
-        String listofdecs = ""; // test code
         GamePiece p = newPiece;
         while (p != null) {
             if (p instanceof BasicPiece) {
@@ -406,19 +395,14 @@ public class ASLGpIdChecker {
 
                 final Decorator decoratorNew = (Decorator) p;
                 final String newState = findState(oldPiece, p, decoratorNew, p.getClass());
-                listofdecs += newState + " ";  //test code
                 // Do not copy the state of Marker traits, we want to see the new value from the new definition
-                if (newState != null && newState.length() > 0 && !(decoratorNew instanceof Marker)) {
+                if (newState != null && !newState.isEmpty() && !(decoratorNew instanceof Marker)) {
                     decoratorNew.mySetState(newState);
-                }
-                else {  //test code to see if the above is correct
-                    boolean reg = true;
                 }
                 p = decoratorNew.getInner();
             }
         }
     }
-
 
     /**
      * Locate a Decorator in the old piece that has the exact same
