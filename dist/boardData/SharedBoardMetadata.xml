@@ -1395,7 +1395,7 @@
 		<color name="BrushDesertL6" red="185" green="179" blue="47" terrain="Brush" elevation="6" />
 		<color name="DirtRdBridgeDesert" red="246" green="210" blue="108" terrain="Dirt Road" elevation="UNKNOWN" />
 		<color name="OrchTreesDesert" red="106" green="120" blue="0" terrain="Orchard" elevation="UNKNOWN" />
-		<color name="DierBase" red="250" green="213" blue="134" terrain="Dier" elevation="UNKNOWN" />
+		<color name="DeirBase" red="250" green="213" blue="134" terrain="Deir" elevation="UNKNOWN" />
 		<color name="Sand1" red="238" green="194" blue="98" terrain="Open Ground" elevation="UNKNOWN" />
 		<color name="Sand2" red="222" green="163" blue="120" terrain="Open Ground" elevation="UNKNOWN" />
 		<color name="Wadi1" red="231" green="167" blue="0" terrain="Wadi" elevation="UNKNOWN" />
@@ -1564,8 +1564,8 @@
 
 		<!-- Desert colors for desert overlays, including AD terrain -->
 		<color name="Hillock1" red="114" green="83" blue="42" terrain="Hillock Summit" elevation="1" />
-		<color name="Dier1" red="252" green="223" blue="89" terrain="Dier" elevation="UNKNOWN" />
-		<color name="Dier2" red="202" green="152" blue="0" terrain="Dier" elevation="UNKNOWN" />
+		<color name="Deir1" red="252" green="223" blue="89" terrain="Deir" elevation="UNKNOWN" />
+		<color name="Deir2" red="202" green="152" blue="0" terrain="Deir" elevation="UNKNOWN" />
 		<color name="Cactus Patch" red="230" green="192" blue="82" terrain="Cactus Patch" elevation="0" />
 		<color name="Cactus Patch1" red="194" green="165" blue="68" terrain="Cactus Patch" elevation="0" />
 		<color name="Cactus Patch2" red="137" green="83" blue="35" terrain="Cactus Patch" elevation="0" />
@@ -1734,8 +1734,8 @@
         <terrainType name="Cave" typeCode="97" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="0" mapColorGreen="0" mapColorBlue="0" LOSCategory="OPEN"  />
         <terrainType name="Scrub" typeCode="100" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="119" mapColorGreen="67" mapColorBlue="0" LOSCategory="OPEN"  />
         <terrainType name="Hammada" typeCode="101" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="59" mapColorGreen="55" mapColorBlue="19" LOSCategory="OPEN"  />
-        <terrainType name="Dier" typeCode="102" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="OPEN"  />
-        <terrainType name="Dier Lip" typeCode="103" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="HEXSIDE"  />
+        <terrainType name="Deir" typeCode="102" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="OPEN"  />
+        <terrainType name="Deir Lip" typeCode="103" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="HEXSIDE"  />
         <terrainType name="Wadi" typeCode="104" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="191" mapColorGreen="111" mapColorBlue="7" LOSCategory="DEPRESSION"  />
         <terrainType name="Hillock" typeCode="105" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="85" mapColorGreen="45" mapColorBlue="4" LOSCategory="OTHER"  />
         <terrainType name="Hillock Summit" typeCode="106" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="114" mapColorGreen="83" mapColorBlue="42" LOSCategory="OPEN"  />  //mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="OPEN"  />
