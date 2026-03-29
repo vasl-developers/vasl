@@ -5011,18 +5011,18 @@ public class Map  {
                         status.groundLevel + status.currentTerrainHgt >  status.sourceElevation);
     }
 
-    public void setDierLip() {
+    public void setDeirLip() {
         // step through each hex and reset the terrain.
         for (int col = 0; col < getHexGrid().length; col++) {
             for (int row = 0; row < getHexGrid()[col].length; row++) {
-                if(getHexGrid()[col][row].getCenterLocation().getTerrain().getName().equals("Dier")) {
+                if(getHexGrid()[col][row].getCenterLocation().getTerrain().getName().equals("Deir")) {
                     // start with a dier hex
                     for (int a = 0; a < 6; a++) {
                         Hex testhex = getAdjacentHex(getHexGrid()[col][row], a);
-                        if ((testhex == null) || !(testhex.getCenterLocation().getTerrain().getName().equals("Dier"))) {
+                        if ((testhex == null) || !(testhex.getCenterLocation().getTerrain().getName().equals("Deir"))) {
                             // if adjacent hex is NOT a dier then the hexside must be a dier lip
-                            getHexGrid()[col][row].setHexsideTerrain(a, getTerrain("Dier Lip"));
-                            getHexGrid()[col][row].setHexsideLocationTerrain(a, getTerrain("Dier Lip"));
+                            getHexGrid()[col][row].setHexsideTerrain(a, getTerrain("Deir Lip"));
+                            getHexGrid()[col][row].setHexsideLocationTerrain(a, getTerrain("Deir Lip"));
                         }
                     }
                 }
@@ -5033,12 +5033,12 @@ public class Map  {
         if (losonoverlays.newlosdata.getMapConfiguration().equals("ToplefthalfheightEqualRowCount") || losonoverlays.newlosdata.getA1CenterY() == 65) {
             for (losonoverlays.currentx = 0; losonoverlays.currentx < losonoverlays.newlosdata.getWidth(); losonoverlays.currentx++) {
                 for (losonoverlays.currenty = 0; losonoverlays.currenty < losonoverlays.newlosdata.getHeight(); losonoverlays.currenty++) { // no extra hex for boards where each col has same number of rows (eg RO)
-                    if (losonoverlays.newlosdata.getHex(losonoverlays.currentx, losonoverlays.currenty).getCenterLocation().getTerrain().getName().equals("Dier")) {
+                    if (losonoverlays.newlosdata.getHex(losonoverlays.currentx, losonoverlays.currenty).getCenterLocation().getTerrain().getName().equals("Deir")) {
                         for (int a = 0; a < 6; a++) {
                             Hex testhex = losonoverlays.newlosdata.getAdjacentHex(losonoverlays.newlosdata.getHex(losonoverlays.currentx, losonoverlays.currenty), a);
-                            if ((testhex == null) || !(testhex.getCenterLocation().getTerrain().getName().equals("Dier"))) {
-                                losonoverlays.newlosdata.getHex(losonoverlays.currentx, losonoverlays.currenty).setHexsideTerrain(a, losonoverlays.newlosdata.getTerrain("Dier Lip"));
-                                losonoverlays.newlosdata.getHex(losonoverlays.currentx, losonoverlays.currenty).setHexsideLocationTerrain(a, losonoverlays.newlosdata.getTerrain("Dier Lip"));
+                            if ((testhex == null) || !(testhex.getCenterLocation().getTerrain().getName().equals("Deir"))) {
+                                losonoverlays.newlosdata.getHex(losonoverlays.currentx, losonoverlays.currenty).setHexsideTerrain(a, losonoverlays.newlosdata.getTerrain("Deir Lip"));
+                                losonoverlays.newlosdata.getHex(losonoverlays.currentx, losonoverlays.currenty).setHexsideLocationTerrain(a, losonoverlays.newlosdata.getTerrain("Deir Lip"));
                             }
                         }
                     }
@@ -5047,12 +5047,12 @@ public class Map  {
         } else {
             for (losonoverlays.currentx = 0; losonoverlays.currentx < losonoverlays.newlosdata.getWidth(); losonoverlays.currentx++) {
                 for (losonoverlays.currenty = 0; losonoverlays.currenty < losonoverlays.newlosdata.getHeight() + (losonoverlays.currentx % 2); losonoverlays.currenty++) { // add 1 hex if odd
-                    if (losonoverlays.newlosdata.getHex(losonoverlays.currentx, losonoverlays.currenty).getCenterLocation().getTerrain().getName().equals("Dier")) {
+                    if (losonoverlays.newlosdata.getHex(losonoverlays.currentx, losonoverlays.currenty).getCenterLocation().getTerrain().getName().equals("Deir")) {
                         for (int a = 0; a < 6; a++) {
                             Hex testhex = losonoverlays.newlosdata.getAdjacentHex(losonoverlays.newlosdata.getHex(losonoverlays.currentx, losonoverlays.currenty), a);
-                            if ((testhex == null) || !(testhex.getCenterLocation().getTerrain().getName().equals("Dier"))) {
-                                losonoverlays.newlosdata.getHex(losonoverlays.currentx, losonoverlays.currenty).setHexsideTerrain(a, losonoverlays.newlosdata.getTerrain("Dier Lip"));
-                                losonoverlays.newlosdata.getHex(losonoverlays.currentx, losonoverlays.currenty).setHexsideLocationTerrain(a, losonoverlays.newlosdata.getTerrain("Dier Lip"));
+                            if ((testhex == null) || !(testhex.getCenterLocation().getTerrain().getName().equals("Deir"))) {
+                                losonoverlays.newlosdata.getHex(losonoverlays.currentx, losonoverlays.currenty).setHexsideTerrain(a, losonoverlays.newlosdata.getTerrain("Deir Lip"));
+                                losonoverlays.newlosdata.getHex(losonoverlays.currentx, losonoverlays.currenty).setHexsideLocationTerrain(a, losonoverlays.newlosdata.getTerrain("Deir Lip"));
                             }
                         }
                     }
@@ -5184,35 +5184,35 @@ public class Map  {
             }
         }
 
-        // Dier special case
-        if (status.source.getTerrain().isEntrenchmentTerrain() && status.sourceHex.getCenterLocation().getTerrain().getName().equals("Dier") &&
+        // Deir special case
+        if (status.source.getTerrain().isEntrenchmentTerrain() && status.sourceHex.getCenterLocation().getTerrain().getName().equals("Deir") &&
                 (status.sourceElevation== status.targetElevation)){
             boolean nonlip = true;
             for (int x =0; x < 6; x++) {
-                if (status.sourceHex.getHexsideLocation(x).getTerrain().getName().equals("Dier Lip")) {
+                if (status.sourceHex.getHexsideLocation(x).getTerrain().getName().equals("Deir Lip")) {
                     nonlip = false;
                     break;
                 }
             }
             if (nonlip) {
                 status.blocked = true;
-                status.reason = "Unit in entrenchment cannot see/be seen over Dier Lip (F4.4)";
+                status.reason = "Unit in entrenchment cannot see/be seen over Deir Lip (F4.4)";
                 result.setBlocked(status.currentCol, status.currentRow, status.reason);
                 return true;
             }
         }
-        else if (status.target.getTerrain().isEntrenchmentTerrain() && status.targetHex.getCenterLocation().getTerrain().getName().equals("Dier") &&
+        else if (status.target.getTerrain().isEntrenchmentTerrain() && status.targetHex.getCenterLocation().getTerrain().getName().equals("Deir") &&
                 (status.sourceElevation == status.targetElevation)){
             boolean nonlip = true;
             for (int x =0; x < 6; x++) {
-                if (status.targetHex.getHexsideLocation(x).getTerrain().getName().equals("Dier Lip")) {
+                if (status.targetHex.getHexsideLocation(x).getTerrain().getName().equals("Deir Lip")) {
                     nonlip = false;
                     break;
                 }
             }
             if (nonlip) {
                 status.blocked = true;
-                status.reason = "Unit in entrenchment cannot see/be seen over Dier Lip (F4.4)";
+                status.reason = "Unit in entrenchment cannot see/be seen over Deir Lip (F4.4)";
                 result.setBlocked(status.currentCol, status.currentRow, status.reason);
                 return true;
             }

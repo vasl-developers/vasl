@@ -976,7 +976,7 @@ public class ASLMap extends Map {
             //ToDo these variables seem to be working; confirm for other configurations
             losonoverlays.ovrXstart = (int) (o.bounds().x + (board.bounds().getX() - board.getMap().getEdgeBuffer().getWidth()));
             losonoverlays.ovrYstart = (int) (o.bounds().y + (board.bounds().getY() - board.getMap().getEdgeBuffer().getHeight()));
-            // ToDo can setDierLip() be model for Rice Paddies - banks?
+            // ToDo can setDeirLip() be model for Rice Paddies - banks?
             String terraintype = getOverlayTerrainType(o);
             terraintype = resetfortransform(terraintype, losonoverlays);
             //setOverlayTerrain(losonoverlays, terraintype, o.getPreserveElevation());
@@ -1008,7 +1008,7 @@ public class ASLMap extends Map {
             }
         }
         losonoverlays.newlosdata.buildHillocks();
-        losonoverlays.newlosdata.setDierLip();
+        losonoverlays.newlosdata.setDeirLip();
         return losonoverlays.newlosdata;
     }
 
@@ -1553,7 +1553,7 @@ public class ASLMap extends Map {
         }
         if (inhex.getNearestLocation(losonoverlays.overpositionx, losonoverlays.overpositiony).isCenterLocation() && !overlaytype.contains("NoRoads") &&
                 !terr.isCliff() && !terr.isHexsideTerrain()) {
-            if (!inhex.getCenterLocation().getTerrain().getName().contains("Dier") && !inhex.getCenterLocation().getTerrain().getName().contains("Sand Dune, Low")) {
+            if (!inhex.getCenterLocation().getTerrain().getName().contains("Deir") && !inhex.getCenterLocation().getTerrain().getName().contains("Sand Dune, Low")) {
                 inhex.getCenterLocation().setTerrain(terr);
             }
             if (terr.isDepression()) {inhex.getCenterLocation().setDepressionTerrain(terr);}
