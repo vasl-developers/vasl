@@ -788,7 +788,7 @@ public class Map  {
                     hexGrid[col] = new Hex[this.height];
                     for (int row = 0; row < (startrow + this.height); row++) {
                         if (col >= startcol && row >= startrow) {
-                            hexGrid[col - startcol][row- startrow] = new Hex(col - startcol, row - startrow, getGEOHexName(col, row, false, false), getHexCenterPoint(col - startcol, row - startrow), hexHeight, hexWidth, this, 0, terrainList[0]);
+                            hexGrid[col - startcol][row- startrow] = new Hex(col - startcol, row - startrow, getHASLHexName(col, row, "BRT"), getHASLHexCenterPoint(col - startcol, row - startrow), hexHeight, hexWidth, this, 0, terrainList[0]);
                         }
                     }
                 }
@@ -797,7 +797,7 @@ public class Map  {
                 for (int col = 0; col < this.width; col++) {
                     hexGrid[col] = new Hex[this.height];
                     for (int row = 0; row < this.height; row++) {
-                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                        hexGrid[col][row] = new Hex(col, row, getHASLHexName(col, row, "BRT"), getHASLHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
                     }
                 }
             }
@@ -1021,6 +1021,13 @@ public class Map  {
                     hexHeight/2.0 + (hexHeight * (double) row) - (hexHeight/2.0 * evencol) +A1CenterY );
 
         }
+        else if (A1CenterY == 20) {  //BRT map topleft hex is half height
+            evencol = col % 2 == 0 ? 1 : 0;
+            p = new Point2D.Double(
+                    (A1CenterX < 0.0 ? 0.0 : A1CenterX) + hexWidth * (double) col,
+                    hexHeight/2.0 + (hexHeight * (double) row) - (hexHeight/2.0 * evencol) +A1CenterY );
+
+        }
         else {
             p = new Point2D.Double(
                     (A1CenterX < 0.0 ? 0.0 : A1CenterX) + hexWidth * (double) col,
@@ -1044,7 +1051,7 @@ public class Map  {
         char c;
         String name = "";
 
-        // isbboard implies boards 1b-22b
+        // isbboard implies boards 1b-26b
         if(isbboard) {
 
             if (col < 10) {
@@ -1125,6 +1132,44 @@ public class Map  {
         }*/
 
     }
+
+    /**
+     * this is used from within LOSGUI only
+     */
+    public String getHASLHexName(int col, int row, String mapname) {
+
+        //get col name
+        char c;
+        String name = "";
+        c = (char) ((int) 'A' + col%26);
+        name += c;
+        for (int x = 0; x < col/26; x++) {
+            name += c;
+        }
+
+        // add row as suffix
+        if(!mapname.contains("RO")) {
+            int rowadj = col % 2 == 0 ? 1 : 0;
+            row = row + rowadj;
+        }
+        else {
+            if (col % 2 == 0){row +=1;}
+        }
+        return name + row;
+        /*int rowOffset = A1CenterY < 0.0 ? (int) (-A1CenterY / hexHeight) + 1 : 0;
+        if (A1CenterY == 65) {
+            return name + (row + rowOffset);
+        } else {
+            //if (A1CenterY == 32.5 && getMapConfiguration().contains("ROadjustment")) {
+            //    return name + (row + rowOffset);
+            //} else {
+            return name + (row + rowOffset + (col % 2 == 0 ? 1 : 0));
+            //}
+        }*/
+
+    }
+
+
     /**
      * Constructs a new <code>Map</code> as a standard geomorphic map board (10 x 33 hexes)
      * @param w the width of the map in hexes
@@ -2891,7 +2936,7 @@ public class Map  {
         Point imagepoint = new Point();
         BufferedImage img = getImage(overlaypiece);
         Location hexsideloc = status.currentHex.getHexsideLocation(hexside);
-        //ToDo - test the formulas for imagepoint.x and .y are correct - working so far in Dec 25
+        //ToDo - test the formulas for imagepoint.x and .y are correct - NOT WoRKING mar 26 OUt of bounds errors #2319
         if (hexside == -1) {  //hex terrain or no terrain
             imagepoint.x = img.getWidth() / 2 + status.currentCol - (int) (status.currentHex.getHexCenter().getX());
             imagepoint.y = img.getHeight() / 2 + status.currentRow - (int) (status.currentHex.getHexCenter().getY());
