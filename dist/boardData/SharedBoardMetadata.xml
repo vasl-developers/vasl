@@ -1633,6 +1633,14 @@
 		<color name="Gutted_FactoryL2_56" red="145" green="157" blue="158" terrain="Gutted Stone Factory, 2.5 Level" elevation="UNKNOWN" />
 		<color name="Gutted_FactoryL2_57" red="142" green="153" blue="155" terrain="Gutted Stone Factory, 2.5 Level" elevation="UNKNOWN" />
 		<color name="Gutted_FactoryL2_57" red="137" green="149" blue="150" terrain="Gutted Stone Factory, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Slightly_Sloped_Beach" red="212" green="179" blue="121" terrain="Open Ground" elevation="0" />
+		<color name="Slightly_Sloped_Surf" red="212" green="228" blue="228" terrain="Open Ground" elevation="0" />
+		<color name="Slightly_Sloped_Shallow_Ocean" red="164" green="205" blue="229" terrain="Open Ground" elevation="0" />
+		<color name="Slightly_Sloped_Deep_Ocean" red="133" green="188" blue="219" terrain="Open Ground" elevation="0" />
+		<color name="Moderately_Sloped_Beach" red="213" green="180" blue="122" terrain="Deir" elevation="0" />
+		<color name="Moderately_Sloped_Surf" red="213" green="229" blue="229" terrain="Deir" elevation="0" />
+		<color name="Moderately_Sloped_Shallow_Ocean" red="165" green="206" blue="230" terrain="Deir" elevation="0" />
+		<color name="Moderately_Sloped_Deep_Ocean" red="134" green="189" blue="220" terrain="Deir" elevation="0" />
 	</colors>
 
 	<terrainTypes>

@@ -1,0 +1,10 @@
+<SSRControls>
+	<Option name="LFT1 beach slope overlays">
+		<Checkbox name="">
+			<entry name="Slightly Sloped Beach" rule="Slightly_Sloped_Beach" text="slightly sloped beach"/>
+		</Checkbox>
+		<Checkbox name="">
+			<entry name="Moderately Sloped Beach" rule="Moderately_Sloped_Beach" text="moderately sloped beach"/>
+		</Checkbox>		
+	</Option>
+</SSRControls>
