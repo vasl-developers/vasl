@@ -1,11 +1,12 @@
 
 # Release Notes: Version 6.7.2
-**Release Date:** April 2, 2026
+**Release Date:** April 11, 2026
 
 ---
 
 ## 🚀 New Features
  - Feature 1: SASL support for Finnish and Forgotten War nationalities (BCFK, CPVA, KPA, OUNC, SK). Use the existing U.S. Army S? for Korea.
+ - Feature 2: LOS enabled bdLFT1 and added options for different beach slopes.
  
 ---
 
@@ -39,6 +40,7 @@
  - Improvement 5: LOS support for bdHT (Hatten In Flames), bdVotG (Valor of the Guards) added.
  - Improvement 6: Minor graphical changes to the Japanese HMG/.50 cal HMG counters.
  - Improvement 7: HIP Fortification now displays bd and location info for Fortification and Unit when asking to reveal.
+ - Improvement 8: Corrected counter palette label for IP Carrier Mk IIA (was incorrectly labeled "IIS).
 
 ---
 
