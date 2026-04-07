@@ -1784,12 +1784,7 @@ public class Map  {
 
                 // reset variables
                 //status.ignoreGroundLevelHex = null;
-                // code added by DR to enable Roofless factory hexes
-                // test code
-                if(status.currentCol == 79 && status.currentRow == 218){
-                    boolean reg = true;
-                }
-                //end test code
+
                 status.currentTerrain = getGridTerrain(status.currentCol, status.currentRow);
                 status.groundLevel = getGridElevation(status.currentCol, status.currentRow);
 
@@ -2766,6 +2761,7 @@ public class Map  {
         } else {
             insamehex = true;
         }
+
         // check for hexside counter terrain (ie walls, hedges, drifts, roadblocks, etc) and reset value of currentTerrain if found
         int usehexside = -1;
         for (Integer hexside : hexsides) {
@@ -4982,7 +4978,7 @@ public class Map  {
 
             // apply max one hindrance for grain/brush
             if (status.firstHalfLevelHindrance == null &&
-                    (BRUSH.equals(status.currentTerrain.getName()) || GRAIN.equals(status.currentTerrain.getName())) &&
+                    (BRUSH.equals(status.currentTerrain.getName()) || GRAIN.equals(status.currentTerrain.getName()) || "Rice Paddy, In Season".equals(status.currentTerrain.getName())) &&
                     !(status.startsOnHillock && status.endsOnHillock)) {
 
                 status.firstHalfLevelHindrance = status.currentHex;
@@ -5613,7 +5609,8 @@ public class Map  {
                             if (testhex.getCenterLocation().getTerrain().isRoofless() || status.currentTerrain.getName().contains("Light Woods")) {
                                 hindrancevalue = 2;
                             }
-                            else if (status.currentTerrain.getName().contains("Rice Paddy, In Season") || status.currentTerrain.getName().contains("Light Grain")) {
+                            else if (status.currentTerrain.getName().contains("Rice Paddy, In Season") || status.currentTerrain.getName().contains("Rice Paddy Bank") ||
+                                    status.currentTerrain.getName().contains("Light Grain")) {
                                 hindrancevalue = 0.5;
                             }
                         }
@@ -5624,16 +5621,22 @@ public class Map  {
                             if (testhex.getCenterLocation().getTerrain().isRoofless() || status.currentTerrain.getName().contains("Light Woods")) {
                                 hindrancevalue = 2;
                             }
-                            else if (status.currentTerrain.getName().contains("Rice Paddy, In Season") || status.currentTerrain.getName().contains("Light Grain")) {
+                            else if (status.currentTerrain.getName().contains("Rice Paddy, In Season") || status.currentTerrain.getName().contains("Rice Paddy Bank") ||
+                                    status.currentTerrain.getName().contains("Light Grain")) {
                                 hindrancevalue = 0.5;
                             }
                         }
+                    } else {
+                        // handles situations where pixel is part of wrong hexside
+                        return false;
                     }
+
                 }
                 else if(status.currentTerrain.getName().contains("Light Woods")){
                     hindrancevalue = 2;
                 }
-                else if (status.currentTerrain.getName().contains("Rice Paddy, In Season") || status.currentTerrain.getName().contains("Light Grain")) {
+                else if (status.currentTerrain.getName().contains("Rice Paddy, In Season") || status.currentTerrain.getName().contains("Rice Paddy Bank") ||
+                        status.currentTerrain.getName().contains("Light Grain")) {
                     hindrancevalue = 0.5;
                 }
                 else {
@@ -6479,8 +6482,6 @@ public class Map  {
         int cropadjx = 0, cropadjy = 0;
         if (upperLeft.getRowNumber() > 0 && y == 0 && !map.cropconfiguration.equals("FullHex")) {   // a new board is being added below an existing one
             if (this.gridToHex(x, y).getHexCenter().getY() == 0) {  // column is half-hex at top
-                // test code
-                Hex testhex = gridToHex(left + x, upper -2 + y);
                 Terrain firsthalfterrain = getGridTerrain(left + x, upper - 2 + y);
                 int firsthalfelevation = getGridElevation(left + x, upper - 2 + y);
                 if (!firsthalfterrain.isOpen()) {
