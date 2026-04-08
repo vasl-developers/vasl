@@ -298,7 +298,7 @@
 		<boarddata name="Kreta" version=" 1.0" versionDate="2008/08/30" description="Operation Merkur" boardType="HASL" publisher="HOB" issued="" />
 		<boarddata name="OTO" version=" 1.0" versionDate="2008/08/30" description="Onslaught to Orsha" boardType="HASL" publisher="HOB" issued="" />
 		<boarddata name="KOTH" version="1.0" versionDate="2008/08/30" description="King of the Hill" boardType="HASL" publisher="HOB" issued="" />
-		<boarddata name="LFT1" version="2.0" versionDate="2026/04/03" description="" boardType="Geoboard" publisher="LFT" issued="" />
+		<boarddata name="LFT1" version="2.1" versionDate="2026/04/03" description="" boardType="Geoboard" publisher="LFT" issued="" />
 		<boarddata name="LFT2" version="6.0" versionDate="2021/06/30" description="" boardType="Geoboard" publisher="LFT" issued="" />
 		<boarddata name="LFT3" version="6.5" versionDate="2026/03/31" description="" boardType="Geoboard" publisher="LFT" issued="" />
 		<boarddata name="LFT4" version="6.3" versionDate="2026/03/31" description="" boardType="Geoboard" publisher="LFT" issued="" />
