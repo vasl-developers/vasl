@@ -24,8 +24,8 @@ jobs:
           VERSION=$(grep -oP '(?<=<version>)[^<]+' pom.xml | head -n 1)
           
           # Check if the version contains "beta"
-          if [[ "$VERSION" == *"beta"* ]]; then
-          echo "Beta version detected. Skipping version check."
+          if [[ "$VERSION" == "beta" ]] || [[ "$PREV_VERSION" == "beta" ]]; then
+          echo "Beta version detected in current or previous version. Skipping version check."
           exit 0
           fi
           
