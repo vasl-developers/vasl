@@ -72,22 +72,22 @@ public class LOSResult {
      * @return total hindrances in results
      */
     public int getHindrance() {
-		double hindrance=0;
-		for(Integer range : mapHindrances.keySet()) {
+		double hindrance = 0;
+		for (Integer range : mapHindrances.keySet()) {
 			hindrance += mapHindrances.get(range);
 		}
 
 		// add the smoke hindrances
-        for(Integer range : smokeHindrances.keySet()) {
+		for (Integer range : smokeHindrances.keySet()) {
 
-            hindrance += smokeHindrances.get(range);
-        }
-        // add the vehicle hindrances
-        for(Integer range: vehicleHindrances.keySet()) {
-            hindrance += vehicleHindrances.get(range);
-        }
-        // add the OBA hindrances
-        hindrance += obaHindrances.size();
+			hindrance += smokeHindrances.get(range);
+		}
+		// add the vehicle hindrances
+		for (Integer range : vehicleHindrances.keySet()) {
+			hindrance += vehicleHindrances.get(range);
+		}
+		// add the OBA hindrances
+		hindrance += obaHindrances.size();
 
 		return (int) Math.floor(hindrance);
 	}

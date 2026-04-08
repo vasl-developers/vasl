@@ -489,7 +489,7 @@ public class ASLPieceMover extends PieceMover {
             comm = ((Command)comm).append(this.doTrueMovedSupport(allDraggedPieces));
         }
 
-        //test code to pass new location to HIP Fort
+        //pass new location to HIP Fort - this is necessary because Piece data not updated
         Point newpos = dragging.getPosition();
         if (GlobalOptions.getInstance().autoReportEnabled()) {
             if (dragging.getName().substring(0, Math.min(dragging.getName().length(), 6)).equals("<html>")) {
