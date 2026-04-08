@@ -1,6 +1,6 @@
 
 # Release Notes: Version 6.7.2
-**Release Date:** April 11, 2026
+**Release Date:** April 10, 2026
 
 ---
 
