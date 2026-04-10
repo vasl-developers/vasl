@@ -1095,13 +1095,6 @@ public class ASLMap extends Map {
                         }
                         else {
                             // handle terrain update
-                            // test code
-                            if (losonoverlays.overpositionx == 617 && losonoverlays.overpositiony == 302) {
-                                boolean reg = true;
-                            }
-                            if (terr.getType() !=0){
-                                boolean reg = true;
-                            }
                             losonoverlays.newlosdata.setGridTerrainCode(terr.getType(), losonoverlays.overpositionx, losonoverlays.overpositiony);
                         }
 
@@ -1109,10 +1102,6 @@ public class ASLMap extends Map {
                         if (!preserveelevation) {
                             elevint = getOverlayElevationfromColor(losonoverlays, color);
                         }
-                        if (elevint == 0 ){
-                            boolean reg2 = true;
-                        }
-
                         // if elevint = -99 then method above could not find a proper elevation for terrain; revert to current elevation in mapboard losdata
                         if (elevint == -99 || preserveelevation ) {
                             elevint = losonoverlays.newlosdata.getGridElevation(losonoverlays.overpositionx, losonoverlays.overpositiony);
@@ -1132,8 +1121,6 @@ public class ASLMap extends Map {
                     }
                 }
             }
-
-        boolean doug = true;
     }
 
     // handles all the hexGrid changes for Overlays that can't be added until all Terrain/Elevation changes are done
@@ -1175,11 +1162,6 @@ public class ASLMap extends Map {
                 losonoverlays.overpositionx = losonoverlays.currentx + (int) losonoverlays.ovrXstart - (int) losonoverlays.board.getCropBounds().getX();
                 losonoverlays.overpositiony = losonoverlays.currenty + (int) losonoverlays.ovrYstart - (int) losonoverlays.board.getCropBounds().getY();
                 if (losonoverlays.newlosdata.onMap(losonoverlays.overpositionx, losonoverlays.overpositiony) && losonoverlays.newlosdata.gridToHex(losonoverlays.overpositionx, losonoverlays.overpositiony) != null) {
-
-                    //test code
-                    if (losonoverlays.overpositionx == 618 && losonoverlays.overpositiony == 295){
-                        boolean reg = true;
-                    }
 
                 //ToDo could simplify this by using the terrain code from the terrainGrid as that is already set!
                 terr = null; elevint = 0; //clear previous values
@@ -1341,19 +1323,44 @@ public class ASLMap extends Map {
             passoverlay = 0;
         }
         switch (passoverlay) {
-            case 1: case 2: case 4: case 5: case 6: case 7: case 11:
+            case 1:
+            case 2:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+            case 11:
                 newterrain = "Stone Building";
                 break;
-            case  3: case 9: case 26: case 28: case 29:
+            case 3:
+            case 9:
+            case 26:
+            case 28:
+            case 29:
                 newterrain = "Wooden Building";
                 break;
-            case 12: case 17: case 19: case 20: case 21: case 22: case 23: case 24: case 25: case 27: case 30: case 39:
+            case 12:
+            case 17:
+            case 19:
+            case 20:
+            case 21:
+            case 22:
+            case 23:
+            case 24:
+            case 25:
+            case 27:
+            case 30:
+            case 39:
                 newterrain = "Stone Building, 1 Level";
                 break;
-            case 13: case 41:
+            case 13:
+            case 41:
                 newterrain = "Wooden Building, 1 Level";
                 break;
-            case 8: case 16: case 38: case 40:
+            case 8:
+            case 16:
+            case 38:
+            case 40:
                 newterrain = "Stone Building, 2 Level";
                 break;
             case 10:
@@ -1362,11 +1369,20 @@ public class ASLMap extends Map {
             //case -99:
             //    newterrain = "Stone Building, 3 Level";
             //    break;
-            case 14: case 15: case 18: case 32: case 33: case 34: case 35: case 36: case 37:
+            case 14:
+            case 15:
+            case 18:
+            case 32:
+            case 33:
+            case 34:
+            case 35:
+            case 36:
+            case 37:
                 newterrain = "Multiple Types";
                 break;
+            case 0:
             default:
-                newterrain = "Stone Building";
+                newterrain = terr.getName();
         }
         if (newterrain == "Multiple Types") {
             addtoFixHexList(losonoverlays);
@@ -1442,9 +1458,6 @@ public class ASLMap extends Map {
     private void setOverlayTerrainType(LOSonOverlays losonoverlays, Terrain terr, String overlaytype) {
         // handle center and hexside locations
         Hex inhex = losonoverlays.newlosdata.gridToHex(losonoverlays.overpositionx, losonoverlays.overpositiony);
-        if (inhex.getName().contains("C5") || inhex.getName().contains("D7")) {
-            boolean reg = true;
-        }
         if (inhex.getNearestLocation(losonoverlays.overpositionx, losonoverlays.overpositiony).isCenterLocation() && !overlaytype.contains("NoRoads") &&
                 !terr.isCliff() && !terr.isHexsideTerrain()) {
             if (!inhex.getCenterLocation().getTerrain().getName().contains("Deir") && !inhex.getCenterLocation().getTerrain().getName().contains("Sand Dune, Low")) {
@@ -1496,6 +1509,10 @@ public class ASLMap extends Map {
                     terr = losonoverlays.newlosdata.getGridTerrain(losonoverlays.overpositionx, losonoverlays.overpositiony);
                 } else {
                     terrint = losonoverlays.board.getVASLBoardArchive().getTerrainForColor(color);
+                    if (terrint == -1){
+                        // exception handling: I have tried this before and it caused bugs
+                        terrint = 0; //OG
+                    }
                     terr = losonoverlays.newlosdata.getTerrain(terrint);
                 }
             }
@@ -1524,8 +1541,11 @@ public class ASLMap extends Map {
         int c = 0;
         int a = 2;
         Color color = Color.BLACK;
-        //ToDo fix use of int values of c
-        while (color.equals(Color.BLACK) || isOverlayBoardNumColor(color, losonoverlays) || color.equals(getRGBColor(-5261152)) || color.equals(getRGBColor(-262915))) {  //-5261152 = 175,184,160 - SnowHexDots2
+        //ToDo fix use of int values of c - this need to be a method to handle all the non-terrain colors on the map
+        while (color.equals(Color.BLACK) || isOverlayBoardNumColor(color, losonoverlays) || color.equals(getRGBColor(-5261152)) ||
+                color.equals(getRGBColor(-262915)) || color.equals(getRGBColor(-259)) || color.equals(getRGBColor(-246)) ||
+                color.equals(getRGBColor(-16776960))) {  //-5261152 = 175,184,160 - SnowHexDots2 -259 = 255, 254, 253 - some overlay center dots -246 = 255, 255, 10 - yellow Hill Num
+                // -1677690 = 0,1,0 - manholes
             // point must be (a) on map (b) on overlay (c) not transparent
             if (losonoverlays.newlosdata.onMap(newovrx + a, newovry + a) && (pointIsOnOverlay(losonoverlays.bi, losonoverlays.currentx + (a - 1), losonoverlays.currenty + a) && (!((losonoverlays.bi.getRGB(losonoverlays.currentx + (a - 1), losonoverlays.currenty + a) >> 24) == 0X00)))) {
                 c = losonoverlays.bi.getRGB(losonoverlays.currentx + (a - 1), losonoverlays.currenty + a);
@@ -1536,13 +1556,13 @@ public class ASLMap extends Map {
             } else if ((losonoverlays.newlosdata.onMap(newovrx - a, newovry - a)) && (pointIsOnOverlay(losonoverlays.bi, losonoverlays.currentx - (a - 1), losonoverlays.currenty - a) && (!((losonoverlays.bi.getRGB(losonoverlays.currentx - (a - 1), losonoverlays.currenty - a) >> 24) == 0X00)))) {
                 c = losonoverlays.bi.getRGB(losonoverlays.currentx - (a - 1), losonoverlays.currenty - a);
             } else {
-                //c= -5260182;  // use OG as default - see if this causes LOS errors
+                //
             }
             if (c != 0) {
                 color = getRGBColor(c);
             }
             a += 1;
-            if (a > 5) {
+            if (a > 6) {
                 break;
             }
         }
