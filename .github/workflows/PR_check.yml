@@ -41,16 +41,16 @@ jobs:
           fi
           
           # Check for proper version increments
-          # if [ $((CURR_PARTS[0] - PREV_PARTS[0])) -eq 1 ] && [ "${CURR_PARTS[1]}" -eq 0 ] && [ "${CURR_PARTS[2]}" -eq 0 ]; then
-          # echo "Version $VERSION properly increments the major version from $PREV_VERSION."
-          # elif [ "${CURR_PARTS[0]}" -eq "${PREV_PARTS[0]}" ] && [ $((CURR_PARTS[1] - PREV_PARTS[1])) -eq 1 ] && [ "${CURR_PARTS[2]}" -eq 0 ]; then
-          # echo "Version $VERSION properly increments the minor version from $PREV_VERSION."
-          # elif [ "${CURR_PARTS[0]}" -eq "${PREV_PARTS[0]}" ] && [ "${CURR_PARTS[1]}" -eq "${PREV_PARTS[1]}" ] && [ $((CURR_PARTS[2] - PREV_PARTS[2])) -eq 1 ]; then
-          # echo "Version $VERSION properly increments the patch version from $PREV_VERSION."
-          # else
-          # echo "Error: Version $VERSION is not a valid increment from $PREV_VERSION."
-          # exit 1
-          # fi
+          if [ $((CURR_PARTS[0] - PREV_PARTS[0])) -eq 1 ] && [ "${CURR_PARTS[1]}" -eq 0 ] && [ "${CURR_PARTS[2]}" -eq 0 ]; then
+          echo "Version $VERSION properly increments the major version from $PREV_VERSION."
+          elif [ "${CURR_PARTS[0]}" -eq "${PREV_PARTS[0]}" ] && [ $((CURR_PARTS[1] - PREV_PARTS[1])) -eq 1 ] && [ "${CURR_PARTS[2]}" -eq 0 ]; then
+          echo "Version $VERSION properly increments the minor version from $PREV_VERSION."
+          elif [ "${CURR_PARTS[0]}" -eq "${PREV_PARTS[0]}" ] && [ "${CURR_PARTS[1]}" -eq "${PREV_PARTS[1]}" ] && [ $((CURR_PARTS[2] - PREV_PARTS[2])) -eq 1 ]; then
+          echo "Version $VERSION properly increments the patch version from $PREV_VERSION."
+          else
+          echo "Error: Version $VERSION is not a valid increment from $PREV_VERSION."
+          exit 1
+          fi
 
       - name: Check for correct version in release-notes.md
         run: |
