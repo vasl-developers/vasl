@@ -489,7 +489,8 @@ public class ASLPieceMover extends PieceMover {
             comm = ((Command)comm).append(this.doTrueMovedSupport(allDraggedPieces));
         }
 
-
+        //pass new location to HIP Fort - this is necessary because Piece data not updated
+        Point newpos = dragging.getPosition();
         if (GlobalOptions.getInstance().autoReportEnabled()) {
             if (dragging.getName().substring(0, Math.min(dragging.getName().length(), 6)).equals("<html>")) {
                 // new code to handle Labels with html code; stop it pasting to chat
@@ -505,7 +506,7 @@ public class ASLPieceMover extends PieceMover {
                 comm = comm.append(report);
                 // trigger auto-reveal fortifications
                 HIPFortification hipfort = map.getComponentsOf(HIPFortification.class).get(0);
-                if (hipfort.isEnabled()) {hipfort.runupdate(allDraggedPieces);}
+                if (hipfort.isEnabled()) {hipfort.runupdate(allDraggedPieces, newpos);}
 
             }
         }

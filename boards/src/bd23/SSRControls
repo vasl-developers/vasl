@@ -27,6 +27,9 @@
 <Checkbox name="">
          <entry name="U36: Operation Switchback" rule="SSO_U36" text="scenario U36 overlay"/>
  </Checkbox>
+<Checkbox name="">
+         <entry name="57: The Battle For Rome" rule="23_SSO_57" text="scenario 57 overlay"/>
+ </Checkbox>
 
     </Option>
 </SSRControls>

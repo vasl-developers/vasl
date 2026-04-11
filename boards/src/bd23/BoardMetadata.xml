@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.1"?>
 <!--
     This file contains the board metadata specific to a VASL board archive.
     Create one file per VASL board and place it in the archive.
@@ -23,8 +23,9 @@
 	12/13/22 - added SSO_23_3 - TJ
 	7/12/25 - added SSO_23_135 - TJ
 	7/13/25 - added SSO_23_bars - TJ
+	3/16/26 - added 23_SSO_57 - WJS
 -->
-<boardMetadata name="23" version="7.3" versionDate="2025/07/13" author="TR" boardImageFileName="bd23.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="23" version="7.4" versionDate="2026/03/16" author="WJS" boardImageFileName="bd23.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -142,6 +143,7 @@
 		<overlaySSRule name="OrchardsToCrags" image="23_Orch2Crag.gif" x="86" y="108" />
 		<overlaySSRule name="SSO_22" image="23_SSO_22.gif" x="1" y="51" />
 		<overlaySSRule name="SSO_U36" image="23_SSO_U36.gif" x="0" y="0" />
+		<overlaySSRule name="23_SSO_57" image="23_SSO_57.gif" x="0" y="0" />
 		<overlaySSRule name="23_SSO_10" image="23_SSO_10.gif" x="0" y="0" />
 		<overlaySSRule name="23_BSO_Canal2OG" image="23_BSO_Canal2OG.gif" x="1" y="51" />
 		<overlaySSRule name="23_BSO_1SideWater" image="23_BSO_Hexrow1SideToWater.gif" x="1" y="1" />

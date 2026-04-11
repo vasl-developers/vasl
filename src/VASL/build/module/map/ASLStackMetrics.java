@@ -231,9 +231,11 @@ public class ASLStackMetrics extends StackMetrics {
         } else {
             final Graphics2D g2d = (Graphics2D) g;
             final double os_scale = g2d.getDeviceConfiguration().getDefaultTransform().getScaleX();
-
+            // if view is null here it will cause an NPE at next.draw() below
+            // so return and do nothing
             final Component view = map.getView();
-
+            if (view == null) {return;
+            }
             Highlighter highlighter = map.getHighlighter();
             Point mapLocation = map.drawingToMap(location, os_scale);
             Rectangle region = visibleRect == null ? null : map.drawingToMap(visibleRect, os_scale);

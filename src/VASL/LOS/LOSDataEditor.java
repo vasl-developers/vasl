@@ -3,18 +3,22 @@ package VASL.LOS;
 import VASL.LOS.Map.*;
 import VASL.build.module.map.boardArchive.BoardArchive;
 import VASL.build.module.map.boardArchive.SharedBoardMetadata;
+import VASL.build.module.map.boardPicker.ASLBoard;
+import VASL.build.module.map.boardPicker.BoardException;
 import VASL.build.module.map.boardPicker.VASLBoard;
+import VASSAL.build.module.map.boardPicker.Board;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Vector;
 
 
 /**
  * LOSDataEditor is used to edit the LOS data.
- * It's used by the LOS GUI and dynamically by VASL to perform SSR terrain changes
  */
 public class LOSDataEditor {
 
@@ -24,7 +28,7 @@ public class LOSDataEditor {
     // the board archive and shared board metadata
     protected BoardArchive boardArchive;
     protected SharedBoardMetadata sharedBoardMetadata;
-
+    protected LinkedList<VASLBoard> vaslboards = new LinkedList<VASLBoard>();
     // for terrain and elevation encoding while creating LOS data
     private static final int UNKNOWN_TERRAIN = 255;
     private static final int TERRAIN_OFFSET = 500;  //changed by DR to permit terrain types with types values > 128
@@ -33,14 +37,14 @@ public class LOSDataEditor {
 
     /**
      * Creates an LOS data editor for a VASL archive
-     *
+     * ToDo this is only used by the LOSGUI app and should be shifted to it
      * @param boardName      the name of the VASL board archive file
      * @param boardDirectory the VASL board archive directory
      * @throws java.io.IOException if the archive cannot be opened
      */
     public LOSDataEditor(String boardName, String boardDirectory, SharedBoardMetadata sharedBoardMetadata) throws IOException {
-
         boardArchive = new BoardArchive(boardName, boardDirectory, sharedBoardMetadata);
+        // as of Mar 26, the sharedBoardMetadata includes values added from the BoardArchive file (ie the bdXX file)
         this.sharedBoardMetadata = sharedBoardMetadata;
 
         // create an empty map
@@ -60,8 +64,7 @@ public class LOSDataEditor {
     public Map createNewLOSData() {
 
         Map m;
-        //ToDo - a value for passboardgridconfig needs to be passed to the createNewLOSData() method
-        // review to determine if these two variables are needed with new crop/fip
+        //ToDo - review to determine if these two variables are needed with new crop/fip
         String passcropgridconfig= boardArchive.getHexGridConfig();
         if(passcropgridconfig==null){passcropgridconfig="Normal";}
         String passboardgridconfig = "Normal";
@@ -81,7 +84,18 @@ public class LOSDataEditor {
                     sharedBoardMetadata.getTerrainTypes(), passboardgridconfig, passcropgridconfig, isCropping);
             m.setSlopes(boardArchive.getSlopes());
         } else {
+            //switching to new constructor for HASL/non-standard maps
             final Rectangle mapBoundary = new Rectangle(boardArchive.getBoardImage().getWidth(), boardArchive.getBoardImage().getHeight());
+            m = new Map (boardArchive, boardArchive.getA1CenterX(),
+                    boardArchive.getA1CenterY(),
+                    sharedBoardMetadata.getTerrainTypes(),
+                    boardArchive.getBoardWidth(),
+                    boardArchive.getBoardHeight(),
+                    mapBoundary
+                    );
+
+            // previous constructor
+            /*    final Rectangle mapBoundary = new Rectangle(boardArchive.getBoardImage().getWidth(), boardArchive.getBoardImage().getHeight());
              //m = new Map(vaslboards, boardArchive.getA1CenterX(), boardArchive.getA1CenterY(), sharedBoardMetadata.getTerrainTypes(), boardArchive.getBoardWidth(), boardArchive.getBoardHeight(), mapBoundary, true);
 
             m = new Map(
@@ -95,7 +109,7 @@ public class LOSDataEditor {
                     boardArchive.getBoardImage().getWidth(),
                     boardArchive.getBoardImage().getHeight(),
                     sharedBoardMetadata.getTerrainTypes(), passboardgridconfig, passcropgridconfig, isCropping);
-            m.setSlopes(boardArchive.getSlopes());
+            m.setSlopes(boardArchive.getSlopes());*/
         }
         return m;
     }

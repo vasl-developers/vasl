@@ -1395,7 +1395,7 @@
 		<color name="BrushDesertL6" red="185" green="179" blue="47" terrain="Brush" elevation="6" />
 		<color name="DirtRdBridgeDesert" red="246" green="210" blue="108" terrain="Dirt Road" elevation="UNKNOWN" />
 		<color name="OrchTreesDesert" red="106" green="120" blue="0" terrain="Orchard" elevation="UNKNOWN" />
-		<color name="DierBase" red="250" green="213" blue="134" terrain="Dier" elevation="UNKNOWN" />
+		<color name="DeirBase" red="250" green="213" blue="134" terrain="Deir" elevation="UNKNOWN" />
 		<color name="Sand1" red="238" green="194" blue="98" terrain="Open Ground" elevation="UNKNOWN" />
 		<color name="Sand2" red="222" green="163" blue="120" terrain="Open Ground" elevation="UNKNOWN" />
 		<color name="Wadi1" red="231" green="167" blue="0" terrain="Wadi" elevation="UNKNOWN" />
@@ -1564,8 +1564,8 @@
 
 		<!-- Desert colors for desert overlays, including AD terrain -->
 		<color name="Hillock1" red="114" green="83" blue="42" terrain="Hillock Summit" elevation="1" />
-		<color name="Dier1" red="252" green="223" blue="89" terrain="Dier" elevation="UNKNOWN" />
-		<color name="Dier2" red="202" green="152" blue="0" terrain="Dier" elevation="UNKNOWN" />
+		<color name="Deir1" red="252" green="223" blue="89" terrain="Deir" elevation="UNKNOWN" />
+		<color name="Deir2" red="202" green="152" blue="0" terrain="Deir" elevation="UNKNOWN" />
 		<color name="Cactus Patch" red="230" green="192" blue="82" terrain="Cactus Patch" elevation="0" />
 		<color name="Cactus Patch1" red="194" green="165" blue="68" terrain="Cactus Patch" elevation="0" />
 		<color name="Cactus Patch2" red="137" green="83" blue="35" terrain="Cactus Patch" elevation="0" />
@@ -1633,6 +1633,18 @@
 		<color name="Gutted_FactoryL2_56" red="145" green="157" blue="158" terrain="Gutted Stone Factory, 2.5 Level" elevation="UNKNOWN" />
 		<color name="Gutted_FactoryL2_57" red="142" green="153" blue="155" terrain="Gutted Stone Factory, 2.5 Level" elevation="UNKNOWN" />
 		<color name="Gutted_FactoryL2_57" red="137" green="149" blue="150" terrain="Gutted Stone Factory, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Slightly_Sloped_Beach" red="212" green="179" blue="121" terrain="Open Ground" elevation="0" />
+		<color name="Moderately_Sloped_Beach" red="213" green="180" blue="122" terrain="Deir" elevation="0" />
+		<color name="Steeply_Sloped_Beach" red="214" green="181" blue="123" terrain="Open Ground" elevation="-1" />
+		<color name="Slightly_Sloped_Surf" red="212" green="228" blue="228" terrain="Open Ground" elevation="0" />
+		<color name="Moderately_Sloped_Surf" red="213" green="229" blue="229" terrain="Deir" elevation="0" />
+		<color name="Steeply_Sloped_Surf" red="214" green="230" blue="230" terrain="Deir" elevation="-1" />
+		<color name="Slightly_Sloped_Shallow_Ocean" red="164" green="205" blue="229" terrain="Open Ground" elevation="0" />
+		<color name="Moderately_Sloped_Shallow_Ocean" red="165" green="206" blue="230" terrain="Deir" elevation="0" />
+		<color name="Steeply_Sloped_Shallow_Ocean" red="166" green="207" blue="231" terrain="Deir" elevation="-1" />
+		<color name="Slightly_Sloped_Deep_Ocean" red="133" green="188" blue="219" terrain="Open Ground" elevation="0" />
+		<color name="Moderately_Sloped_Deep_Ocean" red="134" green="189" blue="220" terrain="Deir" elevation="0" />		
+		<color name="Steeply_Sloped_Deep_Ocean" red="135" green="190" blue="221" terrain="Deir" elevation="-1" />		
 	</colors>
 
 	<terrainTypes>
@@ -1734,8 +1746,8 @@
         <terrainType name="Cave" typeCode="97" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="0" mapColorGreen="0" mapColorBlue="0" LOSCategory="OPEN"  />
         <terrainType name="Scrub" typeCode="100" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="119" mapColorGreen="67" mapColorBlue="0" LOSCategory="OPEN"  />
         <terrainType name="Hammada" typeCode="101" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="59" mapColorGreen="55" mapColorBlue="19" LOSCategory="OPEN"  />
-        <terrainType name="Dier" typeCode="102" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="OPEN"  />
-        <terrainType name="Dier Lip" typeCode="103" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="HEXSIDE"  />
+        <terrainType name="Deir" typeCode="102" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="OPEN"  />
+        <terrainType name="Deir Lip" typeCode="103" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="HEXSIDE"  />
         <terrainType name="Wadi" typeCode="104" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="191" mapColorGreen="111" mapColorBlue="7" LOSCategory="DEPRESSION"  />
         <terrainType name="Hillock" typeCode="105" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="85" mapColorGreen="45" mapColorBlue="4" LOSCategory="OTHER"  />
         <terrainType name="Hillock Summit" typeCode="106" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="114" mapColorGreen="83" mapColorBlue="42" LOSCategory="OPEN"  />  //mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="OPEN"  />
@@ -1765,8 +1777,8 @@
         <terrainType name="Swamp" typeCode="133" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="2" mapColorRed="47" mapColorGreen="99" mapColorBlue="36" LOSCategory="OTHER"  />
         <terrainType name="Rice Paddy, Drained" typeCode="135" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="47" mapColorGreen="99" mapColorBlue="36" LOSCategory="OPEN"  />
         <terrainType name="Rice Paddy, Irrigated" typeCode="136" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="47" mapColorGreen="99" mapColorBlue="36" LOSCategory="OPEN"  />
-        <terrainType name="Rice Paddy, In Season" typeCode="137" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="0" mapColorRed="47" mapColorGreen="99" mapColorBlue="36" LOSCategory="OPEN"  />
-        <terrainType name="Rice Paddy Bank" typeCode="138" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="205" mapColorGreen="175" mapColorBlue="84" LOSCategory="OPEN"  />
+        <terrainType name="Rice Paddy, In Season" typeCode="137" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="0" mapColorRed="47" mapColorGreen="99" mapColorBlue="36" LOSCategory="OTHER"  />
+        <terrainType name="Rice Paddy Bank" typeCode="138" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="0" mapColorRed="205" mapColorGreen="175" mapColorBlue="84" LOSCategory="OPEN"  />
         <terrainType name="Panji" typeCode="139" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="0" mapColorGreen="0" mapColorBlue="0" LOSCategory="OPEN"  />
         <terrainType name="Ocean" typeCode="140" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="0" mapColorGreen="128" mapColorBlue="255" LOSCategory="OPEN"  />
         <terrainType name="Shallow Ocean" typeCode="141" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="171" mapColorGreen="231" mapColorBlue="255" LOSCategory="OPEN"  />
@@ -1826,6 +1838,9 @@
 		<terrainType name="Breach" typeCode="207" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="125" mapColorGreen="135" mapColorBlue="136" LOSCategory="BUILDING"  />
 		<terrainType name="Light Grain" typeCode="208" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="0" mapColorRed="255" mapColorGreen="255" mapColorBlue="137" LOSCategory="OPEN"  />
 		<terrainType name="Volga Pier" typeCode="209" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="0" mapColorRed="255" mapColorGreen="255" mapColorBlue="137" LOSCategory="OTHER"  />
+		<terrainType name="Gutted Building Wall, 1 Level" typeCode="210" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="1" mapColorGreen="1" mapColorBlue="0" LOSCategory="BUILDING"  />
+		<terrainType name="Gutted Building Wall, 2 Level" typeCode="211" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="2" mapColorRed="1" mapColorGreen="1" mapColorBlue="0" LOSCategory="BUILDING"  />
+
 
 		<!--ToDo VASL code may hit a bug if typeCode > 255 OR if there are more than 255 terrainTypes - need to test and change code -->
 	</terrainTypes>
