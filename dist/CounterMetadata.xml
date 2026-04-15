@@ -210,6 +210,8 @@
     <terrain name="Lv 6 og snow" terrain="Open Ground" level="6"/>
     <terrain name="Prepared Fire Zone - Open" terrain="Open Ground" level="-99"/>
     <terrain name="Prepared Fire Zone - Vineyard" terrain="Vineyard" level="-99"/>
+    <terrain name="Cows (+1 TEM)" terrain="Vineyard" level="-99"/>
+    <terrain name="DeadCow (Hindrance)" terrain="Vineyard" level="-99"/>
     <terrain name="Road" terrain="Paved Road"/>   <!-- Dirt/Paved has no effect on LOS -->
     <terrain name="Stone Rubble RB" terrain="Stone Rubble"/>
     <terrain name="Wood Rubble RB" terrain="Wooden Rubble"/>
