@@ -1,6 +1,6 @@
+# Release Notes: Version 6.7.3 beta 1
+**Release Date:** TBD, 2026
 
-# Release Notes: Version 6.7.3-b1
-**Release Date:** April 10, 2026
 
 ---
 
@@ -16,8 +16,14 @@
 ---
 
 ## 📈 Improvements
- - Improvement 1: 
-
+ - Improvement 1: Enabled beach slope options for BE, OC, and EF overlays.
+ - Improvement 2: 
+ - Improvement 3: 
+ - Improvement 4: 
+ - Improvement 5: 
+ - Improvement 6: 
+ - Improvement 7: 
+ - Improvement 8: 
 ---
 
 ## ⚠️ Compatibility Notes
