@@ -1844,10 +1844,13 @@ public class ASLMap extends Map {
             return "Vineyard";
         }
         else if (overlayname.contains("w")) {
-            return "Wadi";
+            return " ";
         }
         else if (overlayname.contains("rp")) {
             return "Rice Paddy";
+        }
+        else if (overlayname.contains("ef")) {
+            return "Effluent";
         }
         else {
             return "";
