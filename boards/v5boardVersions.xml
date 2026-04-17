@@ -189,13 +189,13 @@
 		<boarddata name="e" version="6.7" versionDate="2024/12/23" description="" boardType="Deluxe" publisher="MMP" issued="" />
 		<boarddata name="f" version="6.4" versionDate="2023/12/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
 		<boarddata name="g" version="6.6" versionDate="2025/10/27" description="" boardType="Deluxe" publisher="MMP" issued="" />
-		<boarddata name="gSK" version="2.1" versionDate="2024/12/27" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="gSK" version="6.1" versionDate="2026/04/16" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="h" version="6.7" versionDate="2023/12/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
-		<boarddata name="hSK" version="2.1" versionDate="2024/12/27" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="hSK" version="6.1" versionDate="2026/04/17" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="i" version="6.4" versionDate="2023/01/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
-		<boarddata name="iSK" version="6.1" versionDate="2023/11/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="iSK" version="6.2" versionDate="2026/04/17" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="j" version="6.4" versionDate="2023/01/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
-		<boarddata name="jSK" version="6.2" versionDate="2026/01/07" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="jSK" version="6.3" versionDate="2026/04/17" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="k" version="6.4" versionDate="2023/01/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
 		<boarddata name="kSK" version="6.5" versionDate="2023/11/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="l" version="6.4" versionDate="2023/01/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
@@ -206,20 +206,20 @@
 		<boarddata name="ndx" version="6.0" versionDate="2022/06/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
 		<boarddata name="o" version="6.6" versionDate="2023/11/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="odx" version="6.1" versionDate="2022/11/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
-		<boarddata name="p" version="6.4" versionDate="2023/01/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="p" version="6.5" versionDate="2026/04/17" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="pdx" version="6.0" versionDate="2024/03/25" description="" boardType="Deluxe" publisher="MMP" issued="" />
 		<boarddata name="q" version="6.5" versionDate="2023/01/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="qdx" version="6.0" versionDate="2024/03/25" description="" boardType="Deluxe" publisher="MMP" issued="" />
 		<boarddata name="r" version="6.6" versionDate="2026/01/07" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="rdx" version="6.0" versionDate="2024/03/25" description="" boardType="Deluxe" publisher="MMP" issued="" />
-		<boarddata name="s" version="6.6" versionDate="2023/11/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="s" version="6.7" versionDate="2026/04/17" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="t" version="6.5" versionDate="2026/02/06" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="u" version="6.4" versionDate="2023/01/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="v" version="6.6" versionDate="2026/02/06" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="w" version="6.5" versionDate="2023/11/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 		<boarddata name="x" version="6.6" versionDate="2026/01/07" description="" boardType="Starter Kit" publisher="MMP" issued="" />
-		<boarddata name="y" version="6.5" versionDate="2026/01/06" description="" boardType="Starter Kit" publisher="MMP" issued="" />
-		<boarddata name="z" version="6.7" versionDate="2023/01/30" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="y" version="6.6" versionDate="2026/04/17" description="" boardType="Starter Kit" publisher="MMP" issued="" />
+		<boarddata name="z" version="6.8" versionDate="2026/04/17" description="" boardType="Starter Kit" publisher="MMP" issued="" />
 
 	</coreBoards>
 
