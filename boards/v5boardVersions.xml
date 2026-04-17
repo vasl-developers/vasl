@@ -102,14 +102,14 @@
 		<boarddata name="67" version="6.7" versionDate="2026/04/15" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="68" version="6.6" versionDate="2026/04/15" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="69" version="6.5" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="70" version="6.6" versionDate="2024/06/18" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="71" version="6.6" versionDate="2024/06/28" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="72" version="6.9" versionDate="2026/02/12" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="70" version="6.7" versionDate="2026/04/16" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="71" version="6.7" versionDate="2026/04/16" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="72" version="7.0" versionDate="2026/04/16" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="73" version="6.3" versionDate="2022/04/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="74" version="6.5" versionDate="2022/04/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="75" version="6.8" versionDate="2026/02/17" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="76" version="6.7" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="77" version="6.0" versionDate="2023/02/28" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="76" version="6.8" versionDate="2026/04/16" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="77" version="6.1" versionDate="2026/04/16" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="78" version="6.3" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="79" version="6.8" versionDate="2025/09/18" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="80" version="6.4" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
@@ -124,7 +124,7 @@
 		<boarddata name="89" version="6.2" versionDate="2025/10/27" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="90" version="6.1" versionDate="2025/07/08" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="91" version="6.0" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="2023/10/25" />
-		<boarddata name="92" version="6.2" versionDate="2025/07/29" description="" boardType="Geoboard" publisher="MMP" issued="2023/10/27" />
+		<boarddata name="92" version="6.3" versionDate="2026/04/16" description="" boardType="Geoboard" publisher="MMP" issued="2023/10/27" />
 		<boarddata name="93" version="6.0" versionDate="2025/05/12" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="96" version="6.2" versionDate="2026/03/09" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="97" version="6.0" versionDate="2026/02/05" description="" boardType="Geoboard" publisher="MMP" issued="" />
