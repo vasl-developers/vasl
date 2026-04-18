@@ -30,7 +30,7 @@
 	<counter name ="No Fire" palloc="Unit/Fire/Prep"/>
 	<counter name ="Veh Prep Fire" palloc="Unit/Fire/Prep"/>
 
-    	<counter name ="First Fire" palloc="Unit/Fire/Def"/>
+    <counter name ="First Fire" palloc="Unit/Fire/Def"/>
 	<counter name ="First Fire IFP" palloc="Unit/Fire/Def"/>
 	<counter name ="First Fire SW" palloc="Unit/Fire/Def"/>
 	<counter name ="Final Fire" palloc="Unit/Fire/Def"/>
@@ -69,8 +69,6 @@
 	<counter name ="Smoke" palloc="Unit/Fire/Smoke"/>
 	<counter name ="WP" palloc="Unit/Fire/Smoke"/>
 
-	<counter name ="SA Rockets" palloc="Unit/Fire/Rocket"/>
-
 	<counter name ="Disrupt" palloc="Unit/Inf/Infantry"/>
 	<counter name ="Encircled" palloc="Unit/Inf/Infantry"/>
 	<counter name ="Haz Movement" palloc="Unit/Inf/Infantry"/>
@@ -81,9 +79,6 @@
 	<counter name ="Wounded" palloc="Unit/Inf/Infantry"/>
 	<counter name ="Walking Wounded" palloc="Unit/Inf/Infantry"/>
 	<counter name ="Inf WP" palloc="Unit/Inf/Infantry"/>
-	<counter name ="Deserter" palloc="Unit/Inf/Infantry"/>
-	<counter name ="UF" palloc="Unit/Inf/Infantry"/>
-	<counter name ="Infantry Charge" palloc="Unit/Inf/Infantry"/>
 
 	<counter name ="CC" palloc="Unit/Inf/CC - Melee"/>
 	<counter name ="Melee" palloc="Unit/Inf/CC - Melee"/>
@@ -96,7 +91,6 @@
 	<counter name ="HW Range" palloc="Unit/Inf/HW - Banzai"/>
 	<counter name ="Banzai" palloc="Unit/Inf/HW - Banzai"/>
 	<counter name ="Lax" palloc="Unit/Inf/HW - Banzai"/>
-
 
 	<counter name ="Berserk" palloc="Unit/Inf/HoB"/>
 	<counter name ="Fanatic" palloc="Unit/Inf/HoB"/>
@@ -127,7 +121,7 @@
 	<counter name ="BU/CE NT" palloc="Unit/Veh/Vehicle"/>
 	<counter name ="BU/CE T" palloc="Unit/Veh/Vehicle"/>
 	<counter name ="BU" palloc="Unit/Veh/Vehicle"/>
-	<counter name ="CT" palloc="Unit/Veh/Vehicle"/>
+	<counter name ="CE" palloc="Unit/Veh/Vehicle"/>
 
 	<counter name ="Abandoned" palloc="Unit/Veh/Bad Things"/>
 	<counter name ="Low Ammo" palloc="Unit/Veh/Bad Things"/>
@@ -155,14 +149,16 @@
 
 	<counter name ="TKO" palloc="Unit/Veh/TKO - Dust"/>
 	<counter name ="Vehicle Dust" palloc="Unit/Veh/TKO - Dust"/>
-	
+
+	<counter name ="Blank" palloc="Unit/Blank"/>
+
 	<counter name ="Crest" palloc="Info/Locate/Basic"/>
 	<counter name ="Culvert" palloc="Info/Locate/Basic"/>
 	<counter name ="Drift" palloc="Info/Locate/Basic"/>
 	<counter name ="Sewer" palloc="Info/Locate/Basic"/>
 	<counter name ="Path" palloc="Info/Locate/Basic"/>
 	<counter name ="Trailbreak" palloc="Info/Locate/Basic"/>
-	
+
 	<counter name ="Bridge" palloc="Info/Locate/Bridge"/>
 	<counter name ="Foot Bridge" palloc="Info/Locate/Bridge"/>
 	<counter name ="Heavy Bridge" palloc="Info/Locate/Bridge"/>
@@ -177,6 +173,7 @@
 	<counter name ="Cellar" palloc="Info/Locate/Building"/>
 
 	<counter name ="Steeple" palloc="Info/Locate/Steeple"/>
+	<counter name ="Church symbol" palloc="Info/Locate/Steeple"/>
 
 	<counter name ="Climb" palloc="Info/Locate/Climb"/>
 
@@ -204,6 +201,7 @@
 	<counter name ="Stone Rubble" palloc="Info/Destroy/Rubble"/>
 	<counter name ="Wood Rubble" palloc="Info/Destroy/Rubble"/>
 	<counter name ="Shellholes" palloc="Info/Destroy/Rubble"/>
+	<counter name ="Bomb Crater" palloc="Info/Destroy/Rubble"/>
 
 	<counter name ="Smoke" palloc="Info/Destroy/Smoke"/>
 	<counter name ="WP" palloc="Info/Destroy/Smoke"/>
@@ -214,6 +212,8 @@
 	<counter name ="Wire" palloc="Info/Fortify/Basic"/>
 	<counter name ="Barricade" palloc="Info/Fortify/Basic"/>
 	<counter name ="Roaddblock" palloc="Info/Fortify/Basic"/>
+	<counter name ="PFZ" palloc="Info/Fortify/Basic"/>
+	<counter name ="Rail Car" palloc="Info/Fortify/Basic"/>
 
 	<counter name ="DTO Foxhole" palloc="Info/Fortify/DTO"/>
 	<counter name ="DTO Trench" palloc="Info/Fortify/DTO"/>
@@ -299,8 +299,11 @@
 	<counter name ="Heat Haze" palloc="Other/Map/DTO EC"/>
 
 	<counter name ="Phase Track" palloc="Other/Map/Phase Track"/>
+	<counter name ="Phase Wheel" palloc="Other/Map/Phase Track"/>
 
 	<counter name ="Turn Markers" palloc="Other/Map/Turn Markers"/>
+	<counter name ="KW Turn Markers" palloc="Other/Map/Turn Markers (by Module)/KW"/>
+	<counter name ="CdG Turn Markers" palloc="Other/Map/Turn Markers (by Module)/CdG"/>
 	<counter name ="Air Support" palloc="Other/Map/Turn Markers"/>
 
 	<counter name ="Horizontal Turn Tracks" palloc="Other/Map/Turn Tracks/Horizontal"/>
@@ -344,6 +347,7 @@
 	<counter name ="Letter Chit" palloc="Other/SASL"/>
 	<counter name ="VPO" palloc="Other/SASL"/>
 	<counter name ="Suspect" palloc="Other/SASL"/>
+	<counter name ="Suspect" palloc="Other/SASL/Nationality"/>
 	<counter name ="In Command" palloc="Other/SASL"/>
 	<counter name ="Panic" palloc="Other/SASL"/>
 
