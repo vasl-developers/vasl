@@ -388,6 +388,60 @@
 			<color name="FurrowsL_1" />
 			<color name="FurrowsL_2" />
 		</underlaySSRule>
+		<underlaySSRule name="GrainToLightGrain" image="LightGrainPattern.gif">
+			<color name="GrainL0" />
+			<color name="GrainL1" />
+			<color name="GrainL2" />
+			<color name="GrainL3" />
+			<color name="GrainL4" />
+			<color name="GrainL5" />
+			<color name="GrainL6" />
+			<color name="GrainL_1" />
+			<color name="GrainL_2" />
+			<color name="PlowedFields" />
+			<color name="Furrows" />
+			<color name="FurrowsL0" />
+			<color name="FurrowsL1" />
+			<color name="FurrowsL2" />
+			<color name="FurrowsL3" />
+			<color name="FurrowsL4" />
+			<color name="FurrowsL5" />
+			<color name="FurrowsL6" />
+			<color name="FurrowsL_1" />
+			<color name="FurrowsL_2" />
+		</underlaySSRule>
+		<underlaySSRule name="SaP_GrainToLightGrain" image="LightGrainPattern.gif">
+			<color name="SaP_Grain_01" />
+			<color name="SaP_Grain_02" />
+			<color name="SaP_Grain_03" />
+			<color name="SaP_Grain_04" />
+			<color name="SaP_Grain_05" />
+			<color name="SaP_Grain_06" />
+			<color name="SaP_Grain_07" />
+			<color name="SaP_Grain_08" />
+			<color name="SaP_Grain_09" />
+			<color name="SaP_Grain_10" />
+			<color name="SaP_Grain_11" />
+			<color name="SaP_Grain_12" />
+			<color name="SaP_Grain_13" />
+			<color name="SaP_Grain_14" />
+			<color name="SaP_Grain_15" />
+			<color name="SaP_Grain_16" />
+			<color name="SaP_Grain_17" />
+			<color name="SaP_Grain_18" />
+			<color name="SaP_Grain_19" />
+			<color name="SaP_Grain_20" />
+			<color name="SaP_Grain_21" />
+			<color name="SaP_Grain_22" />
+			<color name="SaP_Grain_23" />
+			<color name="SaP_Grain_24" />
+			<color name="SaP_Grain_25" />
+			<color name="SaP_Grain_26" />
+			<color name="SaP_Grain_27" />
+			<color name="SaP_Grain_28" />
+			<color name="SaP_Grain_29" />
+			<color name="SaP_Grain_30" />
+		</underlaySSRule>
 		<underlaySSRule name="MarshToWoods" image="WoodsPattern.gif">
 			<color name="StreamMarshGreenL_1" />
 			<color name="StreamMarshGreenL0" />
@@ -1645,6 +1699,38 @@
 		<color name="Slightly_Sloped_Deep_Ocean" red="133" green="188" blue="219" terrain="Open Ground" elevation="0" />
 		<color name="Moderately_Sloped_Deep_Ocean" red="134" green="189" blue="220" terrain="Deir" elevation="0" />		
 		<color name="Steeply_Sloped_Deep_Ocean" red="135" green="190" blue="221" terrain="Deir" elevation="-1" />		
+		<!-- SaP Grain colors for Grain to Light Grain transformation (begin) -->
+		<color name="SaP_Grain_01" red="242" green="207" blue="148" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_02" red="239" green="210" blue="149" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_03" red="247" green="217" blue="156" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_04" red="240" green="223" blue="140" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_05" red="242" green="222" blue="151" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_06" red="241" green="224" blue="137" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_07" red="244" green="223" blue="140" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_08" red="249" green="222" blue="139" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_09" red="246" green="224" blue="135" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_10" red="247" green="221" blue="168" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_11" red="246" green="224" blue="138" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_12" red="243" green="226" blue="135" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_13" red="246" green="226" blue="127" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_14" red="247" green="222" blue="171" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_15" red="245" green="226" blue="139" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_16" red="244" green="224" blue="172" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_17" red="244" green="227" blue="142" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_18" red="244" green="228" blue="140" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_19" red="242" green="230" blue="142" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_20" red="254" green="224" blue="170" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_21" red="249" green="226" blue="171" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_22" red="247" green="230" blue="139" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_23" red="245" green="228" blue="171" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_24" red="251" green="229" blue="142" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_25" red="244" green="232" blue="139" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_26" red="251" green="230" blue="139" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_27" red="249" green="231" blue="136" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_28" red="251" green="233" blue="145" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_29" red="255" green="238" blue="145" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_30" red="246" green="251" blue="153" terrain="Grain" elevation="0" />
+		<!-- SaP Grain colors for Grain to Light Grain transformation (end) -->
 	</colors>
 
 	<terrainTypes>
@@ -3308,6 +3394,8 @@
         <LOSSSRule name="GrainToBrush" type="terrainMap" fromValue="Grain" toValue="Brush" />
         <LOSSSRule name="GrainToWoods" type="terrainMap" fromValue="Grain" toValue="Woods" />
         <LOSSSRule name="GrainToMarsh" type="terrainMap" fromValue="Grain" toValue="Marsh" />
+        <LOSSSRule name="GrainToLightGrain" type="terrainMap" fromValue="Grain" toValue="Light Grain" />
+        <LOSSSRule name="SaP_GrainToLightGrain" type="terrainMap" fromValue="Grain" toValue="Light Grain" />
 
         <LOSSSRule name="MarshToLevel_1" type="terrainToElevationMap" fromValue="Marsh" toValue="-1" />
         <LOSSSRule name="MarshToLevel0" type="terrainToElevationMap" fromValue="Marsh" toValue="0" />
