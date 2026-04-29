@@ -1,5 +1,5 @@
 # Release Notes: Version 6.7.3 beta 1
-**Release Date:** TBD, 2026
+**Release Date:** April 29, 2026
 
 
 ---
@@ -11,14 +11,14 @@
 ---
 
 ## 🛠 Bug Fixes
- - Fix 1: NUL boards now work with LOS Checking
+ - Fix 1: Counter Linking bug fixed
  - Fix 2: Cows/Dead Cows now work with LOS Checking (you've been waiting for it, you know you have)
 ---
 
 ## 📈 Improvements
  - Improvement 1: Enabled beach slope options for BE, OC, and EF overlays.
  - Improvement 2: Enable Grain to Light Grain transformation for Slaughter at Ponyri (map-specific transformation) and "Light Grain" under "Other transformations" for Geoboards.
- - Improvement 3: 
+ - Improvement 3: Counter Search Updated
  - Improvement 4: 
  - Improvement 5: 
  - Improvement 6: 
