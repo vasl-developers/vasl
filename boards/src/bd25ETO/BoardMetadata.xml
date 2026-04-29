@@ -22,7 +22,7 @@
 	v7.0 7/27/25 modified SSO_25ETO_CH59 - TJ
 
 -->
-<boardMetadata name="25ETO" version="7.0" versionDate="2025/07/27" author="TR" boardImageFileName="bd25ETO.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="25ETO" version="7.1" versionDate="2026/04/12" author="TR" boardImageFileName="bd25ETO.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily

@@ -1,0 +1,7 @@
+<SSRControls>
+	<Option name="Slaughter at Ponyri Transformations">
+		<Checkbox name="">
+			<entry name="Light Grain" rule="SaP_GrainToLightGrain" text="light grain"/>
+		</Checkbox>
+	</Option>
+</SSRControls>

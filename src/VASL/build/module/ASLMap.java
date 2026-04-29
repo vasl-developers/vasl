@@ -330,22 +330,20 @@ public class ASLMap extends Map {
             final Rectangle mapBoundary = new Rectangle(0, 0);
             for (Board b : boards) {
                 final VASLBoard board = (VASLBoard) b;
-                // ignore null boards
+                // if legacy, abort
                 if (!"NUL".equals(b.getName()) && !"NULV".equals(b.getName())) {
                     if (board.isLegacyBoard()) {
                         throw new Exception("VASL LOS disabled - Board " + board.getName() + " does not support LOS checking. VASSAL los active - safe to continue play");
                     }
-                    mapBoundary.add(b.bounds());
-                    vaslboards.add(board);
-                    // make sure the hex geometry of all boards is the same
-                    if (hexheight != 0.0 && Math.round(board.getHexHeight()) != Math.round(hexheight) || hexwidth != 0.0 && Math.round(board.getHexWidth()) != Math.round(hexwidth)) {
-                        throw new Exception("VASL LOS disabled: Map configuration contains multiple hex sizes. VASSAL los active - safe to continue play");
-                    }
-                    hexheight = board.getHexHeight();
-                    hexwidth = board.getHexWidth();
-                } else {
-                    nullBoards = true;
                 }
+                mapBoundary.add(b.bounds());
+                vaslboards.add(board);
+                // make sure the hex geometry of all boards is the same
+                if (hexheight != 0.0 && Math.round(board.getHexHeight()) != Math.round(hexheight) || hexwidth != 0.0 && Math.round(board.getHexWidth()) != Math.round(hexwidth)) {
+                    throw new Exception("VASL LOS disabled: Map configuration contains multiple hex sizes. VASSAL los active - safe to continue play");
+                }
+                hexheight = board.getHexHeight();
+                hexwidth = board.getHexWidth();
             }
             /* handle non-standard boards separately.
             * there are only 4 but they complexify the crop/flip options enormously so pull out
@@ -605,7 +603,10 @@ public class ASLMap extends Map {
      */
     protected void addBoardsToMap(LinkedList<VASLBoard> vaslboards, GameModule mod, String fliphexconfig) {
         for (VASLBoard board : vaslboards) {
-            addOneBoardToMap(board, mod, fliphexconfig);
+            // no need to add losdata for NUL boards; just placeholders
+            if (!"NUL".equals(board.getName()) && !"NULV".equals(board.getName())) {
+                addOneBoardToMap(board, mod, fliphexconfig);
+            }
         }
         // ToDo test this method is working properly - especially for hexsides (Bocage!)
         // does it need to be done here?
@@ -1843,10 +1844,16 @@ public class ASLMap extends Map {
             return "Vineyard";
         }
         else if (overlayname.contains("w")) {
-            return "Wadi";
+            return " ";
         }
         else if (overlayname.contains("rp")) {
             return "Rice Paddy";
+        }
+        else if (overlayname.contains("ef")) {
+            return "Effluent";
+        }
+        else if (overlayname.contains("LightGrain")) {
+            return "Light Grain";
         }
         else {
             return "";

@@ -413,7 +413,10 @@ Changes:
       </Checkbox>
       <Checkbox name="Pine Woods" >
                <entry name="Pine Woods" rule="PineWoods" text="Pine Woods"/>
-            </Checkbox>
+      </Checkbox>
+      <Checkbox name="Light Grain" >
+         <entry name="Light Grain" rule="GrainToLightGrain" text="Light Grain"/>
+      </Checkbox>
    </Option>
 </SSRControls>
 
