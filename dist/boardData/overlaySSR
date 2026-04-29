@@ -133,6 +133,9 @@ underlay MarshPattern.gif BrushL0,BrushL1,BrushL2,BrushL3,BrushL4,BrushL5,BrushL
 GrainToMarsh
 underlay MarshPattern.gif GrainL0,GrainL1,GrainL2,GrainL3,GrainL4,GrainL5,GrainL6,GrainL_1,GrainL_2,PlowedFields,Furrows,FurrowsL0,FurrowsL1,FurrowsL2,FurrowsL3,FurrowsL4,FurrowsL5,FurrowsL6,FurrowsL_1,FurrowsL_2
 
+GrainToLightGrain
+underlay LightGrainPattern.gif GrainL0,GrainL1,GrainL2,GrainL3,GrainL4,GrainL5,GrainL6,GrainL_1,GrainL_2,PlowedFields,Furrows,FurrowsL0,FurrowsL1,FurrowsL2,FurrowsL3,FurrowsL4,FurrowsL5,FurrowsL6,FurrowsL_1,FurrowsL_2
+
 Level_2ToMarsh
 underlay MarshPattern.gif Level_2
 

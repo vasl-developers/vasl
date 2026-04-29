@@ -17,7 +17,7 @@
 
 ## 📈 Improvements
  - Improvement 1: Enabled beach slope options for BE, OC, and EF overlays.
- - Improvement 2: 
+ - Improvement 2: Enable Grain to Light Grain transformation for Slaughter at Ponyri (map-specific transformation) and "Light Grain" under "Other transformations" for Geoboards.
  - Improvement 3: 
  - Improvement 4: 
  - Improvement 5: 

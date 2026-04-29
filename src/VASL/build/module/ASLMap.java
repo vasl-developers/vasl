@@ -1852,6 +1852,9 @@ public class ASLMap extends Map {
         else if (overlayname.contains("ef")) {
             return "Effluent";
         }
+        else if (overlayname.contains("LightGrain")) {
+            return "Light Grain";
+        }
         else {
             return "";
         }
