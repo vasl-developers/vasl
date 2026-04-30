@@ -1,33 +1,31 @@
+# Release Notes: Version 6.7.3-beta2
+**Release Date:** April 30, 2026
 
-# Release Notes: Version 6.7.2-beta4
-**Release Date:** ? ?, 2026
+
 
 ---
 
 ## 🚀 New Features
- - 
+ - Feature 1: 
+ - Feature 2: 
  
 ---
 
 ## 🛠 Bug Fixes
- - Fix 1:
- - Fix 2:
- - Fix 3:
- - Fix 4:
- - Fix 5:
- - Fix 6:
- - Fix 7:
- - Fix 8:
-
+ - Fix 1: Counter Linking bug fixed.
+ - Fix 2: Cows/Dead Cows now work with LOS Checking (you've been waiting for it, you know you have).
+ - Fix 3: LOS works when using NUL and/or NULV boards.
 ---
 
 ## 📈 Improvements
- - Improvement 1: Created "Gutted Building Wall" terrain types to support VotG LOS.
- - Improvement 2:
- - Improvement 3:
- - Improvement 4:
- - Improvement 5:
-
+ - Improvement 1: Enabled beach slope options for BE, OC, and EF overlays.
+ - Improvement 2: Enable Grain to Light Grain transformation for Slaughter at Ponyri (map-specific transformation) and "Light Grain" under "Other transformations" for Geoboards.
+ - Improvement 3: Counter Search updated.
+ - Improvement 4: 
+ - Improvement 5: 
+ - Improvement 6: 
+ - Improvement 7: 
+ - Improvement 8: 
 ---
 
 ## ⚠️ Compatibility Notes

@@ -9,5 +9,9 @@
  <Checkbox name="">
          <entry name="Stream to Open Ground" rule="22_BSO_Stream2OG" text="bd 22 stream to OG"/>
  </Checkbox>
+<Checkbox name="">
+         <entry name="57: The Battle For Rome" rule="22_SSO_57" text="scenario 57 overlay"/>
+ </Checkbox>
+
     </Option>
 </SSRControls>

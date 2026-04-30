@@ -388,6 +388,60 @@
 			<color name="FurrowsL_1" />
 			<color name="FurrowsL_2" />
 		</underlaySSRule>
+		<underlaySSRule name="GrainToLightGrain" image="LightGrainPattern.gif">
+			<color name="GrainL0" />
+			<color name="GrainL1" />
+			<color name="GrainL2" />
+			<color name="GrainL3" />
+			<color name="GrainL4" />
+			<color name="GrainL5" />
+			<color name="GrainL6" />
+			<color name="GrainL_1" />
+			<color name="GrainL_2" />
+			<color name="PlowedFields" />
+			<color name="Furrows" />
+			<color name="FurrowsL0" />
+			<color name="FurrowsL1" />
+			<color name="FurrowsL2" />
+			<color name="FurrowsL3" />
+			<color name="FurrowsL4" />
+			<color name="FurrowsL5" />
+			<color name="FurrowsL6" />
+			<color name="FurrowsL_1" />
+			<color name="FurrowsL_2" />
+		</underlaySSRule>
+		<underlaySSRule name="SaP_GrainToLightGrain" image="LightGrainPattern.gif">
+			<color name="SaP_Grain_01" />
+			<color name="SaP_Grain_02" />
+			<color name="SaP_Grain_03" />
+			<color name="SaP_Grain_04" />
+			<color name="SaP_Grain_05" />
+			<color name="SaP_Grain_06" />
+			<color name="SaP_Grain_07" />
+			<color name="SaP_Grain_08" />
+			<color name="SaP_Grain_09" />
+			<color name="SaP_Grain_10" />
+			<color name="SaP_Grain_11" />
+			<color name="SaP_Grain_12" />
+			<color name="SaP_Grain_13" />
+			<color name="SaP_Grain_14" />
+			<color name="SaP_Grain_15" />
+			<color name="SaP_Grain_16" />
+			<color name="SaP_Grain_17" />
+			<color name="SaP_Grain_18" />
+			<color name="SaP_Grain_19" />
+			<color name="SaP_Grain_20" />
+			<color name="SaP_Grain_21" />
+			<color name="SaP_Grain_22" />
+			<color name="SaP_Grain_23" />
+			<color name="SaP_Grain_24" />
+			<color name="SaP_Grain_25" />
+			<color name="SaP_Grain_26" />
+			<color name="SaP_Grain_27" />
+			<color name="SaP_Grain_28" />
+			<color name="SaP_Grain_29" />
+			<color name="SaP_Grain_30" />
+		</underlaySSRule>
 		<underlaySSRule name="MarshToWoods" image="WoodsPattern.gif">
 			<color name="StreamMarshGreenL_1" />
 			<color name="StreamMarshGreenL0" />
@@ -1395,7 +1449,7 @@
 		<color name="BrushDesertL6" red="185" green="179" blue="47" terrain="Brush" elevation="6" />
 		<color name="DirtRdBridgeDesert" red="246" green="210" blue="108" terrain="Dirt Road" elevation="UNKNOWN" />
 		<color name="OrchTreesDesert" red="106" green="120" blue="0" terrain="Orchard" elevation="UNKNOWN" />
-		<color name="DierBase" red="250" green="213" blue="134" terrain="Dier" elevation="UNKNOWN" />
+		<color name="DeirBase" red="250" green="213" blue="134" terrain="Deir" elevation="UNKNOWN" />
 		<color name="Sand1" red="238" green="194" blue="98" terrain="Open Ground" elevation="UNKNOWN" />
 		<color name="Sand2" red="222" green="163" blue="120" terrain="Open Ground" elevation="UNKNOWN" />
 		<color name="Wadi1" red="231" green="167" blue="0" terrain="Wadi" elevation="UNKNOWN" />
@@ -1564,8 +1618,8 @@
 
 		<!-- Desert colors for desert overlays, including AD terrain -->
 		<color name="Hillock1" red="114" green="83" blue="42" terrain="Hillock Summit" elevation="1" />
-		<color name="Dier1" red="252" green="223" blue="89" terrain="Dier" elevation="UNKNOWN" />
-		<color name="Dier2" red="202" green="152" blue="0" terrain="Dier" elevation="UNKNOWN" />
+		<color name="Deir1" red="252" green="223" blue="89" terrain="Deir" elevation="UNKNOWN" />
+		<color name="Deir2" red="202" green="152" blue="0" terrain="Deir" elevation="UNKNOWN" />
 		<color name="Cactus Patch" red="230" green="192" blue="82" terrain="Cactus Patch" elevation="0" />
 		<color name="Cactus Patch1" red="194" green="165" blue="68" terrain="Cactus Patch" elevation="0" />
 		<color name="Cactus Patch2" red="137" green="83" blue="35" terrain="Cactus Patch" elevation="0" />
@@ -1633,6 +1687,50 @@
 		<color name="Gutted_FactoryL2_56" red="145" green="157" blue="158" terrain="Gutted Stone Factory, 2.5 Level" elevation="UNKNOWN" />
 		<color name="Gutted_FactoryL2_57" red="142" green="153" blue="155" terrain="Gutted Stone Factory, 2.5 Level" elevation="UNKNOWN" />
 		<color name="Gutted_FactoryL2_57" red="137" green="149" blue="150" terrain="Gutted Stone Factory, 2.5 Level" elevation="UNKNOWN" />
+		<color name="Slightly_Sloped_Beach" red="212" green="179" blue="121" terrain="Open Ground" elevation="0" />
+		<color name="Moderately_Sloped_Beach" red="213" green="180" blue="122" terrain="Deir" elevation="0" />
+		<color name="Steeply_Sloped_Beach" red="214" green="181" blue="123" terrain="Open Ground" elevation="-1" />
+		<color name="Slightly_Sloped_Surf" red="212" green="228" blue="228" terrain="Open Ground" elevation="0" />
+		<color name="Moderately_Sloped_Surf" red="213" green="229" blue="229" terrain="Deir" elevation="0" />
+		<color name="Steeply_Sloped_Surf" red="214" green="230" blue="230" terrain="Deir" elevation="-1" />
+		<color name="Slightly_Sloped_Shallow_Ocean" red="164" green="205" blue="229" terrain="Open Ground" elevation="0" />
+		<color name="Moderately_Sloped_Shallow_Ocean" red="165" green="206" blue="230" terrain="Deir" elevation="0" />
+		<color name="Steeply_Sloped_Shallow_Ocean" red="166" green="207" blue="231" terrain="Deir" elevation="-1" />
+		<color name="Slightly_Sloped_Deep_Ocean" red="133" green="188" blue="219" terrain="Open Ground" elevation="0" />
+		<color name="Moderately_Sloped_Deep_Ocean" red="134" green="189" blue="220" terrain="Deir" elevation="0" />		
+		<color name="Steeply_Sloped_Deep_Ocean" red="135" green="190" blue="221" terrain="Deir" elevation="-1" />		
+		<!-- SaP Grain colors for Grain to Light Grain transformation (begin) -->
+		<color name="SaP_Grain_01" red="242" green="207" blue="148" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_02" red="239" green="210" blue="149" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_03" red="247" green="217" blue="156" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_04" red="240" green="223" blue="140" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_05" red="242" green="222" blue="151" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_06" red="241" green="224" blue="137" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_07" red="244" green="223" blue="140" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_08" red="249" green="222" blue="139" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_09" red="246" green="224" blue="135" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_10" red="247" green="221" blue="168" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_11" red="246" green="224" blue="138" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_12" red="243" green="226" blue="135" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_13" red="246" green="226" blue="127" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_14" red="247" green="222" blue="171" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_15" red="245" green="226" blue="139" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_16" red="244" green="224" blue="172" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_17" red="244" green="227" blue="142" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_18" red="244" green="228" blue="140" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_19" red="242" green="230" blue="142" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_20" red="254" green="224" blue="170" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_21" red="249" green="226" blue="171" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_22" red="247" green="230" blue="139" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_23" red="245" green="228" blue="171" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_24" red="251" green="229" blue="142" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_25" red="244" green="232" blue="139" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_26" red="251" green="230" blue="139" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_27" red="249" green="231" blue="136" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_28" red="251" green="233" blue="145" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_29" red="255" green="238" blue="145" terrain="Grain" elevation="0" />
+		<color name="SaP_Grain_30" red="246" green="251" blue="153" terrain="Grain" elevation="0" />
+		<!-- SaP Grain colors for Grain to Light Grain transformation (end) -->
 	</colors>
 
 	<terrainTypes>
@@ -1734,8 +1832,8 @@
         <terrainType name="Cave" typeCode="97" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="0" mapColorGreen="0" mapColorBlue="0" LOSCategory="OPEN"  />
         <terrainType name="Scrub" typeCode="100" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="119" mapColorGreen="67" mapColorBlue="0" LOSCategory="OPEN"  />
         <terrainType name="Hammada" typeCode="101" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="59" mapColorGreen="55" mapColorBlue="19" LOSCategory="OPEN"  />
-        <terrainType name="Dier" typeCode="102" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="OPEN"  />
-        <terrainType name="Dier Lip" typeCode="103" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="HEXSIDE"  />
+        <terrainType name="Deir" typeCode="102" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="OPEN"  />
+        <terrainType name="Deir Lip" typeCode="103" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="HEXSIDE"  />
         <terrainType name="Wadi" typeCode="104" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="191" mapColorGreen="111" mapColorBlue="7" LOSCategory="DEPRESSION"  />
         <terrainType name="Hillock" typeCode="105" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="85" mapColorGreen="45" mapColorBlue="4" LOSCategory="OTHER"  />
         <terrainType name="Hillock Summit" typeCode="106" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="114" mapColorGreen="83" mapColorBlue="42" LOSCategory="OPEN"  />  //mapColorRed="251" mapColorGreen="223" mapColorBlue="147" LOSCategory="OPEN"  />
@@ -1765,8 +1863,8 @@
         <terrainType name="Swamp" typeCode="133" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="2" mapColorRed="47" mapColorGreen="99" mapColorBlue="36" LOSCategory="OTHER"  />
         <terrainType name="Rice Paddy, Drained" typeCode="135" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="47" mapColorGreen="99" mapColorBlue="36" LOSCategory="OPEN"  />
         <terrainType name="Rice Paddy, Irrigated" typeCode="136" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="47" mapColorGreen="99" mapColorBlue="36" LOSCategory="OPEN"  />
-        <terrainType name="Rice Paddy, In Season" typeCode="137" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="0" mapColorRed="47" mapColorGreen="99" mapColorBlue="36" LOSCategory="OPEN"  />
-        <terrainType name="Rice Paddy Bank" typeCode="138" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="205" mapColorGreen="175" mapColorBlue="84" LOSCategory="OPEN"  />
+        <terrainType name="Rice Paddy, In Season" typeCode="137" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="0" mapColorRed="47" mapColorGreen="99" mapColorBlue="36" LOSCategory="OTHER"  />
+        <terrainType name="Rice Paddy Bank" typeCode="138" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="0" mapColorRed="205" mapColorGreen="175" mapColorBlue="84" LOSCategory="OPEN"  />
         <terrainType name="Panji" typeCode="139" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="0" mapColorGreen="0" mapColorBlue="0" LOSCategory="OPEN"  />
         <terrainType name="Ocean" typeCode="140" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="0" mapColorGreen="128" mapColorBlue="255" LOSCategory="OPEN"  />
         <terrainType name="Shallow Ocean" typeCode="141" isLOSObstacle="FALSE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="171" mapColorGreen="231" mapColorBlue="255" LOSCategory="OPEN"  />
@@ -1824,11 +1922,12 @@
 		<terrainType name="BTCrags" typeCode="205" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="0" mapColorRed="215" mapColorGreen="215" mapColorBlue="213" LOSCategory="OTHER"  />
 		<terrainType name="MultipleStone" typeCode="206" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="125" mapColorGreen="135" mapColorBlue="135" LOSCategory="BUILDING"  />
 		<terrainType name="Breach" typeCode="207" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="FALSE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="125" mapColorGreen="135" mapColorBlue="136" LOSCategory="BUILDING"  />
-		<terrainType name="Light Grain" typeCode="208" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="TRUE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="0" mapColorRed="255" mapColorGreen="255" mapColorBlue="137" LOSCategory="OPEN"  />
+		<terrainType name="Light Grain" typeCode="208" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="0" mapColorRed="255" mapColorGreen="255" mapColorBlue="137" LOSCategory="OPEN"  />
 		<terrainType name="Volga Pier" typeCode="209" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="0" mapColorRed="255" mapColorGreen="255" mapColorBlue="137" LOSCategory="OTHER"  />
 		<terrainType name="Gutted Building Wall, 1 Level" typeCode="210" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="1" mapColorGreen="1" mapColorBlue="0" LOSCategory="BUILDING"  />
 		<terrainType name="Gutted Building Wall, 2 Level" typeCode="211" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="2" mapColorRed="1" mapColorGreen="1" mapColorBlue="0" LOSCategory="BUILDING"  />
-		
+
+
 		<!--ToDo VASL code may hit a bug if typeCode > 255 OR if there are more than 255 terrainTypes - need to test and change code -->
 	</terrainTypes>
 
@@ -3295,6 +3394,8 @@
         <LOSSSRule name="GrainToBrush" type="terrainMap" fromValue="Grain" toValue="Brush" />
         <LOSSSRule name="GrainToWoods" type="terrainMap" fromValue="Grain" toValue="Woods" />
         <LOSSSRule name="GrainToMarsh" type="terrainMap" fromValue="Grain" toValue="Marsh" />
+        <LOSSSRule name="GrainToLightGrain" type="terrainMap" fromValue="Grain" toValue="Light Grain" />
+        <LOSSSRule name="SaP_GrainToLightGrain" type="terrainMap" fromValue="Grain" toValue="Light Grain" />
 
         <LOSSSRule name="MarshToLevel_1" type="terrainToElevationMap" fromValue="Marsh" toValue="-1" />
         <LOSSSRule name="MarshToLevel0" type="terrainToElevationMap" fromValue="Marsh" toValue="0" />

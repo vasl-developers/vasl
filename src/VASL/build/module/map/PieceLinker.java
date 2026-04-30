@@ -38,6 +38,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import static VASL.build.module.map.boardPicker.ASLBoard.DEFAULT_HEX_HEIGHT;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 
 /**
  * Copyright (c) 2017 by David Sullivan
@@ -197,7 +199,7 @@ public class PieceLinker extends AbstractConfigurable implements KeyListener, Co
                 GamePiece fromPiece = gs.getPieceForId(fromPieceID);
                 if (fromPiece != null &&
                         isSelected(fromPiece) &&
-                        (fromPiece.getProperty(Properties.INVISIBLE_TO_ME) == null || Boolean.FALSE.equals(fromPiece.getProperty(Properties.INVISIBLE_TO_ME)))) {
+                        (fromPiece.getProperty(Properties.INVISIBLE_TO_ME) == null || FALSE.equals(fromPiece.getProperty(Properties.INVISIBLE_TO_ME)))) {
                         //&&
                         //(fromPiece.getProperty(Properties.OBSCURED_TO_ME) == null || Boolean.FALSE.equals(fromPiece.getProperty(Properties.OBSCURED_TO_ME)))) {
 
@@ -205,7 +207,7 @@ public class PieceLinker extends AbstractConfigurable implements KeyListener, Co
                     for (String s : toPieceIDs) {
                         GamePiece toPiece = gs.getPieceForId(s);
                         if (toPiece != null &&
-                                (toPiece.getProperty(Properties.INVISIBLE_TO_ME) == null || Boolean.FALSE.equals(toPiece.getProperty(Properties.INVISIBLE_TO_ME)))) {
+                                (toPiece.getProperty(Properties.INVISIBLE_TO_ME) == null || FALSE.equals(toPiece.getProperty(Properties.INVISIBLE_TO_ME)))) {
                             //&&
                                // (toPiece.getProperty(Properties.OBSCURED_TO_ME) == null || Boolean.FALSE.equals(toPiece.getProperty(Properties.OBSCURED_TO_ME)))) {
                             Point p1 = map.mapToDrawing(fromPiece.getPosition(), os_scale);
@@ -219,9 +221,22 @@ public class PieceLinker extends AbstractConfigurable implements KeyListener, Co
                                 linkrange = range(fromPiece.getPosition(), toPiece.getPosition(), map, grid);
                             }
                             else {
-                                VASL.LOS.Map.Hex sourceHex = map.getVASLMap().gridToHex((int)(fromPiece.getPosition().getX() - map.getEdgeBuffer().getWidth()), (int)(fromPiece.getPosition().getY() - map.getEdgeBuffer().getHeight()));
-                                VASL.LOS.Map.Hex targetHex = map.getVASLMap().gridToHex((int)(toPiece.getPosition().getX() - map.getEdgeBuffer().getWidth()), (int)(toPiece.getPosition().getY() - map.getEdgeBuffer().getHeight()));
-                                linkrange = map.getVASLMap().range(sourceHex, targetHex, map.getVASLMap().getMapConfiguration());
+                                // check both source/target on map before calculating range
+                                boolean sourceonmap = map.getVASLMap().onMap((int)fromPiece.getPosition().getX(),(int) fromPiece.getPosition().getY()) ? TRUE : FALSE;
+                                boolean targetonmap = map.getVASLMap().onMap((int)fromPiece.getPosition().getX(),(int) fromPiece.getPosition().getY()) ? TRUE : FALSE;
+                                if (sourceonmap && targetonmap) {
+                                    VASL.LOS.Map.Hex sourceHex = map.getVASLMap().gridToHex((int) (fromPiece.getPosition().getX() - map.getEdgeBuffer().getWidth()), (int) (fromPiece.getPosition().getY() - map.getEdgeBuffer().getHeight()));
+                                    VASL.LOS.Map.Hex targetHex = map.getVASLMap().gridToHex((int) (toPiece.getPosition().getX() - map.getEdgeBuffer().getWidth()), (int) (toPiece.getPosition().getY() - map.getEdgeBuffer().getHeight()));
+                                    if (sourceHex == null || targetHex == null){
+                                        linkrange = 0;
+                                    }
+                                    else {
+                                        linkrange = map.getVASLMap().range(sourceHex, targetHex, map.getVASLMap().getMapConfiguration());
+                                    }
+                                }
+                                else {
+                                    linkrange =0;
+                                }
                             }
                             drawText(g2d, p1.x +30, p1.y + 30, "Range: " + linkrange );
                         }
@@ -471,7 +486,7 @@ public class PieceLinker extends AbstractConfigurable implements KeyListener, Co
      * @return true if the piece is selected
      */
     private boolean isSelected(GamePiece p) {
-        return Boolean.TRUE.equals(p.getProperty(Properties.SELECTED)) &&
+        return TRUE.equals(p.getProperty(Properties.SELECTED)) &&
                 p.getId() != null &&
                 !"".equals(p.getId());
     }
