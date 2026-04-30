@@ -227,7 +227,12 @@ public class PieceLinker extends AbstractConfigurable implements KeyListener, Co
                                 if (sourceonmap && targetonmap) {
                                     VASL.LOS.Map.Hex sourceHex = map.getVASLMap().gridToHex((int) (fromPiece.getPosition().getX() - map.getEdgeBuffer().getWidth()), (int) (fromPiece.getPosition().getY() - map.getEdgeBuffer().getHeight()));
                                     VASL.LOS.Map.Hex targetHex = map.getVASLMap().gridToHex((int) (toPiece.getPosition().getX() - map.getEdgeBuffer().getWidth()), (int) (toPiece.getPosition().getY() - map.getEdgeBuffer().getHeight()));
-                                    linkrange = map.getVASLMap().range(sourceHex, targetHex, map.getVASLMap().getMapConfiguration());
+                                    if (sourceHex == null || targetHex == null){
+                                        linkrange = 0;
+                                    }
+                                    else {
+                                        linkrange = map.getVASLMap().range(sourceHex, targetHex, map.getVASLMap().getMapConfiguration());
+                                    }
                                 }
                                 else {
                                     linkrange =0;
