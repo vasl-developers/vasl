@@ -219,9 +219,11 @@ public class PieceLinker extends AbstractConfigurable implements KeyListener, Co
                                 ASLBoard board = (ASLBoard) mapBoards.toArray()[0];
                                 MapGrid grid = board.getGrid();
                                 //adjust points for edgebuffer
-                                p1.setLocation(fromPiece.getPosition().getX() - map.getEdgeBuffer().width , fromPiece.getPosition().getY() - map.getEdgeBuffer().height);
-                                p2.setLocation(toPiece.getPosition().getX() - map.getEdgeBuffer().width , toPiece.getPosition().getY() - map.getEdgeBuffer().height);
-                                linkrange = range(p1, p2, map, grid);
+                                Point p1a = new Point(0,0);
+                                Point p2a = new Point(0,0);
+                                p1a.setLocation(fromPiece.getPosition().getX() - map.getEdgeBuffer().width , fromPiece.getPosition().getY() - map.getEdgeBuffer().height);
+                                p2a.setLocation(toPiece.getPosition().getX() - map.getEdgeBuffer().width , toPiece.getPosition().getY() - map.getEdgeBuffer().height);
+                                linkrange = range(p1a, p2a, map, grid);
                             }
                             else {
                                 // check both source/target on map before calculating range
