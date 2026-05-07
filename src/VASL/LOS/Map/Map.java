@@ -1148,7 +1148,12 @@ public class Map  {
         }
 
         // add row as suffix
-        if(!mapname.contains("RO")) {
+        // handle special board configurations
+        if(mapname.contains("BRT")){
+            int rowadj = col % 2 == 0 ? 0 : 1;
+            row = row + rowadj;
+        }
+        else if(!mapname.contains("RO")) {
             int rowadj = col % 2 == 0 ? 1 : 0;
             row = row + rowadj;
         }
@@ -1156,17 +1161,6 @@ public class Map  {
             if (col % 2 == 0){row +=1;}
         }
         return name + row;
-        /*int rowOffset = A1CenterY < 0.0 ? (int) (-A1CenterY / hexHeight) + 1 : 0;
-        if (A1CenterY == 65) {
-            return name + (row + rowOffset);
-        } else {
-            //if (A1CenterY == 32.5 && getMapConfiguration().contains("ROadjustment")) {
-            //    return name + (row + rowOffset);
-            //} else {
-            return name + (row + rowOffset + (col % 2 == 0 ? 1 : 0));
-            //}
-        }*/
-
     }
 
 
