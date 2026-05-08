@@ -768,7 +768,7 @@ public class Hex {
             return map.getGridTerrain((int)centerLocation.getLOSPoint().getX()-1, (int)centerLocation.getLOSPoint().getY()+1 );
         }
         else if (map.onMap((int)centerLocation.getLOSPoint().getX()-1, (int)centerLocation.getLOSPoint().getY()- 1 )){
-            return map.getGridTerrain((int)centerLocation.getLOSPoint().getX()-1, (int)centerLocation.getLOSPoint().getY()+1 );
+            return map.getGridTerrain((int)centerLocation.getLOSPoint().getX()-1, (int)centerLocation.getLOSPoint().getY()-1 );
         }
         return map.getGridTerrain((int)centerLocation.getLOSPoint().getX(), (int)centerLocation.getLOSPoint().getY() );
 
