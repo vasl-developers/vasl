@@ -218,12 +218,17 @@ public class PieceLinker extends AbstractConfigurable implements KeyListener, Co
                                 Collection<Board> mapBoards = map.getBoards();
                                 ASLBoard board = (ASLBoard) mapBoards.toArray()[0];
                                 MapGrid grid = board.getGrid();
-                                linkrange = range(fromPiece.getPosition(), toPiece.getPosition(), map, grid);
+                                //adjust points for edgebuffer
+                                Point p1a = new Point(0,0);
+                                Point p2a = new Point(0,0);
+                                p1a.setLocation(fromPiece.getPosition().getX() - map.getEdgeBuffer().width , fromPiece.getPosition().getY() - map.getEdgeBuffer().height);
+                                p2a.setLocation(toPiece.getPosition().getX() - map.getEdgeBuffer().width , toPiece.getPosition().getY() - map.getEdgeBuffer().height);
+                                linkrange = range(p1a, p2a, map, grid);
                             }
                             else {
                                 // check both source/target on map before calculating range
-                                boolean sourceonmap = map.getVASLMap().onMap((int)fromPiece.getPosition().getX(),(int) fromPiece.getPosition().getY()) ? TRUE : FALSE;
-                                boolean targetonmap = map.getVASLMap().onMap((int)fromPiece.getPosition().getX(),(int) fromPiece.getPosition().getY()) ? TRUE : FALSE;
+                                boolean sourceonmap = map.getVASLMap().onMap((int)fromPiece.getPosition().getX() - (int) map.getEdgeBuffer().getWidth(),(int) fromPiece.getPosition().getY() - (int)map.getEdgeBuffer().getHeight()) ? TRUE : FALSE;
+                                boolean targetonmap = map.getVASLMap().onMap((int)toPiece.getPosition().getX() - (int) map.getEdgeBuffer().getWidth(),(int) toPiece.getPosition().getY() - (int)map.getEdgeBuffer().getHeight()) ? TRUE : FALSE;
                                 if (sourceonmap && targetonmap) {
                                     VASL.LOS.Map.Hex sourceHex = map.getVASLMap().gridToHex((int) (fromPiece.getPosition().getX() - map.getEdgeBuffer().getWidth()), (int) (fromPiece.getPosition().getY() - map.getEdgeBuffer().getHeight()));
                                     VASL.LOS.Map.Hex targetHex = map.getVASLMap().gridToHex((int) (toPiece.getPosition().getX() - map.getEdgeBuffer().getWidth()), (int) (toPiece.getPosition().getY() - map.getEdgeBuffer().getHeight()));

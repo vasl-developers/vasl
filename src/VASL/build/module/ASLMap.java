@@ -335,8 +335,9 @@ public class ASLMap extends Map {
                     if (board.isLegacyBoard()) {
                         throw new Exception("VASL LOS disabled - Board " + board.getName() + " does not support LOS checking. VASSAL los active - safe to continue play");
                     }
+                    mapBoundary.add(b.bounds());
                 }
-                mapBoundary.add(b.bounds());
+                //mapBoundary.add(b.bounds());
                 vaslboards.add(board);
                 // make sure the hex geometry of all boards is the same
                 if (hexheight != 0.0 && Math.round(board.getHexHeight()) != Math.round(hexheight) || hexwidth != 0.0 && Math.round(board.getHexWidth()) != Math.round(hexwidth)) {
