@@ -1086,6 +1086,8 @@ public class ASLMap extends Map {
                         // special case for transform where image does not change
                         terr = resetterraintypefortransform(losonoverlays.board.getTerrainChanges(), terr);
                         // special case for building overlays
+
+
                         if (terr.isBuildingTerrain()) {
                             if (!terr.isHexsideTerrain()) {
                                 setBuildingTerrainFromOverlay(losonoverlays, o, terr);
@@ -1629,24 +1631,43 @@ public class ASLMap extends Map {
         // (1) if pixel is on the overlay edge and (2) if so are pixels 2 away also transparent
         // in those conditions, skip actions
         if (!pixelOnTransparentOverlayBorder(losonoverlays)) {
-            int j = 0; int k = 0; int c = 0;
-            while ((c >> 24) == 0x00 && j <= 6) {
-                j += 2;
-                k += 2;
-                if (losonoverlays.newlosdata.onMap(losonoverlays.currentx + j, losonoverlays.currenty + k) && pointIsOnOverlay(losonoverlays.bi, losonoverlays.currentx + j, losonoverlays.currenty + k)) {
+            int j = 1; int k = 1; int c = 0; int b = 0;
+            while ((c >> 24) == 0x00 && j <= 4) {
+                // need to differentiate between transparent pixels for centre dots and hexnames and those that are
+                // part of transparent area of overlays - use the c and b test to do so.
+                // if b =0 then tested both b and c; if both are same terrain then use that terrain (b & c are opposite sides of transparent pixel)
+                // if b = -1 then only c tested, use its terrain if exists; b not on map or overlay
+                j += 1;
+                k += 1;
+                b = -1;
+                if (losonoverlays.newlosdata.onMap(losonoverlays.overpositionx + j, losonoverlays.overpositiony + k) && pointIsOnOverlay(losonoverlays.bi, losonoverlays.currentx + j, losonoverlays.currenty + k)) {
                     c = losonoverlays.bi.getRGB(losonoverlays.currentx + j, losonoverlays.currenty + k);
-                } else if (losonoverlays.newlosdata.onMap(losonoverlays.currentx + j, losonoverlays.currenty - k) && pointIsOnOverlay(losonoverlays.bi, losonoverlays.currentx + j, losonoverlays.currenty - k)) {
+                    if (losonoverlays.newlosdata.onMap(losonoverlays.overpositionx - j, losonoverlays.overpositiony - k) && pointIsOnOverlay(losonoverlays.bi, losonoverlays.currentx - j, losonoverlays.currenty - k)) {
+                        b = losonoverlays.bi.getRGB(losonoverlays.currentx - j, losonoverlays.currenty - k);
+                    }
+                } else if (losonoverlays.newlosdata.onMap(losonoverlays.overpositionx + j, losonoverlays.overpositiony - k) && pointIsOnOverlay(losonoverlays.bi, losonoverlays.currentx + j, losonoverlays.currenty - k)) {
                     c = losonoverlays.bi.getRGB(losonoverlays.currentx + j, losonoverlays.currenty - k);
-                } else if (losonoverlays.newlosdata.onMap(losonoverlays.currentx - j, losonoverlays.currenty + k) && pointIsOnOverlay(losonoverlays.bi, losonoverlays.currentx - j, losonoverlays.currenty + k)) {
+                    if (losonoverlays.newlosdata.onMap(losonoverlays.overpositionx - j, losonoverlays.overpositiony + k) && pointIsOnOverlay(losonoverlays.bi, losonoverlays.currentx - j, losonoverlays.currenty + k)) {
+                        b = losonoverlays.bi.getRGB(losonoverlays.currentx - j, losonoverlays.currenty + k);
+                    }
+                } else if (losonoverlays.newlosdata.onMap(losonoverlays.overpositionx - j, losonoverlays.overpositiony + k) && pointIsOnOverlay(losonoverlays.bi, losonoverlays.currentx - j, losonoverlays.currenty + k)) {
                     c = losonoverlays.bi.getRGB(losonoverlays.currentx - j, losonoverlays.currenty + k);
-                } else if (losonoverlays.newlosdata.onMap(losonoverlays.currentx - j, losonoverlays.currenty - k) && pointIsOnOverlay(losonoverlays.bi, losonoverlays.currentx - j, losonoverlays.currenty - k)) {
+                    if (losonoverlays.newlosdata.onMap(losonoverlays.overpositionx + j, losonoverlays.overpositiony - k) && pointIsOnOverlay(losonoverlays.bi, losonoverlays.currentx + j, losonoverlays.currenty - k)) {
+                        b = losonoverlays.bi.getRGB(losonoverlays.currentx + j, losonoverlays.currenty - k);
+                    }
+                } else if (losonoverlays.newlosdata.onMap(losonoverlays.overpositionx - j, losonoverlays.overpositiony - k) && pointIsOnOverlay(losonoverlays.bi, losonoverlays.currentx - j, losonoverlays.currenty - k)) {
                     c = losonoverlays.bi.getRGB(losonoverlays.currentx - j, losonoverlays.currenty - k);
+                    if (losonoverlays.newlosdata.onMap(losonoverlays.overpositionx + j, losonoverlays.overpositiony + k) && pointIsOnOverlay(losonoverlays.bi, losonoverlays.currentx + j, losonoverlays.currenty + k)) {
+                        b = losonoverlays.bi.getRGB(losonoverlays.currentx + j, losonoverlays.currenty + k);
+                    }
                 } else {
                     break;
                 }
                 if ((c >> 24) != 0x00) {
                     final Color color = getRGBColor(c);
-                    transterrain = getOverlayTerrainfromColor(color, losonoverlays);
+                    if (b == -1 || b == c) {
+                        transterrain = getOverlayTerrainfromColor(color, losonoverlays);
+                    }
                 }
             }
         }
@@ -1672,7 +1693,7 @@ public class ASLMap extends Map {
                         //hack - ensure that the pixel is not close to a hexside as VASL geometry can put it in an adjacent hex
                         final Point hexcenter = losonoverlays.newlosdata.gridToHex((int) losonoverlays.overpositionx, (int) losonoverlays.overpositiony).getHexCenter();
                         final Double d = Math.sqrt(((Math.pow(hexcenter.x - losonoverlays.overpositionx, 2) + (Math.pow(hexcenter.y - losonoverlays.overpositiony, 2)))));
-                        if (d < 25) {
+                        if (d < 15) {
                             inhhexes.put(losonoverlays.newlosdata.gridToHex((int) losonoverlays.overpositionx, (int) losonoverlays.overpositiony), terr);
                             doNonInherentToInherentFix(terraintype, terr, losonoverlays);
                         }
