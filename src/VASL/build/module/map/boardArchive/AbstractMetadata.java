@@ -69,25 +69,25 @@ public abstract class AbstractMetadata {
     private static final String underlayColorNameAttribute = "name";
 
     // Maps color names to board color object
-    protected LinkedHashMap<String, BoardColor> boardColors = new LinkedHashMap<String, BoardColor>(100);
+    protected final LinkedHashMap<String, BoardColor> boardColors = new LinkedHashMap<String, BoardColor>(100);
 
     // Maps a Color object to VASL color name
-    protected LinkedHashMap<Color, String> colorToVASLColorName = new LinkedHashMap<Color, String>(100);
+    protected final LinkedHashMap<Color, String> colorToVASLColorName = new LinkedHashMap<Color, String>(100);
 
     // Maps rule name to the rule object
-    protected LinkedHashMap<String, ColorSSRule> colorSSRules = new LinkedHashMap<String, ColorSSRule>(100);
+    protected final LinkedHashMap<String, ColorSSRule> colorSSRules = new LinkedHashMap<String, ColorSSRule>(100);
 
     // List of LOS scenario-specific rules
-    protected LinkedHashMap<String, LOSSSRule> LOSSSRules = new LinkedHashMap<String, LOSSSRule>(100);
+    protected final LinkedHashMap<String, LOSSSRule> LOSSSRules = new LinkedHashMap<String, LOSSSRule>(100);
 
     // Lists of the counter rules
     // protected LinkedHashMap<String, LOSCounterRule> LOSCounterRules = new LinkedHashMap<String, LOSCounterRule>(30);
 
     // Maps SSR name to the overlay rule object
-    protected LinkedHashMap<String, OverlaySSRule> overlaySSRules = new LinkedHashMap<String, OverlaySSRule>();
+    protected final LinkedHashMap<String, OverlaySSRule> overlaySSRules = new LinkedHashMap<String, OverlaySSRule>();
 
     // Maps SSR name to the underlay rule object
-    protected LinkedHashMap<String, UnderlaySSRule> underlaySSRules = new LinkedHashMap<String, UnderlaySSRule>();
+    protected final LinkedHashMap<String, UnderlaySSRule> underlaySSRules = new LinkedHashMap<String, UnderlaySSRule>();
 
     /**
      * Assert the element has the given name otherwise throw an exception
@@ -184,8 +184,9 @@ public abstract class AbstractMetadata {
                 // make sure the type code is valid
                 boolean validTypeCode = false;
                 for(int x = 0; x < LOSSSRuleTypeValues.length && !validTypeCode; x++) {
-                    if(LOSSSRuleTypeValues[x].equals(type)) {
+                    if (LOSSSRuleTypeValues[x].equals(type)) {
                         validTypeCode = true;
+                        break;
                     }
                 }
 
@@ -233,7 +234,7 @@ public abstract class AbstractMetadata {
             }
 
             // make sure there is at least one mapping
-            if (colorSSRule.getColorMaps().size() < 1) {
+            if (colorSSRule.getColorMaps().isEmpty()) {
                 throw new JDOMException("colorSSRule " + name + " has no mappings");
             }
             if (!colorSSRules.containsKey(name)) {
@@ -319,52 +320,56 @@ public abstract class AbstractMetadata {
         for (Element e: element.getChildren()) {
 
             // overlay rules
-            if(e.getName().equals(overlaySSRuleElement)){
+            switch (e.getName()) {
+                case overlaySSRuleElement: {
 
-                OverlaySSRule rule = new OverlaySSRule(e.getAttributeValue(overlaySSRNameAttribute));
-                rule.addImage(new OverlaySSRuleImage(
-                        e.getAttributeValue(overlaySSRImageAttribute),
-                        e.getAttribute(overlaySSRXAttribute).getIntValue(),
-                        e.getAttribute(overlaySSRYAttribute).getIntValue()));
-                overlaySSRules.put(rule.getName(), rule);
+                    OverlaySSRule rule = new OverlaySSRule(e.getAttributeValue(overlaySSRNameAttribute));
+                    rule.addImage(new OverlaySSRuleImage(
+                            e.getAttributeValue(overlaySSRImageAttribute),
+                            e.getAttribute(overlaySSRXAttribute).getIntValue(),
+                            e.getAttribute(overlaySSRYAttribute).getIntValue()));
+                    overlaySSRules.put(rule.getName(), rule);
 
-            }
-
-            // overlay rules sets - those having multiple images
-            else if(e.getName().equals(overlaySSRuleSetElement)){
-
-                OverlaySSRule rule = new OverlaySSRule(e.getAttributeValue(overlaySSRNameAttribute));
-                for (Element image: e.getChildren()) {
-
-                    if(image.getName().equals(overlaySSRuleImageElement)){
-                        rule.addImage(new OverlaySSRuleImage(
-                                image.getAttributeValue(overlaySSRImageAttribute),
-                                image.getAttribute(overlaySSRXAttribute).getIntValue(),
-                                image.getAttribute(overlaySSRYAttribute).getIntValue()));
-                    }
-                }
-                overlaySSRules.put(rule.getName(), rule);
-            }
-
-            //underlay rules
-            else if(e.getName().equals(underLaySSRuleElement)) {
-
-                // read the SSR underlay attributes
-                String name = e.getAttributeValue(underlaySSRNameAttribute);
-                String imageName = e.getAttributeValue(underlaySSRImageAttribute);
-                ArrayList<String> colors = new ArrayList<String>();
-
-                // read all of the color names
-                for (Element el: e.getChildren()) {
-
-                    if(el.getName().equals(underlayColorElement)) {
-
-                        colors.add(el.getAttributeValue(underlayColorNameAttribute));
-                    }
-
+                    break;
                 }
 
-                underlaySSRules.put(name, new UnderlaySSRule(name, imageName, colors));
+                // overlay rules sets - those having multiple images
+                case overlaySSRuleSetElement: {
+
+                    OverlaySSRule rule = new OverlaySSRule(e.getAttributeValue(overlaySSRNameAttribute));
+                    for (Element image : e.getChildren()) {
+
+                        if (image.getName().equals(overlaySSRuleImageElement)) {
+                            rule.addImage(new OverlaySSRuleImage(
+                                    image.getAttributeValue(overlaySSRImageAttribute),
+                                    image.getAttribute(overlaySSRXAttribute).getIntValue(),
+                                    image.getAttribute(overlaySSRYAttribute).getIntValue()));
+                        }
+                    }
+                    overlaySSRules.put(rule.getName(), rule);
+                    break;
+                }
+
+                //underlay rules
+                case underLaySSRuleElement:
+
+                    // read the SSR underlay attributes
+                    String name = e.getAttributeValue(underlaySSRNameAttribute);
+                    String imageName = e.getAttributeValue(underlaySSRImageAttribute);
+                    ArrayList<String> colors = new ArrayList<String>();
+
+                    // read all of the color names
+                    for (Element el : e.getChildren()) {
+
+                        if (el.getName().equals(underlayColorElement)) {
+
+                            colors.add(el.getAttributeValue(underlayColorNameAttribute));
+                        }
+
+                    }
+
+                    underlaySSRules.put(name, new UnderlaySSRule(name, imageName, colors));
+                    break;
             }
         }
     }
