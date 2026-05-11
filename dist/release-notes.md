@@ -1,5 +1,5 @@
-# Release Notes: Version 6.7.3-beta2
-**Release Date:** April 30, 2026
+# Release Notes: Version 6.7.3
+**Release Date:** May 6, 2026
 
 
 
