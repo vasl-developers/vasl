@@ -768,6 +768,10 @@ public class VASLGameInterface {
 
         Stack stack = piece.getParent();
 
+        // this is a bug fix to allow the HexGrid to be Nudged; if more counters affected, develop a method to handle
+        // or add those counters to dist/CounterMetadata.xml with "ignore" tag
+        if (piece.getName().contains("Hex Grid")) {return null;}
+
         // single counter?
         if(stack == null || stack.getPieceCount() == 1) {
             return locationCounterList.get(piece.getName());
