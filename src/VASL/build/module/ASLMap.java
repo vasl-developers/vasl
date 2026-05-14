@@ -331,12 +331,12 @@ public class ASLMap extends Map {
             for (Board b : boards) {
                 final VASLBoard board = (VASLBoard) b;
                 // if legacy, abort
-                if (!"NUL".equals(b.getName()) && !"NULV".equals(b.getName())) {
-                    if (board.isLegacyBoard()) {
-                        throw new Exception("VASL LOS disabled - Board " + board.getName() + " does not support LOS checking. VASSAL los active - safe to continue play");
-                    }
-                    mapBoundary.add(b.bounds());
+                if ((!"NUL".equals(b.getName())) && (!"NULV".equals(b.getName())) && board.isLegacyBoard()) {
+                    //if (board.isLegacyBoard()) {
+                    throw new Exception("VASL LOS disabled - Board " + board.getName() + " does not support LOS checking. VASSAL los active - safe to continue play");
                 }
+                mapBoundary.add(b.bounds());
+
                 //mapBoundary.add(b.bounds());
                 vaslboards.add(board);
                 // make sure the hex geometry of all boards is the same

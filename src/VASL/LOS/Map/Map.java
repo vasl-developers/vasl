@@ -617,7 +617,7 @@ public class Map  {
                 }
             }
         } if (boardarchive.getBoardName().contains("RO")) {
-            if (this.A1CenterY == 0) {  //topleft is half height
+            if (this.A1CenterY == 0 || this.A1CenterY == 65) {  //topleft is half height
                 for (int col = 0; col < (startcol + this.width); col++) {
                     hexGrid[col] = new Hex[this.height];  // + (col % 2)]; // add 1 if odd
                     for (int row = 0; row < (startrow + this.height); row++) { // + (col % 2)); row++) {
