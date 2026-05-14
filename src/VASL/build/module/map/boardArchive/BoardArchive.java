@@ -657,7 +657,7 @@ public class BoardArchive {
             }
 
             // write the hex information
-            if(map.getMapConfiguration().contains("EqualRowCount")){
+            if(this.metadata.getHexGridConfig().contains("EqualRowCount")){
                 for (int col = 0; col < map.getWidth(); col++) {
                     for (int row = 0; row < map.getHeight(); row++) { // no extra hex for boards where each col has same number of rows (eg RO/DaE)
                         outfile.writeByte( map.getHex(col, row).hasStairway() ? 1: 0);
