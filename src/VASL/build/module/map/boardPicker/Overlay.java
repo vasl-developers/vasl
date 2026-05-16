@@ -90,12 +90,13 @@ public class Overlay implements Cloneable {
             throw new BoardException("Incorrect path name for overlay. Confirm name and retry to add overlay.");
         }
         readData();
-        transform(persistelevation);
+
         try {
             setBounds();
         } catch (BadCoords e) {
             throw new BoardException(e.getMessage());
         }
+        transform(persistelevation);
         check();
     }
 
@@ -557,7 +558,7 @@ public class Overlay implements Cloneable {
         if (!persistelevation) {
             return;
         }
-        // new transform to support preserve elevation
+        // new transform to support  preserve elevation
         try {
             readMetadata();
         }
@@ -587,14 +588,79 @@ public class Overlay implements Cloneable {
                     //Retrieving the R G B values
                     Color color = getRGBColor(c);
                     terr = getOverlayTerrainfromColor(color);
-                    if (terr == null || (terr.getLOSCategory() == Terrain.LOSCategories.OPEN && !(getName().contains("og")))) {
+                    if (terr == null || (terr.getLOSCategory() == Terrain.LOSCategories.OPEN && !(getName().contains("og")))) {  //need to allow OpenGround overlays to work
                         int transparentWhite = 0x00FFFFFF;
                         bi.setRGB(currentwidth, currentheight, transparentWhite);
+                        // now need to check for board terrain that should become openground at level
+                        // read the board image
+                        BufferedImage boardImage = board.getVASLBoardArchive().getBoardImage();
+                        int x = (int) boundaries.getX() + currentwidth;
+                        int y = (int) boundaries.getY() + currentheight;
+                        int boardc = boardImage.getRGB(x, y);
+                        Color boardcolor = getRGBColor(boardc);
+                        Terrain boardterr = getOverlayTerrainfromColor(boardcolor);
+                        //test if should be replaced
+                        if (boardterr != null) {
+                            if(!(boardterr.getLOSCategory() == Terrain.LOSCategories.OPEN)) { // || !(getName().contains("og"))){
+                                // update bi pixel with OG-level color
+                                c = getOGLevel(boardImage, x, y);
+                                bi.setRGB(currentwidth, currentheight, c);
+                            }
+                        }
                     }
                 }
             }
         }
         setImage(bi);
+    }
+
+    private int getOGLevel(BufferedImage boardImage, int x, int y) {
+
+        int transparentWhite = 0x00FFFFFF;
+        try {
+
+            // Define starting point and radius
+            int startX = x;
+            int startY = y;
+            int radius = 3;
+
+            // Define the bounding box limits
+            int startXLimit = Math.max(0, startX - radius);
+            int endXLimit = Math.min(boardImage.getWidth() - 1, startX + radius);
+            int startYLimit = Math.max(0, startY - radius);
+            int endYLimit = Math.min(boardImage.getHeight() - 1, startY + radius);
+
+            // Pre-calculate squared radius for highly efficient math
+            double radiusSquared = radius * radius;
+
+            // Loop through the bounding box
+            for (int posy = startYLimit; posy <= endYLimit; posy++) {
+               for (int posx = startXLimit; posx <= endXLimit; posx++) {
+
+                    // Calculate squared distance from starting point
+                    double dx = posx - startX;
+                    double dy = posy - startY;
+                    double distanceSquared = (dx * dx) + (dy * dy);
+
+                    // Check if pixel is within the radius
+                    if (distanceSquared <= radiusSquared) {
+                        // Extract pixel color
+                        int rgb = boardImage.getRGB(posx, posy);
+                        Color color = new Color(rgb, true);
+                        // Execute custom pixel test logic here
+                        Terrain testterr = getOverlayTerrainfromColor(color);
+                        if (testterr.getLOSCategory() == Terrain.LOSCategories.OPEN || getName().contains("og")){
+                            return rgb;
+                        }
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return transparentWhite;
+        }
+        return transparentWhite;
     }
 
     /* Methods getRGBColor, getOverlayTerrainfromColor, readMetaData, getOverlayTerrain, and SetTerrain were added
