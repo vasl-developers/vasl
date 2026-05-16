@@ -1051,6 +1051,7 @@ public class ASLMap extends Map {
                     losonoverlays.overpositionx = losonoverlays.currentx + (int) losonoverlays.ovrXstart - (int) losonoverlays.board.getCropBounds().getX();
                     losonoverlays.overpositiony = losonoverlays.currenty + (int) losonoverlays.ovrYstart - (int) losonoverlays.board.getCropBounds().getY();
                     if (losonoverlays.newlosdata.onMap(losonoverlays.overpositionx, losonoverlays.overpositiony) && losonoverlays.newlosdata.gridToHex(losonoverlays.overpositionx, losonoverlays.overpositiony) != null) {
+
                         c = losonoverlays.bi.getRGB(losonoverlays.currentx, losonoverlays.currenty);
                         terr = null; elevint = 0; Color color = null; //clear previous values
                         if ((c >> 24) != 0x00 ){
@@ -1062,8 +1063,16 @@ public class ASLMap extends Map {
                         else { // handle transparent pixel on overlay - ToDO move to method
                             terr = setTerrainForTransparentPixel(losonoverlays);
                             if (terr == null) {
-                                continue;
+                                // handle transparency when using preserve elevation
+                                if(preserveelevation){
+                                    terr = losonoverlays.newlosdata.getTerrain("Open Ground");
+                                }
+                                else {
+                                    continue;
+                                }
                             }
+
+
 
                             /*
                             // handle special case of transparent center dot
@@ -1086,8 +1095,6 @@ public class ASLMap extends Map {
                         // special case for transform where image does not change
                         terr = resetterraintypefortransform(losonoverlays.board.getTerrainChanges(), terr);
                         // special case for building overlays
-
-
                         if (terr.isBuildingTerrain()) {
                             if (!terr.isHexsideTerrain()) {
                                 setBuildingTerrainFromOverlay(losonoverlays, o, terr);
