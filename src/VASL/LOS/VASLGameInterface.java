@@ -140,7 +140,6 @@ public class VASLGameInterface {
         // determine what hex and location the piece is in
         Point p = piece.getPosition();
         p.translate(-gameMap.getEdgeBuffer().width, -gameMap.getEdgeBuffer().height);
-
         if (p == null || !LOSMap.onMap(p.x, p.y) || LOSMap.gridToHex(p.x, p.y) == null ) {return;} // error handling - no point or point not on map or not in a hex
         Hex h = LOSMap.gridToHex(p.x, p.y);
         Location hexloc = h.getNearestLocation(p.x, p.y );

@@ -166,7 +166,7 @@ public class ASLTranslate extends Translate {
       MapGrid mgrid; VASSAL.build.module.Chatter mchat;
       // test for situations where Key Combos won't work: b is null; Casbin and Tray extensions (?) which don't have hexgrid
       if (b == null) {
-          // do nothing
+          super.translate(p);
           return;
       }
       else {
@@ -190,7 +190,7 @@ public class ASLTranslate extends Translate {
               p.x = x + (int) Math.round(scale * (p.x - x));
               p.y = y + (int) Math.round(scale * (p.y - y));
           } else {
-              super.translate(p);
+              //super.translate(p);
           }
       }
   } 
