@@ -588,23 +588,25 @@ public class Overlay implements Cloneable {
                     //Retrieving the R G B values
                     Color color = getRGBColor(c);
                     terr = getOverlayTerrainfromColor(color);
-                    if (terr == null || (terr.getLOSCategory() == Terrain.LOSCategories.OPEN && !(getName().contains("og")))) {  //need to allow OpenGround overlays to work
-                        int transparentWhite = 0x00FFFFFF;
-                        bi.setRGB(currentwidth, currentheight, transparentWhite);
-                        // now need to check for board terrain that should become openground at level
-                        // read the board image
-                        BufferedImage boardImage = board.getVASLBoardArchive().getBoardImage();
-                        int x = (int) boundaries.getX() + currentwidth;
-                        int y = (int) boundaries.getY() + currentheight;
-                        int boardc = boardImage.getRGB(x, y);
-                        Color boardcolor = getRGBColor(boardc);
-                        Terrain boardterr = getOverlayTerrainfromColor(boardcolor);
-                        //test if should be replaced
-                        if (boardterr != null) {
-                            if(!(boardterr.getLOSCategory() == Terrain.LOSCategories.OPEN)) { // || !(getName().contains("og"))){
-                                // update bi pixel with OG-level color
-                                c = getOGLevel(boardImage, x, y);
-                                bi.setRGB(currentwidth, currentheight, c);
+                    if (terr != null) {
+                        if (terr.getLOSCategory() == Terrain.LOSCategories.OPEN && !(getName().contains("og"))) {  //need to allow OpenGround overlays to work
+                            int transparentWhite = 0x00FFFFFF;
+                            bi.setRGB(currentwidth, currentheight, transparentWhite);
+                            // now need to check for board terrain that should become openground at level
+                            // read the board image
+                            BufferedImage boardImage = board.getVASLBoardArchive().getBoardImage();
+                            int x = (int) boundaries.getX() + currentwidth;
+                            int y = (int) boundaries.getY() + currentheight;
+                            int boardc = boardImage.getRGB(x, y);
+                            Color boardcolor = getRGBColor(boardc);
+                            Terrain boardterr = getOverlayTerrainfromColor(boardcolor);
+                            //test if should be replaced
+                            if (boardterr != null) {
+                                if (!(boardterr.getLOSCategory() == Terrain.LOSCategories.OPEN)) { // || !(getName().contains("og"))){
+                                    // update bi pixel with OG-level color
+                                    c = getOGLevel(boardImage, x, y);
+                                    bi.setRGB(currentwidth, currentheight, c);
+                                }
                             }
                         }
                     }
@@ -653,7 +655,7 @@ public class Overlay implements Cloneable {
                             return rgb;
                         }
                     }
-                }
+               }
             }
 
         } catch (Exception e) {
@@ -663,8 +665,9 @@ public class Overlay implements Cloneable {
         return transparentWhite;
     }
 
-    /* Methods getRGBColor, getOverlayTerrainfromColor, readMetaData, getOverlayTerrain, and SetTerrain were added
-     * in December 2025 to support the PreserveElevation functionality when adding overlays to a board
+    /* Methods getRGBColor, getOverlayTerrainfromColor, readMetaData, getOverlayTerrain,
+     * SetTerrain, getElevationforColor, and  were added
+     * in December 2025/ May 2026 to support the PreserveElevation functionality when adding overlays to a board
      * They are copied (with adjustments) from other classes not available to Overlay at the point at which
      * they are required (especially when starting a new game).
      * As the LOS code continues to be reworked, it may be possible to access the methods from their original
@@ -732,5 +735,29 @@ public class Overlay implements Cloneable {
         for(String name : nameMap.keySet()) {
             terrainList[nameMap.get(name).getType()] = nameMap.get(name);
         }
+    }
+
+    /**
+     * Gets the elevation for the given color
+     * @param color the board color
+     * @return the elevation
+     */
+    public int getElevationForColor(Color color) {
+
+        int elevint =0;
+        LinkedHashMap<Color, String> colorToVASLColorName = new LinkedHashMap<Color, String>(100);
+        colorToVASLColorName.putAll(sharedBoardMetadata.getColorToVASLColorName());
+        String vaslcolor = colorToVASLColorName.get(color);
+        if (vaslcolor == null) {
+            return BoardMetadata.NO_ELEVATION;
+        }
+        String vaslColorElevation = sharedBoardMetadata.getBoardColors().get(vaslcolor).getElevation();
+        if(vaslColorElevation.equals(BoardMetadata.UNKNOWN)) {
+            return BoardMetadata.NO_ELEVATION;
+        }
+        else {
+            elevint = Integer.parseInt(vaslColorElevation);
+        }
+        return elevint;
     }
 }
