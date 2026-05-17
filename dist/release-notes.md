@@ -18,8 +18,8 @@
 ---
 
 ## 📈 Improvements
- - Improvement 1: 
- - Improvement 2: 
+ - Improvement 1: Preserve Elevation with Overlays now hides underlying terrain 
+ - Improvement 2: Can now set building type for each hex of mixed building overlays
  - Improvement 3: 
  - Improvement 4: 
  - Improvement 5: 
