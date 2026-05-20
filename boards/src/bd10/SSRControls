@@ -13,12 +13,14 @@
          <entry name="DB044 - Asking For Trouble" rule="SSO_10_DB044" text="DB044 SSO"/>
  </Checkbox>
 <Checkbox name="">
+         <entry name="AP112: First Ally" rule="10_SSO_6_AP112" text="AP112 SSO"/>
+ </Checkbox>
+<Checkbox name="">
          <entry name="U36: Operation Switchback" rule="10_SSO_U36" text="U36 SSO"/>
  </Checkbox>
 <Checkbox name="">
          <entry name="U37: Scheldt Fortress South" rule="SSO_U37_10" text="U37 SSO"/>
  </Checkbox>
-
  <Checkbox name="">
          <entry name="Go Rogue!" rule="BSO_10_Rogue" text="Rogue board 10"/>
  </Checkbox>
