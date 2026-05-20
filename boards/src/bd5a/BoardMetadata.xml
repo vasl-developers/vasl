@@ -22,8 +22,8 @@
 -->
 <boardMetadata 
 	name="5a" 
-	version="7.0" 
-	versionDate="2025/10/27" 
+	version="7.1" 
+	versionDate="2026/05/18" 
 	author="TR" 
 	boardImageFileName="bd5a.gif" 
 	hasHills="TRUE" 
@@ -63,7 +63,7 @@
 			<color name="HedgeGreen" />
 		</underlaySSRule>
 		<overlaySSRule name="SSO_AP75" image="5a_SSO_AP75.gif" x="1" y="1" />
-		<overlaySSRule name="PalmTrees" image="5a_PalmTrees.gif" x="30" y="101" />
+		<overlaySSRule name="SSO_AP112_5a" image="SSO_AP112_5a.gif" x="0" y="0" />		               			<overlaySSRule name="PalmTrees" image="5a_PalmTrees.gif" x="30" y="101" />
 		<overlaySSRule name="OrchardsToCrags" image="5a_Orch2Crag.gif" x="36" y="104" />
 		<overlaySSRule name="OrchardsToShellholes" image="5a_OrchardsToShellholes.gif" x="27" y="103" />
 		<overlaySSRule name="NoCliffs" image="5a_NoCliffs.gif" x="521" y="482" />
