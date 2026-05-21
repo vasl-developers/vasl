@@ -567,9 +567,7 @@ public class Overlay implements Cloneable {
         }
         final Image i = getImage();
         // error handling
-        if (i == null) {
-            return;
-        }
+        if (i == null) {return;}
         // get the image as a buffered image
         BufferedImage bi = new BufferedImage(i.getWidth(null), i.getHeight(null), BufferedImage.TYPE_INT_ARGB);
         Rectangle ovrRec = bounds();
@@ -583,6 +581,7 @@ public class Overlay implements Cloneable {
         int currentheight = 0;
         for (currentwidth = 0; currentwidth < bi.getWidth(); currentwidth++) {
             for (currentheight = 0; currentheight < bi.getHeight(); currentheight++) {
+
                 c = bi.getRGB(currentwidth, currentheight);
                 if ((c >> 24) != 0x00) { // not a transparent pixel
                     //Retrieving the R G B values
@@ -602,7 +601,7 @@ public class Overlay implements Cloneable {
                             Terrain boardterr = getOverlayTerrainfromColor(boardcolor);
                             //test if should be replaced
                             if (boardterr != null) {
-                                if (!(boardterr.getLOSCategory() == Terrain.LOSCategories.OPEN)) { // || !(getName().contains("og"))){
+                                if (!(boardterr.getLOSCategory() == Terrain.LOSCategories.OPEN)) { //
                                     // update bi pixel with OG-level color
                                     c = getOGLevel(boardImage, x, y);
                                     bi.setRGB(currentwidth, currentheight, c);
@@ -616,7 +615,7 @@ public class Overlay implements Cloneable {
         setImage(bi);
     }
 
-    private int getOGLevel(BufferedImage boardImage, int x, int y) {
+    public int getOGLevel(BufferedImage boardImage, int x, int y) {
 
         int transparentWhite = 0x00FFFFFF;
         try {
@@ -648,7 +647,7 @@ public class Overlay implements Cloneable {
                     if (distanceSquared <= radiusSquared) {
                         // Extract pixel color
                         int rgb = boardImage.getRGB(posx, posy);
-                        Color color = new Color(rgb, true);
+                        Color color = new Color(rgb); // , true);
                         // Execute custom pixel test logic here
                         Terrain testterr = getOverlayTerrainfromColor(color);
                         if (testterr.getLOSCategory() == Terrain.LOSCategories.OPEN || getName().contains("og")){
