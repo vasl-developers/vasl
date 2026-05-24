@@ -26,11 +26,13 @@
 	v1.0 Sep 2018 Hatten in Flames VASL conversion by Tim Fachko based on the original art by C Kibler
 	v1.1 Oct 2018 fixes missing H4 walls
 	v2.0 Jan 2026 LOS enabled by Gordon Molek
+	v2.1 Feb 2026 Metadata cleanup by Gordon Molek
+	v2.2 May 2026 Missing orchards corrected by Gordon Molek
 -->
 <boardMetadata
 	name="HT"
-	version="2.0"
-	versionDate="Jan 2026"
+	version="2.2"
+	versionDate="May 2026"
 	author="TJ (LOS enabled by GM)"
 	boardImageFileName="bdHT.gif"
 	hasHills="FALSE"
@@ -72,17 +74,6 @@
 			elevation - the base elevation of the terrain
 			
 		-->
-		<color name="HedgeGreen" red="0" green="99" blue="0" terrain="Hedge" elevation="0" />
-		<color name="Church" red="0" green="132" blue="132" terrain="Stone Building, 2 Level" elevation="0" />
-		<color name="WallBrown" red="66" green="66" blue="66" terrain="Wall" elevation="0" />
-		<color name="StoneBldg1" red="99" green="99" blue="99" terrain="Stone Building" elevation="0" />
-		<color name="OrchL0" red="136" green="112" blue="74" terrain="Orchard, Out of Season" elevation="0" />
-		<color name="StoneBldg2" red="148" green="148" blue="148" terrain="Stone Building, 1 Level" elevation="0" />
-		<color name="WoodsL0" red="165" green="173" blue="99" terrain="Woods" elevation="0" />
-		<color name="WoodBldg1" red="189" green="99" blue="8" terrain="Wooden Building" elevation="0" />
-		<color name="GraveyardGreen" red="189" green="206" blue="189" terrain="Graveyard" elevation="0" />
-		<color name="DirtRdL0" red="239" green="231" blue="206" terrain="Dirt Road" elevation="0" />
-		<color name="Level0" red="247" green="255" blue="247" terrain="Open Ground" elevation="0" />
 	</colors>
 	
 	<colorSSRules>
