@@ -226,9 +226,24 @@
     <hexside name="Hedge Overlay" terrain="Hedge" ca="2"/>
     <hexside name="Wall Overlay" terrain="Wall" ca="6"/>
     <hexside name="Bocage Overlay" terrain="Bocage" ca="1"/>
-    <hexside name="StoneBreach Rowhouse Overlay" terrain="Breach" hside="1"/>
-    <hexside name="Wood Breach Rowhouse Overlay" terrain="Breach" hside="1"/>
-    <hexside name="Rowhouse Bar Overlay" terrain="Rowhouse Wall" hside="1"/>
+    <hexside name="StoneBreach Rowhouse Overlay 0" terrain="Breach" hside="0"/>
+    <hexside name="StoneBreach Rowhouse Overlay 1" terrain="Breach" hside="1"/>
+    <hexside name="StoneBreach Rowhouse Overlay 2" terrain="Breach" hside="2"/>
+    <hexside name="StoneBreach Rowhouse Overlay 3" terrain="Breach" hside="3"/>
+    <hexside name="StoneBreach Rowhouse Overlay 4" terrain="Breach" hside="4"/>
+    <hexside name="StoneBreach Rowhouse Overlay 5" terrain="Breach" hside="5"/>
+    <hexside name="Wood Breach Rowhouse Overlay 0" terrain="Breach" hside="0"/>
+    <hexside name="Wood Breach Rowhouse Overlay 1" terrain="Breach" hside="1"/>
+    <hexside name="Wood Breach Rowhouse Overlay 2" terrain="Breach" hside="2"/>
+    <hexside name="Wood Breach Rowhouse Overlay 3" terrain="Breach" hside="3"/>
+    <hexside name="Wood Breach Rowhouse Overlay 4" terrain="Breach" hside="4"/>
+    <hexside name="Wood Breach Rowhouse Overlay 5" terrain="Breach" hside="5"/>
+    <hexside name="Rowhouse Bar Overlay 0" terrain="Rowhouse Wall" hside="0"/>
+    <hexside name="Rowhouse Bar Overlay 1" terrain="Rowhouse Wall" hside="1"/>
+    <hexside name="Rowhouse Bar Overlay 2" terrain="Rowhouse Wall" hside="2"/>
+    <hexside name="Rowhouse Bar Overlay 3" terrain="Rowhouse Wall" hside="3"/>
+    <hexside name="Rowhouse Bar Overlay 4" terrain="Rowhouse Wall" hside="4"/>
+    <hexside name="Rowhouse Bar Overlay 5" terrain="Rowhouse Wall" hside="5"/>
 
     <wreck name="Wreck"/>
     <wreck name="Burnt Out Wreck"/>

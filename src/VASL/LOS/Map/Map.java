@@ -2349,6 +2349,8 @@ public class Map  {
          * 3. targetHex is not depression terrain and adjacent hex is depression terrain and hexside is a depression hexside (base heihts are equal else first test would have been true
          */
         public boolean enterHexsideIsCrest() {
+            //error handling
+            if (targetHex == null){return false;}
             if((targetEnterHexsides[0] != NONE && targetHex.getBaseLevelofHex() !=  getAdjacentHex(targetHex, targetEnterHexsides[0]).getBaseLevelofHex()) ||
                     (targetEnterHexsides[0] != NONE &&
                             (targetHex.isDepressionTerrain() && targetHex.getHexsideLocation(targetEnterHexsides[0]).isDepressionTerrain()  && !getAdjacentHex(targetHex, targetEnterHexsides[0]).isDepressionTerrain()) ||
@@ -2834,6 +2836,7 @@ public class Map  {
                         }
                     }
                 }
+                status.currentTerrainHgt = status.currentTerrain.getHeight();
                 break;
             }
         }
@@ -2945,7 +2948,8 @@ public class Map  {
         }
         return false;
     }
-
+    // this handles terrain overlay counters from the draggable overlays window; mostly one hex in size
+    // it does NOT handle overlays added via boardPicker
     protected Terrain getTerrainFromOverlayImage(LOSStatus status, GamePiece overlaypiece, int hexside){
         Terrain imageterrain = null;
         Point imagepoint = new Point();
@@ -2972,12 +2976,16 @@ public class Map  {
                 else if (color.equals(Color.BLACK) && overlaypiece.getName().contains("StoneBreach")) {
                     imageterrain = getTerrain("Breach");
                 }
+                else if (color.equals(Color.BLACK) ) {
+                    imageterrain = getTerrain("Open Ground");
+                }
                 else {
                     imageterrain = getOverlayTerrainfromColor(color, status);
                     if (imageterrain.isBuilding() &&
                       (overlaypiece.getName().contains("StoneBreach")) || overlaypiece.getName().contains("Wood Breach")) {
                         imageterrain = getTerrain("Breach");
                     }
+
                 }
             } else {
                 // if overlay pixel is transparent use underlying map terrain
