@@ -136,8 +136,10 @@ public class VASLGameInterface {
      * @param piece the piece
      */
     private void updatePiece(GamePiece piece) {
-
+        int newcounter = 0;
         // determine what hex and location the piece is in
+        if (piece.getName().contains("Control") || piece.getName().contains("Blank") || piece.getName().contains("Perimeter") ||
+        piece.getName().contains("perimeter") || piece.getName().contains("Fortified") || piece.getName().contains("Hex Grid")){return;}
         Point p = piece.getPosition();
         p.translate(-gameMap.getEdgeBuffer().width, -gameMap.getEdgeBuffer().height);
         if (p == null || !LOSMap.onMap(p.x, p.y) || LOSMap.gridToHex(p.x, p.y) == null ) {return;} // error handling - no point or point not on map or not in a hex
@@ -159,7 +161,7 @@ public class VASLGameInterface {
 
         // add the piece
         if (!Boolean.TRUE.equals(piece.getProperty(Properties.INVISIBLE_TO_ME))) {
-
+            newcounter++;
             CounterMetadata counter = counterMetadata.get(name);
             if (counter == null) {
                 if (name.contains("Hedge Overlay")) {
@@ -181,6 +183,11 @@ public class VASLGameInterface {
                 } else if (name.contains("Wood Breach")) {
                     name = "Wood Breach Rowhouse Overlay";
                 }
+                String sidenum = null;
+                if (hexside != -1) {
+                    sidenum = " " + String.valueOf(hexside) ;
+                }
+                if (sidenum != null) {name += sidenum;}
                 counter = counterMetadata.get(name);
             }
             if(counter != null) {

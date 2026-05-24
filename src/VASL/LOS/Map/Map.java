@@ -2948,7 +2948,8 @@ public class Map  {
         }
         return false;
     }
-
+    // this handles terrain overlay counters from the draggable overlays window; mostly one hex in size
+    // it does NOT handle overlays added via boardPicker
     protected Terrain getTerrainFromOverlayImage(LOSStatus status, GamePiece overlaypiece, int hexside){
         Terrain imageterrain = null;
         Point imagepoint = new Point();

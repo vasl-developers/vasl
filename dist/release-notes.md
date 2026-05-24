@@ -1,5 +1,5 @@
 # Release Notes: Version 6.7.4-beta1
-**Release Date:** May 6, 2026
+**Release Date:** May 24, 2026
 
 
 
@@ -13,7 +13,7 @@
 
 ## 🛠 Bug Fixes
  - Fix 1: HexGrid counter Nudge working
- - Fix 2: 
+ - Fix 2: LOS bugs with hexside overlay counters (walls, hedges, bocage) fixed
  - Fix 3: 
 ---
 
