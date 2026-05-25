@@ -14,7 +14,7 @@
 ## 🛠 Bug Fixes
  - Fix 1: HexGrid counter Nudge working
  - Fix 2: LOS bugs with hexside overlay counters (walls, hedges, bocage) fixed
- - Fix 3: 
+ - Fix 3: CTRL+Numpad Move bug
 ---
 
 ## 📈 Improvements

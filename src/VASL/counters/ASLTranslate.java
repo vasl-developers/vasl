@@ -182,7 +182,7 @@ public class ASLTranslate extends Translate {
           mchat.send("Key Combos (CTRL + Arrow or Numpad) cannot move units on this map. Drag and Drop instead!");
       }
       else {
-          if (b != null && ((HexGrid) mgrid).getHexSize() != ASLBoard.DEFAULT_HEX_HEIGHT) {
+          if (((HexGrid) mgrid).getHexSize() != ASLBoard.DEFAULT_HEX_HEIGHT) {
               int x = p.x;
               int y = p.y;
               super.translate(p);
@@ -190,7 +190,7 @@ public class ASLTranslate extends Translate {
               p.x = x + (int) Math.round(scale * (p.x - x));
               p.y = y + (int) Math.round(scale * (p.y - y));
           } else {
-              //super.translate(p);
+              super.translate(p);
           }
       }
   } 
