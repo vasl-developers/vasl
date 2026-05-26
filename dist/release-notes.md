@@ -16,17 +16,12 @@
  - Fix 2: LOS bugs with hexside overlay counters (walls, hedges, bocage) fixed
  - Fix 3: CTRL+Numpad Move bug
  - Fix 4: Hatten LOS bugs fixed
+ - Fix 5: Disappearing concealed 5/8 counters when rotating fixed
 ---
 
 ## 📈 Improvements
- - Improvement 1: Preserve Elevation with Overlays now hides underlying terrain 
+ - Improvement 1: Preserve Elevation with Overlays now hides underlying terrain and persists across sessions
  - Improvement 2: Can now set building type for each hex of mixed building overlays
- - Improvement 3: 
- - Improvement 4: 
- - Improvement 5: 
- - Improvement 6: 
- - Improvement 7: 
- - Improvement 8: 
 ---
 
 ## ⚠️ Compatibility Notes
