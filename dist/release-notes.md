@@ -17,6 +17,7 @@
  - Fix 3: CTRL+Numpad Move bug
  - Fix 4: Hatten LOS bugs fixed
  - Fix 5: Disappearing concealed 5/8 counters when rotating fixed
+ - Fix 6: Reduce text on the various Human Wave counters so they fit on the counters
 ---
 
 ## 📈 Improvements
