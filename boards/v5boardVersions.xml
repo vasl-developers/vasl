@@ -499,7 +499,7 @@
 		<boarddata name="TR6" version="2.0" versionDate="2008/08/30" description="" boardType="Geoboard" publisher="Tom Repetti" issued="" />
 		<boarddata name="TR7" version="2.0" versionDate="2008/08/30" description="" boardType="Geoboard" publisher="Tom Repetti" issued="" />
 		<boarddata name="TR8" version="2.0" versionDate="2008/08/30" description="" boardType="Geoboard" publisher="Tom Repetti" issued="" />
-		<boarddata name="HT" version="2.0" versionDate="2026/01/30" description="Hatten in Flames" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="HT" version="2.2" versionDate="2026/05/26" description="Hatten in Flames" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="RM" version="1.0" versionDate="2020/04/30" description="Race for the Meuse" boardType="HASL" publisher="LCP" issued="" />
 		<boarddata name="KBR" version="1.0" versionDate="2020/04/30" description="Königsberg – The Bear’s Revenge" boardType="HASL" publisher="LCP" issued="" />
 		<boarddata name="Eagles" version="1.0" versionDate="2020/09/30" description="Where the Half-Squads Dare" boardType="HASL" publisher="Grumble Jones" issued="" />
