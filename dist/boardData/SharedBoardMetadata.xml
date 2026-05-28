@@ -1926,7 +1926,7 @@
 		<terrainType name="Volga Pier" typeCode="209" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="0" mapColorRed="255" mapColorGreen="255" mapColorBlue="137" LOSCategory="OTHER"  />
 		<terrainType name="Gutted Building Wall, 1 Level" typeCode="210" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="1" mapColorRed="1" mapColorGreen="1" mapColorBlue="0" LOSCategory="BUILDING"  />
 		<terrainType name="Gutted Building Wall, 2 Level" typeCode="211" isLOSObstacle="TRUE" isLOSHindrance="FALSE" isHalfLevelHeight="TRUE" isInherentTerrain="FALSE" split="0.0" isLowerLOSObstacle="TRUE" isLowerLOSHindrance="FALSE" height="2" mapColorRed="1" mapColorGreen="1" mapColorBlue="0" LOSCategory="BUILDING"  />
-
+		<terrainType name="Dense Orchard" typeCode="212" isLOSObstacle="FALSE" isLOSHindrance="TRUE" isHalfLevelHeight="FALSE" isInherentTerrain="TRUE" split="0.5" isLowerLOSObstacle="FALSE" isLowerLOSHindrance="TRUE" height="1" mapColorRed="52" mapColorGreen="164" mapColorBlue="52" LOSCategory="OTHER"  />
 
 		<!--ToDo VASL code may hit a bug if typeCode > 255 OR if there are more than 255 terrainTypes - need to test and change code -->
 	</terrainTypes>

@@ -39,7 +39,7 @@
 		<boarddata name="07" version="6.7" versionDate="2025/02/03" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="08" version="7.4" versionDate="2025/10/26" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="09" version="7.4" versionDate="2025/01/22" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="10" version="7.1" versionDate="2026/04/11" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="10" version="7.2" versionDate="2026/05/20" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="10z" version="7.2" versionDate="2026/04/11" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="11" version="7.1" versionDate="2026/04/11" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="12" version="6.9" versionDate="2025/01/14" description="" boardType="Geoboard" publisher="MMP" issued="" />
@@ -82,7 +82,7 @@
 		<boarddata name="47" version="7.5" versionDate="2025/10/28" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="48" version="6.6" versionDate="2023/10/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="49" version="6.8" versionDate="2025/10/27" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="50" version="7.2" versionDate="2025/10/27" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="50" version="7.3" versionDate="2026/05/20" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="51" version="6.7" versionDate="2026/04/13" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="52" version="6.5" versionDate="2022/04/30" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="53" version="7.1" versionDate="2026/04/13" description="" boardType="Geoboard" publisher="MMP" issued="" />
@@ -138,7 +138,7 @@
 		<boarddata name="3b" version="7.1" versionDate="2023/11/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
 		<boarddata name="4a" version="7.0" versionDate="2026/03/25" description="" boardType="Double-sided" publisher="MMP" issued="" />
 		<boarddata name="4b" version="7.2" versionDate="2026/03/25" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="5a" version="7.0" versionDate="2025/10/27" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="5a" version="7.1" versionDate="2026/05/18" description="" boardType="Double-sided" publisher="MMP" issued="" />
 		<boarddata name="5b" version="7.0" versionDate="2025/10/27" description="" boardType="Double-sided" publisher="MMP" issued="" />
 		<boarddata name="6a" version="6.9" versionDate="2023/11/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
 		<boarddata name="6b" version="6.9" versionDate="2023/11/30" description="" boardType="Double-sided" publisher="MMP" issued="" />
@@ -321,7 +321,7 @@
 		<!--# NG = 1.0 duplicate -->
 		<!--<boarddata name="RBv2" version="2.4" versionDate="2021/06/30" description="Red Barricades" boardType="HASL" publisher="MMP" issued="" /> -->
 		<boarddata name="RBv3" version="6.5" versionDate="2025/02/10" description="Red Barricades" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="RO" version="6.3" versionDate="2025/02/10" description="Red October" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="RO" version="6.4" versionDate="2026/05/13" description="Red October" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="KR" version="6.0" versionDate="2021/06/30" description="Kakazu Ridge" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="GT" version="1.0" versionDate="2008/08/30" description="Gavatu-Tanambogo" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="CH" version="0.93" versionDate="2008/08/30" description="Cheneux (KGP II)" boardType="HASL" publisher="MMP" issued="" />
@@ -499,7 +499,7 @@
 		<boarddata name="TR6" version="2.0" versionDate="2008/08/30" description="" boardType="Geoboard" publisher="Tom Repetti" issued="" />
 		<boarddata name="TR7" version="2.0" versionDate="2008/08/30" description="" boardType="Geoboard" publisher="Tom Repetti" issued="" />
 		<boarddata name="TR8" version="2.0" versionDate="2008/08/30" description="" boardType="Geoboard" publisher="Tom Repetti" issued="" />
-		<boarddata name="HT" version="2.0" versionDate="2026/01/30" description="Hatten in Flames" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="HT" version="2.2" versionDate="2026/05/26" description="Hatten in Flames" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="RM" version="1.0" versionDate="2020/04/30" description="Race for the Meuse" boardType="HASL" publisher="LCP" issued="" />
 		<boarddata name="KBR" version="1.0" versionDate="2020/04/30" description="Königsberg – The Bear’s Revenge" boardType="HASL" publisher="LCP" issued="" />
 		<boarddata name="Eagles" version="1.0" versionDate="2020/09/30" description="Where the Half-Squads Dare" boardType="HASL" publisher="Grumble Jones" issued="" />

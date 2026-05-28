@@ -84,7 +84,8 @@ public class Concealable extends Obscurable implements EditablePiece {
   }
 
   protected void drawObscuredToMe(Graphics g, int x, int y, Component obs, double zoom) {
-    if (obs == null) {return;} // error handling - if obs is null then loadImages(obs) will cause NPE
+    //if (obs == null) {
+    //  return;} // error handling - if obs is null then loadImages(obs) will cause NPE
     loadImages(obs);
     int size = (int) (zoom * imageSize.width);
 
@@ -100,7 +101,8 @@ public class Concealable extends Obscurable implements EditablePiece {
   }
 
   protected void drawObscuredToOthers(Graphics g, int x, int y, Component obs, double zoom) {
-    // if (obs == null) {return;} // error handling - if obs is null then loadImages(obs) will cause NPE
+    //if (obs == null) {
+    //  return;} // error handling - if obs is null then loadImages(obs) will cause NPE
     loadImages(obs);
     piece.draw(g, x, y, obs, zoom);
     int size = (int) (zoom * imageSize.width);
@@ -314,10 +316,23 @@ public class Concealable extends Obscurable implements EditablePiece {
         }
         else {
           //imageSize.setSize(0, 0);
-          concealedToMe = obs.createImage(20, 20);
-          java.awt.Graphics g = concealedToMe.getGraphics();
-          g.drawString("?", 0, 0);
-
+          //May 2026 use code from concealedToOthers if obs is null
+          if (obs != null) {
+            concealedToMe = obs.createImage(20, 20);
+            java.awt.Graphics g = concealedToMe.getGraphics();
+            g.drawString("?", 0, 0);
+          }
+          else {
+            concealedToMe = Op.load(nation + "/" + nation + "qmarkme.svg").getImage();
+            if (concealedToMe == null) {
+              // Using generic qmarkme.gif image and prefs-specified colors
+              BufferedImage rev = new BufferedImage(20, 20, BufferedImage.TYPE_4BYTE_ABGR);
+              final Graphics2D g = rev.createGraphics();
+              g.drawString("?", 0, 0);
+              concealedToMe = rev;
+              g.dispose();
+            }
+          }
         }
       //}
       //catch (Exception ex) {

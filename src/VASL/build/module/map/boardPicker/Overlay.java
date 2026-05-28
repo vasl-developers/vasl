@@ -90,12 +90,13 @@ public class Overlay implements Cloneable {
             throw new BoardException("Incorrect path name for overlay. Confirm name and retry to add overlay.");
         }
         readData();
-        transform(persistelevation);
+
         try {
             setBounds();
         } catch (BadCoords e) {
             throw new BoardException(e.getMessage());
         }
+        transform(persistelevation);
         check();
     }
 
@@ -557,7 +558,7 @@ public class Overlay implements Cloneable {
         if (!persistelevation) {
             return;
         }
-        // new transform to support preserve elevation
+        // new transform to support  preserve elevation
         try {
             readMetadata();
         }
@@ -566,9 +567,7 @@ public class Overlay implements Cloneable {
         }
         final Image i = getImage();
         // error handling
-        if (i == null) {
-            return;
-        }
+        if (i == null) {return;}
         // get the image as a buffered image
         BufferedImage bi = new BufferedImage(i.getWidth(null), i.getHeight(null), BufferedImage.TYPE_INT_ARGB);
         Rectangle ovrRec = bounds();
@@ -582,14 +581,33 @@ public class Overlay implements Cloneable {
         int currentheight = 0;
         for (currentwidth = 0; currentwidth < bi.getWidth(); currentwidth++) {
             for (currentheight = 0; currentheight < bi.getHeight(); currentheight++) {
+
                 c = bi.getRGB(currentwidth, currentheight);
                 if ((c >> 24) != 0x00) { // not a transparent pixel
                     //Retrieving the R G B values
                     Color color = getRGBColor(c);
                     terr = getOverlayTerrainfromColor(color);
-                    if (terr == null || (terr.getLOSCategory() == Terrain.LOSCategories.OPEN && !(getName().contains("og")))) {
-                        int transparentWhite = 0x00FFFFFF;
-                        bi.setRGB(currentwidth, currentheight, transparentWhite);
+                    if (terr != null) {
+                        if (terr.getLOSCategory() == Terrain.LOSCategories.OPEN && !(getName().contains("og"))) {  //need to allow OpenGround overlays to work
+                            int transparentWhite = 0x00FFFFFF;
+                            bi.setRGB(currentwidth, currentheight, transparentWhite);
+                            // now need to check for board terrain that should become openground at level
+                            // read the board image
+                            BufferedImage boardImage = board.getVASLBoardArchive().getBoardImage();
+                            int x = (int) boundaries.getX() + currentwidth;
+                            int y = (int) boundaries.getY() + currentheight;
+                            int boardc = boardImage.getRGB(x, y);
+                            Color boardcolor = getRGBColor(boardc);
+                            Terrain boardterr = getOverlayTerrainfromColor(boardcolor);
+                            //test if should be replaced
+                            if (boardterr != null) {
+                                if (!(boardterr.getLOSCategory() == Terrain.LOSCategories.OPEN)) { //
+                                    // update bi pixel with OG-level color
+                                    c = getOGLevel(boardImage, x, y);
+                                    bi.setRGB(currentwidth, currentheight, c);
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -597,8 +615,58 @@ public class Overlay implements Cloneable {
         setImage(bi);
     }
 
-    /* Methods getRGBColor, getOverlayTerrainfromColor, readMetaData, getOverlayTerrain, and SetTerrain were added
-     * in December 2025 to support the PreserveElevation functionality when adding overlays to a board
+    public int getOGLevel(BufferedImage boardImage, int x, int y) {
+
+        int transparentWhite = 0x00FFFFFF;
+        try {
+
+            // Define starting point and radius
+            int startX = x;
+            int startY = y;
+            int radius = 3;
+
+            // Define the bounding box limits
+            int startXLimit = Math.max(0, startX - radius);
+            int endXLimit = Math.min(boardImage.getWidth() - 1, startX + radius);
+            int startYLimit = Math.max(0, startY - radius);
+            int endYLimit = Math.min(boardImage.getHeight() - 1, startY + radius);
+
+            // Pre-calculate squared radius for highly efficient math
+            double radiusSquared = radius * radius;
+
+            // Loop through the bounding box
+            for (int posy = startYLimit; posy <= endYLimit; posy++) {
+               for (int posx = startXLimit; posx <= endXLimit; posx++) {
+
+                    // Calculate squared distance from starting point
+                    double dx = posx - startX;
+                    double dy = posy - startY;
+                    double distanceSquared = (dx * dx) + (dy * dy);
+
+                    // Check if pixel is within the radius
+                    if (distanceSquared <= radiusSquared) {
+                        // Extract pixel color
+                        int rgb = boardImage.getRGB(posx, posy);
+                        Color color = new Color(rgb); // , true);
+                        // Execute custom pixel test logic here
+                        Terrain testterr = getOverlayTerrainfromColor(color);
+                        if (testterr.getLOSCategory() == Terrain.LOSCategories.OPEN || getName().contains("og")){
+                            return rgb;
+                        }
+                    }
+               }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return transparentWhite;
+        }
+        return transparentWhite;
+    }
+
+    /* Methods getRGBColor, getOverlayTerrainfromColor, readMetaData, getOverlayTerrain,
+     * SetTerrain, getElevationforColor, and  were added
+     * in December 2025/ May 2026 to support the PreserveElevation functionality when adding overlays to a board
      * They are copied (with adjustments) from other classes not available to Overlay at the point at which
      * they are required (especially when starting a new game).
      * As the LOS code continues to be reworked, it may be possible to access the methods from their original
@@ -666,5 +734,29 @@ public class Overlay implements Cloneable {
         for(String name : nameMap.keySet()) {
             terrainList[nameMap.get(name).getType()] = nameMap.get(name);
         }
+    }
+
+    /**
+     * Gets the elevation for the given color
+     * @param color the board color
+     * @return the elevation
+     */
+    public int getElevationForColor(Color color) {
+
+        int elevint =0;
+        LinkedHashMap<Color, String> colorToVASLColorName = new LinkedHashMap<Color, String>(100);
+        colorToVASLColorName.putAll(sharedBoardMetadata.getColorToVASLColorName());
+        String vaslcolor = colorToVASLColorName.get(color);
+        if (vaslcolor == null) {
+            return BoardMetadata.NO_ELEVATION;
+        }
+        String vaslColorElevation = sharedBoardMetadata.getBoardColors().get(vaslcolor).getElevation();
+        if(vaslColorElevation.equals(BoardMetadata.UNKNOWN)) {
+            return BoardMetadata.NO_ELEVATION;
+        }
+        else {
+            elevint = Integer.parseInt(vaslColorElevation);
+        }
+        return elevint;
     }
 }

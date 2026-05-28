@@ -617,7 +617,7 @@ public class Map  {
                 }
             }
         } if (boardarchive.getBoardName().contains("RO")) {
-            if (this.A1CenterY == 0) {  //topleft is half height
+            if (this.A1CenterY == 0 || this.A1CenterY == 65) {  //topleft is half height
                 for (int col = 0; col < (startcol + this.width); col++) {
                     hexGrid[col] = new Hex[this.height];  // + (col % 2)]; // add 1 if odd
                     for (int row = 0; row < (startrow + this.height); row++) { // + (col % 2)); row++) {
@@ -644,24 +644,23 @@ public class Map  {
                 }
             }
         }
-        else if (boardarchive.getBoardName().contains("HT")){
-            if (this.A1CenterY== this.hexHeight / 2) {
-                for (int col = 0; col < (startcol + this.width); col++) {
-                    hexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
-                    for (int row = 0; row < (startrow + this.height + (col % 2)); row++) {
-                        if (col >= startcol && row >= startrow) {
-                            hexGrid[col - startcol][row- startrow] = new Hex(col - startcol, row - startrow, getGEOHexName(col, row, false, false), getHexCenterPoint(col - startcol, row - startrow), hexHeight, hexWidth, this, 0, terrainList[0]);
-                        }
-                    }
-                }
-            }
-            else if (this.A1CenterY==0){
+        else if (boardarchive.getBoardName().contains("HT")) {
+            if (this.A1CenterY == 0) { // Cropped board
                 int evencol =0;
                 for (int col = 0; col < this.width; col++) {
                     evencol = col % 2 == 0 ? 1 : 0;
                     hexGrid[col] = new Hex[this.height + evencol]; // add 1 if even
                     for (int row = 0; row < this.height + evencol; row++) {
                         hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                    }
+                }
+            } else { // uncropped board
+                for (int col = 0; col < (startcol + this.width); col++) {
+                    hexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
+                    for (int row = 0; row < (startrow + this.height + (col % 2)); row++) {
+                        if (col >= startcol && row >= startrow) {
+                            hexGrid[col - startcol][row- startrow] = new Hex(col - startcol, row - startrow, getGEOHexName(col, row, false, false), getHexCenterPoint(col - startcol, row - startrow), hexHeight, hexWidth, this, 0, terrainList[0]);
+                        }
                     }
                 }
             }
@@ -807,6 +806,32 @@ public class Map  {
                     hexGrid[col][row].resetHexsideLocationNames();
                 }
             }
+        } else if (boardarchive.getBoardName().contains("FB")) {
+            if (this.A1CenterY == 0) { // Cropped board
+                int evencol =0;
+                for (int col = 0; col < this.width; col++) {
+                    evencol = col % 2 == 0 ? 1 : 0;
+                    hexGrid[col] = new Hex[this.height + evencol]; // add 1 if even
+                    for (int row = 0; row < this.height + evencol; row++) {
+                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                    }
+                }
+            } else { // uncropped board
+                for (int col = 0; col < (startcol + this.width); col++) {
+                    hexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
+                    for (int row = 0; row < (startrow + this.height + (col % 2)); row++) {
+                        if (col >= startcol && row >= startrow) {
+                            hexGrid[col - startcol][row- startrow] = new Hex(col - startcol, row - startrow, getGEOHexName(col, row, false, false), getHexCenterPoint(col - startcol, row - startrow), hexHeight, hexWidth, this, 0, terrainList[0]);
+                        }
+                    }
+                }
+            }
+            // reset the hex locations to map grid
+            for (int col = 0; col < hexGrid.length; col++) {
+                for (int row = 0; row < hexGrid[col].length; row++) {
+                    hexGrid[col][row].resetHexsideLocationNames();
+                }
+            }
         }
         else {
             return null;
@@ -872,7 +897,7 @@ public class Map  {
         //have a separate loop for non-standard boards
         //Dinant follows standard board layout and so can be treated as geo
         if (b.getName().equals("RBv3") || b.getName().equals("RO") || b.getName().equals("DaE") ||
-                 b.getName().equals("SG") || b.getName().equals("VotG")) { //b.getName().equals("Dinant") ||
+                 b.getName().equals("SG") || b.getName().equals("VotG") || b.getName().equals("FB")) { //b.getName().equals("Dinant") ||
             createtheHASLHexGrid(b);
             return;
         }
@@ -913,7 +938,7 @@ public class Map  {
         //Dinant follows standard board layout and so can be treated as geo
         if (b.getName().equals("RBv3") || b.getName().equals("RO") || b.getName().equals("DaE") ||
                 b.getName().equals("SG") || b.getName().equals("HT") || b.getName().equals("VotG") ||
-                b.getName().equals("SaPF")) {
+                b.getName().equals("SaPF") || b.getName().equals("FB")) {
             createtheHASLHexGrid(b);
         }
         // at this point the terrainGrid, elevationGrid and HexGrid are created but hold no los data
@@ -948,7 +973,7 @@ public class Map  {
         //Dinant follows standard board layout and so can be treated as geo
         if (boardarchive.getBoardName().equals("RBv3") || boardarchive.getBoardName().equals("RO") || boardarchive.getBoardName().equals("DaE") ||
                 boardarchive.getBoardName().equals("SG") || boardarchive.getBoardName().equals("HT") || boardarchive.getBoardName().equals("VotG") ||
-                boardarchive.getBoardName().equals("SaPF") || boardarchive.getBoardName().equals("BRT")) {
+                boardarchive.getBoardName().equals("SaPF") || boardarchive.getBoardName().equals("BRT") || boardarchive.getBoardName().equals("FB")) {
 
             createtheHASLHexGrid(boardarchive);
         }
@@ -2324,6 +2349,8 @@ public class Map  {
          * 3. targetHex is not depression terrain and adjacent hex is depression terrain and hexside is a depression hexside (base heihts are equal else first test would have been true
          */
         public boolean enterHexsideIsCrest() {
+            //error handling
+            if (targetHex == null){return false;}
             if((targetEnterHexsides[0] != NONE && targetHex.getBaseLevelofHex() !=  getAdjacentHex(targetHex, targetEnterHexsides[0]).getBaseLevelofHex()) ||
                     (targetEnterHexsides[0] != NONE &&
                             (targetHex.isDepressionTerrain() && targetHex.getHexsideLocation(targetEnterHexsides[0]).isDepressionTerrain()  && !getAdjacentHex(targetHex, targetEnterHexsides[0]).isDepressionTerrain()) ||
@@ -2809,6 +2836,7 @@ public class Map  {
                         }
                     }
                 }
+                status.currentTerrainHgt = status.currentTerrain.getHeight();
                 break;
             }
         }
@@ -2920,7 +2948,8 @@ public class Map  {
         }
         return false;
     }
-
+    // this handles terrain overlay counters from the draggable overlays window; mostly one hex in size
+    // it does NOT handle overlays added via boardPicker
     protected Terrain getTerrainFromOverlayImage(LOSStatus status, GamePiece overlaypiece, int hexside){
         Terrain imageterrain = null;
         Point imagepoint = new Point();
@@ -2947,12 +2976,16 @@ public class Map  {
                 else if (color.equals(Color.BLACK) && overlaypiece.getName().contains("StoneBreach")) {
                     imageterrain = getTerrain("Breach");
                 }
+                else if (color.equals(Color.BLACK) ) {
+                    imageterrain = getTerrain("Open Ground");
+                }
                 else {
                     imageterrain = getOverlayTerrainfromColor(color, status);
                     if (imageterrain.isBuilding() &&
                       (overlaypiece.getName().contains("StoneBreach")) || overlaypiece.getName().contains("Wood Breach")) {
                         imageterrain = getTerrain("Breach");
                     }
+
                 }
             } else {
                 // if overlay pixel is transparent use underlying map terrain
