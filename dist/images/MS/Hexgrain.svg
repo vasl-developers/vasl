@@ -2,7 +2,7 @@
 <svg width="48" height="48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<!--
 		Name:		Hexgrain
-		Version:	0.1
+		Version:	1.1
 		
 		Author(s): Gordon Molek, Klas Malmström, Alan Bills
 		Tester(s): Alan Bills, Alan Cannamore, Doug Rimmer
@@ -59,9 +59,9 @@
 		</g>
 	</g>
 	
-	<text x="50%" y="30.0%" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:ultra-condensed;text-anchor:middle;fill:#ffffff;fill-opacity:1;font-family:Nimbus Sans L">HEX Grain</text>
-	<text x="50%" y="52.0%" style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:ultra-condensed;text-anchor:middle;fill:#ffffff;fill-opacity:1;font-family:Nimbus Sans L">Range</text>
-	<text x="50%" y="72.5%" style="font-size:10px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:ultra-condensed;text-anchor:middle;fill:#ffffff;fill-opacity:1;font-family:Nimbus Sans L">Inc Rng to HW</text>
-	<text x="50%" y="90.0%" style="font-size:10px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:ultra-condensed;text-anchor:middle;fill:#ffffff;fill-opacity:1;font-family:Nimbus Sans L">hexgrain NA</text>
+	<text x="50%" y="30.0%" style="font-size:9px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:ultra-condensed;text-anchor:middle;fill:#ffffff;fill-opacity:1;font-family:Nimbus Sans L">HEX Grain</text>
+	<text x="50%" y="52.0%" style="font-size:9px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:ultra-condensed;text-anchor:middle;fill:#ffffff;fill-opacity:1;font-family:Nimbus Sans L">Range</text>
+	<text x="50%" y="72.5%" style="font-size:6px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:ultra-condensed;text-anchor:middle;fill:#ffffff;fill-opacity:1;font-family:Nimbus Sans L">Inc Rng to HW</text>
+	<text x="50%" y="90.0%" style="font-size:6px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:ultra-condensed;text-anchor:middle;fill:#ffffff;fill-opacity:1;font-family:Nimbus Sans L">hexgrain NA</text>
 	
 </svg>

@@ -1,0 +1,9 @@
+<SSRControls>
+ <Option name="Board 50 Special Overlays">
+ 
+  <Checkbox name="">
+         <entry name="AP112: First Ally" rule="SSO_AP112_50" text="AP112 SSO"/>
+  </Checkbox>
+
+ </Option>
+</SSRControls>

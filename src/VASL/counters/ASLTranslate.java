@@ -166,7 +166,7 @@ public class ASLTranslate extends Translate {
       MapGrid mgrid; VASSAL.build.module.Chatter mchat;
       // test for situations where Key Combos won't work: b is null; Casbin and Tray extensions (?) which don't have hexgrid
       if (b == null) {
-          // do nothing
+          super.translate(p);
           return;
       }
       else {
@@ -182,7 +182,7 @@ public class ASLTranslate extends Translate {
           mchat.send("Key Combos (CTRL + Arrow or Numpad) cannot move units on this map. Drag and Drop instead!");
       }
       else {
-          if (b != null && ((HexGrid) mgrid).getHexSize() != ASLBoard.DEFAULT_HEX_HEIGHT) {
+          if (((HexGrid) mgrid).getHexSize() != ASLBoard.DEFAULT_HEX_HEIGHT) {
               int x = p.x;
               int y = p.y;
               super.translate(p);
