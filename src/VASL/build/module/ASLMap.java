@@ -2142,23 +2142,25 @@ public class ASLMap extends Map {
         java.util.Map<Point, Integer> pieceMap = new HashMap<Point, Integer>();
         for (int i = 0; i < stack.length; ++i) {
             // increment the count of pieces at this point
-            String name = stack[i].getName();
-            Stack s = null;
-            if (stack[i] instanceof Stack) {
-                s = (Stack) stack[i];
-            } else {
-                continue;
+            if (!(stack[i] == null)) { //error handling for NPE issue#2002
+                String name = stack[i].getName();
+                Stack s = null;
+                if (stack[i] instanceof Stack) {
+                    s = (Stack) stack[i];
+                } else {
+                    continue;
+                }
+                int x = s.getPieceCount();
+                if (x == 0 || name.equals(""))
+                    //empty stack, ignore
+                    continue;
+                Point pt = stack[i].getPosition();
+                Integer count = pieceMap.get(pt);
+                if (count == null) {
+                    count = 0;
+                }
+                pieceMap.put(pt, count + 1);
             }
-            int x = s.getPieceCount();
-            if (x == 0 || name.equals(""))
-                //empty stack, ignore
-                continue;
-            Point pt = stack[i].getPosition();
-            Integer count = pieceMap.get(pt);
-            if (count == null) {
-                count = 0;
-            }
-            pieceMap.put(pt, count + 1);
         }
 
         for (int i = 0; i < stack.length; ++i) {
