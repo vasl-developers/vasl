@@ -41,6 +41,7 @@ import VASL.LOS.Map.Location;
 import VASL.LOS.Map.Map;
 import VASL.build.module.ASLMap;
 import VASL.LOS.VASLGameInterface;
+import VASL.build.module.dice.DieColor;
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
@@ -49,8 +50,7 @@ import VASSAL.build.module.map.LOS_Thread;
 import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.build.module.map.boardPicker.board.HexGrid;
 import VASSAL.command.Command;
-import VASSAL.configure.BooleanConfigurer;
-import VASSAL.configure.ColorConfigurer;
+import VASSAL.configure.*;
 
 import static VASSAL.build.GameModule.getGameModule;
 // Needed to enable LOS checking on boards with overlays
@@ -99,6 +99,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
     private Color hindranceColor;
     private Color blockedColor;
     private double magnification;
+    private String opacityValue;
 
     private void setGridSnapToVertex(boolean toVertex) {
         for (Board b : map.getBoards()) {
@@ -293,11 +294,15 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         final ColorConfigurer hindrance = new ColorConfigurer(HINDRANCE_THREAD_COLOR, "Hindrance Thread Color", Color.red);
         final ColorConfigurer blocked = new ColorConfigurer(BLOCKED_THREAD_COLOR, "Blocked Thread Color", Color.blue);
         final BooleanConfigurer verbose = new BooleanConfigurer("verboseLOS", "Verbose LOS mode");
+        final StringEnumConfigurer opacity = new StringEnumConfigurer("CounterOpacity", "Unit opacity % during LOS checks:  ", new String[] { "0", "25", "33", "50", "66", "75", "100" } );
+
         getGameModule().getPrefs().addOption(preferenceTabName, thread);
         getGameModule().getPrefs().addOption(preferenceTabName, enable);
         getGameModule().getPrefs().addOption(preferenceTabName, hindrance);
         getGameModule().getPrefs().addOption(preferenceTabName, blocked);
         getGameModule().getPrefs().addOption(preferenceTabName, verbose);
+        getGameModule().getPrefs().addOption(preferenceTabName, opacity);
+
         final ItemListener l = new ItemListener() {
 
 			public void itemStateChanged(ItemEvent evt) {
@@ -310,6 +315,16 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         enableAll(hindrance.getControls(), Boolean.TRUE.equals(enable.getValue()));
         enableAll(blocked.getControls(), Boolean.TRUE.equals(enable.getValue()));
         enableAll(verbose.getControls(), Boolean.TRUE.equals(enable.getValue()));
+
+        opacity.addPropertyChangeListener(e -> {
+            opacityValue = (String)e.getNewValue();
+
+            if (opacityValue == null) {
+                opacityValue = "33";
+            }
+
+            this.setAttribute("hideOpacity", opacityValue);
+        });
 
         // hook for game opening/closing
         getGameModule().getGameState().addGameComponent(this);

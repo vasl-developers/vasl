@@ -1,5 +1,6 @@
 # Release Notes: Version 6.7.4-beta1
-**Release Date:** May 24, 2026
+**Release Date:** May 28, 2026
+
 
 
 
@@ -18,11 +19,15 @@
  - Fix 4: Hatten LOS bugs fixed
  - Fix 5: Disappearing concealed 5/8 counters when rotating fixed
  - Fix 6: Reduce text on the various Human Wave counters so they fit on the counters
+ - Fix 7: Add alternate hex grain arrows to Human Wave direction counters
+
 ---
 
 ## 📈 Improvements
  - Improvement 1: Preserve Elevation with Overlays now hides underlying terrain and persists across sessions
  - Improvement 2: Can now set building type for each hex of mixed building overlays
+ - Improvement 3: Allow user configurable opacity for counters during LOS checks.
+
 ---
 
 ## ⚠️ Compatibility Notes
