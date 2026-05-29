@@ -11,6 +11,7 @@ import VASSAL.build.AutoConfigurable;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.GameComponent;
+import VASSAL.build.module.GlobalOptions;
 import VASSAL.build.module.Map;
 import VASSAL.build.module.documentation.HelpFile;
 import VASSAL.build.module.map.Drawable;
@@ -537,14 +538,25 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
         if (s.startsWith(COMMAND_PREFIX)) {
 
             // build the player object
+            boolean playerstringvalid = true;  // error handling issue#2014
             String[] strings = s.split(COMMAND_SEPARATOR);
-            HIPFortification.Player thePlayer = new HIPFortification.Player(strings[1], strings[2], strings[3]);
-
-            // add to the players list if necessary
-            if(!players.containsKey(thePlayer.getName())) {
-                players.put(thePlayer.getName(), thePlayer);
+            for (int i=1; i < 5; i++) {
+                if (i > strings.length) {
+                    playerstringvalid = false;
+                }
             }
-            return new HIPFortification.HIPFortificationUpdateCommand(thePlayer);
+            if (playerstringvalid) {
+                HIPFortification.Player thePlayer = new HIPFortification.Player(strings[1], strings[2], strings[3]);
+
+                // add to the players list if necessary
+                if (!players.containsKey(thePlayer.getName())) {
+                    players.put(thePlayer.getName(), thePlayer);
+                }
+                return new HIPFortification.HIPFortificationUpdateCommand(thePlayer);
+            }
+            else {
+                return null;
+            }
         }
         else if (s.startsWith(COMMAND_QUERY)){
             List ownerlist = new List(); List querylist = new List(); List spotterlist = new List();
