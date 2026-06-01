@@ -853,7 +853,7 @@ public class ASLMap extends Map {
                 // set crop variables
                 int boardwidthinhexes = indexOfCol2 - indexOfCol1 + 1;
                 mapheightinhexes = (int) Math.round(mapBoundary.height / b.getHexHeight());
-                if (b.equals(boards.get(0))) {
+                if (!(boards.get(0) == null) && b.equals(boards.get(0))) {  // error handling issue#2012
                     if (toplefthexwidth.contains("HalfHexWidthOffset")) {
                         passA1centerx = b.getA1CenterX(); // board is not cropped on left edge and A1centerx will include offset
                     }
@@ -868,7 +868,7 @@ public class ASLMap extends Map {
                     }
 
                 }
-                if (b.equals(vaslboards.get(0))) {
+                if (!(!(vaslboards.get(0) == null)) && b.equals(vaslboards.get(0))) {  // error handling issue#2012
                     if (toplefthexheight.contains("Offset")) {
                         passA1centery = toplefthexheight.contains("HalfHeight") ? (b.getA1CenterY() - b.getHexHeight() /2) : b.getA1CenterY();
                     } else {
@@ -2142,23 +2142,25 @@ public class ASLMap extends Map {
         java.util.Map<Point, Integer> pieceMap = new HashMap<Point, Integer>();
         for (int i = 0; i < stack.length; ++i) {
             // increment the count of pieces at this point
-            String name = stack[i].getName();
-            Stack s = null;
-            if (stack[i] instanceof Stack) {
-                s = (Stack) stack[i];
-            } else {
-                continue;
+            if (!(stack[i] == null)) { //error handling for NPE issue#2002
+                String name = stack[i].getName();
+                Stack s = null;
+                if (stack[i] instanceof Stack) {
+                    s = (Stack) stack[i];
+                } else {
+                    continue;
+                }
+                int x = s.getPieceCount();
+                if (x == 0 || name.equals(""))
+                    //empty stack, ignore
+                    continue;
+                Point pt = stack[i].getPosition();
+                Integer count = pieceMap.get(pt);
+                if (count == null) {
+                    count = 0;
+                }
+                pieceMap.put(pt, count + 1);
             }
-            int x = s.getPieceCount();
-            if (x == 0 || name.equals(""))
-                //empty stack, ignore
-                continue;
-            Point pt = stack[i].getPosition();
-            Integer count = pieceMap.get(pt);
-            if (count == null) {
-                count = 0;
-            }
-            pieceMap.put(pt, count + 1);
         }
 
         for (int i = 0; i < stack.length; ++i) {
