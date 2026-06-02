@@ -65,7 +65,7 @@
 	<svg x="3.00" y="46.00" width="54.00" height="11.00" style="overflow:visible">
 		<text x="0.00" y="100.00%" dominant-baseline="auto" text-anchor="start" style="font-size:10.50px;font-weight:bold;font-family:Nimbus Sans L;fill:black">&#x002A;</text>
 		<text x="4.20" y="100.00%" dominant-baseline="auto" text-anchor="start" style="font-size:10.50px;font-weight:bold;font-family:Nimbus Sans L;fill:black">150<tspan style="font-size:6px;font-weight:bold;font-family:Nimbus Sans L" baseline-shift="super">&#x273D;</tspan></text>
-		<line x1="4.20" y1="0%" x2="7.20" y2="0%" style="stroke:black;stroke-width:1.00"/> <!-- overline -->
+		<line x1="4.20" y1="0%" x2="20.61" y2="0%" style="stroke:black;stroke-width:1.00"/> <!-- overline -->
 	</svg>
 	<!-- ROF -->
 	<svg x="3.00" y="32.28" width="11.22" height="11.22" style="overflow:visible">
