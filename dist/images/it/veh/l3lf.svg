@@ -70,8 +70,8 @@
 		<text x="0" y="98%" dominant-baseline="auto" text-anchor="start"><tspan style="font-size:8.40px;font-weight:normal;font-family:Nimbus Sans L;fill:#e10000;fill-opacity:1;stroke-width:0.2">X11</tspan></text>
 	</svg>
 	<!-- Malfunction -->
-	<svg x="3.00" y="29.30" width="24.00" height="6.60" style="overflow:visible">
-		<text x="0" y="98%" dominant-baseline="auto" text-anchor="start"><tspan style="font-size:8.40px;font-weight:normal;font-family:Nimbus Sans L;fill:black;fill-opacity:1;stroke-width:0.2">B11</tspan></text>
+	<svg x="3.00" y="31.30" width="24.00" height="4.60" style="overflow:visible">
+		<text x="0" y="98%" dominant-baseline="auto" text-anchor="start"><tspan style="font-size:6.40px;font-weight:normal;font-family:Nimbus Sans L;fill:black;fill-opacity:1;stroke-width:0.2">B11</tspan></text>
 	</svg>
 	<!-- Front Armor -->
 	<svg x="40.00" y="15.00" width="18.00" height="12.00" style="overflow:visible">

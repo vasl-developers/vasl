@@ -2,7 +2,7 @@
 <svg width="48" height="48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<!--
 		Name:		Vcrest
-		Version:	0.1
+		Version:	0.2
 
 		Author(s): Gordon Molek, Klas Malmström, Alan Bills
 		Tester(s): Alan Bills, Alan Cannamore, Doug Rimmer
@@ -62,7 +62,7 @@
 	
 	<image x="0.00" y="0" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" href="./svg/Vcrest.png" xlink:href="./svg/Vcrest.png"/>
 	
-	<text x="24.00" y="10.00" style="font-size:10px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">Veh Crest</text>
-	<text x="24.00" y="20.00" style="font-size:10px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">HD</text>
+	<text x="24.00" y="10.00" style="font-size:9px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">Veh Crest</text>
+	<text x="24.00" y="20.00" style="font-size:9px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">HD</text>
 	
 </svg>
