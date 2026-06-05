@@ -19,7 +19,7 @@
 
 ## 📈 Improvements
  - Improvement 1: Text rendering improvements to various gun and vehicle counters 
- - Improvement 2: SVG versions of the bridge/pier counters, Vehicle Dust, Immobilized, stun/STUN +X counters, etc.
+ - Improvement 2: SVG versions of the bridge/pier counters, Vehicle Dust, Immobilized, stun/STUN +X counters, PFZs, etc.
 
 ---
 
