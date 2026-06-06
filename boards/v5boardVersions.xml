@@ -353,7 +353,7 @@
 		<boarddata name="BRT" version="1.2" versionDate="2018/09/30" description="Blood Reef: TARAWA" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="Bataan" version="1.0" versionDate="2008/08/30" description="Bataan - Battle for the Mabatang Line" boardType="HASL" publisher="CH!" issued="" />
 		<boarddata name="BerlinRV" version="1.0" versionDate="2008/08/30" description="Berlin 1" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="Blood&#x20;&amp;&#x20;Iron" version="1.0" versionDate="2008/08/30" description="Blood and Iron" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="Blood_&amp;_Iron" version="1.0" versionDate="2026/06/06" description="Blood and Iron" boardType="HASL" publisher="CH!" issued="" />
 		<boarddata name="Bracchi" version="1.0" versionDate="2008/08/30" description="Battle of the Bracchi Hills" boardType="HASL" publisher="CH!" issued="" />
 		<boarddata name="CAC" version="1.0" versionDate="2008/08/30" description="Carnage at Cassino" boardType="HASL" publisher="CH!" issued="" />
 		<boarddata name="CE" version="1.1" versionDate="2008/08/30" description="Dien Bien Phu" boardType="HASL" publisher="CH!" issued="" />
@@ -444,8 +444,8 @@
 		<boarddata name="PdH" version="1.0" versionDate="2008/08/30" description="Pointe Du Hoc" boardType="HASL" publisher="CH!" issued="" />
 		<boarddata name="Pel" version="6.0" versionDate="2021/06/30" description="Peleliu White Beach One" boardType="HASL" publisher="CH!" issued="" />
 		<boarddata name="QuatreBras" version="1.0" versionDate="2008/08/30" description="Battle of the Bulge - Quatre Bras" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="RC&#x20;Novo" version="1.0" versionDate="2008/08/30" description="CSIR - ARMIR 1941/43 Novo Orlovka" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="RC&#x20;Orlovo" version="1.0" versionDate="2008/08/30" description="CSIR - ARMIR 1941/43 Orlovo Ivanovka" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="RC_Novo" version="1.0" versionDate="2026/06/06" description="CSIR - ARMIR 1941/43 Novo Orlovka" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="RC_Orlovo" version="1.0" versionDate="2026/06/06" description="CSIR - ARMIR 1941/43 Orlovo Ivanovka" boardType="HASL" publisher="CH!" issued="" />
 		<boarddata name="RG" version="2.0" versionDate="2008/08/30" description="Roman Glory" boardType="HASL" publisher="CH!" issued="" />
 		<boarddata name="SaPC" version="1.0" versionDate="2025/05/12" description="Slaughter at Ponyri - Center" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="SaPF" version="1.2" versionDate="2026/04/29" description="Slaughter at Ponyri - Full" boardType="HASL" publisher="MMP" issued="" />
