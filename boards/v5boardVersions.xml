@@ -349,7 +349,7 @@
 		<boarddata name="B3R" version="1.0" versionDate="2008/08/30" description="Berlin 1" boardType="HASL" publisher="CH!" issued="" />
 		<boarddata name="BB" version="1.0" versionDate="2008/08/30" description="Bloody Buron" boardType="HASL" publisher="LCP" issued="" />
 		<boarddata name="BERLIN" version="1.0" versionDate="2008/08/30" description="Berlin 1" boardType="HASL" publisher="CH!" issued="" />
-		<boarddata name="BOB&#x20;DZN" version="1.0" versionDate="2008/08/30" description="Drop Zone Normandy" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="BOB_DZN" version="1.0" versionDate="2026/06/06" description="Drop Zone Normandy" boardType="HASL" publisher="CH!" issued="" />
 		<boarddata name="BRT" version="1.2" versionDate="2018/09/30" description="Blood Reef: TARAWA" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="Bataan" version="1.0" versionDate="2008/08/30" description="Bataan - Battle for the Mabatang Line" boardType="HASL" publisher="CH!" issued="" />
 		<boarddata name="BerlinRV" version="1.0" versionDate="2008/08/30" description="Berlin 1" boardType="HASL" publisher="CH!" issued="" />
