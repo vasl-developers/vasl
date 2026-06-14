@@ -1,5 +1,5 @@
-# Release Notes: Version 6.7.4-beta1
-**Release Date:** May 28, 2026
+# Release Notes: Version 6.7.4-beta2
+**Release Date:** November 1, 2026
 
 
 
@@ -7,31 +7,27 @@
 ---
 
 ## 🚀 New Features
- - Feature 1: 
- - Feature 2: 
+ - 
  
 ---
 
 ## 🛠 Bug Fixes
- - Fix 1: HexGrid counter Nudge working
- - Fix 2: LOS bugs with hexside overlay counters (walls, hedges, bocage) fixed
- - Fix 3: CTRL+Numpad Move bug
- - Fix 4: Hatten LOS bugs fixed
- - Fix 5: Disappearing concealed 5/8 counters when rotating fixed
- - Fix 6: Reduce text on the various Human Wave counters so they fit on the counters
- - Fix 7: Add alternate hex grain arrows to Human Wave direction counters
+ - Fix 1: Various bugs causing VASL to crash were fixed.
+ - Fix 2: Fixed old CH boards that would not open.
+
 
 ---
 
 ## 📈 Improvements
- - Improvement 1: Preserve Elevation with Overlays now hides underlying terrain and persists across sessions
- - Improvement 2: Can now set building type for each hex of mixed building overlays
- - Improvement 3: Allow user configurable opacity for counters during LOS checks.
+ - Improvement 1: Game Updater function now auto-syncs extensions.
+ - Improvement 2: Text rendering improvements to various gun and vehicle counters.
+ - Improvement 3: SVG versions of the bridge/pier counters, Vehicle Dust, Immobilized, stun/STUN +X counters, PFZs, etc.
+ - Improvement 4: SVG versions of 360 degree pillboxes, barricade and roadblock, drift, and parachute counters.
 
 ---
 
 ## ⚠️ Compatibility Notes
-- **Minimum Version Required:** Built with VASSAL 3.7.20
+- **Minimum Version Required:** Built with VASSAL 3.7.23
 
 ---
 
