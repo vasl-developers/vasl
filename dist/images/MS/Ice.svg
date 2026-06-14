@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="48" height="48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<!--
+		Name:		Ice
+		Version:	0.1
+		
+		Author(s): Gordon Molek, Klas Malmström, Alan Bills
+		Tester(s): Alan Bills, Alan Cannamore, Doug Rimmer
+		Counter data scraped with permission from: https://www.klasm.com/ASL/Listings/OrdnanceListings.html
+	-->
+
+	<defs id="fonts">
+		<style>
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: normal;
+				src: url("../fonts/NimbusSanL-Reg.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: normal;
+				src: url("../fonts/NimbusSanL-Bol.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: italic;
+				src: url("../fonts/NimbusSanL-RegIta.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: italic;
+				src: url("../fonts/NimbusSanL-BolIta.ttf") format("ttf");
+			}
+		</style>
+	</defs>
+
+	<!-- The bevel - is there a better/more efficient way to achieve this? -->
+	<defs id="bevel">
+		<filter id="highlight_filter" x="-0.058226637" y="-0.058226637" width="1.1144796" height="1.1144796" style="color-interpolation-filters:sRGB;">
+			<feGaussianBlur stdDeviation="10 10" result="fbSourceGraphic" id="feGaussianBlur3"/>
+			<feColorMatrix result="fbSourceGraphicAlpha" in="fbSourceGraphic" values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0" id="feColorMatrix3"/>
+			<feGaussianBlur id="feGaussianBlur4" stdDeviation="10 10" result="blur" in="fbSourceGraphic"/>
+		</filter>
+		<filter id="shadow_filter" x="-0.030508946" y="-0.030508946" width="1.0629916" height="1.0629916" style="color-interpolation-filters:sRGB;">
+			<feGaussianBlur id="feGaussianBlur5" stdDeviation="10 10" result="blur"/>
+		</filter>
+		<clipPath id="counter_clipping">
+			<rect x="0" y="0" width="100%" height="100%" ry="4" rx="4" style="display:inline;fill:red;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"/>
+		</clipPath>
+	</defs>
+	<g id="background">
+		<rect id="color" x="0" y="0" width="100%" height="100%" ry="4" rx="4" style="display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"/>
+		<g id="bevel" clip-path="url(#counter_clipping)">
+			<path id="shadow" style="display:inline;fill:none;stroke:#000000;stroke-width:25.1286;filter:url(#shadow_filter);stroke-opacity:50" d="m 1023.6424,120.45592 c 10.8149,10.81495 17.4864,25.7734 17.4864,42.34736 v 830.07515 c 0,33.14797 -26.6859,59.83377 -59.83378,59.83377 H 151.21981 c -16.57396,0 -31.54851,-6.6875 -42.34737,-17.4864" transform="matrix(1.0503456,0,0,1.0590455,-36.912259,-39.56161) scale(0.06) translate(290,310)"/>
+			<path id="highlight" style="display:inline;fill:none;stroke:#d8d8d8;stroke-width:25.1286;stroke-opacity:50;filter:url(#highlight_filter)" d="M 108.87244,1035.2258 C 98.057485,1024.4109 91.386017,1009.4524 91.386017,992.87843 V 162.80328 c 0,-33.14792 26.685873,-59.83379 59.833793,-59.83379 h 830.07521 c 16.57394,0 31.53238,6.67147 42.34738,17.48643" transform="matrix(1.0387133,0,0,1.0339712,-12.412385,-8.9484139) scale(0.06) translate(118,54)"/>
+		</g>
+	</g>
+	
+	<text x="24.00" y="9.00" style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:middle;fill:#2bb9eb;fill-opacity:1;font-family:Nimbus Sans L">Collapsed</text>
+
+	<g id="broken_ice" transform="scale(0.33)">
+		<path style="stroke:#2bb9eb;fill:#ffffff;stroke-width:1.75" d="M 98.260224,33.070632 92.168171,57.796132 113.82738,54.904508 95.936954,70.244264 114.43016,84.085539 98.899267,85.153411 105.55658,100.74727 86.185581,90.059811 81.87572,115.34319 74.564391,97.057136 56.1487,110.86989 60.813244,89.713166 47.005336,88.084344 57.282379,76.789198 39.740839,67.46837 53.368393,60.214624 46.473168,43.193255 l 20.560584,11.87705 2.882352,-23.380037 9.928429,21.616913 z"/>
+		<path style="stroke:#2bb9eb;fill:#ffffff" d="m 55.434944,67.806691 9.992565,-4.520446 4.282528,9.278811 -6.899628,2.6171 z"/>
+		<path style="stroke:#2bb9eb;fill:#ffffff" d="m 76.371747,68.996283 0.713755,-2.617101 2.855018,-7.375465 7.137547,6.185874 z"/>
+		<path style="stroke:#2bb9eb;fill:#ffffff" d="m 80.892193,75.657993 -6.899628,10.468401 7.613383,2.141264 9.754647,-10.70632 z"/>
+		<path style="stroke:#2bb9eb;fill:#ffffff" d="m 66.855019,78.275093 -5.710038,6.66171 9.516729,6.66171 1.189591,-7.851301 z"/>
+	</g>
+	
+	<text x="24.00" y="45.00" style="font-size:8px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;text-anchor:middle;fill:#2bb9eb;fill-opacity:1;font-family:Nimbus Sans L">Ice</text>	
+</svg>

@@ -60,6 +60,6 @@
 
 	<path id="New Blast" style="color:#000000;fill:#538d1a;stroke-linecap:round" d="m 27.526114,11.77389 -5.217218,6.940933 -5.578945,-6.869681 0.183216,8.675274 -7.8913589,-0.09543 6.7991519,7.664732 -5.420343,4.066848 6.189971,1.77279 -5.431943,8.754058 9.507252,-3.981052 2.706254,3.78126 3.576032,-4.601368 6.172565,5.717358 -2.278347,-7.802303 6.005741,-0.148998 -3.970725,-5.429925 8.156847,-3.616942 -8.263017,-3.617498 3.022542,-9.419468 -7.553675,6.719259 z m -0.783845,2.802984 0.61592,7.819731 6.771974,-6.192498 -2.514621,7.160987 7.691039,3.253701 -7.835397,3.48116 3.359763,4.583585 -5.301267,0.08064 1.745274,5.724275 -4.424195,-4.072503 -3.428064,4.417008 -2.385651,-3.414494 -7.413597,3.184015 4.681543,-7.333629 -5.669857,-1.595767 4.696812,-3.462988 -6.22311,-6.855264 6.977373,0.02412 -0.313602,-6.597246 4.563871,5.506129 z"/>
 
-	<text x="3" y="7.50" style="font-size:6px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-expanded;text-anchor:start;fill:#538d1a;fill-opacity:1;font-family:Nimbus Sans L">Firelane</text>
+	<text x="3" y="8.50" style="font-size:8px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-expanded;text-anchor:start;fill:#538d1a;fill-opacity:1;font-family:Nimbus Sans L">Firelane</text>
 	<text x="19.00" y="33.50" style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-expanded;text-anchor:start;fill:#538d1a;fill-opacity:1;font-family:Nimbus Sans L">6</text>
 </svg>

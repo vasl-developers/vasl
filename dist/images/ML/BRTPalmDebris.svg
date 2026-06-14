@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="60" height="60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<!--
+		Name:		BRTPalmDebris
+		Version:	0.1
+
+		Author(s): Gordon Molek, Klas Malmström, Alan Bills
+		Tester(s): Alan Bills, Alan Cannamore, Doug Rimmer
+		Counter data scraped with permission from: https://www.klasm.com/ASL/Listings/OrdnanceListings.html
+	-->
+
+	<defs id="fonts">
+		<style>
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: normal;
+				src: url("../fonts/NimbusSanL-Reg.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: normal;
+				src: url("../fonts/NimbusSanL-Bol.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: italic;
+				src: url("../fonts/NimbusSanL-RegIta.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: italic;
+				src: url("../fonts/NimbusSanL-BolIta.ttf") format("ttf");
+			}
+		</style>
+	</defs>
+
+	<text x="30.00" y="10.00" dominant-baseline="auto" text-anchor="middle" style="font-size:9.00px;font-weight:bold;font-family:Nimbus Sans L;fill:#000000">Palm Debris</text>
+
+	<image x="0" y="0" width="60" height="60" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8BAMAAADI0sRBAAAAB3RJTUUH6gYFCTIviuXFcQAAAAlw&#10;SFlzAAALEgAACxIB0t1+/AAAADBQTFRFHhMPSRgYUUY3SmMYY0NBe2pTY5wxY84xnDFKl2hhnJwx&#10;moxmrpV1nM4x0LKN7rDtIQ/6yQAAABB0Uk5T////////////////////AOAjXRkAAAH6SURBVHja&#10;7ZO/atxAEMZn4QzpsgsKpBME8h63eG8RaobAEQIptpFVXAr16QyX+l7iosIpVDmp8gx5Ctfxwexx&#10;KIknI+n+2WAXgXQnFRL7229mZ75Z4CcfOOH/jLOEvf9SeJ5aMGbxEJNr2w8fl3VktCOX7HHLHLuv&#10;ed+u69A0jHQveNNTNsxXLYdIeC/3Oq7/yAYSXBBGfoCxavIgCQyTT5gE02iPybjGF9VnZsuXrhMK&#10;xgN2k5KKWRvZojsP/bo7Co7O+zJ2yT+tlMg65eaAm9qX9bDdKhem6V7eB8/X3+qyDFJrGIPjyw5n&#10;e7zCPK+/f22C9EYbZ5Xq1G6+U2NR+6q65sDvgFfwoltLOOxyT2e/yirG+UJYeKO62BZeboOTSapz&#10;nzOPUx5DuoKU5wQAbou1za0vXCQXNYA26a02ysIoG4IHmmTslLQHRWSMBZVI6Y56PJjVaKQMQeQu&#10;M4q2lQPHBeFUQugkIGtQcubBD4O9Wtrfmy9tOeNbUSFPeK/e/YnLZ0yC7TMZAHkPfg8uWhVZGrYC&#10;9B7fXhwNk0zlxgKEYSAd1UWxrA7Y8WasjX6OYial5PNyVjQHLH3UI5YCELtB89WyvAp8POeGhzno&#10;D3rty+qxS2SlSdXs4hFMol63uR8w8u9XP+Jrvgvx5qes3PzrDT3hE37y+QvoZhW5eyihBwAAAABJ&#10;RU5ErkJggg==&#10;"/>
+
+	<text x="30.00" y="48.00" dominant-baseline="auto" text-anchor="middle" style="font-size:7.00px;font-weight:bold;font-family:Nimbus Sans L;fill:#000000">LOS Hindrance</text>
+	<text x="30.00" y="56.00" dominant-baseline="auto" text-anchor="middle" style="font-size:7.00px;font-weight:bold;font-family:Nimbus Sans L;fill:#000000">+1 TEM/MF</text>
+</svg>
