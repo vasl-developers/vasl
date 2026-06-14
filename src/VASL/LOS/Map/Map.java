@@ -2815,11 +2815,11 @@ public class Map  {
             if (counter != null){
                 if (counter.getName().contains("Overlay")) {
                     if (usehexside == -1 ){  //Hedge, Wall, Bocage
-                        status.currentTerrain = getTerrainFromOverlayImage(status, getOverlayPiece(status), usehexside);
+                        status.currentTerrain = getTerrainFromOverlayCounterImage(status, getOverlayPiece(status), usehexside);
                     }
                     else if (status.currentHex.isPointOnHexside(status.currentCol, status.currentRow, usehexside,2,3)) { //counter.getHexside())) {
                         // draggable overlay of hexside: Hedge, Wall, Bocage, Rowhouse/Factory Bar and Breach - others?
-                        status.currentTerrain = getTerrainFromOverlayImage(status, getOverlayPiece(status), hexside);
+                        status.currentTerrain = getTerrainFromOverlayCounterImage(status, getOverlayPiece(status), hexside);
                     }
                 } else if (hexside == counter.getCoverArch()) {
                     // counter metadata includes which hexside is terrain
@@ -2950,21 +2950,19 @@ public class Map  {
     }
     // this handles terrain overlay counters from the draggable overlays window; mostly one hex in size
     // it does NOT handle overlays added via boardPicker
-    protected Terrain getTerrainFromOverlayImage(LOSStatus status, GamePiece overlaypiece, int hexside){
+    protected Terrain getTerrainFromOverlayCounterImage(LOSStatus status, GamePiece overlaypiece, int hexside){
         Terrain imageterrain = null;
         Point imagepoint = new Point();
         BufferedImage img = getImage(overlaypiece);
+        // error handling #2550
+        if (img == null){
+            return getTerrain("Open Ground");
+        }
         Location hexsideloc = status.currentHex.getHexsideLocation(hexside);
-        //ToDo - test the formulas for imagepoint.x and .y are correct - NOT WoRKING mar 26 OUt of bounds errors #2319
-        if (hexside == -1) {  //hex terrain or no terrain
-            imagepoint.x = img.getWidth() / 2 + status.currentCol - (int) (status.currentHex.getHexCenter().getX());
-            imagepoint.y = img.getHeight() / 2 + status.currentRow - (int) (status.currentHex.getHexCenter().getY());
-        }
-        else {  // hexside terrain
-            imagepoint.x = img.getWidth() / 2 + status.currentCol - (int) (hexsideloc.getEdgeCenterPoint().getX());  // status.currentHex.getHexCenter().getX());
-            imagepoint.y = img.getHeight() / 2 + status.currentRow - (int) (hexsideloc.getEdgeCenterPoint().getY());  // status.currentHex.getHexCenter().getY());
-        }
-        if (img.getWidth() > imagepoint.x && img.getHeight() > imagepoint.y) {  // point must be in bounds of img
+        imagepoint.x = img.getWidth() / 2 + status.currentCol - (int) (status.currentHex.getHexCenter().getX());
+        imagepoint.y = img.getHeight() / 2 + status.currentRow - (int) (status.currentHex.getHexCenter().getY());
+        // NPE error handling #2319 - check imagepoint is within bounds of overlay image
+        if (img.getWidth() > imagepoint.x && img.getHeight() > imagepoint.y && imagepoint.x >= 0 && imagepoint.y >= 0 ) {  // point must be in bounds of img
             int c = img.getRGB(imagepoint.x, imagepoint.y);
             if ((c >> 24) != 0x00) { // not a transparent pixel
                 //Retrieving the R G B values
@@ -2981,9 +2979,14 @@ public class Map  {
                 }
                 else {
                     imageterrain = getOverlayTerrainfromColor(color, status);
-                    if (imageterrain.isBuilding() &&
-                      (overlaypiece.getName().contains("StoneBreach")) || overlaypiece.getName().contains("Wood Breach")) {
-                        imageterrain = getTerrain("Breach");
+                    //error handling #2550 NPE when imageterrain == null
+                    if (imageterrain != null) {
+                        if (imageterrain.isBuilding() &&
+                                (overlaypiece.getName().contains("StoneBreach")) || overlaypiece.getName().contains("Wood Breach")) {
+                            imageterrain = getTerrain("Breach");
+                        }
+                    }else {
+                        imageterrain = getTerrain("Open Ground");
                     }
 
                 }
@@ -3033,7 +3036,7 @@ public class Map  {
         }
         else {
             if (getOverlayPiece(status) == null) {return;}
-            status.currentTerrain = getTerrainFromOverlayImage(status, getOverlayPiece(status), -1);
+            status.currentTerrain = getTerrainFromOverlayCounterImage(status, getOverlayPiece(status), -1);
         }
         status.currentTerrainfromCounter = true;
         if (status.vaslGameInterface.getLevel(status.tempHex) != -99) {
