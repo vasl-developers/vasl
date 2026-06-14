@@ -496,6 +496,8 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
          * 5/ Update Extensions
          */
         msg = new Chatter.DisplayText(chatter,  "Checking if installed extensions need updating");
+        ExtensionUpdater extensionUpdater = new ExtensionUpdater();
+        extensionUpdater.refresh(command);
         msg.execute();
 
         /*
