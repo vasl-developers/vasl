@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="60" height="60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<!--
+		Name:		BridgePontoon
+		Version:	0.1
+
+		Author(s): Gordon Molek, Klas Malmström, Alan Bills
+		Tester(s): Alan Bills, Alan Cannamore, Doug Rimmer
+		Counter data scraped with permission from: https://www.klasm.com/ASL/Listings/OrdnanceListings.html
+	-->
+
+	<defs id="fonts">
+		<style>
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: normal;
+				src: url("../fonts/NimbusSanL-Reg.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: normal;
+				src: url("../fonts/NimbusSanL-Bol.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: italic;
+				src: url("../fonts/NimbusSanL-RegIta.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: italic;
+				src: url("../fonts/NimbusSanL-BolIta.ttf") format("ttf");
+			}
+		</style>
+	</defs>
+
+	<!-- The bevel - is there a better/more efficient way to achieve this? -->
+	<defs id="bevel">
+		<filter id="highlight_filter" x="-0.058226637" y="-0.058226637" width="1.1144796" height="1.1144796" style="color-interpolation-filters:sRGB;">
+			<feGaussianBlur stdDeviation="10 10" result="fbSourceGraphic" id="feGaussianBlur3"/>
+			<feColorMatrix result="fbSourceGraphicAlpha" in="fbSourceGraphic" values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0" id="feColorMatrix3"/>
+			<feGaussianBlur id="feGaussianBlur4" stdDeviation="10 10" result="blur" in="fbSourceGraphic"/>
+		</filter>
+		<filter id="shadow_filter" x="-0.030508946" y="-0.030508946" width="1.0629916" height="1.0629916" style="color-interpolation-filters:sRGB;">
+			<feGaussianBlur id="feGaussianBlur5" stdDeviation="10 10" result="blur"/>
+		</filter>
+		<clipPath id="counter_clipping">
+			<rect x="0" y="0" width="100%" height="100%" ry="4" rx="4" style="display:inline;fill:red;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"/>
+		</clipPath>
+		<marker id="arrow_head" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth">
+			<path d="M0,0 L0,6 L9,3 z" fill="#dc0029" />
+		</marker>
+		<symbol id="pontoon">
+			<path id="background" style="fill:#ffffff;stroke:#ffffffff;stroke-width:1.00;stroke-linecap:round" d="M 43.00,2.50 C 14.00,1.00 3.00,11.00 2.50,23.50 C 3.00,34.00 14.00,44.00 43.00,43.50"/>
+			<path id="Outer" style="fill:none;stroke:#000000;stroke-width:5.00;stroke-linecap:round" d="M 43.00,2.50 C 14.00,1.00 3.00,11.00 2.50,23.50 C 3.00,34.00 14.00,44.00 43.00,43.50"/>
+			<path id="inner" style="fill:none;stroke:#000000;stroke-width:2.00;stroke-linecap:round" d="M 43.00,12.50 C 24.00,12.50 16.00,16.00 15.50,23.00 C 16.00,30.00 24.00,33.50 43.00,33.50"/>
+			<line x1="30.00" y1="5.00" x2="30.00" y2="13.00" style="stroke:#000000;stroke-width:1.00;stroke-linecap:round"/>
+			<line x1="13.00" y1="36.00" x2="19.00" y2="30.00" style="stroke:#000000;stroke-width:1.00;stroke-linecap:round"/>
+			<line x1="13.00" y1="10.00" x2="19.00" y2="16.00" style="stroke:#000000;stroke-width:1.00;stroke-linecap:round"/>
+			<line x1="30.00" y1="33.00" x2="30.00" y2="41.00" style="stroke:#000000;stroke-width:1.00;stroke-linecap:round"/>
+			<line  x1="27.50" y1="14.00" x2="27.50" y2="32.00" style="stroke:#000000;stroke-width:2.00;stroke-linecap:round"/>
+			<line  x1="31.50" y1="14.00" x2="31.50" y2="32.00" style="stroke:#000000;stroke-width:2.00;stroke-linecap:round"/>
+		</symbol>
+		<symbol id="treadway">
+			<rect x="0.00" y="0.00" width="3.00" height="2.00" style="display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"/>
+			<line x1="11.00" y1="0.00" x2="16.00" y2="0.00" stroke="#000000" stroke-width="1.00" />
+			<line x1="38.00" y1="0.00" x2="43.00" y2="0.00" stroke="#000000" stroke-width="1.00" />
+			<rect x="52.00" y="0.00" width="3.00" height="2.00" style="display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"/>
+		</symbol>
+		<symbol id="treadway2">
+			<rect x="0.00" y="0.00" width="3.00" height="2.00" style="display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"/>
+			<rect x="52.00" y="0.00" width="3.00" height="2.00" style="display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"/>
+		</symbol>
+	</defs>
+
+	<g id="background">
+		<rect id="color" x="0" y="0" width="100%" height="100%" ry="4" rx="4" style="display:inline;fill:#94cef7;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"/>
+		
+		<g transform="scale(0.25)">
+			<use style="display:inline" xlink:href="#pontoon" x="46.00" y="37.00"/>
+			<use style="display:inline" xlink:href="#pontoon" x="149.00" y="37.00" transform="scale(-1.00,1.00) translate(-343.50,0.00)"/>
+			<use style="display:inline" xlink:href="#pontoon" x="46.00" y="157.00"/>
+			<use style="display:inline" xlink:href="#pontoon" x="149.00" y="157.00" transform="scale(-1.00,1.00) translate(-343.50,0.00)"/>
+
+			<rect x="89.00" y="0.00" width="61.00" height="240.00" style="display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"/>
+			<line x1="90.00" y1="0.00" x2="90.00" y2="240.00" stroke="#000000" stroke-width="3.00" />
+			<line x1="99.00" y1="0.00" x2="99.00" y2="240.00" stroke="#000000" stroke-width="5.00" />			
+			<line x1="112.50" y1="0.00" x2="112.50" y2="69.00" stroke="#000000" stroke-width="2.00" />
+			<line x1="112.50" y1="170.00" x2="112.50" y2="240.00" stroke="#000000" stroke-width="2.00" />
+			<line x1="127.50" y1="0.00" x2="127.50" y2="69.00" stroke="#000000" stroke-width="2.00" />
+			<line x1="127.50" y1="170.00" x2="127.50" y2="240.00" stroke="#000000" stroke-width="2.00" />
+			<line x1="141.00" y1="0.00" x2="141.00" y2="240.00" stroke="#000000" stroke-width="5.00" />
+			<line x1="150.00" y1="0.00" x2="150.00" y2="240.00" stroke="#000000" stroke-width="3.00" />
+			
+			<rect x="93.00" y="2.00" width="3" height="2" style="display:inline;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0"/>
+			<use style="display:inline" xlink:href="#treadway" x="93.00" y="2.00"/>
+			<use style="display:inline" xlink:href="#treadway" x="93.00" y="8.00"/>
+			<use style="display:inline" xlink:href="#treadway" x="93.00" y="14.00"/>
+			<use style="display:inline" xlink:href="#treadway" x="93.00" y="20.00"/>
+			<use style="display:inline" xlink:href="#treadway" x="93.00" y="26.00"/>
+			<use style="display:inline" xlink:href="#treadway" x="93.00" y="32.00"/>
+			<use style="display:inline" xlink:href="#treadway" x="93.00" y="38.00"/>
+			<use style="display:inline" xlink:href="#treadway" x="93.00" y="44.00"/>
+			<use style="display:inline" xlink:href="#treadway" x="93.00" y="50.00"/>
+			<use style="display:inline" xlink:href="#treadway" x="93.00" y="56.00"/>
+			<use style="display:inline" xlink:href="#treadway" x="93.00" y="62.00"/>
+			<use style="display:inline" xlink:href="#treadway" x="93.00" y="68.00"/>
+			<use style="display:inline" xlink:href="#treadway2" x="93.00" y="74.00"/>
+			<use style="display:inline" xlink:href="#treadway2" x="93.00" y="80.00"/>
+			<use style="display:inline" xlink:href="#treadway2" x="93.00" y="86.00"/>
+			<use style="display:inline" xlink:href="#treadway2" x="93.00" y="92.00"/>
+			<use style="display:inline" xlink:href="#treadway2" x="93.00" y="98.00"/>
+			<use style="display:inline" xlink:href="#treadway2" x="93.00" y="104.00"/>
+			<use style="display:inline" xlink:href="#treadway2" x="93.00" y="110.00"/>
+			<use style="display:inline" xlink:href="#treadway2" x="93.00" y="116.00"/>
+			<use style="display:inline" xlink:href="#treadway2" x="93.00" y="122.00"/>
+			<use style="display:inline" xlink:href="#treadway2" x="93.00" y="128.00"/>
+			<use style="display:inline" xlink:href="#treadway2" x="93.00" y="134.00"/>
+			<use style="display:inline" xlink:href="#treadway2" x="93.00" y="140.00"/>
+			<use style="display:inline" xlink:href="#treadway2" x="93.00" y="146.00"/>
+			<use style="display:inline" xlink:href="#treadway2" x="93.00" y="152.00"/>
+			<use style="display:inline" xlink:href="#treadway2" x="93.00" y="158.00"/>
+			<use style="display:inline" xlink:href="#treadway2" x="93.00" y="164.00"/>
+			<use style="display:inline" xlink:href="#treadway" x="93.00" y="170.00"/>
+			<use style="display:inline" xlink:href="#treadway" x="93.00" y="176.00"/>
+			<use style="display:inline" xlink:href="#treadway" x="93.00" y="182.00"/>
+			<use style="display:inline" xlink:href="#treadway" x="93.00" y="188.00"/>
+			<use style="display:inline" xlink:href="#treadway" x="93.00" y="194.00"/>
+			<use style="display:inline" xlink:href="#treadway" x="93.00" y="200.00"/>
+			<use style="display:inline" xlink:href="#treadway" x="93.00" y="206.00"/>
+			<use style="display:inline" xlink:href="#treadway" x="93.00" y="212.00"/>
+			<use style="display:inline" xlink:href="#treadway" x="93.00" y="218.00"/>
+			<use style="display:inline" xlink:href="#treadway" x="93.00" y="224.00"/>
+			<use style="display:inline" xlink:href="#treadway" x="93.00" y="230.00"/>
+			<use style="display:inline" xlink:href="#treadway" x="93.00" y="236.00"/>
+		</g>
+
+		<g id="bevel" clip-path="url(#counter_clipping)">
+			<path id="shadow" style="display:inline;fill:none;stroke:#000000;stroke-width:25.1286;filter:url(#shadow_filter);stroke-opacity:50" d="m 1023.6424,120.45592 c 10.8149,10.81495 17.4864,25.7734 17.4864,42.34736 v 830.07515 c 0,33.14797 -26.6859,59.83377 -59.83378,59.83377 H 151.21981 c -16.57396,0 -31.54851,-6.6875 -42.34737,-17.4864" transform="matrix(1.0503456,0,0,1.0590455,-36.912259,-39.56161) scale(0.06) translate(490,500)"/>
+			<path id="highlight" style="display:inline;fill:none;stroke:#ffffff;stroke-width:25.1286;stroke-opacity:50;filter:url(#highlight_filter)" d="M 108.87244,1035.2258 C 98.057485,1024.4109 91.386017,1009.4524 91.386017,992.87843 V 162.80328 c 0,-33.14792 26.685873,-59.83379 59.833793,-59.83379 h 830.07521 c 16.57394,0 31.53238,6.67147 42.34738,17.48643" transform="matrix(1.0387133,0,0,1.0339712,-12.412385,-8.9484139) scale(0.06) translate(118,54)"/>
+		</g>
+	</g>
+	
+	<text x="32.50" y="30.00" transform="rotate(-90,32.50,30.00)" style="font-size:7.50px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">0 TEM</text>
+</svg>

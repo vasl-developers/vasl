@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="60" height="60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<!--
+		Name:		WreckBO
+		Version:	0.1
+
+		Author(s): Gordon Molek, Klas Malmström, Alan Bills
+		Tester(s): Alan Bills, Alan Cannamore, Doug Rimmer
+		Counter data scraped with permission from: https://www.klasm.com/ASL/Listings/OrdnanceListings.html
+	-->
+
+	<defs id="fonts">
+		<style>
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: normal;
+				src: url("../fonts/NimbusSanL-Reg.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: normal;
+				src: url("../fonts/NimbusSanL-Bol.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: normal;
+				font-style: italic;
+				src: url("../fonts/NimbusSanL-RegIta.ttf") format("ttf");
+			}
+			@font-face {
+				font-family: Nimbus Sans L;
+				font-weight: bold;
+				font-style: italic;
+				src: url("../fonts/NimbusSanL-BolIta.ttf") format("ttf");
+			}
+		</style>
+	</defs>
+	
+	<image x="0" y="0" width="60" height="60" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAMAAAANIilAAAAAFXRFWHRDcmVhdGlvbiBUaW1lAAfp&#10;BBESARLAu6K3AAAAB3RJTUUH6gYEEwMSvd3PEQAAAAlwSFlzAAAK8AAACvABQqw0mAAAAwBQTFRF&#10;AAAACAgIEBAQGBgYISEhKSkpMTExOTk5QkJCSkpKUlJSWlpaY2Nja2trc3Nze3t7hISEjIyMlJSU&#10;nJycpaWlra2ttbW1vb29xsbGzs7O1tbW3t7e/8D/5+fn7+/v9/f3////AAAAAAAAAAAAAAAAAAAA&#10;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&#10;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&#10;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&#10;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&#10;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&#10;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&#10;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&#10;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&#10;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&#10;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&#10;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&#10;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIBnqvgAAAB10Uk5T////////////////////////&#10;/////////////wBZhudqAAACU0lEQVR42u3VyY7cIBAA0PKC2RfjwjZ2s/z/V4aeTBRFCqNILSU5&#10;NAfLBx4UVYUNjxcGvPEbv/Ffxge8gJdXMJEvYM7/FRZ/fuZL85QwP1/vHNszwRCvE51zZ0o5p1C6&#10;GCdutQYYBiapXZWgA4CYVq489woo08KWHj7ZbGolQMm5H7UIzQCkNFiOamuEs9a6dXe+5lmlOkHb&#10;D4bFkHMB4DAjbtnXonKtxXSxgXEepwYnMs10JgpgTMrQybYTeO9HAN3FszdKSbeTaVzwOu62DlCM&#10;Sce6Lav3LQHdbOfZb+Ew+3m3uGmt7cR09RhwHcvlNNIFji4uk97x0Dqczx1zaEHW70NhXP1pGMQu&#10;PgeKPlAwrVrAkgU4PjHRKNxGOdxdLIZlT8e+hwEmgqktEZ/Sx6pGsQkdRjj7Yc/uWcp6K2a89QaG&#10;o961oq1qmGJIseW+355crteeizAOVd45jJsHs+otRkmJCG5kX2BLXPAiU5jn0RYOoLAVXWDwSnOC&#10;Dr7Ebl2DzfJZX38pGKWBj5S7sJIlaJhyHzOj7EoPQQkFjufIsPUYbFeRh2fECvgi2w+B0jCFTgk+&#10;i+v2oLh9NgqHTQOXDgYuupi3aT8H92QQVBEjB+n4fasWfpbdK5kkWnfel2strmxJfhqiYpEJj6Jm&#10;Ueta+jjbeqcanrWO97WnzEAGPEDVNKcbAyGed8POcmsljge2SH/EjiXAIBmhwqzHuuxdXIILKEba&#10;7q1sjaqGXDZG7f0Zat7yL5+w3349yyOn00upPqbej+74f/+Sb/zGb/xX8TfMTWH4AzmB5QAAAABJ&#10;RU5ErkJggg==&#10;"/>
+	   
+	<text x="30.00" y="12.00" style="font-size:11.00px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">Burnt Out</text>
+	<text x="30.00" y="54.00" style="font-size:11.00px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:Nimbus Sans L">Wreck</text>
+
+</svg>
