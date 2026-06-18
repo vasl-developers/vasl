@@ -566,7 +566,7 @@ public class Overlay implements Cloneable {
             return;
         }
         final Image i = getImage();
-        // error handling
+        // error handling issue#2015
         if (i == null) {return;}
         // get the image as a buffered image
         BufferedImage bi = new BufferedImage(i.getWidth(null), i.getHeight(null), BufferedImage.TYPE_INT_ARGB);

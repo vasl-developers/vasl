@@ -66,12 +66,12 @@
 	<!-- Unit depiction -->
 	<image x="0" y="0" width="60" height="60" preserveAspectRatio="xMidYMid meet" transform="" href="svg/cam132.png" xlink:href="svg/cam132.png"/>
 	<!-- MA, text position adjusts to account for any overlined/underlined text. -->
-	<svg x="3.00" y="47.00" width="54.00" height="10.00" style="overflow:visible">
-		<text x="0.00" y="100.00%" dominant-baseline="auto" text-anchor="start" style="font-size:12.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">&#x002A;</text>
-		<text x="4.80" y="100.00%" dominant-baseline="auto" text-anchor="start" style="font-size:12.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">12.7<tspan style="font-size:7.20px">(12)</tspan></text>
+	<svg x="3.00" y="50.00" width="54.00" height="7.00" style="overflow:visible">
+		<text x="0.00" y="100.00%" dominant-baseline="auto" text-anchor="start" style="font-size:8.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">&#x002A;</text>
+		<text x="4.20" y="100.00%" dominant-baseline="auto" text-anchor="start" style="font-size:8.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">12.7<tspan style="font-size:6.20px">(12)</tspan></text>
 	</svg>
 	<!-- ROF -->
-	<svg x="3.00" y="33.28" width="11.22" height="11.22" style="overflow:visible">
+	<svg x="3.00" y="36.28" width="11.22" height="11.22" style="overflow:visible">
 		<text x="50%" y="75%" dominant-baseline="auto" text-anchor="middle"><tspan style="font-size:8.40px;font-weight:bold;font-family:Nimbus Sans L;font-family:Nimbus Sans L;fill:black;fill-opacity:1;stroke-width:0.2">3</tspan></text>
 		<rect x="0.25" y="0.25" width="10.72" height="10.72" style="display:inline;fill:none;fill-opacity:1;stroke:black;stroke-width:0.50px;stroke-dasharray:none;stroke-opacity:1"/>
 	</svg>
