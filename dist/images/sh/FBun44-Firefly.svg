@@ -75,8 +75,9 @@
 	</svg>
 	<!-- Bomb, text position adjusts to account for any overlined/underlined text. -->
 	<svg x="3.00" y="45.00" width="54.00" height="15.00" style="overflow:visible">
-		<text x="0.00" y="80.00%" dominant-baseline="auto" text-anchor="start" style="font-size:12.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black"><tspan style="text-decoration:overline">150</tspan></text>
-	</svg>
+		<text x="0.00" y="80.00%" dominant-baseline="auto" text-anchor="start" style="font-size:12.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black">150</text>
+
+		<line x1="0.00" y1="0%" x2="17.25" y2="0%" style="stroke:black;stroke-width:1.00"/> <!-- overline -->	</svg>
 	<!-- ML -->
 	<svg x="3.00" y="37.00" width="36.00" height="6.00" style="overflow:visible">
 		<text x="0.00" y="98%" dominant-baseline="auto" text-anchor="start"><tspan style="font-size:8.00px;font-weight:bold;font-family:Nimbus Sans L;fill:black;fill-opacity:1;stroke-width:0.2">8ML</tspan></text>
