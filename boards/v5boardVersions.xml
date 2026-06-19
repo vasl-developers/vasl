@@ -371,6 +371,7 @@
 		<boarddata name="FB_NW" version="6.3" versionDate="2023/01/30" description="Festung Budapest (NW)" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="FB_SE" version="6.3" versionDate="2023/01/30" description="Festung Budapest (SE)" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="FB_SW" version="6.3" versionDate="2023/01/30" description="Festung Budapest (SW)" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="FBL" version="6.2" versionDate="2026/04/30" description="Festung Budapest" boardType="HASL-Revised" publisher="MMP" issued="" />
 		<boarddata name="FE1" version="1.1" versionDate="2008/08/30" description="" boardType="Geoboard" publisher="FE" issued="" />
 		<boarddata name="FE2" version="1.1" versionDate="2008/08/30" description="" boardType="Geoboard" publisher="FE" issued="" />
 		<boarddata name="FE3" version="6.0" versionDate="2021/06/30" description="" boardType="Geoboard" publisher="FE" issued="" />
