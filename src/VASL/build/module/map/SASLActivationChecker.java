@@ -656,7 +656,13 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
     }
 
     private boolean isOnboard(GamePiece piece) {
-        return (VASLGameInterface.getLocation(piece) != null);
+        boolean result = false;
+
+        if (piece != null) {
+            result = (VASLGameInterface.getLocation(piece) != null);
+        }
+
+        return result;
     }
 
     private boolean illuminates(GamePiece target, GamePiece possibleIlluminator) {
