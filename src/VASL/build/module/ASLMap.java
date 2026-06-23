@@ -868,7 +868,7 @@ public class ASLMap extends Map {
                     }
 
                 }
-                if (!(!(vaslboards.get(0) == null)) && b.equals(vaslboards.get(0))) {  // error handling issue#2012
+                if ((!(vaslboards.get(0) == null)) && b.equals(vaslboards.get(0))) {  // error handling issue#2012
                     if (toplefthexheight.contains("Offset")) {
                         passA1centery = toplefthexheight.contains("HalfHeight") ? (b.getA1CenterY() - b.getHexHeight() /2) : b.getA1CenterY();
                     } else {
