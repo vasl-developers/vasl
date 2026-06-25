@@ -20,7 +20,7 @@
 
 	 2/7/15 - fixed bad data in overlaySSR file
 -->
-<boardMetadata name="16" version="6.5" versionDate="Jan 2023" author="TR" boardImageFileName="bd16.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="16" version="6.6" versionDate="2026/06/25" author="WJS" boardImageFileName="bd16.gif" hasHills="FALSE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -78,7 +78,7 @@
 		<overlaySSRule name="WallsToBocage" image="16_WallsToBocage.gif" x="597" y="286" />
 		<overlaySSRule name="HedgesToBocage" image="16_HedgesToBocage.gif" x="802" y="222" />
 		<overlaySSRule name="NoRoads" image="16_NoRoads.gif" x="1" y="1" />
-		<overlaySSRule name="16_SSO_19" image="16_SSO_19.gif" x="84" y="9" />
+		<overlaySSRule name="16_SSO_AP102" image="16_SSO_AP102.gif" x="0" y="0"/>                              			<overlaySSRule name="16_SSO_19" image="16_SSO_19.gif" x="84" y="9" />
 		<overlaySSRule name="16_SSO_25" image="16_SSO_25.gif" x="0" y="0" />
 		<overlaySSRule name="16_SSO_59" image="16_SSO_59.gif" x="1" y="1" />
 		<overlaySSRule name="16_SSO_79" image="16_SSO_79.gif" x="765" y="141" />
