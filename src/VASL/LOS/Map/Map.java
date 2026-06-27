@@ -5312,7 +5312,8 @@ public class Map  {
             if (status.sourceElevation == status.targetElevation && status.sourceElevation == status.bridge.getRoadLevel()) {
 
                 // on bridge but not on road?
-                if (status.bridgeArea.contains((double)status.currentCol, (double)status.currentRow) && !status.bridgeRoadArea.contains((double)status.currentCol, (double)status.currentRow)) {
+                if (status.bridgeArea.contains((double)status.currentCol, (double)status.currentRow) && !status.bridgeRoadArea.contains((double)status.currentCol, (double)status.currentRow)
+                && (!status.currentTerrain.isRoad())) {
 
                     // add hindrance
                     if (addHindranceHex(status, result))
