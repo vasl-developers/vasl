@@ -13,8 +13,9 @@
 
 ## Improvements
 
- - Improvement 1: Final set of SVG counter updates. Fortification counters will be updated when Vassal 4.0 comes out. Vehicle and Gun unit depiction updates still need a volunteer artist or artists. Miscellaneous counters can be updated upon request.
-
+ - Improvement 1: Final set of SVG counter updates. Vehicle and Gun unit depiction updates still need a volunteer artist or artists. Miscellaneous counters can be updated upon request.
+ - Improvement 2: Consolidated all the BRT-specific counters under a new "Blood Reef: Tarawa" panel in the "HASL and CGs" tab.
+ 
 ---
 
 ## ⚠️ Compatibility Notes
