@@ -23,8 +23,8 @@
 -->
 <boardMetadata 
 	name="3a" 
-	version="7.1"
-	versionDate="Nov 2023"
+	version="7.2"
+	versionDate="2026/06/27"
 	author="TR" 
 	boardImageFileName="bd3a.gif" 
 	hasHills="TRUE" 
@@ -69,8 +69,8 @@
 		<underlaySSRule name="HedgeToCactus" image="CactusPattern.gif">
 			<color name="HedgeGreen" />
 		</underlaySSRule>
-		<overlaySSRule name="BSO_bd3a_Hexrow20IsWater" image="BSO_bd3a_Hexrow20IsWater.gif" x="1" y="196" />
-		<overlaySSRule name="BSO_bd3a_Hexrow1IsWater" image="BSO_bd3a_Hexrow1IsWater.gif" x="1" y="1" />
+		<overlaySSRule name="BSO_bd3a_Hexrow20IsWater" image="BSO_bd3a_Hexrow20IsWater.gif" x="0" y="196" />
+		<overlaySSRule name="BSO_bd3a_Hexrow1IsWater" image="BSO_bd3a_Hexrow1IsWater.gif" x="0" y="0" />
 		<overlaySSRule name="DenseJungle" image="bd3a_DenseJungle.gif" x="1" y="1" />
 		<overlaySSRule name="BridgeToFord" image="bd3a_BridgeToFord.gif" x="202" y="1042" />
 		<overlaySSRule name="NoBridge" image="bd3a_NoBridge.gif" x="202" y="1042" />
