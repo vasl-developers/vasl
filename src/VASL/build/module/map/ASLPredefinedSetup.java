@@ -52,7 +52,7 @@ public class ASLPredefinedSetup extends PredefinedSetup {
         gs.loadGameInForeground(this.fileName, this.getSavedGameContents());
         mod.getPlayerWindow().setCursor(Cursor.getPredefinedCursor(3));
 
-        aslGameUpdater.doupdate(versionname);
+        aslGameUpdater.doupdate(versionname, this.fileName);
         //gameRefresher.execute(this.refresherOptions, (Command)null);
         File tmpFile = File.createTempFile("vassal", (String)null);
         ZipArchive tmpZip = new ZipArchive(tmpFile);
