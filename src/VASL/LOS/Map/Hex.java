@@ -410,13 +410,12 @@ public class Hex {
                 northWestOnMap = false;
             }
             // last hex in even column?
-            if ((columnNumber % 2 == 0) && (rowNumber == map.getHeight()-1)) {
+            if ((columnNumber % 2 == 0) && (rowNumber == map.getHeight() - 1)) {
                 southOnMap = false;
                 southEastOnMap = false;
                 southWestOnMap = false;
             }
         }
-
     }
 
 	// used to update the hexside location once the map has been fully initialized and in new crop/flip methods
@@ -737,8 +736,15 @@ public class Hex {
                     }
                 }
                 getHexsideLocation(x).setTerrain(terrain);
+
+                // test hexsides/verticies that should be out of play - such as maps with border areas
+                if (terrain.getName().contains("OutOfBounds")) {
+                    setHexsideOffMap(x);
+                }
             }
+
         }
+
 
         // set the hex base height
         setBaseLevelofHex(centerLocationElevation);
@@ -752,6 +758,24 @@ public class Hex {
         // correct for single hex bridges
         fixBridges(0);
     }
+
+    private void setHexsideOffMap(int x){
+        switch (x){
+            case 0 : northOnMap		= false;
+                    return;
+            case 1 : northEastOnMap  = false;
+                    return;
+            case 2 : southEastOnMap  = false;
+                    return;
+            case 3 : southOnMap		= false;
+                    return;
+            case 4 : southWestOnMap  = false;
+                    return;
+            case 5 : northWestOnMap  = false;
+            default : return;
+        }
+    }
+
 
     /**
      * gets Terrain one pixel away from center point of hex

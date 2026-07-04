@@ -472,7 +472,7 @@ public class Map  {
                 }
             }
         }
-        else if (b.getName().contains("FB_LOS")) {
+        else if (b.getName().contains("FB")) {
             if (this.A1CenterY == 0) { // Cropped board
                 int evencol =0;
                 for (int col = 0; col < this.width; col++) {
@@ -833,7 +833,7 @@ public class Map  {
                     hexGrid[col][row].resetHexsideLocationNames();
                 }
             }
-        } else if (boardarchive.getBoardName().contains("FB_LOS")) {
+        } else if (boardarchive.getBoardName().contains("FB")) {
             if (this.A1CenterY == 0) { // Cropped board
                 int evencol =0;
                 for (int col = 0; col < this.width; col++) {
@@ -965,7 +965,7 @@ public class Map  {
         //Dinant follows standard board layout and so can be treated as geo
         if (b.getName().equals("RBv3") || b.getName().equals("RO") || b.getName().equals("DaE") ||
                 b.getName().equals("SG") || b.getName().equals("HT") || b.getName().equals("VotG") ||
-                b.getName().equals("SaPF") || b.getName().equals("FB_LOS")) {
+                b.getName().equals("SaPF") || b.getName().equals("FB")) {
             createtheHASLHexGrid(b);
         }
         // at this point the terrainGrid, elevationGrid and HexGrid are created but hold no los data
@@ -1000,7 +1000,7 @@ public class Map  {
         //Dinant follows standard board layout and so can be treated as geo
         if (boardarchive.getBoardName().equals("RBv3") || boardarchive.getBoardName().equals("RO") || boardarchive.getBoardName().equals("DaE") ||
                 boardarchive.getBoardName().equals("SG") || boardarchive.getBoardName().equals("HT") || boardarchive.getBoardName().equals("VotG") ||
-                boardarchive.getBoardName().equals("SaPF") || boardarchive.getBoardName().equals("BRT") || boardarchive.getBoardName().equals("FB_LOS")) {
+                boardarchive.getBoardName().equals("SaPF") || boardarchive.getBoardName().equals("BRT") || boardarchive.getBoardName().equals("FB")) {
 
             createtheHASLHexGrid(boardarchive);
         }
