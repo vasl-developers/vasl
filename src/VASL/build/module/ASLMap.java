@@ -353,7 +353,7 @@ public class ASLMap extends Map {
             for (VASLBoard board : vaslboards) {
                 if (board.getName().equals("RBv3") || board.getName().equals("RO") || board.getName().equals("DaE") ||
                          board.getName().equals("SG") || board.getName().equals("HT") || board.getName().equals("VotG") ||
-                         board.getName().equals("SaPF") || board.getName().equals("FB_LOS")) {
+                         board.getName().equals("SaPF") || board.getName().equals("FB")) {
                     if (board.isReversed()){
                         return;
                     }
@@ -726,7 +726,7 @@ public class ASLMap extends Map {
                 indexOfCol2 = b.getWidth() - 1;
                 valueOfRow1 = 0;
                 valueOfRow2 = b.getHeight(); //default value
-                if (b.getName().contains("RBv3") || b.getName().contains("SaPF") || b.getName().contains("FB_LOS")) {
+                if (b.getName().contains("RBv3") || b.getName().contains("SaPF") || b.getName().contains("FB")) {
                     gridconfigWidth = "HalfHexWidthOffset";
                     toplefthexheight = "LeftHexFullHeight";
                     toplefthexwidth = "HalfHexWidthOffset";

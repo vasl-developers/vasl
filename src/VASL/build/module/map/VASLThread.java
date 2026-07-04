@@ -962,10 +962,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
     private void doLOS() {
 
         // silently ignore invalid LOS checks
-        if(source == null || target == null || result == null || VASLGameInterface == null)
-        {
-            return;
-        }
+        if(source == null || target == null || result == null || VASLGameInterface == null ) {return;}
 
         // do the LOS
         result = new LOSResult();
