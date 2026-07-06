@@ -497,6 +497,10 @@ public class BoardArchive {
                 boardposx = (int) (board.bounds().getX() - board.getMap().getEdgeBuffer().getWidth());
                 boardposy = (int) (board.bounds().getY() - board.getMap().getEdgeBuffer().getHeight());
                 Hex boardstarthex = VASLMap.gridToHex(boardposx, boardposy);
+                // error handling NPE if boardstarthex is null from above line; happens if map has border -FB
+                if (boardstarthex == null) {
+                    boardstarthex = VASLMap.getHex(0, 0); //A1 is the default
+                }
                 int mapcol = boardstarthex.getColumnNumber();
                 int maprow = boardstarthex.getRowNumber();
                 // add hack to fix RB/RO join

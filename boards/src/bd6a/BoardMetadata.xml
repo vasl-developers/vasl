@@ -22,8 +22,8 @@
 -->
 <boardMetadata 
 	name="6a" 
-	version="6.9"
-	versionDate="Nov 2023"
+	version="7.0"
+	versionDate="2026/06/28"
 	author="TR" 
 	boardImageFileName="bd6a.gif" 
 	hasHills="TRUE" 
@@ -71,8 +71,8 @@
 		<overlaySSRule name="BSO_6a_NoJ13Island" image="BSO_6a_NoJ13Island.gif" x="462" y="797" />
 		<overlaySSRule name="BSO_6a_NoE12Island" image="BSO_6a_NoE12Island.gif" x="67" y="702" />
 		<overlaySSRule name="BSO_6a_NoM4Island" image="BSO_6a_NoM4Island.gif" x="517" y="184" />
-		<overlaySSRule name="BSO_6a_Q20SideIsWater" image="BSO_6a_Q20SideIsWater.gif" x="1" y="379" />
-		<overlaySSRule name="BSO_6a_A1SideIsWater" image="BSO_6a_A1SideIsWater.gif" x="1" y="1" />
+		<overlaySSRule name="BSO_6a_Q20SideIsWater" image="BSO_6a_Q20SideIsWater.gif" x="0" y="378" />
+		<overlaySSRule name="BSO_6a_A1SideIsWater" image="BSO_6a_A1SideIsWater.gif" x="0" y="0" />
 		<overlaySSRule name="BSO_6a_I11-L12Bridge" image="BSO_6a_I11-L12Bridge.gif" x="415" y="650" />
 		<overlaySSRule name="PalmTrees" image="6a_PalmTrees.gif" x="32" y="400" />
 		<overlaySSRule name="OrchardsToShellholes" image="6a_Orch2Shell.gif" x="27" y="396" />
