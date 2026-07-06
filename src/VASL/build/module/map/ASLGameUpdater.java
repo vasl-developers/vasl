@@ -53,6 +53,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
     private GameModule theModule;
     private Chatter chatter;
     private final Set<String> options = new HashSet<>();
+    private String scenariotoupdate = null;
 
     public List<DrawPile> getModuleDrawPiles() {
         return theModule.getAllDescendantComponentsOf(DrawPile.class);
@@ -86,7 +87,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
             map.getPopupMenu().add(nextmenuItem);
             // VASL predefined setup extension updater
             nextmenuItem = new JMenuItem("Update Scenario Setup extension games...");
-            nextmenuItem.setEnabled(false);
+            nextmenuItem.setEnabled(true);
             nextmenuItem.addActionListener(evt -> askToUpdateScenSetups());
             map.getPopupMenu().add(nextmenuItem);
         }
@@ -517,7 +518,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
                     }
                 }
                 if (legacyMode) {
-                    int dialogResult = JOptionPane.showConfirmDialog(null, "LOS Checking Disabled. To restore, re-select boards for the game. Proceed?",
+                    int dialogResult = JOptionPane.showConfirmDialog(null, scenariotoupdate + " LOS Checking Disabled. To restore, re-select boards for the game. Proceed?",
                             "Updating LOS Checking . . . ", JOptionPane.YES_NO_OPTION);
                     if (dialogResult == JOptionPane.YES_OPTION) {
                         dolosrestore(theMap);
@@ -662,7 +663,7 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
                             "Updating Game . . . ", JOptionPane.YES_NO_OPTION);
                     if(dialogResult == JOptionPane.YES_OPTION) {
                         // starts the update process
-                        doupdate(saveModuleVersion);
+                        doupdate(saveModuleVersion, "");
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "No update possible; game was saved with current version or higher",
@@ -677,7 +678,8 @@ public class ASLGameUpdater extends AbstractConfigurable implements CommandEncod
      * Execute the update routine
      * Provides status messages at beginning and end
      */
-    public void doupdate(String savegameversion) {
+    public void doupdate(String savegameversion, String scenarioname) {
+        scenariotoupdate = scenarioname.length() > 0 ? scenarioname : "";
         if(theModule == null){
             theModule = GameModule.getGameModule();
         }
