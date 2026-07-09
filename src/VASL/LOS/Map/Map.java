@@ -2788,7 +2788,7 @@ public class Map  {
             // set the hillocks status
             status.setHillockStatus();
 
-            // do RR Embankment/Partial Orchard terrain check here
+            // do RrEmbankment/Partial Orchard terrain check here
             Terrain checkhexside;
             for (Integer hexside : hexsides) {
                 // get Terrain for hexside
@@ -5337,7 +5337,13 @@ public class Map  {
         if (status.currentHex.hasBridge()) {
 
             if (status.sourceElevation == status.targetElevation && status.sourceElevation == status.bridge.getRoadLevel()) {
-
+                // handle special case of EmRR bridge on FB map
+                for (int x = 0; x < 6; x++ ) {
+                    Terrain hexsideterrain = status.currentHex.getHexsideLocation(x).getTerrain();
+                    if  (hexsideterrain != null && !hexsideterrain.isDepression() && hexsideterrain.getName().contains("Railroad, Embankment")) {
+                        return false; // Bridge will be half-level higher
+                    }
+                }
                 // on bridge but not on road?
                 if (status.bridgeArea.contains((double)status.currentCol, (double)status.currentRow) && !status.bridgeRoadArea.contains((double)status.currentCol, (double)status.currentRow)
                 && (!status.currentTerrain.isRoad())) {
