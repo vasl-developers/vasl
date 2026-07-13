@@ -27,8 +27,8 @@
 -->
 <boardMetadata
 	name="Dinant"
-	version="6.2"
-	versionDate="Jan 2025"
+	version="6.3"
+	versionDate="2026/07/13"
 	author="ATC"
 	boardImageFileName="bdDinant.gif"
 	hasHills="TRUE"
@@ -161,11 +161,7 @@
 			For hexsides 0 is the top hexside with 1 being clockwise from there, etc. 
 			Example hex E1 has railway embankment on the two right hand side hexsides adjacent to column F: <rrembankment hex="E1" hexsides="12" />
 		-->
-		<rrembankment hex="LL21" hexsides="12" />
-		<rrembankment hex="LL22" hexsides="12" />
-		<rrembankment hex="LL23" hexsides="12" />
-		<rrembankment hex="JJ31" hexsides="2" />
-		<rrembankment hex="JJ44" hexsides="1" />
+		
 
 	</rrembankments>
 	<partialorchards>
