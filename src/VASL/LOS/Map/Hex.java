@@ -753,10 +753,9 @@ public class Hex {
         // set inherent terrain in the hex grid
         setInherentTerrain(0);
         // reset the hexside terrain
-         resetHexsideTerrain(0);
-
+        resetHexsideTerrain(0);
         // correct for single hex bridges
-        fixBridges(0);
+        fixBridgesTunnelWater(0);
     }
 
     private void setHexsideOffMap(int x){
@@ -855,7 +854,7 @@ public class Hex {
     /**
      * @return true if this hex contains bridge terrain
      */
-    private boolean hasBridgeTerrain(){
+    private boolean hasBridgeOrTunnelTerrain(){
 
         final Rectangle rectangle = getHexBorder().getBounds();
         for(int x = rectangle.x; x < rectangle.x + rectangle.width; x++) {
@@ -863,7 +862,7 @@ public class Hex {
 
                 if(getHexBorder().contains(x,y) &&
                         map.onMap(x,y) &&
-                        map.getGridTerrain(x,y).isBridge()) {
+                        (map.getGridTerrain(x,y).isBridge() || map.getGridTerrain(x, y).isTunnel())) {
 
                     return true;
                 }
@@ -876,12 +875,10 @@ public class Hex {
     /**
      * Corrects hexes with single-hex bridges by adding a new location (either bridge or depression)
      */
-    private void fixBridges(double gridadj) {
-
-        if(hasBridgeTerrain()) {
+    private void fixBridgesTunnelWater(double gridadj) {
+       if(hasBridgeOrTunnelTerrain()) {
             Location bridgeLocation = null;
-            // determine if existing location is bridge or depression terrain
-
+            // determine if existing location is bridge, tunnel, water or depression terrain
             if (centerLocation.isDepressionTerrain()) {
                 // need to add new bridge location
                 final Location newLocation = new Location(centerLocation);
@@ -917,6 +914,16 @@ public class Hex {
                 centerLocation.setDownLocation(newLocation);
                 bridgeLocation = centerLocation;
             }
+            else if (centerLocation.getTerrain().isTunnel()) {
+                // need to add new terrain location above tunnel
+                final Location newLocation = new Location(centerLocation);
+                newLocation.setDepressionTerrain(null);
+                newLocation.setTerrain(getRareTerrain(getName()));
+                newLocation.setLevelInHex(centerLocation.getLevelInHex() + 1);
+                newLocation.setDownLocation(centerLocation);
+                centerLocation.setUpLocation(newLocation);
+                //bridgeLocation = newLocation;
+            }
             else if (centerLocation.getTerrain().isWaterTerrain()){
                 // need to add new bridge location
                 final Location newLocation = new Location(centerLocation);
@@ -929,8 +936,10 @@ public class Hex {
                 centerLocation.setUpLocation(newLocation);
                 bridgeLocation = newLocation;
             }
-            setBridge(new Bridge(getBridgeTerrain(gridadj), getBridgeLocationAbsoluteLevel(), bridgeLocation,
-                    true, new Point((int) center.getX(), (int) center.getY())));
+            if (bridgeLocation != null) {
+                setBridge(new Bridge(getBridgeTerrain(gridadj), getBridgeLocationAbsoluteLevel(), bridgeLocation,
+                        true, new Point((int) center.getX(), (int) center.getY())));
+            }
         }
     }
 
@@ -949,6 +958,19 @@ public class Hex {
             }
         }
         return null;
+    }
+
+    /**
+     * @return return Terrain associated with special case hex -
+     * add new cases as required when fixing los on boards
+     * first case is underpass in Dinant II50
+     * should be ok to use Hex name as test since these should be rare cases
+     */
+    private Terrain getRareTerrain(String hexname){
+        if (hexname.contains("II50")){
+            return getMap().getTerrain("Woods");
+        }
+        return getMap().getTerrain("Open Ground");
     }
 
     public void addBuildingLevels(Terrain centerLocationTerrain, boolean multihex){
