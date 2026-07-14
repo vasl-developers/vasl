@@ -1312,7 +1312,7 @@ public class Map  {
     /**
      * Sets the hex grid to conform with the terrain and elevation grids
      */
-    public void resetHexTerrain(double gridadj){
+    public void resetHexTerrain(){
 
         // step through each hex and reset the terrain.
         // EqualRowCount applies only to DaE map - ?
@@ -6648,14 +6648,12 @@ public class Map  {
         boolean isCropping = true;
         Map newMap = new Map(hexWidth, hexHeight, localHexWidth, localHexHeight, A1CenterX, A1CenterY, localGridWidth, localGridHeight, terrainNameMap, passboardgridconfig, passcropgridconfig, isCropping);
 
-        int  gridadj= upperLeft.x;
-
         // copy the terrain and elevation grids
-        for(int x = 0; x < newMap.gridWidth && x + gridadj < gridWidth; x++) {
+        for(int x = 0; x < newMap.gridWidth && x < gridWidth; x++) {
             for(int y = 0; y < newMap.gridHeight && y + upperLeft.y < gridHeight; y++){
-                if(x+gridadj >=0) { // final RB adjustment - upperLeft.x will be a small negative if cropping to fullhex but keeping row A due to offset;
-                    newMap.terrainGrid[x][y] = terrainGrid[x + gridadj][y + upperLeft.y];
-                    newMap.elevationGrid[x][y] = elevationGrid[x + gridadj][y + upperLeft.y];
+                if(x >=0) { // final RB adjustment - upperLeft.x will be a small negative if cropping to fullhex but keeping row A due to offset;
+                    newMap.terrainGrid[x][y] = terrainGrid[x][y + upperLeft.y];
+                    newMap.elevationGrid[x][y] = elevationGrid[x][y + upperLeft.y];
                 }
             }
         }

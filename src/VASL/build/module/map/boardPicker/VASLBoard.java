@@ -152,8 +152,8 @@ public class VASLBoard extends ASLBoard {
     //ToDo delete this method
     // No longer used due to changes to los-enabled crop/flip - can be deleted when changes complete
     @Deprecated(since="6.7.1", forRemoval=true)
-    public Map getLOSData(HashMap<String, Terrain> terrainTypes, boolean isCropping, double gridadj) {
-        //return VASLBoardArchive.getLOSData(terrainTypes, isCropping, gridadj);
+    public Map getLOSData(HashMap<String, Terrain> terrainTypes, boolean isCropping) {
+        //return VASLBoardArchive.getLOSData(terrainTypes, isCropping);
         return null;
     }
 
@@ -369,7 +369,7 @@ public class VASLBoard extends ASLBoard {
             // update the hex grid
             //ToDo check if this should be re-enabled; will it solve/create problems?
             //if (changed) {
-            //    LOSData.resetHexTerrain(gridadj);
+            //    LOSData.resetHexTerrain();
             //}
         }
     }
@@ -528,7 +528,7 @@ public class VASLBoard extends ASLBoard {
                         changed = true;
                         PTO = true;
                     }
-                    // all these will be have already been handled in applyColorSSRulestoTerrainElevationGrids(VASLMap, sharedBoardMetadata.getLOSSSRules());
+                    // all these will have already been handled in applyColorSSRulestoTerrainElevationGrids(VASLMap, sharedBoardMetadata.getLOSSSRules());
                     else if ("RowhouseBarsToBuildings".equals(s) || "RowhouseBarsToOpenGround".equals(s) ||
                             "PalmTrees".equals(s)){
 
@@ -548,7 +548,7 @@ public class VASLBoard extends ASLBoard {
                 } */
                 else if ("terrainToElevationMap".equals(rule.getType())) {
                     // need to set Hex values
-                    LOSData.resetHexTerrain(0);
+                    LOSData.resetHexTerrain();
                     //applyTerrainToElevationMapRule(rule, LOSData);
                     changed = true;
                 } else if ("elevationToTerrainMap".equals(rule.getType())) {
@@ -572,7 +572,7 @@ public class VASLBoard extends ASLBoard {
             // update the hex grid
             //ToDo check if this should be re-enabled; will it solve/create problems?
             //if (changed) {
-            //    LOSData.resetHexTerrain(gridadj);
+            //    LOSData.resetHexTerrain();
             //}
         }
     }
