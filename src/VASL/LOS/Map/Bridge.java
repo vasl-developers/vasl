@@ -74,13 +74,14 @@ public class Bridge {
 		//setRoadShape();
 	}
 
-	public Terrain getTerrain(){ return terrain;}
+	public Terrain 		getTerrain(){ return terrain;}
 	public int			getRoadLevel(){ return roadLevel;}
 	public int			getRotation(){ return rotation;}
 	public Location		getLocation(){ return location;}
 	public void			setLocation(Location newLocation){ location = newLocation;}
 	public Point 		getCenter(){ return center;}
-	public void	setCenter(Point newCenter){
+
+	public void			setCenter(Point newCenter){
 
 		center = newCenter;
 		setShape();

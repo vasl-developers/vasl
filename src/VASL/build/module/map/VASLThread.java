@@ -860,6 +860,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             if (levelchangelocation.getName().contains("Rooftop") && levelchangelocation.getLevelInHex() != 1) {
                 leveladj = -0.5;
             }
+            // FB special case
             if (source.getTerrain().getName().contains("Railroad, Embankment")) {
                 // handle special case of EmRR bridge on FB map
                 for (int x = 0; x < 6; x++) {
@@ -869,6 +870,16 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                     }
                 }
             }
+            if (target.getTerrain().getName().contains("Railroad, Embankment")) {
+                // handle special case of EmRR bridge on FB map
+                for (int x = 0; x < 6; x++) {
+                    Terrain hexsideterrain = target.getHex().getHexsideLocation(x).getTerrain();
+                    if (hexsideterrain != null && !hexsideterrain.isDepression() && hexsideterrain.getName().contains("Railroad, Embankment")) {
+                        leveladj = 0.5; // Bridge will be half-level higher
+                    }
+                }
+            }
+
         }
         else if (-3 < levelchangelocation.getLevelInHex() && levelchangelocation.getLevelInHex() <10) {   // no upper level so create virtual levels up to 10
             virtualleveladj = (levelchangedirection.equals("up") ? 1 : -1);
