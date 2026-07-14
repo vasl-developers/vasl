@@ -282,7 +282,7 @@ public class LOSDataEditor {
         setAllUnknownTerrain();
 
         // we need to occasionally update the hex grid as the following processes need updated hex information
-        map.resetHexTerrain(0);
+        map.resetHexTerrain();
 
         // fix cliff elevation pixels - set them to the lower of the two hex elevations
         for (int x = 0; x < map.getGridWidth(); x++) {
@@ -315,7 +315,7 @@ public class LOSDataEditor {
         }
         setExteriorFactoryWalls();
 
-        map.resetHexTerrain(0);
+        map.resetHexTerrain();
 
         // set depression elevations
         for (int x = 0; x < map.getGridWidth(); x++) {
@@ -328,11 +328,11 @@ public class LOSDataEditor {
             }
         }
 
-        map.resetHexTerrain(0);
+        map.resetHexTerrain();
 
         fixElevatedSunkenRoads();
 
-        map.resetHexTerrain(0);
+        map.resetHexTerrain();
 
         addStairways();
     }
