@@ -3137,8 +3137,8 @@ public class Map  {
                 }
 
                 // source on a bridge and target under bridge, etc?
-                if ((status.source.getTerrain().isBridge() && status.target.isCenterLocation()) ||
-                        (status.target.getTerrain().isBridge() && status.source.isCenterLocation())) {
+                if (((status.source.getTerrain().isBridge() || status.source.getTerrain().isTunnel()) && status.target.isCenterLocation()) ||
+                        ((status.target.getTerrain().isBridge() || status.source.getTerrain().isTunnel()) && status.source.isCenterLocation())) {
 
                     result.setBlocked(
                             (int) status.source.getLOSPoint().getX(),
