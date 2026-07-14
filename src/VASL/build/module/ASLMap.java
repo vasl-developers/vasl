@@ -611,7 +611,7 @@ public class ASLMap extends Map {
         }
         // ToDo test this method is working properly - especially for hexsides (Bocage!)
         // does it need to be done here?
-        VASLMap.resetHexTerrain(0);
+        VASLMap.resetHexTerrain();
 
     }
 
@@ -629,7 +629,7 @@ public class ASLMap extends Map {
         }
         // ToDo test this method is working properly - especially for hexsides (Bocage!)
         // does it need to be done here?
-        VASLMap.resetHexTerrain(0);
+        VASLMap.resetHexTerrain();
 
     }
     protected void addOneBoardToMap(VASLBoard board, GameModule mod, String fliphexconfig) {
@@ -1285,7 +1285,7 @@ public class ASLMap extends Map {
                     }
                 }
                 hexToCheck.getCenterLocation().setTerrain(losonoverlays.newlosdata.getTerrain(terr.getType()));
-                hexToCheck.resetHexsideTerrain(0);
+                hexToCheck.resetHexsideTerrain();
             //}
         }
 
@@ -1307,7 +1307,7 @@ public class ASLMap extends Map {
                 }
             }
             inhterrhex.getCenterLocation().setTerrain(losonoverlays.newlosdata.getTerrain(terrtype));
-            inhterrhex.resetHexsideTerrain(0);
+            inhterrhex.resetHexsideTerrain();
         }
     }
 
