@@ -464,7 +464,7 @@ public class BoardArchive {
                     }
                 }
                 // code moved from before stairway loop to enable factory quasi-levels in stairway hexes
-                VASLMap.resetHexTerrain(0); //gridadj);
+                VASLMap.resetHexTerrain();
             }
         } catch(Exception e) {
             logger.warn("Could not read the LOS data in board " + qualifiedBoardArchive);
@@ -623,7 +623,7 @@ public class BoardArchive {
                     }
                 }
                 // code moved from before stairway loop to enable factory quasi-levels in stairway hexes
-                VASLMap.resetHexTerrain(0); //gridadj);
+                VASLMap.resetHexTerrain();
             }
         } catch(Exception e) {
             logger.warn("Could not read the LOS data in board " + qualifiedBoardArchive);
