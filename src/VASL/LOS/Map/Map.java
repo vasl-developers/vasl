@@ -472,6 +472,33 @@ public class Map  {
                 }
             }
         }
+        else if (b.getName().contains("FB")) {
+            if (this.A1CenterY == 0) { // Cropped board
+                int evencol =0;
+                for (int col = 0; col < this.width; col++) {
+                    evencol = col % 2 == 0 ? 1 : 0;
+                    hexGrid[col] = new Hex[this.height + evencol]; // add 1 if even
+                    for (int row = 0; row < this.height + evencol; row++) {
+                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                    }
+                }
+            } else { // uncropped board
+                for (int col = 0; col < (startcol + this.width); col++) {
+                    hexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
+                    for (int row = 0; row < (startrow + this.height + (col % 2)); row++) {
+                        if (col >= startcol && row >= startrow) {
+                            hexGrid[col - startcol][row- startrow] = new Hex(col - startcol, row - startrow, getGEOHexName(col, row, false, false), getHexCenterPoint(col - startcol, row - startrow), hexHeight, hexWidth, this, 0, terrainList[0]);
+                        }
+                    }
+                }
+            }
+            // reset the hex locations to map grid
+            for (int col = 0; col < hexGrid.length; col++) {
+                for (int row = 0; row < hexGrid[col].length; row++) {
+                    hexGrid[col][row].resetHexsideLocationNames();
+                }
+            }
+        }
         else {
             return null;
         }
@@ -1285,7 +1312,7 @@ public class Map  {
     /**
      * Sets the hex grid to conform with the terrain and elevation grids
      */
-    public void resetHexTerrain(double gridadj){
+    public void resetHexTerrain(){
 
         // step through each hex and reset the terrain.
         // EqualRowCount applies only to DaE map - ?
@@ -2761,7 +2788,7 @@ public class Map  {
             // set the hillocks status
             status.setHillockStatus();
 
-            // do RR Embankment/Partial Orchard terrain check here
+            // do RrEmbankment/Partial Orchard terrain check here
             Terrain checkhexside;
             for (Integer hexside : hexsides) {
                 // get Terrain for hexside
@@ -3110,8 +3137,8 @@ public class Map  {
                 }
 
                 // source on a bridge and target under bridge, etc?
-                if ((status.source.getTerrain().isBridge() && status.target.isCenterLocation()) ||
-                        (status.target.getTerrain().isBridge() && status.source.isCenterLocation())) {
+                if (((status.source.getTerrain().isBridge() || status.source.getTerrain().isTunnel()) && status.target.isCenterLocation()) ||
+                        ((status.target.getTerrain().isBridge() || status.source.getTerrain().isTunnel()) && status.source.isCenterLocation())) {
 
                     result.setBlocked(
                             (int) status.source.getLOSPoint().getX(),
@@ -5310,9 +5337,16 @@ public class Map  {
         if (status.currentHex.hasBridge()) {
 
             if (status.sourceElevation == status.targetElevation && status.sourceElevation == status.bridge.getRoadLevel()) {
-
+                // handle special case of EmRR bridge on FB map
+                for (int x = 0; x < 6; x++ ) {
+                    Terrain hexsideterrain = status.currentHex.getHexsideLocation(x).getTerrain();
+                    if  (hexsideterrain != null && !hexsideterrain.isDepression() && hexsideterrain.getName().contains("Railroad, Embankment")) {
+                        return false; // Bridge will be half-level higher
+                    }
+                }
                 // on bridge but not on road?
-                if (status.bridgeArea.contains((double)status.currentCol, (double)status.currentRow) && !status.bridgeRoadArea.contains((double)status.currentCol, (double)status.currentRow)) {
+                if (status.bridgeArea.contains((double)status.currentCol, (double)status.currentRow) && !status.bridgeRoadArea.contains((double)status.currentCol, (double)status.currentRow)
+                && (!status.currentTerrain.isRoad())) {
 
                     // add hindrance
                     if (addHindranceHex(status, result))
@@ -6614,14 +6648,12 @@ public class Map  {
         boolean isCropping = true;
         Map newMap = new Map(hexWidth, hexHeight, localHexWidth, localHexHeight, A1CenterX, A1CenterY, localGridWidth, localGridHeight, terrainNameMap, passboardgridconfig, passcropgridconfig, isCropping);
 
-        int  gridadj= upperLeft.x;
-
         // copy the terrain and elevation grids
-        for(int x = 0; x < newMap.gridWidth && x + gridadj < gridWidth; x++) {
+        for(int x = 0; x < newMap.gridWidth && x < gridWidth; x++) {
             for(int y = 0; y < newMap.gridHeight && y + upperLeft.y < gridHeight; y++){
-                if(x+gridadj >=0) { // final RB adjustment - upperLeft.x will be a small negative if cropping to fullhex but keeping row A due to offset;
-                    newMap.terrainGrid[x][y] = terrainGrid[x + gridadj][y + upperLeft.y];
-                    newMap.elevationGrid[x][y] = elevationGrid[x + gridadj][y + upperLeft.y];
+                if(x >=0) { // final RB adjustment - upperLeft.x will be a small negative if cropping to fullhex but keeping row A due to offset;
+                    newMap.terrainGrid[x][y] = terrainGrid[x][y + upperLeft.y];
+                    newMap.elevationGrid[x][y] = elevationGrid[x][y + upperLeft.y];
                 }
             }
         }

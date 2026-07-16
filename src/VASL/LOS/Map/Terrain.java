@@ -65,7 +65,14 @@ public class Terrain {
      * @return return true if the terrain is a bridge
      */
     public boolean isBridge() {
-        return LOSCategory == LOSCategories.BRIDGE;
+        return (LOSCategory == LOSCategories.BRIDGE);
+    }
+
+    /**
+     * @return return true if the terrain is a Tunnel
+     */
+    public boolean isTunnel() {
+        return (LOSCategory == LOSCategories.TUNNEL);
     }
 
     /**

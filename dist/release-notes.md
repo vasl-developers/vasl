@@ -1,5 +1,5 @@
-# Release Notes: Version 6.7.4-beta2
-**Release Date:** June 17, 2026
+# Release Notes: Version 6.7.4-beta3
+**Release Date:** July 14, 2026
 
 ---
 
@@ -9,16 +9,13 @@
 ---
 
 ## 🛠 Bug Fixes
- - Fix 1: Various bugs causing VASL to crash were fixed.
- - Fix 2: Fixed old CH boards that would not open.
+ - Fix 1: 
 
 ## Improvements
 
- - Improvement 1: Game Updater function now auto-syncs extensions.
- - Improvement 2: Text rendering improvements to various gun and vehicle counters.
- - Improvement 3: SVG versions of the bridge/pier counters, Vehicle Dust, Immobilized, stun/STUN +X counters, PFZs, etc.
- - Improvement 4: SVG versions of 360 degree pillboxes, barricade and roadblock, drift, and parachute counters.
-
+ - Improvement 1: Final set of SVG counter updates. Vehicle and Gun unit depiction updates still need a volunteer artist or artists. Miscellaneous counters can be updated upon request.
+ - Improvement 2: Consolidated all the BRT-specific counters under a new "Blood Reef: Tarawa" panel in the "HASL and CGs" tab.
+ 
 ---
 
 ## ⚠️ Compatibility Notes

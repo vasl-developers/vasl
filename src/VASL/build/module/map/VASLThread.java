@@ -39,6 +39,7 @@ import javax.swing.JCheckBox;
 import VASL.LOS.Map.LOSResult;
 import VASL.LOS.Map.Location;
 import VASL.LOS.Map.Map;
+import VASL.LOS.Map.Terrain;
 import VASL.build.module.ASLMap;
 import VASL.LOS.VASLGameInterface;
 import VASL.build.module.dice.DieColor;
@@ -859,6 +860,26 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             if (levelchangelocation.getName().contains("Rooftop") && levelchangelocation.getLevelInHex() != 1) {
                 leveladj = -0.5;
             }
+            // FB special case
+            if (source.getTerrain().getName().contains("Railroad, Embankment")) {
+                // handle special case of EmRR bridge on FB map
+                for (int x = 0; x < 6; x++) {
+                    Terrain hexsideterrain = source.getHex().getHexsideLocation(x).getTerrain();
+                    if (hexsideterrain != null && !hexsideterrain.isDepression() && hexsideterrain.getName().contains("Railroad, Embankment")) {
+                        leveladj = 0.5; // Bridge will be half-level higher
+                    }
+                }
+            }
+            if (target.getTerrain().getName().contains("Railroad, Embankment")) {
+                // handle special case of EmRR bridge on FB map
+                for (int x = 0; x < 6; x++) {
+                    Terrain hexsideterrain = target.getHex().getHexsideLocation(x).getTerrain();
+                    if (hexsideterrain != null && !hexsideterrain.isDepression() && hexsideterrain.getName().contains("Railroad, Embankment")) {
+                        leveladj = 0.5; // Bridge will be half-level higher
+                    }
+                }
+            }
+
         }
         else if (-3 < levelchangelocation.getLevelInHex() && levelchangelocation.getLevelInHex() <10) {   // no upper level so create virtual levels up to 10
             virtualleveladj = (levelchangedirection.equals("up") ? 1 : -1);
@@ -962,10 +983,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
     private void doLOS() {
 
         // silently ignore invalid LOS checks
-        if(source == null || target == null || result == null || VASLGameInterface == null)
-        {
-            return;
-        }
+        if(source == null || target == null || result == null || VASLGameInterface == null ) {return;}
 
         // do the LOS
         result = new LOSResult();
@@ -1049,6 +1067,15 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                 }
                 if (source.getHex().isDepressionTerrain() && !source.getLOSPoint().equals(source.getHex().getHexCenter())) {
                     leveladj = +1;
+                }
+                if (source.getTerrain().getName().contains("Railroad, Embankment")) {
+                    // handle special case of EmRR bridge on FB map
+                    for (int x = 0; x < 6; x++) {
+                        Terrain hexsideterrain = source.getHex().getHexsideLocation(x).getTerrain();
+                        if (hexsideterrain != null && !hexsideterrain.isDepression() && hexsideterrain.getName().contains("Railroad, Embankment")) {
+                            leveladj = 0.5; // Bridge will be half-level higher
+                        }
+                    }
                 }
                 sourcelevel = source.getAbsoluteHeight() + leveladj;          //source.getLevelInHex() + source.getHex().getBaseLevelofHex() + leveladj;
             }

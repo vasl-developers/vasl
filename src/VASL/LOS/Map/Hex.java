@@ -410,13 +410,12 @@ public class Hex {
                 northWestOnMap = false;
             }
             // last hex in even column?
-            if ((columnNumber % 2 == 0) && (rowNumber == map.getHeight()-1)) {
+            if ((columnNumber % 2 == 0) && (rowNumber == map.getHeight() - 1)) {
                 southOnMap = false;
                 southEastOnMap = false;
                 southWestOnMap = false;
             }
         }
-
     }
 
 	// used to update the hexside location once the map has been fully initialized and in new crop/flip methods
@@ -661,8 +660,8 @@ public class Hex {
         Terrain centerLocationTerrain = getnearcenterLocationTerrain();
         int centerLocationElevation = getnearcenterLocationElevation();
         // fix center location when building misses the center dot
-        if(!centerLocationTerrain.isBuilding() && getHexsideBuildingTerrain(0) != null) {
-            centerLocationTerrain = getHexsideBuildingTerrain(0);
+        if(!centerLocationTerrain.isBuilding() && getHexsideBuildingTerrain() != null) {
+            centerLocationTerrain = getHexsideBuildingTerrain();
         }
         if (centerLocationTerrain  == null) {centerLocationTerrain = map.getTerrain("Open Ground");}
         // hack to deal with I24-I26 wooden warehouses on bdRO
@@ -737,21 +736,45 @@ public class Hex {
                     }
                 }
                 getHexsideLocation(x).setTerrain(terrain);
+
+                // test hexsides/verticies that should be out of play - such as maps with border areas
+                if (terrain.getName().contains("OutOfBounds")) {
+                    setHexsideOffMap(x);
+                }
             }
+
         }
+
 
         // set the hex base height
         setBaseLevelofHex(centerLocationElevation);
         // set the depression terrain
         setDepressionTerrain();
         // set inherent terrain in the hex grid
-        setInherentTerrain(0);
+        setInherentTerrain();
         // reset the hexside terrain
-         resetHexsideTerrain(0);
-
+        resetHexsideTerrain();
         // correct for single hex bridges
-        fixBridges(0);
+        fixBridgesTunnelWater();
     }
+
+    private void setHexsideOffMap(int x){
+        switch (x){
+            case 0 : northOnMap		= false;
+                    return;
+            case 1 : northEastOnMap  = false;
+                    return;
+            case 2 : southEastOnMap  = false;
+                    return;
+            case 3 : southOnMap		= false;
+                    return;
+            case 4 : southWestOnMap  = false;
+                    return;
+            case 5 : northWestOnMap  = false;
+            default : return;
+        }
+    }
+
 
     /**
      * gets Terrain one pixel away from center point of hex
@@ -796,13 +819,13 @@ public class Hex {
      * so the hex terrain is open ground but should really be the building
      * @return the building terrain
      */
-    private Terrain getHexsideBuildingTerrain(double gridadj){
+    private Terrain getHexsideBuildingTerrain(){
 
         for(int x = 0; x <6; x++) {
 
             // we need to read the terrain from the map as the hexside location may not be current when this is called
             Point p = hexsideLocations[x].getEdgeCenterPoint();
-            Terrain terrain = map.getGridTerrain( (int)(p.x + gridadj), p.y);
+            Terrain terrain = map.getGridTerrain(p.x, p.y);
             if(terrain != null && terrain.isBuilding()) {
                 return terrain;
             }
@@ -831,7 +854,7 @@ public class Hex {
     /**
      * @return true if this hex contains bridge terrain
      */
-    private boolean hasBridgeTerrain(){
+    private boolean hasBridgeOrTunnelTerrain(){
 
         final Rectangle rectangle = getHexBorder().getBounds();
         for(int x = rectangle.x; x < rectangle.x + rectangle.width; x++) {
@@ -839,7 +862,7 @@ public class Hex {
 
                 if(getHexBorder().contains(x,y) &&
                         map.onMap(x,y) &&
-                        map.getGridTerrain(x,y).isBridge()) {
+                        (map.getGridTerrain(x,y).isBridge() || map.getGridTerrain(x, y).isTunnel())) {
 
                     return true;
                 }
@@ -852,17 +875,15 @@ public class Hex {
     /**
      * Corrects hexes with single-hex bridges by adding a new location (either bridge or depression)
      */
-    private void fixBridges(double gridadj) {
-
-        if(hasBridgeTerrain()) {
+    private void fixBridgesTunnelWater() {
+       if(hasBridgeOrTunnelTerrain()) {
             Location bridgeLocation = null;
-            // determine if existing location is bridge or depression terrain
-
+            // determine if existing location is bridge, tunnel, water or depression terrain
             if (centerLocation.isDepressionTerrain()) {
                 // need to add new bridge location
                 final Location newLocation = new Location(centerLocation);
                 newLocation.setDepressionTerrain(null);
-                newLocation.setTerrain(getBridgeTerrain(gridadj));
+                newLocation.setTerrain(getBridgeTerrain());
                 // elevated road check
                 int bridgeLevelInHex = getBridgeLocationAbsoluteLevel() - newLocation.getHex().getBaseLevelofHex();
                 newLocation.setLevelInHex(bridgeLevelInHex);
@@ -873,7 +894,7 @@ public class Hex {
             else if (centerLocation.getTerrain().isBridge()) {
                 // need to add new depression location
                 final Location newLocation = new Location(centerLocation);
-                newLocation.setDepressionTerrain(getDepressionTerrain(gridadj));
+                newLocation.setDepressionTerrain(getDepressionTerrain());
                 // added by DR; this is a wonky fix to deal with bridges in non-zero level terrain; not sure why its needed but it works, otherwise bridges and depressions in valleys are two levels apart and those in hills are at same level
                 int depressionadj = 1;
                 if (baseLevelofHex == 0 && centerLocation.getLevelInHex() == 0) {
@@ -888,10 +909,20 @@ public class Hex {
                 }
                 //ToDo check to see if this line is ever used and if it works properly
                 newLocation.setLevelInHex(centerLocation.getLevelInHex() - depressionadj);
-                newLocation.setTerrain(getDepressionTerrain(gridadj));
+                newLocation.setTerrain(getDepressionTerrain());
                 newLocation.setUpLocation(centerLocation);
                 centerLocation.setDownLocation(newLocation);
                 bridgeLocation = centerLocation;
+            }
+            else if (centerLocation.getTerrain().isTunnel()) {
+                // need to add new terrain location above tunnel
+                final Location newLocation = new Location(centerLocation);
+                newLocation.setDepressionTerrain(null);
+                newLocation.setTerrain(getRareTerrain(getName()));
+                newLocation.setLevelInHex(centerLocation.getLevelInHex() + 1);
+                newLocation.setDownLocation(centerLocation);
+                centerLocation.setUpLocation(newLocation);
+                //bridgeLocation = newLocation;
             }
             else if (centerLocation.getTerrain().isWaterTerrain()){
                 // need to add new bridge location
@@ -900,17 +931,19 @@ public class Hex {
                 int bridgeLevelInHex = getBridgeLocationAbsoluteLevel() - newLocation.getHex().getBaseLevelofHex();
                 newLocation.setLevelInHex(bridgeLevelInHex);
                 //newLocation.setLevelInHex(baseLevelofHex + depressionadj);
-                newLocation.setTerrain(getBridgeTerrain(gridadj));
+                newLocation.setTerrain(getBridgeTerrain());
                 newLocation.setDownLocation(centerLocation);
                 centerLocation.setUpLocation(newLocation);
                 bridgeLocation = newLocation;
             }
-            setBridge(new Bridge(getBridgeTerrain(gridadj), getBridgeLocationAbsoluteLevel(), bridgeLocation,
-                    true, new Point((int) center.getX(), (int) center.getY())));
+            if (bridgeLocation != null) {
+                setBridge(new Bridge(getBridgeTerrain(), getBridgeLocationAbsoluteLevel(), bridgeLocation,
+                        true, new Point((int) center.getX(), (int) center.getY())));
+            }
         }
     }
 
-    private Terrain getBridgeTerrain(double gridadj){
+    private Terrain getBridgeTerrain(){
 
         final Rectangle rectangle = getHexBorder().getBounds();
         for(int x = rectangle.x; x < rectangle.x + rectangle.width; x++) {
@@ -918,13 +951,26 @@ public class Hex {
 
                 if(getHexBorder().contains(x,y) &&
                         map.onMap(x,y) &&
-                        map.getGridTerrain((int)(x + gridadj),y).isBridge()) {
+                        map.getGridTerrain(x,y).isBridge()) {
 
-                    return map.getGridTerrain((int)(x + gridadj),y);
+                    return map.getGridTerrain(x,y);
                 }
             }
         }
         return null;
+    }
+
+    /**
+     * @return return Terrain associated with special case hex -
+     * add new cases as required when fixing los on boards
+     * first case is underpass in Dinant II50
+     * should be ok to use Hex name as test since these should be rare cases
+     */
+    private Terrain getRareTerrain(String hexname){
+        if (hexname.contains("II50")){
+            return getMap().getTerrain("Woods");
+        }
+        return getMap().getTerrain("Open Ground");
     }
 
     public void addBuildingLevels(Terrain centerLocationTerrain, boolean multihex){
@@ -1047,7 +1093,7 @@ public class Hex {
             fixspecialcasesAddRooftops(); // handles RO wooden warehouses and SK transform (all buildings are single story)
         }
     }
-    private Terrain getDepressionTerrain(double gridadj){
+    private Terrain getDepressionTerrain(){
 
         final Rectangle rectangle = getHexBorder().getBounds();
         for(int x = rectangle.x; x < rectangle.x + rectangle.width; x++) {
@@ -1055,9 +1101,9 @@ public class Hex {
 
                 if(getHexBorder().contains(x,y) &&
                         map.onMap(x,y) &&
-                        map.getGridTerrain((int)(x + gridadj),y).isDepression()) {
+                        map.getGridTerrain(x ,y).isDepression()) {
 
-                    return map.getGridTerrain((int)(x + gridadj),y);
+                    return map.getGridTerrain(x ,y);
                 }
             }
         }
@@ -1083,7 +1129,7 @@ public class Hex {
     /**
      * If the hex contains inherent terrain set center location to that terrain type
      */
-    private void setInherentTerrain(double gridadj){
+    private void setInherentTerrain(){
 
         final Rectangle rectangle = getHexBorder().getBounds();
         Terrain terrain = null;
@@ -1092,11 +1138,11 @@ public class Hex {
 
                 if(rectangle.getBounds().contains(x,y) &&
                         map.onMap(x,y)  &&
-                        (x +gridadj< map.getGridWidth()) &&  //these two lines are to ensure point is within the terrain grid
-                        (x + gridadj >= 0) &&
-                        map.getGridTerrain((int)(x + gridadj),y).isInherentTerrain() &&
+                        (x < map.getGridWidth()) &&  //these two lines are to ensure point is within the terrain grid
+                        (x >= 0) &&
+                        map.getGridTerrain(x ,y).isInherentTerrain() &&
 					getNearestLocation(x, y).equals(centerLocation)) {
-                    terrain = map.getGridTerrain((int)(x + gridadj),y);
+                    terrain = map.getGridTerrain(x ,y);
                 }
             }
         }
@@ -1106,7 +1152,7 @@ public class Hex {
         }
     }
 
-    public void resetHexsideTerrain(double gridadj) {
+    public void resetHexsideTerrain() {
 
 		for (int x = 0; x < 6; x++) {
 
@@ -1114,7 +1160,7 @@ public class Hex {
             if (isHexsideOnMap(x)) {
 
 				final Location l = getHexsideLocation(x);
-				Terrain t = map.getGridTerrain((int)(l.getEdgeCenterPoint().getX()+gridadj), (int)l.getEdgeCenterPoint().getY());
+				Terrain t = map.getGridTerrain((int)(l.getEdgeCenterPoint().getX()), (int)l.getEdgeCenterPoint().getY());
                 if (t != null && t.isOpen()){
                     t = checkWallHedgeGap(l);
                 }

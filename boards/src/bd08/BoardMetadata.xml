@@ -24,7 +24,7 @@
 	v6.4 Mar 2018 update version for lightwoods transform (ATC)
 
 -->
-<boardMetadata name="08" version="7.4" versionDate="2025/10/26" author="TR" boardImageFileName="bd08.gif" hasHills="TRUE" width="33" height="10">
+<boardMetadata name="08" version="7.5" versionDate="2026/06/27" author="TR" boardImageFileName="bd08.gif" hasHills="TRUE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -126,8 +126,8 @@
 
 		<overlaySSRule name="BSO_08_BSOCW" image="BSO_08_BSOCW.gif" x="76" y="1" />
 		<overlaySSRule name="8_BSO_NoIsland" image="08_NoIsland.gif" x="1570" y="262" />
-		<overlaySSRule name="8_BSO_1SideWater" image="08_Hexrow1SideToWater.gif" x="1" y="1" />
-		<overlaySSRule name="8_BSO_10SideWater" image="08_Hexrow10SideToWater.gif" x="1" y="214" />
+		<overlaySSRule name="8_BSO_1SideWater" image="08_Hexrow1SideToWater.gif" x="0" y="0" />
+		<overlaySSRule name="8_BSO_10SideWater" image="08_Hexrow10SideToWater.gif" x="0" y="213" />
 		<overlaySSRule name="DenseJungle" image="08_DenseJungle.gif" x="191" y="1" />
 		<overlaySSRule name="NoWoodsRoads" image="08_NoWoodsRoads.gif" x="535" y="26" />
 		<overlaySSRule name="RoadsToPaths" image="08_WoodsRoadToPath.gif" x="531" y="26" />
