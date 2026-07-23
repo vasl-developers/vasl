@@ -72,6 +72,8 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
     private static final String ENABLED = "LosCheckEnabled";
     private static final String HINDRANCE_THREAD_COLOR = "hindranceThreadColor";
     private static final String BLOCKED_THREAD_COLOR = "blockedThreadColor";
+    private static final String COUNTER_OPACITY_PERCENT = "CounterOpacity";
+    private static final String HIDE_OPACITY_ATTRIBUTE = "hideOpacity";
     private boolean legacyMode;
     private boolean initialized; // LOS has been initialized?
     private static final String preferenceTabName = "LOS";
@@ -295,14 +297,12 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         final ColorConfigurer hindrance = new ColorConfigurer(HINDRANCE_THREAD_COLOR, "Hindrance Thread Color", Color.red);
         final ColorConfigurer blocked = new ColorConfigurer(BLOCKED_THREAD_COLOR, "Blocked Thread Color", Color.blue);
         final BooleanConfigurer verbose = new BooleanConfigurer("verboseLOS", "Verbose LOS mode");
-        final StringEnumConfigurer opacity = new StringEnumConfigurer("CounterOpacity", "Unit opacity % during LOS checks:  ", new String[] { "0", "25", "33", "50", "66", "75", "100" } );
 
         getGameModule().getPrefs().addOption(preferenceTabName, thread);
         getGameModule().getPrefs().addOption(preferenceTabName, enable);
         getGameModule().getPrefs().addOption(preferenceTabName, hindrance);
         getGameModule().getPrefs().addOption(preferenceTabName, blocked);
         getGameModule().getPrefs().addOption(preferenceTabName, verbose);
-        getGameModule().getPrefs().addOption(preferenceTabName, opacity);
 
         final ItemListener l = new ItemListener() {
 
@@ -317,6 +317,15 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         enableAll(blocked.getControls(), Boolean.TRUE.equals(enable.getValue()));
         enableAll(verbose.getControls(), Boolean.TRUE.equals(enable.getValue()));
 
+        StringEnumConfigurer opacity = new StringEnumConfigurer(COUNTER_OPACITY_PERCENT, "Unit opacity % during LOS checks:  ", new String[] { "0", "25", "33", "50", "66", "75", "100" } );
+        if (getGameModule().getPrefs().getValue(COUNTER_OPACITY_PERCENT) == null) {
+            getGameModule().getPrefs().addOption(preferenceTabName, opacity);
+            opacityValue = "33";
+        } else {
+            opacityValue = getGameModule().getPrefs().getValue(COUNTER_OPACITY_PERCENT).toString();
+        }
+        this.setAttribute(HIDE_OPACITY_ATTRIBUTE, opacityValue);
+
         opacity.addPropertyChangeListener(e -> {
             opacityValue = (String)e.getNewValue();
 
@@ -324,9 +333,8 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                 opacityValue = "33";
             }
 
-            this.setAttribute("hideOpacity", opacityValue);
+            this.setAttribute(HIDE_OPACITY_ATTRIBUTE, opacityValue);
         });
-
         // hook for game opening/closing
         getGameModule().getGameState().addGameComponent(this);
     }
