@@ -22,13 +22,15 @@
 -->
 <boardMetadata 
 	name="BFPDW5b" 
-	version="6.5" 
-	versionDate="Jan 2023" 
+	version="6.6" 
+	versionDate="2026/07/22" 
 	author="BK" 
 	boardImageFileName="bdBFPDW5b.gif" 
 	hasHills="TRUE" 
 	width="33" 
 	height="10"
+	hexHeight = "64.47"
+	hexWidth = "56.25"
 	A1CenterX = "0"
 	A1CenterY = "-612.75"
 	>

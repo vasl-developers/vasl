@@ -195,8 +195,8 @@ public class Map  {
         // create the hex grid
         int startcol =0; int startrow =0;
         hexGrid = new Hex[this.width][];
-        //ToDo Test for uses of b from a/b boards, and BFPDW boards
-        if (this.A1CenterY==32.25 || this.A1CenterY == -612.75 || this.A1CenterY == 97.1) {   //adding configuration for BFP1 and BFP2
+        //ToDo Test for uses of b from a/b boards
+        if (this.A1CenterY==32.25 || this.A1CenterY == 32.235 ||this.A1CenterY == -612.75 || this.A1CenterY == 97.1) {   //adding configuration for BFP1 and BFP2 and BFPDW
             for (int col = 0; col < (startcol + this.width); col++) {
                 hexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
                 for (int row = 0; row < (startrow + this.height + (col % 2)); row++) {
