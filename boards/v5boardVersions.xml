@@ -254,8 +254,8 @@
 		<boarddata name="BFPU" version="6.1" versionDate="2025/04/14" description="" boardType="Geoboard" publisher="BFP" issued="2025/04/14" />
 		<boarddata name="BFPDW1a" version="6.6" versionDate="2026/07/22" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPDW1b" version="6.6" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPDW2a" version="6.4" versionDate="2025/10/27" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPDW2b" version="6.5" versionDate="2025/10/27" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPDW2a" version="6.5" versionDate="2026/07/23" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPDW2b" version="6.6" versionDate="2026/07/23" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPDW3a" version="6.7" versionDate="2026/07/22" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPDW3b" version="6.5" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPDW4a" version="6.5" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />

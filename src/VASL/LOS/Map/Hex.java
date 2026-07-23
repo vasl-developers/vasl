@@ -655,8 +655,8 @@ public class Hex {
      */
     public void resetTerrain(){
         //ToDo add all overlay and other terrain updates here
-        // set the center location terrain
 
+        // set the center location terrain
         Terrain centerLocationTerrain = getnearcenterLocationTerrain();
         int centerLocationElevation = getnearcenterLocationElevation();
         // fix center location when building misses the center dot
