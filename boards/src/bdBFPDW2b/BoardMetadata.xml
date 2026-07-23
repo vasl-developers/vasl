@@ -27,6 +27,8 @@
 	hasHills="TRUE" 
 	width="33" 
 	height="10" 
+	hexHeight = "64.47"
+	hexWidth = "56.25"
 	A1CenterX = "0"
 	A1CenterY = "-612.75"
 	>

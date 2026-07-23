@@ -26,7 +26,10 @@
 	boardImageFileName="bdBFPDW2a.gif" 
 	hasHills="TRUE" 
 	width="33" 
-	height="10" >
+	height="10" 
+	hexHeight = "64.47"
+	hexWidth = "56.25"
+>
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
