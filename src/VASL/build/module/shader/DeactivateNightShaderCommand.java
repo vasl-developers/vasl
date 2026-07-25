@@ -6,6 +6,9 @@ import VASSAL.build.GameModule;
 import VASSAL.build.module.properties.MutableProperty;
 import VASSAL.command.Command;
 
+import java.awt.*;
+import java.awt.event.KeyEvent;
+
 public class DeactivateNightShaderCommand extends BaseShaderCommand {
     @Override
     protected void executeCommand() {
@@ -20,6 +23,15 @@ public class DeactivateNightShaderCommand extends BaseShaderCommand {
         if (visibilityProperty == null) return;
         visibilityProperty.setPropertyValue(Boolean.FALSE.toString()).execute();
 
+        //linking to ScenInfo variables for los purposes
+        Robot robot = null;
+        try {
+            robot = new Robot();
+        } catch (AWTException e) {
+            throw new RuntimeException(e);
+        }
+        // Simulate a key press
+        robot.keyPress(KeyEvent.VK_F7);
     }
 
     @Override
