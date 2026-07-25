@@ -18,6 +18,7 @@ package VASL.LOS.Map;
 
 import VASL.LOS.counters.CounterMetadata;
 import VASL.build.module.ASLMap;
+import VASL.build.module.ScenInfo;
 import VASL.build.module.map.boardArchive.BoardArchive;
 import VASL.build.module.map.boardArchive.RBrrembankments;
 import VASL.build.module.map.boardArchive.PartialOrchards;
@@ -29,6 +30,7 @@ import VASL.LOS.counters.Smoke;
 import VASL.LOS.counters.Vehicle;
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASL.build.module.map.boardPicker.VASLBoard;
+import VASSAL.build.GameModule;
 import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.counters.GamePiece;
 import VASSAL.counters.PieceIterator;
@@ -2868,6 +2870,10 @@ public class Map  {
             }
         }
         // check the LOS rules
+        if (checkNVRRule(status, result)){
+            return true;
+        }
+
         if (checkDepressionRule(status, result)) {
             return true;
         }
@@ -3747,6 +3753,33 @@ public class Map  {
         }
         return false;
     }
+
+    /**
+     * Ensures the NVR range restrictions (including illumination) are met
+     * @param status the LOS status
+     * @param result the LOS result
+     * @return true if the LOS is blocked
+     */
+    protected boolean checkNVRRule(LOSStatus status, LOSResult result) {
+        ScenInfo scenarioInfo = GetScenarioInfo();
+        boolean isNight = scenarioInfo.getNightvalue().contains("Yes");
+        if(isNight) {
+            int nvr = scenarioInfo.getNvrvalue();
+            if (status.rangeToSource > nvr){
+                status.blocked = true;
+                status.reason = "Range is greater than NVR (E1.101)";
+                result.setBlocked(status.currentCol, status.currentRow, status.reason);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private ScenInfo GetScenarioInfo()
+    {
+        return GameModule.getGameModule().getComponentsOf(ScenInfo.class).iterator().next();
+    }
+
     /**
      * Ensures the elevation/range restriction for source/target IN a depression are met
      * @param status the LOS status
