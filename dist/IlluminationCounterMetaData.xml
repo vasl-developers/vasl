@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+	This file contains additional information about illumination game counters.
+-->
+<illuminationCounterMetadata>
+
+    <!-- metadata for each of the illumination counters
+    Attributes:
+        name = game piece name (i.e. piece.getName())
+        hex = name of hex where the illumination counter is placed
+        range = # of hex
+        zone =
+
+
+    -->
+    <starshell name="White +3 Smoke" hindrance="3" height="2"/>
+
+    <illumround name="White +3 Smoke" hindrance="3" height="2"/>
+
+    <blaze name="White +3 Smoke" hindrance="3" height="2"/>
+    <flame name="White +3 Smoke" hindrance="3" height="2"/>
+
+    <tripflares name="White +3 Smoke" hindrance="3" height="2"/>
+
+</illuminationCounterMetadata>

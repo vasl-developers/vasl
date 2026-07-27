@@ -3766,6 +3766,7 @@ public class Map  {
         if(isNight) {
             int nvr = scenarioInfo.getNvrvalue();
             if (status.rangeToSource > nvr){
+                if (!targetisIlluminatedOrInGunflash(status.currentHex))
                 status.blocked = true;
                 status.reason = "Range is greater than NVR (E1.101)";
                 result.setBlocked(status.currentCol, status.currentRow, status.reason);
@@ -3778,6 +3779,17 @@ public class Map  {
     private ScenInfo GetScenarioInfo()
     {
         return GameModule.getGameModule().getComponentsOf(ScenInfo.class).iterator().next();
+    }
+
+    /**
+     * tests if the given hex is (a) Illuminated or (b) in a Gunflash hex and therefore visible beyond NVR
+     * @param targethhex
+     * @return
+     */
+    private boolean targetisIlluminatedOrInGunflash(Hex targethhex){
+
+
+        return false;
     }
 
     /**
