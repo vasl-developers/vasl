@@ -13,13 +13,20 @@
 
 
     -->
-    <starshell name="White +3 Smoke" hindrance="3" height="2"/>
+    <starshell name="Green Starshell" range="3"/>
+    <starshell name="Red Starshell" range="3"/>
+    <starshell name="Blue Starshell" range="3"/>
 
-    <illumround name="White +3 Smoke" hindrance="3" height="2"/>
+    <illumround name="Blue IR" range="6"/>
+    <illumround name="Green IR" range="6"/>
+    <illumround name="Red IR" range="6"/>
 
-    <blaze name="White +3 Smoke" hindrance="3" height="2"/>
-    <flame name="White +3 Smoke" hindrance="3" height="2"/>
+    <blaze name="Blaze" range="2"/>
+    <flame name="Flame" range="0"/>
+    <blaze name="2-Level Blaze" range="4"/>
 
-    <tripflares name="White +3 Smoke" hindrance="3" height="2"/>
+    <tripflares name="Red Trip Flare" range="1"/>
+
+    <searchlights name="searchlights" />
 
 </illuminationCounterMetadata>
