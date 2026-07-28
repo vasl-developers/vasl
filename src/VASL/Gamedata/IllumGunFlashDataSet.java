@@ -1,6 +1,5 @@
 package VASL.Gamedata;
 
-import VASL.LOS.counters.CounterMetadata;
 import VASSAL.build.GameModule;
 import VASSAL.tools.DataArchive;
 import org.jdom2.Document;
@@ -106,34 +105,35 @@ public class IllumGunFlashDataSet implements StandardXMLDataSet {
                 if(e.getName().equals(starshellCounterElement)) {
                     // read the attributes of the element
                     illumgunflashMetadata = new IllumGunFlashMetadata(name, IllumGunFlashMetadata.CounterType.STARSHELL);
-                    illumgunflashMetadata.setHeight(e.getAttribute(counterHeightAttribute).getIntValue());
-                    illumgunflashMetadata.setHindrance(e.getAttribute(counterHindranceAttribute).getIntValue());
+                    illumgunflashMetadata.setRange(e.getAttribute(counterRangeAttribute).getIntValue());
+                    //illumgunflashMetadata.setHindrance(e.getAttribute(counterHindranceAttribute).getIntValue());
 
                 }
                 else if(e.getName().equals(illumRoundCounterElement)) {
                     illumgunflashMetadata = new IllumGunFlashMetadata(name, IllumGunFlashMetadata.CounterType.ILLUMROUND);
-                    illumgunflashMetadata.setTerrain(e.getAttributeValue(counterTerrainAttribute));
-                    if (e.getAttribute(counterLevelAttribute) != null) {
-                        illumgunflashMetadata.setLevel(e.getAttribute(counterLevelAttribute).getIntValue());
-                    }
+                    illumgunflashMetadata.setRange(e.getAttribute(counterRangeAttribute).getIntValue());
+                    //if (e.getAttribute(counterLevelAttribute) != null) {
+                    //    illumgunflashMetadata.setLevel(e.getAttribute(counterLevelAttribute).getIntValue());
+                    //}
                 }
                 else if(e.getName().equals(flameCounterElement)) {
                     illumgunflashMetadata = new IllumGunFlashMetadata(name, IllumGunFlashMetadata.CounterType.FLAME);
-                    illumgunflashMetadata.setTerrain(e.getAttributeValue(counterTerrainAttribute));
-                    if (e.getAttribute(counterCoveredArchAttribute) != null) {
-                        illumgunflashMetadata.setCoverArch(e.getAttribute(counterCoveredArchAttribute).getIntValue());
-                    }
-                    if (e.getAttribute(counterHexsideAttribute) != null) {
-                        illumgunflashMetadata.setHexside(e.getAttribute(counterHexsideAttribute).getIntValue());
-                    }
+                    //illumgunflashMetadata.setTerrain(e.getAttributeValue(counterTerrainAttribute));
+                    //if (e.getAttribute(counterCoveredArchAttribute) != null) {
+                    illumgunflashMetadata.setRange(e.getAttribute(counterRangeAttribute).getIntValue());
+                    //}
+                    //if (e.getAttribute(counterHexsideAttribute) != null) {
+                    //    illumgunflashMetadata.setHexside(e.getAttribute(counterHexsideAttribute).getIntValue());
+                    //}
                 }
                 else if(e.getName().equals(blazeCounterElement)) {
                     illumgunflashMetadata = new IllumGunFlashMetadata(name, IllumGunFlashMetadata.CounterType.BLAZE);
-                    illumgunflashMetadata.setRotation(e.getAttribute(counterRotationAttribute).getIntValue());
-                    illumgunflashMetadata.setIsBarrage(e.getAttribute(counterIsBarrageAttribute).getBooleanValue());
+                    illumgunflashMetadata.setRange(e.getAttribute(counterRangeAttribute).getIntValue());
+                    //illumgunflashMetadata.setIsBarrage(e.getAttribute(counterIsBarrageAttribute).getBooleanValue());
                 }
                 else if(e.getName().equals(tripflaresCounterElement)) {
                     illumgunflashMetadata = new IllumGunFlashMetadata(name, IllumGunFlashMetadata.CounterType.TRIPFLARES);
+                    illumgunflashMetadata.setRange(e.getAttribute(counterRangeAttribute).getIntValue());
                 }
                 else if(e.getName().equals(searchlightsCounterElement)) {
                     illumgunflashMetadata = new IllumGunFlashMetadata(name, IllumGunFlashMetadata.CounterType.SEARCHLIGHTS);

@@ -3765,12 +3765,13 @@ public class Map  {
         boolean isNight = scenarioInfo.getNightvalue().contains("Yes");
         if(isNight) {
             int nvr = scenarioInfo.getNvrvalue();
-            if (status.rangeToSource > nvr){
-                if (!targetisIlluminatedOrInGunflash(status.currentHex))
-                status.blocked = true;
-                status.reason = "Range is greater than NVR (E1.101)";
-                result.setBlocked(status.currentCol, status.currentRow, status.reason);
-                return true;
+            if (status.rangeToSource > nvr) {
+                if (!targetisIlluminatedOrInGunflash(status.currentHex)) {
+                    status.reason = "Range is greater than NVR (E1.101)";
+                    status.blocked = true;
+                    result.setBlocked(status.currentCol, status.currentRow, status.reason);
+                    return true;
+                }
             }
         }
         return false;

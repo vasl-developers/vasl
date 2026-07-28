@@ -18,9 +18,9 @@ public class IllumGunFlashMetadata {
          */
         private String name;
         private String terrain;
-        private int height;
+        private int range;
         private int hindrance;
-        private VASL.LOS.counters.CounterMetadata.CounterType type;
+        private VASL.Gamedata.IllumGunFlashMetadata.CounterType type;
         private int level;
         private String position;
         private int coverArch;
@@ -32,7 +32,7 @@ public class IllumGunFlashMetadata {
 
         public IllumGunFlashMetadata(String name, VASL.Gamedata.IllumGunFlashMetadata.CounterType type) {
             this.name = name;
-            this.type = type;
+            //this.type = type;
         }
 
         /**
@@ -52,8 +52,8 @@ public class IllumGunFlashMetadata {
         /**
          * @return the height (for smoke-type counters)
          */
-        public int getHeight() {
-            return height;
+        public int getRange() {
+            return range;
         }
 
         /**
@@ -72,7 +72,7 @@ public class IllumGunFlashMetadata {
         /**
          * @return the counter type
          */
-        public VASL.LOS.counters.CounterMetadata.CounterType getType() {
+        public IllumGunFlashMetadata.CounterType getType() {
             return type;
         }
 
@@ -85,11 +85,11 @@ public class IllumGunFlashMetadata {
         }
 
         /**
-         * Set the smoke height (for smoke-type counter)
-         * @param height the smoke height
+         * Set the range (for Area for Effect type counter)
+         * @param range the range of AfE
          */
-        public void setHeight(int height) {
-            this.height = height;
+        public void setRange(int range) {
+            this.range = this.range;
         }
 
         /**
