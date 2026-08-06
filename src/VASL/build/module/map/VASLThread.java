@@ -36,13 +36,13 @@ import java.util.Enumeration;
 
 import javax.swing.JCheckBox;
 
+import VASL.Gameplay.IllumGunFlash;
 import VASL.LOS.Map.LOSResult;
 import VASL.LOS.Map.Location;
 import VASL.LOS.Map.Map;
 import VASL.LOS.Map.Terrain;
 import VASL.build.module.ASLMap;
 import VASL.LOS.VASLGameInterface;
-import VASL.build.module.dice.DieColor;
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
@@ -87,7 +87,9 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
     private LOSResult result;
     private Location source;
     private Location target;
-    private VASLGameInterface VASLGameInterface;
+    private VASLGameInterface vaslgameinterface;
+    private IllumGunFlash illumgunflash;
+
     private ASLBoard upperLeftBoard;
     private boolean useAuxSourceLOSPoint;
     private boolean useAuxTargetLOSPoint;
@@ -143,8 +145,12 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             }
             // initialize LOS
             result = new LOSResult();
-            VASLGameInterface = new VASLGameInterface(theMap, LOSMap);
-            VASLGameInterface.updatePieces();
+            vaslgameinterface = new VASLGameInterface(theMap, LOSMap);
+            vaslgameinterface.updatePieces();
+            //use this to initialize game data that effects los
+            //ToDo is this the best place to trigger this
+            illumgunflash = new IllumGunFlash(theMap, LOSMap);
+            illumgunflash.updatePieces();
 
             // setting these to null prevents the last LOS from being shown when launched
             source = null;
@@ -983,11 +989,11 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
     private void doLOS() {
 
         // silently ignore invalid LOS checks
-        if(source == null || target == null || result == null || VASLGameInterface == null ) {return;}
+        if(source == null || target == null || result == null || vaslgameinterface == null ) {return;}
 
         // do the LOS
         result = new LOSResult();
-        LOSMap.LOS(source, useAuxSourceLOSPoint, target, useAuxTargetLOSPoint, result, VASLGameInterface);
+        LOSMap.LOS(source, useAuxSourceLOSPoint, target, useAuxTargetLOSPoint, result, vaslgameinterface, illumgunflash);
 
         try {
             // set the result string

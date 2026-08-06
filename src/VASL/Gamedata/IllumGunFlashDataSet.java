@@ -13,6 +13,7 @@ import java.util.LinkedHashMap;
 
 /**
  * This class provides access to the Illumination and Gunflash counter metadata file in the module archive
+ * equivalent to CounterMetadataFile.java
  */
 public class IllumGunFlashDataSet implements StandardXMLDataSet {
 

@@ -16,6 +16,8 @@
  */
 package VASL.LOS.Map;
 
+import VASL.Gamedata.IllumGunFlashMetadata;
+import VASL.Gameplay.IllumGunFlash;
 import VASL.LOS.counters.CounterMetadata;
 import VASL.build.module.ASLMap;
 import VASL.build.module.ScenInfo;
@@ -1793,9 +1795,10 @@ public class Map  {
      * @param target "target" location
      * @param useAuxTargetLOSPoint use auxiliary bypass aiming point for target location
      * @param result <code>LOSResult</code> that will contain all of the LOS information
-     * @param VASLGameInterface <code>Scenario</code> that contains all scenario-dependent LOS information
+     * @param vaslgameinterface <code>Scenario</code> that contains scenario-dependent LOS information
+     * @param illumgunflash <code>Scenario</code> that contains scenario-dependent Night LOS information
      */
-    public void LOS(Location source, boolean useAuxSourceLOSPoint, Location target, boolean useAuxTargetLOSPoint, LOSResult result, VASLGameInterface VASLGameInterface) {
+    public void LOS(Location source, boolean useAuxSourceLOSPoint, Location target, boolean useAuxTargetLOSPoint, LOSResult result, VASLGameInterface vaslgameinterface, IllumGunFlash illumgunflash) {
 
         // initialize the results
         result.reset();
@@ -1809,7 +1812,7 @@ public class Map  {
             return;
         }
 
-        LOSStatus status = new LOSStatus(source, useAuxSourceLOSPoint, target, useAuxTargetLOSPoint, result, VASLGameInterface);
+        LOSStatus status = new LOSStatus(source, useAuxSourceLOSPoint, target, useAuxTargetLOSPoint, result, vaslgameinterface, illumgunflash);
 
         // check same hex rules
         if(checkSameHexSmokeRule(status, result)) {
@@ -2054,6 +2057,7 @@ public class Map  {
         public boolean useAuxTargetLOSPoint;
         public LOSResult result;
         public VASL.LOS.VASLGameInterface vaslGameInterface;
+        public VASL.Gameplay.IllumGunFlash illumGunFlash;
 
         // location variables
         public int sourceX;
@@ -2139,7 +2143,7 @@ public class Map  {
 
         public double slope;
 
-        private LOSStatus(Location source, boolean useAuxSourceLOSPoint, Location target, boolean useAuxTargetLOSPoint, LOSResult result, VASLGameInterface vaslgameinterface) {
+        private LOSStatus(Location source, boolean useAuxSourceLOSPoint, Location target, boolean useAuxTargetLOSPoint, LOSResult result, VASLGameInterface vaslgameinterface, IllumGunFlash illumgunflash) {
 
             this.source = source;
             this.useAuxSourceLOSPoint = useAuxSourceLOSPoint;
@@ -2147,6 +2151,7 @@ public class Map  {
             this.useAuxTargetLOSPoint = useAuxTargetLOSPoint;
             this.result = result;
             this.vaslGameInterface = vaslgameinterface;
+            this.illumGunFlash = illumgunflash;
 
             // start and end points
             sourceX = useAuxSourceLOSPoint ? (int) source.getAuxLOSPoint().getX() : (int) source.getLOSPoint().getX();
@@ -3340,8 +3345,8 @@ public class Map  {
                                 if(!insamehex) {
                                     LOSResult result1 = new LOSResult();
                                     LOSResult result2 = new LOSResult();
-                                    LOS(status.source, status.useAuxSourceLOSPoint, v.getLocation(), false, result1, status.vaslGameInterface);
-                                    LOS(status.target, status.useAuxTargetLOSPoint, v.getLocation(), false, result2, status.vaslGameInterface);
+                                    LOS(status.source, status.useAuxSourceLOSPoint, v.getLocation(), false, result1, status.vaslGameInterface, status.illumGunFlash);
+                                    LOS(status.target, status.useAuxTargetLOSPoint, v.getLocation(), false, result2, status.vaslGameInterface, status.illumGunFlash);
                                     if (!result1.isBlocked() && !result2.isBlocked()) {
                                         hindrance++;
                                     }
@@ -3766,7 +3771,7 @@ public class Map  {
         if(isNight) {
             int nvr = scenarioInfo.getNvrvalue();
             if (status.rangeToSource > nvr) {
-                if (!targetisIlluminatedOrInGunflash(status.currentHex)) {
+                if (!targetisIlluminatedOrInGunflash(status)) {
                     status.reason = "Range is greater than NVR (E1.101)";
                     status.blocked = true;
                     result.setBlocked(status.currentCol, status.currentRow, status.reason);
@@ -3784,13 +3789,21 @@ public class Map  {
 
     /**
      * tests if the given hex is (a) Illuminated or (b) in a Gunflash hex and therefore visible beyond NVR
-     * @param targethhex
+     * @param
      * @return
      */
-    private boolean targetisIlluminatedOrInGunflash(Hex targethhex){
-
-
+    private boolean targetisIlluminatedOrInGunflash(LOSStatus status){
+        /*for  ((Integer hexside : status.illumGunFlash.illumRoundHexList
+        starshellHexList = new HashMap<Hex, IllumGunFlashMetadata>();
+        flameHexList = new HashMap<Hex, IllumGunFlashMetadata>();
+        blazeHexList = new HashMap<Hex, IllumGunFlashMetadata>();
+        tripflareHexList = new HashMap<Hex, IllumGunFlashMetadata>();
+        searchlightHexList = new HashMap<Hex, IllumGunFlashMetadata>();
+        gunflashHexList = new HashMap<Hex, IllumGunFlashMetadata>();*/
         return false;
+
+
+
     }
 
     /**

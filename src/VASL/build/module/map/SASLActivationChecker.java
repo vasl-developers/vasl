@@ -613,7 +613,7 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
             if (l1 != null && l2 != null) {
                 // check the range
                 LOSResult losResult = new LOSResult();
-                mainMap.getVASLMap().LOS(l1, false, l2, false, losResult, VASLGameInterface);
+                mainMap.getVASLMap().LOS(l1, false, l2, false, losResult, VASLGameInterface, null);
 
                 range = losResult.getRange();
             }
@@ -764,7 +764,7 @@ public class SASLActivationChecker extends AbstractConfigurable implements GameC
             if (l1 != null && l2 != null) {
                 // check the LOS
                 LOSResult losResult = new LOSResult();
-                mainMap.getVASLMap().LOS(l1, false, l2, false, losResult, VASLGameInterface);
+                mainMap.getVASLMap().LOS(l1, false, l2, false, losResult, VASLGameInterface, null);
 
                 if (!losResult.isBlocked() && (losResult.getRange() <= 16)) {
                     int myNvr = nvr;

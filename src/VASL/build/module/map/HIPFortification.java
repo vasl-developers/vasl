@@ -254,7 +254,7 @@ public class HIPFortification  extends AbstractConfigurable implements CommandEn
         }
         // check the LOS
         LOSResult result = new LOSResult();
-        map.getVASLMap().LOS(l1, false, l2, false, result, VASLGameInterface);
+        map.getVASLMap().LOS(l1, false, l2, false, result, VASLGameInterface, null);
         int range = result.getRange();
         if (!result.isBlocked()) {
             if (range > 16 && isConcealmentTerrain(l2.getTerrain())) {
