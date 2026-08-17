@@ -3855,6 +3855,14 @@ public class Map  {
         }
         //searchlightHexList = new HashMap<Hex, IllumGunFlashMetadata>();
         //ToDo add searchlight test
+        for  (java.util.Map<Hex, IllumGunFlashMetadata> gunflashitem : status.illumGunFlash.gunflashList) {
+            for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : gunflashitem.entrySet()) {
+                Hex key = entry.getKey();
+                if (range(status.targetHex, key, getMapConfiguration()) <= 1) {
+                    return true;
+                }
+            }
+        }
         return false;
 
 
