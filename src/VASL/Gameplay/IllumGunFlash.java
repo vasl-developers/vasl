@@ -4,6 +4,7 @@ import VASL.Gamedata.IllumGunFlashDataSet;
 import VASL.Gamedata.IllumGunFlashMetadata;
 import VASL.LOS.Map.Hex;
 import VASL.LOS.Map.Location;
+import VASL.LOS.Map.Map;
 import VASL.LOS.counters.*;
 import VASL.build.module.ASLMap;
 import VASL.counters.ASLProperties;
@@ -14,9 +15,8 @@ import VASSAL.counters.Properties;
 import VASSAL.counters.Stack;
 
 import java.awt.*;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
+import java.util.*;
+import java.util.List;
 
 import static VASSAL.build.GameModule.getGameModule;
 
@@ -31,7 +31,7 @@ public class IllumGunFlash {
     // the LOS counter rules from the shared metadata file
     LinkedHashMap<String, IllumGunFlashMetadata> illumGunFlashMetadata;
     // list of hexes with illumination or gunflash counters;
-    protected HashMap<Hex, IllumGunFlashMetadata> illumRoundHexList;
+    public HashMap<Hex, IllumGunFlashMetadata> illumRoundHexMap;
     protected HashMap<Hex, IllumGunFlashMetadata> starshellHexList;
     protected HashMap<Hex, IllumGunFlashMetadata> flameHexList;
     protected HashMap<Hex, IllumGunFlashMetadata> blazeHexList;
@@ -39,6 +39,13 @@ public class IllumGunFlash {
     protected HashMap<Hex, IllumGunFlashMetadata> searchlightHexList;
     protected HashMap<Hex, IllumGunFlashMetadata> gunflashHexList;
 
+    public ArrayList<java.util.Map<Hex, IllumGunFlashMetadata>> illumRoundList;
+    public ArrayList<java.util.Map<Hex, IllumGunFlashMetadata>> starshellList;
+    public ArrayList<java.util.Map<Hex, IllumGunFlashMetadata>> flameList;
+    public ArrayList<java.util.Map<Hex, IllumGunFlashMetadata>> blazeList;
+    public ArrayList<java.util.Map<Hex, IllumGunFlashMetadata>> tripflareList;
+    public ArrayList<java.util.Map<Hex, IllumGunFlashMetadata>> searchlightList;
+    public ArrayList<java.util.Map<Hex, IllumGunFlashMetadata>> gunflashList;
 
     //Constructor
     public IllumGunFlash(ASLMap GameMap, VASL.LOS.Map.Map LOSMap) {
@@ -60,13 +67,20 @@ public class IllumGunFlash {
     public void updatePieces() {
 
         // reset the counter lists
-        illumRoundHexList = new HashMap<Hex, IllumGunFlashMetadata>();
+        illumRoundHexMap = new HashMap<Hex, IllumGunFlashMetadata>();
+        illumRoundList = new ArrayList<java.util.Map<Hex, IllumGunFlashMetadata>>();
         starshellHexList = new HashMap<Hex, IllumGunFlashMetadata>();
+        starshellList = new ArrayList<java.util.Map<Hex, IllumGunFlashMetadata>>();
         flameHexList = new HashMap<Hex, IllumGunFlashMetadata>();
+        flameList = new ArrayList<java.util.Map<Hex, IllumGunFlashMetadata>>();
         blazeHexList = new HashMap<Hex, IllumGunFlashMetadata>();
+        blazeList = new ArrayList<java.util.Map<Hex, IllumGunFlashMetadata>>();
         tripflareHexList = new HashMap<Hex, IllumGunFlashMetadata>();
+        tripflareList = new ArrayList<java.util.Map<Hex, IllumGunFlashMetadata>>();
         searchlightHexList = new HashMap<Hex, IllumGunFlashMetadata>();
+        searchlightList = new ArrayList<java.util.Map<Hex, IllumGunFlashMetadata>>();
         gunflashHexList = new HashMap<Hex, IllumGunFlashMetadata>();
+        gunflashList = new ArrayList<java.util.Map<Hex, IllumGunFlashMetadata>>();
 
         // get all of the game pieces
         GamePiece[] p = gameMap.getPieces();
@@ -151,21 +165,27 @@ public class IllumGunFlash {
 
                     case STARSHELL:
                         starshellHexList.put(h, illumGunFlash);
+                        starshellList.add(starshellHexList);
                         break;
                     case ILLUMROUND:
-                        illumRoundHexList.put(h, illumGunFlash);
+                        illumRoundHexMap.put(h, illumGunFlash);
+                        illumRoundList.add(illumRoundHexMap);
                         break;
                     case FLAME:
                         flameHexList.put(h, illumGunFlash);
+                        flameList.add(flameHexList);
                         break;
                     case BLAZE:
                         blazeHexList.put(h, illumGunFlash);
+                        blazeList.add(blazeHexList);
                         break;
                     case TRIPFLARES:
                         tripflareHexList.put(h, illumGunFlash);
+                        tripflareList.add(tripflareHexList);
                         break;
                     case SEARCHLIGHTS:
                         searchlightHexList.put(h, illumGunFlash);
+                        searchlightList.add(searchlightHexList);
                         break;
 
 

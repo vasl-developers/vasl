@@ -3793,13 +3793,68 @@ public class Map  {
      * @return
      */
     private boolean targetisIlluminatedOrInGunflash(LOSStatus status){
-        /*for  ((Integer hexside : status.illumGunFlash.illumRoundHexList
-        starshellHexList = new HashMap<Hex, IllumGunFlashMetadata>();
-        flameHexList = new HashMap<Hex, IllumGunFlashMetadata>();
-        blazeHexList = new HashMap<Hex, IllumGunFlashMetadata>();
-        tripflareHexList = new HashMap<Hex, IllumGunFlashMetadata>();
-        searchlightHexList = new HashMap<Hex, IllumGunFlashMetadata>();
-        gunflashHexList = new HashMap<Hex, IllumGunFlashMetadata>();*/
+
+        status.illumGunFlash.illumRoundList.forEach(irmap -> {
+            irmap.forEach((key, value) -> System.out.println(key + " : " + value));
+        });
+        // IR test
+        for  (java.util.Map<Hex, IllumGunFlashMetadata> illumRounditem : status.illumGunFlash.illumRoundList) {
+            for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : illumRounditem.entrySet()) {
+                Hex key = entry.getKey();
+                if (range(status.targetHex, key, getMapConfiguration()) <= 6) {
+                    return true;
+                }
+            }
+        }
+        // starshell test
+        for  (java.util.Map<Hex, IllumGunFlashMetadata> starshellitem : status.illumGunFlash.starshellList) {
+            for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : starshellitem.entrySet()) {
+                Hex key = entry.getKey();
+                if (range(status.targetHex, key, getMapConfiguration()) <= 3) {
+                    return true;
+                }
+            }
+        }
+        // flame test
+        for  (java.util.Map<Hex, IllumGunFlashMetadata> flameitem : status.illumGunFlash.flameList) {
+            for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : flameitem.entrySet()) {
+                Hex key = entry.getKey();
+                if (range(status.targetHex, key, getMapConfiguration()) == 0) {
+                    return true;
+                }
+            }
+        }
+        // blaze test
+        //ToDo add proper range test (2x number of levels
+        for  (java.util.Map<Hex, IllumGunFlashMetadata> blazeitem : status.illumGunFlash.blazeList) {
+            for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : blazeitem.entrySet()) {
+                Hex key = entry.getKey();
+                if (range(status.targetHex, key, getMapConfiguration()) <= 2) {
+                    return true;
+                }
+            }
+        }
+        // tripflare test
+        for  (java.util.Map<Hex, IllumGunFlashMetadata> tripflareitem : status.illumGunFlash.tripflareList) {
+            for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : tripflareitem.entrySet()) {
+                Hex key = entry.getKey();
+                if (range(status.targetHex, key, getMapConfiguration()) <= 1) {
+                    return true;
+                }
+            }
+        }
+        // gunflash test
+        //ToDo code gunflashcounters
+        for  (java.util.Map<Hex, IllumGunFlashMetadata> gunflashitem : status.illumGunFlash.gunflashList) {
+            for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : gunflashitem.entrySet()) {
+                Hex key = entry.getKey();
+                if (range(status.targetHex, key, getMapConfiguration()) <= 1) {
+                    return true;
+                }
+            }
+        }
+        //searchlightHexList = new HashMap<Hex, IllumGunFlashMetadata>();
+        //ToDo add searchlight test
         return false;
 
 
