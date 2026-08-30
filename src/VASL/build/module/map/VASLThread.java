@@ -395,6 +395,10 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         if(source.getHex().isDepressionTerrain() && !source.getLOSPoint().equals(source.getHex().getHexCenter())) {
             leveladj=+1;
         }
+        if(source.getTerrain().getName().contains("Railroad, Embankment")) {
+            leveladj=+0.5;
+        }
+
         sourcelevel= source.getAbsoluteHeight() +leveladj;
         // make the source and the target the same
         target = source;
@@ -528,7 +532,10 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             if(target.getHex().isDepressionTerrain() && !target.getLOSPoint().equals(target.getHex().getHexCenter())){
                 leveladj=+1;
             }
-            targetlevel = target.getAbsoluteHeight() + leveladj;               //getLevelInHex() + target.getHex().getBaseLevelofHex() + leveladj;
+            if(target.getTerrain().getName().contains("Railroad, Embankment")) {
+                leveladj=+0.5;
+            }
+            targetlevel = target.getAbsoluteHeight() + leveladj;
 
         }
         super.mouseDragged(e);

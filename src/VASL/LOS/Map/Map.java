@@ -3777,6 +3777,13 @@ public class Map  {
                     result.setBlocked(status.currentCol, status.currentRow, status.reason);
                     return true;
                 }
+            } else if (sourceisIlluminated(status)){
+                if (!targetisIlluminatedOrInGunflash(status)) {
+                    status.reason = "Source is illuminated; target is not (E1.101)";
+                    status.blocked = true;
+                    result.setBlocked(status.currentCol, status.currentRow, status.reason);
+                    return true;
+                }
             }
         }
         return false;
@@ -3794,9 +3801,9 @@ public class Map  {
      */
     private boolean targetisIlluminatedOrInGunflash(LOSStatus status){
 
-        status.illumGunFlash.illumRoundList.forEach(irmap -> {
-            irmap.forEach((key, value) -> System.out.println(key + " : " + value));
-        });
+        //status.illumGunFlash.illumRoundList.forEach(irmap -> {
+        //    irmap.forEach((key, value) -> System.out.println(key + " : " + value));
+        //});
         // IR test
         for  (java.util.Map<Hex, IllumGunFlashMetadata> illumRounditem : status.illumGunFlash.illumRoundList) {
             for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : illumRounditem.entrySet()) {
@@ -3848,25 +3855,83 @@ public class Map  {
         for  (java.util.Map<Hex, IllumGunFlashMetadata> gunflashitem : status.illumGunFlash.gunflashList) {
             for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : gunflashitem.entrySet()) {
                 Hex key = entry.getKey();
-                if (range(status.targetHex, key, getMapConfiguration()) <= 1) {
+                if (range(status.targetHex, key, getMapConfiguration()) <= 0) {
                     return true;
                 }
             }
         }
         //searchlightHexList = new HashMap<Hex, IllumGunFlashMetadata>();
         //ToDo add searchlight test
-        for  (java.util.Map<Hex, IllumGunFlashMetadata> gunflashitem : status.illumGunFlash.gunflashList) {
+        /*for  (java.util.Map<Hex, IllumGunFlashMetadata> gunflashitem : status.illumGunFlash.gunflashList) {
             for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : gunflashitem.entrySet()) {
                 Hex key = entry.getKey();
                 if (range(status.targetHex, key, getMapConfiguration()) <= 1) {
                     return true;
                 }
             }
-        }
+        }*/
         return false;
+    }
 
+    private boolean sourceisIlluminated (LOSStatus status){
+        // IR test
+        for  (java.util.Map<Hex, IllumGunFlashMetadata> illumRounditem : status.illumGunFlash.illumRoundList) {
+            for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : illumRounditem.entrySet()) {
+                Hex key = entry.getKey();
+                if (range(status.sourceHex, key, getMapConfiguration()) <= 6) {
+                    return true;
+                }
+            }
+        }
+        // starshell test
+        for  (java.util.Map<Hex, IllumGunFlashMetadata> starshellitem : status.illumGunFlash.starshellList) {
+            for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : starshellitem.entrySet()) {
+                Hex key = entry.getKey();
+                if (range(status.sourceHex, key, getMapConfiguration()) <= 3) {
+                    return true;
+                }
+            }
+        }
+        // flame test
+        for  (java.util.Map<Hex, IllumGunFlashMetadata> flameitem : status.illumGunFlash.flameList) {
+            for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : flameitem.entrySet()) {
+                Hex key = entry.getKey();
+                if (range(status.sourceHex, key, getMapConfiguration()) == 0) {
+                    return true;
+                }
+            }
+        }
+        // blaze test
+        //ToDo add proper range test (2x number of levels
+        for  (java.util.Map<Hex, IllumGunFlashMetadata> blazeitem : status.illumGunFlash.blazeList) {
+            for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : blazeitem.entrySet()) {
+                Hex key = entry.getKey();
+                if (range(status.sourceHex, key, getMapConfiguration()) <= 2) {
+                    return true;
+                }
+            }
+        }
+        // tripflare test
+        for  (java.util.Map<Hex, IllumGunFlashMetadata> tripflareitem : status.illumGunFlash.tripflareList) {
+            for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : tripflareitem.entrySet()) {
+                Hex key = entry.getKey();
+                if (range(status.sourceHex, key, getMapConfiguration()) <= 1) {
+                    return true;
+                }
+            }
+        }
 
-
+        //searchlightHexList = new HashMap<Hex, IllumGunFlashMetadata>();
+        //ToDo add searchlight test
+        /*for  (java.util.Map<Hex, IllumGunFlashMetadata> gunflashitem : status.illumGunFlash.gunflashList) {
+            for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : gunflashitem.entrySet()) {
+                Hex key = entry.getKey();
+                if (range(status.targetHex, key, getMapConfiguration()) <= 1) {
+                    return true;
+                }
+            }
+        }*/
+        return false;
     }
 
     /**
@@ -4119,13 +4184,19 @@ public class Map  {
             return false;
         }
         // code added by DR to deal with cellars
-        int sourceadj=0;
-        int targetadj=0;
+        double sourceadj=0;
+        double targetadj=0;
         if(status.source.getTerrain().isCellar()) {
             sourceadj=+1;
         }
         if(status.target.getTerrain().isCellar()) {
             targetadj=+1;
+        }
+        if(status.source.getTerrain().getName().contains("Railroad, Embankment")) {
+            sourceadj=+0.5;
+        }
+        if(status.target.getTerrain().getName().contains("Railroad, Embankment")) {
+            targetadj=+0.5;
         }
         // rowhouse/factory wall?
         if (status.currentTerrain.isRowhouseFactoryWallOrBreach()) {
@@ -4264,7 +4335,7 @@ public class Map  {
                     }
 
                     // on the same level?
-                    else if (status.groundLevel == status.sourceElevation && status.groundLevel == status.targetElevation && !status.slopes) {
+                    else if ((status.groundLevel == status.sourceElevation + sourceadj) && (status.groundLevel == status.targetElevation + targetadj) && !status.slopes) {
 
                         status.blocked = true;
                         status.reason = "Intervening hexside terrain (B9.2)";
@@ -4544,7 +4615,16 @@ public class Map  {
             rooftopadj=1;
             rangehex=status.targetHex;
         }
+        if(status.source.getTerrain().getName().contains("Railroad, Embankment")) {
+            sourceadj=+0.5;
+        }
+        if(status.target.getTerrain().getName().contains("Railroad, Embankment")) {
+            targetadj=+0.5;
+        }
         if(status.currentTerrain.isHalfLevelHeight() && status.currentTerrain.isBuilding() ) {
+            obstacleadj=+0.5;
+        }
+        if(status.currentTerrain.isHalfLevelHeight() && status.currentTerrain.getName().contains("Railroad, Embankment") ) {
             obstacleadj=+0.5;
         }
         if(status.source.getTerrain().isCellar()) {
@@ -4720,6 +4800,13 @@ public class Map  {
         }
         if(status.target.getTerrain().isRooftop() && status.target.getLevelInHex() !=1) {
             targetadj=-0.5;
+        }
+        //Railroad, Embankment special case
+        if(status.source.getTerrain().getName().contains("Railroad, Embankment")) {
+            sourceadj=+0.5;
+        }
+        if(status.target.getTerrain().getName().contains("Railroad, Embankment")) {
+            targetadj=+0.5;
         }
         // Hillock special case - source or target is on a hillock
         if(status.startsOnHillock){
@@ -5177,6 +5264,12 @@ public class Map  {
         if(status.target.getTerrain().isRooftop() && status.target.getLevelInHex() !=1 && !(status.source.getTerrain().isRooftop())) {
             targetadj=-0.5;
         }
+        if(status.source.getTerrain().getName().contains("Railroad, Embankment")) {
+            sourceadj=+0.5;
+        }
+        if(status.target.getTerrain().getName().contains("Railroad, Embankment")) {
+            targetadj=+0.5;
+        }
         //ToDo fix this - using an exception test here is not best way to handle
         if (sanddunetest(status)){
             return false;
@@ -5381,6 +5474,12 @@ public class Map  {
         }
         if(status.target.getTerrain().isRooftop() && status.target.getLevelInHex() !=1) {
             targetadj=-0.5;
+        }
+        if(status.source.getTerrain().getName().contains("Railroad, Embankment")) {
+            sourceadj=+0.5;
+        }
+        if(status.target.getTerrain().getName().contains("Railroad, Embankment")) {
+            targetadj=+0.5;
         }
         if (status.currentTerrain.isBridge()) {
             status.ignoreGroundLevelHex = status.currentHex;
