@@ -32,7 +32,7 @@ public class IllumGunFlashMetadata {
 
         public IllumGunFlashMetadata(String name, VASL.Gamedata.IllumGunFlashMetadata.CounterType type) {
             this.name = name;
-            //this.type = type;
+            this.type = type;
         }
 
         /**
