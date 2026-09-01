@@ -30,7 +30,7 @@
 -->
 <boardMetadata
 	name="VotG"
-	version="4.2"
+	version="4.3"
 	versionDate="Aug 2026"
 	author="TR (LOS enabled by GM and DR)"
 	boardImageFileName="bdVotG.gif"
@@ -72,30 +72,7 @@
 			terrain - the LOS terrain type
 			elevation - the base elevation of the terrain
 			
-		-->
-		<color name="VotG_Water" red="0" green="0" blue="255" terrain="Water" elevation="0"/>
-		<color name="VotG_Level0" red="150" green="170" blue="90" terrain="Open Ground" elevation="0"/>
-		<color name="VotG_Level1" red="210" green="160" blue="130" terrain="Open Ground" elevation="1" />
-		<color name="VotG_Cliff" red="192" green="0" blue="192" terrain="Cliff" elevation="UNKNOWN"/>
-		<color name="VotG_PavedRdL1" red="192" green="192" blue="208" terrain="Paved Road" elevation="1" />
-		<color name="VotG_DirtRdL1" red="220" green="205" blue="124" terrain="Dirt Road" elevation="1" />
-		<color name="VotG_GullyGreen1" red="20" green="70" blue="20" terrain="Gully" elevation="1"/>
-		<color name="VotG_GullyCliff" red="232" green="0" blue="229" terrain="Cliff" elevation="UNKNOWN"/>		
-		<color name="VotG_WoodBldg1" red="184" green="98" blue="14" terrain="Wooden Building" elevation="UNKNOWN"/>
-		<color name="VotG_WoodBldg2" red="146" green="78" blue="12" terrain="Wooden Building, 1 Level" elevation="UNKNOWN"/>
-		<color name="VotG_WoodBldg3" red="108" green="58" blue="10" terrain="Wooden Factory, 1.5 Level" elevation="UNKNOWN"/>
-		<color name="VotG_StoneBldg1" red="100" green="100" blue="100" terrain="Stone Building" elevation="UNKNOWN"/>
-		<color name="VotG_StoneBldg2" red="150" green="150" blue="150" terrain="Stone Building, 1 Level" elevation="UNKNOWN"/>
-		<color name="VotG_StoneBldg3" red="100" green="128" blue="128" terrain="Stone Factory, 1.5 Level" elevation="UNKNOWN"/>
-		<color name="VotG_StoneBldg4" red="0" green="128" blue="128" terrain="Stone Building, 2 Level" elevation="UNKNOWN"/>
-		<color name="VotG_BldgWall1" red="40" green="255" blue="40" terrain="Gutted Building Wall, 1 Level" elevation="UNKNOWN"/>
-		<color name="VotG_BldgWall2" red="150" green="255" blue="150" terrain="Gutted Building Wall, 2 Level" elevation="UNKNOWN"/>
-		<color name="VotG_Lumberyard" red="128" green="0" blue="0" terrain="Lumberyard" elevation="UNKNOWN"/>
-		<color name="VotG_Monument" red="0" green="255" blue="255" terrain="Monument" elevation="UNKNOWN"/>
-		<color name="VotG_Railcar" red="255" green="128" blue="128" terrain="Wooden Building" elevation="UNKNOWN"/>
-		<color name="VotG_Pier" red="192" green="0" blue="0" terrain="Volga Pier" elevation="UNKNOWN"/>
-		<color name="VotG_Wall" red="70" green="70" blue="70" terrain="Wall" elevation="UNKNOWN"/>
-		<color name="VotG_Hedge" red="0" green="100" blue="0" terrain="Hedge" elevation="UNKNOWN"/>		
+		-->		
 	</colors>
 	
 	<colorSSRules>
