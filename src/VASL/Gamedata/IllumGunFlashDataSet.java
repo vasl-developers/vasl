@@ -21,13 +21,14 @@ public class IllumGunFlashDataSet implements StandardXMLDataSet {
     private final static String illgunMetadataFileName = "IlluminationCounterMetadata.xml";
 
     // XML element and attribute names
-    protected static final String illuminationMetadataElement = "illuminationCounterMetadata";
+    protected static final String illuminationMetadataElement = "illuminationGunflashCounterMetadata";
     protected static final String starshellCounterElement = "starshell";
     protected static final String illumRoundCounterElement = "illumround";
     protected static final String blazeCounterElement = "blaze";
     protected static final String flameCounterElement = "flame";
     protected static final String tripflaresCounterElement = "tripflares";
     protected static final String searchlightsCounterElement = "searchlights";
+    protected static final String gunflashCounterElement = "gunflash";
 
     protected static final String counterNameAttribute = "name";
     protected static final String counterHexAttribute = "hex";
@@ -138,6 +139,9 @@ public class IllumGunFlashDataSet implements StandardXMLDataSet {
                 }
                 else if(e.getName().equals(searchlightsCounterElement)) {
                     illumgunflashMetadata = new IllumGunFlashMetadata(name, IllumGunFlashMetadata.CounterType.SEARCHLIGHTS);
+                }else if(e.getName().equals(gunflashCounterElement)) {
+                    illumgunflashMetadata = new IllumGunFlashMetadata(name, IllumGunFlashMetadata.CounterType.GUNFLASH);
+                    illumgunflashMetadata.setRange(e.getAttribute(counterRangeAttribute).getIntValue());
                 }
 
 

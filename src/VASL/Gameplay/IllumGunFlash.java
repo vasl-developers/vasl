@@ -129,25 +129,11 @@ public class IllumGunFlash {
             newcounter++;
             IllumGunFlashMetadata illumGunFlash = illumGunFlashMetadata.get(name);
             if (illumGunFlash == null) {
-                if (name.contains("Hedge Overlay")) {
+                // code from VASLGameInterface - use as pattern if needed
+                /*if (name.contains("Hedge Overlay")) {
                     name = "Hedge Overlay";
                 } else if (name.contains("Wall Overlay")) {
                     name = "Wall Overlay";
-                } else if (name.contains("Bocage Overlay")) {
-                    name = "Bocage Overlay";
-                } else if (name.contains("Road")) {
-                    name = "Road";    // Dirt/Paved has no los impact
-                } else if (name.contains("Foot") || name.contains("Pontoon")) { // Foot/Pontoon have no los impact
-                    name = "";
-                } else if (name.contains("Bridge")) { // all Bridges are same for LOS
-                    name = "Bridge";
-                } else if (name.contains("Rowhouse Bar")) {
-                    name = "Rowhouse Bar Overlay";
-                } else if (name.contains("StoneBreach")) {
-                    name = "StoneBreach Rowhouse Overlay";
-                } else if (name.contains("Wood Breach")) {
-                    name = "Wood Breach Rowhouse Overlay";
-                }
                 // for searchlights ????
                 String sidenum = null;
                 if (hexside != -1) {
@@ -156,7 +142,7 @@ public class IllumGunFlash {
                 if (sidenum != null) {
                     name += sidenum;
                 }
-                illumGunFlash = illumGunFlashMetadata.get(name);
+                illumGunFlash = illumGunFlashMetadata.get(name);*/
             }
             if (illumGunFlash != null) {
 
@@ -187,8 +173,9 @@ public class IllumGunFlash {
                         searchlightHexList.put(h, illumGunFlash);
                         searchlightList.add(searchlightHexList);
                         break;
-
-
+                    case GUNFLASH:
+                        gunflashHexList.put(h, illumGunFlash);
+                        gunflashList.add(gunflashHexList);
                     default:
                 }
                 /*case OBA:
