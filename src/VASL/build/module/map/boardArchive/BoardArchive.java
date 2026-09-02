@@ -706,6 +706,11 @@ public class BoardArchive {
                 metadata.getA1CenterY() == BoardMetadata.MISSING;
     }
 
+    public boolean isABboard(){
+        return
+                metadata.getBoardHeight() == 20 &&
+                metadata.getBoardWidth() == 17;
+    }
     /**
      * Get the board image from the archive
      */
@@ -1093,6 +1098,10 @@ public class BoardArchive {
      */
     public boolean isLegacyBoard() {
         return legacyBoard;
+    }
+
+    public void setLegacyBoard(boolean legacyBoard) {
+        this.legacyBoard = legacyBoard;
     }
 
     /**
