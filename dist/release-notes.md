@@ -1,10 +1,9 @@
-# Release Notes: Version 6.7.4-beta3
-**Release Date:** July 14, 2026
-
+# Release Notes: Version 6.7.4-beta4
+**Release Date:** September 3, 2026
 ---
 
 ## 🚀 New Features
- - 
+ - Feature 1: LOS Checking in Night Scenarios. 
  
 ---
 
@@ -13,9 +12,7 @@
 
 ## Improvements
 
- - Improvement 1: Final set of SVG counter updates. Vehicle and Gun unit depiction updates still need a volunteer artist or artists. Miscellaneous counters can be updated upon request.
- - Improvement 2: Consolidated all the BRT-specific counters under a new "Blood Reef: Tarawa" panel in the "HASL and CGs" tab.
- 
+ - Improvement 1: Added preference to set opacity of counters during LOS checks. 
 ---
 
 ## ⚠️ Compatibility Notes
