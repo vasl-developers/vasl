@@ -28,7 +28,7 @@ public class IllumGunFlashMetadata {
         private boolean isBarrage;
         private int hside;
 
-        public static enum CounterType {STARSHELL, ILLUMROUND, FLAME, BLAZE, TRIPFLARES, SEARCHLIGHTS}
+        public static enum CounterType {STARSHELL, ILLUMROUND, FLAME, BLAZE, TRIPFLARES, SEARCHLIGHTS, GUNFLASH}
 
         public IllumGunFlashMetadata(String name, VASL.Gamedata.IllumGunFlashMetadata.CounterType type) {
             this.name = name;

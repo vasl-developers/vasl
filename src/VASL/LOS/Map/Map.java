@@ -3836,7 +3836,9 @@ public class Map  {
         for  (java.util.Map<Hex, IllumGunFlashMetadata> blazeitem : status.illumGunFlash.blazeList) {
             for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : blazeitem.entrySet()) {
                 Hex key = entry.getKey();
-                if (range(status.targetHex, key, getMapConfiguration()) <= 2) {
+                //String name = String.valueOf(entry.getValue().getRange());
+                int range = entry.getValue().getName().contains("2-level") ? 4 : 2;
+                if (range(status.targetHex, key, getMapConfiguration()) <= range) {
                     return true;
                 }
             }
@@ -3851,7 +3853,6 @@ public class Map  {
             }
         }
         // gunflash test
-        //ToDo code gunflashcounters
         for  (java.util.Map<Hex, IllumGunFlashMetadata> gunflashitem : status.illumGunFlash.gunflashList) {
             for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : gunflashitem.entrySet()) {
                 Hex key = entry.getKey();
@@ -3860,16 +3861,16 @@ public class Map  {
                 }
             }
         }
-        //searchlightHexList = new HashMap<Hex, IllumGunFlashMetadata>();
-        //ToDo add searchlight test
-        /*for  (java.util.Map<Hex, IllumGunFlashMetadata> gunflashitem : status.illumGunFlash.gunflashList) {
-            for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : gunflashitem.entrySet()) {
+
+        // searchlight test
+        for  (java.util.Map<Hex, IllumGunFlashMetadata> illumBeamitem : status.illumGunFlash.searchlightList) {
+            for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : illumBeamitem.entrySet()) {
                 Hex key = entry.getKey();
-                if (range(status.targetHex, key, getMapConfiguration()) <= 1) {
+                if (range(status.targetHex, key, getMapConfiguration()) <= 0) {
                     return true;
                 }
             }
-        }*/
+        }
         return false;
     }
 
@@ -3921,16 +3922,15 @@ public class Map  {
             }
         }
 
-        //searchlightHexList = new HashMap<Hex, IllumGunFlashMetadata>();
-        //ToDo add searchlight test
-        /*for  (java.util.Map<Hex, IllumGunFlashMetadata> gunflashitem : status.illumGunFlash.gunflashList) {
-            for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : gunflashitem.entrySet()) {
+        // searchlight test
+        for  (java.util.Map<Hex, IllumGunFlashMetadata> illumBeamitem : status.illumGunFlash.searchlightList) {
+            for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : illumBeamitem.entrySet()) {
                 Hex key = entry.getKey();
-                if (range(status.targetHex, key, getMapConfiguration()) <= 1) {
+                if (range(status.sourceHex, key, getMapConfiguration()) <= 0) {
                     return true;
                 }
             }
-        }*/
+        }
         return false;
     }
 

@@ -2,7 +2,7 @@
 <!--
 	This file contains additional information about illumination game counters.
 -->
-<illuminationCounterMetadata>
+<illuminationGunflashCounterMetadata>
 
     <!-- metadata for each of the illumination counters
     Attributes:
@@ -23,10 +23,18 @@
 
     <blaze name="Blaze" range="2"/>
     <flame name="Flame" range="0"/>
-    <blaze name="2-Level Blaze" range="4"/>
+    <blaze name="2-level Blaze" range="4"/>
 
     <tripflares name="Red Trip Flare" range="1"/>
 
-    <searchlights name="searchlights" />
+    <searchlights name="searchlights" range="0"/>
+    <searchlights name="Illum. Beam" range="0"/>
 
-</illuminationCounterMetadata>
+    <gunflash name="Prep Fire" range="0"/>
+    <gunflash name="Int Fire" range="0"/>
+    <gunflash name="Veh Prep Fire" range="0"/>
+    <gunflash name="First Fire" range="0"/>
+    <gunflash name="Veh First Fire" range="0"/>
+    <gunflash name="Gunflash" range="0"/>
+
+</illuminationGunflashCounterMetadata>
