@@ -28,8 +28,7 @@
 	boardImageFileName="bdBFPDW10a.gif" 
 	hasHills="FALSE" 
 	width="33" 
-	height="10" 
->
+	height="10" >
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
