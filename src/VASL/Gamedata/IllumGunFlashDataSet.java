@@ -11,14 +11,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
 
+import static VASSAL.build.GameModule.getGameModule;
+
 /**
  * This class provides access to the Illumination and Gunflash counter metadata file in the module archive
  * equivalent to CounterMetadataFile.java
  */
-public class IllumGunFlashDataSet implements StandardXMLDataSet {
+public class IllumGunFlashDataSet {  //implements StandardXMLDataSet {
 
     // name of the counter metadata file in the module archive
-    private final static String illgunMetadataFileName = "IlluminationCounterMetadata.xml";
+    private final static String illgunMetadataFileName = "IlluminationCounterMetaData.xml";
 
     // XML element and attribute names
     protected static final String illuminationMetadataElement = "illuminationGunflashCounterMetadata";
@@ -58,6 +60,8 @@ public class IllumGunFlashDataSet implements StandardXMLDataSet {
         catch (NullPointerException e) {
             metadataElements = null;
         }
+        final GameModule mod = getGameModule();
+        if (metadataElements == null) {mod.warn("metadataElements are null");}
     }
 
         /**

@@ -17,7 +17,7 @@
 package VASL.LOS.Map;
 
 import VASL.Gamedata.IllumGunFlashMetadata;
-import VASL.Gameplay.IllumGunFlash;
+import VASL.Gamedata.IllumGunFlash;
 import VASL.LOS.counters.CounterMetadata;
 import VASL.build.module.ASLMap;
 import VASL.build.module.ScenInfo;
@@ -2057,7 +2057,7 @@ public class Map  {
         public boolean useAuxTargetLOSPoint;
         public LOSResult result;
         public VASL.LOS.VASLGameInterface vaslGameInterface;
-        public VASL.Gameplay.IllumGunFlash illumGunFlash;
+        public IllumGunFlash illumGunFlash;
 
         // location variables
         public int sourceX;
