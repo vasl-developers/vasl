@@ -21,8 +21,6 @@ package VASL.LOS.counters;
 import VASL.LOS.counters.CounterMetadata;
 import VASSAL.build.GameModule;
 import VASSAL.tools.DataArchive;
-import VASSAL.tools.ErrorDialog;
-import org.apache.commons.io.IOUtils;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -31,8 +29,6 @@ import org.jdom2.input.SAXBuilder;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
-
-import static VASSAL.build.GameModule.getGameModule;
 
 /**
  * This class provides access to the counter metadata file in the module archive

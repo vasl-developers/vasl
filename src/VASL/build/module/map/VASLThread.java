@@ -36,13 +36,13 @@ import java.util.Enumeration;
 
 import javax.swing.JCheckBox;
 
+import VASL.Gameplay.IllumGunFlash;
 import VASL.LOS.Map.LOSResult;
 import VASL.LOS.Map.Location;
 import VASL.LOS.Map.Map;
 import VASL.LOS.Map.Terrain;
 import VASL.build.module.ASLMap;
 import VASL.LOS.VASLGameInterface;
-import VASL.build.module.dice.DieColor;
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
@@ -72,6 +72,8 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
     private static final String ENABLED = "LosCheckEnabled";
     private static final String HINDRANCE_THREAD_COLOR = "hindranceThreadColor";
     private static final String BLOCKED_THREAD_COLOR = "blockedThreadColor";
+    private static final String COUNTER_OPACITY_PERCENT = "CounterOpacity";
+    private static final String HIDE_OPACITY_ATTRIBUTE = "hideOpacity";
     private boolean legacyMode;
     private boolean initialized; // LOS has been initialized?
     private static final String preferenceTabName = "LOS";
@@ -87,7 +89,9 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
     private LOSResult result;
     private Location source;
     private Location target;
-    private VASLGameInterface VASLGameInterface;
+    private VASLGameInterface vaslgameinterface;
+    private IllumGunFlash illumgunflash;
+
     private ASLBoard upperLeftBoard;
     private boolean useAuxSourceLOSPoint;
     private boolean useAuxTargetLOSPoint;
@@ -143,8 +147,12 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             }
             // initialize LOS
             result = new LOSResult();
-            VASLGameInterface = new VASLGameInterface(theMap, LOSMap);
-            VASLGameInterface.updatePieces();
+            vaslgameinterface = new VASLGameInterface(theMap, LOSMap);
+            vaslgameinterface.updatePieces();
+            //use this to initialize game data that effects los
+            //ToDo is this the best place to trigger this
+            illumgunflash = new IllumGunFlash(theMap, LOSMap);
+            illumgunflash.updatePieces();
 
             // setting these to null prevents the last LOS from being shown when launched
             source = null;
@@ -295,14 +303,12 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         final ColorConfigurer hindrance = new ColorConfigurer(HINDRANCE_THREAD_COLOR, "Hindrance Thread Color", Color.red);
         final ColorConfigurer blocked = new ColorConfigurer(BLOCKED_THREAD_COLOR, "Blocked Thread Color", Color.blue);
         final BooleanConfigurer verbose = new BooleanConfigurer("verboseLOS", "Verbose LOS mode");
-        final StringEnumConfigurer opacity = new StringEnumConfigurer("CounterOpacity", "Unit opacity % during LOS checks:  ", new String[] { "0", "25", "33", "50", "66", "75", "100" } );
 
         getGameModule().getPrefs().addOption(preferenceTabName, thread);
         getGameModule().getPrefs().addOption(preferenceTabName, enable);
         getGameModule().getPrefs().addOption(preferenceTabName, hindrance);
         getGameModule().getPrefs().addOption(preferenceTabName, blocked);
         getGameModule().getPrefs().addOption(preferenceTabName, verbose);
-        getGameModule().getPrefs().addOption(preferenceTabName, opacity);
 
         final ItemListener l = new ItemListener() {
 
@@ -317,6 +323,15 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         enableAll(blocked.getControls(), Boolean.TRUE.equals(enable.getValue()));
         enableAll(verbose.getControls(), Boolean.TRUE.equals(enable.getValue()));
 
+        StringEnumConfigurer opacity = new StringEnumConfigurer(COUNTER_OPACITY_PERCENT, "Unit opacity % during LOS checks:  ", new String[] { "0", "25", "33", "50", "66", "75", "100" } );
+        if (getGameModule().getPrefs().getValue(COUNTER_OPACITY_PERCENT) == null) {
+            getGameModule().getPrefs().addOption(preferenceTabName, opacity);
+            opacityValue = "33";
+        } else {
+            opacityValue = getGameModule().getPrefs().getValue(COUNTER_OPACITY_PERCENT).toString();
+        }
+        this.setAttribute(HIDE_OPACITY_ATTRIBUTE, opacityValue);
+
         opacity.addPropertyChangeListener(e -> {
             opacityValue = (String)e.getNewValue();
 
@@ -324,9 +339,8 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                 opacityValue = "33";
             }
 
-            this.setAttribute("hideOpacity", opacityValue);
+            this.setAttribute(HIDE_OPACITY_ATTRIBUTE, opacityValue);
         });
-
         // hook for game opening/closing
         getGameModule().getGameState().addGameComponent(this);
     }
@@ -389,6 +403,10 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         if(source.getHex().isDepressionTerrain() && !source.getLOSPoint().equals(source.getHex().getHexCenter())) {
             leveladj=+1;
         }
+        if(source.getTerrain().getName().contains("Railroad, Embankment")) {
+            leveladj=+0.5;
+        }
+
         sourcelevel= source.getAbsoluteHeight() +leveladj;
         // make the source and the target the same
         target = source;
@@ -522,7 +540,10 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             if(target.getHex().isDepressionTerrain() && !target.getLOSPoint().equals(target.getHex().getHexCenter())){
                 leveladj=+1;
             }
-            targetlevel = target.getAbsoluteHeight() + leveladj;               //getLevelInHex() + target.getHex().getBaseLevelofHex() + leveladj;
+            if(target.getTerrain().getName().contains("Railroad, Embankment")) {
+                leveladj=+0.5;
+            }
+            targetlevel = target.getAbsoluteHeight() + leveladj;
 
         }
         super.mouseDragged(e);
@@ -983,11 +1004,11 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
     private void doLOS() {
 
         // silently ignore invalid LOS checks
-        if(source == null || target == null || result == null || VASLGameInterface == null ) {return;}
+        if(source == null || target == null || result == null || vaslgameinterface == null ) {return;}
 
         // do the LOS
         result = new LOSResult();
-        LOSMap.LOS(source, useAuxSourceLOSPoint, target, useAuxTargetLOSPoint, result, VASLGameInterface);
+        LOSMap.LOS(source, useAuxSourceLOSPoint, target, useAuxTargetLOSPoint, result, vaslgameinterface, illumgunflash);
 
         try {
             // set the result string

@@ -38,6 +38,7 @@ import java.util.StringTokenizer;
 public class ScenInfo extends AbstractBuildable implements GameComponent, CommandEncoder {
 
   private JTextField AxisELR, AxisSAN, AlliedELR, AlliedSAN, AxisBoobyTrap, AlliedBoobyTrap;
+  public JComboBox EC, Weather, Wind, WindDir, Night, NVR;
   private TextConfigurer notes;
   private Hashtable privateNotes = new Hashtable();
   private JComboBox movesFirst;
@@ -50,8 +51,8 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
   private KeyStrokeListener keyListener;
   private AbstractAction launchAction;
 
-  private int axisSAN, alliedSAN;
-  private String axisBooby, alliedBooby;
+  private int axisSAN, alliedSAN, ecvalue, nvrvalue;
+  private String axisBooby, alliedBooby, weather, wind, windir, night;
   private TextConfigurer myPrivate;
 
   public ScenInfo() {
@@ -72,7 +73,7 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
 
     keyListener = new KeyStrokeListener(launchAction);
     keyListener.setKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0, false));
-
+    // Side variables
     turn = new TurnMarker("Axis", "Axis", 1);
     AxisELR = new JTextField(" ? ");
     AxisELR.setMaximumSize(AxisELR.getPreferredSize());
@@ -138,6 +139,12 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
     b.add(AxisBoobyTrap);
     frame.getContentPane().add(b);
 
+    frame.getContentPane().add(Box.createRigidArea(new Dimension(0, 10))); // Use (10, 0) for horizontal
+
+    createEnvironmentPanel();
+
+    frame.getContentPane().add(Box.createRigidArea(new Dimension(0, 10))); // Use (10, 0) for horizontal
+
     notes = new TextConfigurer(null, "Notes: ");
     frame.getContentPane().add(notes.getControls());
 
@@ -181,7 +188,8 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
     reset();
 
     SequenceEncoder.Decoder st = new SequenceEncoder.Decoder(in, '\t');
-    String mf = "Axis",pl = "Axis",c = "1",xELR = "?",lELR = "?",xSAN = "?",lSAN = "?", xBooby = "?", lBooby = "?";
+    String mf = "Axis",pl = "Axis",c = "1",xELR = "?",lELR = "?",xSAN = "?",lSAN = "?",xBooby = "?",lBooby = "?", we = "Clear", ec = "Moderate: 0",
+            wi = "None", wd = "None", ni = "No", nv = "0";
     try {
       mf = st.nextToken();
       pl = st.nextToken();
@@ -192,6 +200,12 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
       lSAN = st.nextToken();
       xBooby = st.nextToken();
       lBooby = st.nextToken();
+      we = st.nextToken();
+      ec = st.nextToken();
+      wi = st.nextToken();
+      wd = st.nextToken();
+      ni = st.nextToken();
+      nv = st.nextToken();
 
     }
     catch (Exception e) {
@@ -204,6 +218,12 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
     if (!lBooby.equals("?") && !lBooby.equals("A") && !lBooby.equals("B") && !lBooby.equals("C")) {
       lBooby = "?";
     }
+    if (we == "") {we = "Clear";}
+    if (ec == "") {ec = "Moderate: 0";}
+    if (wi == "") {wi = "None";}
+    if (wd == "") {wd = "None";}
+    if (ni == "") {ni = "No";}
+    if (nv == "") {nv = "0";}
 
     turn.movesFirst = mf;
     movesFirst.setSelectedItem(mf + " moves first");
@@ -220,12 +240,24 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
     AlliedSAN.setText(lSAN);
     AxisBoobyTrap.setText(xBooby);
     AlliedBoobyTrap.setText(lBooby);
+    Weather.setSelectedItem(we);
+    String ecitem = makeECItem(ec);
+    EC.setSelectedItem(ecitem);
+    Wind.setSelectedItem(wi);
+    WindDir.setSelectedItem(wd);
+    Night.setSelectedItem(ni);
+    NVR.setSelectedItem(nv);
 
     axisSAN = getSAN(xSAN);
     alliedSAN = getSAN(lSAN);
     axisBooby = getBooby(xBooby);
     alliedBooby = getBooby(lBooby);
-
+    weather = getWeather(we);
+    ecvalue = getEC(ec);
+    wind = getWind(wi);
+    windir = getWindDir(wd);
+    night = getNight(ni);
+    nvrvalue = getNVR(nv);
     turn.repaint();
 
     if (st.hasMoreTokens()) {
@@ -275,6 +307,86 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
     return alliedSAN;
   }
 
+  public int getEC(String ec) {
+    int n = 0;
+    if (ec.contains(":")){
+      String ecstr = ec.substring(0, ec.indexOf(':'));
+      switch (ecstr){
+        case "Snow":
+        case "Mud" :
+          n = -3;
+          break;
+        case "Wet":
+          n = -2;
+          break;
+        case "Moist":
+          n = -1;
+          break;
+        case "Moderate":
+          n = 0;
+          break;
+        case "Dry":
+          n = 1;
+          break;
+        case "Very Dry":
+          n = 2;
+          break;
+        default:
+          n = 0;
+      }
+    }
+    else {
+
+      try {
+        n = Integer.parseInt(ec.trim());
+      }
+      catch (Exception e) {
+      }
+    }
+
+    return n;
+  }
+
+  public String makeECItem(String ec) {
+    String eccomboitem = "";
+    switch (ec){
+      case "-3":
+        eccomboitem = "Snow: -3";
+        break;
+      case "-2":
+        eccomboitem = "Wet: -2";
+        break;
+      case "-1":
+        eccomboitem = "Moist: -1";
+        break;
+      case "0":
+        eccomboitem = "Moderate: 0";
+        break;
+      case "1":
+        eccomboitem = "Dry: 1";
+        break;
+      case "2":
+        eccomboitem = "Very Dry: 2";
+        break;
+      default:
+        eccomboitem = "Moderate: 0";
+    }
+    return eccomboitem;
+  }
+
+  public int getNvrvalue() {
+    return nvrvalue;
+  }
+  private int getNVR(String nv) {
+    int n = 0;
+    try {
+      n = Integer.parseInt(nv.trim());
+    }
+    catch (Exception e) {
+    }
+    return n;
+  }
+
   private int getSAN(String s) {
     int n = 0;
     try {
@@ -291,6 +403,15 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
 
   public String getAlliedBooby() {
     return alliedBooby;
+  }
+
+  public String getWeather(String s) {return weather;}
+  public String getWind(String s) {return wind;}
+  public String getWindDir(String s) {return windir;}
+  private String getNight(String s) {return night;}
+
+  public String getNightvalue(){
+    return night;
   }
 
   private String getBooby(String s) {
@@ -340,12 +461,19 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
     alliedSAN = getSAN(AlliedSAN.getText());
     axisBooby = getBooby(AxisBoobyTrap.getText());
     alliedBooby = getBooby(AlliedBoobyTrap.getText());
+    weather = getWeather(weather);
+    ecvalue = getEC(EC.getSelectedItem().toString());
+    wind = getWind(wind);
+    windir = getWindDir(windir);
+    night = getNight(night);
+    nvrvalue = getNVR(NVR.getSelectedItem().toString());
+
 
     SequenceEncoder se = new SequenceEncoder('\t');
     se.append(turn.movesFirst).append(turn.player).append("" + turn.current)
         .append(AxisELR.getText()).append(AxisSAN.getText())
-        .append(AlliedELR.getText()).append(AlliedSAN.getText()).append(AxisBoobyTrap.getText()).append(AlliedBoobyTrap.getText());
-    se.append(notes.getValueString());
+        .append(AlliedELR.getText()).append(AlliedSAN.getText()).append(AxisBoobyTrap.getText()).append(AlliedBoobyTrap.getText())
+        .append(weather).append(Integer.toString(ecvalue)).append(wind).append(windir).append(night).append(Integer.toString(nvrvalue));
     for (Enumeration e = privateNotes.keys(); e.hasMoreElements();) {
       String id = (String) e.nextElement();
       String notes = (String) privateNotes.get(id);
@@ -360,6 +488,128 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
       }
     }
     return se.getValue();
+  }
+
+  private void createEnvironmentPanel() {
+
+      // Environment Variables
+      frame.getContentPane().add(Box.createRigidArea(new Dimension(0, 10))); // Use (10, 0) for horizontal
+      frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
+
+      EC = new JComboBox();
+      EC.addItemListener(new ItemListener() {
+          public void itemStateChanged(ItemEvent evt) {
+              String s = (String) EC.getSelectedItem();
+              String strvalue = s.substring(s.length() - 1);
+              String seclastChar = s.substring(s.length() - 2);
+              ecvalue = Integer.parseInt(strvalue);
+              if (seclastChar.contains("-")) {
+                ecvalue = -ecvalue;
+              }
+          }
+      });
+      EC.addItem("Snow: -3");
+      EC.addItem("Mud: -3");
+      EC.addItem("Wet: -2");
+      EC.addItem("Moist: -1");
+      EC.addItem("Moderate: 0");
+      EC.addItem("Dry: 1");
+      EC.addItem("Very Dry: 2");
+      EC.setSelectedIndex(0);
+
+      Weather = new JComboBox();
+      Weather.addItemListener(new ItemListener() {
+          public void itemStateChanged(ItemEvent evt) {
+              weather = (String) Weather.getSelectedItem();
+          }
+      });
+      Weather.addItem("Clear");
+      Weather.addItem("Clear & Gusty");
+      Weather.addItem("Overcast");
+      Weather.addItem("Fog & Mist");
+      Weather.addItem("Mud");
+      Weather.addItem("Mun & Overcast");
+      Weather.addItem("Snow");
+      Weather.addItem("Heavy Rain");
+      Weather.addItem("Mud & Heavy Rain");
+      Weather.setSelectedIndex(0);
+
+      Box b = Box.createHorizontalBox();
+      b.add(new JLabel("Weather: "));
+      b.add(Weather);
+      b.add(new JLabel("EC: "));
+      b.add(EC);
+      frame.getContentPane().add(b);
+
+      frame.getContentPane().add(Box.createRigidArea(new Dimension(0, 10))); // Use (10, 0) for horizontal
+
+      Wind = new JComboBox();
+      Wind.addItemListener(new ItemListener() {
+          public void itemStateChanged(ItemEvent evt) {
+              wind = (String) Wind.getSelectedItem();
+          }
+      });
+      Wind.addItem("None");
+      Wind.addItem("Mild Breeze");
+      Wind.addItem("Heavy Winds");
+      Wind.setSelectedIndex(0);
+
+      WindDir = new JComboBox();
+      WindDir.addItemListener(new ItemListener() {
+          public void itemStateChanged(ItemEvent evt) {
+              windir = (String) WindDir.getSelectedItem();
+          }
+      });
+      WindDir.addItem("1");
+      WindDir.addItem("2");
+      WindDir.addItem("3");
+      WindDir.addItem("4");
+      WindDir.addItem("5");
+      WindDir.addItem("6");
+      WindDir.setSelectedIndex(0);
+
+      b = Box.createHorizontalBox();
+      b.add(new JLabel("Wind: "));
+      b.add(Wind);
+      b.add(new JLabel("Wind Dir: "));
+      b.add(WindDir);
+      frame.getContentPane().add(b);
+
+      frame.getContentPane().add(Box.createRigidArea(new Dimension(0, 10))); // Use (10, 0) for horizontal
+
+      Night = new JComboBox();
+      Night.addItemListener(new ItemListener() {
+        public void itemStateChanged(ItemEvent evt) {
+            night = (String) Night.getSelectedItem();
+        }
+      });
+      Night.addItem("No");
+      Night.addItem("Yes");
+      Night.setSelectedIndex(0);
+
+      NVR = new JComboBox();
+      NVR.addItemListener(new ItemListener() {
+        public void itemStateChanged(ItemEvent evt) {
+            String s = (String) NVR.getSelectedItem();
+            nvrvalue = Integer.parseInt(s);
+        }
+      });
+      NVR.addItem("0");
+      NVR.addItem("1");
+      NVR.addItem("2");
+      NVR.addItem("3");
+      NVR.addItem("4");
+      NVR.addItem("5");
+      NVR.addItem("6");
+      NVR.setSelectedIndex(0);
+
+      b = Box.createHorizontalBox();
+      b.add(new JLabel("Night: "));
+      b.add(Night);
+      b.add(new JLabel("NVR: "));
+      b.add(NVR);
+      frame.getContentPane().add(b);
+
   }
 
   public static class SetInfo extends Command {

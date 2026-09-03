@@ -334,7 +334,7 @@ public class DoubleBlindViewer extends AbstractConfigurable implements CommandEn
 
         // check the LOS
         LOSResult result = new LOSResult();
-        map.getVASLMap().LOS(l1, false, l2, false, result, VASLGameInterface);
+        map.getVASLMap().LOS(l1, false, l2, false, result, VASLGameInterface, null);
         return !result.isBlocked();
     }
 

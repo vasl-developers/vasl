@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!--
+	This file contains additional information about illumination game counters.
+-->
+<illuminationGunflashCounterMetadata>
+
+    <!-- metadata for each of the illumination counters
+    Attributes:
+        name = game piece name (i.e. piece.getName())
+        hex = name of hex where the illumination counter is placed
+        range = # of hex
+        zone =
+
+
+    -->
+    <starshell name="Green Starshell" range="3"/>
+    <starshell name="Red Starshell" range="3"/>
+    <starshell name="Blue Starshell" range="3"/>
+
+    <illumround name="Blue IR" range="6"/>
+    <illumround name="Green IR" range="6"/>
+    <illumround name="Red IR" range="6"/>
+
+    <blaze name="Blaze" range="2"/>
+    <flame name="Flame" range="0"/>
+    <blaze name="2-level Blaze" range="4"/>
+
+    <tripflares name="Red Trip Flare" range="1"/>
+
+    <searchlights name="searchlights" range="0"/>
+    <searchlights name="Illum. Beam" range="0"/>
+
+    <gunflash name="Prep Fire" range="0"/>
+    <gunflash name="Int Fire" range="0"/>
+    <gunflash name="Veh Prep Fire" range="0"/>
+    <gunflash name="First Fire" range="0"/>
+    <gunflash name="Veh First Fire" range="0"/>
+    <gunflash name="Gunflash" range="0"/>
+
+</illuminationGunflashCounterMetadata>

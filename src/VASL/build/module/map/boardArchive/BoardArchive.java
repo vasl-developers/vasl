@@ -661,7 +661,7 @@ public class BoardArchive {
             }
 
             // write the hex information
-            if(this.metadata.getHexGridConfig().contains("EqualRowCount")){
+            if(this.metadata.getHexGridConfig() != null && this.metadata.getHexGridConfig().contains("EqualRowCount")){
                 for (int col = 0; col < map.getWidth(); col++) {
                     for (int row = 0; row < map.getHeight(); row++) { // no extra hex for boards where each col has same number of rows (eg RO/DaE)
                         outfile.writeByte( map.getHex(col, row).hasStairway() ? 1: 0);
@@ -706,6 +706,11 @@ public class BoardArchive {
                 metadata.getA1CenterY() == BoardMetadata.MISSING;
     }
 
+    public boolean isABboard(){
+        return
+                metadata.getBoardHeight() == 20 &&
+                metadata.getBoardWidth() == 17;
+    }
     /**
      * Get the board image from the archive
      */
@@ -1093,6 +1098,10 @@ public class BoardArchive {
      */
     public boolean isLegacyBoard() {
         return legacyBoard;
+    }
+
+    public void setLegacyBoard(boolean legacyBoard) {
+        this.legacyBoard = legacyBoard;
     }
 
     /**

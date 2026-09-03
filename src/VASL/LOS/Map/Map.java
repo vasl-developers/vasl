@@ -16,8 +16,11 @@
  */
 package VASL.LOS.Map;
 
+import VASL.Gamedata.IllumGunFlashMetadata;
+import VASL.Gameplay.IllumGunFlash;
 import VASL.LOS.counters.CounterMetadata;
 import VASL.build.module.ASLMap;
+import VASL.build.module.ScenInfo;
 import VASL.build.module.map.boardArchive.BoardArchive;
 import VASL.build.module.map.boardArchive.RBrrembankments;
 import VASL.build.module.map.boardArchive.PartialOrchards;
@@ -29,6 +32,7 @@ import VASL.LOS.counters.Smoke;
 import VASL.LOS.counters.Vehicle;
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASL.build.module.map.boardPicker.VASLBoard;
+import VASSAL.build.GameModule;
 import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.counters.GamePiece;
 import VASSAL.counters.PieceIterator;
@@ -195,8 +199,8 @@ public class Map  {
         // create the hex grid
         int startcol =0; int startrow =0;
         hexGrid = new Hex[this.width][];
-        //ToDo Test for uses of b from a/b boards, and BFPDW boards
-        if (this.A1CenterY==32.25 || this.A1CenterY == -612.75 || this.A1CenterY == 97.1) {   //adding configuration for BFP1 and BFP2
+        //ToDo Test for uses of b from a/b boards
+        if (this.A1CenterY==32.25 || this.A1CenterY == 32.235 ||this.A1CenterY == -612.75 || this.A1CenterY == 97.1) {   //adding configuration for BFP1 and BFP2 and BFPDW
             for (int col = 0; col < (startcol + this.width); col++) {
                 hexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
                 for (int row = 0; row < (startrow + this.height + (col % 2)); row++) {
@@ -1791,9 +1795,10 @@ public class Map  {
      * @param target "target" location
      * @param useAuxTargetLOSPoint use auxiliary bypass aiming point for target location
      * @param result <code>LOSResult</code> that will contain all of the LOS information
-     * @param VASLGameInterface <code>Scenario</code> that contains all scenario-dependent LOS information
+     * @param vaslgameinterface <code>Scenario</code> that contains scenario-dependent LOS information
+     * @param illumgunflash <code>Scenario</code> that contains scenario-dependent Night LOS information
      */
-    public void LOS(Location source, boolean useAuxSourceLOSPoint, Location target, boolean useAuxTargetLOSPoint, LOSResult result, VASLGameInterface VASLGameInterface) {
+    public void LOS(Location source, boolean useAuxSourceLOSPoint, Location target, boolean useAuxTargetLOSPoint, LOSResult result, VASLGameInterface vaslgameinterface, IllumGunFlash illumgunflash) {
 
         // initialize the results
         result.reset();
@@ -1807,7 +1812,7 @@ public class Map  {
             return;
         }
 
-        LOSStatus status = new LOSStatus(source, useAuxSourceLOSPoint, target, useAuxTargetLOSPoint, result, VASLGameInterface);
+        LOSStatus status = new LOSStatus(source, useAuxSourceLOSPoint, target, useAuxTargetLOSPoint, result, vaslgameinterface, illumgunflash);
 
         // check same hex rules
         if(checkSameHexSmokeRule(status, result)) {
@@ -2052,6 +2057,7 @@ public class Map  {
         public boolean useAuxTargetLOSPoint;
         public LOSResult result;
         public VASL.LOS.VASLGameInterface vaslGameInterface;
+        public VASL.Gameplay.IllumGunFlash illumGunFlash;
 
         // location variables
         public int sourceX;
@@ -2137,7 +2143,7 @@ public class Map  {
 
         public double slope;
 
-        private LOSStatus(Location source, boolean useAuxSourceLOSPoint, Location target, boolean useAuxTargetLOSPoint, LOSResult result, VASLGameInterface vaslgameinterface) {
+        private LOSStatus(Location source, boolean useAuxSourceLOSPoint, Location target, boolean useAuxTargetLOSPoint, LOSResult result, VASLGameInterface vaslgameinterface, IllumGunFlash illumgunflash) {
 
             this.source = source;
             this.useAuxSourceLOSPoint = useAuxSourceLOSPoint;
@@ -2145,6 +2151,7 @@ public class Map  {
             this.useAuxTargetLOSPoint = useAuxTargetLOSPoint;
             this.result = result;
             this.vaslGameInterface = vaslgameinterface;
+            this.illumGunFlash = illumgunflash;
 
             // start and end points
             sourceX = useAuxSourceLOSPoint ? (int) source.getAuxLOSPoint().getX() : (int) source.getLOSPoint().getX();
@@ -2868,6 +2875,10 @@ public class Map  {
             }
         }
         // check the LOS rules
+        if (checkNVRRule(status, result)){
+            return true;
+        }
+
         if (checkDepressionRule(status, result)) {
             return true;
         }
@@ -3334,8 +3345,8 @@ public class Map  {
                                 if(!insamehex) {
                                     LOSResult result1 = new LOSResult();
                                     LOSResult result2 = new LOSResult();
-                                    LOS(status.source, status.useAuxSourceLOSPoint, v.getLocation(), false, result1, status.vaslGameInterface);
-                                    LOS(status.target, status.useAuxTargetLOSPoint, v.getLocation(), false, result2, status.vaslGameInterface);
+                                    LOS(status.source, status.useAuxSourceLOSPoint, v.getLocation(), false, result1, status.vaslGameInterface, status.illumGunFlash);
+                                    LOS(status.target, status.useAuxTargetLOSPoint, v.getLocation(), false, result2, status.vaslGameInterface, status.illumGunFlash);
                                     if (!result1.isBlocked() && !result2.isBlocked()) {
                                         hindrance++;
                                     }
@@ -3747,6 +3758,182 @@ public class Map  {
         }
         return false;
     }
+
+    /**
+     * Ensures the NVR range restrictions (including illumination) are met
+     * @param status the LOS status
+     * @param result the LOS result
+     * @return true if the LOS is blocked
+     */
+    protected boolean checkNVRRule(LOSStatus status, LOSResult result) {
+        ScenInfo scenarioInfo = GetScenarioInfo();
+        boolean isNight = scenarioInfo.getNightvalue().contains("Yes");
+        if(isNight) {
+            int nvr = scenarioInfo.getNvrvalue();
+            if (status.rangeToSource > nvr) {
+                if (!targetisIlluminatedOrInGunflash(status)) {
+                    status.reason = "Range is greater than NVR (E1.101)";
+                    status.blocked = true;
+                    result.setBlocked(status.currentCol, status.currentRow, status.reason);
+                    return true;
+                }
+            } else if (sourceisIlluminated(status)){
+                if (!targetisIlluminatedOrInGunflash(status)) {
+                    status.reason = "Source is illuminated; target is not (E1.101)";
+                    status.blocked = true;
+                    result.setBlocked(status.currentCol, status.currentRow, status.reason);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private ScenInfo GetScenarioInfo()
+    {
+        return GameModule.getGameModule().getComponentsOf(ScenInfo.class).iterator().next();
+    }
+
+    /**
+     * tests if the given hex is (a) Illuminated or (b) in a Gunflash hex and therefore visible beyond NVR
+     * @param
+     * @return
+     */
+    private boolean targetisIlluminatedOrInGunflash(LOSStatus status){
+
+        //status.illumGunFlash.illumRoundList.forEach(irmap -> {
+        //    irmap.forEach((key, value) -> System.out.println(key + " : " + value));
+        //});
+        // IR test
+        for  (java.util.Map<Hex, IllumGunFlashMetadata> illumRounditem : status.illumGunFlash.illumRoundList) {
+            for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : illumRounditem.entrySet()) {
+                Hex key = entry.getKey();
+                if (range(status.targetHex, key, getMapConfiguration()) <= 6) {
+                    return true;
+                }
+            }
+        }
+        // starshell test
+        for  (java.util.Map<Hex, IllumGunFlashMetadata> starshellitem : status.illumGunFlash.starshellList) {
+            for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : starshellitem.entrySet()) {
+                Hex key = entry.getKey();
+                if (range(status.targetHex, key, getMapConfiguration()) <= 3) {
+                    return true;
+                }
+            }
+        }
+        // flame test
+        for  (java.util.Map<Hex, IllumGunFlashMetadata> flameitem : status.illumGunFlash.flameList) {
+            for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : flameitem.entrySet()) {
+                Hex key = entry.getKey();
+                if (range(status.targetHex, key, getMapConfiguration()) == 0) {
+                    return true;
+                }
+            }
+        }
+        // blaze test
+        //ToDo add proper range test (2x number of levels
+        for  (java.util.Map<Hex, IllumGunFlashMetadata> blazeitem : status.illumGunFlash.blazeList) {
+            for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : blazeitem.entrySet()) {
+                Hex key = entry.getKey();
+                //String name = String.valueOf(entry.getValue().getRange());
+                int range = entry.getValue().getName().contains("2-level") ? 4 : 2;
+                if (range(status.targetHex, key, getMapConfiguration()) <= range) {
+                    return true;
+                }
+            }
+        }
+        // tripflare test
+        for  (java.util.Map<Hex, IllumGunFlashMetadata> tripflareitem : status.illumGunFlash.tripflareList) {
+            for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : tripflareitem.entrySet()) {
+                Hex key = entry.getKey();
+                if (range(status.targetHex, key, getMapConfiguration()) <= 1) {
+                    return true;
+                }
+            }
+        }
+        // gunflash test
+        for  (java.util.Map<Hex, IllumGunFlashMetadata> gunflashitem : status.illumGunFlash.gunflashList) {
+            for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : gunflashitem.entrySet()) {
+                Hex key = entry.getKey();
+                if (range(status.targetHex, key, getMapConfiguration()) <= 0) {
+                    return true;
+                }
+            }
+        }
+
+        // searchlight test
+        for  (java.util.Map<Hex, IllumGunFlashMetadata> illumBeamitem : status.illumGunFlash.searchlightList) {
+            for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : illumBeamitem.entrySet()) {
+                Hex key = entry.getKey();
+                if (range(status.targetHex, key, getMapConfiguration()) <= 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean sourceisIlluminated (LOSStatus status){
+        // IR test
+        for  (java.util.Map<Hex, IllumGunFlashMetadata> illumRounditem : status.illumGunFlash.illumRoundList) {
+            for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : illumRounditem.entrySet()) {
+                Hex key = entry.getKey();
+                if (range(status.sourceHex, key, getMapConfiguration()) <= 6) {
+                    return true;
+                }
+            }
+        }
+        // starshell test
+        for  (java.util.Map<Hex, IllumGunFlashMetadata> starshellitem : status.illumGunFlash.starshellList) {
+            for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : starshellitem.entrySet()) {
+                Hex key = entry.getKey();
+                if (range(status.sourceHex, key, getMapConfiguration()) <= 3) {
+                    return true;
+                }
+            }
+        }
+        // flame test
+        for  (java.util.Map<Hex, IllumGunFlashMetadata> flameitem : status.illumGunFlash.flameList) {
+            for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : flameitem.entrySet()) {
+                Hex key = entry.getKey();
+                if (range(status.sourceHex, key, getMapConfiguration()) == 0) {
+                    return true;
+                }
+            }
+        }
+        // blaze test
+        //ToDo add proper range test (2x number of levels
+        for  (java.util.Map<Hex, IllumGunFlashMetadata> blazeitem : status.illumGunFlash.blazeList) {
+            for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : blazeitem.entrySet()) {
+                Hex key = entry.getKey();
+                if (range(status.sourceHex, key, getMapConfiguration()) <= 2) {
+                    return true;
+                }
+            }
+        }
+        // tripflare test
+        for  (java.util.Map<Hex, IllumGunFlashMetadata> tripflareitem : status.illumGunFlash.tripflareList) {
+            for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : tripflareitem.entrySet()) {
+                Hex key = entry.getKey();
+                if (range(status.sourceHex, key, getMapConfiguration()) <= 1) {
+                    return true;
+                }
+            }
+        }
+
+        // searchlight test
+        for  (java.util.Map<Hex, IllumGunFlashMetadata> illumBeamitem : status.illumGunFlash.searchlightList) {
+            for (java.util.Map.Entry<Hex, IllumGunFlashMetadata> entry : illumBeamitem.entrySet()) {
+                Hex key = entry.getKey();
+                if (range(status.sourceHex, key, getMapConfiguration()) <= 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     /**
      * Ensures the elevation/range restriction for source/target IN a depression are met
      * @param status the LOS status
@@ -3997,13 +4184,19 @@ public class Map  {
             return false;
         }
         // code added by DR to deal with cellars
-        int sourceadj=0;
-        int targetadj=0;
+        double sourceadj=0;
+        double targetadj=0;
         if(status.source.getTerrain().isCellar()) {
             sourceadj=+1;
         }
         if(status.target.getTerrain().isCellar()) {
             targetadj=+1;
+        }
+        if(status.source.getTerrain().getName().contains("Railroad, Embankment")) {
+            sourceadj=+0.5;
+        }
+        if(status.target.getTerrain().getName().contains("Railroad, Embankment")) {
+            targetadj=+0.5;
         }
         // rowhouse/factory wall?
         if (status.currentTerrain.isRowhouseFactoryWallOrBreach()) {
@@ -4142,7 +4335,7 @@ public class Map  {
                     }
 
                     // on the same level?
-                    else if (status.groundLevel == status.sourceElevation && status.groundLevel == status.targetElevation && !status.slopes) {
+                    else if ((status.groundLevel == status.sourceElevation + sourceadj) && (status.groundLevel == status.targetElevation + targetadj) && !status.slopes) {
 
                         status.blocked = true;
                         status.reason = "Intervening hexside terrain (B9.2)";
@@ -4422,7 +4615,16 @@ public class Map  {
             rooftopadj=1;
             rangehex=status.targetHex;
         }
+        if(status.source.getTerrain().getName().contains("Railroad, Embankment")) {
+            sourceadj=+0.5;
+        }
+        if(status.target.getTerrain().getName().contains("Railroad, Embankment")) {
+            targetadj=+0.5;
+        }
         if(status.currentTerrain.isHalfLevelHeight() && status.currentTerrain.isBuilding() ) {
+            obstacleadj=+0.5;
+        }
+        if(status.currentTerrain.isHalfLevelHeight() && status.currentTerrain.getName().contains("Railroad, Embankment") ) {
             obstacleadj=+0.5;
         }
         if(status.source.getTerrain().isCellar()) {
@@ -4598,6 +4800,13 @@ public class Map  {
         }
         if(status.target.getTerrain().isRooftop() && status.target.getLevelInHex() !=1) {
             targetadj=-0.5;
+        }
+        //Railroad, Embankment special case
+        if(status.source.getTerrain().getName().contains("Railroad, Embankment")) {
+            sourceadj=+0.5;
+        }
+        if(status.target.getTerrain().getName().contains("Railroad, Embankment")) {
+            targetadj=+0.5;
         }
         // Hillock special case - source or target is on a hillock
         if(status.startsOnHillock){
@@ -5055,6 +5264,12 @@ public class Map  {
         if(status.target.getTerrain().isRooftop() && status.target.getLevelInHex() !=1 && !(status.source.getTerrain().isRooftop())) {
             targetadj=-0.5;
         }
+        if(status.source.getTerrain().getName().contains("Railroad, Embankment")) {
+            sourceadj=+0.5;
+        }
+        if(status.target.getTerrain().getName().contains("Railroad, Embankment")) {
+            targetadj=+0.5;
+        }
         //ToDo fix this - using an exception test here is not best way to handle
         if (sanddunetest(status)){
             return false;
@@ -5259,6 +5474,12 @@ public class Map  {
         }
         if(status.target.getTerrain().isRooftop() && status.target.getLevelInHex() !=1) {
             targetadj=-0.5;
+        }
+        if(status.source.getTerrain().getName().contains("Railroad, Embankment")) {
+            sourceadj=+0.5;
+        }
+        if(status.target.getTerrain().getName().contains("Railroad, Embankment")) {
+            targetadj=+0.5;
         }
         if (status.currentTerrain.isBridge()) {
             status.ignoreGroundLevelHex = status.currentHex;

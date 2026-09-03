@@ -252,16 +252,16 @@
 		<boarddata name="BFPS" version="6.0" versionDate="2025/01/30" description="" boardType="Geoboard" publisher="BFP" issued="2025/04/14" />
 		<boarddata name="BFPT" version="6.2" versionDate="2025/04/14" description="" boardType="Geoboard" publisher="BFP" issued="2025/04/14" />
 		<boarddata name="BFPU" version="6.1" versionDate="2025/04/14" description="" boardType="Geoboard" publisher="BFP" issued="2025/04/14" />
-		<boarddata name="BFPDW1a" version="6.5" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPDW1a" version="6.6" versionDate="2026/07/22" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPDW1b" version="6.6" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPDW2a" version="6.4" versionDate="2025/10/27" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPDW2b" version="6.5" versionDate="2025/10/27" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPDW3a" version="6.6" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPDW2a" version="6.5" versionDate="2026/07/23" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPDW2b" version="6.6" versionDate="2026/07/23" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPDW3a" version="6.7" versionDate="2026/07/22" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPDW3b" version="6.5" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPDW4a" version="6.5" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPDW4b" version="6.5" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPDW5a" version="6.7" versionDate="2026/04/18" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPDW5b" version="6.5" versionDate="2023/01/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPDW5a" version="6.8" versionDate="2026/07/22" description="" boardType="Geoboard" publisher="BFP" issued="" />
+		<boarddata name="BFPDW5b" version="6.6" versionDate="2026/07/22" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPDW6a" version="6.7" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPDW6b" version="6.6" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPDW7a" version="6.5" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
@@ -270,7 +270,7 @@
 		<boarddata name="BFPDW8b" version="6.1" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPDW9a" version="6.1" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
 		<boarddata name="BFPDW9b" version="6.1" versionDate="2023/11/30" description="" boardType="Geoboard" publisher="BFP" issued="" />
-		<boarddata name="BFPDW10a" version="6.0" versionDate="2025/01/30" description="" boardType="Geoboard" publisher="BFP" issued="2025/04/14" />
+		<boarddata name="BFPDW10a" version="6.1" versionDate="2026/07/22" description="" boardType="Geoboard" publisher="BFP" issued="2025/04/14" />
 		<boarddata name="BFPDW10b" version="6.0" versionDate="2025/01/30" description="" boardType="Geoboard" publisher="BFP" issued="2025/04/14" />
 		<boarddata name="BFPHW1a" version="6.0" versionDate="2025/01/30" description="" boardType="Geoboard" publisher="BFP" issued="2025/04/14" />
 		<boarddata name="BFPHW1b" version="6.0" versionDate="2025/01/30" description="" boardType="Geoboard" publisher="BFP" issued="2025/04/14" />
@@ -312,7 +312,7 @@
 		<boarddata name="TFF1" version="0.1" versionDate="2025/05/27" description="" boardType="HASL" publisher="LFT" issued="" />
 		<boarddata name="TFF2" version="0.1" versionDate="2025/05/27" description="" boardType="HASL" publisher="LFT" issued="" />
 		<boarddata name="SG" version="6.0" versionDate="2021/04/30" description="Singling" boardType="HASL" publisher="MMP" issued="" />
-		<boarddata name="VotG" version="4.1" versionDate="2026/03/03" description="Valor of the Guards" boardType="HASL" publisher="MMP" issued="" />
+		<boarddata name="VotG" version="4.3" versionDate="2026/08/30" description="Valor of the Guards" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="SC" version="3.0" versionDate="2008/08/30" description="Suicide Creek" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="ST" version="2.02" versionDate="2008/08/30" description="Stoumont (KGP I)" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="PB" version="0.1" versionDate="2008/08/30" description="Pegasus Bridge" boardType="HASL" publisher="MMP" issued="" />

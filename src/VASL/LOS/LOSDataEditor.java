@@ -70,9 +70,9 @@ public class LOSDataEditor {
         String passboardgridconfig = "Normal";
 
         boolean isCropping=false;
-        if (boardArchive.isGEO()) {
+        if (boardArchive.isGEO() || boardArchive.isABboard()) {
             //ToDo switch to new method for creating a map in VASL.LOS.Map.Map
-            //return null;
+            boardArchive.setLegacyBoard(false);
             m = new Map(boardArchive.getHexWidth(),
                     boardArchive.getHexHeight(),
                     boardArchive.getBoardWidth(),

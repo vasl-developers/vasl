@@ -655,8 +655,8 @@ public class Hex {
      */
     public void resetTerrain(){
         //ToDo add all overlay and other terrain updates here
-        // set the center location terrain
 
+        // set the center location terrain
         Terrain centerLocationTerrain = getnearcenterLocationTerrain();
         int centerLocationElevation = getnearcenterLocationElevation();
         // fix center location when building misses the center dot
@@ -876,7 +876,10 @@ public class Hex {
      * Corrects hexes with single-hex bridges by adding a new location (either bridge or depression)
      */
     private void fixBridgesTunnelWater() {
-       if(hasBridgeOrTunnelTerrain()) {
+       if (getName().contains("CCC15")){
+           boolean reg = true;
+       }
+        if(hasBridgeOrTunnelTerrain()) {
             Location bridgeLocation = null;
             // determine if existing location is bridge, tunnel, water or depression terrain
             if (centerLocation.isDepressionTerrain()) {
