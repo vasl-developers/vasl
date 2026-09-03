@@ -1,13 +1,8 @@
-package VASL.Gameplay;
+package VASL.Gamedata;
 
-import VASL.Gamedata.IllumGunFlashDataSet;
-import VASL.Gamedata.IllumGunFlashMetadata;
 import VASL.LOS.Map.Hex;
 import VASL.LOS.Map.Location;
-import VASL.LOS.Map.Map;
-import VASL.LOS.counters.*;
 import VASL.build.module.ASLMap;
-import VASL.counters.ASLProperties;
 import VASSAL.build.GameModule;
 import VASSAL.counters.GamePiece;
 import VASSAL.counters.PieceIterator;
@@ -16,7 +11,6 @@ import VASSAL.counters.Stack;
 
 import java.awt.*;
 import java.util.*;
-import java.util.List;
 
 import static VASSAL.build.GameModule.getGameModule;
 
