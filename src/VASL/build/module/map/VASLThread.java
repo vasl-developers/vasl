@@ -36,7 +36,7 @@ import java.util.Enumeration;
 
 import javax.swing.JCheckBox;
 
-import VASL.Gameplay.IllumGunFlash;
+import VASL.Gamedata.IllumGunFlash;
 import VASL.LOS.Map.LOSResult;
 import VASL.LOS.Map.Location;
 import VASL.LOS.Map.Map;
