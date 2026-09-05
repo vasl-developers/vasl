@@ -182,6 +182,8 @@
 		<boarddata name="25b" version="6.0" versionDate="2026/01/28" description="" boardType="Double-sided" publisher="MMP" issued="" />
 		<boarddata name="26a" version="6.3" versionDate="2026/04/11" description="" boardType="Double-sided" publisher="MMP" issued="" />
 		<boarddata name="26b" version="6.3" versionDate="2026/04/11" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="28a" version="6.0" versionDate="2026/09/04" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="28b" version="6.0" versionDate="2026/09/04" description="" boardType="Double-sided" publisher="MMP" issued="" />
 		<boarddata name="29a" version="6.0" versionDate="2026/09/03" description="" boardType="Double-sided" publisher="MMP" issued="" />
 		<boarddata name="29b" version="6.0" versionDate="2026/09/03" description="" boardType="Double-sided" publisher="MMP" issued="" />
 		<boarddata name="a" version="6.5" versionDate="2023/01/30" description="" boardType="Deluxe" publisher="MMP" issued="" />
