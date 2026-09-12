@@ -533,7 +533,9 @@ public class ASLBoard extends Board {
                     for (SSROverlay ssrOverlay : o.getTerrain().getOverlays()) {
                         if (ssrOverlay.getImage() != null) {
                             Rectangle oBounds = ssrOverlay.bounds();
-                            if (o.getOrientation() == 'a') {
+                            //fix for #2638
+                            //ToDo check that this does not cause other bugs 09/26
+                            //if (o.getOrientation() == 'a') {
                                 oBounds.translate(o.bounds().x, o.bounds().y);
                                 r = visible.intersection(oBounds);
                                 if (!r.isEmpty()) {
@@ -552,9 +554,12 @@ public class ASLBoard extends Board {
                                             null
                                     );
                                 }
-                            } else {
+                            /*} else {
                                 try {
                                     Point p1 = o.offset(o.getOrientation(), ASLBoard.this);
+                                    char testchar = o.getOrientation();
+                                    // test code
+                                    //Point p2 = o.offset(testchar, ASLBoard.this);
                                     Point p2 = o.offset('a', ASLBoard.this);
                                     Point p = new Point(
                                             p1.x + p2.x - oBounds.x + o.bounds().x - visible.x,
@@ -575,7 +580,7 @@ public class ASLBoard extends Board {
                                 } catch (BoardException e1) {
                                     e1.printStackTrace();
                                 }
-                            }
+                            }*/
                         }
                     }
                 }
