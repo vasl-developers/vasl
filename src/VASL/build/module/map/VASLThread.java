@@ -148,7 +148,6 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             vaslgameinterface = new VASLGameInterface(theMap, LOSMap);
             vaslgameinterface.updatePieces();
             //use this to initialize game data that effects los
-            //ToDo is this the best place to trigger this
             illumgunflash = new IllumGunFlash(theMap, LOSMap);
             illumgunflash.updatePieces();
 
