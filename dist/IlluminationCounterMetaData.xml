@@ -31,10 +31,21 @@
     <searchlights name="Illum. Beam" range="0"/>
 
     <gunflash name="Prep Fire" range="0"/>
-    <gunflash name="Int Fire" range="0"/>
+    <gunflash name="Bnd. Fire" range="0"/>
+    <gunflash name="Opp. Fire" range="0"/>
+    <gunflash name="Adv. Fire" range="0"/>
+    <gunflash name="Int. Fire" range="0"/>
+    <gunflash name="No Fire" range="0"/>
     <gunflash name="Veh Prep Fire" range="0"/>
     <gunflash name="First Fire" range="0"/>
+    <gunflash name="First Fire IFP" range="0"/>
+    <gunflash name="First Fire SW" range="0"/>
+    <gunflash name="Final Fire" range="0"/>
+    <gunflash name="Int. Def Fire" range="0"/>
+    <gunflash name="No Def Fire" range="0"/>
     <gunflash name="Veh First Fire" range="0"/>
     <gunflash name="Gunflash" range="0"/>
+    <gunflash name="Melee" range="0"/>
+    <gunflash name="H-t-H Melee" range="0"/>
 
 </illuminationGunflashCounterMetadata>
