@@ -32,7 +32,7 @@ public class ActivateNightShaderCommand extends BaseShaderCommand {
             throw new RuntimeException(e);
         }
         // Simulate a key press
-        robot.keyPress(KeyEvent.VK_F7);
+        //robot.keyPress(KeyEvent.VK_F7);
     }
 
     @Override
