@@ -36,7 +36,7 @@
 		<boarddata name="04" version="7.0" versionDate="2026/02/16" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="05" version="7.1" versionDate="2025/08/28" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="06" version="6.8" versionDate="2025/02/03" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="07" version="6.8" versionDate="2026/06/27" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="07" version="6.9" versionDate="2026/09/14" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="08" version="7.5" versionDate="2026/06/27" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="09" version="7.4" versionDate="2025/01/22" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="10" version="7.2" versionDate="2026/05/20" description="" boardType="Geoboard" publisher="MMP" issued="" />
@@ -164,9 +164,9 @@
 		<boarddata name="16b" version="6.2" versionDate="2024/07/02" description="" boardType="Double-sided" publisher="MMP" issued="" />
 		<boarddata name="17a" version="6.4" versionDate="2024/08/21" description="" boardType="Double-sided" publisher="MMP" issued="" />
 		<boarddata name="17b" version="6.2" versionDate="2024/07/02" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="18a" version="6.4" versionDate="2026/04/07" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="18a" version="6.5" versionDate="2026/09/14" description="" boardType="Double-sided" publisher="MMP" issued="" />
 		<boarddata name="18b" version="6.2" versionDate="2026/04/07" description="" boardType="Double-sided" publisher="MMP" issued="" />
-		<boarddata name="19a" version="6.1" versionDate="2026/04/07" description="" boardType="Double-sided" publisher="MMP" issued="" />
+		<boarddata name="19a" version="6.2" versionDate="2026/09/14" description="" boardType="Double-sided" publisher="MMP" issued="" />
 		<boarddata name="19b" version="6.1" versionDate="2026/04/07" description="" boardType="Double-sided" publisher="MMP" issued="" />
 		<boarddata name="20a" version="6.0" versionDate="2025/06/09" description="" boardType="Double-sided" publisher="MMP" issued="" />
 		<boarddata name="20b" version="6.0" versionDate="2025/06/09" description="" boardType="Double-sided" publisher="MMP" issued="" />
