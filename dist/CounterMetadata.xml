@@ -617,6 +617,7 @@
     <entrenchment name="Trench" position="below" />
     <entrenchment name="A-T Ditch" position="below" />
     <entrenchment name="Trench BRT" level="0" ca="1" position="above" />
+    <entrenchment name="RR Turntable" position="below" />
 
     <crest name="Crest ca1" ca="1" position="above" />
     <crest name="Crest ca2" ca="2" position="above" />

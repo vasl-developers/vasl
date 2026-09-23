@@ -56,14 +56,14 @@
 		<boarddata name="22" version="7.3" versionDate="2026/03/16" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="23" version="7.5" versionDate="2026/06/24" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="24" version="7.6" versionDate="2026/04/12" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="25" version="7.1" versionDate="2026/04/12" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="25" version="7.2" versionDate="2026/09/23" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="25ETO" version="7.1" versionDate="2026/04/12" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="26" version="6.9" versionDate="2026/09/22" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="27" version="6.8" versionDate="2026/09/22" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="28" version="6.7" versionDate="2026/07/01" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="29" version="6.8" versionDate="2026/09/22" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="30" version="6.9" versionDate="2026/07/01" description="" boardType="Geoboard" publisher="MMP" issued="" />
-		<boarddata name="31" version="6.8" versionDate="2026/07/01" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="26" version="7.0" versionDate="2026/09/23" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="27" version="6.9" versionDate="2026/09/23" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="28" version="6.8" versionDate="2026/09/23" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="29" version="6.9" versionDate="2026/09/23" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="30" version="7.0" versionDate="2026/09/23" description="" boardType="Geoboard" publisher="MMP" issued="" />
+		<boarddata name="31" version="6.9" versionDate="2026/09/23" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="32" version="7.3" versionDate="2025/10/27" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="33" version="7.0" versionDate="2026/09/22" description="" boardType="Geoboard" publisher="MMP" issued="" />
 		<boarddata name="34" version="7.0" versionDate="2025/06/02" description="" boardType="Geoboard" publisher="MMP" issued="" />

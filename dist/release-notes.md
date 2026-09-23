@@ -1,18 +1,18 @@
-# Release Notes: Version 6.7.4-beta5
-**Release Date:** September 12, 2026
+# Release Notes: Version 6.7.4-beta6
+**Release Date:** TBD XX, 2026
 ---
 
 ## 🚀 New Features
- - Feature 1: LOS Checking in Night Scenarios. (FIXED GUNFLASH BUG)
+ - Feature 1:
  
 ---
 
 ## 🛠 Bug Fixes
- - Fix 1: Fixed Orchard to Olive Grove transformation on Orchard overlays
+ - Fix 1: Enable clearing of "Moved" flag for GE '42 DB.
 
 ## Improvements
 
- - Improvement 1: Added preference to set opacity of counters during LOS checks. 
+ - Improvement 1: Add "Broken Ground" draggable overlays and improve "Broken Ground" artwork. 
 ---
 
 ## ⚠️ Compatibility Notes
