@@ -1,15 +1,19 @@
 <SSRControls>
    <Option name="Board 38 Special Overlays">
-      <Checkbox name="Remove Airfield" >
+      <Checkbox name="">
          <entry name="Remove Airfield" rule="BSO_38_NoAirfield" text="Remove Airfield"/>
       </Checkbox>
-	   <Checkbox name="">
+      <Checkbox name="">
          <entry name="Scenario 74 - Bloody Red Beach" rule="SSO_38_74" text="Bd38 Scen 74 SSO"/>
        </Checkbox>
        <Checkbox name="">
-         <entry name="Scenario J63 - Silesian Interlude" rule="SSO_38_J63" text="Bd38 Scen J63 SSO"/>
+            <entry name="Scenario J63 - Silesian Interlude" rule="SSO_38_J63" text="Bd38 Scen J63 SSO"/>
        </Checkbox>
-	<Checkbox name="">
-         <entry name="Scenario A245 - The Time Of Humiliations" rule="SSO_38_245" text="Bd38 Scen 245 SSO"/>
-       </Checkbox>   </Option>
+       <Checkbox name="">
+            <entry name="Scenario A245 - The Time Of Humiliations" rule="SSO_38_245" text="Bd38 Scen 245 SSO"/>
+       </Checkbox>   
+       <Checkbox name="">
+            <entry name="Scenario WC3 - Earned, Not Given" rule="SSO_38_WC3" text="Bd38 Scen WC3 SSO"/>
+       </Checkbox> 
+</Option>
 </SSRControls>
