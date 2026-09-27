@@ -182,37 +182,58 @@ public class ASLStackMetrics extends StackMetrics {
         return val;
     }
 
+    // Both draw methods work like the VASSAL ones, which draw blank the pieces below the top of an unexpanded stack,
+    // but with full color stacks (the default) all the pieces are drawn in full
+
     @Override
     public void draw(Stack stack, Graphics g, int x, int y, Component obs, double zoom) {
-        if (disableFullColorStacks) {
-            super.draw(stack, g, x, y, obs, zoom);
-        } else {
-            Highlighter highlighter = stack.getMap() == null ? BasicPiece.getHighlighter() : stack.getMap().getHighlighter();
-            Point[] positions = new Point[stack.getPieceCount()];
-            getContents(stack, positions, null, null, x, y);
+        Highlighter highlighter = stack.getMap() == null ? BasicPiece.getHighlighter() : stack.getMap().getHighlighter();
+        Point[] positions = new Point[stack.getPieceCount()];
+        getContents(stack, positions, null, null, x, y);
 
-            for (PieceIterator e = new PieceIterator(stack.getPiecesIterator(), unselectedVisible); e.hasMoreElements(); ) {
-                GamePiece next = e.nextPiece();
-                int index = stack.indexOf(next);
+        for (PieceIterator e = new PieceIterator(stack.getPiecesIterator(), unselectedVisible); e.hasMoreElements(); ) {
+            GamePiece next = e.nextPiece();
+            int index = stack.indexOf(next);
+            if (index >= 0) {
                 int nextX = x + (int) (zoom * (positions[index].x - x));
                 int nextY = y + (int) (zoom * (positions[index].y - y));
-//if (stack.isExpanded() || !e.hasMoreElements()) {
-                next.draw(g, nextX, nextY, obs, zoom);
-//}
-//else {
-//    drawUnexpanded(next, g, nextX, nextY, obs, zoom);
-//}
-            }
-
-            for (PieceIterator e = new PieceIterator(stack.getPiecesIterator(), selectedVisible); e.hasMoreElements(); ) {
-                GamePiece next = e.nextPiece();
-                int index = stack.indexOf(next);
-                int nextX = x + (int) (zoom * (positions[index].x - x));
-                int nextY = y + (int) (zoom * (positions[index].y - y));
-                next.draw(g, nextX, nextY, obs, zoom);
-                highlighter.draw(next, g, nextX, nextY, obs, zoom);
+                drawPiece(map, next, g, new Point(nextX, nextY), obs, zoom, isDrawnBlank(stack, e), null);
             }
         }
+
+        for (PieceIterator e = new PieceIterator(stack.getPiecesIterator(), selectedVisible); e.hasMoreElements(); ) {
+            GamePiece next = e.nextPiece();
+            int index = stack.indexOf(next);
+            if (index >= 0) {
+                int nextX = x + (int) (zoom * (positions[index].x - x));
+                int nextY = y + (int) (zoom * (positions[index].y - y));
+                drawPiece(map, next, g, new Point(nextX, nextY), obs, zoom, false, highlighter);
+            }
+        }
+    }
+
+    // true for the pieces below the top of an unexpanded stack, drawn blank when full color stacks are disabled
+    private boolean isDrawnBlank(Stack stack, PieceIterator remainingPieces) {
+        return disableFullColorStacks && !stack.isExpanded() && remainingPieces.hasMoreElements();
+    }
+
+    // draws a piece of a stack, upright on the rotated map view if needed, with its highlight if one is given
+    private void drawPiece(Map m, GamePiece piece, Graphics g, Point pt, Component obs, double zoom, boolean blank, Highlighter highlighter) {
+        final Graphics2D g2d = (Graphics2D) g;
+        final AffineTransform t = g2d.getTransform();
+        if (m instanceof ASLMap && ((ASLMap) m).isDrawnUpright(piece)) {
+            MapViewRotation.rotate(g2d, -((ASLMap) m).getViewRotation(), pt.x, pt.y);
+        }
+        if (blank) {
+            drawUnexpanded(piece, g, pt.x, pt.y, obs, zoom);
+        }
+        else {
+            piece.draw(g, pt.x, pt.y, obs, zoom);
+        }
+        if (highlighter != null) {
+            highlighter.draw(piece, g, pt.x, pt.y, obs, zoom);
+        }
+        g2d.setTransform(t);
     }
 
     private boolean isVisible(Rectangle region, Rectangle bounds) {
@@ -225,46 +246,35 @@ public class ASLStackMetrics extends StackMetrics {
 
     @Override
     public void draw(Stack stack, Point location, Graphics g, Map map, double zoom, Rectangle visibleRect) {
+        final Graphics2D g2d = (Graphics2D) g;
+        final double os_scale = g2d.getDeviceConfiguration().getDefaultTransform().getScaleX();
+        // if view is null here it will cause an NPE at next.draw() below
+        // so return and do nothing
+        final Component view = map.getView();
+        if (view == null) {return;
+        }
+        Highlighter highlighter = map.getHighlighter();
+        Point mapLocation = map.drawingToMap(location, os_scale);
+        Rectangle region = visibleRect == null ? null : map.drawingToMap(visibleRect, os_scale);
+        Point[] positions = new Point[stack.getPieceCount()];
+        Rectangle[] bounds = region == null ? null : new Rectangle[stack.getPieceCount()];
+        getContents(stack, positions, null, bounds, mapLocation.x, mapLocation.y);
 
-        if (disableFullColorStacks) {
-            super.draw(stack, location, g, map, zoom, visibleRect);
-        } else {
-            final Graphics2D g2d = (Graphics2D) g;
-            final double os_scale = g2d.getDeviceConfiguration().getDefaultTransform().getScaleX();
-            // if view is null here it will cause an NPE at next.draw() below
-            // so return and do nothing
-            final Component view = map.getView();
-            if (view == null) {return;
-            }
-            Highlighter highlighter = map.getHighlighter();
-            Point mapLocation = map.drawingToMap(location, os_scale);
-            Rectangle region = visibleRect == null ? null : map.drawingToMap(visibleRect, os_scale);
-            Point[] positions = new Point[stack.getPieceCount()];
-            Rectangle[] bounds = region == null ? null : new Rectangle[stack.getPieceCount()];
-            getContents(stack, positions, null, bounds, mapLocation.x, mapLocation.y);
-
-            for (PieceIterator e = new PieceIterator(stack.getPiecesIterator(), unselectedVisible); e.hasMoreElements(); ) {
-                GamePiece next = e.nextPiece();
-                int index = stack.indexOf(next);
+        for (PieceIterator e = new PieceIterator(stack.getPiecesIterator(), unselectedVisible); e.hasMoreElements(); ) {
+            GamePiece next = e.nextPiece();
+            int index = stack.indexOf(next);
+            if (index >= 0 && (bounds == null || isVisible(region, bounds[index]))) {
                 Point pt = map.mapToDrawing(positions[index], os_scale);
-                if (bounds == null || isVisible(region, bounds[index])) {
-//if (stack.isExpanded() || !e.hasMoreElements()) {
-
-                    next.draw(g, pt.x, pt.y, view, zoom);
-//} else {
-//    drawUnexpanded(next, g, pt.x, pt.y, map.getView(), zoom);
-//}
-                }
+                drawPiece(map, next, g, pt, view, zoom, isDrawnBlank(stack, e), null);
             }
+        }
 
-            for (PieceIterator e = new PieceIterator(stack.getPiecesIterator(), selectedVisible); e.hasMoreElements(); ) {
-                GamePiece next = e.nextPiece();
-                int index = stack.indexOf(next);
-                if (bounds == null || isVisible(region, bounds[index])) {
-                    Point pt = map.mapToDrawing(positions[index], os_scale);
-                    next.draw(g, pt.x, pt.y, view, zoom);
-                    highlighter.draw(next, g, pt.x, pt.y, view, zoom);
-                }
+        for (PieceIterator e = new PieceIterator(stack.getPiecesIterator(), selectedVisible); e.hasMoreElements(); ) {
+            GamePiece next = e.nextPiece();
+            int index = stack.indexOf(next);
+            if (index >= 0 && (bounds == null || isVisible(region, bounds[index]))) {
+                Point pt = map.mapToDrawing(positions[index], os_scale);
+                drawPiece(map, next, g, pt, view, zoom, false, highlighter);
             }
         }
     }

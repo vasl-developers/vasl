@@ -30,6 +30,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.Enumeration;
@@ -702,6 +703,12 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             }
             // use the draw range property to turn all text on/off
             if (drawRange) {
+                // when the map view is rotated the text is placed and written aligned with the screen
+                final AffineTransform labelTransform = map instanceof ASLMap ? ((ASLMap) map).getRotatedViewScreenTransform() : null;
+                if (labelTransform != null) {
+                    sourceLOSPoint = ((ASLMap) map).drawingToScreen(sourceLOSPoint, os_scale);
+                    targetLOSPoint = ((ASLMap) map).drawingToScreen(targetLOSPoint, os_scale);
+                }
                 // determine if the text should be above or below the location
                 final boolean shiftSourceText = sourceLOSPoint.y > targetLOSPoint.y;
                 final int shift = g.getFontMetrics().getHeight();
@@ -753,7 +760,7 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                     }
 
                     g.setColor(oldcolor);
-                    lastRangeRect.add(drawText(g, targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), targetLOSPoint.y + targetLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
+                    lastRangeRect.add(drawText(g, labelTransform, targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), targetLOSPoint.y + targetLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
                             "LOS Check Disabled - Overlay nearby. Range: " + Map.range(source.getHex(), target.getHex(), LOSMap.getMapConfiguration())));
 
                 } else {
@@ -769,12 +776,12 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                     }
                     if (source.getTerrain().isEntrenchmentTerrain()) {sourcelevelString += " (Entrenched)";}
                     if (isVerbose()) {
-                        lastRangeRect = drawText(g,
+                        lastRangeRect = drawText(g, labelTransform,
                                 sourceLOSPoint.x - 20,
                                 sourceLOSPoint.y - sourceLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) - (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
                                 source.getName() + "  (" + sourcelevelString + ")");
                     } else if (source.getLevelInHex() != 0) {
-                        lastRangeRect = drawText(g,
+                        lastRangeRect = drawText(g, labelTransform,
                                 sourceLOSPoint.x - 20,
                                 sourceLOSPoint.y - sourceLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) -  (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
                                 sourcelevelString );
@@ -807,12 +814,12 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                     }
                     if (target.getTerrain().isEntrenchmentTerrain()) {targetlevelString += " (Entrenched)";}
                     if (isVerbose()) {
-                        lastRangeRect.add(drawText(g,
+                        lastRangeRect.add(drawText(g, labelTransform,
                                 targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), //- 20,
                                 targetLOSPoint.y + targetLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
                                 target.getName() + "  (" + targetlevelString + ")"));
                     } else if (target.getLevelInHex() != 0) {
-                        lastRangeRect.add(drawText(g,
+                        lastRangeRect.add(drawText(g, labelTransform,
                                 targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), //- 20,
                                 targetLOSPoint.y + targetLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) + (shiftSourceText ? 0 : shift) - g.getFontMetrics().getDescent(),
                                 targetlevelString ));
@@ -821,11 +828,11 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
                     g.setColor(Color.black);
                     if (shiftSourceText) {
                         //lastRangeRect.add(drawText(g, targetLOSPoint.x - 20, targetLOSPoint.y - shift, resultsString));
-                        lastRangeRect.add(drawText(g, targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), targetLOSPoint.y + targetLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) - (int)(shift * os_scale), resultsString));
+                        lastRangeRect.add(drawText(g, labelTransform, targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), targetLOSPoint.y + targetLOSLabelYoffset(sourceLOSPoint, targetLOSPoint) - (int)(shift * os_scale), resultsString));
                     }
                     else {
                         //lastRangeRect.add(drawText(g, targetLOSPoint.x - 20, targetLOSPoint.y + shift * 2 - 2, resultsString));
-                        lastRangeRect.add(drawText(g, targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), targetLOSPoint.y + targetLOSLabelYoffset(sourceLOSPoint, targetLOSPoint)+ (int)((shift * 2 - 2) * os_scale), resultsString));
+                        lastRangeRect.add(drawText(g, labelTransform, targetLOSPoint.x + targetLOSLabelXoffset(sourceLOSPoint, targetLOSPoint), targetLOSPoint.y + targetLOSLabelYoffset(sourceLOSPoint, targetLOSPoint)+ (int)((shift * 2 - 2) * os_scale), resultsString));
                     }
 
                 }
@@ -967,6 +974,27 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
         final Point temp = new Point(p);
         temp.translate(-map.getEdgeBuffer().width, -map.getEdgeBuffer().height);
         return temp;
+    }
+
+    /**
+     * Draws some text on the map, aligned with the screen when the map view is rotated
+     * @param g the map graphics
+     * @param screenTransform the transform aligned with the screen of the rotated map view, null if not rotated
+     * @param x upper left point
+     * @param y upper left point
+     * @param s the text
+     * @return a bounding region of the text drawn
+     */
+    private static Rectangle drawText(Graphics g, AffineTransform screenTransform, int x, int y, String s) {
+        if (screenTransform == null) {
+            return drawText(g, x, y, s);
+        }
+        final Graphics2D g2d = (Graphics2D) g;
+        final AffineTransform t = g2d.getTransform();
+        g2d.setTransform(screenTransform);
+        final Rectangle region = drawText(g, x, y, s);
+        g2d.setTransform(t);
+        return region;
     }
 
     /**

@@ -32,6 +32,7 @@ import VASSAL.build.module.Map;
 import VASSAL.build.module.map.KeyBufferer;
 import VASSAL.build.module.map.PieceMover;
 import VASSAL.build.widget.PieceSlot;
+import VASSAL.command.ChangeTracker;
 import VASSAL.command.Command;
 import VASSAL.command.NullCommand;
 import VASSAL.counters.*;
@@ -39,6 +40,7 @@ import VASSAL.counters.Properties;
 import VASSAL.counters.Stack;
 import VASSAL.tools.DebugControls;
 import VASSAL.tools.LaunchButton;
+import VASSAL.tools.SequenceEncoder;
 import VASSAL.tools.image.ImageUtils;
 import VASSAL.tools.swing.SwingUtils;
 
@@ -50,6 +52,7 @@ import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -225,6 +228,8 @@ public class ASLPieceMover extends PieceMover {
     public Command movePieces(Map m, Point p) {
         extractMovable();
 
+        final Command facings = keepFacingsOnScreen(m);
+
         GamePiece movingConcealment = null;
         Stack formerParent = null;
         final PieceIterator it = DragBuffer.getBuffer().getIterator();
@@ -246,7 +251,7 @@ public class ASLPieceMover extends PieceMover {
 
         final Command c = _movePieces(m, p);
         if (c == null || c.isNull()) {
-            return c;
+            return facings.isNull() ? c : facings.append(c);
         }
 
         if (movingConcealment != null) {
@@ -258,7 +263,55 @@ public class ASLPieceMover extends PieceMover {
             }
         }
         c.append(snapErrantPieces());
+        return facings.append(c);
+    }
+
+    /**
+     * The pieces with a covered arc coming from a window shown with another rotation (e.g. from the OB window to the
+     * rotated map view) are turned so that they face on the screen the same direction as before. Not the overlays,
+     * which are placed on the boards as they are.
+     */
+    private Command keepFacingsOnScreen(Map target) {
+        Command c = new NullCommand();
+        final int targetRotation = getViewRotation(target);
+        for (final PieceIterator it = DragBuffer.getBuffer().getIterator(); it.hasMoreElements(); ) {
+            final GamePiece dragged = it.nextPiece();
+            final List<GamePiece> pieces = dragged instanceof Stack ? ((Stack) dragged).asList() : List.of(dragged);
+            for (final GamePiece piece : pieces) {
+                final Map source = piece.getMap();
+                final int sourceRotation = getViewRotation(source);
+                // only the ASL map can be rotated, so it is either the source or the target
+                final ASLMap aslMap = target instanceof ASLMap ? (ASLMap) target : source instanceof ASLMap ? (ASLMap) source : null;
+                if (sourceRotation != targetRotation && aslMap != null && !aslMap.isOverlay(piece)) {
+                    c = c.append(turnLikeViews(piece, sourceRotation, targetRotation));
+                }
+            }
+        }
         return c;
+    }
+
+    private static int getViewRotation(Map m) {
+        return m instanceof ASLMap ? ((ASLMap) m).getViewRotation() : 0;
+    }
+
+    // turns a piece with a covered arc so that it looks the same on views with different rotations
+    private static Command turnLikeViews(GamePiece piece, int fromRotation, int toRotation) {
+        final FreeRotator rotator = (FreeRotator) Decorator.getDecorator(piece, FreeRotator.class);
+        if (rotator == null) {
+            return null;
+        }
+        // the pieces already in the game need a command, the new ones (e.g. from a palette) are added with their state
+        final boolean inGame = GameModule.getGameModule().getGameState().getPieceForId(piece.getId()) != null;
+        final ChangeTracker tracker = inGame ? new ChangeTracker(piece) : null;
+        if (rotator.isFreeRotation()) {
+            rotator.setAngle(rotator.getAngle() + (toRotation - fromRotation) * 90);
+        }
+        else {
+            final int facings = new SequenceEncoder.Decoder(rotator.myGetType().substring(FreeRotator.ID.length()), ';').nextInt(1);
+            final int facing = Integer.parseInt(rotator.myGetState());
+            rotator.mySetState(String.valueOf(MapViewRotation.facingSeenAlike(facing, facings, fromRotation, toRotation)));
+        }
+        return tracker == null ? null : tracker.getChangeCommand();
     }
 
     /**
@@ -828,6 +881,9 @@ public class ASLPieceMover extends PieceMover {
         protected int currentPieceOffsetX; // How far cursor is CURRENTLY off-center, a function of dragPieceOffCenter{X,Y,Zoom}
         protected int currentPieceOffsetY; // I.e. on current map (which may have different zoom)
 
+        protected ASLMap dragImageMap; // map with a rotated view the pieces are dragged from, the image is turned like it
+        protected Point dragImagePiecePosition; // position of the dragged piece in the image, when the image is turned
+
         // Seems there can be only one DropTargetListener per drop target. After we
         // process a drop target event, we manually pass the event on to this listener.
         protected java.util.Map<Component, DropTargetListener> dropTargetListeners = new HashMap<>();
@@ -921,10 +977,6 @@ public class ASLPieceMover extends PieceMover {
             boundingBoxComp.x *= mapzoom;
             boundingBoxComp.y *= mapzoom;
 
-            if (doOffset) {
-                calcDrawOffset();
-            }
-
             // convert boundingBox, relativePosisions to drawing space
             boundingBox.width *= zoom;
             boundingBox.height *= zoom;
@@ -940,8 +992,24 @@ public class ASLPieceMover extends PieceMover {
             final int w = boundingBox.width + eb * 2;
             final int h = boundingBox.height + eb * 2;
 
-            final BufferedImage image = ImageUtils.createCompatibleTranslucentImage(w, h);
+            BufferedImage image = ImageUtils.createCompatibleTranslucentImage(w, h);
             drawDragImage(image, target, relativePositions, zoom);
+
+            // when dragging from a rotated map view turn the image like the view
+            dragImagePiecePosition = null;
+            if (dragImageMap != null) {
+                final Point piecePosition = new Point(
+                        (int) Math.round(EXTRA_BORDER - boundingBoxComp.x * os_scale),
+                        (int) Math.round(EXTRA_BORDER - boundingBoxComp.y * os_scale)
+                );
+                dragImagePiecePosition = MapViewRotation.rotate(piecePosition, dragImageMap.getViewRotation(),
+                        new Dimension(image.getWidth(), image.getHeight()));
+                image = dragImageMap.rotateImageLikeView(image);
+            }
+
+            if (doOffset) {
+                calcDrawOffset();
+            }
 
             return image;
         }
@@ -1074,8 +1142,18 @@ public class ASLPieceMover extends PieceMover {
                 GamePiece next = stack.getPieceAt(index);
                 int nextX = x + (int) (zoom * (positions[index].x - x));
                 int nextY = y + (int) (zoom * (positions[index].y - y));
+                final AffineTransform t = ((Graphics2D) g).getTransform();
+                keepUprightInDragImage((Graphics2D) g, next, nextX, nextY);
                 next.draw(g, nextX, nextY, obs, zoom);
                 highlighter.draw(next, g, nextX, nextY, obs, zoom);
+                ((Graphics2D) g).setTransform(t);
+            }
+        }
+
+        // the drag image is turned like the view of the map afterwards: turn back the pieces which stay upright on it
+        private void keepUprightInDragImage(Graphics2D g, GamePiece piece, int x, int y) {
+            if (dragImageMap != null && dragImageMap.keepsUpright(piece)) {
+                MapViewRotation.rotate(g, -dragImageMap.getViewRotation(), x, y);
             }
         }
 
@@ -1141,6 +1219,8 @@ public class ASLPieceMover extends PieceMover {
                     final AffineTransform t = AffineTransform.getScaleInstance(zoom, zoom);
                     t.translate(x / zoom, y / zoom);
                     Shape s = this.scalePiece(piece.getShape(), pZoom);
+                    final AffineTransform imageTransform = g.getTransform();
+                    keepUprightInDragImage(g, piece, x, y);
                     g.setClip(t.createTransformedShape(s));
                     piece.draw(g, x, y, map == null ? target : map.getView(), zoom*pZoom);
 
@@ -1149,6 +1229,7 @@ public class ASLPieceMover extends PieceMover {
                     final Highlighter highlighter = map == null ?
                             BasicPiece.getHighlighter() : map.getHighlighter();
                     highlighter.draw(piece, g, x, y, null, zoom*pZoom);
+                    g.setTransform(imageTransform);
 
                     if (piece.getParent() instanceof Deck) {
                         piece.setProperty(Properties.OBSCURED_BY, owner);
@@ -1233,6 +1314,9 @@ public class ASLPieceMover extends PieceMover {
             final Map map = dge.getComponent() instanceof Map.View ?
                     ((Map.View) dge.getComponent()).getMap() : null;
 
+            // the drag image is turned like the view of the map, if rotated
+            dragImageMap = map instanceof ASLMap && ((ASLMap) map).isViewRotated() ? (ASLMap) map : null;
+
             final Point mousePosition = dge.getDragOrigin(); //BR// Bug13137 - now that we're not pre-adulterating dge's event, it already arrives in component coordinates
 
             Point piecePosition = piece.getPosition();
@@ -1299,10 +1383,16 @@ public class ASLPieceMover extends PieceMover {
             // this call is needed to instantiate the boundingBox object
             final BufferedImage bImage = makeDragImage(dragPieceOffCenterZoom, os_scale);
 
-            final Point dragPointOffset = new Point(
-                    (int) Math.round(getOffsetMult() * ((boundingBoxComp.x + currentPieceOffsetX) * os_scale - EXTRA_BORDER)),
-                    (int) Math.round(getOffsetMult() * ((boundingBoxComp.y + currentPieceOffsetY) * os_scale - EXTRA_BORDER))
-            );
+            final Point dragPointOffset = dragImagePiecePosition == null ?
+                    new Point(
+                        (int) Math.round(getOffsetMult() * ((boundingBoxComp.x + currentPieceOffsetX) * os_scale - EXTRA_BORDER)),
+                        (int) Math.round(getOffsetMult() * ((boundingBoxComp.y + currentPieceOffsetY) * os_scale - EXTRA_BORDER))
+                    ) :
+                    // the image is turned like the map view
+                    new Point(
+                        (int) Math.round(getOffsetMult() * (currentPieceOffsetX * os_scale - dragImagePiecePosition.x)),
+                        (int) Math.round(getOffsetMult() * (currentPieceOffsetY * os_scale - dragImagePiecePosition.y))
+                    );
 
             //BR// Inform PieceMovers of relevant metrics
             for (final ASLPieceMover pieceMover : pieceMovers) {
@@ -1612,8 +1702,15 @@ public class ASLPieceMover extends PieceMover {
                 // and the upper-left corner of the cursor
                 // accounts for difference between event point (screen coords)
                 // and Layered Pane position, boundingBox and off-center drag
-                drawOffset.x = -boundingBoxComp.x - currentPieceOffsetX + EXTRA_BORDER;
-                drawOffset.y = -boundingBoxComp.y - currentPieceOffsetY + EXTRA_BORDER;
+                if (dragImagePiecePosition == null) {
+                    drawOffset.x = -boundingBoxComp.x - currentPieceOffsetX + EXTRA_BORDER;
+                    drawOffset.y = -boundingBoxComp.y - currentPieceOffsetY + EXTRA_BORDER;
+                }
+                else {
+                    // the image is turned like the map view
+                    drawOffset.x = dragImagePiecePosition.x - currentPieceOffsetX;
+                    drawOffset.y = dragImagePiecePosition.y - currentPieceOffsetY;
+                }
                 SwingUtilities.convertPointToScreen(drawOffset, drawWin);
             }
         }

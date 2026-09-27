@@ -38,6 +38,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Shape;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import javax.swing.JComponent;
@@ -233,9 +234,16 @@ public class CounterDetailViewer extends VASSAL.build.module.map.CounterDetailVi
 
       final int x = dbounds.x + (int)((ar_Pieces_Pos[i].x - (int)(pieceBounds.x * graphicsZoomLevel)) * os_scale);
       final int y = dbounds.y + (int)((ar_Pieces_Pos[i].y - (int)(pieceBounds.y * graphicsZoomLevel)) * os_scale);
-      
+
+      // show the piece turned as it is on the rotated map
+      final AffineTransform pieceTransform = g2d.getTransform();
+      final ASLMap aslMap = (ASLMap) map;
+      if (aslMap.isViewRotated() && !unrotatePieces && !aslMap.keepsUpright(piece)) {
+          MapViewRotation.rotate(g2d, aslMap.getViewRotation(), x, y);
+      }
       piece.draw(g, x, y, comp, graphicsZoomLevel * os_scale);
-      
+      g2d.setTransform(pieceTransform);
+
       if (parent instanceof Deck) 
           piece.setProperty(Properties.OBSCURED_BY, owner);
       
