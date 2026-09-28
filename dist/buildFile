@@ -44,7 +44,7 @@
         <VASL.build.module.map.ASLBoardPicker/>
         <VASL.build.module.map.ASLGlobalMap buttonText="" color="0,0,0" hotkey="79,195" icon="overview.gif" scale="0.19444444" tooltip="Show/Hide overview window"/>
         <VASL.build.module.map.HindranceKeeper/>
-        <VASSAL.build.module.map.ForwardToKeyBuffer/>
+        <VASL.build.module.map.ASLForwardToKeyBuffer/>
         <VASSAL.build.module.map.Scroller/>
         <VASL.build.module.map.ASLMenuDisplayer/>
         <VASL.build.module.map.MapCenterer/>

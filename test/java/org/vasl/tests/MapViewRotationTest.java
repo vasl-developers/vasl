@@ -18,6 +18,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 
@@ -134,6 +135,38 @@ public class MapViewRotationTest {
                 assertEquals(f, MapViewRotation.facingSeenAlike(onView, 6, q, 0));
             }
         }
+    }
+
+    @Test
+    public void keypadKeysMoveTowardTheScreenDirection() {
+        final int[] hexKeys = {KeyEvent.VK_NUMPAD7, KeyEvent.VK_NUMPAD8, KeyEvent.VK_NUMPAD9, KeyEvent.VK_NUMPAD1, KeyEvent.VK_NUMPAD2, KeyEvent.VK_NUMPAD3};
+        // unrotated: the keys stay the same
+        for (int key : hexKeys) {
+            assertEquals(key, MapViewRotation.keypadKeyOnUnrotatedView(key, 0));
+        }
+        // half turn: the opposite direction, 4 and 6 have no hex
+        assertEquals(KeyEvent.VK_NUMPAD2, MapViewRotation.keypadKeyOnUnrotatedView(KeyEvent.VK_NUMPAD8, 2));
+        assertEquals(KeyEvent.VK_NUMPAD1, MapViewRotation.keypadKeyOnUnrotatedView(KeyEvent.VK_NUMPAD9, 2));
+        assertEquals(KeyEvent.VK_NUMPAD7, MapViewRotation.keypadKeyOnUnrotatedView(KeyEvent.VK_NUMPAD3, 2));
+        assertEquals(KeyEvent.VK_UNDEFINED, MapViewRotation.keypadKeyOnUnrotatedView(KeyEvent.VK_NUMPAD4, 2));
+        assertEquals(KeyEvent.VK_UNDEFINED, MapViewRotation.keypadKeyOnUnrotatedView(KeyEvent.VK_NUMPAD6, 2));
+        // quarter turn clockwise: the screen right is the map up, 8 and 2 have no hex
+        assertEquals(KeyEvent.VK_NUMPAD8, MapViewRotation.keypadKeyOnUnrotatedView(KeyEvent.VK_NUMPAD6, 1));
+        assertEquals(KeyEvent.VK_NUMPAD2, MapViewRotation.keypadKeyOnUnrotatedView(KeyEvent.VK_NUMPAD4, 1));
+        assertEquals(KeyEvent.VK_NUMPAD7, MapViewRotation.keypadKeyOnUnrotatedView(KeyEvent.VK_NUMPAD9, 1));
+        assertEquals(KeyEvent.VK_NUMPAD9, MapViewRotation.keypadKeyOnUnrotatedView(KeyEvent.VK_NUMPAD3, 1));
+        assertEquals(KeyEvent.VK_NUMPAD3, MapViewRotation.keypadKeyOnUnrotatedView(KeyEvent.VK_NUMPAD1, 1));
+        assertEquals(KeyEvent.VK_NUMPAD1, MapViewRotation.keypadKeyOnUnrotatedView(KeyEvent.VK_NUMPAD7, 1));
+        assertEquals(KeyEvent.VK_UNDEFINED, MapViewRotation.keypadKeyOnUnrotatedView(KeyEvent.VK_NUMPAD8, 1));
+        assertEquals(KeyEvent.VK_UNDEFINED, MapViewRotation.keypadKeyOnUnrotatedView(KeyEvent.VK_NUMPAD2, 1));
+        // quarter turn counterclockwise: the screen left is the map up
+        assertEquals(KeyEvent.VK_NUMPAD8, MapViewRotation.keypadKeyOnUnrotatedView(KeyEvent.VK_NUMPAD4, 3));
+        assertEquals(KeyEvent.VK_NUMPAD2, MapViewRotation.keypadKeyOnUnrotatedView(KeyEvent.VK_NUMPAD6, 3));
+        assertEquals(KeyEvent.VK_NUMPAD9, MapViewRotation.keypadKeyOnUnrotatedView(KeyEvent.VK_NUMPAD7, 3));
+        assertEquals(KeyEvent.VK_NUMPAD3, MapViewRotation.keypadKeyOnUnrotatedView(KeyEvent.VK_NUMPAD9, 3));
+        // the other keys are not changed
+        assertEquals(KeyEvent.VK_NUMPAD5, MapViewRotation.keypadKeyOnUnrotatedView(KeyEvent.VK_NUMPAD5, 1));
+        assertEquals(KeyEvent.VK_UP, MapViewRotation.keypadKeyOnUnrotatedView(KeyEvent.VK_UP, 1));
     }
 
     @Test

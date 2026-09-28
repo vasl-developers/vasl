@@ -18,6 +18,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 
 /**
@@ -125,5 +126,36 @@ public final class MapViewRotation {
     private static int facingOffset(int facings, int quarterTurns) {
         // a quarter turn is facings / 4 facings, rounded (half down) to the facing turned counterclockwise
         return (int) Math.ceil(-normalize(quarterTurns) * facings / 4.0 - 0.5);
+    }
+
+    // keys of the numeric keypad that move a piece to the hexes around it, clockwise from the top: the direction of
+    // the i-th key is 60 * i degrees when the hexes have a side at the top (unrotated view and half turn) and
+    // 30 + 60 * i degrees when they have a vertex at the top (quarter turns)
+    private static final int[] SIDE_UP_KEYS = {
+        KeyEvent.VK_NUMPAD8, KeyEvent.VK_NUMPAD9, KeyEvent.VK_NUMPAD3, KeyEvent.VK_NUMPAD2, KeyEvent.VK_NUMPAD1, KeyEvent.VK_NUMPAD7
+    };
+    private static final int[] VERTEX_UP_KEYS = {
+        KeyEvent.VK_NUMPAD9, KeyEvent.VK_NUMPAD6, KeyEvent.VK_NUMPAD3, KeyEvent.VK_NUMPAD1, KeyEvent.VK_NUMPAD4, KeyEvent.VK_NUMPAD7
+    };
+
+    /**
+     * The keys of the numeric keypad move the pieces toward the direction they have on the screen: on a view rotated
+     * by the given quarter turns, this is the key with the same direction on the unrotated view. For a key without
+     * a hex in its direction on the rotated view (4 and 6 when the hexes have a side at the top, 8 and 2 when they
+     * have a vertex at the top) it is {@link KeyEvent#VK_UNDEFINED}; any other key is returned as it is.
+     */
+    public static int keypadKeyOnUnrotatedView(int keyCode, int quarterTurns) {
+        if (keyCode < KeyEvent.VK_NUMPAD1 || keyCode > KeyEvent.VK_NUMPAD9 || keyCode == KeyEvent.VK_NUMPAD5) {
+            return keyCode;
+        }
+        final int q = normalize(quarterTurns);
+        final int[] keysOnView = q % 2 == 0 ? SIDE_UP_KEYS : VERTEX_UP_KEYS;
+        for (int i = 0; i < keysOnView.length; i++) {
+            if (keysOnView[i] == keyCode) {
+                final int direction = (q % 2 == 0 ? 60 * i : 30 + 60 * i) - 90 * q;
+                return SIDE_UP_KEYS[Math.floorMod(direction, 360) / 60];
+            }
+        }
+        return KeyEvent.VK_UNDEFINED;
     }
 }
