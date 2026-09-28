@@ -2370,6 +2370,19 @@ public class ASLMap extends Map {
         repaint(true);
     }
 
+    @Override
+    public void setup(boolean gameStarting) {
+        super.setup(gameStarting);
+        // the game is closed, also before loading another game or log: the next one starts with the view not rotated
+        if (!gameStarting && isViewRotated()) {
+            viewRotation = 0;
+            if (theMap != null) {
+                theMap.revalidate();
+                theMap.repaint();
+            }
+        }
+    }
+
     /** @return a copy of the image turned like the view */
     public BufferedImage rotateImageLikeView(BufferedImage img) {
         final Dimension size = MapViewRotation.rotate(new Dimension(img.getWidth(), img.getHeight()), viewRotation);
