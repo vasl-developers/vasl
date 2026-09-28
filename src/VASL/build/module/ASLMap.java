@@ -27,6 +27,7 @@ import VASL.LOS.counters.CounterMetadataFile;
 import VASL.build.module.map.ASLDiceOverlay;
 import VASL.build.module.map.ASLPieceMover;
 import VASL.build.module.map.ASLStackMetrics;
+import VASL.build.module.map.BoardSwapper;
 import VASL.build.module.map.MapViewRotation;
 import VASL.build.module.map.boardArchive.BoardMetadata;
 import VASL.build.module.map.boardArchive.SharedBoardMetadata;
@@ -69,7 +70,6 @@ import java.awt.List;
 import java.awt.dnd.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Arc2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -150,9 +150,6 @@ public class ASLMap extends Map {
         mainpopup.addSeparator();
         // add the menu button to the toolbar
         getToolBar().add(lMenu);
-        // buttons to rotate the view of the map (only on this computer, the other players are not affected)
-        getToolBar().add(createRotateViewButton(false));
-        getToolBar().add(createRotateViewButton(true));
         getToolBar().addSeparator();
 
         // background color preference
@@ -2544,14 +2541,27 @@ public class ASLMap extends Map {
             || drawable instanceof ASLDiceOverlay;                              // dice over the map
     }
 
-    private JButton createRotateViewButton(boolean clockwise) {
-        final JButton button = new JButton(new RotateViewIcon(clockwise));
-        button.setToolTipText(clockwise ? "Rotate the map view clockwise (only on this computer)"
-                                        : "Rotate the map view counterclockwise (only on this computer)");
-        button.setMargin(new Insets(0, 0, 0, 0));
-        button.setAlignmentY(0.0F);
-        button.addActionListener(e -> setViewRotation(viewRotation + (clockwise ? 1 : -1)));
-        return button;
+    @Override
+    public void add(Buildable b) {
+        super.add(b);
+        // in the popup menu the items to rotate the view follow the one to pick new boards
+        if (b instanceof BoardSwapper) {
+            mainpopup.add(createRotateViewMenuItem(true));
+            mainpopup.add(createRotateViewMenuItem(false));
+        }
+    }
+
+    private JMenuItem createRotateViewMenuItem(boolean clockwise) {
+        final JMenuItem item = new JMenuItem(clockwise ? "Rotate map view clockwise" : "Rotate map view counterclockwise");
+        try {
+            item.setIcon(new ImageIcon(Op.load(clockwise ? "rotateViewCW.png" : "rotateViewCCW.png").getImage(null)));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        item.setToolTipText("Only on this computer, the other players are not affected");
+        item.addActionListener(e -> setViewRotation(viewRotation + (clockwise ? 1 : -1)));
+        return item;
     }
 
     /**
@@ -2611,44 +2621,6 @@ public class ASLMap extends Map {
             else {
                 super.repaint(tm, x, y, width, height);
             }
-        }
-    }
-
-    /** Toolbar icon of the view rotation buttons: a circular arrow */
-    private static class RotateViewIcon implements Icon {
-        private static final int SIZE = 18;
-        private final boolean clockwise;
-
-        RotateViewIcon(boolean clockwise) {
-            this.clockwise = clockwise;
-        }
-
-        @Override
-        public int getIconWidth() {
-            return SIZE;
-        }
-
-        @Override
-        public int getIconHeight() {
-            return SIZE;
-        }
-
-        @Override
-        public void paintIcon(Component c, Graphics g, int x, int y) {
-            final Graphics2D g2d = (Graphics2D) g.create();
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2d.translate(x, y);
-            if (!clockwise) {
-                // mirror image of the clockwise arrow
-                g2d.translate(SIZE, 0);
-                g2d.scale(-1, 1);
-            }
-            g2d.setColor(c == null || c.isEnabled() ? Color.DARK_GRAY : Color.LIGHT_GRAY);
-            g2d.setStroke(new BasicStroke(2.0F, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-            // three quarters of a circle, clockwise from 12 to 9 o'clock, ending with an arrow head
-            g2d.draw(new Arc2D.Double(3, 4, 12, 12, 90, -270, Arc2D.OPEN));
-            g2d.fill(new Polygon(new int[] {0, 6, 3}, new int[] {10, 10, 5}, 3));
-            g2d.dispose();
         }
     }
 
