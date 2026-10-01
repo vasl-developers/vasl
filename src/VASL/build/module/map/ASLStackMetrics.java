@@ -76,6 +76,12 @@ public class ASLStackMetrics extends StackMetrics {
         //Duplicate VASSAL StackMetrics.getContents(), with changes to apparent sizes to account for board zoom level
         //int val = super.getContents(parent, positions, shapes, boundingBoxes, x, y);
         double pZoom = ((ASLMap)map).PieceScalerBoardZoom(parent);
+        // the offsets of the pieces are turned to point the same way on the screen whatever the rotation of the map
+        // view, so the positions are needed also when not asked for
+        final int layoutRotation = ((ASLMap) map).getStackLayoutRotation();
+        if (layoutRotation != 0 && positions == null) {
+            positions = new Point[parent.getPieceCount()];
+        }
         int val = parent.getMaximumVisiblePieceCount();
         if (positions != null) {
             val = Math.min(val, positions.length);
@@ -176,6 +182,22 @@ public class ASLStackMetrics extends StackMetrics {
                             //JY
                         }
                     }
+                }
+            }
+        }
+
+        if (layoutRotation != 0) {
+            for (int i = 0; i < val; ++i) {
+                final Point offset = new Point(positions[i].x - x, positions[i].y - y);
+                final Point turned = MapViewRotation.rotateVector(offset, -layoutRotation);
+                final int tx = turned.x - offset.x;
+                final int ty = turned.y - offset.y;
+                positions[i].translate(tx, ty);
+                if (boundingBoxes != null) {
+                    boundingBoxes[i].translate(tx, ty);
+                }
+                if (shapes != null) {
+                    shapes[i] = AffineTransform.getTranslateInstance(tx, ty).createTransformedShape(shapes[i]);
                 }
             }
         }

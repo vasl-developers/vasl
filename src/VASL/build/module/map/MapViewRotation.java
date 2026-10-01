@@ -70,6 +70,12 @@ public final class MapViewRotation {
         return rotate(p, -quarterTurns, rotate(size, quarterTurns));
     }
 
+    /** Turns a vector, e.g. the offset between two points, clockwise by the given quarter turns */
+    public static Point rotateVector(Point v, int quarterTurns) {
+        // on a view of no size the points turn around the origin
+        return rotate(v, quarterTurns, new Dimension());
+    }
+
     /** Converts a rectangle of the unrotated view into the rotated view */
     public static Rectangle rotate(Rectangle r, int quarterTurns, Dimension size) {
         switch (normalize(quarterTurns)) {

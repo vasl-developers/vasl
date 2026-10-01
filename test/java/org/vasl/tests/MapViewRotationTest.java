@@ -79,6 +79,18 @@ public class MapViewRotationTest {
     }
 
     @Test
+    public void vectorsTurnAroundTheOrigin() {
+        // up and right (y grows downward) turns into down and right, clockwise, and into up and left, counterclockwise
+        assertEquals(new Point(2, 3), MapViewRotation.rotateVector(new Point(3, -2), 1));
+        assertEquals(new Point(-2, -3), MapViewRotation.rotateVector(new Point(3, -2), -1));
+        assertEquals(new Point(-3, 2), MapViewRotation.rotateVector(new Point(3, -2), 2));
+        // turning back gives the vector again
+        for (int q = 0; q < 4; q++) {
+            assertEquals(new Point(3, -2), MapViewRotation.rotateVector(MapViewRotation.rotateVector(new Point(3, -2), q), -q));
+        }
+    }
+
+    @Test
     public void rectanglesRotateLikeTheirCorners() {
         final Rectangle r = new Rectangle(100, 200, 40, 70);
         for (int q = 0; q < 4; q++) {

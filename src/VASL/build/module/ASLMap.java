@@ -107,8 +107,11 @@ public class ASLMap extends Map {
 
     // local rotation of the map view, in clockwise quarter turns (see MapViewRotation)
     private int viewRotation = 0;
-    // transform of the screen while the rotated view is being painted, null otherwise
-    private AffineTransform rotatedViewScreenTransform = null;
+    // transform of the screen while the rotated view is being painted, null otherwise; per thread, as the map can
+    // also be painted in background, e.g. to save it as an image
+    private final ThreadLocal<AffineTransform> rotatedViewScreenTransform = new ThreadLocal<>();
+    // true while the map is being painted for something other than the view, e.g. to save it as an image
+    private final ThreadLocal<Boolean> paintingOutsideView = ThreadLocal.withInitial(() -> Boolean.FALSE);
     // preference: with the view rotated, show upright the counters without a covered arc
     private static final String UPRIGHT_COUNTERS = "RotatedMapUprightCounters";
     private boolean keepCountersUpright = true;
@@ -2411,7 +2414,7 @@ public class ASLMap extends Map {
 
     /** @return true if the piece is being drawn on the rotated view and has to be kept upright */
     public boolean isDrawnUpright(GamePiece piece) {
-        return rotatedViewScreenTransform != null && keepsUpright(piece);
+        return rotatedViewScreenTransform.get() != null && keepsUpright(piece);
     }
 
     /**
@@ -2419,7 +2422,8 @@ public class ASLMap extends Map {
      * {@link #drawingToScreen}); null otherwise
      */
     public AffineTransform getRotatedViewScreenTransform() {
-        return rotatedViewScreenTransform == null ? null : new AffineTransform(rotatedViewScreenTransform);
+        final AffineTransform screenTransform = rotatedViewScreenTransform.get();
+        return screenTransform == null ? null : new AffineTransform(screenTransform);
     }
 
     /** Converts a point in drawing coordinates into the coordinates used to draw aligned with the screen */
@@ -2515,16 +2519,38 @@ public class ASLMap extends Map {
     }
 
     @Override
+    public void paintRegion(Graphics g, Rectangle visibleRect, Component c) {
+        final Boolean outsideView = paintingOutsideView.get();
+        paintingOutsideView.set(c != theMap);
+        try {
+            super.paintRegion(g, visibleRect, c);
+        }
+        finally {
+            paintingOutsideView.set(outsideView);
+        }
+    }
+
+    /**
+     * @return the rotation of the view the stacks are laid out for, so that their pieces are offset toward the same
+     * direction of the screen whatever the rotation; none when the map is painted for something else than the
+     * view, e.g. to save it as an image
+     */
+    public int getStackLayoutRotation() {
+        return paintingOutsideView.get() ? 0 : viewRotation;
+    }
+
+    @Override
     protected void clearMapBorder(Graphics g) {
         // the rotated view clears its whole visible area before painting the map
-        if (rotatedViewScreenTransform == null) {
+        if (rotatedViewScreenTransform.get() == null) {
             super.clearMapBorder(g);
         }
     }
 
     @Override
     public void drawDrawable(Graphics g, boolean aboveCounters) {
-        if (rotatedViewScreenTransform == null) {
+        final AffineTransform screenTransform = rotatedViewScreenTransform.get();
+        if (screenTransform == null) {
             super.drawDrawable(g, aboveCounters);
             return;
         }
@@ -2533,7 +2559,7 @@ public class ASLMap extends Map {
             if (aboveCounters == drawable.drawAboveCounters()) {
                 if (isDrawnInViewCoordinates(drawable)) {
                     final AffineTransform t = g2d.getTransform();
-                    g2d.setTransform(rotatedViewScreenTransform);
+                    g2d.setTransform(screenTransform);
                     drawable.draw(g, this);
                     g2d.setTransform(t);
                 }
@@ -2614,12 +2640,12 @@ public class ASLMap extends Map {
             // paint the map as if the view were not rotated
             final Dimension size = getUnrotatedViewSize();
             g2d.transform(MapViewRotation.getTransform(viewRotation, size.width * os_scale, size.height * os_scale));
-            rotatedViewScreenTransform = screen_t;
+            rotatedViewScreenTransform.set(screen_t);
             try {
                 paintRegion(g2d, componentToDrawing(r, os_scale));
             }
             finally {
-                rotatedViewScreenTransform = null;
+                rotatedViewScreenTransform.remove();
                 g2d.setTransform(orig_t);
             }
         }

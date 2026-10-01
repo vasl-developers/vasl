@@ -1072,7 +1072,8 @@ public class ASLPieceMover extends PieceMover {
                     final ASLStackMetrics sm = getStackMetrics(nextPiece);
                     int usx = Integer.parseInt(sm.getAttributeValueString("unexSepX"));
                     int usy = Integer.parseInt(sm.getAttributeValueString("unexSepY"));
-                    r.translate(usx * stackCount, -usy * stackCount);
+                    final Point stackOffset = stackOffsetInDragImage(usx * stackCount, -usy * stackCount);
+                    r.translate(stackOffset.x, stackOffset.y);
                 }
 
                 boundingBox.add(r);
@@ -1140,8 +1141,9 @@ public class ASLPieceMover extends PieceMover {
             }
             for(int index = 0; index < val; ++index) {
                 GamePiece next = stack.getPieceAt(index);
-                int nextX = x + (int) (zoom * (positions[index].x - x));
-                int nextY = y + (int) (zoom * (positions[index].y - y));
+                final Point stackOffset = stackOffsetInDragImage(positions[index].x - x, positions[index].y - y);
+                int nextX = x + (int) (zoom * stackOffset.x);
+                int nextY = y + (int) (zoom * stackOffset.y);
                 final AffineTransform t = ((Graphics2D) g).getTransform();
                 keepUprightInDragImage((Graphics2D) g, next, nextX, nextY);
                 next.draw(g, nextX, nextY, obs, zoom);
@@ -1155,6 +1157,13 @@ public class ASLPieceMover extends PieceMover {
             if (dragImageMap != null && dragImageMap.keepsUpright(piece)) {
                 MapViewRotation.rotate(g, -dragImageMap.getViewRotation(), x, y);
             }
+        }
+
+        // the offset of a stacked piece in the drag image, turned back like on the map so that it points the same way on
+        // the screen once the image is turned like the view
+        private Point stackOffsetInDragImage(int dx, int dy) {
+            final Point offset = new Point(dx, dy);
+            return dragImageMap == null ? offset : MapViewRotation.rotateVector(offset, -dragImageMap.getViewRotation());
         }
 
         private void drawDragImage(BufferedImage image, Component target,
@@ -1201,8 +1210,9 @@ public class ASLPieceMover extends PieceMover {
                     if ((ASLMap.getbZoom() < 1.0) || (ASLMap.getbZoom() > 1.0)) {
                         eb = Math.max((int) (EXTRA_BORDER / ASLMap.getbZoom() * (zoom > 1.0 ? zoom : 1.0)), EXTRA_BORDER);
                     }
-                    final int x = eb - boundingBox.x + pos.x + offset.x;
-                    final int y = eb - boundingBox.y + pos.y - offset.y;
+                    final Point stackOffset = stackOffsetInDragImage(offset.x, -offset.y);
+                    final int x = eb - boundingBox.x + pos.x + stackOffset.x;
+                    final int y = eb - boundingBox.y + pos.y + stackOffset.y;
 
                     String owner = "";
                     final GamePiece parent = piece.getParent();
