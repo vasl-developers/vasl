@@ -503,6 +503,33 @@ public class Map  {
                 }
             }
         }
+        else if (b.getName().contains("ER")) {
+            if (this.A1CenterY == 0) { // Cropped board
+                int evencol =0;
+                for (int col = 0; col < this.width; col++) {
+                    evencol = col % 2 == 0 ? 1 : 0;
+                    hexGrid[col] = new Hex[this.height + evencol]; // add 1 if even
+                    for (int row = 0; row < this.height + evencol; row++) {
+                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                    }
+                }
+            } else { // uncropped board
+                for (int col = 0; col < (startcol + this.width); col++) {
+                    hexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
+                    for (int row = 0; row < (startrow + this.height + (col % 2)); row++) {
+                        if (col >= startcol && row >= startrow) {
+                            hexGrid[col - startcol][row- startrow] = new Hex(col - startcol, row - startrow, getGEOHexName(col, row, false, false), getHexCenterPoint(col - startcol, row - startrow), hexHeight, hexWidth, this, 0, terrainList[0]);
+                        }
+                    }
+                }
+            }
+            // reset the hex locations to map grid
+            for (int col = 0; col < hexGrid.length; col++) {
+                for (int row = 0; row < hexGrid[col].length; row++) {
+                    hexGrid[col][row].resetHexsideLocationNames();
+                }
+            }
+        }
         else {
             return null;
         }
@@ -863,6 +890,32 @@ public class Map  {
                     hexGrid[col][row].resetHexsideLocationNames();
                 }
             }
+        } else if (boardarchive.getBoardName().contains("ER")) {
+            if (this.A1CenterY == 0) { // Cropped board
+                int evencol = 0;
+                for (int col = 0; col < this.width; col++) {
+                    evencol = col % 2 == 0 ? 1 : 0;
+                    hexGrid[col] = new Hex[this.height + evencol]; // add 1 if even
+                    for (int row = 0; row < this.height + evencol; row++) {
+                        hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
+                    }
+                }
+            } else { // uncropped board
+                for (int col = 0; col < (startcol + this.width); col++) {
+                    hexGrid[col] = new Hex[this.height + (col % 2)]; // add 1 if odd
+                    for (int row = 0; row < (startrow + this.height + (col % 2)); row++) {
+                        if (col >= startcol && row >= startrow) {
+                            hexGrid[col - startcol][row - startrow] = new Hex(col - startcol, row - startrow, getGEOHexName(col, row, false, false), getHexCenterPoint(col - startcol, row - startrow), hexHeight, hexWidth, this, 0, terrainList[0]);
+                        }
+                    }
+                }
+            }
+            // reset the hex locations to map grid
+            for (int col = 0; col < hexGrid.length; col++) {
+                for (int row = 0; row < hexGrid[col].length; row++) {
+                    hexGrid[col][row].resetHexsideLocationNames();
+                }
+            }
         }
         else {
             return null;
@@ -928,7 +981,8 @@ public class Map  {
         //have a separate loop for non-standard boards
         //Dinant follows standard board layout and so can be treated as geo
         if (b.getName().equals("RBv3") || b.getName().equals("RO") || b.getName().equals("DaE") ||
-                 b.getName().equals("SG") || b.getName().equals("VotG") || b.getName().equals("FB")) { //b.getName().equals("Dinant") ||
+                 b.getName().equals("SG") || b.getName().equals("VotG") || b.getName().equals("FB") ||
+                 b.getName().equals("ER")) { //b.getName().equals("Dinant") ||
             createtheHASLHexGrid(b);
             return;
         }
@@ -969,7 +1023,7 @@ public class Map  {
         //Dinant follows standard board layout and so can be treated as geo
         if (b.getName().equals("RBv3") || b.getName().equals("RO") || b.getName().equals("DaE") ||
                 b.getName().equals("SG") || b.getName().equals("HT") || b.getName().equals("VotG") ||
-                b.getName().equals("SaPF") || b.getName().equals("FB")) {
+                b.getName().equals("SaPF") || b.getName().equals("FB") || b.getName().equals("ER")) {
             createtheHASLHexGrid(b);
         }
         // at this point the terrainGrid, elevationGrid and HexGrid are created but hold no los data
@@ -1004,7 +1058,8 @@ public class Map  {
         //Dinant follows standard board layout and so can be treated as geo
         if (boardarchive.getBoardName().equals("RBv3") || boardarchive.getBoardName().equals("RO") || boardarchive.getBoardName().equals("DaE") ||
                 boardarchive.getBoardName().equals("SG") || boardarchive.getBoardName().equals("HT") || boardarchive.getBoardName().equals("VotG") ||
-                boardarchive.getBoardName().equals("SaPF") || boardarchive.getBoardName().equals("BRT") || boardarchive.getBoardName().equals("FB")) {
+                boardarchive.getBoardName().equals("SaPF") || boardarchive.getBoardName().equals("BRT") || boardarchive.getBoardName().equals("FB") ||
+                boardarchive.getBoardName().equals("ER")) {
 
             createtheHASLHexGrid(boardarchive);
         }
