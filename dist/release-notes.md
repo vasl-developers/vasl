@@ -13,6 +13,7 @@
 ## Improvements
 
  - Improvement 1: Add "Broken Ground" draggable overlays and improve "Broken Ground" artwork. 
+ - Improvement 2: Updating various "shared" vehicle counters (bicycles, motorcycles, horses, etc.) to reference the SVG versions of the counters.
 ---
 
 ## ⚠️ Compatibility Notes
