@@ -30,5 +30,8 @@
     <Checkbox name="">
       <entry name="J47 - They're Here! Reverse!" rule="SSO_26_J47" text="Bd26 J47 SSO"/>
     </Checkbox>
+	<Checkbox name="">
+      <entry name="Scenario A51 - Clash Along the Psel" rule="SSO_A51" text="Bd26 Scen A51 SSO"/>
+    </Checkbox>
   </Option>
 </SSRControls>

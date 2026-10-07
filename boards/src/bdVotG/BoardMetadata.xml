@@ -26,12 +26,13 @@
 	v3.1 Mar 2008 Tom Repetti
 	v4.0 Feb 2026 LOS enabled by Gordon Molek
 	v4.1 Mar 2026 Fixing LOS to/from hexes with gutted building walls by Gordon Molek
+	v4.2 Aug 2026 Fixing several mis-categorized buildings by Gordon Molek with help from Doug Rimmer
 -->
 <boardMetadata
 	name="VotG"
-	version="4.1"
-	versionDate="Mar 2026"
-	author="TR (LOS enabled by GM)"
+	version="4.3"
+	versionDate="Aug 2026"
+	author="TR (LOS enabled by GM and DR)"
 	boardImageFileName="bdVotG.gif"
 	hasHills="TRUE"
 	width="41"
@@ -39,7 +40,7 @@
 	hexWidth="56.225"
 	hexHeight="64.44"
 	A1CenterX="37"
-	A1CenterY="32"
+	A1CenterY="32.22"
 	HexGridConfig = "Normal"
 	altHexGrain="FALSE">
 
@@ -71,7 +72,7 @@
 			terrain - the LOS terrain type
 			elevation - the base elevation of the terrain
 			
-		-->	
+		-->		
 	</colors>
 	
 	<colorSSRules>
