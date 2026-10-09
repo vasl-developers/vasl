@@ -24,31 +24,41 @@ import VASL.LOS.Map.Hex;
 import VASL.LOS.Map.Location;
 import VASL.LOS.Map.Terrain;
 import VASL.LOS.counters.CounterMetadataFile;
+import VASL.build.module.map.ASLDiceOverlay;
 import VASL.build.module.map.ASLPieceMover;
 import VASL.build.module.map.ASLStackMetrics;
+import VASL.build.module.map.BoardSwapper;
+import VASL.build.module.map.MapViewRotation;
 import VASL.build.module.map.boardArchive.BoardMetadata;
 import VASL.build.module.map.boardArchive.SharedBoardMetadata;
 import VASL.build.module.map.boardPicker.ASLBoard;
 import VASL.build.module.map.boardPicker.BoardException;
 import VASL.build.module.map.boardPicker.Overlay;
 import VASL.build.module.map.boardPicker.VASLBoard;
+import VASL.counters.ASLProperties;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.GameComponent;
 import VASSAL.build.module.Map;
 import VASSAL.build.module.PieceWindow;
+import VASSAL.build.module.map.Drawable;
+import VASSAL.build.module.map.KeyBufferer;
 import VASSAL.build.module.map.PieceMover;
 import VASSAL.build.module.map.boardPicker.Board;
 import VASSAL.build.widget.ListWidget;
 import VASSAL.build.widget.PanelWidget;
 import VASSAL.build.widget.PieceSlot;
 import VASSAL.configure.*;
+import VASSAL.counters.Decorator;
+import VASSAL.counters.FreeRotator;
 import VASSAL.counters.GamePiece;
 import VASSAL.counters.Properties;
 import VASSAL.counters.Stack;
 import VASSAL.tools.DataArchive;
 import VASSAL.tools.ErrorDialog;
+import VASSAL.tools.image.ImageUtils;
 import VASSAL.tools.imageop.Op;
+import VASSAL.tools.swing.SwingUtils;
 import org.jdom2.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +69,7 @@ import java.awt.*;
 import java.awt.List;
 import java.awt.dnd.*;
 import java.awt.event.*;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -93,6 +104,17 @@ public class ASLMap extends Map {
     public static final String SCALEWITHBOARDMAG = "ScaleWithBoardMag"; //Property name for any counters that should also scale with the board magnification (not the same as the zoom)
     public ArrayList<String> dxAvailBoards = new ArrayList<>(); //List of all available deluxe boards
     protected LinkedList<VASL.LOS.Map.Hex> hexestofixlist = new LinkedList<>();
+
+    // local rotation of the map view, in clockwise quarter turns (see MapViewRotation)
+    private int viewRotation = 0;
+    // transform of the screen while the rotated view is being painted, null otherwise; per thread, as the map can
+    // also be painted in background, e.g. to save it as an image
+    private final ThreadLocal<AffineTransform> rotatedViewScreenTransform = new ThreadLocal<>();
+    // true while the map is being painted for something other than the view, e.g. to save it as an image
+    private final ThreadLocal<Boolean> paintingOutsideView = ThreadLocal.withInitial(() -> Boolean.FALSE);
+    // preference: with the view rotated, show upright the counters without a covered arc
+    private static final String UPRIGHT_COUNTERS = "RotatedMapUprightCounters";
+    private boolean keepCountersUpright = true;
 
     public ASLMap() {
         super();
@@ -136,6 +158,15 @@ public class ASLMap extends Map {
         // background color preference
         final ColorConfigurer backgroundcolor = new ColorConfigurer("backcolor", "Set Color of space around Map (requires VASL restart)", Color.white);
         getGameModule().getPrefs().addOption(preferenceTabName, backgroundcolor);
+
+        // upright counters preference
+        final BooleanConfigurer uprightCounters = new BooleanConfigurer(UPRIGHT_COUNTERS, "When the map view is rotated, keep upright the counters without a CA", Boolean.TRUE);
+        getGameModule().getPrefs().addOption(preferenceTabName, uprightCounters);
+        keepCountersUpright = Boolean.TRUE.equals(getGameModule().getPrefs().getValue(UPRIGHT_COUNTERS));
+        uprightCounters.addPropertyChangeListener(e -> {
+            keepCountersUpright = Boolean.TRUE.equals(uprightCounters.getValue());
+            repaint();
+        });
 
     }
 
@@ -2138,7 +2169,8 @@ public class ASLMap extends Map {
         drawPiecesNonStackableInRegion(g2d, rect, dzoom);
 
         g2d.dispose();
-        return img;
+        // show the surroundings of the hex turned like the map view
+        return isViewRotated() ? rotateImageLikeView(img) : img;
     }
 
     protected void drawPiecesNonStackableInRegion(Graphics g, Rectangle visibleRect, double dZoom)
@@ -2160,7 +2192,15 @@ public class ASLMap extends Map {
                     //JY
                     //stack[i].draw(g, (int) (pt.x * dZoom), (int) (pt.y * dZoom), null, dZoom);
                     double pZoom = PieceScalerBoardZoom(stack[i]);
-                    stack[i].draw(g, (int) (pt.x * dZoom), (int) (pt.y * dZoom), null, dZoom*pZoom);
+                    final int x = (int) (pt.x * dZoom);
+                    final int y = (int) (pt.y * dZoom);
+                    // the image is turned like the view afterwards, so the upright pieces are turned back
+                    final AffineTransform t = g2d.getTransform();
+                    if (keepsUpright(stack[i])) {
+                        MapViewRotation.rotate(g2d, -viewRotation, x, y);
+                    }
+                    stack[i].draw(g, x, y, null, dZoom*pZoom);
+                    g2d.setTransform(t);
                     //JY
                 }
             }
@@ -2235,17 +2275,11 @@ public class ASLMap extends Map {
             }
             else {
                 if (showmaplevel == ShowMapLevel.ShowAll  || (stack[i].getProperty("overlay") != null && showmaplevel == ShowMapLevel.ShowMapOnly)) {// always show overlays
-                    stack[i].draw(g, pt.x, pt.y, c, dzoom*pZoom);
-                    if (Boolean.TRUE.equals(stack[i].getProperty(Properties.SELECTED))) {
-                        highlighter.draw(stack[i], g, pt.x, pt.y, c, dzoom*pZoom);
-                    }
+                    drawSinglePiece(stack[i], g2d, pt, c, dzoom*pZoom);
                 }
                 else if (showmaplevel == ShowMapLevel.ShowMapAndOverlay) {
                     if (Boolean.TRUE.equals(stack[i].getProperty(Properties.NO_STACK))) {
-                        stack[i].draw(g, pt.x, pt.y, c, dzoom*pZoom);
-                        if (Boolean.TRUE.equals(stack[i].getProperty(Properties.SELECTED))) {
-                            highlighter.draw(stack[i], g, pt.x, pt.y, c, dzoom*pZoom);
-                        }
+                        drawSinglePiece(stack[i], g2d, pt, c, dzoom*pZoom);
                     }
                 }
             }
@@ -2293,6 +2327,342 @@ public class ASLMap extends Map {
         }
         g2d.setComposite(oldComposite);
     }
+
+    /*
+     * Local rotation of the map view
+     *
+     * The view can be turned by quarter turns, e.g. to see an attack from right to left as one from bottom to top.
+     * Only the view is rotated: map coordinates, and therefore piece positions, saved games and the commands sent
+     * to the other players, are the same as without rotation, so every player can use a different rotation.
+     * The conversions between map and component coordinates include the rotation, while drawing coordinates are
+     * those of the unrotated view: the map is painted as usual through a rotated Graphics (see RotatableView).
+     */
+
+    /** @return the rotation of the view, in clockwise quarter turns (0-3) */
+    public int getViewRotation() {
+        return viewRotation;
+    }
+
+    public boolean isViewRotated() {
+        return viewRotation != 0;
+    }
+
+    /**
+     * Rotates the view, keeping the same part of the map in the middle of the window
+     * @param quarterTurns clockwise quarter turns from the default (unrotated) view
+     */
+    public void setViewRotation(int quarterTurns) {
+        final int rotation = MapViewRotation.normalize(quarterTurns);
+        if (rotation == viewRotation) {
+            return;
+        }
+        final Point center = componentToMap(getCenter());
+        final GameModule mod = getGameModule();
+        final boolean suppressAutoCenterUpdate = mod.isSuppressAutoCenterUpdate();
+        mod.setSuppressAutoCenterUpdate(true);
+        try {
+            viewRotation = rotation;
+            final Dimension d = getPreferredSize();
+            theMap.setBounds(0, 0, d.width, d.height);
+            theMap.revalidate();
+            centerAt(center);
+        }
+        finally {
+            mod.setSuppressAutoCenterUpdate(suppressAutoCenterUpdate);
+        }
+        repaint(true);
+    }
+
+    @Override
+    public void setup(boolean gameStarting) {
+        super.setup(gameStarting);
+        // the game is closed, also before loading another game or log: the next one starts with the view not rotated
+        if (!gameStarting && isViewRotated()) {
+            viewRotation = 0;
+            if (theMap != null) {
+                theMap.revalidate();
+                theMap.repaint();
+            }
+        }
+    }
+
+    /** @return a copy of the image turned like the view */
+    public BufferedImage rotateImageLikeView(BufferedImage img) {
+        final Dimension size = MapViewRotation.rotate(new Dimension(img.getWidth(), img.getHeight()), viewRotation);
+        final BufferedImage rotated = ImageUtils.createCompatibleTranslucentImage(size.width, size.height);
+        final Graphics2D g2d = rotated.createGraphics();
+        g2d.drawImage(img, MapViewRotation.getTransform(viewRotation, img.getWidth(), img.getHeight()), null);
+        g2d.dispose();
+        return rotated;
+    }
+
+    /**
+     * @return true if with the view rotated the piece is shown upright instead of turning with the map (when the
+     * preference is on): the pieces without a covered arc, except the overlays, and only if square and centred on
+     * their position, so that the area where they can be clicked does not change
+     */
+    public boolean keepsUpright(GamePiece piece) {
+        if (!isViewRotated() || !keepCountersUpright || piece instanceof Stack) {
+            return false;
+        }
+        if (Decorator.getDecorator(piece, FreeRotator.class) != null || isOverlay(piece)) {
+            return false;
+        }
+        final Rectangle r = piece.getShape().getBounds();
+        return Math.abs(r.width - r.height) <= 1 && Math.abs(2 * r.x + r.width) <= 1 && Math.abs(2 * r.y + r.height) <= 1;
+    }
+
+    /** @return true if the piece is being drawn on the rotated view and has to be kept upright */
+    public boolean isDrawnUpright(GamePiece piece) {
+        return rotatedViewScreenTransform.get() != null && keepsUpright(piece);
+    }
+
+    /**
+     * @return while the rotated view is being painted, the transform to draw aligned with the screen (see
+     * {@link #drawingToScreen}); null otherwise
+     */
+    public AffineTransform getRotatedViewScreenTransform() {
+        final AffineTransform screenTransform = rotatedViewScreenTransform.get();
+        return screenTransform == null ? null : new AffineTransform(screenTransform);
+    }
+
+    /** Converts a point in drawing coordinates into the coordinates used to draw aligned with the screen */
+    public Point drawingToScreen(Point p, double os_scale) {
+        final Dimension size = getUnrotatedViewSize();
+        final Point2D s = MapViewRotation.getTransform(viewRotation, size.width * os_scale, size.height * os_scale).transform(p, null);
+        return new Point((int) Math.round(s.getX()), (int) Math.round(s.getY()));
+    }
+
+    // draws a piece which is not in a stack (upright if needed) and its highlight if selected
+    private void drawSinglePiece(GamePiece piece, Graphics2D g2d, Point pt, Component c, double zoom) {
+        final AffineTransform t = g2d.getTransform();
+        if (isDrawnUpright(piece)) {
+            MapViewRotation.rotate(g2d, -viewRotation, pt.x, pt.y);
+        }
+        piece.draw(g2d, pt.x, pt.y, c, zoom);
+        if (Boolean.TRUE.equals(piece.getProperty(Properties.SELECTED))) {
+            highlighter.draw(piece, g2d, pt.x, pt.y, c, zoom);
+        }
+        g2d.setTransform(t);
+    }
+
+    /** @return true for the overlays and the other pieces that scale with the board (see PieceScalerBoardZoom) */
+    public boolean isOverlay(GamePiece piece) {
+        if (piece.getProperty(ASLProperties.OVERLAY) != null || piece.getProperty("overlay") != null) {
+            return true;
+        }
+        final Object id = piece.getProperty(Properties.PIECE_ID);
+        return id != null && (pieceslotgpidlist.contains(id.toString()) || piece.getProperty(SCALEWITHBOARDZOOM) != null);
+    }
+
+    /** @return the size the view would have without rotation */
+    private Dimension getUnrotatedViewSize() {
+        return super.getPreferredSize();
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+        return MapViewRotation.rotate(super.getPreferredSize(), viewRotation);
+    }
+
+    @Override
+    public Point mapToComponent(Point p) {
+        final Point c = super.mapToComponent(p);
+        return isViewRotated() ? MapViewRotation.rotate(c, viewRotation, getUnrotatedViewSize()) : c;
+    }
+
+    @Override
+    public Rectangle mapToComponent(Rectangle r) {
+        final Rectangle c = super.mapToComponent(r);
+        return isViewRotated() ? MapViewRotation.rotate(c, viewRotation, getUnrotatedViewSize()) : c;
+    }
+
+    @Override
+    public Point componentToMap(Point p) {
+        return super.componentToMap(isViewRotated() ? MapViewRotation.unrotate(p, viewRotation, getUnrotatedViewSize()) : p);
+    }
+
+    @Override
+    public Rectangle componentToMap(Rectangle r) {
+        return super.componentToMap(isViewRotated() ? MapViewRotation.unrotate(r, viewRotation, getUnrotatedViewSize()) : r);
+    }
+
+    @Override
+    public Point componentToDrawing(Point p, double os_scale) {
+        return super.componentToDrawing(isViewRotated() ? MapViewRotation.unrotate(p, viewRotation, getUnrotatedViewSize()) : p, os_scale);
+    }
+
+    @Override
+    public Rectangle componentToDrawing(Rectangle r, double os_scale) {
+        return super.componentToDrawing(isViewRotated() ? MapViewRotation.unrotate(r, viewRotation, getUnrotatedViewSize()) : r, os_scale);
+    }
+
+    @Override
+    public Point drawingToComponent(Point p, double os_scale) {
+        final Point c = super.drawingToComponent(p, os_scale);
+        return isViewRotated() ? MapViewRotation.rotate(c, viewRotation, getUnrotatedViewSize()) : c;
+    }
+
+    @Override
+    public Rectangle drawingToComponent(Rectangle r, double os_scale) {
+        final Rectangle c = super.drawingToComponent(r, os_scale);
+        return isViewRotated() ? MapViewRotation.rotate(c, viewRotation, getUnrotatedViewSize()) : c;
+    }
+
+    @Override
+    public JComponent getView() {
+        if (theMap == null) {
+            theMap = new RotatableView();
+            setUpView();
+        }
+        return theMap;
+    }
+
+    @Override
+    public void paintRegion(Graphics g, Rectangle visibleRect, Component c) {
+        final Boolean outsideView = paintingOutsideView.get();
+        paintingOutsideView.set(c != theMap);
+        try {
+            super.paintRegion(g, visibleRect, c);
+        }
+        finally {
+            paintingOutsideView.set(outsideView);
+        }
+    }
+
+    /**
+     * @return the rotation of the view the stacks are laid out for, so that their pieces are offset toward the same
+     * direction of the screen whatever the rotation; none when the map is painted for something else than the
+     * view, e.g. to save it as an image
+     */
+    public int getStackLayoutRotation() {
+        return paintingOutsideView.get() ? 0 : viewRotation;
+    }
+
+    @Override
+    protected void clearMapBorder(Graphics g) {
+        // the rotated view clears its whole visible area before painting the map
+        if (rotatedViewScreenTransform.get() == null) {
+            super.clearMapBorder(g);
+        }
+    }
+
+    @Override
+    public void drawDrawable(Graphics g, boolean aboveCounters) {
+        final AffineTransform screenTransform = rotatedViewScreenTransform.get();
+        if (screenTransform == null) {
+            super.drawDrawable(g, aboveCounters);
+            return;
+        }
+        final Graphics2D g2d = (Graphics2D) g;
+        for (final Drawable drawable : drawComponents) {
+            if (aboveCounters == drawable.drawAboveCounters()) {
+                if (isDrawnInViewCoordinates(drawable)) {
+                    final AffineTransform t = g2d.getTransform();
+                    g2d.setTransform(screenTransform);
+                    drawable.draw(g, this);
+                    g2d.setTransform(t);
+                }
+                else {
+                    drawable.draw(g, this);
+                }
+            }
+        }
+    }
+
+    /**
+     * @return true for the drawables placed with view coordinates (e.g. following the mouse) instead of map
+     * coordinates: they are drawn without rotation
+     */
+    private static boolean isDrawnInViewCoordinates(Drawable drawable) {
+        return drawable instanceof VASSAL.build.module.map.CounterDetailViewer // stack viewer
+            || drawable instanceof KeyBufferer                                  // selection rectangle
+            || drawable instanceof ASLDiceOverlay;                              // dice over the map
+    }
+
+    @Override
+    public void add(Buildable b) {
+        super.add(b);
+        // in the popup menu the items to rotate the view follow the one to pick new boards
+        if (b instanceof BoardSwapper) {
+            mainpopup.add(createRotateViewMenuItem(true));
+            mainpopup.add(createRotateViewMenuItem(false));
+        }
+    }
+
+    private JMenuItem createRotateViewMenuItem(boolean clockwise) {
+        final JMenuItem item = new JMenuItem(clockwise ? "Rotate map view clockwise" : "Rotate map view counterclockwise");
+        try {
+            item.setIcon(new ImageIcon(Op.load(clockwise ? "rotateViewCW.png" : "rotateViewCCW.png").getImage(null)));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        item.setToolTipText("Only on this computer, the other players are not affected");
+        item.addActionListener(e -> setViewRotation(viewRotation + (clockwise ? 1 : -1)));
+        return item;
+    }
+
+    /**
+     * Map view able to show the map rotated: when the view is rotated the map is painted as if it were not, through
+     * a Graphics rotated like the view
+     */
+    public class RotatableView extends View {
+        private static final long serialVersionUID = 1L;
+
+        public RotatableView() {
+            super(ASLMap.this);
+        }
+
+        @Override
+        public void paint(Graphics g) {
+            if (!isViewRotated()) {
+                super.paint(g);
+                return;
+            }
+            if (getGameModule().getGameState().isUpdating()) {
+                return;
+            }
+            final Graphics2D g2d = (Graphics2D) g;
+            g2d.addRenderingHints(SwingUtils.FONT_HINTS);
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            final double os_scale = g2d.getDeviceConfiguration().getDefaultTransform().getScaleX();
+            final AffineTransform orig_t = g2d.getTransform();
+            final AffineTransform screen_t = SwingUtils.descaleTransform(orig_t);
+            g2d.setTransform(screen_t);
+
+            // clear the visible part of the view
+            final Rectangle r = getVisibleRect();
+            g2d.setColor(bgColor);
+            g2d.fillRect((int) (r.x * os_scale), (int) (r.y * os_scale), (int) Math.ceil(r.width * os_scale), (int) Math.ceil(r.height * os_scale));
+
+            // paint the map as if the view were not rotated
+            final Dimension size = getUnrotatedViewSize();
+            g2d.transform(MapViewRotation.getTransform(viewRotation, size.width * os_scale, size.height * os_scale));
+            rotatedViewScreenTransform.set(screen_t);
+            try {
+                paintRegion(g2d, componentToDrawing(r, os_scale));
+            }
+            finally {
+                rotatedViewScreenTransform.remove();
+                g2d.setTransform(orig_t);
+            }
+        }
+
+        @Override
+        public void repaint(long tm, int x, int y, int width, int height) {
+            // some callers (e.g. the board tiles loaded in background) give the area to repaint in unrotated
+            // coordinates, so when the view is rotated it is repainted in full
+            if (isViewRotated()) {
+                super.repaint(tm, 0, 0, getWidth(), getHeight());
+            }
+            else {
+                super.repaint(tm, x, y, width, height);
+            }
+        }
+    }
+
     private Color getRGBColor(int c){
         final int red = (c & 0x00ff0000) >> 16;
         final int green = (c & 0x0000ff00) >> 8;
