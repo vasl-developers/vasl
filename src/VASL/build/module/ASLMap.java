@@ -1050,7 +1050,7 @@ public class ASLMap extends Map {
                 losonoverlays.overpositiony = losonoverlays.currenty + (int) losonoverlays.ovrYstart - (int) losonoverlays.board.getCropBounds().getY();
                 if (losonoverlays.newlosdata.onMap(losonoverlays.overpositionx, losonoverlays.overpositiony) && losonoverlays.newlosdata.gridToHex(losonoverlays.overpositionx, losonoverlays.overpositiony) != null) {
                     // test code
-                    if (losonoverlays.currentx == 5 && losonoverlays.currenty == 546){
+                    if (losonoverlays.overpositionx == 561 && losonoverlays.overpositiony == 85){
                         boolean reg = true;
                     }
                     c = losonoverlays.bi.getRGB(losonoverlays.currentx, losonoverlays.currenty);
@@ -1763,7 +1763,10 @@ public class ASLMap extends Map {
                 }
             }*/
         }
-        if (transterrain == null) {transterrain = losonoverlays.newlosdata.getTerrain("Open Ground");}
+        // Oct 26 calling code handles null return so no need for this - test for bugs
+        //if (transterrain == null) {
+        //    transterrain = losonoverlays.newlosdata.getTerrain("Open Ground");
+        //}
         return transterrain;
     }
     private boolean pointIsOnOverlay(BufferedImage bi, int usex, int usey) {
@@ -2155,13 +2158,15 @@ public class ASLMap extends Map {
 
             if (stack[i].getClass() != Stack.class)
             {
-                if (Boolean.TRUE.equals(stack[i].getProperty(Properties.NO_STACK)))
-                {
+                if (Boolean.TRUE.equals(stack[i].getProperty(Properties.NO_STACK))) {
                     //JY
                     //stack[i].draw(g, (int) (pt.x * dZoom), (int) (pt.y * dZoom), null, dZoom);
                     double pZoom = PieceScalerBoardZoom(stack[i]);
-                    stack[i].draw(g, (int) (pt.x * dZoom), (int) (pt.y * dZoom), null, dZoom*pZoom);
+                    // exception handling - issue 2643
+                    if (pZoom != 0 && dZoom != 0){
+                        stack[i].draw(g, (int) (pt.x * dZoom), (int) (pt.y * dZoom), null, dZoom * pZoom);
                     //JY
+                    }
                 }
             }
         }
