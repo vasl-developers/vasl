@@ -1122,6 +1122,10 @@
 		<color name="StoneRubble5" red="55" green="55" blue="56" terrain="Stone Rubble" elevation="UNKNOWN" />
 		<color name="WoodRubble" red="181" green="125" blue="60" terrain="Wooden Rubble" elevation="UNKNOWN" />
 		<color name="WoodRubble2" red="117" green="100" blue="39" terrain="Wooden Rubble" elevation="UNKNOWN" />
+		<color name="WoodRubble3" red="105" green="173" blue="36" terrain="Wooden Rubble" elevation="UNKNOWN" />
+		<color name="WoodRubble4" red="194" green="135" blue="67" terrain="Wooden Rubble" elevation="UNKNOWN" />
+		<color name="WoodRubble5" red="60" green="42" blue="21" terrain="Wooden Rubble" elevation="UNKNOWN" />
+		<color name="WoodRubble6" red="150" green="104" blue="51" terrain="Wooden Rubble" elevation="UNKNOWN" />
 		<!-- Shellholes  -->
 		<color name="Shellhole1" red="177" green="136" blue="57" terrain="Shellholes" elevation="UNKNOWN" />
 		<color name="Shellhole2" red="97" green="68" blue="27" terrain="Shellholes" elevation="UNKNOWN" />
