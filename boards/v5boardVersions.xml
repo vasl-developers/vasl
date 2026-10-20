@@ -421,6 +421,7 @@
 		<boarddata name="Hurtgen" version="1.0" versionDate="2008/08/30" description="Strass, Hurtgenwald" boardType="HASL" publisher="CH!" issued="" />
 		<boarddata name="IvansWar" version="1.0" versionDate="2008/08/30" description="Ivan's War - Stalingrad" boardType="HASL" publisher="CH!" issued="" />
 		<boarddata name="KB" version="2.1" versionDate="2018/09/30" description="Kellam's Bridge" boardType="HASL" publisher="CH!" issued="" />
+		<boarddata name="KF" version="3.0" versionDate="2026/10/20" description="Kharkov in Flames" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="LG" version="1.0" versionDate="2008/08/30" description="La Glieze (KGP II)" boardType="HASL" publisher="MMP" issued="" />
 		<boarddata name="MC1" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="CH!" issued="" />
 		<boarddata name="MC1&#x20;Snow" version="1.0" versionDate="2008/08/30" description="" boardType="HASL" publisher="CH!" issued="" />
