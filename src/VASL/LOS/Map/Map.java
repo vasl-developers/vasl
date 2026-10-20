@@ -5559,7 +5559,7 @@ public class Map  {
         }
 
         // Deir special case
-        if (status.source.getTerrain().isEntrenchmentTerrain() && status.sourceHex.getCenterLocation().getTerrain().getName().equals("Deir") &&
+        if (status.source.getTerrain().isEntrenchmentTerrain()  && status.sourceHex.getCenterLocation().getTerrain().getName().equals("Deir") &&
                 (status.sourceElevation== status.targetElevation)){
             boolean nonlip = true;
             for (int x =0; x < 6; x++) {
