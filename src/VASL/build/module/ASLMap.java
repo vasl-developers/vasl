@@ -49,6 +49,7 @@ import VASSAL.build.widget.ListWidget;
 import VASSAL.build.widget.PanelWidget;
 import VASSAL.build.widget.PieceSlot;
 import VASSAL.configure.*;
+import VASSAL.counters.BasicPiece;
 import VASSAL.counters.Decorator;
 import VASSAL.counters.FreeRotator;
 import VASSAL.counters.GamePiece;
@@ -115,6 +116,8 @@ public class ASLMap extends Map {
     // preference: with the view rotated, show upright the counters without a covered arc
     private static final String UPRIGHT_COUNTERS = "RotatedMapUprightCounters";
     private boolean keepCountersUpright = true;
+    // basic names of the artillery request counters of the Korean War, the only ones without "OBA" in their name
+    private static final Set<String> KOREAN_WAR_OBA_COUNTERS = Set.of("AR", "SR", "FFE", "VTE");
 
     public ASLMap() {
         super();
@@ -2398,19 +2401,30 @@ public class ASLMap extends Map {
 
     /**
      * @return true if with the view rotated the piece is shown upright instead of turning with the map (when the
-     * preference is on): the pieces without a covered arc, except the overlays and the snipers (their side 1 points to
-     * the hexside with the hex number; they are found by name, as in ASLSniperFinder), and only if square and centred
-     * on their position, so that the area where they can be clicked does not change
+     * preference is on): the pieces without a covered arc, except the overlays and the counters with numbered sides,
+     * and only if square and centred on their position, so that the area where they can be clicked does not change
      */
     public boolean keepsUpright(GamePiece piece) {
         if (!isViewRotated() || !keepCountersUpright || piece instanceof Stack) {
             return false;
         }
-        if (Decorator.getDecorator(piece, FreeRotator.class) != null || isOverlay(piece) || piece.getName().contains("Sniper")) {
+        if (Decorator.getDecorator(piece, FreeRotator.class) != null || isOverlay(piece) || hasNumberedSides(piece)) {
             return false;
         }
         final Rectangle r = piece.getShape().getBounds();
         return Math.abs(r.width - r.height) <= 1 && Math.abs(2 * r.x + r.width) <= 1 && Math.abs(2 * r.y + r.height) <= 1;
+    }
+
+    /**
+     * @return true for the counters whose numbered sides give the directions of the hexsides (side 1 toward the hexside
+     * with the hex number), so they have to turn with the map: the snipers (found by name, as in ASLSniperFinder) and
+     * the artillery request counters (AR, SR, FFE)
+     */
+    private boolean hasNumberedSides(GamePiece piece) {
+        final String name = piece.getName();
+        final Object basicName = piece.getProperty(BasicPiece.BASIC_NAME);
+        return name.contains("Sniper") || name.contains("OBA") ||
+            (basicName != null && KOREAN_WAR_OBA_COUNTERS.contains(basicName.toString()));
     }
 
     /** @return true if the piece is being drawn on the rotated view and has to be kept upright */
