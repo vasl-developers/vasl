@@ -2398,14 +2398,15 @@ public class ASLMap extends Map {
 
     /**
      * @return true if with the view rotated the piece is shown upright instead of turning with the map (when the
-     * preference is on): the pieces without a covered arc, except the overlays, and only if square and centred on
-     * their position, so that the area where they can be clicked does not change
+     * preference is on): the pieces without a covered arc, except the overlays and the snipers (their side 1 points to
+     * the hexside with the hex number; they are found by name, as in ASLSniperFinder), and only if square and centred
+     * on their position, so that the area where they can be clicked does not change
      */
     public boolean keepsUpright(GamePiece piece) {
         if (!isViewRotated() || !keepCountersUpright || piece instanceof Stack) {
             return false;
         }
-        if (Decorator.getDecorator(piece, FreeRotator.class) != null || isOverlay(piece)) {
+        if (Decorator.getDecorator(piece, FreeRotator.class) != null || isOverlay(piece) || piece.getName().contains("Sniper")) {
             return false;
         }
         final Rectangle r = piece.getShape().getBounds();
