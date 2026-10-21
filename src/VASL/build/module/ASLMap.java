@@ -2427,7 +2427,10 @@ public class ASLMap extends Map {
             (basicName != null && KOREAN_WAR_OBA_COUNTERS.contains(basicName.toString()));
     }
 
-    /** @return true if the piece is being drawn on the rotated view and has to be kept upright */
+    /**
+     * @return true if the piece is being drawn on the rotated view and has to be kept upright, so it is drawn through
+     * a graphics turned back around it; false while the drawables aligned with the screen are drawn (see drawDrawable)
+     */
     public boolean isDrawnUpright(GamePiece piece) {
         return rotatedViewScreenTransform.get() != null && keepsUpright(piece);
     }
@@ -2525,6 +2528,14 @@ public class ASLMap extends Map {
     }
 
     @Override
+    public void repaint(Rectangle r) {
+        // VASSAL converts the given rectangle in place into the area of the view to repaint, but some callers keep it,
+        // e.g. the movement trail its bounds: on the rotated view the conversion moves them far from the piece, which is
+        // then no longer drawn, so a copy is converted
+        super.repaint(new Rectangle(r));
+    }
+
+    @Override
     public JComponent getView() {
         if (theMap == null) {
             theMap = new RotatableView();
@@ -2575,7 +2586,14 @@ public class ASLMap extends Map {
                 if (isDrawnInViewCoordinates(drawable)) {
                     final AffineTransform t = g2d.getTransform();
                     g2d.setTransform(screenTransform);
-                    drawable.draw(g, this);
+                    // aligned with the screen, e.g. in the stack viewer, the pieces are not turned back to be upright
+                    rotatedViewScreenTransform.remove();
+                    try {
+                        drawable.draw(g, this);
+                    }
+                    finally {
+                        rotatedViewScreenTransform.set(screenTransform);
+                    }
                     g2d.setTransform(t);
                 }
                 else {

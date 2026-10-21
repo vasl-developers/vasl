@@ -103,6 +103,9 @@ public class ASLCommandEncoder extends VASSAL.build.module.BasicCommandEncoder i
     else if (type.startsWith(Translate.ID)) {
       return new ASLTranslate(type,inner);
     }
+    else if (type.startsWith(Footprint.ID)) {  // the movement trail turns with the rotated map view
+      return new ASLFootprint(type, inner);
+    }
     else if (type.startsWith(ASLAreaOfEffect.ID)) {  // FredKors 16-nov-2013 fix for the starshell - IR off map
       return new ASLAreaOfEffect(type,inner);
     }
