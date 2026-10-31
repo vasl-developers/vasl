@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<VASSAL.build.GameModule ModuleOther1="" ModuleOther2="" VassalVersion="3.7.27" description="VASL" name="VASL" nextPieceSlotId="15685" version="6.7.4-beta5">
+<VASSAL.build.GameModule ModuleOther1="" ModuleOther2="" VassalVersion="3.7.30" description="VASL" name="VASL" nextPieceSlotId="15685" version="6.7.4-beta6">
     <VASSAL.build.module.properties.GlobalProperties>
         <VASSAL.build.module.properties.GlobalProperty description="TurnMarker1" initialValue="Spy (white)" isNumeric="false" max="null" min="null" name="TurnMarker1" wrap="false"/>
         <VASSAL.build.module.properties.GlobalProperty description="TurnMarkerLayerLevel1" initialValue="33" isNumeric="true" max="100" min="0" name="TurnMarkerLayerLevel1" wrap="false"/>
@@ -160,6 +160,7 @@
         <VASL.build.module.map.RandomSelectCounter MoveSelection="66,195" SelectCenter="89,195" SelectLeft="78,195" SelectRight="90,195"/>
         <VASSAL.build.module.map.Flare circleColor="255,0,0" circleScale="true" circleSize="100" flareKey="keyAlt" flareName="Map Flare" flarePulses="6" flarePulsesPerSec="3" reportFormat=""/>
         <VASL.build.module.map.HIPFortification propertiesTab="LOS" report="true" reportFormat=""/>
+        <VASL.build.module.map.DoubleBlindViewer hidden="false" buttonText="Blind" propertiesTab="LOS" report="true" reportFormat=""/>
         <VASL.build.module.map.SASLActivationChecker CheckActivationsKey="83,650" ClearFlaresKey="88,650" Name="SASLActivationChecker"/>
     </VASL.build.module.ASLMap>
     <VASSAL.build.module.NotesWindow buttonText="" hotkey="" icon="notesV.gif" tooltip="Notes"/>
