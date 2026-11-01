@@ -9,6 +9,7 @@
 
 ## 🛠 Bug Fixes
  - Fix 1: Enable clearing of "Moved" flag for GE '42 DB.
+ - Fix 2: German and Waffen SS FlaK 30 and FlaK 38 limbered sides should show as a normal sized target.
 
 ## Improvements
 
