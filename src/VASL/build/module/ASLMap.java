@@ -2565,6 +2565,16 @@ public class ASLMap extends Map {
         return paintingOutsideView.get() ? 0 : viewRotation;
     }
 
+    /**
+     * @return the quarter turns by which the graphics given to draw the piece for the component obs is turned like the
+     * rotated view: the rotation of the view if the piece turns with the map and is drawn for the view, also in the
+     * stack viewer or in the dragged image; none for the pieces kept upright and for what is drawn elsewhere, e.g. in
+     * the overview or in the map saved as an image
+     */
+    public int getViewTurnsInGraphics(GamePiece piece, Component obs) {
+        return obs == theMap && !keepsUpright(piece) ? getStackLayoutRotation() : 0;
+    }
+
     @Override
     protected void clearMapBorder(Graphics g) {
         // the rotated view clears its whole visible area before painting the map

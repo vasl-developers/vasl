@@ -18,6 +18,8 @@
  */
 package VASL.counters;
 
+import VASL.build.module.ASLMap;
+import VASL.build.module.map.MapViewRotation;
 import VASSAL.command.Command;
 import VASSAL.counters.Decorator;
 import VASSAL.counters.EditablePiece;
@@ -34,10 +36,12 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.event.InputEvent;
+import java.awt.geom.AffineTransform;
 import javax.swing.KeyStroke;
 import java.util.StringTokenizer;
 
@@ -162,6 +166,13 @@ public class TextInfo extends Decorator implements EditablePiece {
         zoomedInfoSize = getInfoSize(info, g.getFontMetrics(), zoom);
       }
 
+      // on the rotated map view the info is written aligned with the screen, also when the piece turns with the map
+      final Graphics2D g2d = (Graphics2D) g;
+      final AffineTransform t = g2d.getTransform();
+      final int turns = getMap() instanceof ASLMap ? ((ASLMap) getMap()).getViewTurnsInGraphics(getOutermost(this), obs) : 0;
+      if (turns != 0) {
+        MapViewRotation.rotate(g2d, -turns, x, y);
+      }
       drawInfo(
         g,
         x + (int)(getInfoOffset().x * zoom),
@@ -170,6 +181,7 @@ public class TextInfo extends Decorator implements EditablePiece {
         zoomedInfoSize.height,
         zoom
       );
+      g2d.setTransform(t);
     }
   }
 
