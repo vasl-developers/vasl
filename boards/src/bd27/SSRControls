@@ -21,5 +21,8 @@
     <Checkbox name="">
       <entry name="Scenario J79 - Rommel's Remedy" rule="SSO_27_J79" text="Bd27 Scen J79 SSO"/>
     </Checkbox>
+	<Checkbox name="">
+      <entry name="Scenario A51 - Clash Along the Psel" rule="SSO_A51" text="Bd27 Scen A51 SSO"/>
+    </Checkbox>
   </Option>
 </SSRControls>
