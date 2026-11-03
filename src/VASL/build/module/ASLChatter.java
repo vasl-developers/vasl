@@ -972,6 +972,21 @@ public class ASLChatter extends VASSAL.build.module.Chatter
         if (unmodifiedTotal < total || environment.dustInEffect()) {
             specialMessages.add("Total: " + total);
         }
+        //Ammo Shortage
+        if (total == 12) {
+            switch (category) {
+                case "IFT": {
+                    specialMessages.add("If Ammo Shortage in effect: unit replacement (A19.132)");
+                    break;
+                }
+            }
+        } else if (total > 9) {
+            switch (category) {
+               case "TH":
+                specialMessages.add("Check impact of Ammo Shortage (A19.132) or Low Ammo B# (D3.71)");
+                break;
+            }
+        }
     }
 
     private void paintIcon(int dice, DiceType diceType) {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<VASSAL.build.GameModule ModuleOther1="" ModuleOther2="" VassalVersion="3.7.27" description="VASL" name="VASL" nextPieceSlotId="15698" version="6.7.4-beta5">
+<VASSAL.build.GameModule ModuleOther1="" ModuleOther2="" VassalVersion="3.7.30" description="VASL" name="VASL" nextPieceSlotId="15685" version="6.7.4-beta6">
     <VASSAL.build.module.properties.GlobalProperties>
         <VASSAL.build.module.properties.GlobalProperty description="TurnMarker1" initialValue="Spy (white)" isNumeric="false" max="null" min="null" name="TurnMarker1" wrap="false"/>
         <VASSAL.build.module.properties.GlobalProperty description="TurnMarkerLayerLevel1" initialValue="33" isNumeric="true" max="100" min="0" name="TurnMarkerLayerLevel1" wrap="false"/>
@@ -6398,7 +6398,7 @@
                     <VASSAL.build.widget.PieceSlot entryName="Lv 0 OG DTO" gpid="4187" height="64" width="75">+/null/prototype;DBGlobal	mark;Overlay\	immob;i;I;R;\\	piece;K;D;DO\/OGdL0;Lv 0 OG DTO/	true\	\\	null;0;0;4187;0</VASSAL.build.widget.PieceSlot>
                     <VASSAL.build.widget.PieceSlot entryName="Lv -2 OG DTO" gpid="4185" height="64" width="75">+/null/prototype;DBGlobal	mark;Overlay\	immob;i;I;R;\\	piece;K;D;DO\/OGdL_2_alt;Lv -2 OG DTO/	true\	\\	null;0;0;15686;0</VASSAL.build.widget.PieceSlot>
                     <VASSAL.build.widget.PieceSlot entryName="Lv -1 OG DTO" gpid="4186" height="64" width="75">+/null/prototype;DBGlobal	mark;Overlay\	immob;i;I;R;\\	piece;K;D;DO\/OGdL_1_alt;Lv -1 OG DTO/	true\	\\	null;0;0;15687;0</VASSAL.build.widget.PieceSlot>
-                    <VASSAL.build.widget.PieceSlot entryName="Lv 0 OG DTO" gpid="4187" height="64" width="75">+/null/prototype;DBGlobal	mark;Overlay\	immob;i;I;R;\\	piece;K;D;DO\/OGdL0_alt;Lv 0 OG DTO/	true\	\\	null;0;0;15688;0</VASSAL.build.widget.PieceSlot>					
+                    <VASSAL.build.widget.PieceSlot entryName="Lv 0 OG DTO" gpid="4187" height="64" width="75">+/null/prototype;DBGlobal	mark;Overlay\	immob;i;I;R;\\	piece;K;D;DO\/OGdL0_alt;Lv 0 OG DTO/	true\	\\	null;0;0;15688;0</VASSAL.build.widget.PieceSlot>
                 </VASSAL.build.widget.PanelWidget>
                 <VASSAL.build.widget.PanelWidget entryName="open ground dto" fixed="true" nColumns="3" scale="1.0" vert="false">
                     <VASSAL.build.widget.PieceSlot entryName="Lv 4 og dto" gpid="11642" height="64" width="75">+/null/prototype;DBGlobal	mark;Overlay\	immob;i;I;R;\\	piece;K;D;DO\/pOGL4;Lv 4 og dto/	true\	\\	null;0;0;11642;0</VASSAL.build.widget.PieceSlot>
@@ -6412,7 +6412,7 @@
                     <VASSAL.build.widget.PieceSlot entryName="Lv 0 og dto" gpid="4196" height="64" width="75">+/null/prototype;DBGlobal	mark;Overlay\	immob;i;I;R;\\	piece;K;D;DO\/pOGdL0;Lv 0 og dto/	true\	\\	null;0;0;4196;0</VASSAL.build.widget.PieceSlot>
                     <VASSAL.build.widget.PieceSlot entryName="Lv -2 og dto" gpid="4194" height="64" width="75">+/null/prototype;DBGlobal	mark;Overlay\	immob;i;I;R;\\	piece;K;D;DO\/pOGdL_2_alt;Lv -2 og dto/	true\	\\	null;0;0;15689;0</VASSAL.build.widget.PieceSlot>
                     <VASSAL.build.widget.PieceSlot entryName="Lv -1 og dto" gpid="4195" height="64" width="75">+/null/prototype;DBGlobal	mark;Overlay\	immob;i;I;R;\\	piece;K;D;DO\/pOGdL_1_alt;Lv -1 og dto/	true\	\\	null;0;0;15690;0</VASSAL.build.widget.PieceSlot>
-                    <VASSAL.build.widget.PieceSlot entryName="Lv 0 og dto" gpid="4196" height="64" width="75">+/null/prototype;DBGlobal	mark;Overlay\	immob;i;I;R;\\	piece;K;D;DO\/pOGdL0_alt;Lv 0 og dto/	true\	\\	null;0;0;15691;0</VASSAL.build.widget.PieceSlot>					
+                    <VASSAL.build.widget.PieceSlot entryName="Lv 0 og dto" gpid="4196" height="64" width="75">+/null/prototype;DBGlobal	mark;Overlay\	immob;i;I;R;\\	piece;K;D;DO\/pOGdL0_alt;Lv 0 og dto/	true\	\\	null;0;0;15691;0</VASSAL.build.widget.PieceSlot>
                 </VASSAL.build.widget.PanelWidget>
 
                 <VASSAL.build.widget.PanelWidget entryName="Broken Ground DTO" fixed="true" nColumns="3" scale="1.0" vert="false">
@@ -6423,7 +6423,7 @@
                     <VASSAL.build.widget.PieceSlot entryName="BG crag dto" gpid="15696" height="64" width="75">+/null/prototype;DBGlobal	mark;Overlay\	immob;i;I;R;\\	piece;K;D;DO\/pBG_BRd;Lv 2 og dto/	true\	\\	null;0;0;4192;0</VASSAL.build.widget.PieceSlot>
                     <VASSAL.build.widget.PieceSlot entryName="BG brush dto" gpid="15697" height="64" width="75">+/null/prototype;DBGlobal	mark;Overlay\	immob;i;I;R;\\	piece;K;D;DO\/pBG_CRd;Lv 3 og dto/	true\	\\	null;0;0;4193;0</VASSAL.build.widget.PieceSlot>
                 </VASSAL.build.widget.PanelWidget>
-				
+
                 <VASSAL.build.widget.PanelWidget entryName="Open Ground Snow" fixed="true" nColumns="3" scale="1.0" vert="false">
                     <VASSAL.build.widget.PieceSlot entryName="Lv 4 OG Snow" gpid="4197" height="64" width="75">+/null/prototype;DBGlobal	mark;Overlay\	immob;i;I;R;\\	piece;K;D;DO\/OGsL4;Lv 4 OG Snow/	true\	\\	null;0;0;4197;0</VASSAL.build.widget.PieceSlot>
                     <VASSAL.build.widget.PieceSlot entryName="Lv 5 OG Snow" gpid="4198" height="64" width="75">+/null/prototype;DBGlobal	mark;Overlay\	immob;i;I;R;\\	piece;K;D;DO\/OGsL5;Lv 5 OG Snow/	true\	\\	null;0;0;4198;0</VASSAL.build.widget.PieceSlot>
