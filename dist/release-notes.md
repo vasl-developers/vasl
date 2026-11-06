@@ -1,5 +1,5 @@
 # Release Notes: Version 6.7.4-beta6
-**Release Date:** TBD XX, 2026
+**Release Date:** Nov 05, 2026
 ---
 
 ## 🚀 New Features
