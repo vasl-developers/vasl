@@ -3,6 +3,9 @@
  <Checkbox name="">
          <entry name="48 - Toujours L'Audace" rule="SSO_11_48" text="Bd11 Scen 48 SSO"/>
  </Checkbox>
+<Checkbox name="">
+         <entry name="A74 - Valhalla Bound" rule="SSO_11_A74" text="Bd11 Scen A74 SSO"/>
+ </Checkbox>
  <Checkbox name="">
          <entry name="A76 - Night Drop" rule="SSO_11_A76" text="Bd11 Scen A76 SSO"/>
  </Checkbox>

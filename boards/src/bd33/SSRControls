@@ -3,6 +3,9 @@
  <Checkbox name="">
          <entry name="BFP GS 2: Hard Realities" rule="SSO_33_BFP_GS2" text="scenario BFP GS 2 Overlay"/>
  </Checkbox>
+<Checkbox name="">
+         <entry name="J04: Wet Sahwahs" rule="33_SSO_J4" text="scenario J04 Wet Sahwahs Overlay"/>
+ </Checkbox>
  
    </Option>
 </SSRControls>

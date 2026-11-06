@@ -231,6 +231,7 @@ public class CounterNames {
     h.put("at3", "3 AT Mine");
     h.put("at4", "4 AT Mine");
     h.put("at5", "5 AT Mine");
+    h.put("FB_RRturntable", "RR Turntable");
 
     h.put("Glider", "Glider");
     h.put("Parab", "Parachute");

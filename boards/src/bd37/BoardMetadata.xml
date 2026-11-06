@@ -18,7 +18,7 @@
     width - width of the board in hexes.
 	others - TBD e.g. alternate hex grain, etc. 
 -->
-<boardMetadata name="37" version="6.5" versionDate="Oct 2023" author="TR" boardImageFileName="bd37.gif" hasHills="FALSE" width="33" height="10">
+<boardMetadata name="37" version="6.6" versionDate="2026/09/22" author="WJS" boardImageFileName="bd37.gif" hasHills="FALSE" width="33" height="10">
 
     <!--
         The type of buildings on the map. Because the building colors are shared by all building types, VASL can't easily
@@ -72,6 +72,7 @@
 		<overlaySSRule name="SSO_37_ESG8" image="SSO_37_ESG8.gif" x="987" y="6" />
 		<overlaySSRule name="SSO_37_J117" image="SSO_37_J117.gif" x="1280" y="349" />
 		<overlaySSRule name="SSO_37_J7" image="SSO_37_J7.gif" x="1" y="262" />
+		<overlaySSRule name="SSO_37_147" image="SSO_37_147.gif" x="0" y="0" />
 		<overlaySSRule name="SSO_37_J70" image="SSO_37_J70.gif" x="1" y="12" />
 		<overlaySSRule name="SwampToSwampPattern" image="37_Swamps.gif" x="318" y="6" />
 		<overlaySSRule name="OrchardsToShellholes" image="37_Orch2Shell.gif" x="1" y="1" />

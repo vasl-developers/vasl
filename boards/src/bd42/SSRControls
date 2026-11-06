@@ -12,5 +12,9 @@
  <Checkbox name="">
          <entry name="SP42: Hot in Kot" rule="SSO_SP42" text="scenario SP42 overlay"/>
  </Checkbox>
+ <Checkbox name="">
+         <entry name="WC3: Earned, Not Given" rule="SSO_42_WC3" text="scenario WC3 overlay"/>
+ </Checkbox>
     </Option>
 </SSRControls>
+
