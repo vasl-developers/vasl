@@ -20,7 +20,7 @@
 ---
 
 ## ⚠️ Compatibility Notes
-- **Minimum Version Required:** Built with VASSAL 3.7.30
+- **Minimum Version Required:** Built with VASSAL 3.8.0
 
 ---
 
