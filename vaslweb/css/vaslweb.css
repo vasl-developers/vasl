@@ -1,0 +1,661 @@
+:root{
+  --fond:#2b2b2b; --barre:#1e1e1e; --texte:#e6e6e6; --doux:#9a9a9a;
+  --accent:#d9a441; --bord:#444;
+  /* Menus, fenêtres et aperçus : sombres, comme le reste de l'interface. */
+  --menu-fond:#2f2f2f; --menu-texte:#e6e6e6; --menu-survol:#2f5f9e; --menu-bord:#555;
+  --menu-doux:#a8a8a8; --champ:#232323;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;height:100%;background:var(--fond);color:var(--texte);
+  font:14px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{display:flex;flex-direction:column;overflow:hidden}
+/* Hors de la carte, un double appui ne zoome pas la page (Safari iOS) ;
+   le pincement reste permis. */
+html,body{touch-action:manipulation}
+.barre{display:flex;align-items:center;gap:6px;padding:6px 10px;
+  background:var(--barre);border-bottom:1px solid var(--bord);flex-wrap:wrap}
+.barre h1{font-size:15px;margin:0 10px 0 0;font-weight:600}
+button{background:#333;color:var(--texte);border:1px solid var(--bord);
+  border-radius:4px;padding:5px 10px;font:inherit;cursor:pointer}
+button:hover{border-color:var(--accent)}
+/* Pas de délai de double appui ni de zoom de page sur les commandes. */
+button,select,label,.onglet,.wli,.lig,.vig{touch-action:manipulation}
+button:disabled{opacity:.4;cursor:default}
+/* ── Interface : menus, barre d'icônes, panneau à onglets (profil PC). */
+:root{--cible:28px;--marge-h:env(safe-area-inset-top,0px);--marge-b:env(safe-area-inset-bottom,0px);
+  --marge-g:env(safe-area-inset-left,0px);--marge-d:env(safe-area-inset-right,0px)}
+body[data-terminal=tactile]{--cible:44px}
+#chromeHaut,#chromeBas,#chromeGauche{flex:none}
+.menus{display:flex;align-items:center;height:calc(26px + var(--marge-h));padding:var(--marge-h) calc(6px + var(--marge-d)) 0 calc(6px + var(--marge-g));background:var(--barre);font-size:13px}
+.menus h1{font-size:13px;margin:0 10px 0 2px;font-weight:600;color:var(--doux);white-space:nowrap}
+.menus .titreMenu{background:none;border:1px solid transparent;padding:2px 9px;border-radius:3px}
+.menus .titreMenu:hover,.menus .titreMenu.ouvert,.menus .titreMenu:focus-visible{background:#333;border-color:transparent}
+.deroulant{position:fixed;z-index:9650;min-width:220px;max-width:360px;max-height:80vh;overflow:auto;padding:3px 0;
+  background:var(--menu-fond);color:var(--menu-texte);border:1px solid var(--menu-bord);border-radius:4px;
+  box-shadow:0 6px 20px rgba(0,0,0,.55);font-size:13px;user-select:none;-webkit-user-select:none}
+.deroulant .it{display:flex;align-items:center;gap:8px;padding:4px 10px 4px 6px;cursor:pointer;white-space:nowrap}
+.deroulant .it:hover,.deroulant .it.focus{background:var(--menu-survol);color:#fff}
+.deroulant .it .ck{width:14px;text-align:center;flex:none}
+.deroulant .it .lb{flex:1}
+.deroulant .it .rc{opacity:.6;font-size:11px}
+.deroulant .it.off{color:#777;cursor:default;background:none}
+.deroulant .sepm{height:1px;background:var(--menu-bord);margin:3px 0}
+.barreIcones{display:flex;align-items:center;gap:4px;height:36px;padding:0 8px;background:var(--barre);
+  border-bottom:1px solid var(--bord);overflow-x:auto;overflow-y:hidden;white-space:nowrap;scrollbar-width:thin}
+.barreIcones .sep{align-self:center;height:20px}
+.barreDes{height:32px}
+.barreDes .act.ico{height:24px;min-width:0;padding:1px 8px;font-size:13px}
+.act.ico{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;min-width:30px;height:28px;flex:none}
+.act img{height:16px;vertical-align:-3px}
+.act.actif{border-color:var(--accent);color:var(--accent)}
+.act.enreg.actif{border-color:#c03a3a;color:#ff8a8a}
+.act.reseau.actif{border-color:#3c8f4a;color:#9fe0a8}
+.act.admin{border-color:#c0392b;color:#ff8a7a}
+.etiqAct{color:var(--doux);font-variant-numeric:tabular-nums;white-space:nowrap;flex:none}
+.etiqAct.zoom{min-width:46px;text-align:center}
+.etiqAct.enreg{color:#e05252;font-size:12px}
+.groupeAct{display:inline-flex;align-items:center;gap:4px;flex:none}
+.coteOnglets{display:flex;flex:none;background:#262626;border-bottom:1px solid var(--bord)}
+.coteOnglets button{flex:1;background:none;border:none;border-bottom:2px solid transparent;border-radius:0;
+  padding:6px 4px;color:var(--doux);font-size:13px}
+.coteOnglets button.actif{color:var(--accent);border-bottom-color:var(--accent)}
+.ongCorps{display:none;flex:1;min-height:0;flex-direction:column}
+.ongCorps.actif{display:flex}
+.poignee{flex:none;background:var(--bord);touch-action:none}
+.poignee.verticale{width:4px;cursor:col-resize}
+.poignee.horizontale{height:4px;cursor:row-resize}
+.poignee:hover{background:var(--accent)}
+.desBoutons{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:8px}
+.desBoutons .sepDes{grid-column:1/-1;height:1px;background:var(--bord);margin:2px 0}
+.infoScen{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;padding:4px 8px 8px}
+.infoScen label{display:flex;flex-direction:column;gap:2px;font-size:12px;color:var(--doux)}
+.infoScen input,.infoScen select{background:#2a2a2a;color:var(--texte);border:1px solid var(--bord);
+  border-radius:4px;padding:4px;font:inherit;font-size:13px}
+.desAide{padding:4px 8px 8px;font-size:11px;color:var(--doux);overflow:auto}
+.desAide td{padding:1px 6px 1px 0}
+.act.bouton{padding:4px 6px;min-height:var(--cible)}
+.act.ligne{display:flex;align-items:center;gap:10px;width:100%;text-align:left;min-height:44px;padding:6px 12px;
+  background:none;border:none;border-bottom:1px solid #353535;border-radius:0;font-size:15px}
+.act.ligne .ic{width:24px;text-align:center;flex:none}
+.act.ligne.sigle .ic{font:600 10px/1 system-ui,sans-serif}
+.act.ligne .lb{flex:1}
+.act.ligne .rc{color:var(--menu-doux);font-size:12px}
+.act.ligne.actif{color:var(--accent)}
+.fenetre th[colspan]{padding-top:8px;color:var(--accent)}
+/* ── Composants tactiles. */
+.voile{position:fixed;inset:0;z-index:9690;background:rgba(0,0,0,.45)}
+.voile.transparent{background:transparent}
+.feuille{position:fixed;left:0;right:0;bottom:0;z-index:9700;display:flex;flex-direction:column;
+  max-height:70vh;background:var(--menu-fond);color:var(--menu-texte);border-top:1px solid var(--menu-bord);
+  border-radius:12px 12px 0 0;box-shadow:0 -6px 24px rgba(0,0,0,.6);padding-bottom:var(--marge-b);
+  transition:transform .18s ease-out;margin:0 auto;max-width:720px}
+.feuille.moitie{max-height:55vh}
+.feuille.plein{top:var(--marge-h);max-height:none;border-radius:0;max-width:none}
+.poigneeFeuille{width:44px;height:5px;border-radius:3px;background:#666;margin:7px auto 2px;flex:none}
+.teteFeuille{display:flex;align-items:center;gap:8px;padding:2px 6px 6px 14px;flex:none;touch-action:none}
+.teteFeuille .tt{flex:1;font-weight:600;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.teteFeuille .ferme{min-width:var(--cible);min-height:var(--cible);background:none;border:none;font-size:18px}
+.corpsFeuille{overflow:auto;flex:1;min-height:0;overscroll-behavior:contain}
+.corpsFeuille .act.ligne:disabled{opacity:.4}
+.videFeuille{padding:14px;color:var(--menu-doux);font-style:italic}
+.sepFeuille{height:6px;background:#262626}
+/* Feuille déplaçable (Lancer IFT) : sa poignée ⠿ la promène sur l'écran ;
+   une fois déplacée, elle flotte, arrondie de partout. */
+.teteFeuille .poigneeVolant{margin-left:-8px}
+.feuille.deplacee{right:auto;bottom:auto;margin:0;border:1px solid var(--menu-bord);border-radius:12px;
+  box-shadow:0 6px 24px rgba(0,0,0,.6);padding-bottom:0}
+.feuille.deplacee .poigneeFeuille{display:none}
+/* ── Lancer IFT : deux roues, colonne de FP et modificateur du DR ;
+   le choix est la ligne sous le bandeau. */
+.iftCorps{padding:6px 12px 10px;display:flex;flex-direction:column;gap:8px}
+.iftRoues{display:flex;gap:10px}
+.iftCol{flex:1;min-width:0;display:flex;flex-direction:column}
+.iftLib{text-align:center;font-weight:600;font-size:13px;color:var(--menu-doux);margin-bottom:3px}
+.iftBoite{position:relative}
+.iftBoite::before{content:"";position:absolute;left:0;right:0;top:calc(50% - 22px);height:44px;pointer-events:none;
+  border-top:2px solid var(--accent);border-bottom:2px solid var(--accent);background:rgba(217,164,65,.1)}
+.iftRoue{height:220px;overflow-y:scroll;scroll-snap-type:y mandatory;overscroll-behavior:contain;
+  scrollbar-width:none;background:var(--champ);border:1px solid var(--menu-bord);border-radius:6px}
+.iftRoue::-webkit-scrollbar{display:none}
+.iftRoue .iftPad{height:88px}
+.iftItem{height:44px;line-height:44px;text-align:center;scroll-snap-align:center;font-size:18px;
+  color:var(--menu-doux);user-select:none;cursor:pointer;font-variant-numeric:tabular-nums}
+.iftItem small{font-size:12px}
+.iftItem.on{color:var(--menu-texte);font-weight:700;font-size:22px}
+.iftOpts{display:flex;gap:10px}
+.iftOpts label{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;min-height:var(--cible);
+  font-weight:600;font-size:15px;border:1px solid var(--menu-bord);border-radius:6px;user-select:none}
+.iftOpts input{width:22px;height:22px;margin:0;accent-color:var(--accent)}
+.iftRes{min-height:44px;padding:8px;text-align:center;font-weight:700;font-size:17px;color:var(--accent);
+  background:var(--champ);border:1px solid var(--menu-bord);border-radius:6px}
+.iftRes .iftSp{display:block;text-align:left;font-weight:400;font-size:13px;color:var(--menu-texte);margin-top:4px}
+.iftBoutons{display:flex;gap:10px}
+.iftBoutons button{flex:1;min-height:var(--cible);font-weight:600;font-size:15px}
+.act.danger{color:#ff8a8a}
+.act.prim{background:#2f5f9e;border-color:#2f5f9e;color:#fff}
+.barrePile,.bandeauMode,.panneauFil{position:absolute;z-index:60;display:flex;align-items:center;gap:6px;
+  padding:6px 8px;background:rgba(30,30,30,.94);border-top:1px solid var(--bord);overflow-x:auto;scrollbar-width:none}
+.barrePile{bottom:0}
+.barrePile .act.bouton,.actionsEv .act.bouton,.panneauFil .act.bouton{flex:none;white-space:nowrap;min-height:40px}
+.miniPile{position:relative;flex:none;width:46px;height:40px;padding:2px;display:flex;align-items:center;justify-content:center}
+.miniPile .nb{position:absolute;right:-2px;bottom:-2px;background:var(--accent);color:#111;border-radius:8px;
+  font:600 11px/15px system-ui,sans-serif;padding:0 4px}
+.copiePion{position:relative;overflow:hidden;flex:none;pointer-events:none}
+.bandeauMode{top:8px;border:1px solid var(--accent);border-radius:6px;font-size:14px}
+.bandeauMode label{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--doux);white-space:nowrap}
+.bandeauMode button{flex:none;min-width:36px;min-height:36px}
+.panneauFil{top:8px;border:1px solid var(--accent);border-radius:6px;flex-wrap:wrap}
+.panneauFil .libFil{font-size:12px;color:var(--doux);white-space:nowrap;margin-left:4px}
+.eventail{position:fixed;z-index:9550;background:rgba(28,28,28,.97);border:1px solid var(--accent);border-radius:8px;
+  box-shadow:0 6px 22px rgba(0,0,0,.65);padding:6px;max-width:calc(100vw - 16px)}
+.bandeEv{position:relative;display:flex;flex-wrap:wrap;align-items:center;gap:8px;max-height:45vh;overflow:auto}
+.bandeEv .tout,.bandeEv .aucun{flex:none;align-self:stretch;min-width:44px}
+.vigEv{position:relative;flex:none;padding:2px;border:2px solid transparent;border-radius:5px;touch-action:none}
+.vigEv.sel{border-color:var(--accent);background:rgba(217,164,65,.18)}
+.vigEv.horsCouche{opacity:.35}
+.vigEv.masque .copiePion{opacity:.6}
+.vigEv .cadenas{position:absolute;left:2px;bottom:2px;font-size:14px}
+.ckEv{position:absolute;right:-6px;top:-6px;width:28px;height:28px;padding:0;border-radius:14px;font-size:16px;
+  line-height:26px;background:#1e1e1e}
+.inserEv{position:absolute;width:3px;background:var(--accent);border-radius:2px;pointer-events:none}
+/* Éventail tourné de 90° : les vignettes en colonne, du fond (en haut)
+   vers le sommet, à côté de la pile ; les commandes en colonne aussi. */
+.eventail.vertical{display:flex;flex-direction:column;max-height:calc(100vh - 16px)}
+.eventail.vertical .bandeEv{flex:1 1 auto;min-height:140px;max-height:none;flex-direction:column;flex-wrap:nowrap;align-items:center}
+.eventail.vertical .actionsEv{flex:none;display:grid;grid-template-columns:1fr 1fr}
+.eventail .tournerEv{position:absolute;left:-12px;top:-12px;z-index:2;width:30px;height:30px;min-width:30px;padding:0;
+  border-radius:50%;border:2px solid #fff;font:700 16px/26px system-ui,sans-serif;box-shadow:0 2px 6px rgba(0,0,0,.6)}
+.croixFermer{flex:none;width:30px;height:30px;min-width:30px;padding:0;border-radius:50%;background:#c0392b;color:#fff;
+  border:2px solid #fff;font:700 15px/26px system-ui,sans-serif;box-shadow:0 2px 6px rgba(0,0,0,.6)}
+.eventail .croixFermer{position:absolute;right:-12px;top:-12px;z-index:2}
+/* Poignée des fenêtres flottantes (éventail de pile, panneau LOS) : on
+   la glisse, à la souris ou au doigt, pour dégager la carte. */
+.poigneeVolant{flex:none;display:flex;align-items:center;justify-content:center;min-width:28px;min-height:28px;
+  color:var(--doux);font-size:16px;line-height:1;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+.poigneeVolant:active{cursor:grabbing;color:var(--accent)}
+.eventail .poigneeVolant{margin:-4px 22px 4px;border-bottom:1px solid var(--bord)}
+.panneauFil .poigneeVolant{align-self:stretch;min-height:40px}
+/* Panneau LOS, ramassé pour un téléphone : à gauche la croix, la
+   poignée et ⟳ ; au milieu From et To, chacun sur ses flèches de niveau ;
+   à droite ✓ Check, de la hauteur de la croix. Tourné de 90°, tout passe en
+   colonne : ⟳, poignée et croix en tête, ✓ en pied. */
+.panneauFil.losCompact{flex-wrap:nowrap;gap:6px;padding:6px}
+.teteFil,.piedFil{flex:none;align-self:stretch;display:flex;flex-direction:column;align-items:center;gap:4px}
+.teteFil .poigneeVolant{flex:1 1 auto;min-height:20px}
+.rondFil{flex:none;width:30px;height:30px;min-width:30px;padding:0;border-radius:50%;border:2px solid #fff;
+  font:700 15px/26px system-ui,sans-serif;box-shadow:0 2px 6px rgba(0,0,0,.6);background:#3a3a3a;color:#fff}
+/* ✓ Check : le mot gardé, écrit verticalement dans la colonne de droite,
+   de la largeur de la croix et de la hauteur du panneau ; en colonne
+   (panneau tourné), une pilule de la hauteur de la croix, en pied. */
+.rondFil.checkFil{width:auto;padding:0 10px;border-radius:15px;background:#2e7d32;font-size:14px;white-space:nowrap}
+.panneauFil:not(.vertical) .rondFil.checkFil{writing-mode:vertical-rl;width:30px;height:auto;flex:1 1 auto;
+  padding:8px 0;line-height:26px}
+.grpFil{flex:none;display:flex;flex-direction:column;align-items:stretch;gap:4px}
+.grpFil .flechesFil{display:flex;gap:4px}
+.panneauFil .grpFil .act.bouton{min-height:36px;padding:2px 6px}
+.grpFil .flechesFil .act.bouton{flex:1 1 0;min-width:34px}
+.panneauFil .act.bouton.boutFil{font-weight:600}
+/* Fenêtre du résultat de la LOS. */
+#fenLOS .resLOS{font-weight:700;padding:6px 8px;border-radius:4px;color:#fff}
+#fenLOS .resLOS.libre{background:#2e7d32}
+#fenLOS .resLOS.gene{background:#b26a00}
+#fenLOS .resLOS.bloque{background:#b3261e}
+#fenLOS .resLOS.inconnu{background:#555}
+#fenLOS .cadreImageLOS{display:flex;justify-content:center;margin:0 0 6px}
+#fenLOS .imageLOS{max-width:100%;height:auto!important;border:1px solid var(--bord);border-radius:4px}
+#fenLOS .legendeLOS{font-size:12px;color:var(--menu-doux)}
+.panneauFil .act.bouton.boutFil.vise{border-color:var(--accent);background:rgba(217,164,65,.25);color:#fff}
+.panneauFil.vertical{flex-direction:column;flex-wrap:nowrap;align-items:stretch;overflow-x:hidden;overflow-y:auto}
+.panneauFil.vertical .teteFil{flex-direction:row;border-bottom:1px solid var(--bord);padding-bottom:4px}
+.panneauFil.vertical .piedFil{flex-direction:row;justify-content:flex-end;border-top:1px solid var(--bord);padding-top:4px}
+.panneauFil.vertical .poigneeVolant{min-height:30px}
+.barrePile .croixFermer{position:sticky;right:0;margin-left:auto}
+.actionsEv{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;padding-top:6px;border-top:1px solid var(--bord)}
+/* Commandes rapides en tête du panneau Pile (PC) ; commandes d'état
+   (Prep Fire, First Fire, Break, Pin, Conceal) allumées ou en partie. */
+.actionsPile{position:sticky;top:0;z-index:1;display:flex;flex-wrap:wrap;gap:4px;padding:6px 8px;
+  background:var(--barre);border-bottom:1px solid var(--bord)}
+.actionsPile{align-items:center}
+.actionsPile .act.bouton{min-height:28px;padding:2px 7px;font-size:12px;white-space:nowrap}
+.actionsPile .act.cmdEtat{padding:2px}
+.act.cmdEtat{padding:2px;line-height:0;border-width:2px}
+.iconeCmd{position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:2px}
+.iconeCmd img{position:absolute;pointer-events:none}
+.iconeCmd .lbIcone{font-size:9px;line-height:1.1;text-align:center;white-space:normal}
+.act.cmdEtat.actif{background:rgba(217,164,65,.30);border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.act.cmdEtat.mixte{border-style:dashed;border-color:var(--accent)}
+/* Fenêtres (identification, réseau, log) : plein écran au doigt. */
+body:not([data-terminal=pc]) .fenetre{left:0;top:0;transform:none;width:100%;height:100%;max-height:none;border-radius:0;
+  padding:var(--marge-h) var(--marge-d) var(--marge-b) var(--marge-g);font-size:15px}
+body:not([data-terminal=pc]) .fenetre .fb button{min-height:44px}
+body:not([data-terminal=pc]) .fenetre label.coche{min-height:44px;font-size:15px}
+body:not([data-terminal=pc]) .fenetre label.coche input{width:22px;height:22px}
+/* Au doigt, Safari iOS zoome la page sur tout champ de moins de 16 px :
+   chat, recherches, SAN, palette de commandes compris. */
+body:not([data-terminal=pc]) :is(input:not([type=checkbox]):not([type=radio]),select,textarea){font-size:16px!important}
+/* Focus visible au clavier, partout. */
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.deroulant .it:focus-visible,.corpsFeuille .act.ligne:focus-visible{outline-offset:-2px}
+/* Animations réduites : ni éclat des coups, ni fondu des retraits. */
+@media (prefers-reduced-motion: reduce){
+  .pion.coup{animation:none;box-shadow:0 0 0 3px #ff3b3b}
+  .pion.retire{display:none}
+  .feuille{transition:none}
+}
+/* ── Profils tactiles : boutons plus grands. */
+body:not([data-terminal=pc]) .act.ico{min-width:var(--cible);height:var(--cible)}
+/* Croix du panneau : là où il recouvre la carte (profils tactiles, PC étroit). */
+.coteOnglets button.fermeCote{flex:none;align-self:center;display:none;width:30px;height:30px;min-width:30px;margin:0 6px;
+  padding:0;border-radius:50%;background:#c0392b;color:#fff;border:2px solid #fff;font:700 15px/26px system-ui,sans-serif}
+body:not([data-terminal=pc]) .coteOnglets button.fermeCote{display:block}
+@media (max-width:700px){ .coteOnglets button.fermeCote{display:block} }
+.act.rail{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;flex:none;
+  width:var(--tailleRail,52px);height:var(--tailleRail,52px);min-height:0;padding:0;margin:1px;font-size:10px;
+  line-height:1.1;background:none;border-color:transparent;white-space:nowrap;overflow:hidden}
+.act.rail .ic{font-size:calc(var(--tailleRail,52px) * .44);line-height:1}
+.act.rail .lb{display:none}
+.icPion{display:inline-block;position:relative;width:28px;height:28px;overflow:hidden;vertical-align:middle}
+.icPion .modelePion{position:absolute;left:0;top:0;width:48px;height:48px;transform:scale(calc(28 / 48));transform-origin:0 0}
+.modelePion{position:relative;width:48px;height:48px;overflow:hidden}
+.modelePion img{position:absolute}
+.act.ico .icPion{width:20px;height:20px}
+.act.ico .icPion .modelePion{transform:scale(calc(20 / 48))}
+.act.rail img{height:calc(var(--tailleRail,52px) * .46)}
+.act.rail .icPion{width:calc(var(--tailleRail,52px) * .6);height:calc(var(--tailleRail,52px) * .6)}
+.act.rail .icPion .modelePion{transform:scale(var(--echPionRail,.65))}
+.act.rail .lb{max-width:50px;overflow:hidden;text-overflow:ellipsis}
+/* Boutons LOS de VASL : l'icône thread.gif (16 px, trait noir) sur fond
+   clair, et la lettre du bouton à côté, ou dessous dans le rail. */
+.act.lettre img{background:#e4e1d6;border-radius:3px;padding:1px;image-rendering:pixelated}
+.act.rail.lettre img{height:calc(var(--tailleRail,52px) * .36)}
+.act.rail.lettre .lb{display:block;font:600 12px/1 system-ui,sans-serif}
+.act.rail.actif{background:#333;border-color:var(--accent)}
+.desBoutons.grand .act.bouton{min-height:56px;font-size:17px}
+/* Téléphone : barre du haut, navigation en bas, une vue à la fois. */
+.navBas{display:flex;justify-content:space-around;background:var(--barre);border-top:1px solid var(--bord);
+  padding:0 var(--marge-d) var(--marge-b) var(--marge-g)}
+.navBas{overflow-x:auto;overflow-y:hidden;touch-action:pan-x;scroll-snap-type:x proximity;scrollbar-width:none;
+  overscroll-behavior-x:contain;justify-content:flex-start}
+.navBas::-webkit-scrollbar{display:none}
+/* Icônes rapprochées : 46 px de large, au-dessus de la cible tactile de 44 px. */
+.navBas{gap:2px;padding-left:calc(var(--marge-g) + 4px);padding-right:calc(var(--marge-d) + 4px);
+  scroll-padding-inline:calc(var(--marge-g) + 4px) calc(var(--marge-d) + 4px)}
+.navBas .act.rail{flex:0 0 46px;width:46px;height:50px;margin:0;font-size:11px;scroll-snap-align:start}
+/* Un fondu au bord qui cache encore des icônes : la barre défile. */
+.navBas.suiteDroite{-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent);
+  mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent)}
+.navBas.suiteGauche{-webkit-mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent);
+  mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent)}
+.navGauche.navBas{flex-direction:column;width:var(--railMobile);overflow-x:hidden;overflow-y:auto;touch-action:pan-y;
+  scroll-snap-type:none;overscroll-behavior-y:contain;gap:2px;padding:calc(var(--marge-h) + 4px) calc(var(--marge-d) + 2px) calc(var(--marge-b) + 4px) 2px;
+  scroll-padding-block:4px;border-top:none;border-left:1px solid var(--bord);-webkit-mask-image:none;mask-image:none}
+.navGauche.navBas .act.rail{flex:0 0 46px;width:46px;height:46px}
+/* Les dés, et INFO : leur sigle en guise d'icône. */
+.navGauche .act.rail.de .ic,.navGauche .act.rail.sigle .ic{font:600 13px/1 system-ui,sans-serif;letter-spacing:-.02em}
+/* Relecture du log en bas de la colonne : boutons empilés, position en petit. */
+.navGauche .groupeAct{flex-direction:column;gap:2px}
+.navGauche .groupeAct .etiqAct{width:46px;font-size:10px;text-align:center;white-space:normal;color:var(--texte)}
+:root{--railMobile:52px}
+/* Affichage tactile : la colonne d'icônes est sur la droite de l'écran. */
+body[data-terminal=tactile] #chromeGauche{display:flex;background:var(--barre);order:9}
+/* … ou à gauche, au choix de l'utilisateur (icône ⇄ de la colonne). */
+body[data-colonne=gauche] #chromeGauche{order:0}
+body[data-colonne=gauche] .navGauche.navBas{padding-left:calc(var(--marge-g) + 2px);padding-right:2px;border-left:none;border-right:1px solid var(--bord)}
+body[data-colonne=gauche][data-terminal=tactile] #cote,
+body[data-colonne=gauche][data-terminal=tactile] #bas:not([hidden]){left:var(--railMobile);right:0}
+.navBas.suiteGauche.suiteDroite{-webkit-mask-image:linear-gradient(to right,transparent,#000 28px,#000 calc(100% - 28px),transparent);
+  mask-image:linear-gradient(to right,transparent,#000 28px,#000 calc(100% - 28px),transparent)}
+body[data-terminal=tactile] #poigneeCote,body[data-terminal=tactile] #poigneeJournal,
+body[data-terminal=tactile] #coteOnglets button[data-onglet]{display:none}
+body[data-terminal=tactile] #coteOnglets{justify-content:flex-end}
+body[data-terminal=tactile] #couches{display:none}
+body[data-terminal=tactile] #cote{position:absolute;left:0;right:var(--railMobile);bottom:0;z-index:70;width:auto;border-left:none;
+  border-top:1px solid var(--bord);box-shadow:0 -6px 20px rgba(0,0,0,.5)}
+body[data-terminal=tactile][data-vue=pile] #cote{top:auto;height:58%;border-radius:12px 12px 0 0}
+body[data-terminal=tactile][data-vue=pions] #cote{top:0}
+body[data-terminal=tactile] #bas:not([hidden]){position:fixed;left:0;right:var(--railMobile);z-index:80;display:flex;flex-direction:column;
+  top:calc(var(--vv-haut,0px) + var(--marge-h));bottom:var(--hautBas,calc(55px + var(--marge-b)));background:var(--barre)}
+/* Saisie au doigt : le chat touche le clavier ; la relecture, dessous de
+   toute façon, s'efface ; la colonne d'icônes reste. Le chat
+   et les vues de l'affichage tactile laissent cette colonne visible. */
+body:not([data-terminal=pc]).saisie .navBas:not(.navGauche){display:none}
+body[data-terminal=tactile].saisie #bas:not([hidden]){bottom:var(--clavier,0px)}
+/* Chat compact : une feuille au-dessus du bas de l'écran, la carte visible. */
+body[data-terminal=tactile] #bas[data-etat=compact]:not([hidden]){top:auto;height:calc(var(--vv-h,100vh) * .45);
+  border-radius:12px 12px 0 0;border-top:1px solid var(--bord);box-shadow:0 -6px 20px rgba(0,0,0,.55)}
+body[data-terminal=tactile].saisie #bas[data-etat=compact]:not([hidden]){height:calc(var(--vv-h,100vh) * .5)}
+body[data-terminal=tactile] #bas[data-etat=compact] #journal{min-height:48px}
+.poigneeChat{display:none}
+.filtresChat{display:none;gap:6px;padding:4px 10px;overflow-x:auto;touch-action:pan-x;scrollbar-width:none;flex:none;
+  background:var(--barre);border-bottom:1px solid var(--bord)}
+body[data-terminal=tactile].chatOuvert .filtresChat{display:flex}
+.filtresChat .pastilleChat{height:30px;font-size:12px;opacity:.55}
+.filtresChat .pastilleChat.actif{opacity:1;border-color:var(--accent)}
+body:not([data-terminal=pc]) #journal:not([data-filtres~=msg]) > .msg,
+body:not([data-terminal=pc]) #journal:not([data-filtres~=jet]) > .jet,
+body:not([data-terminal=pc]) #journal:not([data-filtres~=rap]) > .rap,
+body:not([data-terminal=pc]) #journal:not([data-filtres~=sys]) > .sys:not(.alerte){display:none}
+body:not([data-terminal=pc]) .lieuChat{color:var(--accent);text-decoration:underline;cursor:pointer}
+.chatRapide{display:none;gap:6px;padding:4px 10px 2px;overflow-x:auto;touch-action:pan-x;scrollbar-width:none;flex:none;
+  background:var(--barre)}
+body[data-terminal=tactile].chatOuvert .chatRapide{display:flex}
+.pastilleChat{flex:none;height:36px;padding:0 12px;border-radius:18px;white-space:nowrap;font-size:14px}
+body[data-terminal=tactile] #bas[data-etat=compact] .poigneeChat{display:block;flex:none;height:18px;touch-action:none;position:relative}
+.poigneeChat::after{content:"";position:absolute;left:50%;top:6px;width:44px;height:5px;margin-left:-22px;border-radius:3px;background:#666}
+.apercuChat{display:flex;align-items:center;gap:6px;min-height:40px;padding:2px 4px 2px 10px;background:#232323;
+  border-top:1px solid var(--bord);font-size:12px;line-height:17px;color:var(--doux);cursor:pointer}
+/* En haut de l'écran, sous l'encoche. */
+#chromeHaut > .apercuChat{border-top:none;border-bottom:1px solid var(--bord);padding-top:calc(2px + var(--marge-h))}
+/* À gauche, le bouton qui place l'aperçu en haut ou en bas de l'écran. */
+.apercuChat .placer{flex:none;align-self:stretch;min-width:32px;margin-left:-8px;padding:0;background:none;border:none;font-size:16px}
+/* Quatre lignes, chacune coupée par une ellipse ; un jet de dés en couleur. */
+.apercuChat .txt{flex:1;min-width:0;display:flex;flex-direction:column}
+.apercuChat .txt > div{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.apercuChat .txt > .jet{color:var(--accent);font-weight:600}
+.apercuChat .ecrire{flex:none;height:26px;min-width:36px;padding:0;background:none;border:none;font-size:15px}
+body.chatOuvert .apercuChat{display:none}
+.badgeAct{background:#c03a3a;color:#fff;border-radius:9px;padding:0 5px;font:600 11px/16px system-ui,sans-serif;flex:none}
+.act.rail{position:relative}
+.act.rail .badgeAct{position:absolute;top:3px;right:calc(50% - 22px)}
+body[data-terminal=tactile] #journal{flex:1;height:auto;font-size:13px}
+body[data-terminal=tactile] #chatIn{font-size:16px;padding:8px}
+body[data-terminal=tactile] #palRech{font-size:16px;padding:8px}
+body[data-terminal=tactile] .vig{width:56px;height:56px}
+body[data-terminal=tactile] .vig .mini{transform:scale(1.25)}
+#mapWrap{flex:1;overflow:auto;position:relative;touch-action:none;cursor:grab;
+  user-select:none;-webkit-user-select:none}
+/* Couche de sélection décochée : ses pièces laissent passer le clic vers
+   la carte ou le pion du dessous, comme si elles n'étaient qu'un décor. */
+.pion.verrou{pointer-events:none}
+#couches{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--doux);flex:none}
+#couches label{display:flex;align-items:center;gap:3px;cursor:pointer}
+#mapWrap.pan{cursor:grabbing}
+#mapWrap.dropping{outline:3px dashed var(--accent);outline-offset:-6px}
+#mapScaler{position:relative}
+#mapInner{position:absolute;left:0;top:0;transform-origin:0 0}
+.boardLayer{position:absolute;pointer-events:none}
+/* Tables QRDC sous la zone de la carte : au-dessus des boards, sous les
+   pions. Les onglets gardent une taille lisible quand la carte s'éloigne. */
+.tablesQRDC{position:absolute;z-index:1;cursor:default}
+.tablesQRDC .qOnglets{display:flex;flex-wrap:wrap;gap:.25em;margin:.4em 0;font-size:calc(13px * max(1, var(--zinv, 1)))}
+.tablesQRDC .qOnglets button{font:inherit;padding:.25em .8em;background:#262626;color:#ccc;
+  border:1px solid var(--bord);border-radius:.3em;cursor:pointer}
+.tablesQRDC .qOnglets button.actif{background:#3a3a3a;color:var(--accent);border-color:var(--accent)}
+.tablesQRDC .qPanneau{display:flex;align-items:flex-start;gap:16px}
+.tablesQRDC .qPanneau.vert{flex-direction:column}
+.tablesQRDC img{display:block;max-width:none;box-shadow:0 2px 8px rgba(0,0,0,.5)}
+/* Fenêtre QRDC du PC, flottante, comme la ChartWindow de VASL. */
+.fenQRDC{position:fixed;left:80px;top:90px;z-index:9000;display:flex;flex-direction:column;
+  width:min(90vw,820px);height:min(80vh,560px);min-width:220px;min-height:120px;resize:both;overflow:hidden;
+  background:var(--menu-fond);color:var(--menu-texte);border:1px solid var(--menu-bord);border-radius:6px;
+  box-shadow:0 8px 28px rgba(0,0,0,.6);font-size:13px}
+.fenQRDC .qTitre{display:flex;align-items:center;justify-content:space-between;flex:none;padding:4px 6px 4px 12px;
+  font-weight:700;background:#2f5f9e;color:#fff;cursor:move;user-select:none;touch-action:none}
+.fenQRDC .qFermer{background:none;border:none;color:#fff;font-size:15px;cursor:pointer;padding:2px 6px}
+.fenQRDC .qCorps{flex:1;overflow:auto;padding:0 8px 8px}
+.fenQRDC .qOnglets{display:flex;flex-wrap:wrap;gap:3px;margin:6px 0}
+.fenQRDC .qOnglets button{font:inherit;padding:3px 10px;background:#262626;color:#ccc;border:1px solid var(--bord);
+  border-radius:4px;cursor:pointer}
+.fenQRDC .qOnglets button.actif{background:#3a3a3a;color:var(--accent);border-color:var(--accent)}
+.fenQRDC .qPanneau{display:flex;align-items:flex-start;gap:8px}
+.fenQRDC .qPanneau.vert{flex-direction:column}
+.fenQRDC img{display:block;max-width:none}
+/* OBA : les pioches de cartes de VASL (fenêtre « OBA Modules »), en
+   onglet des tables QRDC. Sur la carte, le texte et les cartes gardent une
+   taille lisible et touchable quand la carte s'éloigne. */
+.tablesQRDC .oba{font-size:calc(15px * max(1, var(--zinv, 1)))}
+.oba{color:#ddd;max-width:32em}
+.oba .obaModule{background:rgba(20,20,20,.9);border:1px solid var(--bord);border-radius:.4em;padding:.5em .7em;
+  margin:0 0 .6em;box-shadow:0 2px 8px rgba(0,0,0,.5)}
+.fenQRDC .oba .obaModule{box-shadow:none}
+.oba .obaTete{display:flex;align-items:center;gap:.5em;margin-bottom:.45em}
+.oba .obaTitre{font-weight:700;color:var(--accent)}
+.oba .obaNomLu{font-weight:700}
+.oba .obaSuppr,.oba .obaVerrou{margin-left:auto}
+.oba input.obaNom{font:inherit;width:9em;padding:.15em .4em;background:#1b1b1b;color:#eee;
+  border:1px solid var(--bord);border-radius:.3em}
+.oba .obaCompte{display:flex;flex-wrap:wrap;align-items:center;gap:.4em 1.2em;margin-bottom:.55em}
+.oba .obaSt{display:inline-flex;align-items:center;gap:.35em}
+.oba .obaSt b{min-width:1.2em;text-align:center}
+.oba button{font:inherit;cursor:pointer}
+.oba button:disabled{cursor:default}
+.oba .obaSt button,.oba .obaSuppr,.oba .obaAjout{background:#262626;color:#ccc;border:1px solid var(--bord);
+  border-radius:.3em;padding:.1em .6em;min-width:2em;min-height:1.9em}
+.oba .obaAjout{margin:.2em 0 .4em}
+.oba .obaCartes{display:flex;align-items:flex-end;gap:.35em;flex-wrap:wrap;min-height:3.9em}
+.oba .obaCarte{width:2.4em;height:3.4em;border-radius:.25em;border:1px solid #888;padding:0}
+.oba .obaCarte.b{background:#000}
+.oba .obaCarte.r{background:#d01818}
+.oba .obaPioche{display:flex;flex-direction:column;align-items:center;justify-content:center;width:2.6em;height:3.4em;
+  margin:.4em 0 0 .9em;border-radius:.25em;border:1px solid #222;background:#c8c8c8;color:#222;padding:0;line-height:1.1;
+  box-shadow:.2em -.2em 0 -1px #c8c8c8,.2em -.2em 0 0 #333,.4em -.4em 0 -1px #c8c8c8,.4em -.4em 0 0 #333}
+.oba .obaPioche b{font-size:1.2em}
+.oba .obaPioche small{font-size:.65em}
+.oba .obaPioche:disabled{opacity:.6}
+.oba .obaVide{color:var(--doux);margin:.4em 0}
+.oba .obaNoir{color:#bbb}
+.oba .obaRouge{color:#ff6a6a}
+/* Casualties Bin : la fenêtre « Casualties » de VASL, en onglet des tables
+   QRDC comme l'OBA. Une colonne par zone, ses pions et son total de CVP. */
+.tablesQRDC .bin{font-size:calc(15px * max(1, var(--zinv, 1)))}
+.bin{color:#ddd;display:flex;flex-wrap:wrap;gap:.6em;align-items:flex-start;max-width:52em}
+.bin .binZone{flex:1 1 18em;min-width:14em;background:rgba(20,20,20,.9);border:1px solid var(--bord);border-radius:.4em;
+  padding:.45em .55em;box-shadow:0 2px 8px rgba(0,0,0,.5)}
+.fenQRDC .bin .binZone{box-shadow:none}
+.bin .binZone.vise{border-color:var(--accent)}
+.bin .binTete{display:flex;align-items:baseline;gap:.5em;margin-bottom:.4em}
+.bin .binTitre{font-weight:700;color:var(--accent)}
+.bin .binTotal{margin-left:auto;font-weight:700;white-space:nowrap}
+.bin .binLig{display:flex;align-items:center;gap:.4em;padding:.2em 0;border-top:1px solid rgba(255,255,255,.08);
+  touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab}
+.bin .binMini{position:relative;flex:none;width:calc(40px * max(1, var(--zinv, 1)));height:calc(40px * max(1, var(--zinv, 1)));overflow:hidden}
+.bin .binNom{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bin .binCvp{color:var(--doux);white-space:nowrap}
+.bin button{font:inherit;cursor:pointer;background:#262626;color:#ccc;border:1px solid var(--bord);border-radius:.3em;
+  padding:.1em .45em;min-width:2.3em;min-height:2.2em}
+.bin .binVide{color:var(--doux);margin:.3em 0}
+.obaJet .obaMini{display:inline-block;width:.7em;height:1em;border:1px solid #888;border-radius:2px;
+  vertical-align:-.15em;margin-right:.45em}
+.obaJet .obaMini.b{background:#000}
+.obaJet .obaMini.r{background:#d01818}
+#vide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  text-align:center;color:var(--doux);padding:16px;pointer-events:none}
+#bas{flex:none}
+#journal{height:var(--hautJournal,96px);overflow:auto;background:var(--barre);border-top:1px solid var(--bord);
+  padding:4px 10px;font-size:12px;color:var(--doux)}
+#journal div{white-space:pre-wrap}
+#journal .rap{color:#c9c2a8;font-style:italic}
+#journal .msg{color:var(--texte)}
+#chatBarre{display:flex;gap:6px;padding:3px 10px 5px;background:var(--barre)}
+#bas{position:relative}
+.nouveauxChat{position:absolute;left:50%;transform:translateX(-50%);z-index:5;padding:2px 12px;border-radius:12px;
+  background:var(--accent);color:#111;border:none;font-size:12px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,.5)}
+#chatEnvoi{display:none;flex:none}
+body:not([data-terminal=pc]) #chatEnvoi{display:block;min-width:44px;min-height:44px;font-size:18px;padding:0}
+#chatIn{flex:1;background:#2a2a2a;color:var(--texte);border:1px solid var(--bord);border-radius:4px;padding:3px 6px;font:inherit;font-size:12px}
+/* Fenêtres d'identification et de gestion des utilisateurs. */
+.fenetre{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:9800;
+  width:min(92vw,380px);max-height:90vh;overflow:auto;background:var(--menu-fond);color:var(--menu-texte);
+  border:1px solid var(--menu-bord);border-radius:6px;box-shadow:0 8px 28px rgba(0,0,0,.6);font-size:13px}
+.fenetre .ft{padding:7px 12px;font-weight:700;background:#2f5f9e;color:#fff;border-radius:6px 6px 0 0}
+.fenetre .fc{padding:10px 12px}
+.fenetre p{margin:0 0 8px}
+.fenetre label{display:flex;flex-direction:column;gap:3px;margin-bottom:8px;font-size:12px;color:var(--menu-doux)}
+.fenetre label.coche{flex-direction:row;align-items:center;gap:6px}
+.fenetre input:not([type=checkbox]),.fenetre select{padding:6px;font:inherit;font-size:14px;color:var(--menu-texte);
+  background:var(--champ);border:1px solid var(--menu-bord);border-radius:3px}
+.fenetre .ferr{min-height:16px;color:#ff6b6b;font-weight:600;font-size:12px;margin-bottom:4px}
+.fenetre .fb{display:flex;gap:6px;flex-wrap:wrap}
+.fenetre .fb button{flex:1;min-height:32px}
+.fenetre .fb button.prim{background:#2f5f9e;color:#fff;border-color:#2f5f9e}
+#fenLog{z-index:9900}
+.fenetre .fnote{margin:10px 0 0;font-size:11px;color:var(--menu-doux)}
+.fenetre table{width:100%;border-collapse:collapse;margin-bottom:6px}
+.fenetre th{text-align:left;border-bottom:1px solid var(--menu-bord);padding:3px}
+.fenetre td{padding:3px;border-bottom:1px solid #3a3a3a}
+.fenetre td.nb{text-align:right}
+.fenetre td button,.fenetre button.petit{padding:1px 8px;font-size:12px}
+#journal .jet{display:flex;align-items:center;gap:6px;flex-wrap:wrap;color:var(--texte);padding:1px 0}
+#journal .jet img{width:22px;height:22px}
+#journal .jet .cat{font-weight:600}
+#journal .jet .tot{font-weight:700;color:var(--accent)}
+#journal .jet .spe{color:#f0b040;text-decoration:underline}
+#journal .jet .spe .san{color:#ff5a5a;font-weight:700}
+#journal .jet .qui{color:var(--doux)}
+.sep{width:1px;align-self:stretch;background:var(--bord);margin:0 4px}
+#corps{flex:1;display:flex;min-height:0}
+#corps #mapWrap{flex:1}
+#cote{width:var(--largeurCote,320px);display:flex;flex-direction:column;background:var(--barre);
+  border-left:1px solid var(--bord);min-height:0;flex:none}
+#cote.ferme{display:none}
+#corps:has(#cote.ferme) #poigneeCote{display:none}
+#cote h2{font-size:13px;margin:0;padding:6px 8px;background:#262626;border-bottom:1px solid var(--bord)}
+#pile{flex:1;overflow:auto;border-bottom:1px solid var(--bord)}
+#couches{padding:6px 8px;flex-wrap:wrap}
+#pile:empty::before{content:"Cliquer un pion pour voir sa pile.";display:block;padding:8px;color:var(--doux);font-size:12px}
+html[lang=en] #pile:empty::before{content:"Click a counter to see its stack."}
+.lig{display:flex;align-items:center;gap:6px;padding:3px 8px;border-bottom:1px solid #2c2c2c;
+  touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab}
+.lig .mini{width:36px;height:36px;flex:none;margin-right:auto}
+.lig.sel{background:rgba(217,164,65,.16);box-shadow:inset 3px 0 0 var(--accent)}
+.bordPile{font-size:11px;color:var(--doux);padding:3px 8px;text-transform:uppercase;letter-spacing:.04em}
+#pile{position:relative}
+.inserPile{position:absolute;left:4px;right:4px;height:3px;background:var(--accent);border-radius:2px;pointer-events:none}
+body:not([data-terminal=pc]) .lig{min-height:60px}
+body:not([data-terminal=pc]) .lig .mini{width:56px;height:56px}
+body:not([data-terminal=pc]) .lig button{min-width:var(--cible);min-height:var(--cible)}
+.lig button{padding:1px 6px;font-size:12px}
+.lig button.poigneeRang{cursor:grab;touch-action:none}
+#palRech{margin:6px 8px;padding:5px;background:#2a2a2a;color:var(--texte);border:1px solid var(--bord);border-radius:4px}
+#palCorps{flex:1;overflow:auto;padding:0 8px 8px;font-size:12px}
+.grille{display:flex;flex-wrap:wrap;gap:4px;padding:6px 2px}
+.vig{width:46px;height:46px;background:#2a2a2a;border:1px solid var(--bord);border-radius:3px;
+  display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:pan-y;
+  user-select:none;-webkit-user-select:none}
+.mini{position:relative;width:42px;height:42px;overflow:hidden;pointer-events:none}
+.mini img{position:absolute;pointer-events:none}
+.pion{position:absolute;touch-action:none;cursor:pointer;-webkit-touch-callout:none}
+/* Vue tournée : chaque pion tourne en sens inverse autour de son centre et
+   reste droit à l'écran ; un overlay de terrain, une carte de scénario ou
+   un panneau (.terrain), lui, suit la carte. */
+#mapInner .pion:not(.terrain){rotate:calc(-1 * var(--rotVue, 0deg))}
+/* Trait Immobilized : Fire Lane en surimpression… Le clic simple passe
+   au travers ; Maj enfoncée, la pièce redevient saisissable. */
+.pion.immob,.pion.immob-jamais{pointer-events:none}
+/* Show Info (TextInfo de VASL) : bande blanche à droite du pion. Les
+   copies du pion (aperçu, panneau Pile) ne la reprennent pas. */
+.infoTxt{display:none}
+#mapInner .infoTxt{display:block;position:absolute;white-space:nowrap;
+  background:#fff;color:#000;border:1px solid #000;box-sizing:border-box;pointer-events:none;
+  font-family:Dialog,Arial,Helvetica,sans-serif;transform:translateY(-50%)}
+.infoTxt .rouge{color:#f00}
+.infoTxt .radio{border:1px solid #000;border-radius:50%;padding:0 .18em;margin:0 .05em}
+/* Exposant de TextInfo : même taille, remonté d'une demi-hauteur de capitale. */
+.infoTxt sup{font-size:1em;vertical-align:.45em;line-height:0}
+/* HidePiecesButton de VASL (Ctrl+F10) — vue 1 : la carte et les pièces
+   qui ne s'empilent pas (overlays déplaçables, Fire Lane). Une pièce
+   masquée ne prend ni clic ni survol. */
+#mapInner.vue1 .pion:not(.nonEmpile),
+#mapInner.vue1 .fondPile,
+#mapInner.vue1 .pastille{visibility:hidden!important}
+body.maj .pion.immob{pointer-events:auto}
+.pion img{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;
+  -webkit-user-drag:none;user-select:none}
+/* Le pion reçoit le clic partout où il est dessiné : sa face et ses
+   couches, tournées avec le CA d'un véhicule, débordent de son carré.
+   C'est la forme de VASSAL (FreeRotator.getShape, Embellishment.getShape) :
+   sous un chef, le bout visible d'un véhicule tourné reste cliquable. */
+.pion > img,.pion > .couche{pointer-events:auto}
+.pion.verrou *,.pion.retire *,.mini *,.survol *{pointer-events:none!important}
+.pion.sel{outline:2px solid var(--accent);outline-offset:1px}
+/* Pion saisi au doigt (appui maintenu) : soulevé, prêt à glisser. La
+   propriété scale laisse rotate à la vue tournée. */
+.pion.saisi{scale:1.08;filter:drop-shadow(0 4px 6px rgba(0,0,0,.55))}
+@media (prefers-reduced-motion: reduce){
+  .pion.saisi{scale:none;filter:none;outline:2px solid var(--accent);outline-offset:2px}
+}
+/* Pile dépliée : une trame et un liseré sous ses pions écartés ; le pion
+   survolé est cerné, pour que le clic soit sans surprise. */
+.fondPile{position:absolute;z-index:4999;pointer-events:none;border:1px solid var(--accent);border-radius:4px;
+  background:repeating-linear-gradient(45deg,rgba(20,20,20,.55) 0 6px,rgba(60,60,60,.55) 6px 12px)}
+.pion.deplie:hover:not(.sel){outline:1px dashed #fff;outline-offset:0}
+.pastille{position:absolute;z-index:6000;pointer-events:none;
+  transform:translate(-50%,-50%) rotate(calc(-1 * var(--rotVue, 0deg))) scale(var(--zinv,1));
+  background:#1e1e1e;color:var(--texte);border:1px solid var(--bord);border-radius:9px;padding:0 5px;
+  font:600 11px/16px system-ui,sans-serif;white-space:nowrap}
+.loupe{position:fixed;z-index:9990;pointer-events:none;text-align:center}
+.loupe canvas{border-radius:50%;border:2px solid var(--accent);box-shadow:0 4px 14px rgba(0,0,0,.7);display:block}
+.loupe.hexSeul canvas{border-radius:0;border:none;box-shadow:none;filter:drop-shadow(0 4px 10px rgba(0,0,0,.7))}
+.loupe span{display:inline-block;margin-top:3px;background:#000;color:#fff;font:600 12px/16px system-ui,sans-serif;
+  padding:0 5px;border-radius:3px;white-space:nowrap}
+.lasso{position:fixed;z-index:9400;pointer-events:none;border:2px solid var(--accent);background:rgba(217,164,65,.12)}
+.pastille.partielle{background:var(--accent);color:#111;border-color:#111}
+.pion.coup{animation:coup 1.6s ease-out}
+.pion.retire{pointer-events:none;animation:retire 1.6s ease-out forwards}
+@keyframes retire{0%,40%{opacity:.9;box-shadow:0 0 0 4px #ff3b3b,0 0 14px 6px rgba(255,59,59,.7)}100%{opacity:0;box-shadow:none}}
+@keyframes coup{0%,40%{box-shadow:0 0 0 4px #ff3b3b,0 0 14px 6px rgba(255,59,59,.7)}100%{box-shadow:none}}
+.fantome{position:fixed;z-index:9999;pointer-events:none;opacity:.8}
+.fantome *{pointer-events:none!important}
+.cible{position:absolute;z-index:9000;pointer-events:none;width:24px;height:24px;margin:-12px 0 0 -12px;
+  border:3px solid var(--accent);border-radius:50%}
+.survol{position:fixed;z-index:9500;pointer-events:none;background:var(--menu-fond);color:var(--menu-texte);
+  border:1px solid var(--menu-bord);border-radius:4px;box-shadow:0 4px 16px rgba(0,0,0,.55);padding:4px 6px 5px}
+.survol .tt{font-weight:600;font-size:11px;padding:0 1px 4px}
+.survol .rang{display:flex;gap:6px;align-items:flex-end}
+.survol .cel{display:flex;flex-direction:column;align-items:center;gap:2px}
+/* Terrain sous la pile (CounterDetailViewer « show terrain beneath ») */
+.survol .terrain{display:block}
+.survol .lieuT{font-size:10px;line-height:1.1;opacity:.85}
+#ctx,.ssmenu{position:fixed;z-index:9600;min-width:190px;max-width:340px;max-height:80vh;overflow:auto;
+  background:var(--menu-fond);color:var(--menu-texte);border:1px solid var(--menu-bord);border-radius:4px;
+  box-shadow:0 6px 20px rgba(0,0,0,.55);font-size:13px;padding:3px 0;user-select:none;-webkit-user-select:none}
+.ssmenu{display:none;z-index:9601}
+.ouvert > .ssmenu{display:block}
+#ctx .tt{font-weight:700;padding:4px 10px 5px;border-bottom:1px solid var(--menu-bord);margin-bottom:2px}
+#ctx .it{display:flex;justify-content:space-between;gap:18px;padding:4px 10px;cursor:pointer;white-space:nowrap}
+#ctx .it:hover,#ctx .it.ouvert{background:var(--menu-survol);color:#fff}
+#ctx .it .rc{opacity:.6;font-size:11px}
+#ctx .it.smi > .rc{opacity:.8}
+#ctx .vide{padding:4px 10px;color:var(--menu-doux);font-style:italic}
+#ctx .it.off,#ctx .it.off:hover{color:#777;background:none;cursor:default}
+.editLabel.choix{flex-direction:column;align-items:stretch}
+.editLabel.auClavier{right:8px;font-size:15px;padding:8px}
+.editLabel.auClavier input{flex:1;width:auto;font-size:16px;padding:6px}
+.editLabel.auClavier button,.editLabel.auClavier select{min-height:40px;font-size:15px}
+.editLabel.choix label{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.editLabel select{padding:2px 4px;font:inherit;font-size:13px;max-width:220px;background:var(--champ);color:var(--menu-texte);
+  border:1px solid var(--menu-bord)}
+.onglets{display:flex;flex-wrap:wrap;gap:2px;border-bottom:1px solid var(--bord);margin-top:4px}
+.onglet{padding:2px 7px;font-size:11px;background:#262626;border:1px solid var(--bord);border-bottom:none;
+  border-radius:3px 3px 0 0;cursor:pointer;color:var(--doux)}
+.onglet.actif{background:#3a3a3a;color:var(--accent)}
+.wcontenu{padding:4px 0 2px 6px;border-left:2px solid #333}
+.wliste{border:1px solid var(--bord);max-height:150px;overflow:auto;margin:4px 0;background:#232323}
+.wli{padding:2px 6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wli:hover{background:#2c2c2c}
+.wli.actif{background:#2f5f9e;color:#fff}
+.wboite{width:100%;margin:4px 0;background:#2a2a2a;color:var(--texte);border:1px solid var(--bord);padding:3px}
+.wtitre{font-weight:600;font-size:11px;color:var(--doux);margin:6px 0 2px}
+.etiq{position:absolute;white-space:nowrap;pointer-events:none;padding:0 1px;z-index:2}
+.editLabel{position:fixed;z-index:9700;display:flex;gap:4px;align-items:center;background:var(--menu-fond);
+  color:var(--menu-texte);border:1px solid var(--menu-bord);border-radius:4px;padding:4px 6px;box-shadow:0 4px 14px rgba(0,0,0,.5);font-size:12px}
+.editLabel input{width:180px;padding:3px 5px;border:1px solid var(--menu-bord);border-radius:3px;font:inherit;font-size:13px;
+  background:var(--champ);color:var(--menu-texte)}
+.editLabel button{background:#2f5f9e;color:#fff;border:none;padding:3px 8px}
+/* Fil de visée (VASLThread) : calque du fil, étiquettes noires de taille
+   fixe à l'écran, pions transparents pendant la visée. */
+#mapWrap.visee{cursor:crosshair}
+#mapInner.losActif .pion{opacity:.33}
+/* « ? » vu par son propriétaire (ou l'administrateur) : translucide, il
+   laisse voir les unités qu'il dissimule dessous (Concealment de VASL). */
+.pion.qTransparent{opacity:.45}
+#reperes{position:absolute;left:0;top:0;z-index:8400;pointer-events:none;overflow:visible}
+#filLOS{position:absolute;left:0;top:0;z-index:8500;pointer-events:none;overflow:visible}
+#liensPions{position:absolute;left:0;top:0;z-index:3;pointer-events:none;overflow:visible}
+.etiqLOS,.etiqLien{position:absolute;z-index:8600;pointer-events:none;transform-origin:0 0;white-space:nowrap;
+  background:#000;color:#fff;font:11px/14px Dialog,Arial,sans-serif;padding:1px 1px 0}
+/* Sur petit écran, le panneau couvre la carte, et elle seule : il est
+   placé dans #corps, sous les barres et au-dessus du journal. */
+#corps{position:relative}
+@media (max-width:700px){ #cote{position:absolute;right:0;top:0;bottom:0;z-index:50;width:min(320px,90vw)} }
