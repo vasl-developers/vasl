@@ -19,7 +19,6 @@ const LANGUE = (() => {
 // Libellés exacts (espaces regroupés).
 const EN = {
   // Page et carte
-  'VASL — Carte': 'VASL — Map',
   'Ouvrir un fichier .vsav ou .vlog, ou le déposer ici,': 'Open a .vsav or .vlog file, or drop it here,',
   'pour afficher la carte du scénario.': 'to display the scenario map.',
   'Glisser pour régler la largeur du panneau': 'Drag to resize the panel',
