@@ -1086,14 +1086,15 @@ function tournerDansPile(p, sens){
   selectionner([s[i]]);
 }
 
-// Double appui dans le vide, au doigt : zoom ×2 centré ; au zoom maximal,
-// la carte s'ajuste.
+// Double appui dans le vide, au doigt : un Flare au point touché (voir
+// js/flare.js), comme l'Alt+clic de VASL. Le zoom passe par le pincement.
 let _dernierVide = {t: 0, x: 0, y: 0};
 function _doubleAppuiVide(e){
   const d = Date.now() - _dernierVide.t < 320 && Math.hypot(e.clientX - _dernierVide.x, e.clientY - _dernierVide.y) < 30;
   _dernierVide = d ? {t: 0, x: 0, y: 0} : {t: Date.now(), x: e.clientX, y: e.clientY};
   if(!d) return false;
-  if(zoom >= 2.99) zoomFit(); else setZoom(zoom * 2, e.clientX, e.clientY);
+  const c = clientVersCarte(e.clientX, e.clientY, null, true);
+  if(c) lancerFlare(c.x, c.y);
   return true;
 }
 

@@ -159,11 +159,12 @@ const ACTIONS = {
   utilisateur: {lib: () => `Utilisateur : ${_nomUtilisateur()} — changer ou gérer les utilisateurs`,
              court: _nomUtilisateur, ico: '👤', texteBarre: true, faire: demanderUtilisateur,
              classe: () => _admin ? 'admin' : ''},
-  pions:    {lib: 'Panneau Pile, Palette, Dés', court: 'Pions', ico: '♟', pion: true, faire: () => basculerCote(),
+  pions:    {lib: 'Palette des pions', court: 'Pions', ico: '♟', pion: true, faire: () => basculerCote(),
              coche: () => !document.getElementById('cote').classList.contains('ferme')},
   journal:  {lib: 'Journal et chat', court: 'Journal', ico: '💬', faire: () => basculerJournal(),
              coche: () => !document.getElementById('bas').hidden},
-  infoScenario: {lib: 'SAN et pièges du scénario…', court: 'SAN', ico: '🎯', faire: () => montrerOnglet('des')},
+  // SAN et pièges : leur feuille, au PC comme au doigt (plus d'onglet Dés).
+  infoScenario: {lib: 'SAN et pièges du scénario…', court: 'SAN', ico: '🎯', faire: () => ouvrirFeuilleSan()},
   palette:  {lib: 'Palette des pions', court: 'Palette', ico: '🗂', faire: () => montrerOnglet('palette')},
   pile:     {lib: 'Pile sélectionnée', court: 'Pile', ico: '▤', faire: () => montrerOnglet('pile')},
   des:      {lib: 'Dés', court: 'Dés', ico: '🎲', faire: () => montrerOnglet('des')},
@@ -442,10 +443,13 @@ const DISPOSITIONS = {
       'Aide':      ['raccourcis']
     },
     barre: ['ouvrir', 'vsav', 'log', 'logTxt', '|', 'undo', '|', 'zoomMoins', 'zoomTxt', 'zoomPlus', 'ajuster', 'rotGauche', 'rotDroite',
-            '|', 'relecture', 'los', 'unmoved', 'all', 'brises', 'sniper', 'masquer', 'tables', 'oba', 'bin', '|', 'reseau', 'utilisateur'],
+            '|', 'relecture', 'los', 'unmoved', 'all', 'brises', 'sniper', 'masquer', 'tables', 'oba', 'bin', '|', 'pions', '|', 'reseau', 'utilisateur'],
     // Les dés restent à portée, en boutons sous la barre d'icônes.
     barreDes: [...DES.filter(d => d.id.startsWith('DR_')).map(d => d.id), '|', ...DES.filter(d => d.id.startsWith('dr_')).map(d => d.id)],
-    panneau: ['pile', 'palette', 'des']
+    // Ni onglet Pile ni onglet Dés : la pile se gère comme au doigt
+    // (barre de pile, éventail au double-clic), les dés sont dans la barre
+    // et le menu Dés, SAN et pièges dans leur feuille. Reste la palette.
+    panneau: ['palette']
   }
 };
 // Tant qu'un profil n'a pas sa disposition propre, il reprend celle du PC.
@@ -466,9 +470,9 @@ function appliquerProfil(p){
   if(d.barreDes) haut.appendChild(construireBarre(d.barreDes, 'barreIcones barreDes'));
   construireOnglets(d.panneau || ['pile', 'palette', 'des']);
   if(d.construire) d.construire();
-  // Les vues de l'affichage tactile partent fermées ; au
-  // PC, le panneau est ouvert, sauf d'abord sur un petit écran.
-  if(p === 'pc') basculerCote(ancien ? true : window.innerWidth >= 700);
+  // Les vues de l'affichage tactile partent fermées ; au PC aussi, la
+  // palette : elle s'ouvre par ♟ (barre ou menu Affichage).
+  if(p === 'pc') basculerCote(false);
   rafraichirActions();
   for(const f of _apresProfil) f(p, ancien);
   _surRedimension();
@@ -626,7 +630,7 @@ Object.assign(ACTIONS, {
   vueJournal:{lib: 'Journal et chat', court: 'Journal', ico: '💬', faire: () => vueMobile('journal'), allume: () => _vue() === 'journal',
               badge: () => _nonLus},
   apercuChat:{ico: '💭', lib: 'Aperçu du chat sur la carte', coche: () => _apercuChat, faire: () => basculerApercuChat()},
-  titre:     {etiquette: () => _source ? _nomFichier : 'VASLweb 1.0', classe: 'titreScen'},
+  titre:     {etiquette: () => _source ? _nomFichier : 'VASLweb 1.01', classe: 'titreScen'},
   desMenu:   {lib: 'Dés : un appui DR, un appui long les catégories', court: 'Dés', ico: '🎲',
               faire: () => lancerDR('Other'), menuLong: null},
   sanPieges: {lib: 'SAN et pièges…', court: 'SAN', ico: 'INFO', classe: 'sigle', faire: () => ouvrirFeuilleSan()},

@@ -24,9 +24,11 @@ function _logCmd(c, o){
   _planifierSecours();
   if(_net && !o.horsReseau) _netCoup(c);
   // Un coup relu ne change pas la partie : le .vlog le rejouera.
-  if(!_etapeLog && !_relecture) _partieModifiee = true;
+  // Un Flare non plus : il ne change rien à la partie.
+  const flare = c.startsWith('FLARE\t');
+  if(!_etapeLog && !_relecture && !flare) _partieModifiee = true;
   // Un coup joué ici (ni reçu, ni relu) : les CVP recomptés le suivent.
-  if(!_netReception && !_etapeLog && !_relecture && !/^(MutableProperty|GlobalProperty)\t/.test(c)) _planifierCVP();
+  if(!_netReception && !_etapeLog && !_relecture && !/^(MutableProperty|GlobalProperty|FLARE)\t/.test(c)) _planifierCVP();
   // Pièce déplacée ici : elle quitte sa pile VASSAL, comme dans VASSAL
   // (un coup reçu, relu ou annulé passe déjà par rejouerLog).
   if(!_netReception && !_etapeLog && !_relecture && !_annulation && c.startsWith('M/')){

@@ -340,7 +340,7 @@ async function chargerPartie(texte, label, annexes){
   const boards = _parseBoardSegment(texte);
   if(!boards.length){ chatLog(`⚠️ Aucun board dans ${label}`); return false; }
   fermerLog();
-  document.title = 'VASLweb 1.0 — ' + label;
+  document.title = 'VASLweb 1.01 — ' + label;
   chatLog(`🗺️ ${label} — boards : `
     + boards.map(b => b.name + (b.reversed ? ' (retourné)' : '')).join(', '));
   await _renderBoards(boards);

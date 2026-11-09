@@ -7,7 +7,7 @@ function construireMenus(def){
   barre.className = 'menus';
   barre.setAttribute('role', 'menubar');
   const h = document.createElement('h1');
-  h.textContent = 'VASLweb 1.0';
+  h.textContent = 'VASLweb 1.01';
   barre.appendChild(h);
   for(const [nom, ids] of Object.entries(def)){
     const t = document.createElement('button');
@@ -119,12 +119,13 @@ function aideRaccourcis(){
     ${lignes('Dés', DES.map(d => [d.titre, d.touche]))}
     ${lignes('Pions et piles', [
       ['Commandes du pion (menu)', 'clic droit · double appui'],
-      ['Sélectionner la pile', 'clic'], ['Déplier / replier la pile', 'double-clic'],
+      ['Sélectionner la pile', 'clic'], ['Éventail de la pile', 'double-clic · double appui'],
       ['Ajouter ou retirer un pion', 'Ctrl+clic'], ['Ajouter à la sélection', 'Maj+clic'],
       ['Rectangle de sélection', 'Maj+glisser dans le vide'],
       ['Mettre au sommet de la pile', libelleTouche(m.top) || '↑'], ['Mettre au fond', libelleTouche(m.bottom) || '↓'],
       ['Monter d\'un cran', libelleTouche(m.up) || '→'], ['Descendre d\'un cran', libelleTouche(m.down) || '←'],
-      ['Replier, puis désélectionner', 'Échap']])}
+      ['Replier, puis désélectionner', 'Échap'],
+      ['Flare (montrer un point à l\'adversaire)', 'Alt+clic · double appui dans le vide']])}
     ${lignes('Ligne de vue (pendant le tracé)', [['Niveau de la cible', '↑ / ↓'], ['Niveau de la source', 'Ctrl+↑ / Ctrl+↓'],
       ['Plus haut niveau hors toit', 'Ctrl à l\'appui'], ['Annuler', 'Échap']])}
     ${lignes('Relecture', [['Coup suivant / précédent', 'Page suivante / précédente']])}
@@ -152,6 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
   _brancherLangue();
   _setupDropZone();
   _setupPanZoom();
+  _brancherFlare();
   _brancherCouches();
   // Ni sélection de texte ni glisser natif d'image sur la carte : le clic
   // y sert au panoramique et aux pions, jamais à surligner le terrain.
