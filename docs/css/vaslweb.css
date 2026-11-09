@@ -148,7 +148,11 @@ body[data-terminal=tactile]{--cible:44px}
 .panneauFil{top:8px;border:1px solid var(--accent);border-radius:6px;flex-wrap:wrap}
 .panneauFil .libFil{font-size:12px;color:var(--doux);white-space:nowrap;margin-left:4px}
 .eventail{position:fixed;z-index:9550;background:rgba(28,28,28,.97);border:1px solid var(--accent);border-radius:8px;
-  box-shadow:0 6px 22px rgba(0,0,0,.65);padding:6px;max-width:calc(100vw - 16px)}
+  box-shadow:0 6px 22px rgba(0,0,0,.65);padding:32px 6px 6px;max-width:calc(100vw - 16px);
+  cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+.eventail.deplace{cursor:grabbing}
+.eventail button{cursor:pointer}
+.eventail .actionsEv{touch-action:none}
 .bandeEv{position:relative;display:flex;flex-wrap:wrap;align-items:center;gap:8px;max-height:45vh;overflow:auto}
 .bandeEv .tout,.bandeEv .aucun{flex:none;align-self:stretch;min-width:44px}
 .vigEv{position:relative;flex:none;padding:2px;border:2px solid transparent;border-radius:5px;touch-action:none}
@@ -169,12 +173,17 @@ body[data-terminal=tactile]{--cible:44px}
 .croixFermer{flex:none;width:30px;height:30px;min-width:30px;padding:0;border-radius:50%;background:#c0392b;color:#fff;
   border:2px solid #fff;font:700 15px/26px system-ui,sans-serif;box-shadow:0 2px 6px rgba(0,0,0,.6)}
 .eventail .croixFermer{position:absolute;right:-12px;top:-12px;z-index:2}
+/* Barre du haut : Tout (☑), Flare, Aucun (☐), trois boutons ronds de même
+   taille au centre ; le reste, comme tous les vides, déplace l'éventail. */
+.eventail .hautEv{position:absolute;left:50%;top:1px;transform:translateX(-50%);z-index:2;display:flex;gap:10px;touch-action:none}
+.eventail .hautEv button{flex:none;width:28px;height:28px;min-width:28px;padding:0;border-radius:50%;border:2px solid #fff;
+  background:#1e1e1e;color:#fff;font:700 16px/24px system-ui,sans-serif;box-shadow:0 2px 6px rgba(0,0,0,.6)}
+.eventail .hautEv .flareEv{color:#ff4d4d}
 /* Poignée des fenêtres flottantes (éventail de pile, panneau LOS) : on
    la glisse, à la souris ou au doigt, pour dégager la carte. */
 .poigneeVolant{flex:none;display:flex;align-items:center;justify-content:center;min-width:28px;min-height:28px;
   color:var(--doux);font-size:16px;line-height:1;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
 .poigneeVolant:active{cursor:grabbing;color:var(--accent)}
-.eventail .poigneeVolant{margin:-4px 22px 4px;border-bottom:1px solid var(--bord)}
 .panneauFil .poigneeVolant{align-self:stretch;min-height:40px}
 /* Panneau LOS, ramassé pour un téléphone : à gauche la croix, la
    poignée et ⟳ ; au milieu From et To, chacun sur ses flèches de niveau ;
@@ -659,3 +668,9 @@ body.maj .pion.immob{pointer-events:auto}
    placé dans #corps, sous les barres et au-dessus du journal. */
 #corps{position:relative}
 @media (max-width:700px){ #cote{position:absolute;right:0;top:0;bottom:0;z-index:50;width:min(320px,90vw)} }
+/* Flare (js/flare.js) : cercle rouge qui se resserre sur le point, au-dessus des pions. */
+.flare{position:absolute;z-index:8700;pointer-events:none;box-sizing:border-box;width:var(--d);height:var(--d);
+  transform:translate(-50%,-50%);border:var(--trait) solid rgb(255,0,0);border-radius:50%;
+  animation:flare var(--pulsation) linear var(--pulsations)}
+@keyframes flare{from{width:var(--d);height:var(--d)}to{width:0;height:0}}
+@media (prefers-reduced-motion: reduce){ .flare{animation:none} }

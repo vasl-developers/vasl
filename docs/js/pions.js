@@ -186,17 +186,16 @@ function creerPion(seg, ordre){
     if(!_sel.has(p) && selectionnable(p)) selectionner([p], e.shiftKey ? 'ajouter' : 'remplacer');
     ouvrirMenu(p, e.clientX, e.clientY, 'mouse');
   });
-  // StackExpander : le double-clic déplie ou replie une pile d'au moins
-  // deux pions visibles, et ne sélectionne que son pion du sommet.
+  // Double-clic : l'éventail de la pile, comme le double appui au doigt
+  // (il remplace le dépliage de StackExpander et l'onglet Pile du PC).
   el.addEventListener('dblclick', e => {
     e.preventDefault(); e.stopPropagation();
-    // Au doigt, le double appui a son propre geste (l'éventail de la pile).
+    // Au doigt, le double appui a son propre geste (appuiSurPile).
     if(_dernierPointeur !== 'mouse') return;
-    const k = cle(p), vus = pile(k).filter(q => !q.cache);
-    if(vus.length < 2 || _filArme) return;
-    deplier(k, !_depliees.has(k));
-    const haut = [...vus].reverse().find(selectionnable);
-    selectionner(haut ? [haut] : []);
+    const k = cle(p);
+    if(_filArme || !pile(k).some(selectionnable)) return;
+    if(!_sel.size || !pileEntiereSel(k)) selectionnerPile(k);
+    ouvrirEventail(k);
   });
   el.addEventListener('pointerenter', e => { if(e.pointerType === 'mouse' && !e.buttons) survolEntre(p, e); });
   el.addEventListener('pointermove', e => { if(e.pointerType === 'mouse' && !e.buttons) survolEntre(p, e); });
@@ -1083,6 +1082,8 @@ function rejouerLog(segs){
       n++;
     } else if(s.startsWith('LOS\t')){
       filDistant(s);
+    } else if(s.startsWith('FLARE\t')){
+      flareDistant(s);
     } else if(_appliquerLien(s)){
       n++;
     } else if(s.startsWith('INFO\t')){

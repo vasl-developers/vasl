@@ -205,7 +205,20 @@ const _visesBarre = () => _sel.size ? trierParPile([..._sel])
 function _rangeeCommandes(boite, avecDeplacer){
   const vises = _visesBarre();
   const haut = vises[vises.length - 1];
+  // 🗑 et non ✕ : la croix rouge ferme le panneau, elle ne retire rien.
+  // Une seule corbeille : elle prend la place de la commande « Delete »
+  // des pions, à défaut la fin de la rangée.
+  let corbeille = false;
+  const poserCorbeille = () => {
+    corbeille = true;
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'act bouton danger';
+    b.textContent = '🗑'; b.title = 'Retirer de la carte'; b.setAttribute('aria-label', b.title);
+    b.addEventListener('click', () => retirerSelection());
+    boite.appendChild(b);
+  };
   for(const c of commandesRapides(vises)){
+    if(c.nom === 'Delete' && !c.etat){ if(!corbeille) poserCorbeille(); continue; }
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'act bouton cmdRapide';
     b.textContent = c.nom;
@@ -245,8 +258,7 @@ function _rangeeCommandes(boite, avecDeplacer){
     ouvrirMenu(haut, r.left, r.bottom, _profil === 'pc' ? 'mouse' : 'touch');
   });
   if(avecDeplacer && vises.length) outil('Déplacer…', 'Déplacer : toucher ensuite la destination', () => armerDeplacement());
-  // 🗑 et non ✕ : la croix rouge ferme le panneau, elle ne retire rien.
-  if(vises.length) outil('🗑', 'Retirer de la carte', () => retirerSelection(), 'danger');
+  if(vises.length && !corbeille) poserCorbeille();
 }
 
 // Retire la sélection (ou la pile courante) ; confirmation dès 3 pions.
@@ -258,11 +270,12 @@ function retirerSelection(){
   if(l.length > 1) chatLog(`✖️ ${l.length} pions retirés`);
 }
 
-// ── Barre de pile (profils tactiles) : en bas de la carte, tant qu'une
-// pile est sélectionnée et que l'éventail est fermé.
+// ── Barre de pile (tous profils ; au PC, elle remplace l'onglet Pile) :
+// en bas de la carte, tant qu'une pile est sélectionnée et que
+// l'éventail est fermé.
 function majBarrePile(){
   let b = document.getElementById('barrePile');
-  const montrer = _profil && _profil !== 'pc' && (_sel.size || _pileSel) && !_eventail && !_modeCarte;
+  const montrer = _profil && (_sel.size || _pileSel) && !_eventail && !_modeCarte;
   document.body.classList.toggle('avecBarrePile', !!montrer);
   if(!montrer){ if(b) b.remove(); if(typeof _placerVolants === 'function') _placerVolants(); return; }
   if(!b){
@@ -384,33 +397,80 @@ function majEventail(){
   bande.className = 'bandeEv';
   if(!_eventailVertical) bande.style.maxWidth = (EVENTAIL_PAR_RANG * (EVENTAIL_COTE + 8) + 56) + 'px';
   const tout = document.createElement('button');
-  tout.type = 'button'; tout.className = 'act bouton tout';
-  tout.textContent = 'Tout';
+  // Tout (☑) et Aucun (☐) : sur la barre du haut, de part et d'autre du Flare.
+  tout.type = 'button'; tout.className = 'tout';
+  tout.textContent = '☑';
   tout.title = 'Sélectionner toute la pile';
-  tout.addEventListener('click', () => { selectionnerPile(ev.k); vibrer(); });
-  bande.appendChild(tout);
+  tout.setAttribute('aria-label', tout.title);
+  tout.addEventListener('pointerdown', e => e.stopPropagation());
+  tout.addEventListener('click', e => { e.stopPropagation(); selectionnerPile(ev.k); vibrer(); });
   const marque = document.createElement('div');
   marque.className = 'inserEv';
   marque.hidden = true;
   for(const p of s) bande.appendChild(_vignetteEventail(p, ev.k, bande, marque));
   // Aucun : la pile reste ouverte, sans pion sélectionné.
   const aucun = document.createElement('button');
-  aucun.type = 'button'; aucun.className = 'act bouton aucun';
-  aucun.textContent = 'Aucun';
+  aucun.type = 'button'; aucun.className = 'aucun';
+  aucun.textContent = '☐';
   aucun.title = 'Désélectionner tous les pions de la pile';
-  aucun.addEventListener('click', () => {
+  aucun.setAttribute('aria-label', aucun.title);
+  aucun.addEventListener('pointerdown', e => e.stopPropagation());
+  aucun.addEventListener('click', e => {
+    e.stopPropagation();
     selectionner([]);
     _pileSel = ev.k;
     afficherPile();
     vibrer();
   });
-  bande.append(aucun, marque);
+  bande.append(marque);
   const actions = document.createElement('div');
   actions.className = 'actionsEv';
   _rangeeCommandes(actions, false);
-  const poignee = _poigneeVolant(() => ({x: parseFloat(el.style.left) || 0, y: parseFloat(el.style.top) || 0}),
-    (x, y) => { _posEventail = {x, y}; placerEventail(); },
-    () => { _posEventail = null; placerEventail(); });
+  // Flare (js/flare.js) : la pile montrée à l'adversaire. Au centre de
+  // la barre du haut.
+  const flare = document.createElement('button');
+  flare.type = 'button'; flare.className = 'flareEv';
+  flare.textContent = '✺';
+  flare.title = 'Flare : montrer la pile à l\'adversaire';
+  flare.setAttribute('aria-label', flare.title);
+  flare.addEventListener('pointerdown', e => e.stopPropagation());
+  flare.addEventListener('click', e => { e.stopPropagation(); flarePile(ev.k); });
+  // Pas de poignée : tout ce qui, dans l'éventail, n'est ni un bouton ni
+  // une vignette le déplace (souris ou doigt) ; un double clic (double
+  // appui) au même endroit le rend à sa place, près de la pile. Une bande
+  // qui défile garde ses vides pour défiler.
+  const defile = () => bande.scrollHeight > bande.clientHeight + 1 || bande.scrollWidth > bande.clientWidth + 1;
+  const libre = t => t === el || t === actions || t === haut || (t === bande && !defile());
+  el.addEventListener('pointerdown', e => {
+    if(e.button > 0 || !libre(e.target)) return;
+    e.preventDefault();
+    const id = e.pointerId, x0 = e.clientX, y0 = e.clientY;
+    const o = {x: parseFloat(el.style.left) || 0, y: parseFloat(el.style.top) || 0};
+    try { el.setPointerCapture(id); } catch(err){}
+    el.classList.add('deplace');
+    const bouge = m => {
+      if(m.pointerId !== id) return;
+      m.preventDefault();
+      _posEventail = {x: o.x + m.clientX - x0, y: o.y + m.clientY - y0};
+      placerEventail();
+    };
+    const fin = m => {
+      if(m.pointerId !== id) return;
+      el.classList.remove('deplace');
+      el.removeEventListener('pointermove', bouge);
+      el.removeEventListener('pointerup', fin);
+      el.removeEventListener('pointercancel', fin);
+    };
+    el.addEventListener('pointermove', bouge);
+    el.addEventListener('pointerup', fin);
+    el.addEventListener('pointercancel', fin);
+  });
+  el.addEventListener('dblclick', e => {
+    if(!libre(e.target)) return;
+    e.preventDefault(); e.stopPropagation();
+    _posEventail = null; placerEventail();
+  });
+  el.title = 'Glisser pour déplacer la fenêtre (double clic : la remettre à sa place)';
   // Tourner de 90° : bande ↔ colonne ; l'éventail se replace près de la pile.
   const tourner = document.createElement('button');
   tourner.type = 'button'; tourner.className = 'tournerEv';
@@ -424,8 +484,13 @@ function majEventail(){
     _posEventail = null;
     majEventail();
   });
-  el.append(tourner, _croixFermer('Fermer la pile'), poignee, bande, actions);
+  const haut = document.createElement('div');
+  haut.className = 'hautEv';
+  haut.append(tout, flare, aucun);
+  el.append(tourner, haut, _croixFermer('Fermer la pile'), bande, actions);
   document.body.appendChild(el);
+  // Le doigt déplace l'éventail par les vides de la bande, sauf si elle défile.
+  bande.style.touchAction = defile() ? '' : 'none';
   bande.scrollTop = defil;
   placerEventail();
 }
@@ -473,6 +538,13 @@ function _vignetteEventail(p, k, bande, marque){
   ck.addEventListener('pointerdown', e => e.stopPropagation());
   ck.addEventListener('click', e => { e.stopPropagation(); selectionner([p], 'basculer'); vibrer(); });
   v.appendChild(ck);
+  // À la souris : le clic droit ouvre les commandes du pion, comme sur la carte.
+  v.addEventListener('contextmenu', e => {
+    if(_dernierPointeur !== 'mouse') return;
+    e.preventDefault(); e.stopPropagation();
+    if(!_sel.has(p)) selectionner([p]);
+    ouvrirMenu(p, e.clientX, e.clientY, 'mouse');
+  });
   v.addEventListener('pointerdown', e => {
     if(e.button > 0) return;
     const x0 = e.clientX, y0 = e.clientY;
