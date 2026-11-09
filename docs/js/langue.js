@@ -21,6 +21,7 @@ const EN = {
   // Page et carte
   'Ouvrir un fichier .vsav ou .vlog, ou le déposer ici,': 'Open a .vsav or .vlog file, or drop it here,',
   'pour afficher la carte du scénario.': 'to display the scenario map.',
+  'Nouvelle version de VASLweb disponible.': 'New VASLweb version available.', 'Recharger': 'Reload',
   'Glisser pour régler la largeur du panneau': 'Drag to resize the panel',
   'Glisser pour régler la hauteur du journal': 'Drag to resize the chat log',
   'Glisser pour déplacer la fenêtre (double clic : la remettre à sa place)': 'Drag to move the window (double-click: put it back)',
