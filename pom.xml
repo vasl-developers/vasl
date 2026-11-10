@@ -50,7 +50,7 @@
         <dependency>
         <groupId>org.json</groupId>
         <artifactId>json</artifactId>
-        <version>20231013</version> <!-- Use the latest version -->
+        <version>20260719</version> <!-- Use the latest version -->
         </dependency>
 
         <dependency>
