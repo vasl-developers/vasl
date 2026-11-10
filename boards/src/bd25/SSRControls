@@ -10,6 +10,9 @@
 	        <entry name="36 - Rachi Ridge" rule="SSO_25_36" text="Bd25 36 SSO"/>
 	</Checkbox>
 	<Checkbox name="">
+	        <entry name="51-The Taking Of Takrouna" rule="SSO_25_51" text="Bd25 51 SSO"/>
+	</Checkbox>
+	<Checkbox name="">
 	        <entry name="72 - Sea of Tranquility" rule="SSO_25_72" text="Bd25 72 SSO"/>
 	</Checkbox>
 	<Checkbox name="">
