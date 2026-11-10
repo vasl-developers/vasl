@@ -3,7 +3,7 @@
   "short_name": "VASLweb 1.01",
   "description": "Carte VASL dans le navigateur : ouvrir, jouer et relire des parties .vsav / .vlog.",
   "lang": "fr",
-  "id": "./",
+  "id": "/vasl/",
   "start_url": "./VASLweb.html",
   "scope": "./",
   "display": "standalone",
