@@ -300,24 +300,23 @@ async function majApparence(p, d){
   p.nom = d.nom;
   // Comme Concealable de VASL : l'adversaire ne voit que le « ? », le
   // joueur qui a dissimulé l'unité la voit, marquée d'un petit « ? ».
-  // L'administrateur voit tout.
   const voile = d.masque && !voitMasque(d.masqueProprio) ? d.masque : null;
   p.el.title = voile ? T('Pion dissimulé') : d.nom + (d.masque ? ' (?)' : '');
   p.proprietaire = d.proprietaire;
   p.masqueProprio = d.masqueProprio;
   p.hipProprio = d.hipProprio;
   p.compteurProprio = d.compteurProprio;
-  // HIP : invisible de l'adversaire ; son joueur et l'administrateur le
-  // voient en transparence, comme Hideable de VASSAL.
+  // HIP : invisible de l'adversaire ; son joueur le voit en
+  // transparence, comme Hideable de VASSAL.
   const voitHip = d.hip && voitMasque(d.hipProprio);
   p.el.style.display = (d.hip && !voitHip) || p.ovrExtPose ? 'none' : '';
   p.el.style.opacity = voitHip ? '.55' : '';
   p.cache = d.hip && !voitHip;
-  // Le « ? » qui coiffe une pile : son propriétaire et l'administrateur
-  // le voient en transparence, pour distinguer leurs unités dessous ;
+  // Le « ? » qui coiffe une pile : son propriétaire le voit en
+  // transparence, pour distinguer ses unités dessous ;
   // l'adversaire, lui, ne voit que le « ? » opaque.
   p.el.classList.toggle('qTransparent', !!d.compteurProprio
-    && (_admin || d.compteurProprio === idJoueur()));
+    && d.compteurProprio === idJoueur());
   p.couche = coucheDe(d);
   // Pièce de l'extension VASL Overlays (image « ovr… ») : jamais
   // sélectionnable, même case « Overlays » cochée ; l'overlay du dépôt

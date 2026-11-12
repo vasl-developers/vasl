@@ -178,7 +178,6 @@ const EN = {
   'Nouvel utilisateur…': 'New user…',
   'Pour un joueur VASL, le mot de passe est celui de VASL : il ouvre ses pions dissimulés et en HIP.':
     'For a VASL player, the password is the VASL one: it reveals their concealed and HIP counters.',
-  'Mot de passe administrateur incorrect.': 'Incorrect administrator password.',
   'Saisir le mot de passe.': 'Enter the password.', 'Ce mot de passe est réservé.': 'This password is reserved.',
   'Nom requis : 24 caractères au plus, sans ; / \\ , < > & ".': 'Name required: 24 characters at most, without ; / \\ , < > & ".',
   'Cet utilisateur existe déjà : le choisir dans la liste.': 'This user already exists: pick it from the list.',
@@ -191,8 +190,8 @@ const EN = {
   'Connecté :': 'Logged in as:', 'Pions masqués': 'Hidden counters', '(vous)': '(you)',
   'Oublier': 'Forget', 'fichier': 'file', 'Aucun utilisateur': 'No users',
   'Changer d\'utilisateur…': 'Change user…',
-  'Comme dans VASL, tous les pions se déplacent librement ; un pion dissimulé ou en HIP n\'est visible et commandable que par son joueur et par l\'administrateur.':
-    'As in VASL, every counter moves freely; a concealed or HIP counter can only be seen and commanded by its player and by the administrator.',
+  'Comme dans VASL, tous les pions se déplacent librement ; un pion dissimulé ou en HIP n\'est visible et commandable que par son joueur.':
+    'As in VASL, every counter moves freely; a concealed or HIP counter can only be seen and commanded by its player.',
   // Partie à distance
   'Partie à distance': 'Server',
   'Comme le serveur de VASSAL : l\'hôte ouvre une salle et donne son code ; qui la rejoint reçoit la partie du propriétaire, puis chaque coup joué part chez les autres.':

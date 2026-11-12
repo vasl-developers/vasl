@@ -51,7 +51,6 @@ body[data-terminal=tactile]{--cible:44px}
 .act.actif{border-color:var(--accent);color:var(--accent)}
 .act.enreg.actif{border-color:#c03a3a;color:#ff8a8a}
 .act.reseau.actif{border-color:#3c8f4a;color:#9fe0a8}
-.act.admin{border-color:#c0392b;color:#ff8a7a}
 .etiqAct{color:var(--doux);font-variant-numeric:tabular-nums;white-space:nowrap;flex:none}
 .etiqAct.zoom{min-width:46px;text-align:center}
 .etiqAct.enreg{color:#e05252;font-size:12px}
@@ -683,7 +682,7 @@ body.maj .pion.immob{pointer-events:auto}
    fixe à l'écran, pions transparents pendant la visée. */
 #mapWrap.visee{cursor:crosshair}
 #mapInner.losActif .pion{opacity:var(--los-opacite,.33)}
-/* « ? » vu par son propriétaire (ou l'administrateur) : translucide, il
+/* « ? » vu par son propriétaire : translucide, il
    laisse voir les unités qu'il dissimule dessous (Concealment de VASL). */
 .pion.qTransparent{opacity:.45}
 #reperes{position:absolute;left:0;top:0;z-index:8400;pointer-events:none;overflow:visible}

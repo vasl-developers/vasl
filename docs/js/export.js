@@ -64,7 +64,7 @@ function commencerLog(){
   _fenetreLog('Commencer un fichier de log', `
       <label>Nom du fichier<input id="lgNom" autocomplete="off" value="${_esc(_nomExport('vlog'))}"></label>
       <label class="coche"><input id="lgDevoile" type="checkbox"${demasquablesParMoi() ? ' checked' : ''}>
-        Permettre à mes adversaires de démasquer mes unités</label>${_utilisateur || _admin ? '' : `
+        Permettre à mes adversaires de démasquer mes unités</label>${_utilisateur ? '' : `
       <p class="fnote">Vous êtes observateur : la case s'appliquera à vos unités dès que vous
         vous identifierez (Utilisateur).</p>`}
       <div class="fb"><button id="lgOk" class="prim">Commencer</button><button id="lgAnnul">Annuler</button></div>
