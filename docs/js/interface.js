@@ -29,7 +29,7 @@ const _texteReseau = () => {
   const nb = s ? n.joueurs.filter(j => j.salle === s).length : 0;
   return !n ? 'Hors ligne' : s ? `${s} (${nb})` : 'Connexion…';
 };
-const _nomUtilisateur = () => _admin ? NOM_ADMIN : (_utilisateur ? _utilisateur.nom : 'Observateur');
+const _nomUtilisateur = () => _utilisateur ? _utilisateur.nom : 'Observateur';
 const _enRelecture = () => _etapes.length > 0;
 
 // ── HidePiecesButton de VASL (Ctrl+F10), réduit à deux vues, de
@@ -161,8 +161,7 @@ const ACTIONS = {
   reseau:   {lib: () => 'Partie à distance — ' + _texteReseau(), court: _texteReseau, ico: '🌐', classe: 'reseau',
              texteBarre: true, faire: ouvrirReseau, allume: () => !!_net},
   utilisateur: {lib: () => `Utilisateur : ${_nomUtilisateur()} — changer ou gérer les utilisateurs`,
-             court: _nomUtilisateur, ico: '👤', texteBarre: true, faire: demanderUtilisateur,
-             classe: () => _admin ? 'admin' : ''},
+             court: _nomUtilisateur, ico: '👤', texteBarre: true, faire: demanderUtilisateur},
   pions:    {lib: 'Palette des pions', court: 'Pions', ico: '♟', pion: true, faire: () => basculerCote(),
              coche: () => !document.getElementById('cote').classList.contains('ferme')},
   journal:  {lib: 'Journal et chat', court: 'Journal', ico: '💬', faire: () => basculerJournal(),

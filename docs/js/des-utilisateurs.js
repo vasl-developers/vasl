@@ -18,32 +18,23 @@ const DE_COLORE = 'R', DE_BLANC = 'W';     // DC<n>_<couleur>.png du module
 // Comme dans VASL, la propriété ne joue que pour les masques : tout le
 // monde déplace tous les pions, mais un pion dissimulé (« ? ») ou en HIP
 // n'est visible et commandable que par le joueur qui l'a masqué.
-// L'administrateur voit et commande tout : arbitrage, relecture, partie
-// solitaire.
 //
 // Rien de tout cela ne résiste à quelqu'un qui ouvre la console : tout
 // s'exécute dans son navigateur. Le contrôle évite les regards
 // distraits, pas la triche — il faudrait un serveur pour cela.
-const NOM_ADMIN = 'Administrateur';
-// Le mot de passe administrateur n'est pas dans le code : seulement son
-// empreinte (_empreinte, FNV-1a), à laquelle on compare celle de la
-// saisie. Cela empêche de le lire dans le dépôt publié, rien de plus :
-// quiconque modifie le JavaScript chez lui se donne les droits
-// d'administrateur, et une empreinte de 32 bits se retrouve par essais.
-// Une vraie protection demanderait un arbitre de confiance, hors de
-// portée d'une PWA sans serveur.
-const ADMIN_EMPREINTE = 'c1e00cff';
-const estMdpAdmin = mdp => _empreinte(mdp) === ADMIN_EMPREINTE;
 let _utilisateur = null;              // {nom, mdp} ; null = observateur
-let _admin = false;
 
 // Nom du joueur : Owner, chat, dés, rapports et commandes du log.
-const joueur = () => _admin ? NOM_ADMIN : (_utilisateur ? _utilisateur.nom : 'web');
+const joueur = () => _utilisateur ? _utilisateur.nom : 'web';
 // Identifiant des masques (conceal, hide) : le mot de passe.
-const idJoueur = () => _admin ? 'admin' : (_utilisateur ? _utilisateur.mdp : 'web');
+const idJoueur = () => _utilisateur ? _utilisateur.mdp : 'web';
+// Identifiants qui ne réservent rien : « web », d'avant les comptes, et
+// « admin », celui de l'ancien compte administrateur, supprimé.
+const idLibre = id => !id || id === 'web' || id === 'admin';
 
 // Vrai si l'utilisateur voit et commande ce que masque l'identifiant id.
-const voitMasque = id => _admin || id === idJoueur();
+// Les pions masqués par l'ancien administrateur sont visibles de tous.
+const voitMasque = id => id === 'admin' || id === idJoueur();
 
 // ── Dévoilement par l'adversaire : ObscurableOptions de VASSAL.
 // La préférence « OpponentUnmaskable » met l'identifiant du joueur dans
@@ -80,11 +71,11 @@ function _ecrireDemasquables(){
 // Le joueur permet-il à l'adversaire de démasquer ses unités ? Comme
 // une préférence de VASSAL, le choix vaut aussi avant l'identification :
 // il s'applique dès que le joueur se fait reconnaître.
-const demasquablesParMoi = () => (_utilisateur || _admin) ? _demasquables.has(idJoueur())
-                                                         : _lireLocal(CLE_DEMASQUABLE, '0') === '1';
+const demasquablesParMoi = () => _utilisateur ? _demasquables.has(idJoueur())
+                                              : _lireLocal(CLE_DEMASQUABLE, '0') === '1';
 function permettreDemasquage(oui){
   _ecrireLocal(CLE_DEMASQUABLE, oui ? '1' : '0');
-  if(!_utilisateur && !_admin) return;
+  if(!_utilisateur) return;
   const id = idJoueur();
   if(oui === _demasquables.has(id)) return;
   if(oui) _demasquables.add(id); else _demasquables.delete(id);
@@ -95,8 +86,8 @@ function permettreDemasquage(oui){
 // Unité dissimulée par un autre joueur qui l'a permis : seule la commande
 // Conceal lui reste (Obscurable.keyEvent → myKeyEvent).
 function demasquable(p){
-  if(!p || !p.masqueProprio || voitMasque(p.masqueProprio) || !_demasquables.has(p.masqueProprio)) return false;
-  const autrui = id => !!id && id !== 'web' && !voitMasque(id);
+  if(!p || idLibre(p.masqueProprio) || voitMasque(p.masqueProprio) || !_demasquables.has(p.masqueProprio)) return false;
+  const autrui = id => !idLibre(id) && !voitMasque(id);
   return !autrui(p.hipProprio) && !autrui(p.compteurProprio);
 }
 const _cmdDemasque = p => { const te = tePion(p); return te ? commandesDe(te.type).cmds.find(c => c.demasque) : null; };
@@ -133,7 +124,7 @@ function oublierCompte(nom){
 }
 // Le nom est écrit tel quel dans l'état Owner : « ; », « / », « \ »,
 // « , » et la tabulation sont des séparateurs de VASSAL.
-const nomValide = nom => /^[^;/\\\t,<>&"]{1,24}$/.test(nom) && !_memeNom(nom, NOM_ADMIN) && !_memeNom(nom, 'web');
+const nomValide = nom => /^[^;/\\\t,<>&"]{1,24}$/.test(nom) && !_memeNom(nom, 'web');
 
 // Joueurs du fichier : un par identifiant de masque, nommé d'après
 // l'Owner majoritaire des pions qu'il masque.
@@ -141,7 +132,7 @@ function joueursDuFichier(){
   const par = new Map();
   for(const p of vivants()){
     for(const id of [p.masqueProprio, p.hipProprio, p.compteurProprio]){
-      if(!id || id === 'web' || id === 'admin') continue;
+      if(idLibre(id)) continue;
       if(!par.has(id)) par.set(id, {id, n: 0, noms: new Map()});
       const f = par.get(id);
       f.n++;
@@ -154,34 +145,32 @@ function joueursDuFichier(){
   }).sort((a, b) => b.n - a.n);
 }
 
-function seConnecter(u, admin){
-  _utilisateur = admin ? null : u;
-  _admin = !!admin;
+function seConnecter(u){
+  _utilisateur = u;
   // ObscurableOptions.setup : la préférence du joueur vaut pour la partie.
-  if((_utilisateur || _admin) && _lireLocal(CLE_DEMASQUABLE, '0') === '1') permettreDemasquage(true);
+  if(_utilisateur && _lireLocal(CLE_DEMASQUABLE, '0') === '1') permettreDemasquage(true);
   majUtilisateur();
   if(typeof majAideChat === 'function') majAideChat();
   _netMajInfo();
   // Ce qu'on voit d'une unité dissimulée ou en HIP dépend de qui l'on est.
   vivants().forEach(p => majApparence(p));
   if(_pileSel) afficherPile();
-  chatLog(_admin ? '👁️ Administrateur : tous les pions dissimulés et HIP sont visibles'
-    : (_utilisateur ? `👤 ${_utilisateur.nom}${monCamp() ? ` (${CAMPS[monCamp()]})` : ''} — ${nbMasques(_utilisateur.mdp)} pion(s) masqué(s) à vous`
-                    : '👤 Observateur : les pions dissimulés et HIP restent cachés'));
+  chatLog(_utilisateur ? `👤 ${_utilisateur.nom}${monCamp() ? ` (${CAMPS[monCamp()]})` : ''} — ${nbMasques(_utilisateur.mdp)} pion(s) masqué(s) à vous`
+                       : '👤 Observateur : les pions dissimulés et HIP restent cachés');
 }
 
 function majUtilisateur(){ rafraichirActions(['utilisateur']); }
 
 // ── Accès aux pions masqués.
-// « web » est l'identifiant d'avant les comptes : il ne réserve rien.
+// « web » et « admin » ne réservent rien (idLibre).
 const _masqueDe = (p, id) => !!id && (p.masqueProprio === id || p.hipProprio === id || p.compteurProprio === id);
 const nbMasques = id => vivants().filter(p => _masqueDe(p, id)).length;
 // Avec une touche : celle de Conceal reste permise sur une unité que son
 // joueur laisse démasquer.
 function accesRefuse(p, touche){
-  if(!p || _admin) return false;
+  if(!p) return false;
   if(touche && demasquable(p)){ const c = _cmdDemasque(p); if(c && c.touche === touche) return false; }
-  const autrui = id => !!id && id !== 'web' && !voitMasque(id);
+  const autrui = id => !idLibre(id) && !voitMasque(id);
   return autrui(p.masqueProprio) || autrui(p.hipProprio) || autrui(p.compteurProprio);
 }
 // Vrai si la commande est refusée ; le refus est dit au journal.
@@ -202,8 +191,8 @@ function refuser(p, touche){
 // ruOTtur…). Les marqueurs, les Suédois (dans les deux O/B) et les pions
 // partagés n'ont pas de camp.
 // Déplacer un pion du camp adverse demande une confirmation, au PC comme
-// au doigt. Rien n'est demandé à l'administrateur, à l'observateur, ni à
-// qui a choisi « Les deux ».
+// au doigt. Rien n'est demandé à l'observateur, ni à qui a choisi
+// « Les deux ».
 const CAMPS = {axe: 'Axe', allies: 'Alliés', tous: 'Les deux'};
 const NATIONS_AXE = new Set(['ge', 'ss', 'ax', 'it', 'ja', 'fi', 'hu', 'nk', 'cc']);
 const NATIONS_ALLIES = new Set(['al', 'am', 'br', 'ch', 'fr', 'ru', 'un', 'sk']);
@@ -222,7 +211,7 @@ function nationPion(p){
 }
 const campPion = p => campDeNation(nationPion(p));
 // Camp de l'utilisateur connecté ; null : aucun contrôle.
-const monCamp = () => _admin ? 'tous' : (_utilisateur && CAMPS[_utilisateur.camp] ? _utilisateur.camp : null);
+const monCamp = () => _utilisateur && CAMPS[_utilisateur.camp] ? _utilisateur.camp : null;
 
 // Camps mémorisés sur ce poste, par nom d'utilisateur (sans la casse).
 function _campsLocaux(){
@@ -345,7 +334,6 @@ function deplacerAuDoigt(liste, x, y){
 // prouve l'identité.
 //   · joueur du fichier : son mot de passe est l'identifiant de ses masques
 //   · compte du poste   : comparé à l'empreinte enregistrée
-//   · administrateur    : comparé à ADMIN_EMPREINTE
 const _esc = t => String(t).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'})[c]);
 
 function demanderUtilisateur(){
@@ -353,7 +341,7 @@ function demanderUtilisateur(){
   const fiches = joueursDuFichier();
   const comptes = comptesLocaux();
   const compteDe = nom => comptes.find(c => _memeNom(c.nom, nom)) || null;
-  const entrees = [{type: 'admin', nom: NOM_ADMIN, info: 'voit tous les pions masqués'}];
+  const entrees = [];
   const deja = nom => entrees.some(e => _memeNom(e.nom, nom));
   for(const f of fiches){
     if(f.nom && deja(f.nom)) continue;
@@ -366,7 +354,7 @@ function demanderUtilisateur(){
   // Présélection : l'utilisateur de la dernière fois, sinon le premier joueur.
   const dernier = _lireLocal(CLE_DERNIER, '');
   let defaut = entrees.findIndex(e => e.type !== 'nouveau' && _memeNom(e.nom, dernier));
-  if(defaut < 0) defaut = entrees.length > 2 ? 1 : entrees.length - 1;
+  if(defaut < 0) defaut = 0;
 
   const w = document.createElement('div');
   w.id = 'fenUtil'; w.className = 'fenetre';
@@ -402,9 +390,8 @@ function demanderUtilisateur(){
     // Camp : choix explicite à chaque connexion, jamais présélectionné ;
     // le dernier camp de ce nom sur ce poste (ou celui des pions qu'il
     // masque) n'est qu'indiqué.
-    $('utCampL').style.display = e.type === 'admin' ? 'none' : '';
     $('utCamp').value = '';
-    const indice = nouveau || e.type === 'admin' ? null
+    const indice = nouveau ? null
       : campMemorise(e.fiche ? (e.fiche.nom || e.nom) : e.nom) || (e.fiche && campDeduit(e.fiche.id));
     $('utCampInd').textContent = indice ? T(`Dernier camp : ${CAMPS[indice]}`) : '';
     err.textContent = '';
@@ -415,21 +402,14 @@ function demanderUtilisateur(){
     _ecrireLocal(CLE_DERNIER, nom);
     memoriserCamp(nom, camp);
     w.remove();
-    seConnecter({nom, mdp, camp}, false);
+    seConnecter({nom, mdp, camp});
   };
   $('utOk').onclick = () => {
     const e = entrees[+sel.value], mdp = $('utMdp').value;
-    if(e.type === 'admin'){
-      if(!estMdpAdmin(mdp)){ err.textContent = 'Mot de passe administrateur incorrect.'; return; }
-      _ecrireLocal(CLE_DERNIER, NOM_ADMIN);
-      w.remove();
-      seConnecter(null, true);
-      return;
-    }
     if(!mdp){ err.textContent = 'Saisir le mot de passe.'; return; }
     const camp = $('utCamp').value;
     if(!CAMPS[camp]){ err.textContent = 'Choisir le camp.'; $('utCamp').focus(); return; }
-    if(estMdpAdmin(mdp) || mdp === 'web' || mdp === 'admin'){ err.textContent = 'Ce mot de passe est réservé.'; return; }
+    if(idLibre(mdp)){ err.textContent = 'Ce mot de passe est réservé.'; return; }
     if(e.type === 'nouveau'){
       const nom = $('utNom').value.trim();
       if(!nomValide(nom)){ err.textContent = 'Nom requis : 24 caractères au plus, sans ; / \\ , < > & ".'; return; }
@@ -451,7 +431,7 @@ function demanderUtilisateur(){
     if(!e.compte && nomValide(nom)) enregistrerCompte(nom, mdp);
     connecter(nom, mdp, camp);
   };
-  $('utObs').onclick = () => { _ecrireLocal(CLE_DERNIER, ''); w.remove(); seConnecter(null, false); };
+  $('utObs').onclick = () => { _ecrireLocal(CLE_DERNIER, ''); w.remove(); seConnecter(null); };
   $('utGerer').onclick = () => { w.remove(); gererUtilisateurs(); };
   for(const c of [$('utMdp'), $('utNom')])
     c.addEventListener('keydown', ev => {
@@ -479,7 +459,7 @@ function gererUtilisateurs(){
   w.innerHTML = `
     <div class="ft">Utilisateurs</div>
     <div class="fc">
-      <p>Connecté : <b>${_esc(_admin ? NOM_ADMIN : (_utilisateur ? _utilisateur.nom : 'observateur'))}</b>.</p>
+      <p>Connecté : <b>${_esc(_utilisateur ? _utilisateur.nom : 'observateur')}</b>.</p>
       <table><tr><th>Utilisateur</th><th>Camp</th><th>Pions masqués</th><th></th></tr>
         ${lignes.map(l => `<tr><td>${_esc(l.nom)}${l.moi ? ' <b>(vous)</b>' : ''}</td>
           <td>${CAMPS[(l.moi && monCamp()) || campMemorise(l.nom)] || '—'}</td><td class="nb">${l.n}</td>
@@ -490,8 +470,7 @@ function gererUtilisateurs(){
         <button id="utFermer">Fermer</button>
       </div>
       <p class="fnote">Comme dans VASL, tous les pions se déplacent librement ; un pion
-        dissimulé ou en HIP n'est visible et commandable que par son joueur et par
-        l'administrateur.</p>
+        dissimulé ou en HIP n'est visible et commandable que par son joueur.</p>
     </div>`;
   document.body.appendChild(w);
   w.querySelectorAll('.oubli').forEach(b => b.onclick = () => {
