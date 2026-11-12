@@ -214,6 +214,7 @@ body[data-terminal=tactile]{--cible:44px}
 #fenLOS .cadreImageLOS{display:flex;justify-content:center;margin:0 0 6px}
 #fenLOS .imageLOS{max-width:100%;height:auto!important;border:1px solid var(--bord);border-radius:4px}
 #fenLOS .legendeLOS{font-size:12px;color:var(--menu-doux)}
+#fenLOS .pastilleLOS{display:inline-block;width:14px;height:4px;vertical-align:middle;border:1px solid #000}
 .panneauFil .act.bouton.boutFil.vise{border-color:var(--accent);background:rgba(217,164,65,.25);color:#fff}
 .panneauFil.vertical{flex-direction:column;flex-wrap:nowrap;align-items:stretch;overflow-x:hidden;overflow-y:auto}
 .panneauFil.vertical .teteFil{flex-direction:row;border-bottom:1px solid var(--bord);padding-bottom:4px}
@@ -240,6 +241,9 @@ body:not([data-terminal=pc]) .fenetre{left:0;top:0;transform:none;width:100%;hei
 body:not([data-terminal=pc]) .fenetre .fb button{min-height:44px}
 body:not([data-terminal=pc]) .fenetre label.coche{min-height:44px;font-size:15px}
 body:not([data-terminal=pc]) .fenetre label.coche input{width:22px;height:22px}
+body:not([data-terminal=pc]) .fenPrefs input[type=color]{width:56px;height:40px}
+body:not([data-terminal=pc]) .fenPrefs label.coulPref{font-size:15px}
+body:not([data-terminal=pc]) .fenPrefs .ongletsPref button{min-height:44px}
 /* Au doigt, Safari iOS zoome la page sur tout champ de moins de 16 px :
    chat, recherches, SAN, palette de commandes compris. */
 body:not([data-terminal=pc]) :is(input:not([type=checkbox]):not([type=radio]),select,textarea){font-size:16px!important}
@@ -335,6 +339,16 @@ body[data-terminal=tactile] #bas[data-etat=compact]:not([hidden]){top:auto;heigh
   border-radius:12px 12px 0 0;border-top:1px solid var(--bord);box-shadow:0 -6px 20px rgba(0,0,0,.55)}
 body[data-terminal=tactile].saisie #bas[data-etat=compact]:not([hidden]){height:calc(var(--vv-h,100vh) * .5)}
 body[data-terminal=tactile] #bas[data-etat=compact] #journal{min-height:48px}
+/* Chat placé en haut (⬆ de l'aperçu) : la feuille descend sous la barre
+   du haut, la saisie en tête, puis phrases, filtres, journal ; la
+   poignée au pied. En saisie, la barre du haut s'efface : collé en haut. */
+body[data-terminal=tactile][data-chat=haut] #bas[data-etat=compact]:not([hidden]){top:calc(var(--vv-haut,0px) + var(--hautHaut,0px));bottom:auto;
+  border-radius:0 0 12px 12px;border-top:none;border-bottom:1px solid var(--bord);box-shadow:0 6px 20px rgba(0,0,0,.55)}
+body[data-terminal=tactile][data-chat=haut].saisie #bas[data-etat=compact]:not([hidden]){top:calc(var(--vv-haut,0px) + var(--marge-h))}
+body[data-terminal=tactile][data-chat=haut] #chatBarre{order:-4;padding-top:5px}
+body[data-terminal=tactile][data-chat=haut] .chatRapide{order:-3}
+body[data-terminal=tactile][data-chat=haut] .filtresChat{order:-2}
+body[data-terminal=tactile][data-chat=haut] .poigneeChat{order:1}
 .poigneeChat{display:none}
 .filtresChat{display:none;gap:6px;padding:4px 10px;overflow-x:auto;touch-action:pan-x;scrollbar-width:none;flex:none;
   background:var(--barre);border-bottom:1px solid var(--bord)}
@@ -501,6 +515,19 @@ body:not([data-terminal=pc]) #chatEnvoi{display:block;min-width:44px;min-height:
 #fenLog{z-index:9900}
 .fenetre .fnote{margin:10px 0 0;font-size:11px;color:var(--menu-doux)}
 .fenetre table{width:100%;border-collapse:collapse;margin-bottom:6px}
+/* Préférences (⚙) : onglets comme ceux des Preferences de VASSAL. */
+.fenPrefs{width:min(92vw,420px)}
+.fenPrefs .ongletsPref{display:flex;gap:2px;border-bottom:1px solid var(--menu-bord);margin-bottom:10px}
+.fenPrefs .ongletsPref button{flex:none;background:transparent;border:1px solid transparent;border-bottom:none;
+  border-radius:4px 4px 0 0;padding:5px 12px;color:var(--menu-doux)}
+.fenPrefs .ongletsPref button.actif{background:var(--champ);border-color:var(--menu-bord);color:var(--menu-texte)}
+.fenPrefs label.coulPref{flex-direction:row;align-items:center;gap:8px}
+.fenPrefs input[type=color]{width:44px;height:28px;padding:0 2px;flex:none}
+.fenPrefs small{color:var(--menu-doux);font-size:11px}
+.fenPrefs .apercuLOS{display:flex;height:6px;margin:4px 0 2px;border:1px solid #000}
+.fenPrefs .apercuLOS span{flex:1}
+.fenPrefs .exMvt{margin:-6px 0 10px 26px;font-family:monospace}
+.fenPrefs .pagePref .fb{margin-bottom:10px}
 .fenetre th{text-align:left;border-bottom:1px solid var(--menu-bord);padding:3px}
 .fenetre td{padding:3px;border-bottom:1px solid #3a3a3a}
 .fenetre td.nb{text-align:right}
@@ -655,7 +682,7 @@ body.maj .pion.immob{pointer-events:auto}
 /* Fil de visée (VASLThread) : calque du fil, étiquettes noires de taille
    fixe à l'écran, pions transparents pendant la visée. */
 #mapWrap.visee{cursor:crosshair}
-#mapInner.losActif .pion{opacity:.33}
+#mapInner.losActif .pion{opacity:var(--los-opacite,.33)}
 /* « ? » vu par son propriétaire (ou l'administrateur) : translucide, il
    laisse voir les unités qu'il dissimule dessous (Concealment de VASL). */
 .pion.qTransparent{opacity:.45}
@@ -674,3 +701,39 @@ body.maj .pion.immob{pointer-events:auto}
   animation:flare var(--pulsation) linear var(--pulsations)}
 @keyframes flare{from{width:var(--d);height:var(--d)}to{width:0;height:0}}
 @media (prefers-reduced-motion: reduce){ .flare{animation:none} }
+/* Barre QC de VASL (Quick Counters) : icônes de 30 px, triangle des sous-menus. */
+.barreQC{height:38px;gap:2px}
+.barreQC .act.qc{position:relative;display:inline-flex;align-items:center;justify-content:center;flex:none;
+  width:34px;height:34px;padding:1px;min-width:0;cursor:grab}
+.barreQC .act.qcMenu{cursor:pointer}
+.barreQC .act.qc.ouvert{background:var(--menu-survol)}
+.barreQC .qcTri{position:absolute;right:2px;bottom:2px;height:auto;pointer-events:none}
+.menuQC .it .mini{flex:none}
+.menuQC .it{cursor:grab}
+/* Barre QC de l'affichage tactile : en haut, défilante sans fin. */
+.barreQCT.navBas{border-top:none;border-bottom:1px solid var(--bord);padding-top:2px;padding-bottom:2px;scroll-snap-type:none}
+#chromeHaut > .barreQCT:first-child{padding-top:calc(var(--marge-h) + 2px)}
+.barreQCT .act.rail.qc{position:relative;flex:0 0 46px;width:46px;height:46px;cursor:default}
+.barreQCT .qcTri{position:absolute;right:3px;bottom:3px;height:auto!important;pointer-events:none}
+.menuQC.tactile{max-height:70vh;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.menuQC.tactile .it{min-height:44px;padding:4px 14px 4px 8px;gap:10px;cursor:default;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+/* ── Dés en 3D (des-3d.js) : ils roulent du bas vers le haut et s'arrêtent
+   en haut à droite de la carte, par-dessus les pions, sous les menus ;
+   jamais un obstacle au clic. */
+#des3d{position:fixed;z-index:9500;pointer-events:none;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-start;
+  gap:calc(var(--de) * .35);padding:calc(var(--de) * .4);box-sizing:border-box;overflow:hidden;perspective:900px;transition:opacity .45s}
+#des3d.part{opacity:0}
+#des3d .piste{display:flex;gap:calc(var(--de) * .6)}
+#des3d .de3d{width:var(--de);height:var(--de);transform-style:preserve-3d;filter:drop-shadow(0 calc(var(--de) * .18) calc(var(--de) * .12) rgba(0,0,0,.55))}
+#des3d .cube{position:relative;width:100%;height:100%;transform-style:preserve-3d}
+#des3d .face{position:absolute;inset:0;display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);padding:14%;box-sizing:border-box;
+  border-radius:14%;backface-visibility:hidden;overflow:hidden}
+#des3d .colore .face{background:#c8102e;box-shadow:inset 0 0 0 1px #8a0b20}
+#des3d .blanc .face{background:#f5f2ea;box-shadow:inset 0 0 0 1px #b9b4a8}
+#des3d .face i.pt{align-self:center;justify-self:center;width:72%;height:72%;border-radius:50%}
+#des3d .colore .face i.pt{background:#fff}
+#des3d .blanc .face i.pt{background:#111}
+#des3d .face img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#des3d .legende{padding:4px 12px;border-radius:14px;background:rgba(0,0,0,.72);color:#fff;font-size:15px;font-weight:600;
+  white-space:nowrap;opacity:0;transform:translateY(6px);transition:opacity .25s,transform .25s}
+#des3d .legende.vue{opacity:1;transform:none}

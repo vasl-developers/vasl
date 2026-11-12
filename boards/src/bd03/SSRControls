@@ -7,6 +7,9 @@
          <entry name="A8: The Agony of Doom" rule="SSO_A8" text="scenario A8 overlay"/>
  </Checkbox>
  <Checkbox name="">
+         <entry name="A75: Medal of Honor" rule="SSO_A75" text="scenario A75 overlay"/>
+ </Checkbox>
+ <Checkbox name="">
          <entry name="A26: Beachhead at Ozereyka Bay" rule="SSO_A26" text="scenario A26 overlay"/>
  </Checkbox>
  <Checkbox name="">

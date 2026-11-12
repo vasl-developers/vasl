@@ -7,9 +7,40 @@
 // toit. Au lâcher, le rapport part au chat et le fil disparaît
 // (persistence « Never » du module).
 // ═══════════════════════════════════════════════════════════════
-// Préférences par défaut de VASL : fil et gêne rouges, blocage bleu,
-// pions à 33 % pendant la visée.
-const LOS_COUL_FIL = '#ff0000', LOS_COUL_GENE = '#ff0000', LOS_COUL_BLOC = '#0000ff';
+// Préférences de l'onglet « LOS » de VASL (VASLThread.addTo), réglées
+// par la fenêtre des préférences (⚙, js/preferences.js) et gardées sur le
+// poste : couleurs du fil (Thread Color), de la gêne (Hindrance Thread
+// Color) et du blocage (Blocked Thread Color), vérification de la LOS
+// (Enable LOS checking), opacité des pions pendant la visée (Unit opacity
+// % during LOS checks). Par défaut, ceux de VASL : fil et gêne rouges,
+// blocage bleu, vérification active, pions à 33 %.
+const LOS_DEFAUTS = {fil: '#ff0000', gene: '#ff0000', bloc: '#0000ff', verif: true, opacite: '33'};
+const LOS_OPACITES = ['0', '25', '33', '50', '66', '75', '100'];
+const _couleurPref = (c, d) => { const v = _lirePref(c); return /^#[0-9a-f]{6}$/i.test(v || '') ? v.toLowerCase() : d; };
+let LOS_COUL_FIL = _couleurPref('aslweb.losCouleurFil', LOS_DEFAUTS.fil);
+let LOS_COUL_GENE = _couleurPref('aslweb.losCouleurGene', LOS_DEFAUTS.gene);
+let LOS_COUL_BLOC = _couleurPref('aslweb.losCouleurBloc', LOS_DEFAUTS.bloc);
+let _losVerif = _lirePref('aslweb.losVerif') !== '0';
+let _losOpacite = LOS_OPACITES.includes(_lirePref('aslweb.losOpacite')) ? _lirePref('aslweb.losOpacite') : LOS_DEFAUTS.opacite;
+// L'opacité passe à la feuille de style (#mapInner.losActif .pion).
+const _appliquerOpaciteLOS = () => document.documentElement.style.setProperty('--los-opacite', String(_losOpacite / 100));
+_appliquerOpaciteLOS();
+// Change une préférence de la LOS, la garde sur le poste et redessine le
+// fil en cours. quoi : 'fil' | 'gene' | 'bloc' | 'verif' | 'opacite'.
+function reglerLOS(quoi, v){
+  const cles = {fil: 'losCouleurFil', gene: 'losCouleurGene', bloc: 'losCouleurBloc', verif: 'losVerif', opacite: 'losOpacite'};
+  if(quoi === 'fil') LOS_COUL_FIL = v;
+  else if(quoi === 'gene') LOS_COUL_GENE = v;
+  else if(quoi === 'bloc') LOS_COUL_BLOC = v;
+  else if(quoi === 'verif') _losVerif = !!v;
+  else if(quoi === 'opacite'){ _losOpacite = String(v); _appliquerOpaciteLOS(); }
+  else return;
+  try { localStorage.setItem('aslweb.' + cles[quoi], quoi === 'verif' ? (v ? '1' : '0') : String(v)); } catch(e){}
+  if(_fil){
+    if(quoi === 'verif' && _fil.m){ _fil.complet = !!(_fil.completCarte && _losVerif); _faireLOS(_fil); }
+    dessinerFil();
+  }
+}
 const LOS_POLICE = 14, LOS_DESCENTE = 3;   // hauteur et descente de RANGE_FONT, en px
 let _losBoards = null;      // disposition de la carte affichée
 let _losCarte = null;       // Promise<{map, complet}> ou null
@@ -165,7 +196,7 @@ function _nomLieu(f, l){
 }
 
 const _nouveauFil = (mode, c0, c1) => ({mode, c0, c1, ctrl0: false, ctrl1: false,
-  m: null, complet: false, src: null, tgt: null, auxS: false, auxT: false,
+  m: null, complet: false, completCarte: false, src: null, tgt: null, auxS: false, auxT: false,
   sl: 0, tl: 0, res: null, texte: '', compte: 0, de: '', vers: ''});
 
 // Au doigt, la visée se fait en deux temps, chacun avec la loupe dès
@@ -231,7 +262,7 @@ function commencerFil(e){
   }
   carteLOS().then(({map, complet}) => {
     if(_fil !== f) return;
-    f.m = map; f.complet = complet; f.pret = true;
+    f.m = map; f.completCarte = complet; f.complet = complet && _losVerif; f.pret = true;
     f.gi = _pionsDuFil(map);
     if(map) _poserSource(f);
     if(map && (f.c1.x !== f.c0.x || f.c1.y !== f.c0.y)) _poserCible(f);
@@ -495,7 +526,7 @@ function filDistant(cmd){
   f.distant = true;
   carteLOS().then(({map, complet}) => {
     if(_fil !== f) return;
-    f.m = map; f.complet = complet;
+    f.m = map; f.completCarte = complet; f.complet = complet && _losVerif;
     f.gi = _pionsDuFil(map);
     if(map) _poserSource(f);
     const c = map && f.src && _lieuAuPoint(map, f.c1);
@@ -758,6 +789,7 @@ function terminerFil(f){
 function _resultatLOS(f){
   if(f.surOverlay) return {etat: 'inconnu', texte: T('Vérification impossible : overlay sur la ligne de vue')};
   const r = f.res;
+  if(f.completCarte && !_losVerif) return {etat: 'inconnu', texte: T('Vérification de la LOS désactivée (préférences) : portée seule')};
   if(!f.complet || !r) return {etat: 'inconnu', texte: T('Données LOS de VASL absentes : portée seule')};
   if(r.isBlocked()){
     const b = r.getBlockedAtPoint(), h = b && f.m.gridToHex(b.x, b.y);
@@ -858,6 +890,14 @@ function _imageLOS(f){
   return cv;
 }
 
+// Légende de l'image de la ligne, aux couleurs des préférences.
+function _legendeLOS(){
+  const pastille = c => `<span class="pastilleLOS" style="background:${c}"></span>`;
+  return `${_esc(T('Vert : From ; or : To'))} ; ${pastille(LOS_COUL_FIL)} ${_esc(T('ligne dégagée'))} ; `
+    + `${pastille(LOS_COUL_GENE)} ${_esc(T('après la gêne'))} ; ${pastille(LOS_COUL_BLOC)} ${_esc(T('après le blocage'))} ; `
+    + _esc(T('croix : point de blocage'));
+}
+
 // Fenêtre du résultat (bouton ✓ Check) : lieux, niveaux, portée, résultat
 // et image de la ligne. OK, Entrée ou Échap la ferment.
 function _fenetreResultatLOS(f, portee){
@@ -875,7 +915,7 @@ function _fenetreResultatLOS(f, portee){
         (${_esc(T('niveau'))} ${niv(f.tl)}) — Range ${portee}</p>
       <p class="resLOS ${res.etat}">${_esc(res.texte)}</p>
       <div class="cadreImageLOS"></div>
-      <p class="legendeLOS">${_esc(T('Vert : From ; or : To ; rouge : ligne dégagée ; bleu : après le blocage ; croix : point de blocage'))}</p>
+      <p class="legendeLOS">${_legendeLOS()}</p>
       <div class="fb"><button id="losOk" class="prim">OK</button></div>
     </div>`;
   try { w.querySelector('.cadreImageLOS').appendChild(_imageLOS(f)); } catch(e){}
