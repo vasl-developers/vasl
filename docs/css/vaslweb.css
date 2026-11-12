@@ -491,6 +491,14 @@ body[data-terminal=tactile] .vig .mini{transform:scale(1.25)}
 #journal .msg{color:var(--texte)}
 #chatBarre{display:flex;gap:6px;padding:3px 10px 5px;background:var(--barre)}
 #bas{position:relative}
+/* PC, chat placé en haut : journal et saisie sous la barre de menus, la
+   saisie en tête, la poignée dessous ; la carte vient après. */
+body[data-terminal=pc][data-chat=haut] #chromeHaut{order:-3}
+body[data-terminal=pc][data-chat=haut] #bas{order:-2;display:flex;flex-direction:column}
+body[data-terminal=pc][data-chat=haut] #bas[hidden]{display:none}
+body[data-terminal=pc][data-chat=haut] #poigneeJournal{order:-1}
+body[data-terminal=pc][data-chat=haut] #chatBarre{order:-1;padding:5px 10px 3px}
+body[data-terminal=pc][data-chat=haut] #journal{border-top:none;border-bottom:1px solid var(--bord)}
 .nouveauxChat{position:absolute;left:50%;transform:translateX(-50%);z-index:5;padding:2px 12px;border-radius:12px;
   background:var(--accent);color:#111;border:none;font-size:12px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,.5)}
 #chatEnvoi{display:none;flex:none}
