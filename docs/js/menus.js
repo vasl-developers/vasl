@@ -130,6 +130,8 @@ function aideRaccourcis(){
       ['Flare (montrer un point à l\'adversaire)', 'Alt+clic · double appui dans le vide']])}
     ${lignes('Ligne de vue (pendant le tracé)', [['Niveau de la cible', '↑ / ↓'], ['Niveau de la source', 'Ctrl+↑ / Ctrl+↓'],
       ['Plus haut niveau hors toit', 'Ctrl à l\'appui'], ['Annuler', 'Échap']])}
+    ${lignes('Carte', [['Zoom', 'Ctrl+molette · Cmd+molette (Mac) · pincement'],
+      ['Défiler', 'molette · glisser'], ['Défiler de côté', 'molette horizontale · Maj+molette']])}
     ${lignes('Relecture', [['Coup suivant / précédent', 'Page suivante / précédente']])}
     </table><div class="fb"><button id="utFermer" class="prim">Fermer</button></div></div>`;
   document.body.appendChild(w);

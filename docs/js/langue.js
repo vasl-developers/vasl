@@ -170,6 +170,9 @@ const EN = {
   'Niveau de la cible': 'Target level', 'Niveau de la source': 'Source level',
   'Plus haut niveau hors toit': 'Highest non-rooftop level', 'Ctrl à l\'appui': 'Ctrl on press',
   'Relecture': 'Replay', 'Coup suivant / précédent': 'Step forward / back',
+  'Ctrl+molette · Cmd+molette (Mac) · pincement': 'Ctrl+wheel · Cmd+wheel (Mac) · pinch',
+  'Défiler': 'Scroll', 'molette · glisser': 'wheel · drag',
+  'Défiler de côté': 'Scroll sideways', 'molette horizontale · Maj+molette': 'horizontal wheel · Shift+wheel',
   'Page suivante / précédente': 'Page Down / Page Up',
   // Identification et utilisateurs
   'Identification': 'Login',

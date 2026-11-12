@@ -50,11 +50,14 @@ let _etatChat = null;            // null (aperçu), 'compact', 'plein'
 let _nonLus = 0;
 // L'option n'a plus de bouton (masquée) : l'aperçu est toujours montré.
 let _apercuChat = true;
-// Place de l'aperçu, en haut ou en bas de l'écran, retenue sur cet appareil.
-let _posApercu = _lirePref('aslweb.apercuPos') === 'haut' ? 'haut' : 'bas';
-function placerApercuChat(pos){
+// Place de l'aperçu, en haut ou en bas de l'écran, retenue sur cet appareil
+// une fois choisie. Sans choix : en haut au PC, en bas au doigt.
+const _posChoisie = () => { const v = _lirePref('aslweb.apercuPos'); return v === 'haut' || v === 'bas' ? v : null; };
+const _posParDefaut = p => p === 'pc' ? 'haut' : 'bas';
+let _posApercu = _posChoisie() || 'bas';
+function placerApercuChat(pos, memoriser = true){
   _posApercu = pos;
-  try { localStorage.setItem('aslweb.apercuPos', pos); } catch(e){}
+  if(memoriser) try { localStorage.setItem('aslweb.apercuPos', pos); } catch(e){}
   document.body.dataset.chat = pos;
   if(typeof rafraichirActions === 'function') rafraichirActions(['chatHaut']);
   const ap = document.getElementById('apercuChat');
@@ -80,7 +83,11 @@ function majHautBas(){
   if(h) document.documentElement.style.setProperty('--hautHaut', Math.max(0, h.getBoundingClientRect().bottom) + 'px');
 }
 _apresRedimension.push(majHautBas);
-_apresProfil.push(() => { majHautBas(); _majApercuChat(); });
+_apresProfil.push(p => {
+  const pos = _posChoisie() || _posParDefaut(p);
+  if(pos !== _posApercu) placerApercuChat(pos, false);
+  majHautBas(); _majApercuChat();
+});
 
 // Sous le chat compact, une marge de la hauteur couverte : la carte peut
 // défiler jusqu'à montrer son bas au-dessus du chat ; chat placé en haut,

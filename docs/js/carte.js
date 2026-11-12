@@ -1231,13 +1231,37 @@ function _setupPanZoom(){
   window.addEventListener('pointerup', fin);
   window.addEventListener('pointercancel', fin);
   wrap.addEventListener('scroll', () => { if(!_redim) _noterCentre(); });
+  // Molette, comme dans VASL : Ctrl + molette zoome (Cmd + molette sur Mac
+  // et iPad, et le pincement du pavé tactile, que le navigateur signale par
+  // ctrlKey) ; la molette seule fait défiler la carte, la molette
+  // horizontale (ou Maj + molette) la fait défiler de côté. Au doigt, la
+  // molette verticale seule zoome toujours.
   wrap.addEventListener('wheel', e => {
-    e.preventDefault();
     // Alt + molette sur une pile : la sélection passe d'un pion à l'autre
     // de la pile, dépliée au besoin.
     const pion = e.altKey && e.target.closest && e.target.closest('.pion');
-    if(pion){ tournerDansPile(pions.find(p => p.el === pion), e.deltaY > 0 ? -1 : 1); return; }
-    setZoom(zoom * (e.deltaY < 0 ? 1.1 : 1/1.1), e.clientX, e.clientY);
+    if(pion){ e.preventDefault(); tournerDansPile(pions.find(p => p.el === pion), e.deltaY > 0 ? -1 : 1); return; }
+    if(e.ctrlKey || e.metaKey){
+      e.preventDefault();
+      // Un cran de molette (~100 px) : ×1,1 ; le pavé tactile, par petits pas.
+      const d = e.deltaY * (e.deltaMode === 1 ? 33 : e.deltaMode === 2 ? 800 : 1);
+      setZoom(zoom * Math.pow(1.1, Math.max(-3, Math.min(3, -d / 100))), e.clientX, e.clientY);
+      return;
+    }
+    // Défilement natif du navigateur (vertical, horizontal, Maj + molette).
+    if(_profil === 'pc' || e.shiftKey || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+    e.preventDefault();
+    if(e.deltaY) setZoom(zoom * (e.deltaY < 0 ? 1.1 : 1/1.1), e.clientX, e.clientY);
   }, {passive:false});
+  // Pincement du pavé tactile dans Safari (Mac, iPad avec trackpad) : il
+  // n'envoie pas Ctrl + molette mais des GestureEvent. Un pincement au
+  // doigt passe par les pointeurs (plus haut) : ignoré ici.
+  let zoomGeste = null;
+  wrap.addEventListener('gesturestart', e => { e.preventDefault(); zoomGeste = pts.size ? null : zoom; });
+  wrap.addEventListener('gesturechange', e => {
+    e.preventDefault();
+    if(zoomGeste !== null && !pts.size) setZoom(zoomGeste * e.scale, e.clientX, e.clientY);
+  });
+  wrap.addEventListener('gestureend', e => { e.preventDefault(); zoomGeste = null; });
 }
 
