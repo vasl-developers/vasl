@@ -399,17 +399,6 @@ function _brancherChat(){
       envoyerSaisie();
     } else if(e.key === 'Escape' && (!_profil || _profil === 'pc')){ e.preventDefault(); ci.blur(); }
   });
-  // Sur PC, Entrée hors de tout champ place le curseur dans le chat.
-  document.addEventListener('keydown', e => {
-    if(e.key !== 'Enter' || e.defaultPrevented || e.ctrlKey || e.altKey || e.metaKey || e.shiftKey) return;
-    if(_profil && _profil !== 'pc') return;
-    const t = e.target;
-    if(/^(INPUT|SELECT|TEXTAREA|BUTTON|A)$/.test(t.tagName) || t.isContentEditable) return;
-    if(document.querySelector('.fenetre, .voile, #ctx') || feuilleOuverte()) return;
-    if(ci.offsetParent === null) return;
-    e.preventDefault();
-    ci.focus();
-  });
   ci.addEventListener('input', _majEnvoi);
   // Le bouton ne prend pas le focus : le clavier reste ouvert.
   bt.addEventListener('pointerdown', e => e.preventDefault());
@@ -425,4 +414,22 @@ function _brancherChat(){
   majAideChat();
 }
 _apresProfil.push(majAideChat);
+
+// Sur PC, Entrée hors de tout champ de saisie place le curseur dans le chat.
+// Captée sur window dès le chargement, avant tout le reste : elle ne répète
+// plus le bouton resté au focus (pose rapide, dernier outil…) ni une
+// commande de pion liée à Entrée. Fenêtres, menus déroulants, feuilles,
+// menu contextuel et éditeur de label ouverts gardent leur Entrée.
+window.addEventListener('keydown', e => {
+  if(e.key !== 'Enter' || e.isComposing || e.ctrlKey || e.altKey || e.metaKey || e.shiftKey) return;
+  if(_profil && _profil !== 'pc') return;
+  const t = e.target;
+  if(t && (/^(INPUT|SELECT|TEXTAREA)$/.test(t.tagName) || t.isContentEditable)) return;
+  if(document.querySelector('.fenetre, .voile, #ctx, #editLabel') || feuilleOuverte()) return;
+  if(typeof _menuOuvert !== 'undefined' && _menuOuvert) return;
+  const ci = document.getElementById('chatIn');
+  if(!ci || ci.offsetParent === null) return;
+  e.preventDefault(); e.stopImmediatePropagation();
+  ci.focus();
+}, true);
 

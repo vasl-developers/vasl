@@ -639,7 +639,7 @@ Object.assign(ACTIONS, {
   vueJournal:{lib: 'Journal et chat', court: 'Journal', ico: '💬', faire: () => vueMobile('journal'), allume: () => _vue() === 'journal',
               badge: () => _nonLus},
   apercuChat:{ico: '💭', lib: 'Aperçu du chat sur la carte', coche: () => _apercuChat, faire: () => basculerApercuChat()},
-  titre:     {etiquette: () => _source ? _nomFichier : 'VASLweb 1.03', classe: 'titreScen'},
+  titre:     {etiquette: () => _source ? _nomFichier : 'VASLweb 1.05', classe: 'titreScen'},
   desMenu:   {lib: 'Dés : un appui DR, un appui long les catégories', court: 'Dés', ico: '🎲',
               faire: () => lancerDR('Other'), menuLong: null},
   sanPieges: {lib: 'SAN et pièges…', court: 'SAN', ico: 'INFO', classe: 'sigle', faire: () => ouvrirFeuilleSan()},
