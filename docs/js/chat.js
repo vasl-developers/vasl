@@ -55,27 +55,48 @@ let _posApercu = _lirePref('aslweb.apercuPos') === 'haut' ? 'haut' : 'bas';
 function placerApercuChat(pos){
   _posApercu = pos;
   try { localStorage.setItem('aslweb.apercuPos', pos); } catch(e){}
+  document.body.dataset.chat = pos;
   const ap = document.getElementById('apercuChat');
   if(!ap) return;
   document.getElementById(pos === 'haut' ? 'chromeHaut' : 'chromeBas').prepend(ap);
   _majApercuChat();
   _surRedimension();
+  majHautBas();
+  _majReserveCarte();
 }
+// Le chat placé en haut s'ouvre en haut, la saisie en tête (CSS
+// body[data-chat=haut]) ; en bas, il s'ouvre en bas, la saisie au pied.
+document.body.dataset.chat = _posApercu;
 
 // Hauteur réelle du bas de l'écran (aperçu, relecture, navigation) : le
-// chat ouvert s'arrête au-dessus, la relecture reste accessible.
+// chat ouvert s'arrête au-dessus, la relecture reste accessible. De même,
+// le bord bas du haut de l'écran (barre QC) : le chat placé en haut s'ouvre
+// dessous.
 function majHautBas(){
-  const b = document.getElementById('chromeBas');
+  const b = document.getElementById('chromeBas'), h = document.getElementById('chromeHaut');
   if(b) document.documentElement.style.setProperty('--hautBas', b.offsetHeight + 'px');
+  if(h) document.documentElement.style.setProperty('--hautHaut', Math.max(0, h.getBoundingClientRect().bottom) + 'px');
 }
 _apresRedimension.push(majHautBas);
 _apresProfil.push(() => { majHautBas(); _majApercuChat(); });
 
 // Sous le chat compact, une marge de la hauteur couverte : la carte peut
-// défiler jusqu'à montrer son bas au-dessus du chat.
+// défiler jusqu'à montrer son bas au-dessus du chat ; chat placé en haut,
+// la marge passe au-dessus : la carte montre son haut sous le chat.
 function _majReserveCarte(){
-  const w = document.getElementById('mapWrap');
-  document.getElementById('mapScaler').style.marginBottom = (w.clientHeight - hauteurVisibleCarte()) + 'px';
+  const w = document.getElementById('mapWrap'), s = document.getElementById('mapScaler');
+  const couvert = (w.clientHeight - hauteurVisibleCarte()) + 'px', haut = _chatEnHaut();
+  const avant = margeHautCarte();
+  s.style.marginBottom = haut ? '0px' : couvert;
+  s.style.marginTop = haut ? couvert : '0px';
+  // La carte ne saute pas : ce qu'on voyait reste à sa place à l'écran.
+  w.scrollTop += margeHautCarte() - avant;
+}
+const _chatEnHaut = () => _posApercu === 'haut' && _etatChat === 'compact';
+// Marge posée au-dessus de la carte par le chat compact placé en haut ;
+// les calculs du zoom la retirent du défilement.
+function margeHautCarte(){
+  return parseFloat(document.getElementById('mapScaler').style.marginTop) || 0;
 }
 _apresRedimension.push(_majReserveCarte);
 
@@ -84,6 +105,7 @@ function hauteurVisibleCarte(){
   const w = document.getElementById('mapWrap'), bas = document.getElementById('bas');
   if(_etatChat !== 'compact' || bas.hidden) return w.clientHeight;
   const rw = w.getBoundingClientRect(), rb = bas.getBoundingClientRect();
+  if(_posApercu === 'haut') return Math.max(80, Math.min(w.clientHeight, rw.bottom - rb.bottom));
   return Math.max(80, Math.min(w.clientHeight, rb.top - rw.top));
 }
 
@@ -220,6 +242,7 @@ window.addEventListener('popstate', () => {
 });
 
 // Poignée du chat compact : vers le bas, l'aperçu ; vers le haut, le plein.
+// Chat placé en haut, la poignée est au pied et le geste s'inverse.
 function _brancherPoigneeChat(){
   const bas = document.getElementById('bas');
   const pg = document.createElement('div');
@@ -233,7 +256,7 @@ function _brancherPoigneeChat(){
       if(ev.pointerId !== id) return;
       document.removeEventListener('pointerup', fin);
       document.removeEventListener('pointercancel', fin);
-      const dy = ev.clientY - y0;
+      const dy = (ev.clientY - y0) * (_posApercu === 'haut' ? -1 : 1);
       if(dy > 50) fermerChat();
       else if(dy < -50 || Math.abs(dy) < 6) vueMobile('journal');
     };

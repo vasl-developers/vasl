@@ -8,6 +8,24 @@
 // ramène le cumul à l'hexagone retrouvé ; Mark unmoved le remet à zéro.
 //
 // TEC_MVT, MP_VEHICULES : js/donnees/mouvement.js
+
+// Affichage du décompte, réglé dans les préférences (⚙, js/preferences.js)
+// et gardé sur le poste : les MF de l'infanterie, les MP des véhicules.
+// Masqué, le décompte se tient quand même (le cumul reste juste s'il est
+// réaffiché en cours de phase), mais rien n'en paraît au chat ni au log :
+// la ligne du déplacement reste celle de VASL, les lignes de décompte
+// seul (VCA, changement d'emplacement) ne s'écrivent pas, et les
+// commandes du menu (Start, Stop, Reverse, Load, Unload, Smoke) s'annoncent
+// sans leur coût.
+let _afficherMF = _lirePref('aslweb.decompteMF') !== '0';
+let _afficherMP = _lirePref('aslweb.decompteMP') !== '0';
+const decompteAffiche = unite => unite === 'MP' ? _afficherMP : _afficherMF;
+function reglerDecompte(unite, oui){
+  if(unite === 'MP') _afficherMP = !!oui; else _afficherMF = !!oui;
+  try { localStorage.setItem('aslweb.decompte' + (unite === 'MP' ? 'MP' : 'MF'), oui ? '1' : '0'); } catch(e){}
+}
+// « Start 1MP/ 2MP », ou « Start » seul si le décompte est masqué.
+const _avecCout = (txt, cout) => cout ? `${txt} ${cout}` : txt;
 const _COL_MVT = {inf: 1, cav: 2, hd: 3, mc: 4, ac: 5, ft: 6, ht: 7, tr: 8};
 // vehicleType du module VASL → colonne du chart.
 const _COL_VEH = {ft: 'ft', ft_a: 'ft', ht: 'ht', ac: 'ac', tr: 'tr', tr_a: 'tr', mc: 'mc', hd: 'hd'};
@@ -661,6 +679,7 @@ function _demarrer(p, e, pos, vca, motion){
 const _MULT_RECUL = {ft: 4, ht: 4, tr: 3, ac: 2};
 // Décompte : coût puis cumul, « 1MP/ 3MP (démarrage 1) », « 2MF/ 4MF ».
 function _texteCout(p, cout, unite, plus){
+  if(!decompteAffiche(unite)) return '';
   plus = (plus || []).filter(Boolean);
   return `${cout}${unite}/ ${_mvtCumul(p)}${unite}` + (plus.length ? ` (${plus.join(', ')})` : '');
 }
@@ -796,14 +815,14 @@ function compterMouvement(avant, portes, local){
   // Infanterie : la pile qui bouge est comptée d'un bloc, sans le détail
   // des unités. Son cumul est celui de l'unité qui a le plus dépensé
   // (une unité ralentit la pile). Une unité seule garde son nom.
-  if(pied.length){
+  if(pied.length && _afficherMF){
     const cle = x => { const c = x.p.mvt.etapes.slice(1).map(e => e.cout);
                        return c.includes('ALL') ? Infinity : _cMax(_mvtSomme(x.p)); };
     const max = pied.reduce((a, x) => cle(x) > cle(a) ? x : a);
     const pas = [...new Set(pied.map(x => x.pas))].join(' / ');
     segments.push({qui: pied.length > 1 ? 'Pile' : nomRapport(max.p), txt: `${pas}MF/ ${_mvtCumul(max.p)}MF`});
   }
-  for(const [txt, noms] of lignes) segments.push({qui: noms.join(', '), txt});
+  if(_afficherMP) for(const [txt, noms] of lignes) segments.push({qui: noms.join(', '), txt});
   // Un seul groupe : le chiffre seul ; sinon chacun nommé.
   const texte = segments.length === 1 ? segments[0].txt : segments.map(x => `${x.qui} : ${x.txt}`).join(' ; ');
   return {texte, alertes};
@@ -861,7 +880,7 @@ function compterVCA(p, T, S0, S1){
   const d = _etatMvt(e);
   const cout = pas * (dedans || codeD ? 2 : 1);
   e.push({pos: P.cle, vca: b, cout, lib: 'VCA', byp: d.byp, etat: d.etat, recul: d.recul});
-  rapport(`${nomRapport(p)} : VCA ${_texteMP(p, cout, [demarrage && 'démarrage 1'])}`);
+  if(_afficherMP) rapport(`${nomRapport(p)} : VCA ${_texteMP(p, cout, [demarrage && 'démarrage 1'])}`);
 }
 
 // ── Start, Stop, Reverse : commandes du menu des véhicules, avant le
@@ -898,7 +917,7 @@ function commandeVehicule(p, quoi){
     }
   }
   if(!quoiTxt){ if(!avait && e.length === 1) delete p.mvt; return; }
-  rapport(`${nomRapport(p)} : ${quoiTxt} ${_texteMP(p, cout, plus)}`);
+  rapport(`${nomRapport(p)} : ${_avecCout(quoiTxt, _texteMP(p, cout, plus))}`);
   const etapes = e;
   _histoJs(() => {
     if(p.mvt && p.mvt.etapes === etapes) etapes.length = n0;
@@ -1003,9 +1022,9 @@ function commandeTransport(p, quoi, veh){
     // Rang : sous le véhicule, à pied.
     deplacerDansPile(p, pile(cle(p)).indexOf(v));
   }
-  rapport(`${nomRapport(p)} : ${txtP} ${_texteMF(p, coutP, plusP)}`);
+  rapport(`${nomRapport(p)} : ${_avecCout(txtP, _texteMF(p, coutP, plusP))}`);
   if(alertes.length) chatLog(`⚠️ ${nomRapport(p)} : ${alertes.join(', ')} (D6.${quoi === 'load' ? 4 : 5})`);
-  if(txtV) rapport(`${nomRapport(v)} : ${txtV} ${_texteMP(v, coutV, plusV)}`);
+  if(txtV && _afficherMP) rapport(`${nomRapport(v)} : ${txtV} ${_texteMP(v, coutV, plusV)}`);
   if(quoi === 'unload') v._dechargeNo = _actionNo;
   const etP = eP, etV = eV;
   _histoJs(() => {
@@ -1106,13 +1125,13 @@ function commandeSmoke(p, quoi, usage){
   if(veh){
     const txt = quoi === 'G' ? 'Smoke grenades' : `s${quoi}${usage}`;
     e.push({pos: P.cle, vca, cout: 1, lib: 'Smoke ' + txt, byp: d.byp, etat: d.etat, recul: d.recul});
-    rapport(`${nomRapport(p)} : ${txt} ${_texteMP(p, 1)}`);
+    rapport(`${nomRapport(p)} : ${_avecCout(txt, _texteMP(p, 1))}`);
   } else {
     const cout = quoi === 'adj' ? 2 : 1;
     const txt = quoi === 'adj' ? 'Smoke ADJ' : 'Smoke Hex';
     e.push({pos: P.cle, vca: null, cout, lib: txt, etat: 'arret'});
     const x = exposantSmoke(p);
-    rapport(`${nomRapport(p)} : ${txt} ${_texteMF(p, cout, [x && `exposant ${x}`])}`);
+    rapport(`${nomRapport(p)} : ${_avecCout(txt, _texteMF(p, cout, [x && `exposant ${x}`]))}`);
   }
   const etapes = e;
   _histoJs(() => {
@@ -1358,7 +1377,7 @@ function compterLieux(avant, local){
         _histoJs(() => { if(p.mvt && p.mvt.etapes === et) et.length = n0; if(!avait && p.mvt && p.mvt.etapes.length <= 1) delete p.mvt; });
       }
     }
-    emettre(`${nomRapport(p)} : ${txt}`);
+    if(_afficherMF) emettre(`${nomRapport(p)} : ${txt}`);
   }
 }
 

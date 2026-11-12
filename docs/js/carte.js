@@ -1013,7 +1013,8 @@ function setZoom(z, fx, fy){
   const wr = wrap.getBoundingClientRect();
   if(fx === undefined){ fx = wr.left + wr.width/2; fy = wr.top + wr.height/2; }
   const wx = (wrap.scrollLeft + (fx - wr.left)) / zoom;
-  const wy = (wrap.scrollTop  + (fy - wr.top )) / zoom;
+  const mh = typeof margeHautCarte === 'function' ? margeHautCarte() : 0;
+  const wy = (wrap.scrollTop - mh + (fy - wr.top )) / zoom;
   const loin = _effectifPiles && _vueDeLoin();
   zoom = z;
   if(!_zoomAuto) _zoomManuel = true;
@@ -1021,7 +1022,7 @@ function setZoom(z, fx, fy){
   mi.style.setProperty('--zinv', 1 / zoom);
   _majScaler();
   wrap.scrollLeft = wx*zoom - (fx - wr.left);
-  wrap.scrollTop  = wy*zoom - (fy - wr.top);
+  wrap.scrollTop  = wy*zoom + mh - (fy - wr.top);
   rafraichirActions(['zoomTxt']);
   if(_fil) dessinerFil();
   if(_liens.size) dessinerLiens();

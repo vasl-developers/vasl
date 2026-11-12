@@ -137,10 +137,14 @@ const ACTIONS = {
   los:      {lib: 'LOS (ligne de vue)', court: 'L', img: ICONE_LOS, lettre: true, touche: 'F10',
              faire: (ancre, e) => armerFil(e && e.ctrlKey && e.shiftKey ? 'l' : 'L'), allume: () => !!_filArme,
              // Au doigt, un appui long propose la LOS silencieuse et le mode détaillé.
-             menuLong: ['los', 'losMuet', 'verbeux']},
+             menuLong: ['los', 'losMuet', 'verbeux', 'prefLOS']},
   losMuet:  {lib: 'LOS inv (ligne de vue silencieuse)', court: 'l', img: ICONE_LOS, lettre: true, touche: 'Ctrl+Maj+F10',
              faire: () => armerFil('l'), allume: () => _filArme === 'l'},
   verbeux:  {ico: '📝', lib: 'LOS détaillée (Verbose LOS mode)', coche: () => _losVerbeux, faire: basculerVerbeux},
+  // Préférences de VASSAL (roue crantée) : couleurs du fil de la LOS,
+  // décompte des MF et des MP (js/preferences.js).
+  preferences: {lib: 'Préférences (LOS, décompte MF / MP)…', court: 'Préférences', ico: '⚙', faire: () => ouvrirPreferences()},
+  prefLOS:  {lib: 'Préférences de la LOS (couleurs)…', court: 'Préférences', ico: '⚙', faire: () => ouvrirPreferences('los')},
   zoomMoins:{lib: 'Zoom arrière', ico: '−', faire: zoomOut},
   zoomPlus: {lib: 'Zoom avant', ico: '+', faire: zoomIn},
   zoomTxt:  {etiquette: () => Math.round(zoom * 100) + ' %', classe: 'zoom'},
@@ -178,6 +182,7 @@ const ACTIONS = {
   // Bouton « Casualties Bin » de VASL : les pertes et leurs CVP.
   bin:      {lib: () => 'Casualties Bin — pertes et CVP (onglet des tables QRDC)' + (_cvpAffiche ? ' : ' + _cvpAffiche : ''),
              court: 'Pertes', ico: 'CVP', classe: 'sigle', coche: binOuvert, faire: basculerBin},
+  des3d:    {ico: '🎲', lib: 'Dés en 3D sur la carte', coche: () => _des3d, faire: () => basculerDes3d()},
   effectif: {ico: '🔢', lib: 'Afficher l\'effectif des piles (vue de loin)', coche: () => _effectifPiles, faire: () => basculerEffectif()},
   raccourcis: {lib: 'Raccourcis clavier et gestes…', court: 'Aide', ico: '?', faire: () => aideRaccourcis()},
   couche_unite:    {ico: '👥', lib: 'Sélection : unités', coche: () => COUCHES_SEL.unite, faire: () => basculerCouche('unite')},
@@ -431,19 +436,21 @@ function choisirProfil(p){
 const DISPOSITIONS = {
   pc: {
     menus: {
-      'Fichier':   ['ouvrir', 'vsav', '-', 'log'],
+      'Fichier':   ['ouvrir', 'vsav', '-', 'log', '-', 'preferences'],
       'Partie':    ['undo', '-', 'unmoved', 'all', '-', 'brises', 'sniper', '-', 'infoScenario'],
       // Masqués à la demande : sélection des cartes et panneaux, effectif
       // des piles, LOS détaillée (toujours au clic droit sur le bouton LOS).
       'Affichage': ['zoomPlus', 'zoomMoins', 'ajuster', 'zoom100', '-', 'rotDroite', 'rotGauche', 'rot180', 'rot0', '-', 'masquer', 'tables', '-', 'couche_unite', 'couche_marqueur',
                     'couche_overlay', '-', 'pions', 'journal', '-', 'profil_auto', 'profil_pc', 'profil_tactile'],
-      'Outils':    ['los', 'losMuet', '-', 'oba', 'bin'],
-      'Dés':       [...DES.map(d => d.id), '-', 'infoScenario'],
+      'Outils':    ['los', 'losMuet', 'prefLOS', '-', 'oba', 'bin'],
+      'Dés':       [...DES.map(d => d.id), '-', 'des3d', 'infoScenario'],
       'Réseau':    ['reseau', 'utilisateur'],
       'Aide':      ['raccourcis']
     },
     barre: ['ouvrir', 'vsav', 'log', 'logTxt', '|', 'undo', '|', 'zoomMoins', 'zoomTxt', 'zoomPlus', 'ajuster', 'rotGauche', 'rotDroite',
-            '|', 'relecture', 'los', 'unmoved', 'all', 'brises', 'sniper', 'masquer', 'tables', 'oba', 'bin', '|', 'pions', '|', 'reseau', 'utilisateur'],
+            '|', 'relecture', 'los', 'unmoved', 'all', 'brises', 'sniper', 'masquer', 'tables', 'oba', 'bin', '|', 'pions', '|', 'reseau', 'utilisateur', '|', 'preferences'],
+    // La barre QC de VASL (Quick Counters) : marqueurs à tirer sur la carte.
+    barreQC: true,
     // Les dés restent à portée, en boutons sous la barre d'icônes.
     barreDes: [...DES.filter(d => d.id.startsWith('DR_')).map(d => d.id), '|', ...DES.filter(d => d.id.startsWith('dr_')).map(d => d.id)],
     // Ni onglet Pile ni onglet Dés : la pile se gère comme au doigt
@@ -467,6 +474,7 @@ function appliquerProfil(p){
   haut.replaceChildren(); gauche.replaceChildren(); bas.replaceChildren();
   if(d.menus) haut.appendChild(construireMenus(d.menus));
   if(d.barre) haut.appendChild(construireBarre(d.barre, 'barreIcones'));
+  if(d.barreQC) haut.appendChild(construireBarreQC());
   if(d.barreDes) haut.appendChild(construireBarre(d.barreDes, 'barreIcones barreDes'));
   construireOnglets(d.panneau || ['pile', 'palette', 'des']);
   if(d.construire) d.construire();
@@ -630,7 +638,7 @@ Object.assign(ACTIONS, {
   vueJournal:{lib: 'Journal et chat', court: 'Journal', ico: '💬', faire: () => vueMobile('journal'), allume: () => _vue() === 'journal',
               badge: () => _nonLus},
   apercuChat:{ico: '💭', lib: 'Aperçu du chat sur la carte', coche: () => _apercuChat, faire: () => basculerApercuChat()},
-  titre:     {etiquette: () => _source ? _nomFichier : 'VASLweb 1.01', classe: 'titreScen'},
+  titre:     {etiquette: () => _source ? _nomFichier : 'VASLweb 1.02', classe: 'titreScen'},
   desMenu:   {lib: 'Dés : un appui DR, un appui long les catégories', court: 'Dés', ico: '🎲',
               faire: () => lancerDR('Other'), menuLong: null},
   sanPieges: {lib: 'SAN et pièges…', court: 'SAN', ico: 'INFO', classe: 'sigle', faire: () => ouvrirFeuilleSan()},
@@ -660,9 +668,9 @@ function placerColonne(c){
 // La sélection des overlays reste : sans elle, un overlay posé ne pourrait
 // plus être ni déplacé ni retiré au doigt.
 const PLUS = ['ouvrir', 'vsav', 'log', '-', 'los', 'losMuet', 'unmoved', 'all', 'brises', 'sniper', 'masquer', 'tables', 'oba', 'bin', 'couche_overlay', '-', 'rotDroite', 'rot180', '-', 'reseau', 'utilisateur', '-',
-  'sanPieges', '-', 'profil_pc'];
+  'sanPieges', 'des3d', '-', 'preferences', 'profil_pc'];
 // Dans la feuille « Plus », mais pas dans la colonne d'icônes.
-const PLUS_SANS_ICONE = ['profil_pc', 'reseau', 'utilisateur'];
+const PLUS_SANS_ICONE = ['profil_pc', 'reseau', 'utilisateur', 'des3d'];
 function ouvrirFeuillePlus(){ return ouvrirFeuilleActions('Plus', PLUS, 'feuillePlus'); }
 
 // SAN et pièges : les champs eux-mêmes viennent dans la feuille, et
@@ -694,9 +702,11 @@ function ouvrirFeuilleDes(){
 DISPOSITIONS.tactile = {
   panneau: ['pile', 'palette'],
   construire(){
-    // Pas de barre en haut : tout passe par la colonne d'icônes de droite ;
+    // En haut, la seule barre QC ; le reste passe par la colonne d'icônes ;
     // l'aperçu du chat se place en haut ou en bas, au choix.
     document.getElementById(_posApercu === 'haut' ? 'chromeHaut' : 'chromeBas').appendChild(_construireApercuChat());
+    // La barre QC de VASL, en haut de l'écran, défilante comme la colonne.
+    document.getElementById('chromeHaut').appendChild(construireBarreQCTactile());
     const nav = document.createElement('nav');
     nav.className = 'navBas navGauche';
     nav.setAttribute('aria-label', 'Vues');

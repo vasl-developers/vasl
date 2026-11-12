@@ -7,7 +7,7 @@ function construireMenus(def){
   barre.className = 'menus';
   barre.setAttribute('role', 'menubar');
   const h = document.createElement('h1');
-  h.textContent = 'VASLweb 1.01';
+  h.textContent = 'VASLweb 1.02';
   barre.appendChild(h);
   for(const [nom, ids] of Object.entries(def)){
     const t = document.createElement('button');
@@ -71,7 +71,8 @@ function _brancherMenus(){
     altSeul = false;
     const o = _menuOuvert;
     if(!o) return;
-    const titres = [...document.querySelectorAll('.menus .titreMenu')];
+    // Les sous-menus de la barre QC circulent entre eux.
+    const titres = [...document.querySelectorAll(o.titre._ouvrir ? '.barreQC .qcMenu' : '.menus .titreMenu')];
     const j = titres.indexOf(o.titre);
     const k = e.key;
     if(!['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Enter', ' ', 'Escape', 'Home', 'End'].includes(k)) return;
@@ -82,7 +83,8 @@ function _brancherMenus(){
     else if(k === 'Home') _focusItem(0);
     else if(k === 'End') _focusItem(-1);
     else if(k === 'ArrowLeft' || k === 'ArrowRight')
-      ouvrirDeroulant(titres[(j + (k === 'ArrowLeft' ? -1 : 1) + titres.length) % titres.length], true);
+      { const t = titres[(j + (k === 'ArrowLeft' ? -1 : 1) + titres.length) % titres.length];
+        if(t._ouvrir) t._ouvrir(true); else ouvrirDeroulant(t, true); }
     else if(o.i >= 0) o.items[o.i].click();
   }, true);
   window.addEventListener('keyup', e => {

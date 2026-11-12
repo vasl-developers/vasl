@@ -635,7 +635,8 @@ function lancerdr(cat){
 // et VASL affiche « *2~null ... » à sa place.
 function _publierJet(msg){
   _logCmd('CHAT' + msg);
-  afficherChat(msg);
+  _jetLocal = true;
+  try { afficherChat(msg); } finally { _jetLocal = false; }
 }
 
 function _desechappe(s){
@@ -709,6 +710,9 @@ function afficherChat(msg){
     ligne.appendChild(s);
   }
   ajouterLigne(ligne);
+  // Jet lancé ici ou reçu en direct : les dés roulent sur la carte.
+  if(_jetLocal || (_netReception && !_relecture))
+    animerDes(type, v, `${t.textContent} ${v.join(' + ')}${type === 'DR' ? ' = ' + (v[0] + v[1]) : ''} · ${qui}`);
 }
 
 // dr d'activation du Sniper (A14.3), comme ASLChatter.
