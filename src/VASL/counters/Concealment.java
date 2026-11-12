@@ -244,7 +244,9 @@ public class Concealment extends Decorator implements EditablePiece {
         if (piece.getProperty("separateLocation") != null) {
           return false;
         }
-        if (Decorator.getDecorator(piece, Concealment.class) == null) {
+        // Only the units this concealment counter can conceal make the stack a non-dummy one: other counters,
+        // e.g. fortifications or enemy units, do not
+        if (Decorator.getDecorator(piece, Concealment.class) == null && canConceal(piece)) {
           if (piece.getProperty(Properties.OBSCURED_TO_ME) == null || !(boolean) piece.getProperty(Properties.OBSCURED_TO_ME)) {
               return true;
           }
