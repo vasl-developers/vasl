@@ -7,7 +7,7 @@ function construireMenus(def){
   barre.className = 'menus';
   barre.setAttribute('role', 'menubar');
   const h = document.createElement('h1');
-  h.textContent = 'VASLweb 1.03';
+  h.textContent = 'VASLweb 1.05';
   barre.appendChild(h);
   for(const [nom, ids] of Object.entries(def)){
     const t = document.createElement('button');

@@ -359,7 +359,7 @@ function _poigneeVolant(depart, bouger, revenir){
 // ── Éventail de pile : au doigt, viser un pion décalé de 4 px est
 // impossible ; une bande flottante montre la pile en grand, du fond
 // (à gauche) vers le sommet, au-dessus de la pile.
-let _eventail = null;            // {k, el}
+let _eventail = null;            // {k, el, coche} ; coche : sélection faite aux cases
 let _posEventail = null;         // {x, y} à l'écran, une fois déplacé
 // Éventail tourné de 90° (en colonne) : réglage du poste.
 let _eventailVertical = _lirePref('aslweb.eventailVertical') === '1';
@@ -403,7 +403,7 @@ function majEventail(){
   tout.title = 'Sélectionner toute la pile';
   tout.setAttribute('aria-label', tout.title);
   tout.addEventListener('pointerdown', e => e.stopPropagation());
-  tout.addEventListener('click', e => { e.stopPropagation(); selectionnerPile(ev.k); vibrer(); });
+  tout.addEventListener('click', e => { e.stopPropagation(); ev.coche = true; selectionnerPile(ev.k); vibrer(); });
   const marque = document.createElement('div');
   marque.className = 'inserEv';
   marque.hidden = true;
@@ -417,6 +417,7 @@ function majEventail(){
   aucun.addEventListener('pointerdown', e => e.stopPropagation());
   aucun.addEventListener('click', e => {
     e.stopPropagation();
+    ev.coche = false;
     selectionner([]);
     _pileSel = ev.k;
     afficherPile();
@@ -536,7 +537,7 @@ function _vignetteEventail(p, k, bande, marque){
   ck.textContent = _sel.has(p) ? '☑' : '☐';
   ck.setAttribute('aria-label', _sel.has(p) ? 'Retirer de la sélection' : 'Ajouter à la sélection');
   ck.addEventListener('pointerdown', e => e.stopPropagation());
-  ck.addEventListener('click', e => { e.stopPropagation(); selectionner([p], 'basculer'); vibrer(); });
+  ck.addEventListener('click', e => { e.stopPropagation(); if(_eventail) _eventail.coche = true; selectionner([p], 'basculer'); vibrer(); });
   v.appendChild(ck);
   // À la souris : le clic droit ouvre les commandes du pion, comme sur la carte.
   v.addEventListener('contextmenu', e => {
@@ -571,13 +572,18 @@ function _vignetteEventail(p, k, bande, marque){
       return {c: best.c, r: best.r, apres, i: cases.indexOf(best.c)};
     };
     const doigt = !!e.pointerType && e.pointerType !== 'mouse';
-    glisser(e, () => sommetDeplace(aEmporter(p, doigt), p), EVENTAIL_COTE, (cx, cy) => {
-      // Lâché sur la carte : la sélection, ou ce pion s'il n'en est pas.
+    // Un pion tiré de l'éventail part seul. Il n'emporte les autres que
+    // s'il est coché avec eux : la sélection de la pile entière, faite en
+    // ouvrant l'éventail, ne compte pas, il faut les cases à cocher.
+    const emporte = () => _eventail && _eventail.coche && _sel.has(p) && _sel.size > 1 ? piecesADeplacer() : [p];
+    glisser(e, () => sommetDeplace(emporte(), p), EVENTAIL_COTE, (cx, cy) => {
+      // Lâché sur la carte : ce pion, ou les pions cochés s'il en est.
       const c = clientVersCarte(cx, cy);
       if(!c || masque) return;
-      (doigt ? deplacerAuDoigt : deplacer)(aEmporter(p, doigt), c.x, c.y);
+      (doigt ? deplacerAuDoigt : deplacer)(emporte(), c.x, c.y);
     }, () => {
       clearTimeout(timer);
+      if(_eventail) _eventail.coche = false;
       selectionner([p]); vibrer();
     }, {
       zone: bande,
