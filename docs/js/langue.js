@@ -124,6 +124,7 @@ const EN = {
   'Panneau Pile, Palette, Dés': 'Stack, Counters and Dice panel',
   'Éventail de la pile': 'Stack view', 'double-clic · double appui': 'double-click · double tap',
   'Journal et chat': 'Chat log', 'Journal': 'Chat',
+  'Journal et chat en haut de l\'écran': 'Chat log at the top of the screen', 'En haut': 'Top',
   'SAN et pièges du scénario…': 'Scenario SAN and Booby Traps…', 'SAN': 'SAN',
   'Palette des pions': 'Counters palette', 'Pile sélectionnée': 'Selected stack',
   'Verrou des pions (un glissé déplace la carte)': 'Lock counters (dragging scrolls the map)', 'Verrou': 'Lock',

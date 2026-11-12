@@ -56,10 +56,12 @@ function placerApercuChat(pos){
   _posApercu = pos;
   try { localStorage.setItem('aslweb.apercuPos', pos); } catch(e){}
   document.body.dataset.chat = pos;
+  if(typeof rafraichirActions === 'function') rafraichirActions(['chatHaut']);
   const ap = document.getElementById('apercuChat');
-  if(!ap) return;
-  document.getElementById(pos === 'haut' ? 'chromeHaut' : 'chromeBas').prepend(ap);
-  _majApercuChat();
+  if(ap){
+    document.getElementById(pos === 'haut' ? 'chromeHaut' : 'chromeBas').prepend(ap);
+    _majApercuChat();
+  }
   _surRedimension();
   majHautBas();
   _majReserveCarte();
@@ -382,7 +384,25 @@ function majAideChat(){
 }
 function _brancherChat(){
   const ci = document.getElementById('chatIn'), bt = document.getElementById('chatEnvoi');
-  ci.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); envoyerSaisie(); } });
+  ci.addEventListener('keydown', e => {
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      // Entrée sur un message vide : on quitte le chat, les raccourcis reviennent.
+      if(!ci.value.trim()){ if(!_profil || _profil === 'pc') ci.blur(); return; }
+      envoyerSaisie();
+    } else if(e.key === 'Escape' && (!_profil || _profil === 'pc')){ e.preventDefault(); ci.blur(); }
+  });
+  // Sur PC, Entrée hors de tout champ place le curseur dans le chat.
+  document.addEventListener('keydown', e => {
+    if(e.key !== 'Enter' || e.defaultPrevented || e.ctrlKey || e.altKey || e.metaKey || e.shiftKey) return;
+    if(_profil && _profil !== 'pc') return;
+    const t = e.target;
+    if(/^(INPUT|SELECT|TEXTAREA|BUTTON|A)$/.test(t.tagName) || t.isContentEditable) return;
+    if(document.querySelector('.fenetre, .voile, #ctx') || feuilleOuverte()) return;
+    if(ci.offsetParent === null) return;
+    e.preventDefault();
+    ci.focus();
+  });
   ci.addEventListener('input', _majEnvoi);
   // Le bouton ne prend pas le focus : le clavier reste ouvert.
   bt.addEventListener('pointerdown', e => e.preventDefault());

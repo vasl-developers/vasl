@@ -24,7 +24,7 @@
   ajouter('link', {rel: 'apple-touch-icon', href: 'icons/apple-touch-icon.png'});
   ajouter('meta', {name: 'mobile-web-app-capable', content: 'yes'});
   ajouter('meta', {name: 'apple-mobile-web-app-capable', content: 'yes'});
-  ajouter('meta', {name: 'apple-mobile-web-app-title', content: 'VASLweb 1.02'});
+  ajouter('meta', {name: 'apple-mobile-web-app-title', content: 'VASLweb 1.03'});
 
   if('serviceWorker' in navigator){
     navigator.serviceWorker.register('sw.js').catch(err => console.warn('Service worker :', err));
