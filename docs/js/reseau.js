@@ -839,6 +839,7 @@ function ouvrirReseau(){
         <p>Comme le serveur de VASSAL : l'hôte ouvre une salle et donne son code ; qui la
           rejoint reçoit la partie du propriétaire, puis chaque coup joué part chez les autres.</p>
         <p>Vous jouez sous le nom <b>${qui}</b>.</p>
+        <p>Pour rejoindre, le code de la salle suffit : aucun mot de passe n'est demandé. « Identification… » sert seulement à voir ses propres pions dissimulés et HIP.</p>
         <label>Liaison<select id="nwMoyen">
           <option value="internet">Internet (direct ou par relais)</option>
           <option value="onglets">Onglets de ce navigateur</option></select></label>
