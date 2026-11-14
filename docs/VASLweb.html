@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,viewport-fit=cover">
+<meta name="theme-color" content="#2b2b2b">
+<script src="pwa.js?v=vasl-1.06" defer></script>
+<title>VASLweb 1.06</title>
+<link rel="stylesheet" href="css/vaslweb.css?v=vasl-1.06">
+</head>
+<body>
+<!-- L'interface (menus, barres, rail, navigation) est construite par
+     appliquerProfil() d'après le terminal ; la carte, les pions, le journal
+     et les contrôles de formulaire ne sont jamais recréés, seulement placés. -->
+<div id="chromeHaut"></div>
+<div id="corps">
+  <div id="chromeGauche"></div>
+  <div id="mapWrap">
+    <div id="mapScaler"><div id="mapInner"></div></div>
+    <div id="vide">Ouvrir un fichier .vsav ou .vlog, ou le déposer ici,<br>pour afficher la carte du scénario.</div>
+  </div>
+  <div id="poigneeCote" class="poignee verticale" title="Glisser pour régler la largeur du panneau"></div>
+  <div id="cote">
+    <div id="coteOnglets" class="coteOnglets" role="tablist"></div>
+    <div id="ongPile" class="ongCorps" role="tabpanel">
+      <div id="pile"></div>
+      <span id="couches" title="Couches que le clic peut sélectionner ; les autres laissent passer le clic">Sélection :
+        <label><input type="checkbox" data-couche="unite"> Unités</label>
+        <label><input type="checkbox" data-couche="marqueur"> Marqueurs</label>
+        <label><input type="checkbox" data-couche="carte"> Cartes et panneaux</label>
+        <label><input type="checkbox" data-couche="overlay"> Overlays</label>
+      </span>
+    </div>
+    <div id="ongPalette" class="ongCorps" role="tabpanel">
+      <input id="palRech" placeholder="Rechercher un pion…" autocomplete="off" aria-label="Rechercher un pion">
+      <div id="palCorps"></div>
+    </div>
+    <div id="ongDes" class="ongCorps" role="tabpanel">
+      <div id="desBoutons" class="desBoutons"></div>
+      <div id="infoScen" class="infoScen">
+        <label>SAN Axis <input type="number" id="sanAxis" min="0" max="12" placeholder="?"></label>
+        <label>SAN Allied <input type="number" id="sanAllied" min="0" max="12" placeholder="?"></label>
+        <label title="Booby Trap (A/B/C)">Piège Axis <select id="bbAxis"><option>?</option><option>A</option><option>B</option><option>C</option></select></label>
+        <label title="Booby Trap (A/B/C)">Piège Allied <select id="bbAllied"><option>?</option><option>A</option><option>B</option><option>C</option></select></label>
+      </div>
+      <div id="desAide" class="desAide"></div>
+    </div>
+  </div>
+</div>
+<div id="poigneeJournal" class="poignee horizontale" title="Glisser pour régler la hauteur du journal"></div>
+<div id="bas">
+  <div id="journal" role="log" aria-live="polite"></div>
+  <div id="chatBarre">
+    <input id="chatIn" autocomplete="off" enterkeyhint="send" autocapitalize="sentences"
+           aria-label="Message au chat" placeholder="Message au chat (Entrée pour envoyer)">
+    <button id="chatEnvoi" type="button" class="act bouton" aria-label="Envoyer" title="Envoyer" disabled>➤</button>
+  </div>
+</div>
+<div id="chromeBas"></div>
+<input type="file" id="fileImport" style="display:none" onchange="handleFileImport(this)">
+
+<script src="js/outils.js?v=vasl-1.06" defer></script>
+<script src="js/donnees/ssr.js?v=vasl-1.06" defer></script>
+<script src="js/donnees/overlays-ext.js?v=vasl-1.06" defer></script>
+<script src="js/donnees/mouvement.js?v=vasl-1.06" defer></script>
+<script src="js/langue.js?v=vasl-1.06" defer></script>
+<script src="js/noyau.js?v=vasl-1.06" defer></script>
+<script src="js/fichiers.js?v=vasl-1.06" defer></script>
+<script src="js/carte.js?v=vasl-1.06" defer></script>
+<script src="js/hexagones.js?v=vasl-1.06" defer></script>
+<script src="js/los-moteur.js?v=vasl-1.06" defer></script>
+<script src="js/los-pions.js?v=vasl-1.06" defer></script>
+<script src="js/los-fil.js?v=vasl-1.06" defer></script>
+<script src="js/pieces.js?v=vasl-1.06" defer></script>
+<script src="js/pions.js?v=vasl-1.06" defer></script>
+<script src="js/vlog.js?v=vasl-1.06" defer></script>
+<script src="js/mf.js?v=vasl-1.06" defer></script>
+<script src="js/commandes.js?v=vasl-1.06" defer></script>
+<script src="js/chat-rapports.js?v=vasl-1.06" defer></script>
+<script src="js/flare.js?v=vasl-1.06" defer></script>
+<script src="js/cvp.js?v=vasl-1.06" defer></script>
+<script src="js/dissimulation.js?v=vasl-1.06" defer></script>
+<script src="js/tactile.js?v=vasl-1.06" defer></script>
+<script src="js/bdd.js?v=vasl-1.06" defer></script>
+<script src="js/qrdc.js?v=vasl-1.06" defer></script>
+<script src="js/oba.js?v=vasl-1.06" defer></script>
+<script src="js/des-utilisateurs.js?v=vasl-1.06" defer></script>
+<script src="js/des-3d.js?v=vasl-1.06" defer></script>
+<script src="js/ift.js?v=vasl-1.06" defer></script>
+<script src="js/reseau.js?v=vasl-1.06" defer></script>
+<script src="js/export.js?v=vasl-1.06" defer></script>
+<script src="js/preferences.js?v=vasl-1.06" defer></script>
+<script src="js/qc.js?v=vasl-1.06" defer></script>
+<script src="js/interface.js?v=vasl-1.06" defer></script>
+<script src="js/chat.js?v=vasl-1.06" defer></script>
+<script src="js/menus.js?v=vasl-1.06" defer></script>
+</body>
+</html>
