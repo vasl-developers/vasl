@@ -7,7 +7,7 @@ function construireMenus(def){
   barre.className = 'menus';
   barre.setAttribute('role', 'menubar');
   const h = document.createElement('h1');
-  h.textContent = 'VASLweb 1.05';
+  h.textContent = 'VASLweb 1.06';
   barre.appendChild(h);
   for(const [nom, ids] of Object.entries(def)){
     const t = document.createElement('button');
@@ -91,10 +91,9 @@ function _brancherMenus(){
     if(e.key !== 'Alt' || !altSeul) return;
     altSeul = false;
     if(_profil !== 'pc' || /^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) return;
-    const t = document.querySelector('.menus .titreMenu');
-    if(!t) return;
+    // Plus de barre de menus au PC : Alt seul ouvre ou ferme la roue ⚙.
     e.preventDefault();
-    if(_menuOuvert) fermerDeroulants(); else ouvrirDeroulant(t, true);
+    if(_menuOuvert) fermerDeroulants(); else basculerConfig();
   });
   // Alt enfoncé puis un clic : ce n'est pas « Alt seul ».
   window.addEventListener('pointerdown', () => { altSeul = false; }, true);
@@ -117,7 +116,7 @@ function aideRaccourcis(){
   const w = document.createElement('div');
   w.id = 'fenUtil'; w.className = 'fenetre';
   w.innerHTML = `<div class="ft">Raccourcis clavier et gestes</div><div class="fc"><table>
-    ${lignes('Partie', [...actions, ['Menus', 'Alt']])}
+    ${lignes('Partie', [...actions, ['Configuration', 'Alt']])}
     ${lignes('Dés', DES.map(d => [d.titre, d.touche]))}
     ${lignes('Pions et piles', [
       ['Commandes du pion (menu)', 'clic droit · double appui'],

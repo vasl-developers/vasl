@@ -197,9 +197,10 @@ function evaluerExpression(expr, pr){
   } catch(e){ return undefined; }
 }
 
-// Propriétés globales du module (traits setprop), le temps de la séance :
-// VASSAL les garde dans la partie, la page seulement en mémoire. Les
-// couches qui les suivent gardent leur niveau dans leur propre état.
+// Propriétés globales du module (traits setprop). Comme VASSAL, la page
+// les garde dans la partie : un changement part en « MutableProperty »
+// (log, réseau) et la sauvegarde l'écrit (fixerGlobale, cvp.js). Les
+// couches qui les suivent gardent aussi leur niveau dans leur état.
 const _globales = {};
 
 // Découpage d'une séquence VASSAL (SequenceEncoder) : un séparateur
@@ -460,7 +461,7 @@ function commandesDe(type){
           v = String(n);
         }
         if(id === 'PROP') S[i] = v.replace(/\//g, '\\/');
-        else _globales[nom] = v;
+        else fixerGlobale(nom, v);
       };
       const evaluer = (x, p, S) => evaluerExpression(x.replace(/\$PlayerName\$/g, joueur()), proprietesPion(p, T, S));
       _seq(ch[3], ',').forEach((cmd, j) => {
@@ -554,6 +555,22 @@ function _passerTouche(p, T, S, cmds, touche, cmdDirecte, lot){
   return {agi, effets, tirees};
 }
 
+// Couches qui suivent une propriété : leur niveau, dans l'état S, prend
+// la valeur de la propriété.
+function _appliquerSuivis(p, T, S, suivis){
+  if(!suivis.length) return;
+  const pr = proprietesPion(p, T, S);
+  for(const sv of suivis){
+    const v = pr[sv.prop];
+    if(!_nombre(v)) continue;
+    const niv = Number(v) - sv.premier + 1;
+    if(niv < 1 || niv > sv.N) continue;
+    const m = (S[sv.i] || '').match(/^(-?\d+)([^]*)$/);
+    const [x, r] = m ? [+m[1], m[2]] : [1, ''];
+    S[sv.i] = String(x < 0 ? -niv : niv) + r;
+  }
+}
+
 // ── Envoie une touche à un pion. Les états changés sont réécrits et
 // consignés par un « D/ » ; les effets (poser, retirer, cloner,
 // déplacer) passent après, chacun avec ses propres commandes de log.
@@ -572,18 +589,9 @@ function executerTouche(p, touche, cmdDirecte, lot){
   const nomAvant = nomRapport(p);
   const {agi, effets, tirees} = _passerTouche(p, T, S, cmds, touche, cmdDirecte, lot);
   // Couches qui suivent une propriété : leur niveau en découle.
-  if(suivis.length){
-    const pr = proprietesPion(p, T, S);
-    for(const sv of suivis){
-      const v = pr[sv.prop];
-      if(!_nombre(v)) continue;
-      const niv = Number(v) - sv.premier + 1;
-      if(niv < 1 || niv > sv.N) continue;
-      const m = (S[sv.i] || '').match(/^(-?\d+)([^]*)$/);
-      const [x, r] = m ? [+m[1], m[2]] : [1, ''];
-      S[sv.i] = String(x < 0 ? -niv : niv) + r;
-    }
-  }
+  _appliquerSuivis(p, T, S, suivis);
+  // Propriétés globales changées par la touche (« Set Sides »…).
+  const globs = _globAttente.splice(0);
   if(S.join('\x00') !== avant){
     _avantAction();
     const neuf = encoderTraits(S);
@@ -593,6 +601,7 @@ function executerTouche(p, touche, cmdDirecte, lot){
     // Un véhicule qui tourne paie ses MP de VCA (D2.11).
     if(typeof compterVCA === 'function') compterVCA(p, T, avant.split('\x00'), S);
   }
+  if(globs.length) _emettreGlobales(globs, p);
   if(agi) rapportsEtat(p, te.type, tirees, cmds, nomAvant);
   for(const f of effets) f();
   return agi;

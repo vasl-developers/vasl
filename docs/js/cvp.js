@@ -42,12 +42,62 @@ function _lireGlob(c){
   }
   return null;
 }
-function _appliquerGlob(c){
+function _appliquerGlob(c, sansSuivi){
   const g = _lireGlob(c);
   if(!g) return false;
   _globConnu.set(_cleGlob(g.nom, g.carte), g.valeur);
   _globales[g.nom] = g.valeur;
+  if(!sansSuivi) _suivreGlobales([g.nom]);
   return true;
+}
+
+// ── Propriété globale changée par un trait setprop (« Set Sides » du
+// marqueur de tour et de la roue des phases : TurnMarker1/2 et les
+// niveaux de couche qui en découlent). VASSAL la garde dans la partie :
+//   · le changement part en MutableProperty (log, réseau, Undo) ;
+//   · la sauvegarde écrit la nouvelle valeur (_segmentsGlob) ;
+//   · les autres pièces dont une couche suit la propriété changent
+//     d'image aussitôt, comme dans VASL.
+// Les compteurs de CVP, recomptés à part, n'en font pas partie.
+let _globEnComptage = false;
+const _globAttente = [];          // noms changés pendant le passage d'une touche
+function fixerGlobale(nom, v){
+  if(_globales[nom] === v) return;
+  _globales[nom] = v;
+  if(_globEnComptage || ((_bdd && _bdd.compteurs) || []).some(c => c.prop === nom)) return;
+  if(!_globAttente.includes(nom)) _globAttente.push(nom);
+}
+// Après la touche : une commande par propriété que la partie connaît et
+// dont la valeur a changé. Une propriété absente de la partie (son
+// conteneur est inconnu) reste en mémoire, comme avant.
+function _emettreGlobales(noms, sauf){
+  for(const nom of noms){
+    const v = _globales[nom];
+    for(const [k, connu] of _globConnu){
+      const [n, carte] = k.split('\u0001');
+      if(n !== nom || connu === v) continue;
+      _avantAction();
+      _logCmd(`MutableProperty\t${nom}\t${connu}\t${v}\t${carte}`);
+      _globConnu.set(k, v);
+    }
+  }
+  _suivreGlobales(noms, sauf);
+}
+// Les pièces dont une couche suit l'une de ces propriétés prennent son
+// niveau. Leur état change sans commande : VASL, lui, lit la propriété.
+function _suivreGlobales(noms, sauf){
+  for(const p of pions){
+    if(p === sauf || (p.deleted && !p.ailleurs)) continue;
+    const te = tePion(p);
+    if(!te) continue;
+    const {suivis, T} = commandesDe(te.type);
+    if(!suivis.some(sv => noms.includes(sv.prop))) continue;
+    const S = decoderTraits(te.etat), avant = S.join('\x00');
+    _appliquerSuivis(p, T, S, suivis);
+    if(S.join('\x00') === avant) continue;
+    fixerEtat(p, encoderTraits(S));
+    if(!p.deleted) majApparence(p);
+  }
 }
 
 // Recomptage des compteurs, comme leurs boutons : la touche du bouton
@@ -65,6 +115,7 @@ function _recompterCVP(){
 // d'un pion), sans rien laisser dans les propriétés globales.
 function _compter(c, liste){
   const avant = Object.assign({}, _globales);
+  _globEnComptage = true;
   try {
     _globales[c.prop] = '0';
     for(const p of liste){
@@ -78,6 +129,7 @@ function _compter(c, liste){
     }
     return String(Number(_globales[c.prop]) || 0);
   } finally {
+    _globEnComptage = false;
     for(const k of Object.keys(_globales)) if(!(k in avant)) delete _globales[k];
     Object.assign(_globales, avant);
   }
@@ -122,7 +174,10 @@ function _planifierCVP(){
 function lireGlobales(segs){
   _globConnu.clear(); _cvpAffiche = '';
   for(const k of Object.keys(_globales)) delete _globales[k];
-  for(const s of segs) if(s.startsWith('GlobalProperty\t')) _appliquerGlob(s.replace(/\\+$/, ''));
+  for(const s of segs) if(s.startsWith('GlobalProperty\t')) _appliquerGlob(s.replace(/\\+$/, ''), true);
+  // Comme dans VASL, une couche qui suit une propriété montre la valeur
+  // de la partie, quel que soit le niveau gardé dans l'état de la pièce.
+  _suivreGlobales(Object.keys(_globales));
   if(_bdd) _cvpAJour(false);
   else if(pions.some(p => p.ailleurs)) chargerBDD().catch(() => {});
 }
@@ -130,6 +185,15 @@ function lireGlobales(segs){
 // Sauvegarde : les compteurs recomptés à la place des valeurs lues ; un
 // compteur absent du fichier n'y entre que s'il n'est pas nul.
 function _segmentsGlob(sortie){
+  // Propriétés changées ici ou reçues (Set Sides…) : leur valeur du moment.
+  const estCompteur = g => ((_bdd && _bdd.compteurs) || []).some(x => x.prop === g.nom && x.carte === g.carte);
+  for(let i = 0; i < sortie.length; i++){
+    const g = sortie[i].startsWith('GlobalProperty\t') && _lireGlob(sortie[i].replace(/\\+$/, ''));
+    if(!g || estCompteur(g)) continue;
+    const k = _cleGlob(g.nom, g.carte);
+    if(!_globConnu.has(k) || _globConnu.get(k) === g.valeur) continue;
+    sortie[i] = `GlobalProperty\t;${g.nom};${_globConnu.get(k).replace(/([;\\])/g, '\\$1')};${g.carte}`;
+  }
   const r = _recompterCVP();
   if(!r) return [];
   const vus = new Set();

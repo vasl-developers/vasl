@@ -144,6 +144,9 @@ const ACTIONS = {
   // Préférences de VASSAL (roue crantée) : couleurs du fil de la LOS,
   // décompte des MF et des MP (js/preferences.js).
   preferences: {lib: 'Préférences (LOS, décompte MF / MP)…', court: 'Préférences', ico: '⚙', faire: () => ouvrirPreferences()},
+  // Roue de configuration du PC : la feuille des réglages (CONFIG_PC).
+  config:   {lib: 'Configuration…', court: 'Configuration', ico: '⚙', faire: () => basculerConfig(),
+             allume: () => _feuilles.has('feuilleConfig')},
   prefLOS:  {lib: 'Préférences de la LOS (couleurs)…', court: 'Préférences', ico: '⚙', faire: () => ouvrirPreferences('los')},
   zoomMoins:{lib: 'Zoom arrière', ico: '−', faire: zoomOut},
   zoomPlus: {lib: 'Zoom avant', ico: '+', faire: zoomIn},
@@ -194,7 +197,7 @@ const ACTIONS = {
   profil_auto:     {ico: '🔄', lib: 'Affichage : automatique', coche: () => _profilChoisi === 'auto', faire: () => choisirProfil('auto')},
   coteColonne:     {ico: '⇄', court: 'Côté', lib: () => _colonne === 'droite' ? 'Placer la barre d\'icônes à gauche' : 'Placer la barre d\'icônes à droite',
                     faire: () => placerColonne(_colonne === 'droite' ? 'gauche' : 'droite')},
-  profil_pc:       {ico: '🖥', lib: 'Affichage : PC', coche: () => _profilChoisi === 'pc', faire: () => choisirProfil('pc')},
+  profil_pc:       {ico: '🖥', lib: 'Affichage : PC/Mac', coche: () => _profilChoisi === 'pc', faire: () => choisirProfil('pc')},
   profil_tactile:  {ico: '📱', lib: 'Affichage : tactile', coche: () => _profilChoisi === 'tactile', faire: () => choisirProfil('tactile')},
   // Relecture d'un .vlog : visible seulement s'il reste des coups.
   relecture:{groupe: ['lgDebut', 'lgArr', 'logPos', 'lgAv', 'lgFin'], visible: _enRelecture},
@@ -436,20 +439,15 @@ function choisirProfil(p){
 
 const DISPOSITIONS = {
   pc: {
-    menus: {
-      'Fichier':   ['ouvrir', 'vsav', '-', 'log', '-', 'preferences'],
-      'Partie':    ['undo', '-', 'unmoved', 'all', '-', 'brises', 'sniper', '-', 'infoScenario'],
-      // Masqués à la demande : sélection des cartes et panneaux, effectif
-      // des piles, LOS détaillée (toujours au clic droit sur le bouton LOS).
-      'Affichage': ['zoomPlus', 'zoomMoins', 'ajuster', 'zoom100', '-', 'rotDroite', 'rotGauche', 'rot180', 'rot0', '-', 'masquer', 'tables', '-', 'couche_unite', 'couche_marqueur',
-                    'couche_overlay', '-', 'pions', 'journal', 'chatHaut', '-', 'profil_auto', 'profil_pc', 'profil_tactile'],
-      'Outils':    ['los', 'losMuet', 'prefLOS', '-', 'oba', 'bin'],
-      'Dés':       [...DES.map(d => d.id), '-', 'des3d', 'infoScenario'],
-      'Réseau':    ['reseau', 'utilisateur'],
-      'Aide':      ['raccourcis']
-    },
-    barre: ['ouvrir', 'vsav', 'log', 'logTxt', '|', 'undo', '|', 'zoomMoins', 'zoomTxt', 'zoomPlus', 'ajuster', 'rotGauche', 'rotDroite',
-            '|', 'relecture', 'los', 'unmoved', 'all', 'brises', 'sniper', 'masquer', 'tables', 'oba', 'bin', '|', 'pions', '|', 'reseau', 'utilisateur', '|', 'preferences'],
+    // Plus de barre de menus : chaque action a son icône dans la barre, et
+    // les réglages passent par la roue ⚙ « Configuration », une feuille
+    // comme la feuille « Plus » de l'affichage tactile (Alt l'ouvre).
+    // Masqués à la demande : sélection des cartes et panneaux, effectif
+    // des piles (LOS détaillée : dans la roue et au clic droit sur LOS).
+    barre: ['ouvrir', 'vsav', 'log', 'logTxt', '|', 'undo', '|', 'zoomMoins', 'zoomTxt', 'zoomPlus', 'ajuster', 'zoom100',
+            'rotGauche', 'rotDroite', 'rot180', 'rot0',
+            '|', 'relecture', 'los', 'losMuet', 'unmoved', 'all', 'brises', 'sniper', 'masquer', 'tables', 'oba', 'bin', 'sanPieges',
+            '|', 'pions', 'journal', '|', 'reseau', 'utilisateur', '|', 'config', 'raccourcis'],
     // La barre QC de VASL (Quick Counters) : marqueurs à tirer sur la carte.
     barreQC: true,
     // Les dés restent à portée, en boutons sous la barre d'icônes.
@@ -460,6 +458,17 @@ const DISPOSITIONS = {
     panneau: ['palette']
   }
 };
+// Réglages de la roue ⚙ du PC : ce que les menus étaient seuls à offrir
+// et qui n'a pas sa place dans la barre d'icônes.
+const CONFIG_PC = ['preferences', 'prefLOS', 'verbeux', '-', 'couche_unite', 'couche_marqueur', 'couche_overlay', '-',
+  'chatHaut', 'des3d', '-', 'profil_auto', 'profil_pc', 'profil_tactile'];
+function basculerConfig(){
+  if(_feuilles.has('feuilleConfig')){ fermerFeuille('feuilleConfig'); return; }
+  const f = ouvrirFeuilleActions('Configuration', CONFIG_PC, 'feuilleConfig');
+  // Une entrée à cocher laisse la feuille ouverte : la roue reste allumée.
+  f._surFermer = () => rafraichirActions(['config']);
+  return f;
+}
 // Tant qu'un profil n'a pas sa disposition propre, il reprend celle du PC.
 const disposition = p => DISPOSITIONS[p] || DISPOSITIONS.pc;
 
@@ -480,7 +489,7 @@ function appliquerProfil(p){
   construireOnglets(d.panneau || ['pile', 'palette', 'des']);
   if(d.construire) d.construire();
   // Les vues de l'affichage tactile partent fermées ; au PC aussi, la
-  // palette : elle s'ouvre par ♟ (barre ou menu Affichage).
+  // palette : elle s'ouvre par ♟ (barre d'icônes).
   if(p === 'pc') basculerCote(false);
   rafraichirActions();
   for(const f of _apresProfil) f(p, ancien);
@@ -639,7 +648,7 @@ Object.assign(ACTIONS, {
   vueJournal:{lib: 'Journal et chat', court: 'Journal', ico: '💬', faire: () => vueMobile('journal'), allume: () => _vue() === 'journal',
               badge: () => _nonLus},
   apercuChat:{ico: '💭', lib: 'Aperçu du chat sur la carte', coche: () => _apercuChat, faire: () => basculerApercuChat()},
-  titre:     {etiquette: () => _source ? _nomFichier : 'VASLweb 1.05', classe: 'titreScen'},
+  titre:     {etiquette: () => _source ? _nomFichier : 'VASLweb 1.06', classe: 'titreScen'},
   desMenu:   {lib: 'Dés : un appui DR, un appui long les catégories', court: 'Dés', ico: '🎲',
               faire: () => lancerDR('Other'), menuLong: null},
   sanPieges: {lib: 'SAN et pièges…', court: 'SAN', ico: 'INFO', classe: 'sigle', faire: () => ouvrirFeuilleSan()},
@@ -665,7 +674,7 @@ function placerColonne(c){
 // détaillée, verrou des pions, effectif des piles, aperçu du chat,
 // raccourcis ; du choix de l'affichage ne reste que l'affichage ordinateur,
 // dans la feuille seulement. Les actions restent définies (menu Affichage du
-// PC) : pour les rendre, remettre 'couche_unite', 'couche_marqueur' ici.
+// PC, roue ⚙) : pour les rendre, remettre 'couche_unite', 'couche_marqueur' ici.
 // La sélection des overlays reste : sans elle, un overlay posé ne pourrait
 // plus être ni déplacé ni retiré au doigt.
 const PLUS = ['ouvrir', 'vsav', 'log', '-', 'los', 'losMuet', 'unmoved', 'all', 'brises', 'sniper', 'masquer', 'tables', 'oba', 'bin', 'couche_overlay', '-', 'rotDroite', 'rot180', '-', 'reseau', 'utilisateur', '-',
