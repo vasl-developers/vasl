@@ -18,6 +18,7 @@
  */
 package VASL.counters;
 
+import VASL.build.module.ASLMap;
 import VASSAL.build.module.GlobalOptions;
 import VASSAL.build.module.Map;
 import VASSAL.build.Buildable;
@@ -26,6 +27,7 @@ import VASSAL.counters.GamePiece;
 import VASSAL.counters.Labeler;
 import VASSAL.tools.image.LabelUtils;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Document;
@@ -48,16 +50,34 @@ public class ASLHighlighter extends ColoredBorder implements Buildable {
       final Font sf = f.deriveFont((float)(f.getSize() * os_scale));
 
       Rectangle r = p.getShape().getBounds();
+      GamePiece bottom = p;
       if (p.getParent() != null) {
         Point rel = p.getMap().getStackMetrics().relativePosition(p.getParent(), p);
         x -= (int) (zoom * (rel.x));
         y -= (int) (zoom * (rel.y));
-        r = p.getParent().bottomPiece().getShape().getBounds();
+        bottom = p.getParent().bottomPiece();
+        r = bottom.getShape().getBounds();
       }
+
+      // on the rotated map view the label is written below the stack as seen on the screen
+      final AffineTransform t = g2d.getTransform();
+      final ASLMap aslMap = p.getMap() instanceof ASLMap ? (ASLMap) p.getMap() : null;
+      final AffineTransform screenTransform = aslMap == null ? null : aslMap.getRotatedViewScreenTransform();
+      if (screenTransform != null) {
+        final Point onScreen = aslMap.drawingToScreen(new Point(x, y), os_scale);
+        x = onScreen.x;
+        y = onScreen.y;
+        if (!aslMap.isDrawnUpright(bottom)) {
+          r = AffineTransform.getQuadrantRotateInstance(aslMap.getViewRotation()).createTransformedShape(r).getBounds();
+        }
+        g2d.setTransform(screenTransform);
+      }
+
       y += (int) (zoom * (r.y + r.height + 6));
       LabelUtils.drawLabel(g, p.getMap().locationName(p.getPosition()),
                         x, y, sf, LabelUtils.CENTER, LabelUtils.TOP,
                         Color.black, Color.white, Color.black);
+      g2d.setTransform(t);
     }
   }
 

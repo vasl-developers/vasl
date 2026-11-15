@@ -18,6 +18,7 @@
  */
 package VASL.build.module.map;
 
+import VASL.build.module.ASLMap;
 import VASL.counters.ASLProperties;
 import VASSAL.build.AbstractBuildable;
 import VASSAL.build.Buildable;
@@ -32,6 +33,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.geom.AffineTransform;
 
 /**
  * This is a {@link Drawable} class that draws only counters that have the {@link ASLProperties#HINDRANCE} property set.
@@ -86,7 +88,12 @@ public class HindranceKeeper extends AbstractBuildable implements Drawable, KeyL
       }
       else if (isVisibleHindrance(p)) {
         pt = map.mapToDrawing(p.getPosition(), os_scale);
+        final AffineTransform t = g2d.getTransform();
+        if (map instanceof ASLMap && ((ASLMap) map).isDrawnUpright(p)) {
+          MapViewRotation.rotate(g2d, -((ASLMap) map).getViewRotation(), pt.x, pt.y);
+        }
         p.draw(g, pt.x, pt.y, view, dzoom);
+        g2d.setTransform(t);
       }
     }
   }
