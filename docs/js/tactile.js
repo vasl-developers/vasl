@@ -576,7 +576,7 @@ function _vignetteEventail(p, k, bande, marque){
     // s'il est coché avec eux : la sélection de la pile entière, faite en
     // ouvrant l'éventail, ne compte pas, il faut les cases à cocher.
     const emporte = () => _eventail && _eventail.coche && _sel.has(p) && _sel.size > 1 ? piecesADeplacer() : [p];
-    glisser(e, () => sommetDeplace(emporte(), p), EVENTAIL_COTE, (cx, cy) => {
+    glisser(e, () => pileDeplacee(emporte(), p), EVENTAIL_COTE, (cx, cy) => {
       // Lâché sur la carte : ce pion, ou les pions cochés s'il en est.
       const c = clientVersCarte(cx, cy);
       if(!c || masque) return;

@@ -1585,8 +1585,14 @@ function poserDepuisPalette(x, cx, cy){
 // pièce naît sans position, puis un M/ la place, ce qui fixe aussi son
 // rang : 0 sommet de la pile, 1 fond, 2 juste au-dessus de `ref`,
 // 3 juste en dessous (placements de PlaceMarker).
+// Une couche qui suit une propriété globale (le marqueur de tour et ses
+// camps « Set Sides ») naît à son niveau, comme VASL qui lit la propriété
+// en dessinant : sans cela, le marqueur retourné gardait le camp par
+// défaut du module au lieu de celui du scénario.
 function poserTraits(T, S, x, y, ref, placement){
   _avantAction();
+  const {suivis} = commandesDe(encoderTraits(T));
+  if(suivis.length){ S = S.slice(); _appliquerSuivis({nom: ''}, T, S, suivis); }
 
   const uid = nouvelUid();
   const n = S.length - 1;

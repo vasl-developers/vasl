@@ -143,8 +143,9 @@ const ACTIONS = {
   verbeux:  {ico: '📝', lib: 'LOS détaillée (Verbose LOS mode)', coche: () => _losVerbeux, faire: basculerVerbeux},
   // Préférences de VASSAL (roue crantée) : couleurs du fil de la LOS,
   // décompte des MF et des MP (js/preferences.js).
-  preferences: {lib: 'Préférences (LOS, décompte MF / MP)…', court: 'Préférences', ico: '⚙', faire: () => ouvrirPreferences()},
-  // Roue de configuration du PC : la feuille des réglages (CONFIG_PC).
+  preferences: {lib: 'Préférences (utilisateur, LOS, décompte MF / MP)…', court: 'Préférences', ico: '⚙', faire: () => ouvrirPreferences()},
+  // Roue de configuration, au PC comme au doigt : la feuille des réglages
+  // (CONFIG_PC, CONFIG_TACTILE).
   config:   {lib: 'Configuration…', court: 'Configuration', ico: '⚙', faire: () => basculerConfig(),
              allume: () => _feuilles.has('feuilleConfig')},
   prefLOS:  {lib: 'Préférences de la LOS (couleurs)…', court: 'Préférences', ico: '⚙', faire: () => ouvrirPreferences('los')},
@@ -441,7 +442,7 @@ const DISPOSITIONS = {
   pc: {
     // Plus de barre de menus : chaque action a son icône dans la barre, et
     // les réglages passent par la roue ⚙ « Configuration », une feuille
-    // comme la feuille « Plus » de l'affichage tactile (Alt l'ouvre).
+    // comme celle de l'affichage tactile (Alt l'ouvre).
     // Masqués à la demande : sélection des cartes et panneaux, effectif
     // des piles (LOS détaillée : dans la roue et au clic droit sur LOS).
     barre: ['ouvrir', 'vsav', 'log', 'logTxt', '|', 'undo', '|', 'zoomMoins', 'zoomTxt', 'zoomPlus', 'ajuster', 'zoom100',
@@ -464,7 +465,7 @@ const CONFIG_PC = ['preferences', 'prefLOS', 'verbeux', '-', 'couche_unite', 'co
   'chatHaut', 'des3d', '-', 'profil_auto', 'profil_pc', 'profil_tactile'];
 function basculerConfig(){
   if(_feuilles.has('feuilleConfig')){ fermerFeuille('feuilleConfig'); return; }
-  const f = ouvrirFeuilleActions('Configuration', CONFIG_PC, 'feuilleConfig');
+  const f = ouvrirFeuilleActions('Configuration', _telLike() ? CONFIG_TACTILE : CONFIG_PC, 'feuilleConfig');
   // Une entrée à cocher laisse la feuille ouverte : la roue reste allumée.
   f._surFermer = () => rafraichirActions(['config']);
   return f;
@@ -641,14 +642,13 @@ function _brancherPoignees(){
 const _vue = () => document.body.dataset.vue || 'carte';
 
 Object.assign(ACTIONS, {
-  plus:      {lib: 'Plus…', court: 'Plus', ico: '☰', faire: () => ouvrirFeuillePlus()},
   vueCarte:  {lib: 'Carte', court: 'Carte', ico: '🗺', pion: ICONE_NORTH, faire: () => vueMobile('carte'), allume: () => _vue() === 'carte'},
   vuePile:   {lib: 'Pile sélectionnée', court: 'Pile', ico: '▤', faire: () => vueMobile('pile'), allume: () => _vue() === 'pile'},
   vuePions:  {lib: 'Palette des pions', court: 'Pions', ico: '♟', pion: true, faire: () => vueMobile('pions'), allume: () => _vue() === 'pions'},
   vueJournal:{lib: 'Journal et chat', court: 'Journal', ico: '💬', faire: () => vueMobile('journal'), allume: () => _vue() === 'journal',
               badge: () => _nonLus},
   apercuChat:{ico: '💭', lib: 'Aperçu du chat sur la carte', coche: () => _apercuChat, faire: () => basculerApercuChat()},
-  titre:     {etiquette: () => _source ? _nomFichier : 'VASLweb 1.06', classe: 'titreScen'},
+  titre:     {etiquette: () => _source ? _nomFichier : 'VASLweb 1.07', classe: 'titreScen'},
   desMenu:   {lib: 'Dés : un appui DR, un appui long les catégories', court: 'Dés', ico: '🎲',
               faire: () => lancerDR('Other'), menuLong: null},
   sanPieges: {lib: 'SAN et pièges…', court: 'SAN', ico: 'INFO', classe: 'sigle', faire: () => ouvrirFeuilleSan()},
@@ -668,20 +668,21 @@ function placerColonne(c){
   for(const f of _apresRedimension) f();
 }
 
-// Le reste des actions, dans la feuille « Plus » des profils tactiles.
+// Colonne d'icônes de l'affichage tactile : les actions, chacune par son
+// icône. Plus de menu ☰ « Plus » : les réglages passent, comme au PC, par
+// la roue ⚙ « Configuration » (CONFIG_TACTILE), en bas de la colonne.
 // Masqués en affichage tactile, à la demande : sélection des unités,
-// des marqueurs, des cartes et panneaux, zoom avant, arrière, ajuster, LOS
-// détaillée, verrou des pions, effectif des piles, aperçu du chat,
-// raccourcis ; du choix de l'affichage ne reste que l'affichage ordinateur,
-// dans la feuille seulement. Les actions restent définies (menu Affichage du
-// PC, roue ⚙) : pour les rendre, remettre 'couche_unite', 'couche_marqueur' ici.
-// La sélection des overlays reste : sans elle, un overlay posé ne pourrait
+// des marqueurs, des cartes et panneaux, zoom avant, arrière, ajuster,
+// verrou des pions, effectif des piles, aperçu du chat, raccourcis. La
+// sélection des overlays reste : sans elle, un overlay posé ne pourrait
 // plus être ni déplacé ni retiré au doigt.
-const PLUS = ['ouvrir', 'vsav', 'log', '-', 'los', 'losMuet', 'unmoved', 'all', 'brises', 'sniper', 'masquer', 'tables', 'oba', 'bin', 'couche_overlay', '-', 'rotDroite', 'rot180', '-', 'reseau', 'utilisateur', '-',
-  'sanPieges', 'des3d', '-', 'preferences', 'profil_pc'];
-// Dans la feuille « Plus », mais pas dans la colonne d'icônes.
-const PLUS_SANS_ICONE = ['profil_pc', 'reseau', 'utilisateur', 'des3d'];
-function ouvrirFeuillePlus(){ return ouvrirFeuilleActions('Plus', PLUS, 'feuillePlus'); }
+const RAIL_TACTILE = ['ouvrir', 'vsav', 'log', 'los', 'losMuet', 'unmoved', 'all', 'brises', 'sniper', 'masquer', 'tables',
+  'oba', 'bin', 'couche_overlay', 'rotDroite', 'rot180', 'sanPieges'];
+// Réglages de la roue ⚙ en affichage tactile : préférences (utilisateur,
+// LOS, décompte), identification, partie à distance, dés 3D, côté de la
+// colonne, affichage ordinateur.
+const CONFIG_TACTILE = ['preferences', 'verbeux', '-', 'utilisateur', 'reseau', '-',
+  'des3d', 'coteColonne', '-', 'profil_pc'];
 
 // SAN et pièges : les champs eux-mêmes viennent dans la feuille, et
 // retournent à l'onglet Dés quand elle se ferme.
@@ -723,15 +724,14 @@ DISPOSITIONS.tactile = {
     nav.setAttribute('aria-orientation', 'vertical');
     // Une colonne d'icônes sur la droite de l'écran : carte ; affichage de
     // la carte avec ou sans pions ; palette ; Remove all ; journal ; Undo ;
-    // les dés (DR, IFT, TH, TK, MC, Rally, CC, TC, dr, SA, RS) ; puis toutes
-    // les actions de la feuille « Plus », chacune par son icône, ⏭ (fin du
-    // log) juste sous Unmoved ; le côté de la colonne (⇄, à droite ou à
-    // gauche de l'écran) ; Plus ; tout en bas, ◀, la position et ▶. ⏭, ◀
-    // et ▶ ne sont présents que pendant une relecture.
+    // les dés (DR, IFT, TH, TK, MC, Rally, CC, TC, dr, SA, RS) ; puis les
+    // actions de RAIL_TACTILE, ⏭ (fin du log) juste sous Unmoved ; la roue
+    // ⚙ de configuration ; tout en bas, ◀, la position et ▶. ⏭, ◀ et ▶ ne
+    // sont présents que pendant une relecture.
     const premieres = ['vueCarte', 'masquer', 'vuePions', 'all', 'vueJournal', 'undo', ...DES.map(d => d.id)];
-    const ids = [...premieres, ...PLUS.filter(x => x !== '-' && !premieres.includes(x) && !PLUS_SANS_ICONE.includes(x))
+    const ids = [...premieres, ...RAIL_TACTILE.filter(x => !premieres.includes(x))
                    .flatMap(x => x === 'unmoved' ? [x, 'relectureFin'] : [x]),
-                 'coteColonne', 'plus', 'relectureRail'];
+                 'config', 'relectureRail'];
     // Défilement sans fin : la liste est posée trois fois ; près d'un bout,
     // on saute d'une longueur de liste sans que rien ne bouge à l'écran.
     // Monter au-delà de la première icône mène à la dernière, et l'inverse.

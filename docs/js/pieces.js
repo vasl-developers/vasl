@@ -797,18 +797,18 @@ function _vtCorps(s, logos){
     const estLV = lv.has(n), estNuit = nuit.has(n);
     const fond = estNuit ? 'background-color:#000;color:#fff;' : estLV ? 'background-color:#c0c0c0;' : '';
     const coins = j.map((x, i) => renf[i].has(String(n)) ? coin(x.code, i) : '').join('');
-    cases.push(`<td class="${coins ? 'reinforce' : estLV ? 'turnlv' : estNuit ? 'turnnight' : 'turn'}" style="${fond}">`
+    cases.push(`<td data-pt class="${coins ? 'reinforce' : estLV ? 'turnlv' : estNuit ? 'turnnight' : 'turn'}" style="${fond}">`
       + coins + n + (estNuit && nvr >= 0 ? `<span class="nvr">NVR: ${nvr}</span>` : '') + '</td>');
   }
   if(demi){
     const n = entiers + 1, estLV = lv.has(entiers), estNuit = nuit.has(entiers);
     const fond = estLV ? '#c0c0c0' : estNuit ? '#000' : '#fff';
     // Demi-tour : moitié inférieure droite en rouge (paintRedHalf).
-    cases.push(`<td class="half" style="background:linear-gradient(to bottom right,${fond} 50%,#ff4444 50%);`
+    cases.push(`<td data-pt class="half" style="background:linear-gradient(to bottom right,${fond} 50%,#ff4444 50%);`
       + `${estNuit ? 'color:#fff;' : ''}">${n}`
       + (estNuit && nvr >= 0 ? `<span class="nvr">NVR: ${nvr}</span>` : '') + '</td>');
   }
-  cases.push('<td class="endcell">END</td>');
+  cases.push('<td data-pt class="endcell">END</td>');
   const compact = /^comp/.test(s.disposition) && s.joueurs !== 3;
   if(compact) cases.splice(9);
 
@@ -828,10 +828,10 @@ function _vtCorps(s, logos){
   };
   const scen = (span) => `<td valign="top" class="scenario" colspan="3"${span ? ` rowspan="${span}"` : ''}>${titre}</td>`;
   const vcc = (span) => `<td valign="top" class="vc" colspan="3"${span ? ` rowspan="${span}"` : ''} title="${_vtEsc(s.vc)}">${vc}</td>`;
-  const roue = (span) => `<td class="phasewheel" data-case="PhaseWheel" colspan="2" rowspan="${span}">Phase<br>Wheel</td>`;
-  const jetons = (noms) => noms.map(n => `<td class="token" data-case="${VT_ROLES[n] || ''}">${n}</td>`).join('');
+  const roue = (span) => `<td data-pt class="phasewheel" data-case="PhaseWheel" colspan="2" rowspan="${span}">Phase<br>Wheel</td>`;
+  const jetons = (noms) => noms.map(n => `<td data-pt class="token" data-case="${VT_ROLES[n] || ''}">${n}</td>`).join('');
   const piste = '<td class="track" rowspan="5">T<br>U<br>R<br>N<br><br>T<br>R<br>A<br>C<br>K</td>';
-  const misc = `<td class="token">Wind Dir · Wind · Gusts · ECs · Weather · LV · NQ</td>`;
+  const misc = `<td data-pt class="token">Wind Dir · Wind · Gusts · ECs · Weather · LV · NQ</td>`;
 
   let h = '<table class="main">';
   if(s.joueurs === 3 || !/^(vertical|comphorizontal|compvertical)$/.test(s.disposition)){
@@ -844,7 +844,7 @@ function _vtCorps(s, logos){
       + rang(n * 2, n) + '</tr>';
     if(j[2]) h += '<tr>' + barre(j[2]) + '</tr><tr>' + infos(j[2]) + '</tr>';
   } else if(s.disposition === 'comphorizontal'){
-    h += '<tr>' + scen(5) + barre(j[0]) + vcc(4) + roue(4) + rs('<td class="token">Compass</td>', 2) + '</tr>'
+    h += '<tr>' + scen(5) + barre(j[0]) + vcc(4) + roue(4) + rs('<td data-pt class="token" data-case="Compass">Compass</td>', 2) + '</tr>'
       + '<tr>' + infos(j[0]) + '</tr>'
       + '<tr>' + barre(j[1]) + rs(misc, 2) + '</tr>'
       + '<tr>' + infos(j[1]) + '</tr>'
@@ -856,11 +856,11 @@ function _vtCorps(s, logos){
       + '<tr>' + barre(j[1]) + '</tr><tr>' + infos(j[1]) + '</tr>'
       + '<tr>' + vcc(0) + '</tr>';
     if(comp){
-      h += '<tr>' + roue(2) + '<td class="token">Compass</td></tr><tr>' + misc + '</tr>';
+      h += '<tr>' + roue(2) + '<td data-pt class="token" data-case="Compass">Compass</td></tr><tr>' + misc + '</tr>';
     } else {
       h += '<tr><td class="vtrack" colspan="3">STATUS</td></tr>'
-        + '<tr>' + roue(2) + '<td class="token">Compass</td></tr>'
-        + '<tr><td class="token">LV</td></tr>'
+        + '<tr>' + roue(2) + '<td data-pt class="token" data-case="Compass">Compass</td></tr>'
+        + '<tr><td data-pt class="token" data-case="LV">LV</td></tr>'
         + '<tr>' + jetons(['NQ', 'Weather', 'Gusts']) + '</tr>'
         + '<tr>' + jetons(['ECs', 'Wind Dir', 'Wind']) + '</tr>'
         + '<tr><td class="vtrack" colspan="3">TURN TRACK</td></tr>';
@@ -905,6 +905,38 @@ function _vtCaler(p, e){
   p.decX = mx; p.decY = my;
 }
 
+// Cases à pions d'une carte ou d'un bandeau (td[data-pt], ancrage
+// invisible) : rectangles en
+// pixels natifs, comptés depuis le centre du panneau. Un pion lâché dans
+// une case se pose en son centre (positionDepot). Les offsets ne dépendent
+// ni du zoom ni de la rotation de la vue.
+function _vtCases(p, e){
+  p.cases = [];
+  for(const td of e.querySelectorAll('td[data-pt]')){
+    let x = 0, y = 0, n = td;
+    while(n && n !== e){ x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }
+    if(n !== e) continue;
+    p.cases.push({x: x - e.offsetWidth / 2, y: y - e.offsetHeight / 2, w: td.offsetWidth, h: td.offsetHeight});
+  }
+}
+
+// Centre de la case de panneau qui contient le point (pixels natifs), ou
+// null. Les panneaux affichés seuls comptent ; le dernier posé gagne.
+function caseDePanneau(x, y){
+  let out = null;
+  for(const p of vivants()){
+    if(!p.cases || p.cache) continue;
+    const ox = p.x + (p.decX || 0), oy = p.y + (p.decY || 0);
+    for(const c of p.cases){
+      if(x < ox + c.x || x > ox + c.x + c.w || y < oy + c.y || y > oy + c.y + c.h) continue;
+      out = {x: Math.round(ox + c.x + c.w / 2), y: Math.round(oy + c.y + c.h / 2)};
+      // Un pion au centre exact du panneau entrerait dans sa pile.
+      if(out.x === p.x && out.y === p.y) out.x++;
+    }
+  }
+  return out;
+}
+
 // Élément de la carte de scénario, prêt à poser sur le pion.
 async function _vtElementCarte(champs){
   const s = _vtCarte(champs);
@@ -935,7 +967,7 @@ function _vtElementBandeau(c){
   e.title = [id, nom, date, lieu].filter(Boolean).join(' \u2014 ');
   const td = `height:${px(60)};width:${px(60)};min-width:${px(60)};border:2px solid #666;border-radius:${px(5)};`
     + `box-sizing:border-box;text-align:center;vertical-align:middle;padding:0;`;
-  const jeton = (nom, role) => `<td data-case="${role}" style="${td}background:#fff;color:#999;font:bold ${px(8)} Arial">${nom}</td>`;
+  const jeton = (nom, role) => `<td data-pt data-case="${role}" style="${td}background:#fff;color:#999;font:bold ${px(8)} Arial">${nom}</td>`;
   e.innerHTML = `<table style="border-collapse:separate;border-spacing:2px;border:0;background:#fff"><tr>`
     + jeton('Compass', 'Compass') + jeton('Wind Dir', 'WindDir')
     + `<td style="${td}width:auto;background:#000;color:#fff;font:600 ${px(14)} Verdana,Arial,sans-serif;`

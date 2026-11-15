@@ -106,7 +106,7 @@ const EN = {
   'LOS inv (ligne de vue silencieuse)': 'LOS inv (silent line of sight)', 'LOS inv': 'LOS inv',
   'LOS détaillée (Verbose LOS mode)': 'Verbose LOS mode',
   // Préférences (⚙)
-  'Préférences (LOS, décompte MF / MP)…': 'Preferences (LOS, MF / MP count)…', 'Préférences': 'Preferences',
+  'Préférences (utilisateur, LOS, décompte MF / MP)…': 'Preferences (user, LOS, MF / MP count)…', 'Préférences': 'Preferences',
   'Préférences de la LOS (couleurs)…': 'LOS preferences (colors)…',
   'Décompte MF / MP': 'MF / MP count',
   'Couleur du fil': 'Thread Color', 'Vérifier la ligne de vue': 'Enable LOS checking',
@@ -186,11 +186,21 @@ const EN = {
   'Nom requis : 24 caractères au plus, sans ; / \\ , < > & ".': 'Name required: 24 characters at most, without ; / \\ , < > & ".',
   'Cet utilisateur existe déjà : le choisir dans la liste.': 'This user already exists: pick it from the list.',
   'Mot de passe incorrect pour cet utilisateur.': 'Incorrect password for this user.',
-  'Camp': 'Side', '— choisir —': '— choose —', 'Axe': 'Axis', 'Alliés': 'Allied', 'Les deux': 'Both',
-  'Choisir le camp.': 'Choose the side.', 'Pion du camp adverse': 'Opposing side counter',
+  'Axe': 'Axis', 'Alliés': 'Allied', 'Les deux': 'Both', 'Pion du camp adverse': 'Opposing side counter',
   'Déplacer quand même': 'Move anyway', 'Déplacement inhabituel': 'Unusual move',
-  'Déplacer un pion du camp adverse demande une confirmation ; « Les deux » ne demande rien. Le camp reste sur ce poste, hors des fichiers VASL.':
-    'Moving a counter of the opposing side asks for confirmation; “Both” asks nothing. The side stays on this device, outside VASL files.',
+  'Le nom et le mot de passe sont retenus sur ce poste (Préférences ▸ Utilisateur, roue ⚙) : la prochaine carte ouverte ne les redemandera pas.':
+    'The name and password are kept on this device (Preferences ▸ User, ⚙ wheel): the next map opened will not ask for them again.',
+  'Saisir le nom d\'utilisateur.': 'Enter the user name.', 'Identifiants mémorisés refusés :': 'Saved credentials rejected:',
+  'Général': 'General',
+  'Vos adversaires pourront retirer le « ? » de vos unités dissimulées (commande Conceal), sans les voir avant. Les unités HIP restent cachées. Le choix part aussitôt aux joueurs de la salle et la partie le garde.':
+    'Your opponents will be able to remove the "?" from your concealed units (Conceal command), without seeing them first. HIP units stay hidden. The choice is sent at once to the players in the room and kept in the game.',
+  'Nom d\'utilisateur': 'User name', 'Afficher le mot de passe': 'Show password',
+  'Enregistrer et se connecter': 'Save and log in', 'Effacer': 'Clear',
+  'aucun identifiant enregistré': 'no saved credentials',
+  'Retenus sur ce poste, ils identifient le joueur à chaque carte ouverte, sans la boîte d\'identification ; effacés, elle revient. Le mot de passe est celui de VASL (il ouvre vos pions dissimulés et HIP) ; il est gardé en clair dans ce navigateur : ne pas l\'enregistrer sur un poste partagé.':
+    'Kept on this device, they identify the player at each map opened, without the login box; cleared, it comes back. The password is the VASL one (it opens your concealed and HIP counters); it is stored in clear text in this browser: do not save it on a shared device.',
+  'Identifiants effacés de ce poste : la prochaine carte ouverte demandera l\'identification':
+    'Credentials cleared from this device: the next map opened will ask for login',
   'Connecté :': 'Logged in as:', 'Pions masqués': 'Hidden counters', '(vous)': '(you)',
   'Oublier': 'Forget', 'fichier': 'file', 'Aucun utilisateur': 'No users',
   'Changer d\'utilisateur…': 'Change user…',
@@ -289,7 +299,6 @@ const EN_MOTIFS = [
   ['Déplacement de {} hexagones (plus de {}) : {}… Le faire quand même ?', 'Move of {} hexes (more than {}): {}… Move anyway?'],
   ['↩️ Déplacement annulé : {} hexagones', '↩️ Move cancelled: {} hexes'],
   ['{} pion(s) du camp adverse ({}) : {}. Les déplacer quand même ?', '{} counter(s) of the opposing side ({}): {}. Move them anyway?'],
-  ['Dernier camp : {}', 'Last side: {}'],
   ['Le log « {} » n\'est pas écrit ({} coup(s)). L\'écrire maintenant ?', 'Logfile “{}” is not written ({} move(s)). Write it now?'],
   ['Le log « {} » n\'a pas été écrit avant la fermeture de la page ({} coup(s)). L\'écrire maintenant ?',
    'Logfile “{}” was not written before the page closed ({} move(s)). Write it now?']

@@ -781,7 +781,7 @@ async function _netRestaurer(n, texte){
   chatLog('✅ Synchronisation terminée');
   majNet();
   // Un joueur du fichier se fait reconnaître pour voir ses pions masqués.
-  if(!_utilisateur) demanderUtilisateur();
+  if(!_utilisateur) identifierJoueur();
 }
 
 // Coup reçu : exécuté, consigné, puis montré comme une relecture.

@@ -636,7 +636,7 @@ function _pionPointerDown(e, p){
       pt.x = ev.clientX; pt.y = ev.clientY;
     }
   };
-  glisser(e, () => sommetDeplace(aDeplacer(), p), q => q.sz * zoom, (cx, cy) => {
+  glisser(e, () => pileDeplacee(aDeplacer(), p), q => q.sz * zoom, (cx, cy) => {
     const c = clientVersCarte(cx, cy);
     const l = aDeplacer();
     if(c && l.length) (souris ? deplacer : deplacerAuDoigt)(l, c.x, c.y);
@@ -715,26 +715,43 @@ function glisser(e, src, taille, auLacher, auClic, opts = {}){
     // Fantôme et taille choisis quand le geste devient un glissé : la
     // sélection, qui décide de ce qui part, est alors arrêtée.
     if(typeof src === 'function') src = src();
+    // Une pile (du fond au sommet) : le fantôme la montre entière, centré
+    // sur le pion du sommet, qui en donne la taille.
+    let groupe = null;
+    if(Array.isArray(src)){ groupe = src.filter(q => q && q.el); src = groupe[groupe.length - 1] || null; }
     if(typeof taille === 'function') taille = taille(src);
     const t = Math.max(24, taille);
     if(src && src.el){
-      // Pion de la carte : le fantôme en est une copie, telle qu'affichée
+      // Pions de la carte : le fantôme en est une copie, telle qu'affichée
       // — CA du véhicule (trait rotate), tourelle (TCA), couches et
-      // étiquettes —, et non sa seule image de base, toujours droite.
+      // étiquettes —, et non leur seule image de base, toujours droite.
+      // Chacun garde son écart à l'écran par rapport au sommet, à
+      // l'échelle du fantôme : le véhicule sous ses passagers ou ses
+      // marqueurs reste visible avec son orientation.
       fantome = document.createElement('div');
-      const c = src.el.cloneNode(true);
-      const w = parseFloat(src.el.style.width) || src.sz, h = parseFloat(src.el.style.height) || src.sz;
-      const k = t / (src.sz || w);
-      c.className = 'pion';
-      c.removeAttribute('title');
-      c.style.cssText = `left:${(t - w*k)/2}px;top:${(t - h*k)/2}px;width:${w}px;height:${h}px;`
-        + `transform:scale(${k});transform-origin:0 0;background:${src.el.style.background || ''}`;
+      const k = t / (src.sz || parseFloat(src.el.style.width) || t);
+      const r0 = src.el.getBoundingClientRect();
+      const ech = zoom > 0 ? k / zoom : 1;
+      const copier = (q, dx, dy) => {
+        const c = q.el.cloneNode(true);
+        const w = parseFloat(q.el.style.width) || q.sz, h = parseFloat(q.el.style.height) || q.sz;
+        c.className = 'pion';
+        c.removeAttribute('title');
+        c.style.cssText = `left:${(t - w*k)/2 + dx}px;top:${(t - h*k)/2 + dy}px;width:${w}px;height:${h}px;`
+          + `transform:scale(${k});transform-origin:0 0;background:${q.el.style.background || ''}`;
+        fantome.appendChild(c);
+      };
+      for(const q of groupe || [src]){
+        if(q === src){ copier(q, 0, 0); continue; }
+        const r = q.el.getBoundingClientRect();
+        if(!r.width || !r0.width) continue;            // pion non affiché
+        copier(q, (r.left + r.width/2 - r0.left - r0.width/2) * ech, (r.top + r.height/2 - r0.top - r0.height/2) * ech);
+      }
       // Vue tournée : à l'écran, le pion suit la même rotation que sur la
       // carte (--rotVue, posé sur #mapInner, n'atteint pas le fantôme) ;
       // une pièce de terrain tourne aussi avec la carte.
       fantome.style.setProperty('--rotVue', _rotVue + 'deg');
       if(src.el.classList.contains('terrain')) fantome.style.rotate = _rotVue + 'deg';
-      fantome.appendChild(c);
     } else {
       fantome = document.createElement('img');
       if(src) fantome.src = src;
@@ -1077,7 +1094,7 @@ function afficherPile(){
     l.addEventListener('pointerdown', e => {
       if(e.button > 0) return;
       const doigt = !!e.pointerType && e.pointerType !== 'mouse';
-      glisser(e, () => sommetDeplace(aEmporter(p, doigt), p), q => q.sz * zoom, (cx, cy) => {
+      glisser(e, () => pileDeplacee(aEmporter(p, doigt), p), q => q.sz * zoom, (cx, cy) => {
         const c = clientVersCarte(cx, cy);
         if(c) (doigt ? deplacerAuDoigt : deplacer)(aEmporter(p, doigt), c.x, c.y);
       }, ev => {

@@ -4,7 +4,7 @@
 // Le jet est tiré d'abord (lancerDR, lancerdr, ou reçu d'un autre
 // joueur) ; les dés roulent ensuite et s'arrêtent sur ses faces.
 // L'animation ne change rien au jet, au chat ni au log : un simple
-// décor, que chacun peut couper (menu Dés, ou la feuille « Plus »).
+// décor, que chacun peut couper (menu Dés, ou la roue ⚙ « Configuration »).
 // Des cubes en CSS 3D, sans bibliothèque : chaque face prend l'image du
 // dé du module (DC<n>_R.png, DC<n>_W.png), sur des points dessinés en
 // attendant qu'elle arrive.
