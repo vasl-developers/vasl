@@ -53,9 +53,9 @@ function lireDemasquables(segs){
 }
 // Réécrit la commande UNMASK de l'état chargé, d'où partent .vsav et .vlog.
 function _ecrireDemasquables(){
-  if(!_source) return;
-  const i = _source.findIndex(x => x.startsWith(UNMASK));
   const seg = UNMASK + [..._demasquables].map(x => x.replace(/\t/g, '\\\t')).join('\t');
+  if(!_source) return seg;
+  const i = _source.findIndex(x => x.startsWith(UNMASK));
   if(i >= 0) _source[i] = seg;
   else {
     const iFin = _source.lastIndexOf('end_save');
@@ -67,6 +67,7 @@ function _ecrireDemasquables(){
     if(j >= 0) _logDepart[j] = seg;
     else { const jFin = _logDepart.lastIndexOf('end_save'); _logDepart.splice(jFin >= 0 ? jFin : _logDepart.length, 0, seg); }
   }
+  return seg;
 }
 // Le joueur permet-il à l'adversaire de démasquer ses unités ? Comme
 // une préférence de VASSAL, le choix vaut aussi avant l'identification :
@@ -79,9 +80,27 @@ function permettreDemasquage(oui){
   const id = idJoueur();
   if(oui === _demasquables.has(id)) return;
   if(oui) _demasquables.add(id); else _demasquables.delete(id);
-  _ecrireDemasquables();
+  const seg = _ecrireDemasquables();
+  // allowSome : la liste part aussitôt aux autres joueurs de la salle
+  // (sendToOthers, SetAllowed), sans entrer dans le log.
+  if(typeof _net !== 'undefined' && _net && typeof _netAuxAutres === 'function') _netAuxAutres(_net, seg);
   chatLog(oui ? '🔓 Vos adversaires peuvent démasquer vos unités dissimulées'
               : '🔒 Vos adversaires ne peuvent plus démasquer vos unités dissimulées');
+}
+// SetAllowed reçu d'un autre joueur : sa liste remplace la nôtre
+// (SetAllowed.executeCommand), et la partie la garde.
+function recevoirDemasquables(seg){
+  _demasquables = lireDemasquables([seg]);
+  _ecrireDemasquables();
+}
+// Partie ouverte ou reçue (ObscurableOptions.setup(true)) : la liste du
+// fichier, plus le joueur identifié si sa préférence le permet.
+function demasquablesAuChargement(segs){
+  _demasquables = lireDemasquables(segs);
+  if(_utilisateur && _lireLocal(CLE_DEMASQUABLE, '0') === '1' && !_demasquables.has(idJoueur())){
+    _demasquables.add(idJoueur());
+    _ecrireDemasquables();
+  }
 }
 // Unité dissimulée par un autre joueur qui l'a permis : seule la commande
 // Conceal lui reste (Obscurable.keyEvent → myKeyEvent).
@@ -119,7 +138,8 @@ function enregistrerCompte(nom, mdp){
   return _ecrireLocal(CLE_COMPTES, JSON.stringify(l));
 }
 function oublierCompte(nom){
-  memoriserCamp(nom, null);
+  const m = identifiantsMemorises();
+  if(m && _memeNom(m.nom, nom)) oublierIdentifiants();
   return _ecrireLocal(CLE_COMPTES, JSON.stringify(comptesLocaux().filter(x => !_memeNom(x.nom, nom))));
 }
 // Le nom est écrit tel quel dans l'état Owner : « ; », « / », « \ »,
@@ -182,21 +202,21 @@ function refuser(p, touche){
 }
 
 // ── Camps (Axe / Alliés) : données de la seule version HTML.
-// VASL ne lie pas un joueur à un camp. Le camp se choisit donc à
-// l'identification et se garde sur ce poste, par utilisateur ; il n'entre
-// ni dans le .vsav, ni dans le .vlog, ni dans les messages réseau.
+// VASL ne lie pas un joueur à un camp. Le camp n'est plus demandé à
+// l'identification : il se déduit de la nationalité des pions que le
+// joueur tient masqués (campDeduit) ; il n'entre ni dans le .vsav, ni
+// dans le .vlog, ni dans les messages réseau.
 // Le camp d'un pion vient de sa nationalité, avec les codes du module
 // (dossiers Axis O/B et Allied O/B de la palette) : celle du trait conceal
 // ou concealment, sinon celle du premier prototype national (geINF,
 // ruOTtur…). Les marqueurs, les Suédois (dans les deux O/B) et les pions
 // partagés n'ont pas de camp.
 // Déplacer un pion du camp adverse demande une confirmation, au PC comme
-// au doigt. Rien n'est demandé à l'observateur, ni à qui a choisi
-// « Les deux ».
+// au doigt. Rien n'est demandé à l'observateur, ni à
+// un joueur dont le camp ne se déduit pas (aucun pion masqué).
 const CAMPS = {axe: 'Axe', allies: 'Alliés', tous: 'Les deux'};
 const NATIONS_AXE = new Set(['ge', 'ss', 'ax', 'it', 'ja', 'fi', 'hu', 'nk', 'cc']);
 const NATIONS_ALLIES = new Set(['al', 'am', 'br', 'ch', 'fr', 'ru', 'un', 'sk']);
-const CLE_CAMPS = 'aslweb.camps';
 const campDeNation = n => NATIONS_AXE.has(n) ? 'axe' : NATIONS_ALLIES.has(n) ? 'allies' : null;
 function nationPion(p){
   const m = infoDissimulation(p);
@@ -210,23 +230,9 @@ function nationPion(p){
   return null;
 }
 const campPion = p => campDeNation(nationPion(p));
-// Camp de l'utilisateur connecté ; null : aucun contrôle.
-const monCamp = () => _utilisateur && CAMPS[_utilisateur.camp] ? _utilisateur.camp : null;
-
-// Camps mémorisés sur ce poste, par nom d'utilisateur (sans la casse).
-function _campsLocaux(){
-  try {
-    const o = JSON.parse(_lireLocal(CLE_CAMPS, '{}'));
-    return o && typeof o === 'object' && !Array.isArray(o) ? o : {};
-  } catch(e){ return {}; }
-}
-const campMemorise = nom => { const c = nom ? _campsLocaux()[nom.toLowerCase()] : null; return CAMPS[c] ? c : null; };
-function memoriserCamp(nom, camp){
-  if(!nom) return;
-  const o = _campsLocaux();
-  if(CAMPS[camp]) o[nom.toLowerCase()] = camp; else delete o[nom.toLowerCase()];
-  _ecrireLocal(CLE_CAMPS, JSON.stringify(o));
-}
+// Camp de l'utilisateur connecté, d'après ses pions masqués ; null :
+// aucun contrôle.
+const monCamp = () => _utilisateur ? campDeduit(_utilisateur.mdp) : null;
 // Camp d'un joueur du fichier, d'après la nationalité des pions qu'il masque.
 function campDeduit(id){
   const n = {axe: 0, allies: 0};
@@ -319,7 +325,7 @@ function distanceHex(x1, y1, x2, y2){
 function deplacerAuDoigt(liste, x, y){
   liste = liste.filter(p => !p.cache && !p.deleted);
   if(!liste.length) return;
-  const pos = positionDepot(x, y);
+  const pos = positionDepot(x, y, liste);
   const loin = Math.max(-1, ...liste.map(p => distanceHex(p.x, p.y, pos.x, pos.y) ?? -1));
   if(loin <= DISTANCE_ANORMALE) return deplacer(liste, x, y);
   const noms = liste.slice(0, 5).map(p => accesRefuse(p) ? T('Pion dissimulé') : p.nom).join(', ')
@@ -329,30 +335,88 @@ function deplacerAuDoigt(liste, x, y){
     `↩️ Déplacement annulé : ${loin} hexagones`, () => deplacer(liste, x, y));
 }
 
-// ── Boîte d'identification, ouverte à chaque carte chargée.
-// Choisir une ligne ne donne aucun accès : c'est le mot de passe qui
-// prouve l'identité.
+// ── Identifiants mémorisés : le nom et le mot de passe saisis dans
+// Préférences ▸ Utilisateur (roue ⚙), gardés par la PWA sur ce poste
+// (localStorage). À chaque carte chargée, ils identifient le joueur sans
+// rien demander ; absents ou refusés, la boîte d'identification s'ouvre.
+// Le mot de passe y est en clair : c'est l'identifiant des masques, il
+// faut le rendre tel quel. Ne pas mémoriser sur un poste partagé.
+const CLE_IDENT = 'aslweb.identifiants';
+function identifiantsMemorises(){
+  try {
+    const o = JSON.parse(_lireLocal(CLE_IDENT, 'null'));
+    return o && typeof o.nom === 'string' && typeof o.mdp === 'string' && o.nom && o.mdp ? {nom: o.nom, mdp: o.mdp} : null;
+  } catch(e){ return null; }
+}
+const memoriserIdentifiants = (nom, mdp) => _ecrireLocal(CLE_IDENT, JSON.stringify({nom, mdp}));
+function oublierIdentifiants(){ try { localStorage.removeItem(CLE_IDENT); } catch(e){} }
+
+// Contrôle d'un couple nom / mot de passe, sans rien changer :
 //   · joueur du fichier : son mot de passe est l'identifiant de ses masques
 //   · compte du poste   : comparé à l'empreinte enregistrée
+//   · autre nom         : nouveau compte du poste
+// Rend {erreur} ou {nom, mdp, nouveau}.
+function verifierIdentifiants(nom, mdp){
+  nom = String(nom || '').trim();
+  if(!nom) return {erreur: T('Saisir le nom d\'utilisateur.')};
+  if(!mdp) return {erreur: T('Saisir le mot de passe.')};
+  if(idLibre(mdp)) return {erreur: T('Ce mot de passe est réservé.')};
+  if(!nomValide(nom)) return {erreur: T('Nom requis : 24 caractères au plus, sans ; / \\ , < > & ".')};
+  const fiche = joueursDuFichier().find(f => _memeNom(f.nom, nom));
+  const compte = comptesLocaux().find(c => _memeNom(c.nom, nom));
+  const parMasque = !!fiche && mdp === fiche.id;
+  const parCompte = !!compte && _empreinte(mdp) === compte.h;
+  if((fiche || compte) && !parMasque && !parCompte) return {erreur: T('Mot de passe incorrect pour cet utilisateur.')};
+  return {nom: fiche && fiche.nom ? fiche.nom : (compte ? compte.nom : nom), mdp, nouveau: !compte};
+}
+// Connexion après contrôle ; le couple est mémorisé pour la prochaine fois.
+function connecterIdentifiants(nom, mdp){
+  const r = verifierIdentifiants(nom, mdp);
+  if(r.erreur) return r;
+  memoriserIdentifiants(r.nom, mdp);
+  _ecrireLocal(CLE_DERNIER, r.nom);
+  // Un nom encore inconnu du poste y devient un compte : il sera reconnu
+  // la prochaine fois, même sans pion masqué.
+  if(r.nouveau){ enregistrerCompte(r.nom, mdp); chatLog(`➕ Utilisateur créé : ${r.nom}`); }
+  seConnecter({nom: r.nom, mdp});
+  return r;
+}
+// À l'ouverture d'une carte : les identifiants mémorisés, sinon la boîte.
+function identifierJoueur(){
+  const m = identifiantsMemorises();
+  if(!m){ demanderUtilisateur(); return false; }
+  const r = connecterIdentifiants(m.nom, m.mdp);
+  if(r.erreur){ demanderUtilisateur(T('Identifiants mémorisés refusés :') + ' ' + r.erreur, m.nom); return false; }
+  return true;
+}
+// Au lancement de l'application, sans carte : connexion silencieuse si
+// les identifiants mémorisés passent le contrôle.
+window.addEventListener('load', () => {
+  const m = identifiantsMemorises();
+  if(m && !_utilisateur && !verifierIdentifiants(m.nom, m.mdp).erreur) connecterIdentifiants(m.nom, m.mdp);
+});
+
+// ── Boîte d'identification, ouverte à la carte chargée quand aucun
+// identifiant n'est mémorisé (ou qu'il est refusé). Choisir une ligne ne
+// donne aucun accès : c'est le mot de passe qui prouve l'identité.
 const _esc = t => String(t).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'})[c]);
 
-function demanderUtilisateur(){
+function demanderUtilisateur(erreur, nomPropose){
   fermerFenetres();
   const fiches = joueursDuFichier();
   const comptes = comptesLocaux();
-  const compteDe = nom => comptes.find(c => _memeNom(c.nom, nom)) || null;
   const entrees = [];
   const deja = nom => entrees.some(e => _memeNom(e.nom, nom));
   for(const f of fiches){
     if(f.nom && deja(f.nom)) continue;
-    entrees.push({type: 'joueur', nom: f.nom || f.etiquette, fiche: f, compte: compteDe(f.nom),
-                  info: `${f.n} pion(s) masqué(s)`});
+    entrees.push({type: 'joueur', nom: f.nom || f.etiquette, fiche: f, info: `${f.n} pion(s) masqué(s)`});
   }
-  for(const c of comptes) if(!deja(c.nom)) entrees.push({type: 'joueur', nom: c.nom, compte: c, info: 'compte de ce poste'});
+  for(const c of comptes) if(!deja(c.nom)) entrees.push({type: 'joueur', nom: c.nom, info: 'compte de ce poste'});
   entrees.push({type: 'nouveau', nom: 'Nouvel utilisateur…', info: ''});
 
-  // Présélection : l'utilisateur de la dernière fois, sinon le premier joueur.
-  const dernier = _lireLocal(CLE_DERNIER, '');
+  // Présélection : le nom proposé, sinon l'utilisateur de la dernière
+  // fois, sinon le premier joueur.
+  const dernier = nomPropose || _lireLocal(CLE_DERNIER, '');
   let defaut = entrees.findIndex(e => e.type !== 'nouveau' && _memeNom(e.nom, dernier));
   if(defaut < 0) defaut = 0;
 
@@ -368,8 +432,6 @@ function demanderUtilisateur(){
         `<option value="${i}"${i === defaut ? ' selected' : ''}>${_esc(e.nom)}${e.info ? ' — ' + _esc(e.info) : ''}</option>`).join('')}</select></label>
       <label id="utNomL">Nom du nouvel utilisateur<input id="utNom" maxlength="24" autocomplete="off" placeholder="nom affiché"></label>
       <label>Mot de passe<input id="utMdp" type="password" autocomplete="off" placeholder="mot de passe"></label>
-      <label id="utCampL">Camp<select id="utCamp"><option value="">— choisir —</option>${
-        Object.entries(CAMPS).map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}</select><span id="utCampInd"></span></label>
       <div class="ferr" id="utErr"></div>
       <div class="fb">
         <button id="utOk" class="prim">Se connecter</button>
@@ -378,58 +440,36 @@ function demanderUtilisateur(){
       </div>
       <p class="fnote">Pour un joueur VASL, le mot de passe est celui de VASL : il ouvre ses
         pions dissimulés et en HIP.</p>
-      <p class="fnote">Déplacer un pion du camp adverse demande une confirmation ; « Les deux » ne
-        demande rien. Le camp reste sur ce poste, hors des fichiers VASL.</p>
+      <p class="fnote">${_esc(T('Le nom et le mot de passe sont retenus sur ce poste (Préférences ▸ Utilisateur, roue ⚙) : la prochaine carte ouverte ne les redemandera pas.'))}</p>
     </div>`;
   document.body.appendChild(w);
   const $ = id => document.getElementById(id);
   const sel = $('utSel'), err = $('utErr');
   const majNom = () => {
-    const e = entrees[+sel.value], nouveau = e.type === 'nouveau';
+    const nouveau = entrees[+sel.value].type === 'nouveau';
     $('utNomL').style.display = nouveau ? '' : 'none';
-    // Camp : choix explicite à chaque connexion, jamais présélectionné ;
-    // le dernier camp de ce nom sur ce poste (ou celui des pions qu'il
-    // masque) n'est qu'indiqué.
-    $('utCamp').value = '';
-    const indice = nouveau ? null
-      : campMemorise(e.fiche ? (e.fiche.nom || e.nom) : e.nom) || (e.fiche && campDeduit(e.fiche.id));
-    $('utCampInd').textContent = indice ? T(`Dernier camp : ${CAMPS[indice]}`) : '';
     err.textContent = '';
     (nouveau ? $('utNom') : $('utMdp')).focus();
   };
   sel.addEventListener('change', majNom);
-  const connecter = (nom, mdp, camp) => {
-    _ecrireLocal(CLE_DERNIER, nom);
-    memoriserCamp(nom, camp);
-    w.remove();
-    seConnecter({nom, mdp, camp});
-  };
   $('utOk').onclick = () => {
     const e = entrees[+sel.value], mdp = $('utMdp').value;
-    if(!mdp){ err.textContent = 'Saisir le mot de passe.'; return; }
-    const camp = $('utCamp').value;
-    if(!CAMPS[camp]){ err.textContent = 'Choisir le camp.'; $('utCamp').focus(); return; }
-    if(idLibre(mdp)){ err.textContent = 'Ce mot de passe est réservé.'; return; }
+    let nom = e.nom;
     if(e.type === 'nouveau'){
-      const nom = $('utNom').value.trim();
+      nom = $('utNom').value.trim();
       if(!nomValide(nom)){ err.textContent = 'Nom requis : 24 caractères au plus, sans ; / \\ , < > & ".'; return; }
       if(entrees.some(x => x.type !== 'nouveau' && _memeNom(x.nom, nom))){
         err.textContent = 'Cet utilisateur existe déjà : le choisir dans la liste.'; return;
       }
-      enregistrerCompte(nom, mdp);
-      chatLog(`➕ Utilisateur créé : ${nom}`);
-      connecter(nom, mdp, camp);
-      return;
     }
-    // Le mot de passe doit être celui de l'utilisateur DÉSIGNÉ.
-    const parMasque = e.fiche && mdp === e.fiche.id;
-    const parCompte = e.compte && _empreinte(mdp) === e.compte.h;
-    if(!parMasque && !parCompte){ err.textContent = 'Mot de passe incorrect pour cet utilisateur.'; return; }
-    // Un nom réel encore inconnu du poste y devient un compte : il sera
-    // reconnu la prochaine fois, même sans pion masqué.
-    const nom = e.fiche ? (e.fiche.nom || e.nom) : e.nom;
-    if(!e.compte && nomValide(nom)) enregistrerCompte(nom, mdp);
-    connecter(nom, mdp, camp);
+    // Joueur du fichier sans nom (« Joueur 2 ») : son mot de passe suffit,
+    // il prend le nom de son étiquette.
+    if(e.fiche && !e.fiche.nom){
+      if(mdp !== e.fiche.id){ err.textContent = 'Mot de passe incorrect pour cet utilisateur.'; return; }
+    }
+    const r = connecterIdentifiants(nom, mdp);
+    if(r.erreur){ err.textContent = r.erreur; return; }
+    w.remove();
   };
   $('utObs').onclick = () => { _ecrireLocal(CLE_DERNIER, ''); w.remove(); seConnecter(null); };
   $('utGerer').onclick = () => { w.remove(); gererUtilisateurs(); };
@@ -439,6 +479,7 @@ function demanderUtilisateur(){
       if(ev.key === 'Escape') w.remove();
     });
   majNom();
+  if(erreur) err.textContent = erreur;
 }
 
 // ── Gestion des utilisateurs : comptes du poste et joueurs du fichier,
@@ -448,7 +489,7 @@ function gererUtilisateurs(){
   const fiches = joueursDuFichier();
   const lignes = [];
   for(const f of fiches)
-    lignes.push({nom: f.nom || f.etiquette, n: f.n, local: false, moi: !!_utilisateur && f.id === _utilisateur.mdp});
+    lignes.push({nom: f.nom || f.etiquette, id: f.id, n: f.n, local: false, moi: !!_utilisateur && f.id === _utilisateur.mdp});
   for(const c of comptesLocaux()){
     const l = lignes.find(x => _memeNom(x.nom, c.nom));
     if(l) l.local = true;
@@ -462,7 +503,7 @@ function gererUtilisateurs(){
       <p>Connecté : <b>${_esc(_utilisateur ? _utilisateur.nom : 'observateur')}</b>.</p>
       <table><tr><th>Utilisateur</th><th>Camp</th><th>Pions masqués</th><th></th></tr>
         ${lignes.map(l => `<tr><td>${_esc(l.nom)}${l.moi ? ' <b>(vous)</b>' : ''}</td>
-          <td>${CAMPS[(l.moi && monCamp()) || campMemorise(l.nom)] || '—'}</td><td class="nb">${l.n}</td>
+          <td>${CAMPS[(l.moi && monCamp()) || (l.id && campDeduit(l.id))] || '—'}</td><td class="nb">${l.n}</td>
           <td>${l.local ? `<button class="oubli" data-nom="${_esc(l.nom)}">Oublier</button>` : '<i>fichier</i>'}</td></tr>`).join('')
           || '<tr><td colspan="4"><i>Aucun utilisateur</i></td></tr>'}</table>
       <div class="fb">

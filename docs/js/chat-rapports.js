@@ -88,7 +88,22 @@ function _slotDuChemin(chemin){
     const k = c.indexOf(':');
     return k < 0 ? '' : c.substring(k + 1);
   });
-  return _bdd.parChemin.get(noms.join('\u0001')) || null;
+  const exact = _bdd.parChemin.get(noms.join('\u0001'));
+  if(exact) return exact;
+  // Un composant renommé depuis l'écriture du trait (l'onglet « < Custom »
+  // du marqueur de tour s'appelle aujourd'hui « Custom ») : comme VASSAL,
+  // qui se contente alors du seul enfant de la bonne classe, on prend le
+  // PieceSlot de même nom dont le chemin diffère le moins. Le premier
+  // « Turn » venu était celui du module CdG (français).
+  const fin = noms[noms.length - 1];
+  let mieux = null, ecarts = Infinity;
+  for(const [k, x] of _bdd.parChemin){
+    const c = k.split('\u0001');
+    if(c.length !== noms.length || c[c.length - 1] !== fin) continue;
+    const e = c.reduce((n, v, i) => n + (v !== noms[i]), 0);
+    if(e < ecarts){ ecarts = e; mieux = x; }
+  }
+  return ecarts * 2 < noms.length ? mieux : null;
 }
 
 // Pose le marqueur d'un trait PlaceMarker / Replace. `spec` est son

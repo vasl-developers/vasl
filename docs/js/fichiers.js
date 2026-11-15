@@ -325,7 +325,7 @@ async function openGameFile(file){
     if(!await chargerPartie(texte, label, annexes)) return;
     netPartieChargee();
     // Qui joue ? Ce que l'on voit et ce que l'on peut toucher en dépend.
-    demanderUtilisateur();
+    identifierJoueur();
     // GameState.loadGame : « Replay commencing. Begin new log file? »
     proposerLog(true);
   } catch(err){
@@ -340,7 +340,7 @@ async function chargerPartie(texte, label, annexes){
   const boards = _parseBoardSegment(texte);
   if(!boards.length){ chatLog(`⚠️ Aucun board dans ${label}`); return false; }
   fermerLog();
-  document.title = 'VASLweb 1.06 — ' + label;
+  document.title = 'VASLweb 1.07 — ' + label;
   chatLog(`🗺️ ${label} — boards : `
     + boards.map(b => b.name + (b.reversed ? ' (retourné)' : '')).join(', '));
   await _renderBoards(boards);

@@ -117,6 +117,13 @@ function sommetDeplace(l, p){
   const k = cle(p), dans = l.filter(q => cle(q) === k), s = dans.length ? dans : l;
   return s.length ? s.reduce((a, b) => b.ordre > a.ordre ? b : a) : p;
 }
+// Ce que montre le fantôme d'un glissé : les pions qui partent de
+// l'hexagone de p, du fond au sommet — un véhicule sous ses passagers ou
+// ses marqueurs garde ainsi son VCA et son TCA à l'écran.
+function pileDeplacee(l, p){
+  const k = cle(p), dans = l.filter(q => cle(q) === k && !q.cache && q.el);
+  return dans.length ? dans.sort((a, b) => a.ordre - b.ordre) : [sommetDeplace(l, p)];
+}
 
 // Au doigt (doigt vrai), un pion sélectionné emporte toujours toute la
 // sélection, pile entière comprise : pour n'en tirer qu'un, on le touche
@@ -243,7 +250,8 @@ async function _majPieceFond(p, d, gen, e, ech){
   p.fond = true;
   p.larg = Math.round(e.offsetWidth * ech);
   p.haut = Math.round(e.offsetHeight * ech);
-  if(d.vt && (d.vt.genre === 'carte' || d.vt.genre === 'bandeau')) _vtCaler(p, e);
+  p.cases = null;
+  if(d.vt && (d.vt.genre === 'carte' || d.vt.genre === 'bandeau')){ _vtCaler(p, e); _vtCases(p, e); }
   _etendreCarte();
   p.sz = Math.max(p.larg, p.haut);
   rendrePile(cle(p));
@@ -799,7 +807,7 @@ function importerPions(texte, label, annexes){
   if(iLog < 0) iLog = segs.length;
   _source = segs.slice(0, iLog).filter(s => !s.startsWith('UNDO'));
   _annexes = annexes || new Map();
-  _demasquables = lireDemasquables(_source);
+  demasquablesAuChargement(_source);
   _nomFichier = label.replace(/\.(vsav|vlog)$/i, '');
 
   const rangs = _parseStacks(_source);
@@ -1085,6 +1093,8 @@ function rejouerLog(segs){
       flareDistant(s);
     } else if(_appliquerLien(s)){
       n++;
+    } else if(s.startsWith(UNMASK)){
+      recevoirDemasquables(s);
     } else if(s.startsWith('INFO\t')){
       _infoEtat = s.substring(5); majChampsInfo();
       n++;

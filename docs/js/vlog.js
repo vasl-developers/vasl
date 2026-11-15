@@ -357,13 +357,17 @@ function _dessous(p){
   return 'null';
 }
 
-// Position finale d'un lâcher : l'ancrage d'hexagone, ou une pile déjà
-// là — les piles d'un fichier VASL ne tombent pas toujours au pixel
-// près sur nos centres calculés.
-function positionDepot(x, y){
-  const a = ancragePlusProche(x, y) || {x: Math.round(x), y: Math.round(y)};
+// Position finale d'un lâcher : le centre d'une case de panneau (carte de
+// scénario, bandeau), sinon l'ancrage d'hexagone, ou une pile déjà là —
+// les piles d'un fichier VASL ne tombent pas toujours au pixel près sur
+// nos centres calculés. liste : les pions lâchés ; un panneau qu'on
+// déplace ne s'accroche pas aux cases.
+function positionDepot(x, y, liste){
+  const c = liste && liste.some(p => p.fond) ? null : caseDePanneau(x, y);
+  const a = c || ancragePlusProche(x, y) || {x: Math.round(x), y: Math.round(y)};
   let best = null, bd = 12*12;
   for(const p of vivants()){
+    if(c && p.fond) continue;
     const d = (p.x-a.x)*(p.x-a.x) + (p.y-a.y)*(p.y-a.y);
     if(d < bd){ bd = d; best = p; }
   }
@@ -379,7 +383,7 @@ function deplacer(liste, x, y, campConfirme){
   // est bloqué jusqu'à la réponse de la fenêtre de confirmation.
   if(!campConfirme && !confirmerCampAdverse(liste, () => deplacer(liste, x, y, true))) return;
   _avantAction();
-  const pos = positionDepot(x, y);
+  const pos = positionDepot(x, y, liste);
   const kArr = pos.x + ',' + pos.y;
   // Une unité dissimulée sortie de sa pile emporte sa dissimulation
   // (A12.15) : le « ? » qui ne couvrirait plus rien la suit, et entre
