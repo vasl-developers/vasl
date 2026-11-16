@@ -187,6 +187,21 @@ function _qmarkPourPartants(liste, kArr, sousQ){
     if(poserConcealment(p, m)) chatLog(`❔ « ? » posé sur ${p.nom}`);
 }
 
+// « ? » d'un joueur qui laisse l'adversaire dévoiler ses unités : quand
+// l'adversaire le retire, les unités qu'il coiffait sont démasquées
+// (un « D/ » chacune, avant le « -/ » du « ? »).
+function devoilerSousQmark(q){
+  const n = infoDissimulation(q).nation;
+  const s = pile(cle(q));
+  const l = s.filter((u, i) => {
+    const m = infoDissimulation(u);
+    return m.unite && m.proprio && m.nation === n && _qmarkAuDessus(s, i, n) === q && demasquable(u);
+  });
+  for(const u of l) fixerMasque(u, null);
+  if(l.length) chatLog(`👁️ « ? » retiré : ${l.map(u => u.nom).join(', ')} dévoilé${l.length > 1 ? 's' : ''}`);
+  return l;
+}
+
 // Clone.myKeyEvent : la copie rejoint la pile par placeOrMerge, au sommet.
 function cloner(p){
   const te = tePion(p);
@@ -222,7 +237,8 @@ function arbreCommandes(p){
   // Comme Obscurable de VASSAL : un pion masqué par un autre joueur
   // n'offre aucune commande.
   // Sauf Conceal, si son joueur laisse l'adversaire la démasquer.
-  const visibles = accesRefuse(p) ? cmds.filter(c => c.demasque && demasquable(p)) : cmds.filter(c => {
+  // Et la suppression de son « ? », s'il laisse dévoiler ses unités.
+  const visibles = accesRefuse(p) ? cmds.filter(c => (c.demasque && demasquable(p)) || (c.suppr && qmarkLevable(p))) : cmds.filter(c => {
     if(!c.nom || restriction(c) === 'cacher') return false;
     const k = c.touche ? c.nom + '\u0001' + c.touche : null;
     if(k && vues.has(k)) return false;

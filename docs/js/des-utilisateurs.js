@@ -110,6 +110,17 @@ function demasquable(p){
   return !autrui(p.hipProprio) && !autrui(p.compteurProprio);
 }
 const _cmdDemasque = p => { const te = tePion(p); return te ? commandesDe(te.type).cmds.find(c => c.demasque) : null; };
+// « ? » d'un autre joueur qui l'a permis : l'adversaire peut le retirer,
+// ce qui dévoile les unités qu'il coiffe (devoilerSousQmark).
+function qmarkLevable(p){
+  if(!p || !p.compteurProprio || voitMasque(p.compteurProprio) || !_demasquables.has(p.compteurProprio)) return false;
+  const autrui = id => !!id && id !== 'web' && !voitMasque(id);
+  return !autrui(p.masqueProprio) && !autrui(p.hipProprio);
+}
+// « Touche » du retrait d'un pion (corbeille, retirer()).
+const TOUCHE_RETRAIT = '\u0000retrait';
+const _estSuppression = (p, touche) => touche === TOUCHE_RETRAIT
+  || (() => { const te = tePion(p); return !!te && commandesDe(te.type).cmds.some(c => c.suppr && c.touche === touche); })();
 
 const CLE_COMPTES = 'aslweb.comptes';
 const CLE_DERNIER = 'aslweb.dernierUtilisateur';
@@ -190,6 +201,7 @@ const nbMasques = id => vivants().filter(p => _masqueDe(p, id)).length;
 function accesRefuse(p, touche){
   if(!p) return false;
   if(touche && demasquable(p)){ const c = _cmdDemasque(p); if(c && c.touche === touche) return false; }
+  if(touche && qmarkLevable(p) && _estSuppression(p, touche)) return false;
   const autrui = id => !idLibre(id) && !voitMasque(id);
   return autrui(p.masqueProprio) || autrui(p.hipProprio) || autrui(p.compteurProprio);
 }

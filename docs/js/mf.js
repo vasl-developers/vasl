@@ -1487,9 +1487,10 @@ function retirerTous(action){
 }
 
 function retirer(p, silencieux){
-  if(p.deleted || refuser(p)) return;
+  if(p.deleted || refuser(p, TOUCHE_RETRAIT)) return;
   _avantAction();
   const k = cle(p);
+  if(qmarkLevable(p)) devoilerSousQmark(p);
   p.deleted = true; p.el.remove(); _sel.delete(p);
   _logCmd('-/' + p.uid);
   ajusterDissimulation(k);
