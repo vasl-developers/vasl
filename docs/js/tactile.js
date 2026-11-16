@@ -263,7 +263,7 @@ function _rangeeCommandes(boite, avecDeplacer){
 
 // Retire la sélection (ou la pile courante) ; confirmation dès 3 pions.
 function retirerSelection(){
-  const l = _visesBarre().filter(p => !accesRefuse(p));
+  const l = _visesBarre().filter(p => !accesRefuse(p, TOUCHE_RETRAIT));
   if(!l.length){ const v = _visesBarre(); if(v.length) refuser(v[0]); return; }
   if(l.length >= 3 && !confirm(T(`Retirer ${l.length} pions de la carte ?`))) return;
   for(const p of l) retirer(p, l.length > 1);

@@ -312,13 +312,14 @@ function commandesDe(type){
         effets.push(() => editerLabel(p, i, (ch[2] || 'Label').replace(/\\(.)/g, '$1'), lot)));
     } else if(id === 'delete'){
       ajouter(i, ch[1], lireTouche(ch[2]), ({p, effets}) => effets.push(() => retirer(p)));
+      cmds[cmds.length - 1].suppr = true;
     } else if(id === 'clone'){
       ajouter(i, ch[1], lireTouche(ch[2]), ({p, effets}) => effets.push(() => cloner(p)));
     } else if(id === 'piece'){
       // BasicPiece : touches historiques de clonage et de suppression.
       const k = toucheAncienne(ch[1], 2), d = toucheAncienne(ch[2], 2);
       if(k) ajouter(i, 'Clone', k, ({p, effets}) => effets.push(() => cloner(p)));
-      if(d) ajouter(i, 'Delete', d, ({p, effets}) => effets.push(() => retirer(p)));
+      if(d){ ajouter(i, 'Delete', d, ({p, effets}) => effets.push(() => retirer(p))); cmds[cmds.length - 1].suppr = true; }
     } else if(['replace', 'placemark', 'placeDM', 'placeACQ'].includes(id)){
       // PlaceMarker et ses dérivés VASL :
       //   commande;touche;chemin;définition;dx;dy;rotation;touche après;description;gpid;placement
@@ -579,7 +580,8 @@ function executerTouche(p, touche, cmdDirecte, lot){
   // Obscurable.keyEvent : sur l'unité d'un autre, seule la commande
   // Conceal agit, et elle démasque.
   const k = touche || (cmdDirecte && cmdDirecte.touche);
-  if(accesRefuse(p) && !accesRefuse(p, k)){ dissimuler(p); return true; }
+  // Sur son « ? », seule la suppression agit (qmarkLevable).
+  if(accesRefuse(p) && !accesRefuse(p, k) && demasquable(p)){ dissimuler(p); return true; }
   if(refuser(p, k)) return false;
   const te = tePion(p);
   if(!te) return false;
