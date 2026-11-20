@@ -642,6 +642,10 @@ public class VASLGameInterface {
         }
 
         Hex h = LOSMap.gridToHex(p.x, p.y);
+        // a point on the map grid can be in no hex, e.g. in a partial hex at the map edge
+        if (h == null) {
+            return null;
+        }
         Location location = h.getNearestLocation(p.x, p.y);
         LocationCounter locationCounter = getLocationCounterForPiece(piece);
 
