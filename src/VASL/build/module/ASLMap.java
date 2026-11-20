@@ -502,7 +502,6 @@ public class ASLMap extends Map {
     private void doBuildingfix() {
         JFrame frame = new JFrame("Adding Overlays To LOS");
         frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600, 400);
 
         Box b = Box.createHorizontalBox();
