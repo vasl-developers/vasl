@@ -22,6 +22,7 @@ import VASSAL.build.AbstractBuildable;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.GameComponent;
+import VASSAL.build.module.properties.MutableProperty;
 import VASSAL.command.Command;
 import VASSAL.command.CommandEncoder;
 import VASSAL.configure.TextConfigurer;
@@ -474,6 +475,7 @@ public class ScenInfo extends AbstractBuildable implements GameComponent, Comman
         .append(AxisELR.getText()).append(AxisSAN.getText())
         .append(AlliedELR.getText()).append(AlliedSAN.getText()).append(AxisBoobyTrap.getText()).append(AlliedBoobyTrap.getText())
         .append(weather).append(Integer.toString(ecvalue)).append(wind).append(windir).append(night).append(Integer.toString(nvrvalue));
+    se.append(notes.getValueString());
     for (Enumeration e = privateNotes.keys(); e.hasMoreElements();) {
       String id = (String) e.nextElement();
       String notes = (String) privateNotes.get(id);
