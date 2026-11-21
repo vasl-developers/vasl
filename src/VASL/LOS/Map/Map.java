@@ -3089,7 +3089,12 @@ public class Map  {
             }
         }
         // handle NPE situation by using default terrain
-        if (imageterrain == null){imageterrain = getTerrain("Open Ground");}
+        if (imageterrain == null) {
+            imageterrain = getGridTerrain(status.currentCol, status.currentRow);
+            if (imageterrain == null) {
+                imageterrain = getTerrain("Open Ground");
+            }
+        }
         return imageterrain;
     }
     // copied from ASLMap - refactor
