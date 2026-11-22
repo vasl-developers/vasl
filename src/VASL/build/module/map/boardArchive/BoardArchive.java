@@ -504,7 +504,9 @@ public class BoardArchive {
                 int mapcol = boardstarthex.getColumnNumber();
                 int maprow = boardstarthex.getRowNumber();
                 // add hack to fix RB/RO join
-                if (maprow > 0 && board.getName().contains("RO")) { maprow += 1;}
+                if (maprow > 0 && board.getName().contains("RO")) {
+                    maprow += 1;
+                }
                 if (board.isCropped()){
                     // uses the board getters to retrieve data set in ASLMap.buildVASLMap()
                     startcropx = (int) board.getCropBounds().getX();
@@ -519,7 +521,7 @@ public class BoardArchive {
                     if (board.getName().contains("RO") && boardposy > 0) { // adding RO below RBv3
                         height = endrow;
                     } else if (board.getCropBounds().getHeight() != -1) { // this formula only works if rows actually cropped
-                        height = endrow - startrow;
+                        height = endrow - startrow +1;
                     }
                     cropWidth = (int) board.getCropBounds().getWidth() == -1 ? gridWidth : (int) board.getCropBounds().getWidth();
                     cropHeight = (int) board.getCropBounds().getHeight() == -1 ? gridHeight : (int) board.getCropBounds().getHeight();
@@ -576,15 +578,29 @@ public class BoardArchive {
                 // now create and populate the hexGrid
                 // read-in the hex information
                 //determine if even/odd col has extra row - depends on crop
-                if (startrow != 0) {startrow -= 1;} //adjustment required to align with zero-based row arrays
+                if (startrow != 0 && !(board.getName().contains("RO"))) {startrow -= 1;} //adjustment required to align with zero-based row arrays but not for boards with hex A0 such as RO
                 int heightadj = 0;
                 for (int col = 0; col < (startcol + width); col++) {
+                    // handle special cases  - due to board configuration and cropping
                     if (board.getName().contains("RBv3") || board.getName().contains("SG")) {
                         heightadj = col % 2 == 1 ? 1 : 0;
-                    }  // DaE has equal rows so no heightadj required
+                    }
                     // if adding RO to RBv3 then heightadj required
-                    else if (board.getName().contains("RO") && maprow > 0){
+                    else if (board.getName().contains("RO") && maprow > 0 ){
                         heightadj = col % 2 == 1 ? 1 : 0;
+                    }
+                    // if cropping rows top and bottom then height adj required
+                    if (startrow > 0 && endrow < gridHeight) {
+                        if (startcol % 2 == 0){
+                            heightadj = col % 2 == 1 ? 1 : 0;
+                        } else {
+                            heightadj = col % 2 == 0 ? 1 : 0;
+                        }
+                    }
+                    // if cropping map with A0 hex (such as RO) need to adjust hexnames
+                    int rowadj = 0;
+                    if (board.getName().contains("RO") && startrow > 0 ){
+                        rowadj = -1;
                     }
                     for (int row = 0 + dwadj; row < (startrow + height + heightadj); row++) {
                         if (col >= startcol && row >= startrow) {
@@ -594,7 +610,7 @@ public class BoardArchive {
                             } else {
                                 VASLMap.getHex(mapcol + col - startcol, maprow + row - startrow).setStairway(false);
                             }
-                            VASLMap.getHex(mapcol + col - startcol, maprow + row - startrow).resetHexAndLocationNames(VASLMap.getHASLHexName(col, row, board));
+                            VASLMap.getHex(mapcol + col - startcol, maprow + row - startrow).resetHexAndLocationNames(VASLMap.getHASLHexName(col, row + rowadj, board));
 
                         } else {
                             infile.readByte();
