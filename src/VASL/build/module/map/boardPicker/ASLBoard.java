@@ -359,11 +359,11 @@ public class ASLBoard extends Board {
         Rectangle newCropBounds = new Rectangle(0, 0, -1, -1);
         newCropBounds.x = (row1.length() == 0 ? 0 : getGrid().getLocation(row1 + "0").x);
         newCropBounds.width = row2.length() == 0 ? -1 : (getGrid().getLocation(row2 + "0").x - newCropBounds.x);
-        newCropBounds.y = coord1.length() == 0 ? 0 : (getGrid().getLocation("a" + coord1). y - (int) (dy / 2));
+        newCropBounds.y = coord1.length() == 0 ? 0 : (getGrid().getLocation("a" + coord1).y - (int) (dy / 2));
         // hack to fix problem with RB cropping
         if (dy == 64.47 || dy ==64.4528){
             if (coord1.equals("")){coord1 = "0";}
-            newCropBounds.y += Math.ceil((double) Integer.valueOf(coord1)/10);
+        //    newCropBounds.y += Math.ceil((double) Integer.valueOf(coord1)/10); // messed up RO cropping see #2714
         }
         newCropBounds.height = coord2.length() == 0 ? -1 : (getGrid().getLocation("a" + coord2).y + (int) (dy / 2) - newCropBounds.y);
         if (nearestFullRow) {
