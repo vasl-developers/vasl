@@ -784,7 +784,10 @@ function _parseStacks(segs){
 }
 
 // La carte de jeu porte le nom par défaut de VASSAL ; à défaut, la plus
-// peuplée hors fenêtres auxiliaires (Casualties, Scenario Aid…).
+// peuplée hors fenêtres auxiliaires (Casualties, Scenario Aid…). Une
+// fenêtre auxiliaire n'est jamais la carte de jeu : sans autre carte
+// peuplée (partie neuve, carte encore vide), c'est « Main Map », et les
+// pièces des fenêtres restent à l'écart.
 function _carteDeJeu(infos){
   const tally = {};
   for(const d of infos) if(d.carte && d.carte !== 'null') tally[d.carte] = (tally[d.carte] || 0) + 1;
@@ -793,7 +796,7 @@ function _carteDeJeu(infos){
   if(std) return std;
   const AUX = /Casualties|Field Maintenance|Campaign Roster|Scenario Aid|Charts?|Reference|Dice|Roster|Aid Card/i;
   const jeu = noms.filter(n => !AUX.test(n));
-  return (jeu.length ? jeu : noms).sort((a, b) => tally[b] - tally[a])[0] || 'Main Map';
+  return jeu.sort((a, b) => tally[b] - tally[a])[0] || 'Main Map';
 }
 
 function importerPions(texte, label, annexes){
@@ -910,6 +913,8 @@ function _inverse(c){
   if(_CMD_LIEN.test(c)) return [c.startsWith('UN') ? c.substring(2) : 'UN' + c];
   // CreateModule ↔ RemoveModule, UpdateModule vers l'état d'avant.
   if(_cleOBA(c).startsWith('OBA/')) return _inverseOBA(c);
+  // Activate ↔ DeactivatePersistElevationCommand (myUndoCommand).
+  if(c.startsWith(CMD_PERSIST)) return [CMD_PERSIST + (c.substring(CMD_PERSIST.length).split('|')[0].toLowerCase() === 'true' ? 'false' : 'true')];
   // ChangePropertyCommand : la valeur d'avant.
   if(c.startsWith('MutableProperty\t')){
     const g = _lireGlob(c);
@@ -1102,6 +1107,10 @@ function rejouerLog(segs){
       if(_obaAppliquer(s)) n++;
     } else if(s.startsWith('MutableProperty\t') || s.startsWith('GlobalProperty\t')){
       if(_appliquerGlob(s)) n++;
+    } else if(s.startsWith(CMD_PERSIST)){
+      // LOSSettingsAndPrefs.decode : Activate / DeactivatePersistElevationCommand.
+      fixerPersistElevation(s.substring(CMD_PERSIST.length).split('|')[0].toLowerCase() === 'true');
+      n++;
     } else if(s.startsWith('+/')){
       if(/^\+\/[^/]+\/stack\//.test(s)){
         _pilesVassal.set(s.split('/')[1], _idsPile(s.substring(s.indexOf('/stack/') + 7)));

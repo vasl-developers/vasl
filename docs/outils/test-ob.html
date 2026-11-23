@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Essai OB PDF</title>
+<!--
+  Page d'essai locale : lecture de la fiche d'un scénario (PDF).
+  Ouvrir ce fichier depuis le dépôt (file:// ou serveur local), choisir un
+  ou plusieurs PDF de fiche. Rien n'est envoyé nulle part : seules les
+  bibliothèques (pdf.js, tesseract.js, données eng) sont téléchargées.
+  Elle montre, fiche par fiche, l'image extraite puis, case par case, la
+  découpe et ce qui en a été lu. Le bouton « Exporter » donne les
+  résultats en JSON, pour les comparer à ceux du prototype Python.
+  Carte : js/ob-carte.js ; OB : js/ob-lecture.js (verdicts écrits comme
+  les res*.txt du prototype, pour la comparaison).
+-->
+<style>
+:root{
+  --fond:#f6f6f4; --carte:#fff; --texte:#1d1d1b; --doux:#6b6b66; --trait:#d9d9d4;
+  --accent:#2f6f4e; --rouge:#b3261e; --case:#2f8f4e;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --fond:#161615; --carte:#21211f; --texte:#ecece8; --doux:#a0a09a; --trait:#3a3a37;
+    --accent:#7cc49c; --rouge:#f2827a; --case:#5fd08a; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --fond:#161615; --carte:#21211f; --texte:#ecece8; --doux:#a0a09a; --trait:#3a3a37;
+  --accent:#7cc49c; --rouge:#f2827a; --case:#5fd08a; color-scheme: dark;
+}
+*{box-sizing:border-box}
+body{margin:0;padding:16px;background:var(--fond);color:var(--texte);font:14px/1.45 system-ui,sans-serif}
+h1{font-size:18px;margin:0 0 4px}
+h2{font-size:16px;margin:0 0 8px}
+h3{font-size:14px;margin:14px 0 6px}
+.doux{color:var(--doux)}
+.barre{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0}
+button,select,input[type=file]{font:inherit}
+button{padding:4px 10px;border:1px solid var(--trait);border-radius:6px;background:var(--carte);color:var(--texte);cursor:pointer}
+button:disabled{opacity:.5;cursor:default}
+label{display:inline-flex;gap:4px;align-items:center}
+progress{width:200px}
+#etat{min-height:1.4em}
+.erreur{color:var(--rouge)}
+.fiche{background:var(--carte);border:1px solid var(--trait);border-radius:8px;padding:12px;margin:12px 0}
+.haut{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start}
+.vignette{max-width:100%;width:340px;border:1px solid var(--trait);cursor:zoom-in}
+.vignette.grande{width:100%;cursor:zoom-out}
+table{border-collapse:collapse;font-size:13px}
+td,th{border-bottom:1px solid var(--trait);padding:3px 8px;text-align:left;vertical-align:middle}
+td canvas{display:block;image-rendering:pixelated;max-width:160px;border:1px solid var(--trait)}
+.defile{overflow-x:auto;max-width:100%}
+code{font-size:12px}
+</style>
+</head>
+<body>
+<h1>Essai : lecture de la fiche d'un scénario (PDF)</h1>
+<div class="doux">Page locale de mise au point. Les PDF restent sur cet appareil.</div>
+
+<div class="barre">
+  <input type="file" id="pdf" accept="application/pdf,.pdf" multiple>
+  <label><input type="checkbox" id="vSchema" checked> carte (schéma des boards)</label>
+  <label><input type="checkbox" id="vPions" checked> OB (pions)</label>
+  <label>workers <select id="nw"></select></label>
+  <button id="arreter" disabled>Arrêter</button>
+  <button id="exporter" disabled>Exporter (JSON)</button>
+</div>
+<div class="barre"><progress id="prog" value="0" max="1"></progress><span id="etat" class="doux"></span></div>
+<div id="fiches"></div>
+
+<script src="../js/ob-image.js"></script>
+<script src="../js/ob-pdf.js"></script>
+<script src="../js/ob-ocr.js"></script>
+<script src="../js/donnees/ob-reference.js"></script>
+<script src="../js/ob-lecture.js"></script>
+<script src="../js/ob-carte.js"></script>
+<script>
+'use strict';
+const O = obImage;
+const $ = id => document.getElementById(id);
+const resultats = window.__resultats = [];
+let _arret = false;
+
+for(let n = 1; n <= 4; n++) $('nw').add(new Option(n, n, false, n === obOcr.nbParDefaut()));
+
+function etat(t, erreur){ $('etat').textContent = t; $('etat').className = erreur ? 'erreur' : 'doux'; }
+function progression(f, t){ $('prog').max = Math.max(1, t); $('prog').value = f; }
+
+function canvasDe(im, echelle = 1){
+  const c = document.createElement('canvas');
+  c.width = im.w; c.height = im.h;
+  c.getContext('2d').putImageData(O.versRVBA(im), 0, 0);
+  if(echelle !== 1) c.style.width = Math.round(im.w * echelle) + 'px';
+  return c;
+}
+function el(tag, attrs = {}, ...enfants){
+  const e = document.createElement(tag);
+  Object.assign(e, attrs);
+  for(const x of enfants) if(x != null) e.append(x);
+  return e;
+}
+
+function dessinerVignette(rgba, cases, cells){
+  const c = document.createElement('canvas');
+  c.width = rgba.w; c.height = rgba.h;
+  const cx = c.getContext('2d');
+  cx.putImageData(new ImageData(rgba.d, rgba.w, rgba.h), 0, 0);
+  cx.lineWidth = Math.max(3, rgba.w / 500);
+  cx.font = `bold ${Math.round(rgba.w / 60)}px system-ui`;
+  cx.strokeStyle = cx.fillStyle = '#1f9d55';
+  (cases || []).forEach(({cas: [x, y, w, h], i}) => { cx.strokeRect(x, y, w, h); cx.fillText(i, x + 4, y + rgba.w / 60); });
+  cx.strokeStyle = cx.fillStyle = '#c0392b';
+  (cells || []).forEach(({cas: [x, y, w, h], board, sens}) => { cx.strokeRect(x, y, w, h); if(board) cx.fillText((sens === 'retourné' ? 'r' : '') + board, x + 6, y + h - 8); });
+  c.className = 'vignette';
+  c.title = 'Agrandir / réduire';
+  c.onclick = () => c.classList.toggle('grande');
+  return c;
+}
+
+async function traiter(fichier){
+  const bloc = el('div', {className: 'fiche'}, el('h2', {textContent: fichier.name}));
+  $('fiches').append(bloc);
+  const r = {fichier: fichier.name};
+  resultats.push(r);
+  let img;
+  try { img = await obImageDuPdf(fichier); }
+  catch(e){ bloc.append(el('div', {className: 'erreur', textContent: e.message})); r.erreur = e.message; return; }
+  r.image = {largeur: img.rgba.w, hauteur: img.rgba.h, source: img.source, nbImages: img.nbImages, ms: img.ms, texte: img.texte};
+  bloc.append(el('div', {className: 'doux', textContent:
+    `${img.rgba.w} × ${img.rgba.h} px · ${img.source === 'jpeg' ? 'JPEG du PDF, tel quel' : 'rendu par pdf.js'}`
+    + (img.nbImages > 1 ? ` · ${img.nbImages} images (la plus grande est prise)` : '') + ` · ${img.ms} ms`
+    + ` · scénario n° ${obCarte.numeroScenario(fichier.name, img.texte) || '?'}`}));
+  const haut = el('div', {className: 'haut'}), droite = el('div', {className: 'defile'});
+  bloc.append(haut);
+  const fiche = {rgba: img.rgba, gris: img.gris};
+  let carte = null, ob = null;
+  if($('vSchema').checked && !_arret){
+    const t0 = performance.now();
+    const cad = obLecture.cadresOb(img.gris, obLecture.casesPions(img.gris));
+    try { carte = await obCarte.lireSchema(fiche, {limiteY: cad.cadres.length ? cad.cadres[0][1] : null}); }
+    catch(e){ if(e.message !== OB_ARRET) throw e; }
+    if(carte){
+      const g = Array.from({length: carte.ny}, () => Array(carte.nx).fill('·'));
+      for(const b of carte.boards) g[b.row][b.col] = (b.reversed ? 'r' : '') + b.numero + (b.sens === 'incertain' ? ' (sens ?)' : '');
+      for(const v of carte.vides) g[v.row][v.col] = '□ à choisir';
+      r.carte = {grille: g, vertical: carte.vertical, boards: carte.boards.map(b => ({nom: b.nom, col: b.col, row: b.row, reversed: b.reversed, sens: b.sens, angle: b.angle, conf: b.conf})), ms: Math.round(performance.now() - t0)};
+      droite.append(el('h3', {textContent: `Carte (${carte.vertical ? 'boards debout, carte pivotée' : 'boards couchés'}), ${r.carte.ms} ms`}),
+        el('table', {}, ...g.map(l => el('tr', {}, ...l.map(x => el('td', {textContent: x}))))));
+    }
+  }
+  if($('vPions').checked && !_arret){
+    const t0 = performance.now();
+    try { ob = await obLecture.lireFiche(fiche, {arret: () => _arret}); }
+    catch(e){ if(e.message !== OB_ARRET) throw e; }
+    if(ob){
+      r.ob = {nat_de: ob.nat_de, nations_piste: ob.nations_piste, res: ob.cases.map(c => c.verdict ? obLecture.ligneRes(c) : `${c.i} (non lu)`), ms: Math.round(performance.now() - t0)};
+      droite.append(el('h3', {textContent: `OB : ${ob.cases.length} cases, ${(r.ob.ms / 1000).toFixed(1)} s — piste : ${ob.nations_piste.join(', ') || '?'}`}));
+      const tb = el('table', {}, el('tr', {}, el('th', {textContent: 'n°'}), el('th', {textContent: 'découpe'}), el('th', {textContent: 'nation'}), el('th', {textContent: 'verdict'}), el('th', {textContent: 'qté'})));
+      for(const c of ob.cases){
+        const [x, y, w, h] = c.cas;
+        tb.append(el('tr', {}, el('td', {textContent: c.i}), el('td', {}, canvasDe(O.tranche(img.gris, y, y + Math.round(h * 1.5), x, x + w))),
+          el('td', {textContent: c.nat}), el('td', {}, el('code', {textContent: c.verdict || '(non lu)'})),
+          el('td', {textContent: (c.q === null ? '?' : c.q) + (c.qlu && String(c.q) !== c.qlu ? ` (lu ${c.qlu})` : '')})));
+      }
+      droite.append(tb);
+    }
+  }
+  haut.append(dessinerVignette(img.rgba, ob && ob.cases, carte && carte.cases), droite);
+}
+
+$('pdf').onchange = async () => {
+  const fichiers = [...$('pdf').files];
+  if(!fichiers.length) return;
+  _arret = false;
+  $('fiches').textContent = ''; resultats.length = 0;
+  $('arreter').disabled = false; $('exporter').disabled = true; $('pdf').disabled = true;
+  obOcr.remettreCompteurs();
+  const t0 = performance.now();
+  try {
+    if($('vSchema').checked || $('vPions').checked){
+      etat('Chargement du moteur d’OCR…');
+      await obOcr.demarrer({n: +$('nw').value, surProgression: progression});
+    }
+    for(const [i, f] of fichiers.entries()){
+      if(_arret) break;
+      etat(`Fiche ${i + 1} / ${fichiers.length} : ${f.name}`);
+      await traiter(f);
+    }
+    const s = ((performance.now() - t0) / 1000).toFixed(1);
+    const p = obOcr.progression();
+    etat(_arret ? 'Arrêté.' : `Terminé : ${fichiers.length} fiche(s) en ${s} s, ${p.faits} lectures OCR.`);
+  } catch(e){
+    etat(e.message, true);
+  } finally {
+    $('arreter').disabled = true; $('exporter').disabled = !resultats.length; $('pdf').disabled = false;
+    window.__fini = true;
+  }
+};
+$('arreter').onclick = () => { _arret = true; obOcr.arreter(); etat('Arrêt…'); };
+$('exporter').onclick = () => {
+  const a = el('a', {download: 'resultats-ob.json',
+    href: URL.createObjectURL(new Blob([JSON.stringify(resultats, null, 1)], {type: 'application/json'}))});
+  a.click();
+};
+</script>
+</body>
+</html>

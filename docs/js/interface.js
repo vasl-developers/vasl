@@ -57,6 +57,7 @@ function basculerVueCarte(){
 // palette.
 const ICONE_BRISES = {gpid: '482', ico: '⭕'};
 const ICONE_SNIPER = {gpid: '778', ico: '🎯'};
+const ICONE_NOUVELLE = {gpid: '3b5:7124', ico: '🆕'};
 const _reperes = {brises: false, sniper: false};
 function basculerRepere(q){
   _reperes[q] = !_reperes[q];
@@ -116,6 +117,10 @@ const ICONE_LOS = 'https://raw.githubusercontent.com/vassalengine/vassal/master/
 
 const ACTIONS = {
   ouvrir:   {lib: 'Ouvrir .vsav / .vlog', court: 'Ouvrir', ico: '📂', faire: doOpen},
+  // New Game : la partie neuve du module, puis le choix des boards. Icône :
+  // le pion Bayonet Charge du module.
+  nouvelle: {lib: 'Nouvelle partie (choix des boards)…', court: 'Nouvelle', ico: '🆕', pion: ICONE_NOUVELLE,
+             faire: () => nouvellePartie()},
   vsav:     {lib: 'Exporter .vsav', court: 'Exporter', ico: '💾', faire: ecrireVsav, actif: () => !!_source},
   log:      {lib: () => enregistreLog() ? `Terminer le log « ${_logNom} » et l'écrire` : 'Commencer un fichier de log',
              court: () => enregistreLog() ? '⏹ Log' : 'Log', ico: '⏺', classe: 'enreg',
@@ -128,6 +133,9 @@ const ACTIONS = {
              faire: leverDeplaces},
   all:      {lib: 'Remove all — retirer tous les pions d\'un type…', court: 'ALL', img: 'QC/Remove.png',
              faire: ancre => ouvrirMassRemover(ancre)},
+  // BoardSwapper de VASL (menu de la carte) : changer les boards de la partie.
+  boards:   {lib: 'Pick new boards for this scenario', court: 'Boards', img: 'newBoards.gif',
+             faire: () => ouvrirChoixBoards(), actif: () => !!_source},
   brises:   {lib: 'Entourer les unités brisées et les armes MALF', court: 'Broken', ico: '⭕', pion: ICONE_BRISES,
              faire: () => basculerRepere('brises'), allume: () => _reperes.brises},
   sniper:   {lib: 'Entourer le sniper', court: 'Sniper', ico: '🎯', pion: ICONE_SNIPER,
@@ -148,6 +156,16 @@ const ACTIONS = {
   // (CONFIG_PC, CONFIG_TACTILE).
   config:   {lib: 'Configuration…', court: 'Configuration', ico: '⚙', faire: () => basculerConfig(),
              allume: () => _feuilles.has('feuilleConfig')},
+  // Vérifier tout de suite qu'une nouvelle version est publiée et la
+  // prendre (pwa.js) ; hors PWA (file://), recharger la page.
+  miseAJour:{lib: 'Mise à jour de VASLweb', court: 'Mise à jour', ico: '🔄',
+             faire: () => typeof window.miseAJourVaslweb === 'function' ? window.miseAJourVaslweb() : location.reload()},
+  // Retélécharger les boards, overlays et motifs gardés en cache (carte.js).
+  majCartes:{lib: 'Mise à jour des cartes (boards en cache)', court: 'Cartes', ico: '🗺️',
+             faire: () => miseAJourCartes()},
+  // Garder un board choisi pour le hors-ligne, sans ouvrir de partie (carte.js).
+  ajoutCarte:{lib: 'Ajouter une carte au cache…', court: 'Ajout carte', ico: '💾',
+             faire: () => ajouterCarteAuCache()},
   prefLOS:  {lib: 'Préférences de la LOS (couleurs)…', court: 'Préférences', ico: '⚙', faire: () => ouvrirPreferences('los')},
   zoomMoins:{lib: 'Zoom arrière', ico: '−', faire: zoomOut},
   zoomPlus: {lib: 'Zoom avant', ico: '+', faire: zoomIn},
@@ -206,6 +224,9 @@ const ACTIONS = {
   // ◀, la position et ▶ tout en bas.
   relectureRail: {groupe: ['lgArr', 'logPos', 'lgAv'], visible: _enRelecture},
   relectureFin:  {groupe: ['lgFin'], visible: _enRelecture},
+  // Colonne d'icônes du tactile, pendant l'enregistrement d'un log : LOS et
+  // LOS inv épinglées en tête de la colonne, hors de la roue qui défile.
+  losEpingle:    {groupe: ['los', 'losMuet'], visible: () => enregistreLog()},
   lgDebut:  {lib: 'Début du log', ico: '⏮', faire: () => allerLog(0), actif: () => _logPos > _logPlancher},
   lgArr:    {lib: () => _logPlancher > 0 && _logPos <= _logPlancher
                ? 'Un coup a été joué ici pendant la relecture : Undo pour l\'annuler' : 'Coup précédent',
@@ -445,9 +466,9 @@ const DISPOSITIONS = {
     // comme celle de l'affichage tactile (Alt l'ouvre).
     // Masqués à la demande : sélection des cartes et panneaux, effectif
     // des piles (LOS détaillée : dans la roue et au clic droit sur LOS).
-    barre: ['ouvrir', 'vsav', 'log', 'logTxt', '|', 'undo', '|', 'zoomMoins', 'zoomTxt', 'zoomPlus', 'ajuster', 'zoom100',
+    barre: ['ouvrir', 'nouvelle', 'vsav', 'log', 'logTxt', '|', 'undo', '|', 'zoomMoins', 'zoomTxt', 'zoomPlus', 'ajuster', 'zoom100',
             'rotGauche', 'rotDroite', 'rot180', 'rot0',
-            '|', 'relecture', 'los', 'losMuet', 'unmoved', 'all', 'brises', 'sniper', 'masquer', 'tables', 'oba', 'bin', 'sanPieges',
+            '|', 'relecture', 'los', 'losMuet', 'unmoved', 'all', 'boards', 'brises', 'sniper', 'masquer', 'tables', 'oba', 'bin', 'sanPieges',
             '|', 'pions', 'journal', '|', 'reseau', 'utilisateur', '|', 'config', 'raccourcis'],
     // La barre QC de VASL (Quick Counters) : marqueurs à tirer sur la carte.
     barreQC: true,
@@ -462,7 +483,7 @@ const DISPOSITIONS = {
 // Réglages de la roue ⚙ du PC : ce que les menus étaient seuls à offrir
 // et qui n'a pas sa place dans la barre d'icônes.
 const CONFIG_PC = ['preferences', 'prefLOS', 'verbeux', '-', 'couche_unite', 'couche_marqueur', 'couche_overlay', '-',
-  'chatHaut', 'des3d', '-', 'profil_auto', 'profil_pc', 'profil_tactile'];
+  'chatHaut', 'des3d', '-', 'profil_auto', 'profil_pc', 'profil_tactile', '-', 'miseAJour', 'majCartes', 'ajoutCarte'];
 function basculerConfig(){
   if(_feuilles.has('feuilleConfig')){ fermerFeuille('feuilleConfig'); return; }
   const f = ouvrirFeuilleActions('Configuration', _telLike() ? CONFIG_TACTILE : CONFIG_PC, 'feuilleConfig');
@@ -648,7 +669,7 @@ Object.assign(ACTIONS, {
   vueJournal:{lib: 'Journal et chat', court: 'Journal', ico: '💬', faire: () => vueMobile('journal'), allume: () => _vue() === 'journal',
               badge: () => _nonLus},
   apercuChat:{ico: '💭', lib: 'Aperçu du chat sur la carte', coche: () => _apercuChat, faire: () => basculerApercuChat()},
-  titre:     {etiquette: () => _source ? _nomFichier : 'VASLweb 1.08', classe: 'titreScen'},
+  titre:     {etiquette: () => _source ? _nomFichier : 'VASLweb 1.09', classe: 'titreScen'},
   desMenu:   {lib: 'Dés : un appui DR, un appui long les catégories', court: 'Dés', ico: '🎲',
               faire: () => lancerDR('Other'), menuLong: null},
   sanPieges: {lib: 'SAN et pièges…', court: 'SAN', ico: 'INFO', classe: 'sigle', faire: () => ouvrirFeuilleSan()},
@@ -676,13 +697,13 @@ function placerColonne(c){
 // verrou des pions, effectif des piles, aperçu du chat, raccourcis. La
 // sélection des overlays reste : sans elle, un overlay posé ne pourrait
 // plus être ni déplacé ni retiré au doigt.
-const RAIL_TACTILE = ['ouvrir', 'vsav', 'log', 'los', 'losMuet', 'unmoved', 'all', 'brises', 'sniper', 'masquer', 'tables',
+const RAIL_TACTILE = ['ouvrir', 'nouvelle', 'vsav', 'log', 'los', 'losMuet', 'unmoved', 'all', 'boards', 'brises', 'sniper', 'masquer', 'tables',
   'oba', 'bin', 'couche_overlay', 'rotDroite', 'rot180', 'sanPieges'];
 // Réglages de la roue ⚙ en affichage tactile : préférences (utilisateur,
 // LOS, décompte), identification, partie à distance, dés 3D, côté de la
-// colonne, affichage ordinateur.
+// colonne, affichage ordinateur, mise à jour.
 const CONFIG_TACTILE = ['preferences', 'verbeux', '-', 'utilisateur', 'reseau', '-',
-  'des3d', 'coteColonne', '-', 'profil_pc'];
+  'des3d', 'coteColonne', '-', 'profil_pc', '-', 'miseAJour', 'majCartes', 'ajoutCarte'];
 
 // SAN et pièges : les champs eux-mêmes viennent dans la feuille, et
 // retournent à l'onglet Dés quand elle se ferme.
@@ -754,7 +775,12 @@ DISPOSITIONS.tactile = {
       else if(nav.scrollTop > L * 1.5) nav.scrollTop -= L;
     }, {passive: true});
     setTimeout(() => { nav.scrollTop = longueur(); }, 0);
-    document.getElementById('chromeGauche').appendChild(nav);
+    // Pendant l'enregistrement d'un log, LOS et LOS inv restent affichées en
+    // permanence en tête de la colonne, du côté choisi (gauche ou droite) :
+    // la roue défile sous elles.
+    const epingle = rendreAction('losEpingle', 'rail');
+    epingle.classList.add('railEpingle');
+    document.getElementById('chromeGauche').append(epingle, nav);
     vueMobile('carte');
   }
 };

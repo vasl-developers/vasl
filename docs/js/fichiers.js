@@ -340,14 +340,65 @@ async function chargerPartie(texte, label, annexes){
   const boards = _parseBoardSegment(texte);
   if(!boards.length){ chatLog(`⚠️ Aucun board dans ${label}`); return false; }
   fermerLog();
-  document.title = 'VASLweb 1.08 — ' + label;
+  document.title = 'VASLweb 1.09 — ' + label;
   chatLog(`🗺️ ${label} — boards : `
     + boards.map(b => b.name + (b.reversed ? ' (retourné)' : '')).join(', '));
+  // PersistElevation sert à composer les boards : lu ici, avant
+  // lireGlobales (importerPions), qui le relira.
+  const pe = /(?:^|\x1b)GlobalProperty\t;PersistElevation;([^;\x1b]*);/.exec(texte);
+  _globales.PersistElevation = pe ? pe[1] : '';
   await _renderBoards(boards);
+  avertirVersionsBoards(boards);
   importerPions(texte, label, annexes);
   poserTables();
   _partieModifiee = false;
   return true;
+}
+
+// ASLBoardPicker.buildBoard : la version écrite (VER) comparée à celle du
+// board téléchargé ; un écart est signalé, le board est quand même posé.
+function avertirVersionsBoards(boards){
+  for(const b of boards){
+    const g = _geoBoards.get(b.name), etat = b.etat || '';
+    const i = etat.indexOf('VER');
+    if(!g || g.defaut || i < 0) continue;
+    const voulue = etat.substring(i + 4).split('\t').find(t => t);
+    if(voulue !== undefined && voulue !== g.version)
+      chatLog(`This game was saved with board ${g.nomBoard} v${voulue}. You are using v${g.version}`);
+  }
+}
+
+// ── Nouvelle partie (New Game de VASSAL, puis le BoardPicker de VASL) :
+// la partie neuve du module VASL, gardée en modèle (modeles/), puis le
+// dialogue des boards, grille vide, pour composer la carte.
+const MODELE_NOUVELLE_PARTIE = 'modeles/nouvelle-partie.vsav';
+async function nouvellePartie(){
+  if(!netProprietaire()){
+    chatLog('🔒 Dans une salle, seul son propriétaire ouvre une partie : utiliser Synchroniser');
+    return;
+  }
+  if(_source && _partieModifiee && !confirm(T('La partie en cours n\'est pas enregistrée. Commencer une nouvelle partie quand même ?'))) return;
+  try {
+    const r = await fetch(MODELE_NOUVELLE_PARTIE, {cache: 'no-cache'});
+    if(!r.ok) throw new Error('modèle introuvable (HTTP ' + r.status + ')');
+    const files = await _zipRead(await r.arrayBuffer());
+    let raw = null;
+    const annexes = new Map();
+    for(const [n, d] of files){
+      if(!raw && (n === 'savedGame' || n.toLowerCase().endsWith('savedgame'))) raw = d;
+      else annexes.set(n, d);
+    }
+    if(!raw) throw new Error('modèle sans savedGame');
+    if(!await chargerPartie(_xorDecode(raw), 'Nouvelle partie', annexes)) return;
+    netPartieChargee();
+    identifierJoueur();
+    // Ni proposition de log : VASSAL ne la fait qu'en ouvrant une partie
+    // enregistrée. Le dialogue des boards part d'une grille vide.
+    ouvrirChoixBoards({nouvelle: true});
+  } catch(err){
+    chatLog('❌ Nouvelle partie impossible : ' + (err && err.message ? err.message : err));
+    console.error(err);
+  }
 }
 
 const EXT_ACCEPTEES = ['.vsav', '.vlog'];

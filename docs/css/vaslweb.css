@@ -310,7 +310,15 @@ body:not([data-terminal=pc]) .coteOnglets button.fermeCote{display:block}
 .navGauche .groupeAct .etiqAct{width:46px;font-size:10px;text-align:center;white-space:normal;color:var(--texte)}
 :root{--railMobile:52px}
 /* Affichage tactile : la colonne d'icônes est sur la droite de l'écran. */
-body[data-terminal=tactile] #chromeGauche{display:flex;background:var(--barre);order:9}
+body[data-terminal=tactile] #chromeGauche{display:flex;flex-direction:column;background:var(--barre);order:9}
+body[data-terminal=tactile] #chromeGauche .navGauche.navBas{flex:1 1 0;min-height:0}
+/* LOS et LOS inv épinglées en tête de la colonne pendant l'enregistrement
+   d'un log : la roue défile dessous, du même côté de l'écran. */
+#chromeGauche .railEpingle{display:flex;flex-direction:column;align-items:center;gap:2px;width:var(--railMobile);
+  padding:calc(var(--marge-h) + 4px) calc(var(--marge-d) + 2px) 4px 2px;border-left:1px solid var(--bord);border-bottom:1px solid var(--bord)}
+#chromeGauche .railEpingle .act.rail{flex:0 0 46px;width:46px;height:46px;margin:0}
+#chromeGauche .railEpingle:not([hidden]) + .navGauche.navBas{padding-top:4px}
+body[data-colonne=gauche] #chromeGauche .railEpingle{padding-left:calc(var(--marge-g) + 2px);padding-right:2px;border-left:none;border-right:1px solid var(--bord)}
 /* … ou à gauche, au choix de l'utilisateur (icône ⇄ de la colonne). */
 body[data-colonne=gauche] #chromeGauche{order:0}
 body[data-colonne=gauche] .navGauche.navBas{padding-left:calc(var(--marge-g) + 2px);padding-right:2px;border-left:none;border-right:1px solid var(--bord)}
@@ -570,6 +578,14 @@ body:not([data-terminal=pc]) .lig .mini{width:56px;height:56px}
 body:not([data-terminal=pc]) .lig button{min-width:var(--cible);min-height:var(--cible)}
 .lig button{padding:1px 6px;font-size:12px}
 .lig button.poigneeRang{cursor:grab;touch-action:none}
+.ajoutCarteAutre{padding:6px 8px 8px;border-bottom:6px solid #262626}
+.ajoutCarteAutre .tt{font-size:13px;color:var(--menu-doux);margin:0 0 4px}
+.ajoutCarteUrl{display:block;box-sizing:border-box;width:100%;padding:8px;font-size:16px;
+  background:#2a2a2a;color:var(--texte);border:1px solid var(--bord);border-radius:4px}
+.ajoutCarteBoutons{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.ajoutCarteBoutons .act{flex:1;min-width:140px}
+#ajoutCarteRech{display:block;box-sizing:border-box;width:calc(100% - 16px);margin:4px 8px 6px;padding:8px;font-size:16px;
+  background:#2a2a2a;color:var(--texte);border:1px solid var(--bord);border-radius:4px}
 #palRech{margin:6px 8px;padding:5px;background:#2a2a2a;color:var(--texte);border:1px solid var(--bord);border-radius:4px}
 #palCorps{flex:1;overflow:auto;padding:0 8px 8px;font-size:12px}
 .grille{display:flex;flex-wrap:wrap;gap:4px;padding:6px 2px}
@@ -744,3 +760,117 @@ body.maj .pion.immob{pointer-events:auto}
 #des3d .legende{padding:4px 12px;border-radius:14px;background:rgba(0,0,0,.72);color:#fff;font-size:15px;font-weight:600;
   white-space:nowrap;opacity:0;transform:translateY(6px);transition:opacity .25s,transform .25s}
 #des3d .legende.vue{opacity:1;transform:none}
+/* « Pick new boards for this scenario » (js/boards.js) : le BoardPicker de
+   VASSAL — ligne d'état bleue, boutons à gauche, grille de cases. */
+.fenBoards{width:min(96vw,1200px);max-height:92vh;display:flex;flex-direction:column;overflow:hidden}
+.fenBoards .ft{cursor:move;user-select:none;touch-action:none}
+.fenBoards .fc{display:flex;flex-direction:column;gap:8px;min-height:0;flex:1}
+.fenBoards .bpEtat{min-height:18px;color:#6fa8ff;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fenBoards .bpCorps{display:flex;gap:10px;min-height:0;flex:1}
+.fenBoards .bpOutils{display:flex;flex-direction:column;gap:6px;flex:none}
+.fenBoards .bpOutils button{min-height:30px;white-space:nowrap}
+.fenBoards .bpDefile{flex:1;min-width:0;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.fenBoards .bpGrille{display:grid;gap:4px;align-items:start;justify-content:start}
+.fenBoards .bpCase{display:flex;flex-direction:column;align-items:center;gap:3px;padding:3px;border:1px solid var(--menu-bord);border-radius:3px}
+.fenBoards .bpChoix{display:flex;align-items:center;gap:4px;flex-wrap:wrap;justify-content:center;max-width:100%}
+.fenBoards .bpChoix .bpRech{width:90px;padding:4px 6px;font-size:13px}
+.fenBoards .bpChoix .bpListe{max-width:230px;padding:4px;font-size:13px}
+.fenBoards label.bpFlip{margin:0;font-size:12px;color:var(--menu-texte)}
+.fenBoards label.bpFlip[hidden]{display:none}
+.fenBoards .bpApercu{display:block;background:#1b1b1b}
+.fenBoards .bpApercu.vide{background:repeating-linear-gradient(45deg,#1e1e1e 0 10px,#252525 10px 20px)}
+/* Au doigt : plein écran, la grille défile dans les deux sens, cibles de 44 px. */
+body:not([data-terminal=pc]) .fenBoards{display:flex;max-height:none;overflow:hidden}
+body:not([data-terminal=pc]) .fenBoards .ft{cursor:default}
+body:not([data-terminal=pc]) .fenBoards .bpCorps{flex-direction:column}
+body:not([data-terminal=pc]) .fenBoards .bpOutils{flex-direction:row;flex-wrap:wrap}
+body:not([data-terminal=pc]) .fenBoards .bpOutils button{flex:1;min-height:44px}
+body:not([data-terminal=pc]) .fenBoards .bpChoix .bpRech,
+body:not([data-terminal=pc]) .fenBoards .bpChoix .bpListe{min-height:44px;font-size:16px}
+body:not([data-terminal=pc]) .fenBoards label.bpFlip{min-height:44px;font-size:15px}
+/* Crop boards : fenêtre modale au-dessus du dialogue des boards. */
+.voile.voileRognage{z-index:9850}
+.fenetre.fenRognage{z-index:9860;width:min(92vw,330px)}
+.fenRognage .ft{cursor:move;user-select:none;touch-action:none}
+.fenRognage .rgLigne{display:flex;flex-direction:row;align-items:center;gap:6px;margin-bottom:8px;font-size:13px;color:var(--menu-texte)}
+.fenRognage .rgLigne > span:first-child{min-width:64px}
+.fenRognage .rgLigne input{width:56px}
+.fenRognage .rgLigne select{flex:1}
+body:not([data-terminal=pc]) .fenRognage .ft{cursor:default}
+body:not([data-terminal=pc]) .fenRognage .rgLigne input,
+body:not([data-terminal=pc]) .fenRognage .rgLigne select{min-height:44px;font-size:16px}
+/* Add overlays : Overlay, Board, Hex 1, Hex 2 côte à côte, état au-dessus. */
+.fenetre.fenOverlays{width:min(94vw,440px)}
+.fenOverlays .ovEtat{min-height:18px;margin-bottom:8px;text-align:center;color:var(--menu-texte)}
+.fenOverlays .ovChamps{display:grid;grid-template-columns:1fr 1.4fr 1fr 1fr;gap:6px}
+.fenOverlays .ovChamps label{margin-bottom:8px;min-width:0}
+.fenOverlays .ovChamps input,.fenOverlays .ovChamps select{width:100%;min-width:0;box-sizing:border-box}
+body:not([data-terminal=pc]) .fenOverlays .ovChamps{grid-template-columns:1fr 1fr}
+body:not([data-terminal=pc]) .fenOverlays .ovChamps input,
+body:not([data-terminal=pc]) .fenOverlays .ovChamps select{min-height:44px;font-size:16px}
+/* Terrain SSR : options de base en haut, état, puis boutons, catégories
+   et réglages de la catégorie choisie. */
+.fenetre.fenTerrain{width:min(96vw,820px);max-height:92vh}
+.fenTerrain .teBasics{display:flex;flex-direction:column;gap:6px;margin-bottom:6px}
+.fenTerrain .teBasic{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:flex-end}
+.fenTerrain .teOption{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--menu-doux)}
+.fenTerrain .teOption[hidden]{display:none}
+.fenTerrain .teOption label.coche{margin:0;color:var(--menu-texte);font-size:13px}
+.fenTerrain .teTransfo{flex-direction:row;align-items:center;gap:6px;color:var(--menu-texte);font-size:13px}
+.fenTerrain .teEtat{width:100%;box-sizing:border-box;margin-bottom:8px}
+.fenTerrain .teCorps{display:flex;gap:10px;align-items:flex-start}
+.fenTerrain .teBoutons{display:flex;flex-direction:column;gap:6px;flex:none;width:120px}
+.fenTerrain .teBoutons button{min-height:30px}
+.fenTerrain label.teBoard{margin:0}
+.fenTerrain .teListe{flex:none;width:190px;min-height:120px}
+.fenTerrain .teCartes{flex:1;min-width:0}
+.fenTerrain .teCategorie{display:flex;flex-direction:column;gap:8px}
+.fenTerrain .teCategorie[hidden]{display:none}
+.fenTerrain .teCategorie select{max-width:100%}
+body:not([data-terminal=pc]) .fenTerrain{overflow:auto}
+body:not([data-terminal=pc]) .fenTerrain .teCorps{flex-direction:column;align-items:stretch}
+body:not([data-terminal=pc]) .fenTerrain .teBoutons{width:auto;flex-direction:row;flex-wrap:wrap}
+body:not([data-terminal=pc]) .fenTerrain .teBoutons > *{flex:1}
+body:not([data-terminal=pc]) .fenTerrain .teBoutons button{min-height:44px}
+body:not([data-terminal=pc]) .fenTerrain .teListe{width:100%;min-height:44px}
+body:not([data-terminal=pc]) .fenTerrain select{min-height:44px;font-size:16px}
+
+/* ═══ OB du scénario (PDF de la fiche) — js/ob-panneau.js ═══ */
+.fenBoards .bpEtat.long{white-space:normal;max-height:4.5em;overflow:auto}
+.fenBoards .bpPdf{flex:none;width:180px;overflow:auto;align-self:flex-start;max-height:100%}
+.fenBoards .bpPdf canvas{display:block;width:100%;height:auto;border:1px solid var(--menu-bord);cursor:zoom-in;background:#fff}
+.fenBoards .bpPdf.grand{width:min(55vw,600px)}
+.fenBoards .bpPdf.grand canvas{cursor:zoom-out}
+body:not([data-terminal=pc]) .fenBoards .bpPdf{width:110px}
+.fenOb{width:min(96vw,560px);max-height:88vh;display:flex;flex-direction:column;overflow:hidden;left:auto;right:12px;top:60px;transform:none}
+.fenOb .ft{cursor:move;user-select:none;touch-action:none;display:flex;align-items:center;justify-content:space-between}
+.fenOb .obBoutons{display:flex;gap:2px}
+.fenOb .obFermer{background:none;border:none;color:#fff;font-size:18px;line-height:1;min-width:28px;min-height:28px;cursor:pointer}
+body:not([data-terminal=pc]) .fenOb .obFermer{min-width:44px;min-height:44px;font-size:22px}
+.fenOb .fc{display:flex;flex-direction:column;gap:8px;min-height:0;flex:1;overflow:hidden}
+.fenOb .obEtat{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--menu-doux)}
+.fenOb .obEtat progress{width:120px;flex:none}
+.fenOb .obEtat span{flex:1}
+.fenOb .obCorps{flex:1;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.obGroupe{margin-bottom:10px}
+.obTitre select{width:100%;font-weight:700}
+.obListe{display:flex;flex-direction:column;gap:4px;margin-top:6px}
+.obCase{display:flex;align-items:center;gap:8px;padding:3px;border:1px solid var(--menu-bord);border-radius:4px;flex-wrap:wrap}
+.obCase .obTexte{flex:1;min-width:120px;font-size:13px}
+.obCase.identifie .obTexte{color:var(--menu-texte)}
+.obCase.ambigu,.obCase.illisible,.obCase.attente{border-style:dashed}
+.obCase.illisible .obTexte,.obCase.attente .obTexte{color:var(--menu-doux)}
+.obCase.epuise .vig,.obCase.epuise .obTexte{opacity:.4}
+.obScan{flex:none;width:52px;height:auto;image-rendering:auto;border:1px solid var(--menu-bord);background:#fff}
+.obChoix{display:flex;flex-wrap:wrap;gap:4px;width:100%}
+.obCand{display:flex;align-items:center;gap:4px;padding:2px 6px 2px 2px;font-size:12px}
+.obCand .mini{flex:none}
+.obRappel{position:fixed;right:12px;bottom:12px;z-index:9700;padding:8px 12px;border-radius:18px;
+  background:var(--menu-fond);color:var(--menu-texte);border:1px solid var(--accent);box-shadow:0 2px 8px rgba(0,0,0,.4)}
+body:not([data-terminal=pc]) .fenOb{left:0;right:0;top:0;width:100%;height:100%;max-height:none}
+.fenBoards .bpPdfNote{font-size:11px;color:var(--menu-doux);margin-top:6px;display:flex;flex-direction:column;gap:2px}
+.obGroupe>summary{list-style:none;cursor:default}
+.obGroupe>summary::-webkit-details-marker{display:none}
+.obGroupe.vide>summary{cursor:pointer}
+.obGroupe.vide>summary::after{content:'aucun pion reconnu — ouvrir';display:block;font-size:11px;color:var(--menu-doux);margin-top:2px}
+.obGroupe.vide[open]>summary::after{content:'aucun pion reconnu'}

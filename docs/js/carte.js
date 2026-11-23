@@ -31,7 +31,12 @@ function _parseBoardSegment(text){
       col, row, name, reversed, crop,
       zoom: zm ? parseFloat(zm[1]) : 1,
       ssrList: m ? m[1].split('\t').filter(s => s && s !== 'true' && s !== 'false' && s !== 'FH') : [],
-      overlays: _parseOverlays(part)
+      overlays: _parseOverlays(part),
+      // État tel qu'écrit (ASLBoard.getState) : « Pick new boards » le
+      // réécrit tel quel, seules la place et le retournement changeant.
+      etat: part.replace(/\\+$/, ''),
+      // nearestFullRow (« FH », ASLBoardPicker.buildBoard : bd.contains("FH")).
+      fh: /\tFH\t/.test(part)
     });
   }
   return out;
@@ -57,7 +62,13 @@ const _archives = new Map();          // nom → Promise<Map(fichier → octets)
 
 function _archive(nom){
   if(!_archives.has(nom)){
-    _archives.set(nom, fetch(VASL_BOARDS_URL + 'bd' + nom).then(async r => {
+    // Un board ajouté d'un autre emplacement (ajouterCarteAuCache) n'existe
+    // pas au dépôt VASL : sans service worker pour le servir, la page le
+    // prend elle-même dans le cache.
+    const url = VASL_BOARDS_URL + 'bd' + nom;
+    const duCache = async () => { try { return 'caches' in window ? await caches.match(url) : null; } catch(e){ return null; } };
+    _archives.set(nom, fetch(url).catch(async e => (await duCache()) || Promise.reject(e)).then(async r => {
+      if(!r.ok) r = (await duCache()) || r;
       if(!r.ok) throw new Error('bd' + nom + ' introuvable (HTTP ' + r.status + ')');
       return _zipRead(await r.arrayBuffer());
     }));
@@ -101,8 +112,14 @@ async function chargerGeoBoard(nom){
         if(regle && texte) for(const r of regle.split(',')) if(r.trim()) libelles[r.trim()] = texte;
       }
     }
+    // Nom de l'image (ASLBoard.getState : imageFile sans « bd » ni « .gif »),
+    // nom du board (getName) et version (VER), comme les lit BoardArchive.
+    const nomImage = /^bd(.+?)\.gif$/i.exec(att.boardImageFileName || '');
     g = {
       libelles,
+      nomImage: nomImage ? nomImage[1] : nom,
+      nomBoard: att.name || nom,
+      version: att.version ?? att['data.version'] ?? '0.0',
       cols: parseInt(att.width, 10)  || HEX_COLS,
       rows: parseInt(att.height, 10) || HEX_ROWS,
       hw: nb(att.hexWidth  ?? att['data.dx'], 56.25),
@@ -278,6 +295,31 @@ function _layoutBoards(boards){
   return {totalW, totalH};
 }
 
+// ── Repère d'un board (ASLBoard.localCoordinates / globalCoordinates).
+// « Affiché » : pixels depuis le coin du board sur la carte (dispW ×
+// dispH : recadré, grossi, retourné) ; « local » : pixels de l'image du
+// board non recadrée, au format natif.
+function localCoordinates(b, p){
+  let x = p.x, y = p.y;
+  if(b.reversed){ x = b.dispW - x; y = b.dispH - y; }
+  const z = b.zoom || 1;
+  if(z !== 1){ x = Math.round(x / z); y = Math.round(y / z); }
+  return {x: x + (b.crop ? b.crop.x || 0 : 0), y: y + (b.crop ? b.crop.y || 0 : 0)};
+}
+function globalCoordinates(b, p){
+  let x = p.x - (b.crop ? b.crop.x || 0 : 0), y = p.y - (b.crop ? b.crop.y || 0 : 0);
+  const z = b.zoom || 1;
+  if(z !== 1){ x = Math.round(x * z); y = Math.round(y * z); }
+  if(b.reversed){ x = b.dispW - x; y = b.dispH - y; }
+  return {x, y};
+}
+// Map.findBoard : le premier board dont l'emprise contient le point
+// (pixels de la carte, marge comprise), ou null.
+function boardSous(boards, x, y){
+  const X = x - BOARD_MARGIN, Y = y - BOARD_MARGIN;
+  return (boards || []).find(b => X >= b.px && X < b.px + b.dispW && Y >= b.py && Y < b.py + b.dispH) || null;
+}
+
 // ── Beaucoup de GPU Android plafonnent un canvas à 4096 px de côté.
 let _canvasMax = null;
 function _maxCanvasSide(){
@@ -389,6 +431,332 @@ function chargerMotif(nom){
     _motifs.get(nom).catch(() => _motifs.delete(nom));
   }
   return _motifs.get(nom);
+}
+
+// ═══ MISE À JOUR DES CARTES (roue ⚙) ═══
+// Le service worker garde les boards, les overlays et les motifs « cache
+// d'abord » (sw.js) : un board vu une fois n'est plus jamais redemandé,
+// même si VASL l'a mis à jour. Ici, chaque fichier du cache venu de
+// bdFiles/ (boards et overlays) ou de boardData/ (motifs ; les .xml y
+// sont déjà « réseau d'abord ») est redemandé avec cache: 'reload' :
+// sw.js prend alors le réseau et remplace l'entrée du cache. Ce que la
+// page a déjà chargé reste en mémoire : les boards neufs s'affichent au
+// prochain lancement de VASLweb.
+const CACHE_BOARDS_VASL = 'vaslweb-vasl-v1';    // CACHE_VASL de sw.js
+let _majCartesEnCours = false;
+
+const _carteDuCache = url => url.startsWith(VASL_BOARDS_URL)
+  || (url.startsWith(VASL_BOARDDATA_URL) && !/\.xml$/i.test(url.split('?')[0]));
+
+function _memesOctets(a, b){
+  if(a.byteLength !== b.byteLength) return false;
+  const x = new Uint8Array(a), y = new Uint8Array(b);
+  for(let i = 0; i < x.length; i++) if(x[i] !== y[i]) return false;
+  return true;
+}
+
+async function miseAJourCartes(){
+  if(_majCartesEnCours){ chatLog('⏳ Mise à jour des cartes déjà en cours'); return; }
+  if(!('caches' in window)){
+    alert(T('Pas de cache des cartes ici : les boards sont retéléchargés à chaque session.'));
+    return;
+  }
+  let cache, urls;
+  try {
+    cache = await caches.open(CACHE_BOARDS_VASL);
+    urls = (await cache.keys()).map(r => r.url).filter(_carteDuCache);
+  } catch(e){
+    chatLog('❌ Cache des cartes illisible : ' + (e && e.message ? e.message : e));
+    return;
+  }
+  if(!urls.length){
+    alert(T('Aucune carte en cache : elles seront téléchargées à leur première ouverture.'));
+    return;
+  }
+  if(!navigator.onLine){ alert(T('Mise à jour des cartes impossible hors ligne.')); return; }
+  if(!confirm(T(`Retélécharger les ${urls.length} fichier(s) de cartes gardés en cache (boards, overlays, motifs) ?`))) return;
+
+  _majCartesEnCours = true;
+  const nom = u => decodeURIComponent(u.split('?')[0].split('/').pop());
+  const changes = [], echecs = [], locales = [];
+  // Sans service worker actif, la page range elle-même la réponse.
+  const range = !(navigator.serviceWorker && navigator.serviceWorker.controller);
+  let faits = 0, dernierPalier = 0;
+  chatLog(`🔄 Mise à jour des cartes : ${urls.length} fichier(s) à vérifier…`);
+  try {
+    await _runLimited(urls, async url => {
+      try {
+        const ancien = await cache.match(url);
+        // Carte ajoutée d'un autre emplacement (ajouterCarteAuCache) : elle
+        // est redemandée à sa source ; un fichier local n'a pas de source.
+        const source = ancien && ancien.headers.get(ENTETE_SOURCE_CARTE);
+        if(source && !/^https?:/i.test(source)){ locales.push(nom(url)); return; }
+        const avant = ancien ? await ancien.arrayBuffer() : null;
+        const r = await fetch(source || url, {cache: 'reload'});
+        if(!r.ok) throw new Error('HTTP ' + r.status);
+        const neuf = await r.clone().arrayBuffer();
+        if(source) await cache.put(url, _reponseCarte(neuf, source));
+        else if(range) await cache.put(url, r);
+        if(!avant || !_memesOctets(avant, neuf)) changes.push(nom(url));
+      } catch(e){
+        echecs.push(nom(url) + ' (' + (e && e.message ? e.message : e) + ')');
+      } finally {
+        faits++;
+        const palier = Math.floor(faits * 4 / urls.length);
+        if(palier > dernierPalier && faits < urls.length){
+          dernierPalier = palier;
+          chatLog(`🔄 … ${faits} / ${urls.length}`);
+        }
+      }
+    }, 4);
+  } finally {
+    _majCartesEnCours = false;
+  }
+  changes.sort(); echecs.sort();
+  chatLog(changes.length
+    ? `✅ Cartes : ${changes.length} fichier(s) mis à jour sur ${urls.length} — ${changes.join(', ')}`
+    : `✅ Cartes : les ${urls.length - echecs.length - locales.length} fichier(s) vérifiés sont à jour`);
+  if(echecs.length) chatLog(`⚠️ Cartes non vérifiées (${echecs.length}) : ${echecs.join(', ')}`);
+  if(locales.length) chatLog(`ℹ️ Cartes venues d'un fichier local, non vérifiées (${locales.length}) : ${locales.sort().join(', ')}`);
+  if(!changes.length) return;
+  // Les boards déjà chargés restent en mémoire : un rechargement de la
+  // page les prend dans le cache neuf.
+  if(_source && _partieModifiee){
+    chatLog('ℹ️ Les cartes mises à jour s\'afficheront au prochain lancement de VASLweb (exporter la partie avant de recharger la page).');
+    return;
+  }
+  if(confirm(T('Des cartes ont été mises à jour. Recharger VASLweb maintenant pour les afficher ?'))) location.reload();
+  else chatLog('ℹ️ Les cartes mises à jour s\'afficheront au prochain lancement de VASLweb.');
+}
+
+// ═══ AJOUTER UNE CARTE AU CACHE (roue ⚙) ═══
+// Un board n'entre dans le cache qu'à son premier affichage. Ici, on le
+// garde pour le hors-ligne sans ouvrir de partie, de deux façons :
+//  · depuis la liste VASL (v5boardVersions.xml, comme « Pick new boards ») :
+//    l'archive bdXX est téléchargée du dépôt VASL, et sw.js la range
+//    (cache d'abord) ; sans service worker actif, la page la range ;
+//  · depuis un emplacement choisi par l'utilisateur : une adresse web, ou
+//    un fichier de l'appareil. L'archive est vérifiée (ZIP avec l'image du
+//    board), puis rangée sous l'adresse VASL du board (bdFiles/bdNOM) : une
+//    partie qui le demande la trouve alors dans le cache, comme un board
+//    VASL. L'en-tête ENTETE_SOURCE_CARTE garde sa source, pour que « Mise
+//    à jour des cartes » la redemande là, et non au dépôt VASL.
+// Les motifs et les overlays du scénario viendront, eux, au premier usage.
+const ENTETE_SOURCE_CARTE = 'X-VASLweb-Source';
+const _urlBoard = nom => VASL_BOARDS_URL + 'bd' + nom;
+const _reponseCarte = (octets, source) => new Response(octets, {headers: {
+  'Content-Type': 'application/octet-stream', [ENTETE_SOURCE_CARTE]: source}});
+
+// Boards en cache : nom → source (« » pour un board du dépôt VASL).
+async function boardsEnCache(){
+  const out = new Map();
+  try {
+    const cache = await caches.open(CACHE_BOARDS_VASL);
+    for(const r of await cache.keys()){
+      const u = r.url.split('?')[0];
+      if(!u.startsWith(VASL_BOARDS_URL)) continue;
+      const f = decodeURIComponent(u.substring(VASL_BOARDS_URL.length));
+      if(!f.startsWith('bd') || f.includes('/')) continue;        // pas overlays/
+      const m = await cache.match(r);
+      out.set(f.substring(2), (m && m.headers.get(ENTETE_SOURCE_CARTE)) || '');
+    }
+  } catch(e){ /* pas de cache */ }
+  return out;
+}
+
+// Nom du board tiré d'une adresse ou d'un nom de fichier : « bdRB.zip » → RB.
+function _nomDeSource(s){
+  let f = (s || '').replace(/^fichier:/, '').split(/[?#]/)[0].split(/[\\/]/).pop() || '';
+  try { f = decodeURIComponent(f); } catch(e){ /* tel quel */ }
+  return f.replace(/\.(zip|bd)$/i, '').replace(/^bd/i, '').trim();
+}
+
+// Le nom du board est celui que porte l'archive, jamais celui du fichier
+// (« bdHT_bordure » contient le board HT) : c'est sous ce nom que les
+// parties le demandent (« bd » + nom dans bdFiles/). Comme
+// chargerGeoBoard, on le lit dans l'image déclarée par BoardMetadata.xml
+// (boardImageFileName « bdHT.gif » → HT), sinon dans son attribut name,
+// sinon dans la seule image bd*.gif de l'archive ; le nom du fichier ne
+// sert qu'en dernier recours.
+async function _lireArchiveBoard(octets, source){
+  const files = await _zipRead(octets);
+  let image = null, nomMeta = null;
+  const xml = _fichier(files, 'BoardMetadata.xml');
+  if(xml){
+    const doc = new DOMParser().parseFromString(new TextDecoder().decode(xml), 'application/xml');
+    const r = doc.documentElement;
+    if(r && r.nodeName === 'boardMetadata'){
+      image = r.getAttribute('boardImageFileName');
+      nomMeta = (r.getAttribute('name') || '').trim() || null;
+    }
+  }
+  const gifs = [...files.keys()].filter(n => /^bd.+\.gif$/i.test(n) && !n.includes('/'));
+  const deImage = n => { const m = /^bd(.+?)\.gif$/i.exec(n || ''); return m ? m[1] : null; };
+  const nom = deImage(image) || nomMeta || (gifs.length === 1 ? deImage(gifs[0]) : null) || _nomDeSource(source);
+  if(!nom || !/^[^\s\/\\?#]+$/.test(nom)) throw new Error(T('nom de board illisible dans l\'archive'));
+  if(!_gifDuBoard(files, nom, image))
+    throw new Error(T('pas un board VASL : image') + ' ' + (image || 'bd' + nom + '.gif') + ' ' + T('absente de l\'archive'));
+  return {files, nom};
+}
+
+// Range l'archive sous l'adresse VASL du board.
+async function _garderArchive(octets, files, nom, source){
+  if('caches' in window) await (await caches.open(CACHE_BOARDS_VASL)).put(_urlBoard(nom), _reponseCarte(octets, source));
+  // Ce que la page avait déjà chargé de ce nom est oublié ; l'archive neuve
+  // reste en mémoire pour la session (indispensable sans cache).
+  _archives.set(nom, Promise.resolve(files));
+  _geoBoards.delete(nom);
+  const u = _boardCache.get(nom);
+  if(u){ URL.revokeObjectURL(u); _boardCache.delete(nom); }
+}
+
+async function ajouterCarteAuCache(){
+  const f = ouvrirFeuille({id: 'feuilleAjoutCarte', titre: T('Ajouter une carte au cache'), hauteur: 'moitie'});
+  const ouverte = () => _feuilles.get('feuilleAjoutCarte') === f;
+
+  // ── Depuis un emplacement choisi : adresse web ou fichier de l'appareil.
+  const autre = document.createElement('div');
+  autre.className = 'ajoutCarteAutre';
+  autre.innerHTML = `<div class="tt"></div>
+    <input type="url" class="ajoutCarteUrl" autocomplete="off" spellcheck="false" inputmode="url">
+    <div class="ajoutCarteBoutons">
+      <button type="button" class="act bouton ajoutCarteDl"></button>
+      <button type="button" class="act bouton ajoutCarteFichier"></button>
+      <input type="file" hidden>
+    </div>`;
+  autre.querySelector('.tt').textContent = T('Depuis un autre emplacement');
+  const champUrl = autre.querySelector('.ajoutCarteUrl');
+  champUrl.placeholder = T('Adresse de l\'archive du board (https://…/bdNOM)');
+  champUrl.setAttribute('aria-label', champUrl.placeholder);
+  const btDl = autre.querySelector('.ajoutCarteDl'), btFichier = autre.querySelector('.ajoutCarteFichier');
+  const choixFichier = autre.querySelector('input[type=file]');
+  btDl.textContent = '⬇️ ' + T('Télécharger');
+  btFichier.textContent = '📁 ' + T('Fichier de l\'appareil…');
+
+  const rech = document.createElement('input');
+  rech.type = 'search'; rech.id = 'ajoutCarteRech'; rech.autocomplete = 'off'; rech.spellcheck = false;
+  rech.placeholder = T('Rechercher un board VASL (RB, VotG, 23a…)');
+  rech.setAttribute('aria-label', rech.placeholder);
+  const liste = document.createElement('div');
+  f.corps.append(autre, rech, liste);
+  const vide = t => { const d = document.createElement('div'); d.className = 'videFeuille'; d.textContent = t; liste.replaceChildren(d); };
+  vide(T('Chargement de la liste des boards…'));
+
+  let boards = [], enCache = new Map(), peindre = () => {};
+  if(!('caches' in window))
+    chatLog('ℹ️ ' + T('Pas de cache des cartes ici : le board ajouté ne sera gardé que pour cette session.'));
+
+  // Une seule question, et seulement si le board remplace quelque chose.
+  const remplacer = nom => !(enCache.has(nom) || boards.some(b => b.nom === nom))
+    || confirm(T(enCache.has(nom) ? `Le board ${nom} est déjà en cache. Le remplacer ?`
+                 : `${nom} est un board VASL : la version choisie le remplacera sur cet appareil. Continuer ?`));
+  const occupe = v => { btDl.disabled = btFichier.disabled = champUrl.disabled = v; };
+  const garderDepuis = async (source, lire) => {
+    occupe(true);
+    let nom = _nomDeSource(source);
+    try {
+      const octets = await lire();
+      const a = await _lireArchiveBoard(octets, source);
+      nom = a.nom;
+      if(!remplacer(nom)) return;
+      await _garderArchive(octets, a.files, nom, source);
+      enCache.set(nom, source);
+      chatLog(`💾 Board ${nom} gardé pour le hors-ligne depuis ${source} (${(octets.byteLength / 1048576).toFixed(1)} Mo)`);
+      champUrl.value = '';
+      if(ouverte()) peindre();
+    } catch(e){
+      chatLog(`❌ Board ${nom} non gardé : ${e && e.message ? e.message : e}`);
+    } finally {
+      occupe(false);
+    }
+  };
+  const telecharger = () => {
+    const adresse = champUrl.value.trim();
+    let u;
+    try { u = new URL(adresse); } catch(e){ u = null; }
+    if(!u || !/^https?:$/.test(u.protocol)){ alert(T('Saisir une adresse web complète (https://…).')); champUrl.focus(); return; }
+    if(!navigator.onLine){ alert(T('Ajout au cache impossible hors ligne.')); return; }
+    garderDepuis(u.href, async () => {
+      let r;
+      try { r = await fetch(u.href, {cache: 'no-cache'}); }
+      catch(e){ throw new Error(T('adresse injoignable (le site refuse peut-être les téléchargements depuis une page web : télécharger le fichier, puis « Fichier de l\'appareil… »)')); }
+      if(!r.ok) throw new Error('HTTP ' + r.status);
+      return r.arrayBuffer();
+    });
+  };
+  btDl.addEventListener('click', telecharger);
+  champUrl.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); telecharger(); } });
+  btFichier.addEventListener('click', () => { choixFichier.value = ''; choixFichier.click(); });
+  choixFichier.addEventListener('change', () => {
+    const fi = choixFichier.files && choixFichier.files[0];
+    if(fi) garderDepuis('fichier:' + fi.name, () => fi.arrayBuffer());
+  });
+
+  // ── Depuis la liste VASL.
+  const enCours = new Set();
+  const garder = async (b, bt) => {
+    if(enCours.has(b.nom)) return;
+    if(!navigator.onLine){ alert(T('Ajout au cache impossible hors ligne.')); return; }
+    enCours.add(b.nom);
+    bt.disabled = true;
+    bt.querySelector('.rc').textContent = '⏳';
+    try {
+      const url = _urlBoard(b.nom);
+      const r = await fetch(url);
+      if(!r.ok) throw new Error('HTTP ' + r.status);
+      const range = 'caches' in window && !(navigator.serviceWorker && navigator.serviceWorker.controller);
+      if(range) await (await caches.open(CACHE_BOARDS_VASL)).put(url, r.clone());
+      const n = (await r.arrayBuffer()).byteLength;
+      enCache.set(b.nom, '');
+      chatLog(`💾 Board ${b.nom} gardé pour le hors-ligne (${(n / 1048576).toFixed(1)} Mo)`);
+    } catch(e){
+      chatLog(`❌ Board ${b.nom} non gardé : ${e && e.message ? e.message : e}`);
+    } finally {
+      enCours.delete(b.nom);
+      if(ouverte()) peindre();
+    }
+  };
+  peindre = () => {
+    const q = rech.value.trim().toLowerCase();
+    // Les boards venus d'ailleurs, en tête.
+    const perso = [...enCache].filter(([, s]) => s).map(([nom, s]) => ({nom, type: s, perso: true}))
+      .filter(b => !boards.some(x => x.nom === b.nom));
+    const tous = [...perso.sort((a, b) => a.nom.localeCompare(b.nom)), ...boards];
+    const l = q ? tous.filter(b => (b.nom + ' ' + b.type).toLowerCase().includes(q)) : tous;
+    if(!l.length){ vide(T(boards.length ? 'Aucun board ne correspond.' : 'Liste des boards indisponible (hors ligne ?).')); return; }
+    const frag = document.createDocumentFragment();
+    for(const b of l){
+      const bt = document.createElement('button');
+      bt.type = 'button'; bt.className = 'act ligne';
+      bt.innerHTML = '<span class="ic"></span><span class="lb"></span><span class="rc"></span>';
+      const source = enCache.get(b.nom), garde = source !== undefined;
+      bt.querySelector('.ic').textContent = garde ? '✓' : '🗺️';
+      bt.querySelector('.lb').textContent = b.nom;
+      bt.querySelector('.rc').textContent = enCours.has(b.nom) ? '⏳'
+        : source ? T('en cache') + ' · ' + _nomDeSource(source) + (source.startsWith('fichier:') ? '' : ' (web)')
+        : garde ? T('en cache') : b.type;
+      bt.disabled = garde || enCours.has(b.nom);
+      bt.title = source ? source : garde ? T('Déjà gardé pour le hors-ligne') : T('Télécharger ce board pour le hors-ligne');
+      if(!b.perso) bt.addEventListener('click', () => garder(b, bt));
+      frag.appendChild(bt);
+    }
+    liste.replaceChildren(frag);
+  };
+  rech.addEventListener('input', () => peindre());
+
+  enCache = await boardsEnCache();
+  try {
+    // Un nom par board (le libellé « New » / « Updated » double l'entrée).
+    const vus = new Map();
+    for(const lib of await listeBoards()){
+      const nom = nomDuLibelle(lib);
+      if(!vus.has(nom)) vus.set(nom, lib.split(/\s{2,}/).slice(1).join(' · '));
+    }
+    boards = [...vus].map(([nom, type]) => ({nom, type}));
+  } catch(e){ /* hors ligne : seuls les boards venus d'ailleurs */ }
+  if(!ouverte()) return;
+  peindre();
+  if(_profil === 'pc') champUrl.focus();
 }
 
 // Pose les motifs sur l'image visible, comme Underlay.loadImage : le motif,
@@ -697,11 +1065,100 @@ function _pixelsOverlay(nom, image, x, y){
   return {nom, x, y, w: c.width, h: c.height, data: g.getImageData(0, 0, c.width, c.height).data};
 }
 
+// ═══ PRESERVE BOARD ELEVATION ═══ (Overlay.transform, getOGLevel)
+// Propriété de module PersistElevation (LOS.PERSIST_ELEVATION_PROPERTY),
+// gardée dans la partie : à true, chaque overlay posé garde le niveau du
+// board là où il ne montre qu'un terrain découvert.
+const persistElevationActive = () => typeof _globales !== 'undefined' && _globales.PersistElevation === 'true';
+
+// Couleurs et terrains partagés (SharedBoardMetadata.xml), une fois.
+let _metaPersist = null, _metaPersistPret = null;
+function metaPersist(){
+  if(!_metaPersist){
+    _metaPersist = textePartage().then(t => {
+      const {parNom, parRgb} = lireCouleursLOS(t, null);
+      return _metaPersistPret = {parNom, parRgb, terrains: lireTerrainsLOS(t).terrains};
+    });
+    _metaPersist.catch(() => { _metaPersist = null; });
+  }
+  return _metaPersist;
+}
+// Pixels de l'image du board (non recadrée, sans SSR : getBoardImage).
+const _pixelsBoards = new Map();
+function pixelsBoard(nom, img){
+  if(!_pixelsBoards.has(nom)){
+    const c = document.createElement('canvas');
+    c.width = img.naturalWidth || img.width; c.height = img.naturalHeight || img.height;
+    const g = c.getContext('2d', {willReadFrequently:true});
+    g.drawImage(img, 0, 0);
+    _pixelsBoards.set(nom, g.getImageData(0, 0, c.width, c.height));
+  }
+  return _pixelsBoards.get(nom);
+}
+// getOverlayTerrainfromColor : couleur → terrain, par les couleurs
+// partagées ; null pour une couleur inconnue ou un terrain UNKNOWN.
+function _terrainPersist(meta, rgb){
+  const n = meta.parRgb.get(rgb), e = n && meta.parNom.get(n);
+  if(!e || e.terrain === 'UNKNOWN') return null;
+  return meta.terrains.get(e.terrain) || null;
+}
+// getOGLevel : dans un rayon de 3 pixels autour de (x, y), ligne par
+// ligne, la première couleur du board dont le terrain est découvert (ou
+// toute couleur pour un overlay « og ») ; une couleur sans terrain arrête
+// la recherche (NullPointerException rattrapée dans VASL) : transparent.
+const _TRANSPARENT = -1;
+function ogLevel(meta, bd, x, y, og){
+  const x0 = Math.max(0, x - 3), x1 = Math.min(bd.width - 1, x + 3);
+  const y0 = Math.max(0, y - 3), y1 = Math.min(bd.height - 1, y + 3);
+  for(let py = y0; py <= y1; py++) for(let px = x0; px <= x1; px++){
+    if((px - x) * (px - x) + (py - y) * (py - y) > 9) continue;
+    const k = (py * bd.width + px) * 4, rgb = bd.data[k] << 16 | bd.data[k+1] << 8 | bd.data[k+2];
+    const t = _terrainPersist(meta, rgb);
+    if(!t) return _TRANSPARENT;
+    if(t.getLOSCategory() === 'OPEN' || og) return rgb;
+  }
+  return _TRANSPARENT;
+}
+// Overlay.transform(true) : chaque pixel opaque de terrain découvert
+// devient transparent (sauf overlay « og ») ; si le board, dessous, n'est
+// pas découvert, il prend la couleur découverte la plus proche du board.
+// Un point hors du board reste transparent (VASL y lèverait une erreur).
+async function transformerOverlay(b, ov, imgBoard){
+  const meta = await metaPersist();
+  const bd = pixelsBoard(b.name, imgBoard);
+  const c = document.createElement('canvas');
+  c.width = ov.image.width; c.height = ov.image.height;
+  const g = c.getContext('2d', {willReadFrequently:true});
+  g.drawImage(ov.image, 0, 0);
+  const d = g.getImageData(0, 0, c.width, c.height), px = d.data;
+  const og = ov.nom.includes('og');
+  const poser = (k, v) => {
+    if(v === _TRANSPARENT){ px[k] = px[k+1] = px[k+2] = 255; px[k+3] = 0; }
+    else { px[k] = v >> 16; px[k+1] = (v >> 8) & 255; px[k+2] = v & 255; px[k+3] = 255; }
+  };
+  for(let cx = 0; cx < c.width; cx++) for(let cy = 0; cy < c.height; cy++){
+    const k = (cy * c.width + cx) * 4;
+    if(!px[k+3]) continue;
+    const t = _terrainPersist(meta, px[k] << 16 | px[k+1] << 8 | px[k+2]);
+    if(!t || t.getLOSCategory() !== 'OPEN' || og) continue;
+    poser(k, _TRANSPARENT);
+    const x = ov.x + cx, y = ov.y + cy;
+    if(x < 0 || y < 0 || x >= bd.width || y >= bd.height) continue;
+    const j = (y * bd.width + x) * 4;
+    const tb = _terrainPersist(meta, bd.data[j] << 16 | bd.data[j+1] << 8 | bd.data[j+2]);
+    if(tb && tb.getLOSCategory() !== 'OPEN') poser(k, ogLevel(meta, bd, x, y, og));
+  }
+  g.putImageData(d, 0, 0);
+  if(ov.image.close) ov.image.close();
+  return c;
+}
+
 // Image d'un board telle que la compose ASLBoard.BoardOp : la partie
 // visible (recadrée) au format natif, puis les motifs, les images SSR et
 // les overlays, puis le repeint des SSR sur l'ensemble. Le retournement et
 // le zoom viennent après, au dessin sur la carte.
 async function composerBoard(b, img){
+  const imageBoard = img;
   const gb = geoBoard(b);
   const sx = b.crop ? b.crop.x : 0, sy = b.crop ? b.crop.y : 0;
   const sw = (b.crop && b.crop.w > 0) ? b.crop.w : gb.w;
@@ -749,17 +1206,25 @@ async function composerBoard(b, img){
   for(const o of overlays){
     try {
       const ov = await preparerOverlay(b, o);
+      // Preserve Board Elevation : l'overlay posé par « Add overlays » avec
+      // la case cochée, ou tous quand la partie a PersistElevation à true
+      // (ASLMap.adjustLOSForOverlays) ; pas les pièces de l'extension.
+      const persist = !o.piece && (!!o.persist || persistElevationActive());
+      if(persist){
+        try { ov.image = await transformerOverlay(b, ov, imageBoard); }
+        catch(e){ chatLog(`⚠️ bd${b.name} : overlay ${o.nom}, niveaux du board non préservés — ${e.message}`); }
+      }
       const img = await dessinerOverlay(b, cv, ov, tbl, voulues, sx, sy);
-      b.ovrLOS.push(Object.assign(_pixelsOverlay(o.nom, img, ov.x, ov.y), {archive: ov.archive}));
+      b.ovrLOS.push(Object.assign(_pixelsOverlay(o.nom, img, ov.x, ov.y), {archive: ov.archive, persist}));
       if(ov.x < sx || ov.y < sy || ov.x + img.width > sx + sw || ov.y + img.height > sy + sh){
         const c = document.createElement('canvas');
         c.width = img.width; c.height = img.height;
         c.getContext('2d').drawImage(img, 0, 0);
         b.ovrDebords.push({nom: o.nom, image: c, x: ov.x, y: ov.y});
       }
-      ov.image.close();
+      if(ov.image.close) ov.image.close();
       chatLog(`🧱 bd${b.name} : overlay ${o.nom} en ${o.hex1}-${o.hex2} (${ov.archive}, orientation ${ov.orientation})`
-        + (o.piece ? ` — pièce ${o.piece} de l'extension VASL Overlays` : ''));
+        + (o.piece ? ` — pièce ${o.piece} de l'extension VASL Overlays` : '') + (persist ? ' — niveaux du board préservés' : ''));
     } catch(e){
       chatLog(`⚠️ bd${b.name} : overlay ${o.nom} non posé — ${e.message}`);
     }

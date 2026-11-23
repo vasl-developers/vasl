@@ -366,7 +366,7 @@ function _fenetreLog(titre, corps, brancher){
   brancher(w);
 }
 
-function majBoutons(){ rafraichirActions(['vsav', 'log', 'logTxt']); }
+function majBoutons(){ rafraichirActions(['vsav', 'log', 'logTxt', 'losEpingle', 'boards']); }
 
 // Piles de la carte de jeu, d'après l'état courant. VASL écrit aussi les
 // piles d'un seul pion. La couche (@@n) est celle de la pièce du fond
