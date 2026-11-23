@@ -2975,16 +2975,24 @@ function _ssrHexagones(m, R, ssr, regles){
 function _hexesBoardLOS(b, g, R, z){
   const out = [];
   const cropX = b.crop ? (b.crop.x || 0) : 0, cropY = b.crop ? (b.crop.y || 0) : 0;
-  const i0 = Math.max(0, Math.floor((-g.hw/4 - g.x0) / g.hw)), i1 = Math.ceil((g.w + g.hw/4 - g.x0) / g.hw);
+  // Colonnes à gauche de A (bordure hors carte, ex. HTB) comprises :
+  // ASLHexGrid.locationName les nomme « offboard », comme les rangées
+  // au-dessus de la rangée 0.
+  const i0 = Math.floor((-g.hw/4 - g.x0) / g.hw), i1 = Math.ceil((g.w + g.hw/4 - g.x0) / g.hw);
   const r0 = Math.floor((-g.hh/4 - g.y0) / g.hh), r1 = Math.ceil((g.h + g.hh/4 - g.y0) / g.hh) + 1;
   for(let i = i0; i <= i1; i++){
-    const col = hexrow(i);
+    const col = i < 0 ? '' : hexrow(i), impaire = i % 2 !== 0;
     for(let r = r0; r <= r1; r++){
-      const c = centreHex(g, col + r);
+      // centreHex, étendu aux colonnes négatives.
+      const y = !impaire ? Math.trunc(g.hh * (r - 1) + .5)
+              : g.alt    ? Math.trunc(g.hh * (r - 1.5) + .5)
+              :            Math.trunc(g.hh * (r - .5) + .5);
+      const c = {x: Math.trunc(g.hw * i + .5) + g.x0, y: y + g.y0};
       if(c.x <= -g.hw/4 || c.x >= g.w + g.hw/4 || c.y <= -g.hh/4 || c.y >= g.h + g.hh/4) continue;
       const lx = c.x - cropX, ly = c.y - cropY;
       if(ly < -g.hh/2 || ly > R.h + g.hh/2 || lx < -g.hw/2 || lx > R.w + g.hw/2) continue;
-      out.push({nom: col + r, x: R.x + (b.reversed ? R.w - lx : lx), y: R.y + (b.reversed ? R.h - ly : ly)});
+      out.push({nom: i < 0 || r < 0 ? 'offboard' : col + r,
+                x: R.x + (b.reversed ? R.w - lx : lx), y: R.y + (b.reversed ? R.h - ly : ly)});
     }
   }
   return out;
@@ -3387,10 +3395,15 @@ async function construireCarteLOS(boards, terrainsXML, archiveDe, opts = {}){
   const coin = boards.find(b => b._los.x === 0 && b._los.y === 0) || boards[0];
   const hx = _hexesBoardLOS(coin, geoBoard(coin), coin._los, z);
   if(!hx.length) throw new Error('board ' + coin.name + ' sans hexagone');
-  const xmin = Math.min(...hx.filter(h => h.x >= -3).map(h => h.x));
-  const ymin = Math.min(...hx.filter(h => Math.abs(h.x - xmin) < 3 && h.y >= -3).map(h => h.y));
-  let A1x = xmin < hw/4 ? 0 : hw/2;
-  let A1y = ymin < hh/4 ? 0 : hh/2;
+  const nommes = hx.filter(h => h.nom !== 'offboard');
+  const xmin = Math.min(...nommes.filter(h => h.x >= -3).map(h => h.x));
+  const ymin = Math.min(...nommes.filter(h => Math.abs(h.x - xmin) < 3 && h.y >= -3).map(h => h.y));
+  // Rapportés au pas de la grille : A1 peut être à l'intérieur de l'image
+  // (bordure hors carte, ex. HTB : A1 à 225, 225 → A1x = 0, A1y = hh/2
+  // comme le chemin géo de ASLMap.buildVASLMap).
+  const mx = ((xmin % hw) + hw) % hw, my = ((ymin % hh) + hh) % hh;
+  let A1x = mx < hw/4 ? 0 : hw/2;
+  let A1y = my < hh/4 ? 0 : hh/2;
   // Cartes HASL non standard (ASLMap.buildVASLMapforNonStandardBoards) :
   // A1 garde le décalage de BoardMetadata.xml tant que le bord gauche
   // n'est pas recadré (sinon 0 ou un demi-hexagone, comme ci-dessus).
@@ -3467,14 +3480,20 @@ async function construireCarteLOS(boards, terrainsXML, archiveDe, opts = {}){
       // Demi-hexagones coupés par le recadrage : hors de la grille.
       if(h.x < R.x - 3 || h.x > R.x + R.w + 3 || h.y < R.y - 3 || h.y > R.y + R.h + 3) continue;
       const hex = _hexAuCentre(m, h.x, h.y);
+      // Bordure hors carte absente de la grille (cartes HASL dont A1 ouvre
+      // la grille) : rien à nommer.
+      if(!hex && h.nom === 'offboard') continue;
       total++;
       if(!hex){ rates++; continue; }
       hex.resetHexAndLocationNames(h.nom);
       hex.board = b.name;
       parNom.set(h.nom.toUpperCase(), hex);
     }
-    const lettres = g.x0 < 0 ? Math.round(-g.x0 / g.hw) : 0;
-    const decalage = g.y0 < 0 ? Math.trunc(-g.y0 / g.hh) + 1 : 0;
+    // LOSData commence à la colonne et à la rangée du bord de l'image :
+    // A1 hors de l'image (x0, y0 < 0) ou à l'intérieur (bordure hors
+    // carte, ex. HTB : -4 colonnes, -3 rangées ; noms vides ignorés).
+    const lettres = g.x0 < 0 ? Math.round(-g.x0 / g.hw) : -Math.round(g.x0 / g.hw);
+    const decalage = g.y0 < 0 ? Math.trunc(-g.y0 / g.hh) + 1 : -Math.round((g.y0 - g.hh/2) / g.hh);
     const egal = /EqualRowCount/.test((_elementsXML(meta, 'boardMetadata')[0] || {}).HexGridConfig || '');
     let k = d ? d.debutHex : 0;
     if(d) for(let col = 0; col < d.width; col++)

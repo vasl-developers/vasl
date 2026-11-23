@@ -340,7 +340,7 @@ async function chargerPartie(texte, label, annexes){
   const boards = _parseBoardSegment(texte);
   if(!boards.length){ chatLog(`⚠️ Aucun board dans ${label}`); return false; }
   fermerLog();
-  document.title = 'VASLweb 1.09 — ' + label;
+  document.title = 'VASLweb 1.10 — ' + label;
   chatLog(`🗺️ ${label} — boards : `
     + boards.map(b => b.name + (b.reversed ? ' (retourné)' : '')).join(', '));
   // PersistElevation sert à composer les boards : lu ici, avant
