@@ -1580,6 +1580,9 @@ function poserDepuisPalette(x, cx, cy){
   const p = poserTraits(def.T, def.S, pos.x, pos.y, null, 0);
   selectionnerPile(cle(p));
   if(!p.cache) rapport(_remplir(FORMAT_CREATION, {pieceName: nomRapport(p), location: lieu(p.x, p.y), mapName: _carteJeu}));
+  // Case de l'OB d'un scénario (js/ob-panneau.js) : son compteur baisse.
+  if(x.apresPose) x.apresPose(p);
+  return p;
 }
 
 // Pose une pièce décrite par ses traits. VASL procède en deux temps — la

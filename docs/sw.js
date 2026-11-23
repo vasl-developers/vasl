@@ -3,9 +3,10 @@
 // L'application (VASLweb.html, manifeste, icônes) : réseau d'abord, pour
 // qu'une nouvelle version publiée arrive dès la connexion suivante ; le
 // cache ne sert que hors ligne.
-// Les ressources VASL (raw.githubusercontent.com) et PeerJS (unpkg) :
-// gardées au fil des parties, pour rejouer hors ligne les boards déjà
-// vus. Les métadonnées XML et le buildFile changent avec VASL : réseau
+// Les ressources VASL (raw.githubusercontent.com), PeerJS (unpkg) et les
+// bibliothèques de lecture des PDF de scénario (cdn.jsdelivr.net, versions
+// fixées) : gardées au fil des parties, pour rejouer hors ligne les boards
+// déjà vus. Les métadonnées XML et le buildFile changent avec VASL : réseau
 // d'abord ; les boards, overlays et images : cache d'abord.
 // ═══════════════════════════════════════════════════════════════
 // VERSION change à chaque publication : le cache de la version précédente
@@ -15,7 +16,7 @@
 // et de VASLweb.html, pour qu'une page neuve ne prenne jamais un script de
 // la version d'avant dans un cache HTTP.
 // APP : tout fichier de l'application.
-const VERSION = 'vasl-1.08';
+const VERSION = 'vasl-1.09';
 const CACHE_APP = 'vaslweb-app-' + VERSION;
 // Nom fixe ; « -v1 » garde le cache des boards des versions d'avant.
 const CACHE_VASL = 'vaslweb-vasl-v1';
@@ -29,45 +30,47 @@ const APP = [
   './icons/icon-maskable-512.png',
   './icons/apple-touch-icon.png',
   './icons/favicon-32.png',
-  './pwa.js?v=vasl-1.08',
-  './css/vaslweb.css?v=vasl-1.08',
-  './js/outils.js?v=vasl-1.08',
-  './js/donnees/ssr.js?v=vasl-1.08',
-  './js/donnees/overlays-ext.js?v=vasl-1.08',
-  './js/donnees/mouvement.js?v=vasl-1.08',
-  './js/langue.js?v=vasl-1.08',
-  './js/noyau.js?v=vasl-1.08',
-  './js/fichiers.js?v=vasl-1.08',
-  './js/carte.js?v=vasl-1.08',
-  './js/hexagones.js?v=vasl-1.08',
-  './js/los-moteur.js?v=vasl-1.08',
-  './js/los-pions.js?v=vasl-1.08',
-  './js/los-fil.js?v=vasl-1.08',
-  './js/pieces.js?v=vasl-1.08',
-  './js/pions.js?v=vasl-1.08',
-  './js/vlog.js?v=vasl-1.08',
-  './js/mf.js?v=vasl-1.08',
-  './js/commandes.js?v=vasl-1.08',
-  './js/chat-rapports.js?v=vasl-1.08',
-  './js/flare.js?v=vasl-1.08',
-  './js/cvp.js?v=vasl-1.08',
-  './js/dissimulation.js?v=vasl-1.08',
-  './js/tactile.js?v=vasl-1.08',
-  './js/bdd.js?v=vasl-1.08',
-  './js/qrdc.js?v=vasl-1.08',
-  './js/oba.js?v=vasl-1.08',
-  './js/des-utilisateurs.js?v=vasl-1.08',
-  './js/des-3d.js?v=vasl-1.08',
-  './js/ift.js?v=vasl-1.08',
-  './js/reseau.js?v=vasl-1.08',
-  './js/export.js?v=vasl-1.08',
-  './js/preferences.js?v=vasl-1.08',
-  './js/qc.js?v=vasl-1.08',
-  './js/interface.js?v=vasl-1.08',
-  './js/chat.js?v=vasl-1.08',
-  './js/menus.js?v=vasl-1.08'
+  './modeles/nouvelle-partie.vsav',
+  './pwa.js?v=vasl-1.09',
+  './css/vaslweb.css?v=vasl-1.09',
+  './js/outils.js?v=vasl-1.09',
+  './js/donnees/ssr.js?v=vasl-1.09',
+  './js/donnees/overlays-ext.js?v=vasl-1.09',
+  './js/donnees/mouvement.js?v=vasl-1.09',
+  './js/langue.js?v=vasl-1.09',
+  './js/noyau.js?v=vasl-1.09',
+  './js/fichiers.js?v=vasl-1.09',
+  './js/carte.js?v=vasl-1.09',
+  './js/hexagones.js?v=vasl-1.09',
+  './js/los-moteur.js?v=vasl-1.09',
+  './js/los-pions.js?v=vasl-1.09',
+  './js/los-fil.js?v=vasl-1.09',
+  './js/pieces.js?v=vasl-1.09',
+  './js/pions.js?v=vasl-1.09',
+  './js/boards.js?v=vasl-1.09',
+  './js/vlog.js?v=vasl-1.09',
+  './js/mf.js?v=vasl-1.09',
+  './js/commandes.js?v=vasl-1.09',
+  './js/chat-rapports.js?v=vasl-1.09',
+  './js/flare.js?v=vasl-1.09',
+  './js/cvp.js?v=vasl-1.09',
+  './js/dissimulation.js?v=vasl-1.09',
+  './js/tactile.js?v=vasl-1.09',
+  './js/bdd.js?v=vasl-1.09',
+  './js/qrdc.js?v=vasl-1.09',
+  './js/oba.js?v=vasl-1.09',
+  './js/des-utilisateurs.js?v=vasl-1.09',
+  './js/des-3d.js?v=vasl-1.09',
+  './js/ift.js?v=vasl-1.09',
+  './js/reseau.js?v=vasl-1.09',
+  './js/export.js?v=vasl-1.09',
+  './js/preferences.js?v=vasl-1.09',
+  './js/qc.js?v=vasl-1.09',
+  './js/interface.js?v=vasl-1.09',
+  './js/chat.js?v=vasl-1.09',
+  './js/menus.js?v=vasl-1.09'
 ];
-const HOTES_VASL = ['raw.githubusercontent.com', 'unpkg.com'];
+const HOTES_VASL = ['raw.githubusercontent.com', 'unpkg.com', 'cdn.jsdelivr.net'];
 
 // À l'installation, les fichiers sont pris au serveur, jamais dans le cache
 // HTTP (10 minutes sur GitHub Pages) : sinon le cache d'une version neuve
@@ -118,6 +121,12 @@ async function cacheDabord(req, cache){
   return r;
 }
 
+async function rafraichir(req, cache){
+  const r = await fetch(req);
+  if(r.ok) (await caches.open(cache)).put(req.url, r.clone());
+  return r;
+}
+
 self.addEventListener('fetch', e => {
   const req = e.request;
   if(req.method !== 'GET') return;
@@ -136,6 +145,10 @@ self.addEventListener('fetch', e => {
   }
 
   if(HOTES_VASL.includes(url.hostname)){
+    // « Mise à jour des cartes » (roue ⚙) : la page demande le fichier
+    // avec cache: 'reload' ; il est pris au réseau et remplace celui du
+    // cache. Pas de repli sur le cache : un échec doit se voir.
+    if(req.cache === 'reload'){ e.respondWith(rafraichir(req, CACHE_VASL)); return; }
     const variable = /\.xml$|\/buildFile$/i.test(url.pathname);
     e.respondWith(variable ? reseauDabord(req, CACHE_VASL) : cacheDabord(req, CACHE_VASL));
   }

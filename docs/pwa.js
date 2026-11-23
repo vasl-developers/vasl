@@ -24,7 +24,7 @@
   ajouter('link', {rel: 'apple-touch-icon', href: 'icons/apple-touch-icon.png'});
   ajouter('meta', {name: 'mobile-web-app-capable', content: 'yes'});
   ajouter('meta', {name: 'apple-mobile-web-app-capable', content: 'yes'});
-  ajouter('meta', {name: 'apple-mobile-web-app-title', content: 'VASLweb 1.08'});
+  ajouter('meta', {name: 'apple-mobile-web-app-title', content: 'VASLweb 1.09'});
 
   if('serviceWorker' in navigator){
     navigator.serviceWorker.register('sw.js').catch(err => console.warn('Service worker :', err));
@@ -54,7 +54,14 @@
     window.addEventListener('online', verifier);
   }
   function bandeauMiseAJour(){
-    if(document.getElementById('majVaslweb') || !document.body) return;
+    if(document.getElementById('majVaslweb')) return;
+    bandeau('Nouvelle version de VASLweb disponible.', true);
+  }
+  // Bandeau en bas de l'écran : un message, « Recharger » si demandé, ×.
+  function bandeau(message, recharger){
+    if(!document.body) return;
+    const ancien = document.getElementById('majVaslweb');
+    if(ancien) ancien.remove();
     const b = document.createElement('div');
     b.id = 'majVaslweb';
     b.setAttribute('role', 'status');
@@ -63,7 +70,7 @@
       + 'padding:8px 8px 8px 14px;border-radius:8px;background:#2b2b2b;color:#e6e6e6;'
       + 'border:1px solid #d9a441;box-shadow:0 2px 10px rgba(0,0,0,.5);font:14px system-ui,sans-serif';
     const texte = document.createElement('span');
-    texte.textContent = 'Nouvelle version de VASLweb disponible.';
+    texte.textContent = message;
     const bouton = (libelle, titre, style, action) => {
       const el = document.createElement('button');
       el.type = 'button'; el.textContent = libelle;
@@ -72,11 +79,45 @@
       el.addEventListener('click', action);
       return el;
     };
-    b.append(texte,
-      bouton('Recharger', '', 'padding:4px 12px;border:0;background:#d9a441;color:#1e1e1e', () => location.reload()),
-      bouton('×', 'Fermer', 'padding:0 10px;border:0;background:none;color:#e6e6e6', () => b.remove()));
+    b.append(texte);
+    if(recharger) b.append(bouton('Recharger', '', 'padding:4px 12px;border:0;background:#d9a441;color:#1e1e1e', () => location.reload()));
+    b.append(bouton('×', 'Fermer', 'padding:0 10px;border:0;background:none;color:#e6e6e6', () => b.remove()));
     document.body.appendChild(b);
+    return b;
   }
+
+  // Roue ⚙ ▸ « Mise à jour » : sans attendre que l'application revienne au
+  // premier plan, le service worker se revérifie tout de suite. Une
+  // version neuve est attendue jusqu'à son activation, puis la page se
+  // recharge (c'est l'utilisateur qui l'a demandé). Sinon, un bandeau dit
+  // que VASLweb est à jour et laisse recharger quand même.
+  window.miseAJourVaslweb = async function(){
+    if(!('serviceWorker' in navigator)){ location.reload(); return; }
+    bandeau('Recherche d\'une mise à jour…', false);
+    let r = null;
+    try { r = await navigator.serviceWorker.getRegistration(); } catch(e){}
+    if(!r){ location.reload(); return; }
+    try { await r.update(); } catch(e){
+      bandeau('Mise à jour impossible (hors ligne ?).', true);
+      return;
+    }
+    const neuf = r.installing || r.waiting;
+    if(!neuf){
+      bandeau('VASLweb est à jour.', true);
+      return;
+    }
+    bandeau('Installation de la nouvelle version…', false);
+    const active = await new Promise(ok => {
+      if(neuf.state === 'activated') return ok(true);
+      const fin = setTimeout(() => ok(false), 30000);
+      neuf.addEventListener('statechange', () => {
+        if(neuf.state === 'activated'){ clearTimeout(fin); ok(true); }
+        else if(neuf.state === 'redundant'){ clearTimeout(fin); ok(false); }
+      });
+    });
+    if(active) location.reload();
+    else bandeau('La nouvelle version ne s\'est pas installée.', true);
+  };
 
   // Double-clic sur un .vsav ou un .vlog : l'application l'ouvre, une
   // fois la page prête (après l'initialisation de VASLweb.html).
