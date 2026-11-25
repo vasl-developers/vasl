@@ -311,7 +311,7 @@ public class Map  {
                 }
             }
         } if (b.getName().contains("RO")) {
-            if (this.A1CenterY == 0) {  //topleft is half height
+              if (this.A1CenterY == 0) {  //topleft is half height
                 for (int col = 0; col < (startcol + this.width); col++) {
                     hexGrid[col] = new Hex[this.height];  // + (col % 2)]; // add 1 if odd
                     for (int row = 0; row < (startrow + this.height); row++) { // + (col % 2)); row++) {
@@ -324,8 +324,8 @@ public class Map  {
             else if (this.A1CenterY == this.hexHeight / 2){  //topleft is full height
                 int evencol =0;
                 for (int col = 0; col < this.width; col++) {
-                    //evencol = col % 2 == 0 ? 1 : 0;
-                    hexGrid[col] = new Hex[this.height];  // + evencol]; // add 1 if even
+                    evencol = col % 2 == 0 ? 0 : 1;
+                    hexGrid[col] = new Hex[this.height + evencol]; // add 1 if odd
                     for (int row = 0; row < this.height + evencol; row++) {
                         hexGrid[col][row] = new Hex(col, row, getGEOHexName(col, row, false, false), getHexCenterPoint(col, row), hexHeight, hexWidth, this, 0, terrainList[0]);
                     }
@@ -3089,7 +3089,12 @@ public class Map  {
             }
         }
         // handle NPE situation by using default terrain
-        if (imageterrain == null){imageterrain = getTerrain("Open Ground");}
+        if (imageterrain == null) {
+            imageterrain = getGridTerrain(status.currentCol, status.currentRow);
+            if (imageterrain == null) {
+                imageterrain = getTerrain("Open Ground");
+            }
+        }
         return imageterrain;
     }
     // copied from ASLMap - refactor

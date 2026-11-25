@@ -860,7 +860,8 @@ public class VASLThread extends LOS_Thread implements KeyListener, GameComponent
             levelchangedirection = "down";
         }
         levelchangelocation = (e.isControlDown() && source != null ? source : target);  // set the source or target
-        if (levelchangelocation == null || levelchangedirection == "") {return;}
+        // processLevelChange needs both ends: a LOS started off the map has no source but keeps the target of the previous one
+        if (source == null || target == null || levelchangelocation == null || levelchangedirection == "") {return;}
         processLevelChange(levelchangelocation, levelchangedirection);
         doLOS();
         map.repaint();
