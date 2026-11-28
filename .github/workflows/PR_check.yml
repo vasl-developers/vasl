@@ -22,16 +22,15 @@ jobs:
       - name: Ensure version was incremented properly
         run: |
           VERSION=$(grep -oP '(?<=<version>)[^<]+' pom.xml | head -n 1)
-          
-          # Check if the version contains "beta"
-          if [[ "$VERSION" == "beta" ]] || [[ "$PREV_VERSION" == "beta" ]]; then
-          echo "Beta version detected in current or previous version. Skipping version check."
-          exit 0
-          fi
-          
           git fetch --depth=1 origin production
           PREV_VERSION=$(git show origin/production:pom.xml | grep -oP '(?<=<version>)[^<]+' | head -n 1)
           
+          # Check if the version contains "beta"
+          if [[ "$VERSION" =~ "beta" ]] || [[ "$PREV_VERSION" =~ "beta" ]]; then
+          echo "Beta version detected in current or previous version. Skipping version check."
+          exit 0
+          fi
+                         
           IFS='.' read -r -a CURR_PARTS <<< "$VERSION"
           IFS='.' read -r -a PREV_PARTS <<< "$PREV_VERSION"
           
